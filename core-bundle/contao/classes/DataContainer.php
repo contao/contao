@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
+use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Picker\DcaPickerProviderInterface;
@@ -892,146 +893,28 @@ abstract class DataContainer extends Backend
 	 * @param string  $strPrevious
 	 * @param string  $strNext
 	 *
-	 * @return string
+	 * @return DataContainerOperationsBuilder
 	 */
 	protected function generateButtons($arrRow, $strTable, $arrRootIds=array(), $blnCircularReference=false, $arrChildRecordIds=null, $strPrevious=null, $strNext=null)
 	{
-		if (!\is_array($GLOBALS['TL_DCA'][$strTable]['list']['operations'] ?? null))
-		{
-			return '';
-		}
+		return System::getContainer()->get('contao.data_container.operations_builder')->initializeButtons(
+			$strTable,
+			$arrRow,
+			$this,
+			function (DataContainerOperation $config) use ($arrRow, $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext) {
+				trigger_deprecation('contao/core-bundle', '5.5', 'Using a button_callback without DataContainerOperation object is deprecated and will no longer work in Contao 6.');
 
-		$return = '';
-
-		foreach ($GLOBALS['TL_DCA'][$strTable]['list']['operations'] as $k=>$v)
-		{
-			$v = \is_array($v) ? $v : array($v);
-
-			$config = new DataContainerOperation($k, $v, $arrRow, $this);
-
-			// Call a custom function instead of using the default button
-			if (\is_array($v['button_callback'] ?? null))
-			{
-				$callback = System::importStatic($v['button_callback'][0]);
-				$ref = new \ReflectionMethod($callback, $v['button_callback'][1]);
-
-				if ($ref->getNumberOfParameters() === 1 && ($type = $ref->getParameters()[0]->getType()) && $type->getName() === DataContainerOperation::class)
+				if (\is_array($config['button_callback'] ?? null))
 				{
-					$callback->{$v['button_callback'][1]}($config);
+					$callback = System::importStatic($config['button_callback'][0]);
+					$config->setHtml($callback->{$config['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this));
 				}
-				else
+				elseif (\is_callable($config['button_callback'] ?? null))
 				{
-					$return .= $callback->{$v['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
-					continue;
+					$config->setHtml($config['button_callback']($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this));
 				}
 			}
-			elseif (\is_callable($v['button_callback'] ?? null))
-			{
-				$ref = new \ReflectionFunction($v['button_callback']);
-
-				if ($ref->getNumberOfParameters() === 1 && ($type = $ref->getParameters()[0]->getType()) && $type->getName() === DataContainerOperation::class)
-				{
-					$v['button_callback']($config);
-				}
-				else
-				{
-					$return .= $v['button_callback']($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strTable, $arrRootIds, $arrChildRecordIds, $blnCircularReference, $strPrevious, $strNext, $this);
-					continue;
-				}
-			}
-
-			if (($html = $config->getHtml()) !== null)
-			{
-				$return .= $html;
-				continue;
-			}
-
-			$isPopup = $k == 'show';
-			$href = null;
-
-			if ($config->getUrl() !== null)
-			{
-				$href = $config->getUrl();
-			}
-			elseif (!empty($config['route']))
-			{
-				$params = array('id' => $arrRow['id']);
-
-				if ($isPopup)
-				{
-					$params['popup'] = '1';
-				}
-
-				$href = System::getContainer()->get('router')->generate($config['route'], $params);
-			}
-			elseif (isset($config['href']))
-			{
-				$href = $this->addToUrl($config['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''));
-			}
-
-			parse_str(StringUtil::decodeEntities($config['href'] ?? $v['href'] ?? ''), $params);
-
-			if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
-			{
-				// Hide the toggle icon if the user does not have access to the field
-				if ((($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['toggle'] ?? false) !== true && ($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['reverseToggle'] ?? false) !== true) || (self::isFieldExcluded($strTable, $params['field']) && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strTable . '::' . $params['field'])))
-				{
-					continue;
-				}
-
-				$icon = $config['icon'];
-				$_icon = pathinfo($config['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($config['icon'], PATHINFO_EXTENSION);
-
-				if (str_contains($config['icon'], '/'))
-				{
-					$_icon = \dirname($config['icon']) . '/' . $_icon;
-				}
-
-				if ($icon == 'visible.svg')
-				{
-					$_icon = 'invisible.svg';
-				}
-				elseif ($icon == 'featured.svg')
-				{
-					$_icon = 'unfeatured.svg';
-				}
-
-				$state = $arrRow[$params['field']] ? 1 : 0;
-
-				if (($config['reverse'] ?? false) || ($GLOBALS['TL_DCA'][$strTable]['fields'][$params['field']]['reverseToggle'] ?? false))
-				{
-					$state = $arrRow[$params['field']] ? 0 : 1;
-				}
-
-				if ($href === null)
-				{
-					$return .= Image::getHtml($config['icon'], $config['label']) . ' ';
-				}
-				else
-				{
-					if (isset($config['titleDisabled']))
-					{
-						$titleDisabled = $config['titleDisabled'];
-					}
-					else
-					{
-						$titleDisabled = (\is_array($v['label']) && isset($v['label'][2])) ? \sprintf($v['label'][2], $arrRow['id']) : $config['title'];
-					}
-
-					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($state ? $config['title'] : $titleDisabled) . '" data-title="' . StringUtil::specialchars($config['title']) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
-				}
-			}
-			elseif ($href === null)
-			{
-				$return .= Image::getHtml($config['icon'], $config['label']) . ' ';
-			}
-			else
-			{
-				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($config['title']) . '"' . ($isPopup ? ' onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $config['label'])) . '\',\'url\':this.href});return false"' : '') . $config['attributes'] . '>' . Image::getHtml($config['icon'], $config['label']) . '</a> ';
-			}
-		}
-
-		return trim($return);
+		);
 	}
 
 	/**
@@ -1124,157 +1007,28 @@ abstract class DataContainer extends Backend
 	 * @param array  $arrRow
 	 * @param string $strPtable
 	 *
-	 * @return string
+	 * @return DataContainerOperationsBuilder
 	 */
 	protected function generateHeaderButtons($arrRow, $strPtable)
 	{
-		if (!\is_array($GLOBALS['TL_DCA'][$strPtable]['list']['operations'] ?? null))
-		{
-			return '';
-		}
+		return System::getContainer()->get('contao.data_container.operations_builder')->initializeHeaderButtons(
+			$strPtable,
+			$arrRow,
+			$this,
+			function (DataContainerOperation $config) use ($arrRow, $strPtable) {
+				trigger_deprecation('contao/core-bundle', '5.5', 'Using a button_callback without DataContainerOperation object is deprecated and will no longer work in Contao 6.');
 
-		$return = '';
-
-		foreach ($GLOBALS['TL_DCA'][$strPtable]['list']['operations'] as $k=> $v)
-		{
-			if (empty($v['showInHeader']) || (Input::get('act') == 'select' && !($v['showOnSelect'] ?? null)))
-			{
-				continue;
-			}
-
-			$v = \is_array($v) ? $v : array($v);
-
-			// Add the parent table to the href
-			if (isset($v['href']))
-			{
-				$v['href'] .= '&amp;table=' . $strPtable;
-			}
-			else
-			{
-				$v['href'] = 'table=' . $strPtable;
-			}
-
-			$config = new DataContainerOperation($k, $v, $arrRow, $this);
-
-			// Call a custom function instead of using the default button
-			if (\is_array($v['button_callback'] ?? null))
-			{
-				$callback = System::importStatic($v['button_callback'][0]);
-				$ref = new \ReflectionMethod($callback, $v['button_callback'][1]);
-
-				if ($ref->getNumberOfParameters() === 1 && ($type = $ref->getParameters()[0]->getType()) && $type->getName() === DataContainerOperation::class)
+				if (\is_array($config['button_callback'] ?? null))
 				{
-					$callback->{$v['button_callback'][1]}($config);
+					$callback = System::importStatic($config['button_callback'][0]);
+					$config->setHtml($callback->{$config['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strPtable, array(), null, false, null, null, $this));
 				}
-				else
+				elseif (\is_callable($config['button_callback'] ?? null))
 				{
-					$return .= $callback->{$v['button_callback'][1]}($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strPtable, array(), null, false, null, null, $this);
-					continue;
+					$config->setHtml($config['button_callback']($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strPtable, array(), null, false, null, null, $this));
 				}
 			}
-			elseif (\is_callable($v['button_callback'] ?? null))
-			{
-				$ref = new \ReflectionFunction($v['button_callback']);
-
-				if ($ref->getNumberOfParameters() === 1 && ($type = $ref->getParameters()[0]->getType()) && $type->getName() === DataContainerOperation::class)
-				{
-					$v['button_callback']($config);
-				}
-				else
-				{
-					$return .= $v['button_callback']($arrRow, $config['href'] ?? null, $config['label'], $config['title'], $config['icon'] ?? null, $config['attributes'], $strPtable, array(), null, false, null, null, $this);
-					continue;
-				}
-			}
-
-			if (($html = $config->getHtml()) !== null)
-			{
-				$return .= $html;
-				continue;
-			}
-
-			$isPopup = $k == 'show';
-			$href = null;
-
-			if ($config->getUrl() !== null)
-			{
-				$href = $config->getUrl();
-			}
-			elseif (!empty($config['route']))
-			{
-				$params = array('id' => $arrRow['id']);
-
-				if ($isPopup)
-				{
-					$params['popup'] = '1';
-				}
-
-				$href = System::getContainer()->get('router')->generate($config['route'], $params);
-			}
-			elseif (isset($config['href']))
-			{
-				$href = $this->addToUrl($config['href'] . '&amp;id=' . $arrRow['id'] . (Input::get('nb') ? '&amp;nc=1' : '') . ($isPopup ? '&amp;popup=1' : ''));
-			}
-
-			parse_str(StringUtil::decodeEntities($config['href'] ?? $v['href'] ?? ''), $params);
-
-			if (($params['act'] ?? null) == 'toggle' && isset($params['field']))
-			{
-				// Hide the toggle icon if the user does not have access to the field
-				if ((($GLOBALS['TL_DCA'][$strPtable]['fields'][$params['field']]['toggle'] ?? false) !== true && ($GLOBALS['TL_DCA'][$strPtable]['fields'][$params['field']]['reverseToggle'] ?? false) !== true) || (self::isFieldExcluded($strPtable, $params['field']) && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $strPtable . '::' . $params['field'])))
-				{
-					continue;
-				}
-
-				$icon = $config['icon'];
-				$_icon = pathinfo($config['icon'], PATHINFO_FILENAME) . '_.' . pathinfo($config['icon'], PATHINFO_EXTENSION);
-
-				if (str_contains($config['icon'], '/'))
-				{
-					$_icon = \dirname($config['icon']) . '/' . $_icon;
-				}
-
-				if ($icon == 'visible.svg')
-				{
-					$_icon = 'invisible.svg';
-				}
-
-				$state = $arrRow[$params['field']] ? 1 : 0;
-
-				if (($config['reverse'] ?? false) || ($GLOBALS['TL_DCA'][$strPtable]['fields'][$params['field']]['reverseToggle'] ?? false))
-				{
-					$state = $arrRow[$params['field']] ? 0 : 1;
-				}
-
-				if ($href === null)
-				{
-					$return .= Image::getHtml($config['icon'], $config['label']) . ' ';
-				}
-				else
-				{
-					if (isset($config['titleDisabled']))
-					{
-						$titleDisabled = $config['titleDisabled'];
-					}
-					else
-					{
-						$titleDisabled = (\is_array($v['label']) && isset($v['label'][2])) ? \sprintf($v['label'][2], $arrRow['id']) : $config['title'];
-					}
-
-					$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($state ? $config['title'] : $titleDisabled) . '" data-title="' . StringUtil::specialchars($config['title']) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,' . ($icon == 'visible.svg' ? 'true' : 'false') . ')">' . Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="' . $icon . '" data-icon-disabled="' . $_icon . '" data-state="' . $state . '"') . '</a> ';
-				}
-			}
-			elseif ($href === null)
-			{
-				$return .= Image::getHtml($config['icon'], $config['label']) . ' ';
-			}
-			else
-			{
-				$return .= '<a href="' . $href . '" title="' . StringUtil::specialchars($config['title']) . '"' . ($isPopup ? ' onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $config['label'])) . '\',\'url\':this.href});return false"' : '') . $config['attributes'] . '>' . Image::getHtml($config['icon'], $config['label']) . '</a> ';
-			}
-		}
-
-		return trim($return);
+		);
 	}
 
 	/**
