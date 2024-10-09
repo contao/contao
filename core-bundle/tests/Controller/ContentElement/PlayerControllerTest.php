@@ -103,11 +103,7 @@ class PlayerControllerTest extends ContentElementTestCase
                 'subtitlesSRC' => serialize([
                     self::FILE_SUBTITLES_EN_VTT,
                     self::FILE_SUBTITLES_DE_VTT,
-                ]),
-                'subtitlesLabels' => serialize([
-                    ['key' => 'en', 'value' => 'English'],
-                    ['key' => 'de', 'value' => 'Deutsch'],
-                ]),
+                ])
             ],
         );
 
@@ -116,8 +112,8 @@ class PlayerControllerTest extends ContentElementTestCase
                 <figure>
                     <video controls>
                         <source type="video/mp4" src="https://example.com/files/video.mp4">
-                        <track label="English" srclang="en" src="https://example.com/files/subtitles-en.vtt"/>
-                        <track label="Deutsch" srclang="de" src="https://example.com/files/subtitles-de.vtt"/>
+                        <track label="English" srclang="en" src="https://example.com/files/subtitles-en.vtt" default/>
+                        <track kind="captions" label="Deutsch" srclang="de" src="https://example.com/files/subtitles-de.vtt"/>
                     </video>
                 </figure>
             </div>

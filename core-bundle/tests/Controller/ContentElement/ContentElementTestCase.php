@@ -363,8 +363,40 @@ class ContentElementTestCase extends TestCase
                         self::FILE_IMAGE_MISSING => new FilesystemItem(true, 'image_missing.jpg', null, null, 'image/jpeg'),
                         self::FILE_VIDEO_MP4 => new FilesystemItem(true, 'video.mp4', null, null, 'video/mp4'),
                         self::FILE_VIDEO_OGV => new FilesystemItem(true, 'video.ogv', null, null, 'video/ogg'),
-                        self::FILE_SUBTITLES_EN_VTT => new FilesystemItem(true, 'subtitles-en.vtt', null, null, 'text/vtt'),
-                        self::FILE_SUBTITLES_DE_VTT => new FilesystemItem(true, 'subtitles-de.vtt', null, null, 'text/vtt'),
+                        self::FILE_SUBTITLES_EN_VTT => new FilesystemItem(
+                            true,
+                            'subtitles-en.vtt',
+                            null,
+                            null,
+                            'text/vtt',
+                            [
+                                'metadata' => new MetadataBag(
+                                    ['en' => new Metadata([Metadata::VALUE_TITLE => 'English'])],
+                                    ['en'],
+                                ),
+                                'subtitles' => [
+                                    'language' => 'en',
+                                    'type' => '',
+                                ],
+                            ],
+                        ),
+                        self::FILE_SUBTITLES_DE_VTT => new FilesystemItem(
+                            true,
+                            'subtitles-de.vtt',
+                            null,
+                            null,
+                            'text/vtt',
+                            [
+                                'metadata' => new MetadataBag(
+                                    ['en' => new Metadata([Metadata::VALUE_TITLE => 'Deutsch'])],
+                                    ['en'],
+                                ),
+                                'subtitles' => [
+                                    'language' => 'de',
+                                    'type' => 'captions',
+                                ],
+                            ],
+                        ),
                     ];
 
                     return $storageMap[$uuid->toRfc4122()] ?? null;
