@@ -13,3 +13,8 @@ will no longer work in Contao 6. Use the locale from the request object instead:
 ```php
 $locale = System::getContainer()->get('request_stack')->getCurrentRequest()->getLocale();
 ```
+
+## `Controller::sendFileToBrowser()`
+
+Using `Controller::sendFileToBrowser()` has been deprecated in Contao 5.3 and will no longer work in Contao 6.
+Use the Symfony `BinaryFileResponse` instead.
