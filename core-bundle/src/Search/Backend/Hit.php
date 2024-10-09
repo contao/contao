@@ -10,7 +10,7 @@ use Contao\Image\ImageInterface;
 /**
  * @experimental
  */
-class Hit
+final class Hit
 {
     private string|null $editUrl = null;
 
@@ -18,10 +18,21 @@ class Hit
 
     private FilesModel|ImageInterface|int|string|null $image = null;
 
+    /**
+     * @var array<mixed>
+     */
+    private array $metadata = [];
+
     public function __construct(
+        private readonly Document $document,
         private readonly string $title,
         private readonly string $viewUrl,
     ) {
+    }
+
+    public function getDocument(): Document
+    {
+        return $this->document;
     }
 
     public function getTitle(): string
@@ -49,6 +60,14 @@ class Hit
         return $this->image;
     }
 
+    /**
+     * @return array<mixed>
+     */
+    public function getMetadata(): array
+    {
+        return $this->metadata;
+    }
+
     public function withEditUrl(string $editUrl): self
     {
         $clone = clone $this;
@@ -69,6 +88,14 @@ class Hit
     {
         $clone = clone $this;
         $clone->image = $image;
+
+        return $clone;
+    }
+
+    public function withMetadata(array $metadata): self
+    {
+        $clone = clone $this;
+        $clone->metadata = $metadata;
 
         return $clone;
     }

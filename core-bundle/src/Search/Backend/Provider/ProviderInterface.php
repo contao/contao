@@ -27,9 +27,9 @@ interface ProviderInterface
      */
     public function updateIndex(IndexUpdateConfigInterface $trigger): iterable;
 
-    public function convertDocumentToHit(Document $document): Hit;
+    public function convertDocumentToHit(Document $document): Hit|null;
 
     public function supportsType(string $type): bool;
 
-    public function canAccessDocument(TokenInterface $token, Document $document): bool;
+    public function isHitGranted(TokenInterface $token, Hit $hit): bool;
 }
