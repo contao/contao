@@ -8,7 +8,7 @@ export default class extends Controller {
 
     buttonTargetConnected(button) {
         button.setAttribute('aria-controls', this.nameValue);
-		button.setAttribute('aria-expanded', 'false');
+        button.setAttribute('aria-expanded', 'false');
     }
 
     menuTargetConnected(menu) {
