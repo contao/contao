@@ -16,50 +16,52 @@
 
         let text, timer;
 
-        el.addEventListener('mouseenter', function() {
-            if (useContent) {
-                text = el.innerHTML;
-            } else {
-                text = el.getAttribute('title');
-                el.setAttribute('data-original-title', text);
-                el.removeAttribute('title');
-                text = text?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
-            }
-
-            if (!text) {
-                return;
-            }
-
-            clearTimeout(timer);
-            tip.style.willChange = 'display,contents';
-
-            timer = setTimeout(function() {
-                const position = el.getBoundingClientRect();
-                const rtl = getComputedStyle(el).direction === 'rtl';
-                const clientWidth = document.html.clientWidth;
-
-                if ((rtl && position.x < 200) || (!rtl && position.x < (clientWidth - 200))) {
-                    tip.style.left = `${(window.scrollX + position.left + x)}px`;
-                    tip.style.right = 'auto';
-                    tip.classList.remove('tip--rtl');
+        ['mouseenter', 'touchend'].forEach((event) => {
+            el.addEventListener(event, function(e) {
+                if (useContent) {
+                    text = el.innerHTML;
                 } else {
-                    tip.style.left = 'auto';
-                    tip.style.right = `${(clientWidth - window.scrollX - position.right + x)}px`;
-                    tip.classList.add('tip--rtl');
+                    text = el.getAttribute('title');
+                    el.setAttribute('data-original-title', text);
+                    el.removeAttribute('title');
+                    text = text?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
                 }
-
-                tip.innerHTML = `<div>${text}</div>`;
-                tip.style.top = `${(window.scrollY + position.top + y)}px`;
-                tip.style.display = 'block';
-                tip.style.willChange = 'auto';
-
-                if (!tip.parentNode && document.body) {
-                    document.body.append(tip);
+    
+                if (!text) {
+                    return;
                 }
-            }, 1000)
-        })
+    
+                clearTimeout(timer);
+                tip.style.willChange = 'display,contents';
+    
+                timer = setTimeout(function() {
+                    const position = el.getBoundingClientRect();
+                    const rtl = getComputedStyle(el).direction === 'rtl';
+                    const clientWidth = document.html.clientWidth;
+    
+                    if ((rtl && position.x < 200) || (!rtl && position.x < (clientWidth - 200))) {
+                        tip.style.left = `${(window.scrollX + position.left + x)}px`;
+                        tip.style.right = 'auto';
+                        tip.classList.remove('tip--rtl');
+                    } else {
+                        tip.style.left = 'auto';
+                        tip.style.right = `${(clientWidth - window.scrollX - position.right + x)}px`;
+                        tip.classList.add('tip--rtl');
+                    }
+    
+                    tip.innerHTML = `<div>${text}</div>`;
+                    tip.style.top = `${(window.scrollY + position.top + y)}px`;
+                    tip.style.display = 'block';
+                    tip.style.willChange = 'auto';
+    
+                    if (!tip.parentNode && document.body) {
+                        document.body.append(tip);
+                    }
+                }, 'mouseenter' === e.type ? 1000 : 0)
+            })
+        });
 
-        el.addEventListener('mouseleave', function() {
+        const close = (e) => {
             if (el.hasAttribute('data-original-title')) {
                 if (!el.hasAttribute('title')) {
                     el.setAttribute('title', el.getAttribute('data-original-title'));
@@ -76,9 +78,20 @@
                 timer = setTimeout(function() {
                     tip.style.display = 'none';
                     tip.style.willChange = 'auto';
-                }, 100)
+                }, 'mouseleave' === e.type ? 100 : 0)
             }
-        })
+        };
+
+        el.addEventListener('mouseleave', close);
+
+        // Close tooltip when touching anywhere else
+        document.addEventListener('touchstart', (e) => {
+            if (el.contains(e.target)) {
+                return;
+            }
+
+            close(e);
+        });
 
         const action = el.closest('button, a');
 
