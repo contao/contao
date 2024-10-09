@@ -244,6 +244,22 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "DOUBLE unsigned NOT NULL default 0"
 		),
+		'subtitlesLanguage' => array
+		(
+			'filter'                  => true,
+			'inputType'               => 'select',
+			'eval'                    => array('mandatory' => true, 'includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50 clr'),
+			'options_callback'        => static fn () => System::getContainer()->get('contao.intl.locales')->getLocales(),
+			'sql'                     => "varchar(64) NOT NULL default ''"
+		),
+		'subtitlesType' => array
+		(
+			'inputType'               => 'select',
+			'options'                 => array('subtitles', 'captions', 'descriptions', 'chapters', 'metadata'),
+			'reference'               => &$GLOBALS['TL_LANG']['tl_files'],
+			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(12) COLLATE ascii_bin NOT NULL default ''"
+		),
 		'meta' => array
 		(
 			'inputType'               => 'metaWizard',

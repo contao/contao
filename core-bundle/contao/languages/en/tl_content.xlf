@@ -348,19 +348,7 @@
         <source>Subtitles files</source>
       </trans-unit>
       <trans-unit id="tl_content.subtitlesSRC.1">
-        <source>Here you can add one or more .vtt files with subtitles.</source>
-      </trans-unit>
-      <trans-unit id="tl_content.subtitlesType.0">
-        <source>Subtitles kind</source>
-      </trans-unit>
-      <trans-unit id="tl_content.subtitlesType.1">
-        <source>Here you can choose the type of subtitles.</source>
-      </trans-unit>
-      <trans-unit id="tl_content.subtitlesLabels.0">
-        <source>Subtitles labels</source>
-      </trans-unit>
-      <trans-unit id="tl_content.subtitlesLabels.1">
-        <source>Please enter the subtitles language according to the ISO-639 as key and the label as value.</source>
+        <source>Here you can add one or more .vtt files with subtitles. Additional settings are done within the .vtt file.</source>
       </trans-unit>
       <trans-unit id="tl_content.youtube.0">
         <source>YouTube ID</source>
