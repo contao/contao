@@ -99,9 +99,9 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
         $locator = new FileLocator(Path::join($fixturesDir, 'table-data-container-provider'));
 
         $container = $this->getContainerWithContaoConfiguration($fixturesDir);
-
         $container->set('contao.resource_finder', $resourceFinder);
         $container->set('contao.resource_locator', $locator);
+
         System::setContainer($container);
 
         $provider = new TableDataContainerProvider(

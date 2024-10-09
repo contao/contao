@@ -30,6 +30,7 @@ abstract class AbstractProviderTestCase extends TestCase
     {
         $dsnParser = new DsnParser();
         $connectionParams = $dsnParser->parse('pdo-sqlite:///:memory:');
+
         $configuration = new Configuration();
         $configuration->setSchemaManagerFactory(new DefaultSchemaManagerFactory());
 

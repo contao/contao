@@ -117,7 +117,9 @@ class TableDataContainerProvider implements ProviderInterface
         }
 
         return $this->accessDecisionManager->decide(
-            $token, [ContaoCorePermissions::DC_PREFIX.$table], new ReadAction($table, $row),
+            $token,
+            [ContaoCorePermissions::DC_PREFIX.$table],
+            new ReadAction($table, $row),
         );
     }
 
@@ -151,7 +153,10 @@ class TableDataContainerProvider implements ProviderInterface
             return [];
         }
 
-        $searchableFields = array_filter($GLOBALS['TL_DCA'][$table]['fields'] ?? [], static fn (array $config): bool => isset($config['search']) && true === $config['search']);
+        $searchableFields = array_filter(
+            $GLOBALS['TL_DCA'][$table]['fields'] ?? [],
+            static fn (array $config): bool => isset($config['search']) && true === $config['search'],
+        );
 
         $qb = $this->createQueryBuilderForTable($table);
 
@@ -176,11 +181,7 @@ class TableDataContainerProvider implements ProviderInterface
             return null;
         }
 
-        return (new Document(
-            (string) $row['id'],
-            $this->getTypeFromTable($table),
-            $searchableContent,
-        ))->withMetadata(['table' => $table]);
+        return (new Document((string) $row['id'], $this->getTypeFromTable($table), $searchableContent))->withMetadata(['table' => $table]);
     }
 
     private function getTypeFromTable(string $table): string
