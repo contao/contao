@@ -15,8 +15,8 @@ namespace Contao\CoreBundle\File;
 class Subtitle
 {
     public function __construct(
-        private readonly ?string $sourceLanguage,
-        private readonly ?string $type,
+        private readonly string|null $sourceLanguage,
+        private readonly string|null $type,
     ) {
     }
 

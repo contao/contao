@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
-use Contao\CoreBundle\File\Subtitle;
 use Contao\CoreBundle\File\SubtitleType;
 use Contao\DataContainer;
 
@@ -37,6 +36,6 @@ class SubtitlesFieldsListener
     #[AsCallback(table: 'tl_files', target: 'fields.subtitlesType.options')]
     public function subtitlesTypeOptions(): array
     {
-        return array_map(fn ($case) => $case->name, SubtitleType::cases());
+        return array_map(static fn ($case) => $case->name, SubtitleType::cases());
     }
 }
