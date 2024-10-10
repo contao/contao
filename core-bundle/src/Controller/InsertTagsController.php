@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\StringUtil;
@@ -61,6 +62,7 @@ class InsertTagsController
             $response->setPublic();
             $response->setExpires($result->getExpiresAt());
             $response->headers->removeCacheControlDirective('no-store');
+            $response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
         }
 
         $this->responseTagger?->addTags($result->getCacheTags());

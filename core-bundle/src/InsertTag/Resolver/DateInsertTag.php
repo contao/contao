@@ -14,13 +14,16 @@ namespace Contao\CoreBundle\InsertTag\Resolver;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\InsertTag\InsertTag;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
+use Contao\CoreBundle\InsertTag\DefaultParametersInterface;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
+use Contao\CoreBundle\InsertTag\ResolvedParameters;
 use Contao\Date;
 
 #[AsInsertTag('date', asFragment: true)]
-class DateInsertTag implements InsertTagResolverNestedResolvedInterface
+class DateInsertTag implements InsertTagResolverNestedResolvedInterface, DefaultParametersInterface
 {
     private const MAPPER = [
         'd' => ['d', 'j', 'l', 'D'],
@@ -37,7 +40,7 @@ class DateInsertTag implements InsertTagResolverNestedResolvedInterface
         $this->framework->initialize();
 
         $date = $this->framework->getAdapter(Date::class);
-        $format = $insertTag->getParameters()->get(0) ?? $GLOBALS['objPage']->dateFormat ?? $GLOBALS['TL_CONFIG']['dateFormat'] ?? '';
+        $format = $insertTag->getParameters()->get(0); // Always here, ensured by defaults
         $result = new InsertTagResult($date->parse($format), OutputType::text);
 
         // Add caching headers for supported formats
@@ -87,5 +90,18 @@ class DateInsertTag implements InsertTagResolverNestedResolvedInterface
         }
 
         return null;
+    }
+
+    public function applyDefaults(InsertTag $tag): InsertTag
+    {
+        // Format is set, all good
+        if ($tag->getParameters()->get(0)) {
+            return $tag;
+        }
+
+        $parameters = $tag->getParameters()->all();
+        $parameters[0] = $GLOBALS['objPage']->dateFormat ?? $GLOBALS['TL_CONFIG']['dateFormat'] ?? '';
+
+        return $tag->withParameters(new ResolvedParameters($parameters));
     }
 }
