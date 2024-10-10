@@ -629,7 +629,7 @@ h2.sub_headline {
 
 /* Limit, search and submit */
 .tl_panel:last-of-type {
-	column-gap: 15px;
+	column-gap: 10px;
 	min-width: 100px;
 }
 
@@ -639,7 +639,7 @@ h2.sub_headline {
 
 .tl_filter {
 	flex-wrap: wrap;
-	gap: 6px 4px;
+	gap: 6px 3px;
 	width: 100%;
 	box-sizing: border-box;
 }
@@ -669,17 +669,16 @@ h2.sub_headline {
 }
 
 .tl_limit {
-	width: 50%;
-	max-width: 180px;
+	width: 20%;
+}
+
+.tl_limit .tl_select {
+	width: 57%;
 }
 
 .tl_search {
-	gap: 0;
+	gap: 4px;
 	width: 100%;
-}
-
-.tl_search > strong:first-of-type {
-	padding-right: 4px;
 }
 
 .tl_search > .tl_select {
@@ -696,11 +695,14 @@ h2.sub_headline {
 	background-position: 8px center !important;
 	background-repeat: no-repeat;
 	margin: 0;
-	padding: 7px 12px 7px 30px;
+	padding: 7px 12px 7px 20px;
 	border: 1px solid var(--form-border);
 	border-radius: 2px;
 	box-sizing: border-box;
 	transition: background .2s ease;
+	width: 30px;
+	text-indent: 20px;
+	overflow: hidden;
 }
 
 .tl_img_submit:hover {
@@ -735,6 +737,15 @@ h2.sub_headline {
 
 .tl_subpanel strong, .tl_search span {
 	vertical-align: middle;
+}
+
+.tl_sorting {
+	width: 26%;
+}
+
+.tl_sorting .tl_select {
+	width: 60%;
+	margin-left: 1%;
 }
 
 .tl_submit_panel {
@@ -3188,6 +3199,10 @@ fieldset.collapsed > legend {
 	.tl_undo_header div:not(.tstamp, .source) {
 		display: none;
 	}
+
+	.tl_sorting, .tl_limit {
+		width: 60%;
+	}
 }
 
 /* Phones */
@@ -3202,13 +3217,6 @@ fieldset.collapsed > legend {
 
 	.tl_metawizard .tl_text {
 		width: 100%;
-	}
-
-	.tl_img_submit {
-		width: 30px;
-		padding-left: 20px;
-		text-indent: 20px;
-		overflow: hidden;
 	}
 }
 
