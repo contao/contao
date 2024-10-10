@@ -5910,9 +5910,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				return '';
 			}
 
-			$active = ($session['filter'][$filter]['limit'] ?? null) != 'all' && $this->total > Config::get('resultsPerPage') ? ' active' : '';
+			$resultsPerPage = Config::get('resultsPerPage');
 
-			$this->setPanelState($active);
+			$limit = $session['filter'][$filter]['limit'] ?? null;
+
+			$active = $limit != 'all' && $this->total > $resultsPerPage ? ' active' : '';
+
+			// Only disable reset button if it is not on the first page
+			if ($limit !== ('0,' . $resultsPerPage) && $limit !== null) {
+				$this->setPanelState($active);
+			}
 
 			$fields = '
 <select name="tl_limit" class="tl_select' . ($active ? ' active' : '') . '" data-controller="contao--chosen" onchange="this.form.submit()">
