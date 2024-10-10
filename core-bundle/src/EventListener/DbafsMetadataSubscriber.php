@@ -92,9 +92,9 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
             $event->set('importantPartHeight', $importantPart->getHeight());
         }
 
-        if (!empty($subtitles)) {
-            $event->set('subtitlesLanguage', $subtitles['language']);
-            $event->set('subtitlesType', $subtitles['type']);
+        if ($subtitles instanceof Subtitle) {
+            $event->set('subtitlesLanguage', $subtitles->getSourceLanguage());
+            $event->set('subtitlesType', $subtitles->getType());
         }
 
         if ($fileMetadata instanceof MetadataBag) {
