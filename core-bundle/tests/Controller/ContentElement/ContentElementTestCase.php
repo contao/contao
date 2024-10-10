@@ -23,6 +23,7 @@ use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
+use Contao\CoreBundle\File\Subtitle;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
@@ -377,10 +378,10 @@ class ContentElementTestCase extends TestCase
                                     ['en' => new Metadata([Metadata::VALUE_TITLE => 'English'])],
                                     ['en'],
                                 ),
-                                'subtitles' => [
-                                    'language' => 'en',
-                                    'type' => '',
-                                ],
+                                'subtitles' => new Subtitle(
+                                    'en',
+                                    '',
+                                ),
                             ],
                         ),
                         self::FILE_SUBTITLES_DE_VTT => new FilesystemItem(
@@ -394,10 +395,10 @@ class ContentElementTestCase extends TestCase
                                     ['en' => new Metadata([Metadata::VALUE_TITLE => 'Deutsch'])],
                                     ['en'],
                                 ),
-                                'subtitles' => [
-                                    'language' => 'de',
-                                    'type' => 'captions',
-                                ],
+                                'subtitles' => new Subtitle(
+                                    'de',
+                                    'captions',
+                                ),
                             ],
                         ),
                     ];

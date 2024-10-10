@@ -14,12 +14,14 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
+use Contao\CoreBundle\File\Subtitle;
+use Contao\CoreBundle\File\SubtitleType;
 use Contao\DataContainer;
 
-#[AsCallback(table: 'tl_files', target: 'config.onpalette')]
 class SubtitlesFieldsListener
 {
-    public function __invoke(string $palette, DataContainer $dc): string
+    #[AsCallback(table: 'tl_files', target: 'config.onpalette')]
+    public function addSubtitlesFields(string $palette, DataContainer $dc): string
     {
         // $dc->id is the file name in this case
         if (str_ends_with($dc->id, '.vtt')) {
@@ -30,5 +32,11 @@ class SubtitlesFieldsListener
         }
 
         return $palette;
+    }
+
+    #[AsCallback(table: 'tl_files', target: 'fields.subtitlesType.options')]
+    public function subtitlesTypeOptions(): array
+    {
+        return array_map(fn ($case) => $case->name, SubtitleType::cases());
     }
 }

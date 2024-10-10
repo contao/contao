@@ -255,7 +255,6 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 		'subtitlesType' => array
 		(
 			'inputType'               => 'select',
-			'options'                 => array('subtitles', 'captions', 'descriptions', 'chapters', 'metadata'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_files'],
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(12) COLLATE ascii_bin NOT NULL default ''"

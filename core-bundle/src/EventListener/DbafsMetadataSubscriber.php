@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
+use Contao\CoreBundle\File\Subtitle;
 use Contao\CoreBundle\Filesystem\Dbafs\AbstractDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\StoreDbafsMetadataEvent;
@@ -59,10 +60,8 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
 
         // Add subtitle information
         if (!empty($language = $row['subtitlesLanguage'] ?? null)) {
-            $event->set('subtitles', [
-                'language' => $language,
-                'type' => $row['subtitlesType'] ?? null,
-            ]);
+            $subtitle = new Subtitle($language, $row['subtitlesType'] ?? null);
+            $event->set('subtitles', $subtitle);
         }
 
         // Add file metadata

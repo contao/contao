@@ -127,19 +127,17 @@ class PlayerController extends AbstractContentElementController
 
         if ([] !== $subtitlesFiles) {
             foreach ($subtitlesFiles as $file) {
-                $data = $file->getExtraMetadata();
+                $subtitle = $file->getExtraMetadata()['subtitles'] ?? null;
+                $label = ($file->getExtraMetadata()['metadata'] ?? null)?->getDefault()?->getTitle();
 
-                $label = ($data['metadata'] ?? null)?->getDefault()?->getTitle();
-                $subtitleData = $data['subtitles'] ?? [];
-
-                if (empty($label) || !isset($subtitleData['language'])) {
+                if (empty($label) || !$subtitle?->getSourceLanguage()) {
                     continue;
                 }
 
                 $trackAttributes = (new HtmlAttributes())
-                    ->setIfExists('kind', $subtitleData['type'] ?? null)
+                    ->setIfExists('kind', $subtitle?->getType())
                     ->set('label', $label)
-                    ->set('srclang', $subtitleData['language'])
+                    ->set('srclang', $subtitle?->getSourceLanguage())
                     ->set('src', $this->publicUriByStoragePath[$file->getPath()])
                 ;
 
