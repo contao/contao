@@ -35,9 +35,11 @@ class CspParserTest extends TestCase
     {
         yield ["default-src self; script-src 'none'; style-src unsafe-inline", ['default-src' => "'self'", 'script-src' => "'none'", 'style-src' => "'unsafe-inline'"]];
         yield ["script-src 'self' example.com", ['script-src' => "'self' example.com"]];
+        yield ["script-src 'self'\n example.com", ['script-src' => "'self' example.com"]];
         yield ["style-src 'self' 'unsafe-inline'; upgrade-insecure-requests", ['style-src' => "'self' 'unsafe-inline'", 'upgrade-insecure-requests' => true]];
         yield ["frame-ancestors 'none'; script-src 'self' example.com", ['frame-ancestors' => "'none'", 'script-src' => "'self' example.com"]];
         yield ["img-src 'self' data:; script-src 'self' example.com", ['img-src' => "'self' data:", 'script-src' => "'self' example.com"]];
+        yield ["img-src 'self' data:; \nscript-src 'self' example.com", ['img-src' => "'self' data:", 'script-src' => "'self' example.com"]];
         yield ["frame-ancestors 'self' https://example.com https://store.example.com", ['frame-ancestors' => "'self' https://example.com https://store.example.com"]];
         yield ["base-uri 'self'; report-uri https://endpoint.com", ['base-uri' => "'self'", 'report-uri' => 'https://endpoint.com']];
         yield ['font-src https://example.com/', ['font-src' => 'https://example.com/']];
