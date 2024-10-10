@@ -108,7 +108,7 @@ final class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Do not list partial templates. Partial templates are identified by their
+     * Do not include partial templates. Partial templates are identified by their
      * filename starting with an underscore, e.g. "@Contao/foo/_bar.html.twig".
      */
     public function excludePartials(): self
@@ -195,7 +195,7 @@ final class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Yield identifier => extension.
+     * Yields key-value pairs "identifier" => "extension".
      *
      * @return \Generator<string, string>
      */
