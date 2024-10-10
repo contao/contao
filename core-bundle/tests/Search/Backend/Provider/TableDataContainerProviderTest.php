@@ -112,11 +112,11 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             $this->createMock(AccessDecisionManagerInterface::class),
         );
 
-        $documents = $provider->updateIndex(new UpdateAllProvidersConfig());
+        $documentsIterator = $provider->updateIndex(new UpdateAllProvidersConfig());
 
         // Sort the documents for deterministic tests
         /** @var array<Document> $documents */
-        $documents = iterator_to_array($documents);
+        $documents = iterator_to_array($documentsIterator);
         usort($documents, static fn (Document $a, Document $b) => $a->getId() <=> $b->getId());
 
         $this->assertSame('1', $documents[0]->getId());
