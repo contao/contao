@@ -135,9 +135,9 @@ class PlayerController extends AbstractContentElementController
                 }
 
                 $trackAttributes = (new HtmlAttributes())
-                    ->setIfExists('kind', $subtitle?->getType())
+                    ->setIfExists('kind', $subtitle->getType())
                     ->set('label', $label)
-                    ->set('srclang', $subtitle?->getSourceLanguage())
+                    ->set('srclang', $subtitle->getSourceLanguage())
                     ->set('src', $this->publicUriByStoragePath[$file->getPath()])
                 ;
 

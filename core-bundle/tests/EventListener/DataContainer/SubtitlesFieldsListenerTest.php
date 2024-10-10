@@ -26,7 +26,7 @@ class SubtitlesFieldsListenerTest extends TestCase
 
         $this->assertSame(
             'name,subtitlesLanguage,subtitlesType,protected,syncExclude;meta',
-            (new SubtitlesFieldsListener)->addSubtitlesFields(self::PALETTE, $dc),
+            (new SubtitlesFieldsListener())->addSubtitlesFields(self::PALETTE, $dc),
         );
     }
 
@@ -34,6 +34,6 @@ class SubtitlesFieldsListenerTest extends TestCase
     {
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 'bar.baz']);
 
-        $this->assertSame(self::PALETTE, (new SubtitlesFieldsListener)->addSubtitlesFields(self::PALETTE, $dc));
+        $this->assertSame(self::PALETTE, (new SubtitlesFieldsListener())->addSubtitlesFields(self::PALETTE, $dc));
     }
 }
