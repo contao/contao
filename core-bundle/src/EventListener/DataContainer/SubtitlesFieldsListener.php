@@ -17,7 +17,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\DataContainer;
 
 #[AsCallback(table: 'tl_files', target: 'config.onpalette')]
-class SubtitleFieldListener
+class SubtitlesFieldsListener
 {
     public function __invoke(string $palette, DataContainer $dc): string
     {

@@ -12,31 +12,28 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
-use Contao\CoreBundle\EventListener\DataContainer\SubtitleFieldListener;
+use Contao\CoreBundle\EventListener\DataContainer\SubtitlesFieldsListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 
-class SubtitleFieldListenerTest extends TestCase
+class SubtitlesFieldsListenerTest extends TestCase
 {
     private const PALETTE = 'name,protected,syncExclude;meta';
 
-    public function testAddsTheSubtitleFieldsToThePalette(): void
+    public function testAddsTheSubtitlesFieldsToThePalette(): void
     {
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 'foo.vtt']);
 
         $this->assertSame(
             'name,subtitlesLanguage,subtitlesType,protected,syncExclude;meta',
-            (new SubtitleFieldListener())(self::PALETTE, $dc),
+            (new SubtitlesFieldsListener())(self::PALETTE, $dc),
         );
     }
 
-    public function testDoesNotAddTheSubtitleFieldsToThePalette(): void
+    public function testDoesNotAddTheSubtitlesFieldsToThePalette(): void
     {
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 'bar.baz']);
 
-        $this->assertSame(
-            self::PALETTE,
-            (new SubtitleFieldListener())(self::PALETTE, $dc),
-        );
+        $this->assertSame(self::PALETTE, (new SubtitlesFieldsListener())(self::PALETTE, $dc));
     }
 }
