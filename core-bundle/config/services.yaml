@@ -190,6 +190,14 @@ services:
         tags:
             - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
 
+    contao.data_container.operations_builder:
+        class: Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder
+        public: true
+        arguments:
+            - '@twig'
+            - '@security.helper'
+            - '@router'
+
     contao.data_container.record_labeler:
         class: Contao\CoreBundle\DataContainer\RecordLabeler
         public: true
