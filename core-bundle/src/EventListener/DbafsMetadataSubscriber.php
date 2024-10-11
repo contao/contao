@@ -57,14 +57,14 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
             $event->set('importantPart', $importantPart);
         }
 
-        // Add file metadata
-        $metadata = [];
+        // Add localized metadata
+        $localizedMetadata = [];
 
         foreach (StringUtil::deserialize($row['meta'] ?? null, true) as $lang => $data) {
-            $metadata[$lang] = new Metadata([Metadata::VALUE_UUID => $event->getUuid()->toRfc4122(), ...$data]);
+            $localizedMetadata[$lang] = new Metadata([Metadata::VALUE_UUID => $event->getUuid()->toRfc4122(), ...$data]);
         }
 
-        $event->set('metadata', new MetadataBag($metadata, $this->getDefaultLocales()));
+        $event->set('localized', new MetadataBag($localizedMetadata, $this->getDefaultLocales()));
     }
 
     public function normalizeMetadata(StoreDbafsMetadataEvent $event): void
@@ -75,7 +75,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
 
         $extraMetadata = $event->getExtraMetadata();
         $importantPart = $extraMetadata['importantPart'] ?? null;
-        $fileMetadata = $extraMetadata['metadata'] ?? null;
+        $localizedMetadata = $extraMetadata['localized'] ?? null;
 
         if ($importantPart instanceof ImportantPart) {
             $event->set('importantPartX', $importantPart->getX());
@@ -84,7 +84,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
             $event->set('importantPartHeight', $importantPart->getHeight());
         }
 
-        if ($fileMetadata instanceof MetadataBag) {
+        if ($localizedMetadata instanceof MetadataBag) {
             $metadata = array_map(
                 static function (Metadata $metadata) use ($event): array {
                     if (null !== ($uuid = $metadata->getUuid()) && $uuid !== ($recordUuid = $event->getUuid()->toRfc4122())) {
@@ -93,7 +93,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
 
                     return array_diff_key($metadata->all(), [Metadata::VALUE_UUID => null]);
                 },
-                $fileMetadata->all(),
+                $localizedMetadata->all(),
             );
 
             $event->set('meta', serialize($metadata));

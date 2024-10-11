@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Filesystem;
 
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
 use Contao\CoreBundle\Tests\TestCase;
@@ -33,7 +34,7 @@ class FilesystemItemTest extends TestCase
             123450,
             1024,
             'image/png',
-            ['foo' => 'bar', 'uuid' => $uuid],
+            new ExtraMetadata(['foo' => 'bar', 'uuid' => $uuid]),
         );
 
         $this->assertTrue($fileItem->isFile());
@@ -105,9 +106,9 @@ class FilesystemItemTest extends TestCase
             123450,
             1024,
             $mimeType,
-            [
+            new ExtraMetadata([
                 'uuid' => Uuid::fromString('2fcae369-c955-4b43-bcf9-d069f9d25542'),
-                'metadata' => new MetadataBag(
+                'localized' => new MetadataBag(
                     [
                         'en' => new Metadata([
                             Metadata::VALUE_TITLE => 'My title!',
@@ -115,7 +116,7 @@ class FilesystemItemTest extends TestCase
                     ],
                     ['en'],
                 ),
-            ],
+            ]),
         );
 
         $this->assertSame($expectedSchema, $fileItem->getSchemaOrgData());
@@ -174,10 +175,10 @@ class FilesystemItemTest extends TestCase
 
                 return 'image/png';
             },
-            static function () use (&$invocationCounts): array {
+            static function () use (&$invocationCounts): ExtraMetadata {
                 ++$invocationCounts['extraMetadata'];
 
-                return ['foo' => 'bar'];
+                return new ExtraMetadata(['foo' => 'bar']);
             },
         );
 
@@ -189,7 +190,7 @@ class FilesystemItemTest extends TestCase
             $this->assertSame(123450, $fileItem->getLastModified());
             $this->assertSame(1024, $fileItem->getFileSize());
             $this->assertSame('image/png', $fileItem->getMimeType());
-            $this->assertSame(['foo' => 'bar'], $fileItem->getExtraMetadata());
+            $this->assertSame(['foo' => 'bar'], $fileItem->getExtraMetadata()->all());
         }
 
         foreach ($invocationCounts as $property => $invocationCount) {
@@ -215,7 +216,7 @@ class FilesystemItemTest extends TestCase
         $this->assertSame(123450, $fileItem->getLastModified());
         $this->assertSame(1024, $fileItem->getFileSize());
         $this->assertSame('image/png', $fileItem->getMimeType());
-        $this->assertSame(['foo' => 'bar'], $fileItem->getExtraMetadata());
+        $this->assertSame(['foo' => 'bar'], $fileItem->getExtraMetadata()->all());
 
         $directoryAttributes = new DirectoryAttributes(
             'foo/bar',

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Filesystem\Dbafs;
 use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\Context;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGeneratorInterface;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\Filesystem\Dbafs\DbafsTest;
@@ -28,7 +29,7 @@ use Symfony\Contracts\Service\ResetInterface;
 /**
  * @phpstan-type DatabasePaths array<string|int, self::RESOURCE_FILE|self::RESOURCE_DIRECTORY>
  * @phpstan-type FilesystemPaths \Generator<string, self::RESOURCE_*>
- * @phpstan-type Record array{isFile: bool, path: string, lastModified: ?int, fileSize: ?int, mimeType: ?string, extra: array<string, mixed>}
+ * @phpstan-type Record array{isFile: bool, path: string, lastModified: ?int, fileSize: ?int, mimeType: ?string, extra: ExtraMetadata}
  *
  * @phpstan-import-type CreateItemDefinition from ChangeSet
  * @phpstan-import-type UpdateItemDefinition from ChangeSet
@@ -163,7 +164,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         }
     }
 
-    public function setExtraMetadata(string $path, array $metadata): void
+    public function setExtraMetadata(string $path, ExtraMetadata $metadata): void
     {
         if (!$this->getRecord($path)) {
             throw new \InvalidArgumentException(\sprintf('Record for path "%s" does not exist.', $path));
@@ -274,7 +275,7 @@ class Dbafs implements DbafsInterface, ResetInterface
             isset($record['lastModified']) ? (int) $record['lastModified'] : null,
             isset($record['fileSize']) ? (int) $record['fileSize'] : null,
             $record['mimeType'] ?? null,
-            [...$record['extra'], ...['uuid' => Uuid::fromBinary($uuid)]],
+            new ExtraMetadata([...$record['extra']->all(), ...['uuid' => Uuid::fromBinary($uuid)]]),
         );
     }
 

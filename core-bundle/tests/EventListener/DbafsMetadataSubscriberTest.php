@@ -17,6 +17,7 @@ use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\Filesystem\Dbafs\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\StoreDbafsMetadataEvent;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ImportantPart;
 use Contao\PageModel;
@@ -43,12 +44,12 @@ class DbafsMetadataSubscriberTest extends TestCase
     {
         $event = new RetrieveDbafsMetadataEvent('tl_files', $this->getDemoRowData());
 
-        $this->assertEmpty($event->getExtraMetadata());
+        $this->assertEmpty($event->getExtraMetadata()->all());
 
         $this->getDbafsMetadataSubscriber()->enhanceMetadata($event);
 
         $extraMetadata = $event->getExtraMetadata();
-        $importantPart = $extraMetadata['importantPart'] ?? null;
+        $importantPart = $extraMetadata->getImportantPart();
 
         $this->assertInstanceOf(ImportantPart::class, $importantPart);
         $this->assertSame(0.1, $importantPart->getX());
@@ -56,12 +57,12 @@ class DbafsMetadataSubscriberTest extends TestCase
         $this->assertSame(0.3, $importantPart->getWidth());
         $this->assertSame(0.4, $importantPart->getHeight());
 
-        $fileMetadata = $extraMetadata['metadata'] ?? null;
+        $localizedMetadata = $extraMetadata->getLocalized();
 
-        $this->assertInstanceOf(MetadataBag::class, $fileMetadata);
-        $this->assertInstanceOf(Metadata::class, $fileMetadata['de']);
-        $this->assertSame('my title', $fileMetadata['de']->getTitle());
-        $this->assertSame('f372c7d8-5aab-11ec-bf63-0242ac130002', $fileMetadata['de']->getUuid());
+        $this->assertInstanceOf(MetadataBag::class, $localizedMetadata);
+        $this->assertInstanceOf(Metadata::class, $localizedMetadata['de']);
+        $this->assertSame('my title', $localizedMetadata['de']->getTitle());
+        $this->assertSame('f372c7d8-5aab-11ec-bf63-0242ac130002', $localizedMetadata['de']->getUuid());
     }
 
     public function testOnlyEnhancesMetadataOnDefaultTable(): void
@@ -75,7 +76,7 @@ class DbafsMetadataSubscriberTest extends TestCase
 
         $this->getDbafsMetadataSubscriber()->enhanceMetadata($event);
 
-        $this->assertEmpty($event->getExtraMetadata());
+        $this->assertEmpty($event->getExtraMetadata()->all());
     }
 
     public function testSetsMetadataBagDefaultLocales(): void
@@ -97,15 +98,15 @@ class DbafsMetadataSubscriberTest extends TestCase
 
         $this->getDbafsMetadataSubscriber($requestStack)->enhanceMetadata($event);
 
-        $metadataBag = $event->getExtraMetadata()['metadata'];
+        $localizedMetadata = $event->getExtraMetadata()->get('localized');
 
-        $this->assertInstanceOf(MetadataBag::class, $metadataBag);
+        $this->assertInstanceOf(MetadataBag::class, $localizedMetadata);
 
         $this->assertSame(
             ['fr', 'de'],
             (new \ReflectionClass(MetadataBag::class))
                 ->getProperty('defaultLocales')
-                ->getValue($metadataBag),
+                ->getValue($localizedMetadata),
         );
     }
 
@@ -146,14 +147,14 @@ class DbafsMetadataSubscriberTest extends TestCase
             'path' => 'foo/bar',
         ];
 
-        $metadata = [
-            'metadata' => new MetadataBag([
+        $metadata = new ExtraMetadata([
+            'localized' => new MetadataBag([
                 'de' => new Metadata([
                     Metadata::VALUE_TITLE => 'my title',
                     Metadata::VALUE_UUID => '64c738b4-5aad-11ec-bf63-0242ac130002',
                 ]),
             ]),
-        ];
+        ]);
 
         $event = new StoreDbafsMetadataEvent('tl_files', $rowData, $metadata);
 
@@ -185,16 +186,16 @@ class DbafsMetadataSubscriberTest extends TestCase
         ];
     }
 
-    private function getDemoMetadata(): array
+    private function getDemoMetadata(): ExtraMetadata
     {
-        return [
+        return new ExtraMetadata([
             'importantPart' => new ImportantPart(0.1, 0.2, 0.3, 0.4),
-            'metadata' => new MetadataBag([
+            'localized' => new MetadataBag([
                 'de' => new Metadata([
                     Metadata::VALUE_TITLE => 'my title',
                     Metadata::VALUE_UUID => 'f372c7d8-5aab-11ec-bf63-0242ac130002',
                 ]),
             ]),
-        ];
+        ]);
     }
 }

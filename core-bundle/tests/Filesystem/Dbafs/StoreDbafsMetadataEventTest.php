@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Filesystem\Dbafs;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Filesystem\Dbafs\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\StoreDbafsMetadataEvent;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\Uid\Uuid;
 
@@ -30,9 +31,9 @@ class StoreDbafsMetadataEventTest extends TestCase
             'baz' => 42,
         ];
 
-        $extraMetadata = [
+        $extraMetadata = new ExtraMetadata([
             'foo' => new Metadata(['some' => 'value']),
-        ];
+        ]);
 
         $event = new StoreDbafsMetadataEvent('tl_files', $rowData, $extraMetadata);
 
@@ -42,7 +43,7 @@ class StoreDbafsMetadataEventTest extends TestCase
         $this->assertSame($extraMetadata, $event->getExtraMetadata());
         $this->assertSame($rowData, $event->getRow());
 
-        $event->set('foo', $event->getExtraMetadata()['foo']->all());
+        $event->set('foo', $event->getExtraMetadata()->get('foo')->all());
 
         $this->assertSame(
             [

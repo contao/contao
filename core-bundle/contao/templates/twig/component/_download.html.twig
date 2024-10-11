@@ -34,7 +34,7 @@
     {% set download = download|default(_context) %}
 
     {# Derive title and link text if not explicitly set #}
-    {% set title = download.title|default(download.file.extraMetadata['metadata'].default.title|default(download.file.name)) %}
+    {% set title = download.title|default(download.file.extraMetadata.localized.default.title|default(download.file.name)) %}
     {% set text = download.text|default(title) %}
 
     {% block download_link %}

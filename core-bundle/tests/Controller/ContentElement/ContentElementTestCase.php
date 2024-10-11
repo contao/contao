@@ -23,6 +23,7 @@ use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
@@ -343,12 +344,12 @@ abstract class ContentElementTestCase extends TestCase
                             123456,
                             1024,
                             'image/jpg',
-                            [
-                                'metadata' => new MetadataBag(
+                            new ExtraMetadata([
+                                'localized' => new MetadataBag(
                                     ['en' => new Metadata([Metadata::VALUE_TITLE => 'image1 title'])],
                                     ['en'],
                                 ),
-                            ],
+                            ]),
                         ),
                         self::FILE_IMAGE2 => new FilesystemItem(true, 'image2.jpg', null, null, 'image/jpeg'),
                         self::FILE_IMAGE3 => new FilesystemItem(true, 'image3.jpg', null, null, 'image/jpeg'),
