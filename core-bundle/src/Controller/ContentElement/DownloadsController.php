@@ -96,7 +96,7 @@ class DownloadsController extends AbstractDownloadContentElementController
         // Optionally filter out files without metadata
         if ('downloads' === $model->type && $model->metaIgnore) {
             $filesystemItems = $filesystemItems->filter(
-                static fn (FilesystemItem $item): bool => null !== $item->getExtraMetadata()->getLocalized()?->getDefault(),
+                static fn (FilesystemItem $item): bool => (bool) $item->getExtraMetadata()->getLocalized()?->getDefault(),
             );
         }
 
