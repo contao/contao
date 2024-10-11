@@ -12,25 +12,34 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Search\Backend\Provider;
 
+use Contao\CoreBundle\Filesystem\FilesystemItem;
+use Contao\CoreBundle\Filesystem\PermissionCheckingVirtualFilesystem;
+use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Hit;
 use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\IndexUpdateConfigInterface;
 use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\UpdateAllProvidersConfig;
-use Doctrine\DBAL\Connection;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
 /**
  * @experimental
  */
 class FilesProvider implements ProviderInterface
 {
-    public const TYPE = 'file';
+    public const TYPE = 'contao.vfs.files';
+
+    private readonly PermissionCheckingVirtualFilesystem $permissionCheckingFilesStorage;
 
     public function __construct(
-        private readonly Connection $connection,
-        private readonly AccessDecisionManagerInterface $accessDecisionManager,
+        private readonly VirtualFilesystem $filesStorage,
+        Security $security,
+        private readonly Studio $studio,
     ) {
+        $this->permissionCheckingFilesStorage = new PermissionCheckingVirtualFilesystem(
+            $this->filesStorage, $security,
+        );
     }
 
     public function supportsType(string $type): bool
@@ -47,50 +56,69 @@ class FilesProvider implements ProviderInterface
             return new \EmptyIterator();
         }
 
-        $qb = $this->connection
-            ->createQueryBuilder()
-            ->select('*')
-            ->from('tl_files')
+        $items = $this->filesStorage
+            ->listContents('', true)
+            ->files()
         ;
 
-        if ($trigger->getUpdateSince()) {
-            $qb->andWhere('tstamp <= ', $qb->createNamedParameter($trigger->getUpdateSince()));
+        if (null !== ($lastIndexed = $trigger->getUpdateSince()?->getTimestamp())) {
+            $items = $items->filter(static fn (FilesystemItem $item): bool => ($item->getLastModified() ?? 0) > $lastIndexed);
         }
 
-        foreach ($qb->executeQuery()->iterateAssociative() as $row) {
+        foreach ($items as $item) {
             $document = new Document(
-                (string) $row['id'],
+                $item->getPath(),
                 self::TYPE,
-                $row['name'] ?? '',
+                $item->getName(),
             );
 
-            // Use the entire row as metadata. In the core, we use at least "path" for
-            // permission checks and "name" in convertDocumentToHit() but third-party
-            // developers might want to use the rest of the data for more logic.
-            yield $document
-                ->withTags(['extension:'.$row['extension']])
-                ->withMetadata($row)
-            ;
+            if ($item->isFile()) {
+                $document = $document->withTags(['extension:'.$item->getExtension(true)]);
+            }
+
+            yield $document->withMetadata([
+                'path' => $item->getPath(),
+            ]);
         }
     }
 
     public function convertDocumentToHit(Document $document): Hit|null
     {
+        $metadata = $document->getMetadata();
+
+        if (!($item = $this->filesStorage->get($metadata['path']))) {
+            return null;
+        }
+
         // TODO: service for view and edit URLs
         $viewUrl = 'https://todo.com?view='.$document->getId();
         $editUrl = 'https://todo.com?edit='.$document->getId();
 
-        return (new Hit($document, $document->getMetadata()['name'] ?? '', $viewUrl))
+        $hit = (new Hit($document, $item->getName(), $viewUrl))
             ->withEditUrl($editUrl)
             ->withContext($document->getSearchableContent())
-            ->withImage($document->getMetadata()['path'] ?? null)
+            ->withMetadata([
+                'filesystem_item' => $item,
+            ])
         ;
+
+        if ($item->isImage()) {
+            $figureBuilder = $this->studio
+                ->createFigureBuilder()
+                ->fromStorage($this->filesStorage, $item->getPath())
+                ->disableMetadata()
+            ;
+
+            $hit = $hit->withImageFigureBuilder($figureBuilder);
+        }
+
+        return $hit;
     }
 
     public function isHitGranted(TokenInterface $token, Hit $hit): bool
     {
-        $path = $hit->getDocument()->getMetadata()['path'] ?? '';
-
-        return $this->accessDecisionManager->decide($token, ['contao_user.filemounts'], $path);
+        return $this->permissionCheckingFilesStorage->canAccessLocation(
+            $hit->getDocument()->getMetadata()['path'] ?? '',
+        );
     }
 }

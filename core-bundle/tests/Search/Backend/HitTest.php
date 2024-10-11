@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Search\Backend;
 
+use Contao\CoreBundle\Image\Studio\FigureBuilder;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Hit;
 use PHPUnit\Framework\TestCase;
@@ -20,9 +21,11 @@ class HitTest extends TestCase
 {
     public function testHit(): void
     {
+        $figureBuilder = $this->createMock(FigureBuilder::class);
+
         $hit = (new Hit(new Document('42', 'type', 'searchable'), 'title', 'https://example.com'))
             ->withContext('context')
-            ->withImage('image')
+            ->withImageFigureBuilder($figureBuilder)
             ->withEditUrl('https://example.com?edit=true')
             ->withMetadata(['foo' => 'bar'])
         ;
@@ -30,7 +33,7 @@ class HitTest extends TestCase
         $this->assertSame('title', $hit->getTitle());
         $this->assertSame('https://example.com', $hit->getViewUrl());
         $this->assertSame('context', $hit->getContext());
-        $this->assertSame('image', $hit->getImage());
+        $this->assertSame($figureBuilder, $hit->getImageFigureBuilder());
         $this->assertSame('https://example.com?edit=true', $hit->getEditUrl());
         $this->assertSame(['foo' => 'bar'], $hit->getMetadata());
     }
