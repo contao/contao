@@ -20,6 +20,8 @@ class PermissionCheckingVirtualFilesystem implements VirtualFilesystemInterface
         $this->inner = $virtualFilesystem;
     }
 
+    // TODO: add other methods as well that access file content/metadata
+
     public function write(Uuid|string $location, string $contents, array $options = []): void
     {
         $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_UPLOAD_FILES, $location);
@@ -70,9 +72,18 @@ class PermissionCheckingVirtualFilesystem implements VirtualFilesystemInterface
         $this->inner->move($source, $destination, $options);
     }
 
+    public function canAccess(string $path): bool
+    {
+        return $this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $path);
+    }
+
     private function denyAccessUnlessGranted(string $attribute, Uuid|string $location): void
     {
-        if ($this->security->isGranted($attribute)) {
+        if ($location instanceof Uuid) {
+            throw new \LogicException('Cannot evaluate filesystem permissions on UUIDs. Please use storage-relative paths instead.');
+        }
+
+        if ($this->security->isGranted($attribute, $location)) {
             return;
         }
 

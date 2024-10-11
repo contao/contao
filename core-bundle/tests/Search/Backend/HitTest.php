@@ -22,7 +22,7 @@ class HitTest extends TestCase
     {
         $hit = (new Hit(new Document('42', 'type', 'searchable'), 'title', 'https://example.com'))
             ->withContext('context')
-            ->withImage('image')
+            ->withImageFigureBuilder('image')
             ->withEditUrl('https://example.com?edit=true')
             ->withMetadata(['foo' => 'bar'])
         ;
@@ -30,7 +30,7 @@ class HitTest extends TestCase
         $this->assertSame('title', $hit->getTitle());
         $this->assertSame('https://example.com', $hit->getViewUrl());
         $this->assertSame('context', $hit->getContext());
-        $this->assertSame('image', $hit->getImage());
+        $this->assertSame('image', $hit->getImageFigureBuilder());
         $this->assertSame('https://example.com?edit=true', $hit->getEditUrl());
         $this->assertSame(['foo' => 'bar'], $hit->getMetadata());
     }
