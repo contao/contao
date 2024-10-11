@@ -103,7 +103,7 @@ class PlayerController extends AbstractContentElementController
 
         $sources = array_map(
             function (FilesystemItem $item) use (&$captions, $range): HtmlAttributes {
-                $captions[] = ($item->getExtraMetadata()['metadata'] ?? null)?->getDefault()?->getCaption();
+                $captions[] = $item->getExtraMetadata()->getLocalized()?->getDefault()?->getCaption();
 
                 return (new HtmlAttributes())
                     ->setIfExists('type', $item->getMimeType(''))
@@ -143,7 +143,7 @@ class PlayerController extends AbstractContentElementController
 
         $sources = array_map(
             function (FilesystemItem $item) use (&$captions): HtmlAttributes {
-                $captions[] = ($item->getExtraMetadata()['metadata'] ?? null)?->getDefault()?->getCaption();
+                $captions[] = $item->getExtraMetadata()->getLocalized()?->getDefault()?->getCaption();
 
                 return (new HtmlAttributes())
                     ->setIfExists('type', $item->getMimeType(''))
