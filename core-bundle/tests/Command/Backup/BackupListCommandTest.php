@@ -56,7 +56,7 @@ class BackupListCommandTest extends TestCase
             [],
             <<<'OUTPUT'
                  --------------------- ----------- ------------------------------
-                  Created (<TIMEZONE>)      Size        Name
+                  Created (UTC)      Size        Name
                  --------------------- ----------- ------------------------------
                   2021-11-01 14:12:54   48.83 KiB   test__20211101141254.sql.gz
                   2021-10-31 14:12:54   5.73 MiB    test2__20211031141254.sql.gz
