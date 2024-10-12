@@ -302,8 +302,18 @@ class DumperTest extends ContaoTestCase
 
         $calls = [];
 
+        $reflection = new \ReflectionClass(ArrayResult::class);
+        $dbal41 = count($reflection->getConstructor()->getParameters()) > 1;
+
         foreach ($queries as $query => $results) {
-            $calls[] = [$query, [], [], null, new Result(new ArrayResult($results), $connection)];
+            if ($dbal41) {
+                $result = new ArrayResult(array_keys($results[0] ?? []), $results);
+            } else {
+                $result = new ArrayResult($results);
+            }
+
+            $calls[] = [$query];
+            $returns[] = new Result($result, $connection);
         }
 
         $connection
