@@ -211,9 +211,17 @@ class ResultTest extends TestCase
      */
     private function createResults(array $data): array
     {
+        $reflection = new \ReflectionClass(ArrayResult::class);
+
+        if (count($reflection->getConstructor()->getParameters()) > 1) {
+            $result = new ArrayResult(array_keys($data[0] ?? []), $data);
+        } else {
+            $result = new ArrayResult($data);
+        }
+
         return [
             new Result(
-                new DoctrineResult(new ArrayResult($data), $this->createMock(Connection::class)),
+                new DoctrineResult($result, $this->createMock(Connection::class)),
                 'SELECT * FROM test',
             ),
             new Result($data, 'SELECT * FROM test'),
