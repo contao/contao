@@ -477,7 +477,8 @@ class ModuleRegistration extends Module
 	 */
 	protected function sendActivationMail($arrData)
 	{
-		$optIn = System::getContainer()->get('contao.opt_in');
+		$container = System::getContainer();
+		$optIn = $container->get('contao.opt_in');
 		$optInToken = $optIn->create('reg', $arrData['email'], array('tl_member'=>array($arrData['id'])));
 
 		// Prepare the simple token data
@@ -487,7 +488,7 @@ class ModuleRegistration extends Module
 		$arrTokenData['link'] = Idna::decode(Environment::get('base')) . Environment::get('request') . ((strpos(Environment::get('request'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 		$arrTokenData['channels'] = '';
 
-		$bundles = System::getContainer()->getParameter('kernel.bundles');
+		$bundles = $container->getParameter('kernel.bundles');
 
 		if (isset($bundles['ContaoNewsletterBundle']))
 		{
@@ -512,10 +513,13 @@ class ModuleRegistration extends Module
 		// Deprecated since Contao 4.0, to be removed in Contao 5.0
 		$arrTokenData['channel'] = $arrTokenData['channels'];
 
+		$text = $container->get('contao.string.simple_token_parser')->parse($this->reg_text, $arrTokenData);
+		$text = $container->get('contao.insert_tag.parser')->replaceInline($text);
+
 		// Send the token
 		$optInToken->send(
 			sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))),
-			System::getContainer()->get('contao.string.simple_token_parser')->parse($this->reg_text, $arrTokenData)
+			$text
 		);
 	}
 
