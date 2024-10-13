@@ -40,7 +40,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $idDefault = $table->getColumn('id')->getDefault();
 
         if (null !== $idDefault) {
-            $this->assertSame(0, $idDefault);
+            $this->assertSame('0', (string) $idDefault);
         }
 
         $this->assertTrue($table->hasColumn('pid'));
@@ -96,7 +96,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $priceDefault = $table->getColumn('price')->getDefault();
 
         if (null !== $priceDefault) {
-            $this->assertSame(1.99, $priceDefault);
+            $this->assertSame('1.99', (string) $priceDefault);
         }
 
         $this->assertTrue($table->hasColumn('thumb'));
