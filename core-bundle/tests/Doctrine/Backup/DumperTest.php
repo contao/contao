@@ -303,7 +303,7 @@ class DumperTest extends ContaoTestCase
         $calls = [];
 
         $reflection = new \ReflectionClass(ArrayResult::class);
-        $dbal41 = count($reflection->getConstructor()->getParameters()) > 1;
+        $dbal41 = \count($reflection->getConstructor()->getParameters()) > 1;
 
         foreach ($queries as $query => $results) {
             if ($dbal41) {

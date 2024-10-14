@@ -213,7 +213,7 @@ class ResultTest extends TestCase
     {
         $reflection = new \ReflectionClass(ArrayResult::class);
 
-        if (count($reflection->getConstructor()->getParameters()) > 1) {
+        if (\count($reflection->getConstructor()->getParameters()) > 1) {
             $result = new ArrayResult(array_keys($data[0] ?? []), $data);
         } else {
             $result = new ArrayResult($data);
