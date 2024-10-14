@@ -26,6 +26,10 @@ class DoctrineAlterTableListenerTest extends TestCase
 {
     public function testConvertsRenameToDropAndAdd(): void
     {
+        if (!class_exists(SchemaAlterTableRenameColumnEventArgs::class)) {
+            $this->markTestSkipped(\sprintf('The "%s" class does not exist.', SchemaAlterTableRenameColumnEventArgs::class));
+        }
+
         $table = new Table('tl_member');
         $table->addColumn('bar', Types::INTEGER);
 
