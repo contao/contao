@@ -142,7 +142,7 @@ class Dumper implements DumperInterface
         }
     }
 
-    private function formatValueForDump(float|int|string|null $value, int $columnBindingType, bool $isUtf8Charset, Connection $connection): string
+    private function formatValueForDump(float|int|string|null $value, ParameterType|int $columnBindingType, bool $isUtf8Charset, Connection $connection): string
     {
         if (null === $value) {
             return 'NULL';
@@ -202,7 +202,7 @@ class Dumper implements DumperInterface
     private function getCompatibleKeywords(): KeywordList
     {
         return new class() extends KeywordList {
-            public function isKeyword($word): bool
+            public function isKeyword(mixed $word): bool
             {
                 return true;
             }

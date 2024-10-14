@@ -12,24 +12,22 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Fixtures\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\Table;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="tl_author")
- */
+#[Table(name: 'tl_author')]
+#[Entity]
 class Author
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(name="id", type="integer", options={"unsigned": true})
-     */
+    #[Id]
+    #[Column(type: 'integer', options: ['unsigned' => true])]
+    #[GeneratedValue]
     private int $id = -1;
 
-    /**
-     * @ORM\Column(options={"default": ""})
-     */
+    #[Column(type: 'string', options: ['default' => ''])]
     private string $name = '';
 
     public function getId(): int

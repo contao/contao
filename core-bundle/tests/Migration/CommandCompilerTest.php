@@ -17,6 +17,7 @@ use Contao\CoreBundle\Migration\CommandCompiler;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Schema\ComparatorConfig;
 use Doctrine\DBAL\Schema\MySQLSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\TestCase;
@@ -31,7 +32,7 @@ class CommandCompilerTest extends TestCase
             ->addOption('engine', 'MyISAM')
             ->addOption('charset', 'utf8')
             ->addOption('collate', 'utf8_unicode_ci')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $toSchema = new Schema();
@@ -40,7 +41,7 @@ class CommandCompilerTest extends TestCase
             ->addOption('engine', 'InnoDB')
             ->addOption('charset', 'utf8mb4')
             ->addOption('collate', 'utf8mb4_unicode_ci')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
@@ -67,7 +68,7 @@ class CommandCompilerTest extends TestCase
             ->addOption('collate', 'utf8_unicode_ci')
         ;
 
-        $fromSchema->getTable('tl_foo')->addColumn('foo', 'string');
+        $fromSchema->getTable('tl_foo')->addColumn('foo', 'string', ['length' => 255]);
         $fromSchema->getTable('tl_foo')->addIndex(['foo'], 'foo_idx');
 
         $toSchema = new Schema();
@@ -78,7 +79,7 @@ class CommandCompilerTest extends TestCase
 
         $toSchema
             ->getTable('tl_foo')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $toSchema
@@ -103,7 +104,7 @@ class CommandCompilerTest extends TestCase
             ->addOption('collate', 'utf8_unicode_ci')
         ;
 
-        $fromSchema->getTable('tl_foo')->addColumn('foo', 'string');
+        $fromSchema->getTable('tl_foo')->addColumn('foo', 'string', ['length' => 255]);
         $fromSchema->getTable('tl_foo')->addIndex(['foo'], 'foo_idx');
 
         $toSchema = new Schema();
@@ -114,7 +115,7 @@ class CommandCompilerTest extends TestCase
 
         $toSchema
             ->getTable('tl_foo')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $toSchema
@@ -140,7 +141,7 @@ class CommandCompilerTest extends TestCase
 
         $fromSchema
             ->getTable('tl_foo')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $fromSchema
@@ -156,7 +157,7 @@ class CommandCompilerTest extends TestCase
 
         $toSchema
             ->getTable('tl_foo')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $toSchema
@@ -182,7 +183,7 @@ class CommandCompilerTest extends TestCase
 
         $fromSchema
             ->getTable('tl_foo')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $fromSchema
@@ -198,7 +199,7 @@ class CommandCompilerTest extends TestCase
 
         $toSchema
             ->getTable('tl_foo')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $toSchema
@@ -222,7 +223,7 @@ class CommandCompilerTest extends TestCase
             ->addOption('charset', 'utf8mb4')
             ->addOption('collate', 'utf8mb4_unicode_ci')
             ->addOption('Create_options', 'row_format=COMPACT')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $toSchema = new Schema();
@@ -232,7 +233,7 @@ class CommandCompilerTest extends TestCase
             ->addOption('row_format', 'DYNAMIC')
             ->addOption('charset', 'utf8mb4')
             ->addOption('collate', 'utf8mb4_unicode_ci')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
@@ -250,7 +251,7 @@ class CommandCompilerTest extends TestCase
             ->addOption('charset', 'utf8mb4')
             ->addOption('collate', 'utf8mb4_unicode_ci')
             ->addOption('create_options', ['row_format=COMPACT', 'KEY_BLOCK_SIZE=16'])
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $toSchema = new Schema();
@@ -260,7 +261,7 @@ class CommandCompilerTest extends TestCase
             ->addOption('row_format', 'DYNAMIC')
             ->addOption('charset', 'utf8mb4')
             ->addOption('collate', 'utf8mb4_unicode_ci')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo']);
@@ -277,7 +278,7 @@ class CommandCompilerTest extends TestCase
             ->addOption('engine', 'MyISAM')
             ->addOption('charset', 'utf8')
             ->addOption('collate', 'utf8_unicode_ci')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $toSchema = new Schema();
@@ -287,7 +288,7 @@ class CommandCompilerTest extends TestCase
             ->addOption('row_format', 'DYNAMIC')
             ->addOption('charset', 'utf8mb4')
             ->addOption('collate', 'utf8mb4_unicode_ci')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo'], 'OFF');
@@ -301,7 +302,7 @@ class CommandCompilerTest extends TestCase
         $fromSchema = new Schema();
         $fromSchema
             ->createTable('tl_foo_view')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $toSchema = new Schema();
@@ -311,7 +312,7 @@ class CommandCompilerTest extends TestCase
             ->addOption('row_format', 'DYNAMIC')
             ->addOption('charset', 'utf8mb4')
             ->addOption('collate', 'utf8mb4_unicode_ci')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema, ['tl_foo_view']);
@@ -327,7 +328,7 @@ class CommandCompilerTest extends TestCase
             ->addOption('engine', 'MyISAM')
             ->addOption('charset', 'utf8')
             ->addOption('collate', 'utf8_unicode_ci')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $fromSchema
@@ -338,7 +339,7 @@ class CommandCompilerTest extends TestCase
         $toSchema = new Schema();
         $toSchema
             ->createTable('tl_foo')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema);
@@ -355,18 +356,18 @@ class CommandCompilerTest extends TestCase
             ->addOption('engine', 'MyISAM')
             ->addOption('charset', 'utf8')
             ->addOption('collate', 'utf8_unicode_ci')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $toSchema = new Schema();
         $toSchema
             ->createTable('tl_foo')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $toSchema
             ->getTable('tl_foo')
-            ->addColumn('bar', 'string')
+            ->addColumn('bar', 'string', ['length' => 255])
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema);
@@ -410,7 +411,7 @@ class CommandCompilerTest extends TestCase
         $toSchema = new Schema();
         $toSchema
             ->createTable('tl_foo')
-            ->addColumn('foo', 'string', ['default' => ','])
+            ->addColumn('foo', 'string', ['length' => 255, 'default' => ','])
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema);
@@ -432,7 +433,7 @@ class CommandCompilerTest extends TestCase
         $toSchema = new Schema();
         $toSchema
             ->createTable('tl_foo')
-            ->addColumn('foo1', 'string')
+            ->addColumn('foo1', 'string', ['length' => 255])
         ;
 
         $toSchema
@@ -447,7 +448,7 @@ class CommandCompilerTest extends TestCase
 
         $toSchema
             ->getTable('tl_foo')
-            ->addColumn('foo4', 'string', ['default' => ','])
+            ->addColumn('foo4', 'string', ['length' => 255, 'default' => ','])
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema);
@@ -471,7 +472,7 @@ class CommandCompilerTest extends TestCase
             ->addOption('engine', 'MyISAM')
             ->addOption('charset', 'utf8')
             ->addOption('collate', 'utf8_unicode_ci')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $toSchema = new Schema();
@@ -480,7 +481,7 @@ class CommandCompilerTest extends TestCase
             ->addOption('engine', 'MyISAM')
             ->addOption('charset', 'utf8')
             ->addOption('collate', 'utf8_unicode_ci')
-            ->addColumn('foo', 'string')
+            ->addColumn('foo', 'string', ['length' => 255])
         ;
 
         $installer = $this->getInstaller($fromSchema, $toSchema);
@@ -491,8 +492,15 @@ class CommandCompilerTest extends TestCase
 
     private function getInstaller(Schema|null $fromSchema = null, Schema|null $toSchema = null, array $tables = [], string $filePerTable = 'ON'): CommandCompiler
     {
+        $schemaManagerConnection = $this->createMock(Connection::class);
+        $schemaManagerConnection
+            ->method('fetchNumeric')
+            ->with('SELECT @@character_set_database, @@collation_database')
+            ->willReturn(['utf8mb4', 'utf8mb4_unicode_ci'])
+        ;
+
         $platform = new MySQLPlatform();
-        $comparator = (new MySQLSchemaManager($this->createMock(Connection::class), $platform))->createComparator();
+        $comparator = (new MySQLSchemaManager($schemaManagerConnection, $platform))->createComparator();
 
         $schemaManager = $this->createMock(MySQLSchemaManager::class);
         $schemaManager
@@ -500,8 +508,16 @@ class CommandCompilerTest extends TestCase
             ->willReturn($fromSchema)
         ;
 
+        $comparatorParams = [$this->callback(static fn ($param) => $param instanceof ComparatorConfig)];
+
+        // Backwards compatibility for doctrine/dbal 3.x
+        if (!class_exists(ComparatorConfig::class)) {
+            $comparatorParams = [];
+        }
+
         $schemaManager
             ->method('createComparator')
+            ->with(...$comparatorParams)
             ->willReturn($comparator)
         ;
 

@@ -64,7 +64,7 @@ class DcaSchemaProvider
 
             if (isset($definitions['SCHEMA_FIELDS'])) {
                 foreach ($definitions['SCHEMA_FIELDS'] as $fieldName => $conf) {
-                    if ($table->hasColumn($fieldName)) {
+                    if ($table->hasColumn($conf['name'] ?? $fieldName)) {
                         continue;
                     }
 
@@ -87,6 +87,9 @@ class DcaSchemaProvider
 
                         $options['platformOptions']['collation'] = $options['customSchemaOptions']['collation'];
                     }
+
+                    // Deprecated in doctrine/dbal 3.x and removed in 4.x
+                    unset($options['customSchemaOptions']);
 
                     $table->addColumn($conf['name'], $conf['type'], $options);
                 }
@@ -143,7 +146,7 @@ class DcaSchemaProvider
         if (null !== $def) {
             if (preg_match('/default (\'[^\']*\'|\d+(?:\.\d+)?)/i', $def, $match)) {
                 if (is_numeric($match[1])) {
-                    $default = $match[1] * 1;
+                    $default = $match[1];
                 } else {
                     $default = trim($match[1], "'");
                 }
@@ -165,20 +168,20 @@ class DcaSchemaProvider
         }
 
         $options = [
-            'length' => $length,
             'unsigned' => $unsigned,
             'fixed' => $fixed,
             'default' => $default,
             'notnull' => $notnull,
-            'scale' => null,
-            'precision' => null,
             'autoincrement' => $autoincrement,
-            'comment' => null,
         ];
 
+        if (null !== $length) {
+            $options['length'] = $length;
+        }
+
         if (null !== $scale && null !== $precision) {
-            $options['scale'] = $scale;
-            $options['precision'] = $precision;
+            $options['scale'] = (int) $scale;
+            $options['precision'] = (int) $precision;
         }
 
         $platformOptions = [];

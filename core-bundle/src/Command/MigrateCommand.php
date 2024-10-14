@@ -18,6 +18,7 @@ use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Migration\CommandCompiler;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Connection\StaticServerVersionProvider;
 use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
 use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\Schema\Table;
@@ -666,30 +667,43 @@ class MigrateCommand extends Command
 
     private function validateDatabaseVersion(bool $asJson): bool
     {
-        // TODO: Find a replacement for getWrappedConnection() once doctrine/dbal
-        // 4.0 is released
-        $driverConnection = $this->connection->getWrappedConnection();
+        // Backwards compatibility for doctrine/dbal 3.x
+        if (interface_exists(ServerInfoAwareConnection::class)) {
+            /** @phpstan-ignore method.notFound */
+            $driverConnection = $this->connection->getWrappedConnection();
 
-        if (!$driverConnection instanceof ServerInfoAwareConnection) {
-            return true;
+            /** @phpstan-ignore class.notFound */
+            if (!$driverConnection instanceof ServerInfoAwareConnection) {
+                return true;
+            }
+
+            $driver = $this->connection->getDriver();
+
+            /** @phpstan-ignore class.notFound */
+            if (!$driver instanceof VersionAwarePlatformDriver) {
+                return true;
+            }
+
+            /** @phpstan-ignore class.notFound */
+            $version = $driverConnection->getServerVersion();
+            /** @phpstan-ignore class.notFound */
+            $correctPlatform = $driver->createDatabasePlatformForVersion($version);
+        } else {
+            $version = $this->connection->getServerVersion();
+            $correctPlatform = $this->connection->getDriver()->getDatabasePlatform(new StaticServerVersionProvider($version));
         }
 
-        $driver = $this->connection->getDriver();
-
-        if (!$driver instanceof VersionAwarePlatformDriver) {
-            return true;
-        }
-
-        $version = $driverConnection->getServerVersion();
-        $correctPlatform = $driver->createDatabasePlatformForVersion($version);
         $currentPlatform = $this->connection->getDatabasePlatform();
 
         if ($correctPlatform::class === $currentPlatform::class) {
             return true;
         }
 
-        // If serverVersion is not configured, we will actually never end up here
         $currentVersion = $this->connection->getParams()['serverVersion'] ?? '';
+
+        if (!$currentVersion || !$version) {
+            return true;
+        }
 
         $message = <<<EOF
             Wrong database version configured!
