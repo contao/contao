@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Migration;
 use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\Column;
+use Doctrine\DBAL\Schema\ComparatorConfig;
 use Doctrine\DBAL\Schema\Schema;
 use Doctrine\DBAL\Schema\Table;
 
@@ -54,11 +55,15 @@ class CommandCompiler
             $this->copyMissingTablesAndColumns($fromSchema, $toSchema);
         }
 
+        if (class_exists(ComparatorConfig::class)) {
+            $comparator = $schemaManager->createComparator((new ComparatorConfig(false, false)));
+        } else {
+            // Backwards compatibility for doctrine/dbal 3.x
+            $comparator = $schemaManager->createComparator();
+        }
+
         // Get a list of SQL statements from the schema diff
-        $schemaDiff = $schemaManager
-            ->createComparator()
-            ->compareSchemas($fromSchema, $toSchema)
-        ;
+        $schemaDiff = $comparator->compareSchemas($fromSchema, $toSchema);
 
         $diffCommands = $this->connection->getDatabasePlatform()->getAlterSchemaSQL($schemaDiff);
 

@@ -25,6 +25,8 @@ class DoctrineAlterTableListener
     /**
      * Prevents renaming arbitrary columns by explicitly dropping the old ones and
      * adding the new ones (see #1716).
+     *
+     * Backwards compatibility for doctrine/dbal 3.x
      */
     public function onSchemaAlterTableRenameColumn(SchemaAlterTableRenameColumnEventArgs $args): void
     {
