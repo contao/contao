@@ -374,6 +374,7 @@ class DumperTest extends ContaoTestCase
             if ($dbal41) {
                 $result = new ArrayResult(array_keys($results[0] ?? []), $results);
             } else {
+                /** @phpstan-ignore arguments.count */
                 $result = new ArrayResult($results);
             }
 
