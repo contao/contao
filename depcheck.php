@@ -11,8 +11,10 @@ declare(strict_types=1);
  */
 
 use AppBundle\AppBundle;
+use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\Event\SchemaAlterTableRenameColumnEventArgs;
 use Doctrine\DBAL\Platforms\MySQL57Platform;
+use Doctrine\DBAL\VersionAwarePlatformDriver;
 use ShipMonk\ComposerDependencyAnalyser\Config\Configuration;
 use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 
@@ -21,6 +23,8 @@ return (new Configuration())
         AppBundle::class,
         SchemaAlterTableRenameColumnEventArgs::class,
         MySQL57Platform::class,
+        ServerInfoAwareConnection::class,
+        VersionAwarePlatformDriver::class,
         'Imagick',
         'Gmagick',
         'SensitiveParameter',
