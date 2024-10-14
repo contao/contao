@@ -166,6 +166,10 @@ class MigrateCommand extends Command
             throw new InvalidOptionException('Use --no-interaction or --dry-run together with --format=ndjson');
         }
 
+        if (!$this->validateDatabaseVersion($asJson)) {
+            return 1;
+        }
+
         if ($input->getOption('migrations-only')) {
             if ($input->getOption('schema-only')) {
                 throw new InvalidOptionException('--migrations-only cannot be combined with --schema-only');
@@ -696,5 +700,46 @@ class MigrateCommand extends Command
         }
 
         return $warnings;
+    }
+
+    private function validateDatabaseVersion(bool $asJson): bool
+    {
+        // TODO: Find a replacement for getWrappedConnection() once doctrine/dbal 4.0 is released
+        $driverConnection = $this->connection->getWrappedConnection();
+
+        if (!$driverConnection instanceof ServerInfoAwareConnection) {
+            return true;
+        }
+
+        $driver = $this->connection->getDriver();
+
+        if (!$driver instanceof VersionAwarePlatformDriver) {
+            return true;
+        }
+
+        $version = $driverConnection->getServerVersion();
+        $correctPlatform = $driver->createDatabasePlatformForVersion($version);
+        $currentPlatform = $this->connection->getDatabasePlatform();
+
+        if ($correctPlatform::class === $currentPlatform::class) {
+            return true;
+        }
+
+        // If serverVersion is not configured, we will actually never end up here
+        $currentVersion = $this->connection->getParams()['serverVersion'] ?? '';
+
+        $message =
+            <<<EOF
+                Wrong database version configured!
+                You have version $version but the database connection is configured to $currentVersion.
+                EOF;
+
+        if ($asJson) {
+            $this->writeNdjson('problem', ['message' => $message]);
+        } else {
+            $this->io->error($message);
+        }
+
+        return false;
     }
 }
