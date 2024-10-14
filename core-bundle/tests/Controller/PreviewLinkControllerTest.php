@@ -114,7 +114,7 @@ class PreviewLinkControllerTest extends TestCase
                 'SELECT * FROM tl_preview_link WHERE id=? AND published=1 AND expiresAt>UNIX_TIMESTAMP()',
                 new IsType('array'),
             )
-            ->willReturn(null === $link ? false : $link)
+            ->willReturn($link ?? false)
         ;
 
         return $connection;
