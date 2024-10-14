@@ -47,7 +47,7 @@ class BackendSearch
                 $this->eventDispatcher->dispatch($event);
                 $document = $event->getDocument();
 
-                if (null === $document) {
+                if (!$document) {
                     continue;
                 }
 
