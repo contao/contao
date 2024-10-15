@@ -48,6 +48,25 @@ class DataContainerOperationsBuilder implements \Stringable
         ]);
     }
 
+    public static function generateBackButton(string|null $href = null): string
+    {
+        $href ??= System::getReferer(true);
+
+        return ' <a href="'.$href.'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" data-action="contao--scroll-offset#discard">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a> ';
+    }
+
+    public static function generateClearClipboardButton(): string
+    {
+        return ' <a href="'.Backend::addToUrl('clipboard=1').'" class="header_clipboard" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']).'" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['clearClipboard'].'</a> ';
+    }
+
+    public static function generateNewButton(string $table, string $href): string
+    {
+        $labelNew = $GLOBALS['TL_LANG'][$table]['new'] ?? $GLOBALS['TL_LANG']['DCA']['new'];
+
+        return ' <a href="'.$href.'" class="header_new" title="'.StringUtil::specialchars($labelNew[1] ?? '').'" accesskey="n" data-action="contao--scroll-offset#store">'.$labelNew[0].'</a> ';
+    }
+
     public function initializeButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
     {
         if (null !== $this->operations) {
