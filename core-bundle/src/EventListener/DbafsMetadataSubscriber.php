@@ -14,6 +14,8 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
+use Contao\CoreBundle\File\Subtitles;
+use Contao\CoreBundle\File\SubtitlesType;
 use Contao\CoreBundle\Filesystem\Dbafs\AbstractDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\StoreDbafsMetadataEvent;
@@ -57,6 +59,12 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
             $event->set('importantPart', $importantPart);
         }
 
+        // Add subtitles information
+        if (!empty($language = $row['subtitlesLanguage'] ?? null)) {
+            $subtitles = new Subtitles($language, $row['subtitlesType'] ? SubtitlesType::from($row['subtitlesType']) : null);
+            $event->set('subtitles', $subtitles);
+        }
+
         // Add file metadata
         $metadata = [];
 
@@ -75,6 +83,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
 
         $extraMetadata = $event->getExtraMetadata();
         $importantPart = $extraMetadata['importantPart'] ?? null;
+        $subtitles = $extraMetadata['subtitles'] ?? null;
         $fileMetadata = $extraMetadata['metadata'] ?? null;
 
         if ($importantPart instanceof ImportantPart) {
@@ -82,6 +91,11 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
             $event->set('importantPartY', $importantPart->getY());
             $event->set('importantPartWidth', $importantPart->getWidth());
             $event->set('importantPartHeight', $importantPart->getHeight());
+        }
+
+        if ($subtitles instanceof Subtitles) {
+            $event->set('subtitlesLanguage', $subtitles->getSourceLanguage());
+            $event->set('subtitlesType', $subtitles->getType()->value);
         }
 
         if ($fileMetadata instanceof MetadataBag) {
