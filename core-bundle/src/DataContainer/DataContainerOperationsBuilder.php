@@ -39,7 +39,7 @@ class DataContainerOperationsBuilder implements \Stringable
 
     public function __toString(): string
     {
-        if (null === $this->operations || [] === $this->operations) {
+        if (!$this->operations) {
             return '';
         }
 
