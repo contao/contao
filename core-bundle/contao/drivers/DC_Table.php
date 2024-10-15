@@ -4420,11 +4420,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (!$isVisibleRootTrailPage)
 		{
-			if ((Input::get('act') == 'select'))
+			if (Input::get('act') == 'select')
 			{
 				$_buttons .= $this->strTable == $table ? '<input type="checkbox" name="IDS[]" id="ids_'.$id.'" class="tl_tree_checkbox" value="'.$id.'">' : '';
 			}
-
 			// Regular buttons ($row, $table, $root, $blnCircularReference, $children, $previous, $next)
 			elseif ($this->strTable == $table)
 			{
@@ -4541,7 +4540,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			$_buttons .= (string) $operations;
+			$_buttons .= $operations;
 
 			if ($this->strTable == $table && $this->strPickerFieldType)
 			{
@@ -4743,7 +4742,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						));
 					}
 
-					$return .= (string) $operations;
+					$return .= $operations;
 				}
 			}
 
@@ -5085,7 +5084,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						}
 					}
 
-					$return .= (string) $operations;
+					$return .= $operations;
 
 					// Picker
 					if ($this->strPickerFieldType)
