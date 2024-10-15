@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Image\Studio;
 
 use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
 use Contao\Image\ImageInterface;
@@ -40,12 +41,12 @@ class FigureRenderer
      *
      * Returns null if the resource is invalid.
      *
-     * @param int|string|FilesModel|ImageInterface       $from          Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
-     * @param int|string|array|PictureConfiguration|null $size          A picture size configuration or reference
-     * @param array<string, mixed>                       $configuration Configuration for the FigureBuilder
-     * @param string                                     $template      A Contao or Twig template
+     * @param int|string|FilesModel|FilesystemItem|ImageInterface $from          Can be a FilesModel, a FilesystemItem, an ImageInterface, a tl_files UUID/ID/path or a file system path
+     * @param int|string|array|PictureConfiguration|null          $size          A picture size configuration or reference
+     * @param array<string, mixed>                                $configuration Configuration for the FigureBuilder
+     * @param string                                              $template      A Contao or Twig template
      */
-    public function render(FilesModel|ImageInterface|int|string $from, PictureConfiguration|array|int|string|null $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): string|null
+    public function render(FilesModel|FilesystemItem|ImageInterface|int|string $from, PictureConfiguration|array|int|string|null $size, array $configuration = [], string $template = '@ContaoCore/Image/Studio/figure.html.twig'): string|null
     {
         if (!$figure = $this->buildFigure($from, $size, $configuration)) {
             return null;

@@ -16,6 +16,7 @@ use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\DirectoryAttributes;
 use League\Flysystem\FileAttributes;
@@ -26,6 +27,7 @@ class FilesystemItemTest extends TestCase
     public function testSetAndGetAttributes(): void
     {
         $uuid = Uuid::fromString('2fcae369-c955-4b43-bcf9-d069f9d25542');
+        $storage = $this->createMock(VirtualFilesystemInterface::class);
 
         $fileItem = new FilesystemItem(
             true,
@@ -34,6 +36,7 @@ class FilesystemItemTest extends TestCase
             1024,
             'image/png',
             ['foo' => 'bar', 'uuid' => $uuid],
+            $storage,
         );
 
         $this->assertTrue($fileItem->isFile());
@@ -47,6 +50,7 @@ class FilesystemItemTest extends TestCase
         $this->assertSame('bar.PNG', $fileItem->getName());
         $this->assertSame('bar', $fileItem->getExtraMetadata()['foo']);
         $this->assertSame('2fcae369-c955-4b43-bcf9-d069f9d25542', $fileItem->getUuid()->toRfc4122());
+        $this->assertSame($storage, $fileItem->getStorage());
     }
 
     public function testTypeHelperShortcuts(): void
@@ -315,6 +319,16 @@ class FilesystemItemTest extends TestCase
         $this->assertSame(123450, $item->getLastModified());
         $this->assertSame(1024, $item->getFileSize());
         $this->assertSame('image/png', $item->getMimeType());
+    }
+
+    public function testAccessingStorageIFNotSetResultsInAnException(): void
+    {
+        $item = new FilesystemItem(true, 'some/path');
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('No storage was set for this filesystem item.');
+
+        $item->getStorage();
     }
 
     public static function provideSchemaOrgData(): iterable
