@@ -4417,7 +4417,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			if (Input::get('act') == 'select')
 			{
-				$_buttons .= $this->strTable == $table ? '<input type="checkbox" name="IDS[]" id="ids_'.$id.'" class="tl_tree_checkbox" value="'.$id.'">' : '';
+				$operations = $this->strTable == $table ? '<input type="checkbox" name="IDS[]" id="ids_'.$id.'" class="tl_tree_checkbox" value="'.$id.'">' : '';
 			}
 			// Regular buttons ($row, $table, $root, $blnCircularReference, $children, $previous, $next)
 			elseif ($this->strTable == $table)
