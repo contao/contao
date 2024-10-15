@@ -27,7 +27,7 @@ use Twig\Environment;
 #[Route(
     '%contao.backend.route_prefix%/search',
     name: 'contao_backend_search',
-    defaults: ['_scope' => 'backend', '_allow_preview' => true, '_store_referrer' => false],
+    defaults: ['_scope' => 'backend', '_store_referrer' => false],
     methods: ['GET'],
 )]
 class BackendSearchController

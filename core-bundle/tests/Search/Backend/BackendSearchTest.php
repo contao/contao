@@ -39,7 +39,7 @@ class BackendSearchTest extends TestCase
                 'contao_backend_search',
                 $this->callback(
                     function (array $document): bool {
-                        $this->assertSame('type.id', $document['id']);
+                        $this->assertSame('type_id', $document['id']);
                         $this->assertSame('type', $document['type']);
                         $this->assertSame('search me', $document['searchableContent']);
                         $this->assertSame([], $document['tags']);
@@ -78,7 +78,6 @@ class BackendSearchTest extends TestCase
     public function testSearch(): void
     {
         $indexName = 'contao_backend_search';
-        $hit = new Hit('title', 'https://whatever.com');
 
         $provider = $this->createMock(ProviderInterface::class);
         $provider
@@ -92,7 +91,7 @@ class BackendSearchTest extends TestCase
             ->expects($this->once())
             ->method('convertDocumentToHit')
             ->with($this->callback(static fn (Document $document): bool => '42' === $document->getId()))
-            ->willReturn($hit)
+            ->willReturnCallback(static fn (Document $document): Hit => new Hit($document, 'human readable hit title', 'https://whatever.com'))
         ;
 
         $security = $this->createMock(Security::class);
@@ -100,8 +99,8 @@ class BackendSearchTest extends TestCase
             ->expects($this->once())
             ->method('isGranted')
             ->with(
-                ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT,
-                $this->callback(static fn (Document $document): bool => '42' === $document->getId()),
+                ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_HIT,
+                $this->callback(static fn (Hit $hit): bool => '42' === $hit->getDocument()->getId()),
             )
             ->willReturn(true)
         ;
@@ -110,7 +109,7 @@ class BackendSearchTest extends TestCase
         $engine->createIndex($indexName);
 
         $engine->saveDocument($indexName, [
-            'id' => 'foobarType.42',
+            'id' => 'foobarType_42',
             'type' => 'foobarType',
             'searchableContent' => 'search me',
             'tags' => [],
@@ -120,7 +119,8 @@ class BackendSearchTest extends TestCase
         $backendSearch = new BackendSearch([$provider], $security, $engine, $indexName);
         $result = $backendSearch->search(new Query(20, 'search me'));
 
-        $this->assertSame($hit, $result->getHits()[0]);
+        $this->assertSame('human readable hit title', $result->getHits()[0]->getTitle());
+        $this->assertSame('42', $result->getHits()[0]->getDocument()->getId());
 
         // Cleanup memory
         MemoryStorage::dropIndex(new Index($indexName, []));

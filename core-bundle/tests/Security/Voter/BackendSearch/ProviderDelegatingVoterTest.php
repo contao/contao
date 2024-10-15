@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Security\Voter\BackendSearch;
 
 use Contao\CoreBundle\Search\Backend\Document;
+use Contao\CoreBundle\Search\Backend\Hit;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\Voter\BackendSearch\ProviderDelegatingVoter;
@@ -54,15 +55,15 @@ class ProviderDelegatingVoterTest extends TestCase
 
         $provider
             ->expects($this->once())
-            ->method('canAccessDocument')
+            ->method('isHitGranted')
             ->willReturn($accessGranted)
         ;
 
         $voter = new ProviderDelegatingVoter([$provider]);
         $result = $voter->vote(
             $this->createMock(TokenInterface::class),
-            new Document('id', 'type', 'searchable content'),
-            [ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT],
+            new Hit(new Document('id', 'type', 'searchable content'), 'title', 'https://example.com?view=true'),
+            [ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_HIT],
         );
 
         $this->assertSame($accessGranted ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED, $result);
@@ -77,11 +78,11 @@ class ProviderDelegatingVoterTest extends TestCase
 
         yield 'Subject does not match' => [
             'foobar',
-            [ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT],
+            [ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_HIT],
         ];
 
         yield 'Attributes does not match' => [
-            new Document('id', 'type', 'searchable content'),
+            new Hit(new Document('id', 'type', 'searchable content'), 'title', 'https://example.com?view=true'),
             ['foobar'],
         ];
     }

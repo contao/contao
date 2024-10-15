@@ -27,6 +27,15 @@ services:
             - '@database_connection'
             - '@security.access.decision_manager'
 
+    contao.search.backend.table_data_container_provider:
+        class: Contao\CoreBundle\Search\Backend\Provider\TableDataContainerProvider
+        arguments:
+            - '@contao.framework'
+            - '@contao.resource_finder'
+            - '@database_connection'
+            - '@contao.data_container.record_labeler'
+            - '@security.access.decision_manager'
+
     contao.search_backend.adapter:
         class: Schranz\Search\SEAL\Adapter\AdapterInterface
         factory: ['@contao.search_backend.adapter_factory', createAdapter]
