@@ -114,6 +114,11 @@ trait VirtualFilesystemDecoratorTrait
         $this->inner->setExtraMetadata($location, $metadata);
     }
 
+    public function resolveUuid(Uuid $uuid): string
+    {
+        return $this->inner->resolveUuid($uuid);
+    }
+
     public function generatePublicUri(Uuid|string $location, OptionsInterface|null $options = null): UriInterface|null
     {
         return $this->inner->generatePublicUri($location, $options);
