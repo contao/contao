@@ -641,5 +641,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         if (!$config['template_studio']['enabled']) {
             return;
         }
+
+        $loader->load('template_studio.yaml');
     }
 }
