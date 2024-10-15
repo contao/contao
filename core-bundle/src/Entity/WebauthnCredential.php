@@ -48,6 +48,7 @@ class WebauthnCredential extends PublicKeyCredentialSource
         $this->name = '';
         $this->createdAt = new \DateTimeImmutable();
         $this->userType = $userType;
+
         parent::__construct($publicKeyCredentialId, $type, $transports, $attestationType, $trustPath, $aaguid, $credentialPublicKey, $userHandle, $counter);
     }
 
