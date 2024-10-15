@@ -54,6 +54,7 @@ class ModuleTwoFactor extends BackendModule
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$ref = $request->attributes->get('_contao_referer_id');
 		$return = $container->get('router')->generate('contao_backend', array('do'=>'security', 'ref'=>$ref));
+
 		/** @var UriSigner $uriSigner */
 		$uriSigner = $container->get('uri_signer');
 		$passkeyReturn = $uriSigner->sign($container->get('router')->generate('contao_backend', array('do'=>'security', 'ref'=>$ref, 'edit_new_passkey'=>1), UrlGeneratorInterface::ABSOLUTE_URL));
@@ -91,7 +92,6 @@ class ModuleTwoFactor extends BackendModule
 		{
 			if ($deleteCredentialId = Input::post('delete_passkey'))
 			{
-				/** @var WebauthnCredential $credential */
 				if ($credential = $credentialRepo->findOneById($deleteCredentialId))
 				{
 					if ((int) $credential->userHandle !== $user->id)
@@ -104,7 +104,6 @@ class ModuleTwoFactor extends BackendModule
 			}
 			elseif ($editCredentialId = Input::post('edit_passkey'))
 			{
-				/** @var WebauthnCredential $credential */
 				if ($credential = $credentialRepo->findOneById($editCredentialId))
 				{
 					if ((int) $credential->userHandle !== $user->id)
@@ -145,7 +144,9 @@ class ModuleTwoFactor extends BackendModule
 
 		if (Input::get('edit_new_passkey') && $uriSigner->checkRequest($request))
 		{
-			if (($lastCredential = $credentialRepo->getLastForUser($user)) instanceof WebauthnCredential)
+			$lastCredential = $credentialRepo->getLastForUser($user);
+
+			if ($lastCredential instanceof WebauthnCredential)
 			{
 				$this->Template->editPassKeyId = $lastCredential->getId();
 			}

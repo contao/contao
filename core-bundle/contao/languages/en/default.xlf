@@ -2205,7 +2205,7 @@
         <source>Passkeys</source>
       </trans-unit>
       <trans-unit id="MSC.passkeysDescription">
-        <source>Here you can add and manage your passkeys with which you can log into the back end. Passkeys allow you to sign in safely and easily, without requiring a password and two-factor authentication.</source>
+        <source>Passkeys allow you to log in securely and easily without the need for a password and two-factor token.</source>
       </trans-unit>
       <trans-unit id="MSC.passkeyLogin">
         <source>Sign in with a passkey</source>

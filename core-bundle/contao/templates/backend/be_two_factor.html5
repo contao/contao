@@ -167,10 +167,7 @@
     data-contao--webauthn-creation-success-redirect-uri-value="<?= $this->webauthnCreationSuccessRedirectUri ?>"
     data-contao--webauthn-error-unsupported-message-value="<?= $this->trans('ERR.passkeysUnsupported') ?>"
     data-contao--webauthn-error-attestation-failure-message-value="<?= $this->trans('ERR.passkeyAttestationFailure') ?>"
-    data-action="
-        webauthn:unsupported->contao--webauthn-error#handleUnsupported
-        webauthn:attestation:failure->contao--webauthn-error#handleAttestationFailure
-      "
+    data-action="webauthn:unsupported->contao--webauthn-error#handleUnsupported webauthn:attestation:failure->contao--webauthn-error#handleAttestationFailure"
   >
     <div class="tl_submit_container">
       <button class="tl_submit" type="submit" data-action="contao--webauthn#signup"><?= $this->trans('MSC.addPasskey') ?></button>

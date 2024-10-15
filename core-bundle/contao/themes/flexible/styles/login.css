@@ -37,7 +37,7 @@ body {
 }
 
 /* Login form */
-.tl_login_form {
+.tl_login_form, .passkey_login {
 	background: var(--content-bg);
 	border-radius: 2px;
 }
@@ -47,9 +47,21 @@ body {
 }
 
 .passkey_login {
-	display: flex;
-	justify-content: center;
-	margin: 35px 45px;
+	max-width: 320px;
+	margin: 25px auto 0;
+	padding: 15px;
+	text-align: center;
+}
+
+.passkey_login button {
+	border: 0;
+	padding-left: 36px;
+	background-color: transparent !important;
+	background: url("icons/passkey.svg") 12px center no-repeat;
+}
+
+.passkey_login button:hover {
+	color: var(--contao);
 }
 
 .widget {
@@ -133,7 +145,7 @@ label[for="verify"] {
 /* Error messages */
 .tl_message {
 	max-width: 420px;
-	margin: 36px auto 0;
+	margin: 12px auto 0;
 	text-align: center;
 }
 

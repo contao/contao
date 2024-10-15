@@ -1100,7 +1100,7 @@ h2.sub_headline {
 
 /* Passkeys */
 .passkeys .credential-list td.created {
-
+	width: 30%;
 }
 
 .passkeys .credential-list td.actions {
@@ -1114,14 +1114,9 @@ h2.sub_headline {
 	background-color: transparent;
 }
 
-.passkeys .credential-list td.created {
-	width: 30%;
-}
-
 .passkeys input[name="passkey_name"] {
 	border: 0;
 	background-color: transparent;
-	padding: 0;
 	height: 1em;
 	width: 100%;
 	display: block;

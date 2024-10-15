@@ -2,7 +2,7 @@
   "entrypoints": {
     "backend": {
       "css": [
-        "/system/themes/flexible/backend.4cb67bfc.css"
+        "/system/themes/flexible/backend.5308d81a.css"
       ]
     },
     "confirm": {
@@ -27,7 +27,7 @@
     },
     "login": {
       "css": [
-        "/system/themes/flexible/login.cff0697e.css"
+        "/system/themes/flexible/login.a14146a1.css"
       ]
     },
     "popup": {
