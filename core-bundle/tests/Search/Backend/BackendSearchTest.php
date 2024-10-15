@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Search\Backend;
 
 use Contao\CoreBundle\Event\BackendSearch\EnhanceHitEvent;
 use Contao\CoreBundle\Event\BackendSearch\IndexDocumentEvent;
+use Contao\CoreBundle\Messenger\Message\BackendSearch\DeleteDocumentsMessage;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Hit;
@@ -29,6 +30,8 @@ use Schranz\Search\SEAL\EngineInterface;
 use Schranz\Search\SEAL\Schema\Index;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class BackendSearchTest extends TestCase
 {
@@ -80,6 +83,7 @@ class BackendSearchTest extends TestCase
             $this->createMock(Security::class),
             $engine,
             $eventDispatcher,
+            $this->createMock(MessageBusInterface::class),
             'contao_backend_search',
         );
 
@@ -134,7 +138,7 @@ class BackendSearchTest extends TestCase
             ->with($this->callback(static fn (EnhanceHitEvent $event): bool => '42' === $event->getHit()->getDocument()->getId()))
         ;
 
-        $backendSearch = new BackendSearch([$provider], $security, $engine, $eventDispatcher, $indexName);
+        $backendSearch = new BackendSearch([$provider], $security, $engine, $eventDispatcher, $this->createMock(MessageBusInterface::class), $indexName);
         $result = $backendSearch->search(new Query(20, 'search me'));
 
         $this->assertSame('human readable hit title', $result->getHits()[0]->getTitle());
@@ -142,5 +146,53 @@ class BackendSearchTest extends TestCase
 
         // Cleanup memory
         MemoryStorage::dropIndex(new Index($indexName, []));
+    }
+
+    public function testDeleteDocumentsSync(): void
+    {
+        $documents = ['test_42', new Document('42', 'foobar', 'foo')];
+        $engine = $this->createMock(EngineInterface::class);
+        $engine
+            ->expects($this->exactly(2))
+            ->method('deleteDocument')
+            ->withConsecutive(
+                ['contao_backend_search', 'test_42'],
+                ['contao_backend_search', 'foobar_42'],
+            )
+        ;
+
+        $backendSearch = new BackendSearch(
+            [],
+            $this->createMock(Security::class),
+            $engine,
+            $this->createMock(EventDispatcherInterface::class),
+            $this->createMock(MessageBusInterface::class),
+            'contao_backend_search',
+        );
+
+        $backendSearch->deleteDocuments($documents, false);
+    }
+
+    public function testDeleteDocumentsAsync(): void
+    {
+        $documents = ['test_42', new Document('42', 'foobar', 'foo')];
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with($this->callback(static fn (DeleteDocumentsMessage $message) => ['test_42', 'foobar_42'] === $message->getDocumentIds()))
+            ->willReturn(new Envelope($this->createMock(DeleteDocumentsMessage::class)))
+        ;
+
+        $backendSearch = new BackendSearch(
+            [],
+            $this->createMock(Security::class),
+            $this->createMock(EngineInterface::class),
+            $this->createMock(EventDispatcherInterface::class),
+            $messageBus,
+            'contao_backend_search',
+        );
+
+        $backendSearch->deleteDocuments($documents);
     }
 }
