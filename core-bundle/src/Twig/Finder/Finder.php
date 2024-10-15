@@ -36,6 +36,12 @@ final class Finder implements \IteratorAggregate, \Countable
 
     private bool $variants = false;
 
+    private string|null $identifierExpression = null;
+
+    private bool|null $identifierExpressionIsInclude = null;
+
+    private bool $excludePartials = false;
+
     /**
      * @var array<string, list<string>>
      */
@@ -79,6 +85,35 @@ final class Finder implements \IteratorAggregate, \Countable
     {
         $this->identifier = ContaoTwigUtil::getIdentifier($name);
         $this->extension = ContaoTwigUtil::getExtension($name);
+
+        return $this;
+    }
+
+    /**
+     * Includes only or excludes identifiers matching the given expression.
+     *
+     * E.g. use "%^backend/%" with $include set to false in order to suppress anything
+     * from the "backend" directories or "%/foo/%" with $include set to true to only
+     * consider identifiers containing a directory "foo" in their name.
+     *
+     * The given $regularExpression is passed to preg_match - it must include the
+     * delimiters and can include modifiers.
+     */
+    public function identifierRegex(string $regularExpression, bool $include = true): self
+    {
+        $this->identifierExpression = $regularExpression;
+        $this->identifierExpressionIsInclude = $include;
+
+        return $this;
+    }
+
+    /**
+     * Do not include partial templates. Partial templates are identified by their
+     * filename starting with an underscore, e.g. "@Contao/foo/_bar.html.twig".
+     */
+    public function excludePartials(): self
+    {
+        $this->excludePartials = true;
 
         return $this;
     }
@@ -160,6 +195,8 @@ final class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
+     * Yields key-value pairs "identifier" => "extension".
+     *
      * @return \Generator<string, string>
      */
     public function getIterator(): \Generator
@@ -194,6 +231,14 @@ final class Finder implements \IteratorAggregate, \Countable
 
         foreach ($chains as $identifier => $chain) {
             if ($this->identifier && !$matchIdentifier($identifier)) {
+                continue;
+            }
+
+            if (null !== $this->identifierExpression && (1 === preg_match($this->identifierExpression, $identifier)) !== $this->identifierExpressionIsInclude) {
+                continue;
+            }
+
+            if ($this->excludePartials && 1 === preg_match('%^.*_[^/]+$%', $identifier)) {
                 continue;
             }
 
