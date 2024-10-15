@@ -217,7 +217,7 @@ class BackendSearch
         ];
     }
 
-    private function getGlobalIdForDocument(Document $document)
+    private function getGlobalIdForDocument(Document $document): string
     {
         // Ensure the ID is global across the search index by prefixing the id
         return $document->getType().'_'.$document->getId();

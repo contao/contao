@@ -22,7 +22,7 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 #[AsMessageHandler]
 class DeleteDocumentsMessageHandler
 {
-    public function __construct(private BackendSearch $backendSearch)
+    public function __construct(private readonly BackendSearch $backendSearch)
     {
     }
 

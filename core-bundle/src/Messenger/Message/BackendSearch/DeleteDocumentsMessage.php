@@ -22,7 +22,7 @@ class DeleteDocumentsMessage implements LowPriorityMessageInterface
     /**
      * @param array<string> $documentsIds
      */
-    public function __construct(private array $documentsIds)
+    public function __construct(private readonly array $documentsIds)
     {
     }
 
