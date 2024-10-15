@@ -27,7 +27,7 @@
         }
     ],
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "ext-dom": "*",
         "ext-filter": "*",
         "ext-gd": "*",

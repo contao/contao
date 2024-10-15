@@ -131,11 +131,9 @@ final class Document
                 continue;
             }
 
-            if (\is_string($value)) {
-                // Search engines do not support non UTF-8 strings normally
-                if (!preg_match('//u', $value)) {
-                    continue;
-                }
+            // Search engines do not support non UTF-8 strings normally
+            if (\is_string($value) && !preg_match('//u', $value)) {
+                continue;
             }
 
             $cleanedMetadata[$key] = $value;

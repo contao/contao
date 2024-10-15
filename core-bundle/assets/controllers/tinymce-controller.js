@@ -25,7 +25,7 @@ export default class extends Controller {
         tinymce?.init(config).then((editors) => {
             this.editorId = editors[0]?.id;
 
-            // Fire a custom event when the editor finished intializing.
+            // Fire a custom event when the editor finished initializing.
             this.dispatch('editor-loaded', { detail: { content: editors[0] ?? null } });
         });
 
