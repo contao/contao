@@ -71,28 +71,15 @@ final class Document
     }
 
     /**
-     * Meta data must be JSON encodable.
+     * Metadata must be JSON encodable, thus, anything not UTF-8 encoded will be
+     * stripped automatically.
      *
-     * @param array<string, string> $metadata
+     * @param array<string, mixed> $metadata
      */
     public function withMetadata(array $metadata): self
     {
-        $cleanedMetadata = [];
-
-        foreach ($metadata as $key => $value) {
-            if (!\is_scalar($value)) {
-                continue;
-            }
-
-            if (\is_string($value) && !preg_match('//u', $value)) {
-                continue;
-            }
-
-            $cleanedMetadata[$key] = $value;
-        }
-
         $clone = clone $this;
-        $clone->metadata = $cleanedMetadata;
+        $clone->metadata = self::recursiveCleanMetadata($metadata);
 
         return $clone;
     }
@@ -120,5 +107,32 @@ final class Document
             ->withTags($array['tags'] ?? [])
             ->withMetadata($array['metadata'] ?? [])
         ;
+    }
+
+    private static function recursiveCleanMetadata(array $metadata): array
+    {
+        $cleanedMetadata = [];
+
+        foreach ($metadata as $key => $value) {
+            if (\is_array($value)) {
+                $cleanedMetadata[$key] = self::recursiveCleanMetadata($value);
+                continue;
+            }
+
+            if (!\is_scalar($value)) {
+                continue;
+            }
+
+            if (\is_string($value)) {
+                // Search engines do not support non UTF-8 strings normally
+                if (!preg_match('//u', $value)) {
+                    continue;
+                }
+            }
+
+            $cleanedMetadata[$key] = $value;
+        }
+
+        return $cleanedMetadata;
     }
 }
