@@ -977,6 +977,6 @@ class Configuration implements ConfigurationInterface
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->canBeDisabled()
-            ;
+        ;
     }
 }
