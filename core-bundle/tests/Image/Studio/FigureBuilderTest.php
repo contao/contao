@@ -17,6 +17,7 @@ use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Framework\Adapter;
@@ -382,6 +383,34 @@ class FigureBuilderTest extends TestCase
         $this->expectExceptionObject($exception);
 
         $figureBuilder->build();
+    }
+
+    public function testFromFilesystemItem(): void
+    {
+        $basePath = Path::canonicalize(__DIR__.'/../../Fixtures/files');
+        $absoluteFilePath = Path::join($basePath, 'public/foo.jpg');
+
+        $model = $this->mockClassWithProperties(FilesModel::class);
+        $model->type = 'file';
+        $model->path = 'files/public/foo.jpg';
+
+        $filesModelAdapter = $this->mockAdapter(['findByPath']);
+        $filesModelAdapter
+            ->method('findByPath')
+            ->with($absoluteFilePath)
+            ->willReturn($model)
+        ;
+
+        $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
+        $studio = $this->mockStudioForImage($absoluteFilePath);
+
+        $mountManager = new MountManager();
+        $mountManager->mount(new LocalFilesystemAdapter($basePath), 'files');
+
+        $storage = new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class), 'files');
+        $item = new FilesystemItem(true, 'public/foo.jpg', storage: $storage);
+
+        $this->getFigureBuilder($studio, $framework)->fromFilesystemItem($item)->build();
     }
 
     /**

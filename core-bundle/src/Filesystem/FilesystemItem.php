@@ -36,6 +36,7 @@ class FilesystemItem implements \Stringable
         private \Closure|int|null $fileSize = null,
         private \Closure|string|null $mimeType = null,
         private \Closure|array $extraMetadata = [],
+        private readonly VirtualFilesystemInterface|null $storage = null,
     ) {
     }
 
@@ -94,6 +95,7 @@ class FilesystemItem implements \Stringable
             $this->fileSize ?? $fileSize,
             $this->mimeType ?? $mimeType,
             $this->extraMetadata,
+            $this->storage,
         );
     }
 
@@ -106,7 +108,29 @@ class FilesystemItem implements \Stringable
             $this->fileSize,
             $this->mimeType,
             $this->extraMetadata,
+            $this->storage,
         );
+    }
+
+    public function withStorage(VirtualFilesystemInterface $storage): self
+    {
+        return new self(
+            $this->isFile,
+            $this->path,
+            $this->lastModified,
+            $this->fileSize,
+            $this->mimeType,
+            $this->extraMetadata,
+            $storage,
+        );
+    }
+
+    /**
+     * @internal
+     */
+    public function getStorage(): VirtualFilesystemInterface
+    {
+        return $this->storage ?? throw new \RuntimeException('No storage was set for this filesystem item.');
     }
 
     public function isFile(): bool

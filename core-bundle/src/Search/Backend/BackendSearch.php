@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Search\Backend;
 
+use Contao\CoreBundle\Event\BackendSearch\EnhanceHitEvent;
+use Contao\CoreBundle\Event\BackendSearch\IndexDocumentEvent;
 use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\IndexUpdateConfigInterface;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -16,6 +18,7 @@ use Schranz\Search\SEAL\Search\Condition\EqualCondition;
 use Schranz\Search\SEAL\Search\Condition\SearchCondition;
 use Schranz\Search\SEAL\Search\SearchBuilder;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
  * @experimental
@@ -29,6 +32,7 @@ class BackendSearch
         private readonly iterable $providers,
         private readonly Security $security,
         private readonly EngineInterface $engine,
+        private readonly EventDispatcherInterface $eventDispatcher,
         private readonly string $indexName,
     ) {
     }
@@ -39,11 +43,17 @@ class BackendSearch
         foreach ($this->providers as $provider) {
             /** @var Document $document */
             foreach ($provider->updateIndex($trigger) as $document) {
-                // TODO: Dispatch an event here. This will allow third-party developers to
-                // add/modify a document from a pre-existing provider. E.g. adding your own data
-                // from files to the existing provider
+                $event = new IndexDocumentEvent($document);
+                $this->eventDispatcher->dispatch($event);
 
-                $this->engine->saveDocument($this->indexName, $this->convertProviderDocumentForSearchIndex($document));
+                if (!$document = $event->getDocument()) {
+                    continue;
+                }
+
+                $this->engine->saveDocument(
+                    $this->indexName,
+                    $this->convertProviderDocumentForSearchIndex($document),
+                );
             }
         }
     }
@@ -131,12 +141,21 @@ class BackendSearch
         }
 
         $document = Document::fromArray(json_decode($document['document'], true, 512, JSON_THROW_ON_ERROR));
+        $hit = $fileProvider->convertDocumentToHit($document);
 
-        if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT, $document)) {
+        if (!$hit) {
+            // TODO: delete this document from the index
             return null;
         }
 
-        return $fileProvider->convertDocumentToHit($document);
+        if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_HIT, $hit)) {
+            return null;
+        }
+
+        $event = new EnhanceHitEvent($hit);
+        $this->eventDispatcher->dispatch($event);
+
+        return $event->getHit();
     }
 
     private function getProviderForType(string $type): ProviderInterface|null
@@ -155,7 +174,7 @@ class BackendSearch
     {
         return [
             // Ensure the ID is global across the search index by prefixing the id
-            'id' => $document->getType().'.'.$document->getId(),
+            'id' => $document->getType().'_'.$document->getId(),
             'type' => $document->getType(),
             'searchableContent' => $document->getSearchableContent(),
             'tags' => $document->getTags(),

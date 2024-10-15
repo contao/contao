@@ -16,16 +16,13 @@ use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\UpdateAllProvidersConfig;
 use Contao\CoreBundle\Search\Backend\Provider\FilesProvider;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Schema\Column;
 use Doctrine\DBAL\Schema\Table;
-use Doctrine\DBAL\Tools\DsnParser;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
-class FilesProviderTest extends TestCase
+class FilesProviderTest extends AbstractProviderTestCase
 {
     public function testSupports(): void
     {
@@ -40,12 +37,6 @@ class FilesProviderTest extends TestCase
 
     public function testUpdateIndex(): void
     {
-        try {
-            $connection = $this->createInMemoryFilesTableConnection();
-        } catch (\Exception) {
-            $this->markTestSkipped('Cannot test this without sqlite');
-        }
-
         $row = [
             'id' => 42,
             'name' => 'super-file.jpg',
@@ -53,7 +44,19 @@ class FilesProviderTest extends TestCase
             'extension' => 'jpg',
         ];
 
-        $connection->insert('tl_files', $row);
+        $connection = $this->createInMemorySQLiteConnection(
+            [
+                new Table('tl_files', [
+                    new Column('id', Type::getType(Types::INTEGER)),
+                    new Column('name', Type::getType(Types::STRING)),
+                    new Column('path', Type::getType(Types::STRING)),
+                    new Column('extension', Type::getType(Types::STRING)),
+                ]),
+            ],
+            [
+                'tl_files' => [$row],
+            ],
+        );
 
         $provider = new FilesProvider(
             $connection,
@@ -69,26 +72,5 @@ class FilesProviderTest extends TestCase
         $this->assertSame(FilesProvider::TYPE, $document->getType());
         $this->assertSame(['extension:jpg'], $document->getTags());
         $this->assertSame($row, $document->getMetadata());
-    }
-
-    /**
-     * @throws \Exception If SQLite does not exist
-     */
-    private function createInMemoryFilesTableConnection(): Connection
-    {
-        $dsnParser = new DsnParser();
-        $connectionParams = $dsnParser->parse('pdo-sqlite:///:memory:');
-
-        $connection = DriverManager::getConnection($connectionParams);
-        $connection->connect();
-
-        $connection->createSchemaManager()->createTable(new Table('tl_files', [
-            new Column('id', Type::getType(Types::INTEGER)),
-            new Column('name', Type::getType(Types::STRING)),
-            new Column('path', Type::getType(Types::STRING)),
-            new Column('extension', Type::getType(Types::STRING)),
-        ]));
-
-        return $connection;
     }
 }
