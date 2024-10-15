@@ -131,12 +131,18 @@ class BackendSearch
         }
 
         $document = Document::fromArray(json_decode($document['document'], true, 512, JSON_THROW_ON_ERROR));
+        $hit = $fileProvider->convertDocumentToHit($document);
 
-        if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT, $document)) {
+        if (!$hit) {
+            // TODO: delete this document from the index
             return null;
         }
 
-        return $fileProvider->convertDocumentToHit($document);
+        if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_HIT, $hit)) {
+            return null;
+        }
+
+        return $hit;
     }
 
     private function getProviderForType(string $type): ProviderInterface|null
@@ -155,7 +161,7 @@ class BackendSearch
     {
         return [
             // Ensure the ID is global across the search index by prefixing the id
-            'id' => $document->getType().'.'.$document->getId(),
+            'id' => $document->getType().'_'.$document->getId(),
             'type' => $document->getType(),
             'searchableContent' => $document->getSearchableContent(),
             'tags' => $document->getTags(),
