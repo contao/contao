@@ -59,16 +59,16 @@ class PlayerController extends AbstractContentElementController
             return new Response();
         }
 
-        $subtitleFiles = [];
+        $subtitlesFiles = [];
 
         if ($model->addSubtitles && $filesystemItems->first()?->isVideo()) {
-            $subtitleItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->subtitlesSRC ?: '');
-            $subtitleFiles = $this->getSourceFiles($subtitleItems);
+            $subtitlesItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->subtitlesSRC ?: '');
+            $subtitlesFiles = $this->getSourceFiles($subtitlesItems);
         }
 
         // Compile data
         $figureData = $filesystemItems->first()?->isVideo() ?? false
-            ? $this->buildVideoFigureData($model, $sourceFiles, $subtitleFiles)
+            ? $this->buildVideoFigureData($model, $sourceFiles, $subtitlesFiles)
             : $this->buildAudioFigureData($model, $sourceFiles);
 
         $template->set('figure', (object) $figureData);
@@ -127,17 +127,17 @@ class PlayerController extends AbstractContentElementController
 
         if ([] !== $subtitlesFiles) {
             foreach ($subtitlesFiles as $file) {
-                $subtitle = $file->getExtraMetadata()['subtitles'] ?? null;
+                $subtitles = $file->getExtraMetadata()['subtitles'] ?? null;
                 $label = ($file->getExtraMetadata()['metadata'] ?? null)?->getDefault()?->getTitle();
 
-                if (empty($label) || !$subtitle?->getSourceLanguage()) {
+                if (empty($label) || !$subtitles?->getSourceLanguage()) {
                     continue;
                 }
 
                 $trackAttributes = (new HtmlAttributes())
-                    ->setIfExists('kind', $subtitle->getType())
+                    ->setIfExists('kind', $subtitles->getType()?->value)
                     ->set('label', $label)
-                    ->set('srclang', $subtitle->getSourceLanguage())
+                    ->set('srclang', $subtitles->getSourceLanguage())
                     ->set('src', $this->publicUriByStoragePath[$file->getPath()])
                 ;
 

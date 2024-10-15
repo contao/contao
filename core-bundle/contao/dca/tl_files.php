@@ -257,7 +257,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			'inputType'               => 'select',
 			'reference'               => &$GLOBALS['TL_LANG']['tl_files'],
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(12) COLLATE ascii_bin NOT NULL default ''"
+			'sql'                     => "varchar(12) NULL"
 		),
 		'meta' => array
 		(
