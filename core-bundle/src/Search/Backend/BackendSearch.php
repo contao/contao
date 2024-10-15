@@ -45,9 +45,8 @@ class BackendSearch
             foreach ($provider->updateIndex($trigger) as $document) {
                 $event = new IndexDocumentEvent($document);
                 $this->eventDispatcher->dispatch($event);
-                $document = $event->getDocument();
 
-                if (!$document) {
+                if (!$document = $event->getDocument()) {
                     continue;
                 }
 
