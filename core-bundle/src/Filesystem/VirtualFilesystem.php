@@ -326,6 +326,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         if (!($accessFlags & self::BYPASS_DBAFS) && $this->dbafsManager->match($path)) {
             foreach ($this->dbafsManager->listContents($path, $deep) as $item) {
                 $path = $item->getPath();
+
                 $item = $item
                     ->withPath(Path::makeRelative($path, $this->prefix))
                     ->withStorage($this)
