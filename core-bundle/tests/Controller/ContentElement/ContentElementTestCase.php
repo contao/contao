@@ -23,7 +23,8 @@ use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
-use Contao\CoreBundle\File\Subtitle;
+use Contao\CoreBundle\File\Subtitles;
+use Contao\CoreBundle\File\SubtitlesType;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
@@ -378,9 +379,9 @@ class ContentElementTestCase extends TestCase
                                     ['en' => new Metadata([Metadata::VALUE_TITLE => 'English'])],
                                     ['en'],
                                 ),
-                                'subtitles' => new Subtitle(
+                                'subtitles' => new Subtitles(
                                     'en',
-                                    '',
+                                    null,
                                 ),
                             ],
                         ),
@@ -395,9 +396,9 @@ class ContentElementTestCase extends TestCase
                                     ['en' => new Metadata([Metadata::VALUE_TITLE => 'Deutsch'])],
                                     ['en'],
                                 ),
-                                'subtitles' => new Subtitle(
+                                'subtitles' => new Subtitles(
                                     'de',
-                                    'captions',
+                                    SubtitlesType::captions,
                                 ),
                             ],
                         ),
