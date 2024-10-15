@@ -184,6 +184,7 @@ class ModuleRegistration extends Module
 				$arrData['inputType'] = 'upload';
 			}
 
+			/** @var class-string<DataContainer> $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType']] ?? null;
 
 			// Continue if the class is not defined

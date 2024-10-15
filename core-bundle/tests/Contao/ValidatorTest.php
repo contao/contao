@@ -62,7 +62,7 @@ class ValidatorTest extends TestCase
         yield ['test@example.photography', 1];
         yield ['test@sub-domain.example.photography', 1];
 
-        // Valid with unicode characters in the local part
+        // Valid with Unicode characters in the local part
         yield ['niceändsimple@example.com', 1];
         yield ['véry.çommon@example.com', 1];
         yield ['a.lîttle.lengthy.but.fiñe@dept.example.com', 1];
@@ -74,21 +74,21 @@ class ValidatorTest extends TestCase
         yield ['"üñîçøðé"@example.com', 1];
         yield ['ǅǼ੧ఘⅧ⒇৪@example.com', 1];
 
-        // Valid with IP addresses and unicode characters in the local part
+        // Valid with IP addresses and Unicode characters in the local part
         yield ['üser@[255.255.255.255]', 1];
         yield ['üser@[IPv6:2001:db8:1ff::a0b:dbd0]', 1];
         yield ['üser@[IPv6:2001:0db8:85a3:08d3:1319:8a2e:0370:7344]', 1];
         yield ['üser@[IPv6:2001::7344]', 1];
         yield ['üser@[IPv6:1111:2222:3333:4444:5555:6666:255.255.255.255]', 1];
 
-        // Valid with IDNA domains and unicode characters in the local part
+        // Valid with IDNA domains and Unicode characters in the local part
         yield ['tést@exämple.com', 1];
         yield ['tést@ä.xe', 1];
         yield ['tést@subexample.wizard', 1];
         yield ['tést@wähwähwäh.ümläüts.de', 1];
         yield ['"tés@t"@wähwähwäh.ümläüts.de', 1];
 
-        // Valid with new TLDs and unicode characters in the local part
+        // Valid with new TLDs and Unicode characters in the local part
         yield ['tést@example.photography', 1];
         yield ['tést@sub-domain.example.photography', 1];
 
@@ -128,7 +128,7 @@ class ValidatorTest extends TestCase
         yield ['tes@t@example.photography', 0];
         yield [' test@sub-domain.example.photography', 0];
 
-        // Invalid with unicode characters in the local part
+        // Invalid with Unicode characters in the local part
         yield ['tést..child@example.com', 0];
         yield ['tést@sub.-example.com', 0];
         yield ['tést@_smtp_.example.com', 0];
@@ -145,7 +145,7 @@ class ValidatorTest extends TestCase
         yield ['tést@iana.org-', 0];
         yield ['tést@', 0];
 
-        // Invalid with IP addresses and unicode characters in the local part
+        // Invalid with IP addresses and Unicode characters in the local part
         yield ['tést@a[255.255.255.255]', 0];
         yield ['tést@[255.255.255]', 0];
         yield ['tést@[255.255.255.255.255]', 0];
@@ -153,11 +153,11 @@ class ValidatorTest extends TestCase
         yield ['tést@[2001::7344]', 0];
         yield ['tést@[IPv6:1111:2222:3333:4444:5555:6666:7777:255.255.255.255]', 0];
 
-        // Invalid with IDNA domains and unicode characters in the local part
+        // Invalid with IDNA domains and Unicode characters in the local part
         yield ['tés@t@wähwähwäh.ümläüts.de', 0];
         yield [' tést@wähwähwäh.ümläüts.de', 0];
 
-        // Invalid with new TLDs and unicode characters in the local part
+        // Invalid with new TLDs and Unicode characters in the local part
         yield ['tés@t@example.photography', 0];
         yield [' tést@sub-domain.example.photography', 0];
     }

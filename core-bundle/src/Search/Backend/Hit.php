@@ -18,9 +18,6 @@ final class Hit
 
     private FilesModel|ImageInterface|int|string|null $image = null;
 
-    /**
-     * @var array<mixed>
-     */
     private array $metadata = [];
 
     public function __construct(
@@ -60,9 +57,6 @@ final class Hit
         return $this->image;
     }
 
-    /**
-     * @return array<mixed>
-     */
     public function getMetadata(): array
     {
         return $this->metadata;

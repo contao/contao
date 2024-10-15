@@ -55,7 +55,7 @@ class SwiperControllerTest extends ContentElementTestCase
 
         $expectedOutput = <<<HTML
             <div class="content-swiper">
-                <div class="swiper" data-settings="{$expectedJson}">
+                <div class="swiper" data-settings="$expectedJson">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
                             text

@@ -27,7 +27,7 @@
         }
     ],
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "ext-json": "*",
         "contao/core-bundle": "self.version",
         "contao/manager-plugin": "^2.4",
