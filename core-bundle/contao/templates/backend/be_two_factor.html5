@@ -114,5 +114,64 @@
       <a href="<?= $this->route('contao_backend', ['do' => 'security', 'act' => 'enable', 'ref' => $this->ref]) ?>" class="tl_submit"><?= $this->trans('MSC.enable') ?></a>
     </div>
   <?php endif; ?>
+</div>
 
+<div class="two-factor passkeys">
+  <h2 class="sub_headline"><?= $this->trans('MSC.passkeys') ?></h2>
+  <p><?= $this->trans('MSC.passkeysDescription') ?></p>
+  <div class="tl_listing_container">
+    <turbo-frame id="passkeys" data-turbo-action="advance">
+      <?php if ($this->credentials): ?>
+        <table class="tl_listing showColumns with-border with-padding credential-list" data-controller="contao--passkeys">
+          <thead>
+            <tr>
+              <th class="name"><?= $this->trans('MSC.passkeysName') ?></th>
+              <th class="created"><?= $this->trans('MSC.passkeysCreatedAt') ?></th>
+              <th class="actions"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($this->credentials as $credential): ?>
+              <tr class="hover-row">
+                <td class="name">
+                  <?php if ($this->editPassKeyId === $credential->getId()): ?>
+                    <form method="post" data-contao--passkeys-target="form" id="form-edit-passkey-<?= $credential->getId() ?>">
+                      <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials_edit">
+                      <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
+                      <input type="hidden" name="credential_id" value="<?= $credential->getId() ?>">
+                      <input type="text" name="passkey_name" value="<?= Contao\StringUtil::specialchars($credential->name) ?>" placeholder="<?= $this->trans('MSC.passkeyNameInput') ?>" data-action="keydown.esc->contao--passkeys#cancelEdit" data-contao--passkeys-target="nameInput">
+                    </form>
+                  <?php else: ?>
+                    <?= Contao\StringUtil::specialchars($credential->name ?: $credential->getId()) ?>
+                  <?php endif; ?>
+                </td>
+                <td class="created"><?= $credential->createdAt->format('j. F Y, H:i') ?></td>
+                <td class="actions">
+                  <form method="post">
+                    <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials_actions">
+                    <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
+                    <?php if ($this->editPassKeyId === $credential->getId()): ?><button type="submit" name="save_passkey" form="form-edit-passkey-<?= $credential->getId() ?>" value="<?= $credential->getId() ?>"><?= Contao\Image::getHtml('save.svg', $this->trans('MSC.edit')) ?></button><?php else: ?><button type="submit" name="edit_passkey" value="<?= $credential->getId() ?>"><?= Contao\Image::getHtml('edit.svg', $this->trans('MSC.edit')) ?></button><?php endif; ?> <button type="submit" name="delete_passkey" value="<?= $credential->getId() ?>" onclick="if(!confirm('<?= $this->trans('MSC.deleteConfirm', [$credential->name ?: $credential->getId()]) ?>'))return false"><?= Contao\Image::getHtml('delete.svg', $this->trans('MSC.delete')) ?></button>
+                  </form>
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      <?php endif; ?>
+    </turbo-frame>
+  </div>
+  <div class="add_passkey"
+    data-controller="contao--webauthn contao--webauthn-error"
+    data-contao--webauthn-creation-result-url-value="<?= $this->route('webauthn.controller.creation.response.contao_backend_add_authenticator') ?>"
+    data-contao--webauthn-creation-options-url-value="<?= $this->route('webauthn.controller.creation.request.contao_backend_add_authenticator') ?>"
+    data-contao--webauthn-creation-success-redirect-uri-value="<?= $this->webauthnCreationSuccessRedirectUri ?>"
+    data-contao--webauthn-error-unsupported-message-value="<?= $this->trans('ERR.passkeysUnsupported') ?>"
+    data-contao--webauthn-error-attestation-failure-message-value="<?= $this->trans('ERR.passkeyAttestationFailure') ?>"
+    data-action="webauthn:unsupported->contao--webauthn-error#handleUnsupported webauthn:attestation:failure->contao--webauthn-error#handleAttestationFailure"
+  >
+    <div class="tl_submit_container">
+      <button class="tl_submit" type="submit" data-action="contao--webauthn#signup"><?= $this->trans('MSC.addPasskey') ?></button>
+    </div>
+    <div class="tl_message passkey_message" data-contao--webauthn-error-target="message"></div>
+  </div>
 </div>

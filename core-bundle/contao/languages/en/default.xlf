@@ -293,6 +293,15 @@
       <trans-unit id="ERR.personalDataPassword">
         <source>There is at least one "personal data" module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the "change password" module instead.</source>
       </trans-unit>
+      <trans-unit id="ERR.passkeysUnsupported">
+        <source>Passkeys are not supported on this device.</source>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAssertionFailure">
+        <source>Login with passkey failed.</source>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAttestationFailure">
+        <source>Passkey could not be created.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
       </trans-unit>
@@ -2191,6 +2200,27 @@
       </trans-unit>
       <trans-unit id="MSC.altchaWaitAlert">
         <source>Verifying … please wait.</source>
+      </trans-unit>
+      <trans-unit id="MSC.passkeys">
+        <source>Passkeys</source>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysDescription">
+        <source>Passkeys allow you to log in securely and easily without the need for a password and two-factor token.</source>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyLogin">
+        <source>Sign in with a passkey</source>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysName">
+        <source>Name/ID</source>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyNameInput">
+        <source>Name this passkey …</source>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysCreatedAt">
+        <source>Created at</source>
+      </trans-unit>
+      <trans-unit id="MSC.addPasskey">
+        <source>Add passkey</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
