@@ -269,6 +269,11 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         $this->dbafsManager->setExtraMetadata($this->resolve($location), $metadata);
     }
 
+    public function resolveUuid(Uuid $uuid): string
+    {
+        return $this->dbafsManager->resolveUuid($uuid, $this->prefix);
+    }
+
     public function generatePublicUri(Uuid|string $location, OptionsInterface|null $options = null): UriInterface|null
     {
         $path = $this->resolve($location);
