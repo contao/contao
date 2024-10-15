@@ -251,6 +251,11 @@ class PermissionCheckingVirtualFilesystemTest extends TestCase
             'Access denied to access path at location "../foo".',
         ];
 
+        yield 'local path escaping boundary' => [
+            './../',
+            'Access denied to access path at location "./../".',
+        ];
+
         yield 'absolute path' => [
             '/absolute/foo',
             'Access denied to access path at location "/absolute/foo".',
