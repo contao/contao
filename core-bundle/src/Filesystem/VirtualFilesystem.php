@@ -174,6 +174,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
                 fn () => $this->getFileSize($relativePath, $accessFlags),
                 fn () => $this->getMimeType($relativePath, $accessFlags),
                 fn () => $this->getExtraMetadata($relativePath, $accessFlags),
+                $this,
             );
         }
 
@@ -185,6 +186,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
                 null,
                 null,
                 fn () => $this->getExtraMetadata($relativePath, $accessFlags),
+                $this,
             );
         }
 
@@ -324,7 +326,11 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         if (!($accessFlags & self::BYPASS_DBAFS) && $this->dbafsManager->match($path)) {
             foreach ($this->dbafsManager->listContents($path, $deep) as $item) {
                 $path = $item->getPath();
-                $item = $item->withPath(Path::makeRelative($path, $this->prefix));
+
+                $item = $item
+                    ->withPath(Path::makeRelative($path, $this->prefix))
+                    ->withStorage($this)
+                ;
 
                 if (!$item->isFile()) {
                     yield $item;
@@ -353,6 +359,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
 
             yield $item
                 ->withPath(Path::makeRelative($path, $this->prefix))
+                ->withStorage($this)
                 ->withExtraMetadata(fn () => $this->dbafsManager->getExtraMetadata($path))
             ;
         }

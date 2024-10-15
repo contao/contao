@@ -16,6 +16,7 @@ use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
+use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Framework\Adapter;
@@ -294,16 +295,28 @@ class FigureBuilder
     }
 
     /**
+     * Sets the image resource from a virtual filesystem item.
+     */
+    public function fromFilesystemItem(FilesystemItem $item): self
+    {
+        return $this->fromStorage($item->getStorage(), $item->getPath());
+    }
+
+    /**
      * Sets the image resource by guessing the identifier type.
      *
-     * @param int|string|FilesModel|ImageInterface|null $identifier Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
+     * @param int|string|FilesModel|FilesystemItem|ImageInterface|null $identifier Can be a FilesModel, a FilesystemItem, an ImageInterface, a tl_files UUID/ID/path or a file system path
      */
-    public function from(FilesModel|ImageInterface|int|string|null $identifier): self
+    public function from(FilesModel|FilesystemItem|ImageInterface|int|string|null $identifier): self
     {
         if (null === $identifier) {
             $this->lastException = new InvalidResourceException('The defined resource is "null".');
 
             return $this;
+        }
+
+        if ($identifier instanceof FilesystemItem) {
+            return $this->fromFilesystemItem($identifier);
         }
 
         if ($identifier instanceof FilesModel) {
@@ -326,7 +339,7 @@ class FigureBuilder
     }
 
     /**
-     * Sets the image resource from a path inside a VFS storage.
+     * Sets the image resource from a path inside a virtual filesystem storage.
      */
     public function fromStorage(VirtualFilesystemInterface $storage, Uuid|string $location): self
     {
