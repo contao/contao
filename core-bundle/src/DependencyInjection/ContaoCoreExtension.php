@@ -367,7 +367,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         ;
 
         $factory = $container->getDefinition('contao.search.backend');
-        $factory->setArgument(3, $indexName);
+        $factory->setArgument(4, $indexName);
     }
 
     private function handleCrawlConfig(array $config, ContainerBuilder $container): void

@@ -20,6 +20,7 @@ services:
             - !tagged_iterator contao.backend_search_provider
             - '@security.helper'
             - '@contao.search_backend.engine'
+            - '@event_dispatcher'
 
     contao.search.backend.files_provider:
         class: Contao\CoreBundle\Search\Backend\Provider\FilesProvider

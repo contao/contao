@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
 use Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\BadRequestException;
@@ -478,12 +479,28 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$strRefererId = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 
 		$security = System::getContainer()->get('security.helper');
+		$buttons = '';
 
-		$buttons = ((Input::get('act') == 'select') ? '
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : '') . ((Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable))) ? '
+		if (Input::get('act') == 'select')
+		{
+			$buttons .= DataContainerOperationsBuilder::generateBackButton();
+		}
+
+		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable)))
+		{
+			$buttons .= '
 <a href="' . $this->addToUrl($hrfNew) . '" class="' . $clsNew . '" title="' . StringUtil::specialchars($ttlNew) . '" accesskey="n" data-action="contao--scroll-offset#store">' . $lblNew . '</a>
-<a href="' . $this->addToUrl('&amp;act=paste&amp;mode=move') . '" class="header_new" title="' . StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['move'][1]) . '" data-action="contao--scroll-offset#store">' . $GLOBALS['TL_LANG'][$this->strTable]['move'][0] . '</a>  ' : '') . ($blnClipboard ? '
-<a href="' . $this->addToUrl('clipboard=1') . '" class="header_clipboard" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']) . '" accesskey="x">' . $GLOBALS['TL_LANG']['MSC']['clearClipboard'] . '</a> ' : $this->generateGlobalButtons());
+<a href="' . $this->addToUrl('&amp;act=paste&amp;mode=move') . '" class="header_new" title="' . StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['move'][1]) . '" data-action="contao--scroll-offset#store">' . $GLOBALS['TL_LANG'][$this->strTable]['move'][0] . '</a>  ';
+		}
+
+		if ($blnClipboard)
+		{
+			$buttons .= DataContainerOperationsBuilder::generateClearClipboardButton();
+		}
+		else
+		{
+			$buttons .= $this->generateGlobalButtons();
+		}
 
 		// Build the tree
 		$return = $this->panel() . Message::generate() . ($buttons ? '
@@ -1322,7 +1339,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Display the upload form
 		return Message::generate() . '
 <div id="tl_buttons">
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+' . DataContainerOperationsBuilder::generateBackButton() . '
 </div>
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . ' enctype="multipart/form-data">
 <div class="tl_formbody_edit">
@@ -1579,7 +1596,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <turbo-frame id="tl_edit_form_frame" target="_top" data-turbo-action="advance">' . $version . Message::generate() . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
 <div id="tl_buttons">
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+' . DataContainerOperationsBuilder::generateBackButton() . '
 </div>
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
 <div class="tl_formbody_edit">
@@ -1950,7 +1967,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Return
 		return '
 <div id="tl_buttons">
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+' . DataContainerOperationsBuilder::generateBackButton() . '
 </div>' . $return;
 	}
 
@@ -2135,7 +2152,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Add the form
 		return $version . Message::generate() . '
 <div id="tl_buttons">
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+' . DataContainerOperationsBuilder::generateBackButton() . '
 </div>
 <form id="tl_files" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">

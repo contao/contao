@@ -29,6 +29,7 @@ class FinderTest extends TestCase
         $expected = [
             'ce_table' => 'html.twig',
             'content_element/text' => 'html.twig',
+            'content_element/text/_button' => 'html.twig',
             'content_element/text/foo' => 'html.twig',
             'content_element/text/bar' => 'html.twig',
             'json/thing' => 'json.twig',
@@ -79,6 +80,7 @@ class FinderTest extends TestCase
 
         $expected = [
             'content_element/text' => 'html.twig',
+            'content_element/text/_button' => 'html.twig',
             'content_element/text/foo' => 'html.twig',
             'content_element/text/bar' => 'html.twig',
         ];
@@ -94,6 +96,7 @@ class FinderTest extends TestCase
         ;
 
         $expected = [
+            'content_element/text/_button' => 'html.twig',
             'content_element/text/foo' => 'html.twig',
             'content_element/text/bar' => 'html.twig',
         ];
@@ -111,6 +114,7 @@ class FinderTest extends TestCase
 
         $expected = [
             'content_element/text' => 'html.twig',
+            'content_element/text/_button' => 'html.twig',
             'content_element/text/foo' => 'html.twig',
             'content_element/text/bar' => 'html.twig',
             'content_element/text/baz' => 'html.twig',
@@ -119,9 +123,67 @@ class FinderTest extends TestCase
         $this->assertSame($expected, iterator_to_array($finder));
     }
 
+    public function testFindExcludingPartials(): void
+    {
+        $finder = $this->getFinder()
+            ->identifier('content_element/text')
+            ->withVariants()
+            ->withTheme('my_theme')
+            ->excludePartials()
+        ;
+
+        $expected = [
+            'content_element/text' => 'html.twig',
+            'content_element/text/foo' => 'html.twig',
+            'content_element/text/bar' => 'html.twig',
+            'content_element/text/baz' => 'html.twig',
+        ];
+
+        $this->assertSame($expected, iterator_to_array($finder));
+    }
+
+    /**
+     * @dataProvider provideRegexCases
+     */
+    public function testFindWithRegularExpression(string $regex, bool $include, array $expected): void
+    {
+        $finder = $this->getFinder()
+            ->identifierRegex($regex, $include)
+        ;
+
+        $this->assertSame($expected, iterator_to_array($finder));
+    }
+
+    public static function provideRegexCases(): iterable
+    {
+        yield 'containing "on" anywhere' => [
+            '%on%',
+            true,
+            [
+                'content_element/text' => 'html.twig',
+                'content_element/text/_button' => 'html.twig',
+                'content_element/text/foo' => 'html.twig',
+                'content_element/text/bar' => 'html.twig',
+                'json/thing' => 'json.twig',
+            ],
+        ];
+
+        yield 'without "json" directory' => [
+            '%^json/%',
+            false,
+            [
+                'ce_table' => 'html.twig',
+                'content_element/text' => 'html.twig',
+                'content_element/text/_button' => 'html.twig',
+                'content_element/text/foo' => 'html.twig',
+                'content_element/text/bar' => 'html.twig',
+            ],
+        ];
+    }
+
     public function testCount(): void
     {
-        $this->assertCount(5, $this->getFinder());
+        $this->assertCount(6, $this->getFinder());
     }
 
     public function testGetAsTemplateOptions(): void
@@ -130,6 +192,7 @@ class FinderTest extends TestCase
             ->identifier('content_element/text')
             ->withVariants()
             ->withTheme('my_theme')
+            ->excludePartials()
             ->asTemplateOptions()
         ;
 
@@ -153,6 +216,7 @@ class FinderTest extends TestCase
         $options = $this->getFinder($translations)
             ->identifier('content_element/text')
             ->withVariants()
+            ->excludePartials()
             ->asTemplateOptions()
         ;
 
@@ -182,6 +246,9 @@ class FinderTest extends TestCase
                         'content_element/text' => [
                             '/app/templates/content_element/text.html.twig' => '@Contao_App/content_element/text.html.twig',
                             '/templates/content_element/text.html.twig' => '@Contao_ContaoCoreBundle/content_element/text.html.twig',
+                        ],
+                        'content_element/text/_button' => [
+                            '/app/templates/content_element/text/_button.html.twig' => '@Contao_App/content_element/text/_button.html.twig',
                         ],
                         'content_element/text/foo' => [
                             '/app/templates/content_element/text/foo.html.twig' => '@Contao_App/content_element/text/foo.html.twig',
