@@ -4,6 +4,7 @@
         "@hotwired/stimulus-webpack-helpers": "^1.0.1",
         "@hotwired/turbo": "^8.0.4",
         "@symfony/webpack-encore": "^4.7.0",
+        "@web-auth/webauthn-stimulus": "file:vendor/web-auth/webauthn-stimulus/assets",
         "postcss": "^8.4.47",
         "postcss-loader": "^8.1.1",
         "postcss-preset-env": "^10.0.5"

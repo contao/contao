@@ -1,6 +1,7 @@
 import { Application } from '@hotwired/stimulus';
 import { definitionForModuleAndIdentifier, identifierForContextKey } from '@hotwired/stimulus-webpack-helpers';
 import '@hotwired/turbo';
+import WebAuthn from '@web-auth/webauthn-stimulus';
 
 import './scripts/mootao.js';
 import './scripts/core.js';
@@ -24,6 +25,8 @@ application.load(context.keys()
         }
     }).filter((value) => value)
 );
+
+application.register('contao--webauthn', WebAuthn);
 
 // Cancel all prefetch requests that contain a request token
 document.documentElement.addEventListener('turbo:before-prefetch', e => {

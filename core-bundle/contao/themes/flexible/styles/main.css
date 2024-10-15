@@ -1098,6 +1098,36 @@ h2.sub_headline {
 	line-height: 16px;
 }
 
+/* Passkeys */
+.passkeys .credential-list td.created {
+	width: 30%;
+}
+
+.passkeys .credential-list td.actions {
+	text-align: right;
+	width: 50px;
+}
+
+.passkeys .credential-list td.actions button {
+	border: 0;
+	padding: 0;
+	background-color: transparent;
+}
+
+.passkeys input[name="passkey_name"] {
+	border: 0;
+	background-color: transparent;
+	height: 1em;
+	width: 100%;
+	display: block;
+	margin: -5px;
+	padding: 5px;
+}
+
+.tl_message.passkey_message:not(:has(.tl_error, .tl_info, .tl_confirm)) {
+	display: none;
+}
+
 /* Picker search */
 #search {
 	margin: 18px 18px -9px;
@@ -3214,6 +3244,11 @@ fieldset.collapsed > legend {
 
 	.tl_undo_header div:not(.tstamp, .source) {
 		display: none;
+	}
+
+	.passkeys .credential-list td.actions,
+	.passkeys .credential-list td.created {
+		width: auto;
 	}
 }
 

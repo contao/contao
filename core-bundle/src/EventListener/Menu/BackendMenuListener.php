@@ -164,8 +164,11 @@ class BackendMenuListener
 
         $submenu = $factory
             ->createItem('submenu')
-            ->setLabel('<button type="button">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
+            ->setLabel('<button type="button" data-contao--profile-target="button" data-action="contao--profile#toggle">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
             ->setAttribute('class', 'submenu')
+            ->setAttribute('data-controller', 'contao--profile')
+            ->setAttribute('data-contao--profile-target', 'menu')
+            ->setAttribute('data-action', 'click@document->contao--profile#documentClick')
             ->setExtra('safe_label', true)
             ->setLabelAttribute('class', 'profile')
             ->setExtra('translation_domain', false)
