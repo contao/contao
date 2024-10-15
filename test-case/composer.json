@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "phpunit/phpunit": "^9.5",
         "symfony/yaml": "^6.4 || ^7.0"
     },

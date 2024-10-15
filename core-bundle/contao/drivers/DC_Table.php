@@ -4052,7 +4052,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				));
 			}
 
-			$_buttons .= (string) $operations;
+			$_buttons .= $operations;
 		}
 
 		// End table
@@ -4430,7 +4430,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			// Paste buttons (not for root trails)
-			if ($arrClipboard !== false && Input::get('act') != 'select')
+			if ($arrClipboard !== false && $operations instanceof DataContainerOperation)
 			{
 				// Call paste_button_callback(&$dc, $row, $table, $blnCircularReference, $arrClipboard, $children, $previous, $next)
 				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
@@ -5362,13 +5362,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Display buttons
 		$buttons = '';
 
-		if ((Input::get('act') == 'select' || $this->ptable))
+		if (Input::get('act') == 'select' || $this->ptable)
 		{
 			$buttons .= DataContainerOperationsBuilder::generateBackButton($this->getReferer(true, $this->ptable));
 		}
 		elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 		{
-			$buttons .= DataContainerOperationsBuilder::generateBackButton(System::getContainer()->get('router')->generate('contao_backend').'?'.$GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+			$buttons .= DataContainerOperationsBuilder::generateBackButton(System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
 		}
 
 		if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable)))
