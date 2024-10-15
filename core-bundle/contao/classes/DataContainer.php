@@ -1049,17 +1049,26 @@ abstract class DataContainer extends Backend
 
 		$attributes = $provider->getDcaAttributes($picker->getConfig());
 
+		if (isset($attributes['value']))
+		{
+			$this->arrPickerValue = (array) $attributes['value'];
+		}
+
+		$objSession = System::getContainer()->get('request_stack')->getSession();
+		$arrClipboard = $objSession->get('CLIPBOARD');
+
+		// Hide picker if the clipboard is not empty
+		if (!empty($arrClipboard[$this->strTable]) || Input::get('act') == 'select')
+		{
+			return null;
+		}
+
 		$this->objPicker = $picker;
 		$this->strPickerFieldType = $attributes['fieldType'];
 
 		$this->objPickerCallback = static function ($value) use ($provider, $picker) {
 			return $provider->convertDcaValue($picker->getConfig(), $value);
 		};
-
-		if (isset($attributes['value']))
-		{
-			$this->arrPickerValue = (array) $attributes['value'];
-		}
 
 		return $attributes;
 	}

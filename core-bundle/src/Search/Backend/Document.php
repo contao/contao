@@ -30,7 +30,7 @@ final class Document
     public function __construct(
         private readonly string $id,
         private readonly string $type,
-        private readonly string $searchableContent,
+        private string $searchableContent,
     ) {
     }
 
@@ -57,6 +57,14 @@ final class Document
     public function getMetadata(): array
     {
         return $this->metadata;
+    }
+
+    public function withSearchableContent(string $searchableContent): self
+    {
+        $clone = clone $this;
+        $clone->searchableContent = $searchableContent;
+
+        return $clone;
     }
 
     /**

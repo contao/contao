@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Search\Backend;
 
+use Contao\CoreBundle\Event\BackendSearch\EnhanceHitEvent;
+use Contao\CoreBundle\Event\BackendSearch\IndexDocumentEvent;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Hit;
@@ -26,6 +28,7 @@ use Schranz\Search\SEAL\Engine;
 use Schranz\Search\SEAL\EngineInterface;
 use Schranz\Search\SEAL\Schema\Index;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class BackendSearchTest extends TestCase
 {
@@ -65,10 +68,18 @@ class BackendSearchTest extends TestCase
             )
         ;
 
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with($this->callback(static fn (IndexDocumentEvent $event): bool => 'id' === $event->getDocument()->getId()))
+        ;
+
         $backendSearch = new BackendSearch(
             [$provider],
             $this->createMock(Security::class),
             $engine,
+            $eventDispatcher,
             'contao_backend_search',
         );
 
@@ -116,7 +127,14 @@ class BackendSearchTest extends TestCase
             'document' => '{"id":"42","type":"type","searchableContent":"search me","tags":[],"metadata":[]}',
         ]);
 
-        $backendSearch = new BackendSearch([$provider], $security, $engine, $indexName);
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with($this->callback(static fn (EnhanceHitEvent $event): bool => '42' === $event->getHit()->getDocument()->getId()))
+        ;
+
+        $backendSearch = new BackendSearch([$provider], $security, $engine, $eventDispatcher, $indexName);
         $result = $backendSearch->search(new Query(20, 'search me'));
 
         $this->assertSame('human readable hit title', $result->getHits()[0]->getTitle());
