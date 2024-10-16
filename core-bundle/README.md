@@ -82,6 +82,13 @@ security:
             user_checker: contao.security.user_checker
             switch_user: true
             login_throttling: ~
+            webauthn:
+                authentication:
+                    enabled: true
+                    profile: contao_backend
+                    routes:
+                        options_path: /_contao/login/webauthn/options
+                        result_path: /_contao/login/webauthn/result
 
             login_link:
                 check_route: contao_backend_login_link

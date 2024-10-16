@@ -80,6 +80,9 @@ return (new Configuration())
     // template_skeleton.html.twig template.
     ->ignoreErrorsOnPackage('twig/string-extra', [ErrorType::UNUSED_DEPENDENCY])
 
+    // We only use the assets from the web-auth/webauthn-stimulus package
+    ->ignoreErrorsOnPackage('web-auth/webauthn-stimulus', [ErrorType::UNUSED_DEPENDENCY])
+
     // These packages are required for the search integration
     ->ignoreErrorsOnPackage('schranz-search/symfony-bundle', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('schranz-search/seal-loupe-adapter', [ErrorType::UNUSED_DEPENDENCY])

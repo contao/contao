@@ -523,6 +523,15 @@ services:
             - '@contao.routing.scope_matcher'
             - '@event_dispatcher'
 
+    contao.listener.webauthn_backend_route:
+        class: Contao\CoreBundle\EventListener\WebauthnBackendRouteListener
+        arguments:
+            -
+                - webauthn.controller.creation.request.contao_backend_add_authenticator
+                - webauthn.controller.creation.response.contao_backend_add_authenticator
+                - webauthn.controller.security.contao_backend.request.options
+                - webauthn.controller.security.contao_backend.request.result
+
     contao.listener.widget.custom_rgxp:
         class: Contao\CoreBundle\EventListener\Widget\CustomRgxpListener
         arguments:

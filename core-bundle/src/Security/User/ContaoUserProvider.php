@@ -56,6 +56,21 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
         throw new UserNotFoundException(\sprintf('Could not find user "%s"', $identifier));
     }
 
+    public function loadUserById(int $id): User
+    {
+        $this->framework->initialize();
+
+        /** @var Adapter<User> $adapter */
+        $adapter = $this->framework->getAdapter($this->userClass);
+        $user = $adapter->loadUserById($id);
+
+        if (is_a($user, $this->userClass)) {
+            return $user;
+        }
+
+        throw new UserNotFoundException(\sprintf('Could not find user "%s"', $id));
+    }
+
     public function refreshUser(UserInterface $user): User
     {
         if (!is_a($user, $this->userClass)) {

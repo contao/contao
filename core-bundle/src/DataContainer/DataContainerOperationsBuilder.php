@@ -39,7 +39,7 @@ class DataContainerOperationsBuilder implements \Stringable
 
     public function __toString(): string
     {
-        if (null === $this->operations) {
+        if (!$this->operations) {
             return '';
         }
 
@@ -67,7 +67,7 @@ class DataContainerOperationsBuilder implements \Stringable
         return ' <a href="'.$href.'" class="header_new" title="'.StringUtil::specialchars($labelNew[1] ?? '').'" accesskey="n" data-action="contao--scroll-offset#store">'.$labelNew[0].'</a> ';
     }
 
-    public function initializeButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
+    public function initialize(): self
     {
         if (null !== $this->operations) {
             throw new \RuntimeException(self::class.' has already been initialized.');
@@ -75,6 +75,13 @@ class DataContainerOperationsBuilder implements \Stringable
 
         $builder = clone $this;
         $builder->operations = [];
+
+        return $builder;
+    }
+
+    public function initializeWithButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
+    {
+        $builder = $this->initialize();
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
             return $this;
@@ -92,14 +99,9 @@ class DataContainerOperationsBuilder implements \Stringable
         return $builder;
     }
 
-    public function initializeHeaderButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
+    public function initializeWithHeaderButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
     {
-        if (null !== $this->operations) {
-            throw new \RuntimeException(self::class.' has already been initialized.');
-        }
-
-        $builder = clone $this;
-        $builder->operations = [];
+        $builder = $this->initialize();
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
             return $this;

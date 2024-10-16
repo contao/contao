@@ -2201,6 +2201,10 @@ window.Theme =
 	 * Set up the profile toggle
 	 */
 	setupProfileToggle: function() {
+		if (window.console) {
+			console.warn('Theme.setupProfileToggle() is deprecated. Please use the stimulus controller instead.');
+		}
+
 		var tmenu = $('tmenu');
 		if (!tmenu) return;
 
@@ -2297,7 +2301,6 @@ window.addEvent('domready', function() {
 	Theme.setupCtrlClick();
 	Theme.setupTextareaResizing();
 	Theme.setupMenuToggle();
-	Theme.setupProfileToggle();
 	Theme.setupSplitButtonToggle();
 });
 

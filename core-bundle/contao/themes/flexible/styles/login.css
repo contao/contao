@@ -14,8 +14,6 @@ body {
 #main {
 	max-width: 350px;
 	margin: 0 auto;
-	background: var(--content-bg);
-	border-radius: 2px;
 }
 
 /* Headlines */
@@ -39,8 +37,31 @@ body {
 }
 
 /* Login form */
+.tl_login_form, .passkey_login {
+	background: var(--content-bg);
+	border-radius: 2px;
+}
+
 .formbody {
-	padding: 45px;
+	padding: 35px 45px;
+}
+
+.passkey_login {
+	max-width: 320px;
+	margin: 25px auto 0;
+	padding: 15px;
+	text-align: center;
+}
+
+.passkey_login button {
+	border: 0;
+	padding-left: 36px;
+	background-color: transparent !important;
+	background: url("icons/passkey.svg") 12px center no-repeat;
+}
+
+.passkey_login button:hover {
+	color: var(--contao);
 }
 
 .widget {
@@ -124,14 +145,19 @@ label[for="verify"] {
 /* Error messages */
 .tl_message {
 	max-width: 420px;
-	margin: 36px auto 0;
+	margin: 12px auto 0;
 	text-align: center;
+}
+
+.tl_message.passkey_message:not(:has(.tl_error, .tl_info, .tl_confirm)) {
+	display: none;
 }
 
 .tl_error, .tl_info, .tl_confirm {
 	padding: 3px 0;
 	line-height: 1.5;
 	font-size: 1rem;
+	margin: 0;
 }
 
 .tl_error {

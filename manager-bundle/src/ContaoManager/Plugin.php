@@ -133,23 +133,25 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel): RouteCollection|null
     {
-        if ('dev' !== $kernel->getEnvironment()) {
-            return null;
-        }
-
-        $collections = [];
-
-        $files = [
-            '_wdt' => '@WebProfilerBundle/Resources/config/routing/wdt.xml',
-            '_profiler' => '@WebProfilerBundle/Resources/config/routing/profiler.xml',
+        $collections = [
+            $resolver
+                ->resolve('@WebauthnBundle/Resources/config/routing.php')
+                ->load('@WebauthnBundle/Resources/config/routing.php'),
         ];
 
-        foreach ($files as $prefix => $file) {
-            /** @var RouteCollection $collection */
-            $collection = $resolver->resolve($file)->load($file);
-            $collection->addPrefix($prefix);
+        if ('dev' === $kernel->getEnvironment()) {
+            $files = [
+                '_wdt' => '@WebProfilerBundle/Resources/config/routing/wdt.xml',
+                '_profiler' => '@WebProfilerBundle/Resources/config/routing/profiler.xml',
+            ];
 
-            $collections[] = $collection;
+            foreach ($files as $prefix => $file) {
+                /** @var RouteCollection $collection */
+                $collection = $resolver->resolve($file)->load($file);
+                $collection->addPrefix($prefix);
+
+                $collections[] = $collection;
+            }
         }
 
         return array_reduce(
