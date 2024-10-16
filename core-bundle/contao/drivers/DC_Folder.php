@@ -202,14 +202,15 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				$this->redirect(str_replace('act=select', 'act=deleteAll', Environment::get('requestUri')));
 			}
-			elseif (Input::post('cut') !== null || Input::post('copy') !== null)
+			elseif (Input::post('cut') !== null || Input::post('copy') !== null || Input::post('copyMultiple') !== null)
 			{
 				$arrClipboard = $objSession->get('CLIPBOARD');
 
 				$arrClipboard[$strTable] = array
 				(
 					'id' => $ids,
-					'mode' => (Input::post('cut') !== null ? 'cutAll' : 'copyAll')
+					'mode' => (Input::post('cut') !== null ? 'cutAll' : 'copyAll'),
+					'keep' => Input::post('copyMultiple') !== null
 				);
 
 				$objSession->set('CLIPBOARD', $arrClipboard);
@@ -844,8 +845,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		// Empty clipboard
 		$arrClipboard = $objSession->get('CLIPBOARD');
-		$arrClipboard[$this->strTable] = array();
-		$objSession->set('CLIPBOARD', $arrClipboard);
+
+		if (!($arrClipboard[$this->strTable]['keep'] ?? false))
+		{
+			$arrClipboard[$this->strTable] = array();
+			$objSession->set('CLIPBOARD', $arrClipboard);
+		}
 
 		// Copy folders
 		if (is_dir($this->strRootDir . '/' . $source))
