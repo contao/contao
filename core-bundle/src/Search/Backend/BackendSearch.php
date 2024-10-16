@@ -179,7 +179,7 @@ class BackendSearch
         // The provider did not find any hit for it anymore so it must have been removed
         // or expired. Remove from the index.
         if (!$hit) {
-            $this->deleteDocuments([$hit->getDocument()]);
+            $this->deleteDocuments([$document]);
 
             return null;
         }
