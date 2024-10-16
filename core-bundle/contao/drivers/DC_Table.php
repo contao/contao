@@ -4430,7 +4430,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			// Paste buttons (not for root trails)
-			if ($arrClipboard !== false && $operations instanceof DataContainerOperation)
+			if ($arrClipboard !== false && $operations instanceof DataContainerOperationsBuilder)
 			{
 				// Call paste_button_callback(&$dc, $row, $table, $blnCircularReference, $arrClipboard, $children, $previous, $next)
 				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
