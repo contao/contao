@@ -122,12 +122,9 @@ class ButtonsBuilder
             }
         }
 
-        return $this->twig->render(
-            '@Contao/backend/data_container/buttons.html.twig',
-            [
-                'buttons' => array_values($buttons),
-                'right' => self::TYPE_SELECT === $type,
-            ],
-        );
+        return $this->twig->render('@Contao/backend/data_container/buttons.html.twig', [
+            'buttons' => array_values($buttons),
+            'right' => self::TYPE_SELECT === $type,
+        ]);
     }
 }
