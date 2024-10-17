@@ -175,6 +175,7 @@ class BackendSearchTest extends TestCase
 
         $engine = new Engine(new MemoryAdapter(), BackendSearch::getSearchEngineSchema($indexName));
         $engine->createIndex($indexName);
+
         $engine->saveDocument($indexName, [
             'id' => 'type_42',
             'type' => 'type',
@@ -211,6 +212,7 @@ class BackendSearchTest extends TestCase
     public function testDeleteDocumentsSync(): void
     {
         $documents = ['test_42', new Document('42', 'foobar', 'foo')];
+
         $engine = $this->createMock(EngineInterface::class);
         $engine
             ->expects($this->exactly(2))
@@ -236,6 +238,7 @@ class BackendSearchTest extends TestCase
     public function testDeleteDocumentsAsync(): void
     {
         $documents = ['test_42', new Document('42', 'foobar', 'foo')];
+
         $messageBus = $this->createMock(MessageBusInterface::class);
         $messageBus
             ->expects($this->once())
