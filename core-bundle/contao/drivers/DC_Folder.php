@@ -1450,7 +1450,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$version = '';
 		}
 
-		$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSubmitButtons($this->strTable, false, false, $this);
+		$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditButtons($this->strTable, false, false, $this);
 
 		// Add the buttons and end the form
 		$return .= '
@@ -1721,7 +1721,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 			}
 
-			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSubmitAllButtons($this->strTable, $this);
+			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditAllButtons($this->strTable, $this);
 
 			// Add the form
 			$return = '
@@ -1945,7 +1945,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$version = '';
 		}
 
-		$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSubmitButtons($this->strTable, false, false, $this);
+		$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditButtons($this->strTable, false, false, $this);
 
 		// Add the form
 		return $version . Message::generate() . '

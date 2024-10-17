@@ -2327,7 +2327,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$version = '';
 		}
 
-		$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSubmitButtons($this->strTable, (bool) $this->ptable, $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))), $this);
+		$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditButtons($this->strTable, (bool) $this->ptable, $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))), $this);
 
 		// Add the buttons and end the form
 		$return .= '
@@ -2678,7 +2678,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSubmitAllButtons($this->strTable, $this);
+			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditAllButtons($this->strTable, $this);
 
 			// Add the form
 			$return = '
@@ -3008,7 +3008,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$return .= '
 </div>';
 
-			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSubmitAllButtons($this->strTable, $this);
+			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditAllButtons($this->strTable, $this);
 
 			// Add the form
 			$return = '

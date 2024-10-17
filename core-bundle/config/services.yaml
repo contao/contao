@@ -193,6 +193,8 @@ services:
     contao.data_container.buttons_builder:
         class: Contao\CoreBundle\DataContainer\ButtonsBuilder
         public: true
+        arguments:
+            - '@twig'
 
     contao.data_container.operations_builder:
         class: Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder

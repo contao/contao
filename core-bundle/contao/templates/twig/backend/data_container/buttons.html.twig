@@ -1,0 +1,14 @@
+{% if buttons|length < 3 %}
+    {{ buttons|join(' ')|raw }}
+{% else %}
+    {{ buttons[0]|raw }}
+    <div class="split-button">
+        {{ buttons[1]|raw }}
+        <button type="button" id="sbtog">{{ backend_icon('navcol.svg') }}</button>
+        <ul class="invisible">
+            {% for button in buttons|slice(2) %}
+                <li>{{ button|raw }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
