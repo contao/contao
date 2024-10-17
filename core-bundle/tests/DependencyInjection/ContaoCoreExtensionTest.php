@@ -713,7 +713,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertTrue($container->hasDefinition('contao.search.backend'));
         $backendSearch = $container->getDefinition('contao.search.backend');
-        $this->assertSame('my_backend_search_index', $backendSearch->getArgument(4));
+        $this->assertSame('my_backend_search_index', $backendSearch->getArgument(5));
     }
 
     public function testCspConfiguration(): void
