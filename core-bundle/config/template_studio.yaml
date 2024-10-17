@@ -20,13 +20,13 @@ services:
             - '@twig'
             - '@contao.twig.inspector'
 
-    contao.twig.studio.operation.create:
+    contao.twig.studio.create_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\CreateOperation
 
-    contao.twig.studio.operation.save:
+    contao.twig.studio.save_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\SaveOperation
 
-    contao.twig.studio.operation.delete:
+    contao.twig.studio.delete_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\DeleteOperation
 
     # Autowiring aliases
