@@ -798,10 +798,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		);
 
 		// Empty clipboard
-		if (!($arrClipboard[$this->strTable]['keep'] ?? false))
-		{
-			System::getContainer()->get('contao.data_container.clipboard_manager')->clear($this->strTable);
-		}
+		System::getContainer()->get('contao.data_container.clipboard_manager')->clearIfNotKeep($this->strTable);
 
 		// Copy folders
 		if (is_dir($this->strRootDir . '/' . $source))
