@@ -73,7 +73,11 @@
 
                     let delay = el.getAttribute('data-delay');
                     if (delay > 0) {
-                        opts['autoplay'] = { delay: delay };
+                        opts['autoplay'] = { 
+                            delay: delay,
+                            {# Enable `pauseOnMouseEnter` for accessibility #}
+                            pauseOnMouseEnter: true,
+                        };
                     }
 
                     new Swiper(el, Object.assign({
