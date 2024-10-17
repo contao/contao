@@ -148,7 +148,6 @@ class AbstractBackendControllerTest extends TestCase
         $controller->setContainer($container);
 
         $this->assertSame('<custom_be_main>', $controller->fooAction($includeChromeContext)->getContent());
-
         $this->assertSame($expectedRequestFormat, $request->getRequestFormat());
     }
 
