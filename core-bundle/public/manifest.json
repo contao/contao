@@ -1,4 +1,12 @@
 {
-  "backend.css": "/bundles/contaocore/backend.e1f03a29.css",
-  "backend.js": "/bundles/contaocore/backend.99fbdb90.js"
+  "backend.css": "/bundles/contaocore/backend.48986a0c.css",
+  "backend.js": "/bundles/contaocore/backend.eef294ea.js",
+  "images/editor.svg": "/bundles/contaocore/images/editor.eabeaf3b.svg",
+  "images/copy.svg": "/bundles/contaocore/images/copy.a89183a1.svg",
+  "images/delete.svg": "/bundles/contaocore/images/delete.12e37bc4.svg",
+  "images/edit.svg": "/bundles/contaocore/images/edit.dc8eb78d.svg",
+  "images/search.svg": "/bundles/contaocore/images/search.5659cc96.svg",
+  "images/error.svg": "/bundles/contaocore/images/error.acaa5a14.svg",
+  "images/new.svg": "/bundles/contaocore/images/new.1cf576af.svg",
+  "images/ok.svg": "/bundles/contaocore/images/ok.2dec1917.svg"
 }
