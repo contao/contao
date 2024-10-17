@@ -20,9 +20,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class ClipboardManager
 {
     public const MODE_CREATE = 'create';
+
     public const MODE_CUT = 'cut';
+
     public const MODE_CUT_ALL = 'cutAll';
+
     public const MODE_COPY = 'copy';
+
     public const MODE_COPY_ALL = 'copyAll';
 
     private const SESSION_KEY = 'CLIPBOARD';
@@ -117,7 +121,7 @@ class ClipboardManager
             return false;
         }
 
-        if (($clipboard['mode'] == self::MODE_CUT && $id == $clipboard['id']) || (\is_array($clipboard['id']) && $clipboard['mode'] == self::MODE_CUT_ALL && \in_array($id, $clipboard['id'], false))) {
+        if ((self::MODE_CUT === $clipboard['mode'] && $id === $clipboard['id']) || (\is_array($clipboard['id']) && self::MODE_CUT_ALL === $clipboard['mode'] && \in_array($id, $clipboard['id'], false))) {
             return false;
         }
 

@@ -204,7 +204,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 			elseif (Input::post('cut') !== null || Input::post('copy') !== null || Input::post('copyMultiple') !== null)
 			{
-				System::getContainer()->get('contao.data_container.clipboard_manager')->setIds($strTable, $ids, (Input::post('cut') !== null ? 'cutAll' : 'copyAll'), Input::post('copyMultiple') !== null);
+				System::getContainer()->get('contao.data_container.clipboard_manager')->setIds($strTable, $ids, Input::post('cut') !== null ? 'cutAll' : 'copyAll', Input::post('copyMultiple') !== null);
 				$this->redirect($this->getReferer());
 			}
 		}
