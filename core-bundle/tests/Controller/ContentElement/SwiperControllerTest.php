@@ -32,7 +32,7 @@ class SwiperControllerTest extends ContentElementTestCase
             new SwiperController(),
             [
                 'type' => 'swiper',
-                'sliderDelay' => 0,
+                'sliderDelay' => 3000,
                 'sliderSpeed' => 300,
                 'sliderStartSlide' => 0,
                 'sliderContinuous' => true,
@@ -51,7 +51,14 @@ class SwiperControllerTest extends ContentElementTestCase
             'speed' => 300,
             'offset' => 0,
             'loop' => true,
+            'autoplay' => [
+                'delay' => 3000,
+                'pauseOnMouseEnter' => true,
+            ],
         ]));
+
+        // Replace }} with &#125;&#125; due to our insert tag filter
+        $expectedJson = str_replace('}}', '&#125;&#125;', $expectedJson);
 
         $expectedOutput = <<<HTML
             <div class="content-swiper">
