@@ -13,16 +13,24 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DataContainer;
 
 use Contao\DataContainer;
-use Contao\Image;
 use Contao\Input;
 use Contao\System;
+use Twig\Environment;
 
 /**
  * @internal
  */
 class ButtonsBuilder
 {
-    public function generateSubmitButtons(string $strTable, bool $hasPtable, bool $hasCreatePermission, DataContainer $dc): string
+    private const TYPE_EDIT = 'edit';
+
+    private const TYPE_SELECT = 'select';
+
+    public function __construct(private readonly Environment $twig)
+    {
+    }
+
+    public function generateEditButtons(string $strTable, bool $hasPtable, bool $hasCreatePermission, DataContainer $dc): string
     {
         $arrButtons = [];
         $arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s" data-turbo-frame="_self">'.$GLOBALS['TL_LANG']['MSC']['save'].'</button>';
@@ -49,66 +57,25 @@ class ButtonsBuilder
             }
         }
 
-        // Call the buttons_callback (see #4691)
-        if (\is_array($GLOBALS['TL_DCA'][$strTable]['edit']['buttons_callback'] ?? null)) {
-            foreach ($GLOBALS['TL_DCA'][$strTable]['edit']['buttons_callback'] as $callback) {
-                if (\is_array($callback)) {
-                    $arrButtons = System::importStatic($callback[0])->{$callback[1]}($arrButtons, $dc);
-                } elseif (\is_callable($callback)) {
-                    $arrButtons = $callback($arrButtons, $dc);
-                }
-            }
-        }
-
-        if (\count($arrButtons) < 3) {
-            $strButtons = implode(' ', $arrButtons);
-        } else {
-            $strButtons = array_shift($arrButtons).' ';
-            $strButtons .= '<div class="split-button">';
-            $strButtons .= array_shift($arrButtons).'<button type="button" id="sbtog">'.Image::getHtml('navcol.svg').'</button> <ul class="invisible">';
-
-            foreach ($arrButtons as $strButton) {
-                $strButtons .= '<li>'.$strButton.'</li>';
-            }
-
-            $strButtons .= '</ul></div>';
-        }
-
-        return $strButtons;
+        return $this->render($strTable, self::TYPE_EDIT, $arrButtons, $dc);
     }
 
-    public function generateSubmitAllButtons(string $strTable, DataContainer $dc): string
+    public function generateEditAllButtons(string $strTable, DataContainer $dc): string
     {
         $arrButtons = [];
         $arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG']['MSC']['save'].'</button>';
         $arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c" data-action="contao--scroll-offset#discard">'.$GLOBALS['TL_LANG']['MSC']['saveNclose'].'</button>';
 
-        // Call the buttons_callback (see #4691)
-        if (\is_array($GLOBALS['TL_DCA'][$strTable]['edit']['buttons_callback'] ?? null)) {
-            foreach ($GLOBALS['TL_DCA'][$strTable]['edit']['buttons_callback'] as $callback) {
-                if (\is_array($callback)) {
-                    $arrButtons = System::importStatic($callback[0])->{$callback[1]}($arrButtons, $dc);
-                } elseif (\is_callable($callback)) {
-                    $arrButtons = $callback($arrButtons, $dc);
-                }
-            }
-        }
+        return $this->render($strTable, self::TYPE_EDIT, $arrButtons, $dc);
+    }
 
-        if (\count($arrButtons) < 3) {
-            $strButtons = implode(' ', $arrButtons);
-        } else {
-            $strButtons = array_shift($arrButtons).' ';
-            $strButtons .= '<div class="split-button">';
-            $strButtons .= array_shift($arrButtons).'<button type="button" id="sbtog">'.Image::getHtml('navcol.svg').'</button> <ul class="invisible">';
+    public function generateUploadButtons(string $strTable, DataContainer $dc): string
+    {
+        $arrButtons = [];
+        $arrButtons['upload'] = '<button type="submit" name="upload" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG'][$strTable]['move'][0].'</button>';
+        $arrButtons['uploadNback'] = '<button type="submit" name="uploadNback" class="tl_submit" accesskey="c">'.$GLOBALS['TL_LANG'][$strTable]['uploadNback'].'</button>';
 
-            foreach ($arrButtons as $strButton) {
-                $strButtons .= '<li>'.$strButton.'</li>';
-            }
-
-            $strButtons .= '</ul></div>';
-        }
-
-        return $strButtons;
+        return $this->render($strTable, self::TYPE_EDIT, $arrButtons, $dc);
     }
 
     public function generateSelectButtons(string $strTable, bool $isSortable, DataContainer $dc): string
@@ -139,65 +106,25 @@ class ButtonsBuilder
             $arrButtons['override'] = '<button type="submit" name="override" id="override" class="tl_submit" accesskey="v">'.$GLOBALS['TL_LANG']['MSC']['overrideSelected'].'</button>';
         }
 
-        // Call the buttons_callback (see #4691)
-        if (\is_array($GLOBALS['TL_DCA'][$strTable]['select']['buttons_callback'] ?? null)) {
-            foreach ($GLOBALS['TL_DCA'][$strTable]['select']['buttons_callback'] as $callback) {
-                if (\is_array($callback)) {
-                    $arrButtons = System::importStatic($callback[0])->{$callback[1]}($arrButtons, $dc);
-                } elseif (\is_callable($callback)) {
-                    $arrButtons = $callback($arrButtons, $dc);
-                }
-            }
-        }
-
-        if (\count($arrButtons) < 3) {
-            $strButtons = implode(' ', $arrButtons);
-        } else {
-            $strButtons = array_shift($arrButtons).' ';
-            $strButtons .= '<div class="split-button">';
-            $strButtons .= array_shift($arrButtons).'<button type="button" id="sbtog">'.Image::getHtml('navcol.svg').'</button> <ul class="invisible">';
-
-            foreach ($arrButtons as $strButton) {
-                $strButtons .= '<li>'.$strButton.'</li>';
-            }
-
-            $strButtons .= '</ul></div>';
-        }
-
-        return $strButtons;
+        return $this->render($strTable, self::TYPE_SELECT, $arrButtons, $dc);
     }
 
-    public function generateUploadButtons(string $strTable, DataContainer $dc): string
+    private function render(string $table, string $type, array $buttons, DataContainer $dc): string
     {
-        $arrButtons = [];
-        $arrButtons['upload'] = '<button type="submit" name="upload" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG'][$strTable]['move'][0].'</button>';
-        $arrButtons['uploadNback'] = '<button type="submit" name="uploadNback" class="tl_submit" accesskey="c">'.$GLOBALS['TL_LANG'][$strTable]['uploadNback'].'</button>';
-
         // Call the buttons_callback (see #4691)
-        if (\is_array($GLOBALS['TL_DCA'][$strTable]['edit']['buttons_callback'] ?? null)) {
-            foreach ($GLOBALS['TL_DCA'][$strTable]['edit']['buttons_callback'] as $callback) {
+        if (\is_array($GLOBALS['TL_DCA'][$table][$type]['buttons_callback'] ?? null)) {
+            foreach ($GLOBALS['TL_DCA'][$table][$type]['buttons_callback'] as $callback) {
                 if (\is_array($callback)) {
-                    $arrButtons = System::importStatic($callback[0])->{$callback[1]}($arrButtons, $dc);
+                    $buttons = System::importStatic($callback[0])->{$callback[1]}($buttons, $dc);
                 } elseif (\is_callable($callback)) {
-                    $arrButtons = $callback($arrButtons, $dc);
+                    $buttons = $callback($buttons, $dc);
                 }
             }
         }
 
-        if (\count($arrButtons) < 3) {
-            $strButtons = implode(' ', $arrButtons);
-        } else {
-            $strButtons = array_shift($arrButtons).' ';
-            $strButtons .= '<div class="split-button">';
-            $strButtons .= array_shift($arrButtons).'<button type="button" id="sbtog">'.Image::getHtml('navcol.svg').'</button> <ul class="invisible">';
-
-            foreach ($arrButtons as $strButton) {
-                $strButtons .= '<li>'.$strButton.'</li>';
-            }
-
-            $strButtons .= '</ul></div>';
-        }
-
-        return $strButtons;
+        return $this->twig->render('@Contao/backend/data_container/buttons.html.twig', [
+            'buttons' => array_values($buttons),
+            'right' => self::TYPE_SELECT === $type,
+        ]);
     }
 }
