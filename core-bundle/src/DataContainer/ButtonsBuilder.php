@@ -166,4 +166,47 @@ class ButtonsBuilder
 
         return $strButtons;
     }
+
+    public function generateUploadButtons(string $strTable, DataContainer $dc)
+    {
+        $arrButtons = array();
+        $arrButtons['upload'] = '<button type="submit" name="upload" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG'][$strTable]['move'][0] . '</button>';
+        $arrButtons['uploadNback'] = '<button type="submit" name="uploadNback" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG'][$strTable]['uploadNback'] . '</button>';
+
+        // Call the buttons_callback (see #4691)
+        if (\is_array($GLOBALS['TL_DCA'][$strTable]['edit']['buttons_callback'] ?? null))
+        {
+            foreach ($GLOBALS['TL_DCA'][$strTable]['edit']['buttons_callback'] as $callback)
+            {
+                if (\is_array($callback))
+                {
+                    $arrButtons = System::importStatic($callback[0])->{$callback[1]}($arrButtons, $dc);
+                }
+                elseif (\is_callable($callback))
+                {
+                    $arrButtons = $callback($arrButtons, $dc);
+                }
+            }
+        }
+
+        if (\count($arrButtons) < 3)
+        {
+            $strButtons = implode(' ', $arrButtons);
+        }
+        else
+        {
+            $strButtons = array_shift($arrButtons) . ' ';
+            $strButtons .= '<div class="split-button">';
+            $strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
+
+            foreach ($arrButtons as $strButton)
+            {
+                $strButtons .= '<li>' . $strButton . '</li>';
+            }
+
+            $strButtons .= '</ul></div>';
+        }
+
+        return $strButtons;
+    }
 }
