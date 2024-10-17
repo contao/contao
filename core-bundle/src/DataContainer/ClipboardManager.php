@@ -121,10 +121,6 @@ class ClipboardManager
             return false;
         }
 
-        if ((self::MODE_CUT === $clipboard['mode'] && $id === $clipboard['id']) || (\is_array($clipboard['id']) && self::MODE_CUT_ALL === $clipboard['mode'] && \in_array($id, $clipboard['id'], false))) {
-            return false;
-        }
-
-        return true;
+        return !(self::MODE_CUT === $clipboard['mode'] && $id === $clipboard['id']) && !(\is_array($clipboard['id']) && self::MODE_CUT_ALL === $clipboard['mode'] && \in_array($id, $clipboard['id'], false));
     }
 }
