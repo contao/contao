@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
 use Contao\CoreBundle\Controller\BackendSearchController;
+use Contao\CoreBundle\Controller\BackendTemplateStudioController;
 use Contao\CoreBundle\Cron\CronJob;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
@@ -759,6 +760,26 @@ class ContaoCoreExtensionTest extends TestCase
         $processor = $container->findDefinition('contao.csp.wysiwyg_style_processor');
 
         $this->assertSame(['text-decoration' => 'underline'], $processor->getArgument(0));
+    }
+
+    public function testDoesNotRegisterTemplateStudioIfNotEnabled(): void
+    {
+        $container = $this->getContainerBuilder([
+            'contao' => [
+                'template_studio' => [
+                    'enabled' => false,
+                ],
+            ],
+        ]);
+
+        $this->assertFalse($container->hasDefinition(BackendTemplateStudioController::class));
+    }
+
+    public function testRegistersTheTemplateStudioRelatedServicesCorrectly(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->hasDefinition(BackendTemplateStudioController::class));
     }
 
     public function testRegistersAsContentElementAttribute(): void

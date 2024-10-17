@@ -158,6 +158,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleSecurityConfig($config, $container);
         $this->handleCspConfig($config, $container);
         $this->handleAltcha($config, $container);
+        $this->handTemplateStudioConfig($config, $container, $loader);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -630,5 +631,17 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $altcha->setArgument(3, $config['altcha']['algorithm']);
         $altcha->setArgument(4, $config['altcha']['range_max']);
         $altcha->setArgument(5, $config['altcha']['challenge_expiry']);
+    }
+
+    private function handTemplateStudioConfig(array $config, ContainerBuilder $container, LoaderInterface $loader): void
+    {
+        // Used to display/hide the menu entry in the back end
+        $container->setParameter('contao.template_studio.enabled', $config['template_studio']['enabled']);
+
+        if (!$config['template_studio']['enabled']) {
+            return;
+        }
+
+        $loader->load('template_studio.yaml');
     }
 }
