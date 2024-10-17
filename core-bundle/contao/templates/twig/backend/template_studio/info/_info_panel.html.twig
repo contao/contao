@@ -1,0 +1,10 @@
+{% trans_default_domain "contao_default" %}
+
+<div class="header_wrapper">
+    <h3>{% block headline %}{% endblock %}</h3>
+    <button class="close" type="button" aria-controls="template-studio--info" aria-label="{{ 'MSC.close'|trans }}"
+            data-action="contao--template-studio#closePanel">x
+    </button>
+</div>
+
+{% block content %}{% endblock %}

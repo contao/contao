@@ -773,6 +773,8 @@ class ContaoCoreExtensionTest extends TestCase
         ]);
 
         $this->assertFalse($container->hasDefinition(BackendTemplateStudioController::class));
+        $this->assertFalse($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
+        $this->assertFalse($container->hasDefinition('contao.twig.studio.create_operation'));
     }
 
     public function testRegistersTheTemplateStudioRelatedServicesCorrectly(): void
@@ -780,6 +782,8 @@ class ContaoCoreExtensionTest extends TestCase
         $container = $this->getContainerBuilder();
 
         $this->assertTrue($container->hasDefinition(BackendTemplateStudioController::class));
+        $this->assertTrue($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
+        $this->assertTrue($container->hasDefinition('contao.twig.studio.create_operation'));
     }
 
     public function testRegistersAsContentElementAttribute(): void

@@ -1,4 +1,21 @@
 #template-studio--tabs {
+    .operations {
+        display: flex;
+        justify-content: end;
+        gap: 15px;
+        margin-bottom: 12px;
+    }
+
+    .operation {
+        border: none;
+        padding: 3px 0 3px 22px;
+        background: none no-repeat left center;
+
+        &:hover {
+            color: var(--contao);
+        }
+    }
+
     *[data-contao--tabs-target="panel"] {
         counter-reset: templates;
     }

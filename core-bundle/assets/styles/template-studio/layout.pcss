@@ -1,8 +1,14 @@
 @import "common.pcss";
 @import "tree.pcss";
 @import "editor-tab.pcss";
+@import "ace.pcss";
+@import "operations.pcss";
+@import "info.pcss";
+@import "message.pcss";
 
 #template-studio {
+    --hover-color: var(--green);
+
     height: calc(100vh - 7rem);
     overflow: hidden;
 
@@ -10,6 +16,10 @@
     grid-template-areas: "tree tabs info";
     grid-template-columns: auto 1fr min-content;
     position: relative;
+
+    > *:not(:has(*)) {
+        display: none;
+    }
 
     #template-studio--tree {
         grid-area: tree;
@@ -30,10 +40,6 @@
         grid-area: info;
         border-left: 1px solid var(--border);
         overflow-y: auto;
-
-        &:empty {
-            display: none;
-        }
     }
 }
 

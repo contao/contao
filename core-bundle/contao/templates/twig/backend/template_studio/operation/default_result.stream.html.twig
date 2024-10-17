@@ -1,0 +1,11 @@
+<turbo-stream action="append" target="template-studio--message">
+    <template>
+        {% embed "@Contao/backend/template_studio/_message.html.twig" %}
+            {% trans_default_domain "contao_template_studio" %}
+
+            {% block content %}
+                 {{ translation_key|trans([context.identifier]) }}
+            {% endblock %}
+        {% endembed %}
+    </template>
+</turbo-stream>

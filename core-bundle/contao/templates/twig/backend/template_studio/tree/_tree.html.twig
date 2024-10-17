@@ -27,8 +27,8 @@
 </ol>
 {% endmacro %}
 
-<turbo-frame id="template-studio--tree">
+<form method="get" data-turbo-stream>
     <nav>
         {{ _self.tree_node(tree) }}
     </nav>
-</turbo-frame>
+</form>

@@ -1,9 +1,8 @@
 {% trans_default_domain "contao_default" %}
 
 {% set button_attributes = attrs()
-    .set('data-action', 'contao--template-studio#openTab')
+    .set('formaction', path('_contao_template_studio_editor_tab.stream', {identifier}))
     .set('aria-label', 'MSC.openTab'|trans)
-    .set('data-url', path('_contao_template_studio_editor_tab', {identifier}))
     .mergeWith(button_attributes|default)
 %}
 <button{{ button_attributes }}>{% block inner %}{{ identifier }}{% endblock %}</button>

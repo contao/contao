@@ -1,0 +1,10 @@
+{% trans_default_domain "contao_template_studio" %}
+
+{% set button_attributes = attrs()
+    .set('formaction', path('_contao_template_studio_operation.stream', {identifier, operation}))
+    .set('data-operation', operation)
+    .set('title',  ('operation.' ~ operation ~ '.1')|trans([identifier]))
+    .addClass('operation operation--' ~ operation)
+    .mergeWith(button_attributes|default)
+%}
+<button{{ button_attributes }}>{{ ('operation.' ~ operation ~ '.0')|trans() }}</button>
