@@ -586,7 +586,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 	public function show()
 	{
-		throw new \RuntimeException('"show" action is not supported by '.self::class);
+		throw new \RuntimeException('"show" action is not supported by ' . self::class);
 	}
 
 	/**
