@@ -95,6 +95,10 @@ services:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
             - '@request_stack'
+            - '@contao.security.frontend_user_provider'
+            - '@security.authenticator.login_link_handler.contao_frontend'
+            - '@http_client'
+            - '@uri_signer'
 
     contao.crawl.escargot.search_index_subscriber:
         class: Contao\CoreBundle\Crawl\Escargot\Subscriber\SearchIndexSubscriber
