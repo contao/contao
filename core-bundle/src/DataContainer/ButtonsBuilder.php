@@ -43,7 +43,7 @@ class ButtonsBuilder
                     $arrButtons['saveNedit'] = '<button type="submit" name="saveNedit" id="saveNedit" class="tl_submit" accesskey="e" data-action="contao--scroll-offset#discard">'.$GLOBALS['TL_LANG']['MSC']['saveNedit'].'</button>';
                 }
 
-                if ($hasPtable || ($GLOBALS['TL_DCA'][$strTable]['config']['switchToEdit'] ?? null) || ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? null) === DataContainer::MODE_PARENT) {
+                if ($hasPtable || ($GLOBALS['TL_DCA'][$strTable]['config']['switchToEdit'] ?? null) || DataContainer::MODE_PARENT === ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? null)) {
                     $arrButtons['saveNback'] = '<button type="submit" name="saveNback" id="saveNback" class="tl_submit" accesskey="g" data-action="contao--scroll-offset#discard">'.$GLOBALS['TL_LANG']['MSC']['saveNback'].'</button>';
                 }
             }
