@@ -167,7 +167,7 @@ class ButtonsBuilder
         return $strButtons;
     }
 
-    public function generateUploadButtons(string $strTable, DataContainer $dc)
+    public function generateUploadButtons(string $strTable, DataContainer $dc): string
     {
         $arrButtons = [];
         $arrButtons['upload'] = '<button type="submit" name="upload" class="tl_submit" accesskey="s">'.$GLOBALS['TL_LANG'][$strTable]['move'][0].'</button>';
