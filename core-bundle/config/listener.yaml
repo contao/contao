@@ -349,6 +349,7 @@ services:
             - '@request_stack'
             - '@translator'
             - '@contao.framework'
+            - '%contao.template_studio.enabled%'
 
     contao.listener.menu.backend_favorites:
         class: Contao\CoreBundle\EventListener\Menu\BackendFavoritesListener
