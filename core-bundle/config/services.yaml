@@ -190,6 +190,10 @@ services:
         tags:
             - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
 
+    contao.data_container.buttons_builder:
+        class: Contao\CoreBundle\DataContainer\ButtonsBuilder
+        public: true
+
     contao.data_container.operations_builder:
         class: Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder
         public: true

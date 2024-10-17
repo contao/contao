@@ -116,6 +116,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addCronNode())
                 ->append($this->addCspNode())
                 ->append($this->addAltchaNode())
+                ->append($this->addTemplateStudioNode())
             ->end()
         ;
 
@@ -967,6 +968,15 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(86400)
                 ->end()
             ->end()
+        ;
+    }
+
+    private function addTemplateStudioNode(): NodeDefinition
+    {
+        return (new TreeBuilder('template_studio'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->canBeDisabled()
         ;
     }
 }
