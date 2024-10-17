@@ -532,11 +532,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			$return .= '
 </div>
-<div class="tl_formbody_submit" style="text-align:right">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>';
 		}
 
@@ -1265,11 +1261,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 </div>
 </div>
 </div>
-<div class="tl_formbody_submit">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>';
 	}
 
@@ -1455,11 +1447,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Add the buttons and end the form
 		$return .= '
 </div>
-<div class="tl_formbody_submit">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>
 </turbo-frame>';
 
@@ -1732,11 +1720,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', array_map(array($this, 'urlEncode'), $ids)) . '">' . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . $return . '
 </div>
-<div class="tl_formbody_submit">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>';
 
 			// Reload the page to prevent _POST variables from being sent twice
@@ -1964,11 +1948,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
   </div>
 </div>
 </div>
-<div class="tl_formbody_submit">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>' . "\n\n" . $codeEditor;
 	}
 
