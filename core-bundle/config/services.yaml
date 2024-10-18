@@ -190,10 +190,6 @@ services:
         tags:
             - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
 
-    contao.data_container.action.show:
-        class: Contao\CoreBundle\DataContainer\Action\ShowAction
-        public: true
-
     contao.data_container.buttons_builder:
         class: Contao\CoreBundle\DataContainer\ButtonsBuilder
         public: true
@@ -211,6 +207,10 @@ services:
         public: true
         arguments:
             - '@event_dispatcher'
+
+    contao.data_container.show_action:
+        class: Contao\CoreBundle\DataContainer\Action\ShowAction
+        public: true
 
     contao.doctrine.backup.dumper:
         class: Contao\CoreBundle\Doctrine\Backup\Dumper
