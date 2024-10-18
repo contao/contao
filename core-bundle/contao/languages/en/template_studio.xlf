@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+    <file source-language="en">
+        <body>
+            <trans-unit id="operation.save.0">
+                <source>Save</source>
+            </trans-unit>
+            <trans-unit id="operation.save.1">
+                <source>Save your template for "%s"</source>
+            </trans-unit>
+            <trans-unit id="operation.delete.0">
+                <source>Delete</source>
+            </trans-unit>
+            <trans-unit id="operation.delete.1">
+                <source>Delete your template for "%s"</source>
+            </trans-unit>
+            <trans-unit id="operation.create.0">
+                <source>Create your template</source>
+            </trans-unit>
+            <trans-unit id="operation.create.1">
+                <source>Modify "%s" by creating your own template</source>
+            </trans-unit>
+            <trans-unit id="operation.create_content_element_variant.0">
+                <source>Create variant</source>
+            </trans-unit>
+            <trans-unit id="operation.create_content_element_variant.1">
+                <source>Create a new variant template for the "%s" content element</source>
+            </trans-unit>
+            <trans-unit id="operation.rename_content_element_variant.0">
+                <source>Rename variant</source>
+            </trans-unit>
+            <trans-unit id="operation.rename_content_element_variant.1">
+                <source>Rename the "%s" variant template</source>
+            </trans-unit>
+            <trans-unit id="operation.create_frontend_module_variant.0">
+                <source>Create variant</source>
+            </trans-unit>
+            <trans-unit id="operation.create_frontend_module_variant.1">
+                <source>Create a new variant template for the "%s" front end module</source>
+            </trans-unit>
+            <trans-unit id="operation.rename_frontend_module_variant.0">
+                <source>Rename variant</source>
+            </trans-unit>
+            <trans-unit id="operation.rename_frontend_module_variant.1">
+                <source>Rename the "%s" variant template</source>
+            </trans-unit>
+            <trans-unit id="message.create.success">
+                <source>Your template for "%s" was created.</source>
+            </trans-unit>
+            <trans-unit id="message.create.error">
+                <source>Your template for "%s" could not be created.</source>
+            </trans-unit>
+            <trans-unit id="message.save.success">
+                <source>Your template for "%s" was saved.</source>
+            </trans-unit>
+            <trans-unit id="message.delete.success">
+                <source>Your template for "%s" was deleted.</source>
+            </trans-unit>
+            <trans-unit id="message.delete.error">
+                <source>Your template for "%s" could not be deleted.</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

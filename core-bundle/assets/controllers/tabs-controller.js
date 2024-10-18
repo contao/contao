@@ -93,4 +93,8 @@ export default class TabsController extends Controller {
 
         this.activeTab = panel;
     }
+
+    getActiveTab() {
+        return this.activeTab;
+    }
 }

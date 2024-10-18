@@ -22,6 +22,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsOperationForTemplateStudioElement;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\DependencyInjection\Filesystem\ConfigureFilesystemInterface;
@@ -642,6 +643,39 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             return;
         }
 
+        $this->registerOperationAttribute(AsOperationForTemplateStudioElement::class, 'contao.operation.template_studio_element', $container);
+
         $loader->load('template_studio.yaml');
+    }
+
+    /**
+     * @template T of object
+     *
+     * @param class-string<T> $attributeClass
+     */
+    private function registerOperationAttribute(string $attributeClass, string $tag, ContainerBuilder $container): void
+    {
+        $container->registerAttributeForAutoconfiguration(
+            $attributeClass,
+            static function (ChildDefinition $definition, object $attribute, \Reflector $reflector) use ($tag): void {
+                /** @var \ReflectionClass<T> $reflector */
+                $tagAttributes = get_object_vars($attribute);
+
+                $tagAttributes['name'] ??= (
+                    static function () use ($reflector) {
+                        // Derive name from class name - e.g. a "FooBarBazOperation" would become "foo_bar_baz"
+                        preg_match('/([^\\\\]+)Operation$/', $reflector->getName(), $matches);
+
+                        return Container::underscore($matches[1]);
+                    }
+                )();
+
+                $definition->addTag($tag, $tagAttributes);
+
+                if ($reflector->hasMethod('setName')) {
+                    $definition->addMethodCall('setName', [$tagAttributes['name']]);
+                }
+            },
+        );
     }
 }
