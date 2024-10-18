@@ -36,7 +36,7 @@
                 <source>Create variant</source>
             </trans-unit>
             <trans-unit id="operation.create_frontend_module_variant.1">
-                <source>Create a new variant template for the "%s" frontend module</source>
+                <source>Create a new variant template for the "%s" front end module</source>
             </trans-unit>
             <trans-unit id="operation.rename_frontend_module_variant.0">
                 <source>Rename variant</source>
