@@ -2281,16 +2281,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$version = '';
 		}
 
-		$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSubmitButtons($this->strTable, (bool) $this->ptable, $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))), $this);
+		$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditButtons($this->strTable, (bool) $this->ptable, $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))), $this);
 
 		// Add the buttons and end the form
 		$return .= '
 </div>
-<div class="tl_formbody_submit">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>';
 
 		$strVersionField = '';
@@ -2632,7 +2628,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSubmitAllButtons($this->strTable, $this);
+			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditAllButtons($this->strTable, $this);
 
 			// Add the form
 			$return = '
@@ -2644,11 +2640,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . $return . '
 </div>
-<div class="tl_formbody_submit">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>';
 		}
 
@@ -2962,7 +2954,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$return .= '
 </div>';
 
-			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSubmitAllButtons($this->strTable, $this);
+			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditAllButtons($this->strTable, $this);
 
 			// Add the form
 			$return = '
@@ -2973,11 +2965,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . $return . '
 </div>
-<div class="tl_formbody_submit">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>';
 		}
 
@@ -3875,11 +3863,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$return .= '
 </div>
-<div class="tl_formbody_submit" style="text-align:right">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>';
 		}
 
@@ -4856,11 +4840,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$return .= '
 </div>
-<div class="tl_formbody_submit" style="text-align:right">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>';
 		}
 
@@ -5209,11 +5189,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$return .= '
 </div>
-<div class="tl_formbody_submit" style="text-align:right">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>';
 			}
 		}
