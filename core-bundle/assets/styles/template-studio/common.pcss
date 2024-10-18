@@ -1,4 +1,10 @@
 #template-studio {
+    .token {
+        background-color: var(--code-bg);
+        color: var(--text);
+        padding: 0 4px;
+    }
+
     .template_name {
         display: flex;
         flex-direction: column;
@@ -9,23 +15,28 @@
             display: inline-flex;
             align-items: center;
             gap: 1px;
+            color: var(--black);
 
             button {
                 border: none;
                 padding: 0;
                 background: none;
+
+                &:hover {
+                    color: var(--hover-color);
+                }
             }
 
             .namespace {
-                color: var(--orange);
+                color: var(--contao);
+            }
+
+            .extension, .\/ {
+                color: color-mix(in srgb, currentColor 50%, transparent);
             }
 
             .identifier {
-                color: var(--blue);
-            }
-
-            .extension {
-                color: var(--green);
+                color: color-mix(in srgb, currentColor 75%, transparent);
             }
         }
 
@@ -33,6 +44,63 @@
             color: var(--gray);
             font-size: .75rem;
             margin: 0;
+        }
+    }
+
+    .badges {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 2px 4px;
+        font-size: .6rem;
+        line-height: 1.5;
+
+        .badge {
+            background-color: color-mix(in srgb, currentColor 20%, transparent);
+            display: inline-flex;
+            border-radius: 4px;
+            padding: 2px 6px;
+            color: var(--gray);
+
+            &.badge--user {
+                color: var(--blue);
+            }
+
+            &.badge--origin {
+                color: var(--green);
+            }
+        }
+    }
+
+    *[data-panel] {
+        .header_wrapper {
+            display: flex;
+            gap: 4px;
+            justify-content: space-between;
+
+            h3 {
+                font-size: 0.9rem;
+                margin-bottom: 10px;
+            }
+
+            button {
+                font-size: .75rem;
+                display: grid;
+                background: none;
+                border: none;
+                place-items: center;
+                border-radius: 50%;
+                padding: 0;
+                width: 14px;
+                height: 14px;
+                opacity: .5;
+                font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+
+                &:hover {
+                    opacity: 1;
+                    background: var(--gray);
+                }
+            }
         }
     }
 }

@@ -51,6 +51,7 @@ class BackendMenuListenerTest extends TestCase
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoFramework::class),
+            false,
         );
 
         $listener($event);
@@ -143,6 +144,7 @@ class BackendMenuListenerTest extends TestCase
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoFramework::class),
+            false,
         );
 
         $listener($event);
@@ -175,6 +177,7 @@ class BackendMenuListenerTest extends TestCase
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoFramework::class),
+            false,
         );
 
         $listener($event);
@@ -182,6 +185,49 @@ class BackendMenuListenerTest extends TestCase
         $tree = $event->getTree();
 
         $this->assertCount(0, $tree->getChildren());
+    }
+
+    public function testAddsTheTemplateStudioMenuItemToTheMainMenu(): void
+    {
+        $user = $this->createMock(BackendUser::class);
+        $user
+            ->expects($this->once())
+            ->method('navigation')
+            ->willReturn([
+                'design' => [
+                    'label' => 'Layout',
+                    'title' => 'Layout',
+                    'href' => '/',
+                    'class' => 'design-category node-expanded trail',
+                    'modules' => [],
+                ],
+            ])
+        ;
+
+        $security = $this->createMock(Security::class);
+        $security
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $nodeFactory = new MenuFactory();
+        $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('mainMenu'));
+
+        $listener = new BackendMenuListener(
+            $security,
+            $this->createMock(RouterInterface::class),
+            new RequestStack(),
+            $this->createMock(TranslatorInterface::class),
+            $this->createMock(ContaoFramework::class),
+            true,
+        );
+
+        $listener($event);
+
+        $children = $event->getTree()->getChildren()['design']->getChildren();
+
+        $this->assertArrayHasKey('template-studio', $children);
+        $this->assertSame('Template Studio', $children['template-studio']->getLabel());
     }
 
     public function testBuildsTheHeaderMenu(): void
@@ -234,6 +280,7 @@ class BackendMenuListenerTest extends TestCase
             $requestStack,
             $this->getTranslator(),
             $this->mockContaoFramework([Backend::class => $systemMessages]),
+            false,
         );
 
         $listener($event);
@@ -343,6 +390,7 @@ class BackendMenuListenerTest extends TestCase
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoFramework::class),
+            false,
         );
 
         $listener($event);
@@ -375,6 +423,7 @@ class BackendMenuListenerTest extends TestCase
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoFramework::class),
+            false,
         );
 
         $listener($event);

@@ -6,6 +6,7 @@ namespace Contao\CoreBundle\Search\Backend;
 
 use Contao\CoreBundle\Event\BackendSearch\EnhanceHitEvent;
 use Contao\CoreBundle\Event\BackendSearch\IndexDocumentEvent;
+use Contao\CoreBundle\Messenger\Message\BackendSearch\DeleteDocumentsMessage;
 use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\IndexUpdateConfigInterface;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -18,6 +19,7 @@ use Schranz\Search\SEAL\Search\Condition\EqualCondition;
 use Schranz\Search\SEAL\Search\Condition\SearchCondition;
 use Schranz\Search\SEAL\Search\SearchBuilder;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 /**
@@ -33,12 +35,43 @@ class BackendSearch
         private readonly Security $security,
         private readonly EngineInterface $engine,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly MessageBusInterface $messageBus,
         private readonly string $indexName,
     ) {
     }
 
+    /**
+     * @param array<string>|array<Document> $documents The document instances or document IDs
+     */
+    public function deleteDocuments(array $documents, bool $async = true): self
+    {
+        $documentIds = [];
+
+        foreach ($documents as $document) {
+            if ($document instanceof Document) {
+                $documentIds[] = $this->getGlobalIdForDocument($document);
+            } else {
+                $documentIds[] = $document;
+            }
+        }
+
+        if ($async) {
+            $this->messageBus->dispatch(new DeleteDocumentsMessage($documentIds));
+
+            return $this;
+        }
+
+        // TODO: Use bulk endpoint as soon as SEAL supports this
+        foreach ($documentIds as $documentId) {
+            $this->engine->deleteDocument($this->indexName, $documentId);
+        }
+
+        return $this;
+    }
+
     public function triggerUpdate(IndexUpdateConfigInterface $trigger): void
     {
+        // TODO: Use bulk endpoint as soon as SEAL supports this
         /** @var ProviderInterface $provider */
         foreach ($this->providers as $provider) {
             /** @var Document $document */
@@ -143,8 +176,11 @@ class BackendSearch
         $document = Document::fromArray(json_decode($document['document'], true, 512, JSON_THROW_ON_ERROR));
         $hit = $fileProvider->convertDocumentToHit($document);
 
+        // The provider did not find any hit for it anymore so it must have been removed
+        // or expired. Remove from the index.
         if (!$hit) {
-            // TODO: delete this document from the index
+            $this->deleteDocuments([$document]);
+
             return null;
         }
 
@@ -173,12 +209,17 @@ class BackendSearch
     private function convertProviderDocumentForSearchIndex(Document $document): array
     {
         return [
-            // Ensure the ID is global across the search index by prefixing the id
-            'id' => $document->getType().'_'.$document->getId(),
+            'id' => $this->getGlobalIdForDocument($document),
             'type' => $document->getType(),
             'searchableContent' => $document->getSearchableContent(),
             'tags' => $document->getTags(),
             'document' => json_encode($document->toArray(), JSON_THROW_ON_ERROR),
         ];
+    }
+
+    private function getGlobalIdForDocument(Document $document): string
+    {
+        // Ensure the ID is global across the search index by prefixing the id
+        return $document->getType().'_'.$document->getId();
     }
 }

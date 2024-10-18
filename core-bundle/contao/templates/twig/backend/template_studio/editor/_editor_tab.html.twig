@@ -1,8 +1,19 @@
+{% trans_default_domain "template_studio" %}
+
 {% embed "@Contao/backend/component/tabs/_panel.html.twig" with {
     label: identifier,
     panel_id: 'template-studio--tab_'~ identifier,
 } %}
     {% block content %}
+        {# Operations #}
+        {% if operations|length %}
+            <form class="operations" method="post">
+                {% for operation in operations %}
+                    {% include '@Contao/backend/template_studio/editor/_operation_button.html.twig' %}
+                {% endfor %}
+            </form>
+        {% endif %}
+
         {# Editor listing #}
         {% for template in templates %}
             {# Editor #}
