@@ -1,27 +1,41 @@
 {% extends '@Contao/be_main.html5' %}
 
+{% block head %}
+    {{ parent() }}
+    <script src="{{ asset('js/ext-code_lens.js',  'contao-components/ace') }}"></script>
+{% endblock %}
+
 {% block main %}
     <main id="main"
           aria-labelledby="main_headline"
           data-controller="contao--template-studio"
           data-action="contao--color-scheme:change@window->contao--template-studio#colorChange"
+          data-contao--template-studio-follow-url-value="{{ path('_contao_template_studio_follow.stream') }}"
+          data-contao--template-studio-block-info-url-value="{{ path('_contao_template_studio_block_info.stream') }}"
     >
         {# Headline #}
         <h1 id="main_headline">{{ headline }}</h1>
 
         <section id="template-studio" class="content chrome">
-            {# Browser #}
-            <turbo-frame id="template-studio--tree" src="{{ path('_contao_template_studio_tree') }}"></turbo-frame>
+            {# Template tree #}
+            <div id="template-studio--tree">
+                {{ include("@Contao/backend/template_studio/tree/_tree.html.twig") }}
+            </div>
 
             {# Main editor section with multiple tabs #}
             {% embed "@Contao/backend/component/tabs/_container.html.twig" with {
-                tabs_container_attributes: attrs().set('id', 'template-studio--tabs'),
+                tabs_container_attributes: attrs()
+                    .set('id', 'template-studio--tabs')
+                    .set('data-contao--template-studio-target', 'tabs'),
                 panels_container_id: 'template-studio--tab-panels',
             } %}
             {% endembed %}
 
             {# Info panel #}
-            <div id="template-studio--info"></div>
+            <div id="template-studio--info" data-panel></div>
+
+            {# Overlays #}
+            <div id="template-studio--message" data-message-outlet></div>
         </section>
     </main>
 {% endblock %}

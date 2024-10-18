@@ -1,0 +1,20 @@
+{# @var \Contao\CoreBundle\Twig\Inspector\TemplateInformation template #}
+{% block content_reference %}
+    {%- if type == 'extends' -%}
+        {% verbatim %}{% extends "{% endverbatim %}{{ base_template }}{% verbatim %}" %}{% endverbatim %}
+    {%- else -%}
+        {% verbatim %}{% use "{% endverbatim %}{{ base_template }}{% verbatim %}" %}{% endverbatim %}
+    {%- endif -%}
+{% endblock %}
+
+{% block info %}
+{%- verbatim %}
+{#
+  ** Add changes to the base template here. **
+
+  Try adjusting blocks and attributes instead of overwriting the whole template.
+  This way your version can remain compatible with future changes to the base
+  template as well as adjustments made by extensions.
+#}
+{%- endverbatim %}
+{% endblock %}

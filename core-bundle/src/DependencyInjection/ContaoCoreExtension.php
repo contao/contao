@@ -22,6 +22,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsOperationForTemplateStudioElement;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\DependencyInjection\Filesystem\ConfigureFilesystemInterface;
@@ -158,6 +159,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleSecurityConfig($config, $container);
         $this->handleCspConfig($config, $container);
         $this->handleAltcha($config, $container);
+        $this->handTemplateStudioConfig($config, $container, $loader);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -367,7 +369,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         ;
 
         $factory = $container->getDefinition('contao.search.backend');
-        $factory->setArgument(4, $indexName);
+        $factory->setArgument(5, $indexName);
     }
 
     private function handleCrawlConfig(array $config, ContainerBuilder $container): void
@@ -630,5 +632,50 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $altcha->setArgument(3, $config['altcha']['algorithm']);
         $altcha->setArgument(4, $config['altcha']['range_max']);
         $altcha->setArgument(5, $config['altcha']['challenge_expiry']);
+    }
+
+    private function handTemplateStudioConfig(array $config, ContainerBuilder $container, LoaderInterface $loader): void
+    {
+        // Used to display/hide the menu entry in the back end
+        $container->setParameter('contao.template_studio.enabled', $config['template_studio']['enabled']);
+
+        if (!$config['template_studio']['enabled']) {
+            return;
+        }
+
+        $this->registerOperationAttribute(AsOperationForTemplateStudioElement::class, 'contao.operation.template_studio_element', $container);
+
+        $loader->load('template_studio.yaml');
+    }
+
+    /**
+     * @template T of object
+     *
+     * @param class-string<T> $attributeClass
+     */
+    private function registerOperationAttribute(string $attributeClass, string $tag, ContainerBuilder $container): void
+    {
+        $container->registerAttributeForAutoconfiguration(
+            $attributeClass,
+            static function (ChildDefinition $definition, object $attribute, \Reflector $reflector) use ($tag): void {
+                /** @var \ReflectionClass<T> $reflector */
+                $tagAttributes = get_object_vars($attribute);
+
+                $tagAttributes['name'] ??= (
+                    static function () use ($reflector) {
+                        // Derive name from class name - e.g. a "FooBarBazOperation" would become "foo_bar_baz"
+                        preg_match('/([^\\\\]+)Operation$/', $reflector->getName(), $matches);
+
+                        return Container::underscore($matches[1]);
+                    }
+                )();
+
+                $definition->addTag($tag, $tagAttributes);
+
+                if ($reflector->hasMethod('setName')) {
+                    $definition->addMethodCall('setName', [$tagAttributes['name']]);
+                }
+            },
+        );
     }
 }

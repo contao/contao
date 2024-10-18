@@ -36,11 +36,6 @@ services:
             - '@translator'
             - '%kernel.project_dir%'
 
-    Contao\CoreBundle\Controller\BackendTemplateStudioController:
-        arguments:
-            - '@contao.twig.filesystem_loader'
-            - '@contao.twig.finder_factory'
-
     Contao\CoreBundle\Controller\BackendPreviewController:
         arguments:
             - '%contao.preview_script%'

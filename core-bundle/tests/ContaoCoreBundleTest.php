@@ -48,9 +48,24 @@ use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnha
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
+use Symfony\Component\HttpFoundation\Request;
 
 class ContaoCoreBundleTest extends TestCase
 {
+    /**
+     * @runInSeparateProcess because request attributes are static
+     */
+    public function testAddsTheTurboStreamRequestFormatOnBoot(): void
+    {
+        $request = new Request();
+
+        $this->assertNull($request->getMimeType('turbo_stream'));
+
+        (new ContaoCoreBundle())->boot();
+
+        $this->assertSame('text/vnd.turbo-stream.html', $request->getMimeType('turbo_stream'));
+    }
+
     public function testAddsTheCompilerPasses(): void
     {
         $passes = [

@@ -6,6 +6,9 @@ namespace Contao\CoreBundle\Event\BackendSearch;
 
 use Contao\CoreBundle\Search\Backend\Document;
 
+/**
+ * @experimental
+ */
 final class IndexDocumentEvent
 {
     public function __construct(private Document|null $document)
