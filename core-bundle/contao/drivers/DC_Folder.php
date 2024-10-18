@@ -151,7 +151,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Clear the clipboard
 		if (Input::get('clipboard') !== null)
 		{
-			$objSession->set('CLIPBOARD', array());
+			System::getContainer()->get('contao.data_container.clipboard_manager')->clearAll();
 			$this->redirect($this->getReferer());
 		}
 
@@ -204,16 +204,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 			elseif (Input::post('cut') !== null || Input::post('copy') !== null || Input::post('copyMultiple') !== null)
 			{
-				$arrClipboard = $objSession->get('CLIPBOARD');
-
-				$arrClipboard[$strTable] = array
-				(
-					'id' => $ids,
-					'mode' => (Input::post('cut') !== null ? 'cutAll' : 'copyAll'),
-					'keep' => Input::post('copyMultiple') !== null
-				);
-
-				$objSession->set('CLIPBOARD', $arrClipboard);
+				System::getContainer()->get('contao.data_container.clipboard_manager')->setIds($strTable, $ids, Input::post('cut') !== null ? 'cutAll' : 'copyAll', Input::post('copyMultiple') !== null);
 				$this->redirect($this->getReferer());
 			}
 		}
@@ -313,17 +304,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$children = Input::get('childs');
 			}
 
-			$arrClipboard = $objSession->get('CLIPBOARD');
-
-			$arrClipboard[$this->strTable] = array
-			(
-				'id' => $this->urlEncode($this->intId),
-				'childs' => $children, // backwards compatibility
-				'children' => $children,
-				'mode' => $mode
-			);
-
-			$objSession->set('CLIPBOARD', $arrClipboard);
+			System::getContainer()->get('contao.data_container.clipboard_manager')->set($this->strTable, $this->urlEncode($this->intId), $children, $mode);
 		}
 
 		// Get the session data and toggle the nodes
@@ -346,19 +327,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$this->redirect(preg_replace('/(&(amp;)?|\?)tg=[^& ]*/i', '', Environment::get('requestUri')));
 		}
 
-		$blnClipboard = false;
-		$arrClipboard = $objSession->get('CLIPBOARD');
-
-		// Check clipboard
-		if (!empty($arrClipboard[$this->strTable]))
-		{
-			$blnClipboard = true;
-			$arrClipboard = $arrClipboard[$this->strTable];
-		}
-		else
-		{
-			$arrClipboard = null;
-		}
+		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
+		$blnClipboard = null !== $arrClipboard;
 
 		$arrFound = array();
 		$for = $session['search'][$this->strTable]['value'] ?? null;
@@ -612,12 +582,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('id' => $id, 'pid' => $strFolder)));
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
 		// Empty clipboard
-		$arrClipboard = $objSession->get('CLIPBOARD');
-		$arrClipboard[$this->strTable] = array();
-		$objSession->set('CLIPBOARD', $arrClipboard);
+		System::getContainer()->get('contao.data_container.clipboard_manager')->clear($this->strTable);
 
 		Files::getInstance()->mkdir($id);
 		$this->redirect(html_entity_decode($this->switchToEdit($id), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5));
@@ -664,12 +630,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new UnprocessableEntityHttpException('Attempt to move the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
 		// Empty clipboard
-		$arrClipboard = $objSession->get('CLIPBOARD');
-		$arrClipboard[$this->strTable] = array();
-		$objSession->set('CLIPBOARD', $arrClipboard);
+		System::getContainer()->get('contao.data_container.clipboard_manager')->clear($this->strTable);
 
 		// Calculate the destination path
 		$destination = str_replace(\dirname($source), $strFolder, $source);
@@ -758,21 +720,15 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new BadRequestException();
 		}
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-		$arrClipboard = $objSession->get('CLIPBOARD');
-
-		if (isset($arrClipboard[$this->strTable]) && \is_array($arrClipboard[$this->strTable]['id']))
+		foreach (System::getContainer()->get('contao.data_container.clipboard_manager')->getIds($this->strTable) as $id)
 		{
-			foreach ($arrClipboard[$this->strTable]['id'] as $id)
+			try
 			{
-				try
-				{
-					$this->cut($id); // do not urldecode() here (see #6840)
-				}
-				catch (AccessDeniedException)
-				{
-					// noop
-				}
+				$this->cut($id); // do not urldecode() here (see #6840)
+			}
+			catch (AccessDeniedException)
+			{
+				// noop
 			}
 		}
 
@@ -837,16 +793,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			new CreateAction($this->strTable, array('id' => $destination, 'pid' => $strFolder))
 		);
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
 		// Empty clipboard
-		$arrClipboard = $objSession->get('CLIPBOARD');
-
-		if (!($arrClipboard[$this->strTable]['keep'] ?? false))
-		{
-			$arrClipboard[$this->strTable] = array();
-			$objSession->set('CLIPBOARD', $arrClipboard);
-		}
+		System::getContainer()->get('contao.data_container.clipboard_manager')->clearIfNotKeep($this->strTable);
 
 		// Copy folders
 		if (is_dir($this->strRootDir . '/' . $source))
@@ -957,21 +905,15 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new BadRequestException();
 		}
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-		$arrClipboard = $objSession->get('CLIPBOARD');
-
-		if (isset($arrClipboard[$this->strTable]) && \is_array($arrClipboard[$this->strTable]['id']))
+		foreach (System::getContainer()->get('contao.data_container.clipboard_manager')->getIds($this->strTable) as $id)
 		{
-			foreach ($arrClipboard[$this->strTable]['id'] as $id)
+			try
 			{
-				try
-				{
-					$this->copy($id); // do not urldecode() here (see #6840)
-				}
-				catch (AccessDeniedException)
-				{
-					// noop
-				}
+				$this->copy($id); // do not urldecode() here (see #6840)
+			}
+			catch (AccessDeniedException)
+			{
+				// noop
 			}
 		}
 
@@ -1133,10 +1075,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Empty clipboard
 		if (!$blnIsAjax)
 		{
-			$objSession = System::getContainer()->get('request_stack')->getSession();
-			$arrClipboard = $objSession->get('CLIPBOARD');
-			$arrClipboard[$this->strTable] = array();
-			$objSession->set('CLIPBOARD', $arrClipboard);
+			System::getContainer()->get('contao.data_container.clipboard_manager')->clear($this->strTable);
 		}
 
 		/** @var class-string<FileUpload> $class */
@@ -2304,20 +2243,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted, not within the visible root trails or cannot be found.');
 		}
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-		$blnClipboard = false;
-		$arrClipboard = $objSession->get('CLIPBOARD');
-
-		// Check clipboard
-		if (!empty($arrClipboard[$this->strTable]))
-		{
-			$blnClipboard = true;
-			$arrClipboard = $arrClipboard[$this->strTable];
-		}
-		else
-		{
-			$arrClipboard = null;
-		}
+		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
+		$blnClipboard = null !== $arrClipboard;
 
 		return $this->generateTree($this->strRootDir . '/' . $strFolder, ($level + 1) * 16, false, $this->isProtectedPath($strFolder), $blnClipboard ? $arrClipboard : false);
 	}

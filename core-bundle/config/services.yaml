@@ -196,6 +196,12 @@ services:
         arguments:
             - '@twig'
 
+    contao.data_container.clipboard_manager:
+        class: Contao\CoreBundle\DataContainer\ClipboardManager
+        public: true
+        arguments:
+            - '@request_stack'
+
     contao.data_container.operations_builder:
         class: Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder
         public: true

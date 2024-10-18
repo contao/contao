@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DataContainer\ClipboardManager;
 use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\Exception\AccessDeniedException;
@@ -130,7 +131,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Clear the clipboard
 		if (Input::get('clipboard') !== null)
 		{
-			$objSession->set('CLIPBOARD', array());
+			System::getContainer()->get('contao.data_container.clipboard_manager')->clearAll();
 			$this->redirect($this->getReferer());
 		}
 
@@ -178,7 +179,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 			elseif (Input::post('cut') !== null || Input::post('copy') !== null || Input::post('copyMultiple') !== null)
 			{
-				$arrClipboard = $objSession->get('CLIPBOARD');
 				$security = $container->get('security.helper');
 
 				$mode = Input::post('cut') !== null ? 'cutAll' : 'copyAll';
@@ -186,19 +186,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				if (empty($ids))
 				{
-					unset($arrClipboard[$strTable]);
-					$objSession->set('CLIPBOARD', $arrClipboard);
+					System::getContainer()->get('contao.data_container.clipboard_manager')->clear($this->strTable);
 				}
 				else
 				{
-					$arrClipboard[$strTable] = array
-					(
-						'id' => $ids,
-						'mode' => $mode,
-						'keep' => Input::post('copyMultiple') !== null
-					);
-
-					$objSession->set('CLIPBOARD', $arrClipboard);
+					System::getContainer()->get('contao.data_container.clipboard_manager')->setIds($strTable, $ids, $mode, Input::post('copyMultiple') !== null);
 
 					// Support copyAll in the list view (see #7499)
 					if ((Input::post('copy') !== null || Input::post('copyMultiple') !== null) && ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? 0) < self::MODE_PARENT)
@@ -396,8 +388,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$return = '';
 		$this->limit = '';
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
 		$this->reviseTable();
 
 		// Add to clipboard
@@ -414,17 +404,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$children = Input::get('childs');
 			}
 
-			$arrClipboard = $objSession->get('CLIPBOARD');
-
-			$arrClipboard[$this->strTable] = array
-			(
-				'id' => Input::get('id'),
-				'childs' => $children, // backwards compatibility
-				'children' => $children,
-				'mode' => Input::get('mode')
-			);
-
-			$objSession->set('CLIPBOARD', $arrClipboard);
+			System::getContainer()->get('contao.data_container.clipboard_manager')->set($this->strTable, Input::get('id'), $children, Input::get('mode'));
 
 			if ($this->currentPid)
 			{
@@ -757,9 +737,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Empty the clipboard
-		$arrClipboard = $objSession->get('CLIPBOARD');
-		$arrClipboard[$this->strTable] = array();
-		$objSession->set('CLIPBOARD', $arrClipboard);
+		System::getContainer()->get('contao.data_container.clipboard_manager')->clear($this->strTable);
 
 		$this->set['tstamp'] = 0;
 
@@ -865,12 +843,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$cr[] = $this->intId;
 		}
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
 		// Empty clipboard
-		$arrClipboard = $objSession->get('CLIPBOARD');
-		$arrClipboard[$this->strTable] = array();
-		$objSession->set('CLIPBOARD', $arrClipboard);
+		System::getContainer()->get('contao.data_container.clipboard_manager')->clear($this->strTable);
 
 		// Check for circular references
 		if (\in_array($this->set['pid'], $cr))
@@ -925,28 +899,21 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not sortable.');
 		}
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		$arrClipboard = $objSession->get('CLIPBOARD');
-
-		if (isset($arrClipboard[$this->strTable]) && \is_array($arrClipboard[$this->strTable]['id']))
+		foreach (System::getContainer()->get('contao.data_container.clipboard_manager')->getIds($this->strTable) as $id)
 		{
-			foreach ($arrClipboard[$this->strTable]['id'] as $id)
+			$this->intId = $id;
+
+			try
 			{
-				$this->intId = $id;
-
-				try
-				{
-					$this->cut(true);
-				}
-				catch (AccessDeniedException)
-				{
-					continue;
-				}
-
-				Input::setGet('pid', $id);
-				Input::setGet('mode', 1);
+				$this->cut(true);
 			}
+			catch (AccessDeniedException)
+			{
+				continue;
+			}
+
+			Input::setGet('pid', $id);
+			Input::setGet('mode', 1);
 		}
 
 		$this->redirect($this->getReferer());
@@ -1037,13 +1004,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Empty clipboard
-		$arrClipboard = $objSession->get('CLIPBOARD');
-
-		if (!($arrClipboard[$this->strTable]['keep'] ?? false))
-		{
-			$arrClipboard[$this->strTable] = array();
-			$objSession->set('CLIPBOARD', $arrClipboard);
-		}
+		System::getContainer()->get('contao.data_container.clipboard_manager')->clearIfNotKeep($this->strTable);
 
 		// Insert the record if the table is not closed and switch to edit mode
 		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null))
@@ -1304,28 +1265,21 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not copyable.');
 		}
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		$arrClipboard = $objSession->get('CLIPBOARD');
-
-		if (isset($arrClipboard[$this->strTable]) && \is_array($arrClipboard[$this->strTable]['id']))
+		foreach (System::getContainer()->get('contao.data_container.clipboard_manager')->getIds($this->strTable) as $id)
 		{
-			foreach ($arrClipboard[$this->strTable]['id'] as $id)
+			$this->intId = $id;
+
+			try
 			{
-				$this->intId = $id;
-
-				try
-				{
-					$id = $this->copy(true);
-				}
-				catch (AccessDeniedException)
-				{
-					continue;
-				}
-
-				Input::setGet('pid', $id);
-				Input::setGet('mode', 1);
+				$id = $this->copy(true);
 			}
+			catch (AccessDeniedException)
+			{
+				continue;
+			}
+
+			Input::setGet('pid', $id);
+			Input::setGet('mode', 1);
 		}
 
 		$this->redirect($this->getReferer());
@@ -3707,19 +3661,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <p class="tl_empty">Table "' . $table . '" can not be shown as extended tree, because there is no parent table!</p>';
 		}
 
-		$blnClipboard = false;
-		$arrClipboard = $objSession->get('CLIPBOARD');
-
-		// Check the clipboard
-		if (!empty($arrClipboard[$this->strTable]))
-		{
-			$blnClipboard = true;
-			$arrClipboard = $arrClipboard[$this->strTable];
-		}
-		else
-		{
-			$arrClipboard = null;
-		}
+		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
+		$blnClipboard = null !== $arrClipboard;
 
 		$security = System::getContainer()->get('security.helper');
 
@@ -3998,21 +3941,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$arrIds[] = $objRows->id;
 		}
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		$blnClipboard = false;
-		$arrClipboard = $objSession->get('CLIPBOARD');
-
-		// Check clipboard
-		if (!empty($arrClipboard[$this->strTable]))
-		{
-			$blnClipboard = true;
-			$arrClipboard = $arrClipboard[$this->strTable];
-		}
-		else
-		{
-			$arrClipboard = null;
-		}
+		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
+		$blnClipboard = null !== $arrClipboard;
 
 		for ($i=0, $c=\count($arrIds); $i<$c; $i++)
 		{
@@ -4241,7 +4171,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 					{
 						// Disable buttons of the page and all its children on cut to avoid circular references
-						if (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))))
+						if ($blnCircularReference || !System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $id))
 						{
 							$operations->append(array('icon'=>Image::getHtml('pasteafter--disabled.svg')));
 							$operations->append(array('icon'=>Image::getHtml('pasteinto--disabled.svg')));
@@ -4284,7 +4214,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Paste after the selected record (e.g. paste article after article X)
 						if ($this->strTable == $table)
 						{
-							if (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1)))
+							if ($blnCircularReference || System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $id) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1)))
 							{
 								$operations->append(array('icon'=>Image::getHtml('pasteafter--disabled.svg')));
 							}
@@ -4392,29 +4322,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function parentView()
 	{
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		$blnClipboard = false;
-		$arrClipboard = $objSession->get('CLIPBOARD');
 		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
 		$blnHasSorting = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'][0] ?? null) == 'sorting';
-		$blnMultiboard = false;
 
-		// Check clipboard
-		if (!empty($arrClipboard[$table]))
-		{
-			$blnClipboard = true;
-			$arrClipboard = $arrClipboard[$table];
-
-			if (\is_array($arrClipboard['id'] ?? null))
-			{
-				$blnMultiboard = true;
-			}
-		}
-		else
-		{
-			$arrClipboard = null;
-		}
+		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
+		$blnClipboard = null !== $arrClipboard;
+		$blnMultiboard = null !== $arrClipboard && \is_array($arrClipboard['id'] ?? null);
 
 		// Load the language file and data container array of the parent table
 		System::loadLanguageFile($this->ptable);
@@ -4824,7 +4737,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						}
 
 						// Prevent circular references
-						if (($blnClipboard && $arrClipboard['mode'] == 'cut' && $row[$i]['id'] == $arrClipboard['id']) || ($blnMultiboard && $arrClipboard['mode'] == 'cutAll' && \in_array($row[$i]['id'], $arrClipboard['id'])))
+						if ($blnClipboard && !System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $row[$i]['id']))
 						{
 							$operations->append(array('icon'=>Image::getHtml('pasteafter--disabled.svg')));
 						}
@@ -6535,11 +6448,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	{
 		$action = match ($mode)
 		{
-			'create' => new CreateAction($this->strTable, $new),
-			'cut',
-			'cutAll' => new UpdateAction($this->strTable, $this->getCurrentRecord($id, $this->strTable), array_replace(array('sorting' => null), (array) $new)),
-			'copy',
-			'copyAll' => new CreateAction($this->strTable, array_replace($this->getCurrentRecord($id, $this->strTable), array('tstamp' => null, 'sorting' => null), (array) $new))
+			ClipboardManager::MODE_CREATE => new CreateAction($this->strTable, $new),
+			ClipboardManager::MODE_CUT,
+			ClipboardManager::MODE_CUT_ALL => new UpdateAction($this->strTable, $this->getCurrentRecord($id, $this->strTable), array_replace(array('sorting' => null), (array) $new)),
+			ClipboardManager::MODE_COPY,
+			ClipboardManager::MODE_COPY_ALL => new CreateAction($this->strTable, array_replace($this->getCurrentRecord($id, $this->strTable), array('tstamp' => null, 'sorting' => null), (array) $new))
 		};
 
 		return array(ContaoCorePermissions::DC_PREFIX . $this->strTable, $action);
