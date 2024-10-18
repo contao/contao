@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
  *      media: array{
  *          type: 'video'|'audio',
  *          attributes: HtmlAttributes,
- *          sources: list<HtmlAttributes>,
+ *          sources: list<HtmlAttributes>
  *      },
  *      metadata: Metadata
  *  }
@@ -59,9 +59,16 @@ class PlayerController extends AbstractContentElementController
             return new Response();
         }
 
+        $subtitlesFiles = [];
+
+        if ($model->addSubtitles && $filesystemItems->first()?->isVideo()) {
+            $subtitlesItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->subtitlesSRC ?: '');
+            $subtitlesFiles = $this->getSourceFiles($subtitlesItems);
+        }
+
         // Compile data
         $figureData = $filesystemItems->first()?->isVideo() ?? false
-            ? $this->buildVideoFigureData($model, $sourceFiles)
+            ? $this->buildVideoFigureData($model, $sourceFiles, $subtitlesFiles)
             : $this->buildAudioFigureData($model, $sourceFiles);
 
         $template->set('figure', (object) $figureData);
@@ -72,12 +79,13 @@ class PlayerController extends AbstractContentElementController
 
     /**
      * @param list<FilesystemItem> $sourceFiles
+     * @param list<FilesystemItem> $subtitlesFiles
      *
      * @return array<string, array<string, string|HtmlAttributes|list<HtmlAttributes>>|string>
      *
      * @phpstan-return FigureData
      */
-    private function buildVideoFigureData(ContentModel $model, array $sourceFiles): array
+    private function buildVideoFigureData(ContentModel $model, array $sourceFiles, array $subtitlesFiles): array
     {
         $poster = null;
 
@@ -113,11 +121,42 @@ class PlayerController extends AbstractContentElementController
             $sourceFiles,
         );
 
+        $tracks = [];
+
+        $setDefault = false;
+
+        if ([] !== $subtitlesFiles) {
+            foreach ($subtitlesFiles as $file) {
+                $subtitles = $file->getExtraMetadata()['subtitles'] ?? null;
+                $label = ($file->getExtraMetadata()['metadata'] ?? null)?->getDefault()?->getTitle();
+
+                if (empty($label) || !$subtitles?->getSourceLanguage()) {
+                    continue;
+                }
+
+                $trackAttributes = (new HtmlAttributes())
+                    ->setIfExists('kind', $subtitles->getType()?->value)
+                    ->set('label', $label)
+                    ->set('srclang', $subtitles->getSourceLanguage())
+                    ->set('src', $this->publicUriByStoragePath[$file->getPath()])
+                ;
+
+                // Set the first file as the default track
+                if (!$setDefault) {
+                    $trackAttributes->set('default');
+                    $setDefault = true;
+                }
+
+                $tracks[] = $trackAttributes;
+            }
+        }
+
         return [
             'media' => [
                 'type' => 'video',
                 'attributes' => $attributes,
                 'sources' => $sources,
+                'tracks' => $tracks,
             ],
             'metadata' => new Metadata([
                 Metadata::VALUE_CAPTION => array_filter($captions)[0] ?? '',

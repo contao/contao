@@ -231,6 +231,9 @@ services:
         arguments:
             - '@translator'
 
+    contao.listener.data_container.subtitles_fields:
+        class: Contao\CoreBundle\EventListener\DataContainer\SubtitlesFieldsListener
+
     contao.listener.data_container.template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
