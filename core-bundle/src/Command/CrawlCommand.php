@@ -76,6 +76,7 @@ class CrawlCommand extends Command
             ->addOption('no-progress', null, InputOption::VALUE_NONE, 'Disables the progress bar output')
             ->addOption('enable-debug-csv', null, InputOption::VALUE_NONE, 'Writes the crawl debug log into a separate CSV file')
             ->addOption('debug-csv-path', null, InputOption::VALUE_REQUIRED, 'The path of the debug log CSV file', Path::join(getcwd(), 'crawl_debug_log.csv'))
+            ->addOption('username', 'u', InputOption::VALUE_REQUIRED, 'Username of the frontend member to crawl protected pages')
             ->setHelp('You can add additional URIs via the <info>contao.crawl.additional_uris</info> parameter.')
         ;
     }
@@ -109,9 +110,9 @@ class CrawlCommand extends Command
 
         try {
             if ($jobId = $input->getArgument('job')) {
-                $this->escargot = $this->escargotFactory->createFromJobId($jobId, $queue, $subscribers);
+                $this->escargot = $this->escargotFactory->createFromJobId($jobId, $queue, $subscribers, [], $input->getOption('username'));
             } else {
-                $this->escargot = $this->escargotFactory->create($baseUris, $queue, $subscribers);
+                $this->escargot = $this->escargotFactory->create($baseUris, $queue, $subscribers, [], $input->getOption('username'));
             }
         } catch (InvalidJobIdException) {
             $io->error('Could not find the given job ID.');
