@@ -74,7 +74,7 @@ export default class extends Controller {
     }
 
     _visit(url, params) {
-        if(params !== null) {
+        if (params !== null) {
             url += '?' + new URLSearchParams(params).toString();
         }
 

@@ -660,10 +660,11 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             static function (ChildDefinition $definition, object $attribute, \Reflector $reflector) use ($tag): void {
                 /** @var \ReflectionClass<T> $reflector */
                 $tagAttributes = get_object_vars($attribute);
+
                 $tagAttributes['name'] ??= (
                     static function () use ($reflector) {
                         // Derive name from class name - e.g. a "FooBarBazOperation" would become "foo_bar_baz"
-                        preg_match('/([^\\\\]+)(?:Operation)$/', $reflector->getName(), $matches);
+                        preg_match('/([^\\\\]+)Operation$/', $reflector->getName(), $matches);
 
                         return Container::underscore($matches[1]);
                     }

@@ -35,7 +35,7 @@ class BackendTemplateStudioController extends AbstractBackendController
     /**
      * @var array<string, OperationInterface>
      */
-    private array $operations = [];
+    private array $operations;
 
     /**
      * @param iterable<string, OperationInterface> $operations
@@ -347,8 +347,7 @@ class BackendTemplateStudioController extends AbstractBackendController
 
     private function isAllowedIdentifier(string $identifier): bool
     {
-        // TODO: allow sth like "$allowedIdentifier => $_" in ecs and drop this hack
-        foreach ($this->getFinder() as $allowedIdentifier => $allowedIdentifier) {
+        foreach ($this->getFinder() as $allowedIdentifier => $_) {
             if ($allowedIdentifier === $identifier) {
                 return true;
             }

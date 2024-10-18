@@ -85,7 +85,7 @@ export class TwigEditor {
                     })
                 });
 
-                callback(null, payload)
+                callback(null, payload);
             }
         })
     }
@@ -97,11 +97,11 @@ export class TwigEditor {
             const tokens = this.editor.getSession().getTokens(row);
 
             for (let i = 0; i < tokens.length; i++) {
-                if (tokens[i].type === 'meta.tag.twig' &&
-                    /^{%-?$/.test(tokens[i].value) &&
-                    tokens[i + 2]?.type === 'keyword.control.twig' &&
-                    ['extends', 'use'].includes(tokens[i + 2].value) &&
-                    tokens[i + 4]?.type === 'string'
+                if (tokens[i].type === 'meta.tag.twig'
+                    && /^{%-?$/.test(tokens[i].value)
+                    && tokens[i + 2]?.type === 'keyword.control.twig'
+                    && ['extends', 'use'].includes(tokens[i + 2].value)
+                    && tokens[i + 4]?.type === 'string'
                 ) {
                     const name = tokens[i + 4].value.replace(/["']/g, '');
 
@@ -122,11 +122,11 @@ export class TwigEditor {
             const tokens = this.editor.getSession().getTokens(row);
 
             for (let i = 0; i < tokens.length; i++) {
-                if (tokens[i].type === 'meta.tag.twig' &&
-                    /^{%-?$/.test(tokens[i].value) &&
-                    tokens[i + 2]?.type === 'keyword.control.twig' &&
-                    tokens[i + 2].value === 'block' &&
-                    tokens[i + 4]?.type === 'identifier'
+                if (tokens[i].type === 'meta.tag.twig'
+                    && /^{%-?$/.test(tokens[i].value)
+                    && tokens[i + 2]?.type === 'keyword.control.twig'
+                    && tokens[i + 2].value === 'block'
+                    && tokens[i + 4]?.type === 'identifier'
                 ) {
                     blocks.push({name: tokens[i + 4].value, row, column: tokens[i].start});
                 }

@@ -21,7 +21,7 @@ class SaveOperation extends AbstractOperation
         // Contao_Global namespace.
         $first = $this->getContaoFilesystemLoader()->getFirst($context->getIdentifier());
 
-        return (ContaoTwigUtil::parseContaoName($first)[0] ?? '') === 'Contao_Global';
+        return 'Contao_Global' === (ContaoTwigUtil::parseContaoName($first)[0] ?? '');
     }
 
     public function execute(Request $request, TemplateContext $context): Response|null
