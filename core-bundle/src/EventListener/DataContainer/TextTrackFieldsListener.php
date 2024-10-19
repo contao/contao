@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
-use Contao\CoreBundle\File\TextTrackType;
 use Contao\DataContainer;
 
 class TextTrackFieldsListener
