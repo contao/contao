@@ -59,16 +59,9 @@ class PlayerController extends AbstractContentElementController
             return new Response();
         }
 
-        $textTrackFiles = [];
-
-        if ($model->addTextTracks && $filesystemItems->first()?->isVideo()) {
-            $textTrackItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->textTrackSRC ?: '');
-            $textTrackFiles = $this->getSourceFiles($textTrackItems);
-        }
-
         // Compile data
         $figureData = $filesystemItems->first()?->isVideo() ?? false
-            ? $this->buildVideoFigureData($model, $sourceFiles, $textTrackFiles)
+            ? $this->buildVideoFigureData($model, $sourceFiles)
             : $this->buildAudioFigureData($model, $sourceFiles);
 
         $template->set('figure', (object) $figureData);
@@ -79,13 +72,12 @@ class PlayerController extends AbstractContentElementController
 
     /**
      * @param list<FilesystemItem> $sourceFiles
-     * @param list<FilesystemItem> $textTrackFiles
      *
      * @return array<string, array<string, string|HtmlAttributes|list<HtmlAttributes>>|string>
      *
      * @phpstan-return FigureData
      */
-    private function buildVideoFigureData(ContentModel $model, array $sourceFiles, array $textTrackFiles): array
+    private function buildVideoFigureData(ContentModel $model, array $sourceFiles): array
     {
         $poster = null;
 
@@ -122,8 +114,14 @@ class PlayerController extends AbstractContentElementController
         );
 
         $tracks = [];
+        $textTrackFiles = [];
 
         $setDefault = false;
+
+        if ($model->addTextTracks) {
+            $textTrackItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->textTrackSRC ?: '');
+            $textTrackFiles = $this->getSourceFiles($textTrackItems);
+        }
 
         if ([] !== $textTrackFiles) {
             foreach ($textTrackFiles as $file) {
