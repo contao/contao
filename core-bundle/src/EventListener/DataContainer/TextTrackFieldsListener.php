@@ -32,10 +32,4 @@ class TextTrackFieldsListener
 
         return $palette;
     }
-
-    #[AsCallback(table: 'tl_files', target: 'fields.textTrackType.options')]
-    public function textTrackTypeOptions(): array
-    {
-        return array_map(static fn ($case) => $case->name, TextTrackType::cases());
-    }
 }

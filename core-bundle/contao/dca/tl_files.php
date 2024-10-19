@@ -14,6 +14,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\File\TextTrackType;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Database;
@@ -257,6 +258,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			'inputType'               => 'select',
 			'reference'               => &$GLOBALS['TL_LANG']['tl_files'],
 			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'options_callback'        => static fn () => array_map(static fn ($case) => $case->name, TextTrackType::cases()),
 			'sql'                     => "varchar(12) NULL"
 		),
 		'meta' => array
