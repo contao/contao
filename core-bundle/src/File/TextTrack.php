@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\File;
 
-class Subtitles
+readonly class TextTrack
 {
     public function __construct(
-        private readonly string $sourceLanguage,
-        private readonly SubtitlesType|null $type,
+        private string             $sourceLanguage,
+        private TextTrackType|null $type,
     ) {
     }
 
@@ -25,7 +25,7 @@ class Subtitles
         return $this->sourceLanguage;
     }
 
-    public function getType(): SubtitlesType|null
+    public function getType(): TextTrackType|null
     {
         return $this->type;
     }

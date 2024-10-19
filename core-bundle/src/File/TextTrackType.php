@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\File;
 
-enum SubtitlesType: string
+enum TextTrackType: string
 {
     case subtitles = 'subtitles';
     case captions = 'captions';

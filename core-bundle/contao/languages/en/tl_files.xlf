@@ -158,17 +158,17 @@
       <trans-unit id="tl_files.sync.1">
         <source>Synchronize the file system and the database</source>
       </trans-unit>
-      <trans-unit id="tl_files.subtitlesLanguage.0">
+      <trans-unit id="tl_files.textTrackLanguage.0">
         <source>Language</source>
       </trans-unit>
-      <trans-unit id="tl_files.subtitlesLanguage.1">
+      <trans-unit id="tl_files.textTrackLanguage.1">
         <source>Please select the language.</source>
       </trans-unit>
-      <trans-unit id="tl_files.subtitlesType.0">
+      <trans-unit id="tl_files.textTrackType.0">
         <source>Type</source>
       </trans-unit>
-      <trans-unit id="tl_files.subtitlesType.1">
-        <source>Here you can choose the type of subtitles.</source>
+      <trans-unit id="tl_files.textTrackType.1">
+        <source>Here you can choose the type of the text track.</source>
       </trans-unit>
       <trans-unit id="tl_files.subtitles">
         <source>Subtitles</source>

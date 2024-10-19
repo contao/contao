@@ -244,7 +244,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "DOUBLE unsigned NOT NULL default 0"
 		),
-		'subtitlesLanguage' => array
+		'textTrackLanguage' => array
 		(
 			'filter'                  => true,
 			'inputType'               => 'select',
@@ -252,7 +252,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			'options_callback'        => static fn () => System::getContainer()->get('contao.intl.locales')->getLocales(),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
-		'subtitlesType' => array
+		'textTrackType' => array
 		(
 			'inputType'               => 'select',
 			'reference'               => &$GLOBALS['TL_LANG']['tl_files'],

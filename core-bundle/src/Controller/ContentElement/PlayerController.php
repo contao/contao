@@ -59,16 +59,16 @@ class PlayerController extends AbstractContentElementController
             return new Response();
         }
 
-        $subtitlesFiles = [];
+        $textTrackFiles = [];
 
-        if ($model->addSubtitles && $filesystemItems->first()?->isVideo()) {
-            $subtitlesItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->subtitlesSRC ?: '');
-            $subtitlesFiles = $this->getSourceFiles($subtitlesItems);
+        if ($model->addTextTracks && $filesystemItems->first()?->isVideo()) {
+            $textTrackItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->textTrackSRC ?: '');
+            $textTrackFiles = $this->getSourceFiles($textTrackItems);
         }
 
         // Compile data
         $figureData = $filesystemItems->first()?->isVideo() ?? false
-            ? $this->buildVideoFigureData($model, $sourceFiles, $subtitlesFiles)
+            ? $this->buildVideoFigureData($model, $sourceFiles, $textTrackFiles)
             : $this->buildAudioFigureData($model, $sourceFiles);
 
         $template->set('figure', (object) $figureData);
@@ -79,13 +79,13 @@ class PlayerController extends AbstractContentElementController
 
     /**
      * @param list<FilesystemItem> $sourceFiles
-     * @param list<FilesystemItem> $subtitlesFiles
+     * @param list<FilesystemItem> $textTrackFiles
      *
      * @return array<string, array<string, string|HtmlAttributes|list<HtmlAttributes>>|string>
      *
      * @phpstan-return FigureData
      */
-    private function buildVideoFigureData(ContentModel $model, array $sourceFiles, array $subtitlesFiles): array
+    private function buildVideoFigureData(ContentModel $model, array $sourceFiles, array $textTrackFiles): array
     {
         $poster = null;
 
@@ -125,19 +125,19 @@ class PlayerController extends AbstractContentElementController
 
         $setDefault = false;
 
-        if ([] !== $subtitlesFiles) {
-            foreach ($subtitlesFiles as $file) {
-                $subtitles = $file->getExtraMetadata()['subtitles'] ?? null;
+        if ([] !== $textTrackFiles) {
+            foreach ($textTrackFiles as $file) {
+                $textTrack = $file->getExtraMetadata()['textTrack'] ?? null;
                 $label = ($file->getExtraMetadata()['metadata'] ?? null)?->getDefault()?->getTitle();
 
-                if (empty($label) || !$subtitles?->getSourceLanguage()) {
+                if (empty($label) || !$textTrack?->getSourceLanguage()) {
                     continue;
                 }
 
                 $trackAttributes = (new HtmlAttributes())
-                    ->setIfExists('kind', $subtitles->getType()?->value)
+                    ->setIfExists('kind', $textTrack->getType()?->value)
                     ->set('label', $label)
-                    ->set('srclang', $subtitles->getSourceLanguage())
+                    ->set('srclang', $textTrack->getSourceLanguage())
                     ->set('src', $this->publicUriByStoragePath[$file->getPath()])
                 ;
 

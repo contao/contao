@@ -90,7 +90,7 @@ class PlayerControllerTest extends ContentElementTestCase
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
-    public function testOutputsSubtitles(): void
+    public function testOutputsTextTrack(): void
     {
         $response = $this->renderWithModelData(
             new PlayerController($this->getDefaultStorage()),
@@ -99,8 +99,8 @@ class PlayerControllerTest extends ContentElementTestCase
                 'playerSRC' => serialize([
                     self::FILE_VIDEO_MP4,
                 ]),
-                'addSubtitles' => true,
-                'subtitlesSRC' => serialize([
+                'addTextTracks' => true,
+                'textTrackSRC' => serialize([
                     self::FILE_SUBTITLES_EN_VTT,
                     self::FILE_SUBTITLES_DE_VTT,
                 ]),
@@ -122,7 +122,7 @@ class PlayerControllerTest extends ContentElementTestCase
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
-    public function testEmptySubtitleLabelsOrLanguages(): void
+    public function testEmptyTextTrackLabelsOrLanguages(): void
     {
         $response = $this->renderWithModelData(
             new PlayerController($this->getDefaultStorage()),
@@ -131,8 +131,8 @@ class PlayerControllerTest extends ContentElementTestCase
                 'playerSRC' => serialize([
                     self::FILE_VIDEO_MP4,
                 ]),
-                'addSubtitles' => true,
-                'subtitlesSRC' => serialize([
+                'addTextTracks' => true,
+                'textTrackSRC' => serialize([
                     self::FILE_SUBTITLES_INVALID_VTT,
                 ]),
             ],

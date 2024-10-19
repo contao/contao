@@ -12,28 +12,28 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
-use Contao\CoreBundle\EventListener\DataContainer\SubtitlesFieldsListener;
+use Contao\CoreBundle\EventListener\DataContainer\TextTrackFieldsListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 
-class SubtitlesFieldsListenerTest extends TestCase
+class TextTrackFieldsListenerTest extends TestCase
 {
     private const PALETTE = 'name,protected,syncExclude;meta';
 
-    public function testAddsTheSubtitlesFieldsToThePalette(): void
+    public function testAddsTheTextTrackFieldsToThePalette(): void
     {
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 'foo.vtt']);
 
         $this->assertSame(
-            'name,subtitlesLanguage,subtitlesType,protected,syncExclude;meta',
-            (new SubtitlesFieldsListener())->addSubtitlesFields(self::PALETTE, $dc),
+            'name,textTrackLanguage,textTrackType,protected,syncExclude;meta',
+            (new TextTrackFieldsListener())->addTextTrackFields(self::PALETTE, $dc),
         );
     }
 
-    public function testDoesNotAddTheSubtitlesFieldsToThePalette(): void
+    public function testDoesNotAddTheTextTrackFieldsToThePalette(): void
     {
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 'bar.baz']);
 
-        $this->assertSame(self::PALETTE, (new SubtitlesFieldsListener())->addSubtitlesFields(self::PALETTE, $dc));
+        $this->assertSame(self::PALETTE, (new TextTrackFieldsListener())->addTextTrackFields(self::PALETTE, $dc));
     }
 }

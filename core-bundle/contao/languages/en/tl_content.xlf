@@ -338,17 +338,17 @@
       <trans-unit id="tl_content.playerSRC.1">
         <source>Here you can add the video/audio file or multiple files if you are using different codecs.</source>
       </trans-unit>
-      <trans-unit id="tl_content.addSubtitles.0">
-        <source>Add subtitles</source>
+      <trans-unit id="tl_content.addTextTracks.0">
+        <source>Add text tracks</source>
       </trans-unit>
-      <trans-unit id="tl_content.addSubtitles.1">
-        <source>Add subtitles or closed captions.</source>
+      <trans-unit id="tl_content.addTextTracks.1">
+        <source>Adds text tracks such as subtitles or closed captions.</source>
       </trans-unit>
-      <trans-unit id="tl_content.subtitlesSRC.0">
-        <source>Subtitles files</source>
+      <trans-unit id="tl_content.textTrackSRC.0">
+        <source>Text track files</source>
       </trans-unit>
-      <trans-unit id="tl_content.subtitlesSRC.1">
-        <source>Here you can add one or more .vtt files with subtitles. Additional settings are done within the .vtt file.</source>
+      <trans-unit id="tl_content.textTrackSRC.1">
+        <source>Here you can add one or more .vtt files with text tracks. Additional settings are done within the .vtt file.</source>
       </trans-unit>
       <trans-unit id="tl_content.youtube.0">
         <source>YouTube ID</source>
@@ -593,8 +593,8 @@
       <trans-unit id="tl_content.poster_legend">
         <source>Preview image</source>
       </trans-unit>
-      <trans-unit id="tl_content.subtitles_legend">
-        <source>Subtitles</source>
+      <trans-unit id="tl_content.texttrack_legend">
+        <source>Text tracks</source>
       </trans-unit>
       <trans-unit id="tl_content.invisible_legend">
         <source>Visibility</source>
@@ -700,12 +700,6 @@
       </trans-unit>
       <trans-unit id="tl_content.vimeo_dnt">
         <source>Prevent session data tracking</source>
-      </trans-unit>
-      <trans-unit id="tl_content.subtitles">
-        <source>Subtitles</source>
-      </trans-unit>
-      <trans-unit id="tl_content.captions">
-        <source>Closed captions</source>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New</source>

@@ -14,18 +14,18 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
-use Contao\CoreBundle\File\SubtitlesType;
+use Contao\CoreBundle\File\TextTrackType;
 use Contao\DataContainer;
 
-class SubtitlesFieldsListener
+class TextTrackFieldsListener
 {
     #[AsCallback(table: 'tl_files', target: 'config.onpalette')]
-    public function addSubtitlesFields(string $palette, DataContainer $dc): string
+    public function addTextTrackFields(string $palette, DataContainer $dc): string
     {
         // $dc->id is the file name in this case
         if (str_ends_with($dc->id, '.vtt')) {
             $palette = PaletteManipulator::create()
-                ->addField(['subtitlesLanguage', 'subtitlesType'], 'name')
+                ->addField(['textTrackLanguage', 'textTrackType'], 'name')
                 ->applyToString($palette)
             ;
         }
@@ -33,9 +33,9 @@ class SubtitlesFieldsListener
         return $palette;
     }
 
-    #[AsCallback(table: 'tl_files', target: 'fields.subtitlesType.options')]
-    public function subtitlesTypeOptions(): array
+    #[AsCallback(table: 'tl_files', target: 'fields.textTrackType.options')]
+    public function textTrackTypeOptions(): array
     {
-        return array_map(static fn ($case) => $case->name, SubtitlesType::cases());
+        return array_map(static fn ($case) => $case->name, TextTrackType::cases());
     }
 }
