@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
 use Contao\CoreBundle\Controller\BackendSearchController;
+use Contao\CoreBundle\Controller\BackendTemplateStudioController;
 use Contao\CoreBundle\Cron\CronJob;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
@@ -712,7 +713,7 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertTrue($container->hasDefinition('contao.search.backend'));
         $backendSearch = $container->getDefinition('contao.search.backend');
-        $this->assertSame('my_backend_search_index', $backendSearch->getArgument(4));
+        $this->assertSame('my_backend_search_index', $backendSearch->getArgument(5));
     }
 
     public function testCspConfiguration(): void
@@ -759,6 +760,30 @@ class ContaoCoreExtensionTest extends TestCase
         $processor = $container->findDefinition('contao.csp.wysiwyg_style_processor');
 
         $this->assertSame(['text-decoration' => 'underline'], $processor->getArgument(0));
+    }
+
+    public function testDoesNotRegisterTemplateStudioIfNotEnabled(): void
+    {
+        $container = $this->getContainerBuilder([
+            'contao' => [
+                'template_studio' => [
+                    'enabled' => false,
+                ],
+            ],
+        ]);
+
+        $this->assertFalse($container->hasDefinition(BackendTemplateStudioController::class));
+        $this->assertFalse($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
+        $this->assertFalse($container->hasDefinition('contao.twig.studio.create_operation'));
+    }
+
+    public function testRegistersTheTemplateStudioRelatedServicesCorrectly(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->hasDefinition(BackendTemplateStudioController::class));
+        $this->assertTrue($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
+        $this->assertTrue($container->hasDefinition('contao.twig.studio.create_operation'));
     }
 
     public function testRegistersAsContentElementAttribute(): void

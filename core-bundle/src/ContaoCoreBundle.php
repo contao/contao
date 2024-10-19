@@ -50,6 +50,7 @@ use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnha
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ContaoCoreBundle extends Bundle
@@ -57,6 +58,11 @@ class ContaoCoreBundle extends Bundle
     final public const SCOPE_BACKEND = 'backend';
 
     final public const SCOPE_FRONTEND = 'frontend';
+
+    public function boot(): void
+    {
+        (new Request())->setFormat('turbo_stream', 'text/vnd.turbo-stream.html');
+    }
 
     public function getContainerExtension(): ContaoCoreExtension
     {

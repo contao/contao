@@ -1,0 +1,94 @@
+{% embed "@Contao/backend/template_studio/info/_info_panel.html.twig" %}
+    {% block headline %}Hierarchy of block "{{ block }}"{% endblock %}
+
+    {% block content %}
+        <p class="description">
+            {% if hierarchy|length > 1 %}
+                Block <span class="token">{{ block }}</span> is originally defined in the
+                <span class="token">{{ hierarchy|last.template.namespace }}</span>
+                namespace and is modified {{ hierarchy|length - 1 }} time(s) when rendering
+                the <span class="token">{{ target_template.short_name }}</span> template.
+            {% else %}
+                Block <span class="token">{{ block }}</span> is originally defined in the
+                <span class="token">{{ target_template.short_name }}</span> template.
+            {% endif %}
+        </p>
+
+        <form class="block_hierarchy" method="get" data-turbo-stream>
+            {# Block description #}
+            {% for element in hierarchy %}
+                {% set element_attrs = attrs()
+                    .addClass('block')
+                    .addClass('target', element.target)
+                    .addClass('shadowed', element.shadowed) %}
+                <div{{ element_attrs }}>
+                    {% include '@Contao/backend/template_studio/_template_name_structure.html.twig' with element.template %}
+                    {% include '@Contao/backend/template_studio/_template_badges.html.twig' with {
+                        badges: [
+                            element.template.namespace == 'Contao_Global' ? 'user' : null,
+                            element.info.type.value == 'origin' ? 'origin' : null,
+                            element.info.prototype ? 'prototype' : null
+                        ]|filter(e => e is not null)
+                    } %}
+                </div>
+
+                {# Relation to next block #}
+                {% if element.info.type.value != 'origin' %}
+                    <div class="relation_info">
+                        <div class="relation">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M8 18L12 22L16 18"/>
+                                <path d="M12 2V22"/>
+                            </svg>
+                            {% if element.info.type.value == 'overwrite' %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <path d="M14 4c0-1.1.9-2 2-2"/>
+                                    <path d="M20 2c1.1 0 2 .9 2 2"/>
+                                    <path d="M22 8c0 1.1-.9 2-2 2"/>
+                                    <path d="M16 10c-1.1 0-2-.9-2-2"/>
+                                    <path d="m3 7 3 3 3-3"/>
+                                    <path d="M6 10V5c0-1.7 1.3-3 3-3h1"/>
+                                    <rect width="8" height="8" x="2" y="14" rx="2"/>
+                                </svg>
+                                overwrites{% if not element.warning %} prototype{% endif %}
+                            {% elseif element.info.type.value == 'enhance' %}
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <line x1="15" x2="15" y1="12" y2="18"/>
+                                    <line x1="12" x2="18" y1="15" y2="15"/>
+                                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2"/>
+                                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/>
+                                </svg>
+                                enhances
+                            {% endif %}
+                        </div>
+
+                        {# Warning #}
+                        {% if element.warning %}
+                            <div class="warning">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/>
+                                    <path d="M12 9v4"/>
+                                    <path d="M12 17h.01"/>
+                                </svg>
+                                This template defines content for the <span class="token">{{ block }}</span> block without
+                                using the
+                                <span class="token">parent()</span> expression. This overwrites previously defined content.
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </form>
+    {% endblock %}
+{% endembed %}

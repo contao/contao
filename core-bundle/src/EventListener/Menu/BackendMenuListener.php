@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener\Menu;
 
 use Contao\Backend;
 use Contao\BackendUser;
+use Contao\CoreBundle\Controller\BackendTemplateStudioController;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\StringUtil;
@@ -37,6 +38,7 @@ class BackendMenuListener
         private readonly RequestStack $requestStack,
         private readonly TranslatorInterface $translator,
         private readonly ContaoFramework $framework,
+        private readonly bool $templateStudioEnabled,
     ) {
     }
 
@@ -104,6 +106,17 @@ class BackendMenuListener
                 ;
 
                 $categoryNode->addChild($moduleNode);
+            }
+
+            if ($this->templateStudioEnabled && 'design' === $categoryName) {
+                $templateStudioNode = $factory
+                    ->createItem('template-studio')
+                    ->setLabel('Template Studio')
+                    ->setUri('/contao/template-studio')
+                    ->setCurrent(BackendTemplateStudioController::class === $this->requestStack->getCurrentRequest()?->get('_controller'))
+                ;
+
+                $categoryNode->addChild($templateStudioNode);
             }
         }
     }

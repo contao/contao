@@ -1,0 +1,23 @@
+{# Show a message #}
+<turbo-stream action="append" target="template-studio--message">
+    <template>
+        {% embed "@Contao/backend/template_studio/_message.html.twig" with {success: true} %}
+            {% trans_default_domain "contao_template_studio" %}
+
+            {% block content %}
+                {{ 'message.delete.success'|trans([identifier]) }}
+            {% endblock %}
+        {% endembed %}
+    </template>
+</turbo-stream>
+
+{% if was_last %}
+    {# Close tab #}
+    <turbo-stream action="remove" target="template-studio--tab_{{ identifier }}"></turbo-stream>
+{% else %}
+    {# Reload tab #}
+    {{ render(path('_contao_template_studio_editor_tab.stream', {identifier})) }}
+{% endif %}
+
+{# Reload the template tree #}
+{{ render(path('_contao_template_studio_tree.stream')) }}

@@ -6,6 +6,9 @@ namespace Contao\CoreBundle\Event\BackendSearch;
 
 use Contao\CoreBundle\Search\Backend\Hit;
 
+/**
+ * @experimental
+ */
 final class EnhanceHitEvent
 {
     public function __construct(private Hit|null $hit)
