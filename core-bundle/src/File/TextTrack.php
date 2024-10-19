@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\File;
 readonly class TextTrack
 {
     public function __construct(
-        private string             $sourceLanguage,
+        private string $sourceLanguage,
         private TextTrackType|null $type,
     ) {
     }

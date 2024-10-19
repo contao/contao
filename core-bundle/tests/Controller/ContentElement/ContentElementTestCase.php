@@ -379,7 +379,7 @@ class ContentElementTestCase extends TestCase
                                     ['en' => new Metadata([Metadata::VALUE_TITLE => 'English'])],
                                     ['en'],
                                 ),
-                                'subtitles' => new TextTrack(
+                                'textTrack' => new TextTrack(
                                     'en',
                                     null,
                                 ),
@@ -396,7 +396,7 @@ class ContentElementTestCase extends TestCase
                                     ['en' => new Metadata([Metadata::VALUE_TITLE => 'Deutsch'])],
                                     ['en'],
                                 ),
-                                'subtitles' => new TextTrack(
+                                'textTrack' => new TextTrack(
                                     'de',
                                     TextTrackType::captions,
                                 ),
