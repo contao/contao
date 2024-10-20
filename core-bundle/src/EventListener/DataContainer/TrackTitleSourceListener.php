@@ -37,7 +37,6 @@ readonly class TrackTitleSourceListener
         $invalid = [];
 
         foreach ($fileSystemItems as $fileSystemItem) {
-
             $extraMetadata = $fileSystemItem->getExtraMetadata();
 
             /**
