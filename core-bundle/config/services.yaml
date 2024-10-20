@@ -188,7 +188,7 @@ services:
             - '@router'
             - '@contao.routing.page_finder'
         tags:
-            - { name: data_collector, template: '@ContaoCore/Collector/contao.html.twig', id: contao }
+            - { name: data_collector, template: '@Contao/web_debug_toolbar/contao_collector.html.twig', id: contao }
 
     contao.data_container.buttons_builder:
         class: Contao\CoreBundle\DataContainer\ButtonsBuilder
