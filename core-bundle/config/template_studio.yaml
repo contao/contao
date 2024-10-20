@@ -17,8 +17,20 @@ services:
     contao.twig.studio.create_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\CreateOperation
 
+    contao.twig.studio.create_content_element_variant_operation:
+        class: Contao\CoreBundle\Twig\Studio\Operation\CreateContentElementVariantOperation
+
+    contao.twig.studio.create_frontend_module_variant_operation:
+        class: Contao\CoreBundle\Twig\Studio\Operation\CreateFrontendModuleVariantOperation
+
     contao.twig.studio.delete_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\DeleteOperation
+
+    contao.twig.studio.rename_content_element_variant_operation:
+        class: Contao\CoreBundle\Twig\Studio\Operation\RenameContentElementVariantOperation
+
+    contao.twig.studio.rename_frontend_module_variant_operation:
+        class: Contao\CoreBundle\Twig\Studio\Operation\RenameFrontendModuleVariantOperation
 
     contao.twig.studio.save_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\SaveOperation
