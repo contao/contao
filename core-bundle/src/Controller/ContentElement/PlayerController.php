@@ -114,39 +114,37 @@ class PlayerController extends AbstractContentElementController
         );
 
         $tracks = [];
-        $textTrackFiles = [];
-
-        $setDefault = false;
 
         if ($model->addTextTracks) {
-            $textTrackItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->textTrackSRC ?: '');
-            $textTrackFiles = $this->getSourceFiles($textTrackItems);
-        }
+            $trackItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->textTrackSRC ?: '');
 
-        if ([] !== $textTrackFiles) {
-            foreach ($textTrackFiles as $file) {
-                $textTrack = $file->getExtraMetadata()['textTrack'] ?? null;
-                $label = ($file->getExtraMetadata()['metadata'] ?? null)?->getDefault()?->getTitle();
-
-                if (empty($label) || !$textTrack?->getSourceLanguage()) {
+            foreach ($trackItems as $trackItem) {
+                if (!$publicUri = $this->filesStorage->generatePublicUri($trackItem->getPath())) {
                     continue;
                 }
 
-                $trackAttributes = (new HtmlAttributes())
+                $extraMetadata = $trackItem->getExtraMetadata();
+
+                /** @todo change to: … = $extraMetadata->getTextTrack(); */
+                if (null === ($textTrack = $extraMetadata['textTrack'] ?? null)) {
+                    continue;
+                }
+
+                /** @todo change to: … = $extraMetadata->getLocalized()?->getDefault()?->getTitle(); */
+                if (null === ($label = ($extraMetadata['metadata'] ?? null)?->getDefault()?->getTitle())) {
+                    continue;
+                }
+
+                $tracks[] = (new HtmlAttributes())
                     ->setIfExists('kind', $textTrack->getType()?->value)
                     ->set('label', $label)
                     ->set('srclang', $textTrack->getSourceLanguage())
-                    ->set('src', $this->publicUriByStoragePath[$file->getPath()])
+                    ->set('src', $publicUri)
                 ;
-
-                // Set the first file as the default track
-                if (!$setDefault) {
-                    $trackAttributes->set('default');
-                    $setDefault = true;
-                }
-
-                $tracks[] = $trackAttributes;
             }
+
+            // Set the first file as the default track
+            ($tracks[0] ?? null)?->set('default');
         }
 
         return [
