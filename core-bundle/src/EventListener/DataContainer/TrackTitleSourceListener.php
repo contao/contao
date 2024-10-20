@@ -18,6 +18,7 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\DataContainer;
 use Contao\Message;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
 #[AsCallback(table: 'tl_content', target: 'fields.textTrackSRC.load')]
 #[AsCallback(table: 'tl_content', target: 'fields.textTrackSRC.save')]
@@ -45,7 +46,7 @@ readonly class TrackTitleSourceListener
              *    $extraMetadata->getLocalized()?->getDefault()?->getTitle();
              */
             if (
-                null === ($extraMetadata['textTrack']?->getSourceLanguage())
+                null === $extraMetadata['textTrack']?->getSourceLanguage()
                 || empty(($extraMetadata['metadata'] ?? null)?->getFirst()?->getTitle())
             ) {
                 $invalid[] = $fileSystemItem->getName();
@@ -59,7 +60,9 @@ readonly class TrackTitleSourceListener
 
             // Reset the error if it exists
             if ($session->isStarted()) {
-                ($session->getFlashBag())?->get('contao.BE.error');
+                /** @var $flashBag FlashBagAwareSessionInterface */
+                $flashBag = $session->getFlashBag();
+                $flashBag->get('contao.BE.error');
             }
         }
 
