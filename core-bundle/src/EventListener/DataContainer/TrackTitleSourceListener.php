@@ -56,13 +56,11 @@ readonly class TrackTitleSourceListener
         if ([] !== $invalid) {
             Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['textTrackMetadataMissing'], implode(', ', $invalid)));
         } elseif (Message::hasError()) {
-            $session = $this->requestStack->getSession();
+            $session = $this->requestStack->getCurrentRequest()?->getSession();
 
             // Reset the error if it exists
-            if ($session->isStarted()) {
-                /** @var $flashBag FlashBagAwareSessionInterface */
-                $flashBag = $session->getFlashBag();
-                $flashBag->get('contao.BE.error');
+            if ($session instanceof FlashBagAwareSessionInterface) {
+                $session->getFlashBag()->get('contao.BE.error');
             }
         }
 
