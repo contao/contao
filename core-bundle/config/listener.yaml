@@ -255,6 +255,12 @@ services:
             - '@contao.twig.loader.theme_namespace'
             - '@translator'
 
+    contao.listener.data_container.track_title_source:
+        class: Contao\CoreBundle\EventListener\DataContainer\TrackTitleSourceListener
+        arguments:
+            - '@contao.filesystem.virtual.files'
+            - '@request_stack'
+
     contao.listener.data_container.undo.jump_to_parent_operation:
         class: Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentOperationListener
         arguments:
