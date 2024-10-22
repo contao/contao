@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Filesystem;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\PermissionCheckingVirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -215,7 +216,7 @@ class PermissionCheckingVirtualFilesystemTest extends TestCase
 
         yield 'setExtraMetadata' => [
             'setExtraMetadata',
-            ['foo', []],
+            ['foo', new ExtraMetadata()],
             [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'files/foo'],
             'Access denied to access path at location "foo".',
         ];

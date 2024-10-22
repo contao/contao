@@ -149,14 +149,14 @@ class PermissionCheckingVirtualFilesystem implements VirtualFilesystemInterface
         return $this->inner->getMimeType($location, $accessFlags);
     }
 
-    public function getExtraMetadata(Uuid|string $location, int $accessFlags = VirtualFilesystemInterface::NONE): array
+    public function getExtraMetadata(Uuid|string $location, int $accessFlags = VirtualFilesystemInterface::NONE): ExtraMetadata
     {
         $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $location);
 
         return $this->inner->getExtraMetadata($location, $accessFlags);
     }
 
-    public function setExtraMetadata(Uuid|string $location, array $metadata): void
+    public function setExtraMetadata(Uuid|string $location, ExtraMetadata $metadata): void
     {
         $this->denyAccessUnlessGranted(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $location);
 
@@ -188,20 +188,21 @@ class PermissionCheckingVirtualFilesystem implements VirtualFilesystemInterface
 
     private function canAccess(string $attribute, Uuid|string $location): bool
     {
+        if (!$this->inner instanceof VirtualFilesystem) {
+            return false;
+        }
+
         $path = $location instanceof Uuid
             ? Path::canonicalize($this->inner->resolveUuid($location))
             : Path::canonicalize($location);
 
-        // Deny access for resources, where we cannot generate a meaningful root storage
+        // Deny access for resources where we cannot generate a meaningful root storage
         // relative path.
         if (Path::isAbsolute($path) || str_starts_with($path, '..')) {
             return false;
         }
 
-        /** @var VirtualFilesystem $virtualFilesystemStorage */
-        $virtualFilesystemStorage = $this->inner;
-
-        $rootStorageRelativePath = Path::join($virtualFilesystemStorage->getPrefix(), $path);
+        $rootStorageRelativePath = Path::join($this->inner->getPrefix(), $path);
 
         return $this->security->isGranted($attribute, $rootStorageRelativePath);
     }
