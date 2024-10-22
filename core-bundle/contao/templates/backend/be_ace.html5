@@ -44,7 +44,19 @@ if ($GLOBALS['TL_CONFIG']['useCE']):
         enableLiveAutocompletion: true
       });
 
-      editor.container.style.maxHeight = 'calc(100vh - 320px)';
+      function getMaxLines() {
+        if ('tl_files' === editor.container.closest('form').id) {
+          return Math.floor((window.innerHeight - 320) / Math.floor(12 * editor.container.style.lineHeight));
+        }
+
+        return 14;
+      }
+
+      window.addEventListener('resize', function() {
+        editor.setOption('maxLines', getMaxLines());
+      });
+
+      editor.setOption('maxLines', getMaxLines());
     }
 
     const target = document.getElementById('<?= $this->selector ?>');

@@ -17,7 +17,7 @@ export default class extends Controller {
         this.element.style['display'] = 'none';
 
         // Instantiate the editor
-        this.editor = ace.edit(this.container, {maxLines: 50});
+        this.editor = ace.edit(this.container);
         this.editor.getSession().setValue(this.element.value);
 
         this.editor.on('focus', () => {
