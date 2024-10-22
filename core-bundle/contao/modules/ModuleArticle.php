@@ -199,13 +199,10 @@ class ModuleArticle extends Module
 
 			if (!empty($options) && \is_array($options))
 			{
-				if (!empty($options))
-				{
-					$this->Template->printable = true;
-					$this->Template->printButton = \in_array('print', $options);
-					$this->Template->facebookButton = \in_array('facebook', $options);
-					$this->Template->twitterButton = \in_array('twitter', $options);
-				}
+				$this->Template->printable = true;
+				$this->Template->printButton = \in_array('print', $options);
+				$this->Template->facebookButton = \in_array('facebook', $options);
+				$this->Template->twitterButton = \in_array('twitter', $options);
 			}
 		}
 

@@ -775,6 +775,7 @@ class ContaoCoreExtensionTest extends TestCase
                 'method' => 'aMethod',
                 'renderer' => 'inline',
                 'nestedFragments' => false,
+                'priority' => 0,
                 'foo' => 'bar',
                 'baz' => 42,
             ]),

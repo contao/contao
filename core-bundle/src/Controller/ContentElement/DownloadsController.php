@@ -46,7 +46,7 @@ class DownloadsController extends AbstractDownloadContentElementController
         }
 
         $template->set('sort_mode', $sortMode);
-        $template->set('randomize_order', $randomize = 'random' === $model->sortBy);
+        $template->set('randomize_order', 'random' === $model->sortBy);
 
         $downloads = $this->compileDownloadsList($filesystemItems, $model, $request);
 
