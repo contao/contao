@@ -167,19 +167,16 @@ interface VirtualFilesystemInterface
      *
      * @throws VirtualFilesystemException
      * @throws UnableToResolveUuidException
-     *
-     * @return array<string,mixed>
      */
-    public function getExtraMetadata($location, int $accessFlags = self::NONE): array;
+    public function getExtraMetadata($location, int $accessFlags = self::NONE): ExtraMetadata;
 
     /**
-     * @param string|Uuid         $location
-     * @param array<string,mixed> $metadata
+     * @param string|Uuid $location
      *
      * @throws VirtualFilesystemException
      * @throws UnableToResolveUuidException
      */
-    public function setExtraMetadata($location, array $metadata): void;
+    public function setExtraMetadata($location, ExtraMetadata $metadata): void;
 
     /**
      * @param string|Uuid $location
