@@ -17,7 +17,7 @@ use Contao\Config;
 use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\Cache\EntityCacheTags;
-use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
@@ -77,7 +77,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
-class ContentElementTestCase extends TestCase
+abstract class ContentElementTestCase extends TestCase
 {
     final public const FILE_IMAGE1 = '0a2073bc-c966-4e7b-83b9-163a06aa87e7';
 
@@ -253,10 +253,16 @@ class ContentElementTestCase extends TestCase
     {
         $resourceBasePath = Path::canonicalize(__DIR__.'/../../../');
 
+        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder
+            ->method('getExistingSubpaths')
+            ->with('templates')
+            ->willReturn(['ContaoCore' => $resourceBasePath.'/contao/templates'])
+        ;
+
         $templateLocator = new TemplateLocator(
             '',
-            ['ContaoCore' => ContaoCoreBundle::class],
-            ['ContaoCore' => ['path' => $resourceBasePath]],
+            $resourceFinder,
             $themeNamespace = new ThemeNamespace(),
             $this->createMock(Connection::class),
         );
@@ -270,7 +276,7 @@ class ContentElementTestCase extends TestCase
         $translator
             ->method('trans')
             ->willReturnCallback(
-                static fn (string $id, array $parameters = [], string|null $domain = null, string|null $locale = null): string => sprintf(
+                static fn (string $id, array $parameters = [], string|null $domain = null, string|null $locale = null): string => \sprintf(
                     'translated(%s%s%s)',
                     null !== $domain ? "$domain:" : '',
                     $id,

@@ -78,20 +78,20 @@ composer bin all install
 Then run the code quality scripts via Composer:
 
 ```bash
-composer run all
+composer all
 ```
 
 You can also run the scripts separately:
 
 ```bash
-composer run rector
-composer run cs-fixer
-composer run service-linter
-composer run monorepo-tools
-composer run unit-tests
-composer run functional-tests
-composer run phpstan
-composer run require-checker
+composer rector
+composer cs-fixer
+composer service-linter
+composer monorepo-tools
+composer unit-tests
+composer functional-tests
+composer phpstan
+composer require-checker
 ```
 
 If you want to pass additional flags to the underlying commands, you can use the `--` argument:
@@ -124,26 +124,22 @@ Then run the functional tests via the `run` command:
 composer run functional-tests
 ```
 
-## Yarn 4
+## Node.js
 
-To build the assets and to run the end-to-end tests (see below), you need to enable [Corepack][3], a package manager
-that allows you to manage different Yarn package versions across multiple projects:
+To build the assets, you need a Node.js version >= 18.12. Then run these commands:
 
 ```bash
-corepack enable
+npm ci
+npm run build
 ```
-
-If Corepack is not bundled with your Node.js installation, you might have to install it as a separate package, e.g.
-using `npm install -g corepack` or `brew install corepack`.
 
 ## End-to-end tests
 
-Before you can run the end-to-end tests, you have to install the [Symfony Local Web Server][4] with TLS support. Then
-install the required Node packages and run the end-to-end tests:
+The Contao end-to-end tests are availabe as an [NPM package][3]. You can install and run them like this:
 
 ```bash
-yarn install
-yarn run e2e-tests
+npm install contao-e2e-tests --save-dev
+npm run contao-e2e-tests
 ```
 
 ## License
@@ -152,10 +148,9 @@ Contao is licensed under the terms of the LGPLv3.
 
 ## Getting support
 
-Visit the [support page][5] to learn about the available support options.
+Visit the [support page][4] to learn about the available support options.
 
 [1]: https://contao.org
 [2]: https://github.com/contao/managed-edition
-[3]: https://yarnpkg.com/getting-started/install
-[4]: https://symfony.com/doc/current/setup/symfony_server.html
-[5]: https://to.contao.org/support
+[3]: https://www.npmjs.com/package/contao-e2e-tests
+[4]: https://to.contao.org/support

@@ -49,13 +49,13 @@ class SwitchUserListener
         }
 
         if ($originalUser === $targetUser) {
-            $this->logger->info(sprintf('User "%s" has quit the impersonation of user "%s"', $originalUser, $sourceUser));
+            $this->logger->info(\sprintf('User "%s" has quit the impersonation of user "%s"', $originalUser, $sourceUser));
         } else {
             if ($originalUser) {
                 $sourceUser = $originalUser;
             }
 
-            $this->logger->info(sprintf('User "%s" has switched to user "%s"', $sourceUser, $targetUser));
+            $this->logger->info(\sprintf('User "%s" has switched to user "%s"', $sourceUser, $targetUser));
         }
     }
 }

@@ -207,7 +207,7 @@ class Date
 
 		if (!static::isNumericFormat($strFormat))
 		{
-			throw new \Exception(sprintf('Invalid date format "%s"', $strFormat));
+			throw new \Exception(\sprintf('Invalid date format "%s"', $strFormat));
 		}
 
 		return preg_replace_callback(
@@ -256,7 +256,7 @@ class Date
 
 		if (!static::isNumericFormat($strFormat))
 		{
-			throw new \Exception(sprintf('Invalid date format "%s"', $strFormat));
+			throw new \Exception(\sprintf('Invalid date format "%s"', $strFormat));
 		}
 
 		$arrCharacterMapper = array();
@@ -296,7 +296,7 @@ class Date
 	{
 		if (!static::isNumericFormat($this->strFormat))
 		{
-			throw new \Exception(sprintf('Invalid date format "%s"', $this->strFormat));
+			throw new \Exception(\sprintf('Invalid date format "%s"', $this->strFormat));
 		}
 
 		$intCount  = 0;
@@ -405,7 +405,7 @@ class Date
 		// Validate the date (see #5086 and #7955)
 		if (!is_numeric($intMonth) || !is_numeric($intDay) || !is_numeric($intYear) || checkdate($intMonth, $intDay, $intYear) === false)
 		{
-			throw new \OutOfBoundsException(sprintf('Invalid date "%s"', $this->strDate));
+			throw new \OutOfBoundsException(\sprintf('Invalid date "%s"', $this->strDate));
 		}
 
 		$this->strDate = mktime($intHour, (int) $intMinute, (int) $intSecond, (int) $intMonth, (int) $intDay, (int) $intYear);

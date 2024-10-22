@@ -167,7 +167,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     public function setExtraMetadata(string $path, ExtraMetadata $metadata): void
     {
         if (!$this->getRecord($path)) {
-            throw new \InvalidArgumentException(sprintf('Record for path "%s" does not exist.', $path));
+            throw new \InvalidArgumentException(\sprintf('Record for path "%s" does not exist.', $path));
         }
 
         $row = [
@@ -332,7 +332,7 @@ class Dbafs implements DbafsInterface, ResetInterface
                 // In partial sync we need to manually add child hashes of items that we do not
                 // traverse but which still contribute to the directory hash
                 if ($isPartialSync && !$this->inPath($path, $searchPaths, false)) {
-                    $directChildrenPattern = sprintf('@^%s/[^/]+[/]?$@', preg_quote($path, '@'));
+                    $directChildrenPattern = \sprintf('@^%s/[^/]+[/]?$@', preg_quote($path, '@'));
 
                     foreach ($allDbHashesByPath as $childPath => $childHash) {
                         $childName = basename((string) $childPath);
@@ -448,7 +448,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function loadRecordByUuid(string $uuid): void
     {
         $row = $this->connection->fetchAssociative(
-            sprintf('SELECT * FROM %s WHERE uuid=?', $this->connection->quoteIdentifier($this->table)),
+            \sprintf('SELECT * FROM %s WHERE uuid=?', $this->connection->quoteIdentifier($this->table)),
             [$uuid],
         );
 
@@ -464,7 +464,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function loadRecordById(int $id): void
     {
         $row = $this->connection->fetchAssociative(
-            sprintf('SELECT * FROM %s WHERE id=?', $this->connection->quoteIdentifier($this->table)),
+            \sprintf('SELECT * FROM %s WHERE id=?', $this->connection->quoteIdentifier($this->table)),
             [$id],
         );
 
@@ -480,7 +480,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function loadRecordByPath(string $path): void
     {
         $row = $this->connection->fetchAssociative(
-            sprintf('SELECT * FROM %s WHERE path=?', $this->connection->quoteIdentifier($this->table)),
+            \sprintf('SELECT * FROM %s WHERE path=?', $this->connection->quoteIdentifier($this->table)),
             [$this->convertToDatabasePath($path)],
         );
 
@@ -572,8 +572,10 @@ class Dbafs implements DbafsInterface, ResetInterface
 
             // Backwards compatibility
             if ('tl_files' === $this->table) {
+                $extension = Path::getExtension($itemToCreate->getPath(), true);
+
                 $dataToInsert['name'] = basename($itemToCreate->getPath());
-                $dataToInsert['extension'] = $itemToCreate->isFile() ? Path::getExtension($itemToCreate->getPath(), true) : '';
+                $dataToInsert['extension'] = $itemToCreate->isFile() && \strlen($extension) <= 16 ? $extension : '';
                 $dataToInsert['tstamp'] = $currentTime;
             }
 
@@ -586,18 +588,18 @@ class Dbafs implements DbafsInterface, ResetInterface
 
         if ($inserts) {
             $table = $this->connection->quoteIdentifier($this->table);
-            $columns = sprintf('`%s`', implode('`, `', array_keys($inserts[0]))); // "uuid", "pid", …
-            $placeholders = sprintf('(%s)', implode(', ', array_fill(0, \count($inserts[0]), '?'))); // (?, ?, …, ?)
+            $columns = \sprintf('`%s`', implode('`, `', array_keys($inserts[0]))); // "uuid", "pid", …
+            $placeholders = \sprintf('(%s)', implode(', ', array_fill(0, \count($inserts[0]), '?'))); // (?, ?, …, ?)
 
             foreach (array_chunk($inserts, $this->bulkInsertSize) as $chunk) {
                 $this->connection->executeQuery(
-                    sprintf(
+                    \sprintf(
                         'INSERT INTO %s (%s) VALUES %s',
                         $table,
                         $columns,
                         implode(', ', array_fill(0, \count($chunk), $placeholders)),
                     ),
-                    array_merge(...array_map('array_values', $chunk)),
+                    array_merge(...array_map(array_values(...), $chunk)),
                 );
             }
         }
@@ -680,7 +682,7 @@ class Dbafs implements DbafsInterface, ResetInterface
         $allUuidsByPath = [];
 
         $items = $this->connection->fetchAllNumeric(
-            sprintf(
+            \sprintf(
                 "SELECT path, uuid, hash, IF(type='folder', 1, 0), %s FROM %s",
                 $this->useLastModified ? 'lastModified' : 'NULL',
                 $this->connection->quoteIdentifier($this->table),
@@ -873,11 +875,11 @@ class Dbafs implements DbafsInterface, ResetInterface
                 $path = trim(Path::canonicalize($path));
 
                 if (Path::isAbsolute($path)) {
-                    throw new \InvalidArgumentException(sprintf('Absolute path "%s" is not allowed when synchronizing.', $path));
+                    throw new \InvalidArgumentException(\sprintf('Absolute path "%s" is not allowed when synchronizing.', $path));
                 }
 
                 if (str_starts_with($path, '.')) {
-                    throw new \InvalidArgumentException(sprintf('Dot path "%s" is not allowed when synchronizing.', $path));
+                    throw new \InvalidArgumentException(\sprintf('Dot path "%s" is not allowed when synchronizing.', $path));
                 }
 
                 return $path;

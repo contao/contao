@@ -361,14 +361,14 @@ class Comments extends Frontend
 			$objEmail = new Email();
 			$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
 			$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
-			$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_subject'], Idna::decode(Environment::get('host')));
+			$objEmail->subject = \sprintf($GLOBALS['TL_LANG']['MSC']['com_subject'], Idna::decode(Environment::get('host')));
 
 			// Convert the comment to plain text
 			$strComment = strip_tags($strComment);
 			$strComment = StringUtil::decodeEntities($strComment);
 
 			// Add the comment details
-			$objEmail->text = sprintf(
+			$objEmail->text = \sprintf(
 				$GLOBALS['TL_LANG']['MSC']['com_message'],
 				$arrSet['name'] . ' (' . $arrSet['email'] . ')',
 				$strComment,
@@ -516,7 +516,7 @@ class Comments extends Frontend
 		$optInToken = $optIn->create('com', $objComment->email, array('tl_comments_notify'=>array($objNotify->id)));
 
 		// Send the token
-		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['com_optInSubject'], Idna::decode(Environment::get('host'))), sprintf($GLOBALS['TL_LANG']['MSC']['com_optInMessage'], $objComment->name, $strUrl, $strUrl . $strConnector . 'token=' . $optInToken->getIdentifier(), $strUrl . $strConnector . 'token=' . $objNotify->tokenRemove));
+		$optInToken->send(\sprintf($GLOBALS['TL_LANG']['MSC']['com_optInSubject'], Idna::decode(Environment::get('host'))), \sprintf($GLOBALS['TL_LANG']['MSC']['com_optInMessage'], $objComment->name, $strUrl, $strUrl . $strConnector . 'token=' . $optInToken->getIdentifier(), $strUrl . $strConnector . 'token=' . $objNotify->tokenRemove));
 	}
 
 	/**
@@ -538,13 +538,6 @@ class Comments extends Frontend
 				return;
 			}
 
-			if ($optInToken->isConfirmed())
-			{
-				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['tokenConfirmed'];
-
-				return;
-			}
-
 			if ($optInToken->getEmail() != $objNotify->email)
 			{
 				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['tokenEmailMismatch'];
@@ -552,10 +545,13 @@ class Comments extends Frontend
 				return;
 			}
 
-			$objNotify->active = true;
-			$objNotify->save();
+			if (!$optInToken->isConfirmed())
+			{
+				$objNotify->active = true;
+				$objNotify->save();
 
-			$optInToken->confirm();
+				$optInToken->confirm();
+			}
 
 			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_optInConfirm'];
 		}
@@ -617,8 +613,8 @@ class Comments extends Frontend
 				$objEmail = new Email();
 				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
 				$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
-				$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifySubject'], Idna::decode(Environment::get('host')));
-				$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyMessage'], $objNotify->name, $strUrl . '#c' . $objComment->id, $strUrl . '?token=' . $objNotify->tokenRemove);
+				$objEmail->subject = \sprintf($GLOBALS['TL_LANG']['MSC']['com_notifySubject'], Idna::decode(Environment::get('host')));
+				$objEmail->text = \sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyMessage'], $objNotify->name, $strUrl . '#c' . $objComment->id, $strUrl . '?token=' . $objNotify->tokenRemove);
 				$objEmail->sendTo($objNotify->email);
 			}
 		}

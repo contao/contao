@@ -45,7 +45,7 @@
                 switch (command) {
                     case 'copy':
                         bt.addEventListener('click', () => {
-                            window.dispatchEvent(saveScrollOffsetEvent)
+                            window.dispatchEvent(saveScrollOffsetEvent);
 
                             const ntr = tr.cloneNode(true);
                             const selects = tr.querySelectorAll('select');
@@ -64,7 +64,7 @@
                             tr.parentNode.insertBefore(ntr, tr.nextSibling);
 
                             // Remove the ID of the select before initializing Chosen
-                            const select = ntr.querySelector('select.tl_select')
+                            const select = ntr.querySelector('select.tl_select');
                             select.removeAttribute('id');
 
                             ntr.querySelector('.chzn-container').remove();

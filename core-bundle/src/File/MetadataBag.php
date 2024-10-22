@@ -30,13 +30,13 @@ class MetadataBag implements \ArrayAccess
     ) {
         foreach ($metadata as $item) {
             if (!$item instanceof Metadata) {
-                throw new \TypeError(sprintf('The metadata bag can only contain elements of type %s, got %s.', Metadata::class, get_debug_type($item)));
+                throw new \TypeError(\sprintf('The metadata bag can only contain elements of type %s, got %s.', Metadata::class, get_debug_type($item)));
             }
         }
 
         foreach ($defaultLocales as $locale) {
             if (!\is_string($locale)) {
-                throw new \TypeError(sprintf('The metadata bag can only be constructed with default locales of type string, got %s.', get_debug_type($locale)));
+                throw new \TypeError(\sprintf('The metadata bag can only be constructed with default locales of type string, got %s.', get_debug_type($locale)));
             }
         }
     }
@@ -96,7 +96,7 @@ class MetadataBag implements \ArrayAccess
 
     public function offsetGet(mixed $offset): Metadata
     {
-        return $this->get($offset) ?? throw new \OutOfBoundsException(sprintf('The locale "%s" does not exist in this metadata bag.', $offset));
+        return $this->get($offset) ?? throw new \OutOfBoundsException(\sprintf('The locale "%s" does not exist in this metadata bag.', $offset));
     }
 
     public function offsetSet(mixed $offset, mixed $value): never

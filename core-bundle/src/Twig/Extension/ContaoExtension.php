@@ -416,6 +416,6 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             }
         }
 
-        throw new \RuntimeException(sprintf('The %s class was expected to register the "include" Twig function but did not.', CoreExtension::class));
+        throw new \RuntimeException(\sprintf('The %s class was expected to register the "include" Twig function but did not.', CoreExtension::class));
     }
 }

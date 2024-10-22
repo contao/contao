@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Security\Voter;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\FrontendUser;
 use Contao\StringUtil;
+use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -50,8 +51,8 @@ class MemberGroupVoter implements VoterInterface, CacheableVoterInterface
 
         $user = $token->getUser();
 
-        if (!$user instanceof FrontendUser) {
-            return \in_array(-1, array_map('intval', $subject), true) ? self::ACCESS_GRANTED : self::ACCESS_DENIED;
+        if (!$user instanceof FrontendUser || $token instanceof TwoFactorTokenInterface) {
+            return \in_array(-1, array_map(\intval(...), $subject), true) ? self::ACCESS_GRANTED : self::ACCESS_DENIED;
         }
 
         $groups = StringUtil::deserialize($user->groups, true);

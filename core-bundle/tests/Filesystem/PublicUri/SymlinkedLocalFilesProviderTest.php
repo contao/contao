@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Filesystem\PublicUri;
 
 use Contao\CoreBundle\Filesystem\PublicUri\SymlinkedLocalFilesProvider;
 use Contao\CoreBundle\Tests\TestCase;
-use League\Flysystem\FilesystemAdapter;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -22,7 +22,7 @@ class SymlinkedLocalFilesProviderTest extends TestCase
 {
     public function testGetUri(): void
     {
-        $adapter = $this->createMock(FilesystemAdapter::class);
+        $adapter = $this->createMock(LocalFilesystemAdapter::class);
 
         $request = $this->createMock(Request::class);
         $request
@@ -46,13 +46,13 @@ class SymlinkedLocalFilesProviderTest extends TestCase
     public function testGetUriWithNonMatchingAdapter(): void
     {
         $provider = new SymlinkedLocalFilesProvider(
-            $this->createMock(FilesystemAdapter::class),
+            $this->createMock(LocalFilesystemAdapter::class),
             'upload/dir',
             $this->createMock(RequestStack::class),
         );
 
         $uri = $provider->getUri(
-            $this->createMock(FilesystemAdapter::class),
+            $this->createMock(LocalFilesystemAdapter::class),
             'path/to/resource.txt',
             null,
         );

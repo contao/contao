@@ -49,10 +49,10 @@ class EntityCacheTags
     public function getTagForEntityClass(string $className): string
     {
         if (!$metadata = $this->getClassMetadata($className)) {
-            throw new \InvalidArgumentException(sprintf('The given class name "%s" is no valid entity class.', $className));
+            throw new \InvalidArgumentException(\sprintf('The given class name "%s" is no valid entity class.', $className));
         }
 
-        return sprintf('contao.db.%s', $metadata->getTableName());
+        return \sprintf('contao.db.%s', $metadata->getTableName());
     }
 
     /**
@@ -61,7 +61,7 @@ class EntityCacheTags
     public function getTagForEntityInstance(object $instance): string
     {
         if (!$metadata = $this->getClassMetadata($instance::class)) {
-            throw new \InvalidArgumentException(sprintf('The given object of type "%s" is no valid entity instance.', $instance::class));
+            throw new \InvalidArgumentException(\sprintf('The given object of type "%s" is no valid entity instance.', $instance::class));
         }
 
         $identifier = $this->entityManager
@@ -69,7 +69,7 @@ class EntityCacheTags
             ->getSingleIdentifierValue($instance)
         ;
 
-        return sprintf('contao.db.%s.%s', $metadata->getTableName(), $identifier);
+        return \sprintf('contao.db.%s.%s', $metadata->getTableName(), $identifier);
     }
 
     /**
@@ -80,10 +80,10 @@ class EntityCacheTags
     public function getTagForModelClass(string $className): string
     {
         if (!$this->isModel($className)) {
-            throw new \InvalidArgumentException(sprintf('The given class name "%s" is no valid model class.', $className));
+            throw new \InvalidArgumentException(\sprintf('The given class name "%s" is no valid model class.', $className));
         }
 
-        return sprintf('contao.db.%s', \call_user_func([$className, 'getTable']));
+        return \sprintf('contao.db.%s', \call_user_func([$className, 'getTable']));
     }
 
     /**
@@ -91,7 +91,7 @@ class EntityCacheTags
      */
     public function getTagForModelInstance(Model $instance): string
     {
-        return sprintf('contao.db.%s.%s', $instance::getTable(), $instance->id);
+        return \sprintf('contao.db.%s.%s', $instance::getTable(), $instance->id);
     }
 
     /**

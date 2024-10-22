@@ -42,7 +42,7 @@ class StripQueryParametersSubscriberTest extends TestCase
         $subscriber->preHandle($event);
 
         $this->assertSame($expectedParameters, $request->query->all());
-        $this->assertSame(array_map('strval', $expectedParameters), HeaderUtils::parseQuery($request->server->get('QUERY_STRING')));
+        $this->assertSame(array_map(\strval(...), $expectedParameters), HeaderUtils::parseQuery($request->server->get('QUERY_STRING')));
     }
 
     public static function queryParametersProvider(): iterable

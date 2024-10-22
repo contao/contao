@@ -30,7 +30,7 @@ class FallbackPreviewProvider implements PreviewProviderInterface
     public function generatePreviews(string $sourcePath, int $size, \Closure $targetPathCallback, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $options = []): iterable
     {
         if (1 !== $firstPage) {
-            throw new UnableToGeneratePreviewException(sprintf('There is no page %s in "%s"', $firstPage, $sourcePath));
+            throw new UnableToGeneratePreviewException(\sprintf('There is no page %s in "%s"', $firstPage, $sourcePath));
         }
 
         $svgCode = '<?xml version="1.0"?>'."\n";

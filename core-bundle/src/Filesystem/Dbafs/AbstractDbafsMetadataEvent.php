@@ -32,11 +32,11 @@ class AbstractDbafsMetadataEvent
 
         foreach (['path', 'uuid'] as $mandatoryKey) {
             if (null === ($value = $row[$mandatoryKey] ?? null)) {
-                throw new \InvalidArgumentException(sprintf('Row must contain key "%s".', $mandatoryKey));
+                throw new \InvalidArgumentException(\sprintf('Row must contain key "%s".', $mandatoryKey));
             }
 
             if ('string' !== ($type = \gettype($value))) {
-                throw new \InvalidArgumentException(sprintf('Row key "%s" must be of type string, got %s.', $mandatoryKey, $type));
+                throw new \InvalidArgumentException(\sprintf('Row key "%s" must be of type string, got %s.', $mandatoryKey, $type));
             }
         }
     }

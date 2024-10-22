@@ -214,6 +214,7 @@ class ContaoExtensionTest extends TestCase
         );
 
         $node = new ModuleNode(
+            /** @phpstan-ignore argument.type */
             new FilterExpression(
                 new TextNode('text', 1),
                 new ConstantExpression('escape', 1),
@@ -364,7 +365,7 @@ class ContaoExtensionTest extends TestCase
             }
         }
 
-        $this->fail(sprintf('No escaper rule matched template "%s".', $templateName));
+        $this->fail(\sprintf('No escaper rule matched template "%s".', $templateName));
     }
 
     public static function provideTemplateNames(): iterable

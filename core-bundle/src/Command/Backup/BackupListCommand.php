@@ -28,7 +28,7 @@ class BackupListCommand extends AbstractBackupCommand
     public static function getFormattedTimeZoneOffset(\DateTimeZone $timeZone): string
     {
         $offset = $timeZone->getOffset(new \DateTime('now', new \DateTimeZone('UTC'))) / 3600;
-        $formatted = str_pad(str_replace(['.', '-', '+'], [':', '', ''], sprintf('%05.2F', $offset)), 5, '0', STR_PAD_LEFT);
+        $formatted = str_pad(str_replace(['.', '-', '+'], [':', '', ''], \sprintf('%05.2F', $offset)), 5, '0', STR_PAD_LEFT);
 
         return ($offset >= 0 ? '+' : '-').$formatted;
     }
@@ -46,7 +46,7 @@ class BackupListCommand extends AbstractBackupCommand
         $timeZone = new \DateTimeZone(date_default_timezone_get());
 
         $io->table(
-            [sprintf('Created (%s)', self::getFormattedTimeZoneOffset($timeZone)), 'Size', 'Name'],
+            [\sprintf('Created (%s)', self::getFormattedTimeZoneOffset($timeZone)), 'Size', 'Name'],
             $this->formatForTable($this->backupManager->listBackups(), $timeZone),
         );
 

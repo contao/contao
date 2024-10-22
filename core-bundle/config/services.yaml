@@ -558,7 +558,6 @@ services:
         arguments:
             - '@cache.app'
             - '@console.command.messenger_consume_messages'
-            - '@messenger.receiver_locator'
 
     contao.model_argument_resolver:
         class: Contao\CoreBundle\HttpKernel\ModelArgumentResolver
@@ -888,14 +887,25 @@ services:
     contao.security.data_container.article_content_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ArticleContentVoter
         arguments:
-            - '@contao.framework'
             - '@security.access.decision_manager'
+            - '@database_connection'
 
     contao.security.data_container.content_composition_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ContentCompositionVoter
         arguments:
             - '@contao.framework'
             - '@contao.routing.page_registry'
+
+    contao.security.data_container.content_element_nesting_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\ContentElementNestingVoter
+        arguments:
+            - '@database_connection'
+            - '@contao.fragment.compositor'
+
+    contao.security.data_container.content_element_type_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\ContentElementTypeVoter
+        arguments:
+            - '@security.access.decision_manager'
 
     contao.security.data_container.favorites_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\FavoritesVoter
@@ -1226,8 +1236,7 @@ services:
         class: Contao\CoreBundle\Twig\Loader\TemplateLocator
         arguments:
             - '%kernel.project_dir%'
-            - '%kernel.bundles%'
-            - '%kernel.bundles_metadata%'
+            - '@contao.resource_finder'
             - '@contao.twig.loader.theme_namespace'
             - '@database_connection'
 

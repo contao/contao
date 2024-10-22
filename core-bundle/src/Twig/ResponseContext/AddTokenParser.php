@@ -45,7 +45,7 @@ class AddTokenParser extends AbstractTokenParser
                 DocumentLocation::cases(),
             );
 
-            throw new SyntaxError(sprintf('The parameter "%s" is not a valid location for the "add" tag, use "%s" instead.', $locationString, implode('" or "', $validLocations)));
+            throw new SyntaxError(\sprintf('The parameter "%s" is not a valid location for the "add" tag, use "%s" instead.', $locationString, implode('" or "', $validLocations)));
         }
 
         $stream->expect(Token::BLOCK_END_TYPE);

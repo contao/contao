@@ -19,6 +19,7 @@ return (new Configuration())
         AppBundle::class,
         'Imagick',
         'Gmagick',
+        'SensitiveParameter',
         'Swift_Attachment',
         'Swift_EmbeddedFile',
         'Swift_Mailer',

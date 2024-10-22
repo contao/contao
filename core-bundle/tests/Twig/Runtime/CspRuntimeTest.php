@@ -116,7 +116,7 @@ class CspRuntimeTest extends TestCase
 
         $expectedHash = base64_encode(hash($algorithm, $script, true));
 
-        $this->assertSame(sprintf("script-src 'self' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));
+        $this->assertSame(\sprintf("script-src 'self' '%s-%s'", $algorithm, $expectedHash), $response->headers->get('Content-Security-Policy'));
     }
 
     public function testAddsCspHashFromUnsafeInlineStyle(): void

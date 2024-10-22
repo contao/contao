@@ -387,7 +387,7 @@ class DbafsManagerTest extends TestCase
                 'foo/bar',
                 'foo/baz',
             ],
-            array_map('strval', iterator_to_array($listing)),
+            array_map(\strval(...), iterator_to_array($listing)),
         );
     }
 

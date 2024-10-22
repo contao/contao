@@ -4,27 +4,25 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9a7c3e1a42fc07f726c105e38a1f7bee",
+    "content-hash": "7a65b76d9346e2bf87922976e2b299d1",
     "packages": [
         {
             "name": "nikic/php-parser",
-            "version": "v5.0.2",
+            "version": "v4.19.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "139676794dc1e9231bf7bcd123cfc0c99182cb13"
+                "reference": "715f4d25e225bc47b293a8b997fe6ce99bf987d2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/139676794dc1e9231bf7bcd123cfc0c99182cb13",
-                "reference": "139676794dc1e9231bf7bcd123cfc0c99182cb13",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/715f4d25e225bc47b293a8b997fe6ce99bf987d2",
+                "reference": "715f4d25e225bc47b293a8b997fe6ce99bf987d2",
                 "shasum": ""
             },
             "require": {
-                "ext-ctype": "*",
-                "ext-json": "*",
                 "ext-tokenizer": "*",
-                "php": ">=7.4"
+                "php": ">=7.1"
             },
             "require-dev": {
                 "ircmaxell/php-yacc": "^0.0.7",
@@ -36,7 +34,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "5.0-dev"
+                    "dev-master": "4.9-dev"
                 }
             },
             "autoload": {
@@ -60,22 +58,22 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.0.2"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v4.19.4"
             },
-            "time": "2024-03-05T20:51:40+00:00"
+            "time": "2024-09-29T15:01:53+00:00"
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.11.5",
+            "version": "1.12.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "490f0ae1c92b082f154681d7849aee776a7c1443"
+                "reference": "7e6c6cb7cecb0a6254009a1a8a7d54ec99812b17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/490f0ae1c92b082f154681d7849aee776a7c1443",
-                "reference": "490f0ae1c92b082f154681d7849aee776a7c1443",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/7e6c6cb7cecb0a6254009a1a8a7d54ec99812b17",
+                "reference": "7e6c6cb7cecb0a6254009a1a8a7d54ec99812b17",
                 "shasum": ""
             },
             "require": {
@@ -120,7 +118,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-06-17T15:10:54+00:00"
+            "time": "2024-09-26T12:45:22+00:00"
         },
         {
             "name": "phpstan/phpstan-phpunit",
@@ -176,22 +174,22 @@
         },
         {
             "name": "phpstan/phpstan-symfony",
-            "version": "1.4.4",
+            "version": "1.4.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-symfony.git",
-                "reference": "bca27f1701fc1a297749e6c2a1e3da4462c1a6af"
+                "reference": "f7d5782044bedf93aeb3f38e09c91148ee90e5a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-symfony/zipball/bca27f1701fc1a297749e6c2a1e3da4462c1a6af",
-                "reference": "bca27f1701fc1a297749e6c2a1e3da4462c1a6af",
+                "url": "https://api.github.com/repos/phpstan/phpstan-symfony/zipball/f7d5782044bedf93aeb3f38e09c91148ee90e5a1",
+                "reference": "f7d5782044bedf93aeb3f38e09c91148ee90e5a1",
                 "shasum": ""
             },
             "require": {
                 "ext-simplexml": "*",
                 "php": "^7.2 || ^8.0",
-                "phpstan/phpstan": "^1.11"
+                "phpstan/phpstan": "^1.12"
             },
             "conflict": {
                 "symfony/framework-bundle": "<3.0"
@@ -242,35 +240,38 @@
             "description": "Symfony Framework extensions and rules for PHPStan",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan-symfony/issues",
-                "source": "https://github.com/phpstan/phpstan-symfony/tree/1.4.4"
+                "source": "https://github.com/phpstan/phpstan-symfony/tree/1.4.10"
             },
-            "time": "2024-06-07T09:43:24+00:00"
+            "time": "2024-09-26T18:14:50+00:00"
         },
         {
             "name": "slam/phpstan-extensions",
-            "version": "v6.4.0",
+            "version": "v6.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Slamdunk/phpstan-extensions.git",
-                "reference": "e485ec42d76f3dcdbbb6bd10ef3333ae1b1ec6f0"
+                "reference": "ddc65c09426b6a9d752c200f33d676caab53ca6d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Slamdunk/phpstan-extensions/zipball/e485ec42d76f3dcdbbb6bd10ef3333ae1b1ec6f0",
-                "reference": "e485ec42d76f3dcdbbb6bd10ef3333ae1b1ec6f0",
+                "url": "https://api.github.com/repos/Slamdunk/phpstan-extensions/zipball/ddc65c09426b6a9d752c200f33d676caab53ca6d",
+                "reference": "ddc65c09426b6a9d752c200f33d676caab53ca6d",
                 "shasum": ""
             },
             "require": {
-                "nikic/php-parser": "^4.19.1 || ^5.0.2",
-                "php": "~8.2.0 || ~8.3.0",
-                "phpstan/phpstan": "^1.11.4"
+                "nikic/php-parser": "^v4.13.1",
+                "php": ">=8.0",
+                "phpstan/phpstan": "^1.1.1"
             },
             "require-dev": {
-                "nette/di": "^3.2.2",
-                "nette/neon": "^3.4.1",
-                "phpstan/phpstan-phpunit": "^1.4.0",
-                "phpunit/phpunit": "^11.2.1",
-                "slam/php-cs-fixer-extensions": "^3.10.0"
+                "malukenho/mcbumpface": "^1.1.5",
+                "nette/di": "^v3.0.11",
+                "nette/neon": "^v3.3.1",
+                "phpstan/phpstan-php-parser": "^1.0.0",
+                "phpstan/phpstan-phpunit": "^1.0.0",
+                "phpunit/phpunit": "^9.5.10",
+                "slam/php-cs-fixer-extensions": "^v3.1.0",
+                "slam/php-debug-r": "^v1.7.0"
             },
             "type": "phpstan-extension",
             "extra": {
@@ -299,7 +300,7 @@
             "description": "Slam extension of phpstan",
             "support": {
                 "issues": "https://github.com/Slamdunk/phpstan-extensions/issues",
-                "source": "https://github.com/Slamdunk/phpstan-extensions/tree/v6.4.0"
+                "source": "https://github.com/Slamdunk/phpstan-extensions/tree/v6.0.0"
             },
             "funding": [
                 {
@@ -311,7 +312,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-06-11T10:06:12+00:00"
+            "time": "2021-11-09T11:27:16+00:00"
         },
         {
             "name": "thecodingmachine/phpstan-strict-rules",
@@ -377,5 +378,8 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
+    "platform-overrides": {
+        "php": "8.1"
+    },
     "plugin-api-version": "2.6.0"
 }

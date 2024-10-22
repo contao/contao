@@ -160,7 +160,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
             return '';
         }
 
-        return sprintf('%s (ID %s)', StringUtil::decodeEntities($layout->name), $layout->id);
+        return \sprintf('%s (ID %s)', StringUtil::decodeEntities($layout->name), $layout->id);
     }
 
     private function getTemplateName(): string

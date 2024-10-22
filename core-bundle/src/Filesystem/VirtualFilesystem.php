@@ -365,11 +365,11 @@ class VirtualFilesystem implements VirtualFilesystemInterface
             : Path::canonicalize($location);
 
         if (Path::isAbsolute($path)) {
-            throw new \OutOfBoundsException(sprintf('Virtual filesystem path "%s" cannot be absolute.', $path));
+            throw new \OutOfBoundsException(\sprintf('Virtual filesystem path "%s" cannot be absolute.', $path));
         }
 
         if (str_starts_with($path, '..')) {
-            throw new \OutOfBoundsException(sprintf('Virtual filesystem path "%s" must not escape the filesystem boundary.', $path));
+            throw new \OutOfBoundsException(\sprintf('Virtual filesystem path "%s" must not escape the filesystem boundary.', $path));
         }
 
         return Path::join($this->prefix, $path);

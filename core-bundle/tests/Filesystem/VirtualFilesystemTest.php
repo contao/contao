@@ -605,7 +605,7 @@ class VirtualFilesystemTest extends TestCase
 
         // Normalize listing for comparison
         $listing = array_map(
-            static fn (FilesystemItem $i): string => sprintf('%s (%s)', $i->getPath(), $i->isFile() ? 'file' : 'dir'),
+            static fn (FilesystemItem $i): string => \sprintf('%s (%s)', $i->getPath(), $i->isFile() ? 'file' : 'dir'),
             $listedContents,
         );
 
@@ -687,7 +687,7 @@ class VirtualFilesystemTest extends TestCase
 
         // Normalize listing for comparison
         $listing = array_map(
-            static fn (FilesystemItem $i): string => sprintf('%s (%s)', $i->getPath(), $i->isFile() ? 'file' : 'dir'),
+            static fn (FilesystemItem $i): string => \sprintf('%s (%s)', $i->getPath(), $i->isFile() ? 'file' : 'dir'),
             $listedContents,
         );
 
@@ -957,7 +957,7 @@ class VirtualFilesystemTest extends TestCase
 
     private function doTestGetMetadata(string $property, mixed $value, int $accessFlags, bool $shouldSync, bool $shouldReadFromDbafs): void
     {
-        $method = sprintf('get%s', ucfirst($property));
+        $method = \sprintf('get%s', ucfirst($property));
 
         $mountManager = $this->createMock(MountManager::class);
         $mountManager

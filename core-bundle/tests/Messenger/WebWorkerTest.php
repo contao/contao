@@ -45,6 +45,9 @@ class WebWorkerTest extends TestCase
         $this->logger = new class() extends AbstractLogger {
             private array $logs = [];
 
+            /**
+             * @param string $message
+             */
             public function log($level, $message, array $context = []): void
             {
                 $this->logs[] = $message;

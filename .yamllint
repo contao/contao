@@ -1,7 +1,7 @@
 extends: default
 
 ignore: |
-    /.yarn/
+    /node_modules/
     /vendor/
     /vendor-bin/
 

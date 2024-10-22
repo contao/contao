@@ -124,7 +124,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                sprintf(
+                \sprintf(
                     'Did not index because according to the HTTP status code the response was not successful (%s).',
                     $response->getStatusCode(),
                 ),
@@ -211,7 +211,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                sprintf('Forwarded to the search indexer. Did not index because of the following reason: %s', $e->getMessage()),
+                \sprintf('Forwarded to the search indexer. Did not index because of the following reason: %s', $e->getMessage()),
             );
         }
     }
@@ -254,6 +254,6 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
     {
         ++$this->stats['warning'];
 
-        $this->logWithCrawlUri($crawlUri, LogLevel::DEBUG, sprintf('Broken link! %s.', $message));
+        $this->logWithCrawlUri($crawlUri, LogLevel::DEBUG, \sprintf('Broken link! %s.', $message));
     }
 }

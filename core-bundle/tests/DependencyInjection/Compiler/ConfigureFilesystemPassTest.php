@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 use Contao\CoreBundle\DependencyInjection\Compiler\ConfigureFilesystemPass;
 use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
 use Contao\CoreBundle\Filesystem\MountManager;
+use Contao\CoreBundle\Filesystem\PublicUri\SymlinkedLocalFilesProvider;
 use Contao\CoreBundle\Tests\Fixtures\Filesystem\FilesystemConfiguringExtension;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Local\LocalFilesystemAdapter;
@@ -120,6 +121,11 @@ class ConfigureFilesystemPassTest extends TestCase
             ->setPublic(true)
         ;
 
+        $container->setDefinition(
+            'contao.filesystem.public_uri.symlinked_local_files_provider',
+            $publicUriProviderDefinition = new Definition(SymlinkedLocalFilesProvider::class),
+        );
+
         (new ConfigureFilesystemPass())->process($container);
 
         $methodCalls = $mountManagerDefinition->getMethodCalls();
@@ -142,6 +148,12 @@ class ConfigureFilesystemPassTest extends TestCase
         $mountManager = $container->get($mountManagerId);
 
         $this->assertSame('dummy', $mountManager->read('files/foo/dummy.txt'));
+
+        $methodCallsOnPublicUriProvider = $publicUriProviderDefinition->getMethodCalls();
+        $this->assertCount(1, $methodCallsOnPublicUriProvider);
+        $this->assertSame('registerAdapter', $methodCallsOnPublicUriProvider[0][0]);
+        $this->assertSame('contao.filesystem.adapter.files_foo', (string) $methodCallsOnPublicUriProvider[0][1][0]);
+        $this->assertSame('files/foo', $methodCallsOnPublicUriProvider[0][1][1]);
 
         // Cleanup
         $filesystem->remove(Path::join($tempDir, 'files'));
@@ -190,6 +202,11 @@ class ConfigureFilesystemPassTest extends TestCase
             ->setPublic(true)
         ;
 
+        $container->setDefinition(
+            'contao.filesystem.public_uri.symlinked_local_files_provider',
+            new Definition(SymlinkedLocalFilesProvider::class),
+        );
+
         (new ConfigureFilesystemPass())->process($container);
 
         $methodCalls = $mountManagerDefinition->getMethodCalls();
@@ -209,7 +226,7 @@ class ConfigureFilesystemPassTest extends TestCase
             $link = str_replace('/', '\\', $link);
 
             $isDirectory = !str_ends_with($target, '.txt');
-            $command = sprintf('mklink%s "${:link}" "${:target}"', $isDirectory ? ' /d' : '');
+            $command = \sprintf('mklink%s "${:link}" "${:target}"', $isDirectory ? ' /d' : '');
 
             Process::fromShellCommandline($command, $cwd)->mustRun(null, ['link' => $link, 'target' => $target]);
         } else {

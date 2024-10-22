@@ -270,7 +270,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 if (false !== ($strOutput = Controller::getArticle($insertTag->getParameters()->get(0), false, true))) {
                     $result = ltrim($strOutput);
                 } else {
-                    $result = '<p class="error">'.sprintf($GLOBALS['TL_LANG']['MSC']['invalidPage'], $insertTag->getParameters()->get(0)).'</p>';
+                    $result = '<p class="error">'.\sprintf($GLOBALS['TL_LANG']['MSC']['invalidPage'], $insertTag->getParameters()->get(0)).'</p>';
                 }
                 break;
 
@@ -310,11 +310,11 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 // Replace the tag
                 switch ($insertTag->getName()) {
                     case 'article':
-                        $result = sprintf('<a href="%s" title="%s"%s>%s</a>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $strTarget, $objArticle->title);
+                        $result = \sprintf('<a href="%s" title="%s"%s>%s</a>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $strTarget, $objArticle->title);
                         break;
 
                     case 'article_open':
-                        $result = sprintf('<a href="%s" title="%s"%s>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $strTarget);
+                        $result = \sprintf('<a href="%s" title="%s"%s>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $strTarget);
                         break;
 
                     case 'article_url':

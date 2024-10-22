@@ -373,6 +373,9 @@
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
         <target>Non è stato impostato alcun indirizzo e-mail per l'amministratore, contattare l'amministratore del sito.</target>
       </trans-unit>
+      <trans-unit id="ERR.personalDataPassword">
+        <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Somma %d a %d.</target>

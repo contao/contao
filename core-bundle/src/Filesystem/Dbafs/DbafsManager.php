@@ -176,7 +176,7 @@ class DbafsManager
                 $keys = array_keys($chunk);
 
                 if ($duplicates = array_intersect($metadataKeys, $keys)) {
-                    throw new \LogicException(sprintf('The metadata key(s) "%s" appeared in more than one matching DBAFS for path "%s".', implode('", "', $duplicates), $path));
+                    throw new \LogicException(\sprintf('The metadata key(s) "%s" appeared in more than one matching DBAFS for path "%s".', implode('", "', $duplicates), $path));
                 }
 
                 $metadataChunks[] = $chunk;
@@ -206,7 +206,7 @@ class DbafsManager
         }
 
         if (!$success) {
-            throw new \InvalidArgumentException(sprintf('No resource exists for the given path "%s".', $path));
+            throw new \InvalidArgumentException(\sprintf('No resource exists for the given path "%s".', $path));
         }
     }
 
@@ -328,7 +328,7 @@ class DbafsManager
                 if (0 !== $nonTransitive) {
                     $features = implode('" and "', $this->getFeatureFlagsAsNames($nonTransitive));
 
-                    throw new \LogicException(sprintf('The transitive feature(s) "%s" must be supported for any DBAFS with a path prefix "%s", because they are also supported for "%s".', $features, $prefix, $currentPrefix));
+                    throw new \LogicException(\sprintf('The transitive feature(s) "%s" must be supported for any DBAFS with a path prefix "%s", because they are also supported for "%s".', $features, $prefix, $currentPrefix));
                 }
             }
 
