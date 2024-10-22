@@ -44,7 +44,7 @@ The `postDownload` is triggered in `Controller::sendFileToBrowser()` which has b
 the `postDownload` hook being called in the download(s) content elements, this is no longer the case unless you are
 actively using the legacy content elements as shown later in this document. Replace your hook with a general response
 event listener listening to the `ResponseEvent` and check if it's of instance `BinaryFileResponse`. If so, you can use
-`BinaryFileResponse::getFile()` in order to access the file and apply your business logic. This has the advantage, that
+`BinaryFileResponse::getFile()` in order to access the file and apply your business logic. This has the advantage that
 it works for all responses sent across the system, not just for the ones using the deprecated
 `Controller::sendFileToBrowser()` method.
 
