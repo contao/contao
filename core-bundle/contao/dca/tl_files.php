@@ -485,7 +485,7 @@ class tl_files extends Backend
 		{
 			$strPalette = PaletteManipulator::create()
 				->removeField(array('importantPartX', 'importantPartY', 'importantPartWidth', 'importantPartHeight'))
-				->applytoString($strPalette)
+				->applyToString($strPalette)
 			;
 		}
 
