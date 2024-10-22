@@ -13,7 +13,7 @@ export default class extends Controller {
             this.observer.disconnect();
         }
 
-        Object.entries(this.selectors).forEach(([selector, options]) => {
+        Object.keys(this.selectors).forEach(selector => {
             document.querySelectorAll(selector).forEach(el => {
                 if (this.initialized.includes(el)) {
                     document.removeEventListener('touchstart', el.globalTouchstartListener);
