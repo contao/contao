@@ -16,7 +16,6 @@ use Contao\ContentTable;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
@@ -42,7 +41,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			array('tl_content', 'adjustDcaByType'),
 			array('tl_content', 'showJsLibraryHint'),
-			array('tl_content', 'setDefaultElementType'),
 		),
 		'sql' => array
 		(
@@ -153,7 +151,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'filter'                  => true,
 			'inputType'               => 'select',
-			'options_callback'        => array('tl_content', 'getContentElements'),
 			'reference'               => &$GLOBALS['TL_LANG']['CTE'],
 			'eval'                    => array('helpwizard'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50'),
 			'sql'                     => array('name'=>'type', 'type'=>'string', 'length'=>64, 'default'=>'text', 'customSchemaOptions'=>array('collation'=>'ascii_bin'))
@@ -775,31 +772,6 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 class tl_content extends Backend
 {
 	/**
-	 * Return all content elements as array
-	 *
-	 * @return array
-	 */
-	public function getContentElements(DataContainer $dc)
-	{
-		$security = System::getContainer()->get('security.helper');
-		$groups = array();
-
-		foreach ($GLOBALS['TL_CTE'] as $k=>$v)
-		{
-			foreach (array_keys($v) as $kk)
-			{
-				// Check if an element of this type can be created in the current context (e.g. nested fragments)
-				if ($security->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_content', new CreateAction('tl_content', array('ptable' => $dc->parentTable, 'pid' => $dc->currentPid, 'type' => $kk))))
-				{
-					$groups[$k][] = $kk;
-				}
-			}
-		}
-
-		return $groups;
-	}
-
-	/**
 	 * Return the group of a content element
 	 *
 	 * @param string $element
@@ -848,19 +820,6 @@ class tl_content extends Backend
 		if (System::getContainer()->get('contao.fragment.compositor')->supportsNesting('contao.content_element.' . $objCte->type))
 		{
 			$GLOBALS['TL_DCA']['tl_content']['config']['switchToEdit'] = true;
-		}
-	}
-
-	/**
-	 * Set default element type based on user access.
-	 */
-	public function setDefaultElementType()
-	{
-		$user = BackendUser::getInstance();
-
-		if (!$user->isAdmin && !in_array($GLOBALS['TL_DCA']['tl_content']['fields']['type']['sql']['default'] ?? null, $user->elements))
-		{
-			$GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $user->elements[0] ?? '';
 		}
 	}
 
