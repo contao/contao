@@ -67,7 +67,7 @@ class ContentElementTypeListener implements ResetInterface
         $groups = [];
 
         foreach ($GLOBALS['TL_CTE'] as $k => $v) {
-            foreach ($v as $vv) {
+            foreach ($v as $kk => $vv) {
                 $action = new CreateAction('tl_content', [
                     'ptable' => $ptable,
                     'pid' => $pid,
@@ -75,7 +75,7 @@ class ContentElementTypeListener implements ResetInterface
                 ]);
 
                 if ($this->security->isGranted(ContaoCorePermissions::DC_PREFIX.'tl_content', $action)) {
-                    $groups[$k][] = $vv;
+                    $groups[$k][] = $kk;
                 }
             }
         }
