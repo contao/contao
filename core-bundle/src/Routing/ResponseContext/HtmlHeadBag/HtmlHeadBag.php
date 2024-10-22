@@ -26,6 +26,11 @@ final class HtmlHeadBag
 
     private array $keepParamsForCanonical = [];
 
+    /**
+     * @var array<string, string>
+     */
+    private array $metaTags = [];
+
     public function getTitle(): string
     {
         return $this->title;
@@ -119,5 +124,29 @@ final class HtmlHeadBag
         );
 
         return $request->getUri();
+    }
+
+    public function getMetaTags(): array
+    {
+        return $this->metaTags;
+    }
+
+    public function getMetaTag(string $name): string|null
+    {
+        return $this->metaTags[$name] ?? null;
+    }
+
+    public function setMetaTag(string $name, string $content): self
+    {
+        $this->metaTags[$name] = $content;
+
+        return $this;
+    }
+
+    public function unsetMetaTag(string $name): self
+    {
+        unset($this->metaTags[$name]);
+
+        return $this;
     }
 }

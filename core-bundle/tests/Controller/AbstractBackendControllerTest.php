@@ -107,6 +107,62 @@ class AbstractBackendControllerTest extends TestCase
         $this->assertSame('<custom_be_main>', $controller->fooAction()->getContent());
     }
 
+    public function testSetsUnprocessableEntityStatus(): void
+    {
+        $controller = new class() extends AbstractBackendController {
+            public function fooAction(): Response
+            {
+                return $this->render('custom_be.html.twig', ['foo' => 'bar', 'version' => 'my version']);
+            }
+        };
+
+        // Legacy setup
+        ContaoEnvironment::reset();
+
+        $filesystem = new Filesystem();
+        $filesystem->mkdir(Path::join($this->getTempDir(), 'languages/en'));
+        $filesystem->touch(Path::join($this->getTempDir(), 'be_main.html5'));
+
+        $GLOBALS['TL_LANG']['MSC'] = [
+            'version' => 'version',
+            'dashboard' => 'dashboard',
+            'home' => 'home',
+            'learnMore' => 'learn more',
+        ];
+
+        $GLOBALS['TL_LANGUAGE'] = 'en';
+
+        $_SERVER['HTTP_HOST'] = 'localhost';
+
+        TemplateLoader::addFile('be_main', '');
+
+        $expectedContext = [
+            'version' => 'my version',
+            'headline' => 'dashboard',
+            'title' => '',
+            'theme' => 'flexible',
+            'language' => 'en',
+            'host' => 'localhost',
+            'charset' => 'UTF-8',
+            'home' => 'home',
+            'isPopup' => null,
+            'learnMore' => 'learn more',
+            'menu' => '<menu>',
+            'headerMenu' => '<header_menu>',
+            'badgeTitle' => '',
+            'foo' => 'bar',
+        ];
+
+        $container = $this->getContainerWithDefaultConfiguration($expectedContext);
+
+        $container->get('request_stack')->getMainRequest()->attributes->set('_contao_widget_error', true);
+
+        System::setContainer($container);
+        $controller->setContainer($container);
+
+        $this->assertSame(Response::HTTP_UNPROCESSABLE_ENTITY, $controller->fooAction()->getStatusCode());
+    }
+
     private function getContainerWithDefaultConfiguration(array $expectedContext): ContainerBuilder
     {
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());

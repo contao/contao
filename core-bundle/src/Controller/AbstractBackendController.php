@@ -48,6 +48,14 @@ abstract class AbstractBackendController extends AbstractController
             }
         })();
 
-        return parent::render($view, [...$backendContext, ...$parameters], $response);
+        $response = parent::render($view, [...$backendContext, ...$parameters], $response);
+
+        // Set the status code to 422 if a widget did not validate, so that Turbo can
+        // handle form errors.
+        if ($this->container->get('request_stack')?->getMainRequest()->attributes->has('_contao_widget_error')) {
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return $response;
     }
 }
