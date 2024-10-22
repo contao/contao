@@ -71,12 +71,15 @@
       </trans-unit>
       <trans-unit id="tl_page.all_items">
         <source>Show all items</source>
+        <target>نمایش همه آیتم‌ها</target>
       </trans-unit>
       <trans-unit id="tl_page.featured">
         <source>Show featured items only</source>
+        <target>نمایش فقط آیتم‌های ویژه</target>
       </trans-unit>
       <trans-unit id="tl_page.unfeatured">
         <source>Skip featured items</source>
+        <target>رد کردن آیتم‌های ویژه</target>
       </trans-unit>
     </body>
   </file>

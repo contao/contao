@@ -375,6 +375,7 @@
       </trans-unit>
       <trans-unit id="ERR.personalDataPassword">
         <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
+        <target>Existe al menos un módulo de &quot;datos personales&quot; que permite cambiar la contraseña. Esto es un punto débil de seguridad y ya no funcionará en Contao 6. Utilice el módulo &quot;cambiar contraseña&quot; en su lugar.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -2495,10 +2496,6 @@
       <trans-unit id="MSC.printPage">
         <source>Print this page</source>
         <target>Imprimir esta página</target>
-      </trans-unit>
-      <trans-unit id="MSC.printAsPdf">
-        <source>Save article as PDF</source>
-        <target>Guardar artículo en PDF</target>
       </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>

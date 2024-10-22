@@ -71,12 +71,15 @@
       </trans-unit>
       <trans-unit id="tl_page.all_items">
         <source>Show all items</source>
+        <target>Zobrazit všechny položky</target>
       </trans-unit>
       <trans-unit id="tl_page.featured">
         <source>Show featured items only</source>
+        <target>Zobrazit jen zvýrazněné příspěvky</target>
       </trans-unit>
       <trans-unit id="tl_page.unfeatured">
         <source>Skip featured items</source>
+        <target>Vynechat zvýrazněné příspěvky</target>
       </trans-unit>
     </body>
   </file>

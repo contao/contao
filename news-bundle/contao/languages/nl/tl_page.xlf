@@ -71,12 +71,15 @@
       </trans-unit>
       <trans-unit id="tl_page.all_items">
         <source>Show all items</source>
+        <target>Toon alle items</target>
       </trans-unit>
       <trans-unit id="tl_page.featured">
         <source>Show featured items only</source>
+        <target>Alleen uitgelichte items weergeven</target>
       </trans-unit>
       <trans-unit id="tl_page.unfeatured">
         <source>Skip featured items</source>
+        <target>Uitgelichte items overslaan</target>
       </trans-unit>
     </body>
   </file>

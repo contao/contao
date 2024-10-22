@@ -2497,10 +2497,6 @@
         <source>Print this page</source>
         <target>このページを印刷</target>
       </trans-unit>
-      <trans-unit id="MSC.printAsPdf">
-        <source>Save article as PDF</source>
-        <target>アーティクルをPDFとして保存</target>
-      </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>
         <target>Facebookで共有</target>

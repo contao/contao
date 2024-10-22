@@ -71,12 +71,15 @@
       </trans-unit>
       <trans-unit id="tl_page.all_items">
         <source>Show all items</source>
+        <target>Visa alla objekt</target>
       </trans-unit>
       <trans-unit id="tl_page.featured">
         <source>Show featured items only</source>
+        <target>Visa endast utvalda objekt</target>
       </trans-unit>
       <trans-unit id="tl_page.unfeatured">
         <source>Skip featured items</source>
+        <target>Hoppa över utvalda objekt</target>
       </trans-unit>
     </body>
   </file>

@@ -215,6 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_news.start.1">
         <source>If you want to prevent the news item from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>اگر می‌خواهید از نمایش خبر قبل از تاریخ/ساعت خاصی در وب‌سایت جلوگیری کنید، می توانید آن را در اینجا وارد کنید. در غیر این صورت، قسمت را خالی بگذارید.</target>
       </trans-unit>
       <trans-unit id="tl_news.stop.0">
         <source>Show until</source>
@@ -222,6 +223,7 @@
       </trans-unit>
       <trans-unit id="tl_news.stop.1">
         <source>If you want to prevent the news item from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>اگر می‌خواهید از نمایش خبر بعد از تاریخ/ساعت خاصی در وب‌سایت جلوگیری کنید، می توانید آن را در اینجا وارد کنید. در غیر این صورت، قسمت را خالی بگذارید.</target>
       </trans-unit>
       <trans-unit id="tl_news.tstamp.0">
         <source>Revision date</source>

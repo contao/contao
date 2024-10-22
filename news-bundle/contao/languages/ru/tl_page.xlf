@@ -71,12 +71,15 @@
       </trans-unit>
       <trans-unit id="tl_page.all_items">
         <source>Show all items</source>
+        <target>Показать все элементы</target>
       </trans-unit>
       <trans-unit id="tl_page.featured">
         <source>Show featured items only</source>
+        <target>Показывать только популярные элементы</target>
       </trans-unit>
       <trans-unit id="tl_page.unfeatured">
         <source>Skip featured items</source>
+        <target>Пропустить популярные элементы</target>
       </trans-unit>
     </body>
   </file>

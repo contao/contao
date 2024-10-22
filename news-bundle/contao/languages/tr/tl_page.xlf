@@ -71,12 +71,15 @@
       </trans-unit>
       <trans-unit id="tl_page.all_items">
         <source>Show all items</source>
+        <target>Tüm ögeler görüntülensin</target>
       </trans-unit>
       <trans-unit id="tl_page.featured">
         <source>Show featured items only</source>
+        <target>Yalnızca öne çıkarılmış ögeler görüntülensin</target>
       </trans-unit>
       <trans-unit id="tl_page.unfeatured">
         <source>Skip featured items</source>
+        <target>Öne çıkarılmış ögeler atlansın</target>
       </trans-unit>
     </body>
   </file>

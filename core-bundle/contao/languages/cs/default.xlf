@@ -2495,10 +2495,6 @@
         <source>Print this page</source>
         <target>Vytisknout tuto stránku</target>
       </trans-unit>
-      <trans-unit id="MSC.printAsPdf">
-        <source>Save article as PDF</source>
-        <target>Uložit článek jako PDF</target>
-      </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>
         <target>Sdílet přes Facebook</target>

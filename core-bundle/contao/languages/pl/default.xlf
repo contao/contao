@@ -2494,10 +2494,6 @@
         <source>Print this page</source>
         <target>Drukuj tę stronę</target>
       </trans-unit>
-      <trans-unit id="MSC.printAsPdf">
-        <source>Save article as PDF</source>
-        <target>Zapisz artykuł jako PDF</target>
-      </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>
         <target>Opublikuj na Facebooku</target>
