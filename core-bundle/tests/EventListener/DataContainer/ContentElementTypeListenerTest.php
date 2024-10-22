@@ -39,14 +39,16 @@ class ContentElementTypeListenerTest extends TestCase
         $security
             ->expects($this->exactly(4))
             ->method('isGranted')
-            ->willReturnCallback(function (string $attribute, CreateAction $action): bool {
-                $this->assertSame(ContaoCorePermissions::DC_PREFIX.'tl_content', $attribute);
-                $this->assertSame('tl_foo', $action->getNew()['ptable']);
-                $this->assertSame(42, $action->getNew()['pid']);
-                $this->assertContains($action->getNew()['type'], ['bar', 'baz', 'bas', 'bat']);
+            ->willReturnCallback(
+                function (string $attribute, CreateAction $action): bool {
+                    $this->assertSame(ContaoCorePermissions::DC_PREFIX.'tl_content', $attribute);
+                    $this->assertSame('tl_foo', $action->getNew()['ptable']);
+                    $this->assertSame(42, $action->getNew()['pid']);
+                    $this->assertContains($action->getNew()['type'], ['bar', 'baz', 'bas', 'bat']);
 
-                return \in_array($action->getNew()['type'], ['bar', 'bas']);
-            })
+                    return \in_array($action->getNew()['type'], ['bar', 'bas'], true);
+                },
+            )
         ;
 
         $dataContainer = $this->mockClassWithProperties(DC_Table::class, ['parentTable' => 'tl_foo', 'currentPid' => 42]);
@@ -66,14 +68,16 @@ class ContentElementTypeListenerTest extends TestCase
         $security
             ->expects($this->exactly(2))
             ->method('isGranted')
-            ->willReturnCallback(function (string $attribute, CreateAction $action): bool {
-                $this->assertSame(ContaoCorePermissions::DC_PREFIX.'tl_content', $attribute);
-                $this->assertSame('tl_foo', $action->getNew()['ptable']);
-                $this->assertSame(42, $action->getNew()['pid']);
-                $this->assertContains($action->getNew()['type'], ['bar', 'baz']);
+            ->willReturnCallback(
+                function (string $attribute, CreateAction $action): bool {
+                    $this->assertSame(ContaoCorePermissions::DC_PREFIX.'tl_content', $attribute);
+                    $this->assertSame('tl_foo', $action->getNew()['ptable']);
+                    $this->assertSame(42, $action->getNew()['pid']);
+                    $this->assertContains($action->getNew()['type'], ['bar', 'baz']);
 
-                return 'baz' === $action->getNew()['type'];
-            })
+                    return 'baz' === $action->getNew()['type'];
+                },
+            )
         ;
 
         $dataContainer = $this->mockClassWithProperties(DC_Table::class, ['parentTable' => 'tl_foo', 'currentPid' => 42]);

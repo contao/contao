@@ -37,7 +37,7 @@ class ContentElementTypeListener implements ResetInterface
             $GLOBALS['TL_DCA']['tl_content']['fields']['type']['default'] = $allowedTypes[0] ?? '';
         }
 
-        if (empty($allowedTypes)) {
+        if ([] === $allowedTypes) {
             $GLOBALS['TL_DCA']['tl_content']['config']['notCreatable'] = true;
         }
     }
