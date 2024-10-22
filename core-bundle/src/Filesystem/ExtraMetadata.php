@@ -23,7 +23,9 @@ class ExtraMetadata implements \ArrayAccess
      */
     public function __construct(private array $extraMetadata = [])
     {
-        if (($localizedMetadata = ($extraMetadata['metadata'] ?? null)) instanceof MetadataBag) {
+        $localizedMetadata = $extraMetadata['metadata'] ?? null;
+
+        if ($localizedMetadata instanceof MetadataBag) {
             trigger_deprecation('contao/core-bundle', '5.5', 'Using the key "metadata" to set localized metadata has been deprecated and will no longer work in Contao 6. Use the key "localized" instead.');
 
             $this->extraMetadata['localized'] = $localizedMetadata;
