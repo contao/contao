@@ -73,7 +73,10 @@
 
                     let delay = el.getAttribute('data-delay');
                     if (delay > 0) {
-                        opts['autoplay'] = { delay: delay };
+                        opts['autoplay'] = { 
+                            delay: delay,
+                            pauseOnMouseEnter: true,
+                        };
                     }
 
                     new Swiper(el, Object.assign({
@@ -96,9 +99,9 @@
 {% endblock %}
 
 {% block style %}
-    {% set swiper_css_file = asset('css/swiper-bundle.min.css', 'contao-components/swiper') %}
-
     {% add "swiper_css" to stylesheets %}
-        {% with {file: swiper_css_file} %}{{ block('stylesheet_component') }}{% endwith %}
+        {% with {file: swiper_css_file|default(asset('css/swiper-bundle.min.css', 'contao-components/swiper'))} %}
+            {{ block('stylesheet_component') }}
+        {% endwith %}
     {% endadd %}
 {% endblock %}
