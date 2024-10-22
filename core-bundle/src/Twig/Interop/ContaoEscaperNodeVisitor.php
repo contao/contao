@@ -107,10 +107,11 @@ final class ContaoEscaperNodeVisitor implements NodeVisitorInterface
             return false;
         }
 
-        /** @todo Always use "$node->getAttribute('twig_callable')->getName()" as soon as we are at least requiring Twig 3.12 */
-        $filterName = class_exists(FirstClassTwigCallableReady::class) ?
-            $node->getAttribute('twig_callable')->getName() :
-            $node->getNode('filter')->getAttribute('value');
+        // TODO: Always use "$node->getAttribute('twig_callable')->getName()" as soon as
+        // we require at least Twig 3.12.
+        $filterName = class_exists(FirstClassTwigCallableReady::class)
+            ? $node->getAttribute('twig_callable')->getName()
+            : $node->getNode('filter')->getAttribute('value');
 
         if (!\in_array($filterName, ['escape', 'e'], true)) {
             return false;

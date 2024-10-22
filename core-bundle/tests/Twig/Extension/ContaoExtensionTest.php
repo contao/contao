@@ -215,8 +215,11 @@ class ContaoExtensionTest extends TestCase
             [$escaperNodeVisitor],
         );
 
-        /** @todo Always use "new TwigFilter('escape')" as soon as we are at least requiring Twig 3.12 */
-        $filter = class_exists(FirstClassTwigCallableReady::class) ? new TwigFilter('escape') : new ConstantExpression('escape', 1);
+        // TODO: Always use "new TwigFilter('escape')" as soon as we require at least
+        // Twig 3.12.
+        $filter = class_exists(FirstClassTwigCallableReady::class)
+            ? new TwigFilter('escape')
+            : new ConstantExpression('escape', 1);
 
         $node = new ModuleNode(
             new BodyNode([
