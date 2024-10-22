@@ -132,20 +132,21 @@ interface VirtualFilesystemInterface
     public function getMimeType(Uuid|string $location, int $accessFlags = self::NONE): string;
 
     /**
-     * @return array<string, mixed>
-     *
      * @throws VirtualFilesystemException
      * @throws UnableToResolveUuidException
      */
-    public function getExtraMetadata(Uuid|string $location, int $accessFlags = self::NONE): array;
+    public function getExtraMetadata(Uuid|string $location, int $accessFlags = self::NONE): ExtraMetadata;
 
     /**
-     * @param array<string, mixed> $metadata
-     *
      * @throws VirtualFilesystemException
      * @throws UnableToResolveUuidException
      */
-    public function setExtraMetadata(Uuid|string $location, array $metadata): void;
+    public function setExtraMetadata(Uuid|string $location, ExtraMetadata $metadata): void;
+
+    /**
+     * @throws UnableToResolveUuidException
+     */
+    public function resolveUuid(Uuid $uuid): string;
 
     /**
      * @throws UnableToResolveUuidException

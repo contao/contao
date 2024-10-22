@@ -1,8 +1,6 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 {% use "@Contao/component/_stylesheet.html.twig" %}
 
-{% set highlighter_css_file = asset('foundation.css', 'scrivo/highlight.php') %}
-
 {% block content %}
     {% if as_editor_view %}
         {% block editor_view %}<pre>{{ code }}</pre>{% endblock %}
@@ -24,6 +22,8 @@
 
 {% block style %}
     {% add "highlighter_css" to stylesheets %}
-        {% with {file: highlighter_css_file} %}{{ block('stylesheet_component') }}{% endwith %}
+        {% with {file: highlighter_css_file|default(asset('foundation.css', 'scrivo/highlight.php'))} %}
+            {{ block('stylesheet_component') }}
+        {% endwith %}
     {% endadd %}
 {% endblock %}

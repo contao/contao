@@ -13,10 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\BackendNoindexListener;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestMatcher;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -33,7 +31,7 @@ class BackendNoindexListenerTest extends TestCase
         $kernel = $this->createMock(KernelInterface::class);
         $event = new ResponseEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, $response);
 
-        $listener = new BackendNoindexListener($this->getScopeMatcher());
+        $listener = new BackendNoindexListener($this->mockScopeMatcher());
         $listener($event);
 
         $this->assertSame('noindex', $response->headers->get('X-Robots-Tag'));
@@ -46,20 +44,9 @@ class BackendNoindexListenerTest extends TestCase
         $kernel = $this->createMock(KernelInterface::class);
         $event = new ResponseEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST, $response);
 
-        $listener = new BackendNoindexListener($this->getScopeMatcher());
+        $listener = new BackendNoindexListener($this->mockScopeMatcher());
         $listener($event);
 
         $this->assertNull($response->headers->get('X-Robots-Tag'));
-    }
-
-    private function getScopeMatcher(): ScopeMatcher
-    {
-        $frontendMatcher = new RequestMatcher();
-        $frontendMatcher->matchAttribute('_scope', 'frontend');
-
-        $backendMatcher = new RequestMatcher();
-        $backendMatcher->matchAttribute('_scope', 'backend');
-
-        return new ScopeMatcher($backendMatcher, $frontendMatcher);
     }
 }

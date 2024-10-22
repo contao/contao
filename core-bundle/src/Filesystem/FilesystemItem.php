@@ -24,10 +24,10 @@ use Symfony\Component\Uid\Uuid;
 class FilesystemItem implements \Stringable
 {
     /**
-     * @param int|(\Closure(self):int|null)|null                       $lastModified
-     * @param int|\Closure(self):int|null                              $fileSize
-     * @param string|\Closure(self):string|null                        $mimeType
-     * @param array<string, mixed>|\Closure(self):array<string, mixed> $extraMetadata
+     * @param int|(\Closure(self):int|null)|null              $lastModified
+     * @param int|\Closure(self):int|null                     $fileSize
+     * @param string|\Closure(self):string|null               $mimeType
+     * @param ExtraMetadata|\Closure(self):ExtraMetadata|null $extraMetadata
      */
     public function __construct(
         private readonly bool $isFile,
@@ -35,7 +35,7 @@ class FilesystemItem implements \Stringable
         private \Closure|int|null $lastModified = null,
         private \Closure|int|null $fileSize = null,
         private \Closure|string|null $mimeType = null,
-        private \Closure|array $extraMetadata = [],
+        private \Closure|ExtraMetadata|null $extraMetadata = null,
     ) {
     }
 
@@ -58,7 +58,7 @@ class FilesystemItem implements \Stringable
                 $attributes->lastModified(),
                 $attributes->fileSize(),
                 $attributes->mimeType(),
-                $attributes->extraMetadata(),
+                new ExtraMetadata($attributes->extraMetadata()),
             );
         }
 
@@ -66,9 +66,9 @@ class FilesystemItem implements \Stringable
     }
 
     /**
-     * @param array<string, mixed>|\Closure(self):array<string, mixed> $extraMetadata
+     * @param ExtraMetadata|\Closure(self):ExtraMetadata $extraMetadata
      */
-    public function withExtraMetadata(array|callable $extraMetadata): self
+    public function withExtraMetadata(ExtraMetadata|callable $extraMetadata): self
     {
         return new self(
             $this->isFile,
@@ -217,11 +217,11 @@ class FilesystemItem implements \Stringable
         return $this->mimeType ?? $default;
     }
 
-    public function getExtraMetadata(): array
+    public function getExtraMetadata(): ExtraMetadata
     {
         $this->resolveIfClosure($this->extraMetadata);
 
-        return $this->extraMetadata;
+        return $this->extraMetadata ?? new ExtraMetadata();
     }
 
     public function getUuid(): Uuid|null
@@ -264,7 +264,7 @@ class FilesystemItem implements \Stringable
 
     private function getMetaData(): Metadata|null
     {
-        return ($this->getExtraMetadata()['metadata'] ?? null)?->getDefault();
+        return $this->getExtraMetadata()->getLocalized()?->getDefault();
     }
 
     private function assertIsFile(string $method): void
