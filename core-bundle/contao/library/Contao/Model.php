@@ -231,7 +231,12 @@ abstract class Model
 	public function cloneDetached()
 	{
 		$clone = clone $this;
-		$clone->arrData[static::$strPk] = $this->arrData[static::$strPk];
+
+		if (isset($this->arrData[static::$strPk]))
+		{
+			$clone->arrData[static::$strPk] = $this->arrData[static::$strPk];
+		}
+
 		$clone->preventSaving(false);
 
 		return $clone;

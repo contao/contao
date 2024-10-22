@@ -2781,16 +2781,21 @@ fieldset.tl_tbox.nolegend, fieldset.tl_box.nolegend {
 	border-top: 0;
 }
 
-fieldset.tl_tbox > legend, fieldset.tl_box > legend {
+fieldset:is(.tl_tbox,.tl_box) > legend {
 	box-sizing: border-box;
 	color: var(--legend);
 	padding: 9px 12px 9px 28px;
 	background: url("icons/navcol.svg") 13px 10px no-repeat;
+	width: 100%;
+}
+
+fieldset:is(.tl_tbox,.tl_box) > legend[onclick] {
 	cursor: pointer;
 }
 
-fieldset:is(.tl_tbox,.tl_box) > legend {
-	width: 100%;
+fieldset:is(.tl_tbox,.tl_box) > legend:has(> button) {
+	padding: 0;
+	background: none;
 }
 
 fieldset:is(.tl_tbox,.tl_box) > legend > button {
@@ -2798,8 +2803,10 @@ fieldset:is(.tl_tbox,.tl_box) > legend > button {
 	border: 0 none;
 	width: 100%;
 	line-height: inherit;
-	padding: 0;
-	background: transparent;
+	box-sizing: border-box;
+	padding: 9px 12px 9px 28px;
+	background: transparent url("icons/navcol.svg") 13px 10px no-repeat;
+	cursor: pointer;
 }
 
 fieldset.collapsed {
@@ -2811,8 +2818,9 @@ fieldset.collapsed div {
 	display: none !important;
 }
 
-fieldset.collapsed > legend {
-	background: url("icons/navexp.svg") 13px 10px no-repeat;
+fieldset.collapsed > legend > button,
+fieldset.collapsed > legend:not(:has(> button)) {
+	background-image: url("icons/navexp.svg");
 }
 
 /* Maintenance */

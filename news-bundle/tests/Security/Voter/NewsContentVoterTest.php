@@ -50,7 +50,7 @@ class NewsContentVoterTest extends TestCase
         $accessDecisionMap = [[$token, [ContaoNewsPermissions::USER_CAN_ACCESS_MODULE], null, true]];
 
         foreach ($newsArchives as $archiveId) {
-            $accessDecisionMap[] = [$token, [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE], $archiveId, true];
+            $accessDecisionMap[] = [$token, [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE], (int) $archiveId, true];
         }
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
@@ -124,7 +124,7 @@ class NewsContentVoterTest extends TestCase
         yield 'Check access to news archive when creating element in news' => [
             new CreateAction('tl_content', ['ptable' => 'tl_news', 'pid' => 1]),
             [],
-            [1 => 1],
+            [1 => '1'],
         ];
 
         yield 'Check access to news archive when creating nested element' => [

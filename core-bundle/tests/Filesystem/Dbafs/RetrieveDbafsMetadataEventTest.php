@@ -35,11 +35,11 @@ class RetrieveDbafsMetadataEventTest extends TestCase
         $this->assertSame('foo/bar', $event->getPath());
         $this->assertSame($rowData, $event->getRow());
 
-        $this->assertEmpty($event->getExtraMetadata());
+        $this->assertEmpty($event->getExtraMetadata()->all());
 
         $event->set('baz-data', $event->getRow()['baz']);
 
-        $this->assertSame(['baz-data' => 42], $event->getExtraMetadata());
+        $this->assertSame(['baz-data' => 42], $event->getExtraMetadata()->all());
     }
 
     /**

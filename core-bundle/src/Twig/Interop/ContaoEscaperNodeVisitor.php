@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Interop;
 
+use Twig\Attribute\FirstClassTwigCallableReady;
 use Twig\Environment;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
@@ -106,7 +107,13 @@ final class ContaoEscaperNodeVisitor implements NodeVisitorInterface
             return false;
         }
 
-        if (!\in_array($node->getNode('filter')->getAttribute('value'), ['escape', 'e'], true)) {
+        // TODO: Always use "$node->getAttribute('twig_callable')->getName()" as soon as
+        // we require at least Twig 3.12.
+        $filterName = class_exists(FirstClassTwigCallableReady::class)
+            ? $node->getAttribute('twig_callable')->getName()
+            : $node->getNode('filter')->getAttribute('value');
+
+        if (!\in_array($filterName, ['escape', 'e'], true)) {
             return false;
         }
 
