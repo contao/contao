@@ -232,7 +232,8 @@ abstract class Model
 	{
 		$clone = clone $this;
 
-		if (isset($this->arrData[static::$strPk])) {
+		if (isset($this->arrData[static::$strPk]))
+		{
 			$clone->arrData[static::$strPk] = $this->arrData[static::$strPk];
 		}
 
