@@ -2,6 +2,14 @@
 
 ## Version 4.* to 5.0
 
+### postDownload hook
+
+The `postDownload` hook is only triggered in the legacy download content elements.
+
+To apply business logic to all file responses, use an event listener instead that listens for the `ResponseEvent` event
+and checks whether the response is a `BinaryFileResponse`. The event listener works for both the legacy elements and the
+new Twig-based download elements.
+
 ### Contao 3 theme icons
 
 The old `.gif` images that were used for the back end theme in Contao 3 have been removed. Use the `.svg` icons instead.
