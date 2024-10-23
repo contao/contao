@@ -2185,7 +2185,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$changeSet = $container->get('contao.filesystem.dbafs_manager')->sync();
 
 		return $container->get('twig')->render(
-			'@ContaoCore/Backend/be_filesync_report.html.twig',
+			'@Contao/backend/file_manager/filesync_report.html.twig',
 			array(
 				'change_set' => $changeSet,
 				'referer' => $this->getReferer(true),

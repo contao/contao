@@ -40,7 +40,7 @@ class PageRoutingListener
             return '';
         }
 
-        return $this->twig->render('@ContaoCore/Backend/be_route_path.html.twig', [
+        return $this->twig->render('@Contao/backend/routing/path_widget.html.twig', [
             'path' => $this->getPathWithParameters($this->pageRegistry->getRoute($pageModel)),
         ]);
     }
@@ -96,7 +96,7 @@ class PageRoutingListener
             return '';
         }
 
-        return $this->twig->render('@ContaoCore/Backend/be_route_conflicts.html.twig', [
+        return $this->twig->render('@Contao/backend/routing/route_conflicts_widget.html.twig', [
             'conflicts' => $conflicts,
         ]);
     }
