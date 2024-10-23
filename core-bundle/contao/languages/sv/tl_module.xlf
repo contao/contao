@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_module.ariaLabel.1">
         <source>If there is more than one navigation element on the page, each should have a unique label.</source>
+        <target>Om det finns mer än ett navigeringselement på sidan ska varje element ha en unik etikett.</target>
       </trans-unit>
       <trans-unit id="tl_module.levelOffset.0">
         <source>Start level</source>

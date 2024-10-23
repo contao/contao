@@ -15,6 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.jumpTo.1">
         <source>Please choose the newsreader page to which visitors will be redirected when clicking a news item.</source>
+        <target>لطفاً برگه خبرخوان را انتخاب کنید که بازدیدکنندگان هنگام کلیک کردن روی یک خبر به آن هدایت خواهند شد.</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.protected.0">
         <source>Protect archive</source>

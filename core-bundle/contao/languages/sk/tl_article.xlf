@@ -1,0 +1,234 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_article.php" source-language="en" target-language="sk">
+    <body>
+      <trans-unit id="tl_article.title.0">
+        <source>Title</source>
+        <target>Nadpis</target>
+      </trans-unit>
+      <trans-unit id="tl_article.title.1">
+        <source>Please enter the article title.</source>
+        <target>Prosím vložte názov článku.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.alias.0">
+        <source>Article alias</source>
+        <target>Alias článku</target>
+      </trans-unit>
+      <trans-unit id="tl_article.alias.1">
+        <source>The article alias is a unique reference to the article which can be called instead of its numeric ID.</source>
+        <target>Alias článku je unikátny odkaz k článku, ktorý je možné vyvolať namiesto ID článku.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.author.0">
+        <source>Author</source>
+        <target>Autor</target>
+      </trans-unit>
+      <trans-unit id="tl_article.author.1">
+        <source>Here you can change the author of the article.</source>
+        <target>Prosím vložte meno autora článku.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.inColumn.0">
+        <source>Display in</source>
+        <target>Zobraz v</target>
+      </trans-unit>
+      <trans-unit id="tl_article.inColumn.1">
+        <source>Please choose the layout section you want the article to be displayed in.</source>
+        <target>Prosím nastavte, v ktorom stĺpci sa bude daný článok zobrazovať, v hlavičke, v päte stránky.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.teaserCssID.0">
+        <source>Teaser CSS ID/class</source>
+        <target>CSS ID/class ukážky</target>
+      </trans-unit>
+      <trans-unit id="tl_article.teaserCssID.1">
+        <source>Here you can set an ID and one or more classes for the teaser element.</source>
+        <target>Tu môžete nastaviť ID a jednu alebo viac tried (class) pre element ukážky.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.showTeaser.0">
+        <source>Show teaser</source>
+        <target>Zobraziť ukážku</target>
+      </trans-unit>
+      <trans-unit id="tl_article.showTeaser.1">
+        <source>Show the article teaser if there are multiple articles.</source>
+        <target>Zobraziť ukážku namiesto článku pokiaľ je viac článkov.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.teaser.0">
+        <source>Article teaser</source>
+        <target>Ukážka článku</target>
+      </trans-unit>
+      <trans-unit id="tl_article.teaser.1">
+        <source>The article teaser can also be displayed with the content element &quot;article teaser&quot;.</source>
+        <target>Ukážka môže byť zobrazená automaticky alebo s obsahovým prvkom ukážka článku.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.printable.0">
+        <source>Syndication</source>
+        <target>Tlačiteľné</target>
+      </trans-unit>
+      <trans-unit id="tl_article.printable.1">
+        <source>Here you can choose which options are available.</source>
+        <target>Tlačiť článok ako PDF (bude rozoznaný kaskádový štýl s media typom &quot;print&quot; alebo &quot;all&quot;)</target>
+      </trans-unit>
+      <trans-unit id="tl_article.customTpl.0">
+        <source>Article template</source>
+        <target>Šablóna článku</target>
+      </trans-unit>
+      <trans-unit id="tl_article.customTpl.1">
+        <source>Here you can select the article template.</source>
+        <target>Tu si môžete vybrať šablónu článku.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.protected.0">
+        <source>Protect article</source>
+        <target>Chránený článok</target>
+      </trans-unit>
+      <trans-unit id="tl_article.protected.1">
+        <source>Show the article to certain member groups only.</source>
+        <target>Zobraziť tento článok iba určitým skupinám členov.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.groups.0">
+        <source>Allowed member groups</source>
+        <target>Povolené skupiny členov</target>
+      </trans-unit>
+      <trans-unit id="tl_article.groups.1">
+        <source>These groups will be able to see the article.</source>
+        <target>Týmto skupinám sa bude tento článok zobrazovať.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.cssID.0">
+        <source>CSS ID/class</source>
+        <target>CSS ID/class</target>
+      </trans-unit>
+      <trans-unit id="tl_article.cssID.1">
+        <source>Here you can set an ID and one or more classes.</source>
+        <target>Tu môžte zadať ID a jednu alebo viac tried kaskádových štýlov.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.published.0">
+        <source>Publish article</source>
+        <target>Publikovať</target>
+      </trans-unit>
+      <trans-unit id="tl_article.published.1">
+        <source>Make the article publicly visible on the website.</source>
+        <target>Týmto sa daný článok zverejní.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.start.0">
+        <source>Show from</source>
+        <target>Zobrazovať od</target>
+      </trans-unit>
+      <trans-unit id="tl_article.start.1">
+        <source>If you want to prevent the article from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Ak chcete zabrániť zobrazovaniu článku na webovej stránke pred určitým dátumom/časom, môžete to zadať tu. V opačnom prípade nechajte pole prázdne.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.stop.0">
+        <source>Show until</source>
+        <target>Zobrazovať do</target>
+      </trans-unit>
+      <trans-unit id="tl_article.stop.1">
+        <source>If you want to prevent the article from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Ak chcete zabrániť zobrazovaniu článku na webovej lokalite po určitom dátume/čase, môžete ho zadať tu. V opačnom prípade nechajte pole prázdne.</target>
+      </trans-unit>
+      <trans-unit id="tl_article.tstamp.0">
+        <source>Revision date</source>
+        <target>Dátum zmeny</target>
+      </trans-unit>
+      <trans-unit id="tl_article.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Dátum a čas poslednej úpravy</target>
+      </trans-unit>
+      <trans-unit id="tl_article.title_legend">
+        <source>Title and author</source>
+        <target>Názov a autor</target>
+      </trans-unit>
+      <trans-unit id="tl_article.layout_legend">
+        <source>Section</source>
+        <target>Sekcia</target>
+      </trans-unit>
+      <trans-unit id="tl_article.syndication_legend">
+        <source>Syndication</source>
+        <target>Tlačiteľné</target>
+      </trans-unit>
+      <trans-unit id="tl_article.teaser_legend">
+        <source>Article teaser</source>
+        <target>Ukážka článku</target>
+      </trans-unit>
+      <trans-unit id="tl_article.template_legend">
+        <source>Template settings</source>
+        <target>Nastavenia šablóny</target>
+      </trans-unit>
+      <trans-unit id="tl_article.protected_legend">
+        <source>Access protection</source>
+        <target>Chránený prístup</target>
+      </trans-unit>
+      <trans-unit id="tl_article.expert_legend">
+        <source>Expert settings</source>
+        <target>Rozšírené nastavenia</target>
+      </trans-unit>
+      <trans-unit id="tl_article.publish_legend">
+        <source>Publish settings</source>
+        <target>Nastavenia pre publikovanie</target>
+      </trans-unit>
+      <trans-unit id="tl_article.print">
+        <source>Print the page</source>
+        <target>Vytlačiť stráku</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pdf">
+        <source>Export as PDF</source>
+        <target>Exportovať ako PDF</target>
+      </trans-unit>
+      <trans-unit id="tl_article.facebook">
+        <source>Share on Facebook</source>
+        <target>Zdieľať na Facebook</target>
+      </trans-unit>
+      <trans-unit id="tl_article.twitter">
+        <source>Share on X (formerly Twitter)</source>
+        <target>Zdieľať na X (niekedy Twitter)</target>
+      </trans-unit>
+      <trans-unit id="tl_article.new.0">
+        <source>New</source>
+        <target>Nová</target>
+      </trans-unit>
+      <trans-unit id="tl_article.new.1">
+        <source>Create a new article</source>
+        <target>Vytvoriť nový článok</target>
+      </trans-unit>
+      <trans-unit id="tl_article.show">
+        <source>Show the details of article ID %s</source>
+        <target>Zobraziť detaily článku ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.edit">
+        <source>Edit article ID %s</source>
+        <target>Upraviť článok ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.children">
+        <source>Edit the content elements of article ID %s</source>
+        <target>Upraviť obsahový element v článku ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.copy">
+        <source>Duplicate article ID %s</source>
+        <target>Kopírovať článok ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.cut">
+        <source>Move article ID %s</source>
+        <target>Premiestniť článok ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.delete">
+        <source>Delete article ID %s</source>
+        <target>Odstrániť článok ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.0">
+        <source>Publish/unpublish article</source>
+        <target>Zverejniť/nezverejniť článok</target>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.1">
+        <source>Unpublish article ID %s</source>
+        <target>Zrušiť zverejnenie článku ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.2">
+        <source>Publish article ID %s</source>
+        <target>Zverejniť článok ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pasteafter.1">
+        <source>Paste after article ID %s</source>
+        <target>Vložiť za článok ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_article.pasteinto.1">
+        <source>Paste into page ID %s</source>
+        <target>Vložiť do stránky ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

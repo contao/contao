@@ -27,9 +27,11 @@
       </trans-unit>
       <trans-unit id="tl_module.ariaLabel.0">
         <source>ARIA label</source>
+        <target>ARIA label</target>
       </trans-unit>
       <trans-unit id="tl_module.ariaLabel.1">
         <source>If there is more than one navigation element on the page, each should have a unique label.</source>
+        <target>Als er meer dan één navigatie-element op de pagina staat, moet elk element een uniek label hebben.</target>
       </trans-unit>
       <trans-unit id="tl_module.levelOffset.0">
         <source>Start level</source>

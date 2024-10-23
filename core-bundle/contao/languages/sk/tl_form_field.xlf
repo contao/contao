@@ -1,0 +1,504 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_form_field.php" source-language="en" target-language="sk">
+    <body>
+      <trans-unit id="tl_form_field.type.0">
+        <source>Field type</source>
+        <target>Typ poľa</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.type.1">
+        <source>Please choose the type of field.</source>
+        <target>Zvoľte prosím typ aktuálneho poľa.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.name.0">
+        <source>Field name</source>
+        <target>Názov poľa</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.name.1">
+        <source>The field name is a unique name to identify the field.</source>
+        <target>Zadajte prosím názov poľa. Toto pole nie je zobrazené návštevníkom vašej webstránky.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.label.0">
+        <source>Field label</source>
+        <target>Menovka poľa</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.label.1">
+        <source>The field label will be visible on the website, typically in front of or above the field.</source>
+        <target>Menovka poľa bude viditeľná na webstráke, väčšinou pred, alebo nad poľom</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.text.0">
+        <source>Text</source>
+        <target>Text</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.text.1">
+        <source>You can use HTML tags to format the text.</source>
+        <target>Na formátovanie textu môžete použiť HTML tagy</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.html.0">
+        <source>HTML</source>
+        <target>HTML</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.html.1">
+        <source>You can modify the list of allowed HTML tags in the back end settings.</source>
+        <target>Možte upraviť zoznam povolených HTML tagov v položke Nastavenie (backend).</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.options.0">
+        <source>Options</source>
+        <target>Voľby</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.options.1">
+        <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
+        <target>Nastavte, prosím, moduly v elemente stránky. Použite tlačitko na pridanie, presun, alebo vymazanie modulov. Pokiaľ pracujete bez JavaScript asistenta, mali by ste uložiť všetky zmeny pred týmto nastavením.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.mandatory.0">
+        <source>Mandatory field</source>
+        <target>Povinné pole</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.mandatory.1">
+        <source>The form will not submit if the field is empty.</source>
+        <target>Formulár nebude odoslaný pokiaľ bude toto pole prázdne.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.rgxp.0">
+        <source>Input validation</source>
+        <target>Kontrola údajov</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.rgxp.1">
+        <source>Validate the input against a regular expression.</source>
+        <target>Skontrolovať správnosť zadaných údajov pred ich odosláním.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.digit.0">
+        <source>Numeric characters</source>
+        <target>Číselné znaky</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.digit.1">
+        <source>Allows numeric characters, minus (-) and full stop (.).</source>
+        <target>Povolí  zadať číselné znaky, znaky: mínus (-), bodka (.)</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.alpha.0">
+        <source>Alphabetic characters</source>
+        <target>Abecedné znaky</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.alpha.1">
+        <source>Allows alphabetic characters, minus (-), full stop (.) and space ( ).</source>
+        <target>Povolí užívateľom zadať abecedné znaky, znaky: mínus (-), bodka (.) a medzera ( ).</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.alnum.0">
+        <source>Alphanumeric characters</source>
+        <target>Abecedné a číselné znaky</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.alnum.1">
+        <source>Allows alphabetic and numeric characters, minus (-), full stop (.), underscore (_) and space ( ).</source>
+        <target>Povolí užívateľom zadať abecedné a číselné znaky, mínus (-), bodka (.), podtržník (_) a medzera ( ).</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.extnd.0">
+        <source>Extended alphanumeric characters</source>
+        <target>Rozšírené abecedné a číselné znaky</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.extnd.1">
+        <source>Allows everything except special characters which are usually encoded for security reasons: #&lt;&gt;()\=</source>
+        <target>Povolí užívateľom zadať všetky znaky okrem špeciálnych, ktoré sa bežne z bezpečnostných dôvodov nepovoľujú (#/()&lt;=&gt;).</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.date.0">
+        <source>Date</source>
+        <target>Dátum</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.date.1">
+        <source>Checks whether the input matches the global date format.</source>
+        <target>Overuje či sa vkladaný údaj zhoduje s globálnym formátom dátumu.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.time.0">
+        <source>Time</source>
+        <target>Čas</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.time.1">
+        <source>Checks whether the input matches the global time format.</source>
+        <target>Overuje či sa vkladaný údaj zhoduje s globálnym formátom času.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.datim.0">
+        <source>Date and time</source>
+        <target>Dátum a čas</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.datim.1">
+        <source>Checks whether the input matches the global date and time format.</source>
+        <target>Overuje či sa vkladaný údaj zhoduje s globálnym formátom dátumu a času.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.phone.0">
+        <source>Phone number</source>
+        <target>Telefónne číslo</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.phone.1">
+        <source>Allows numeric characters, plus (+), minus (-), slash (/), parentheses () and space ( ).</source>
+        <target>Povolí užívateľom zadať číselné znaky, znaky: plus (+), mínus (-), lomítko (/), zátvorky () a medzera ( ).</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.email.0">
+        <source>E-mail address</source>
+        <target>Váš e-mail</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.email.1">
+        <source>Checks whether the input is a valid e-mail address.</source>
+        <target>Overuje či vkladaný údaj je správny formát e-mailovej adresy.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.url.0">
+        <source>URL format</source>
+        <target>URL formát</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.url.1">
+        <source>Checks whether the input is a valid URL.</source>
+        <target>Overuje či vkladaný údaj je správny formát URL odkazu.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.httpurl.0">
+        <source>Absolute URL</source>
+        <target>Absolútna URL</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.httpurl.1">
+        <source>Checks whether the input is a valid absolute URL.</source>
+        <target>Overuje či vkladaný údaj je správna absulútna URL.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.custom.0">
+        <source>Custom</source>
+        <target>Vlastné</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.custom.1">
+        <source>Checks against a custom regular expression.</source>
+        <target>Kontroluje sa proti vlastnému regulárnemu výrazu.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.placeholder.0">
+        <source>Placeholder</source>
+        <target>Zástupný znak</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.placeholder.1">
+        <source>Show this text as long as the field is empty (requires HTML5).</source>
+        <target>Zobraziť tento text, pokiaľ bude pole prázdné (vyžaduje HTML5)</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.customRgxp.0">
+        <source>Custom regular expression</source>
+        <target>Vlastný regulárny výraz</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.customRgxp.1">
+        <source>The custom regular expression including delimiters and modifiers.</source>
+        <target>Vlastný regulárny výraz vrátane oddeľovačov a modifikátorov.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.errorMsg.0">
+        <source>Error message</source>
+        <target>Chybové hlásenie</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.errorMsg.1">
+        <source>Show this error message in the front end if the user input is invalid.</source>
+        <target>Ak je vstup používateľa neplatný, zobrazte toto chybové hlásenie na front-ende.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.minlength.0">
+        <source>Minimum length</source>
+        <target>Minimálna dĺžka</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.minlength.1">
+        <source>Require the field value to be a certain number of characters long.</source>
+        <target>Limituje dĺžku poľa stanoveným počtom znakov.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxlength.0">
+        <source>Maximum length</source>
+        <target>Maximálna dĺžka</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxlength.1">
+        <source>Limit the field length to a certain number of characters (text) or bytes (file uploads).</source>
+        <target>Limituje dĺžku poľa stanoveným počtom znakov (text) alebo bytov (veľkosť nahrávaného súboru).</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageWidth.0">
+        <source>Maximum image width</source>
+        <target>Maximálna šírka obrázku</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageWidth.1">
+        <source>Here you can enter the maximum width for image uploads in pixels. Enter 0 to use the system default.</source>
+        <target>Tu môžete zadať maximálnu šírku pre nahrávanie obrázkov v pixeloch. Ak chcete použiť predvolené nastavenie systému, zadajte 0.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageHeight.0">
+        <source>Maximum image height</source>
+        <target>Maximálna výška obrázku</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxImageHeight.1">
+        <source>Here you can enter the maximum height for image uploads in pixels. Enter 0 to use the system default.</source>
+        <target>Tu môžete zadať maximálnu výšku pre nahrávanie obrázkov v pixeloch. Ak chcete použiť predvolené nastavenie systému, zadajte 0.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.minval.0">
+        <source>Minimum value</source>
+        <target>Minimálna hodnota</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.minval.1">
+        <source>Here you can set the minimum value for numeric fields.</source>
+        <target>Tu môžete nastaviť minimálnu hodnotu pre číselné polia.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxval.0">
+        <source>Maximum value</source>
+        <target>Maximálna hodnota</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.maxval.1">
+        <source>Here you can set the maximum value for numeric fields.</source>
+        <target>Tu môžete nastaviť maximálnu hodnotu pre číselné polia.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.step.0">
+        <source>Step</source>
+        <target>Krok</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.step.1">
+        <source>Here you can set the discrete step size of the field.</source>
+        <target>Tu môžete nastaviť diskrétnu veľkosť kroku poľa.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.size.0">
+        <source>Rows and columns</source>
+        <target>Riadky a stĺpce</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.size.1">
+        <source>The number of rows and columns of the textarea.</source>
+        <target>Počet riadkov a stĺpcov poľa Textová oblasť (textarea).</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.multiple.0">
+        <source>Multiple selection</source>
+        <target>Viacnásobný výber</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.multiple.1">
+        <source>Allow visitors to select more than one option.</source>
+        <target>Povolí užívateľom zvoliť viac ako jednu možnosť.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.mSize.0">
+        <source>List size</source>
+        <target>Veľkosť Menu pre výber</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.mSize.1">
+        <source>Here you can enter the size of the select box.</source>
+        <target>Tu môžte nastaviť veľkosť poľa Menu pre výber.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.extensions.0">
+        <source>Allowed file types</source>
+        <target>Povolené typy súborov</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.extensions.1">
+        <source>A comma separated list of valid file extensions.</source>
+        <target>Čiarkou oddelený zoznam povolených typov súborov (jpg, gif, pdf).</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.storeFile.0">
+        <source>Store uploaded files</source>
+        <target>Ukladanie nahrávaných súborov</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.storeFile.1">
+        <source>Move the uploaded files to a folder on the server.</source>
+        <target>Presunie (uloží) nahrávané súbory do zvoleného priečinku na servri.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.uploadFolder.0">
+        <source>Target folder</source>
+        <target>Cieľový adresár</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.uploadFolder.1">
+        <source>Please select the target folder from the files directory.</source>
+        <target>Prosím vyberte si cieľový priečinok zo súborového adresára.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.useHomeDir.0">
+        <source>Use home directory</source>
+        <target>Použiť domovský adresár</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.useHomeDir.1">
+        <source>Store the file in the home directory if there is an authenticated member.</source>
+        <target>Uložiť súbor do domovského adresára ak je prihlásený aspoň jeden z užívateľov.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.doNotOverwrite.0">
+        <source>Preserve existing files</source>
+        <target>Ponechať existujúce súbory</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.doNotOverwrite.1">
+        <source>Add a numeric suffix to the new file if the file name already exists.</source>
+        <target>Ak už existuje súbor s rovnakým názvom, pridá novému súboru do jeho názvu číselnú koncovku.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.value.0">
+        <source>Default value</source>
+        <target>Prednastavená hodnota</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.value.1">
+        <source>Here you can enter a default value for the field.</source>
+        <target>Tu môžte zadať prednastavenú hodnotu pre toto pole.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.class.0">
+        <source>CSS class</source>
+        <target>CSS trieda (class)</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.class.1">
+        <source>Here you can enter one or more classes.</source>
+        <target>Tu môžte zadať jednu alebo viac CSS tried (class).</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.accesskey.0">
+        <source>Access key</source>
+        <target>Klávesová skratka</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.accesskey.1">
+        <source>A form field can be focused by pressing the [ALT] or [CTRL] key and the access key simultaneously.</source>
+        <target>Pole formulára môže byť aktivované stlačením kláves [ALT] alebo [CTRL] v kombinácii ďalšou klávesou.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.fSize.0">
+        <source>Field size</source>
+        <target>Veľkosť poľa</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.fSize.1">
+        <source>Here you can enter the size of the upload field (&lt;em&gt;size&lt;/em&gt; attribute).</source>
+        <target>Tu môžete zadať veľkosť poľa pre nahrávanie súborov (&lt;em&gt;size&lt;/em&gt; atribút).</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.customTpl.0">
+        <source>Form field template</source>
+        <target>Šablóna poľa formulára</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.customTpl.1">
+        <source>Here you can select the form field template.</source>
+        <target>Tu môžete vybrať šablónu poľa formulára.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.slabel.0">
+        <source>Submit button label</source>
+        <target>Nápis tlačítka na odoslanie</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.slabel.1">
+        <source>Please enter the label of the submit button.</source>
+        <target>Prosím zadajte nápis tlačítka na odoslanie (napr. ODOSLAŤ alebo ĎALEJ).</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.imageSubmit.0">
+        <source>Create an image button</source>
+        <target>Vytvoriť obrázkové tlačítko</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.imageSubmit.1">
+        <source>Use an image submit button instead of the default one.</source>
+        <target>Použiť na odosielanie obrázkové tlačítko namiesto prednastaveného.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.singleSRC.0">
+        <source>Source file</source>
+        <target>Zdrojový súbor</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.singleSRC.1">
+        <source>Please select an image from the files directory.</source>
+        <target>Prosím vyberte si obrázok z adresára súborov.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaAuto.0">
+        <source>Auto verification</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaAuto.1">
+        <source>Automatically verify without user interaction.</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaHideLogo.0">
+        <source>Hide logo</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaHideLogo.1">
+        <source>Hide the ALTCHA logo.</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaHideFooter.0">
+        <source>Hide footer</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaHideFooter.1">
+        <source>Hide the footer (ALTCHA link).</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.invisible.0">
+        <source>Invisible</source>
+        <target>Skryté</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.invisible.1">
+        <source>Hide the form field on the website.</source>
+        <target>Skryť pole formulára na webovej stránke.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.type_legend">
+        <source>Field type and name</source>
+        <target>Typ a názov poľa</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.text_legend">
+        <source>Text/HTML</source>
+        <target>Text/HTML</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.fconfig_legend">
+        <source>Field configuration</source>
+        <target>Nastavenie poľa</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.options_legend">
+        <source>Options</source>
+        <target>Voľby</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.store_legend">
+        <source>Store file</source>
+        <target>Uloženie súboru</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.expert_legend">
+        <source>Expert settings</source>
+        <target>Rozšírené nastavenia</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.size_legend">
+        <source>Rows and columns</source>
+        <target>Riadky a stĺpce</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.template_legend">
+        <source>Template settings</source>
+        <target>Nastavenia šablóny</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.submit_legend">
+        <source>Submit button</source>
+        <target>Tlačítko na odoslanie</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.image_legend">
+        <source>Image button</source>
+        <target>Obrázkové tlačítko</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.invisible_legend">
+        <source>Visibility</source>
+        <target>Viditeľnosť</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.new.0">
+        <source>New</source>
+        <target>Nová</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.new.1">
+        <source>Create a new form field</source>
+        <target>Vytvorte nové pole formulára</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.show">
+        <source>Show the details of form field ID %s</source>
+        <target>Zobraziť podrobnosti o poli formulára ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.edit">
+        <source>Edit form field ID %s</source>
+        <target>Upravte pole formulára ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.cut">
+        <source>Move form field ID %s</source>
+        <target>Presunúť pole formulára</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.copy">
+        <source>Duplicate form field ID %s</source>
+        <target>Kopírovať pole formulára ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.delete">
+        <source>Delete form field ID %s</source>
+        <target>Vymazať pole formulára ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle.0">
+        <source>Hide/unhide form field</source>
+        <target>Skryť/zobraziť pole formulára</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle.1">
+        <source>Hide form field ID %s</source>
+        <target>Skryť pole formulára ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle.2">
+        <source>Unhide form field ID %s</source>
+        <target>Zobraziť polia formulára ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.pasteafter.0">
+        <source>Paste at the top</source>
+        <target>Vložiť navrchu</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.pasteafter.1">
+        <source>Paste after form field ID %s</source>
+        <target>Vložiť za pole formulára ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.pastenew.0">
+        <source>Create a new form field at the top</source>
+        <target>Vytvoriť nový pole formulára na vrchu</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.pastenew.1">
+        <source>Create a new form field after form field ID %s</source>
+        <target>Vytvoriť nové pole formulára za poľom formulára ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.option.1">
+        <source>Import options from a CSV file</source>
+        <target>Importovať možnosti zo súboru CSV</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

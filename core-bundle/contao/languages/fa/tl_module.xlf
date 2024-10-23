@@ -1,0 +1,681 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_module.php" source-language="en" target-language="fa">
+    <body>
+      <trans-unit id="tl_module.name.0">
+        <source>Title</source>
+        <target>عنوان</target>
+      </trans-unit>
+      <trans-unit id="tl_module.name.1">
+        <source>Please enter the module title.</source>
+        <target>لطفا عنوان ماژول را وارد نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.headline.0">
+        <source>Headline</source>
+        <target>سربرگ</target>
+      </trans-unit>
+      <trans-unit id="tl_module.headline.1">
+        <source>Here you can add a headline to the module.</source>
+        <target>اینجا می‌توانید یک سربرگ به ماژول اضافه کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.type.0">
+        <source>Module type</source>
+        <target>نوع ماژول</target>
+      </trans-unit>
+      <trans-unit id="tl_module.type.1">
+        <source>Please choose the type of module.</source>
+        <target>لطفا نوع ماژول را انتخاب نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.ariaLabel.0">
+        <source>ARIA label</source>
+        <target>برچسب ARIA</target>
+      </trans-unit>
+      <trans-unit id="tl_module.ariaLabel.1">
+        <source>If there is more than one navigation element on the page, each should have a unique label.</source>
+        <target>اگر بیش از یک المان ناوبری در برگه وجود دارد، هر یک باید دارای یک برچسب منحصر به فرد باشد.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.levelOffset.0">
+        <source>Start level</source>
+        <target>سطح شروع</target>
+      </trans-unit>
+      <trans-unit id="tl_module.levelOffset.1">
+        <source>Enter a value greater than 0 to show only submenu items.</source>
+        <target>مقداری بیشتر از 0 برای نمایش موراد زیرمنو وارد کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.showLevel.0">
+        <source>Stop level</source>
+        <target>سطح خاتمه</target>
+      </trans-unit>
+      <trans-unit id="tl_module.showLevel.1">
+        <source>Enter a value greater than 0 to limit the nesting level of the menu.</source>
+        <target>مقداری بیشتر از 0 برای محدود کردن سطح تودرتو منو وارد کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.hardLimit.0">
+        <source>Hard limit</source>
+        <target>محدود کردن سخت</target>
+      </trans-unit>
+      <trans-unit id="tl_module.hardLimit.1">
+        <source>Never show any menu items beyond the stop level.</source>
+        <target>هیچ مورد منوی فراتر از سطح خاتمه نمایش داده نمی‌شود.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.showProtected.0">
+        <source>Show protected items</source>
+        <target>نمایش موارد حفاظت شده</target>
+      </trans-unit>
+      <trans-unit id="tl_module.showProtected.1">
+        <source>Show items that are usually only visible to authenticated members.</source>
+        <target>نمایش آیتم‌هایی که معمولا برای اعضای تایید شده قابل مشاهده هستند.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.defineRoot.0">
+        <source>Set a reference page</source>
+        <target>انتخاب یک برگه مرجع</target>
+      </trans-unit>
+      <trans-unit id="tl_module.defineRoot.1">
+        <source>Define a custom source or target page for the module.</source>
+        <target>انتخاب منبع سفارشی یا برگه مقصد برای ماژول.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPage.0">
+        <source>Reference page</source>
+        <target>برگه مرجع</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPage.1">
+        <source>Please choose the reference page.</source>
+        <target>لطفا برگه‌ی مرجع را انتخاب کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.navigationTpl.0">
+        <source>Navigation template</source>
+        <target>قالب ناوبری</target>
+      </trans-unit>
+      <trans-unit id="tl_module.navigationTpl.1">
+        <source>Here you can select the navigation template.</source>
+        <target>اینجا می‌توانید قالب ناوبری را انتخاب کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.customTpl.0">
+        <source>Module template</source>
+        <target>قالب ماژول</target>
+      </trans-unit>
+      <trans-unit id="tl_module.customTpl.1">
+        <source>Here you can select the module template.</source>
+        <target>اینجا می‌توانید قالب ماژول را انتخاب کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.pages.0">
+        <source>Pages</source>
+        <target>برگه‌ها</target>
+      </trans-unit>
+      <trans-unit id="tl_module.pages.1">
+        <source>Please choose one or more pages.</source>
+        <target>لطفا یک یا چند برگه انتخاب کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.showHidden.0">
+        <source>Show hidden items</source>
+        <target>نمایش موارد مخفی</target>
+      </trans-unit>
+      <trans-unit id="tl_module.showHidden.1">
+        <source>Show items that are usually hidden in the navigation menu.</source>
+        <target>نمایش مواردی که به طور معمول در منوی ناوبری مخفی هستند.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.customLabel.0">
+        <source>Custom label</source>
+        <target>برچسب سفارشی</target>
+      </trans-unit>
+      <trans-unit id="tl_module.customLabel.1">
+        <source>Here you can enter a custom label for the drop-down menu or the overview link.</source>
+        <target>در اینجا می توانید یک برچسب سفارشی برای منوی کشویی یا پیوند نمای کلی وارد کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.autologin.0">
+        <source>Allow auto login</source>
+        <target>اجازه ورود خودکار</target>
+      </trans-unit>
+      <trans-unit id="tl_module.autologin.1">
+        <source>Allow members to log into the front end automatically.</source>
+        <target>اجازه دادن به اعضاء برای ورود خودکار به بخش کاربری.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.jumpTo.0">
+        <source>Redirect page</source>
+        <target>برگه‌ی تغییر مسیر</target>
+      </trans-unit>
+      <trans-unit id="tl_module.jumpTo.1">
+        <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
+        <target>لطفا برگه‌ای که بازدیدکنندگان بعد از کلیک پیوند یا ارسال یک فرم باید تغییر مسیر شوند را انتخاب نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.pwResetPage.0">
+        <source>Reset password page</source>
+        <target>برگه‌ی بازنشانی گذرواژه</target>
+      </trans-unit>
+      <trans-unit id="tl_module.pwResetPage.1">
+        <source>Here you can choose a page to which visitors will be redirected when clicking the &lt;em&gt;Forgot your password?&lt;/em&gt; link.</source>
+        <target>در اینجا می توانید fv'i hd را انتخاب کنید که با کلیک بر روی پیوند &lt;em&gt;رمز عبور خود را فراموش کرده اید؟&lt;/em&gt; بازدیدکنندگان به آن هدایت شوند.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.overviewPage.0">
+        <source>Overview page</source>
+        <target>برگه‌ی بررسی کلی</target>
+      </trans-unit>
+      <trans-unit id="tl_module.overviewPage.1">
+        <source>Select an overview page to include a link to it in the template.</source>
+        <target>یک برگه‌ی بررسی کلی برای قرار دادن لینک به آن در قالب انتخاب کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.redirectBack.0">
+        <source>Redirect to last page visited</source>
+        <target>تغییر مسیر به آخرین برگه دیده شده</target>
+      </trans-unit>
+      <trans-unit id="tl_module.redirectBack.1">
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+        <target>عضو را به جای اینجا به برگه‌ی بازگردانی به آخرین برگه‌ی بازدید شده برمی‌گرداند.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.1cl.0">
+        <source>One column</source>
+        <target>یک ستونی</target>
+      </trans-unit>
+      <trans-unit id="tl_module.1cl.1">
+        <source>Show the label above the input field.</source>
+        <target>نمایش برچسب بالای فیلد ورودی.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.2cl.0">
+        <source>Two columns</source>
+        <target>دو ستونی</target>
+      </trans-unit>
+      <trans-unit id="tl_module.2cl.1">
+        <source>Show the label on the left side of the input field.</source>
+        <target>نمایش برچسب در سمت چپ فیلد ورودی.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.editable.0">
+        <source>Editable fields</source>
+        <target>فیلدهای قابل ویرایش</target>
+      </trans-unit>
+      <trans-unit id="tl_module.editable.1">
+        <source>Show these fields in the front end form.</source>
+        <target>نمایش این فیلدها در فرم بخش کاربری.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reqFullAuth.0">
+        <source>Require full authentication</source>
+        <target>نیاز به احراز هویت کامل</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reqFullAuth.1">
+        <source>Users with only a &quot;remember me&quot; cookie must verify their identity in order to access the module.</source>
+        <target>کاربران دارای فقط کوکی &quot;مرا به خاطر بسپار&quot; باید هویت خود را برای دسترسی به ماژول تأیید کنند.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.memberTpl.0">
+        <source>Form template</source>
+        <target>قالب فرم</target>
+      </trans-unit>
+      <trans-unit id="tl_module.memberTpl.1">
+        <source>Here you can select the form template.</source>
+        <target>اینجا می‌توانید قالب فرم را انتخاب کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.form.0">
+        <source>Form</source>
+        <target>فرم</target>
+      </trans-unit>
+      <trans-unit id="tl_module.form.1">
+        <source>Please select a form.</source>
+        <target>لطفا یک فرم را انتخاب کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.queryType.0">
+        <source>Default query type</source>
+        <target>نوع پرس‌و‌جو پیش‌فرض</target>
+      </trans-unit>
+      <trans-unit id="tl_module.queryType.1">
+        <source>Please select the default query type.</source>
+        <target>لطفا نوع پرس‌و‌جو پیش‌فرض را انتخاب کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.and.0">
+        <source>Find all words</source>
+        <target>پیدا کردن تمام کلمه‌ها</target>
+      </trans-unit>
+      <trans-unit id="tl_module.and.1">
+        <source>Returns only pages that contain all keywords.</source>
+        <target>بازگرداندن تنها صفحاتی که شامل همه کلیدواژه‌ها باشند.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.or.0">
+        <source>Find any word</source>
+        <target>پیدا کردن هر کلمه‌ای</target>
+      </trans-unit>
+      <trans-unit id="tl_module.or.1">
+        <source>Returns all pages that contain any of the keywords.</source>
+        <target>بازگرداندن همه صفحاتی که شامل هر کلیدواژهای باشند.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.fuzzy.0">
+        <source>Fuzzy search</source>
+        <target>جستجوی فازی</target>
+      </trans-unit>
+      <trans-unit id="tl_module.fuzzy.1">
+        <source>Will find &quot;Contao&quot; if you search for &quot;con&quot; (equal to a wildcard search).</source>
+        <target>پیدا کردن &quot;Contao&quot; به هنگام جستجوی &quot;con&quot; (مانند جستجوی عمومی)</target>
+      </trans-unit>
+      <trans-unit id="tl_module.simple.0">
+        <source>Simple form</source>
+        <target>فرم ساده</target>
+      </trans-unit>
+      <trans-unit id="tl_module.simple.1">
+        <source>Contains a single input field only.</source>
+        <target>فقط شامل یک فیلد ورودی می‌باشد.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.advanced.0">
+        <source>Advanced form</source>
+        <target>فرم پیشرفته</target>
+      </trans-unit>
+      <trans-unit id="tl_module.advanced.1">
+        <source>Contains an input field and a radio button menu to choose the query type.</source>
+        <target>شامل یک فیلد ورودی و یک منوی دکمه رادیویی برای انتخاب نوع پرس‌وجو.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.contextLength.0">
+        <source>Context length</source>
+        <target>طول متن</target>
+      </trans-unit>
+      <trans-unit id="tl_module.contextLength.1">
+        <source>The first field defines the number of characters on the left and right side of each keyword and the second one the overall context length per result.</source>
+        <target>فیلد اول تعداد نویسه‌ها در سمت چپ و راست هر کلیدواژه و دومی طول متن کلی را برای هر نتیجه تعریف می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.minKeywordLength.0">
+        <source>Minimum keyword length</source>
+        <target>کمترین طول کلیدواژه</target>
+      </trans-unit>
+      <trans-unit id="tl_module.minKeywordLength.1">
+        <source>Keywords deceeding the minimum length will be ignored in the search results. Set to 0 to disable.</source>
+        <target>کلیدواژه‌های با طول کمینه در نتایج جستجو نادیده گرفته می‌شوند. برای غیرفعال کردن روی 0 تنظیم کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.perPage.0">
+        <source>Items per page</source>
+        <target>موارد هر برگه</target>
+      </trans-unit>
+      <trans-unit id="tl_module.perPage.1">
+        <source>The number of items per page. Set to 0 to disable pagination.</source>
+        <target>تعداد موارد در هر برگه. 0 را برای از کار انداختن برگه‌بندی انتخاب کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.searchType.0">
+        <source>Search form layout</source>
+        <target>چیدمان فرم جستجو</target>
+      </trans-unit>
+      <trans-unit id="tl_module.searchType.1">
+        <source>Here you can select the search form layout.</source>
+        <target>اینجا می‌توانید چیدمان فرم جستجو را انتخاب کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.searchTpl.0">
+        <source>Search results template</source>
+        <target>قالب نتایج جستجو</target>
+      </trans-unit>
+      <trans-unit id="tl_module.searchTpl.1">
+        <source>Here you can select the search results template.</source>
+        <target>اینجا می‌توانید قالب نتایج جستجو را انتخاب کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.inColumn.0">
+        <source>Layout section</source>
+        <target>بخش چیدمان</target>
+      </trans-unit>
+      <trans-unit id="tl_module.inColumn.1">
+        <source>Please choose the layout section whose articles you want to list.</source>
+        <target>لطفا بخش چیدمان که می‌خواهید نوشته‌ها لیست شوند را انتخاب کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.skipFirst.0">
+        <source>Skip items</source>
+        <target>نادیده گرفتن موارد</target>
+      </trans-unit>
+      <trans-unit id="tl_module.skipFirst.1">
+        <source>Here you can define how many items will be skipped.</source>
+        <target>اینجا می‌توانید تعداد مواردی که باید نادیده گرفته شوند را تعریف کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.loadFirst.0">
+        <source>Load the first item</source>
+        <target>بارگذاری اولین مورد</target>
+      </trans-unit>
+      <trans-unit id="tl_module.loadFirst.1">
+        <source>Automatically redirect to the first item if none is selected.</source>
+        <target>بازگرداتی خودکار به اولین مورد در صورتی که هیچ کدام انتخاب نشده باشند.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.singleSRC.0">
+        <source>Source file</source>
+        <target>منبع پرونده</target>
+      </trans-unit>
+      <trans-unit id="tl_module.singleSRC.1">
+        <source>Please select a file from the files directory.</source>
+        <target>لطفا یک پرونده از دایرکتوری پرونده‌ها را انتخاب نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.fullsize.0">
+        <source>Full-size view/new window</source>
+        <target>نمایش کامل/پنجره جدید</target>
+      </trans-unit>
+      <trans-unit id="tl_module.fullsize.1">
+        <source>Open the full-size image in a lightbox or the link in a new browser window.</source>
+        <target>باز کردن تصویر کامل در lighbox یا پیوند در یک پنجره مرورگر جدید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.useCaption.0">
+        <source>Show caption</source>
+        <target>نمایش زیرنویس</target>
+      </trans-unit>
+      <trans-unit id="tl_module.useCaption.1">
+        <source>Display the image name or caption below the image.</source>
+        <target>نمایش دادن نام تصویر یا زیر نویس زیر تصویر.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.multiSRC.0">
+        <source>Source files</source>
+        <target>پرونده‌های منبع</target>
+      </trans-unit>
+      <trans-unit id="tl_module.multiSRC.1">
+        <source>Please select one or more files from the files directory.</source>
+        <target>لطفا یک یا چند پرونده از دایرکتوری پرونده‌ها انتخاب نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.html.0">
+        <source>HTML code</source>
+        <target>کد HTML</target>
+      </trans-unit>
+      <trans-unit id="tl_module.html.1">
+        <source>You can modify the list of allowed HTML tags in the back end settings.</source>
+        <target>می‌توانید فهرست برچسب‌های HTML مجاز را در تنظیمات بخش مدیریت تغییر دهید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.unfilteredHtml.0">
+        <source>HTML code</source>
+        <target>کد HTML</target>
+      </trans-unit>
+      <trans-unit id="tl_module.unfilteredHtml.1">
+        <source>Take care when pasting things you don't understand. This could allow attackers to steal your identity or take control of the whole system.</source>
+        <target>هنگام چسباندن چیزهایی که متوجه نمی‌شوید مراقب باشید. این می‌تواند به مهاجمان اجازه دهد تا هویت شما را بدزدند یا کنترل کل سیستم را در دست بگیرند.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rss_cache.0">
+        <source>Cache timeout</source>
+        <target>مهلت کش</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rss_cache.1">
+        <source>Here you can define how long the feed is being cached.</source>
+        <target>اینجا می‌توانید تعیین کنید که فید چه مدت در کش ذخیره شود.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rss_feed.0">
+        <source>Feed URLs</source>
+        <target>پیوند RSS Feed</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rss_feed.1">
+        <source>Please enter the URL of one or more feeds.</source>
+        <target>لطفاً URL یک یا چند فید را وارد کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rss_template.0">
+        <source>Feed template</source>
+        <target>قالب خوراک</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rss_template.1">
+        <source>Here you can select the feed template.</source>
+        <target>اینجا می‌توانید قالب خوراک را انتخاب نمایید</target>
+      </trans-unit>
+      <trans-unit id="tl_module.protected.0">
+        <source>Protect module</source>
+        <target>حافظت از ماژول</target>
+      </trans-unit>
+      <trans-unit id="tl_module.protected.1">
+        <source>Show the module to certain member groups only.</source>
+        <target>نمایش ماژول تنها به گروه‌های اعضاء مشخص.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.groups.0">
+        <source>Allowed member groups</source>
+        <target>گروه‌های اعضاء مجاز</target>
+      </trans-unit>
+      <trans-unit id="tl_module.groups.1">
+        <source>These groups will be able to see the module.</source>
+        <target>این گروه‌ها قادر به دیدن ماژول خواهند بود.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.cssID.0">
+        <source>CSS ID/class</source>
+        <target>شناسه/کلاس CSS</target>
+      </trans-unit>
+      <trans-unit id="tl_module.cssID.1">
+        <source>Here you can set an ID and one or more classes.</source>
+        <target>اینجا می‌توانید یک شناسه و یک یا چند کلاس انتخاب نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.disableCaptcha.0">
+        <source>Disable spam protection</source>
+        <target>غیرفعال کردن حفاظت اسپم</target>
+      </trans-unit>
+      <trans-unit id="tl_module.disableCaptcha.1">
+        <source>Here you can disable the spam protection (not recommended).</source>
+        <target>اینجا می‌توانید حفاظت از اسپم را غیرفعال کنید (توصیه نمی‌شود).</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_groups.0">
+        <source>Member groups</source>
+        <target>گروه‌های اعضاء</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_groups.1">
+        <source>Here you can assign the member to one or more groups.</source>
+        <target>اینجا می‌توانید کاربر را به یک یا چند گروه اختصاص دهید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_allowLogin.0">
+        <source>Allow login</source>
+        <target>اجازه ورود</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_allowLogin.1">
+        <source>Allow the new member to log into the front end.</source>
+        <target>اجازه دادن به اعضاء جدید برای ورود به بخش کاربری.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_skipName.0">
+        <source>Skip username</source>
+        <target>نادیده گرفتن نام کاربری</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_skipName.1">
+        <source>Do not require the username to request a new password.</source>
+        <target>با فعال کردن این گزینه در فرم درخواست رمز عبور جدید نام کاربری پرسیده نخواهد شد.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_close.0">
+        <source>Mode</source>
+        <target>حالت</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_close.1">
+        <source>Here you can define how to handle the deletion.</source>
+        <target>اینجا می‌توانید نحوه به کار بردن حذف را تعریف نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_deleteDir.0">
+        <source>Delete home directory</source>
+        <target>پاک کردن پوشه خانه</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_deleteDir.1">
+        <source>Delete the home directory when the account is deleted.</source>
+        <target>وقتی حساب کاربری پاک می‌شود پوشه خانه را حذف می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_assignDir.0">
+        <source>Create a home directory</source>
+        <target>ساخت دایرکتوری شخصی</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_assignDir.1">
+        <source>Create a home directory from the registered username.</source>
+        <target>دایرکتوری خانگی از نام کاربری ثبت‌نام شده تولید می‌کند.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_homeDir.0">
+        <source>Home directory path</source>
+        <target>مسیر دایرکتوری شخصی</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_homeDir.1">
+        <source>Please select the parent folder from the files directory.</source>
+        <target>لطفا دایرکتوری بالاتری دایرکتوری شخصی کاربر را انتخاب نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_activate.0">
+        <source>Send activation e-mail</source>
+        <target>ارسال ایمیل فعال سازی</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_activate.1">
+        <source>Send an activation e-mail to the registered e-mail address.</source>
+        <target>یک ایمیل فعال‌سازی برای کاربر ارسال خواهد شد.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_jumpTo.0">
+        <source>Confirmation page</source>
+        <target>برگه‌ی تایید</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_jumpTo.1">
+        <source>Please choose the page to which members will be redirected after the request has been completed.</source>
+        <target>لطفا برگه‌ای را که کاربران عضو بعد از اینکه درخواست تکمیل شد بازگردانی خواهند شد را انتخاب کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_text.0">
+        <source>Activation message</source>
+        <target>پیغام فعال‌سازی</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_text.1">
+        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any input field (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
+        <target>شما می‌توانید از جستجوی عمومی های &lt;em&gt;##domain##&lt;/em&gt; (نام دامنه), &lt;em&gt;##link##&lt;/em&gt; (پیوند فعال سازی) و هر فیلد ورودی (برای نمونه &lt;em&gt;##lastname##&lt;/em&gt;).</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_password.0">
+        <source>Password message</source>
+        <target>پیغام گذرواژه</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reg_password.1">
+        <source>You can use the wildcards &lt;em&gt;##domain##&lt;/em&gt; (domain name), &lt;em&gt;##link##&lt;/em&gt; (activation link) and any member property (e.g. &lt;em&gt;##lastname##&lt;/em&gt;).</source>
+        <target>می‌توانید از wildcardها استفاده کنید&lt;em&gt;##domain##&lt;/em&gt; (نام دامنه), &lt;em&gt;##link##&lt;/em&gt; (لینک فعال‌سازی) و هر خصوصیت عضو (مثلا &lt;em&gt;##lastname##&lt;/em&gt;).</target>
+      </trans-unit>
+      <trans-unit id="tl_module.data.0">
+        <source>Template data</source>
+        <target>داده‌ی قالب</target>
+      </trans-unit>
+      <trans-unit id="tl_module.data.1">
+        <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
+        <target>این مقادیر به عنوان &lt;code&gt;$this-&gt;data&lt;/code&gt; در قالب در دسترس هستند.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPageDependentModules.0">
+        <source>Modules</source>
+        <target>ماژول‌ها</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPageDependentModules.1">
+        <source>Please select a module for every website root page.</source>
+        <target>لطفاً یک ماژول برای هر برگه ریشه وب‌سایت انتخاب کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
+        <source>Choose module for &quot;%s&quot;</source>
+        <target>انتخال ماژول &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="tl_module.title_legend">
+        <source>Title and type</source>
+        <target>عنوان و نوع</target>
+      </trans-unit>
+      <trans-unit id="tl_module.label_legend">
+        <source>Label</source>
+        <target>برچسب</target>
+      </trans-unit>
+      <trans-unit id="tl_module.nav_legend">
+        <source>Navigation settings</source>
+        <target>تنظیمات ناوبری</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reference_legend">
+        <source>Reference page</source>
+        <target>برگه مرجع</target>
+      </trans-unit>
+      <trans-unit id="tl_module.redirect_legend">
+        <source>Redirect settings</source>
+        <target>تنظیمات تغییر مسیر</target>
+      </trans-unit>
+      <trans-unit id="tl_module.template_legend">
+        <source>Template settings</source>
+        <target>تنظیمات قالب</target>
+      </trans-unit>
+      <trans-unit id="tl_module.image_legend">
+        <source>Image settings</source>
+        <target>تنظیمات تصویر</target>
+      </trans-unit>
+      <trans-unit id="tl_module.config_legend">
+        <source>Module configuration</source>
+        <target>پیکربندی ماژول</target>
+      </trans-unit>
+      <trans-unit id="tl_module.include_legend">
+        <source>Include settings</source>
+        <target>تنظیمات گنجاندن</target>
+      </trans-unit>
+      <trans-unit id="tl_module.source_legend">
+        <source>Source</source>
+        <target>منبع</target>
+      </trans-unit>
+      <trans-unit id="tl_module.html_legend">
+        <source>Text/HTML</source>
+        <target>متن/HTML</target>
+      </trans-unit>
+      <trans-unit id="tl_module.protected_legend">
+        <source>Access protection</source>
+        <target>حفاظت دسترسی</target>
+      </trans-unit>
+      <trans-unit id="tl_module.expert_legend">
+        <source>Expert settings</source>
+        <target>تنطیمات پیشرفته</target>
+      </trans-unit>
+      <trans-unit id="tl_module.email_legend">
+        <source>E-mail settings</source>
+        <target>تنظیمات ایمیل</target>
+      </trans-unit>
+      <trans-unit id="tl_module.account_legend">
+        <source>Account settings</source>
+        <target>تنظیمات حساب کاربری</target>
+      </trans-unit>
+      <trans-unit id="tl_module.emailText.0">
+        <source>Your registration on %s</source>
+        <target>ثبت‌نام شما در %s</target>
+      </trans-unit>
+      <trans-unit id="tl_module.emailText.1">
+        <source>Thank you for your registration on ##domain##.
+
+Click here to complete your registration and to activate your account:
+
+##link##
+
+The confirmation link is valid for 24 hours.
+
+If you did not request an account, please ignore this e-mail.
+</source>
+        <target>ایجاد یک ماژول جدید</target>
+      </trans-unit>
+      <trans-unit id="tl_module.passwordText.0">
+        <source>Your password request on %s</source>
+        <target>درخواست گذرواژه شما در %s</target>
+      </trans-unit>
+      <trans-unit id="tl_module.passwordText.1">
+        <source>You have requested a new password for ##domain##.
+
+Click here to set the new password:
+
+##link##
+
+If you did not request this e-mail, please contact the website administrator.
+</source>
+        <target>شما یک گذرواژه جدید برای ##domain## درخواست کرده‌اید.
+
+اینجا را برای تنظیم گذرواژه‌ی جدید کلیک کنید:
+
+##link##
+
+اگر شما این ایمیل را درخواست نکرده‌اید، لطفا با مدیر وب‌سایت تماس بگیرید.
+</target>
+      </trans-unit>
+      <trans-unit id="tl_module.internal">
+        <source>Internal file</source>
+        <target>پرونده داخلی</target>
+      </trans-unit>
+      <trans-unit id="tl_module.external">
+        <source>External URL</source>
+        <target>نشانی وب خارجی</target>
+      </trans-unit>
+      <trans-unit id="tl_module.close_deactivate">
+        <source>Deactivate account</source>
+        <target>غیرفعال نمودن حساب کاربری</target>
+      </trans-unit>
+      <trans-unit id="tl_module.close_delete">
+        <source>Irrevocably delete account</source>
+        <target>حذف غیرقابل برگشت حساب کاربری</target>
+      </trans-unit>
+      <trans-unit id="tl_module.new.0">
+        <source>New</source>
+        <target>جدید</target>
+      </trans-unit>
+      <trans-unit id="tl_module.new.1">
+        <source>Create a new module</source>
+        <target>ایجاد یک ماژول جدید</target>
+      </trans-unit>
+      <trans-unit id="tl_module.show">
+        <source>Show the details of module ID %s</source>
+        <target>نمایش جزئیات ماژول شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="tl_module.edit">
+        <source>Edit module ID %s</source>
+        <target>ویرایش ماژول شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="tl_module.copy">
+        <source>Duplicate module ID %s</source>
+        <target>تکثیر ماژول شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="tl_module.cut">
+        <source>Move module ID %s</source>
+        <target>جابجایی ماژول شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="tl_module.delete">
+        <source>Delete module ID %s</source>
+        <target>حذف ماژول شناسه %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

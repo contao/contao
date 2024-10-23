@@ -2,6 +2,16 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.4.4] (2024-10-23)
+
+**Fixed issues:**
+
+- [#7663] Correctly set the ACE editor height ([leofeyer])
+- [#7596] Fix the tooltips on mobile devices ([fritzmg])
+- [#7597] Add the `turbo-root` meta tag to the back end ([aschempp])
+- [#7603] Add `display: grid` for subpalettes on Ajax requests ([zoglo])
+- [#7546] Add the missing `widget-group` classes ([fritzmg])
+
 ## [5.4.3] (2024-09-17)
 
 **Security fixes:**
@@ -101,6 +111,7 @@ This project adheres to [Semantic Versioning].
 - [#7229] Fix the `.nogrid` backwards compatibility layer ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.4.4]: https://github.com/contao/contao/releases/tag/5.4.4
 [5.4.3]: https://github.com/contao/contao/releases/tag/5.4.3
 [5.4.2]: https://github.com/contao/contao/releases/tag/5.4.2
 [5.4.1]: https://github.com/contao/contao/releases/tag/5.4.1
@@ -111,6 +122,7 @@ This project adheres to [Semantic Versioning].
 [5.4.0-RC1]: https://github.com/contao/contao/releases/tag/5.4.0-RC1
 [CVE-2024-45398]: https://github.com/contao/contao/security/advisories/GHSA-vm6r-j788-hjh5
 [CVE-2024-45612]: https://github.com/contao/contao/security/advisories/GHSA-2xpq-xp6c-5mgj
+[aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
 [bytehead]: https://github.com/bytehead
 [fritzmg]: https://github.com/fritzmg
@@ -175,3 +187,8 @@ This project adheres to [Semantic Versioning].
 [#7499]: https://github.com/contao/contao/pull/7499
 [#7500]: https://github.com/contao/contao/pull/7500
 [#7503]: https://github.com/contao/contao/pull/7503
+[#7546]: https://github.com/contao/contao/pull/7546
+[#7596]: https://github.com/contao/contao/pull/7596
+[#7597]: https://github.com/contao/contao/pull/7597
+[#7603]: https://github.com/contao/contao/pull/7603
+[#7663]: https://github.com/contao/contao/pull/7663

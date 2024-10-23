@@ -1,0 +1,86 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_page.php" source-language="en" target-language="tr">
+    <body>
+      <trans-unit id="tl_page.newsArchives.0">
+        <source>News archives</source>
+        <target>Haber arşivleri</target>
+      </trans-unit>
+      <trans-unit id="tl_page.newsArchives.1">
+        <source>Here you can choose the news archives to be included in the feed.</source>
+        <target>Buradan akışa katılacak haber arşivlerini seçebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFormat.0">
+        <source>Feed format</source>
+        <target>Akış biçimi</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFormat.1">
+        <source>Please choose a feed format.</source>
+        <target>Lütfen, bir akış biçimi seçin.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedSource.0">
+        <source>Export settings</source>
+        <target>Dışa aktarma ayarları</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedSource.1">
+        <source>Here you can choose what will be exported.</source>
+        <target>Buradan dışa aktarılacak bilgileri seçebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maxFeedItems.0">
+        <source>Maximum number of items</source>
+        <target>En fazla öge sayısı</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maxFeedItems.1">
+        <source>Here you can limit the number of feed items. Set to 0 to export all.</source>
+        <target>Buradan akıştaki öge sayısını belirtebilirsiniz. Tüm ögelerin dışa aktarılması için 0 yazın.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFeatured.0">
+        <source>Featured items</source>
+        <target>Öne çıkarılmış ögeler</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFeatured.1">
+        <source>Here you can choose how featured items are handled.</source>
+        <target>Buradan öne çıkarılmış ögelerin nasıl işleneceğini ayarlayabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedDescription.0">
+        <source>Feed description</source>
+        <target>Akış açıklaması</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedDescription.1">
+        <source>Here you can enter a short description of the news feed.</source>
+        <target>Buraya haber akışının kısa açıklamasını yazabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.archives_legend">
+        <source>News archives</source>
+        <target>Haber arşivleri</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feed_legend">
+        <source>Feed settings</source>
+        <target>Akış ayarları</target>
+      </trans-unit>
+      <trans-unit id="tl_page.image_legend">
+        <source>Image settings</source>
+        <target>Görsel ayarları</target>
+      </trans-unit>
+      <trans-unit id="tl_page.source_teaser">
+        <source>News teasers</source>
+        <target>Haber tanıtımları</target>
+      </trans-unit>
+      <trans-unit id="tl_page.source_text">
+        <source>Full stories</source>
+        <target>Tüm öyküler</target>
+      </trans-unit>
+      <trans-unit id="tl_page.all_items">
+        <source>Show all items</source>
+        <target>Tüm ögeler görüntülensin</target>
+      </trans-unit>
+      <trans-unit id="tl_page.featured">
+        <source>Show featured items only</source>
+        <target>Yalnızca öne çıkarılmış ögeler görüntülensin</target>
+      </trans-unit>
+      <trans-unit id="tl_page.unfeatured">
+        <source>Skip featured items</source>
+        <target>Öne çıkarılmış ögeler atlansın</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

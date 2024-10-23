@@ -371,21 +371,27 @@
       </trans-unit>
       <trans-unit id="tl_form_field.altchaAuto.0">
         <source>Auto verification</source>
+        <target>Verificación automática</target>
       </trans-unit>
       <trans-unit id="tl_form_field.altchaAuto.1">
         <source>Automatically verify without user interaction.</source>
+        <target>Verificar automáticamente sin interacción del usuario.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.altchaHideLogo.0">
         <source>Hide logo</source>
+        <target>Ocultar el logotipo</target>
       </trans-unit>
       <trans-unit id="tl_form_field.altchaHideLogo.1">
         <source>Hide the ALTCHA logo.</source>
+        <target>Ocultar el logotipo de ALTCHA.</target>
       </trans-unit>
       <trans-unit id="tl_form_field.altchaHideFooter.0">
         <source>Hide footer</source>
+        <target>Ocultar pie de página</target>
       </trans-unit>
       <trans-unit id="tl_form_field.altchaHideFooter.1">
         <source>Hide the footer (ALTCHA link).</source>
+        <target>Ocultar el pie de página (enlace ALTCHA).</target>
       </trans-unit>
       <trans-unit id="tl_form_field.invisible.0">
         <source>Invisible</source>
