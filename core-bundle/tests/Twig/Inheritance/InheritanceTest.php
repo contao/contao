@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
@@ -68,40 +68,39 @@ class InheritanceTest extends TestCase
 
     public function testThrowsIfTemplatesAreAmbiguous(): void
     {
-        $bundlePath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle1');
+        $bundlePath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle1/templates');
 
         $this->expectException(\OutOfBoundsException::class);
-        $this->expectExceptionMessage('There cannot be more than one "foo.html.twig" template in "'.$bundlePath.'/templates".');
+        $this->expectExceptionMessage('There cannot be more than one "foo.html.twig" template in "'.$bundlePath.'".');
 
-        $this->getDemoEnvironment(['InvalidBundle1' => ['path' => $bundlePath]]);
+        $this->getDemoEnvironment(['InvalidBundle1' => $bundlePath]);
     }
 
     public function testThrowsIfTemplateTypesAreAmbiguous(): void
     {
-        $bundlePath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle2');
+        $bundlePath = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle2/templates');
         $file1 = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/contao/templates/some/random/text.html.twig');
         $file2 = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/vendor-bundles/InvalidBundle2/templates/text.json.twig');
 
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('The "text" template has incompatible types, got "html.twig/html5" in "'.$file1.'" and "json.twig" in "'.$file2.'".');
 
-        $this->getDemoEnvironment(['InvalidBundle2' => ['path' => $bundlePath]]);
+        $this->getDemoEnvironment(['InvalidBundle2' => $bundlePath]);
     }
 
-    private function getDemoEnvironment(array|null $bundlesMetadata = null, PageFinder|null $pageFinder = null): Environment
+    private function getDemoEnvironment(array|null $paths = null, PageFinder|null $pageFinder = null): Environment
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
-        $bundlesMetadata ??= [
-            'CoreBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/CoreBundle')],
-            'FooBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/FooBundle')],
-            'BarBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/BarBundle')],
+        $paths ??= [
+            'CoreBundle' => Path::join($projectDir, 'vendor-bundles/CoreBundle/Resources/contao/templates'),
+            'foo' => Path::join($projectDir, 'system/modules/foo/templates'),
+            'BarBundle' => Path::join($projectDir, 'vendor-bundles/BarBundle/contao/templates'),
         ];
 
-        $bundles = array_combine(
-            array_keys($bundlesMetadata),
-            array_fill(0, \count($bundlesMetadata), ContaoModuleBundle::class),
-        );
+        if (!isset($paths['App'])) {
+            $paths['App'] = Path::join($projectDir, 'contao/templates');
+        }
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -109,8 +108,15 @@ class InheritanceTest extends TestCase
             ->willReturn(['templates/my/theme'])
         ;
 
+        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder
+            ->method('getExistingSubpaths')
+            ->with('templates')
+            ->willReturn($paths)
+        ;
+
         $themeNamespace = new ThemeNamespace();
-        $templateLocator = new TemplateLocator($projectDir, $bundles, $bundlesMetadata, $themeNamespace, $connection);
+        $templateLocator = new TemplateLocator($projectDir, $resourceFinder, $themeNamespace, $connection);
 
         $loader = new ContaoFilesystemLoader(
             new NullAdapter(),

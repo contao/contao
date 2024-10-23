@@ -225,7 +225,7 @@ class ContaoExtensionTest extends TestCase
             new BodyNode([
                 new FilterExpression(
                     new TextNode('text', 1),
-                    new ConstantExpression('escape', 1),
+                    new TwigFilter('escape'),
                     new Node([
                         new ConstantExpression('html', 1),
                         new ConstantExpression(null, 1),

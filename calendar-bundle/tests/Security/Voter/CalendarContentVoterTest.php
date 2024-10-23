@@ -50,7 +50,7 @@ class CalendarContentVoterTest extends TestCase
         $accessDecisionMap = [[$token, [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], null, true]];
 
         foreach ($events as $calendarId) {
-            $accessDecisionMap[] = [$token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], $calendarId, true];
+            $accessDecisionMap[] = [$token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], (int) $calendarId, true];
         }
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
@@ -124,7 +124,7 @@ class CalendarContentVoterTest extends TestCase
         yield 'Check access to calendar when creating element in events' => [
             new CreateAction('tl_content', ['ptable' => 'tl_calendar_events', 'pid' => 1]),
             [],
-            [1 => 1],
+            [1 => '1'],
         ];
 
         yield 'Check access to news archive when creating nested element' => [

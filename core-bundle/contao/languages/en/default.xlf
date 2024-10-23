@@ -1901,9 +1901,6 @@
       <trans-unit id="MSC.printPage">
         <source>Print this page</source>
       </trans-unit>
-      <trans-unit id="MSC.printAsPdf">
-        <source>Save article as PDF</source>
-      </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>
       </trans-unit>
