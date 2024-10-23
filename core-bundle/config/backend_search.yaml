@@ -28,8 +28,8 @@ services:
             - '@event_dispatcher'
             - '@messenger.bus.default'
 
-    contao.search.backend.files_provider:
-        class: Contao\CoreBundle\Search\Backend\Provider\FilesProvider
+    contao.search.backend.files_storage_provider:
+        class: Contao\CoreBundle\Search\Backend\Provider\FilesStorageProvider
         arguments:
             - '@contao.filesystem.virtual.files'
             - '@security.helper'

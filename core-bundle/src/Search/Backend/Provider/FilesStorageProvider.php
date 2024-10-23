@@ -26,7 +26,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 /**
  * @experimental
  */
-class FilesProvider implements ProviderInterface
+class FilesStorageProvider implements ProviderInterface
 {
     public const TYPE = 'contao.vfs.files';
 

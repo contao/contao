@@ -21,24 +21,24 @@ use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Hit;
 use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\UpdateAllProvidersConfig;
-use Contao\CoreBundle\Search\Backend\Provider\FilesProvider;
+use Contao\CoreBundle\Search\Backend\Provider\FilesStorageProvider;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use League\Flysystem\Config;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
-class FilesProviderTest extends AbstractProviderTestCase
+class FilesStorageProviderTest extends AbstractProviderTestCase
 {
     public function testSupports(): void
     {
-        $provider = new FilesProvider(
+        $provider = new FilesStorageProvider(
             $this->createMock(VirtualFilesystem::class),
             $this->createMock(Security::class),
             $this->createMock(Studio::class),
         );
 
-        $this->assertTrue($provider->supportsType(FilesProvider::TYPE));
+        $this->assertTrue($provider->supportsType(FilesStorageProvider::TYPE));
         $this->assertFalse($provider->supportsType('foobar'));
     }
 
@@ -53,7 +53,7 @@ class FilesProviderTest extends AbstractProviderTestCase
             $this->createMock(DbafsManager::class),
         );
 
-        $provider = new FilesProvider(
+        $provider = new FilesStorageProvider(
             $filesystem,
             $this->createMock(Security::class),
             $this->createMock(Studio::class),
@@ -67,7 +67,7 @@ class FilesProviderTest extends AbstractProviderTestCase
         $document = $documents[0];
 
         $this->assertSame('foo/bar.jpg', $document->getId());
-        $this->assertSame(FilesProvider::TYPE, $document->getType());
+        $this->assertSame(FilesStorageProvider::TYPE, $document->getType());
         $this->assertSame('bar.jpg', $document->getSearchableContent());
         $this->assertSame(['extension:jpg'], $document->getTags());
         $this->assertSame(['path' => 'foo/bar.jpg'], $document->getMetadata());
@@ -94,7 +94,7 @@ class FilesProviderTest extends AbstractProviderTestCase
             $dbafsManager,
         );
 
-        $provider = new FilesProvider(
+        $provider = new FilesStorageProvider(
             $filesystem,
             $this->createMock(Security::class),
             $this->createMock(Studio::class),
@@ -122,7 +122,7 @@ class FilesProviderTest extends AbstractProviderTestCase
             ])
         ;
 
-        $provider = new FilesProvider(
+        $provider = new FilesStorageProvider(
             $this->createMock(VirtualFilesystem::class),
             $security,
             $this->createMock(Studio::class),
