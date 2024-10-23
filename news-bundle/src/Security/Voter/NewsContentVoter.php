@@ -60,12 +60,12 @@ class NewsContentVoter extends AbstractDynamicPtableVoter
             && $this->accessDecisionManager->decide($token, [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE], $archiveId);
     }
 
-    private function getArchiveId(int $newsId): int|null
+    private function getArchiveId(int $newsId): int
     {
         if (!isset($this->archives[$newsId])) {
-            $this->archives[$newsId] = $this->connection->fetchOne('SELECT pid FROM tl_news WHERE id=?', [$newsId]);
+            $this->archives[$newsId] = (int) $this->connection->fetchOne('SELECT pid FROM tl_news WHERE id=?', [$newsId]);
         }
 
-        return $this->archives[$newsId] ?: null;
+        return $this->archives[$newsId];
     }
 }

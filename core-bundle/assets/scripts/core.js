@@ -259,10 +259,7 @@ window.AjaxRequest =
 				var div = new Element('div', {
 					'id': id,
 					'class': 'subpal widget-group',
-					'html': txt,
-					'styles': {
-						'display': 'block'
-					}
+					'html': txt
 				}).inject($(el).getParent('div').getParent('div'), 'after');
 
 				// Execute scripts after the DOM has been updated

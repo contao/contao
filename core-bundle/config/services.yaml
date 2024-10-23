@@ -1311,8 +1311,7 @@ services:
         class: Contao\CoreBundle\Twig\Loader\TemplateLocator
         arguments:
             - '%kernel.project_dir%'
-            - '%kernel.bundles%'
-            - '%kernel.bundles_metadata%'
+            - '@contao.resource_finder'
             - '@contao.twig.loader.theme_namespace'
             - '@database_connection'
 
