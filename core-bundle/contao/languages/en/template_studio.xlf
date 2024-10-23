@@ -72,7 +72,7 @@
                 <source>Your template for %s could not be deleted.</source>
             </trans-unit>
             <trans-unit id="dialog.delete.confirm">
-                <source>This is going to delete your template for %s and cannot be made undone.</source>
+                <source>This deletes your template for %s and cannot be undone.</source>
             </trans-unit>
             <trans-unit id="dialog.create_variant">
                 <source>You are creating a new variant template for %s. Please define a unique name.</source>

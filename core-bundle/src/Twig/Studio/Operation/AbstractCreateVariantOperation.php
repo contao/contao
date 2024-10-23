@@ -20,7 +20,7 @@ abstract class AbstractCreateVariantOperation extends AbstractOperation
     public function execute(Request $request, TemplateContext $context): Response|null
     {
         // Show a confirmation dialog
-        if (!($identifierFragment = $request->request->getString('identifier_fragment'))) {
+        if (!$identifierFragment = $request->request->getString('identifier_fragment')) {
             return $this->render('@Contao/backend/template_studio/operation/create_or_rename_variant.stream.html.twig', [
                 'operation' => $this->getName(),
                 'operation_type' => 'create',

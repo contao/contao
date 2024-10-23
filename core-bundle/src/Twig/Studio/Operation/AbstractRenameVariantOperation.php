@@ -23,7 +23,7 @@ abstract class AbstractRenameVariantOperation extends AbstractOperation
         [, $baseIdentifier, $oldFragment] = $matches;
 
         // Show a confirmation dialog
-        if (!($identifierFragment = $request->request->getString('identifier_fragment'))) {
+        if (!$identifierFragment = $request->request->getString('identifier_fragment')) {
             return $this->render('@Contao/backend/template_studio/operation/create_or_rename_variant.stream.html.twig', [
                 'operation' => $this->getName(),
                 'operation_type' => 'rename',
