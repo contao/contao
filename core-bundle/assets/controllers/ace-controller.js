@@ -44,12 +44,6 @@ export default class extends Controller {
     }
 
     setMaxLines() {
-        let maxLines = 14;
-
-        if (this.element.hasAttribute('data-autosize')) {
-            maxLines = Math.floor((window.innerHeight - 320) / Math.floor(12 * this.editor.container.style.lineHeight));
-        }
-
-        this.editor.setOption('maxLines', maxLines);
+        this.editor.setOption('maxLines', Math.floor((window.innerHeight - 320) / Math.floor(12 * this.editor.container.style.lineHeight)));
     }
 }
