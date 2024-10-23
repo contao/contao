@@ -125,7 +125,7 @@ class PlayerController extends AbstractContentElementController
 
                 $extraMetadata = $trackItem->getExtraMetadata();
 
-                if (null === ($textTrack = $extraMetadata->getTextTrack())) {
+                if (!($textTrack = $extraMetadata->getTextTrack())) {
                     continue;
                 }
 
