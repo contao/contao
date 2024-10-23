@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
+use Contao\ContentProxy;
 use Contao\CoreBundle\EventListener\DataContainer\ContentElementTypeListener;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
@@ -31,8 +32,14 @@ class ContentElementTypeListenerTest extends TestCase
     public function testGetOptions(): void
     {
         $GLOBALS['TL_CTE'] = [
-            'foo' => ['bar', 'baz'],
-            'fii' => ['bas', 'bat'],
+            'foo' => [
+                'bar' => ContentProxy::class,
+                'baz' => ContentProxy::class,
+            ],
+            'fii' => [
+                'bas' => ContentProxy::class,
+                'bat' => ContentProxy::class,
+            ],
         ];
 
         $security = $this->createMock(Security::class);
@@ -62,8 +69,12 @@ class ContentElementTypeListenerTest extends TestCase
     public function testOverridesTheDefaultType(): void
     {
         $GLOBALS['TL_DCA']['tl_content']['fields']['type']['sql']['default'] = 'bar';
-        $GLOBALS['TL_CTE'] = ['foo' => ['bar', 'baz']];
-
+        $GLOBALS['TL_CTE'] = [
+            'foo' => [
+                'bar' => ContentProxy::class,
+                'baz' => ContentProxy::class,
+            ],
+        ];
         $security = $this->createMock(Security::class);
         $security
             ->expects($this->exactly(2))

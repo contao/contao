@@ -67,7 +67,7 @@ class ContentElementTypeListener implements ResetInterface
         $groups = [];
 
         foreach ($GLOBALS['TL_CTE'] as $k => $v) {
-            foreach ($v as $vv) {
+            foreach (array_keys($v) as $vv) {
                 $action = new CreateAction('tl_content', [
                     'ptable' => $ptable,
                     'pid' => $pid,
@@ -80,6 +80,6 @@ class ContentElementTypeListener implements ResetInterface
             }
         }
 
-        return $groups;
+        return $this->cache[$cacheKey] = $groups;
     }
 }
