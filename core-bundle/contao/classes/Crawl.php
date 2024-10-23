@@ -114,35 +114,18 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			throw new ResponseException($response);
 		}
 
-		$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
+		$objMember = null;
 
 		if ($memberWidget?->value)
 		{
 			$objMember = Database::getInstance()->prepare('SELECT username FROM tl_member WHERE id=?')
 												->execute((int) $memberWidget->value);
-
-			if (!$objAuthenticator->authenticateFrontendUser($objMember->username, false))
-			{
-				$objAuthenticator->removeFrontendAuthentication();
-				$clientOptions = array();
-			}
-			else
-			{
-				// TODO: we need a way to authenticate with a token instead of our own cookie
-				$session = System::getContainer()->get('request_stack')->getSession();
-				$clientOptions = array('headers' => array('Cookie' => \sprintf('%s=%s', $session->getName(), $session->getId())));
-			}
-		}
-		else
-		{
-			$objAuthenticator->removeFrontendAuthentication();
-			$clientOptions = array();
 		}
 
 		if (!$jobId)
 		{
 			$baseUris = $factory->getCrawlUriCollection();
-			$escargot = $factory->create($baseUris, $queue, $activeSubscribers, $clientOptions);
+			$escargot = $factory->create($baseUris, $queue, $activeSubscribers, [], $objMember?->username);
 
 			Controller::redirect(Controller::addToUrl('&jobId=' . $escargot->getJobId()));
 		}
@@ -151,7 +134,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 		try
 		{
-			$escargot = $factory->createFromJobId($jobId, $queue, $activeSubscribers, $clientOptions);
+			$escargot = $factory->createFromJobId($jobId, $queue, $activeSubscribers, [], $objMember?->username);
 		}
 		catch (InvalidJobIdException $e)
 		{
