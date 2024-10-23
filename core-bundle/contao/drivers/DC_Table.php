@@ -12,7 +12,6 @@ namespace Contao;
 
 use Contao\CoreBundle\DataContainer\ClipboardManager;
 use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
-use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\NotFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
@@ -4132,7 +4131,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			if (Input::get('act') == 'select')
 			{
-				$operations = $this->strTable == $table ? '<input type="checkbox" name="IDS[]" id="ids_'.$id.'" class="tl_tree_checkbox" value="'.$id.'">' : '';
+				$operations = $this->strTable == $table ? '<input type="checkbox" name="IDS[]" id="ids_' . $id . '" class="tl_tree_checkbox" value="' . $id . '">' : '';
 			}
 			// Regular buttons ($row, $table, $root, $blnCircularReference, $children, $previous, $next)
 			elseif ($this->strTable == $table)

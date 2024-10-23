@@ -76,6 +76,11 @@ services:
             - '@database_connection'
             - '@request_stack'
 
+    contao.listener.data_container.content_element_type:
+        class: Contao\CoreBundle\EventListener\DataContainer\ContentElementTypeListener
+        arguments:
+            - '@security.helper'
+
     contao.listener.data_container.content_record_label:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentRecordLabelListener
         arguments:

@@ -17,7 +17,7 @@ use Contao\Config;
 use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\Cache\EntityCacheTags;
-use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
@@ -25,6 +25,7 @@ use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\File\TextTrack;
 use Contao\CoreBundle\File\TextTrackType;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
@@ -80,7 +81,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
-class ContentElementTestCase extends TestCase
+abstract class ContentElementTestCase extends TestCase
 {
     final public const FILE_IMAGE1 = '0a2073bc-c966-4e7b-83b9-163a06aa87e7';
 
@@ -262,10 +263,16 @@ class ContentElementTestCase extends TestCase
     {
         $resourceBasePath = Path::canonicalize(__DIR__.'/../../../');
 
+        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder
+            ->method('getExistingSubpaths')
+            ->with('templates')
+            ->willReturn(['ContaoCore' => $resourceBasePath.'/contao/templates'])
+        ;
+
         $templateLocator = new TemplateLocator(
             '',
-            ['ContaoCore' => ContaoCoreBundle::class],
-            ['ContaoCore' => ['path' => $resourceBasePath]],
+            $resourceFinder,
             $themeNamespace = new ThemeNamespace(),
             $this->createMock(Connection::class),
         );
@@ -355,12 +362,12 @@ class ContentElementTestCase extends TestCase
                             123456,
                             1024,
                             'image/jpg',
-                            [
-                                'metadata' => new MetadataBag(
+                            new ExtraMetadata([
+                                'localized' => new MetadataBag(
                                     ['en' => new Metadata([Metadata::VALUE_TITLE => 'image1 title'])],
                                     ['en'],
                                 ),
-                            ],
+                            ]),
                         ),
                         self::FILE_IMAGE2 => new FilesystemItem(true, 'image2.jpg', null, null, 'image/jpeg'),
                         self::FILE_IMAGE3 => new FilesystemItem(true, 'image3.jpg', null, null, 'image/jpeg'),
