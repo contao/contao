@@ -48,10 +48,6 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
             throw new SyntaxError('Cannot use "extends" in a macro.', $token->getLine(), $stream->getSourceContext());
         }
 
-        if ($this->parser->getParent()) {
-            throw new SyntaxError('Multiple extends tags are forbidden.', $token->getLine(), $stream->getSourceContext());
-        }
-
         $expr = $this->parser->getExpressionParser()->parseExpression();
         $sourcePath = $stream->getSourceContext()->getPath();
 

@@ -12,6 +12,14 @@ export default class extends Controller {
         if (this.observer) {
             this.observer.disconnect();
         }
+
+        Object.keys(this.selectors).forEach(selector => {
+            document.querySelectorAll(selector).forEach(el => {
+                if (this.initialized.includes(el)) {
+                    document.removeEventListener('touchstart', el.globalTouchstartListener);
+                }
+            });
+        });
     }
 
     createTooltip() {
@@ -53,7 +61,17 @@ export default class extends Controller {
 
     init(el, options) {
         el.addEventListener('mouseenter', () => this.show(el, options));
+        el.addEventListener('touchend', () => this.show(el, options, 0));
         el.addEventListener('mouseleave', () => this.hide(el));
+
+        // Close tooltip when touching anywhere else
+        document.addEventListener('touchstart', el.globalTouchstartListener = (e) => {
+            if (el.contains(e.target)) {
+                return;
+            }
+
+            this.hide(el, 0);
+        });
 
         const action = el.closest('button, a');
 
@@ -67,7 +85,9 @@ export default class extends Controller {
         }
     }
 
-    show (el, options) {
+    show (el, options, delay) {
+        delay = typeof delay !== 'undefined' ? delay : 1000;
+
         let text;
 
         if (options.useContent) {
@@ -105,10 +125,12 @@ export default class extends Controller {
             this.tooltip.style.top = `${(window.scrollY + position.top + options.y)}px`;
             this.tooltip.style.display = 'block';
             this.tooltip.style.willChange = 'auto';
-        }, 1000);
+        }, delay);
     }
 
-    hide (el) {
+    hide (el, delay) {
+        delay = typeof delay !== 'undefined' ? delay : 100;
+
         if (el.hasAttribute('data-original-title')) {
             if (!el.hasAttribute('title')) {
                 el.setAttribute('title', el.getAttribute('data-original-title'));
@@ -125,7 +147,7 @@ export default class extends Controller {
             this.timer = setTimeout(() => {
                 this.tooltip.style.display = 'none';
                 this.tooltip.style.willChange = 'auto';
-            }, 100);
+            }, delay);
         }
     }
 

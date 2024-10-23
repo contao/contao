@@ -14,6 +14,11 @@ services:
         arguments:
             - '@contao.search.backend'
 
+    contao.messenger.backend_search.delete_documents_message_handler:
+        class: Contao\CoreBundle\Messenger\MessageHandler\BackendSearch\DeleteDocumentsMessageHandler
+        arguments:
+            - '@contao.search.backend'
+
     contao.search.backend:
         class: Contao\CoreBundle\Search\Backend\BackendSearch
         arguments:
@@ -21,6 +26,7 @@ services:
             - '@security.helper'
             - '@contao.search_backend.engine'
             - '@event_dispatcher'
+            - '@messenger.bus.default'
 
     contao.search.backend.files_provider:
         class: Contao\CoreBundle\Search\Backend\Provider\FilesProvider

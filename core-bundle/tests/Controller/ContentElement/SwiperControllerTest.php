@@ -32,7 +32,7 @@ class SwiperControllerTest extends ContentElementTestCase
             new SwiperController(),
             [
                 'type' => 'swiper',
-                'sliderDelay' => 3000,
+                'sliderDelay' => 1000,
                 'sliderSpeed' => 300,
                 'sliderStartSlide' => 0,
                 'sliderContinuous' => true,
@@ -52,7 +52,7 @@ class SwiperControllerTest extends ContentElementTestCase
             'offset' => 0,
             'loop' => true,
             'autoplay' => [
-                'delay' => 3000,
+                'delay' => 1000,
                 'pauseOnMouseEnter' => true,
             ],
         ]));
