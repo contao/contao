@@ -810,6 +810,7 @@ class ContaoCoreExtensionTest extends TestCase
                     'method' => 'aMethod',
                     'renderer' => 'inline',
                     'nestedFragments' => false,
+                    'priority' => 0,
                 ],
             )
         ;
@@ -823,6 +824,7 @@ class ContaoCoreExtensionTest extends TestCase
                 'method' => 'aMethod',
                 'renderer' => 'inline',
                 'nestedFragments' => false,
+                'priority' => 0,
                 'foo' => 'bar',
                 'baz' => 42,
             ]),
@@ -851,6 +853,7 @@ class ContaoCoreExtensionTest extends TestCase
                     'template' => 'a_template',
                     'method' => 'aMethod',
                     'renderer' => 'inline',
+                    'priority' => 0,
                 ],
             )
         ;

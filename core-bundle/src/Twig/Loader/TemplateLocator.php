@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Loader;
 
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Exception\InvalidThemePathException;
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception\DriverException;
 use Symfony\Component\Filesystem\Filesystem;
@@ -33,14 +33,9 @@ class TemplateLocator
 
     private readonly string $globalTemplateDirectory;
 
-    /**
-     * @param array<string, string>                $bundles
-     * @param array<string, array<string, string>> $bundlesMetadata
-     */
     public function __construct(
         private readonly string $projectDir,
-        private readonly array $bundles,
-        private readonly array $bundlesMetadata,
+        private readonly ResourceFinder $resourceFinder,
         private readonly ThemeNamespace $themeNamespace,
         private readonly Connection $connection,
     ) {
@@ -86,26 +81,8 @@ class TemplateLocator
     {
         $paths = [];
 
-        $add = function (string $group, string $basePath) use (&$paths): void {
-            $paths[$group] = [...$paths[$group] ?? [], ...$this->expandSubdirectories($basePath)];
-        };
-
-        if (is_dir($path = Path::join($this->projectDir, 'contao/templates'))) {
-            $add('App', $path);
-        }
-
-        if (is_dir($path = Path::join($this->projectDir, 'src/Resources/contao/templates'))) {
-            $add('App', $path);
-        }
-
-        foreach (array_reverse($this->bundles) as $name => $class) {
-            if (ContaoModuleBundle::class === $class && is_dir($path = Path::join($this->bundlesMetadata[$name]['path'], 'templates'))) {
-                $add($name, $path);
-            } elseif (is_dir($path = Path::join($this->bundlesMetadata[$name]['path'], 'Resources/contao/templates'))) {
-                $add($name, $path);
-            } elseif (is_dir($path = Path::join($this->bundlesMetadata[$name]['path'], 'contao/templates'))) {
-                $add($name, $path);
-            }
+        foreach (array_reverse($this->resourceFinder->getExistingSubpaths('templates')) as $name => $path) {
+            $paths[$name] = [...$paths[$name] ?? [], ...$this->expandSubdirectories($path)];
         }
 
         return $paths;

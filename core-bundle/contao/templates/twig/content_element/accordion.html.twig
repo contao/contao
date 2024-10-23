@@ -63,9 +63,9 @@
 {% endblock %}
 
 {% block style %}
-    {% set handorgel_css_file = asset('css/handorgel.min.css', 'contao-components/handorgel') %}
-
     {% add "handorgel_css" to stylesheets %}
-        {% with {file: handorgel_css_file} %}{{ block('stylesheet_component') }}{% endwith %}
+        {% with {file: handorgel_css_file|default(asset('css/handorgel.min.css', 'contao-components/handorgel'))} %}
+            {{ block('stylesheet_component') }}
+        {% endwith %}
     {% endadd %}
 {% endblock %}

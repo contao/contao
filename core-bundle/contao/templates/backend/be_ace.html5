@@ -43,8 +43,6 @@ if ($GLOBALS['TL_CONFIG']['useCE']):
         enableBasicAutocompletion: true,
         enableLiveAutocompletion: true
       });
-
-      editor.container.style.maxHeight = 'calc(100vh - 320px)';
     }
 
     const target = document.getElementById('<?= $this->selector ?>');
