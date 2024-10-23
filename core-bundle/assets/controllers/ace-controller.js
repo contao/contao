@@ -33,10 +33,23 @@ export default class extends Controller {
 
         // Execute the config callback
         this.element?.configCallback(this.editor);
+
+        this.setMaxLines();
+        window.addEventListener('resize', this.setMaxLines.bind(this));
     }
 
     disconnect() {
         this.editor.destroy();
         this.container.remove();
+    }
+
+    setMaxLines() {
+        let maxLines = 14;
+
+        if (this.element.hasAttribute('data-autosize')) {
+            maxLines = Math.floor((window.innerHeight - 320) / Math.floor(12 * this.editor.container.style.lineHeight));
+        }
+
+        this.editor.setOption('maxLines', maxLines);
     }
 }
