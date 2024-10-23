@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.17] (2024-10-23)
+
+**Fixed issues:**
+
+- [#7665] Fix the `ContentElementTypeListener` ([Toflar])
+
 ## [5.3.16] (2024-10-22)
 
 **Fixed issues:**
@@ -449,6 +455,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.17]: https://github.com/contao/contao/releases/tag/5.3.17
 [5.3.16]: https://github.com/contao/contao/releases/tag/5.3.16
 [5.3.15]: https://github.com/contao/contao/releases/tag/5.3.15
 [5.3.14]: https://github.com/contao/contao/releases/tag/5.3.14
@@ -813,3 +820,4 @@ This project adheres to [Semantic Versioning].
 [#7639]: https://github.com/contao/contao/pull/7639
 [#7650]: https://github.com/contao/contao/pull/7650
 [#7660]: https://github.com/contao/contao/pull/7660
+[#7665]: https://github.com/contao/contao/pull/7665
