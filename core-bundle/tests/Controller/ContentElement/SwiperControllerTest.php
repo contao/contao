@@ -57,6 +57,7 @@ class SwiperControllerTest extends ContentElementTestCase
             ],
         ]));
 
+        // Replace }} with &#125;&#125; due to our insert tag filter
         $expectedJson = str_replace('}}', '&#125;&#125;', $expectedJson);
 
         $expectedOutput = <<<HTML
