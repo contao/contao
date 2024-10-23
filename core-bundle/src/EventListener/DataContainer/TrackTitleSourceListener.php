@@ -39,14 +39,9 @@ readonly class TrackTitleSourceListener
         foreach ($fileSystemItems as $fileSystemItem) {
             $extraMetadata = $fileSystemItem->getExtraMetadata();
 
-            /**
-             * @todo change to:
-             *    $extraMetadata->getTextTrack();
-             *    $extraMetadata->getLocalized()?->getDefault()?->getTitle();
-             */
             if (
-                null === $extraMetadata['textTrack']?->getSourceLanguage()
-                || empty(($extraMetadata['metadata'] ?? null)?->getFirst()?->getTitle())
+                null === $extraMetadata?->getTextTrack()?->getSourceLanguage()
+                || '' === $extraMetadata->getLocalized()?->getFirst()?->getTitle()
             ) {
                 $invalid[] = $fileSystemItem->getName();
             }

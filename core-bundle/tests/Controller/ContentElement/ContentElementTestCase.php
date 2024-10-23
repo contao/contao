@@ -381,8 +381,8 @@ abstract class ContentElementTestCase extends TestCase
                             null,
                             null,
                             'text/vtt',
-                            [
-                                'metadata' => new MetadataBag(
+                            new ExtraMetadata([
+                                'localized' => new MetadataBag(
                                     ['en' => new Metadata([Metadata::VALUE_TITLE => 'English'])],
                                     ['en'],
                                 ),
@@ -390,7 +390,7 @@ abstract class ContentElementTestCase extends TestCase
                                     'en',
                                     null,
                                 ),
-                            ],
+                            ]),
                         ),
                         self::FILE_SUBTITLES_DE_VTT => new FilesystemItem(
                             true,
@@ -398,8 +398,8 @@ abstract class ContentElementTestCase extends TestCase
                             null,
                             null,
                             'text/vtt',
-                            [
-                                'metadata' => new MetadataBag(
+                            new ExtraMetadata([
+                                'localized' => new MetadataBag(
                                     ['en' => new Metadata([Metadata::VALUE_TITLE => 'Deutsch'])],
                                     ['en'],
                                 ),
@@ -407,7 +407,7 @@ abstract class ContentElementTestCase extends TestCase
                                     'de',
                                     TextTrackType::captions,
                                 ),
-                            ],
+                            ]),
                         ),
                     ];
 
