@@ -206,15 +206,24 @@ class ResultTest extends TestCase
     }
 
     /**
-     * @param array<array<string, string>> $data
+     * @param list<array<string, string>> $data
      *
      * @return array<Result|object>
      */
     private function createResults(array $data): array
     {
+        $reflection = new \ReflectionClass(ArrayResult::class);
+
+        if (\count($reflection->getConstructor()->getParameters()) > 1) {
+            $result = new ArrayResult(array_keys($data[0] ?? []), array_map(array_values(...), $data));
+        } else {
+            /** @phpstan-ignore arguments.count, argument.type */
+            $result = new ArrayResult($data);
+        }
+
         return [
             new Result(
-                new DoctrineResult(new ArrayResult($data), $this->createMock(Connection::class)),
+                new DoctrineResult($result, $this->createMock(Connection::class)),
                 'SELECT * FROM test',
             ),
             new Result($data, 'SELECT * FROM test'),

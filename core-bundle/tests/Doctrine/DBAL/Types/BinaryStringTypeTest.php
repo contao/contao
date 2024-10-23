@@ -84,11 +84,16 @@ class BinaryStringTypeTest extends TestCase
 
     public function testReturnsTheCorrectName(): void
     {
-        $this->assertSame(BinaryStringType::NAME, $this->type->getName());
+        $this->assertSame(BinaryStringType::NAME, Type::getTypeRegistry()->lookupName($this->type));
     }
 
     public function testRequiresAnSqlCommentHintForTheCustomType(): void
     {
+        if (!method_exists(Type::class, 'requiresSQLCommentHint')) {
+            $this->markTestSkipped('The method requiresSQLCommentHint() does not exist anymore in doctrine/dbal 4.x');
+        }
+
+        /** @phpstan-ignore method.notFound */
         $this->assertTrue($this->type->requiresSQLCommentHint($this->getMockForAbstractClass(AbstractPlatform::class)));
     }
 }

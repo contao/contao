@@ -31,7 +31,7 @@
         "ext-json": "*",
         "contao/core-bundle": "self.version",
         "contao/manager-plugin": "^2.4",
-        "doctrine/dbal": "^3.6",
+        "doctrine/dbal": "^3.6 || ^4.0",
         "doctrine/doctrine-bundle": "^2.8",
         "friendsofsymfony/http-cache": "^2.6",
         "friendsofsymfony/http-cache-bundle": "^2.6",

@@ -14,29 +14,26 @@ namespace Contao\CoreBundle\Tests\Fixtures\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\ManyToMany;
+use Doctrine\ORM\Mapping\Table;
 
-/**
- * @ORM\Entity
- * @ORM\Table(name="tl_tag")
- */
+#[Table(name: 'tl_tag')]
+#[Entity]
 class Tag
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(name="id", type="integer", options={"unsigned": true})
-     */
+    #[Id]
+    #[Column(type: 'integer', options: ['unsigned' => true])]
+    #[GeneratedValue]
     private int $id = -1;
 
-    /**
-     * @ORM\Column(options={"default": ""})
-     */
+    #[Column(type: 'string', options: ['default' => ''])]
     private string $label = '';
 
-    /**
-     * @ORM\ManyToMany(targetEntity=BlogPost::class, mappedBy="tags")
-     */
+    #[ManyToMany(targetEntity: BlogPost::class, mappedBy: 'tags')]
     private Collection $blogPosts;
 
     public function __construct()
