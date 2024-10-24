@@ -9,7 +9,7 @@ export default class extends Controller {
         blockInfoUrl: String,
     };
 
-    static targets = ['tabs', 'editor'];
+    static targets = ['tabs', 'editor', 'dialog'];
 
     connect() {
         // Subscribe to events dispatched by the editors
@@ -29,8 +29,8 @@ export default class extends Controller {
         });
     }
 
-    closePanel(el) {
-        el.target.closest('*[data-panel]').innerText = '';
+    close(event) {
+        document.getElementById(event.target.getAttribute('aria-controls')).innerText = '';
     }
 
     editorTargetConnected(el) {
@@ -40,6 +40,16 @@ export default class extends Controller {
     editorTargetDisconnected(el) {
         this.editors.get(el).destroy();
         this.editors.delete(el);
+    }
+
+    dialogTargetConnected(el) {
+        el.showModal();
+        el.querySelector('input')?.focus();
+        el.querySelector('input[type="text"]')?.select();
+
+        el.querySelector('form')?.addEventListener('submit', () => {
+            el.remove();
+        })
     }
 
     colorChange(event) {

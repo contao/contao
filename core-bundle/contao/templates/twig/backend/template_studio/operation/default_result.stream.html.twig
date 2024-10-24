@@ -4,7 +4,10 @@
             {% trans_default_domain "contao_template_studio" %}
 
             {% block content %}
-                 {{ translation_key|trans([context.identifier]) }}
+                {% set identifier_token -%}
+                    <span class="token">{{ identifier }}</span>
+                {%- endset %}
+                {{ translation_key|trans([identifier_token])|raw }}
             {% endblock %}
         {% endembed %}
     </template>

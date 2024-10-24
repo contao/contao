@@ -8,13 +8,13 @@
                 {% set identifier_token -%}
                     <span class="token">{{ identifier }}</span>
                 {%- endset %}
-                {{ 'message.create.success'|trans([identifier_token])|raw }}
+                {{ 'message.create_variant.success'|trans([identifier_token])|raw }}
             {% endblock %}
         {% endembed %}
     </template>
 </turbo-stream>
 
-{# Open/reload tab #}
+{# Open the new template in a tab #}
 {{ render(path('_contao_template_studio_editor_tab.stream', {identifier})) }}
 
 {# Reload the template tree #}

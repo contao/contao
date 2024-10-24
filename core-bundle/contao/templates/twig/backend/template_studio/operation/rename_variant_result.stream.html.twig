@@ -5,17 +5,20 @@
             {% trans_default_domain "contao_template_studio" %}
 
             {% block content %}
-                {% set identifier_token -%}
-                    <span class="token">{{ identifier }}</span>
+                {% set new_identifier_token -%}
+                    <span class="token">{{ new_identifier }}</span>
                 {%- endset %}
-                {{ 'message.create.success'|trans([identifier_token])|raw }}
+                {{ 'message.rename_variant.success'|trans([new_identifier_token])|raw }}
             {% endblock %}
         {% endembed %}
     </template>
 </turbo-stream>
 
-{# Open/reload tab #}
-{{ render(path('_contao_template_studio_editor_tab.stream', {identifier})) }}
+{# Close the old tab #}
+<turbo-stream action="remove" target="template-studio--tab_{{ old_identifier }}"></turbo-stream>
+
+{# Open the new template in a tab #}
+{{ render(path('_contao_template_studio_editor_tab.stream', {identifier: new_identifier})) }}
 
 {# Reload the template tree #}
 {{ render(path('_contao_template_studio_tree.stream')) }}
