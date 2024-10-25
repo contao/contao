@@ -37,6 +37,10 @@
 
             .identifier {
                 color: color-mix(in srgb, currentColor 75%, transparent);
+
+                &.identifier--user {
+                    color: var(--blue);
+                }
             }
         }
 
@@ -72,34 +76,32 @@
         }
     }
 
-    *[data-panel] {
-        .header_wrapper {
-            display: flex;
-            gap: 4px;
-            justify-content: space-between;
+    .header_wrapper {
+        display: flex;
+        gap: 4px;
+        justify-content: space-between;
 
-            h3 {
-                font-size: 0.9rem;
-                margin-bottom: 10px;
-            }
+        h3 {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
 
-            button {
-                font-size: .75rem;
-                display: grid;
-                background: none;
-                border: none;
-                place-items: center;
-                border-radius: 50%;
-                padding: 0;
-                width: 14px;
-                height: 14px;
-                opacity: .5;
-                font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+        button {
+            font-size: .75rem;
+            display: grid;
+            background: none;
+            border: none;
+            place-items: center;
+            border-radius: 50%;
+            padding: 0;
+            width: 14px;
+            height: 14px;
+            opacity: .5;
+            font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 
-                &:hover {
-                    opacity: 1;
-                    background: var(--gray);
-                }
+            &:hover {
+                opacity: 1;
+                background: var(--gray);
             }
         }
     }

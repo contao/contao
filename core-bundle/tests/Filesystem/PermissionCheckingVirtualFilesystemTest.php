@@ -239,6 +239,8 @@ class PermissionCheckingVirtualFilesystemTest extends TestCase
             $this->createMock(Security::class),
         );
 
+        $this->assertFalse($permissionCheckingVirtualFilesystem->canAccessLocation($invalidPath));
+
         $this->expectException(AccessDeniedException::class);
         $this->expectExceptionMessage($expectedMessage);
 

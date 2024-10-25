@@ -1337,6 +1337,9 @@
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
       </trans-unit>
+      <trans-unit id="MSC.confirm">
+          <source>Are you sure?</source>
+      </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete element ID %s?</source>
       </trans-unit>
