@@ -23,7 +23,7 @@ class TextTrackFieldsListener
     public function addTextTrackFields(string $palette, DataContainer $dc): string
     {
         // $dc->id is the file name in this case
-        if (str_ends_with(Path::getExtension($dc->id, true), 'vtt')) {
+        if ('vtt' === Path::getExtension($dc->id, true)) {
             $palette = PaletteManipulator::create()
                 ->addField(['textTrackLanguage', 'textTrackType'], 'name')
                 ->applyToString($palette)
