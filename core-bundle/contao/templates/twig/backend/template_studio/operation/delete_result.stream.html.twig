@@ -5,7 +5,10 @@
             {% trans_default_domain "contao_template_studio" %}
 
             {% block content %}
-                {{ 'message.delete.success'|trans([identifier]) }}
+                {% set identifier_token -%}
+                    <span class="token">{{ identifier }}</span>
+                {%- endset %}
+                {{ 'message.delete.success'|trans([identifier_token])|raw }}
             {% endblock %}
         {% endembed %}
     </template>
