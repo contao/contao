@@ -171,9 +171,9 @@ class Inspector
             throw new InspectionException($templateName, reason: 'No recorded information was found. Please clear the Twig template cache to make sure templates are recompiled.');
     }
 
-    private function getPathByTemplateName(string $templateName): string | null
+    private function getPathByTemplateName(string $templateName): string|null
     {
-        if(null !== ($cachedPath = $this->pathByTemplateName[$templateName] ?? null)) {
+        if (null !== ($cachedPath = $this->pathByTemplateName[$templateName] ?? null)) {
             return $cachedPath;
         }
 

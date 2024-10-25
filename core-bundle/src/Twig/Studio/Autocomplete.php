@@ -85,7 +85,7 @@ class Autocomplete
     }
 
     /**
-     * @return list<array<string, string>>
+     * @return list<array<string, mixed>>
      */
     public function getCompletions(string $identifier): array
     {
@@ -112,7 +112,7 @@ class Autocomplete
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, mixed>
      */
     private function getCompletionForExtendsTag(TemplateInformation|null $templateInformation, string $identifier, string $extension): array
     {
@@ -132,7 +132,7 @@ class Autocomplete
     }
 
     /**
-     * @return list<array<string, string>>
+     * @return list<array<string, mixed>>
      */
     private function getCompletionsForUseTags(TemplateInformation|null $templateInformation): array
     {
@@ -179,7 +179,7 @@ class Autocomplete
     }
 
     /**
-     * @return list<array<string, string>>
+     * @return list<array<string, mixed>>
      */
     private function getCompletionsForBlocks(TemplateInformation|null $templateInformation): array
     {
@@ -196,7 +196,7 @@ class Autocomplete
     }
 
     /**
-     * @return list<array<string, string>>
+     * @return list<array<string, mixed>>
      */
     private function getCompletionsForDefaultMarkup(): array
     {
