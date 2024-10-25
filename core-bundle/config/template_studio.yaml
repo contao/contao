@@ -12,7 +12,16 @@ services:
             - '@contao.twig.filesystem_loader'
             - '@contao.twig.finder_factory'
             - '@contao.twig.inspector'
+            - '@contao.twig.studio.autocomplete'
             - !tagged_iterator { tag: contao.operation.template_studio_element, index_by: name }
+
+    contao.twig.studio.autocomplete:
+        class: Contao\CoreBundle\Twig\Studio\Autocomplete
+        arguments:
+            - '@contao.twig.inspector'
+            - '@contao.twig.finder_factory'
+            - '@contao.twig.filesystem_loader'
+            - '@twig'
 
     contao.twig.studio.create_content_element_variant_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\CreateContentElementVariantOperation

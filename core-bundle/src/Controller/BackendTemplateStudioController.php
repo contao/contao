@@ -20,6 +20,7 @@ use Contao\CoreBundle\Twig\Inspector\BlockType;
 use Contao\CoreBundle\Twig\Inspector\InspectionException;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Studio\Autocomplete;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationInterface;
 use Contao\CoreBundle\Twig\Studio\Operation\TemplateContext;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,6 +45,7 @@ class BackendTemplateStudioController extends AbstractBackendController
         private readonly ContaoFilesystemLoader $loader,
         private readonly FinderFactory $finder,
         private readonly Inspector $inspector,
+        private readonly Autocomplete $autocomplete,
         iterable $operations,
     ) {
         $this->operations = $operations instanceof \Traversable ? iterator_to_array($operations) : $operations;
@@ -118,6 +120,8 @@ class BackendTemplateStudioController extends AbstractBackendController
             ),
         );
 
+        $canEdit = \in_array('save', $operationNames, true);
+
         return $this->render('@Contao/backend/template_studio/editor/add_editor_tab.stream.html.twig', [
             'identifier' => $identifier,
             'templates' => array_map(
@@ -133,7 +137,8 @@ class BackendTemplateStudioController extends AbstractBackendController
                 $chains,
             ),
             'operations' => $operationNames,
-            'can_edit' => \in_array('save', $operationNames, true),
+            'can_edit' => $canEdit,
+            'autocomplete' => $canEdit ? $this->autocomplete->getCompletions($identifier) : [],
         ]);
     }
 

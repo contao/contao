@@ -46,6 +46,10 @@
                         .set('readonly', not (can_edit and loop.first))
                     %}
                     <textarea{{ template_editor_attributes }}>{{ template.code }}</textarea>
+
+                    {% if autocomplete|length %}
+                        {{ include('@Contao/backend/template_studio/editor/_autocomplete_data.html.twig') }}
+                    {% endif %}
                 </div>
 
                 {# Filename #}
