@@ -263,6 +263,7 @@ services:
     contao.listener.data_container.track_title_source:
         class: Contao\CoreBundle\EventListener\DataContainer\TrackTitleSourceListener
         arguments:
+            - '@contao.framework'
             - '@contao.filesystem.virtual.files'
             - '@request_stack'
 

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Filesystem\FilesystemUtil;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\Message;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -25,6 +26,7 @@ use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 readonly class TrackTitleSourceListener
 {
     public function __construct(
+        private ContaoFramework $framework,
         private VirtualFilesystem $filesStorage,
         private RequestStack $requestStack,
     ) {
@@ -47,9 +49,11 @@ readonly class TrackTitleSourceListener
             }
         }
 
+        $message = $this->framework->getAdapter(Message::class);
+
         if ([] !== $invalid) {
-            Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['textTrackMetadataMissing'], implode(', ', $invalid)));
-        } elseif (Message::hasError()) {
+            $message->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['textTrackMetadataMissing'], implode(', ', $invalid)));
+        } elseif ($message->hasError()) {
             $session = $this->requestStack->getCurrentRequest()?->getSession();
 
             // Reset the error if it exists
