@@ -364,6 +364,9 @@ class BackendTemplateStudioController extends AbstractBackendController
         return ['content_element' => [], 'frontend_module' => [], 'component' => [], ...$prefixTree];
     }
 
+    /**
+     * @return array<string, string>
+     */
     private function getTemplateNameInformation(string $logicalName): array
     {
         [$namespace, $shortName] = ContaoTwigUtil::parseContaoName($logicalName);
