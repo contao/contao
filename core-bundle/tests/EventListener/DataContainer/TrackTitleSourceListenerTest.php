@@ -16,13 +16,6 @@ use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
 class TrackTitleSourceListenerTest extends ContentElementTestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->dataContainer = $this->createMock(DataContainer::class);
-    }
-
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_LANG']);
@@ -54,14 +47,15 @@ class TrackTitleSourceListenerTest extends ContentElementTestCase
             ->willReturnCallback(
                 static function ($message) use ($flashBag): void {
                     $flashBag->add('contao.BE.error', $message);
-                }
+                },
             )
         ;
 
+        $dataContainer = $this->createMock(DataContainer::class);
         $framework = $this->mockContaoFramework([Message::class => $adapter]);
 
         $listener = $this->getListener($framework);
-        $listener($uuids, $this->dataContainer);
+        $listener($uuids, $dataContainer);
     }
 
     public function testTrackFilesHaveValidMetadata(): void
@@ -86,10 +80,11 @@ class TrackTitleSourceListenerTest extends ContentElementTestCase
             ->willReturn(false)
         ;
 
+        $dataContainer = $this->createMock(DataContainer::class);
         $framework = $this->mockContaoFramework([Message::class => $adapter]);
 
         $listener = $this->getListener($framework);
-        $value = $listener($uuids, $this->dataContainer);
+        $value = $listener($uuids, $dataContainer);
 
         $this->assertSame($uuids, $value);
     }
@@ -109,6 +104,7 @@ class TrackTitleSourceListenerTest extends ContentElementTestCase
 
         $framework = $this->mockContaoFramework([Message::class => $adapter]);
 
+        $dataContainer = $this->createMock(DataContainer::class);
         $flashBag = $this->createMock(FlashBagAwareSessionInterface::class);
 
         $request = new Request();
@@ -118,7 +114,7 @@ class TrackTitleSourceListenerTest extends ContentElementTestCase
         $requestStack->push($request);
 
         $listener = $this->getListener($framework, $requestStack);
-        $value = $listener($uuids, $this->dataContainer);
+        $value = $listener($uuids, $dataContainer);
 
         $this->assertSame($uuids, $value);
     }
