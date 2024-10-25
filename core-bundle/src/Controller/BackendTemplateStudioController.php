@@ -251,6 +251,33 @@ class BackendTemplateStudioController extends AbstractBackendController
     }
 
     /**
+     * Stream data for code autocompletion for the given template.
+     */
+    #[Route(
+        '/%contao.backend.route_prefix%/template-studio-autocomplete-data',
+        name: '_contao_template_studio_autocomplete_data.stream',
+        defaults: ['_scope' => 'backend'],
+        methods: ['GET'],
+        condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
+    )]
+    public function autocompleteData(#[MapQueryParameter] string $identifier): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        if (!$this->isAllowedIdentifier($identifier)) {
+            return new Response(
+                'No autocompletion data can be generated for the given template.',
+                Response::HTTP_FORBIDDEN,
+            );
+        }
+
+        return $this->render('@Contao/backend/template_studio/editor/autocomplete.stream.html.twig', [
+            'identifier' => $identifier,
+            'autocomplete' => $this->autocomplete->getCompletions($identifier),
+        ]);
+    }
+
+    /**
      * Execute an operation and stream the result.
      */
     #[Route(
