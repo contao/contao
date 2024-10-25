@@ -2,9 +2,7 @@
 
 <div class="header_wrapper">
     <h3>{% block headline %}{% endblock %}</h3>
-    <button class="close" type="button" aria-controls="template-studio--info" aria-label="{{ 'MSC.close'|trans }}"
-            data-action="contao--template-studio#closePanel">x
-    </button>
+    {% include '@Contao/backend/template_studio/_close_button.html.twig' with {target_id: 'template-studio--info'} %}
 </div>
 
 {% block content %}{% endblock %}
