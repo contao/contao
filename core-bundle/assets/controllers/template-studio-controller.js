@@ -26,6 +26,8 @@ export default class extends Controller {
             if(event.detail.formSubmission.submitter.dataset?.operation === 'save') {
                 this._addEditorContentToRequest(event);
             }
+
+            this._getActiveMutableEditor()?.focus();
         });
     }
 

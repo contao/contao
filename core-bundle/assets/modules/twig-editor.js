@@ -157,6 +157,10 @@ export class TwigEditor {
         return this.editor.getValue();
     }
 
+    focus() {
+        this.editor.focus();
+    }
+
     destroy() {
         this.editor.destroy();
     }
