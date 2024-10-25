@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\DataContainer;
+use Symfony\Component\Filesystem\Path;
 
 class TextTrackFieldsListener
 {
@@ -22,7 +23,7 @@ class TextTrackFieldsListener
     public function addTextTrackFields(string $palette, DataContainer $dc): string
     {
         // $dc->id is the file name in this case
-        if (str_ends_with($dc->id, '.vtt')) {
+        if (str_ends_with(Path::getExtension($dc->id, true), 'vtt')) {
             $palette = PaletteManipulator::create()
                 ->addField(['textTrackLanguage', 'textTrackType'], 'name')
                 ->applyToString($palette)
