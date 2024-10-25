@@ -30,22 +30,13 @@ class Inspector
      */
     public const CACHE_KEY = 'contao.twig.inspector';
 
-    private readonly array $pathByTemplateName;
+    private array $pathByTemplateName = [];
 
     public function __construct(
         private readonly Environment $twig,
         private readonly CacheItemPoolInterface $cachePool,
         private readonly ContaoFilesystemLoader $filesystemLoader,
     ) {
-        $pathByTemplateName = [];
-
-        foreach ($this->filesystemLoader->getInheritanceChains() as $chain) {
-            foreach ($chain as $path => $name) {
-                $pathByTemplateName[$name] = $path;
-            }
-        }
-
-        $this->pathByTemplateName = $pathByTemplateName;
     }
 
     public function inspectTemplate(string $name): TemplateInformation
@@ -58,19 +49,21 @@ class Inspector
         $blockNames = $this->loadTemplate($name)->getBlockNames();
         $source = $this->twig->getLoader()->getSourceContext($name);
 
-        // Accumulate slots data for the template as well as all statically set parents
+        $data = $this->getData($name);
+
+        $parent = $data['parent'];
+        $uses = $data['uses'];
         $slots = [];
 
-        do {
-            $data = $this->getData($name);
-            $slots = array_unique([...$slots, ...$data['slots']]);
-            $name = $data['parent'] ?? false;
-        } while ($name);
+        // Accumulate slots data for the template as well as all statically set parents
+        foreach ($this->getDataFromAll($data) as $parentData) {
+            $slots = array_unique([...$slots, ...$parentData['slots']]);
+        }
 
         sort($blockNames);
         sort($slots);
 
-        return new TemplateInformation($source, $blockNames, $slots, $data['parent'], $data['uses']);
+        return new TemplateInformation($source, $blockNames, $slots, $parent, $uses);
     }
 
     /**
@@ -149,6 +142,15 @@ class Inspector
         return $hierarchy;
     }
 
+    private function getDataFromAll(array $data): \Generator
+    {
+        yield $data;
+
+        if ($data['parent'] ?? false) {
+            yield from $this->getDataFromAll($this->getData($data['parent']));
+        }
+    }
+
     private function loadTemplate(string $name): TemplateWrapper
     {
         try {
@@ -165,7 +167,23 @@ class Inspector
 
         $cache = $this->cachePool->getItem(self::CACHE_KEY)->get();
 
-        return $cache[$this->pathByTemplateName[$templateName] ?? null] ??
+        return $cache[$this->getPathByTemplateName($templateName)] ??
             throw new InspectionException($templateName, reason: 'No recorded information was found. Please clear the Twig template cache to make sure templates are recompiled.');
+    }
+
+    private function getPathByTemplateName(string $templateName): string | null
+    {
+        if(null !== ($cachedPath = $this->pathByTemplateName[$templateName] ?? null)) {
+            return $cachedPath;
+        }
+
+        // Rebuild cache if path was not found
+        foreach ($this->filesystemLoader->getInheritanceChains() as $chain) {
+            foreach ($chain as $path => $name) {
+                $this->pathByTemplateName[$name] = $path;
+            }
+        }
+
+        return $this->pathByTemplateName[$templateName] ?? null;
     }
 }
