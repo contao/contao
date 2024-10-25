@@ -181,7 +181,7 @@ final class Finder implements \IteratorAggregate, \Countable
 
         $options = [];
 
-        foreach (array_keys(iterator_to_array($this->getIterator())) as $identifier) {
+        foreach ($this->asIdentifierList() as $identifier) {
             $sourceLabels = array_map($getSourceLabel, $this->sources[$identifier]);
             $key = $identifier !== $this->identifier ? $identifier : '';
 
@@ -192,6 +192,17 @@ final class Finder implements \IteratorAggregate, \Countable
         ksort($options);
 
         return $options;
+    }
+
+    /**
+     * @return list<string>
+     */
+    public function asIdentifierList(): array
+    {
+        $identifiers = array_keys(iterator_to_array($this->getIterator()));
+        sort($identifiers);
+
+        return $identifiers;
     }
 
     /**
