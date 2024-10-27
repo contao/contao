@@ -2,23 +2,25 @@
 
 {% for hit in hits %}
     <div class="tl_search_hit">
-        <h3>{{ hit.title }}</h3>
-
+        {% if hit.imageFigureBuilder %}
+            <div class="hit_preview">
+                {% set figure = hit.imageFigureBuilder.setSize([200, 200]).buildIfResourceExists %}
+                {% if figure %}
+                    {{ block('figure_component') }}
+                {% endif %}
+            </div>
+        {% endif %}
+        <div class="hit_content">
+            <h3>{{ hit.title }}</h3>
+        </div>
         {% if hit.context %}
             <p class="context">{{ hit.context }}</p>
         {% endif %}
 
-        {% if hit.imageFigureBuilder %}
-            {% set figure = hit.imageFigureBuilder.setSize([200, 200]).buildIfResourceExists %}
-            {% if figure %}
-                {{ block('figure_component') }}
-            {% endif %}
-        {% endif %}
-
-        <a href="{{ hit.viewUrl }}">View this item</a>
+        {#<a href="{{ hit.viewUrl }}">View this item</a>
 
         {% if hit.editUrl %}
             <a href="{{ hit.editUrl }}">Edit this item</a>
-        {% endif %}
+        {% endif %}#}
     </div>
 {% endfor %}

@@ -1,6 +1,203 @@
 {% trans_default_domain 'contao_default' %}
 <nav aria-label="{{ 'MSC.headerNavigation'|trans }}">
     <a href="{{ app.request.requestUri }}#skipHeaderNav" class="invisible">{{ 'MSC.skipNavigation'|trans }}</a>
+    {% if searchEnabled %}
+        <div class="backend-search_outer">
+            <div class="backend-search_overlay"></div>
+            <div class="backend-search_inner">
+                <form id="backend-search_form" class="backend-search_form" action="contao/search" method="GET" target="_blank">
+                    <input id="backend-search" class="tl_text" autocomplete="off" placeholder="Search..." type="text" name="keywords">
+                    <label for="backend-search">
+                        <span class="invisible">Search</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    </label>
+                </form>
+                <div class="backend-search_results">
+                    <span>Type to start searching</span>
+                </div>
+            </div>
+        </div>
+        <script>
+            window.onload = () => {
+                const getSearchRoute = () => {
+                    return window.origin + `{{ path('contao_backend') }}`;
+                }
+                const getSearchResults = (query) => {
+                    return fetch(getSearchRoute() + `/search?keywords=${encodeURIComponent(query)}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error(`Search route could not be found: ${response.status}`)
+                            }
+                            return response.text();
+                        })
+                        .then(html => {
+                            const parser = new DOMParser();
+                            const document = parser.parseFromString(html, 'text/html');
+                            const bodyContent = document.querySelector('body').innerHTML;
+                            if ('' === bodyContent)
+                            {
+                                return '<span>No results found!</span>'
+                            }
+                            return bodyContent;
+                        })
+                        .catch(error => {
+                            console.error(error);
+                        });
+                }
+                const searchForm = document.querySelector('#backend-search_form');
+                const searchInput = document.querySelector('#backend-search');
+                const resultsContainer = document.querySelector('.backend-search_results');
+                let typingTimer;
+                const delay = 250;
+                const resetSearch = () => {
+                    resultsContainer.innerHTML = '<span>Please enter at least 2 characters</span>';
+                    searchInput.value = '';
+                    searchInput.blur();
+                }
+                const performSearch = async (query) => {
+                    if (query.length < 2) {
+                        resultsContainer.innerHTML = '<span>Please enter at least 2 characters</span>';
+                        return;
+                    }
+                    resultsContainer.innerHTML = '<span>Loading results...</span>';
+                    resultsContainer.innerHTML = await getSearchResults(query);
+                }
+                document.addEventListener('keyup', (e) => {
+                    e.key === 'Escape' && resetSearch()
+                });
+                searchInput.addEventListener('input', () => {
+                    const query = searchInput.value.trim();
+                    clearTimeout(typingTimer);
+                    typingTimer = setTimeout(() => {
+                        performSearch(query);
+                    }, delay);
+                });
+                searchForm.addEventListener('submit', async (evt) => {
+                    evt.preventDefault();
+                    const query = searchInput.value.trim();
+                    await performSearch(query);
+                });
+            }
+        </script>
+        <style>
+            header nav {
+                display: flex;
+                justify-content: flex-end;
+                gap: 8px;
+            }
+            #tmenu {
+                display: inline-flex;
+            }
+            .backend-search_outer {
+                display: flex;
+                align-items: center;
+                flex: 1;
+                margin-left: 220px;
+            }
+            .backend-search_overlay {
+                background-color: rgba(0, 0, 0, 0.7);
+                cursor: pointer;
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 0;
+                width: 0;
+                transition: width 0ms .25s, height 0ms .25s, opacity .25s;
+                opacity: 0;
+                z-index: 1;
+            }
+            .backend-search_overlay:has(+div #backend-search:focus) {
+                height: 200vh;
+                opacity: 1;
+                transition: width 0ms, height 0ms, opacity .25s;
+                width: 100%;
+            }
+            .backend-search_inner {
+                position: relative;
+                width: 38%;
+                min-width: 280px;
+                transition: width .25s cubic-bezier(.1,.65,.1,1)
+            }
+            .backend-search_inner:has(#backend-search:focus) {
+                width: 100%;
+                z-index: 2;
+            }
+            .backend-search_results {
+                box-sizing: border-box;
+                position: absolute;
+                width: 100%;
+                background-color: var(--content-bg);
+                border: 1px solid var(--border);
+                padding: 10px 6px 12px 10px;
+                opacity: 0;
+                pointer-events: none;
+                margin-top: -1px;
+                border-radius: 0 0 2px 2px;
+                max-height: 75vh;
+                overflow-y: auto;
+                scrollbar-width: thin;
+            }
+            .backend-search_results > span:first-of-type {
+                font-size: 12px;
+            }
+            .backend-search_inner:has(#backend-search:focus) > .backend-search_results {
+                opacity: 1;
+                pointer-events: revert;
+                transition: opacity .4s;
+            }
+            .backend-search_form {
+                position: relative;
+            }
+            .backend-search_form > label {
+                position: absolute;
+                left: 7px;
+                top: 7px;
+                pointer-events: none;
+            }
+            #backend-search {
+                margin: 0;
+                padding-left: 30px;
+                outline: none;
+            }
+            .tl_search_hit {
+                display: flex;
+                align-items: stretch;
+                justify-content: center;
+                width: 100%;
+            }
+            .tl_search_hit:not(:last-of-type) {
+                margin-bottom: 8px;
+                padding-bottom: 8px;
+                border-bottom: 1px solid var(--border);
+            }
+            .hit_preview {
+                width: 36px;
+                margin-right: 10px;
+            }
+            .preview_image {
+                width: 100%;
+                max-width: 100%;
+                height: auto;
+                aspect-ratio: 1;
+                object-fit: cover;
+                border-radius: 4px;
+            }
+            .hit_content {
+                flex: 1;
+            }
+            .hit_content h3 {
+                margin: 0 0 .25rem;
+            }
+            .hit_content .context {
+                font-size: 13px;
+                color: var(--gray);
+                margin: 0;
+            }
+            @media (min-width: 991px) {
+            }
+        </style>
+    {% endif %}
+
     {{ knp_menu_render('be_header_menu', {'allow_safe_labels': true}) }}
     <span id="skipHeaderNav" class="invisible"></span>
 </nav>
