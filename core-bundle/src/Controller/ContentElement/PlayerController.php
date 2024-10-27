@@ -115,8 +115,8 @@ class PlayerController extends AbstractContentElementController
 
         $tracks = [];
 
-        if ($model->addTextTracks) {
-            $trackItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->textTrackSRC ?: '');
+        if (null !== $model->textTrackSRC) {
+            $trackItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->textTrackSRC);
 
             foreach ($trackItems as $trackItem) {
                 if (!$publicUri = $this->filesStorage->generatePublicUri($trackItem->getPath())) {

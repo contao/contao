@@ -99,7 +99,6 @@ class PlayerControllerTest extends ContentElementTestCase
                 'playerSRC' => serialize([
                     self::FILE_VIDEO_MP4,
                 ]),
-                'addTextTracks' => true,
                 'textTrackSRC' => serialize([
                     self::FILE_SUBTITLES_EN_VTT,
                     self::FILE_SUBTITLES_DE_VTT,
@@ -131,7 +130,6 @@ class PlayerControllerTest extends ContentElementTestCase
                 'playerSRC' => serialize([
                     self::FILE_VIDEO_MP4,
                 ]),
-                'addTextTracks' => true,
                 'textTrackSRC' => serialize([
                     self::FILE_SUBTITLES_INVALID_VTT,
                 ]),

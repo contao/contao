@@ -34,18 +34,20 @@ readonly class TrackTitleSourceListener
 
     public function __invoke(mixed $value, DataContainer $dc): mixed
     {
-        $fileSystemItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $value);
-
         $invalid = [];
 
-        foreach ($fileSystemItems as $fileSystemItem) {
-            $extraMetadata = $fileSystemItem->getExtraMetadata();
+        if (null !== $value) {
+            $fileSystemItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $value);
 
-            if (
-                null === $extraMetadata->getTextTrack()?->getSourceLanguage()
-                || '' === $extraMetadata->getLocalized()?->getFirst()?->getTitle()
-            ) {
-                $invalid[] = $fileSystemItem->getName();
+            foreach ($fileSystemItems as $fileSystemItem) {
+                $extraMetadata = $fileSystemItem->getExtraMetadata();
+
+                if (
+                    null === $extraMetadata->getTextTrack()?->getSourceLanguage()
+                    || '' === $extraMetadata->getLocalized()?->getFirst()?->getTitle()
+                ) {
+                    $invalid[] = $fileSystemItem->getName();
+                }
             }
         }
 

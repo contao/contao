@@ -338,17 +338,11 @@
       <trans-unit id="tl_content.playerSRC.1">
         <source>Here you can add the video/audio file or multiple files if you are using different codecs.</source>
       </trans-unit>
-      <trans-unit id="tl_content.addTextTracks.0">
-        <source>Add text tracks</source>
-      </trans-unit>
-      <trans-unit id="tl_content.addTextTracks.1">
-        <source>Adds text tracks such as subtitles or closed captions.</source>
-      </trans-unit>
       <trans-unit id="tl_content.textTrackSRC.0">
         <source>Text track files</source>
       </trans-unit>
       <trans-unit id="tl_content.textTrackSRC.1">
-        <source>Here you can add one or more .vtt files with text tracks. Additional settings are done within the .vtt file.</source>
+        <source>The top .vtt file is loaded as the default track. Additional settings are made within the .vtt file.</source>
       </trans-unit>
       <trans-unit id="tl_content.youtube.0">
         <source>YouTube ID</source>
