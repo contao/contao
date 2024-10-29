@@ -21,7 +21,6 @@ use Contao\Message;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
-#[AsCallback(table: 'tl_content', target: 'fields.textTrackSRC.load')]
 #[AsCallback(table: 'tl_content', target: 'fields.textTrackSRC.save')]
 readonly class TrackTitleSourceListener
 {
@@ -56,12 +55,8 @@ readonly class TrackTitleSourceListener
         if ([] !== $invalid) {
             $message->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['textTrackMetadataMissing'], implode(', ', $invalid)));
         } elseif ($message->hasError()) {
-            $session = $this->requestStack->getCurrentRequest()?->getSession();
-
-            // Reset the error if it exists
-            if ($session instanceof FlashBagAwareSessionInterface) {
-                $session->getFlashBag()->get('contao.BE.error');
-            }
+            // ToDo: Resets the message - There is currently no possible way to show messages for just the current request
+            $message->reset();
         }
 
         return $value;

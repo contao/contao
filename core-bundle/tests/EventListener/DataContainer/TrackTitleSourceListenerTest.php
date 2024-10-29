@@ -96,7 +96,7 @@ class TrackTitleSourceListenerTest extends ContentElementTestCase
             self::FILE_SUBTITLES_EN_VTT,
         ];
 
-        $adapter = $this->mockAdapter(['hasError']);
+        $adapter = $this->mockAdapter(['hasError', 'reset']);
         $adapter
             ->method('hasError')
             ->willReturn(true)
