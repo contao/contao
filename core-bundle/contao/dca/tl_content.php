@@ -605,7 +605,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'textTrackSRC' => array
 		(
 			'inputType'               => 'fileTree',
-			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'submitOnChange'=>true, 'filesOnly'=>true, 'extensions'=>'vtt', 'isSortable'=>true),
+			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'extensions'=>'vtt', 'isSortable'=>true),
 			'sql'                     => "blob NULL"
 		),
 		'splashImage' => array
