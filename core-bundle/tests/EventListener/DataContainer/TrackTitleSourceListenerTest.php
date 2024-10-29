@@ -10,7 +10,6 @@ use Contao\CoreBundle\Tests\Controller\ContentElement\ContentElementTestCase;
 use Contao\DataContainer;
 use Contao\Message;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
@@ -110,19 +109,14 @@ class TrackTitleSourceListenerTest extends ContentElementTestCase
         $request = new Request();
         $request->setSession($flashBag);
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $listener = $this->getListener($framework, $requestStack);
+        $listener = $this->getListener($framework);
         $value = $listener($uuids, $dataContainer);
 
         $this->assertSame($uuids, $value);
     }
 
-    private function getListener(ContaoFramework $framework, RequestStack|null $requestStack = null): TrackTitleSourceListener
+    private function getListener(ContaoFramework $framework): TrackTitleSourceListener
     {
-        $requestStack ??= new RequestStack();
-
-        return new TrackTitleSourceListener($framework, $this->getDefaultStorage(), $requestStack);
+        return new TrackTitleSourceListener($framework, $this->getDefaultStorage());
     }
 }
