@@ -13,10 +13,15 @@ use Symfony\Component\Uid\Uuid;
  * $inner implementation. With this, decoration of only a few methods is possible
  * with less boilerplate.
  *
+ * @template T of VirtualFilesystemInterface
+ *
  * @internal
  */
 trait VirtualFilesystemDecoratorTrait
 {
+    /**
+     * @phpstan-var T
+     */
     private readonly VirtualFilesystemInterface $inner;
 
     public function has(Uuid|string $location, int $accessFlags = VirtualFilesystemInterface::NONE): bool
