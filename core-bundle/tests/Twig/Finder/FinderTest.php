@@ -206,6 +206,26 @@ class FinderTest extends TestCase
         $this->assertSame($expected, $options);
     }
 
+    public function testGetAsIdentifierList(): void
+    {
+        $options = $this->getFinder()
+            ->identifier('content_element/text')
+            ->withVariants()
+            ->withTheme('my_theme')
+            ->excludePartials()
+            ->asIdentifierList()
+        ;
+
+        $expected = [
+            'content_element/text',
+            'content_element/text/bar',
+            'content_element/text/baz',
+            'content_element/text/foo',
+        ];
+
+        $this->assertSame($expected, $options);
+    }
+
     public function testGetAsTemplateOptionsWithCustomTranslations(): void
     {
         $translations = [
