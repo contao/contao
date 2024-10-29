@@ -18,8 +18,6 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\Message;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\FlashBagAwareSessionInterface;
 
 #[AsCallback(table: 'tl_content', target: 'fields.textTrackSRC.save')]
 readonly class TrackTitleSourceListener
@@ -27,7 +25,6 @@ readonly class TrackTitleSourceListener
     public function __construct(
         private ContaoFramework $framework,
         private VirtualFilesystem $filesStorage,
-        private RequestStack $requestStack,
     ) {
     }
 

@@ -265,7 +265,6 @@ services:
         arguments:
             - '@contao.framework'
             - '@contao.filesystem.virtual.files'
-            - '@request_stack'
 
     contao.listener.data_container.undo.jump_to_parent_operation:
         class: Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentOperationListener
