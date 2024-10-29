@@ -159,7 +159,7 @@ class Autocomplete
             $componentName = substr($identifier, 11);
 
             $completions[] = [
-                'caption' => "component \"{$componentName}\"",
+                'caption' => "component \"$componentName\"",
                 'value' => "{{ block('{$componentName}_component') }}\n",
                 'meta' => 'function',
                 'type' => 'value',
@@ -167,7 +167,7 @@ class Autocomplete
             ];
 
             $completions[] = [
-                'caption' => "component \"{$componentName}\" with …",
+                'caption' => "component \"$componentName\" with …",
                 'snippet' => "{% with {{$componentName}: \$1} %}\n    {{ block('{$componentName}_component') }}\n{% endwith %}\n",
                 'meta' => 'function',
                 'type' => 'snippet',
