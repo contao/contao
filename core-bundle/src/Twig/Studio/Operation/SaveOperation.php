@@ -31,6 +31,9 @@ class SaveOperation extends AbstractOperation
             $request->get('code'),
         );
 
-        return $this->success($context);
+        return $this->render(
+            '@Contao/backend/template_studio/operation/save_result.stream.html.twig',
+            ['identifier' => $context->getIdentifier()],
+        );
     }
 }
