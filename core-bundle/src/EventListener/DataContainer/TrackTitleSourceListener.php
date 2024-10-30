@@ -19,6 +19,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DataContainer;
 use Contao\Message;
 
+#[AsCallback(table: 'tl_content', target: 'fields.textTrackSRC.load')]
 #[AsCallback(table: 'tl_content', target: 'fields.textTrackSRC.save')]
 readonly class TrackTitleSourceListener
 {
@@ -52,7 +53,7 @@ readonly class TrackTitleSourceListener
         if ([] !== $invalid) {
             $message->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['textTrackMetadataMissing'], implode(', ', $invalid)));
         } elseif ($message->hasError()) {
-            // TODO: We need to reset all messages here as there is currently no way to show 
+            // TODO: We need to reset all messages here as there is currently no way to show
             // a message just for the current request.
             $message->reset();
         }
