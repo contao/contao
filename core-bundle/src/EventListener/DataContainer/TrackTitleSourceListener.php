@@ -52,8 +52,8 @@ readonly class TrackTitleSourceListener
         if ([] !== $invalid) {
             $message->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['textTrackMetadataMissing'], implode(', ', $invalid)));
         } elseif ($message->hasError()) {
-            // ToDo: Resets the message - There is currently no possible way to show messages
-            // for just the current request
+            // TODO: We need to reset all messages here as there is currently no way to show 
+            // a message just for the current request.
             $message->reset();
         }
 
