@@ -12,7 +12,10 @@ services:
             - '@contao.twig.filesystem_loader'
             - '@contao.twig.finder_factory'
             - '@contao.twig.inspector'
+            - '@contao.twig.loader.theme_namespace'
+            - '@contao.twig.studio.operation_context_factory'
             - '@contao.twig.studio.autocomplete'
+            - '@database_connection'
             - !tagged_iterator { tag: contao.operation.template_studio_element, index_by: name }
 
     contao.twig.studio.autocomplete:

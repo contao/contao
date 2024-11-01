@@ -14,21 +14,41 @@
     overflow: hidden;
 
     display: grid;
-    grid-template-areas: "tree tabs info";
+    grid-template-areas: "nav tabs info";
     grid-template-columns: auto 1fr min-content;
+    grid-template-rows: auto 1fr;
     position: relative;
 
     > *:not(:has(*)) {
         display: none;
     }
 
-    #template-studio--tree {
-        grid-area: tree;
+    #template-studio--nav{
+        grid-area: nav;
         border-right: 1px solid var(--border);
         overflow: auto;
         resize: horizontal;
         min-width: 100px;
         max-width: max-content;
+
+        display: flex;
+        flex-direction: column;
+
+        #template-studio--theme-selector {
+            border-bottom: 1px solid var(--border);
+            padding: 6px;
+
+            label > span {
+                font-size: .8em;
+                margin-left: 4px;
+                color: var(--info);
+            }
+        }
+
+        #template-studio--tree {
+            padding-top: 4px;
+            overflow: auto;
+        }
     }
 
     #template-studio--tabs {
