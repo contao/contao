@@ -64,11 +64,11 @@ class TemplateLocatorTest extends TestCase
 
     public function testTriggersDeprecationIfThemeDirectoryContainsInvalidCharacters(): void
     {
-        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
+        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/themes');
         $locator = $this->getTemplateLocator($projectDir, ['templates/invalid.theme']);
 
         $this->expectException(InvalidThemePathException::class);
-        $this->expectExceptionMessage('The theme path "templates/invalid.theme" contains one or more invalid characters: "."');
+        $this->expectExceptionMessage('The theme path "invalid.theme" contains one or more invalid characters: "."');
 
         $this->assertEmpty($locator->findThemeDirectories());
     }
