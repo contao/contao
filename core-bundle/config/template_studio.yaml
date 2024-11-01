@@ -23,6 +23,11 @@ services:
             - '@contao.twig.filesystem_loader'
             - '@twig'
 
+    contao.twig.studio.operation_context_factory:
+        class: Contao\CoreBundle\Twig\Studio\Operation\OperationContextFactory
+        arguments:
+            - '@contao.twig.loader.theme_namespace'
+
     contao.twig.studio.create_content_element_variant_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\CreateContentElementVariantOperation
 
