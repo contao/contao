@@ -11,11 +11,11 @@
             {% block title %}{{ ('operation.'~operation~'.0')|trans }}{% endblock %}
 
             {% block content %}
-                <p class="description">
+                <div class="description">
                     {{ ('dialog.'~operation_type~'_variant')|trans([identifier_token])|raw }}
-                </p>
+                </div>
 
-                <div class="template_name widget">
+                <div class="name_container">
                     <h3>
                         <label for="ctrl_variant_name">
                             <span class="invisible">{{ 'MSC.mandatory'|trans(domain: 'contao_default') }}</span>
@@ -34,7 +34,7 @@
 
             {% block buttons %}
                 {{ parent() }}
-                <button>{{ 'MSC.apply'|trans(domain: 'contao_default') }}</button>
+                <button class="confirm">{{ 'MSC.apply'|trans(domain: 'contao_default') }}</button>
             {% endblock %}
         {% endembed %}
     </template>

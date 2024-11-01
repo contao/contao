@@ -67,7 +67,8 @@
 	--serp-preview: #3c4043;
 	--serp-preview-title: #1a0dab;
 	--nested-bg: #fbfbfd;
-	--backdrop: rgba(0, 0, 0, .35);
+	--backdrop: rgba(0, 0, 0, .9);
+	--border-radius: .5rem;
 }
 
 html[data-color-scheme="dark"] {
@@ -126,7 +127,6 @@ html[data-color-scheme="dark"] {
 	--serp-preview: #bdc1c6;
 	--serp-preview-title: #8ab4f8;
 	--nested-bg: #1e2024;
-	--backdrop: rgba(255, 255, 255, .35);
 }
 
 html[data-color-scheme="dark"] .color-scheme--light, .color-scheme--dark {
