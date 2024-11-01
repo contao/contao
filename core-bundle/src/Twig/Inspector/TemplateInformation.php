@@ -66,7 +66,7 @@ final class TemplateInformation
     }
 
     /**
-     * @return array<string, array<string, string>>
+     * @return list<array{string, array<string, string>}>
      */
     public function getUses(): array
     {
