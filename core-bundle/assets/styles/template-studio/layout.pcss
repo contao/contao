@@ -18,29 +18,70 @@
     grid-template-columns: auto 1fr min-content;
     position: relative;
 
+    * {
+        scrollbar-width: thin;
+    }
+
     > *:not(:has(*)) {
         display: none;
     }
 
-    #template-studio--tree {
-        grid-area: tree;
+    &--nav {
+        grid-area: nav;
         border-right: 1px solid var(--border);
         overflow: auto;
         resize: horizontal;
         min-width: 100px;
         max-width: max-content;
+
+        display: flex;
+        flex-direction: column;
     }
 
-    #template-studio--tabs {
+    &--theme-selector {
+        border-bottom: 1px solid var(--border);
+        padding: 6px;
+        max-width: 300px;
+
+        label > span {
+            font-size: .8em;
+            margin-left: 4px;
+            color: var(--info);
+        }
+    }
+
+    &--tree {
+        padding-top: 4px;
+        overflow: auto;
+    }
+
+    &--tabs {
         grid-area: tabs;
         position: relative;
         overflow-y: auto;
     }
 
-    #template-studio--info {
+    &--info {
         grid-area: info;
         border-left: 1px solid var(--border);
         overflow-y: auto;
+        min-width: 220px;
+
+        .block {
+            text-align: right;
+        }
+
+        .template_name {
+            row-gap: 8px;
+
+            .structure {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+        }
+
+        .badges {
+            justify-content: flex-end;
+        }
     }
 }
-

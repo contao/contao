@@ -1,7 +1,8 @@
 module.exports = {
-    plugins: {
-        'postcss-preset-env': {
+    plugins: [
+        require('postcss-nested'),
+        require('postcss-preset-env')({
             stage: 2,
-        }
-    }
+        })
+    ]
 }
