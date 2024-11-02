@@ -221,10 +221,6 @@ class ServiceArgumentsTest extends FunctionalTestCase
             return $names;
         }
 
-        if (null !== $type) {
-            throw new \RuntimeException(\sprintf('Unsupported reflection type "%s"', get_debug_type($type)));
-        }
-
         return [];
     }
 
