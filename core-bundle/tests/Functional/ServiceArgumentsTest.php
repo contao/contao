@@ -112,7 +112,6 @@ class ServiceArgumentsTest extends FunctionalTestCase
                             $this->assertContains('iterable', $typeNames, \sprintf('Argument %s of %s should be an iterable but found %s.', $i, $serviceId, implode('|', $typeNames)));
                         } else {
                             // when used in a union type, iterable is an alias for Traversable|array.
-                            // see
                             // https://www.php.net/manual/en/reflectionuniontype.gettypes.php#128871
                             $this->assertContains(\Traversable::class, $typeNames, \sprintf('Argument %s of %s should be an iterable but found %s.', $i, $serviceId, implode('|', $typeNames)));
                         }
@@ -139,7 +138,7 @@ class ServiceArgumentsTest extends FunctionalTestCase
                 $this->assertTrue($type instanceof \ReflectionNamedType && $type->isBuiltin() ?? false, \sprintf('Argument %s of "%s" should be a built-in type, got "%s".', $i, $serviceId, get_debug_type($argument)));
 
                 if (\in_array('iterable', $typeNames, true)) {
-                    $this->assertTrue(is_iterable($argument), \sprintf('Argument %s of "%s" is not an iterable.', $i, $serviceId));
+                    $this->assertIsIterable($argument, \sprintf('Argument %s of "%s" is not an iterable.', $i, $serviceId));
 
                     continue;
                 }
@@ -213,7 +212,7 @@ class ServiceArgumentsTest extends FunctionalTestCase
 
             foreach ($type->getTypes() as $t) {
                 if (!$t instanceof \ReflectionNamedType) {
-                    throw new \RuntimeException(\sprintf('Expected %s but got %s', \ReflectionNamedType::class, $t::class));
+                    throw new \RuntimeException(\sprintf('Unsupported reflection type "%s"', get_debug_type($t)));
                 }
 
                 $names[] = $t->getName();
@@ -223,7 +222,7 @@ class ServiceArgumentsTest extends FunctionalTestCase
         }
 
         if (null !== $type) {
-            dd($type);
+            throw new \RuntimeException(\sprintf('Unsupported reflection type "%s"', get_debug_type($type)));
         }
 
         return [];
