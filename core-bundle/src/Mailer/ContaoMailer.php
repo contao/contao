@@ -36,7 +36,7 @@ final class ContaoMailer implements MailerInterface
         $this->framework = $framework;
     }
 
-    public function send(RawMessage $message, Envelope $envelope = null): void
+    public function send(RawMessage $message, ?Envelope $envelope = null): void
     {
         if ($message instanceof Message) {
             $this->setTransport($message);

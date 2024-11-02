@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -144,7 +145,7 @@ class FileUpload extends Backend
 			}
 			else
 			{
-				$strExtension = strtolower(substr($file['name'], strrpos($file['name'], '.') + 1));
+				$strExtension = Path::getExtension($file['name'], true);
 
 				// Image is too big
 				if (\in_array($strExtension, array('gif', 'jpg', 'jpeg', 'png', 'webp', 'avif', 'heic', 'jxl')) && System::getContainer()->getParameter('contao.image.reject_large_uploads'))

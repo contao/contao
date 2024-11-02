@@ -1199,7 +1199,7 @@ class StringUtil
 	/**
 	 * @param float|int $number
 	 */
-	public static function numberToString($number, int $precision = null): string
+	public static function numberToString($number, ?int $precision = null): string
 	{
 		if (\is_int($number))
 		{

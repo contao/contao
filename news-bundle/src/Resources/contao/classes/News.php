@@ -606,7 +606,7 @@ class News extends Frontend
 	/**
 	 * Creates a sub request for the given URI.
 	 */
-	private function createSubRequest(string $uri, Request $request = null): Request
+	private function createSubRequest(string $uri, ?Request $request = null): Request
 	{
 		$cookies = null !== $request ? $request->cookies->all() : array();
 		$server = null !== $request ? $request->server->all() : array();

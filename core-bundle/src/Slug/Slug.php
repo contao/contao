@@ -34,7 +34,7 @@ class Slug
     /**
      * @param int|iterable $options A page ID, object or options array {@see SlugGeneratorInterface::generate()}
      */
-    public function generate(string $text, $options = [], callable $duplicateCheck = null, string $integerPrefix = 'id-'): string
+    public function generate(string $text, $options = [], ?callable $duplicateCheck = null, string $integerPrefix = 'id-'): string
     {
         if (!is_iterable($options)) {
             $pageAdapter = $this->framework->getAdapter(PageModel::class);

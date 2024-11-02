@@ -192,7 +192,7 @@ class DebugContaoTwigCommandTest extends TestCase
         ];
     }
 
-    private function getCommand(ContaoFilesystemLoader $filesystemLoader = null): DebugContaoTwigCommand
+    private function getCommand(?ContaoFilesystemLoader $filesystemLoader = null): DebugContaoTwigCommand
     {
         return new DebugContaoTwigCommand(
             $filesystemLoader ?? $this->createMock(ContaoFilesystemLoader::class),

@@ -365,7 +365,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
         $this->assertSame('value="'.$tokenValue.'"', $response->getContent());
     }
 
-    public function getRequestEvent(Request $request = null): RequestEvent
+    public function getRequestEvent(?Request $request = null): RequestEvent
     {
         if (!$request) {
             $request = new Request();
@@ -374,7 +374,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
         return new RequestEvent($this->createMock(Kernel::class), $request, HttpKernelInterface::MAIN_REQUEST);
     }
 
-    public function getResponseEvent(Request $request = null, Response $response = null): ResponseEvent
+    public function getResponseEvent(?Request $request = null, ?Response $response = null): ResponseEvent
     {
         if (!$request) {
             $request = new Request();

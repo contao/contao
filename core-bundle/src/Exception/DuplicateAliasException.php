@@ -19,7 +19,7 @@ class DuplicateAliasException extends \RuntimeException
     private string $url;
     private ?PageModel $pageModel = null;
 
-    public function __construct(string $url, string $message = '', int $code = 0, \Throwable $previous = null)
+    public function __construct(string $url, string $message = '', int $code = 0, ?\Throwable $previous = null)
     {
         parent::__construct($message, $code, $previous);
 

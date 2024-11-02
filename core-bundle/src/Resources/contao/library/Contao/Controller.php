@@ -1629,7 +1629,7 @@ abstract class Controller extends System
 	 * @deprecated Deprecated since Contao 4.11, to be removed in Contao 5.0;
 	 *             use the Contao\CoreBundle\Image\Studio\FigureBuilder instead.
 	 */
-	public static function addImageToTemplate($template, array $rowData, $maxWidth = null, $lightboxGroupIdentifier = null, FilesModel $filesModel = null): void
+	public static function addImageToTemplate($template, array $rowData, $maxWidth = null, $lightboxGroupIdentifier = null, ?FilesModel $filesModel = null): void
 	{
 		trigger_deprecation('contao/core-bundle', '4.11', 'Using Controller::addImageToTemplate() is deprecated and will no longer work in Contao 5.0. Use the "Contao\CoreBundle\Image\Studio\FigureBuilder" class instead.');
 
@@ -1979,7 +1979,7 @@ abstract class Controller extends System
 	 *
 	 * @return string The script path with the static URL
 	 */
-	public static function addStaticUrlTo($script, ContaoContext $context = null)
+	public static function addStaticUrlTo($script, ?ContaoContext $context = null)
 	{
 		// Absolute URLs
 		if (preg_match('@^https?://@', $script))

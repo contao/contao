@@ -33,7 +33,7 @@ class TemplateOptionsListener
      */
     private array $defaultIdentifiersByType = [];
 
-    public function __construct(FinderFactory $finderFactory, Connection $connection, ContaoFramework $framework, RequestStack $requestStack, string $legacyTemplatePrefix, string $legacyProxyClass = null)
+    public function __construct(FinderFactory $finderFactory, Connection $connection, ContaoFramework $framework, RequestStack $requestStack, string $legacyTemplatePrefix, ?string $legacyProxyClass = null)
     {
         $this->finderFactory = $finderFactory;
         $this->connection = $connection;

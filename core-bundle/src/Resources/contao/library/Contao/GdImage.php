@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\Filesystem\Path;
+
 trigger_deprecation('contao/core-bundle', '4.3', 'Using the "Contao\GdImage" class has been deprecated and will no longer work in Contao 5.0. Use the Imagine library instead.');
 
 /**
@@ -157,7 +159,7 @@ class GdImage
 	public function saveToFile($path)
 	{
 		$arrGdInfo = gd_info();
-		$extension = strtolower(substr($path, strrpos($path, '.') + 1));
+		$extension = Path::getExtension($path, true);
 
 		// Fallback to PNG if GIF ist not supported
 		if ($extension == 'gif' && !$arrGdInfo['GIF Create Support'])

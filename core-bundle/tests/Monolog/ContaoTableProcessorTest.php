@@ -301,7 +301,7 @@ class ContaoTableProcessorTest extends TestCase
         yield [ContaoCoreBundle::SCOPE_BACKEND, null, 'BE'];
     }
 
-    private function getContaoTableProcessor(RequestStack $requestStack = null, TokenStorageInterface $tokenStorage = null): ContaoTableProcessor
+    private function getContaoTableProcessor(?RequestStack $requestStack = null, ?TokenStorageInterface $tokenStorage = null): ContaoTableProcessor
     {
         $requestStack ??= $this->createMock(RequestStack::class);
         $tokenStorage ??= $this->createMock(TokenStorageInterface::class);

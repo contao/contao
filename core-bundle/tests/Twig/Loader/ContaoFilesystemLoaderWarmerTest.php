@@ -118,7 +118,7 @@ class ContaoFilesystemLoaderWarmerTest extends TestCase
         $warmer->warmUp();
     }
 
-    private function getContaoFilesystemLoaderWarmer(ContaoFilesystemLoader $filesystemLoader = null, string $environment = null, Filesystem $filesystem = null): ContaoFilesystemLoaderWarmer
+    private function getContaoFilesystemLoaderWarmer(?ContaoFilesystemLoader $filesystemLoader = null, ?string $environment = null, ?Filesystem $filesystem = null): ContaoFilesystemLoaderWarmer
     {
         return new ContaoFilesystemLoaderWarmer(
             $filesystemLoader ?? $this->createMock(ContaoFilesystemLoader::class),

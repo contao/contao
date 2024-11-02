@@ -714,7 +714,7 @@ class tl_style extends Backend
 	 * @param boolean       $blnVisible
 	 * @param DataContainer $dc
 	 */
-	public function toggleVisibility($intId, $blnVisible, DataContainer $dc=null)
+	public function toggleVisibility($intId, $blnVisible, ?DataContainer $dc=null)
 	{
 		// Set the ID and action
 		Input::setGet('id', $intId);

@@ -34,7 +34,7 @@ final class RouteConfig
      * @param string|bool|null     $path
      * @param string|array<string> $methods
      */
-    public function __construct($path = null, string $pathRegex = null, string $urlSuffix = null, array $requirements = [], array $options = [], array $defaults = [], $methods = [])
+    public function __construct($path = null, ?string $pathRegex = null, ?string $urlSuffix = null, array $requirements = [], array $options = [], array $defaults = [], $methods = [])
     {
         $this->path = $path;
         $this->pathRegex = $pathRegex;
