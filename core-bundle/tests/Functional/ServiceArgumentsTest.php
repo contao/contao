@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Functional;
 
 use Contao\TestCase\FunctionalTestCase;
 use Psr\Container\ContainerInterface as PsrContainerInterface;
+use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Yaml\Tag\TaggedValue;
@@ -24,12 +25,15 @@ class ServiceArgumentsTest extends FunctionalTestCase
     protected function setUp(): void
     {
         static::bootKernel();
-
     }
 
     public function testServices(): void
     {
         $container = $this->getContainer();
+
+        if (!$container instanceof Container) {
+            $this->fail(\sprintf('Expected container to be of class %s, got %s', Container::class, $container::class));
+        }
 
         $files = Finder::create()
             ->files()
@@ -70,17 +74,17 @@ class ServiceArgumentsTest extends FunctionalTestCase
         }
     }
 
-    private function doTestService(string $serviceId, string $class, \ReflectionMethod $constructor, array $arguments, ContainerInterface $container): void
+    private function doTestService(string $serviceId, string $class, \ReflectionMethod $constructor, array $arguments, Container $container): void
     {
         $this->assertGreaterThanOrEqual(
             $this->countRequiredParameters($constructor),
             $arguments,
-            sprintf('Service %s does not have the necessary amount of constructor arguments.', $serviceId)
+            \sprintf('Service %s does not have the necessary amount of constructor arguments.', $serviceId),
         );
 
         foreach ($constructor->getParameters() as $i => $parameter) {
             if (!\array_key_exists($i, $arguments)) {
-                $this->assertTrue($parameter->isOptional(), sprintf('Missing argument %s on service ID "%s".', $i, $serviceId));
+                $this->assertTrue($parameter->isOptional(), \sprintf('Missing argument %s on service ID "%s".', $i, $serviceId));
 
                 continue;
             }
@@ -91,7 +95,7 @@ class ServiceArgumentsTest extends FunctionalTestCase
 
             if (null === $argument) {
                 if (!$parameter->allowsNull()) {
-                    $this->fail(sprintf('Argument %s ($%s) of %s does not allow NULL, use a valid type even if this argument is set at runtime.', $i, $parameter->getName(), $serviceId));
+                    $this->fail(\sprintf('Argument %s ($%s) of %s does not allow NULL, use a valid type even if this argument is set at runtime.', $i, $parameter->getName(), $serviceId));
                 }
 
                 continue;
@@ -100,26 +104,27 @@ class ServiceArgumentsTest extends FunctionalTestCase
             if ($argument instanceof TaggedValue) {
                 switch ($argument->getTag()) {
                     case 'service_closure':
-                        $this->assertContains(\Closure::class, $typeNames, sprintf('Argument %s of %s should be \Closure but found %s.', $i, $serviceId, implode('|', $typeNames)));
+                        $this->assertContains(\Closure::class, $typeNames, \sprintf('Argument %s of %s should be \Closure but found %s.', $i, $serviceId, implode('|', $typeNames)));
                         break;
 
                     case 'tagged_iterator':
                         if (\in_array('iterable', $typeNames, true)) {
-                            $this->assertContains('iterable', $typeNames, sprintf('Argument %s of %s should be an iterable but found %s.', $i, $serviceId, implode('|', $typeNames)));
+                            $this->assertContains('iterable', $typeNames, \sprintf('Argument %s of %s should be an iterable but found %s.', $i, $serviceId, implode('|', $typeNames)));
                         } else {
                             // when used in a union type, iterable is an alias for Traversable|array.
-                            // see https://www.php.net/manual/en/reflectionuniontype.gettypes.php#128871
-                            $this->assertContains(\Traversable::class, $typeNames, sprintf('Argument %s of %s should be an iterable but found %s.', $i, $serviceId, implode('|', $typeNames)));
+                            // see
+                            // https://www.php.net/manual/en/reflectionuniontype.gettypes.php#128871
+                            $this->assertContains(\Traversable::class, $typeNames, \sprintf('Argument %s of %s should be an iterable but found %s.', $i, $serviceId, implode('|', $typeNames)));
                         }
                         break;
 
                     case 'tagged_locator':
                     case 'service_locator':
-                        $this->assertContainsInstanceOf(PsrContainerInterface::class, $typeNames, sprintf('Argument %s of %s should be %s but found %s.', $i, $serviceId, PsrContainerInterface::class, implode('|', $typeNames)));
+                        $this->assertContainsInstanceOf(PsrContainerInterface::class, $typeNames, \sprintf('Argument %s of %s should be %s but found %s.', $i, $serviceId, PsrContainerInterface::class, implode('|', $typeNames)));
                         break;
 
                     default:
-                        $this->fail(sprintf('Unknown tagged type "%s" for argument %s ($%s) of service %s.', $parameter->getType(), $i, $parameter->getName(), $serviceId));
+                        $this->fail(\sprintf('Unknown tagged type "%s" for argument %s ($%s) of service %s.', $parameter->getType(), $i, $parameter->getName(), $serviceId));
                 }
 
                 continue;
@@ -131,21 +136,20 @@ class ServiceArgumentsTest extends FunctionalTestCase
                     continue;
                 }
 
-                $this->assertTrue($type->isBuiltin() ?? false, sprintf('Argument %s of "%s" should be a built-in type, got "%s".', $i, $serviceId, get_debug_type($argument)));
+                $this->assertTrue($type instanceof \ReflectionNamedType && $type->isBuiltin() ?? false, \sprintf('Argument %s of "%s" should be a built-in type, got "%s".', $i, $serviceId, get_debug_type($argument)));
 
                 if (\in_array('iterable', $typeNames, true)) {
-                    $this->assertTrue(is_iterable($argument), sprintf('Argument %s of "%s" is not an iterable.', $i, $serviceId));
+                    $this->assertTrue(is_iterable($argument), \sprintf('Argument %s of "%s" is not an iterable.', $i, $serviceId));
 
                     continue;
                 }
 
-                $this->assertContains(get_debug_type($argument), $typeNames, sprintf('Argument %s of "%s" should be "%s", got "%s".', $i, $serviceId, implode('|', $typeNames), get_debug_type($argument)));
+                $this->assertContains(get_debug_type($argument), $typeNames, \sprintf('Argument %s of "%s" should be "%s", got "%s".', $i, $serviceId, implode('|', $typeNames), get_debug_type($argument)));
                 continue;
             }
 
             if ('@.inner' === $argument || str_ends_with($argument, '.inner')) {
-
-                $this->assertContainsInstanceOf($class, $typeNames, sprintf('Argument %s of "%s" should be "%s", got "%s".', $i, $serviceId, implode('|', $typeNames), $class));
+                $this->assertContainsInstanceOf($class, $typeNames, \sprintf('Argument %s of "%s" should be "%s", got "%s".', $i, $serviceId, implode('|', $typeNames), $class));
 
                 continue;
             }
@@ -155,8 +159,8 @@ class ServiceArgumentsTest extends FunctionalTestCase
                 $service = $container->get(substr($argument, $optional ? 2 : 1), ContainerInterface::NULL_ON_INVALID_REFERENCE);
 
                 if (null === $service) {
-                    $this->assertTrue($optional, sprintf('Unknown service "%s" for argument %s of "%s".', $argument, $i, $serviceId));
-                    $this->assertTrue($parameter->allowsNull(), sprintf('Argument %s of "%s" does not allow NULL but the service "%s" was not found.', $i, $serviceId, $argument));
+                    $this->assertTrue($optional, \sprintf('Unknown service "%s" for argument %s of "%s".', $argument, $i, $serviceId));
+                    $this->assertTrue($parameter->allowsNull(), \sprintf('Argument %s of "%s" does not allow NULL but the service "%s" was not found.', $i, $serviceId, $argument));
 
                     continue;
                 }
@@ -166,7 +170,7 @@ class ServiceArgumentsTest extends FunctionalTestCase
                     continue;
                 }
 
-                $this->assertContainsInstanceOf($service::class, $typeNames, sprintf('Argument %s of "%s" should be "%s", got "%s".', $i, $serviceId, implode('|', $typeNames), \get_class($service)));
+                $this->assertContainsInstanceOf($service::class, $typeNames, \sprintf('Argument %s of "%s" should be "%s", got "%s".', $i, $serviceId, implode('|', $typeNames), $service::class));
 
                 continue;
             }
@@ -176,9 +180,10 @@ class ServiceArgumentsTest extends FunctionalTestCase
                 continue;
             }
 
-            // At this point, the argument must be a string, which can contain parameter placeholders
+            // At this point, the argument must be a string, which can contain
+            // parameter placeholders
             $value = $container->getParameterBag()->resolveValue($argument);
-            $this->assertContains(get_debug_type($value), $typeNames, sprintf('Argument %s of "%s" should be "%s", got "%s".', $i, $serviceId, implode('|', $typeNames), get_debug_type($value)));
+            $this->assertContains(get_debug_type($value), $typeNames, \sprintf('Argument %s of "%s" should be "%s", got "%s".', $i, $serviceId, implode('|', $typeNames), get_debug_type($value)));
         }
     }
 
@@ -208,7 +213,7 @@ class ServiceArgumentsTest extends FunctionalTestCase
 
             foreach ($type->getTypes() as $t) {
                 if (!$t instanceof \ReflectionNamedType) {
-                    throw new \RuntimeException($t);
+                    throw new \RuntimeException(\sprintf('Expected %s but got %s', \ReflectionNamedType::class, $t::class));
                 }
 
                 $names[] = $t->getName();
@@ -235,9 +240,9 @@ class ServiceArgumentsTest extends FunctionalTestCase
         }
 
         if ($argument) {
-            $this->addWarning(sprintf('Argument %s of "%s" (value: %s) does not have a type.', $i, $serviceId, $argument));
+            $this->addWarning(\sprintf('Argument %s of "%s" (value: %s) does not have a type.', $i, $serviceId, $argument));
         } else {
-            $this->addWarning(sprintf('Argument %s of "%s" does not have a type.', $i, $serviceId));
+            $this->addWarning(\sprintf('Argument %s of "%s" does not have a type.', $i, $serviceId));
         }
     }
 
