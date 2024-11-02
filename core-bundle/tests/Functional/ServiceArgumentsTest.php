@@ -24,6 +24,7 @@ class ServiceArgumentsTest extends FunctionalTestCase
     protected function setUp(): void
     {
         static::bootKernel();
+
     }
 
     public function testServices(): void
