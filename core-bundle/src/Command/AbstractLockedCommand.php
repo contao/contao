@@ -29,7 +29,7 @@ abstract class AbstractLockedCommand extends Command implements ContainerAwareIn
 {
     private ?ContainerInterface $container = null;
 
-    public function setContainer(ContainerInterface $container = null): void
+    public function setContainer(?ContainerInterface $container = null): void
     {
         $this->container = $container;
     }

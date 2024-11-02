@@ -22,7 +22,7 @@ class PageTrailCacheTagsListener
     private ScopeMatcher $scopeMatcher;
     private ?ResponseTagger $responseTagger;
 
-    public function __construct(ScopeMatcher $scopeMatcher, ResponseTagger $responseTagger = null)
+    public function __construct(ScopeMatcher $scopeMatcher, ?ResponseTagger $responseTagger = null)
     {
         $this->scopeMatcher = $scopeMatcher;
         $this->responseTagger = $responseTagger;

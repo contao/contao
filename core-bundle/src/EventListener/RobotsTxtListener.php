@@ -30,7 +30,7 @@ class RobotsTxtListener
     private ?WebDebugToolbarListener $webDebugToolbarListener;
     private string $routePrefix;
 
-    public function __construct(ContaoFramework $contaoFramework, WebDebugToolbarListener $webDebugToolbarListener = null, string $routePrefix = '/contao')
+    public function __construct(ContaoFramework $contaoFramework, ?WebDebugToolbarListener $webDebugToolbarListener = null, string $routePrefix = '/contao')
     {
         $this->contaoFramework = $contaoFramework;
         $this->webDebugToolbarListener = $webDebugToolbarListener;

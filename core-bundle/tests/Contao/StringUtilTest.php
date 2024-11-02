@@ -275,7 +275,7 @@ class StringUtilTest extends TestCase
     /**
      * @dataProvider getRevertInputEncoding
      */
-    public function testRevertInputEncoding(string $source, string $expected = null): void
+    public function testRevertInputEncoding(string $source, ?string $expected = null): void
     {
         Input::setGet('value', $source);
         $inputEncoded = Input::get('value');
@@ -303,7 +303,7 @@ class StringUtilTest extends TestCase
      *
      * @dataProvider validEncodingsProvider
      */
-    public function testConvertsEncodingOfAString($string, string $toEncoding, string $expected, string $fromEncoding = null): void
+    public function testConvertsEncodingOfAString($string, string $toEncoding, string $expected, ?string $fromEncoding = null): void
     {
         $prevSubstituteCharacter = mb_substitute_character();
 
@@ -441,7 +441,7 @@ class StringUtilTest extends TestCase
      *
      * @dataProvider numberToStringProvider
      */
-    public function testNumberToString($source, string $expected, int $precision = null): void
+    public function testNumberToString($source, string $expected, ?int $precision = null): void
     {
         $this->assertSame($expected, StringUtil::numberToString($source, $precision));
     }
@@ -474,7 +474,7 @@ class StringUtilTest extends TestCase
      *
      * @dataProvider numberToStringFailsProvider
      */
-    public function testNumberToStringFails($source, string $exception, int $precision = null): void
+    public function testNumberToStringFails($source, string $exception, ?int $precision = null): void
     {
         $this->expectException($exception);
 

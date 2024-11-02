@@ -308,7 +308,7 @@ abstract class Backend extends Controller
 	 *
 	 * @throws AccessDeniedException
 	 */
-	protected function getBackendModule($module, PickerInterface $picker = null)
+	protected function getBackendModule($module, ?PickerInterface $picker = null)
 	{
 		$arrModule = array();
 
@@ -1021,7 +1021,7 @@ abstract class Backend extends Controller
 	 *
 	 * @return string
 	 */
-	public static function addPageIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false, $isVisibleRootTrailPage=false)
+	public static function addPageIcon($row, $label, ?DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false, $isVisibleRootTrailPage=false)
 	{
 		if ($blnProtected)
 		{

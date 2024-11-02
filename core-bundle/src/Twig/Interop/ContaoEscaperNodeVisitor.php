@@ -91,7 +91,7 @@ final class ContaoEscaperNodeVisitor implements NodeVisitorInterface
     /**
      * @param-out string $type
      */
-    private function isEscaperFilterExpression(Node $node, string &$type = null): bool
+    private function isEscaperFilterExpression(Node $node, ?string &$type = null): bool
     {
         if (
             !$node instanceof FilterExpression

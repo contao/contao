@@ -524,7 +524,7 @@ class ImageResultTest extends TestCase
     /**
      * @return ContainerInterface&MockObject
      */
-    private function mockLocator(PictureFactoryInterface $pictureFactory = null, string $staticUrl = null): ContainerInterface
+    private function mockLocator(?PictureFactoryInterface $pictureFactory = null, ?string $staticUrl = null): ContainerInterface
     {
         $locator = $this->createMock(ContainerInterface::class);
         $context = null;

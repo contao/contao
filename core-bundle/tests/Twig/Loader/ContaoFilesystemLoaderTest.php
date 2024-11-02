@@ -563,7 +563,7 @@ class ContaoFilesystemLoaderTest extends TestCase
      * @param array<string, string> $templates
      * @param array<string, string> $themeTemplates
      */
-    private function getContaoFilesystemLoaderWithTemplates(array $templates, array $themeTemplates = null): ContaoFilesystemLoader
+    private function getContaoFilesystemLoaderWithTemplates(array $templates, ?array $themeTemplates = null): ContaoFilesystemLoader
     {
         $templateLocator = $this->createMock(TemplateLocator::class);
         $templateLocator
@@ -606,7 +606,7 @@ class ContaoFilesystemLoaderTest extends TestCase
      * @param list<string> $additionalPaths
      * @param list<string> $themePaths
      */
-    private function getContaoFilesystemLoaderWithPaths(string $projectDir = null, array $additionalPaths = [], array $themePaths = []): ContaoFilesystemLoader
+    private function getContaoFilesystemLoaderWithPaths(?string $projectDir = null, array $additionalPaths = [], array $themePaths = []): ContaoFilesystemLoader
     {
         $projectDir ??= Path::canonicalize(__DIR__.'/../../Fixtures/Twig/default-project');
 

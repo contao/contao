@@ -57,7 +57,7 @@ class Factory
      */
     private ?\Closure $httpClientFactory;
 
-    public function __construct(Connection $connection, ContaoFramework $framework, RequestStack $requestStack, array $additionalUris = [], array $defaultHttpClientOptions = [], \Closure $httpClientFactory = null)
+    public function __construct(Connection $connection, ContaoFramework $framework, RequestStack $requestStack, array $additionalUris = [], array $defaultHttpClientOptions = [], ?\Closure $httpClientFactory = null)
     {
         $this->connection = $connection;
         $this->framework = $framework;

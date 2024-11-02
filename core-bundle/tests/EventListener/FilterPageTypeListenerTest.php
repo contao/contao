@@ -122,7 +122,7 @@ class FilterPageTypeListenerTest extends TestCase
     /**
      * @return DataContainer&MockObject
      */
-    private function mockDataContainer(?int $pid, int $id = null): DataContainer
+    private function mockDataContainer(?int $pid, ?int $id = null): DataContainer
     {
         $activeRecord = array_filter(compact('id', 'pid'), static fn ($v): bool => null !== $v);
 

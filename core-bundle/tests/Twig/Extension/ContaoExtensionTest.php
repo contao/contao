@@ -397,7 +397,7 @@ class ContaoExtensionTest extends TestCase
     /**
      * @param Environment&MockObject $environment
      */
-    private function getContaoExtension(Environment $environment = null, ContaoFilesystemLoader $filesystemLoader = null): ContaoExtension
+    private function getContaoExtension(?Environment $environment = null, ?ContaoFilesystemLoader $filesystemLoader = null): ContaoExtension
     {
         $environment ??= $this->createMock(Environment::class);
         $filesystemLoader ??= $this->createMock(ContaoFilesystemLoader::class);

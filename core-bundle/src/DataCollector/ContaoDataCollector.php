@@ -48,7 +48,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
         $this->urlSuffix = $urlSuffix;
     }
 
-    public function collect(Request $request, Response $response, \Throwable $exception = null): void
+    public function collect(Request $request, Response $response, ?\Throwable $exception = null): void
     {
         $this->data = ['contao_version' => ContaoCoreBundle::getVersion()];
 

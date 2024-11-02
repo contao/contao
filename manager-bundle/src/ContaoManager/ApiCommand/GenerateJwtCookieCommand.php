@@ -29,7 +29,7 @@ class GenerateJwtCookieCommand extends Command
 
     private JwtManager $jwtManager;
 
-    public function __construct(Application $application, JwtManager $jwtManager = null)
+    public function __construct(Application $application, ?JwtManager $jwtManager = null)
     {
         parent::__construct();
 

@@ -71,7 +71,7 @@ class ArticlePickerProvider extends AbstractInsertTagPickerProvider implements D
         return sprintf($this->getInsertTag($config), $value);
     }
 
-    protected function getRouteParameters(PickerConfig $config = null): array
+    protected function getRouteParameters(?PickerConfig $config = null): array
     {
         return ['do' => 'article'];
     }

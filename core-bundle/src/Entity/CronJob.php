@@ -43,7 +43,7 @@ class CronJob
      */
     protected \DateTimeInterface $lastRun;
 
-    public function __construct(string $name, \DateTimeInterface $lastRun = null)
+    public function __construct(string $name, ?\DateTimeInterface $lastRun = null)
     {
         $this->name = $name;
         $this->lastRun = $lastRun ?? new \DateTime();

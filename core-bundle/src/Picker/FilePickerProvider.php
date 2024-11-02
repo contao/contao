@@ -90,7 +90,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $value;
     }
 
-    protected function getRouteParameters(PickerConfig $config = null): array
+    protected function getRouteParameters(?PickerConfig $config = null): array
     {
         return ['do' => 'files'];
     }
