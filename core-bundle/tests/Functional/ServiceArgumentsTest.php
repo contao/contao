@@ -201,7 +201,7 @@ class ServiceArgumentsTest extends FunctionalTestCase
         return $count;
     }
 
-    private function getArgumentTypes(\ReflectionType $type): array
+    private function getArgumentTypes(\ReflectionType|null $type): array
     {
         if ($type instanceof \ReflectionNamedType) {
             return [$type->getName()];
