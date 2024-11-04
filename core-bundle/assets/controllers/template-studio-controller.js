@@ -9,7 +9,7 @@ export default class extends Controller {
         blockInfoUrl: String,
     };
 
-    static targets = ['tabs', 'editor', 'dialog'];
+    static targets = ['tabs', 'editor', 'editorAutocomplete', 'dialog'];
 
     connect() {
         // Subscribe to events dispatched by the editors
@@ -26,6 +26,8 @@ export default class extends Controller {
             if(event.detail.formSubmission.submitter.dataset?.operation === 'save') {
                 this._addEditorContentToRequest(event);
             }
+
+            this._getActiveMutableEditor()?.focus();
         });
     }
 
@@ -40,6 +42,13 @@ export default class extends Controller {
     editorTargetDisconnected(el) {
         this.editors.get(el).destroy();
         this.editors.delete(el);
+    }
+
+    editorAutocompleteTargetConnected(el) {
+        this.editors
+            .get(el.closest('*[data-contao--template-studio-target="editor"]'))
+            ?.setAutoCompletionData(JSON.parse(el.innerText))
+        ;
     }
 
     dialogTargetConnected(el) {
