@@ -249,7 +249,7 @@ final class Finder implements \IteratorAggregate, \Countable
                 continue;
             }
 
-            if ($this->excludePartials && 1 === preg_match('%^.*_[^/]+$%', $identifier)) {
+            if ($this->excludePartials && 1 === preg_match('%[^/]+/_[^/\s]+$%', $identifier)) {
                 continue;
             }
 
