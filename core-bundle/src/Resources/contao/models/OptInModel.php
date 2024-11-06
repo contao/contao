@@ -167,19 +167,19 @@ class OptInModel extends Model
 	}
 
 	/**
-	 * Find opt-in tokens by their table and ID
+	 * Find unconfirmed opt-in tokens by their related table and ID
 	 *
-	 * @param string $strTable
-	 * @param int $intId
+	 * @param string  $strTable
+	 * @param integer $intId
 	 *
 	 * @return Collection|OptInModel[]|OptInModel|null
 	 */
-	public static function findUnconfirmedByRelatedTableAndId($strTable, $intId)
+	public static function findUnconfirmedByRelatedTableAndId($strTable, $intId, array $arrOptions=array())
 	{
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 
-		$objResult =  $objDatabase->prepare("SELECT * FROM $t WHERE $t.confirmedOn = 0 AND $t.id IN (SELECT pid FROM tl_opt_in_related WHERE relTable=? AND relId=?)")
+		$objResult =  $objDatabase->prepare("SELECT * FROM $t WHERE $t.confirmedOn=0 AND $t.id IN (SELECT pid FROM tl_opt_in_related WHERE relTable=? AND relId=?)")
 								  ->execute($strTable, $intId);
 
 		if ($objResult->numRows < 1)
