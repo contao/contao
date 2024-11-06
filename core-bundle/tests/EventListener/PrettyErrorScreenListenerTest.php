@@ -486,7 +486,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         return parent::mockContaoFramework($adapters);
     }
 
-    private function getListener(bool $isBackendUser = false, Environment $twig = null, PageModel $errorPage = null, HttpKernelInterface $httpKernel = null, PageModel $rootPage = null): PrettyErrorScreenListener
+    private function getListener(bool $isBackendUser = false, ?Environment $twig = null, ?PageModel $errorPage = null, ?HttpKernelInterface $httpKernel = null, ?PageModel $rootPage = null): PrettyErrorScreenListener
     {
         $twig ??= $this->createMock(Environment::class);
         $httpKernel ??= $this->createMock(HttpKernelInterface::class);
@@ -537,11 +537,12 @@ class PrettyErrorScreenListenerTest extends TestCase
         $request->attributes->set('_scope', $scope);
         $request->attributes->set('_format', $format);
         $request->headers->set('Accept', $accept);
+        $request->headers->set('Host', 'localhost');
 
         return $request;
     }
 
-    private function getResponseEvent(\Exception $exception, Request $request = null, bool $isSubRequest = false): ExceptionEvent
+    private function getResponseEvent(\Exception $exception, ?Request $request = null, bool $isSubRequest = false): ExceptionEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
         $type = $isSubRequest ? HttpKernelInterface::SUB_REQUEST : HttpKernelInterface::MAIN_REQUEST;

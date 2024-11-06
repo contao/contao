@@ -18,7 +18,7 @@ class ResponseException extends \RuntimeException
 {
     private Response $response;
 
-    public function __construct(Response $response, \Exception $previous = null)
+    public function __construct(Response $response, ?\Exception $previous = null)
     {
         $this->response = $response;
 

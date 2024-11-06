@@ -167,7 +167,7 @@ class PreviewFactory
     /**
      * @param int|string|array|ResizeConfiguration|null $size
      */
-    public function createPreviewImage(string $path, $size = null, ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): ImageInterface
+    public function createPreviewImage(string $path, $size = null, ?ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): ImageInterface
     {
         return $this->imageFactory->create(
             $this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $page, $previewOptions),
@@ -181,7 +181,7 @@ class PreviewFactory
      *
      * @return iterable<ImageInterface>
      */
-    public function createPreviewImages(string $path, $size = null, ResizeOptions $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
+    public function createPreviewImages(string $path, $size = null, ?ResizeOptions $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
     {
         $previews = $this->createPreviews(
             $path,
@@ -200,7 +200,7 @@ class PreviewFactory
     /**
      * @param int|string|array|PictureConfiguration|null $size
      */
-    public function createPreviewPicture(string $path, $size = null, ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): PictureInterface
+    public function createPreviewPicture(string $path, $size = null, ?ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): PictureInterface
     {
         $previewPath = $this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $page, $previewOptions);
 
@@ -212,7 +212,7 @@ class PreviewFactory
      *
      * @return iterable<PictureInterface>
      */
-    public function createPreviewPictures(string $path, $size = null, ResizeOptions $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
+    public function createPreviewPictures(string $path, $size = null, ?ResizeOptions $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
     {
         return $this->convertPreviewsToPictures(
             $this->createPreviews(
@@ -230,7 +230,7 @@ class PreviewFactory
     /**
      * @param int|string|array|PictureConfiguration|null $size
      */
-    public function createPreviewFigure(string $path, $size = null, ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): Figure
+    public function createPreviewFigure(string $path, $size = null, ?ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): Figure
     {
         return $this->createPreviewFigureBuilder($path, $size, $resizeOptions, $page, $previewOptions)->build();
     }
@@ -240,7 +240,7 @@ class PreviewFactory
      *
      * @return iterable<Figure>
      */
-    public function createPreviewFigures(string $path, $size = null, ResizeOptions $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
+    public function createPreviewFigures(string $path, $size = null, ?ResizeOptions $resizeOptions = null, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
     {
         $previews = $this->createPreviews(
             $path,
@@ -263,7 +263,7 @@ class PreviewFactory
     /**
      * @param int|string|array|PictureConfiguration|null $size
      */
-    public function createPreviewFigureBuilder(string $path, $size = null, ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): FigureBuilder
+    public function createPreviewFigureBuilder(string $path, $size = null, ?ResizeOptions $resizeOptions = null, int $page = 1, array $previewOptions = []): FigureBuilder
     {
         $figureBuilder = $this->imageStudio
             ->createFigureBuilder()
@@ -384,7 +384,7 @@ class PreviewFactory
      *
      * @return iterable<PictureInterface>
      */
-    private function convertPreviewsToPictures(iterable $previews, $size, ResizeOptions $resizeOptions = null): iterable
+    private function convertPreviewsToPictures(iterable $previews, $size, ?ResizeOptions $resizeOptions = null): iterable
     {
         // Unlike the Contao\Image\PictureFactory, the PictureFactoryInterface
         // does not know about ResizeOptions. We therefore check if the third

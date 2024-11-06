@@ -38,7 +38,7 @@ abstract class DoctrineTestCase extends TestCase
      *
      * @return Registry&MockObject
      */
-    protected function mockDoctrineRegistry(Connection $connection = null): Registry
+    protected function mockDoctrineRegistry(?Connection $connection = null): Registry
     {
         $connection ??= $this->createMock(Connection::class);
 

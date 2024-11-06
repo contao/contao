@@ -557,7 +557,7 @@ class MigrateCommandTest extends TestCase
      * @param array<array<MigrationResult>> $migrationResults
      * @param array<array<string>>          $runonceFiles
      */
-    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], array $runonceFiles = [], Installer $installer = null, BackupManager $backupManager = null, Connection $connection = null): MigrateCommand
+    private function getCommand(array $pendingMigrations = [], array $migrationResults = [], array $runonceFiles = [], ?Installer $installer = null, ?BackupManager $backupManager = null, ?Connection $connection = null): MigrateCommand
     {
         $migrations = $this->createMock(MigrationCollection::class);
         $migrations
@@ -625,7 +625,7 @@ class MigrateCommandTest extends TestCase
     /**
      * @return Connection&MockObject
      */
-    private function createDefaultConnection(string $sqlMode = 'TRADITIONAL', AbstractMySQLDriver $driver = null): Connection
+    private function createDefaultConnection(string $sqlMode = 'TRADITIONAL', ?AbstractMySQLDriver $driver = null): Connection
     {
         $connection = $this->createMock(Connection::class);
         $connection
