@@ -80,7 +80,7 @@ class NewsPickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return sprintf($this->getInsertTag($config), $value);
     }
 
-    protected function getRouteParameters(PickerConfig $config = null): array
+    protected function getRouteParameters(?PickerConfig $config = null): array
     {
         $params = ['do' => 'news'];
 

@@ -392,7 +392,7 @@ class tl_image_size extends Backend
 	 *
 	 * @return array
 	 */
-	public function getFormats(DataContainer $dc=null)
+	public function getFormats(?DataContainer $dc=null)
 	{
 		$formats = array();
 		$missingSupport = array();

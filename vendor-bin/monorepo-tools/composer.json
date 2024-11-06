@@ -1,5 +1,10 @@
 {
     "require": {
         "contao/monorepo-tools": "^0.1"
+    },
+    "config": {
+        "platform": {
+            "php": "8.1"
+        }
     }
 }

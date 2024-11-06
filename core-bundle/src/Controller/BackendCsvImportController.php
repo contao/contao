@@ -99,7 +99,7 @@ class BackendCsvImportController
         );
     }
 
-    private function importFromTemplate(callable $callback, string $table, string $field, int $id, string $submitLabel = null, bool $allowLinebreak = false): Response
+    private function importFromTemplate(callable $callback, string $table, string $field, int $id, ?string $submitLabel = null, bool $allowLinebreak = false): Response
     {
         $request = $this->requestStack->getCurrentRequest();
 
@@ -169,7 +169,7 @@ class BackendCsvImportController
         foreach ($files as $file) {
             $fp = fopen($file, 'r');
 
-            while (false !== ($row = fgetcsv($fp, 0, $delimiter))) {
+            while (false !== ($row = fgetcsv($fp, 0, $delimiter, '"', '\\'))) {
                 $data = $callback($data, $row);
             }
         }

@@ -34,7 +34,7 @@ class LogoutHandler implements LogoutHandlerInterface
     /**
      * @internal
      */
-    public function __construct(ContaoFramework $framework, LoggerInterface $logger = null)
+    public function __construct(ContaoFramework $framework, ?LoggerInterface $logger = null)
     {
         $this->framework = $framework;
         $this->logger = $logger;

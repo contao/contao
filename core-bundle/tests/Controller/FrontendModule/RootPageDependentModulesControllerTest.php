@@ -166,7 +166,7 @@ class RootPageDependentModulesControllerTest extends TestCase
         );
     }
 
-    private function mockContainer(RequestStack $requestStack = null, string $content = null): ContainerBuilder
+    private function mockContainer(?RequestStack $requestStack = null, ?string $content = null): ContainerBuilder
     {
         $moduleAdapter = $this->mockAdapter(['findByPk']);
         $moduleAdapter

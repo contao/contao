@@ -276,7 +276,7 @@ class ContaoDataCollectorTest extends TestCase
         $this->assertSame([], $method->invokeArgs($collector, ['foo']));
     }
 
-    private function getDataCollector(bool $legacyRouting = false, bool $prependLocale = false, string $urlSuffix = '.html', TokenChecker $tokenChecker = null): ContaoDataCollector
+    private function getDataCollector(bool $legacyRouting = false, bool $prependLocale = false, string $urlSuffix = '.html', ?TokenChecker $tokenChecker = null): ContaoDataCollector
     {
         return new ContaoDataCollector(
             $tokenChecker ?? $this->createMock(TokenChecker::class),

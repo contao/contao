@@ -212,7 +212,7 @@ class EventPickerProviderTest extends ContaoTestCase
         $this->assertArrayNotHasKey('id', $params);
     }
 
-    private function getPicker(bool $accessGranted = null): EventPickerProvider
+    private function getPicker(?bool $accessGranted = null): EventPickerProvider
     {
         $security = $this->createMock(Security::class);
         $security

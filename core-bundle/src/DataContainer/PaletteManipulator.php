@@ -86,7 +86,7 @@ class PaletteManipulator
      *
      * @param string|array $name
      */
-    public function removeField($name, string $legend = null): self
+    public function removeField($name, ?string $legend = null): self
     {
         $this->removes[] = [
             'fields' => (array) $name,

@@ -304,7 +304,7 @@ class MergeHttpHeadersListenerTest extends TestCase
         $listener($this->getResponseEvent($response));
     }
 
-    private function getResponseEvent(Response $response = null, int $requestType = HttpKernelInterface::MAIN_REQUEST): ResponseEvent
+    private function getResponseEvent(?Response $response = null, int $requestType = HttpKernelInterface::MAIN_REQUEST): ResponseEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
 

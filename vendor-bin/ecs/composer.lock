@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dfbce4e9ae46a0d37dd10d37b3deb4a2",
+    "content-hash": "b7c4b0d21a789598bbf5eee8df31fbf7",
     "packages": [
         {
             "name": "contao/easy-coding-standard",
-            "version": "5.4.2",
+            "version": "5.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao/easy-coding-standard.git",
-                "reference": "55d47f7b08e60199b32e9e9cbaffd5d1bd2bb620"
+                "reference": "e631502cf7eeaaa1deebaa464b4e15e08290366f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao/easy-coding-standard/zipball/55d47f7b08e60199b32e9e9cbaffd5d1bd2bb620",
-                "reference": "55d47f7b08e60199b32e9e9cbaffd5d1bd2bb620",
+                "url": "https://api.github.com/repos/contao/easy-coding-standard/zipball/e631502cf7eeaaa1deebaa464b4e15e08290366f",
+                "reference": "e631502cf7eeaaa1deebaa464b4e15e08290366f",
                 "shasum": ""
             },
             "require": {
@@ -47,7 +47,7 @@
             "description": "EasyCodingStandard configurations for Contao",
             "support": {
                 "issues": "https://github.com/contao/easy-coding-standard/issues",
-                "source": "https://github.com/contao/easy-coding-standard/tree/5.4.2"
+                "source": "https://github.com/contao/easy-coding-standard/tree/5.4.3"
             },
             "funding": [
                 {
@@ -55,7 +55,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2023-01-06T10:46:16+00:00"
+            "time": "2024-09-30T13:59:26+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
@@ -137,16 +137,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "1.30.1",
+            "version": "1.33.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "51b95ec8670af41009e2b2b56873bad96682413e"
+                "reference": "82a311fd3690fb2bf7b64d5c98f912b3dd746140"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/51b95ec8670af41009e2b2b56873bad96682413e",
-                "reference": "51b95ec8670af41009e2b2b56873bad96682413e",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/82a311fd3690fb2bf7b64d5c98f912b3dd746140",
+                "reference": "82a311fd3690fb2bf7b64d5c98f912b3dd746140",
                 "shasum": ""
             },
             "require": {
@@ -178,9 +178,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.30.1"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/1.33.0"
             },
-            "time": "2024-09-07T20:13:05+00:00"
+            "time": "2024-10-13T11:25:22+00:00"
         },
         {
             "name": "slevomat/coding-standard",
@@ -386,10 +386,13 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
-    "platform-dev": [],
+    "platform": {},
+    "platform-dev": {},
+    "platform-overrides": {
+        "php": "8.1"
+    },
     "plugin-api-version": "2.6.0"
 }

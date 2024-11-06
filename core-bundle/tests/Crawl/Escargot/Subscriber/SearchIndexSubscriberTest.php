@@ -48,7 +48,7 @@ class SearchIndexSubscriberTest extends TestCase
     /**
      * @dataProvider shouldRequestProvider
      */
-    public function testShouldRequest(CrawlUri $crawlUri, string $expectedDecision, string $expectedLogLevel = '', string $expectedLogMessage = '', CrawlUri $foundOnUri = null): void
+    public function testShouldRequest(CrawlUri $crawlUri, string $expectedDecision, string $expectedLogLevel = '', string $expectedLogMessage = '', ?CrawlUri $foundOnUri = null): void
     {
         $logger = $this->createMock(LoggerInterface::class);
 
@@ -147,7 +147,7 @@ class SearchIndexSubscriberTest extends TestCase
     /**
      * @dataProvider needsContentProvider
      */
-    public function testNeedsContent(ResponseInterface $response, string $expectedDecision, string $expectedLogLevel = '', string $expectedLogMessage = '', CrawlUri $crawlUri = null): void
+    public function testNeedsContent(ResponseInterface $response, string $expectedDecision, string $expectedLogLevel = '', string $expectedLogMessage = '', ?CrawlUri $crawlUri = null): void
     {
         $logger = $this->createMock(LoggerInterface::class);
 
@@ -231,7 +231,7 @@ class SearchIndexSubscriberTest extends TestCase
     /**
      * @dataProvider onLastChunkProvider
      */
-    public function testOnLastChunk(?IndexerException $indexerException, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = [], CrawlUri $crawlUri = null): void
+    public function testOnLastChunk(?IndexerException $indexerException, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = [], ?CrawlUri $crawlUri = null): void
     {
         $logger = $this->createMock(LoggerInterface::class);
         $logger
