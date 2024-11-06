@@ -20,7 +20,7 @@ class CronJob
     private string $name;
     private \DateTimeInterface $previousRun;
 
-    public function __construct(object $service, string $interval, string $method = null, string $name = null)
+    public function __construct(object $service, string $interval, ?string $method = null, ?string $name = null)
     {
         $this->service = $service;
         $this->method = $method;

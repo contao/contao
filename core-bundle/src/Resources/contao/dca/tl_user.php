@@ -603,7 +603,11 @@ class tl_user extends Backend
 			return;
 		}
 
-		$objResult = $this->Database->query("SELECT EXISTS(SELECT * FROM tl_user WHERE admin='' AND modules LIKE '%\"tpl_editor\"%') as showTemplateWarning, EXISTS(SELECT * FROM tl_user WHERE admin='' AND themes LIKE '%\"theme_import\"%') as showThemeWarning");
+		$objResult = $this->Database->query("
+			SELECT
+				EXISTS(SELECT * FROM tl_user WHERE admin = '' AND inherit != 'group' AND modules LIKE '%\"tpl_editor\"%') AS showTemplateWarning,
+				EXISTS(SELECT * FROM tl_user WHERE admin = '' AND inherit != 'group' AND themes LIKE '%\"theme_import\"%') AS showThemeWarning
+		");
 
 		if ($objResult->showTemplateWarning)
 		{

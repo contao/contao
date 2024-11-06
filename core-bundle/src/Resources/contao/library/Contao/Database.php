@@ -135,7 +135,7 @@ class Database
 	 *
 	 * @return Database The Database object
 	 */
-	public static function getInstance(array $arrCustomConfig=null)
+	public static function getInstance(?array $arrCustomConfig=null)
 	{
 		$arrConfig = array();
 

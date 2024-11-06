@@ -25,7 +25,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     private ?TranslatorInterface $translator;
     private ?TokenStorageInterface $tokenStorage = null;
 
-    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, TranslatorInterface $translator = null)
+    public function __construct(FactoryInterface $menuFactory, RouterInterface $router, ?TranslatorInterface $translator = null)
     {
         $this->menuFactory = $menuFactory;
         $this->router = $router;
@@ -111,7 +111,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
      *
      * @return array<string,string|int>
      */
-    abstract protected function getRouteParameters(PickerConfig $config = null)/*: array*/;
+    abstract protected function getRouteParameters(?PickerConfig $config = null)/*: array*/;
 
     /**
      * Generates the URL for the picker.

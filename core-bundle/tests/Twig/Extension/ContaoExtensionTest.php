@@ -187,6 +187,7 @@ class ContaoExtensionTest extends TestCase
         );
 
         $node = new ModuleNode(
+            /** @phpstan-ignore argument.type */
             new FilterExpression(
                 new TextNode('text', 1),
                 new ConstantExpression('escape', 1),
@@ -396,7 +397,7 @@ class ContaoExtensionTest extends TestCase
     /**
      * @param Environment&MockObject $environment
      */
-    private function getContaoExtension(Environment $environment = null, ContaoFilesystemLoader $filesystemLoader = null): ContaoExtension
+    private function getContaoExtension(?Environment $environment = null, ?ContaoFilesystemLoader $filesystemLoader = null): ContaoExtension
     {
         $environment ??= $this->createMock(Environment::class);
         $filesystemLoader ??= $this->createMock(ContaoFilesystemLoader::class);

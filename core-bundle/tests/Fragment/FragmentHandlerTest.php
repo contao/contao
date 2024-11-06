@@ -241,7 +241,7 @@ class FragmentHandlerTest extends TestCase
         $fragmentHandler->render($uri);
     }
 
-    private function getFragmentHandler(FragmentRegistry $registry = null, ServiceLocator $renderers = null, ServiceLocator $preHandlers = null, Request $request = null, BaseFragmentHandler $fragmentHandler = null): FragmentHandler
+    private function getFragmentHandler(?FragmentRegistry $registry = null, ?ServiceLocator $renderers = null, ?ServiceLocator $preHandlers = null, ?Request $request = null, ?BaseFragmentHandler $fragmentHandler = null): FragmentHandler
     {
         $registry ??= new FragmentRegistry();
         $renderers ??= new ServiceLocator([]);
@@ -258,7 +258,7 @@ class FragmentHandlerTest extends TestCase
     /**
      * @return ServiceLocator&MockObject
      */
-    private function mockServiceLocatorWithRenderer(string $name, array $with = null, Response $response = null): ServiceLocator
+    private function mockServiceLocatorWithRenderer(string $name, ?array $with = null, ?Response $response = null): ServiceLocator
     {
         $renderer = $this->createMock(FragmentRendererInterface::class);
         $renderer

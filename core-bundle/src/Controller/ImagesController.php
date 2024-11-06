@@ -33,7 +33,7 @@ class ImagesController
     private string $targetDir;
     private Filesystem $filesystem;
 
-    public function __construct(ImageFactoryInterface $imageFactory, ResizerInterface $resizer, string $targetDir, Filesystem $filesystem = null)
+    public function __construct(ImageFactoryInterface $imageFactory, ResizerInterface $resizer, string $targetDir, ?Filesystem $filesystem = null)
     {
         $this->imageFactory = $imageFactory;
         $this->resizer = $resizer;

@@ -58,7 +58,7 @@ class CrawlCsvLogHandler extends StreamHandler
                 'Found on level',
                 'Tags',
                 'Message',
-            ]);
+            ], ',', '"', '\\');
         }
 
         $columns = [
@@ -71,6 +71,6 @@ class CrawlCsvLogHandler extends StreamHandler
             preg_replace('/\r\n|\n|\r/', ' ', $record['message']),
         ];
 
-        fputcsv($stream, $columns);
+        fputcsv($stream, $columns, ',', '"', '\\');
     }
 }

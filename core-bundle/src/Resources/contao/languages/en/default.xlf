@@ -1029,7 +1029,7 @@
         <source>Fit the box</source>
       </trans-unit>
       <trans-unit id="MSC.box.1">
-        <source>The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
+        <source>The image will be resized proportionally so that neither side exceeds any of the given dimensions. This is similar to the &lt;em&gt;contain&lt;/em&gt; value in CSS.</source>
       </trans-unit>
       <trans-unit id="MSC.exact.0">
         <source>Exact dimensions</source>
@@ -1041,7 +1041,7 @@
         <source>Important part</source>
       </trans-unit>
       <trans-unit id="MSC.crop.1">
-        <source>Preserves the important part of an image as specified in the file manager.</source>
+        <source>The image will be resized to the exact dimensions given, cropping the image if necessary while preserving the important part if specified. This is similar to the &lt;em&gt;cover&lt;/em&gt; value in CSS.</source>
       </trans-unit>
       <trans-unit id="MSC.left_top.0">
         <source>Left | Top</source>

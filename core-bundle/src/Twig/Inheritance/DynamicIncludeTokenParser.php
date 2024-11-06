@@ -45,6 +45,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
         // Handle Contao includes
         $this->traverseAndAdjustTemplateNames($expr);
 
+        /** @phpstan-ignore arguments.count */
         return new IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
     }
 

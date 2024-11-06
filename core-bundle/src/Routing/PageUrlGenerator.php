@@ -30,7 +30,7 @@ class PageUrlGenerator extends SymfonyUrlGenerator
     private RouteProviderInterface $provider;
     private PageRegistry $pageRegistry;
 
-    public function __construct(RouteProviderInterface $provider, PageRegistry $pageRegistry, LoggerInterface $logger = null)
+    public function __construct(RouteProviderInterface $provider, PageRegistry $pageRegistry, ?LoggerInterface $logger = null)
     {
         parent::__construct(new RouteCollection(), new RequestContext(), $logger);
 

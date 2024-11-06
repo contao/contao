@@ -810,7 +810,7 @@ class Search
 	 *
 	 * @param string $strUrl The URL to be removed
 	 */
-	public static function removeEntry($strUrl, Connection $connection = null)
+	public static function removeEntry($strUrl, ?Connection $connection = null)
 	{
 		$connection = $connection ?? System::getContainer()->get('database_connection');
 		$result = $connection->executeQuery('SELECT id FROM tl_search WHERE url = :url', array('url' => $strUrl));

@@ -33,7 +33,7 @@ class FrontendLoader extends Loader
         $this->urlSuffix = $urlSuffix;
     }
 
-    public function load($resource, string $type = null): RouteCollection
+    public function load($resource, ?string $type = null): RouteCollection
     {
         $routes = new RouteCollection();
 
@@ -48,7 +48,7 @@ class FrontendLoader extends Loader
         return $routes;
     }
 
-    public function supports($resource, string $type = null): bool
+    public function supports($resource, ?string $type = null): bool
     {
         return 'contao_frontend' === $type;
     }

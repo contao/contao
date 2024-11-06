@@ -1729,7 +1729,7 @@ class PageUrlListenerTest extends TestCase
     /**
      * @return TranslatorInterface&MockObject
      */
-    private function mockTranslator(string $messageKey = null, array $arguments = []): TranslatorInterface
+    private function mockTranslator(?string $messageKey = null, array $arguments = []): TranslatorInterface
     {
         $translator = $this->createMock(TranslatorInterface::class);
 

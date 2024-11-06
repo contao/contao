@@ -134,7 +134,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         return 0 === strpos($config->getCurrent(), $this->getName().'.');
     }
 
-    public function getDcaTable(PickerConfig $config = null): string
+    public function getDcaTable(?PickerConfig $config = null): string
     {
         if (null === $config) {
             return '';
@@ -187,7 +187,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
         return substr($context, self::PREFIX_LENGTH);
     }
 
-    protected function getUrlForValue(PickerConfig $config, string $module, string $table = null, int $pid = null): string
+    protected function getUrlForValue(PickerConfig $config, string $module, ?string $table = null, ?int $pid = null): string
     {
         $params = [
             'do' => $module,
