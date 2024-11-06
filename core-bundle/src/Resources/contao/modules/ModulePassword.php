@@ -260,7 +260,14 @@ class ModulePassword extends Module
 				$objMember->save();
 
 				System::getContainer()->get('contao.repository.remember_me')->deleteByUsername($objMember->username);
-				OptInModel::deleteByTableAndId('tl_member', $objMember->id);
+
+				if ($models = OptInModel::findUnconfirmedByRelatedTableAndId('tl_member', $objMember->id))
+				{
+					foreach ($models as $model)
+					{
+						$model->delete();
+					}
+				}
 
 				$optInToken->confirm();
 
