@@ -1696,12 +1696,15 @@ abstract class DataContainer extends Backend
 			{
 				$row[$v] = Encryption::decrypt(StringUtil::deserialize($row[$v]));
 			}
+
 			if (strpos($v, ':') !== false)
 			{
 				list($strKey, $strTable) = explode(':', $v, 2);
 				list($strTable, $strField) = explode('.', $strTable, 2);
+
 				$objDcaExtractor = DcaExtractor::getInstance($table);
 				$strRelationField = $objDcaExtractor->getRelations()[$strKey]['field'] ?? 'id';
+
 				$objRef = Database::getInstance()
 					->prepare("SELECT " . Database::quoteIdentifier($strField) . " FROM " . $strTable . " WHERE " .Database::quoteIdentifier($strRelationField) ."=?")
 					->limit(1)
@@ -1712,8 +1715,10 @@ abstract class DataContainer extends Backend
 			elseif (isset($row[$v], $GLOBALS['TL_DCA'][$table]['fields'][$v]['foreignKey']))
 			{
 				$key = explode('.', $GLOBALS['TL_DCA'][$table]['fields'][$v]['foreignKey'], 2);
+
 				$objDcaExtractor = DcaExtractor::getInstance($table);
 				$strRelationField = $objDcaExtractor->getRelations()[$v]['field'] ?? 'id';
+
 				$objRef = Database::getInstance()
 					->prepare("SELECT " . Database::quoteIdentifier($key[1]) . " AS value FROM " . $key[0] . " WHERE " .Database::quoteIdentifier($strRelationField) ."=?")
 					->limit(1)
