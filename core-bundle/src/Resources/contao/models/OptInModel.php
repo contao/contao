@@ -165,7 +165,7 @@ class OptInModel extends Model
 
 		return static::createCollection($arrModels, $t);
 	}
-  
+
   /*
 	 * Find unconfirmed opt-in tokens by their related table and ID
 	 *
@@ -205,8 +205,8 @@ class OptInModel extends Model
 
 		return static::createCollection($arrModels, $t);
 	}
-  
-  /**
+
+	/**
 	 * Count unconfirmed password reset opt-in tokens by their ID
 	 *
 	 * @param int $intId
