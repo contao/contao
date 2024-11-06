@@ -165,8 +165,48 @@ class OptInModel extends Model
 
 		return static::createCollection($arrModels, $t);
 	}
+  
+  /*
+	 * Find unconfirmed opt-in tokens by their related table and ID
+	 *
+	 * @param string  $strTable
+	 * @param integer $intId
+	 *
+	 * @return Collection|OptInModel[]|OptInModel|null
+	 */
+	public static function findUnconfirmedByRelatedTableAndId($strTable, $intId, array $arrOptions=array())
+	{
+		$t = static::$strTable;
+		$objDatabase = Database::getInstance();
 
-	/**
+		$objResult =  $objDatabase->prepare("SELECT * FROM $t WHERE $t.confirmedOn=0 AND $t.id IN (SELECT pid FROM tl_opt_in_related WHERE relTable=? AND relId=?)")
+								  ->execute($strTable, $intId);
+
+		if ($objResult->numRows < 1)
+		{
+			return null;
+		}
+
+		$arrModels = array();
+		$objRegistry = Registry::getInstance();
+
+		while ($objResult->next())
+		{
+			/** @var OptInModel|Model $objOptIn */
+			if ($objOptIn = $objRegistry->fetch($t, $objResult->id))
+			{
+				$arrModels[] = $objOptIn;
+			}
+			else
+			{
+				$arrModels[] = new static($objResult->row());
+			}
+		}
+
+		return static::createCollection($arrModels, $t);
+	}
+  
+  /**
 	 * Count unconfirmed password reset opt-in tokens by their ID
 	 *
 	 * @param int $intId
@@ -199,7 +239,7 @@ class OptInModel extends Model
 			->execute(strtotime('1 day ago'), $intId);
 
 		return $objResult->numRows;
-	}
+  }
 
 	/**
 	 * Delete the related records if the model is deleted
