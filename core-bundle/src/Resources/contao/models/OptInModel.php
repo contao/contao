@@ -169,21 +169,20 @@ class OptInModel extends Model
 	/**
 	 * Count unconfirmed password reset opt-in tokens by their ID
 	 *
-	 * @param array $arrIds
+	 * @param int $intId
 	 *
 	 * @return int
 	 *
 	 * @throws \Exception
 	 */
-	public static function countUnconfirmedPasswordResetTokensByIds(array $arrIds)
+	public static function countUnconfirmedPasswordResetTokensById($intId)
 	{
 		$t = static::$strTable;
 		$objDatabase = Database::getInstance();
 		$oneDayAgo = new \DateTime('1 day ago');
 
-		$objResult = $objDatabase
-			->prepare("SELECT * FROM $t WHERE $t.confirmedOn = 0 AND $t.createdOn > ? AND $t.id IN (SELECT pid FROM tl_opt_in_related WHERE relTable='tl_member' AND relId IN(" . implode(',', array_map('\intval', $arrIds)) . ")) AND $t.token LIKE 'pw-%' ORDER BY $t.createdOn DESC")
-			->execute((int) $oneDayAgo->format('U'), $arrIds);
+		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE $t.confirmedOn = 0 AND $t.createdOn > ? AND $t.id IN (SELECT pid FROM tl_opt_in_related WHERE relTable='tl_member' AND relId = ?) AND $t.token LIKE 'pw-%' ORDER BY $t.createdOn DESC")
+								 ->execute((int) $oneDayAgo->format('U'), $intId);
 
 		return $objResult->numRows;
 	}

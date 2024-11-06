@@ -313,7 +313,7 @@ class ModulePassword extends Module
 	protected function sendPasswordLink($objMember)
 	{
 		// Skip, if there is already 3 unconfirmed attempts in the last 24 hours
-		if (OptInModel::countUnconfirmedPasswordResetTokensByIds(array($objMember->id)) > 2) {
+		if (OptInModel::countUnconfirmedPasswordResetTokensById($objMember->id) > 2) {
 
 			$this->strTemplate = 'mod_message';
 
