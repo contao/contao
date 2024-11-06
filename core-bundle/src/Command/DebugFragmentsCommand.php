@@ -45,7 +45,7 @@ class DebugFragmentsCommand extends Command
 
             try {
                 $attributes = $class->getProperty('options')->getValue($this->container->get($config->getController()));
-            } catch (\ReflectionException $e) {
+            } catch (\ReflectionException) {
                 continue; // skip fragments which don't inherit from AbstractFragmentController
             }
 
