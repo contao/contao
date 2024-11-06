@@ -178,11 +178,25 @@ class OptInModel extends Model
 	public static function countUnconfirmedPasswordResetTokensById($intId)
 	{
 		$t = static::$strTable;
-		$objDatabase = Database::getInstance();
-		$oneDayAgo = new \DateTime('1 day ago');
 
-		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE $t.confirmedOn = 0 AND $t.createdOn > ? AND $t.id IN (SELECT pid FROM tl_opt_in_related WHERE relTable='tl_member' AND relId = ?) AND $t.token LIKE 'pw-%' ORDER BY $t.createdOn DESC")
-								 ->execute((int) $oneDayAgo->format('U'), $intId);
+		$objResult = Database::getInstance()
+			->prepare("
+				SELECT *
+				FROM $t
+				WHERE
+					$t.confirmedOn = 0
+					AND $t.createdOn > ?
+					AND $t.id IN (
+						SELECT pid
+						FROM tl_opt_in_related
+						WHERE
+							relTable = 'tl_member'
+							AND relId = ?
+					)
+					AND $t.token LIKE 'pw-%'
+				ORDER BY $t.createdOn DESC
+			")
+			->execute(strtotime('1 day ago'), $intId);
 
 		return $objResult->numRows;
 	}
