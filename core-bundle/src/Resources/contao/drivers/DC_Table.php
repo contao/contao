@@ -3732,17 +3732,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if (!$blnModeTreeExtended)
 			{
 				$objFound = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . ' ORDER BY sorting, id')
-					->execute($this->values);
+										   ->execute($this->values);
 			}
 			elseif ($blnHasSorting)
 			{
 				$objFound = $this->Database->prepare("SELECT pid AS id, (SELECT sorting FROM " . $table . " WHERE " . $this->strTable . ".pid=" . $table . ".id) AS psort FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid ORDER BY psort, pid")
-					->execute($this->values);
+										   ->execute($this->values);
 			}
 			else
 			{
 				$objFound = $this->Database->prepare("SELECT pid AS id FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid")
-					->execute($this->values);
+										   ->execute($this->values);
 			}
 
 			if ($objFound->numRows < 1)
