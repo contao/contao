@@ -236,7 +236,7 @@ class OptInModel extends Model
 					AND $t.token LIKE 'pw-%'
 				ORDER BY $t.createdOn DESC
 			")
-			->execute(strtotime('1 day ago'), $intId);
+			->execute(strtotime('15 minutes ago'), $intId);
 
 		return $objResult->numRows;
   }
