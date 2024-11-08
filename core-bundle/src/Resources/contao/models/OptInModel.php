@@ -166,7 +166,7 @@ class OptInModel extends Model
 		return static::createCollection($arrModels, $t);
 	}
 
-	/*
+	/**
 	 * Find unconfirmed opt-in tokens by their related table and ID
 	 *
 	 * @param string  $strTable
