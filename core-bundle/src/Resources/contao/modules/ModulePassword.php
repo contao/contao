@@ -320,6 +320,18 @@ class ModulePassword extends Module
 	 */
 	protected function sendPasswordLink($objMember)
 	{
+		// Skip if there have already been 3 unconfirmed attempts in the last 15 minutes
+		if (OptInModel::countUnconfirmedPasswordResetTokensById($objMember->id) > 2) {
+
+			$this->strTemplate = 'mod_message';
+
+			$this->Template = new FrontendTemplate($this->strTemplate);
+			$this->Template->type = 'error';
+			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tooManyPasswordResetAttempts'];
+
+			return;
+		}
+
 		$optIn = System::getContainer()->get('contao.opt_in');
 		$optInToken = $optIn->create('pw', $objMember->email, array('tl_member'=>array($objMember->id)));
 
