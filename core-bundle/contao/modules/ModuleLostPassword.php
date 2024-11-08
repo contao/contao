@@ -244,6 +244,14 @@ class ModuleLostPassword extends Module
 				$objMember->password = $objWidget->value;
 				$objMember->save();
 
+				// Delete unconfirmed "change password" tokens
+				$models = OptInModel::findUnconfirmedByRelatedTableAndId('tl_member', $objMember->id);
+
+				foreach ($models ?? array() as $model)
+				{
+					$model->delete();
+				}
+
 				$optInToken->confirm();
 
 				// Create a new version
@@ -293,6 +301,18 @@ class ModuleLostPassword extends Module
 	 */
 	protected function sendPasswordLink($objMember)
 	{
+		// Skip if there have already been 3 unconfirmed attempts in the last 15 minutes
+		if (OptInModel::countUnconfirmedPasswordResetTokensById($objMember->id) > 2)
+		{
+			$this->strTemplate = 'mod_message';
+
+			$this->Template = new FrontendTemplate($this->strTemplate);
+			$this->Template->type = 'error';
+			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tooManyPasswordResetAttempts'];
+
+			return;
+		}
+
 		$optIn = System::getContainer()->get('contao.opt_in');
 		$optInToken = $optIn->create('pw', $objMember->email, array('tl_member'=>array($objMember->id)));
 
