@@ -3826,7 +3826,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$table = $this->strTable;
 		$treeClass = 'tl_tree';
 
-		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
+		$blnModeTreeExtended = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED;
+
+		if ($blnModeTreeExtended)
 		{
 			$table = $this->ptable;
 			$treeClass = 'tl_tree_xtnd';
@@ -3844,7 +3846,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Toggle the nodes
 		if (Input::get('ptg') == 'all')
 		{
-			$node = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->strTable . '_' . $table . '_tree' : $this->strTable . '_tree';
+			$node = $blnModeTreeExtended ? $this->strTable . '_' . $table . '_tree' : $this->strTable . '_tree';
 			$state = Input::get('state');
 
 			// Expand tree
@@ -3877,7 +3879,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Return if there is no parent table
-		if (!$this->ptable && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
+		if (!$this->ptable && $blnModeTreeExtended)
 		{
 			return '
 <p class="tl_empty">Table "' . $table . '" can not be shown as extended tree, because there is no parent table!</p>';
@@ -3932,51 +3934,46 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (!empty($this->procedure))
 		{
-			$fld = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? 'pid' : 'id';
-
-			if ($fld == 'id')
+			if (!$blnModeTreeExtended)
 			{
-				$objRoot = $db
-					->prepare("SELECT id FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . ($blnHasSorting ? " ORDER BY sorting, id" : ""))
+				$objFound = $db
+					->prepare("SELECT id FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " ORDER BY sorting, id")
 					->execute(...$this->values);
 			}
 			elseif ($blnHasSorting)
 			{
-				$objRoot = $db
-					->prepare("SELECT pid, (SELECT sorting FROM " . $table . " WHERE " . $this->strTable . ".pid=" . $table . ".id) AS psort FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid ORDER BY psort, pid")
+				$objFound = $db
+					->prepare("SELECT pid AS id, (SELECT sorting FROM " . $table . " WHERE " . $this->strTable . ".pid=" . $table . ".id) AS psort FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid ORDER BY psort, pid")
 					->execute(...$this->values);
 			}
 			else
 			{
-				$objRoot = $db
-					->prepare("SELECT pid FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid")
+				$objFound = $db
+					->prepare("SELECT pid AS id FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid")
 					->execute(...$this->values);
 			}
 
-			if ($objRoot->numRows < 1)
+			if ($objFound->numRows < 1)
 			{
 				$this->updateRoot(array());
 			}
 			// Respect existing limitations (root IDs)
 			elseif (!empty($this->root))
 			{
-				$arrRoot = array();
-
-				while ($objRoot->next())
+				while ($objFound->next())
 				{
-					if (\count(array_intersect($this->root, $db->getParentRecords($objRoot->$fld, $table))) > 0)
+					if (\count(array_intersect($this->root, $db->getParentRecords($objFound->id, $table))) > 0)
 					{
-						$arrRoot[] = $objRoot->$fld;
+						$arrFound[] = $objFound->id;
 					}
 				}
 
-				$arrFound = $arrRoot;
-				$this->updateRoot($this->eliminateNestedPages($arrFound, $table, $blnHasSorting));
+				$this->updateRoot($arrFound);
 			}
 			else
 			{
-				$arrFound = $objRoot->fetchEach($fld);
-				$this->updateRoot($this->eliminateNestedPages($arrFound, $table, $blnHasSorting));
+				$arrFound = $objFound->fetchEach('id');
+				$this->updateRoot($arrFound);
 			}
 		}
 
