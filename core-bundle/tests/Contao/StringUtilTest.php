@@ -197,9 +197,9 @@ class StringUtilTest extends TestCase
         $this->assertSame('foo', StringUtil::stripRootDir($this->getFixturesDir().'/foo'));
         $this->assertSame('foo', StringUtil::stripRootDir($this->getFixturesDir().'\foo'));
         $this->assertSame('foo/', StringUtil::stripRootDir($this->getFixturesDir().'/foo/'));
-        $this->assertSame('foo\\', StringUtil::stripRootDir($this->getFixturesDir().'\foo\\'));
+        $this->assertSame('foo/', StringUtil::stripRootDir($this->getFixturesDir().'\foo\\'));
         $this->assertSame('foo/bar', StringUtil::stripRootDir($this->getFixturesDir().'/foo/bar'));
-        $this->assertSame('foo\bar', StringUtil::stripRootDir($this->getFixturesDir().'\foo\bar'));
+        $this->assertSame('foo/bar', StringUtil::stripRootDir($this->getFixturesDir().'\foo\bar'));
         $this->assertSame('../../foo/bar', StringUtil::stripRootDir($this->getFixturesDir().'/../../foo/bar'));
     }
 
