@@ -27,6 +27,7 @@ class MakeServicesPublicPass implements CompilerPassInterface
         'database_connection',
         'debug.stopwatch',
         'fragment.handler',
+        'limiter.contao.member_password_reset',
         'mailer',
         'monolog.logger.contao',
         'security.authentication_utils',

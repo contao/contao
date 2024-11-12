@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\RateLimiter\RateLimiterFactory;
+
 /**
  * Front end module "lost password".
  *
@@ -320,9 +322,11 @@ class ModulePassword extends Module
 	 */
 	protected function sendPasswordLink($objMember)
 	{
-		// Skip if there have already been 3 unconfirmed attempts in the last 15 minutes
-		if (OptInModel::countUnconfirmedPasswordResetTokensById($objMember->id) > 2) {
+		/** @var RateLimiterFactory $factory */
+		$factory = System::getContainer()->get('limiter.contao.member_password_reset');
+		$limiter = $factory->create($objMember->id);
 
+		if (false === $limiter->consume()->isAccepted()) {
 			$this->strTemplate = 'mod_message';
 
 			$this->Template = new FrontendTemplate($this->strTemplate);
