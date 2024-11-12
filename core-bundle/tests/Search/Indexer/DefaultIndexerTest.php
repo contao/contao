@@ -68,10 +68,46 @@ class DefaultIndexerTest extends TestCase
             'Cannot index empty response.',
         ];
 
-        yield 'Test does not index if rel="canonical" does not match current page' => [
-            new Document(new Uri('https://example.com/page'), 200, [], '<html><head><link rel="canonical" href="https://example.com/other-page" /></head><body></body></html>'),
-            null,
-            'Ignored because canonical URI "https://example.com/other-page" does not match document URI.',
+        yield 'Test does index the canonical URL if rel="canonical" is set' => [
+            new Document(new Uri('https://example.com/page?with=query'), 200, [], '<html><head><link rel="canonical" href="https://example.com/page" /></head><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:title":"JSON-LD page title","contao:pageId":2}</script></body></html>'),
+            [
+                'url' => 'https://example.com/page',
+                'content' => '<html><head><link rel="canonical" href="https://example.com/page" /></head><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:title":"JSON-LD page title","contao:pageId":2}</script></body></html>',
+                'protected' => false,
+                'groups' => [],
+                'pid' => 2,
+                'title' => 'JSON-LD page title',
+                'language' => 'en',
+                'meta' => [
+                    [
+                        '@context' => ['contao' => 'https://schema.contao.org/'],
+                        '@type' => 'https://schema.contao.org/Page',
+                        'https://schema.contao.org/title' => 'JSON-LD page title',
+                        'https://schema.contao.org/pageId' => 2,
+                    ],
+                ],
+            ],
+        ];
+
+        yield 'Test does index the canonical URL if rel="canonical" is set to a different domain' => [
+            new Document(new Uri('https://example.com/page'), 200, [], '<html><head><link rel="canonical" href="https://example.org/other-page" /></head><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:title":"JSON-LD page title","contao:pageId":2}</script></body></html>'),
+            [
+                'url' => 'https://example.org/other-page',
+                'content' => '<html><head><link rel="canonical" href="https://example.org/other-page" /></head><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:title":"JSON-LD page title","contao:pageId":2}</script></body></html>',
+                'protected' => false,
+                'groups' => [],
+                'pid' => 2,
+                'title' => 'JSON-LD page title',
+                'language' => 'en',
+                'meta' => [
+                    [
+                        '@context' => ['contao' => 'https://schema.contao.org/'],
+                        '@type' => 'https://schema.contao.org/Page',
+                        'https://schema.contao.org/title' => 'JSON-LD page title',
+                        'https://schema.contao.org/pageId' => 2,
+                    ],
+                ],
+            ],
         ];
 
         yield 'Test does not index if page ID could not be determined' => [
