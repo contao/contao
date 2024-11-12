@@ -25,7 +25,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
-use Symfony\Contracts\Service\ResetInterface;
 
 class MergeHttpHeadersListenerTest extends TestCase
 {
@@ -334,9 +333,6 @@ class MergeHttpHeadersListenerTest extends TestCase
         $headerStorage = new MemoryHeaderStorage(['Foo: Bar']);
 
         $listener = new MergeHttpHeadersListener($framework, $headerStorage);
-
-        $this->assertInstanceOf(ResetInterface::class, $listener);
-
         $listener($this->getResponseEvent($response));
         $listener($this->getResponseEvent($response));
 
