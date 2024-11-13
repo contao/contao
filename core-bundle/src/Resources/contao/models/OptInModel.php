@@ -239,7 +239,7 @@ class OptInModel extends Model
 			->execute(strtotime('15 minutes ago'), $intId);
 
 		return $objResult->numRows;
-  }
+	}
 
 	/**
 	 * Delete the related records if the model is deleted
