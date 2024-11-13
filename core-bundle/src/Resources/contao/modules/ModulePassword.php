@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\RateLimiter\RateLimiterFactory;
-
 /**
  * Front end module "lost password".
  *
