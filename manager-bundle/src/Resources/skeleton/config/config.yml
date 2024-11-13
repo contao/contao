@@ -33,11 +33,6 @@ framework:
                 adapter: cache.app
             doctrine.system_cache_pool:
                 adapter: cache.system
-    rate_limiter:
-        contao.member_password_reset:
-            policy: fixed_window
-            limit: 3
-            interval: 15 minutes
 
 # Contao configuration
 contao:

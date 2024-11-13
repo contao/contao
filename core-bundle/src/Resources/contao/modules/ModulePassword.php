@@ -322,22 +322,18 @@ class ModulePassword extends Module
 	 */
 	protected function sendPasswordLink($objMember)
 	{
-		if (System::getContainer()->has('limiter.contao.member_password_reset'))
+		$factory = System::getContainer()->get('contao.rate_limiter.member_password_reset');
+		$limiter = $factory->create($objMember->id);
+
+		if (!$limiter->consume()->isAccepted())
 		{
-			/** @var RateLimiterFactory $factory */
-			$factory = System::getContainer()->get('limiter.contao.member_password_reset');
-			$limiter = $factory->create($objMember->id);
+			$this->strTemplate = 'mod_message';
 
-			if (!$limiter->consume()->isAccepted())
-			{
-				$this->strTemplate = 'mod_message';
+			$this->Template = new FrontendTemplate($this->strTemplate);
+			$this->Template->type = 'error';
+			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tooManyPasswordResetAttempts'];
 
-				$this->Template = new FrontendTemplate($this->strTemplate);
-				$this->Template->type = 'error';
-				$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tooManyPasswordResetAttempts'];
-
-				return;
-			}
+			return;
 		}
 
 		$optIn = System::getContainer()->get('contao.opt_in');
