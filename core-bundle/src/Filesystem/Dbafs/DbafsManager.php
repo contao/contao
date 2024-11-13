@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Filesystem\Dbafs;
 
 use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Uid\Uuid;
@@ -162,19 +163,16 @@ class DbafsManager
     }
 
     /**
-     * Returns merged extra metadata from all DBAFS that are able to serve the
-     * given $path.
-     *
-     * @return array<string, mixed>
+     * Returns merged extra metadata from all DBAFS that are able to serve the given $path.
      */
-    public function getExtraMetadata(string $path): array
+    public function getExtraMetadata(string $path): ExtraMetadata
     {
         $metadataChunks = [];
         $metadataKeys = [];
 
         foreach ($this->getDbafsForPath($path) as $prefix => $dbafs) {
             if (null !== ($record = $dbafs->getRecord(Path::makeRelative($path, $prefix)))) {
-                $chunk = $record->getExtraMetadata();
+                $chunk = $record->getExtraMetadata()->all();
                 $keys = array_keys($chunk);
 
                 if (!empty($duplicates = array_intersect($metadataKeys, $keys))) {
@@ -186,15 +184,13 @@ class DbafsManager
             }
         }
 
-        return array_merge(...array_reverse($metadataChunks));
+        return new ExtraMetadata(array_merge(...array_reverse($metadataChunks)));
     }
 
     /**
      * Sets extra metadata to all DBAFS that are able to serve the given $path.
-     *
-     * @param array<string, mixed> $metadata
      */
-    public function setExtraMetadata(string $path, array $metadata): void
+    public function setExtraMetadata(string $path, ExtraMetadata $metadata): void
     {
         $success = false;
 

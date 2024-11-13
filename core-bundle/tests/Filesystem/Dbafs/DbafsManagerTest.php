@@ -16,6 +16,7 @@ use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -257,17 +258,17 @@ class DbafsManagerTest extends TestCase
     {
         $filesDbafs = $this->getDbafsWithExtraMetadata(
             'media/hilarious-cat.mov',
-            [
+            new ExtraMetadata([
                 'foo' => 'foobar',
                 'bar' => 42,
-            ]
+            ])
         );
 
         $filesMediaDbafs = $this->getDbafsWithExtraMetadata(
             'hilarious-cat.mov',
-            [
+            new ExtraMetadata([
                 'baz' => true,
-            ]
+            ])
         );
 
         $manager = new DbafsManager();
@@ -280,7 +281,7 @@ class DbafsManagerTest extends TestCase
                 'bar' => 42,
                 'baz' => true,
             ],
-            $manager->getExtraMetadata('files/media/hilarious-cat.mov')
+            $manager->getExtraMetadata('files/media/hilarious-cat.mov')->all()
         );
     }
 
@@ -288,20 +289,20 @@ class DbafsManagerTest extends TestCase
     {
         $assetsDbafs = $this->getDbafsWithExtraMetadata(
             'images/a.jpg',
-            [
+            new ExtraMetadata([
                 'accessed' => 123,
                 'compressed' => true,
                 'quality' => 'high',
-            ]
+            ])
         );
 
         $assetsImagesDbafs = $this->getDbafsWithExtraMetadata(
             'a.jpg',
-            [
+            new ExtraMetadata([
                 'aspectRatio' => 1.5,
                 'quality' => '50',
                 'compressed' => true,
-            ]
+            ])
         );
 
         $manager = new DbafsManager();
@@ -316,18 +317,20 @@ class DbafsManagerTest extends TestCase
 
     public function testSetExtraMetadata(): void
     {
+        $extraMetadata = new ExtraMetadata(['some' => 'value']);
+
         $dbafs1 = $this->createMock(DbafsInterface::class);
         $dbafs1
             ->expects($this->once())
             ->method('setExtraMetadata')
-            ->with('bar/baz', ['some' => 'value'])
+            ->with('bar/baz', $extraMetadata)
         ;
 
         $dbafs2 = $this->createMock(DbafsInterface::class);
         $dbafs2
             ->expects($this->once())
             ->method('setExtraMetadata')
-            ->with('baz', ['some' => 'value'])
+            ->with('baz', $extraMetadata)
             ->willThrowException(new \InvalidArgumentException()) // should be ignored
         ;
 
@@ -342,16 +345,18 @@ class DbafsManagerTest extends TestCase
         $manager->register($dbafs2, 'foo/bar');
         $manager->register($dbafs3, 'other');
 
-        $manager->setExtraMetadata('foo/bar/baz', ['some' => 'value']);
+        $manager->setExtraMetadata('foo/bar/baz', $extraMetadata);
     }
 
     public function testSetExtraMetadataFailsIfNoResourceExists(): void
     {
+        $extraMetadata = new ExtraMetadata(['some' => 'value']);
+
         $dbafs1 = $this->createMock(DbafsInterface::class);
         $dbafs1
             ->expects($this->once())
             ->method('setExtraMetadata')
-            ->with('bar/baz', ['some' => 'value'])
+            ->with('bar/baz', $extraMetadata)
             ->willThrowException(new \InvalidArgumentException())
         ;
 
@@ -359,7 +364,7 @@ class DbafsManagerTest extends TestCase
         $dbafs2
             ->expects($this->once())
             ->method('setExtraMetadata')
-            ->with('baz', ['some' => 'value'])
+            ->with('baz', $extraMetadata)
             ->willThrowException(new \InvalidArgumentException())
         ;
 
@@ -370,7 +375,7 @@ class DbafsManagerTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('No resource exists for the given path "foo/bar/baz".');
 
-        $manager->setExtraMetadata('foo/bar/baz', ['some' => 'value']);
+        $manager->setExtraMetadata('foo/bar/baz', $extraMetadata);
     }
 
     /**
@@ -543,7 +548,7 @@ class DbafsManagerTest extends TestCase
         return $dbafs;
     }
 
-    private function getDbafsWithExtraMetadata(string $path, array $extraMetadata): DbafsInterface
+    private function getDbafsWithExtraMetadata(string $path, ExtraMetadata $extraMetadata): DbafsInterface
     {
         $dbafs = $this->createMock(DbafsInterface::class);
         $dbafs

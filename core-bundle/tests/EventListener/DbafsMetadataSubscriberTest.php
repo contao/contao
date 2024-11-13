@@ -16,6 +16,7 @@ use Contao\CoreBundle\EventListener\DbafsMetadataSubscriber;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Filesystem\Dbafs\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\StoreDbafsMetadataEvent;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ImportantPart;
 use Symfony\Component\Uid\Uuid;
@@ -39,12 +40,12 @@ class DbafsMetadataSubscriberTest extends TestCase
     {
         $event = new RetrieveDbafsMetadataEvent('tl_files', $this->getDemoRowData());
 
-        $this->assertEmpty($event->getExtraMetadata());
+        $this->assertEmpty($event->getExtraMetadata()->all());
 
         (new DbafsMetadataSubscriber())->enhanceMetadata($event);
 
         $extraMetadata = $event->getExtraMetadata();
-        $importantPart = $extraMetadata['importantPart'] ?? null;
+        $importantPart = $extraMetadata->getImportantPart();
 
         $this->assertInstanceOf(ImportantPart::class, $importantPart);
         $this->assertSame(0.1, $importantPart->getX());
@@ -52,11 +53,11 @@ class DbafsMetadataSubscriberTest extends TestCase
         $this->assertSame(0.3, $importantPart->getWidth());
         $this->assertSame(0.4, $importantPart->getHeight());
 
-        $metadata = $extraMetadata['metadata']['de'] ?? null;
+        $localizedMetadata = $extraMetadata->getLocalized()['de'] ?? null;
 
-        $this->assertInstanceOf(Metadata::class, $metadata);
-        $this->assertSame('my title', $metadata->getTitle());
-        $this->assertSame('f372c7d8-5aab-11ec-bf63-0242ac130002', $metadata->getUuid());
+        $this->assertInstanceOf(Metadata::class, $localizedMetadata);
+        $this->assertSame('my title', $localizedMetadata->getTitle());
+        $this->assertSame('f372c7d8-5aab-11ec-bf63-0242ac130002', $localizedMetadata->getUuid());
     }
 
     public function testOnlyEnhancesMetadataOnDefaultTable(): void
@@ -70,7 +71,7 @@ class DbafsMetadataSubscriberTest extends TestCase
 
         (new DbafsMetadataSubscriber())->enhanceMetadata($event);
 
-        $this->assertEmpty($event->getExtraMetadata());
+        $this->assertEmpty($event->getExtraMetadata()->all());
     }
 
     public function testNormalizesMetadata(): void
@@ -110,14 +111,14 @@ class DbafsMetadataSubscriberTest extends TestCase
             'path' => 'foo/bar',
         ];
 
-        $metadata = [
-            'metadata' => [
+        $metadata = new ExtraMetadata([
+            'localized' => [
                 'de' => new Metadata([
                     Metadata::VALUE_TITLE => 'my title',
                     Metadata::VALUE_UUID => '64c738b4-5aad-11ec-bf63-0242ac130002',
                 ]),
             ],
-        ];
+        ]);
 
         $event = new StoreDbafsMetadataEvent('tl_files', $rowData, $metadata);
 
@@ -142,16 +143,16 @@ class DbafsMetadataSubscriberTest extends TestCase
         ];
     }
 
-    private function getDemoMetadata(): array
+    private function getDemoMetadata(): ExtraMetadata
     {
-        return [
+        return new ExtraMetadata([
             'importantPart' => new ImportantPart(0.1, 0.2, 0.3, 0.4),
-            'metadata' => [
+            'localized' => [
                 'de' => new Metadata([
                     Metadata::VALUE_TITLE => 'my title',
                     Metadata::VALUE_UUID => 'f372c7d8-5aab-11ec-bf63-0242ac130002',
                 ]),
             ],
-        ];
+        ]);
     }
 }
