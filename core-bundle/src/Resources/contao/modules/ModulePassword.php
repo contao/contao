@@ -320,7 +320,7 @@ class ModulePassword extends Module
 	 */
 	protected function sendPasswordLink($objMember)
 	{
-		$factory = System::getContainer()->get('contao.rate_limiter.member_password_reset');
+		$factory = System::getContainer()->get('contao.rate_limit.member_password_factory');
 		$limiter = $factory->create($objMember->id);
 
 		if (!$limiter->consume()->isAccepted())
