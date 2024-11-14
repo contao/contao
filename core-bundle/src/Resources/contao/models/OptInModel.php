@@ -207,41 +207,6 @@ class OptInModel extends Model
 	}
 
 	/**
-	 * Count unconfirmed password reset opt-in tokens by their ID
-	 *
-	 * @param int $intId
-	 *
-	 * @return int
-	 *
-	 * @throws \Exception
-	 */
-	public static function countUnconfirmedPasswordResetTokensById($intId)
-	{
-		$t = static::$strTable;
-
-		$objResult = Database::getInstance()
-			->prepare("
-				SELECT *
-				FROM $t
-				WHERE
-					$t.confirmedOn = 0
-					AND $t.createdOn > ?
-					AND $t.id IN (
-						SELECT pid
-						FROM tl_opt_in_related
-						WHERE
-							relTable = 'tl_member'
-							AND relId = ?
-					)
-					AND $t.token LIKE 'pw-%'
-				ORDER BY $t.createdOn DESC
-			")
-			->execute(strtotime('15 minutes ago'), $intId);
-
-		return $objResult->numRows;
-	}
-
-	/**
 	 * Delete the related records if the model is deleted
 	 *
 	 * @return integer

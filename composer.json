@@ -129,6 +129,7 @@
         "symfony/polyfill-php80": "^1.26",
         "symfony/process": "^5.4",
         "symfony/property-access": "^5.4",
+        "symfony/rate-limiter": "^5.4",
         "symfony/routing": "^5.4",
         "symfony/security-bundle": "^5.4",
         "symfony/security-core": "^5.4",

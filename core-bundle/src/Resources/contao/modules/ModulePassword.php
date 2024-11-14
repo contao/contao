@@ -320,8 +320,10 @@ class ModulePassword extends Module
 	 */
 	protected function sendPasswordLink($objMember)
 	{
-		// Skip if there have already been 3 unconfirmed attempts in the last 15 minutes
-		if (OptInModel::countUnconfirmedPasswordResetTokensById($objMember->id) > 2)
+		$factory = System::getContainer()->get('contao.rate_limit.member_password_factory');
+		$limiter = $factory->create($objMember->id);
+
+		if (!$limiter->consume()->isAccepted())
 		{
 			$this->strTemplate = 'mod_message';
 
