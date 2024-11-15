@@ -965,8 +965,6 @@ abstract class Widget extends Controller
 
 					foreach ($arrEmails as $strEmail)
 					{
-						$strEmail = Idna::encodeEmail($strEmail);
-
 						if (!Validator::isEmail($strEmail))
 						{
 							$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['emails'], $this->strLabel));
