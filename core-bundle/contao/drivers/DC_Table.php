@@ -3750,7 +3750,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		// Delete all records of the current table that are not related to the parent table, unless configured not to
+		// Delete all records of the current table that are not related to the parent table
 		if ($ptable && !($GLOBALS['TL_DCA'][$this->strTable]['config']['doNotDeleteRecords'] ?? null))
 		{
 			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
@@ -3777,7 +3777,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		// Delete all records of the child table that are not related to the current table, unless configured not to
+		// Delete all records of the child table that are not related to the current table
 		if (!empty($ctable) && \is_array($ctable))
 		{
 			foreach ($ctable as $v)
@@ -3787,10 +3787,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Load the DCA configuration, so we can check for "dynamicPtable" and "doNotDeleteRecords"
 					$this->loadDataContainer($v);
 
-                    if ($GLOBALS['TL_DCA'][$v]['config']['doNotDeleteRecords'] ?? null)
-                    {
-                        continue;
-                    }
+					if ($GLOBALS['TL_DCA'][$v]['config']['doNotDeleteRecords'] ?? null)
+					{
+						continue;
+					}
 
 					if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'] ?? null)
 					{
