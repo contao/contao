@@ -1370,8 +1370,8 @@
         <target>Kutuya sığdırılsın</target>
       </trans-unit>
       <trans-unit id="MSC.box.1">
-        <source>The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
-        <target>Görselin kısa kenarı belirtilen boyutlara ayarlanır ve görsel orantılı şekilde yeniden boyutlandırılır.</target>
+        <source>The image will be resized proportionally so that neither side exceeds any of the given dimensions. This is similar to the &lt;em&gt;contain&lt;/em&gt; value in CSS.</source>
+        <target>Görsel, herhangi bir kenarın belirtilen boyutları aşmaması için orantılı olarak yeniden boyutlandırılır. CSS içindeki &lt;em&gt;contain&lt;/em&gt; değerine benzer.</target>
       </trans-unit>
       <trans-unit id="MSC.exact.0">
         <source>Exact dimensions</source>
@@ -1386,8 +1386,8 @@
         <target>Önemli bölüm</target>
       </trans-unit>
       <trans-unit id="MSC.crop.1">
-        <source>Preserves the important part of an image as specified in the file manager.</source>
-        <target>Dosya yöneticisinde belirtildiği şekilde bir görselin önemli bölümünü korur.</target>
+        <source>The image will be resized to the exact dimensions given, cropping the image if necessary while preserving the important part if specified. This is similar to the &lt;em&gt;cover&lt;/em&gt; value in CSS.</source>
+        <target>Görsel, belirtilen tam boyutlara göre yeniden boyutlandırılır. Gerekirse kırpılır ve belirtilmiş ise önemli kısımlar korunur. CSS içindeki &lt;em&gt;cover&lt;/em&gt; değerine benzer.</target>
       </trans-unit>
       <trans-unit id="MSC.left_top.0">
         <source>Left | Top</source>
@@ -2544,6 +2544,9 @@
       <trans-unit id="MSC.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
         <target>Açmaya çalıştığınız bağlantı doğrulanamadı. Bağlantıya siz tıkladıysanız ya da bu bağlantıyı güvenilir bir kişiden aldıysanız, aşağıdaki işlemi onaylayabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>

@@ -1,0 +1,176 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="src/Resources/contao/languages/en/tl_maintenance.php" source-language="en" target-language="sk">
+    <body>
+      <trans-unit id="tl_maintenance.cacheTables.0">
+        <source>Purge data</source>
+        <target>Vyprázdniť dáta</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.cacheTables.1">
+        <source>Please select the data you want to purge or rebuild.</source>
+        <target>Prosím vyberte cache pamäťové zdroje, ktoré chcete vyprázdniť.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.job">
+        <source>Job</source>
+        <target>Úlohy</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.description">
+        <source>Description</source>
+        <target>Popis</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.clearCache">
+        <source>Purge data</source>
+        <target>Vyprázdniť dáta</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.cacheCleared">
+        <source>The data has been purged</source>
+        <target>Bude vyčistená cache pamäť</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.updateHelp">
+        <source>Please enter your %s here.</source>
+        <target>Prosím tu zadajte Vašu %s.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.index.0">
+        <source>Purge the search index</source>
+        <target>Vyprázdniť index vyhľadávania</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.index.1">
+        <source>Truncates the tables &lt;code&gt;tl_search&lt;/code&gt;, &lt;code&gt;tl_search_index&lt;/code&gt; and &lt;code&gt;tl_search_term&lt;/code&gt;. Afterwards, you have to rebuild the search index (see above).</source>
+        <target>Skráti tabuľky &lt;code&gt;tl_search&lt;/code&gt;, &lt;code&gt;tl_search_index&lt;/code&gt; a &lt;code&gt;tl_search_term&lt;/code&gt;. Potom musíte znova vytvoriť index vyhľadávania (pozri vyššie).</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.undo.0">
+        <source>Purge the undo table</source>
+        <target>Vyprázdniť tabuľku histórie</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.undo.1">
+        <source>Truncates the &lt;code&gt;tl_undo&lt;/code&gt; table which stores the deleted records. This job permanently deletes these records.</source>
+        <target>Vyprázdniť tabuľku &lt;code&gt;tl_undo&lt;/code&gt;, v ktorej sa ukladajú odstránené záznamy. Tento krok navždy odstráni dané záznamy.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.versions.0">
+        <source>Purge the version table</source>
+        <target>Vyprázdniť tabuľku verzií</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.versions.1">
+        <source>Truncates the &lt;code&gt;tl_version&lt;/code&gt; table which stores the previous versions of a record. This job permanently deletes these records.</source>
+        <target>Vyprázdniť tabuľku &lt;code&gt;tl_version&lt;/code&gt;, v ktorej sa ukladajú predošlé verzie záznamov. Tento krok navždy odstráni dané záznamy.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.log.0">
+        <source>Purge the system log</source>
+        <target>Vyprázdniť systémové správy</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.log.1">
+        <source>Truncates the &lt;code&gt;tl_log&lt;/code&gt; table which stores all the system log entries. This job permanently deletes these records.</source>
+        <target>Vyprázdniť tabuľku &lt;code&gt;tl_log&lt;/code&gt;, ktorá zaznamenáva správy systému. Tento krok navždy odstráni súčasné záznamy z danej tabuľky. </target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.crawl_queue.0">
+        <source>Purge the crawl queue</source>
+        <target>Vyčistite zoznam indexového prehľadávania</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.crawl_queue.1">
+        <source>Truncates the &lt;code&gt;tl_crawl_queue&lt;/code&gt; table which stores all the queue information from crawl processes.</source>
+        <target>Skráti &lt;code&gt;tl_crawl_queue&lt;/code&gt; tabuľka, ktorá ukladá všetky informácie o fronte z procesov prehľadávania.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.images.0">
+        <source>Purge the image cache</source>
+        <target>Vyprázdniť dočasné úložisko obrázkov</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.images.1">
+        <source>Removes the automatically generated images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Odstráni automaticky vytvorené obrázky a potom vyprázdni dočasné úložisko stránok. Týmto krokom zaniknú odkazy k odstráneným zdrojom.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.previews.0">
+        <source>Purge the preview cache</source>
+        <target>Vyčistite vyrovnávaciu pamäť ukážky</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.previews.1">
+        <source>Removes the automatically generated preview images and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>Odstráni automaticky vytvorené obrázky a potom vyprázdni dočasné úložisko stránok. Týmto krokom zaniknú odkazy k odstráneným zdrojom.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.scripts.0">
+        <source>Purge the script cache</source>
+        <target>Vyprázdniť dočasné úložisko skriptov</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.scripts.1">
+        <source>Removes the automatically generated &lt;code&gt;.css&lt;/code&gt; and &lt;code&gt;.js&lt;/code&gt; files, recreates the internal style sheets and then purges the shared cache.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.pages.0">
+        <source>Purge the shared cache</source>
+        <target>Vyčistite zdieľanú vyrovnávaciu pamäť</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.pages.1">
+        <source>Removes the cached versions of the front end pages.</source>
+        <target>Odstráni dočasne uložené verzie frontendových stránok.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.temp.0">
+        <source>Purge the temp folder</source>
+        <target>Vyprázdniť priečinok s dočasnými súbormi</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.temp.1">
+        <source>Removes the temporary files.</source>
+        <target>Odstráni dočasné súbory.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.xml.0">
+        <source>Recreate the XML files</source>
+        <target>Znovu vytvorí XML súbory</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.xml.1">
+        <source>Recreates the XML files in the &lt;code&gt;share&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.symlinks.0">
+        <source>Recreate the symlinks</source>
+        <target>Znovu vytvorí symlinks</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance_jobs.symlinks.1">
+        <source>Recreates the symlinks in the public folder (document root).</source>
+        <target>Znovu vytvorí symbolické odkazy vo verejnom priečinku (koreň dokumentu).</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawler">
+        <source>Crawler</source>
+        <target>Crawler</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.startCrawling">
+        <source>Start crawling</source>
+        <target>Spustiť crawling</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscribers.0">
+        <source>Enabled features</source>
+        <target>Povolené funkcie</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscribers.1">
+        <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
+        <target>Prehľadávač prehľadáva všetky adresy URL, ktoré nájde. Tu sa môžete rozhodnúť, čo s týmito výsledkami urobíte.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMember.0">
+        <source>Front end member</source>
+        <target>Front end člen</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlMember.1">
+        <source>Automatically log in a front end member to index protected pages.</source>
+        <target>Automaticky prihláste front-end člena na index chránených stránok.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
+        <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
+        <target>Prehľadávač momentálne funguje. Počkajte na dokončenie, aby ste videli výsledky.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDebugLog">
+        <source>Debug log</source>
+        <target>Debug log</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDebugLogExplain">
+        <source>If errors occurred or pages were skipped, check the debug log for more information.</source>
+        <target>Ak sa vyskytli chyby alebo boli preskočené stránky, ďalšie informácie nájdete v debug logu.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDownloadLog">
+        <source>Download log</source>
+        <target>Stiahnuť log</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscriberNames.search-index">
+        <source>Update the search index</source>
+        <target>Aktualizovať index vyhľadávania</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
+        <source>Check for broken links</source>
+        <target>Skontrolovať poškodené odkazy</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
