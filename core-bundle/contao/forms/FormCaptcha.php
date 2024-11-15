@@ -237,16 +237,6 @@ class FormCaptcha extends Widget
 	}
 
 	/**
-	 * @return bool
-	 */
-	protected function isBackendRequest()
-	{
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		return $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
-	}
-
-	/**
 	 * Generate the label and return it as string
 	 *
 	 * @return string The label markup
