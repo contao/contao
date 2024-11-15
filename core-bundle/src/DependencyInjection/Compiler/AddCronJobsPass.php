@@ -56,7 +56,7 @@ class AddCronJobsPass implements CompilerPassInterface
                 $definition->addMethodCall(
                     'addCronJob',
                     [
-                        new Definition(CronJob::class, [new Reference($serviceId), $interval, $method]),
+                        new Definition(CronJob::class, [new Reference($serviceId), $interval, $method, $serviceId]),
                     ]
                 );
             }

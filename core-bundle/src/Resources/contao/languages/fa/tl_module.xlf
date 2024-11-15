@@ -111,6 +111,7 @@
       </trans-unit>
       <trans-unit id="tl_module.customLabel.1">
         <source>Here you can enter a custom label for the drop-down menu or the overview link.</source>
+        <target>در اینجا می توانید یک برچسب سفارشی برای منوی کشویی یا پیوند نمای کلی وارد کنید.</target>
       </trans-unit>
       <trans-unit id="tl_module.autologin.0">
         <source>Allow auto login</source>
@@ -510,6 +511,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModules.1">
         <source>Please select a module for every root page.</source>
+        <target>لطفاً یک ماژول برای هر برگه ریشه انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
         <source>Choose module for &quot;%s&quot;</source>

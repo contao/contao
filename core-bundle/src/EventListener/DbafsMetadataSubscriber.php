@@ -44,14 +44,14 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
             $event->set('importantPart', $importantPart);
         }
 
-        // Add file metadata
-        $metadata = [];
+        // Add localized metadata
+        $localizedMetadata = [];
 
         foreach (StringUtil::deserialize($row['meta'] ?? null, true) as $lang => $data) {
-            $metadata[$lang] = new Metadata(array_merge([Metadata::VALUE_UUID => $event->getUuid()->toRfc4122()], $data));
+            $localizedMetadata[$lang] = new Metadata(array_merge([Metadata::VALUE_UUID => $event->getUuid()->toRfc4122()], $data));
         }
 
-        $event->set('metadata', $metadata);
+        $event->set('localized', $localizedMetadata);
     }
 
     public function normalizeMetadata(StoreDbafsMetadataEvent $event): void
@@ -70,7 +70,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
             $event->set('importantPartHeight', $importantPart->getHeight());
         }
 
-        if (\is_array($data = $extraMetadata['metadata'] ?? null)) {
+        if (\is_array($localizedMetadata = $extraMetadata['localized'] ?? null)) {
             $metadata = array_map(
                 static function (Metadata $metadata) use ($event): array {
                     if (null !== ($uuid = $metadata->getUuid()) && $uuid !== ($recordUuid = $event->getUuid()->toRfc4122())) {
@@ -79,7 +79,7 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
 
                     return array_diff_key($metadata->all(), [Metadata::VALUE_UUID => null]);
                 },
-                $data
+                $localizedMetadata
             );
 
             $event->set('meta', serialize($metadata));

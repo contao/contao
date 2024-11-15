@@ -39,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_content.showPreview.1">
         <source>Show preview images of the selected files.</source>
+        <target>نمایش تصاویر پیش نمایش فایل های انتخاب شده.</target>
       </trans-unit>
       <trans-unit id="tl_content.inline.0">
         <source>Show in browser</source>
@@ -310,6 +311,7 @@
       </trans-unit>
       <trans-unit id="tl_content.data.1">
         <source>These values are available as &lt;code&gt;$this-&gt;keys&lt;/code&gt; in the template.</source>
+        <target>این مقادیر به صورت &lt;code&gt;$this-&gt;keys&lt;/code&gt; در قالب دردسترس هستند.</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>

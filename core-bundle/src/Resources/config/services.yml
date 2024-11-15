@@ -518,6 +518,19 @@ services:
         tags:
             - contao.picker_provider
 
+    contao.rate_limit.member_password_factory:
+        class: Symfony\Component\RateLimiter\RateLimiterFactory
+        public: true
+        arguments:
+            - { id: contao.member_password_reset, policy: fixed_window, limit: 3, interval: 15 minutes }
+            - '@contao.rate_limit.member_password_storage'
+            - '@?lock_factory'
+
+    contao.rate_limit.member_password_storage:
+        class: Symfony\Component\RateLimiter\Storage\CacheStorage
+        arguments:
+            - '@cache.rate_limiter'
+
     contao.repository.cron_job:
         class: Contao\CoreBundle\Repository\CronJobRepository
         arguments:

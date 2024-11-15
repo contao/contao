@@ -15,6 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.showUnpublished.1">
         <source>Show unpublished pages and elements when sharing this link.</source>
+        <target>هنگام اشتراک‌گذاری این پیوند، صفحات و عناصر منتشرنشده را نشان دهید.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.restrictToUrl.0">
         <source>Restrict access to specified URL</source>
@@ -22,6 +23,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.restrictToUrl.1">
         <source>Allow access only to the specified URL instead of the entire website.</source>
+        <target>اجازه دسترسی فقط به URL مشخص‌شده به جای کل وب‌سایت.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.createdAt.0">
         <source>Created at</source>
@@ -29,6 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.createdAt.1">
         <source>Date and time when the preview link was created.</source>
+        <target>تاریخ و ساعت ایجاد پیوند پیش‌نمایش.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.createdBy.0">
         <source>Created by</source>
@@ -36,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.createdBy.1">
         <source>The user who created the preview link.</source>
+        <target>کاربری که پیوند پیش‌نمایش را ایجاد کرده است.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.expiresAt.0">
         <source>Valid until</source>
@@ -43,6 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.expiresAt.1">
         <source>Preview of the final date until which the link is available.</source>
+        <target>پیش‌نمایش تاریخ نهایی تا زمانی که پیوند در دسترس است.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.published.0">
         <source>Enable</source>
@@ -58,6 +63,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.share.1">
         <source>Copy the preview link ID %s to your clipboard.</source>
+        <target>شناسه پیوند %s پیش‌نمایش را در کلیپ‌بورد خود کپی کنید.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.url_legend">
         <source>Target URL</source>
@@ -85,9 +91,11 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.hintNew">
         <source>To add a preview link, use the &quot;Share URL&quot; button in the front end preview toolbar.</source>
+        <target>برای افزودن پیوند پیش‌نمایش، از دکمه «اشتراک‌گذاری URL» در نوار ابزار پیش‌نمایش وب‌سایت استفاده کنید.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintSave">
         <source>Please save this record to generate the preview link.</source>
+        <target>لطفاً این رکورد را برای ایجاد پیوند پیش‌نمایش ذخیره کنید.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintEdit">
         <source>Preview link: &lt;a href=&quot;%s&quot; data-to-clipboard=&quot;%s&quot;&gt;%s&lt;/a&gt;</source>
@@ -95,6 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.hintExpired">
         <source>This preview link has expired and can no longer be shared.</source>
+        <target>این پیوند پیش‌نمایش منقضی شده است و دیگر نمی‌توان آن را به اشتراک گذاشت.</target>
       </trans-unit>
     </body>
   </file>

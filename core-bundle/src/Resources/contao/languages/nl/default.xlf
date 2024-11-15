@@ -1370,8 +1370,8 @@
         <target>Passend</target>
       </trans-unit>
       <trans-unit id="MSC.box.1">
-        <source>The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
-        <target>De kortste zijde van het beeld wordt aangepast aan de bepaalde afmetingen en het beeld wordt proportioneel aangepast.</target>
+        <source>The image will be resized proportionally so that neither side exceeds any of the given dimensions. This is similar to the &lt;em&gt;contain&lt;/em&gt; value in CSS.</source>
+        <target>De afbeelding wordt proportioneel aangepast zodat geen van beide zijden de opgegeven afmetingen overschrijdt. Dit is vergelijkbaar met de &lt;em&gt;contain&lt;/em&gt; waarde in CSS.</target>
       </trans-unit>
       <trans-unit id="MSC.exact.0">
         <source>Exact dimensions</source>
@@ -1386,8 +1386,8 @@
         <target>Belangrijk gedeelte</target>
       </trans-unit>
       <trans-unit id="MSC.crop.1">
-        <source>Preserves the important part of an image as specified in the file manager.</source>
-        <target>Behoudt het belangrijkste gedeelte van een afbeelding, zoals gespecificeerd in de bestandsmanager.</target>
+        <source>The image will be resized to the exact dimensions given, cropping the image if necessary while preserving the important part if specified. This is similar to the &lt;em&gt;cover&lt;/em&gt; value in CSS.</source>
+        <target>De afbeelding wordt aangepast naar de exacte opgegeven afmetingen, waarbij de afbeelding indien nodig wordt bijgesneden, terwijl het belangrijke deel behouden blijft indien gespecificeerd. Dit is vergelijkbaar met de &lt;em&gt;cover&lt;/em&gt; waarde in CSS.</target>
       </trans-unit>
       <trans-unit id="MSC.left_top.0">
         <source>Left | Top</source>
@@ -2544,6 +2544,9 @@
       <trans-unit id="MSC.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
         <target>De link die u probeert te openen kon niet worden geverifieerd. Als u zelf op de link geklikt heeft of deze heeft ontvangen uit een betrouwbare bron, kunt u dit hieronder bevestigen.</target>
+      </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
