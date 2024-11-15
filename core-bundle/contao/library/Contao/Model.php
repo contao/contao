@@ -1468,13 +1468,6 @@ abstract class Model
 	{
 		static $cache = array();
 
-		if (isset($cache[$key]))
-		{
-			return $cache[$key];
-		}
-
-		$cache[$key] = str_contains($key, '__');
-
-		return $cache[$key];
+		return $cache[$key] ??= str_contains($key, '__');
 	}
 }
