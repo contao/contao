@@ -375,11 +375,18 @@ abstract class Model
 	 */
 	public function setRow(array $arrData)
 	{
-		foreach ($arrData as $k=>$v)
+		// This is a hot path so caching those statically is worth a lot in big websites
+		static $keyToKeep = array();
+
+		foreach ($arrData as $k => $v)
 		{
-			if (str_contains($k, '__'))
+			if (!isset($keyToKeep[$k]) && str_contains($k, '__'))
 			{
 				unset($arrData[$k]);
+			}
+			else
+			{
+				$keyToKeep[$k] = true;
 			}
 		}
 
