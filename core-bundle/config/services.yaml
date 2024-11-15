@@ -1300,6 +1300,7 @@ services:
     Contao\CoreBundle\Routing\ContentUrlGenerator: '@contao.routing.content_url_generator'
     Contao\CoreBundle\Routing\PageFinder: '@contao.routing.page_finder'
     Contao\CoreBundle\Routing\Page\PageRegistry: '@contao.routing.page_registry'
+    Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory: '@contao.routing.response_context_factory'
     Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor: '@contao.routing.response_context_accessor'
     Contao\CoreBundle\Routing\ScopeMatcher: '@contao.routing.scope_matcher'
     Contao\CoreBundle\Security\Authentication\Token\TokenChecker: '@contao.security.token_checker'
