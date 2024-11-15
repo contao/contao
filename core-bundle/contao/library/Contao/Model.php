@@ -139,7 +139,7 @@ abstract class Model
 			// Look for joined fields
 			foreach ($arrData as $k=>$v)
 			{
-				if (str_contains($k, '__'))
+				if (static::isJoinedField($k))
 				{
 					list($key, $field) = explode('__', $k, 2);
 
@@ -375,18 +375,11 @@ abstract class Model
 	 */
 	public function setRow(array $arrData)
 	{
-		// This is a hot path so caching those statically is worth a lot in big websites
-		static $keyToKeep = array();
-
 		foreach ($arrData as $k => $v)
 		{
-			if (!isset($keyToKeep[$k]) && str_contains($k, '__'))
+			if (static::isJoinedField($k))
 			{
 				unset($arrData[$k]);
-			}
-			else
-			{
-				$keyToKeep[$k] = true;
 			}
 		}
 
@@ -411,7 +404,7 @@ abstract class Model
 	{
 		foreach ($arrData as $k=>$v)
 		{
-			if (str_contains($k, '__'))
+			if (static::isJoinedField($k))
 			{
 				continue;
 			}
@@ -1466,5 +1459,22 @@ abstract class Model
 		}
 
 		return System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
+	}
+
+	/**
+	 * This method is a hot path so caching the keys gets rid of thousands of str_contains() calls.
+	 */
+	protected static function isJoinedField(string $key): bool
+	{
+		static $cache = array();
+
+		if (isset($cache[$key]))
+		{
+			return $cache[$key];
+		}
+
+		$cache[$key] = str_contains($key, '__');
+
+		return $cache[$key];
 	}
 }
