@@ -19,7 +19,7 @@ class DeleteDocumentsMessageTest extends TestCase
 {
     public function testGetter(): void
     {
-        $message = new DeleteDocumentsMessage(['foobar-42']);
-        $this->assertSame(['foobar-42'], $message->getDocumentIds());
+        $message = new DeleteDocumentsMessage(['foobar' => ['42']]);
+        $this->assertSame(['foobar' => ['42']], $message->getDocumentTypesAndIds());
     }
 }

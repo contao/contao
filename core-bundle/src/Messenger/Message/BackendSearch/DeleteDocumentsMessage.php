@@ -20,17 +20,17 @@ use Contao\CoreBundle\Messenger\Message\LowPriorityMessageInterface;
 class DeleteDocumentsMessage implements LowPriorityMessageInterface
 {
     /**
-     * @param array<string> $documentsIds
+     * @param array<string, array<string>> $documentTypesAndIds The document IDs grouped by type
      */
-    public function __construct(private readonly array $documentsIds)
+    public function __construct(private readonly array $documentTypesAndIds)
     {
     }
 
     /**
-     * @return array<string>
+     * @return array<string, array<string>>
      */
-    public function getDocumentIds(): array
+    public function getDocumentTypesAndIds(): array
     {
-        return $this->documentsIds;
+        return $this->documentTypesAndIds;
     }
 }
