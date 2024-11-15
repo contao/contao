@@ -1067,6 +1067,7 @@ services:
     Contao\CoreBundle\Routing\Page\PageRegistry:
         alias: contao.routing.page_registry
         public: true # backwards compatibility
+    Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory: '@contao.routing.response_context_factory'
     Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor:
         alias: contao.routing.response_context_accessor
         public: true  # backwards compatibility
