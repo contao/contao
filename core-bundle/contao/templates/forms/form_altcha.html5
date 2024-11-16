@@ -16,13 +16,14 @@ $GLOBALS['TL_BODY'][] = sprintf('<script src="%s" type="module"></script>', $thi
 <?php $this->endblock(); ?>
 
 <?php $this->block('field'); ?>
-    <?php if ($this->hasErrors()): ?>
-      <p class="error"><?= $this->getErrorAsString() ?></p>
-    <?php endif; ?>
+  <noscript><p class="warning"><?= $this->trans('ERR.altchaJavascriptRequired') ?></p></noscript>
+  <?php if ($this->hasErrors()): ?>
+    <p class="error"><?= $this->getErrorAsString() ?></p>
+  <?php endif; ?>
 
-    <?php if (!$this->canUseAltcha): ?>
-      <p class="error"><?= $this->trans('ERR.altchaInsecureConnection') ?></p>
-    <?php else: ?>
-      <altcha-widget<?= $this->altchaAttributes->set('workerurl', $this->asset('js/worker.js', 'contao-components/altcha')) ?>></altcha-widget>
-    <?php endif; ?>
+  <?php if (!$this->canUseAltcha): ?>
+    <p class="error"><?= $this->trans('ERR.altchaInsecureConnection') ?></p>
+  <?php else: ?>
+    <altcha-widget<?= $this->altchaAttributes->set('workerurl', $this->asset('js/worker.js', 'contao-components/altcha')) ?>></altcha-widget>
+  <?php endif; ?>
 <?php $this->endblock(); ?>
