@@ -53,7 +53,7 @@ class CrawlCsvLogHandler extends StreamHandler
         $size = $stat['size'];
 
         if (0 === $size) {
-            fputcsv($stream, ['Time', 'Source', 'URI', 'Found on URI', 'Found on level', 'Tags', 'Message']);
+            fputcsv($stream, ['Time', 'Source', 'URI', 'Found on URI', 'Found on level', 'Tags', 'Message'], ',', '"', '');
         }
 
         $columns = [
@@ -66,6 +66,6 @@ class CrawlCsvLogHandler extends StreamHandler
             preg_replace('/\r\n|\n|\r/', ' ', $record['message']),
         ];
 
-        fputcsv($stream, $columns);
+        fputcsv($stream, $columns, ',', '"', '');
     }
 }

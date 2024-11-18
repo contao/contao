@@ -164,7 +164,7 @@ class BackendCsvImportController
         foreach ($files as $file) {
             $fp = fopen($file, 'r');
 
-            while (false !== ($row = fgetcsv($fp, 0, $delimiter))) {
+            while (false !== ($row = fgetcsv($fp, 0, $delimiter, '"', ''))) {
                 $data = $callback($data, $row);
             }
         }

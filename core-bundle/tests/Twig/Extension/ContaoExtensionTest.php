@@ -44,7 +44,6 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
-use Twig\Node\TextNode;
 use Twig\NodeTraverser;
 use Twig\Runtime\EscaperRuntime;
 use Twig\Source;
@@ -224,7 +223,7 @@ class ContaoExtensionTest extends TestCase
         $node = new ModuleNode(
             new BodyNode([
                 new FilterExpression(
-                    new TextNode('text', 1),
+                    new ConstantExpression('text', 1),
                     $filter,
                     new Node([
                         new ConstantExpression('html', 1),
