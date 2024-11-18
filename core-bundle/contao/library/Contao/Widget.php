@@ -402,6 +402,11 @@ abstract class Widget extends Controller
 			case 'activeRecord':
 				return $this->objDca->activeRecord;
 
+			case 'asEditorView':
+				$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+				return $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
+
 			default:
 				if (isset($this->arrAttributes[$strKey]))
 				{
