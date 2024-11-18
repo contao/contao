@@ -138,7 +138,7 @@ class DebugFragmentsCommandTest extends TestCase
                 OUTPUT,
         ];
 
-        yield 'Old Contao Modules' => [
+        yield 'Legacy modules' => [
             [
                 ['contao.foo.bar', new FragmentConfig(ModuleArticle::class), []],
             ],
