@@ -47,7 +47,7 @@ composer create-project --no-install contao/managed-edition <directory> <branch>
 
 Replace `<directory>` with the directory where you want to install the Managed Edition (use `.` for the current
 directory). Replace `<branch>` with `5.x-dev` if you want to add a new feature, or with `<lts-version>.x-dev` (currently
-`4.13.x-dev`) if you want to fix a bug.
+`5.3.x-dev`) if you want to fix a bug.
 
 Then adjust the `require` section in your `composer.json` file, so Composer loads the monorepo instead of the individual
 bundles:
@@ -72,6 +72,12 @@ running `vendor/bin/contao-setup` on the command line.
 
 Any changes you make in `vendor/contao/contao` will be tracked via Git, so you can submit your pull request directly
 from your application.
+
+## Contao 4.13
+
+Pull requests for Contao 4.13 are no longer merged upstream into Contao 5, as the code base is now too different. If you
+want to fix a bug in Contao 4.13, please create a pull request for Contao 5.3 first and then a separate backport pull
+request for Contao 4.13.
 
 ## Running scripts
 
