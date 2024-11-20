@@ -965,6 +965,16 @@ class tl_content extends Backend
 		$class = 'cte_preview';
 		$preview = StringUtil::insertTagToSrc($this->getContentElement($objModel));
 
+		if (!empty($arrRow['sectionHeadline']))
+		{
+			$sectionHeadline = StringUtil::deserialize($arrRow['sectionHeadline'], true);
+
+			if (!empty($sectionHeadline['value']) && !empty($sectionHeadline['unit']))
+			{
+				$preview = '<' . $sectionHeadline['unit'] . '>' . $sectionHeadline['value'] . '</' . $sectionHeadline['unit'] . '>' . $preview;
+			}
+		}
+
 		// Strip HTML comments to check if the preview is empty
 		if (trim(preg_replace('/<!--(.|\s)*?-->/', '', $preview)) == '')
 		{
