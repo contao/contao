@@ -2,6 +2,27 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.18] (2024-11-20)
+
+**Fixed issues:**
+
+- [#7730] Show section headlines in the back end preview ([leofeyer])
+- [#7729] Allow basic entities in section headlines ([leofeyer])
+- [#7727] Make the abstract entities migration case-sensitive ([leofeyer])
+- [#7670] Prevent possible type error in `DC_Table::getClipboardPermission` ([fritzmg])
+- [#7699] Do not load the CAPTCHA script in the back end preview ([leofeyer])
+- [#7698] Skip fragments which inherit legacy modules in debug:fragments ([bytehead])
+- [#7682] Remove superfluous domain encoding ([falkgeist])
+- [#7720] Cache hot path in model ([Toflar])
+- [#7631] Allow page controllers to create the response context ([fritzmg])
+- [#7715] Consider the `doNotDeleteRecords` setting when deleting child records ([patrickjDE])
+- [#7716] Fix login redirect and session usage ([fritzmg])
+- [#7712] Fix the permissions check for "save and duplicate" ([aschempp])
+- [#7708] Decode entities for favorites labels ([fritzmg])
+- [#7717] Use the `RateLimiter` component to limit password reset requests ([bytehead])
+- [#7674] Flag deprecated Twig functions as deprecated  ([m-vo])
+- [#7667] Harden CSP header parsing ([bytehead])
+
 ## [5.3.17] (2024-10-23)
 
 **Fixed issues:**
@@ -455,6 +476,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.18]: https://github.com/contao/contao/releases/tag/5.3.18
 [5.3.17]: https://github.com/contao/contao/releases/tag/5.3.17
 [5.3.16]: https://github.com/contao/contao/releases/tag/5.3.16
 [5.3.15]: https://github.com/contao/contao/releases/tag/5.3.15
@@ -489,6 +511,7 @@ This project adheres to [Semantic Versioning].
 [bezin]: https://github.com/bezin
 [bytehead]: https://github.com/bytehead
 [de-es]: https://github.com/de-es
+[falkgeist]: https://github.com/falkgeist
 [fritzmg]: https://github.com/fritzmg
 [kllmanu]: https://github.com/kllmanu
 [leofeyer]: https://github.com/leofeyer
@@ -496,6 +519,7 @@ This project adheres to [Semantic Versioning].
 [m-vo]: https://github.com/m-vo
 [md-netdesign]: https://github.com/md-netdesign
 [mpitz]: https://github.com/mpitz
+[patrickjDE]: https://github.com/patrickjDE
 [qzminski]: https://github.com/qzminski
 [ReneLuecking]: https://github.com/ReneLuecking
 [SeverinGloeckle]: https://github.com/SeverinGloeckle
@@ -816,8 +840,24 @@ This project adheres to [Semantic Versioning].
 [#7622]: https://github.com/contao/contao/pull/7622
 [#7623]: https://github.com/contao/contao/pull/7623
 [#7626]: https://github.com/contao/contao/pull/7626
+[#7631]: https://github.com/contao/contao/pull/7631
 [#7637]: https://github.com/contao/contao/pull/7637
 [#7639]: https://github.com/contao/contao/pull/7639
 [#7650]: https://github.com/contao/contao/pull/7650
 [#7660]: https://github.com/contao/contao/pull/7660
 [#7665]: https://github.com/contao/contao/pull/7665
+[#7667]: https://github.com/contao/contao/pull/7667
+[#7670]: https://github.com/contao/contao/pull/7670
+[#7674]: https://github.com/contao/contao/pull/7674
+[#7682]: https://github.com/contao/contao/pull/7682
+[#7698]: https://github.com/contao/contao/pull/7698
+[#7699]: https://github.com/contao/contao/pull/7699
+[#7708]: https://github.com/contao/contao/pull/7708
+[#7712]: https://github.com/contao/contao/pull/7712
+[#7715]: https://github.com/contao/contao/pull/7715
+[#7716]: https://github.com/contao/contao/pull/7716
+[#7717]: https://github.com/contao/contao/pull/7717
+[#7720]: https://github.com/contao/contao/pull/7720
+[#7727]: https://github.com/contao/contao/pull/7727
+[#7729]: https://github.com/contao/contao/pull/7729
+[#7730]: https://github.com/contao/contao/pull/7730
