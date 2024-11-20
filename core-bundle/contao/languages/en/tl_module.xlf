@@ -393,7 +393,7 @@
         <source>Please select a module for every website root page.</source>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Choose module for "%s"</source>
+        <source>Choose module for "%s" [%s]</source>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
