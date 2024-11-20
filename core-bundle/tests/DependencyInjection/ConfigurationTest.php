@@ -482,7 +482,7 @@ class ConfigurationTest extends TestCase
                 }
             }
 
-            if (\is_string($key) && !$value->isDeprecated()) {
+            if (\is_string($key) && !$value->isDeprecated() && 'resampling-filter' !== $key) {
                 $this->assertMatchesRegularExpression('/^[a-z][a-z_]+[a-z]$/', $key);
             }
         }

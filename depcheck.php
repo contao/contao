@@ -25,6 +25,7 @@ return (new Configuration())
         'Swift_Mailer',
         'Swift_Message',
     ])
+    ->disableExtensionsAnalysis()
     ->disableReportingUnmatchedIgnores()
 
     // Ignore the Contao components.

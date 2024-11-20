@@ -168,7 +168,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'search'                  => true,
 			'inputType'               => 'inputUnit',
 			'options'                 => array('h1', 'h2', 'h3', 'h4', 'h5', 'h6'),
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'basicEntities'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default 'a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}'"
 		),
 		'text' => array
@@ -702,7 +702,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_form.title',
 			'options_callback'        => array('tl_content', 'getForms'),
-			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('mandatory'=>true, 'includeBlankOption' => true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
 			'wizard' => array
 			(
 				array('tl_content', 'editForm')
@@ -713,7 +713,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_module.name',
-			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('mandatory'=>true, 'includeBlankOption' => true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
 			'wizard' => array
 			(
 				array('tl_content', 'editModule')
@@ -959,6 +959,16 @@ class tl_content extends Backend
 
 		$class = 'cte_preview';
 		$preview = StringUtil::insertTagToSrc($this->getContentElement($objModel));
+
+		if (!empty($arrRow['sectionHeadline']))
+		{
+			$sectionHeadline = StringUtil::deserialize($arrRow['sectionHeadline'], true);
+
+			if (!empty($sectionHeadline['value']) && !empty($sectionHeadline['unit']))
+			{
+				$preview = '<' . $sectionHeadline['unit'] . '>' . $sectionHeadline['value'] . '</' . $sectionHeadline['unit'] . '>' . $preview;
+			}
+		}
 
 		// Strip HTML comments to check if the preview is empty
 		if (trim(preg_replace('/<!--(.|\s)*?-->/', '', $preview)) == '')

@@ -50,9 +50,12 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Component\Security\Http\ParameterBagUtils;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 class ContaoLoginAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface, InteractiveAuthenticatorInterface
 {
+    use TargetPathTrait;
+
     private readonly array $options;
 
     /**
@@ -213,12 +216,32 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
     private function redirectToBackend(Request $request): RedirectResponse
     {
+        // No redirect parameter required if the 'contao_backend' route was requested
+        // without any parameters.
+        if ('contao_backend' === $request->attributes->get('_route') && [] === $request->query->all()) {
+            $loginParams = [];
+        } else {
+            $loginParams = ['redirect' => $request->getUri()];
+        }
+
         $url = $this->router->generate(
             'contao_backend_login',
-            ['redirect' => $request->getUri()],
+            $loginParams,
             UrlGeneratorInterface::ABSOLUTE_URL,
         );
 
-        return new RedirectResponse($this->uriSigner->sign($url));
+        // No URL signing required if we do not have any parameters.
+        if ([] !== $loginParams) {
+            $url = $this->uriSigner->sign($url);
+        }
+
+        // Our back end login controller will redirect based on the 'redirect' parameter,
+        // ignoring Symfony's target path session value. Thus, we remove the session
+        // variable here in order to not send an unnecessary session cookie.
+        if ($request->hasSession()) {
+            $this->removeTargetPath($request->getSession(), 'contao_backend');
+        }
+
+        return new RedirectResponse($url);
     }
 }

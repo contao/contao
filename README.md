@@ -47,7 +47,7 @@ composer create-project --no-install contao/managed-edition <directory> <branch>
 
 Replace `<directory>` with the directory where you want to install the Managed Edition (use `.` for the current
 directory). Replace `<branch>` with `5.x-dev` if you want to add a new feature, or with `<lts-version>.x-dev` (currently
-`4.13.x-dev`) if you want to fix a bug.
+`5.3.x-dev`) if you want to fix a bug.
 
 Then adjust the `require` section in your `composer.json` file, so Composer loads the monorepo instead of the individual
 bundles:
@@ -75,7 +75,7 @@ from your application.
 
 ## Running scripts
 
-First install the code quality tools:
+First install the code quality tools in `vendor/contao/contao`:
 
 ```bash
 composer bin all install
@@ -145,7 +145,7 @@ The Contao end-to-end tests are availabe as an [NPM package][3]. You can install
 
 ```bash
 npm install contao-e2e-tests --save-dev
-npm run contao-e2e-tests
+npx contao-e2e-tests
 ```
 
 ## License

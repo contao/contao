@@ -313,6 +313,17 @@ class ModulePersonalData extends Module
 						{
 							$migrateSession = true;
 						}
+
+						if ($field == 'password')
+						{
+							// Delete unconfirmed "change password" tokens
+							$models = OptInModel::findUnconfirmedByRelatedTableAndId('tl_member', $objMember->id);
+
+							foreach ($models ?? array() as $model)
+							{
+								$model->delete();
+							}
+						}
 					}
 				}
 			}
