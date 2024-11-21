@@ -95,7 +95,6 @@ class AbstractBackendControllerTest extends TestCase
             'learnMore' => 'learn more',
             'menu' => '<menu>',
             'headerMenu' => '<header_menu>',
-            'turboRoot' => '/contao',
             'badgeTitle' => '',
             'foo' => 'bar',
         ];
