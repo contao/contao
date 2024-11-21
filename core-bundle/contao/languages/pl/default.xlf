@@ -373,8 +373,11 @@
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
         <target>Nie ustawiono adresu e-mail administratora, proszę skontaktować się z administratorem strony.</target>
       </trans-unit>
+      <trans-unit id="ERR.altchaJavaScriptRequired">
+        <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.</source>
+      </trans-unit>
       <trans-unit id="ERR.altchaVerificationFailed">
-        <source>ALTCHA antispam verification failed. Are you a human or a robot?</source>
+        <source>Anti-spam verification failed. Are you a human or a robot?</source>
       </trans-unit>
       <trans-unit id="ERR.altchaWidgetError">
         <source>Verification failed. Try again later.</source>
@@ -2595,6 +2598,9 @@
       <trans-unit id="MSC.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
         <target>Link, który próbowałeś otworzyć, nie mógł zostać zweryfikowany. Jeśli kliknąłeś link sam, lub otrzymałeś go od zaufanej osoby, potwierdź proces poniżej.</target>
+      </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>

@@ -373,9 +373,13 @@
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
         <target>Es ist keine Administrator-E-Mail-Adresse hinterlegt. Bitte wenden Sie sich an den Administrator der Webseite.</target>
       </trans-unit>
+      <trans-unit id="ERR.altchaJavaScriptRequired">
+        <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.</source>
+        <target>JavaScript ist derzeit deaktiviert oder blockiert. Ohne JavaScript wird die Anti-Spam-Überprüfung fehlschlagen. Bitte aktivieren Sie JavaScript vorübergehend für die Übermittlung des Formulars.</target>
+      </trans-unit>
       <trans-unit id="ERR.altchaVerificationFailed">
-        <source>ALTCHA antispam verification failed. Are you a human or a robot?</source>
-        <target>ALTCHA Antispam-Überprüfung fehlgeschlagen. Sind Sie ein Mensch oder ein Roboter?</target>
+        <source>Anti-spam verification failed. Are you a human or a robot?</source>
+        <target>Antispam-Überprüfung fehlgeschlagen. Sind Sie ein Mensch oder ein Roboter?</target>
       </trans-unit>
       <trans-unit id="ERR.altchaWidgetError">
         <source>Verification failed. Try again later.</source>
@@ -2604,6 +2608,10 @@
       <trans-unit id="MSC.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
         <target>Der Link, den Sie aufgerufen haben, konnte nicht verifiziert werden. Wenn Sie den Link selbst aufgerufen oder von einer vertrauenswürdigen Person erhalten haben, können Sie den Vorgang fortsetzen.</target>
+      </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>Sie haben zu oft versucht, Ihr Passwort zurückzusetzen. Bitte versuchen Sie es in 15 Minuten erneut.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>

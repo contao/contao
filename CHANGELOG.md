@@ -2,6 +2,15 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.4.5] (2024-11-21)
+
+**Fixed issues:**
+
+- [#7687] Adjust the tooltip performance ([zoglo])
+- [#7723] Add an ALTCHA noscript warning message ([CMSworker])
+- [#7724] Canonicalize purge paths ([fritzmg])
+- [#7734] Make the slots concept compatible with Twig 3.15 ([m-vo])
+
 ## [5.4.4] (2024-10-23)
 
 **Fixed issues:**
@@ -111,6 +120,7 @@ This project adheres to [Semantic Versioning].
 - [#7229] Fix the `.nogrid` backwards compatibility layer ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.4.5]: https://github.com/contao/contao/releases/tag/5.4.5
 [5.4.4]: https://github.com/contao/contao/releases/tag/5.4.4
 [5.4.3]: https://github.com/contao/contao/releases/tag/5.4.3
 [5.4.2]: https://github.com/contao/contao/releases/tag/5.4.2
@@ -125,6 +135,7 @@ This project adheres to [Semantic Versioning].
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
 [bytehead]: https://github.com/bytehead
+[CMSworker]: https://github.com/CMSworker
 [fritzmg]: https://github.com/fritzmg
 [leofeyer]: https://github.com/leofeyer
 [m-vo]: https://github.com/m-vo
@@ -192,3 +203,7 @@ This project adheres to [Semantic Versioning].
 [#7597]: https://github.com/contao/contao/pull/7597
 [#7603]: https://github.com/contao/contao/pull/7603
 [#7663]: https://github.com/contao/contao/pull/7663
+[#7687]: https://github.com/contao/contao/pull/7687
+[#7723]: https://github.com/contao/contao/pull/7723
+[#7724]: https://github.com/contao/contao/pull/7724
+[#7734]: https://github.com/contao/contao/pull/7734

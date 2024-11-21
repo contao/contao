@@ -373,9 +373,11 @@
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
         <target>آدرس ایمیل مدیر تنظیم نشده است، لطفا با مدیر وب‌سایت تماس بگیرید.</target>
       </trans-unit>
+      <trans-unit id="ERR.altchaJavaScriptRequired">
+        <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.</source>
+      </trans-unit>
       <trans-unit id="ERR.altchaVerificationFailed">
-        <source>ALTCHA antispam verification failed. Are you a human or a robot?</source>
-        <target>تأیید آنتی‌اسپم ALTCHA ناموفق بود. شما انسان هستید یا ربات؟</target>
+        <source>Anti-spam verification failed. Are you a human or a robot?</source>
       </trans-unit>
       <trans-unit id="ERR.altchaWidgetError">
         <source>Verification failed. Try again later.</source>
@@ -2604,6 +2606,9 @@
       <trans-unit id="MSC.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
         <target>پیوندی که شما سعی در باز کردنش دارید نمی‌تواند تایید شود. اگر شما خودتان پیوند را کلیک کرده‌اید یا از شخص مطمئنی آن را دریافت کرده‌اید، می‌توانید روند را از طریق زیر تایید نمایید.</target>
+      </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>

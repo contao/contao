@@ -158,16 +158,16 @@
         <target>ボックスに一致</target>
       </trans-unit>
       <trans-unit id="tl_image_size.box.1">
-        <source>The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
-        <target>画像の短い側を指定した寸法に調整して、画像の大きさを縦横比を保持して変更します。</target>
+        <source>The image will be resized proportionally so that neither side exceeds any of the given dimensions. This is similar to the &lt;em&gt;contain&lt;/em&gt; value in CSS.</source>
+        <target>画僧の大きさを均等に変更して、指定された大きさを超えないようにします。これはCSSの値の&lt;em&gt;contain&lt;/em&gt;と似ています。 </target>
       </trans-unit>
       <trans-unit id="tl_image_size.crop.0">
         <source>Crop</source>
         <target>切り取り</target>
       </trans-unit>
       <trans-unit id="tl_image_size.crop.1">
-        <source>The image will be resized to the given dimensions. If necessary, it will be cropped.</source>
-        <target>画像を指定した寸法に変更します。必要な場合は画像を切り取ります。</target>
+        <source>The image will be resized to the exact dimensions given, cropping the image if necessary while preserving the important part if specified. This is similar to the &lt;em&gt;cover&lt;/em&gt; value in CSS.</source>
+        <target>画像の重要な部分が指定されている場合は、そこを残します。そして、必要な場合は画像を切り落として、画像の大きさを変更します。これはCSSの値の&lt;em&gt;cover&lt;/em&gt;に似ています。</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.default">
         <source>Use default settings</source>
