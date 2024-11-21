@@ -25,7 +25,7 @@ trait BackendTemplateTrait
 		$container = System::getContainer();
 
 		return
-			'var Contao={'
+			'var Contao=Contao ?? {'
 				. 'theme:"' . Backend::getTheme() . '",'
 				. 'lang:{'
 					. 'close:"' . $GLOBALS['TL_LANG']['MSC']['close'] . '",'
