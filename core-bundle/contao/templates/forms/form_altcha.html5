@@ -16,7 +16,7 @@ $GLOBALS['TL_BODY'][] = sprintf('<script src="%s" type="module"></script>', $thi
 <?php $this->endblock(); ?>
 
 <?php $this->block('field'); ?>
-  <noscript><p class="warning"><?= $this->trans('ERR.altchaJavascriptRequired') ?></p></noscript>
+  <noscript><p class="warning"><?= $this->trans('ERR.altchaJavaScriptRequired') ?></p></noscript>
   <?php if ($this->hasErrors()): ?>
     <p class="error"><?= $this->getErrorAsString() ?></p>
   <?php endif; ?>
