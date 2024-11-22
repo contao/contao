@@ -30,7 +30,7 @@ class ButtonsBuilder
     {
     }
 
-    public function generateEditButtons(string $strTable, bool $hasPtable, bool $hasCreatePermission, DataContainer $dc): string
+    public function generateEditButtons(string $strTable, bool $hasPtable, bool $hasCreatePermission, bool $hasCopyPermission, DataContainer $dc): string
     {
         $arrButtons = [];
         $arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s" data-turbo-frame="_self">'.$GLOBALS['TL_LANG']['MSC']['save'].'</button>';
@@ -41,10 +41,10 @@ class ButtonsBuilder
             if (!Input::get('nc')) {
                 if (!($GLOBALS['TL_DCA'][$strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$strTable]['config']['notCreatable'] ?? null) && $hasCreatePermission) {
                     $arrButtons['saveNcreate'] = '<button type="submit" name="saveNcreate" id="saveNcreate" class="tl_submit" accesskey="n" data-action="contao--scroll-offset#discard">'.$GLOBALS['TL_LANG']['MSC']['saveNcreate'].'</button>';
+                }
 
-                    if (!($GLOBALS['TL_DCA'][$strTable]['config']['notCopyable'] ?? null)) {
-                        $arrButtons['saveNduplicate'] = '<button type="submit" name="saveNduplicate" id="saveNduplicate" class="tl_submit" accesskey="d" data-action="contao--scroll-offset#discard">'.$GLOBALS['TL_LANG']['MSC']['saveNduplicate'].'</button>';
-                    }
+                if (!($GLOBALS['TL_DCA'][$strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$strTable]['config']['notCreatable'] ?? null) && !($GLOBALS['TL_DCA'][$strTable]['config']['notCopyable'] ?? null) && $hasCopyPermission) {
+                    $arrButtons['saveNduplicate'] = '<button type="submit" name="saveNduplicate" id="saveNduplicate" class="tl_submit" accesskey="d" data-action="contao--scroll-offset#discard">'.$GLOBALS['TL_LANG']['MSC']['saveNduplicate'].'</button>';
                 }
 
                 if ($GLOBALS['TL_DCA'][$strTable]['config']['switchToEdit'] ?? null) {

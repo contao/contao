@@ -188,7 +188,7 @@ class BackendSearchTest extends TestCase
         $messageBus
             ->expects($this->once())
             ->method('dispatch')
-            ->with($this->callback(static fn (DeleteDocumentsMessage $message) => ['type_42'] === $message->getDocumentIds()))
+            ->with($this->callback(static fn (DeleteDocumentsMessage $message) => ['type' => ['42']] === $message->getDocumentTypesAndIds()))
             ->willReturn(new Envelope($this->createMock(DeleteDocumentsMessage::class)))
         ;
 
@@ -211,7 +211,10 @@ class BackendSearchTest extends TestCase
 
     public function testDeleteDocumentsSync(): void
     {
-        $documents = ['test_42', new Document('42', 'foobar', 'foo')];
+        $documentTypesAndIds = [
+            'test' => ['42'],
+            'foobar' => ['42'],
+        ];
 
         $engine = $this->createMock(EngineInterface::class);
         $engine
@@ -232,18 +235,21 @@ class BackendSearchTest extends TestCase
             'contao_backend_search',
         );
 
-        $backendSearch->deleteDocuments($documents, false);
+        $backendSearch->deleteDocuments($documentTypesAndIds, false);
     }
 
     public function testDeleteDocumentsAsync(): void
     {
-        $documents = ['test_42', new Document('42', 'foobar', 'foo')];
+        $documentTypesAndIds = [
+            'test' => ['42'],
+            'foobar' => ['42'],
+        ];
 
         $messageBus = $this->createMock(MessageBusInterface::class);
         $messageBus
             ->expects($this->once())
             ->method('dispatch')
-            ->with($this->callback(static fn (DeleteDocumentsMessage $message) => ['test_42', 'foobar_42'] === $message->getDocumentIds()))
+            ->with($this->callback(static fn (DeleteDocumentsMessage $message) => $documentTypesAndIds === $message->getDocumentTypesAndIds()))
             ->willReturn(new Envelope($this->createMock(DeleteDocumentsMessage::class)))
         ;
 
@@ -256,6 +262,6 @@ class BackendSearchTest extends TestCase
             'contao_backend_search',
         );
 
-        $backendSearch->deleteDocuments($documents);
+        $backendSearch->deleteDocuments($documentTypesAndIds);
     }
 }

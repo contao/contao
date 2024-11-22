@@ -26,6 +26,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 /**
  * @implements UserProviderInterface<User>
+ * @implements PasswordUpgraderInterface<User>
  */
 class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {

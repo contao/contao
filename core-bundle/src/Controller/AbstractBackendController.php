@@ -19,7 +19,6 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\Environment;
 use Contao\Input;
 use Contao\System;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractBackendController extends AbstractController
@@ -54,8 +53,7 @@ abstract class AbstractBackendController extends AbstractController
             }
         });
 
-        /** @var Request $request */
-        $request = System::getContainer()->get('request_stack')?->getCurrentRequest();
+        $request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
         if (\in_array('text/vnd.turbo-stream.html', $request->getAcceptableContentTypes(), true)) {
             // Setting the request format will add the correct ContentType header and make

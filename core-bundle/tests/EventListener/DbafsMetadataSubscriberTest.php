@@ -62,7 +62,7 @@ class DbafsMetadataSubscriberTest extends TestCase
         $localizedMetadata = $extraMetadata->getLocalized();
 
         $this->assertInstanceOf(MetadataBag::class, $localizedMetadata);
-        $this->assertInstanceOf(Metadata::class, $localizedMetadata['de']);
+        $this->assertArrayHasKey('de', $localizedMetadata);
         $this->assertSame('my title', $localizedMetadata['de']->getTitle());
         $this->assertSame('f372c7d8-5aab-11ec-bf63-0242ac130002', $localizedMetadata['de']->getUuid());
     }
