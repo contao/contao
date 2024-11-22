@@ -108,7 +108,7 @@ class BackendFavoritesListenerTest extends TestCase
                         'id' => 8,
                         'pid' => 7,
                         'tstamp' => 1671538402,
-                        'title' => 'Edit fe_page',
+                        'title' => 'Edit &quot;fe_page&quot;',
                         'url' => '/contao?do=tpl_editor&act=source&id=templates%2Ffe_page.html5',
                     ],
                 ],
@@ -180,13 +180,13 @@ class BackendFavoritesListenerTest extends TestCase
         );
 
         $this->assertSame('favorite_8', $grandChildren[1]->getName());
-        $this->assertSame('Edit fe_page', $grandChildren[1]->getLabel());
+        $this->assertSame('Edit "fe_page"', $grandChildren[1]->getLabel());
         $this->assertSame('/contao?do=tpl_editor&act=source&id=templates%2Ffe_page.html5&ref=foobar', $grandChildren[1]->getUri());
 
         $this->assertSame(
             [
                 'class' => 'navigation',
-                'title' => 'Edit fe_page',
+                'title' => 'Edit "fe_page"',
             ],
             $grandChildren[1]->getLinkAttributes(),
         );

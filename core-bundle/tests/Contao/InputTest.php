@@ -377,13 +377,9 @@ class InputTest extends TestCase
         yield ["\xFB\xBF\xBF\xBF\xBF", "\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}"];
         yield ["\xFD\x80\x80\x80\x80\x80", "\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}"];
         yield ["\xFD\xBF\xBF\xBF\xBF\xBF", "\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}"];
-
-        /** @see https://github.com/php/php-src/issues/8360 */
-        if (\PHP_VERSION_ID >= 80106) {
-            yield ["\xDF\xC0", "\u{FFFD}\u{FFFD}"];
-            yield ["\xEF\xBF\xC0", "\u{FFFD}\u{FFFD}"];
-            yield ["\xF4\x8F\xBF\xC0", "\u{FFFD}\u{FFFD}"];
-        }
+        yield ["\xDF\xC0", "\u{FFFD}\u{FFFD}"];
+        yield ["\xEF\xBF\xC0", "\u{FFFD}\u{FFFD}"];
+        yield ["\xF4\x8F\xBF\xC0", "\u{FFFD}\u{FFFD}"];
     }
 
     /**

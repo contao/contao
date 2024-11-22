@@ -16,6 +16,7 @@ use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Filter\RawFilter;
 use Twig\Node\Expression\FilterExpression;
+use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\GetAttrExpression;
 use Twig\Node\Expression\NameExpression;
 use Twig\Node\Node;
@@ -36,16 +37,10 @@ final class SlotTokenParser extends AbstractTokenParser
         $nameToken = $stream->expect(Token::NAME_TYPE, null, '');
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        // Parse body: we inject a macro symbol with a marker expression to support the
-        // virtual slot() function when parsing the following tokens. Then the marker
-        // expression gets replaced again with a SlotContentNode that outputs the slot
-        // content at runtime.
-        $markerExpression = new ConstantExpression('', 0);
-        $this->parser->addImportedSymbol('function', 'slot', '', $markerExpression);
         $body = $this->parser->subparse($this->decideForFork(...));
 
         if ($body->count()) {
-            $this->traverseAndReplaceMarkerExpression($markerExpression, $nameToken->getValue(), $body);
+            $this->traverseAndReplaceSlotFunction($nameToken->getValue(), $body);
         } else {
             $line = $stream->getCurrent()->getLine();
             $body->setNode('body', new PrintNode($this->getSlotReferenceExpression($nameToken->getValue(), $line), $line));
@@ -79,11 +74,11 @@ final class SlotTokenParser extends AbstractTokenParser
         return 'slot';
     }
 
-    private function traverseAndReplaceMarkerExpression(AbstractExpression $markerExpression, string $name, Node $node, array $parents = []): void
+    private function traverseAndReplaceSlotFunction(string $name, Node $node, Node|null $parent = null): void
     {
-        if ($node === $markerExpression) {
+        if ($node instanceof FunctionExpression && 'slot' === $node->getAttribute('name')) {
             /** @var Node $target */
-            $target = $parents[1];
+            $target = $parent;
 
             foreach (array_keys(iterator_to_array($target)) as $key) {
                 $target->removeNode((string) $key);
@@ -95,7 +90,7 @@ final class SlotTokenParser extends AbstractTokenParser
         }
 
         foreach ($node as $child) {
-            $this->traverseAndReplaceMarkerExpression($markerExpression, $name, $child, [$node, ...$parents]);
+            $this->traverseAndReplaceSlotFunction($name, $child, $node);
         }
     }
 
