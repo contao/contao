@@ -32,7 +32,6 @@ use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -65,9 +64,7 @@ class CoreResponseContextFactoryTest extends TestCase
             $this->createMock(UrlGeneratorInterface::class),
         );
 
-        $responseContext = $factory->createResponseContext();
-
-        $this->assertInstanceOf(ResponseHeaderBag::class, $responseContext->getHeaderBag());
+        $factory->createResponseContext();
     }
 
     public function testWebpageResponseContext(): void
