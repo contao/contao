@@ -22,7 +22,9 @@
       <label for="ctrl_<?= $this->id ?>_hp">Do not fill in this field</label>
       <input type="text" name="<?= $this->name ?>_name" id="ctrl_<?= $this->id ?>_hp" value="">
     </div>
-    <script src="<?= $this->getAjaxUrl() ?>" data-id="<?= $this->id ?>" data-name="<?= $this->name ?>" async></script>
-  <?php endif ?>
+    <?php if (!$this->asEditorView): ?>
+      <script src="<?= $this->getAjaxUrl() ?>" data-id="<?= $this->id ?>" data-name="<?= $this->name ?>" async></script>
+    <?php endif; ?>
+  <?php endif; ?>
 
 <?php $this->endblock(); ?>

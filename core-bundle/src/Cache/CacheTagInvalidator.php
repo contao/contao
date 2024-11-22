@@ -25,8 +25,10 @@ class CacheTagInvalidator
             return $this;
         }
 
-        $this->eventDispatcher->dispatch(new InvalidateCacheTagsEvent($tags));
-        $this->cacheInvalidator?->invalidateTags($tags);
+        $event = new InvalidateCacheTagsEvent($tags);
+
+        $this->eventDispatcher->dispatch($event);
+        $this->cacheInvalidator?->invalidateTags($event->getTags());
 
         return $this;
     }
