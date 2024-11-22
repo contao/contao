@@ -11,8 +11,8 @@ class FormatTableDataContainerDocumentEvent extends Event
     private string|null $searchableContent = null;
 
     public function __construct(
-        private mixed $value,
-        private array $fieldConfig,
+        private readonly mixed $value,
+        private readonly array $fieldConfig,
     ) {
     }
 

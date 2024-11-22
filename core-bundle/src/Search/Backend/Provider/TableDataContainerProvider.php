@@ -156,8 +156,10 @@ class TableDataContainerProvider implements ProviderInterface
             return [];
         }
 
-        $fieldsConfig = $GLOBALS['TL_DCA'][$table]['fields'] ?? [];
-        $searchableFields = array_filter($fieldsConfig,
+        $fieldsConfig = $GLOBALS['TL_DCA'][$table]['fields'];
+
+        $searchableFields = array_filter(
+            $fieldsConfig,
             static fn (array $config): bool => isset($config['search']) && true === $config['search'],
         );
 
