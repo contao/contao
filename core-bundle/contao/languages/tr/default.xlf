@@ -2497,10 +2497,6 @@
         <source>Print this page</source>
         <target>Bu sayfayı yazdır</target>
       </trans-unit>
-      <trans-unit id="MSC.printAsPdf">
-        <source>Save article as PDF</source>
-        <target>Makaleyi PDF olarak yazdır</target>
-      </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>
         <target>Facebook üzerinde paylaş</target>
@@ -2588,6 +2584,9 @@
       <trans-unit id="MSC.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
         <target>Açmaya çalıştığınız bağlantı doğrulanamadı. Bağlantıya siz tıkladıysanız ya da bu bağlantıyı güvenilir bir kişiden aldıysanız, aşağıdaki işlemi onaylayabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>

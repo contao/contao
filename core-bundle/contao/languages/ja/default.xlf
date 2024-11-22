@@ -2497,10 +2497,6 @@
         <source>Print this page</source>
         <target>このページを印刷</target>
       </trans-unit>
-      <trans-unit id="MSC.printAsPdf">
-        <source>Save article as PDF</source>
-        <target>アーティクルをPDFとして保存</target>
-      </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>
         <target>Facebookで共有</target>
@@ -2588,6 +2584,10 @@
       <trans-unit id="MSC.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
         <target>開こうとしているURLを確認できません。あなた自身でクリックしたか、信頼に値する人から受け取ったリンクでしたら、以下を承認して処理を進めて良いでしょう。</target>
+      </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>パスワードを何回も再設定し過ぎです。15分待ってから再度試してください。</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>

@@ -1,0 +1,258 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_newsletter.php" source-language="en" target-language="sk">
+    <body>
+      <trans-unit id="tl_newsletter.subject.0">
+        <source>Subject</source>
+        <target>Predmet</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.subject.1">
+        <source>Please enter the newsletter subject.</source>
+        <target>Zadajte predmet správy.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.alias.0">
+        <source>Newsletter alias</source>
+        <target>Alias správy</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.alias.1">
+        <source>The newsletter alias is a unique reference to the newsletter which can be called instead of its numeric ID.</source>
+        <target>Alias správy je unikátny reťazec popisujúci správu a nahardazuje ID.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.preheader.0">
+        <source>Preheader text</source>
+        <target>Preheader text</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.preheader.1">
+        <source>Here you can enter a preheader text. A preheader text should be between 40-130 characters long.</source>
+        <target>Tu môžete zadať text pre hlavičku. Text preheader by mal mať dĺžku 40 až 130 znakov.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.content.0">
+        <source>HTML content</source>
+        <target>Obsah</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.content.1">
+        <source>Here you can enter the HTML content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <target>Zadajte obsah správy. Ak chcete vložiť e-mail prijímateľa, môžete použiť &lt;em&gt;##email##&lt;/em&gt;. Odkaz na stránku, kde sa dá odhlásiť, vytvorte ako &lt;em&gt;http://www.domain.com/unsubscribe-page.html?email=##email##&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.text.0">
+        <source>Text content</source>
+        <target>Textový obsah</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.text.1">
+        <source>Here you can enter the text content of the newsletter. Use the wildcard &lt;em&gt;##email##&lt;/em&gt; to insert the recipient's e-mail address.</source>
+        <target>Prosím zadajte textový obsah správy. Použite skratky &lt;em&gt;##email##&lt;/em&gt; k vloženiu adresy prijímateľa. Vygenerujte odkaz na odhlásenie sa z odberu správ v tvare &lt;em&gt;http://www.domain.com/unsubscribe-page.html?email=##email##&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.addFile.0">
+        <source>Add attachments</source>
+        <target>Pripojiť prílohu</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.addFile.1">
+        <source>Attach one or more files to the newsletter.</source>
+        <target>Pripojiť jeden, alebo viac súborov.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.files.0">
+        <source>Attachments</source>
+        <target>Prílohy</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.files.1">
+        <source>Please choose the files to be attached from the files directory.</source>
+        <target>Prosím vyberte súbory, ktoré chcete pripojiť k správe.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.template.0">
+        <source>E-mail template</source>
+        <target>Šablóna e-mailu</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.template.1">
+        <source>Here you can override the e-mail template of the channel.</source>
+        <target>Tu môžete prepísať šablónu e-mailu kanála.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sendText.0">
+        <source>Send as plain text</source>
+        <target>Poslať ako text</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sendText.1">
+        <source>Send the newsletter as plain text e-mail without the HTML content.</source>
+        <target>Ak zvolíte túto možnosť, e-mail sa pošle ako text. Všetky HTML značky sa odstránia.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.externalImages.0">
+        <source>External images</source>
+        <target>Externé obrázky</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.externalImages.1">
+        <source>Do not embed images in HTML newsletters.</source>
+        <target>Nevkladajte obrázky priamo do HTML správ.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.mailerTransport.0">
+        <source>Mailer transport</source>
+        <target>Mailer transport</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.mailerTransport.1">
+        <source>Here you can override the default mailer transport of the channel.</source>
+        <target>Tu môžete prepísať predvolený poštový prenos kanála.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sender.0">
+        <source>Custom sender e-mail address</source>
+        <target>Vlastná e-mailová adresa odosielateľa</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sender.1">
+        <source>Here you can override the default sender e-mail address of the channel.</source>
+        <target>Tu môžete prepísať predvolenú e-mailovú adresu odosielateľa kanála.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.senderName.0">
+        <source>Custom sender name</source>
+        <target>Vlastné meno odosielateľa</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.senderName.1">
+        <source>Here you can override the default sender name of the channel.</source>
+        <target>Tu môžete prepísať predvolené meno odosielateľa kanála.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.mailsPerCycle.0">
+        <source>Mails per cycle</source>
+        <target>Správ počas cyklu</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.mailsPerCycle.1">
+        <source>The sending process is split into several cycles to prevent the script from timing out.</source>
+        <target>Zabrániť skriptu pred timeoutom, proces odosielania správ môžete rozdeliť-obmedziť na určitý počet odoslaných správ v jednom timeout cykle.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.timeout.0">
+        <source>Timeout in seconds</source>
+        <target>Timeout v sekundách</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.timeout.1">
+        <source>Here you can modify the waiting time between each cycle to control the number of e-mails per minute.</source>
+        <target>Niektoré mailservery obmedzujú počet odoslaných správ za minútu. Nastavte dĺžku jedného cyklu.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.start.0">
+        <source>Offset</source>
+        <target>Začiatok nového cyklu odosielania</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.start.1">
+        <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent by selecting the category &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; in the system log. If there are 120 entries, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
+        <target>V prípade, že sa proces odosielania preruší, môžete sem zadať číselný posun a pokračovať s konkrétnym príjemcom. Počet odoslaných e-mailov môžete skontrolovať výberom kategórie &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; v systémovom denníku. Ak máte 120 záznamov, zadajte „120“ a pokračujte 121. príjemcom (počítanie začína od 0).</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sendPreviewTo.0">
+        <source>Send preview to</source>
+        <target>Zaslať ukážku na</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sendPreviewTo.1">
+        <source>Send the preview of the newsletter to this e-mail address.</source>
+        <target>Zaslať ukážku správy špecifickému adresátorvi. Slúži pre kontrolu.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.title_legend">
+        <source>Title and subject</source>
+        <target>Názov a predmet</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.html_legend">
+        <source>HTML content</source>
+        <target>Obsah</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.text_legend">
+        <source>Text content</source>
+        <target>Textový obsah</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.attachment_legend">
+        <source>Attachments</source>
+        <target>Prílohy</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.template_legend">
+        <source>Template settings</source>
+        <target>Nastavenia šablóny</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sender_legend">
+        <source>Sender settings</source>
+        <target>Nastavenia odosielateľa</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.expert_legend">
+        <source>Expert settings</source>
+        <target>Rozšírené nastavenia</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sent">
+        <source>Sent</source>
+        <target>Odoslaná</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sentOn">
+        <source>Sent at %s</source>
+        <target>Odoslané v %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.notSent">
+        <source>Not sent yet</source>
+        <target>Neodoslaná</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.mailingDate">
+        <source>Mailing date</source>
+        <target>Dátum odoslania</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.confirm">
+        <source>The newsletter has been sent to %s recipients.</source>
+        <target>Správa bola poslaná %s používateľom.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.rejected">
+        <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
+        <target>%s neplatné e-mailové adresy boli zablokované (viď. system log).</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.skipped">
+        <source>%s e-mail address(es) has/have been skipped.</source>
+        <target>%s e-mailové adresy boli preskočené.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.error">
+        <source>There are no active subscribers to the channel.</source>
+        <target>Žiadni používatelia neodoberajú správy z tohto kanála.</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.from">
+        <source>From</source>
+        <target>Od</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.attachments">
+        <source>Attachments</source>
+        <target>Prílohy</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.preview">
+        <source>Send preview</source>
+        <target>Náhľad</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.sendConfirm">
+        <source>Do you really want to send the newsletter?</source>
+        <target>Naozaj chcete odoslať túto správu?</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.send.0">
+        <source>Send newsletter</source>
+        <target>Poslať správu</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.send.1">
+        <source>Send newsletter ID %s</source>
+        <target>Poslať správu s ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.new.0">
+        <source>New</source>
+        <target>Nová</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.new.1">
+        <source>Create a new newsletter</source>
+        <target>Vytvoriť novú správu</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.show">
+        <source>Show the details of newsletter ID %s</source>
+        <target>Zobraziť detaily správy s ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.edit">
+        <source>Edit newsletter ID %s</source>
+        <target>Upraviť správu s ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.copy">
+        <source>Duplicate newsletter ID %s</source>
+        <target>Duplikovať správu s ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.cut">
+        <source>Move newsletter ID %s</source>
+        <target>Premiestniť správu s ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.delete">
+        <source>Delete newsletter ID %s</source>
+        <target>Odstrániť správu s ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.pasteafter.0">
+        <source>Paste into this channel</source>
+        <target>Vložiť do tohto kanálu</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -19,11 +19,13 @@ return (new Configuration())
         AppBundle::class,
         'Imagick',
         'Gmagick',
+        'SensitiveParameter',
         'Swift_Attachment',
         'Swift_EmbeddedFile',
         'Swift_Mailer',
         'Swift_Message',
     ])
+    ->disableExtensionsAnalysis()
     ->disableReportingUnmatchedIgnores()
 
     // Ignore the Contao components.

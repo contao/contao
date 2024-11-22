@@ -462,6 +462,10 @@ class Configuration implements ConfigurationInterface
                     ->info('Allows to disable the layer flattening of animated images. Set this option to false to support animations. It has no effect with Gd as Imagine service.')
                 ->end()
                 ->scalarNode('interlace')
+                    ->info('One of the Imagine\Image\ImageInterface::INTERLACE_* constants.')
+                ->end()
+                ->scalarNode('resampling-filter')
+                    ->info('Filter used when downsampling images. One of the Imagine\Image\ImageInterface::FILTER_* constants. It has no effect with Gd or SVG as Imagine service.')
                 ->end()
             ->end()
         ;

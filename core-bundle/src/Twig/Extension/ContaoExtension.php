@@ -177,7 +177,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFunction(
                 'contao_figure',
                 [FigureRuntime::class, 'renderFigure'],
-                ['is_safe' => ['html']],
+                ['is_safe' => ['html'], 'deprecated' => true],
             ),
             new TwigFunction(
                 'picture_config',
