@@ -538,7 +538,7 @@ class Newsletter extends Backend
 				$arrRecipients = array();
 				$resFile = $objFile->handle;
 
-				while (($arrRow = @fgetcsv($resFile, null, $strSeparator)) !== false)
+				while (($arrRow = @fgetcsv($resFile, null, $strSeparator, '"', '')) !== false)
 				{
 					$arrRecipients[] = $arrRow;
 				}

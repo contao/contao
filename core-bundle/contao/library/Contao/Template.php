@@ -145,6 +145,13 @@ abstract class Template extends Controller
 	 */
 	public function __get($strKey)
 	{
+		if ($strKey == 'asEditorView')
+		{
+			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+			return $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
+		}
+
 		if (isset($this->arrData[$strKey]))
 		{
 			if (\is_object($this->arrData[$strKey]) && \is_callable($this->arrData[$strKey]))
