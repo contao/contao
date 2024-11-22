@@ -375,9 +375,11 @@
       </trans-unit>
       <trans-unit id="ERR.altchaJavaScriptRequired">
         <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.</source>
+        <target>現在JavaScriptは無効、またはアクセスを禁止されています。JavaScriptなしでは、spam対策のための検証は失敗します。フォームの提出のためにはJavaScriptを一時的に有効にしてください。 </target>
       </trans-unit>
       <trans-unit id="ERR.altchaVerificationFailed">
         <source>Anti-spam verification failed. Are you a human or a robot?</source>
+        <target>spam対策の検証に失敗しました。あなたは人間ですか、それともロボットですか?</target>
       </trans-unit>
       <trans-unit id="ERR.altchaWidgetError">
         <source>Verification failed. Try again later.</source>

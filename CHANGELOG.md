@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.4.6] (2024-11-22)
+
+**Fixed issues:**
+
+- [#7736] Disable Turbo in `MODE_PARENT` content section ([fritzmg])
+- [#7737] Revert 'Add the `turbo-root` meta tag to the back end' ([fritzmg])
+
 ## [5.4.5] (2024-11-21)
 
 **Fixed issues:**
@@ -120,6 +127,7 @@ This project adheres to [Semantic Versioning].
 - [#7229] Fix the `.nogrid` backwards compatibility layer ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.4.6]: https://github.com/contao/contao/releases/tag/5.4.6
 [5.4.5]: https://github.com/contao/contao/releases/tag/5.4.5
 [5.4.4]: https://github.com/contao/contao/releases/tag/5.4.4
 [5.4.3]: https://github.com/contao/contao/releases/tag/5.4.3
@@ -207,3 +215,5 @@ This project adheres to [Semantic Versioning].
 [#7723]: https://github.com/contao/contao/pull/7723
 [#7724]: https://github.com/contao/contao/pull/7724
 [#7734]: https://github.com/contao/contao/pull/7734
+[#7736]: https://github.com/contao/contao/pull/7736
+[#7737]: https://github.com/contao/contao/pull/7737
