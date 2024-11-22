@@ -56,7 +56,7 @@ export default class TooltipsController extends Controller {
 
     tooltipTargetDisconnected(el) {
         if (this.activeTargets.has(el)) {
-            this._hideTooltip(el, 0);
+            this._hideTooltip(el);
         }
 
         if (this.removeClickTargetHandlerDelegates.has(el)) {
