@@ -85,6 +85,5 @@ return (new Configuration())
     ->ignoreErrorsOnPackage('web-auth/webauthn-stimulus', [ErrorType::UNUSED_DEPENDENCY])
 
     // These packages are required for the search integration
-    ->ignoreErrorsOnPackage('schranz-search/symfony-bundle', [ErrorType::UNUSED_DEPENDENCY])
-    ->ignoreErrorsOnPackage('schranz-search/seal-loupe-adapter', [ErrorType::UNUSED_DEPENDENCY])
+    ->ignoreErrorsOnPackage('cmsig/seal-loupe-adapter', [ErrorType::UNUSED_DEPENDENCY])
 ;
