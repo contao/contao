@@ -49,6 +49,7 @@ use Contao\StringUtil;
 use Contao\Template;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
+use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\GlobalsInterface;
@@ -186,7 +187,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFunction(
                 'contao_figure',
                 [FigureRuntime::class, 'renderFigure'],
-                ['is_safe' => ['html']],
+                ['is_safe' => ['html'], 'deprecated' => true],
             ),
             new TwigFunction(
                 'picture_config',
@@ -240,6 +241,10 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFunction(
                 'content_url',
                 [ContentUrlRuntime::class, 'generate'],
+            ),
+            new TwigFunction(
+                'slot',
+                static fn () => throw new SyntaxError('You cannot use the slot() function outside of a slot.'),
             ),
             // Backend functions
             new TwigFunction(
