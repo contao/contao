@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
-use Contao\CoreBundle\EventListener\DataContainer\TextTrackFieldsListener;
+use Contao\CoreBundle\EventListener\DataContainer\TrackFieldsListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 
-class TextTrackFieldsListenerTest extends TestCase
+class TrackFieldsListenerTest extends TestCase
 {
     private const PALETTE = 'name,protected,syncExclude;meta';
 
@@ -26,7 +26,7 @@ class TextTrackFieldsListenerTest extends TestCase
 
         $this->assertSame(
             'name,textTrackLanguage,textTrackType,protected,syncExclude;meta',
-            (new TextTrackFieldsListener())->addTextTrackFields(self::PALETTE, $dc),
+            (new TrackFieldsListener())->addTextTrackFields(self::PALETTE, $dc),
         );
     }
 
@@ -34,6 +34,6 @@ class TextTrackFieldsListenerTest extends TestCase
     {
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 'bar.baz']);
 
-        $this->assertSame(self::PALETTE, (new TextTrackFieldsListener())->addTextTrackFields(self::PALETTE, $dc));
+        $this->assertSame(self::PALETTE, (new TrackFieldsListener())->addTextTrackFields(self::PALETTE, $dc));
     }
 }

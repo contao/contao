@@ -245,9 +245,6 @@ services:
             - '@request_stack'
             - '@contao.twig.filesystem_loader'
 
-    contao.listener.data_container.text_track_fields:
-        class: Contao\CoreBundle\EventListener\DataContainer\TextTrackFieldsListener
-
     contao.listener.data_container.theme_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\ThemeOperationsListener
         arguments:
@@ -259,6 +256,9 @@ services:
             - '@contao.twig.filesystem_loader'
             - '@contao.twig.loader.theme_namespace'
             - '@translator'
+
+    contao.listener.data_container.track_fields:
+        class: Contao\CoreBundle\EventListener\DataContainer\TrackFieldsListener
 
     contao.listener.data_container.track_title_source:
         class: Contao\CoreBundle\EventListener\DataContainer\TrackTitleSourceListener

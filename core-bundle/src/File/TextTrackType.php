@@ -14,9 +14,9 @@ namespace Contao\CoreBundle\File;
 
 enum TextTrackType: string
 {
-    case subtitles = 'subtitles';
     case captions = 'captions';
     case descriptions = 'descriptions';
+    case subtitles = 'subtitles';
     case chapters = 'chapters';
     case metadata = 'metadata';
 }

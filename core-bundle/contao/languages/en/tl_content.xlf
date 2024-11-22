@@ -342,7 +342,7 @@
         <source>Text track files</source>
       </trans-unit>
       <trans-unit id="tl_content.textTrackSRC.1">
-        <source>The top .vtt file is loaded as the default track. Additional settings are made within the .vtt file.</source>
+        <source>The topmost .vtt file is loaded as the default track. Additional settings can be made within the .vtt file.</source>
       </trans-unit>
       <trans-unit id="tl_content.youtube.0">
         <source>YouTube ID</source>

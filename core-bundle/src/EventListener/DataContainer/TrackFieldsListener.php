@@ -17,7 +17,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\DataContainer;
 use Symfony\Component\Filesystem\Path;
 
-class TextTrackFieldsListener
+class TrackFieldsListener
 {
     #[AsCallback(table: 'tl_files', target: 'config.onpalette')]
     public function addTextTrackFields(string $palette, DataContainer $dc): string

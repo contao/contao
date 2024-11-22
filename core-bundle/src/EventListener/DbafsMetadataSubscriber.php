@@ -59,8 +59,10 @@ class DbafsMetadataSubscriber implements EventSubscriberInterface
             $event->set('importantPart', $importantPart);
         }
 
+        $language = $row['textTrackLanguage'] ?? null;
+
         // Add text track information
-        if (!empty($language = $row['textTrackLanguage'] ?? null)) {
+        if ($language) {
             $textTrack = new TextTrack($language, TextTrackType::tryFrom($row['textTrackType'] ?? ''));
             $event->set('textTrack', $textTrack);
         }
