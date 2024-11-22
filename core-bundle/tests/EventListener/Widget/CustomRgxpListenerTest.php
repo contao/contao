@@ -97,4 +97,25 @@ class CustomRgxpListenerTest extends TestCase
 
         $this->assertTrue($listener(CustomRgxpListener::RGXP_NAME, 'foobar', $widget));
     }
+
+    public function testDecodesEntities(): void
+    {
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->never())
+            ->method('trans')
+            ->willReturnArgument(0)
+        ;
+
+        $widget = $this->mockClassWithProperties(Widget::class, ['customRgxp' => '/^&lt;>$/i']);
+        $widget
+            ->expects($this->never())
+            ->method('addError')
+            ->with('ERR.customRgxp')
+        ;
+
+        $listener = new CustomRgxpListener($translator);
+
+        $this->assertTrue($listener(CustomRgxpListener::RGXP_NAME, '<&gt;', $widget));
+    }
 }

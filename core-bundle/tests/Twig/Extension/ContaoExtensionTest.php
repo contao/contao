@@ -38,15 +38,16 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Twig\Environment;
+use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
+use Twig\Loader\ArrayLoader;
 use Twig\Node\BodyNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
-use Twig\Node\TextNode;
 use Twig\NodeTraverser;
 use Twig\Runtime\EscaperRuntime;
 use Twig\Source;
@@ -108,6 +109,7 @@ class ContaoExtensionTest extends TestCase
             'csp_source' => [],
             'csp_hash' => [],
             'content_url' => [],
+            'slot' => [],
             'backend_icon' => ['html'],
         ];
 
@@ -124,6 +126,20 @@ class ContaoExtensionTest extends TestCase
             $this->assertArrayHasKey($name, $expectedFunctions);
             $this->assertSame($expectedFunctions[$name], $function->getSafe($node), $name);
         }
+    }
+
+    public function testPreventsUseOfSlotFunction(): void
+    {
+        $environment = new Environment(
+            new ArrayLoader(['template.html.twig' => 'foo {{ slot() }} bar']),
+        );
+
+        $environment->addExtension($this->getContaoExtension());
+
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage('You cannot use the slot() function outside of a slot');
+
+        $environment->render('template.html.twig');
     }
 
     public function testAddsTheFilters(): void
@@ -224,7 +240,7 @@ class ContaoExtensionTest extends TestCase
         $node = new ModuleNode(
             new BodyNode([
                 new FilterExpression(
-                    new TextNode('text', 1),
+                    new ConstantExpression('text', 1),
                     new TwigFilter('escape'),
                     new Node([
                         new ConstantExpression('html', 1),

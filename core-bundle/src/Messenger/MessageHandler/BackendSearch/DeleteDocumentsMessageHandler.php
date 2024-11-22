@@ -28,6 +28,6 @@ class DeleteDocumentsMessageHandler
 
     public function __invoke(DeleteDocumentsMessage $message): void
     {
-        $this->backendSearch->deleteDocuments($message->getDocumentIds(), false);
+        $this->backendSearch->deleteDocuments($message->getDocumentTypesAndIds(), false);
     }
 }
