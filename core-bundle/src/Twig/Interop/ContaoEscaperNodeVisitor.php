@@ -104,6 +104,17 @@ final class ContaoEscaperNodeVisitor implements NodeVisitorInterface
             return false;
         }
 
+        $doubleEncode = $node->getNode('arguments')->hasNode('double_encode') ? $node->getNode('arguments')->getNode('double_encode') : null;
+
+        if ($doubleEncode instanceof ConstantExpression && \is_bool($doubleEncode->getAttribute('value'))) {
+            $node->getNode('arguments')->removeNode('double_encode');
+
+            // Do not use the Contao escaper if `double_encode = true` is passed
+            if ($doubleEncode->getAttribute('value')) {
+                return false;
+            }
+        }
+
         // Do not use the Contao escaper after the `json_encode` filter to prevent issues
         // with `double_encode: false`
         if ($node->getNode('node') instanceof FilterExpression && 'json_encode' === $node->getNode('node')->getNode('filter')->getAttribute('value')) {
