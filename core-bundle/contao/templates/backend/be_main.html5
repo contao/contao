@@ -44,7 +44,7 @@
       <header id="header">
         <div class="inner">
           <h1>
-            <a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>" data-contao--tooltip-target="tooltip">
+            <a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>" data-contao--tooltips-target="tooltip">
               <span class="app-title">Contao</span>
               <?php if ($this->badgeTitle): ?>
                 <span class="badge-title"><?= $this->badgeTitle ?></span>
