@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
     connect() {
-        this.initialized = [];
+        this.initialized = new Set();
         this.createTooltip();
         this.setup();
         this.addObserver();
@@ -13,13 +13,11 @@ export default class extends Controller {
             this.observer.disconnect();
         }
 
-        Object.keys(this.selectors).forEach(selector => {
-            document.querySelectorAll(selector).forEach(el => {
-                if (this.initialized.includes(el)) {
-                    document.removeEventListener('touchstart', el.globalTouchstartListener);
-                }
-            });
-        });
+        this.initialized.forEach(el => {
+            document.removeEventListener('touchstart', el.globalTouchstartListener);
+        })
+
+        this.initialized.clear();
     }
 
     createTooltip() {
@@ -51,8 +49,8 @@ export default class extends Controller {
 
         Object.entries(this.selectors).forEach(([selector, options]) => {
             document.querySelectorAll(selector).forEach(el => {
-                if (!this.initialized.includes(el)) {
-                    this.initialized.push(el);
+                if (!this.initialized.has(el)) {
+                    this.initialized.add(el);
                     this.init(el, options);
                 }
             });
@@ -160,8 +158,7 @@ export default class extends Controller {
             });
         })
 
-        this.observer.observe(document, {
-            attributes: false,
+        this.observer.observe(this.element, {
             childList: true,
             subtree: true,
         });

@@ -10,6 +10,7 @@ export class TwigEditor {
             useSoftTabs: false,
             autoScrollEditorIntoView: true,
             readOnly: element.hasAttribute('readonly'),
+            enableLiveAutocompletion: true,
         });
 
         this.setColorScheme(document.documentElement.dataset.colorScheme);
@@ -136,6 +137,14 @@ export class TwigEditor {
         return blocks;
     }
 
+    setAutoCompletionData(data) {
+        this.editor.completers = [{
+            getCompletions: function(editor, session, pos, prefix, callback) {
+                callback(null, data);
+            },
+        }];
+    }
+
     setColorScheme(mode) {
         this.editor.setTheme(mode === 'dark' ? 'ace/theme/twilight' : 'ace/theme/clouds');
     }
@@ -146,6 +155,10 @@ export class TwigEditor {
 
     getContent() {
         return this.editor.getValue();
+    }
+
+    focus() {
+        this.editor.focus();
     }
 
     destroy() {

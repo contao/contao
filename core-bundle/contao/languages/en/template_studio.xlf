@@ -6,58 +6,91 @@
                 <source>Save</source>
             </trans-unit>
             <trans-unit id="operation.save.1">
-                <source>Save your template for "%s"</source>
+                <source>Save your template for %s</source>
             </trans-unit>
             <trans-unit id="operation.delete.0">
                 <source>Delete</source>
             </trans-unit>
             <trans-unit id="operation.delete.1">
-                <source>Delete your template for "%s"</source>
+                <source>Delete your template for %s</source>
             </trans-unit>
             <trans-unit id="operation.create.0">
                 <source>Create your template</source>
             </trans-unit>
             <trans-unit id="operation.create.1">
-                <source>Modify "%s" by creating your own template</source>
+                <source>Modify %s by creating your own template</source>
             </trans-unit>
             <trans-unit id="operation.create_content_element_variant.0">
                 <source>Create variant</source>
             </trans-unit>
             <trans-unit id="operation.create_content_element_variant.1">
-                <source>Create a new variant template for the "%s" content element</source>
+                <source>Create a new variant template for the %s content element</source>
             </trans-unit>
             <trans-unit id="operation.rename_content_element_variant.0">
                 <source>Rename variant</source>
             </trans-unit>
             <trans-unit id="operation.rename_content_element_variant.1">
-                <source>Rename the "%s" variant template</source>
+                <source>Rename the %s variant template</source>
             </trans-unit>
             <trans-unit id="operation.create_frontend_module_variant.0">
                 <source>Create variant</source>
             </trans-unit>
             <trans-unit id="operation.create_frontend_module_variant.1">
-                <source>Create a new variant template for the "%s" front end module</source>
+                <source>Create a new variant template for the %s front end module</source>
             </trans-unit>
             <trans-unit id="operation.rename_frontend_module_variant.0">
                 <source>Rename variant</source>
             </trans-unit>
             <trans-unit id="operation.rename_frontend_module_variant.1">
-                <source>Rename the "%s" variant template</source>
+                <source>Rename the %s variant template</source>
             </trans-unit>
             <trans-unit id="message.create.success">
-                <source>Your template for "%s" was created.</source>
+                <source>Your template for %s was created.</source>
             </trans-unit>
             <trans-unit id="message.create.error">
-                <source>Your template for "%s" could not be created.</source>
+                <source>Your template for %s could not be created.</source>
+            </trans-unit>
+            <trans-unit id="message.create_variant.success">
+                <source>The %s variant template was created.</source>
+            </trans-unit>
+            <trans-unit id="message.create_variant.error">
+                <source>A variant template for %s could not be created.</source>
+            </trans-unit>
+            <trans-unit id="message.rename_variant.success">
+                <source>The variant template was renamed to %s.</source>
+            </trans-unit>
+            <trans-unit id="message.rename_variant.error">
+                <source>The variant template %s could not be renamed.</source>
             </trans-unit>
             <trans-unit id="message.save.success">
-                <source>Your template for "%s" was saved.</source>
+                <source>Your template for %s was saved.</source>
             </trans-unit>
             <trans-unit id="message.delete.success">
-                <source>Your template for "%s" was deleted.</source>
+                <source>Your template for %s was deleted.</source>
             </trans-unit>
             <trans-unit id="message.delete.error">
-                <source>Your template for "%s" could not be deleted.</source>
+                <source>Your template for %s could not be deleted.</source>
+            </trans-unit>
+            <trans-unit id="dialog.delete.confirm">
+                <source>This deletes your template for %s and cannot be undone.</source>
+            </trans-unit>
+            <trans-unit id="dialog.create_variant">
+                <source>You are creating a new variant template for %s. Please define a unique name.</source>
+            </trans-unit>
+            <trans-unit id="dialog.rename_variant">
+                <source>Please define a new unique name for the variant template %s.</source>
+            </trans-unit>
+            <trans-unit id="info.block.title">
+                <source>Hierarchy of block %block%</source>
+            </trans-unit>
+            <trans-unit id="info.block.hierarchy">
+                <source>Block %block% is originally defined in the %namespace% namespace and is modified %modify_count% time(s) when rendering the %target_template% template.</source>
+            </trans-unit>
+            <trans-unit id="info.block.flat_hierarchy">
+                <source>Block %block% is originally defined in the %target_template% template.</source>
+            </trans-unit>
+            <trans-unit id="info.block.overwrite_warning">
+                <source>This template defines content for the %block% block without using the %expression_to_use% expression. This overwrites previously defined content.</source>
             </trans-unit>
         </body>
     </file>

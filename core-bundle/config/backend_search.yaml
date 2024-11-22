@@ -28,11 +28,15 @@ services:
             - '@event_dispatcher'
             - '@messenger.bus.default'
 
-    contao.search.backend.files_provider:
-        class: Contao\CoreBundle\Search\Backend\Provider\FilesProvider
+    contao.search.backend.files_storage_provider:
+        class: Contao\CoreBundle\Search\Backend\Provider\FilesStorageProvider
         arguments:
-            - '@database_connection'
-            - '@security.access.decision_manager'
+            - '@contao.filesystem.virtual.files'
+            - '@security.helper'
+            - '@contao.image.studio'
+
+    contao.search.backend.format_core_widget_results_listener:
+        class: Contao\CoreBundle\Search\Backend\EventListener\FormatCoreWidgetSearchResultsListener
 
     contao.search.backend.table_data_container_provider:
         class: Contao\CoreBundle\Search\Backend\Provider\TableDataContainerProvider
@@ -42,6 +46,7 @@ services:
             - '@database_connection'
             - '@contao.data_container.record_labeler'
             - '@security.access.decision_manager'
+            - '@event_dispatcher'
 
     contao.search_backend.adapter:
         class: Schranz\Search\SEAL\Adapter\AdapterInterface

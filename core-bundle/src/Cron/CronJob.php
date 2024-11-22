@@ -24,8 +24,9 @@ class CronJob
         private readonly object $service,
         private readonly string $interval,
         private readonly string|null $method = null,
+        string|null $name = null,
     ) {
-        $name = $service::class;
+        $name ??= $service::class;
 
         if (!\is_callable($service)) {
             if (null === $this->method) {

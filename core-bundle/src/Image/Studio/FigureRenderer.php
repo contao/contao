@@ -62,11 +62,11 @@ class FigureRenderer
      *
      * Returns null if the resource is invalid.
      *
-     * @param int|string|FilesModel|ImageInterface       $from          Can be a FilesModel, an ImageInterface, a tl_files UUID/ID/path or a file system path
-     * @param int|string|array|PictureConfiguration|null $size          A picture size configuration or reference
-     * @param array<string, mixed>                       $configuration Configuration for the FigureBuilder
+     * @param int|string|FilesModel|FilesystemItem|ImageInterface $from          Can be a FilesModel, a FilesystemItem, an ImageInterface, a tl_files UUID/ID/path or a file system path
+     * @param int|string|array|PictureConfiguration|null          $size          A picture size configuration or reference
+     * @param array<string, mixed>                                $configuration Configuration for the FigureBuilder
      */
-    public function buildFigure(FilesModel|ImageInterface|int|string $from, PictureConfiguration|array|int|string|null $size, array $configuration = []): Figure|null
+    public function buildFigure(FilesModel|FilesystemItem|ImageInterface|int|string $from, PictureConfiguration|array|int|string|null $size, array $configuration = []): Figure|null
     {
         $configuration['from'] = $from;
         $configuration['size'] = $size;

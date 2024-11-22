@@ -16,17 +16,19 @@
 
         {# Editor listing #}
         {% for template in templates %}
+            {% set editable = can_edit and loop.first %}
+
             {# Editor #}
             {% set template_attributes = attrs()
                 .addClass('template')
-                .addClass('editable', can_edit and loop.first)
+                .addClass('editable', editable)
             %}
             <div{{ template_attributes }}>
                 {% set template_editor_id = 'template-studio--editor_' ~ loop.index %}
 
                 {# Label #}
                 <label for="{{ template_editor_id }}">
-                    {% include '@Contao/backend/template_studio/_template_name_structure.html.twig' with template only %}
+                    {% include '@Contao/backend/template_studio/_template_name_structure.html.twig' with template|merge({user: editable}) %}
                 </label>
 
                 {% include '@Contao/backend/template_studio/_template_badges.html.twig' with {
@@ -44,6 +46,10 @@
                         .set('readonly', not (can_edit and loop.first))
                     %}
                     <textarea{{ template_editor_attributes }}>{{ template.code }}</textarea>
+
+                    {% if autocomplete|length %}
+                        {{ include('@Contao/backend/template_studio/editor/_autocomplete_data.html.twig') }}
+                    {% endif %}
                 </div>
 
                 {# Filename #}

@@ -171,6 +171,20 @@ class ModuleLostPassword extends Module
 	 */
 	protected function setNewPassword()
 	{
+		$factory = System::getContainer()->get('contao.rate_limit.member_password_factory');
+		$limiter = $factory->create($objMember->id);
+
+		if (!$limiter->consume()->isAccepted())
+		{
+			$this->strTemplate = 'mod_message';
+
+			$this->Template = new FrontendTemplate($this->strTemplate);
+			$this->Template->type = 'error';
+			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tooManyPasswordResetAttempts'];
+
+			return;
+		}
+
 		$optIn = System::getContainer()->get('contao.opt_in');
 
 		// Find an unconfirmed token with only one related record
@@ -243,6 +257,14 @@ class ModuleLostPassword extends Module
 				$objMember->tstamp = time();
 				$objMember->password = $objWidget->value;
 				$objMember->save();
+
+				// Delete unconfirmed "change password" tokens
+				$models = OptInModel::findUnconfirmedByRelatedTableAndId('tl_member', $objMember->id);
+
+				foreach ($models ?? array() as $model)
+				{
+					$model->delete();
+				}
 
 				$optInToken->confirm();
 

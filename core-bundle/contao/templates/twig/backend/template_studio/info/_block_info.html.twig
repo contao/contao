@@ -1,16 +1,36 @@
 {% embed "@Contao/backend/template_studio/info/_info_panel.html.twig" %}
-    {% block headline %}Hierarchy of block "{{ block }}"{% endblock %}
+    {% trans_default_domain "contao_template_studio" %}
+
+    {% set block_token -%}
+        <span class="token">{{ block }}</span>
+    {%- endset %}
+
+    {% block headline %}
+        {{ 'info.block.title'|trans|replace({
+            '%block%': block_token,
+        })|raw }}
+    {% endblock %}
 
     {% block content %}
         <p class="description">
+            {% set target_template_token -%}
+                <span class="token">{{ target_template.short_name }}</span>
+            {%- endset %}
             {% if hierarchy|length > 1 %}
-                Block <span class="token">{{ block }}</span> is originally defined in the
-                <span class="token">{{ hierarchy|last.template.namespace }}</span>
-                namespace and is modified {{ hierarchy|length - 1 }} time(s) when rendering
-                the <span class="token">{{ target_template.short_name }}</span> template.
+                {% set namespace_token -%}
+                    <span class="token">{{ hierarchy|last.template.namespace }}</span>
+                {%- endset %}
+                {{ 'info.block.hierarchy'|trans|replace({
+                    '%block%': block_token,
+                    '%namespace%': namespace_token,
+                    '%modify_count%': hierarchy|length - 1,
+                    '%target_template%': target_template_token
+                })|raw }}
             {% else %}
-                Block <span class="token">{{ block }}</span> is originally defined in the
-                <span class="token">{{ target_template.short_name }}</span> template.
+                {{ 'info.block.flat_hierarchy'|trans|replace({
+                    '%block%': block_token,
+                    '%target_template%': target_template_token
+                })|raw }}
             {% endif %}
         </p>
 
@@ -81,9 +101,13 @@
                                     <path d="M12 9v4"/>
                                     <path d="M12 17h.01"/>
                                 </svg>
-                                This template defines content for the <span class="token">{{ block }}</span> block without
-                                using the
-                                <span class="token">parent()</span> expression. This overwrites previously defined content.
+                                {% set parent_expression_token -%}
+                                    <span class="token">parent()</span>
+                                {%- endset %}
+                                {{ 'info.block.overwrite_warning'|trans|replace({
+                                    '%block%': block_token,
+                                    '%expression_to_use%': parent_expression_token
+                                })|raw }}
                             </div>
                         {% endif %}
                     </div>

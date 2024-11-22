@@ -20,6 +20,9 @@ use Symfony\Component\Uid\Uuid;
  */
 class PermissionCheckingVirtualFilesystem implements VirtualFilesystemInterface
 {
+    /**
+     * @phpstan-use VirtualFilesystemDecoratorTrait<VirtualFilesystem>
+     */
     use VirtualFilesystemDecoratorTrait;
 
     public function __construct(
@@ -170,6 +173,11 @@ class PermissionCheckingVirtualFilesystem implements VirtualFilesystemInterface
         return $this->inner->generatePublicUri($location, $options);
     }
 
+    public function canAccessLocation(Uuid|string $location): bool
+    {
+        return $this->canAccess(ContaoCorePermissions::USER_CAN_ACCESS_PATH, $location);
+    }
+
     private function denyAccessUnlessGranted(string $attribute, Uuid|string $location): void
     {
         if ($this->canAccess($attribute, $location)) {
@@ -188,10 +196,6 @@ class PermissionCheckingVirtualFilesystem implements VirtualFilesystemInterface
 
     private function canAccess(string $attribute, Uuid|string $location): bool
     {
-        if (!$this->inner instanceof VirtualFilesystem) {
-            return false;
-        }
-
         $path = $location instanceof Uuid
             ? Path::canonicalize($this->inner->resolveUuid($location))
             : Path::canonicalize($location);

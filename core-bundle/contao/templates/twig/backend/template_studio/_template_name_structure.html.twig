@@ -2,7 +2,7 @@
     <div class="structure">
         <div class="namespace">@{{ namespace }}</div>
         <div class="/">/</div>
-        {% with {button_attributes: attrs().addClass('identifier')} %}
+        {% with {button_attributes: attrs().addClass('identifier').addClass('identifier--user', user|default)} %}
             {{ include('@Contao/backend/template_studio/_template_identifier_button.html.twig') }}
         {% endwith %}
         <div class="extension">.{{ extension }}</div>

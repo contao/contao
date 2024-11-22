@@ -32,6 +32,13 @@ class DeleteOperation extends AbstractOperation
             return $this->error($context);
         }
 
+        // Show a confirmation dialog
+        if (!$request->request->has('confirm_delete')) {
+            return $this->render('@Contao/backend/template_studio/operation/delete_confirm.stream.html.twig', [
+                'identifier' => $context->getIdentifier(),
+            ]);
+        }
+
         // Delete the user template file
         $this->getUserTemplatesStorage()->delete($context->getUserTemplatesStoragePath());
 
