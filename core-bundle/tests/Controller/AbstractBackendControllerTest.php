@@ -166,7 +166,6 @@ class AbstractBackendControllerTest extends TestCase
             'menu' => '<menu>',
             'headerMenu' => '<header_menu>',
             'searchEnabled' => false,
-            'turboRoot' => '/contao',
             'badgeTitle' => '',
         ];
 
