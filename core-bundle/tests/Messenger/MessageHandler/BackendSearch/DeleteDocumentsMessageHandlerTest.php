@@ -25,6 +25,7 @@ class DeleteDocumentsMessageHandlerTest extends TestCase
             'test' => ['42'],
             'foobar' => ['42'],
         ];
+
         $message = new DeleteDocumentsMessage($documentTypesAndIds);
 
         $backendSearch = $this->createMock(BackendSearch::class);
