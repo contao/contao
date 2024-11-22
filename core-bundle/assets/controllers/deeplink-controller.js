@@ -4,7 +4,7 @@ import * as Turbo from '@hotwired/turbo';
 export default class extends Controller {
     static targets = ['primary', 'secondary'];
 
-    static afterLoad (identifier, application) {
+    static afterLoad (identifier) {
         const setupController = () => {
             document.querySelectorAll('.click2edit').forEach((el) => {
                 el.classList.remove('click2edit');
@@ -91,6 +91,6 @@ export default class extends Controller {
     }
 
     isValid (element) {
-        return element.tagName !== 'a' && !element.closest('a');
+        return 'a' !== element.tagName && !element.closest('a');
     }
 }
