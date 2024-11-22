@@ -21,14 +21,18 @@ class DeleteDocumentsMessageHandlerTest extends TestCase
 {
     public function testDeleteDocuments(): void
     {
-        $documentIds = ['foobar-42', 'foobar-44'];
-        $message = new DeleteDocumentsMessage($documentIds);
+        $documentTypesAndIds = [
+            'test' => ['42'],
+            'foobar' => ['42'],
+        ];
+
+        $message = new DeleteDocumentsMessage($documentTypesAndIds);
 
         $backendSearch = $this->createMock(BackendSearch::class);
         $backendSearch
             ->expects($this->once())
             ->method('deleteDocuments')
-            ->with($documentIds)
+            ->with($documentTypesAndIds)
         ;
 
         $messageHandler = new DeleteDocumentsMessageHandler($backendSearch);
