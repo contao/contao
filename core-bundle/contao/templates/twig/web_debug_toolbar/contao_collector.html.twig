@@ -1,8 +1,8 @@
-{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+{% extends "@WebProfiler/Profiler/layout.html.twig" %}
 
 {% block toolbar %}
     {% set icon %}
-        {{ include('@ContaoCore/Collector/contao.svg') }}
+        {{ include('@Contao/web_debug_toolbar/contao.svg.twig') }}
         <span class="sf-toolbar-value">{{ collector.summary.version }}</span>
     {% endset %}
     {% set text %}
@@ -52,7 +52,7 @@
 
 {% block menu %}
     <span class="label">
-        <span class="icon">{{ include('@ContaoCore/Collector/contao.svg') }}</span>
+        <span class="icon">{{ include('@Contao/web_debug_toolbar/contao.svg.twig') }}</span>
         <strong>Contao</strong>
     </span>
 {% endblock %}
