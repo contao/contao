@@ -58,8 +58,11 @@ class RobotsTxtListener
 
         foreach ($records as $record) {
             $directiveList = $record->getDirectiveList();
-            $directiveList->add(new Directive('Disallow', $this->routePrefix.'/'));
-            $directiveList->add(new Directive('Disallow', '/_contao/'));
+
+            if ( !(1 === $directiveList->getLength() && $directiveList->first()->getField() == 'disallow' && (string)$directiveList->first()->getValue() == '/') ) {
+                $directiveList->add(new Directive('Disallow', $this->routePrefix.'/'));
+                $directiveList->add(new Directive('Disallow', '/_contao/'));
+            }
 
             if ($this->webDebugToolbarListener?->isEnabled()) {
                 $directiveList->add(new Directive('Disallow', '/_profiler/'));
