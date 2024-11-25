@@ -22,5 +22,10 @@
         "psr-4": {
             "Contao\\Tools\\IsolatedTests\\": "src/"
         }
+    },
+    "config": {
+        "platform": {
+            "php": "8.3"
+        }
     }
 }
