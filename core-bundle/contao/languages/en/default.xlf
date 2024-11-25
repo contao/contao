@@ -305,9 +305,6 @@
       <trans-unit id="ERR.passkeyAttestationFailure">
         <source>Passkey could not be created.</source>
       </trans-unit>
-      <trans-unit id="ERR.textTrackMetadataMissing">
-        <source>The following text track file(s) do not contain all necessary metadata: %s</source>
-      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
       </trans-unit>
