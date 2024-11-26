@@ -245,7 +245,7 @@ class DataContainerOperationsBuilder implements \Stringable
         }
 
         if (isset($config['href'])) {
-            return Backend::addToUrl($config['href'].'&amp;id='.$record['id'].(Input::get('nb') ? '&amp;nc=1' : '').($isPopup ? '&amp;popup=1' : ''));
+            return Backend::addToUrl($config['href'].'&amp;id='.$record['id'].(Input::get('nb') ? '&amp;nc=1' : '').($isPopup ? '&amp;popup=1' : ''), addRequestToken: !($config['prefetch'] ?? false));
         }
 
         return null;
