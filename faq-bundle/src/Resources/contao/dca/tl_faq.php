@@ -401,7 +401,8 @@ class tl_faq extends Backend
 			$root = $this->User->faqs;
 		}
 
-		$id = strlen(Input::get('id')) ? Input::get('id') : CURRENT_ID;
+		$currentId = \defined('CURRENT_ID') ? CURRENT_ID : 0;
+		$id = strlen(Input::get('id')) ? Input::get('id') : $currentId;
 
 		// Check current action
 		switch (Input::get('act'))
