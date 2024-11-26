@@ -402,6 +402,11 @@ abstract class Widget extends Controller
 			case 'activeRecord':
 				return $this->objDca->activeRecord;
 
+			case 'asEditorView':
+				$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+				return $request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request);
+
 			default:
 				if (isset($this->arrAttributes[$strKey]))
 				{
@@ -965,8 +970,6 @@ abstract class Widget extends Controller
 
 					foreach ($arrEmails as $strEmail)
 					{
-						$strEmail = Idna::encodeEmail($strEmail);
-
 						if (!Validator::isEmail($strEmail))
 						{
 							$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['emails'], $this->strLabel));
