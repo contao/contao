@@ -56,7 +56,7 @@ class PageRoutingListenerTest extends TestCase
             ->expects($this->once())
             ->method('render')
             ->with(
-                '@ContaoCore/Backend/be_route_path.html.twig',
+                '@Contao/backend/routing/path_widget.html.twig',
                 [
                     'path' => $expected,
                 ],
@@ -225,7 +225,7 @@ class PageRoutingListenerTest extends TestCase
             ->expects($this->once())
             ->method('render')
             ->with(
-                '@ContaoCore/Backend/be_route_conflicts.html.twig',
+                '@Contao/backend/routing/route_conflicts_widget.html.twig',
                 [
                     'conflicts' => [
                         [

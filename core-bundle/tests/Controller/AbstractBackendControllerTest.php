@@ -292,8 +292,8 @@ class AbstractBackendControllerTest extends TestCase
                     }
 
                     $map = [
-                        '@ContaoCore/Backend/be_menu.html.twig' => '<menu>',
-                        '@ContaoCore/Backend/be_header_menu.html.twig' => '<header_menu>',
+                        '@Contao/backend/chrome/main_menu.html.twig' => '<menu>',
+                        '@Contao/backend/chrome/header_menu.html.twig' => '<header_menu>',
                         'custom_be.html.twig' => '<custom_be_main>',
                     ];
 

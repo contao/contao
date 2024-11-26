@@ -441,7 +441,7 @@ class BackendTemplateStudioController extends AbstractBackendController
 
     private function getFinder(): Finder
     {
-        $suppressedPrefixes = ['backend'];
+        $suppressedPrefixes = ['backend', 'frontend_preview', 'web_debug_toolbar'];
 
         // TODO: In Contao 6, do not add theme paths in the ContaoFilesystemLoader to
         // begin with and remove this logic to suppress them (see #7027).
