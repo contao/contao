@@ -56,12 +56,12 @@ export default class extends Controller {
 
         const primaryKey = window.navigator.platform?.startsWith('Mac') ? 'metaKey' : 'ctrlKey';
 
-        if (event[primaryKey] && this.hasPrimaryTarget && this.primaryTarget.href) {
+        if (event[primaryKey] && !event.shiftKey && this.hasPrimaryTarget && this.primaryTarget.href) {
             Turbo.visit(this.primaryTarget.href);
             return;
         }
 
-        if (event.shiftKey && this.hasSecondaryTarget && this.secondaryTarget.href) {
+        if (event[primaryKey] && event.shiftKey && this.hasSecondaryTarget && this.secondaryTarget.href) {
             Turbo.visit(this.secondaryTarget.href);
             return;
         }
