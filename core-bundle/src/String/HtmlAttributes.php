@@ -441,7 +441,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             throw new \RuntimeException(\sprintf('The value of property "%s" is not a valid UTF-8 string.', $name));
         }
 
-        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, null, $this->doubleEncoding);
+        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, null, $this->doubleEncoding || 1 === preg_match('/["\'<>]/', $value));
 
         return str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $value);
     }
