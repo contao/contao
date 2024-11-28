@@ -110,10 +110,8 @@ class SerpPreview extends Widget
 			        descriptionFallbackField: '$descriptionFallbackField',
 			        titleTag: '$titleTag'
 			      });
-
 			      window.removeEvent('domready', initSerpPreview);
 			    };
-
 			    window.addEvent('domready', initSerpPreview);
 			  })();
 			</script>
