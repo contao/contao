@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.4.7] (2024-11-28)
+
+**Fixed issues:**
+
+- [#7739] Fix a JS performance issue related to the registration of tooltips ([m-vo])
+
 ## [5.4.6] (2024-11-22)
 
 **Fixed issues:**
@@ -127,6 +133,7 @@ This project adheres to [Semantic Versioning].
 - [#7229] Fix the `.nogrid` backwards compatibility layer ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.4.7]: https://github.com/contao/contao/releases/tag/5.4.7
 [5.4.6]: https://github.com/contao/contao/releases/tag/5.4.6
 [5.4.5]: https://github.com/contao/contao/releases/tag/5.4.5
 [5.4.4]: https://github.com/contao/contao/releases/tag/5.4.4
@@ -217,3 +224,4 @@ This project adheres to [Semantic Versioning].
 [#7734]: https://github.com/contao/contao/pull/7734
 [#7736]: https://github.com/contao/contao/pull/7736
 [#7737]: https://github.com/contao/contao/pull/7737
+[#7739]: https://github.com/contao/contao/pull/7739

@@ -375,9 +375,11 @@
       </trans-unit>
       <trans-unit id="ERR.altchaJavaScriptRequired">
         <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.</source>
+        <target>JavaScript är för närvarande inaktiverat eller blockerat. Utan JavaScript kommer antispam-verifieringen att misslyckas. Aktivera JavaScript tillfälligt för att kunna skicka in formuläret.</target>
       </trans-unit>
       <trans-unit id="ERR.altchaVerificationFailed">
         <source>Anti-spam verification failed. Are you a human or a robot?</source>
+        <target>Verifiering av anti-spam misslyckades. Är du en människa eller en robot?</target>
       </trans-unit>
       <trans-unit id="ERR.altchaWidgetError">
         <source>Verification failed. Try again later.</source>
@@ -2609,6 +2611,7 @@
       </trans-unit>
       <trans-unit id="MSC.tooManyPasswordResetAttempts">
         <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>Du har försökt återställa ditt lösenord för många gånger. Försök igen om 15 minuter.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>

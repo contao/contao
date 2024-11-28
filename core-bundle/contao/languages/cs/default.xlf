@@ -375,18 +375,23 @@
       </trans-unit>
       <trans-unit id="ERR.altchaJavaScriptRequired">
         <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.</source>
+        <target>JavaScript je momentálně vypnutý nebo blokovaný. Bez JavaScriptu nebude ochrana proti spamu fungovat. Zapněte prosím dočasně JavaScript, aby se podařilo odeslat daný formulář.</target>
       </trans-unit>
       <trans-unit id="ERR.altchaVerificationFailed">
         <source>Anti-spam verification failed. Are you a human or a robot?</source>
+        <target>Ochrana před spamem selhala. Jste robot nebo člověk? </target>
       </trans-unit>
       <trans-unit id="ERR.altchaWidgetError">
         <source>Verification failed. Try again later.</source>
+        <target>Ověření selhalo. Zkuste to prosím znovu.</target>
       </trans-unit>
       <trans-unit id="ERR.altchaInsecureConnection">
         <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
+        <target>ALTCHA není dostupná bez bezpečného připojení pomocí HTTPS. Pokud ho vaše webová stránka nepoužívá, což není doporučené, použijte místo toho bezpečností otázku.</target>
       </trans-unit>
       <trans-unit id="ERR.personalDataPassword">
         <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
+        <target>Existuje alespoň jeden &quot;osobní datový&quot; modul, který umožňuje změnu hesla. To je bezpečností riziko a nebude nadále fungovat v Contau 6. Použijte místo toho modul &quot;Změna hesla&quot;.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -794,9 +799,11 @@
       </trans-unit>
       <trans-unit id="FFL.altcha.0">
         <source>ALTCHA antispam</source>
+        <target>Ochrana před spamem ALTCHA</target>
       </trans-unit>
       <trans-unit id="FFL.altcha.1">
         <source>Provides an ALTCHA antispam form field to verify that the form is submitted by a human (CAPTCHA).</source>
+        <target>Zobrazí pole ochrany před spamem ALTCHA, které ověří, zda formulář odesílá člověk (CAPTCHA).</target>
       </trans-unit>
       <trans-unit id="FFL.captcha.0">
         <source>Security question</source>
@@ -2603,6 +2610,7 @@
       </trans-unit>
       <trans-unit id="MSC.tooManyPasswordResetAttempts">
         <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>Několikrát jste se pokusili restartovat vaše heslo. Pokuste se o to prosím za 15 minut znovu.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
@@ -2638,9 +2646,11 @@
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb</source>
+        <target>Drobečková navigace</target>
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
         <source>Main</source>
+        <target>Hlavní</target>
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
         <source>Header</source>
@@ -2648,6 +2658,7 @@
       </trans-unit>
       <trans-unit id="MSC.pagination">
         <source>Pagination</source>
+        <target>Navigace stránek</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
         <source>Unicode numbers and lowercase letters</source>
@@ -2892,18 +2903,23 @@
       </trans-unit>
       <trans-unit id="MSC.altchaFooter">
         <source>Protected by &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</source>
+        <target>Chráněno pomocí &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</target>
       </trans-unit>
       <trans-unit id="MSC.altchaLabel">
         <source>I'm not a robot</source>
+        <target>Jsem robot</target>
       </trans-unit>
       <trans-unit id="MSC.altchaVerified">
         <source>I'm human</source>
+        <target>Jsem člověk</target>
       </trans-unit>
       <trans-unit id="MSC.altchaVerifying">
         <source>Verifying …</source>
+        <target>Ověřuji...</target>
       </trans-unit>
       <trans-unit id="MSC.altchaWaitAlert">
         <source>Verifying … please wait.</source>
+        <target>Ověřuji… počkejte prosím.</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

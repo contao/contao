@@ -27,9 +27,11 @@
       </trans-unit>
       <trans-unit id="tl_module.ariaLabel.0">
         <source>ARIA label</source>
+        <target>Popisek ARIA</target>
       </trans-unit>
       <trans-unit id="tl_module.ariaLabel.1">
         <source>If there is more than one navigation element on the page, each should have a unique label.</source>
+        <target>Pokud se na stránce nachází víc než jedna navigace, měla by mít každá z nich jedinečné označení.</target>
       </trans-unit>
       <trans-unit id="tl_module.levelOffset.0">
         <source>Start level</source>
