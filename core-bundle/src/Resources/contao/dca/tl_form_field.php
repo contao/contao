@@ -652,8 +652,8 @@ class tl_form_field extends Backend
 				}
 				else
 				{
-					$objFields = $this->Database->prepare("SELECT id, type FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_form_field']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->fields), '?')) . ")")
-												->execute(...$this->User->fields);
+					$objFields = $this->Database->prepare("SELECT id, type FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_form_field']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($this->User->fields), '?')) . ") ORDER BY sorting")
+						                        ->execute(...$this->User->fields);
 
 					$session['CLIPBOARD']['tl_form_field']['id'] = $objFields->fetchEach('id');
 				}
