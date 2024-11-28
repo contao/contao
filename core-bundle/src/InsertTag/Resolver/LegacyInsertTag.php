@@ -506,7 +506,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     $arrParams = explode('&', $strSource);
 
                     foreach ($arrParams as $strParam) {
-                        [$key, $value] = explode('=', urldecode($strParam));
+                        [$key, $value] = explode('=', urldecode($strParam), 2);
 
                         switch ($key) {
                             case 'width':
