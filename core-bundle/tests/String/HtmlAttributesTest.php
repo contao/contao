@@ -612,9 +612,10 @@ class HtmlAttributesTest extends TestCase
             'd' => 'foo&amp;bar',
             'e' => '&ZeroWidthSpace;',
             'property-without-value' => null,
+            'data-json' => json_encode('foo &quot; bar'),
         ]);
 
-        $expectedString = 'a="A B C" b="&#123;&#123;b&#125;&#125;" c="foo&amp;bar" d="foo&amp;bar" e="&ZeroWidthSpace;" property-without-value';
+        $expectedString = 'a="A B C" b="&#123;&#123;b&#125;&#125;" c="foo&amp;bar" d="foo&amp;bar" e="&ZeroWidthSpace;" property-without-value data-json="&quot;foo &amp;quot; bar&quot;"';
 
         $this->assertSame(" $expectedString", (string) $attributes);
         $this->assertSame(" $expectedString", $attributes->toString());
@@ -622,7 +623,7 @@ class HtmlAttributesTest extends TestCase
 
         // With double encoding
         $this->assertSame($attributes, $attributes->setDoubleEncoding(true));
-        $expectedString = 'a="A B C" b="&#123;&#123;b&#125;&#125;" c="foo&amp;bar" d="foo&amp;amp;bar" e="&amp;ZeroWidthSpace;" property-without-value';
+        $expectedString = 'a="A B C" b="&#123;&#123;b&#125;&#125;" c="foo&amp;bar" d="foo&amp;amp;bar" e="&amp;ZeroWidthSpace;" property-without-value data-json="&quot;foo &amp;quot; bar&quot;"';
 
         $this->assertSame(" $expectedString", (string) $attributes);
         $this->assertSame(" $expectedString", $attributes->toString());
