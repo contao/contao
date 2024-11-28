@@ -21,6 +21,7 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Database\Statement;
 use Doctrine\DBAL\Exception\DriverException;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\String\UnicodeString;
@@ -1307,6 +1308,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (isset($arrClipboard[$this->strTable]) && \is_array($arrClipboard[$this->strTable]['id']))
 		{
+			/** @var TranslatorInterface $translator */
+			$translator = System::getContainer()->get('translator');
+
 			foreach ($arrClipboard[$this->strTable]['id'] as $id)
 			{
 				$this->intId = $id;
@@ -1317,6 +1321,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 				catch (AccessDeniedException)
 				{
+					continue;
+				}
+				catch (UniqueConstraintViolationException)
+				{
+					Message::addError(\sprintf($translator->trans('ERR.copyAllUnique', array(), 'contao_default'), (int) $id));
+
 					continue;
 				}
 
