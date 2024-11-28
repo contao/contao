@@ -109,7 +109,6 @@ class NewsLetterRecipientsCopyListenerTest extends TestCase
         ;
 
         $connection = $this->createMock(Connection::class);
-        $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->exactly(2))
             ->method('fetchOne')
