@@ -120,7 +120,7 @@ class BackendSearchTest extends TestCase
         $messageBus
             ->expects($this->once())
             ->method('dispatch')
-            ->with($this->callback(static fn (ReindexMessage $message) => null === $message->getUpdateSince()))
+            ->with($this->callback(static fn (ReindexMessage $message) => !$message->getUpdateSince()))
             ->willReturn(new Envelope($this->createMock(ReindexMessage::class)))
         ;
 
