@@ -135,7 +135,7 @@ class ServiceArgumentsTest extends FunctionalTestCase
                     continue;
                 }
 
-                $this->assertTrue($type instanceof \ReflectionNamedType && $type->isBuiltin() ?: false, \sprintf('Argument %s of "%s" should be a built-in type, got "%s".', $i, $serviceId, get_debug_type($argument)));
+                $this->assertTrue($type instanceof \ReflectionNamedType && $type->isBuiltin(), \sprintf('Argument %s of "%s" should be a built-in type, got "%s".', $i, $serviceId, get_debug_type($argument)));
 
                 if (\in_array('iterable', $typeNames, true)) {
                     $this->assertIsIterable($argument, \sprintf('Argument %s of "%s" is not an iterable.', $i, $serviceId));
