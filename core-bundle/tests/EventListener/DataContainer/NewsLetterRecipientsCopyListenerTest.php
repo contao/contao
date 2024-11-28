@@ -71,10 +71,16 @@ class NewsLetterRecipientsCopyListenerTest extends TestCase
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('fetchOne')
-            ->with('SELECT TRUE FROM tl_newsletter_recipients WHERE id = ? and pid = ?', [1, 2])
-            ->willReturn(false)
+            ->withConsecutive(
+                ['SELECT email FROM tl_newsletter_recipients WHERE id = ?', [1]],
+                ['SELECT TRUE FROM tl_newsletter_recipients WHERE email = ? AND pid = ?', ['foobar@example.com', 2]],
+            )
+            ->willReturnOnConsecutiveCalls(
+                'foobar@example.com',
+                false,
+            )
         ;
 
         (new NewsletterRecipientsCopyListener($requestStack, $connection))();
@@ -103,11 +109,18 @@ class NewsLetterRecipientsCopyListenerTest extends TestCase
         ;
 
         $connection = $this->createMock(Connection::class);
+        $connection = $this->createMock(Connection::class);
         $connection
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('fetchOne')
-            ->with('SELECT TRUE FROM tl_newsletter_recipients WHERE id = ? and pid = ?', [1, 2])
-            ->willReturn(true)
+            ->withConsecutive(
+                ['SELECT email FROM tl_newsletter_recipients WHERE id = ?', [1]],
+                ['SELECT TRUE FROM tl_newsletter_recipients WHERE email = ? AND pid = ?', ['foobar@example.com', 2]],
+            )
+            ->willReturnOnConsecutiveCalls(
+                'foobar@example.com',
+                true,
+            )
         ;
 
         (new NewsletterRecipientsCopyListener($requestStack, $connection))();
