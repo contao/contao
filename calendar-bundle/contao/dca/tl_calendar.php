@@ -83,7 +83,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 				'class'               => 'header_rss',
 				'button_callback'     => array('tl_calendar', 'manageFeeds')
 			),
-			'all'
 		)
 	),
 
