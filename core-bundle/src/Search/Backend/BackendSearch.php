@@ -48,24 +48,22 @@ class BackendSearch
     }
 
     /**
-     * @param array<string>|array<Document> $documents The document instances or document IDs
+     * @param array<string, array<string>> $documentTypesAndIds The document IDs grouped by type
      */
-    public function deleteDocuments(array $documents, bool $async = true): self
+    public function deleteDocuments(array $documentTypesAndIds, bool $async = true): self
     {
-        $documentIds = [];
-
-        foreach ($documents as $document) {
-            if ($document instanceof Document) {
-                $documentIds[] = $this->getGlobalIdForDocument($document);
-            } else {
-                $documentIds[] = $document;
-            }
-        }
-
         if ($async) {
-            $this->messageBus->dispatch(new DeleteDocumentsMessage($documentIds));
+            $this->messageBus->dispatch(new DeleteDocumentsMessage($documentTypesAndIds));
 
             return $this;
+        }
+
+        $documentIds = [];
+
+        foreach ($documentTypesAndIds as $type => $ids) {
+            foreach ($ids as $id) {
+                $documentIds[] = $this->getGlobalIdForTypeAndDocumentId($type, $id);
+            }
         }
 
         // TODO: Use bulk endpoint as soon as SEAL supports this
@@ -201,7 +199,7 @@ class BackendSearch
         // The provider did not find any hit for it anymore so it must have been removed
         // or expired. Remove from the index.
         if (!$hit) {
-            $this->deleteDocuments([$document]);
+            $this->deleteDocuments([$document->getType() => [$document->getId()]]);
 
             return null;
         }
@@ -231,7 +229,7 @@ class BackendSearch
     private function convertProviderDocumentForSearchIndex(Document $document): array
     {
         return [
-            'id' => $this->getGlobalIdForDocument($document),
+            'id' => $this->getGlobalIdForTypeAndDocumentId($document->getType(), $document->getId()),
             'type' => $document->getType(),
             'searchableContent' => $document->getSearchableContent(),
             'tags' => $document->getTags(),
@@ -239,9 +237,9 @@ class BackendSearch
         ];
     }
 
-    private function getGlobalIdForDocument(Document $document): string
+    private function getGlobalIdForTypeAndDocumentId(string $type, string $id): string
     {
         // Ensure the ID is global across the search index by prefixing the id
-        return $document->getType().'_'.$document->getId();
+        return $type.'_'.$id;
     }
 }

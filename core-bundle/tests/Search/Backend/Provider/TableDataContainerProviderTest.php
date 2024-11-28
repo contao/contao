@@ -26,6 +26,7 @@ use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
@@ -48,6 +49,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             $this->createMock(Connection::class),
             $this->createMock(RecordLabeler::class),
             $this->createMock(AccessDecisionManagerInterface::class),
+            $this->createMock(EventDispatcherInterface::class),
         );
 
         $this->assertTrue($provider->supportsType(TableDataContainerProvider::TYPE_PREFIX.'foobar'));
@@ -110,6 +112,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             $connection,
             $this->createMock(RecordLabeler::class),
             $this->createMock(AccessDecisionManagerInterface::class),
+            $this->createMock(EventDispatcherInterface::class),
         );
 
         $documentsIterator = $provider->updateIndex(new ReindexConfig());

@@ -16,6 +16,7 @@ use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\DataContainer\RecordLabeler;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Search\Backend\Document;
+use Contao\CoreBundle\Search\Backend\Event\FormatTableDataContainerDocumentEvent;
 use Contao\CoreBundle\Search\Backend\Hit;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -25,6 +26,7 @@ use Contao\DcaLoader;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -42,6 +44,7 @@ class TableDataContainerProvider implements ProviderInterface
         private readonly Connection $connection,
         private readonly RecordLabeler $recordLabeler,
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -148,8 +151,10 @@ class TableDataContainerProvider implements ProviderInterface
             return [];
         }
 
+        $fieldsConfig = $GLOBALS['TL_DCA'][$table]['fields'];
+
         $searchableFields = array_filter(
-            $GLOBALS['TL_DCA'][$table]['fields'] ?? [],
+            $fieldsConfig,
             static fn (array $config): bool => isset($config['search']) && true === $config['search'],
         );
 
@@ -160,7 +165,7 @@ class TableDataContainerProvider implements ProviderInterface
         }
 
         foreach ($qb->executeQuery()->iterateAssociative() as $row) {
-            $document = $this->createDocumentFromRow($table, $row, $searchableFields);
+            $document = $this->createDocumentFromRow($table, $row, $fieldsConfig, $searchableFields);
 
             if ($document) {
                 yield $document;
@@ -168,9 +173,9 @@ class TableDataContainerProvider implements ProviderInterface
         }
     }
 
-    private function createDocumentFromRow(string $table, array $row, array $searchableFields): Document|null
+    private function createDocumentFromRow(string $table, array $row, array $fieldsConfig, array $searchableFields): Document|null
     {
-        $searchableContent = $this->extractSearchableContent($row, $searchableFields);
+        $searchableContent = $this->extractSearchableContent($row, $fieldsConfig, $searchableFields);
 
         if ('' === $searchableContent) {
             return null;
@@ -184,14 +189,15 @@ class TableDataContainerProvider implements ProviderInterface
         return self::TYPE_PREFIX.$table;
     }
 
-    private function extractSearchableContent(array $row, array $searchableFields): string
+    private function extractSearchableContent(array $row, array $fieldsConfig, array $searchableFields): string
     {
         $searchableContent = [];
 
         foreach (array_keys($searchableFields) as $field) {
             if (isset($row[$field])) {
-                // TODO: Decode, optimize serialized data maybe? Strip HTML tags? Event for e.g. RSCE?
-                $searchableContent[] = $row[$field];
+                $event = new FormatTableDataContainerDocumentEvent($row[$field], $fieldsConfig[$field] ?? []);
+                $this->eventDispatcher->dispatch($event);
+                $searchableContent[] = $event->getSearchableContent();
             }
         }
 
