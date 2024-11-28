@@ -61,7 +61,6 @@ class FilesStorageProvider implements ProviderInterface
         }
 
         foreach ($items as $item) {
-            sleep(1); // TODO: REMOVE ME DEBUG
             $document = new Document(
                 $item->getPath(),
                 self::TYPE,
