@@ -44,8 +44,10 @@ class NewsletterRecipientsCopyListener
             return;
         }
 
-        // Check if the source record has the same parent as the target
-        if ($this->connection->fetchOne('SELECT TRUE FROM tl_newsletter_recipients WHERE id = ? and pid = ?', [$sourceRecordId, $targetParentId])) {
+        $email = $this->connection->fetchOne('SELECT email FROM tl_newsletter_recipients WHERE id = ?', [$sourceRecordId]);
+
+        // Check if the email already exists in the target
+        if ($this->connection->fetchOne('SELECT TRUE FROM tl_newsletter_recipients WHERE email = ? AND pid = ?', [$email, $targetParentId])) {
             $GLOBALS['TL_DCA']['tl_newsletter_recipients']['fields']['email']['eval']['doNotCopy'] = true;
         }
     }
