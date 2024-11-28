@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Contao\CoreBundle\Search\Backend\IndexUpdateConfig;
+namespace Contao\CoreBundle\Search\Backend;
 
 /**
  * @experimental
  */
-abstract class AbstractIndexUpdateConfig implements IndexUpdateConfigInterface
+final class ReindexConfig
 {
     public function __construct(private readonly \DateTimeInterface|null $updateSince = null)
     {

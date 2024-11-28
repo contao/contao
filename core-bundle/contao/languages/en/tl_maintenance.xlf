@@ -140,6 +140,18 @@
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
       </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.title">
+        <source>Backend search</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.disabled_explanation">
+        <source>You cannot use this feature at the moment. Depending on the amount of data in your Contao installation, building the search index can take anywhere from a few minutes up to 15 minutes or even longer. Thus, this job requires background workers. The easiest way to set those up is using &lt;a href="https://to.contao.org/docs/cronjob-framework" target="_blank"&gt;Contao's Cronjob Framework&lt;/a&gt;, which also comes with additional performance improvements.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.button">
+        <source>Rebuild index</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.confirmation">
+        <source>Rebuilding is in progress. Unfortunately, there's currently no way of knowing when it is finished. Please check your search results regularly. A future version of Contao will give information about the progress.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

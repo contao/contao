@@ -16,8 +16,8 @@ use Contao\Config;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\DataContainer\RecordLabeler;
 use Contao\CoreBundle\Search\Backend\Document;
-use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\UpdateAllProvidersConfig;
 use Contao\CoreBundle\Search\Backend\Provider\TableDataContainerProvider;
+use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\DcaLoader;
 use Contao\System;
 use Doctrine\DBAL\Connection;
@@ -112,7 +112,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             $this->createMock(AccessDecisionManagerInterface::class),
         );
 
-        $documentsIterator = $provider->updateIndex(new UpdateAllProvidersConfig());
+        $documentsIterator = $provider->updateIndex(new ReindexConfig());
 
         // Sort the documents for deterministic tests
         /** @var array<Document> $documents */

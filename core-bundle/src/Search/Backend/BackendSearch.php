@@ -7,7 +7,8 @@ namespace Contao\CoreBundle\Search\Backend;
 use Contao\CoreBundle\Event\BackendSearch\EnhanceHitEvent;
 use Contao\CoreBundle\Event\BackendSearch\IndexDocumentEvent;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\DeleteDocumentsMessage;
-use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\IndexUpdateConfigInterface;
+use Contao\CoreBundle\Messenger\Message\BackendSearch\ReindexMessage;
+use Contao\CoreBundle\Messenger\WebWorker;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Schranz\Search\SEAL\EngineInterface;
@@ -36,8 +37,14 @@ class BackendSearch
         private readonly EngineInterface $engine,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly MessageBusInterface $messageBus,
+        private readonly WebWorker $webWorker,
         private readonly string $indexName,
     ) {
+    }
+
+    public function isAvailable(): bool
+    {
+        return $this->webWorker->hasCliWorkersRunning();
     }
 
     /**
@@ -69,13 +76,19 @@ class BackendSearch
         return $this;
     }
 
-    public function triggerUpdate(IndexUpdateConfigInterface $trigger): void
+    public function reindex(ReindexConfig $config, bool $async = true): self
     {
+        if ($async) {
+            $this->messageBus->dispatch(new ReindexMessage($config->getUpdateSince()?->format(\DateTimeInterface::ATOM)));
+
+            return $this;
+        }
+
         // TODO: Use bulk endpoint as soon as SEAL supports this
         /** @var ProviderInterface $provider */
         foreach ($this->providers as $provider) {
             /** @var Document $document */
-            foreach ($provider->updateIndex($trigger) as $document) {
+            foreach ($provider->updateIndex($config) as $document) {
                 $event = new IndexDocumentEvent($document);
                 $this->eventDispatcher->dispatch($event);
 
@@ -89,6 +102,8 @@ class BackendSearch
                 );
             }
         }
+
+        return $this;
     }
 
     /**
@@ -141,6 +156,13 @@ class BackendSearch
                 'document' => new TextField('document'),
             ]),
         ]);
+    }
+
+    public function clear(): void
+    {
+        // TODO: We need an API for that in SEAL
+        $this->engine->dropIndex($this->indexName);
+        $this->engine->createIndex($this->indexName);
     }
 
     private function createSearchBuilder(Query $query): SearchBuilder
