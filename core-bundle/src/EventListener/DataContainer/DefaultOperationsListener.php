@@ -50,8 +50,13 @@ class DefaultOperationsListener
 
     private function getForTable(string $table): array
     {
-        $defaults = $this->getDefaults($table);
         $dca = $GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null;
+
+        if ([] === $dca) {
+            return [];
+        }
+
+        $defaults = $this->getDefaults($table);
 
         if (!\is_array($dca)) {
             return $defaults;
