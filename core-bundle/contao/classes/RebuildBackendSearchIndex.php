@@ -42,7 +42,7 @@ class RebuildBackendSearchIndex extends Backend implements MaintenanceModuleInte
 		$objTemplate = new BackendTemplate('be_rebuild_backend_search');
 		$objTemplate->disabled = !$backendSearch->isAvailable();
 
-		if (Input::post('FORM_SUBMIT') == 'tl_rebuild_backend_search')
+		if (Input::post('FORM_SUBMIT') == 'tl_rebuild_backend_search' && $backendSearch->isAvailable())
 		{
 			$backendSearch->reindex(new ReindexConfig());
 			Message::addConfirmation($GLOBALS['TL_LANG']['tl_maintenance']['backend_search']['confirmation'], self::class);
