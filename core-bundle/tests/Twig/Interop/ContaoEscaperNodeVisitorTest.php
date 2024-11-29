@@ -78,6 +78,39 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $this->assertSame('<h1>&amp; will look like &amp;</h1><p>This is <i>raw HTML</i>.</p>', $output);
     }
 
+    public function testDoesDoubleEncodeJson(): void
+    {
+        $templateContent = '<div data-json="{{ data|json_encode }}">{{ data }}</div>';
+
+        $output = $this->getEnvironment($templateContent)->render('legacy.html.twig', [
+            'data' => 'foo &quot; bar &quot; baz',
+        ]);
+
+        $this->assertSame('<div data-json="&quot;foo &amp;quot; bar &amp;quot; baz&quot;">foo &quot; bar &quot; baz</div>', $output);
+    }
+
+    public function testDoesDoubleEncodeByParameter(): void
+    {
+        $templateContent = '<div data-double-encoded="{{ data|e(\'html\', double_encode = true) }}">{{ data|escape(\'html\', double_encode = true) }}</div>';
+
+        $output = $this->getEnvironment($templateContent)->render('legacy.html.twig', [
+            'data' => 'foo &quot; bar &quot; baz',
+        ]);
+
+        $this->assertSame('<div data-double-encoded="foo &amp;quot; bar &amp;quot; baz">foo &amp;quot; bar &amp;quot; baz</div>', $output);
+    }
+
+    public function testDoesNotDoubleEncodeByParameter(): void
+    {
+        $templateContent = '<div data-not-double-encoded="{{ data|e(\'html\', double_encode = false) }}">{{ data|escape(\'html\', double_encode = false) }}</div>';
+
+        $output = $this->getEnvironment($templateContent)->render('legacy.html.twig', [
+            'data' => 'foo &quot; bar &quot; baz',
+        ]);
+
+        $this->assertSame('<div data-not-double-encoded="foo &quot; bar &quot; baz">foo &quot; bar &quot; baz</div>', $output);
+    }
+
     public function testHandlesFiltersAndFunctions(): void
     {
         $templateContent = '{{ heart() }} {{ target|trim }}';

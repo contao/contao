@@ -2581,6 +2581,9 @@
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
         <target>Link, który próbowałeś otworzyć, nie mógł zostać zweryfikowany. Jeśli kliknąłeś link sam, lub otrzymałeś go od zaufanej osoby, potwierdź proces poniżej.</target>
       </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+      </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
         <target>Konflikt wersji</target>
