@@ -273,7 +273,7 @@
         <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
       </trans-unit>
       <trans-unit id="ERR.copyAllUnique">
-        <source>Could not copy record ID %d because it already exists.</source>
+        <source>Could not copy record ID %d because its data conflicts with an existing record.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
