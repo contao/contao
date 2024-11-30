@@ -28,6 +28,12 @@ class DeleteDocumentsMessageHandler
 
     public function __invoke(DeleteDocumentsMessage $message): void
     {
-        $this->backendSearch->deleteDocuments($message->getDocumentTypesAndIds(), false);
+        // Cannot run in a web request. TODO: Make this feature generally available as
+        // WebWorker config for all kinds of messages
+        if (\PHP_SAPI !== 'cli') {
+            return;
+        }
+
+        $this->backendSearch->deleteDocuments($message->getGroupedDocumentIds(), false);
     }
 }

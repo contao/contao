@@ -15,16 +15,17 @@ namespace Contao\CoreBundle\Tests\Messenger\MessageHandler\BackendSearch;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\DeleteDocumentsMessage;
 use Contao\CoreBundle\Messenger\MessageHandler\BackendSearch\DeleteDocumentsMessageHandler;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
+use Contao\CoreBundle\Search\Backend\GroupedDocumentIds;
 use PHPUnit\Framework\TestCase;
 
 class DeleteDocumentsMessageHandlerTest extends TestCase
 {
     public function testDeleteDocuments(): void
     {
-        $documentTypesAndIds = [
+        $documentTypesAndIds = new GroupedDocumentIds([
             'test' => ['42'],
             'foobar' => ['42'],
-        ];
+        ]);
 
         $message = new DeleteDocumentsMessage($documentTypesAndIds);
 

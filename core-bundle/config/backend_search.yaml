@@ -45,6 +45,11 @@ services:
     contao.search.backend.format_core_widget_results_listener:
         class: Contao\CoreBundle\Search\Backend\EventListener\FormatCoreWidgetSearchResultsListener
 
+    contao.search.backend.trigger_reindex_on_table_data_container_invalidation_listener:
+        class: Contao\CoreBundle\Search\Backend\EventListener\TriggerReindexOnTableDataContainerInvalidationListener
+        arguments:
+            - '@contao.search.backend'
+
     contao.search.backend.table_data_container_provider:
         class: Contao\CoreBundle\Search\Backend\Provider\TableDataContainerProvider
         arguments:

@@ -19,6 +19,7 @@ use Contao\CoreBundle\Messenger\Message\BackendSearch\ReindexMessage;
 use Contao\CoreBundle\Messenger\WebWorker;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Search\Backend\Document;
+use Contao\CoreBundle\Search\Backend\GroupedDocumentIds;
 use Contao\CoreBundle\Search\Backend\Hit;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Search\Backend\Query;
@@ -80,13 +81,22 @@ class BackendSearchTest extends TestCase
             )
         ;
 
-        $indexUpdateConfig = new ReindexConfig();
+        $engine
+            ->expects($this->once())
+            ->method('deleteDocument')
+            ->with('contao_backend_search', 'foo_bar')
+        ;
+
+        $reindexConfig = (new ReindexConfig())
+            ->limitToDocumentIds(new GroupedDocumentIds(['foo' => ['bar']])) // Non-existent document anymore, must be deleted!
+            ->limitToDocumentsNewerThan(new \DateTimeImmutable('2024-01-01T00:00:00+00:00'))
+        ;
 
         $provider = $this->createMock(ProviderInterface::class);
         $provider
             ->expects($this->once())
             ->method('updateIndex')
-            ->with($indexUpdateConfig)
+            ->with($reindexConfig)
             ->willReturnCallback(
                 static function () {
                     yield new Document('id', 'type', 'search me');
@@ -111,16 +121,21 @@ class BackendSearchTest extends TestCase
             'contao_backend_search',
         );
 
-        $backendSearch->reindex($indexUpdateConfig, false);
+        $backendSearch->reindex($reindexConfig, false);
     }
 
     public function testReindexAsync(): void
     {
+        $reindexConfig = (new ReindexConfig())
+            ->limitToDocumentIds(new GroupedDocumentIds(['foo' => ['bar']]))
+            ->limitToDocumentsNewerThan(new \DateTimeImmutable('2024-01-01T00:00:00+00:00'))
+        ;
+
         $messageBus = $this->createMock(MessageBusInterface::class);
         $messageBus
             ->expects($this->once())
             ->method('dispatch')
-            ->with($this->callback(static fn (ReindexMessage $message) => !$message->getUpdateSince()))
+            ->with($this->callback(static fn (ReindexMessage $message): bool => '2024-01-01T00:00:00+00:00' === $message->getReindexConfig()->getUpdateSince()->format(\DateTimeInterface::ATOM) && ['foo' => ['bar']] === $message->getReindexConfig()->getLimitedDocumentIds()->toArray()))
             ->willReturn(new Envelope($this->createMock(ReindexMessage::class)))
         ;
 
@@ -134,7 +149,7 @@ class BackendSearchTest extends TestCase
             'contao_backend_search',
         );
 
-        $backendSearch->reindex(new ReindexConfig());
+        $backendSearch->reindex($reindexConfig);
     }
 
     public function testSearch(): void
@@ -236,7 +251,7 @@ class BackendSearchTest extends TestCase
         $messageBus
             ->expects($this->once())
             ->method('dispatch')
-            ->with($this->callback(static fn (DeleteDocumentsMessage $message) => ['type' => ['42']] === $message->getDocumentTypesAndIds()))
+            ->with($this->callback(static fn (DeleteDocumentsMessage $message) => ['type' => ['42']] === $message->getGroupedDocumentIds()->toArray()))
             ->willReturn(new Envelope($this->createMock(DeleteDocumentsMessage::class)))
         ;
 
@@ -260,10 +275,10 @@ class BackendSearchTest extends TestCase
 
     public function testDeleteDocumentsSync(): void
     {
-        $documentTypesAndIds = [
+        $documentTypesAndIds = new GroupedDocumentIds([
             'test' => ['42'],
             'foobar' => ['42'],
-        ];
+        ]);
 
         $engine = $this->createMock(EngineInterface::class);
         $engine
@@ -290,16 +305,16 @@ class BackendSearchTest extends TestCase
 
     public function testDeleteDocumentsAsync(): void
     {
-        $documentTypesAndIds = [
+        $documentTypesAndIds = new GroupedDocumentIds([
             'test' => ['42'],
             'foobar' => ['42'],
-        ];
+        ]);
 
         $messageBus = $this->createMock(MessageBusInterface::class);
         $messageBus
             ->expects($this->once())
             ->method('dispatch')
-            ->with($this->callback(static fn (DeleteDocumentsMessage $message) => $documentTypesAndIds === $message->getDocumentTypesAndIds()))
+            ->with($this->callback(static fn (DeleteDocumentsMessage $message) => $documentTypesAndIds->toArray() === $message->getGroupedDocumentIds()->toArray()))
             ->willReturn(new Envelope($this->createMock(DeleteDocumentsMessage::class)))
         ;
 

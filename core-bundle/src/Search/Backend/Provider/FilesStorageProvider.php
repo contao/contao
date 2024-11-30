@@ -51,10 +51,19 @@ class FilesStorageProvider implements ProviderInterface
      */
     public function updateIndex(ReindexConfig $config): iterable
     {
+        // Limited to certain document ids but not of our type - skip.
+        if ($config->isLimitedToDocumentIdsExcludingType(self::TYPE)) {
+            return [];
+        }
+
         $items = $this->filesStorage
             ->listContents('', true)
             ->files()
         ;
+
+        if ($documentIds = $config->getLimitedDocumentIds()->getDocumentIdsForType(self::TYPE)) {
+            $items = $items->filter(static fn (FilesystemItem $item): bool => \in_array($item->getPath(), $documentIds, true));
+        }
 
         if (null !== ($lastIndexed = $config->getUpdateSince()?->getTimestamp())) {
             $items = $items->filter(static fn (FilesystemItem $item): bool => ($item->getLastModified() ?? 0) > $lastIndexed);
