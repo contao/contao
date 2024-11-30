@@ -19,7 +19,6 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Util\UrlUtil;
-use Contao\Environment;
 use Contao\PageModel;
 use Spatie\SchemaOrg\WebPage;
 use Symfony\Component\HttpFoundation\RequestStack;
