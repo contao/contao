@@ -19,6 +19,7 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Util\UrlUtil;
+use Contao\Environment;
 use Contao\PageModel;
 use Spatie\SchemaOrg\WebPage;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -101,7 +102,7 @@ class CoreResponseContextFactory
                     throw new \RuntimeException('The request stack did not contain a request');
                 }
 
-                $url = UrlUtil::makeAbsolute($url, $request->getUri());
+                $url = UrlUtil::makeAbsolute($url, $request->getSchemeAndHttpHost().'/'.$request->getBasePath());
             }
 
             $htmlHeadBag->setCanonicalUri($url);
