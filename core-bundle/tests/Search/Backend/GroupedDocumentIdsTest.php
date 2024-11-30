@@ -104,8 +104,6 @@ class GroupedDocumentIdsTest extends TestCase
     {
         $typeToIds = ['foo' => ['bar'], 'type2' => ['baz']];
         $groupedDocumentIds = GroupedDocumentIds::fromArray($typeToIds);
-
-        $this->assertInstanceOf(GroupedDocumentIds::class, $groupedDocumentIds);
         $this->assertSame($typeToIds, $groupedDocumentIds->toArray());
     }
 }
