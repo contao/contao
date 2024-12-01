@@ -951,6 +951,7 @@ var Backend =
 			'hideFooter': true,
 			'draggable': false,
 			'overlayOpacity': .7,
+      'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		}).show({
@@ -973,6 +974,7 @@ var Backend =
 			'hideFooter': true,
 			'draggable': false,
 			'overlayOpacity': .7,
+      'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
@@ -998,6 +1000,7 @@ var Backend =
 			'hideFooter': true,
 			'draggable': false,
 			'overlayOpacity': .7,
+      'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
@@ -1024,6 +1027,7 @@ var Backend =
 			'width': opt.width,
 			'draggable': false,
 			'overlayOpacity': .7,
+      'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
