@@ -28,7 +28,7 @@ final class GroupedDocumentIds
 
     public function isEmpty(): bool
     {
-        return empty($this->typeToIds);
+        return [] === $this->typeToIds;
     }
 
     public function hasType(string $type): bool

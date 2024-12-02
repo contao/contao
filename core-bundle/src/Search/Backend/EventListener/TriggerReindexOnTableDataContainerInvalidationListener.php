@@ -21,7 +21,7 @@ use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 #[AsEventListener]
 class TriggerReindexOnTableDataContainerInvalidationListener
 {
-    public function __construct(private BackendSearch $backendSearch)
+    public function __construct(private readonly BackendSearch $backendSearch)
     {
     }
 
