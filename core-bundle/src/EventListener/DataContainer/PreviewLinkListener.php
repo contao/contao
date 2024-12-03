@@ -92,7 +92,7 @@ class PreviewLinkListener
                         [$userId],
                     );
 
-                    $session = $this->requestStack->getSession();
+                    $session = $this->requestStack->getSession()->getBag('contao_backend');
                     $sessionData = $session->all();
                     $sessionData['CURRENT']['IDS'] = array_intersect((array) $sessionData['CURRENT']['IDS'], $allowedIds);
                     $session->replace($sessionData);
