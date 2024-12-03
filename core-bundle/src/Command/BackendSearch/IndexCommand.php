@@ -50,6 +50,7 @@ class IndexCommand extends Command
         }
 
         $reindexConfig = new ReindexConfig();
+
         if ($updateSince) {
             $reindexConfig = $reindexConfig->limitToDocumentsNewerThan($updateSince);
         }

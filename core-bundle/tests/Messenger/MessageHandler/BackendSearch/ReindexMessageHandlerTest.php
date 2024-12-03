@@ -27,6 +27,7 @@ class ReindexMessageHandlerTest extends TestCase
             ->limitToDocumentIds(new GroupedDocumentIds(['foo' => ['bar']]))
             ->limitToDocumentsNewerThan(new \DateTimeImmutable('2024-01-01T00:00:00+00:00'))
         ;
+
         $message = new ReindexMessage($reindexConfig);
 
         $backendSearch = $this->createMock(BackendSearch::class);

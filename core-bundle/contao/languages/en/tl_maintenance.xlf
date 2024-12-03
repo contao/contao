@@ -144,7 +144,7 @@
         <source>Backend search</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.backend_search.disabled_explanation">
-        <source>You cannot use this feature at the moment. Depending on the amount of data in your Contao installation, building the search index can take anywhere from a few minutes up to 15 minutes or even longer. Thus, this job requires background workers. The easiest way to set those up is using &lt;a href="https://to.contao.org/docs/cronjob-framework" target="_blank"&gt;Contao's Cronjob Framework&lt;/a&gt;, which also comes with additional performance improvements.</source>
+        <source>You cannot use this feature at the moment. Depending on the amount of data in your Contao installation, building the search index can take anywhere from a few minutes up to 15 minutes or even longer. Thus, this job requires background workers. The easiest way to set those up is using &lt;a href="https://to.contao.org/docs/cronjob-framework" target="_blank"&gt;Contao's cronjob framework&lt;/a&gt;, which also comes with additional performance improvements.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.backend_search.button">
         <source>Rebuild index</source>
