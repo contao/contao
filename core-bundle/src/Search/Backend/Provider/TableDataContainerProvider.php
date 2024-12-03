@@ -18,8 +18,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Event\FormatTableDataContainerDocumentEvent;
 use Contao\CoreBundle\Search\Backend\Hit;
-use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\IndexUpdateConfigInterface;
-use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\UpdateAllProvidersConfig;
+use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\DC_Table;
@@ -57,12 +56,8 @@ class TableDataContainerProvider implements ProviderInterface
     /**
      * @return iterable<Document>
      */
-    public function updateIndex(IndexUpdateConfigInterface $trigger): iterable
+    public function updateIndex(ReindexConfig $config): iterable
     {
-        if (!$trigger instanceof UpdateAllProvidersConfig) {
-            return new \EmptyIterator();
-        }
-
         foreach ($this->getTables() as $table) {
             try {
                 $dcaLoader = new DcaLoader($table);
@@ -82,7 +77,7 @@ class TableDataContainerProvider implements ProviderInterface
                 continue;
             }
 
-            foreach ($this->findDocuments($table, $trigger) as $document) {
+            foreach ($this->findDocuments($table, $config) as $document) {
                 yield $document;
             }
         }
@@ -150,7 +145,7 @@ class TableDataContainerProvider implements ProviderInterface
         return array_unique($tables);
     }
 
-    private function findDocuments(string $table, IndexUpdateConfigInterface $indexUpdateConfig): \Generator
+    private function findDocuments(string $table, ReindexConfig $reindexConfig): \Generator
     {
         if (!isset($GLOBALS['TL_DCA'][$table]['fields'])) {
             return [];
@@ -165,8 +160,8 @@ class TableDataContainerProvider implements ProviderInterface
 
         $qb = $this->createQueryBuilderForTable($table);
 
-        if ($indexUpdateConfig->getUpdateSince() && isset($GLOBALS['TL_DCA'][$table]['fields']['tstamp'])) {
-            $qb->andWhere('tstamp <= ', $qb->createNamedParameter($indexUpdateConfig->getUpdateSince()));
+        if ($reindexConfig->getUpdateSince() && isset($GLOBALS['TL_DCA'][$table]['fields']['tstamp'])) {
+            $qb->andWhere('tstamp <= ', $qb->createNamedParameter($reindexConfig->getUpdateSince()));
         }
 
         foreach ($qb->executeQuery()->iterateAssociative() as $row) {

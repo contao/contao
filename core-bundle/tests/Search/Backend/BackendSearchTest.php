@@ -15,12 +15,14 @@ namespace Contao\CoreBundle\Tests\Search\Backend;
 use Contao\CoreBundle\Event\BackendSearch\EnhanceHitEvent;
 use Contao\CoreBundle\Event\BackendSearch\IndexDocumentEvent;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\DeleteDocumentsMessage;
+use Contao\CoreBundle\Messenger\Message\BackendSearch\ReindexMessage;
+use Contao\CoreBundle\Messenger\WebWorker;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Hit;
-use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\IndexUpdateConfigInterface;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Search\Backend\Query;
+use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use PHPUnit\Framework\TestCase;
 use Schranz\Search\SEAL\Adapter\Memory\MemoryAdapter;
@@ -35,7 +37,28 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 class BackendSearchTest extends TestCase
 {
-    public function testTriggerUpdate(): void
+    public function testIAvailable(): void
+    {
+        $webWorker = $this->createMock(WebWorker::class);
+        $webWorker
+            ->method('hasCliWorkersRunning')
+            ->willReturn(true)
+        ;
+
+        $backendSearch = new BackendSearch(
+            [],
+            $this->createMock(Security::class),
+            $this->createMock(EngineInterface::class),
+            $this->createMock(EventDispatcherInterface::class),
+            $this->createMock(MessageBusInterface::class),
+            $webWorker,
+            'contao_backend_search',
+        );
+
+        $this->assertTrue($backendSearch->isAvailable());
+    }
+
+    public function testReindexSync(): void
     {
         $engine = $this->createMock(EngineInterface::class);
         $engine
@@ -57,7 +80,7 @@ class BackendSearchTest extends TestCase
             )
         ;
 
-        $indexUpdateConfig = $this->createMock(IndexUpdateConfigInterface::class);
+        $indexUpdateConfig = new ReindexConfig();
 
         $provider = $this->createMock(ProviderInterface::class);
         $provider
@@ -84,10 +107,34 @@ class BackendSearchTest extends TestCase
             $engine,
             $eventDispatcher,
             $this->createMock(MessageBusInterface::class),
+            $this->createMock(WebWorker::class),
             'contao_backend_search',
         );
 
-        $backendSearch->triggerUpdate($indexUpdateConfig);
+        $backendSearch->reindex($indexUpdateConfig, false);
+    }
+
+    public function testReindexAsync(): void
+    {
+        $messageBus = $this->createMock(MessageBusInterface::class);
+        $messageBus
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with($this->callback(static fn (ReindexMessage $message) => !$message->getUpdateSince()))
+            ->willReturn(new Envelope($this->createMock(ReindexMessage::class)))
+        ;
+
+        $backendSearch = new BackendSearch(
+            [],
+            $this->createMock(Security::class),
+            $this->createMock(EngineInterface::class),
+            $this->createMock(EventDispatcherInterface::class),
+            $messageBus,
+            $this->createMock(WebWorker::class),
+            'contao_backend_search',
+        );
+
+        $backendSearch->reindex(new ReindexConfig());
     }
 
     public function testSearch(): void
@@ -138,7 +185,8 @@ class BackendSearchTest extends TestCase
             ->with($this->callback(static fn (EnhanceHitEvent $event): bool => '42' === $event->getHit()->getDocument()->getId()))
         ;
 
-        $backendSearch = new BackendSearch([$provider], $security, $engine, $eventDispatcher, $this->createMock(MessageBusInterface::class), $indexName);
+        $backendSearch = new BackendSearch([$provider], $security, $engine, $eventDispatcher, $this->createMock(MessageBusInterface::class), $this->createMock(WebWorker::class),
+            $indexName);
         $result = $backendSearch->search(new Query(20, 'search me'));
 
         $this->assertSame('human readable hit title', $result->getHits()[0]->getTitle());
@@ -198,6 +246,7 @@ class BackendSearchTest extends TestCase
             $engine,
             $eventDispatcher,
             $messageBus,
+            $this->createMock(WebWorker::class),
             $indexName,
         );
 
@@ -232,6 +281,7 @@ class BackendSearchTest extends TestCase
             $engine,
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(MessageBusInterface::class),
+            $this->createMock(WebWorker::class),
             'contao_backend_search',
         );
 
@@ -259,6 +309,7 @@ class BackendSearchTest extends TestCase
             $this->createMock(EngineInterface::class),
             $this->createMock(EventDispatcherInterface::class),
             $messageBus,
+            $this->createMock(WebWorker::class),
             'contao_backend_search',
         );
 

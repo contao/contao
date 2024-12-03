@@ -18,8 +18,7 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Hit;
-use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\IndexUpdateConfigInterface;
-use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\UpdateAllProvidersConfig;
+use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -50,18 +49,14 @@ class FilesStorageProvider implements ProviderInterface
     /**
      * @return iterable<Document>
      */
-    public function updateIndex(IndexUpdateConfigInterface $trigger): iterable
+    public function updateIndex(ReindexConfig $config): iterable
     {
-        if (!$trigger instanceof UpdateAllProvidersConfig) {
-            return new \EmptyIterator();
-        }
-
         $items = $this->filesStorage
             ->listContents('', true)
             ->files()
         ;
 
-        if (null !== ($lastIndexed = $trigger->getUpdateSince()?->getTimestamp())) {
+        if (null !== ($lastIndexed = $config->getUpdateSince()?->getTimestamp())) {
             $items = $items->filter(static fn (FilesystemItem $item): bool => ($item->getLastModified() ?? 0) > $lastIndexed);
         }
 

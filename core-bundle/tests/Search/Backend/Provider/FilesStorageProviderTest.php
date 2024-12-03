@@ -20,8 +20,8 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Hit;
-use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\UpdateAllProvidersConfig;
 use Contao\CoreBundle\Search\Backend\Provider\FilesStorageProvider;
+use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use League\Flysystem\Config;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
@@ -59,7 +59,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             $this->createMock(Studio::class),
         );
 
-        $documents = iterator_to_array($provider->updateIndex(new UpdateAllProvidersConfig()));
+        $documents = iterator_to_array($provider->updateIndex(new ReindexConfig()));
 
         $this->assertCount(1, $documents);
 
@@ -101,7 +101,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
         );
 
         $since = new \DateTimeImmutable('1970-01-01 01:00:00');
-        $documents = iterator_to_array($provider->updateIndex(new UpdateAllProvidersConfig($since)));
+        $documents = iterator_to_array($provider->updateIndex(new ReindexConfig($since)));
 
         $this->assertCount(1, $documents);
 
