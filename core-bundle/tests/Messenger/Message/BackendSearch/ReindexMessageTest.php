@@ -13,16 +13,21 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Messenger\Message\BackendSearch;
 
 use Contao\CoreBundle\Messenger\Message\BackendSearch\ReindexMessage;
+use Contao\CoreBundle\Search\Backend\GroupedDocumentIds;
+use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use PHPUnit\Framework\TestCase;
 
 class ReindexMessageTest extends TestCase
 {
     public function testGetter(): void
     {
-        $message = new ReindexMessage();
-        $this->assertNull($message->getUpdateSince());
+        $reindexConfig = (new ReindexConfig())
+            ->limitToDocumentIds(new GroupedDocumentIds(['foo' => ['bar']]))
+            ->limitToDocumentsNewerThan(new \DateTimeImmutable('2024-01-01T00:00:00+00:00'))
+        ;
 
-        $message = new ReindexMessage('2024-01-01 00:00:00');
-        $this->assertInstanceOf(\DateTimeInterface::class, $message->getUpdateSince());
+        $message = new ReindexMessage($reindexConfig);
+        $this->assertSame('2024-01-01T00:00:00+00:00', $message->getReindexConfig()->getUpdateSince()->format(\DateTimeInterface::ATOM));
+        $this->assertSame(['foo' => ['bar']], $message->getReindexConfig()->getLimitedDocumentIds()->toArray());
     }
 }

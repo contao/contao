@@ -23,6 +23,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\DC_Table;
 use Contao\DcaLoader;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -58,7 +59,7 @@ class TableDataContainerProvider implements ProviderInterface
      */
     public function updateIndex(ReindexConfig $config): iterable
     {
-        foreach ($this->getTables() as $table) {
+        foreach ($this->getTables($config) as $table) {
             try {
                 $dcaLoader = new DcaLoader($table);
                 $dcaLoader->load();
@@ -129,20 +130,24 @@ class TableDataContainerProvider implements ProviderInterface
     /**
      * @return array<int, string>
      */
-    private function getTables(): array
+    private function getTables(ReindexConfig $config): array
     {
         $this->contaoFramework->initialize();
 
         $files = $this->resourceFinder->findIn('dca')->depth(0)->files()->name('*.php');
 
-        $tables = array_map(
+        $tables = array_unique(array_values(array_map(
             static fn (SplFileInfo $input) => str_replace('.php', '', $input->getRelativePathname()),
             iterator_to_array($files->getIterator()),
-        );
+        )));
 
-        $tables = array_values($tables);
+        // No document ID limits, consider all tables
+        if ($config->getLimitedDocumentIds()->isEmpty()) {
+            return $tables;
+        }
 
-        return array_unique($tables);
+        // Only consider tables that were asked for
+        return array_filter($tables, fn (string $table): bool => $config->getLimitedDocumentIds()->hasType($this->getTypeFromTable($table)));
     }
 
     private function findDocuments(string $table, ReindexConfig $reindexConfig): \Generator
@@ -162,6 +167,10 @@ class TableDataContainerProvider implements ProviderInterface
 
         if ($reindexConfig->getUpdateSince() && isset($GLOBALS['TL_DCA'][$table]['fields']['tstamp'])) {
             $qb->andWhere('tstamp <= ', $qb->createNamedParameter($reindexConfig->getUpdateSince()));
+        }
+
+        if ($documentIds = $reindexConfig->getLimitedDocumentIds()->getDocumentIdsForType($this->getTypeFromTable($table))) {
+            $qb->expr()->in('id', $qb->createNamedParameter($documentIds, ArrayParameterType::STRING));
         }
 
         foreach ($qb->executeQuery()->iterateAssociative() as $row) {

@@ -55,6 +55,11 @@ services:
             - '@security.access.decision_manager'
             - '@event_dispatcher'
 
+    contao.search.backend.trigger_reindex_on_table_data_container_invalidation_listener:
+        class: Contao\CoreBundle\Search\Backend\EventListener\TriggerReindexOnTableDataContainerInvalidationListener
+        arguments:
+            - '@contao.search.backend'
+
     contao.search_backend.adapter:
         class: Schranz\Search\SEAL\Adapter\AdapterInterface
         factory: ['@contao.search_backend.adapter_factory', createAdapter]

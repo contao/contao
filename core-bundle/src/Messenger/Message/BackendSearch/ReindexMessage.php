@@ -13,22 +13,22 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Messenger\Message\BackendSearch;
 
 use Contao\CoreBundle\Messenger\Message\LowPriorityMessageInterface;
+use Contao\CoreBundle\Search\Backend\ReindexConfig;
 
 /**
  * @experimental
  */
 class ReindexMessage implements LowPriorityMessageInterface
 {
-    public function __construct(private readonly string|null $updateSince = null)
+    private array $asArray = [];
+
+    public function __construct(ReindexConfig $reindexConfig)
     {
+        $this->asArray = $reindexConfig->toArray();
     }
 
-    public function getUpdateSince(): \DateTimeInterface|null
+    public function getReindexConfig(): ReindexConfig
     {
-        if (null === $this->updateSince) {
-            return null;
-        }
-
-        return new \DateTimeImmutable($this->updateSince);
+        return ReindexConfig::fromArray($this->asArray);
     }
 }

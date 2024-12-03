@@ -49,8 +49,14 @@ class IndexCommand extends Command
             return Command::FAILURE;
         }
 
+        $reindexConfig = new ReindexConfig();
+
+        if ($updateSince) {
+            $reindexConfig = $reindexConfig->limitToDocumentsNewerThan($updateSince);
+        }
+
         $this->backendSearch->clear();
-        $this->backendSearch->reindex(new ReindexConfig($updateSince));
+        $this->backendSearch->reindex($reindexConfig);
 
         return Command::SUCCESS;
     }

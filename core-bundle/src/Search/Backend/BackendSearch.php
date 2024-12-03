@@ -47,21 +47,22 @@ class BackendSearch
         return $this->webWorker->hasCliWorkersRunning();
     }
 
-    /**
-     * @param array<string, array<string>> $documentTypesAndIds The document IDs grouped by type
-     */
-    public function deleteDocuments(array $documentTypesAndIds, bool $async = true): self
+    public function deleteDocuments(GroupedDocumentIds $groupedDocumentIds, bool $async = true): self
     {
+        if ($groupedDocumentIds->isEmpty()) {
+            return $this;
+        }
+
         if ($async) {
-            $this->messageBus->dispatch(new DeleteDocumentsMessage($documentTypesAndIds));
+            $this->messageBus->dispatch(new DeleteDocumentsMessage($groupedDocumentIds));
 
             return $this;
         }
 
         $documentIds = [];
 
-        foreach ($documentTypesAndIds as $type => $ids) {
-            foreach ($ids as $id) {
+        foreach ($groupedDocumentIds->getTypes() as $type) {
+            foreach ($groupedDocumentIds->getDocumentIdsForType($type) as $id) {
                 $documentIds[] = $this->getGlobalIdForTypeAndDocumentId($type, $id);
             }
         }
@@ -77,10 +78,14 @@ class BackendSearch
     public function reindex(ReindexConfig $config, bool $async = true): self
     {
         if ($async) {
-            $this->messageBus->dispatch(new ReindexMessage($config->getUpdateSince()?->format(\DateTimeInterface::ATOM)));
+            $this->messageBus->dispatch(new ReindexMessage($config));
 
             return $this;
         }
+
+        // In case the re-index was limited to a given set of document IDs, we check if all of
+        // those still exist. If not, we need to delete the ones that have been removed.
+        $trackDeletedDocumentIds = clone $config->getLimitedDocumentIds();
 
         // TODO: Use bulk endpoint as soon as SEAL supports this
         /** @var ProviderInterface $provider */
@@ -94,12 +99,18 @@ class BackendSearch
                     continue;
                 }
 
+                // This document is still used, remove from tracking
+                $trackDeletedDocumentIds->removeIdFromType($document->getType(), $document->getId());
+
                 $this->engine->saveDocument(
                     $this->indexName,
                     $this->convertProviderDocumentForSearchIndex($document),
                 );
             }
         }
+
+        // Delete IDs that do not exist anymore in case there are any
+        $this->deleteDocuments($trackDeletedDocumentIds, $async);
 
         return $this;
     }
@@ -199,7 +210,7 @@ class BackendSearch
         // The provider did not find any hit for it anymore so it must have been removed
         // or expired. Remove from the index.
         if (!$hit) {
-            $this->deleteDocuments([$document->getType() => [$document->getId()]]);
+            $this->deleteDocuments(new GroupedDocumentIds([$document->getType() => [$document->getId()]]));
 
             return null;
         }

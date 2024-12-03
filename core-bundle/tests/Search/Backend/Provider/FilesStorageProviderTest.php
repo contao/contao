@@ -19,6 +19,7 @@ use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Search\Backend\Document;
+use Contao\CoreBundle\Search\Backend\GroupedDocumentIds;
 use Contao\CoreBundle\Search\Backend\Hit;
 use Contao\CoreBundle\Search\Backend\Provider\FilesStorageProvider;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
@@ -101,7 +102,44 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
         );
 
         $since = new \DateTimeImmutable('1970-01-01 01:00:00');
-        $documents = iterator_to_array($provider->updateIndex(new ReindexConfig($since)));
+        $documents = iterator_to_array($provider->updateIndex((new ReindexConfig())->limitToDocumentsNewerThan($since)));
+
+        $this->assertCount(1, $documents);
+
+        /** @var Document $document */
+        $document = $documents[0];
+
+        $this->assertSame('bar', $document->getId());
+    }
+
+    public function testLimitToDocumentIds(): void
+    {
+        $dbafs = $this->createMock(DbafsInterface::class);
+        $dbafs
+            ->method('getRecords')
+            ->with('', true)
+            ->willReturn(new \ArrayIterator([
+                new FilesystemItem(true, 'foo', 3600),
+                new FilesystemItem(true, 'bar', 3601),
+                new FilesystemItem(true, 'baz', 0),
+            ]))
+        ;
+
+        $dbafsManager = new DbafsManager();
+        $dbafsManager->register($dbafs, '');
+
+        $filesystem = new VirtualFilesystem(
+            $this->createMock(MountManager::class),
+            $dbafsManager,
+        );
+
+        $provider = new FilesStorageProvider(
+            $filesystem,
+            $this->createMock(Security::class),
+            $this->createMock(Studio::class),
+        );
+
+        $documents = iterator_to_array($provider->updateIndex((new ReindexConfig())->limitToDocumentIds(new GroupedDocumentIds([FilesStorageProvider::TYPE => ['bar']]))));
 
         $this->assertCount(1, $documents);
 
