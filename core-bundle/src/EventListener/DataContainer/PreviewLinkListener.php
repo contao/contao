@@ -25,6 +25,7 @@ use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -92,6 +93,7 @@ class PreviewLinkListener
                         [$userId],
                     );
 
+                    /** @var AttributeBagInterface $session */
                     $session = $this->requestStack->getSession()->getBag('contao_backend');
                     $sessionData = $session->all();
                     $sessionData['CURRENT']['IDS'] = array_intersect((array) $sessionData['CURRENT']['IDS'], $allowedIds);
