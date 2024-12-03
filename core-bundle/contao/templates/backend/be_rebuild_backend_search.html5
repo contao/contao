@@ -1,4 +1,3 @@
-
 <div class="maintenance_inactive">
 
   <h2 class="sub_headline"><?= $this->trans('tl_maintenance.backend_search.title') ?></h2>
@@ -15,4 +14,5 @@
           <?php endif; ?>
         </div>
     </form>
+
 </div>

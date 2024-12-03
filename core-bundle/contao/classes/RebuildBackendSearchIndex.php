@@ -11,8 +11,6 @@
 namespace Contao;
 
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
-use Symfony\Component\Filesystem\Path;
-use Symfony\Component\Finder\Finder;
 
 /**
  * Maintenance module "rebuild backend search index".
