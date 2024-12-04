@@ -13,31 +13,20 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Cache;
 
 use Contao\Model;
-use Contao\Model\Collection as ModelCollection;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Doctrine\Persistence\Mapping\MappingException;
-use FOS\HttpCache\ResponseTagger;
 
 /**
  * Use this helper service to derive "contao.db.*" cache tags from entity/model
  * classes and instances. The tagWith*() and invalidateFor*() shortcut methods
  * directly tag the response or invalidate tags. If your application does not use
  * response tagging, these methods are no-ops.
+ *
+ * @deprecated Deprecated since Contao 5.5, to be removed in Contao 6.0. Use the CacheTagManager instead.
  */
 class EntityCacheTags
 {
-    /**
-     * @var array<string, ClassMetadata<object>>
-     */
-    private array $classMetadata = [];
-
-    public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly CacheTagInvalidator $cacheTagInvalidator,
-        private readonly ResponseTagger|null $responseTagger = null,
-    ) {
+    public function __construct(private readonly CacheTagManager $cacheTagManager)
+    {
+        trigger_deprecation('contao/core-bundle', '5.5', 'Deprecated since Contao 5.5, to be removed in Contao 6.0. Use the CacheTagManager instead.');
     }
 
     /**
@@ -47,11 +36,7 @@ class EntityCacheTags
      */
     public function getTagForEntityClass(string $className): string
     {
-        if (!$metadata = $this->getClassMetadata($className)) {
-            throw new \InvalidArgumentException(\sprintf('The given class name "%s" is no valid entity class.', $className));
-        }
-
-        return \sprintf('contao.db.%s', $metadata->getTableName());
+        return $this->cacheTagManager->getTagForEntityClass($className);
     }
 
     /**
@@ -59,16 +44,7 @@ class EntityCacheTags
      */
     public function getTagForEntityInstance(object $instance): string
     {
-        if (!$metadata = $this->getClassMetadata($instance::class)) {
-            throw new \InvalidArgumentException(\sprintf('The given object of type "%s" is no valid entity instance.', $instance::class));
-        }
-
-        $identifier = $this->entityManager
-            ->getUnitOfWork()
-            ->getSingleIdentifierValue($instance)
-        ;
-
-        return \sprintf('contao.db.%s.%s', $metadata->getTableName(), $identifier);
+        return $this->cacheTagManager->getTagForEntityInstance($instance);
     }
 
     /**
@@ -78,11 +54,7 @@ class EntityCacheTags
      */
     public function getTagForModelClass(string $className): string
     {
-        if (!$this->isModel($className)) {
-            throw new \InvalidArgumentException(\sprintf('The given class name "%s" is no valid model class.', $className));
-        }
-
-        return \sprintf('contao.db.%s', \call_user_func([$className, 'getTable']));
+        return $this->cacheTagManager->getTagForModelClass($className);
     }
 
     /**
@@ -90,7 +62,7 @@ class EntityCacheTags
      */
     public function getTagForModelInstance(Model $instance): string
     {
-        return \sprintf('contao.db.%s.%s', $instance::getTable(), $instance->id);
+        return $this->cacheTagManager->getTagForModelInstance($instance);
     }
 
     /**
@@ -118,41 +90,7 @@ class EntityCacheTags
      */
     public function getTagsFor(array|object|string|null $target): array
     {
-        if (!$target) {
-            return [];
-        }
-
-        if (\is_string($target)) {
-            if ($this->isValidFQCN($target)) {
-                if ($this->isModel($target)) {
-                    return [$this->getTagForModelClass($target)];
-                }
-
-                try {
-                    return [$this->getTagForEntityClass($target)];
-                } catch (\InvalidArgumentException) {
-                    // ignore
-                }
-            }
-
-            return [$target];
-        }
-
-        if (\is_array($target) || $target instanceof Collection || $target instanceof ModelCollection) {
-            $tags = [];
-
-            foreach ($target as $part) {
-                $tags = [...$tags, ...$this->getTagsFor($part)];
-            }
-
-            return array_unique($tags);
-        }
-
-        if ($target instanceof Model) {
-            return [$this->getTagForModelInstance($target)];
-        }
-
-        return [$this->getTagForEntityInstance($target)];
+        return $this->cacheTagManager->getTagsFor($target);
     }
 
     /**
@@ -160,11 +98,7 @@ class EntityCacheTags
      */
     public function tagWithEntityClass(string $className): void
     {
-        if (!$this->responseTagger) {
-            return;
-        }
-
-        $this->responseTagger->addTags([$this->getTagForEntityClass($className)]);
+        $this->cacheTagManager->tagWithEntityClass($className);
     }
 
     /**
@@ -172,11 +106,7 @@ class EntityCacheTags
      */
     public function tagWithEntityInstance(object $instance): void
     {
-        if (!$this->responseTagger) {
-            return;
-        }
-
-        $this->responseTagger->addTags([$this->getTagForEntityInstance($instance)]);
+        $this->cacheTagManager->tagWithEntityInstance($instance);
     }
 
     /**
@@ -184,11 +114,7 @@ class EntityCacheTags
      */
     public function tagWithModelClass(string $className): void
     {
-        if (!$this->responseTagger) {
-            return;
-        }
-
-        $this->responseTagger->addTags([$this->getTagForModelClass($className)]);
+        $this->cacheTagManager->tagWithModelClass($className);
     }
 
     /**
@@ -196,11 +122,7 @@ class EntityCacheTags
      */
     public function tagWithModelInstance(Model $instance): void
     {
-        if (!$this->responseTagger) {
-            return;
-        }
-
-        $this->responseTagger->addTags([$this->getTagForModelInstance($instance)]);
+        $this->cacheTagManager->tagWithModelInstance($instance);
     }
 
     /**
@@ -210,11 +132,7 @@ class EntityCacheTags
      */
     public function tagWith(array|object|string|null $target): void
     {
-        if (!$this->responseTagger) {
-            return;
-        }
-
-        $this->responseTagger->addTags($this->getTagsFor($target));
+        $this->cacheTagManager->tagWith($target);
     }
 
     /**
@@ -222,7 +140,7 @@ class EntityCacheTags
      */
     public function invalidateTagsForEntityClass(string $className): void
     {
-        $this->cacheTagInvalidator->invalidateTags([$this->getTagForEntityClass($className)]);
+        $this->cacheTagManager->invalidateTagsForEntityClass($className);
     }
 
     /**
@@ -230,7 +148,7 @@ class EntityCacheTags
      */
     public function invalidateTagsForEntityInstance(object $instance): void
     {
-        $this->cacheTagInvalidator->invalidateTags([$this->getTagForEntityInstance($instance)]);
+        $this->cacheTagManager->invalidateTagsForEntityInstance($instance);
     }
 
     /**
@@ -238,7 +156,7 @@ class EntityCacheTags
      */
     public function invalidateTagsForModelClass(string $className): void
     {
-        $this->cacheTagInvalidator->invalidateTags([$this->getTagForModelClass($className)]);
+        $this->cacheTagManager->invalidateTagsForModelClass($className);
     }
 
     /**
@@ -246,7 +164,7 @@ class EntityCacheTags
      */
     public function invalidateTagsForModelInstance(Model $instance): void
     {
-        $this->cacheTagInvalidator->invalidateTags([$this->getTagForModelInstance($instance)]);
+        $this->cacheTagManager->invalidateTagsForModelInstance($instance);
     }
 
     /**
@@ -256,36 +174,6 @@ class EntityCacheTags
      */
     public function invalidateTagsFor(array|object|string|null $target): void
     {
-        $this->cacheTagInvalidator->invalidateTags($this->getTagsFor($target));
-    }
-
-    /**
-     * @template T of object
-     *
-     * @param class-string<T> $className
-     *
-     * @return ?ClassMetadata<T>
-     */
-    private function getClassMetadata(string $className): ClassMetadata|null
-    {
-        $getMetadata = function (string $className) {
-            try {
-                return $this->entityManager->getClassMetadata($className);
-            } catch (MappingException) {
-                return null;
-            }
-        };
-
-        return $this->classMetadata[$className] ??= $getMetadata($className);
-    }
-
-    private function isValidFQCN(string $target): bool
-    {
-        return 1 === preg_match('/^(?:[a-z_\x80-\xff][a-z0-9_\x80-\xff]*\\\\?)+(?<!\\\\)$/i', $target);
-    }
-
-    private function isModel(object|string $classStringOrObject): bool
-    {
-        return is_subclass_of($classStringOrObject, Model::class);
+        $this->cacheTagManager->invalidateTagsFor($target);
     }
 }

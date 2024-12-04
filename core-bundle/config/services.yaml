@@ -43,16 +43,17 @@ services:
     contao.cache.entity_tags:
         class: Contao\CoreBundle\Cache\EntityCacheTags
         public: true
+        deprecated: Deprecated since Contao 5.5, to be removed in Contao 6. Use the @contao.cache.tag_manager service instead.
         arguments:
-            - '@doctrine.orm.default_entity_manager'
-            - '@contao.cache.tag_invalidator'
-            - '@?fos_http_cache.http.symfony_response_tagger'
+            - '@contao.cache.tag_manager'
 
-    contao.cache.tag_invalidator:
-        class: Contao\CoreBundle\Cache\CacheTagInvalidator
+    contao.cache.tag_manager:
+        class: Contao\CoreBundle\Cache\CacheTagManager
         public: true
         arguments:
+            - '@doctrine.orm.default_entity_manager'
             - '@event_dispatcher'
+            - '@?fos_http_cache.http.symfony_response_tagger'
             - '@?fos_http_cache.cache_manager'
 
     contao.cache.warmer:
@@ -1356,6 +1357,7 @@ services:
 
     # Autowiring aliases
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'
+    Contao\CoreBundle\Cache\CacheTagManager: '@contao.cache.tag_manager'
     Contao\CoreBundle\Config\ResourceFinderInterface: '@contao.resource_finder'
     Contao\CoreBundle\Csp\WysiwygStyleProcessor: '@contao.csp.wysiwyg_style_processor'
     Contao\CoreBundle\Csrf\ContaoCsrfTokenManager: '@contao.csrf.token_manager'
