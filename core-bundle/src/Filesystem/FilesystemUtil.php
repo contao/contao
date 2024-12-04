@@ -103,7 +103,7 @@ class FilesystemUtil
             try {
                 $uuidObject = Uuid::isValid($uuid) ? Uuid::fromString($uuid) : Uuid::fromBinary($uuid);
 
-                if (!$item = $storage->get($uuidObject)) {
+                if (!$item = $storage->get($uuidObject, VirtualFilesystemInterface::BYPASS_DBAFS)) {
                     continue;
                 }
             } catch (\InvalidArgumentException|UnableToResolveUuidException) {
