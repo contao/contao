@@ -152,6 +152,7 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('imagine_options')
                     ->addDefaultsIfNotSet()
+                    ->normalizeKeys(false)
                     ->children()
                         ->integerNode('jpeg_quality')
                             ->defaultValue(80)
