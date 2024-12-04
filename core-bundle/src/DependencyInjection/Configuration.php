@@ -432,6 +432,7 @@ class Configuration implements ConfigurationInterface
     {
         $node = (new TreeBuilder('imagine_options'))
             ->getRootNode()
+            ->normalizeKeys(false)
             ->children()
                 ->integerNode('jpeg_quality')
                 ->end()
