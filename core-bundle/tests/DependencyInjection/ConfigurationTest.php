@@ -276,6 +276,24 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
+    public function testDoesNotNormalizeResamplingFilter(): void
+    {
+        $params = [
+            [
+                'image' => [
+                    'imagine_options' => [
+                        'resampling-filter' => ImageInterface::FILTER_LANCZOS,
+                    ],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertArrayHasKey('resampling-filter', $configuration['image']['imagine_options']);
+        $this->assertSame(ImageInterface::FILTER_LANCZOS, $configuration['image']['imagine_options']['resampling-filter']);
+    }
+
     /**
      * Ensure that all non-deprecated configuration keys are in lower case and
      * separated by underscores (aka snake_case).
@@ -297,23 +315,5 @@ class ConfigurationTest extends TestCase
                 $this->assertMatchesRegularExpression('/^[a-z][a-z_]+[a-z]$/', $key);
             }
         }
-    }
-
-    public function testDoesNotNormalizeResamplingFilter(): void
-    {
-        $params = [
-            [
-                'image' => [
-                    'imagine_options' => [
-                        'resampling-filter' => ImageInterface::FILTER_LANCZOS,
-                    ],
-                ],
-            ],
-        ];
-
-        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
-
-        $this->assertArrayHasKey('resampling-filter', $configuration['image']['imagine_options']);
-        $this->assertSame(ImageInterface::FILTER_LANCZOS, $configuration['image']['imagine_options']['resampling-filter']);
     }
 }
