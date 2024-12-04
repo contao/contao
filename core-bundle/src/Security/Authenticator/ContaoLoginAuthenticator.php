@@ -236,7 +236,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         }
 
         // Our back end login controller will redirect based on the 'redirect' parameter,
-        // ignoring Symfony's target path session value. Thus we remove the session
+        // ignoring Symfony's target path session value. Thus, we remove the session
         // variable here in order to not send an unnecessary session cookie.
         if ($request->hasSession()) {
             $this->removeTargetPath($request->getSession(), 'contao_backend');

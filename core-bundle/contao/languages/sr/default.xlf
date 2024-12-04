@@ -2584,6 +2584,9 @@
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
         <target>Линк који покушавате да отворите не може бити проверен. Ако сте сами кликнули на линк или сте га примили од особе од поверења, можете потврдити поступак испод.</target>
       </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+      </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
         <target>Конфликт верзија</target>
