@@ -58,7 +58,7 @@ services:
             - '@contao.routing.content_url_generator'
             - '@contao.insert_tag.parser'
             - '%kernel.project_dir%'
-            - '@contao.cache.entity_tags'
+            - '@contao.cache.tag_manager'
             - '%kernel.charset%'
 
     contao_news.listener.preview_url_convert:

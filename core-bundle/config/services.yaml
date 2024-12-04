@@ -43,9 +43,12 @@ services:
     contao.cache.entity_tags:
         class: Contao\CoreBundle\Cache\EntityCacheTags
         public: true
-        deprecated: Deprecated since Contao 5.5, to be removed in Contao 6. Use the @contao.cache.tag_manager service instead.
         arguments:
             - '@contao.cache.tag_manager'
+        deprecated:
+            package: 'contao/core-bundle'
+            version: '5.5'
+            message: 'Deprecated since Contao 5.5, to be removed in Contao 6. Use the @contao.cache.tag_manager service instead.'
 
     contao.cache.tag_manager:
         class: Contao\CoreBundle\Cache\CacheTagManager

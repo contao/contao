@@ -14,7 +14,7 @@ namespace Contao\NewsBundle\EventListener;
 
 use Contao\ContentModel;
 use Contao\Controller;
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
@@ -47,7 +47,7 @@ class NewsFeedListener
         private readonly ContentUrlGenerator $urlGenerator,
         private readonly InsertTagParser $insertTags,
         private readonly string $projectDir,
-        private readonly EntityCacheTags $cacheTags,
+        private readonly CacheTagManager $cacheTags,
         private readonly string $charset,
     ) {
     }

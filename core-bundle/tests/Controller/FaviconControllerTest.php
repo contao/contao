@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller;
 
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\FaviconController;
 use Contao\CoreBundle\Routing\PageFinder;
@@ -152,13 +153,13 @@ class FaviconControllerTest extends TestCase
             ->willReturn($pageModel)
         ;
 
-        $entityCacheTags = $this->createMock(EntityCacheTags::class);
-        $entityCacheTags
+        $cacheTags = $this->createMock(CacheTagManager::class);
+        $cacheTags
             ->expects($this->once())
             ->method('tagWithModelInstance')
             ->with($pageModel)
         ;
 
-        return new FaviconController($framework, $pageFinder, $this->getFixturesDir(), $entityCacheTags);
+        return new FaviconController($framework, $pageFinder, $this->getFixturesDir(), $cacheTags);
     }
 }
