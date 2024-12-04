@@ -56,75 +56,75 @@ class CacheTagManagerTest extends DoctrineTestCase
             ))
         ;
 
-        $cacheTagInvalidator = new CacheTagManager(
+        $cacheTagManager = new CacheTagManager(
             $this->createMock(EntityManagerInterface::class),
             $eventDispatcher,
         );
 
-        $cacheTagInvalidator->invalidateTags($tags);
+        $cacheTagManager->invalidateTags($tags);
     }
 
     public function testGetTagForEntityClass(): void
     {
-        $entityCacheTags = $this->getEntityCacheTags($this->createMock(CacheInvalidator::class));
+        $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class));
 
-        $this->assertSame('contao.db.tl_blog_post', $entityCacheTags->getTagForEntityClass(BlogPost::class));
+        $this->assertSame('contao.db.tl_blog_post', $cacheTagManager->getTagForEntityClass(BlogPost::class));
     }
 
     public function testThrowsIfClassIsNoEntity(): void
     {
-        $entityCacheTags = $this->getEntityCacheTags($this->createMock(CacheInvalidator::class));
+        $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class));
 
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('The given class name "stdClass" is no valid entity class.');
 
-        $entityCacheTags->getTagForEntityClass(\stdClass::class);
+        $cacheTagManager->getTagForEntityClass(\stdClass::class);
     }
 
     public function testGetTagForEntityInstance(): void
     {
-        $entityCacheTags = $this->getEntityCacheTags($this->createMock(CacheInvalidator::class));
+        $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class));
         $post = (new BlogPost())->setId(5);
 
-        $this->assertSame('contao.db.tl_blog_post.5', $entityCacheTags->getTagForEntityInstance($post));
+        $this->assertSame('contao.db.tl_blog_post.5', $cacheTagManager->getTagForEntityInstance($post));
     }
 
     public function testThrowsIfInstanceIsNoEntity(): void
     {
-        $entityCacheTags = $this->getEntityCacheTags($this->createMock(CacheInvalidator::class));
+        $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class));
 
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('The given object of type "stdClass" is no valid entity instance.');
 
-        $entityCacheTags->getTagForEntityInstance(new \stdClass());
+        $cacheTagManager->getTagForEntityInstance(new \stdClass());
     }
 
     public function testGetTagForModelClass(): void
     {
-        $entityCacheTags = $this->getEntityCacheTags($this->createMock(CacheInvalidator::class));
+        $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class));
 
-        $this->assertSame('contao.db.tl_page', $entityCacheTags->getTagForModelClass(PageModel::class));
+        $this->assertSame('contao.db.tl_page', $cacheTagManager->getTagForModelClass(PageModel::class));
     }
 
     public function testThrowsIfClassIsNoModel(): void
     {
-        $entityCacheTags = $this->getEntityCacheTags($this->createMock(CacheInvalidator::class));
+        $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class));
 
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('The given class name "stdClass" is no valid model class.');
 
         /** @phpstan-ignore argument.type */
-        $entityCacheTags->getTagForModelClass(\stdClass::class);
+        $cacheTagManager->getTagForModelClass(\stdClass::class);
     }
 
     public function testGetTagForModelInstance(): void
     {
-        $entityCacheTags = $this->getEntityCacheTags($this->createMock(CacheInvalidator::class));
+        $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class));
 
         $page = $this->mockClassWithProperties(PageModel::class, except: ['getTable']);
         $page->id = 5;
 
-        $this->assertSame('contao.db.tl_page.5', $entityCacheTags->getTagForModelInstance($page));
+        $this->assertSame('contao.db.tl_page.5', $cacheTagManager->getTagForModelInstance($page));
     }
 
     /**
@@ -132,9 +132,9 @@ class CacheTagManagerTest extends DoctrineTestCase
      */
     public function testGetTags(mixed $argument, array $expectedTags): void
     {
-        $entityCacheTags = $this->getEntityCacheTags($this->createMock(CacheInvalidator::class));
+        $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class));
 
-        $this->assertSame($expectedTags, $entityCacheTags->getTagsFor($argument));
+        $this->assertSame($expectedTags, $cacheTagManager->getTagsFor($argument));
     }
 
     public static function getArguments(): iterable
@@ -209,10 +209,10 @@ class CacheTagManagerTest extends DoctrineTestCase
         $page2->id = 6;
 
         $modelCollection = new Collection([$page1, $page2], 'tl_page');
-        $entityCacheTags = $this->getEntityCacheTags($this->createMock(CacheInvalidator::class));
+        $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class));
 
-        $this->assertSame(['contao.db.tl_page.5'], $entityCacheTags->getTagsFor($page1));
-        $this->assertSame(['contao.db.tl_page.5', 'contao.db.tl_page.6'], $entityCacheTags->getTagsFor($modelCollection));
+        $this->assertSame(['contao.db.tl_page.5'], $cacheTagManager->getTagsFor($page1));
+        $this->assertSame(['contao.db.tl_page.5', 'contao.db.tl_page.6'], $cacheTagManager->getTagsFor($modelCollection));
     }
 
     public function testDelegatesToResponseTagger(): void
@@ -235,12 +235,12 @@ class CacheTagManagerTest extends DoctrineTestCase
         $page = $this->mockClassWithProperties(PageModel::class, except: ['getTable']);
         $page->id = 2;
 
-        $entityCacheTags = $this->getEntityCacheTags($this->createMock(CacheInvalidator::class), $responseTagger);
-        $entityCacheTags->tagWithEntityClass(BlogPost::class);
-        $entityCacheTags->tagWithEntityInstance($post);
-        $entityCacheTags->tagWithModelClass(PageModel::class);
-        $entityCacheTags->tagWithModelInstance($page);
-        $entityCacheTags->tagWith([$post, $page, 'foo']);
+        $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class), $responseTagger);
+        $cacheTagManager->tagWithEntityClass(BlogPost::class);
+        $cacheTagManager->tagWithEntityInstance($post);
+        $cacheTagManager->tagWithModelClass(PageModel::class);
+        $cacheTagManager->tagWithModelInstance($page);
+        $cacheTagManager->tagWith([$post, $page, 'foo']);
     }
 
     public function testDelegatesToCacheInvalidator(): void
@@ -263,15 +263,15 @@ class CacheTagManagerTest extends DoctrineTestCase
         $page = $this->mockClassWithProperties(PageModel::class, except: ['getTable']);
         $page->id = 2;
 
-        $entityCacheTags = $this->getEntityCacheTags($cacheTagInvalidator);
-        $entityCacheTags->invalidateTagsForEntityClass(BlogPost::class);
-        $entityCacheTags->invalidateTagsForEntityInstance($post);
-        $entityCacheTags->invalidateTagsForModelClass(PageModel::class);
-        $entityCacheTags->invalidateTagsForModelInstance($page);
-        $entityCacheTags->invalidateTagsFor([$post, $page, 'foo']);
+        $cacheTagManager = $this->getCacheTagManager($cacheTagInvalidator);
+        $cacheTagManager->invalidateTagsForEntityClass(BlogPost::class);
+        $cacheTagManager->invalidateTagsForEntityInstance($post);
+        $cacheTagManager->invalidateTagsForModelClass(PageModel::class);
+        $cacheTagManager->invalidateTagsForModelInstance($page);
+        $cacheTagManager->invalidateTagsFor([$post, $page, 'foo']);
     }
 
-    private function getEntityCacheTags(CacheInvalidator $cacheTagInvalidator, ResponseTagger|null $responseTagger = null): CacheTagManager
+    private function getCacheTagManager(CacheInvalidator $cacheTagInvalidator, ResponseTagger|null $responseTagger = null): CacheTagManager
     {
         return new CacheTagManager(
             $this->getTestEntityManager(),

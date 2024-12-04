@@ -15,6 +15,7 @@ namespace Contao\NewsBundle\Tests\Controller\Page;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Routing\Page\PageRoute;
+use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
 use Contao\NewsBundle\Controller\Page\NewsFeedController;
 use Contao\NewsBundle\Event\FetchArticlesForFeedEvent;
 use Contao\NewsBundle\Event\TransformArticleForFeedEvent;
@@ -28,7 +29,7 @@ use Psr\Log\NullLogger;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
-class NewsFeedControllerTest extends ContaoTestCase
+class NewsFeedControllerTest extends DoctrineTestCase
 {
     protected function setUp(): void
     {

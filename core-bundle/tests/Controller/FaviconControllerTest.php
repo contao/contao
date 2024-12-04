@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\Cache\CacheTagManager;
-use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Controller\FaviconController;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
@@ -45,7 +44,7 @@ class FaviconControllerTest extends TestCase
 
         $this->expectException(NotFoundHttpException::class);
 
-        $controller = new FaviconController($framework, $pageFinder, $this->getFixturesDir(), $this->createMock(EntityCacheTags::class));
+        $controller = new FaviconController($framework, $pageFinder, $this->getFixturesDir(), $this->createMock(CacheTagManager::class));
         $controller($request);
     }
 
@@ -70,7 +69,7 @@ class FaviconControllerTest extends TestCase
 
         $this->expectException(NotFoundHttpException::class);
 
-        $controller = new FaviconController($framework, $pageFinder, $this->getFixturesDir(), $this->createMock(EntityCacheTags::class));
+        $controller = new FaviconController($framework, $pageFinder, $this->getFixturesDir(), $this->createMock(CacheTagManager::class));
         $controller($request);
     }
 
