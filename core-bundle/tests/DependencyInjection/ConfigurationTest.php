@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection;
 use Contao\CoreBundle\DependencyInjection\Configuration;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ResizeConfiguration;
+use Imagine\Image\ImageInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Definition\ArrayNode;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -486,5 +487,23 @@ class ConfigurationTest extends TestCase
                 $this->assertMatchesRegularExpression('/^[a-z][a-z_]+[a-z]$/', $key);
             }
         }
+    }
+
+    public function testDoesNotNormalizeResamplingFilter(): void
+    {
+        $params = [
+            [
+                'image' => [
+                    'imagine_options' => [
+                        'resampling-filter' => ImageInterface::FILTER_LANCZOS,
+                    ],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertArrayHasKey('resampling-filter', $configuration['image']['imagine_options']);
+        $this->assertSame(ImageInterface::FILTER_LANCZOS, $configuration['image']['imagine_options']['resampling-filter']);
     }
 }
