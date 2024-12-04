@@ -974,7 +974,6 @@ var Backend =
 			'hideFooter': true,
 			'draggable': false,
 			'overlayOpacity': .7,
-			'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
