@@ -464,7 +464,7 @@ class ConfigurationTest extends TestCase
         ];
     }
 
-    public function testDoesNotNormalizeResamplingFilter(): void
+    public function testDoesNormalizeResamplingFilter(): void
     {
         $params = [
             [
@@ -480,6 +480,21 @@ class ConfigurationTest extends TestCase
 
         $this->assertArrayHasKey('resampling-filter', $configuration['image']['imagine_options']);
         $this->assertSame(ImageInterface::FILTER_LANCZOS, $configuration['image']['imagine_options']['resampling-filter']);
+
+        $params = [
+            [
+                'image' => [
+                    'imagine_options' => [
+                        'resampling_filter' => ImageInterface::FILTER_UNDEFINED,
+                    ],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertArrayHasKey('resampling-filter', $configuration['image']['imagine_options']);
+        $this->assertSame(ImageInterface::FILTER_UNDEFINED, $configuration['image']['imagine_options']['resampling-filter']);
     }
 
     /**
