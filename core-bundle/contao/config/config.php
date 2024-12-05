@@ -93,6 +93,7 @@ use Contao\PageTree;
 use Contao\Password;
 use Contao\Picker;
 use Contao\PurgeData;
+use Contao\RebuildBackendSearchIndex;
 use Contao\RadioButton;
 use Contao\RadioTable;
 use Contao\RootPageDependentSelect;
@@ -354,7 +355,8 @@ $GLOBALS['TL_PTY'] = array
 $GLOBALS['TL_MAINTENANCE'] = array
 (
 	Crawl::class,
-	PurgeData::class
+	RebuildBackendSearchIndex::class,
+	PurgeData::class,
 );
 
 // Purge jobs

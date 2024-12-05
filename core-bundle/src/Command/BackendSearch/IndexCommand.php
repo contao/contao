@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command\BackendSearch;
 
 use Contao\CoreBundle\Search\Backend\BackendSearch;
-use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\UpdateAllProvidersConfig;
+use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -49,7 +49,14 @@ class IndexCommand extends Command
             return Command::FAILURE;
         }
 
-        $this->backendSearch->triggerUpdate(new UpdateAllProvidersConfig($updateSince));
+        $reindexConfig = new ReindexConfig();
+
+        if ($updateSince) {
+            $reindexConfig = $reindexConfig->limitToDocumentsNewerThan($updateSince);
+        }
+
+        $this->backendSearch->clear();
+        $this->backendSearch->reindex($reindexConfig);
 
         return Command::SUCCESS;
     }

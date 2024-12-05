@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Messenger\MessageHandler\BackendSearch;
 
-use Contao\CoreBundle\Messenger\Message\BackendSearch\DeleteDocumentsMessage;
+use Contao\CoreBundle\Messenger\Message\BackendSearch\ReindexMessage;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
@@ -20,13 +20,13 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
  * @experimental
  */
 #[AsMessageHandler]
-class DeleteDocumentsMessageHandler
+class ReindexMessageHandler
 {
     public function __construct(private readonly BackendSearch $backendSearch)
     {
     }
 
-    public function __invoke(DeleteDocumentsMessage $message): void
+    public function __invoke(ReindexMessage $message): void
     {
         // Cannot run in a web request. TODO: Make this feature generally available as
         // WebWorker config for all kinds of messages
@@ -34,6 +34,6 @@ class DeleteDocumentsMessageHandler
             return;
         }
 
-        $this->backendSearch->deleteDocuments($message->getGroupedDocumentIds(), false);
+        $this->backendSearch->reindex($message->getReindexConfig(), false);
     }
 }

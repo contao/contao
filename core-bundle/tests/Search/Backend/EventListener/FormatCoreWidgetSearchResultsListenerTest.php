@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Fixtures\Search\Backend\EventListener;
+namespace Contao\CoreBundle\Tests\Search\Backend\EventListener;
 
 use Contao\CoreBundle\Search\Backend\Event\FormatTableDataContainerDocumentEvent;
 use Contao\CoreBundle\Search\Backend\EventListener\FormatCoreWidgetSearchResultsListener;

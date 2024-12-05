@@ -7,7 +7,8 @@ namespace Contao\CoreBundle\Search\Backend;
 use Contao\CoreBundle\Event\BackendSearch\EnhanceHitEvent;
 use Contao\CoreBundle\Event\BackendSearch\IndexDocumentEvent;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\DeleteDocumentsMessage;
-use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\IndexUpdateConfigInterface;
+use Contao\CoreBundle\Messenger\Message\BackendSearch\ReindexMessage;
+use Contao\CoreBundle\Messenger\WebWorker;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Schranz\Search\SEAL\EngineInterface;
@@ -36,25 +37,32 @@ class BackendSearch
         private readonly EngineInterface $engine,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly MessageBusInterface $messageBus,
+        private readonly WebWorker $webWorker,
         private readonly string $indexName,
     ) {
     }
 
-    /**
-     * @param array<string, array<string>> $documentTypesAndIds The document IDs grouped by type
-     */
-    public function deleteDocuments(array $documentTypesAndIds, bool $async = true): self
+    public function isAvailable(): bool
     {
+        return $this->webWorker->hasCliWorkersRunning();
+    }
+
+    public function deleteDocuments(GroupedDocumentIds $groupedDocumentIds, bool $async = true): self
+    {
+        if ($groupedDocumentIds->isEmpty()) {
+            return $this;
+        }
+
         if ($async) {
-            $this->messageBus->dispatch(new DeleteDocumentsMessage($documentTypesAndIds));
+            $this->messageBus->dispatch(new DeleteDocumentsMessage($groupedDocumentIds));
 
             return $this;
         }
 
         $documentIds = [];
 
-        foreach ($documentTypesAndIds as $type => $ids) {
-            foreach ($ids as $id) {
+        foreach ($groupedDocumentIds->getTypes() as $type) {
+            foreach ($groupedDocumentIds->getDocumentIdsForType($type) as $id) {
                 $documentIds[] = $this->getGlobalIdForTypeAndDocumentId($type, $id);
             }
         }
@@ -67,13 +75,23 @@ class BackendSearch
         return $this;
     }
 
-    public function triggerUpdate(IndexUpdateConfigInterface $trigger): void
+    public function reindex(ReindexConfig $config, bool $async = true): self
     {
+        if ($async) {
+            $this->messageBus->dispatch(new ReindexMessage($config));
+
+            return $this;
+        }
+
+        // In case the re-index was limited to a given set of document IDs, we check if all of
+        // those still exist. If not, we need to delete the ones that have been removed.
+        $trackDeletedDocumentIds = clone $config->getLimitedDocumentIds();
+
         // TODO: Use bulk endpoint as soon as SEAL supports this
         /** @var ProviderInterface $provider */
         foreach ($this->providers as $provider) {
             /** @var Document $document */
-            foreach ($provider->updateIndex($trigger) as $document) {
+            foreach ($provider->updateIndex($config) as $document) {
                 $event = new IndexDocumentEvent($document);
                 $this->eventDispatcher->dispatch($event);
 
@@ -81,12 +99,20 @@ class BackendSearch
                     continue;
                 }
 
+                // This document is still used, remove from tracking
+                $trackDeletedDocumentIds->removeIdFromType($document->getType(), $document->getId());
+
                 $this->engine->saveDocument(
                     $this->indexName,
                     $this->convertProviderDocumentForSearchIndex($document),
                 );
             }
         }
+
+        // Delete IDs that do not exist anymore in case there are any
+        $this->deleteDocuments($trackDeletedDocumentIds, $async);
+
+        return $this;
     }
 
     /**
@@ -141,6 +167,13 @@ class BackendSearch
         ]);
     }
 
+    public function clear(): void
+    {
+        // TODO: We need an API for that in SEAL
+        $this->engine->dropIndex($this->indexName);
+        $this->engine->createIndex($this->indexName);
+    }
+
     private function createSearchBuilder(Query $query): SearchBuilder
     {
         $sb = $this->engine
@@ -177,7 +210,7 @@ class BackendSearch
         // The provider did not find any hit for it anymore so it must have been removed
         // or expired. Remove from the index.
         if (!$hit) {
-            $this->deleteDocuments([$document->getType() => [$document->getId()]]);
+            $this->deleteDocuments(new GroupedDocumentIds([$document->getType() => [$document->getId()]]));
 
             return null;
         }
