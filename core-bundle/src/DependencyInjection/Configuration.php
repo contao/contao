@@ -152,7 +152,6 @@ class Configuration implements ConfigurationInterface
                 ->end()
                 ->arrayNode('imagine_options')
                     ->addDefaultsIfNotSet()
-                    ->normalizeKeys(false)
                     ->children()
                         ->integerNode('jpeg_quality')
                             ->defaultValue(80)
@@ -188,9 +187,21 @@ class Configuration implements ConfigurationInterface
                             ->info('One of the Imagine\Image\ImageInterface::INTERLACE_* constants.')
                             ->defaultValue(ImageInterface::INTERLACE_PLANE)
                         ->end()
-                        ->scalarNode('resampling-filter')
+                        ->scalarNode('resampling_filter')
                             ->info('Filter used when downsampling images. One of the Imagine\Image\ImageInterface::FILTER_* constants. It has no effect with Gd or SVG as Imagine service.')
                         ->end()
+                    ->end()
+                    ->validate()
+                        ->always(
+                            static function (array $options): array {
+                                if (isset($options['resampling_filter'])) {
+                                    $options['resampling-filter'] = $options['resampling_filter'];
+                                    unset($options['resampling_filter']);
+                                }
+
+                                return $options;
+                            }
+                        )
                     ->end()
                 ->end()
                 ->scalarNode('imagine_service')
