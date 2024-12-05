@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": "^8.1",
+        "contao/core-bundle": "self.version",
         "phpunit/phpunit": "^9.5",
         "symfony/yaml": "^6.4"
     },
@@ -20,9 +21,6 @@
         "doctrine/dbal": "^3.6",
         "doctrine/orm": "^2.17",
         "symfony/http-client": "^6.4"
-    },
-    "conflict": {
-        "contao/core-bundle": "< 5.3 && >= 5.4"
     },
     "autoload": {
         "psr-4": {
