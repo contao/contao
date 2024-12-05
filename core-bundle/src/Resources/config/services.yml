@@ -1160,14 +1160,6 @@ services:
             version: 4.13
             message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.image.studio.figure_renderer" instead.
 
-    Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory:
-        alias: contao.routing.response_context_factory
-        public: true
-        deprecated:
-            package: contao/core-bundle
-            version: 4.13
-            message: Using the "%alias_id%" service ID has been deprecated and will no longer work in Contao 5.0. Please use "contao.routing.response_context_factory" instead.
-
     Contao\CoreBundle\Security\TwoFactor\BackupCodeManager:
         alias: contao.security.two_factor.backup_code_manager
         public: true
