@@ -13,9 +13,9 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\Tests\Controller\Page;
 
 use Contao\CoreBundle\Asset\ContaoContext;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Routing\Page\PageRoute;
-use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
 use Contao\NewsBundle\Controller\Page\NewsFeedController;
 use Contao\NewsBundle\Event\FetchArticlesForFeedEvent;
 use Contao\NewsBundle\Event\TransformArticleForFeedEvent;
@@ -29,7 +29,7 @@ use Psr\Log\NullLogger;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
 
-class NewsFeedControllerTest extends DoctrineTestCase
+class NewsFeedControllerTest extends ContaoTestCase
 {
     protected function setUp(): void
     {
@@ -108,6 +108,7 @@ class NewsFeedControllerTest extends DoctrineTestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
         $container->set('event_dispatcher', $this->createMock(EventDispatcher::class));
+        $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
 
         $controller = $this->getController();
         $controller->setContainer($container);
@@ -135,6 +136,7 @@ class NewsFeedControllerTest extends DoctrineTestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
         $container->set('event_dispatcher', $this->createMock(EventDispatcher::class));
+        $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
 
         $controller = $this->getController();
         $controller->setContainer($container);
@@ -167,6 +169,7 @@ class NewsFeedControllerTest extends DoctrineTestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
         $container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
+        $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
 
         $dispatcher = $this->createMock(EventDispatcher::class);
         $dispatcher
