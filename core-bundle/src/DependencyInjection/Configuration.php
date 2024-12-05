@@ -477,7 +477,7 @@ class Configuration implements ConfigurationInterface
                         }
 
                         return $options;
-                    }
+                    },
                 )
             ->end()
         ;
