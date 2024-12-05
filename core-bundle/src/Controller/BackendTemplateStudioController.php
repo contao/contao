@@ -395,7 +395,7 @@ class BackendTemplateStudioController extends AbstractBackendController
     {
         return $this->finder
             ->create()
-            ->identifierRegex('%^backend/%', false)
+            ->identifierRegex('%^(?:backend|frontend_preview|web_debug_toolbar|)/%', false)
         ;
     }
 }

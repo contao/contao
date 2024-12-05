@@ -146,6 +146,7 @@ class EnumOptionsListenerTest extends TestCase
 
     public function testDoesNotOverwriteExistingReference(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $dca = $GLOBALS['TL_DCA']['tl_foo'] = [
             'fields' => [
                 'foo' => [

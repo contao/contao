@@ -1,0 +1,31 @@
+{
+    "name": "contao/isolated-tests",
+    "description": "Contao isolated tests",
+    "license": "LGPL-3.0-or-later",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Martin Auswöger",
+            "homepage": "https://au.si/"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "phpspec/php-diff": "^1.0",
+        "symfony/console": "^6.0",
+        "symfony/dependency-injection": "^6.0",
+        "symfony/finder": "^6.0",
+        "symfony/process": "^6.0",
+        "symfony/yaml": "^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Contao\\Tools\\IsolatedTests\\": "src/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.3"
+        }
+    }
+}

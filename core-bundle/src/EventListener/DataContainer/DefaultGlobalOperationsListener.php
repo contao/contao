@@ -104,6 +104,7 @@ class DefaultGlobalOperationsListener
             $operations += [
                 'all' => [
                     'href' => 'act=select',
+                    'prefetch' => true,
                     'class' => 'header_edit_all',
                     'attributes' => 'accesskey="e"',
                 ],
