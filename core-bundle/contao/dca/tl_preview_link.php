@@ -47,10 +47,6 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 		),
 		'operations' => array
 		(
-			'edit',
-			'delete',
-			'toggle',
-			'show',
 			'share' => array
 			(
 				'icon'                => 'share.svg'

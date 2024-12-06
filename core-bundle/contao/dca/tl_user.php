@@ -70,11 +70,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'operations' => array
 		(
-			'edit',
-			'copy',
-			'delete',
-			'toggle',
-			'show',
 			'su' => array
 			(
 				'href'                => 'key=su',
