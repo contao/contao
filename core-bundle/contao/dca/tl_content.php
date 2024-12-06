@@ -97,7 +97,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'toplink'                     => '{type_legend},type;{link_legend},linkTitle;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'image'                       => '{type_legend},type,headline;{source_legend},singleSRC,size,fullsize,overwriteMeta;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'gallery'                     => '{type_legend},type,headline;{source_legend},multiSRC,useHomeDir,sortBy,metaIgnore;{image_legend},size,perRow,perPage,numberOfItems,fullsize;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'player'                      => '{type_legend},type,headline;{source_legend},playerSRC;{player_legend},playerOptions,playerSize,playerPreload,playerCaption,playerStart,playerStop;{poster_legend:hide},posterSRC;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'player'                      => '{type_legend},type,headline;{source_legend},playerSRC;{texttrack_legend},textTrackSRC;{player_legend},playerOptions,playerSize,playerPreload,playerCaption,playerStart,playerStop;{poster_legend:hide},posterSRC;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'youtube'                     => '{type_legend},type,headline;{source_legend},youtube;{player_legend},youtubeOptions,playerTitle,playerSize,playerAspect,playerCaption,playerStart,playerStop;{splash_legend},splashImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'vimeo'                       => '{type_legend},type,headline;{source_legend},vimeo;{player_legend},vimeoOptions,playerTitle,playerSize,playerAspect,playerCaption,playerStart,playerColor;{splash_legend},splashImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
 		'download'                    => '{type_legend},type,headline;{source_legend},singleSRC;{download_legend},inline,overwriteLink;{preview_legend},showPreview;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
@@ -121,7 +121,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'splashImage'                 => 'singleSRC,size',
 		'markdownSource_sourceText'   => 'code',
 		'markdownSource_sourceFile'   => 'singleSRC',
-		'showPreview'                 => 'size,fullsize,numberOfItems',
+		'showPreview'                 => 'size,fullsize,numberOfItems'
 	),
 
 	// Fields
@@ -168,7 +168,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'search'                  => true,
 			'inputType'               => 'inputUnit',
 			'options'                 => array('h1', 'h2', 'h3', 'h4', 'h5', 'h6'),
-			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('maxlength'=>255, 'basicEntities'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default 'a:2:{s:5:\"value\";s:0:\"\";s:4:\"unit\";s:2:\"h2\";}'"
 		),
 		'text' => array
@@ -602,6 +602,12 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'eval'                    => array('includeBlankOption' => true, 'nospace'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(8) COLLATE ascii_bin NOT NULL default ''"
 		),
+		'textTrackSRC' => array
+		(
+			'inputType'               => 'fileTree',
+			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'extensions'=>'vtt', 'isSortable'=>true),
+			'sql'                     => "blob NULL"
+		),
 		'splashImage' => array
 		(
 			'inputType'               => 'checkbox',
@@ -708,7 +714,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_form.title',
 			'options_callback'        => array('tl_content', 'getForms'),
-			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('mandatory'=>true, 'includeBlankOption' => true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
 			'wizard' => array
 			(
 				array('tl_content', 'editForm')
@@ -719,7 +725,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'inputType'               => 'select',
 			'foreignKey'              => 'tl_module.name',
-			'eval'                    => array('mandatory'=>true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
+			'eval'                    => array('mandatory'=>true, 'includeBlankOption' => true, 'chosen'=>true, 'submitOnChange'=>true, 'tl_class'=>'w50 wizard'),
 			'wizard' => array
 			(
 				array('tl_content', 'editModule')
@@ -965,6 +971,16 @@ class tl_content extends Backend
 
 		$class = 'cte_preview';
 		$preview = StringUtil::insertTagToSrc($this->getContentElement($objModel));
+
+		if (!empty($arrRow['sectionHeadline']))
+		{
+			$sectionHeadline = StringUtil::deserialize($arrRow['sectionHeadline'], true);
+
+			if (!empty($sectionHeadline['value']) && !empty($sectionHeadline['unit']))
+			{
+				$preview = '<' . $sectionHeadline['unit'] . '>' . $sectionHeadline['value'] . '</' . $sectionHeadline['unit'] . '>' . $preview;
+			}
+		}
 
 		// Strip HTML comments to check if the preview is empty
 		if (trim(preg_replace('/<!--(.|\s)*?-->/', '', $preview)) == '')

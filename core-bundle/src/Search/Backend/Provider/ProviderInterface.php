@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Search\Backend\Provider;
 
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Hit;
-use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\IndexUpdateConfigInterface;
+use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
@@ -25,7 +25,7 @@ interface ProviderInterface
     /**
      * @return iterable<Document>
      */
-    public function updateIndex(IndexUpdateConfigInterface $trigger): iterable;
+    public function updateIndex(ReindexConfig $config): iterable;
 
     public function convertDocumentToHit(Document $document): Hit|null;
 

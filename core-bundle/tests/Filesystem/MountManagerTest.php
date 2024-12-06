@@ -261,6 +261,7 @@ class MountManagerTest extends TestCase
             ],
         ];
 
+        /** @phpstan-ignore function.alreadyNarrowedType */
         if (method_exists(FilesystemAdapter::class, 'directoryExists')) {
             yield 'directoryExists' => [
                 [

@@ -7,17 +7,8 @@ includes:
     - vendor-bin/phpstan/vendor/phpstan/phpstan-symfony/rules.neon
     - vendor-bin/phpstan/vendor/slam/phpstan-extensions/conf/symfony-rules.neon
 
-rules:
-    - TheCodingMachine\PHPStan\Rules\Exceptions\DoNotThrowExceptionBaseClassRule
-    - TheCodingMachine\PHPStan\Rules\Exceptions\ThrowMustBundlePreviousExceptionRule
-
 parameters:
     level: 6
-
-    featureToggles:
-        alwaysTrueAlwaysReported: false
-        detectDeadTypeInMultiCatch: false
-        disableCheckMissingIterableValueType: false
 
     paths:
         - %currentWorkingDirectory%/calendar-bundle/src

@@ -34,6 +34,7 @@ use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -284,6 +285,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $router
             ->expects($this->once())
             ->method('generate')
+            ->with('contao_backend_login', ['redirect' => 'https://example.com/foobar?foo=1'], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('url')
         ;
 
@@ -300,10 +302,57 @@ class ContaoLoginAuthenticatorTest extends TestCase
             uriSigner: $uriSigner,
         );
 
-        $response = $authenticator->start(new Request());
+        $response = $authenticator->start(Request::create('https://example.com/foobar?foo=1'));
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
         $this->assertSame('url', $response->getTargetUrl());
+    }
+
+    public function testDoesNotAddRedirectParameterForContaoBackendRouteWithoutParameters(): void
+    {
+        $request = Request::create('https://example.com/contao');
+        $request->attributes->set('_route', 'contao_backend');
+
+        $session = $this->createMock(SessionInterface::class);
+        $session
+            ->expects($this->once())
+            ->method('remove')
+            ->with('_security.contao_backend.target_path')
+        ;
+
+        $request->setSession($session);
+
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher
+            ->expects($this->once())
+            ->method('isBackendRequest')
+            ->willReturn(true)
+        ;
+
+        $router = $this->createMock(RouterInterface::class);
+        $router
+            ->expects($this->once())
+            ->method('generate')
+            ->with('contao_backend_login', [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('/contao/login')
+        ;
+
+        $uriSigner = $this->createMock(UriSigner::class);
+        $uriSigner
+            ->expects($this->never())
+            ->method('sign')
+        ;
+
+        $authenticator = $this->getContaoLoginAuthenticator(
+            scopeMatcher: $scopeMatcher,
+            router: $router,
+            uriSigner: $uriSigner,
+        );
+
+        $response = $authenticator->start($request);
+
+        $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame('/contao/login', $response->getTargetUrl());
     }
 
     /**

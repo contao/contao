@@ -101,6 +101,22 @@ class WebWorkerTest extends TestCase
         $this->assertContains('Stopping worker.', $this->logger->getLogs());
     }
 
+    public function testHasCliWorkersRunning(): void
+    {
+        $cache = new ArrayAdapter(); // No real workers running yet
+
+        $webWorker = new WebWorker(
+            $cache,
+            $this->command,
+            ['transport-1'],
+        );
+
+        $this->addEventsToEventDispatcher($webWorker);
+        $this->assertFalse($webWorker->hasCliWorkersRunning());
+        $this->triggerRealWorkers(['transport-1', 'transport-2']);
+        $this->assertTrue($webWorker->hasCliWorkersRunning());
+    }
+
     private function triggerWebWorker(): void
     {
         $this->eventDispatcher->dispatch(new TerminateEvent(

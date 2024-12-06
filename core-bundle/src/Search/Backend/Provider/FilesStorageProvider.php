@@ -18,8 +18,7 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Hit;
-use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\IndexUpdateConfigInterface;
-use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\UpdateAllProvidersConfig;
+use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -50,10 +49,11 @@ class FilesStorageProvider implements ProviderInterface
     /**
      * @return iterable<Document>
      */
-    public function updateIndex(IndexUpdateConfigInterface $trigger): iterable
+    public function updateIndex(ReindexConfig $config): iterable
     {
-        if (!$trigger instanceof UpdateAllProvidersConfig) {
-            return new \EmptyIterator();
+        // Limited to certain document ids but not of our type - skip.
+        if ($config->isLimitedToDocumentIdsExcludingType(self::TYPE)) {
+            return [];
         }
 
         $items = $this->filesStorage
@@ -61,7 +61,11 @@ class FilesStorageProvider implements ProviderInterface
             ->files()
         ;
 
-        if (null !== ($lastIndexed = $trigger->getUpdateSince()?->getTimestamp())) {
+        if ($documentIds = $config->getLimitedDocumentIds()->getDocumentIdsForType(self::TYPE)) {
+            $items = $items->filter(static fn (FilesystemItem $item): bool => \in_array($item->getPath(), $documentIds, true));
+        }
+
+        if (null !== ($lastIndexed = $config->getUpdateSince()?->getTimestamp())) {
             $items = $items->filter(static fn (FilesystemItem $item): bool => ($item->getLastModified() ?? 0) > $lastIndexed);
         }
 

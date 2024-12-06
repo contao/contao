@@ -32,6 +32,7 @@ class FinderTest extends TestCase
             'content_element/text/_button' => 'html.twig',
             'content_element/text/foo' => 'html.twig',
             'content_element/text/bar' => 'html.twig',
+            'content_element/text/foo_bar' => 'html.twig',
             'json/thing' => 'json.twig',
         ];
 
@@ -83,6 +84,7 @@ class FinderTest extends TestCase
             'content_element/text/_button' => 'html.twig',
             'content_element/text/foo' => 'html.twig',
             'content_element/text/bar' => 'html.twig',
+            'content_element/text/foo_bar' => 'html.twig',
         ];
 
         $this->assertSame($expected, iterator_to_array($finder));
@@ -99,6 +101,7 @@ class FinderTest extends TestCase
             'content_element/text/_button' => 'html.twig',
             'content_element/text/foo' => 'html.twig',
             'content_element/text/bar' => 'html.twig',
+            'content_element/text/foo_bar' => 'html.twig',
         ];
 
         $this->assertSame($expected, iterator_to_array($finder));
@@ -117,6 +120,7 @@ class FinderTest extends TestCase
             'content_element/text/_button' => 'html.twig',
             'content_element/text/foo' => 'html.twig',
             'content_element/text/bar' => 'html.twig',
+            'content_element/text/foo_bar' => 'html.twig',
             'content_element/text/baz' => 'html.twig',
         ];
 
@@ -136,6 +140,7 @@ class FinderTest extends TestCase
             'content_element/text' => 'html.twig',
             'content_element/text/foo' => 'html.twig',
             'content_element/text/bar' => 'html.twig',
+            'content_element/text/foo_bar' => 'html.twig',
             'content_element/text/baz' => 'html.twig',
         ];
 
@@ -164,6 +169,7 @@ class FinderTest extends TestCase
                 'content_element/text/_button' => 'html.twig',
                 'content_element/text/foo' => 'html.twig',
                 'content_element/text/bar' => 'html.twig',
+                'content_element/text/foo_bar' => 'html.twig',
                 'json/thing' => 'json.twig',
             ],
         ];
@@ -177,13 +183,14 @@ class FinderTest extends TestCase
                 'content_element/text/_button' => 'html.twig',
                 'content_element/text/foo' => 'html.twig',
                 'content_element/text/bar' => 'html.twig',
+                'content_element/text/foo_bar' => 'html.twig',
             ],
         ];
     }
 
     public function testCount(): void
     {
-        $this->assertCount(6, $this->getFinder());
+        $this->assertCount(7, $this->getFinder());
     }
 
     public function testGetAsTemplateOptions(): void
@@ -201,6 +208,7 @@ class FinderTest extends TestCase
             'content_element/text/bar' => 'content_element/text/bar [App]',
             'content_element/text/baz' => 'content_element/text/baz [Theme my_theme]',
             'content_element/text/foo' => 'content_element/text/foo [App]',
+            'content_element/text/foo_bar' => 'content_element/text/foo_bar [App]',
         ];
 
         $this->assertSame($expected, $options);
@@ -221,6 +229,7 @@ class FinderTest extends TestCase
             'content_element/text/bar',
             'content_element/text/baz',
             'content_element/text/foo',
+            'content_element/text/foo_bar',
         ];
 
         $this->assertSame($expected, $options);
@@ -244,6 +253,7 @@ class FinderTest extends TestCase
             '' => 'Text default [content_element/text • App, ContaoCore]',
             'content_element/text/bar' => 'content_element/text/bar [App]',
             'content_element/text/foo' => 'Foo variant [content_element/text/foo • App]',
+            'content_element/text/foo_bar' => 'content_element/text/foo_bar [App]',
         ];
 
         $this->assertSame($expected, $options);
@@ -275,6 +285,9 @@ class FinderTest extends TestCase
                         ],
                         'content_element/text/bar' => [
                             '/app/templates/content_element/text/bar.html.twig' => '@Contao_App/content_element/text/bar.html.twig',
+                        ],
+                        'content_element/text/foo_bar' => [
+                            '/app/templates/content_element/text/foo_bar.html.twig' => '@Contao_App/content_element/text/foo_bar.html.twig',
                         ],
                         'json/thing' => [
                             '/app/templates/json/thing.json.twig' => '@Contao_SomeJsonBundle/app/templates/json/thing.json.twig',

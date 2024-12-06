@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Messenger\Message\BackendSearch;
 
 use Contao\CoreBundle\Messenger\Message\LowPriorityMessageInterface;
+use Contao\CoreBundle\Search\Backend\GroupedDocumentIds;
 
 /**
  * @experimental
@@ -20,17 +21,17 @@ use Contao\CoreBundle\Messenger\Message\LowPriorityMessageInterface;
 class DeleteDocumentsMessage implements LowPriorityMessageInterface
 {
     /**
-     * @param array<string> $documentsIds
+     * @var array<string, array<string>>
      */
-    public function __construct(private readonly array $documentsIds)
+    private array $asArray = [];
+
+    public function __construct(GroupedDocumentIds $groupedDocumentIds)
     {
+        $this->asArray = $groupedDocumentIds->toArray();
     }
 
-    /**
-     * @return array<string>
-     */
-    public function getDocumentIds(): array
+    public function getGroupedDocumentIds(): GroupedDocumentIds
     {
-        return $this->documentsIds;
+        return GroupedDocumentIds::fromArray($this->asArray);
     }
 }

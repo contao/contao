@@ -15,20 +15,25 @@ namespace Contao\CoreBundle\Tests\Messenger\MessageHandler\BackendSearch;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\DeleteDocumentsMessage;
 use Contao\CoreBundle\Messenger\MessageHandler\BackendSearch\DeleteDocumentsMessageHandler;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
+use Contao\CoreBundle\Search\Backend\GroupedDocumentIds;
 use PHPUnit\Framework\TestCase;
 
 class DeleteDocumentsMessageHandlerTest extends TestCase
 {
     public function testDeleteDocuments(): void
     {
-        $documentIds = ['foobar-42', 'foobar-44'];
-        $message = new DeleteDocumentsMessage($documentIds);
+        $documentTypesAndIds = new GroupedDocumentIds([
+            'test' => ['42'],
+            'foobar' => ['42'],
+        ]);
+
+        $message = new DeleteDocumentsMessage($documentTypesAndIds);
 
         $backendSearch = $this->createMock(BackendSearch::class);
         $backendSearch
             ->expects($this->once())
             ->method('deleteDocuments')
-            ->with($documentIds)
+            ->with($documentTypesAndIds)
         ;
 
         $messageHandler = new DeleteDocumentsMessageHandler($backendSearch);
