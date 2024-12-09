@@ -233,7 +233,7 @@ class ServiceArgumentsTest extends FunctionalTestCase
         // Only warn about missing types if the constructor is in a Contao class
         if (
             !str_starts_with($class, 'Contao\\')
-            || !str_starts_with((new \ReflectionMethod($class.'::__construct'))->class, 'Contao\\')
+            || !str_starts_with((new \ReflectionMethod($class, '__construct'))->class, 'Contao\\')
         ) {
             return;
         }
