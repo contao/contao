@@ -87,8 +87,6 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 				'class'               => 'header_sync',
 				'button_callback'     => array('tl_files', 'syncFiles')
 			),
-			'toggleNodes',
-			'all'
 		),
 		'operations' => array
 		(
