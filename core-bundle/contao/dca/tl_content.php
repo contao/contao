@@ -34,6 +34,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	(
 		'dataContainer'               => DC_Table::class,
 		'enableVersioning'            => true,
+		'ptable'                      => 'tl_article',
 		'ctable'                      => array('tl_content'),
 		'dynamicPtable'               => true,
 		'markAsCopy'                  => 'headline',
