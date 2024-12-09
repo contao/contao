@@ -38,8 +38,8 @@ class ServiceArgumentsTest extends FunctionalTestCase
         $files = Finder::create()
             ->files()
             ->name('*.yaml')
-            ->name('*.yml')
             ->path('config')
+            ->exclude('vendor')
             ->in(\dirname(__DIR__, 3))
         ;
 
@@ -111,7 +111,7 @@ class ServiceArgumentsTest extends FunctionalTestCase
                         if (\in_array('iterable', $typeNames, true)) {
                             $this->assertContains('iterable', $typeNames, \sprintf('Argument %s of %s should be an iterable but found %s.', $i, $serviceId, implode('|', $typeNames)));
                         } else {
-                            // when used in a union type, iterable is an alias for Traversable|array.
+                            // When used in a union type, iterable is an alias for Traversable|array.
                             // https://www.php.net/manual/en/reflectionuniontype.gettypes.php#128871
                             $this->assertContains(\Traversable::class, $typeNames, \sprintf('Argument %s of %s should be an iterable but found %s.', $i, $serviceId, implode('|', $typeNames)));
                         }
@@ -132,6 +132,7 @@ class ServiceArgumentsTest extends FunctionalTestCase
             if (!\is_string($argument)) {
                 if ([] === $typeNames) {
                     $this->missingArgumentType($serviceId, $class, $i);
+
                     continue;
                 }
 
@@ -144,6 +145,7 @@ class ServiceArgumentsTest extends FunctionalTestCase
                 }
 
                 $this->assertContains(get_debug_type($argument), $typeNames, \sprintf('Argument %s of "%s" should be "%s", got "%s".', $i, $serviceId, implode('|', $typeNames), get_debug_type($argument)));
+
                 continue;
             }
 
@@ -166,6 +168,7 @@ class ServiceArgumentsTest extends FunctionalTestCase
 
                 if ([] === $typeNames) {
                     $this->missingArgumentType($serviceId, $class, $i, $argument);
+
                     continue;
                 }
 
@@ -176,6 +179,7 @@ class ServiceArgumentsTest extends FunctionalTestCase
 
             if ([] === $typeNames) {
                 $this->missingArgumentType($serviceId, $class, $i, $argument);
+
                 continue;
             }
 
