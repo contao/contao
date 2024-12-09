@@ -2,6 +2,17 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.19] (2024-11-28)
+
+**Fixed issues:**
+
+- [#7752] Fix the sorting when copying multiple form fields as a non-admin user ([qzminski])
+- [#7753] Replace insert tags in Twig surrogate parent templates ([ausi])
+- [#7556] Enable double encoding for JSON in Twig ([ausi])
+- [#7750] Handle null result in 404 router provider ([aschempp])
+- [#7749] Make Contao 5.3 compatible with PHP 8.4 ([bytehead])
+- [#7744] Fix the "lost password" module ([leofeyer])
+
 ## [5.3.18] (2024-11-20)
 
 **Fixed issues:**
@@ -476,6 +487,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.19]: https://github.com/contao/contao/releases/tag/5.3.19
 [5.3.18]: https://github.com/contao/contao/releases/tag/5.3.18
 [5.3.17]: https://github.com/contao/contao/releases/tag/5.3.17
 [5.3.16]: https://github.com/contao/contao/releases/tag/5.3.16
@@ -832,6 +844,7 @@ This project adheres to [Semantic Versioning].
 [#7537]: https://github.com/contao/contao/pull/7537
 [#7553]: https://github.com/contao/contao/pull/7553
 [#7555]: https://github.com/contao/contao/pull/7555
+[#7556]: https://github.com/contao/contao/pull/7556
 [#7561]: https://github.com/contao/contao/pull/7561
 [#7570]: https://github.com/contao/contao/pull/7570
 [#7583]: https://github.com/contao/contao/pull/7583
@@ -861,3 +874,8 @@ This project adheres to [Semantic Versioning].
 [#7727]: https://github.com/contao/contao/pull/7727
 [#7729]: https://github.com/contao/contao/pull/7729
 [#7730]: https://github.com/contao/contao/pull/7730
+[#7744]: https://github.com/contao/contao/pull/7744
+[#7749]: https://github.com/contao/contao/pull/7749
+[#7750]: https://github.com/contao/contao/pull/7750
+[#7752]: https://github.com/contao/contao/pull/7752
+[#7753]: https://github.com/contao/contao/pull/7753
