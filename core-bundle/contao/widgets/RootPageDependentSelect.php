@@ -30,7 +30,7 @@ class RootPageDependentSelect extends SelectMenu
 
 		foreach ($rootPages as $rootPage)
 		{
-			$this->arrOptions[0]['label'] = \sprintf($this->blankOptionLabel, $rootPage->title);
+			$this->arrOptions[0]['label'] = \sprintf($this->blankOptionLabel, $rootPage->title, $rootPage->dns);
 			$this->strLabel = $rootPage->title;
 
 			$fields[] = \sprintf(
