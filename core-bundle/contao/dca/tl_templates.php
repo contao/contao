@@ -62,8 +62,6 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'href'                => 'key=new_tpl',
 				'class'               => 'header_new'
 			),
-			'toggleNodes',
-			'all'
 		),
 		'operations' => array
 		(

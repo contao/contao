@@ -251,8 +251,6 @@ class tl_calendar_feed extends Backend
 			$GLOBALS['TL_DCA']['tl_calendar_feed']['config']['notDeletable'] = true;
 		}
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
 		// Check current action
 		switch (Input::get('act'))
 		{
@@ -281,6 +279,7 @@ class tl_calendar_feed extends Backend
 			case 'deleteAll':
 			case 'overrideAll':
 			case 'copyAll':
+				$objSession = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 				$session = $objSession->all();
 
 				if (Input::get('act') == 'deleteAll' && !$security->isGranted(ContaoCalendarPermissions::USER_CAN_DELETE_FEEDS))
