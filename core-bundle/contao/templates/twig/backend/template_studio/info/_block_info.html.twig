@@ -42,7 +42,6 @@
                     .addClass('target', element.target)
                     .addClass('shadowed', element.shadowed) %}
                 <div{{ element_attrs }}>
-                    {% include '@Contao/backend/template_studio/_template_name_structure.html.twig' with element.template %}
                     {% include '@Contao/backend/template_studio/_template_badges.html.twig' with {
                         badges: [
                             element.template.namespace == 'Contao_Global' ? 'user' : null,
@@ -50,6 +49,7 @@
                             element.info.prototype ? 'prototype' : null
                         ]|filter(e => e is not null)
                     } %}
+                    {% include '@Contao/backend/template_studio/_template_name_structure.html.twig' with element.template %}
                 </div>
 
                 {# Relation to next block #}
