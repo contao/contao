@@ -143,7 +143,7 @@ class NewsFeedListener
     {
         $uuids = [];
 
-        if ($article->addImage == true && $article->singleSRC) {
+        if ($article->addImage && $article->singleSRC) {
             $uuids[] = $article->singleSRC;
         }
 
