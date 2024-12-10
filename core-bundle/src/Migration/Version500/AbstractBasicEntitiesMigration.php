@@ -55,7 +55,7 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
             $test = $this->connection->fetchOne("
                 SELECT TRUE
                 FROM $table
-                WHERE CAST(`$column` AS BINARY) REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]'
+                WHERE CAST(`$column` AS BINARY) REGEXP CAST('\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' AS BINARY)
                 LIMIT 1
             ");
 
@@ -84,7 +84,7 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
                     id,
                     `$column`
                 FROM $table
-                WHERE CAST(`$column` AS BINARY) REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]'
+                WHERE CAST(`$column` AS BINARY) REGEXP CAST('\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' AS BINARY)
             ");
 
             foreach ($values as $id => $value) {

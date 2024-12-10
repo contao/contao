@@ -68,7 +68,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 				'class'               => 'header_store',
 				'button_callback'     => array('tl_theme', 'themeStore')
 			),
-			'all'
 		),
 		'operations' => array
 		(
