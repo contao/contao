@@ -166,7 +166,6 @@ class NewsFeedListenerTest extends ContaoTestCase
             'date' => 1656578758,
             'headline' => $headline[0],
             'teaser' => $content[0],
-            'addImage' => true,
             'singleSRC' => 'binary_uuid',
             'addEnclosure' => serialize(['binary_uuid2']),
         ]);
