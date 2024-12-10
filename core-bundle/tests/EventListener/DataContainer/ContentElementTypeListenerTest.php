@@ -29,7 +29,10 @@ class ContentElementTypeListenerTest extends TestCase
         parent::tearDown();
     }
 
-    public function testGetOptions(): void
+    /**
+     * @dataProvider getDcTableProperties
+     */
+    public function testGetOptions(string|null $parentTable, int|null $pid): void
     {
         $GLOBALS['TL_CTE'] = [
             'foo' => [
@@ -47,10 +50,10 @@ class ContentElementTypeListenerTest extends TestCase
             ->expects($this->exactly(4))
             ->method('isGranted')
             ->willReturnCallback(
-                function (string $attribute, CreateAction $action): bool {
+                function (string $attribute, CreateAction $action) use ($parentTable, $pid): bool {
                     $this->assertSame(ContaoCorePermissions::DC_PREFIX.'tl_content', $attribute);
-                    $this->assertSame('tl_foo', $action->getNew()['ptable']);
-                    $this->assertSame(42, $action->getNew()['pid']);
+                    $this->assertSame($parentTable, $action->getNew()['ptable']);
+                    $this->assertSame($pid, $action->getNew()['pid']);
                     $this->assertContains($action->getNew()['type'], ['bar', 'baz', 'bas', 'bat']);
 
                     return \in_array($action->getNew()['type'], ['bar', 'bas'], true);
@@ -58,12 +61,20 @@ class ContentElementTypeListenerTest extends TestCase
             )
         ;
 
-        $dataContainer = $this->mockClassWithProperties(DC_Table::class, ['parentTable' => 'tl_foo', 'currentPid' => 42]);
+        $dataContainer = $this->mockClassWithProperties(DC_Table::class, ['parentTable' => $parentTable, 'currentPid' => $pid]);
 
         $listener = new ContentElementTypeListener($security);
         $options = $listener->getOptions($dataContainer);
 
         $this->assertSame(['foo' => ['bar'], 'fii' => ['bas']], $options);
+    }
+
+    public static function getDcTableProperties(): iterable
+    {
+        yield ['tl_foo', 42];
+        yield ['tl_foo', null];
+        yield [null, 42];
+        yield [null, null];
     }
 
     public function testOverridesTheDefaultType(): void

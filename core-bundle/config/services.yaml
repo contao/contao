@@ -14,9 +14,9 @@ services:
             - '@contao.repository.altcha'
             - '@doctrine.orm.entity_manager'
             - '%kernel.secret%'
-            - ~
-            - ~
-            - ~
+            - SHA-256
+            - 100000
+            - 86400
 
     contao.assets.assets_context:
         class: Contao\CoreBundle\Asset\ContaoContext
@@ -185,8 +185,7 @@ services:
     contao.doctrine.backup.retention_policy:
         class: Contao\CoreBundle\Doctrine\Backup\RetentionPolicy
         arguments:
-            - ~
-            - ~
+            - 0
 
     contao.doctrine.backup_manager:
         class: Contao\CoreBundle\Doctrine\Backup\BackupManager
@@ -194,7 +193,7 @@ services:
             - '@database_connection'
             - '@contao.doctrine.backup.dumper'
             - '@contao.filesystem.virtual.backups'
-            - ~
+            - []
             - '@contao.doctrine.backup.retention_policy'
 
     contao.doctrine.dca_schema_provider:
@@ -517,7 +516,7 @@ services:
         arguments:
             - '@translator'
             - '@request_stack'
-            - ~
+            - []
             - '%contao.intl.countries%'
             - '%kernel.default_locale%'
 
@@ -527,8 +526,8 @@ services:
         arguments:
             - '@translator'
             - '@request_stack'
-            - ~
-            - ~
+            - []
+            - []
             - '%contao.intl.locales%'
             - '%contao.intl.enabled_locales%'
             - '%kernel.default_locale%'
@@ -1058,7 +1057,7 @@ services:
             - '@security.firewall.map'
             - '@security.token_storage'
             - '@security.authentication.trust_resolver'
-            - ~
+            - '@security.access.simple_role_voter'
             - '@database_connection'
 
     contao.security.two_factor.authenticator:
