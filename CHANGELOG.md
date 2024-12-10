@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.4.8] (2024-12-10)
+
+**Fixed issues:**
+
+- [#7741] Make the SERP preview script compatible with Turbo ([fritzmg])
+
 ## [5.4.7] (2024-11-28)
 
 **Fixed issues:**
@@ -133,6 +139,7 @@ This project adheres to [Semantic Versioning].
 - [#7229] Fix the `.nogrid` backwards compatibility layer ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.4.8]: https://github.com/contao/contao/releases/tag/5.4.8
 [5.4.7]: https://github.com/contao/contao/releases/tag/5.4.7
 [5.4.6]: https://github.com/contao/contao/releases/tag/5.4.6
 [5.4.5]: https://github.com/contao/contao/releases/tag/5.4.5
@@ -225,3 +232,4 @@ This project adheres to [Semantic Versioning].
 [#7736]: https://github.com/contao/contao/pull/7736
 [#7737]: https://github.com/contao/contao/pull/7737
 [#7739]: https://github.com/contao/contao/pull/7739
+[#7741]: https://github.com/contao/contao/pull/7741
