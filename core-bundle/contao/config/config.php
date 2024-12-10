@@ -13,6 +13,7 @@ use Contao\Automator;
 use Contao\CheckBox;
 use Contao\CheckBoxWizard;
 use Contao\ChmodTable;
+use Contao\Color;
 use Contao\ContentAccordion;
 use Contao\ContentAccordionStart;
 use Contao\ContentAccordionStop;
@@ -292,6 +293,7 @@ $GLOBALS['BE_FFL'] = array
 (
 	'text'                    => TextField::class,
 	'password'                => Password::class,
+	'color'                   => Color::class,
 	'textarea'                => TextArea::class,
 	'select'                  => SelectMenu::class,
 	'checkbox'                => CheckBox::class,

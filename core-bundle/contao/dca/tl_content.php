@@ -625,8 +625,8 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'playerColor' => array
 		(
 			'search'                  => true,
-			'inputType'               => 'text',
-			'eval'                    => array('maxlength'=>6, 'colorpicker'=>true, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25 wizard'),
+			'inputType'               => 'color',
+			'eval'                    => array('maxlength'=>6, 'isHexColor'=>true, 'decodeEntities'=>true, 'tl_class'=>'w25 wizard'),
 			'sql'                     => "varchar(6) COLLATE ascii_bin NOT NULL default ''"
 		),
 		'youtubeOptions' => array
