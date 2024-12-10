@@ -2587,6 +2587,7 @@
       </trans-unit>
       <trans-unit id="MSC.tooManyPasswordResetAttempts">
         <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>U hebt te vaak geprobeerd uw wachtwoord te resetten. Probeer het over 15 minuten opnieuw.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>

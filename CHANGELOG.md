@@ -2,6 +2,23 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.20] (2024-12-10)
+
+**Fixed issues:**
+
+- [#7785] Use `CAST(… AS BINARY)` instead of `BINARY` ([leofeyer])
+- [#7690] Fix the help wizard ([bytehead])
+- [#7773] Add the missing relations to the DCAs ([aschempp])
+- [#7732] Add the domain to the "root page dependent module" configuration ([aschempp])
+- [#7757] Disallow creating or updating elements with invalid parent record ([aschempp])
+- [#7755] Handle ampersands in the alt attribute of the picture insert tag ([markocupic])
+- [#7772] Use the correct session bag in the preview link listener ([leofeyer])
+- [#7758] Make the default (global) operations more consistent ([aschempp])
+- [#7765] Disable `overlayClick` for SimpleModal ([zoglo])
+- [#7767] Fix the base path for canonical URLs ([fritzmg])
+- [#7778] Do not normalize the `resampling-filter` array key ([ausi])
+- [#7751] Make sure the correct test-case package is installed in Contao ([aschempp])
+
 ## [5.3.19] (2024-11-28)
 
 **Fixed issues:**
@@ -487,6 +504,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.20]: https://github.com/contao/contao/releases/tag/5.3.20
 [5.3.19]: https://github.com/contao/contao/releases/tag/5.3.19
 [5.3.18]: https://github.com/contao/contao/releases/tag/5.3.18
 [5.3.17]: https://github.com/contao/contao/releases/tag/5.3.17
@@ -529,6 +547,7 @@ This project adheres to [Semantic Versioning].
 [leofeyer]: https://github.com/leofeyer
 [lukasbableck]: https://github.com/lukasbableck
 [m-vo]: https://github.com/m-vo
+[markocupic]: https://github.com/markocupic
 [md-netdesign]: https://github.com/md-netdesign
 [mpitz]: https://github.com/mpitz
 [patrickjDE]: https://github.com/patrickjDE
@@ -863,6 +882,7 @@ This project adheres to [Semantic Versioning].
 [#7670]: https://github.com/contao/contao/pull/7670
 [#7674]: https://github.com/contao/contao/pull/7674
 [#7682]: https://github.com/contao/contao/pull/7682
+[#7690]: https://github.com/contao/contao/pull/7690
 [#7698]: https://github.com/contao/contao/pull/7698
 [#7699]: https://github.com/contao/contao/pull/7699
 [#7708]: https://github.com/contao/contao/pull/7708
@@ -874,8 +894,19 @@ This project adheres to [Semantic Versioning].
 [#7727]: https://github.com/contao/contao/pull/7727
 [#7729]: https://github.com/contao/contao/pull/7729
 [#7730]: https://github.com/contao/contao/pull/7730
+[#7732]: https://github.com/contao/contao/pull/7732
 [#7744]: https://github.com/contao/contao/pull/7744
 [#7749]: https://github.com/contao/contao/pull/7749
 [#7750]: https://github.com/contao/contao/pull/7750
+[#7751]: https://github.com/contao/contao/pull/7751
 [#7752]: https://github.com/contao/contao/pull/7752
 [#7753]: https://github.com/contao/contao/pull/7753
+[#7755]: https://github.com/contao/contao/pull/7755
+[#7757]: https://github.com/contao/contao/pull/7757
+[#7758]: https://github.com/contao/contao/pull/7758
+[#7765]: https://github.com/contao/contao/pull/7765
+[#7767]: https://github.com/contao/contao/pull/7767
+[#7772]: https://github.com/contao/contao/pull/7772
+[#7773]: https://github.com/contao/contao/pull/7773
+[#7778]: https://github.com/contao/contao/pull/7778
+[#7785]: https://github.com/contao/contao/pull/7785

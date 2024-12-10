@@ -522,8 +522,7 @@
         <target>Selecteer een module voor elke hoofdpagina van een website.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Choose module for &quot;%s&quot;</source>
-        <target>Kies een module voor &quot;%s&quot;</target>
+        <source>Choose module for &quot;%s&quot; [%s]</source>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

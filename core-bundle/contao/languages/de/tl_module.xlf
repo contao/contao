@@ -522,8 +522,8 @@
         <target>Bitte wählen Sie ein Modul für jeden Website-Startpunkt.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Choose module for &quot;%s&quot;</source>
-        <target>Modul wählen für &quot;%s&quot;</target>
+        <source>Choose module for &quot;%s&quot; [%s]</source>
+        <target>Modul wählen für &quot;%s&quot; [%s]</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
