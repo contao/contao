@@ -437,12 +437,6 @@ abstract class DataContainer extends Backend
 			return $arrData['input_field_callback']($this, $xlabel);
 		}
 
-		// BC-Layer for eval colorpicker
-		if ($arrData['eval']['colorpicker'] ?? null)
-		{
-			$arrData['inputType'] = 'color';
-		}
-
 		/** @var class-string<Widget> $strClass */
 		$strClass = $GLOBALS['BE_FFL'][$arrData['inputType'] ?? null] ?? null;
 
@@ -590,6 +584,28 @@ abstract class DataContainer extends Backend
         useFadeInOut: !Browser.ie' . $strOnSelect . ',
         startDay: ' . $GLOBALS['TL_LANG']['MSC']['weekOffset'] . ',
         titleFormat: "' . $GLOBALS['TL_LANG']['MSC']['titleFormat'] . '"
+      });
+    });
+  </script>';
+		}
+
+		// Color picker
+		if ($arrAttributes['colorpicker'] ?? null)
+		{
+			// Support single fields as well (see #5240)
+			$strKey = ($arrAttributes['multiple'] ?? null) ? $this->strField . '_0' : $this->strField;
+
+			$wizard .= ' ' . Image::getHtml('pickcolor.svg', $GLOBALS['TL_LANG']['MSC']['colorpicker'], 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['colorpicker']) . '" id="moo_' . $this->strField . '" style="cursor:pointer"') . '
+  <script>
+    window.addEvent("domready", function() {
+      var cl = $("ctrl_' . $strKey . '").value.hexToRgb(true) || [255, 0, 0];
+      new MooRainbow("moo_' . $this->strField . '", {
+        id: "ctrl_' . $strKey . '",
+        startColor: cl,
+        imgPath: "assets/colorpicker/images/",
+        onComplete: function(color) {
+          $("ctrl_' . $strKey . '").value = color.hex.replace("#", "");
+        }
       });
     });
   </script>';
