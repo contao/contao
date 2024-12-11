@@ -39,7 +39,7 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 #[AsEventListener(priority: 96)]
 class ExceptionConverterListener
 {
-    private const MAPPER = [
+    public const MAPPER = [
         ForwardPageNotFoundException::class => 'InternalServerErrorHttpException',
         InsecureInstallationException::class => 'InternalServerErrorHttpException',
         InternalServerErrorException::class => 'InternalServerErrorHttpException',
