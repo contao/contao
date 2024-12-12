@@ -125,6 +125,11 @@ class FormRadio extends Widget
 	 */
 	protected function getOptions()
 	{
+		if (!is_array($this->arrOptions))
+		{
+			return array();
+		}
+
 		$arrOptions = array();
 		$blnHasGroups = false;
 
@@ -201,20 +206,23 @@ class FormRadio extends Widget
 	{
 		$strOptions = '';
 
-		foreach ($this->arrOptions as $i=>$arrOption)
+		if (is_array($this->arrOptions))
 		{
-			$strOptions .= \sprintf(
-				'<span><input type="radio" name="%s" id="opt_%s" class="radio" value="%s"%s%s%s <label id="lbl_%s" for="opt_%s">%s</label></span> ',
-				$this->strName,
-				$this->strId . '_' . $i,
-				$arrOption['value'] ?? null,
-				$this->isChecked($arrOption),
-				$this->getAttributes(),
-				$this->strTagEnding,
-				$this->strId . '_' . $i,
-				$this->strId . '_' . $i,
-				$arrOption['label'] ?? null
-			);
+			foreach ($this->arrOptions as $i=>$arrOption)
+			{
+				$strOptions .= \sprintf(
+					'<span><input type="radio" name="%s" id="opt_%s" class="radio" value="%s"%s%s%s <label id="lbl_%s" for="opt_%s">%s</label></span> ',
+					$this->strName,
+					$this->strId . '_' . $i,
+					$arrOption['value'] ?? null,
+					$this->isChecked($arrOption),
+					$this->getAttributes(),
+					$this->strTagEnding,
+					$this->strId . '_' . $i,
+					$this->strId . '_' . $i,
+					$arrOption['label'] ?? null
+				);
+			}
 		}
 
 		if ($this->strLabel)
