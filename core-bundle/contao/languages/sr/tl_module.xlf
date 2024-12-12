@@ -522,8 +522,7 @@
         <target>Изаберите модул за сваку основну страницу.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Choose module for &quot;%s&quot;</source>
-        <target>Изабери модул за &quot;%s&quot;</target>
+        <source>Choose module for &quot;%s&quot; [%s]</source>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

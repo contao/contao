@@ -522,8 +522,7 @@
         <target>Seleccione un módulo para cada página raíz del sitio web.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Choose module for &quot;%s&quot;</source>
-        <target>Elija el módulo para &quot;%s&quot;</target>
+        <source>Choose module for &quot;%s&quot; [%s]</source>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

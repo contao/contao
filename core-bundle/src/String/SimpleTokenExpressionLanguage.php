@@ -17,7 +17,7 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 
 class SimpleTokenExpressionLanguage extends ExpressionLanguage
 {
-    public function __construct(CacheItemPoolInterface|null $cache = null, \Traversable|array|null $taggedProviders = null)
+    public function __construct(CacheItemPoolInterface|null $cache = null, iterable|null $taggedProviders = null)
     {
         $providers = $taggedProviders instanceof \Traversable ? iterator_to_array($taggedProviders) : $taggedProviders ?? [];
 
