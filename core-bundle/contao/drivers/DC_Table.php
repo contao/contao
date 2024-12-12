@@ -25,6 +25,7 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\String\UnicodeString;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Provide methods to modify the database.
@@ -1074,48 +1075,58 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->set));
 
-			$objInsertStmt = Database::getInstance()
-				->prepare("INSERT INTO " . $this->strTable . " %s")
-				->set($this->set)
-				->execute();
-
-			if ($objInsertStmt->affectedRows)
+			try
 			{
-				$insertID = $objInsertStmt->insertId;
+				$objInsertStmt = Database::getInstance()
+					->prepare("INSERT INTO " . $this->strTable . " %s")
+					->set($this->set)
+					->execute();
 
-				// Save the new record in the session
-				$new_records = $objSessionBag->get('new_records');
-				$new_records[$this->strTable][] = $insertID;
-				$objSessionBag->set('new_records', $new_records);
-
-				// Duplicate the records of the child table
-				$this->copyChildren($this->strTable, $insertID, $this->intId, $insertID);
-
-				// Call the oncopy_callback after all new records have been created
-				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncopy_callback'] ?? null))
+				if ($objInsertStmt->affectedRows)
 				{
-					foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['oncopy_callback'] as $callback)
+					$insertID = $objInsertStmt->insertId;
+
+					// Save the new record in the session
+					$new_records = $objSessionBag->get('new_records');
+					$new_records[$this->strTable][] = $insertID;
+					$objSessionBag->set('new_records', $new_records);
+
+					// Duplicate the records of the child table
+					$this->copyChildren($this->strTable, $insertID, $this->intId, $insertID);
+
+					// Call the oncopy_callback after all new records have been created
+					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncopy_callback'] ?? null))
 					{
-						if (\is_array($callback))
+						foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['oncopy_callback'] as $callback)
 						{
-							System::importStatic($callback[0])->{$callback[1]}($insertID, $this);
-						}
-						elseif (\is_callable($callback))
-						{
-							$callback($insertID, $this);
+							if (\is_array($callback))
+							{
+								System::importStatic($callback[0])->{$callback[1]}($insertID, $this);
+							}
+							elseif (\is_callable($callback))
+							{
+								$callback($insertID, $this);
+							}
 						}
 					}
+
+					System::getContainer()->get('monolog.logger.contao.general')->info('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created by duplicating record "' . $this->strTable . '.id=' . $this->intId . '"' . $this->getParentEntries($this->strTable, $insertID));
+
+					// Switch to edit mode
+					if (!$blnDoNotRedirect)
+					{
+						$this->redirect($this->switchToEdit($insertID));
+					}
+
+					return $insertID;
 				}
+			}
+			catch (UniqueConstraintViolationException $e)
+			{
+				/** @var TranslatorInterface $translator */
+				$translator = System::getContainer()->get('translator');
 
-				System::getContainer()->get('monolog.logger.contao.general')->info('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created by duplicating record "' . $this->strTable . '.id=' . $this->intId . '"' . $this->getParentEntries($this->strTable, $insertID));
-
-				// Switch to edit mode
-				if (!$blnDoNotRedirect)
-				{
-					$this->redirect($this->switchToEdit($insertID));
-				}
-
-				return $insertID;
+				Message::addError(\sprintf($translator->trans('ERR.copyUnique', array(), 'contao_default'), (int) $currentRecord['id']));
 			}
 		}
 
@@ -1308,9 +1319,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (isset($arrClipboard[$this->strTable]) && \is_array($arrClipboard[$this->strTable]['id']))
 		{
-			/** @var TranslatorInterface $translator */
-			$translator = System::getContainer()->get('translator');
-
 			foreach ($arrClipboard[$this->strTable]['id'] as $id)
 			{
 				$this->intId = $id;
@@ -1323,15 +1331,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					continue;
 				}
-				catch (UniqueConstraintViolationException)
+
+				if ($id)
 				{
-					Message::addError(\sprintf($translator->trans('ERR.copyAllUnique', array(), 'contao_default'), (int) $id));
-
-					continue;
+					Input::setGet('pid', $id);
+					Input::setGet('mode', 1);
 				}
-
-				Input::setGet('pid', $id);
-				Input::setGet('mode', 1);
 			}
 		}
 
