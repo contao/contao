@@ -61,20 +61,20 @@ services:
             - '@contao.search.backend'
 
     contao.search_backend.adapter:
-        class: Schranz\Search\SEAL\Adapter\AdapterInterface
+        class: CmsIg\Seal\Adapter\AdapterInterface
         factory: ['@contao.search_backend.adapter_factory', createAdapter]
 
     contao.search_backend.adapter_factory:
-        class: Schranz\Search\SEAL\Adapter\AdapterFactory
+        class: CmsIg\Seal\Adapter\AdapterFactory
         arguments:
-            - !tagged_iterator { tag: schranz_search.adapter_factory, default_index_method: getName }
+            - !tagged_iterator { tag: cmsig_seal.adapter_factory, default_index_method: getName }
 
     contao.search_backend.engine:
-        class: Schranz\Search\SEAL\Engine
+        class: CmsIg\Seal\Engine
         arguments:
             - '@contao.search_backend.adapter'
         tags:
-            - { name: schranz_search.engine, index_by: name }
+            - { name: cmsig_seal.engine, index_by: name }
 
     contao.security.backend_search.provider_delegating_voter:
         class: Contao\CoreBundle\Security\Voter\BackendSearch\ProviderDelegatingVoter

@@ -12,6 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Search\Backend;
 
+use CmsIg\Seal\Adapter\Memory\MemoryAdapter;
+use CmsIg\Seal\Adapter\Memory\MemoryStorage;
+use CmsIg\Seal\Engine;
+use CmsIg\Seal\EngineInterface;
+use CmsIg\Seal\Schema\Index;
 use Contao\CoreBundle\Event\BackendSearch\EnhanceHitEvent;
 use Contao\CoreBundle\Event\BackendSearch\IndexDocumentEvent;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\DeleteDocumentsMessage;
@@ -26,11 +31,6 @@ use Contao\CoreBundle\Search\Backend\Query;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use PHPUnit\Framework\TestCase;
-use Schranz\Search\SEAL\Adapter\Memory\MemoryAdapter;
-use Schranz\Search\SEAL\Adapter\Memory\MemoryStorage;
-use Schranz\Search\SEAL\Engine;
-use Schranz\Search\SEAL\EngineInterface;
-use Schranz\Search\SEAL\Schema\Index;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Envelope;

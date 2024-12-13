@@ -4,6 +4,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Search\Backend;
 
+use CmsIg\Seal\EngineInterface;
+use CmsIg\Seal\Schema\Field\IdentifierField;
+use CmsIg\Seal\Schema\Field\TextField;
+use CmsIg\Seal\Schema\Index;
+use CmsIg\Seal\Schema\Schema;
+use CmsIg\Seal\Search\Condition\EqualCondition;
+use CmsIg\Seal\Search\Condition\SearchCondition;
+use CmsIg\Seal\Search\SearchBuilder;
 use Contao\CoreBundle\Event\BackendSearch\EnhanceHitEvent;
 use Contao\CoreBundle\Event\BackendSearch\IndexDocumentEvent;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\DeleteDocumentsMessage;
@@ -11,14 +19,6 @@ use Contao\CoreBundle\Messenger\Message\BackendSearch\ReindexMessage;
 use Contao\CoreBundle\Messenger\WebWorker;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Schranz\Search\SEAL\EngineInterface;
-use Schranz\Search\SEAL\Schema\Field\IdentifierField;
-use Schranz\Search\SEAL\Schema\Field\TextField;
-use Schranz\Search\SEAL\Schema\Index;
-use Schranz\Search\SEAL\Schema\Schema;
-use Schranz\Search\SEAL\Search\Condition\EqualCondition;
-use Schranz\Search\SEAL\Search\Condition\SearchCondition;
-use Schranz\Search\SEAL\Search\SearchBuilder;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -160,7 +160,7 @@ class BackendSearch
             $indexName => new Index($indexName, [
                 'id' => new IdentifierField('id'),
                 'type' => new TextField('type', filterable: true),
-                'searchableContent' => new TextField('type', searchable: true),
+                'searchableContent' => new TextField('searchableContent', searchable: true),
                 'tags' => new TextField('tags', multiple: true, filterable: true),
                 'document' => new TextField('document'),
             ]),
@@ -176,10 +176,7 @@ class BackendSearch
 
     private function createSearchBuilder(Query $query): SearchBuilder
     {
-        $sb = $this->engine
-            ->createSearchBuilder()
-            ->addIndex($this->indexName)
-        ;
+        $sb = $this->engine->createSearchBuilder($this->indexName);
 
         if ($query->getKeywords()) {
             $sb->addFilter(new SearchCondition($query->getKeywords()));
