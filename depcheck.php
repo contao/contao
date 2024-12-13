@@ -84,7 +84,11 @@ return (new Configuration())
     // We only use the assets from the web-auth/webauthn-stimulus package
     ->ignoreErrorsOnPackage('web-auth/webauthn-stimulus', [ErrorType::UNUSED_DEPENDENCY])
 
-    // These packages are required for the search integration
-    ->ignoreErrorsOnPackage('schranz-search/symfony-bundle', [ErrorType::UNUSED_DEPENDENCY])
-    ->ignoreErrorsOnPackage('schranz-search/seal-loupe-adapter', [ErrorType::UNUSED_DEPENDENCY])
+    // This package allows automated integration with the back end search if Loupe is installed
+    ->ignoreErrorsOnPackage('cmsig/seal-loupe-adapter', [ErrorType::UNUSED_DEPENDENCY])
+
+    // Loupe is an optional dependency. For back end search to work, you need one of the SEAL adapters
+    // For a better out-of-the-box experience we require cmsig/seal-loupe-adapter in the Managed Edition
+    // but you can totally use a different search engine.
+    ->ignoreErrorsOnPackage('loupe/loupe', [ErrorType::SHADOW_DEPENDENCY])
 ;
