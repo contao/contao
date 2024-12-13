@@ -84,7 +84,9 @@ return (new Configuration())
     // We only use the assets from the web-auth/webauthn-stimulus package
     ->ignoreErrorsOnPackage('web-auth/webauthn-stimulus', [ErrorType::UNUSED_DEPENDENCY])
 
-    // This package allows automated integration with the back end search if Loupe is installed
+    // These packages allow automated integration with the back end search if Loupe
+    // is installed
+    ->ignoreErrorsOnPackage('cmsig/seal-symfony-bundle', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('cmsig/seal-loupe-adapter', [ErrorType::UNUSED_DEPENDENCY])
 
     // Loupe is an optional dependency. For back end search to work, you need one of the SEAL adapters
