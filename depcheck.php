@@ -88,7 +88,7 @@ return (new Configuration())
     ->ignoreErrorsOnPackage('cmsig/seal-symfony-bundle', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('cmsig/seal-loupe-adapter', [ErrorType::UNUSED_DEPENDENCY])
 
-    // This package is required by cmsig/seal-loupe-adapter and may therefore be
-    // a shadow dependency.
+    // This package is required by cmsig/seal-loupe-adapter and may therefore be a
+    // shadow dependency.
     ->ignoreErrorsOnPackage('loupe/loupe', [ErrorType::SHADOW_DEPENDENCY])
 ;
