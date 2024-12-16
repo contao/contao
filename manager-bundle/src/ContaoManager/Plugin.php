@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\ContaoManager;
 
+use CmsIg\Seal\Integration\Symfony\SealBundle;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\GenerateJwtCookieCommand;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\GetConfigCommand;
@@ -36,7 +37,6 @@ use League\FlysystemBundle\FlysystemBundle;
 use Loupe\Loupe\LoupeFactory;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
-use Schranz\Search\Integration\Symfony\SearchBundle;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
@@ -85,7 +85,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             BundleConfig::create(NelmioCorsBundle::class),
             BundleConfig::create(NelmioSecurityBundle::class),
             BundleConfig::create(FOSHttpCacheBundle::class),
-            BundleConfig::create(SearchBundle::class),
+            BundleConfig::create(SealBundle::class),
             BundleConfig::create(ContaoManagerBundle::class)->setLoadAfter([ContaoCoreBundle::class]),
             BundleConfig::create(DebugBundle::class)->setLoadInProduction(false),
             BundleConfig::create(WebProfilerBundle::class)->setLoadInProduction(false),

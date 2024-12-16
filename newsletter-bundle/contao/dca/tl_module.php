@@ -29,7 +29,8 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['newsletters'] = array
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_newsletter_channel.title',
 	'eval'                    => array('multiple'=>true),
-	'sql'                     => "blob NULL"
+	'sql'                     => "blob NULL",
+	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_channels'] = array
@@ -37,7 +38,8 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_channels'] = array
 	'inputType'               => 'checkbox',
 	'options_callback'        => array('tl_module_newsletter', 'getChannels'),
 	'eval'                    => array('multiple'=>true, 'mandatory'=>true),
-	'sql'                     => "blob NULL"
+	'sql'                     => "blob NULL",
+	'relation'                => array('table'=>'tl_newsletter_channel', 'type'=>'hasMany', 'load'=>'lazy')
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_text'] = array

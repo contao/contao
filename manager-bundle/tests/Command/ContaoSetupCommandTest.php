@@ -71,7 +71,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
             [$phpPath, ...$phpFlags, $consolePath, 'cache:clear', '--no-warmup', '--env=prod', ...$flags],
             [$phpPath, ...$phpFlags, $consolePath, 'cache:clear', '--no-warmup', '--env=dev', ...$flags],
             [$phpPath, ...$phpFlags, $consolePath, 'cache:warmup', '--env=prod', ...$flags],
-            [$phpPath, ...$phpFlags, $consolePath, 'schranz:search:index-create', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'cmsig:seal:index-create', '--env=prod', ...$flags],
         ];
 
         $memoryLimit = ini_set('memory_limit', '1G');

@@ -56,7 +56,7 @@ class ContentElementTypeListener implements ResetInterface
     /**
      * Return elements that can be created in the current context (e.g. nested fragments).
      */
-    private function getAllowedElements(string $ptable, int $pid): array
+    private function getAllowedElements(string|null $ptable, int|null $pid): array
     {
         $cacheKey = $ptable.'.'.$pid;
 
