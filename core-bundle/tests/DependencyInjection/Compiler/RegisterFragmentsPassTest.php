@@ -253,8 +253,12 @@ class RegisterFragmentsPassTest extends TestCase
         $contentController = new Definition('App\Fragments\Text');
         $contentController->addTag('contao.content_element', ['category' => 'content']);
 
+        $overrideController = new Definition('Contao\Frontend');
+        $overrideController->addTag('contao.content_element', ['type' => 'image', 'category' => 'media']);
+
         $container = $this->getContainerWithFragmentServices();
-        $container->setDefinition('app.fragments.content_controller', $contentController);
+        $container->setDefinition('app.fragments.content_controller.text', $contentController);
+        $container->setDefinition('app.fragments.content_controller.override', $overrideController);
 
         (new ResolveClassPass())->process($container);
 
@@ -293,6 +297,17 @@ class RegisterFragmentsPassTest extends TestCase
                 ],
             ],
             $definition->getArguments()[0],
+        );
+
+        $this->assertSame(
+            [
+                'TL_CTE' => [
+                    'media' => [
+                        'image' => ContentProxy::class,
+                    ],
+                ],
+            ],
+            $definition->getArguments()[1],
         );
 
         $this->assertTrue($definition->isPublic());
