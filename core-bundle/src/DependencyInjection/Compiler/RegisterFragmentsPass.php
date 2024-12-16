@@ -16,6 +16,7 @@ use Contao\CoreBundle\EventListener\GlobalsMapListener;
 use Contao\CoreBundle\Fragment\FragmentConfig;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Fragment\FragmentPreHandlerInterface;
+use Contao\Frontend;
 use Psr\Container\ContainerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -63,6 +64,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
     protected function registerFragments(ContainerBuilder $container, string $tag): void
     {
         $globals = [];
+        $forceGlobals = [];
         $preHandlers = [];
         $templates = [];
         $registry = $container->findDefinition('contao.fragment.registry');
@@ -127,13 +129,20 @@ class RegisterFragmentsPass implements CompilerPassInterface
                         throw new InvalidConfigurationException(\sprintf('Missing category for "%s" fragment on service ID "%s"', $tag, $reference));
                     }
 
-                    $globals[$this->globalsKey][$attributes['category']][$attributes['type']] = $this->proxyClass;
+                    // If a fragment controller is extending from a legacy content element or front end
+                    // module, we need to force its registration in the global array. Only regular
+                    // fragments should be able to be switched back to their legacy form (#7802).
+                    if (is_a($definition->getClass(), Frontend::class, true)) {
+                        $forceGlobals[$this->globalsKey][$attributes['category']][$attributes['type']] = $this->proxyClass;
+                    } else {
+                        $globals[$this->globalsKey][$attributes['category']][$attributes['type']] = $this->proxyClass;
+                    }
                 }
             }
         }
 
         $this->addPreHandlers($container, $preHandlers);
-        $this->addGlobalsMapListener($globals, $container);
+        $this->addGlobalsMapListener($globals, $forceGlobals, $container);
 
         if (null !== $this->dca && null !== $this->templateOptionsListener && $container->hasDefinition($this->templateOptionsListener)) {
             $container->findDefinition($this->templateOptionsListener)->addMethodCall('setDefaultIdentifiersByType', [$this->dca, $templates]);
@@ -198,13 +207,13 @@ class RegisterFragmentsPass implements CompilerPassInterface
         return Container::underscore($className);
     }
 
-    private function addGlobalsMapListener(array $globals, ContainerBuilder $container): void
+    private function addGlobalsMapListener(array $globals, array $forceGlobals, ContainerBuilder $container): void
     {
-        if (!$globals) {
+        if (!$globals && !$forceGlobals) {
             return;
         }
 
-        $listener = new Definition(GlobalsMapListener::class, [$globals]);
+        $listener = new Definition(GlobalsMapListener::class, [$globals, $forceGlobals]);
         $listener->setPublic(true);
         $listener->addTag('contao.hook', ['hook' => 'initializeSystem', 'priority' => 255]);
 

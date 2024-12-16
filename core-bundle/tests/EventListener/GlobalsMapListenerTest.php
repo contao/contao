@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
+use Contao\ContentProxy;
 use Contao\CoreBundle\EventListener\GlobalsMapListener;
 use Contao\CoreBundle\Tests\TestCase;
 
@@ -20,11 +21,11 @@ class GlobalsMapListenerTest extends TestCase
     /**
      * @dataProvider getValuesData
      */
-    public function testMergesTheValuesIntoTheGlobalsArray(array $existing, array $new, array $expected): void
+    public function testMergesTheValuesIntoTheGlobalsArray(array $existing, array $new, array $expected, array $forced = []): void
     {
         $GLOBALS['TL_CTE'] = $existing;
 
-        $listener = new GlobalsMapListener(['TL_CTE' => $new]);
+        $listener = new GlobalsMapListener(['TL_CTE' => $new], ['TL_CTE' => $forced]);
         $listener->onInitializeSystem();
 
         $this->assertSame($expected, $GLOBALS['TL_CTE']);
@@ -56,6 +57,13 @@ class GlobalsMapListenerTest extends TestCase
             ['texts' => ['headline' => 'LegacyHeadline']],
             ['texts' => ['headline' => 'HeadlineFragment']],
             ['texts' => ['headline' => 'LegacyHeadline']],
+        ];
+
+        yield 'prefer forced entries over existing entries' => [
+            ['texts' => ['headline' => 'LegacyHeadline']],
+            [],
+            ['texts' => ['headline' => ContentProxy::class]],
+            ['texts' => ['headline' => ContentProxy::class]],
         ];
     }
 }

@@ -17,8 +17,10 @@ namespace Contao\CoreBundle\EventListener;
  */
 class GlobalsMapListener
 {
-    public function __construct(private readonly array $globals)
-    {
+    public function __construct(
+        private readonly array $globals,
+        private readonly array $forceGlobals,
+    ) {
     }
 
     /**
@@ -33,6 +35,14 @@ class GlobalsMapListener
         foreach ($this->globals as $key => $value) {
             if (\is_array($value) && isset($GLOBALS[$key]) && \is_array($GLOBALS[$key])) {
                 $GLOBALS[$key] = array_replace_recursive($GLOBALS[$key], $value, $GLOBALS[$key]);
+            } else {
+                $GLOBALS[$key] = $value;
+            }
+        }
+
+        foreach ($this->forceGlobals as $key => $value) {
+            if (\is_array($value) && isset($GLOBALS[$key]) && \is_array($GLOBALS[$key])) {
+                $GLOBALS[$key] = array_replace_recursive($GLOBALS[$key], $value);
             } else {
                 $GLOBALS[$key] = $value;
             }
