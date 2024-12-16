@@ -86,6 +86,8 @@ class DebugFragmentsCommand extends Command
         foreach ($values as $k => $v) {
             if (\is_bool($v)) {
                 $v = $v ? 'true' : 'false';
+            } elseif ('nestedFragments' === $k && array_key_exists('allowedTypes', $v)) {
+                $v = 'true (allowed types: ' . implode(', ', $v['allowedTypes']) . ')';
             }
 
             $return[] = \sprintf('%s : %s', str_pad($k, $length, ' ', STR_PAD_RIGHT), $v);
