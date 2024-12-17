@@ -41,7 +41,21 @@ class GlobalsMapListenerTest extends TestCase
             ['text' => 'HeadlineFragment'],
         ];
 
+        yield 'add single forced' => [
+            [],
+            [],
+            ['text' => 'HeadlineFragment'],
+            ['text' => 'HeadlineFragment'],
+        ];
+
         yield 'add group' => [
+            [],
+            ['texts' => ['headline' => 'HeadlineFragment']],
+            ['texts' => ['headline' => 'HeadlineFragment']],
+        ];
+
+        yield 'add group forced' => [
+            [],
             [],
             ['texts' => ['headline' => 'HeadlineFragment']],
             ['texts' => ['headline' => 'HeadlineFragment']],
