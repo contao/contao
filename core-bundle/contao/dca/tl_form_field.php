@@ -44,7 +44,8 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			(
 				'id' => 'primary',
 				'pid,invisible' => 'index',
-				'tstamp' => 'index'
+				'tstamp' => 'index',
+				'sorting' => 'index'
 			)
 		)
 	),
