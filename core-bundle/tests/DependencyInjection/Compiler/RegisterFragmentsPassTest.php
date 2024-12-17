@@ -22,6 +22,7 @@ use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\Frontend;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -253,7 +254,7 @@ class RegisterFragmentsPassTest extends TestCase
         $contentController = new Definition('App\Fragments\Text');
         $contentController->addTag('contao.content_element', ['category' => 'content']);
 
-        $overrideController = new Definition('Contao\Frontend');
+        $overrideController = new Definition(Frontend::class);
         $overrideController->addTag('contao.content_element', ['type' => 'image', 'category' => 'media']);
 
         $container = $this->getContainerWithFragmentServices();
