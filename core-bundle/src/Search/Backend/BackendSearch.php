@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Search\Backend;
 
 use CmsIg\Seal\EngineInterface;
+use CmsIg\Seal\Reindex\ReindexConfig as SealReindexConfig;
+use CmsIg\Seal\Reindex\ReindexProviderInterface;
 use CmsIg\Seal\Schema\Field\IdentifierField;
 use CmsIg\Seal\Schema\Field\TextField;
 use CmsIg\Seal\Schema\Index;
@@ -26,8 +28,10 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 /**
  * @experimental
  */
-class BackendSearch
+class BackendSearch implements ReindexProviderInterface
 {
+    public const SEAL_TYPE_NAME = 'contao_backend_search';
+
     /**
      * @param iterable<ProviderInterface> $providers
      */
@@ -67,10 +71,7 @@ class BackendSearch
             }
         }
 
-        // TODO: Use bulk endpoint as soon as SEAL supports this
-        foreach ($documentIds as $documentId) {
-            $this->engine->deleteDocument($this->indexName, $documentId);
-        }
+        $this->engine->bulk($this->indexName, [], $documentIds);
 
         return $this;
     }
@@ -83,34 +84,7 @@ class BackendSearch
             return $this;
         }
 
-        // In case the re-index was limited to a given set of document IDs, we check if all of
-        // those still exist. If not, we need to delete the ones that have been removed.
-        $trackDeletedDocumentIds = clone $config->getLimitedDocumentIds();
-
-        // TODO: Use bulk endpoint as soon as SEAL supports this
-        /** @var ProviderInterface $provider */
-        foreach ($this->providers as $provider) {
-            /** @var Document $document */
-            foreach ($provider->updateIndex($config) as $document) {
-                $event = new IndexDocumentEvent($document);
-                $this->eventDispatcher->dispatch($event);
-
-                if (!$document = $event->getDocument()) {
-                    continue;
-                }
-
-                // This document is still used, remove from tracking
-                $trackDeletedDocumentIds->removeIdFromType($document->getType(), $document->getId());
-
-                $this->engine->saveDocument(
-                    $this->indexName,
-                    $this->convertProviderDocumentForSearchIndex($document),
-                );
-            }
-        }
-
-        // Delete IDs that do not exist anymore in case there are any
-        $this->deleteDocuments($trackDeletedDocumentIds, $async);
+        $this->engine->reindex([$this], $this->internalReindexConfigToSealReindexConfig($config));
 
         return $this;
     }
@@ -157,12 +131,12 @@ class BackendSearch
     public static function getSearchEngineSchema(string $indexName): Schema
     {
         return new Schema([
-            $indexName => new Index($indexName, [
+            self::SEAL_TYPE_NAME => new Index($indexName, [
                 'id' => new IdentifierField('id'),
-                'type' => new TextField('type', filterable: true),
+                'type' => new TextField('type', searchable: false, filterable: true),
                 'searchableContent' => new TextField('searchableContent', searchable: true),
-                'tags' => new TextField('tags', multiple: true, filterable: true),
-                'document' => new TextField('document'),
+                'tags' => new TextField('tags', multiple: true, searchable: false, filterable: true),
+                'document' => new TextField('document', searchable: false),
             ]),
         ]);
     }
@@ -172,6 +146,51 @@ class BackendSearch
         // TODO: We need an API for that in SEAL
         $this->engine->dropIndex($this->indexName);
         $this->engine->createIndex($this->indexName);
+    }
+
+    public function total(): int|null
+    {
+        return null;
+    }
+
+    public function provide(SealReindexConfig $reindexConfig): \Generator
+    {
+        // Not our index
+        if (null !== $reindexConfig->getIndex() && self::SEAL_TYPE_NAME !== $reindexConfig->getIndex()) {
+            return;
+        }
+
+        $internalConfig = $this->sealReindexConfigToInternalReindexConfig($reindexConfig);
+
+        // In case the re-index was limited to a given set of document IDs, we check if all of
+        // those still exist. If not, we need to delete the ones that have been removed.
+        $trackDeletedDocumentIds = clone $internalConfig->getLimitedDocumentIds();
+
+        /** @var ProviderInterface $provider */
+        foreach ($this->providers as $provider) {
+            /** @var Document $document */
+            foreach ($provider->updateIndex($internalConfig) as $document) {
+                $event = new IndexDocumentEvent($document);
+                $this->eventDispatcher->dispatch($event);
+
+                if (!$document = $event->getDocument()) {
+                    continue;
+                }
+
+
+                // This document is still used, remove from tracking
+                $trackDeletedDocumentIds->removeIdFromType($document->getType(), $document->getId());
+
+                yield $document;
+            }
+        }
+
+        $this->deleteDocuments($trackDeletedDocumentIds);
+    }
+
+    public static function getIndex(): string
+    {
+        return self::SEAL_TYPE_NAME;
     }
 
     private function createSearchBuilder(Query $query): SearchBuilder
@@ -249,5 +268,55 @@ class BackendSearch
     {
         // Ensure the ID is global across the search index by prefixing the id
         return $type.'_'.$id;
+    }
+
+    private function internalReindexConfigToSealReindexConfig(ReindexConfig $reindexConfig): SealReindexConfig
+    {
+        $sealConfig = new SealReindexConfig();
+
+        if ($reindexConfig->getUpdateSince()) {
+            $sealConfig = $sealConfig->withDateTimeBoundary($reindexConfig->getUpdateSince());
+        }
+
+        if (!$reindexConfig->getLimitedDocumentIds()->isEmpty()) {
+            $globalIdentifiers = [];
+
+            foreach ($reindexConfig->getLimitedDocumentIds()->getTypes() as $type) {
+                foreach ($reindexConfig->getLimitedDocumentIds()->getDocumentIdsForType($type) as $documentId) {
+                    $globalIdentifiers[] = $this->getGlobalIdForTypeAndDocumentId($type, $documentId);
+                }
+            }
+
+            $sealConfig = $sealConfig->withIdentifiers($globalIdentifiers);
+        }
+
+        return $sealConfig;
+    }
+
+    private function sealReindexConfigToInternalReindexConfig(SealReindexConfig $sealReindexConfig): ReindexConfig
+    {
+        $internalConfig = new ReindexConfig();
+
+        if (null !== $sealReindexConfig->getDateTimeBoundary()) {
+            $internalConfig = $internalConfig->limitToDocumentsNewerThan($sealReindexConfig->getDateTimeBoundary());
+        }
+
+        if ([] !== $sealReindexConfig->getIdentifiers()) {
+            $groupedDocumentIds = new GroupedDocumentIds();
+
+            foreach ($sealReindexConfig->getIdentifiers() as $globalIdentifier) {
+                [$type, $documentId] = explode('__', $globalIdentifier, 2);
+
+                if (!\is_string($type) || !\is_string($documentId) || '' === $type || '' === $documentId) {
+                    continue;
+                }
+
+                $groupedDocumentIds->addIdToType($type, $documentId);
+            }
+
+            $internalConfig = $internalConfig->limitToDocumentIds($groupedDocumentIds);
+        }
+
+        return $internalConfig;
     }
 }
