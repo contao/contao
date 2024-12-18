@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": "^7.4 || ^8.0",
+        "contao/core-bundle": "self.version",
         "phpunit/phpunit": "^9.3"
     },
     "require-dev": {
