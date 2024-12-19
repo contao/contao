@@ -1,0 +1,44 @@
+.tl_search_hit:not(:last-of-type) {
+    margin-bottom: .75rem;
+    padding-bottom: .75rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.hit_header {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    width: 100%;
+}
+
+.hit_preview {
+    width: 40px;
+    margin-right: 10px;
+
+    img {
+        width: 100%;
+        height: auto;
+    }
+}
+
+.hit_actions {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    gap: .5rem;
+}
+
+.hit_title {
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+.hit_context-container {
+    margin-top: .5rem;
+
+    .context {
+        font-size: 14px;
+        color: var(--gray);
+        margin: 0;
+    }
+}
