@@ -1,4 +1,7 @@
 {
+    "dependencies": {
+        "@stimulus-components/color-picker": "^2.0.0"
+    },
     "devDependencies": {
         "@hotwired/stimulus": "^3.2.2",
         "@hotwired/stimulus-webpack-helpers": "^1.0.1",
