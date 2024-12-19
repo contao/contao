@@ -245,9 +245,10 @@ class BackendMain extends Backend
 		$data['learnMore'] = \sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');
 
 		$twig = $container->get('twig');
+		$searchEnabled = $container->has('contao.search.backend') && $container->get('contao.search.backend')->isAvailable();
 
 		$data['menu'] = $twig->render('@Contao/backend/chrome/main_menu.html.twig');
-		$data['headerMenu'] = $twig->render('@Contao/backend/chrome/header_menu.html.twig');
+		$data['headerMenu'] = $twig->render('@Contao/backend/chrome/header_menu.html.twig', ['searchEnabled' => $searchEnabled]);
 
 		return $data;
 	}
