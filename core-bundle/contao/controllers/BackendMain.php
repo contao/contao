@@ -247,9 +247,7 @@ class BackendMain extends Backend
 		$twig = $container->get('twig');
 
 		$data['menu'] = $twig->render('@Contao/backend/chrome/main_menu.html.twig');
-		$data['headerMenu'] = $twig->render('@Contao/backend/chrome/header_menu.html.twig', [
-			'searchEnabled' => System::getContainer()->getParameter('contao.backend_search.enabled')
-		]);
+		$data['headerMenu'] = $twig->render('@Contao/backend/chrome/header_menu.html.twig');
 
 		return $data;
 	}
