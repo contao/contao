@@ -16,9 +16,9 @@ use CmsIg\Seal\Adapter\Memory\MemoryAdapter;
 use CmsIg\Seal\Adapter\Memory\MemoryStorage;
 use CmsIg\Seal\Engine;
 use CmsIg\Seal\EngineInterface;
+use CmsIg\Seal\Reindex\ReindexConfig as SealReindexConfig;
 use CmsIg\Seal\Schema\Index;
 use Contao\CoreBundle\Event\BackendSearch\EnhanceHitEvent;
-use Contao\CoreBundle\Event\BackendSearch\IndexDocumentEvent;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\DeleteDocumentsMessage;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\ReindexMessage;
 use Contao\CoreBundle\Messenger\WebWorker;
@@ -29,6 +29,8 @@ use Contao\CoreBundle\Search\Backend\Hit;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Search\Backend\Query;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
+use Contao\CoreBundle\Search\Backend\Seal\SealReindexProvider;
+use Contao\CoreBundle\Search\Backend\Seal\SealUtil;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -53,6 +55,7 @@ class BackendSearchTest extends TestCase
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(MessageBusInterface::class),
             $webWorker,
+            $this->createMock(SealReindexProvider::class),
             'contao_backend_search',
         );
 
@@ -61,63 +64,39 @@ class BackendSearchTest extends TestCase
 
     public function testReindexSync(): void
     {
+        $reindexConfig = (new ReindexConfig())
+            ->limitToDocumentIds(new GroupedDocumentIds(['foo' => ['bar']])) // Non-existent document anymore, must be deleted!
+            ->limitToDocumentsNewerThan(new \DateTimeImmutable('2024-01-01T00:00:00+00:00'))
+        ;
+
+        $reindexProvider = $this->createMock(SealReindexProvider::class);
+
         $engine = $this->createMock(EngineInterface::class);
         $engine
             ->expects($this->once())
-            ->method('saveDocument')
+            ->method('reindex')
             ->with(
-                'contao_backend_search',
+                [$reindexProvider],
                 $this->callback(
-                    function (array $document): bool {
-                        $this->assertSame('type_id', $document['id']);
-                        $this->assertSame('type', $document['type']);
-                        $this->assertSame('search me', $document['searchableContent']);
-                        $this->assertSame([], $document['tags']);
-                        $this->assertSame('{"id":"id","type":"type","searchableContent":"search me","tags":[],"metadata":[]}', $document['document']);
-
-                        return true;
-                    },
+                    static fn (SealReindexConfig $sealReindexConfig): bool => $reindexConfig->equals(SealUtil::sealReindexConfigToInternalReindexConfig($sealReindexConfig)),
                 ),
             )
         ;
 
         $engine
             ->expects($this->once())
-            ->method('deleteDocument')
-            ->with('contao_backend_search', 'foo_bar')
-        ;
-
-        $reindexConfig = (new ReindexConfig())
-            ->limitToDocumentIds(new GroupedDocumentIds(['foo' => ['bar']])) // Non-existent document anymore, must be deleted!
-            ->limitToDocumentsNewerThan(new \DateTimeImmutable('2024-01-01T00:00:00+00:00'))
-        ;
-
-        $provider = $this->createMock(ProviderInterface::class);
-        $provider
-            ->expects($this->once())
-            ->method('updateIndex')
-            ->with($reindexConfig)
-            ->willReturnCallback(
-                static function () {
-                    yield new Document('id', 'type', 'search me');
-                },
-            )
-        ;
-
-        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-        $eventDispatcher
-            ->expects($this->once())
-            ->method('dispatch')
-            ->with($this->callback(static fn (IndexDocumentEvent $event): bool => 'id' === $event->getDocument()->getId()))
+            ->method('bulk')
+            ->with('contao_backend_search', [], ['foo__bar'])
         ;
 
         $backendSearch = new BackendSearch(
-            [$provider],
+            [$this->createMock(ProviderInterface::class)],
             $this->createMock(Security::class),
             $engine,
-            $eventDispatcher,
+            $this->createMock(EventDispatcherInterface::class),
             $this->createMock(MessageBusInterface::class),
             $this->createMock(WebWorker::class),
+            $reindexProvider,
             'contao_backend_search',
         );
 
@@ -146,6 +125,7 @@ class BackendSearchTest extends TestCase
             $this->createMock(EventDispatcherInterface::class),
             $messageBus,
             $this->createMock(WebWorker::class),
+            $this->createMock(SealReindexProvider::class),
             'contao_backend_search',
         );
 
@@ -200,8 +180,16 @@ class BackendSearchTest extends TestCase
             ->with($this->callback(static fn (EnhanceHitEvent $event): bool => '42' === $event->getHit()->getDocument()->getId()))
         ;
 
-        $backendSearch = new BackendSearch([$provider], $security, $engine, $eventDispatcher, $this->createMock(MessageBusInterface::class), $this->createMock(WebWorker::class),
-            $indexName);
+        $backendSearch = new BackendSearch(
+            [$provider],
+            $security,
+            $engine,
+            $eventDispatcher,
+            $this->createMock(MessageBusInterface::class),
+            $this->createMock(WebWorker::class),
+            $this->createMock(SealReindexProvider::class),
+            $indexName,
+        );
         $result = $backendSearch->search(new Query(20, 'search me'));
 
         $this->assertSame('human readable hit title', $result->getHits()[0]->getTitle());
@@ -262,6 +250,7 @@ class BackendSearchTest extends TestCase
             $eventDispatcher,
             $messageBus,
             $this->createMock(WebWorker::class),
+            $this->createMock(SealReindexProvider::class),
             $indexName,
         );
 
@@ -282,12 +271,9 @@ class BackendSearchTest extends TestCase
 
         $engine = $this->createMock(EngineInterface::class);
         $engine
-            ->expects($this->exactly(2))
-            ->method('deleteDocument')
-            ->withConsecutive(
-                ['contao_backend_search', 'test_42'],
-                ['contao_backend_search', 'foobar_42'],
-            )
+            ->expects($this->once())
+            ->method('bulk')
+            ->with('contao_backend_search', [], ['test__42', 'foobar__42'])
         ;
 
         $backendSearch = new BackendSearch(
@@ -297,6 +283,7 @@ class BackendSearchTest extends TestCase
             $this->createMock(EventDispatcherInterface::class),
             $this->createMock(MessageBusInterface::class),
             $this->createMock(WebWorker::class),
+            $this->createMock(SealReindexProvider::class),
             'contao_backend_search',
         );
 
@@ -325,6 +312,7 @@ class BackendSearchTest extends TestCase
             $this->createMock(EventDispatcherInterface::class),
             $messageBus,
             $this->createMock(WebWorker::class),
+            $this->createMock(SealReindexProvider::class),
             'contao_backend_search',
         );
 
