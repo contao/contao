@@ -1,0 +1,112 @@
+@media (max-width: 991.98px) {
+
+    .backend-search {
+        display: none;
+    }
+}
+
+@media (min-width: 992px) {
+
+    .backend-search_message,
+    .backend-search_results {
+        display: none;
+    }
+
+    .search-message--empty,
+    .backend-search_message {
+        font-size: 12px;
+    }
+
+    .search--initial .search-message--placeholder,
+    .search--loading .search-message--loading,
+    .search--invalid .search-message--invalid,
+    .search--results .backend-search_results {
+        display: initial;
+    }
+
+    .backend-search {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        margin-left: 220px;
+
+        label {
+            position: relative;
+
+            svg {
+                position: absolute;
+                left: 7px;
+                top: 3px;
+                pointer-events: none;
+            }
+        }
+    }
+
+    .backend-search_overlay {
+        background-color: rgba(0, 0, 0, 0.7);
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 0;
+        width: 0;
+        transition: width 0ms .25s, height 0ms .25s, opacity .25s;
+        opacity: 0;
+        z-index: 5;
+
+        pointer-events: none;
+    }
+
+    .backend-search_inner {
+        position: absolute;
+        width: max(38%,280px);
+        transition: width .25s cubic-bezier(.1,.65,.1,1), max-width .25s cubic-bezier(.1,.65,.1,1);
+    }
+
+    #backend-search {
+        margin: 0;
+        padding-left: 30px;
+        outline: none;
+        border: 0 none;
+    }
+
+    .backend-search_results-container {
+        box-sizing: border-box;
+        position: absolute;
+        width: 100%;
+        background-color: var(--content-bg);
+        border-top: 1px solid var(--border);
+        padding: 12px 10px 12px 16px;
+        opacity: 0;
+        pointer-events: none;
+        margin-top: -1px;
+        border-radius: 0 0 2px 2px;
+        max-height: 75vh;
+        overflow-y: auto;
+        scrollbar-width: thin;
+    }
+
+    .backend-search:not(.search--hidden) {
+
+        .backend-search_overlay {
+            height: 200vh;
+            opacity: 1;
+            transition: width 0ms, height 0ms, opacity .25s;
+            width: 100%;
+        }
+
+        .backend-search_inner {
+            width: min(calc(100% - 235px), 1400px);
+            z-index: 5;
+        }
+
+        .backend-search_results-container {
+            opacity: 1;
+            pointer-events: revert;
+            transition: opacity .4s;
+        }
+
+        #backend-search {
+            background-color: var(--content-bg);
+        }
+    }
+}
