@@ -24,7 +24,8 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['calendars'] = array
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_calendar.title',
 	'eval'                    => array('multiple'=>true),
-	'sql'                     => "blob NULL"
+	'sql'                     => "blob NULL",
+	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
 
 $GLOBALS['TL_DCA']['tl_user']['fields']['calendarp'] = array
@@ -41,7 +42,8 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['calendarfeeds'] = array
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_calendar_feed.title',
 	'eval'                    => array('multiple'=>true),
-	'sql'                     => "blob NULL"
+	'sql'                     => "blob NULL",
+	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
 
 $GLOBALS['TL_DCA']['tl_user']['fields']['calendarfeedp'] = array
