@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection;
 use Contao\CoreBundle\DependencyInjection\Configuration;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ResizeConfiguration;
+use Imagine\Image\ImageInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Definition\ArrayNode;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -527,6 +528,39 @@ class ConfigurationTest extends TestCase
         yield 'Explicit true' => [
             [['cron' => ['web_listener' => true]]], true,
         ];
+    }
+
+    public function testDoesNormalizeResamplingFilter(): void
+    {
+        $params = [
+            [
+                'image' => [
+                    'imagine_options' => [
+                        'resampling-filter' => ImageInterface::FILTER_LANCZOS,
+                    ],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertArrayHasKey('resampling-filter', $configuration['image']['imagine_options']);
+        $this->assertSame(ImageInterface::FILTER_LANCZOS, $configuration['image']['imagine_options']['resampling-filter']);
+
+        $params = [
+            [
+                'image' => [
+                    'imagine_options' => [
+                        'resampling_filter' => ImageInterface::FILTER_UNDEFINED,
+                    ],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertArrayHasKey('resampling-filter', $configuration['image']['imagine_options']);
+        $this->assertSame(ImageInterface::FILTER_UNDEFINED, $configuration['image']['imagine_options']['resampling-filter']);
     }
 
     /**

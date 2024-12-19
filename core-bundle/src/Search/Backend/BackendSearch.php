@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Search\Backend;
 
+use CmsIg\Seal\EngineInterface;
+use CmsIg\Seal\Schema\Field\IdentifierField;
+use CmsIg\Seal\Schema\Field\TextField;
+use CmsIg\Seal\Schema\Index;
+use CmsIg\Seal\Schema\Schema;
+use CmsIg\Seal\Search\Condition\EqualCondition;
+use CmsIg\Seal\Search\Condition\SearchCondition;
+use CmsIg\Seal\Search\SearchBuilder;
 use Contao\CoreBundle\Event\BackendSearch\EnhanceHitEvent;
-use Contao\CoreBundle\Event\BackendSearch\IndexDocumentEvent;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\DeleteDocumentsMessage;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\ReindexMessage;
 use Contao\CoreBundle\Messenger\WebWorker;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
+use Contao\CoreBundle\Search\Backend\Seal\SealReindexProvider;
+use Contao\CoreBundle\Search\Backend\Seal\SealUtil;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Schranz\Search\SEAL\EngineInterface;
-use Schranz\Search\SEAL\Schema\Field\IdentifierField;
-use Schranz\Search\SEAL\Schema\Field\TextField;
-use Schranz\Search\SEAL\Schema\Index;
-use Schranz\Search\SEAL\Schema\Schema;
-use Schranz\Search\SEAL\Search\Condition\EqualCondition;
-use Schranz\Search\SEAL\Search\Condition\SearchCondition;
-use Schranz\Search\SEAL\Search\SearchBuilder;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -28,6 +29,8 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
  */
 class BackendSearch
 {
+    public const SEAL_INTERNAL_INDEX_NAME = 'contao_backend_search';
+
     /**
      * @param iterable<ProviderInterface> $providers
      */
@@ -38,6 +41,7 @@ class BackendSearch
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly MessageBusInterface $messageBus,
         private readonly WebWorker $webWorker,
+        private readonly SealReindexProvider $reindexProvider,
         private readonly string $indexName,
     ) {
     }
@@ -63,14 +67,11 @@ class BackendSearch
 
         foreach ($groupedDocumentIds->getTypes() as $type) {
             foreach ($groupedDocumentIds->getDocumentIdsForType($type) as $id) {
-                $documentIds[] = $this->getGlobalIdForTypeAndDocumentId($type, $id);
+                $documentIds[] = SealUtil::getGlobalDocumentId($type, $id);
             }
         }
 
-        // TODO: Use bulk endpoint as soon as SEAL supports this
-        foreach ($documentIds as $documentId) {
-            $this->engine->deleteDocument($this->indexName, $documentId);
-        }
+        $this->engine->bulk($this->indexName, [], $documentIds);
 
         return $this;
     }
@@ -83,34 +84,13 @@ class BackendSearch
             return $this;
         }
 
-        // In case the re-index was limited to a given set of document IDs, we check if all of
-        // those still exist. If not, we need to delete the ones that have been removed.
-        $trackDeletedDocumentIds = clone $config->getLimitedDocumentIds();
+        // Seal does not delete unused documents, it just re-indexes. So if some
+        // identifier here does no longer exist, it would never get removed. Hence, we
+        // remove all those referenced via identifiers first. The ones that still exist
+        // will get re-indexed after.
+        $this->deleteDocuments($config->getLimitedDocumentIds(), false);
 
-        // TODO: Use bulk endpoint as soon as SEAL supports this
-        /** @var ProviderInterface $provider */
-        foreach ($this->providers as $provider) {
-            /** @var Document $document */
-            foreach ($provider->updateIndex($config) as $document) {
-                $event = new IndexDocumentEvent($document);
-                $this->eventDispatcher->dispatch($event);
-
-                if (!$document = $event->getDocument()) {
-                    continue;
-                }
-
-                // This document is still used, remove from tracking
-                $trackDeletedDocumentIds->removeIdFromType($document->getType(), $document->getId());
-
-                $this->engine->saveDocument(
-                    $this->indexName,
-                    $this->convertProviderDocumentForSearchIndex($document),
-                );
-            }
-        }
-
-        // Delete IDs that do not exist anymore in case there are any
-        $this->deleteDocuments($trackDeletedDocumentIds, $async);
+        $this->engine->reindex([$this->reindexProvider], SealUtil::internalReindexConfigToSealReindexConfig($config));
 
         return $this;
     }
@@ -157,12 +137,12 @@ class BackendSearch
     public static function getSearchEngineSchema(string $indexName): Schema
     {
         return new Schema([
-            $indexName => new Index($indexName, [
+            self::SEAL_INTERNAL_INDEX_NAME => new Index($indexName, [
                 'id' => new IdentifierField('id'),
-                'type' => new TextField('type', filterable: true),
-                'searchableContent' => new TextField('type', searchable: true),
-                'tags' => new TextField('tags', multiple: true, filterable: true),
-                'document' => new TextField('document'),
+                'type' => new TextField('type', searchable: false, filterable: true),
+                'searchableContent' => new TextField('searchableContent', searchable: true),
+                'tags' => new TextField('tags', multiple: true, searchable: false, filterable: true),
+                'document' => new TextField('document', searchable: false),
             ]),
         ]);
     }
@@ -176,10 +156,7 @@ class BackendSearch
 
     private function createSearchBuilder(Query $query): SearchBuilder
     {
-        $sb = $this->engine
-            ->createSearchBuilder()
-            ->addIndex($this->indexName)
-        ;
+        $sb = $this->engine->createSearchBuilder(self::SEAL_INTERNAL_INDEX_NAME);
 
         if ($query->getKeywords()) {
             $sb->addFilter(new SearchCondition($query->getKeywords()));
@@ -235,22 +212,5 @@ class BackendSearch
         }
 
         return null;
-    }
-
-    private function convertProviderDocumentForSearchIndex(Document $document): array
-    {
-        return [
-            'id' => $this->getGlobalIdForTypeAndDocumentId($document->getType(), $document->getId()),
-            'type' => $document->getType(),
-            'searchableContent' => $document->getSearchableContent(),
-            'tags' => $document->getTags(),
-            'document' => json_encode($document->toArray(), JSON_THROW_ON_ERROR),
-        ];
-    }
-
-    private function getGlobalIdForTypeAndDocumentId(string $type, string $id): string
-    {
-        // Ensure the ID is global across the search index by prefixing the id
-        return $type.'_'.$id;
     }
 }
