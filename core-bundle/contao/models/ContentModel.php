@@ -83,10 +83,12 @@ use Contao\Model\MetadataTrait;
  * @property string            $playerCaption
  * @property string            $playerAspect
  * @property boolean           $splashImage
+ * @property string            $playerTitle
  * @property string            $playerPreload
  * @property string            $playerColor
  * @property string|array|null $youtubeOptions
  * @property string|array|null $vimeoOptions
+ * @property string|null       $textTrackSRC
  * @property integer           $sliderDelay
  * @property integer           $sliderSpeed
  * @property integer           $sliderStartSlide
@@ -178,10 +180,12 @@ use Contao\Model\MetadataTrait;
  * @method static ContentModel|null findOneByPlayerCaption($val, array $opt=array())
  * @method static ContentModel|null findOneByPlayerAspect($val, array $opt=array())
  * @method static ContentModel|null findOneBySplashImage($val, array $opt=array())
+ * @method static ContentModel|null findOneByPlayerTitle($val, array $opt=array())
  * @method static ContentModel|null findOneByPlayerPreload($val, array $opt=array())
  * @method static ContentModel|null findOneByPlayerColor($val, array $opt=array())
  * @method static ContentModel|null findOneByYoutubeOptions($val, array $opt=array())
  * @method static ContentModel|null findOneByVimeoOptions($val, array $opt=array())
+ * @method static ContentModel|null findOneByTextTrackSRC($val, array $opt = array())
  * @method static ContentModel|null findOneBySliderDelay($val, array $opt=array())
  * @method static ContentModel|null findOneBySliderSpeed($val, array $opt=array())
  * @method static ContentModel|null findOneBySliderStartSlide($val, array $opt=array())
@@ -266,10 +270,12 @@ use Contao\Model\MetadataTrait;
  * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerCaption($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerAspect($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findBySplashImage($val, array $opt=array())
+ * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerTitle($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerPreload($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerColor($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByYoutubeOptions($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByVimeoOptions($val, array $opt=array())
+ * @method static Collection<ContentModel>|ContentModel[]|null findByTextTrackSRC($val, array $opt = array())
  * @method static Collection<ContentModel>|ContentModel[]|null findBySliderDelay($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findBySliderSpeed($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findBySliderStartSlide($val, array $opt=array())
@@ -358,10 +364,12 @@ use Contao\Model\MetadataTrait;
  * @method static integer countByPlayerCaption($val, array $opt=array())
  * @method static integer countByPlayerAspect($val, array $opt=array())
  * @method static integer countBySplashImage($val, array $opt=array())
+ * @method static integer countByPlayerTitle($val, array $opt=array())
  * @method static integer countByPlayerPreload($val, array $opt=array())
  * @method static integer countByPlayerColor($val, array $opt=array())
  * @method static integer countByYoutubeOptions($val, array $opt=array())
  * @method static integer countByVimeoOptions($val, array $opt=array())
+ * @method static integer countByTextTrackSRC($val, array $opt = array())
  * @method static integer countBySliderDelay($val, array $opt=array())
  * @method static integer countBySliderSpeed($val, array $opt=array())
  * @method static integer countBySliderStartSlide($val, array $opt=array())

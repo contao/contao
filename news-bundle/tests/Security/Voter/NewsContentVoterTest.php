@@ -50,7 +50,7 @@ class NewsContentVoterTest extends TestCase
         $accessDecisionMap = [[$token, [ContaoNewsPermissions::USER_CAN_ACCESS_MODULE], null, true]];
 
         foreach ($newsArchives as $archiveId) {
-            $accessDecisionMap[] = [$token, [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE], $archiveId, true];
+            $accessDecisionMap[] = [$token, [ContaoNewsPermissions::USER_CAN_EDIT_ARCHIVE], (int) $archiveId, true];
         }
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
@@ -61,11 +61,23 @@ class NewsContentVoterTest extends TestCase
         ;
 
         $fetchAllAssociativeMap = [];
+        $fetchAssociativeMap = [];
 
-        foreach ($parentRecords as $id => $records) {
+        foreach ($parentRecords as $id => &$records) {
+            if (\count($records) > 1 && 'tl_content' !== end($records)['ptable']) {
+                $parent = array_pop($records);
+
+                $fetchAssociativeMap[] = [
+                    'SELECT id, pid, ptable FROM tl_content WHERE id=?',
+                    [(int) end($records)['pid']],
+                    [],
+                    $parent,
+                ];
+            }
+
             $fetchAllAssociativeMap[] = [
-                'SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=?'.str_repeat(' UNION SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=@pid', 9),
-                [$id],
+                'SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=:id'.str_repeat(' UNION SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=@pid AND ptable=:ptable', 9),
+                ['id' => $id, 'ptable' => 'tl_content'],
                 [],
                 $records,
             ];
@@ -90,6 +102,12 @@ class NewsContentVoterTest extends TestCase
         ;
 
         $connection
+            ->expects($this->exactly(\count($fetchAssociativeMap)))
+            ->method('fetchAssociative')
+            ->willReturnMap($fetchAssociativeMap)
+        ;
+
+        $connection
             ->expects($this->exactly(\count($newsArchives)))
             ->method('fetchOne')
             ->willReturnMap($fetchOneMap)
@@ -106,7 +124,7 @@ class NewsContentVoterTest extends TestCase
         yield 'Check access to news archive when creating element in news' => [
             new CreateAction('tl_content', ['ptable' => 'tl_news', 'pid' => 1]),
             [],
-            [1 => 1],
+            [1 => '1'],
         ];
 
         yield 'Check access to news archive when creating nested element' => [

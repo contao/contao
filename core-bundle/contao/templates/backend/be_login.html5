@@ -28,7 +28,15 @@
 <body class="be_login"<?= $this->attributes ?>>
 
   <?php $this->block('container'); ?>
-    <div id="container">
+    <div id="container"
+      data-controller="contao--webauthn contao--webauthn-error"
+      data-contao--webauthn-request-result-url-value="<?= $this->route('webauthn.controller.security.contao_backend.request.result') ?>"
+      data-contao--webauthn-request-options-url-value="<?= $this->route('webauthn.controller.security.contao_backend.request.options') ?>"
+      data-contao--webauthn-request-success-redirect-uri-value="<?= $this->webauthnSuccessUrl ?>"
+      data-contao--webauthn-error-unsupported-message-value="<?= $this->trans('ERR.passkeysUnsupported') ?>"
+      data-contao--webauthn-error-assertion-failure-message-value="<?= $this->trans('ERR.passkeyAssertionFailure') ?>"
+      data-action="webauthn:unsupported->contao--webauthn-error#handleUnsupported webauthn:assertion:failure->contao--webauthn-error#handleAssertionFailure"
+    >
       <main id="main">
         <form class="tl_login_form" method="post">
           <div class="formbody">
@@ -56,6 +64,10 @@
         </form>
       </main>
       <?= $this->messages ?>
+      <div class="passkey_login">
+        <button type="button" class="tl_submit" data-action="contao--webauthn#signin"><?= $this->passkeyLogin ?></button>
+      </div>
+      <div class="tl_message passkey_message" data-contao--webauthn-error-target="message"></div>
     </div>
   <?php $this->endblock(); ?>
 

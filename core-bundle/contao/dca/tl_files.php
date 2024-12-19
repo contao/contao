@@ -14,6 +14,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\File\TextTrackType;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Database;
@@ -27,6 +28,7 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 
 $GLOBALS['TL_DCA']['tl_files'] = array
@@ -86,15 +88,15 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 				'class'               => 'header_sync',
 				'button_callback'     => array('tl_files', 'syncFiles')
 			),
-			'toggleNodes',
-			'all'
 		),
 		'operations' => array
 		(
 			'edit' => array
 			(
 				'href'                => 'act=edit',
+				'prefetch'            => true,
 				'icon'                => 'edit.svg',
+				'attributes'          => 'data-contao--deeplink-target="primary"',
 				'button_callback'     => array('tl_files', 'editFile')
 			),
 			'copy' => array
@@ -242,6 +244,22 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'digit', 'nospace'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "DOUBLE unsigned NOT NULL default 0"
+		),
+		'textTrackLanguage' => array
+		(
+			'filter'                  => true,
+			'inputType'               => 'select',
+			'eval'                    => array('mandatory' => true, 'includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50 clr'),
+			'options_callback'        => static fn () => System::getContainer()->get('contao.intl.locales')->getLocales(),
+			'sql'                     => "varchar(64) NOT NULL default ''"
+		),
+		'textTrackType' => array
+		(
+			'inputType'               => 'select',
+			'reference'               => &$GLOBALS['TL_LANG']['tl_files'],
+			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'options_callback'        => static fn () => array_map(static fn ($case) => $case->name, TextTrackType::cases()),
+			'sql'                     => "varchar(12) NULL"
 		),
 		'meta' => array
 		(
@@ -480,11 +498,11 @@ class tl_files extends Backend
 		}
 
 		// Only show the important part fields for images
-		if ($blnIsFolder || !in_array(strtolower(substr($dc->id, strrpos($dc->id, '.') + 1)), System::getContainer()->getParameter('contao.image.valid_extensions')))
+		if ($blnIsFolder || !in_array(Path::getExtension($dc->id, true), System::getContainer()->getParameter('contao.image.valid_extensions')))
 		{
 			$strPalette = PaletteManipulator::create()
 				->removeField(array('importantPartX', 'importantPartY', 'importantPartWidth', 'importantPartHeight'))
-				->applytoString($strPalette)
+				->applyToString($strPalette)
 			;
 		}
 
@@ -680,7 +698,7 @@ class tl_files extends Backend
 		$security = System::getContainer()->get('security.helper');
 		$subject = new UpdateAction('tl_files', $row);
 
-		return $security->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_files', $subject) && $security->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return $security->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_files', $subject) && $security->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id'], addRequestToken: false) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**

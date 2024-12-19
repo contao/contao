@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
 use Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\BadRequestException;
@@ -150,7 +151,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Clear the clipboard
 		if (Input::get('clipboard') !== null)
 		{
-			$objSession->set('CLIPBOARD', array());
+			System::getContainer()->get('contao.data_container.clipboard_manager')->clearAll();
 			$this->redirect($this->getReferer());
 		}
 
@@ -201,17 +202,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				$this->redirect(str_replace('act=select', 'act=deleteAll', Environment::get('requestUri')));
 			}
-			elseif (Input::post('cut') !== null || Input::post('copy') !== null)
+			elseif (Input::post('cut') !== null || Input::post('copy') !== null || Input::post('copyMultiple') !== null)
 			{
-				$arrClipboard = $objSession->get('CLIPBOARD');
-
-				$arrClipboard[$strTable] = array
-				(
-					'id' => $ids,
-					'mode' => (Input::post('cut') !== null ? 'cutAll' : 'copyAll')
-				);
-
-				$objSession->set('CLIPBOARD', $arrClipboard);
+				System::getContainer()->get('contao.data_container.clipboard_manager')->setIds($strTable, $ids, Input::post('cut') !== null ? 'cutAll' : 'copyAll', Input::post('copyMultiple') !== null);
 				$this->redirect($this->getReferer());
 			}
 		}
@@ -311,17 +304,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$children = Input::get('childs');
 			}
 
-			$arrClipboard = $objSession->get('CLIPBOARD');
-
-			$arrClipboard[$this->strTable] = array
-			(
-				'id' => $this->urlEncode($this->intId),
-				'childs' => $children, // backwards compatibility
-				'children' => $children,
-				'mode' => $mode
-			);
-
-			$objSession->set('CLIPBOARD', $arrClipboard);
+			System::getContainer()->get('contao.data_container.clipboard_manager')->set($this->strTable, $this->urlEncode($this->intId), $children, $mode);
 		}
 
 		// Get the session data and toggle the nodes
@@ -344,19 +327,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$this->redirect(preg_replace('/(&(amp;)?|\?)tg=[^& ]*/i', '', Environment::get('requestUri')));
 		}
 
-		$blnClipboard = false;
-		$arrClipboard = $objSession->get('CLIPBOARD');
-
-		// Check clipboard
-		if (!empty($arrClipboard[$this->strTable]))
-		{
-			$blnClipboard = true;
-			$arrClipboard = $arrClipboard[$this->strTable];
-		}
-		else
-		{
-			$arrClipboard = null;
-		}
+		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
+		$blnClipboard = null !== $arrClipboard;
 
 		$arrFound = array();
 		$for = $session['search'][$this->strTable]['value'] ?? null;
@@ -478,12 +450,28 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$strRefererId = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 
 		$security = System::getContainer()->get('security.helper');
+		$buttons = '';
 
-		$buttons = ((Input::get('act') == 'select') ? '
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : '') . ((Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable))) ? '
+		if (Input::get('act') == 'select')
+		{
+			$buttons .= DataContainerOperationsBuilder::generateBackButton();
+		}
+
+		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable)))
+		{
+			$buttons .= '
 <a href="' . $this->addToUrl($hrfNew) . '" class="' . $clsNew . '" title="' . StringUtil::specialchars($ttlNew) . '" accesskey="n" data-action="contao--scroll-offset#store">' . $lblNew . '</a>
-<a href="' . $this->addToUrl('&amp;act=paste&amp;mode=move') . '" class="header_new" title="' . StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['move'][1]) . '" data-action="contao--scroll-offset#store">' . $GLOBALS['TL_LANG'][$this->strTable]['move'][0] . '</a>  ' : '') . ($blnClipboard ? '
-<a href="' . $this->addToUrl('clipboard=1') . '" class="header_clipboard" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']) . '" accesskey="x">' . $GLOBALS['TL_LANG']['MSC']['clearClipboard'] . '</a> ' : $this->generateGlobalButtons());
+<a href="' . $this->addToUrl('&amp;act=paste&amp;mode=move') . '" class="header_new" title="' . StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['move'][1]) . '" data-action="contao--scroll-offset#store">' . $GLOBALS['TL_LANG'][$this->strTable]['move'][0] . '</a>  ';
+		}
+
+		if ($blnClipboard)
+		{
+			$buttons .= DataContainerOperationsBuilder::generateClearClipboardButton();
+		}
+		else
+		{
+			$buttons .= $this->generateGlobalButtons();
+		}
 
 		// Build the tree
 		$return = $this->panel() . Message::generate() . ($buttons ? '
@@ -510,70 +498,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Close the form
 		if (Input::get('act') == 'select')
 		{
-			// Submit buttons
-			$arrButtons = array();
-
-			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null))
-			{
-				$arrButtons['edit'] = '<button type="submit" name="edit" id="edit" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['editSelected'] . '</button>';
-			}
-
-			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'] ?? null))
-			{
-				$arrButtons['delete'] = '<button type="submit" name="delete" id="delete" class="tl_submit" accesskey="d" onclick="return confirm(\'' . $GLOBALS['TL_LANG']['MSC']['delAllConfirmFile'] . '\')">' . $GLOBALS['TL_LANG']['MSC']['deleteSelected'] . '</button>';
-			}
-
-			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null))
-			{
-				$arrButtons['cut'] = '<button type="submit" name="cut" id="cut" class="tl_submit" accesskey="x">' . $GLOBALS['TL_LANG']['MSC']['moveSelected'] . '</button>';
-			}
-
-			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null))
-			{
-				$arrButtons['copy'] = '<button type="submit" name="copy" id="copy" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG']['MSC']['copySelected'] . '</button>';
-			}
-
-			// Call the buttons_callback (see #4691)
-			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['select']['buttons_callback'] ?? null))
-			{
-				foreach ($GLOBALS['TL_DCA'][$this->strTable]['select']['buttons_callback'] as $callback)
-				{
-					if (\is_array($callback))
-					{
-						$arrButtons = System::importStatic($callback[0])->{$callback[1]}($arrButtons, $this);
-					}
-					elseif (\is_callable($callback))
-					{
-						$arrButtons = $callback($arrButtons, $this);
-					}
-				}
-			}
-
-			if (\count($arrButtons) < 3)
-			{
-				$strButtons = implode(' ', $arrButtons);
-			}
-			else
-			{
-				$strButtons = array_shift($arrButtons) . ' ';
-				$strButtons .= '<div class="split-button">';
-				$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
-
-				foreach ($arrButtons as $strButton)
-				{
-					$strButtons .= '<li>' . $strButton . '</li>';
-				}
-
-				$strButtons .= '</ul></div>';
-			}
+			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($this->strTable, true, $this);
 
 			$return .= '
 </div>
-<div class="tl_formbody_submit" style="text-align:right">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>';
 		}
 
@@ -653,12 +582,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('id' => $id, 'pid' => $strFolder)));
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
 		// Empty clipboard
-		$arrClipboard = $objSession->get('CLIPBOARD');
-		$arrClipboard[$this->strTable] = array();
-		$objSession->set('CLIPBOARD', $arrClipboard);
+		System::getContainer()->get('contao.data_container.clipboard_manager')->clear($this->strTable);
 
 		Files::getInstance()->mkdir($id);
 		$this->redirect(html_entity_decode($this->switchToEdit($id), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5));
@@ -705,12 +630,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new UnprocessableEntityHttpException('Attempt to move the folder "' . $source . '" to "' . $strFolder . '" (circular reference).');
 		}
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
 		// Empty clipboard
-		$arrClipboard = $objSession->get('CLIPBOARD');
-		$arrClipboard[$this->strTable] = array();
-		$objSession->set('CLIPBOARD', $arrClipboard);
+		System::getContainer()->get('contao.data_container.clipboard_manager')->clear($this->strTable);
 
 		// Calculate the destination path
 		$destination = str_replace(\dirname($source), $strFolder, $source);
@@ -799,21 +720,15 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new BadRequestException();
 		}
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-		$arrClipboard = $objSession->get('CLIPBOARD');
-
-		if (isset($arrClipboard[$this->strTable]) && \is_array($arrClipboard[$this->strTable]['id']))
+		foreach (System::getContainer()->get('contao.data_container.clipboard_manager')->getIds($this->strTable) as $id)
 		{
-			foreach ($arrClipboard[$this->strTable]['id'] as $id)
+			try
 			{
-				try
-				{
-					$this->cut($id); // do not urldecode() here (see #6840)
-				}
-				catch (AccessDeniedException)
-				{
-					// noop
-				}
+				$this->cut($id); // do not urldecode() here (see #6840)
+			}
+			catch (AccessDeniedException)
+			{
+				// noop
 			}
 		}
 
@@ -878,12 +793,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			new CreateAction($this->strTable, array('id' => $destination, 'pid' => $strFolder))
 		);
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
 		// Empty clipboard
-		$arrClipboard = $objSession->get('CLIPBOARD');
-		$arrClipboard[$this->strTable] = array();
-		$objSession->set('CLIPBOARD', $arrClipboard);
+		System::getContainer()->get('contao.data_container.clipboard_manager')->clearIfNotKeep($this->strTable);
 
 		// Copy folders
 		if (is_dir($this->strRootDir . '/' . $source))
@@ -906,7 +817,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			$count = 1;
 			$new = $destination;
-			$ext = strtolower(substr($destination, strrpos($destination, '.') + 1));
+			$ext = Path::getExtension($destination, true);
 
 			if ($ext === 'twig')
 			{
@@ -994,21 +905,15 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new BadRequestException();
 		}
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-		$arrClipboard = $objSession->get('CLIPBOARD');
-
-		if (isset($arrClipboard[$this->strTable]) && \is_array($arrClipboard[$this->strTable]['id']))
+		foreach (System::getContainer()->get('contao.data_container.clipboard_manager')->getIds($this->strTable) as $id)
 		{
-			foreach ($arrClipboard[$this->strTable]['id'] as $id)
+			try
 			{
-				try
-				{
-					$this->copy($id); // do not urldecode() here (see #6840)
-				}
-				catch (AccessDeniedException)
-				{
-					// noop
-				}
+				$this->copy($id); // do not urldecode() here (see #6840)
+			}
+			catch (AccessDeniedException)
+			{
+				// noop
 			}
 		}
 
@@ -1170,10 +1075,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Empty clipboard
 		if (!$blnIsAjax)
 		{
-			$objSession = System::getContainer()->get('request_stack')->getSession();
-			$arrClipboard = $objSession->get('CLIPBOARD');
-			$arrClipboard[$this->strTable] = array();
-			$objSession->set('CLIPBOARD', $arrClipboard);
+			System::getContainer()->get('contao.data_container.clipboard_manager')->clear($this->strTable);
 		}
 
 		/** @var class-string<FileUpload> $class */
@@ -1280,49 +1182,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 		}
 
-		// Submit buttons
-		$arrButtons = array();
-		$arrButtons['upload'] = '<button type="submit" name="upload" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG'][$this->strTable]['move'][0] . '</button>';
-		$arrButtons['uploadNback'] = '<button type="submit" name="uploadNback" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG'][$this->strTable]['uploadNback'] . '</button>';
-
-		// Call the buttons_callback (see #4691)
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] as $callback)
-			{
-				if (\is_array($callback))
-				{
-					$arrButtons = System::importStatic($callback[0])->{$callback[1]}($arrButtons, $this);
-				}
-				elseif (\is_callable($callback))
-				{
-					$arrButtons = $callback($arrButtons, $this);
-				}
-			}
-		}
-
-		if (\count($arrButtons) < 3)
-		{
-			$strButtons = implode(' ', $arrButtons);
-		}
-		else
-		{
-			$strButtons = array_shift($arrButtons) . ' ';
-			$strButtons .= '<div class="split-button">';
-			$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
-
-			foreach ($arrButtons as $strButton)
-			{
-				$strButtons .= '<li>' . $strButton . '</li>';
-			}
-
-			$strButtons .= '</ul></div>';
-		}
+		$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateUploadButtons($this->strTable, $this);
 
 		// Display the upload form
 		return Message::generate() . '
 <div id="tl_buttons">
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+' . DataContainerOperationsBuilder::generateBackButton() . '
 </div>
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . ' enctype="multipart/form-data">
 <div class="tl_formbody_edit">
@@ -1335,11 +1200,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 </div>
 </div>
 </div>
-<div class="tl_formbody_submit">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>';
 	}
 
@@ -1520,57 +1381,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$version = '';
 		}
 
-		// Submit buttons
-		$arrButtons = array();
-		$arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s" data-turbo-frame="_self">' . $GLOBALS['TL_LANG']['MSC']['save'] . '</button>';
-
-		if (!Input::get('nb'))
-		{
-			$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['saveNclose'] . '</button>';
-		}
-
-		// Call the buttons_callback (see #4691)
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] as $callback)
-			{
-				if (\is_array($callback))
-				{
-					$arrButtons = System::importStatic($callback[0])->{$callback[1]}($arrButtons, $this);
-				}
-				elseif (\is_callable($callback))
-				{
-					$arrButtons = $callback($arrButtons, $this);
-				}
-			}
-		}
-
-		if (\count($arrButtons) < 3)
-		{
-			$strButtons = implode(' ', $arrButtons);
-		}
-		else
-		{
-			$strButtons = array_shift($arrButtons) . ' ';
-			$strButtons .= '<div class="split-button">';
-			$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
-
-			foreach ($arrButtons as $strButton)
-			{
-				$strButtons .= '<li>' . $strButton . '</li>';
-			}
-
-			$strButtons .= '</ul></div>';
-		}
+		$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditButtons($this->strTable, false, false, false, $this);
 
 		// Add the buttons and end the form
 		$return .= '
 </div>
-<div class="tl_formbody_submit">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>
 </turbo-frame>';
 
@@ -1579,7 +1395,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <turbo-frame id="tl_edit_form_frame" target="_top" data-turbo-action="advance">' . $version . Message::generate() . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
 <div id="tl_buttons">
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+' . DataContainerOperationsBuilder::generateBackButton() . '
 </div>
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
 <div class="tl_formbody_edit">
@@ -1832,44 +1648,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				}
 			}
 
-			// Submit buttons
-			$arrButtons = array();
-			$arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['save'] . '</button>';
-			$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['saveNclose'] . '</button>';
-
-			// Call the buttons_callback (see #4691)
-			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] ?? null))
-			{
-				foreach ($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] as $callback)
-				{
-					if (\is_array($callback))
-					{
-						$arrButtons = System::importStatic($callback[0])->{$callback[1]}($arrButtons, $this);
-					}
-					elseif (\is_callable($callback))
-					{
-						$arrButtons = $callback($arrButtons, $this);
-					}
-				}
-			}
-
-			if (\count($arrButtons) < 3)
-			{
-				$strButtons = implode(' ', $arrButtons);
-			}
-			else
-			{
-				$strButtons = array_shift($arrButtons) . ' ';
-				$strButtons .= '<div class="split-button">';
-				$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
-
-				foreach ($arrButtons as $strButton)
-				{
-					$strButtons .= '<li>' . $strButton . '</li>';
-				}
-
-				$strButtons .= '</ul></div>';
-			}
+			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditAllButtons($this->strTable, $this);
 
 			// Add the form
 			$return = '
@@ -1880,11 +1659,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', array_map(array($this, 'urlEncode'), $ids)) . '">' . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . $return . '
 </div>
-<div class="tl_formbody_submit">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>';
 
 			// Reload the page to prevent _POST variables from being sent twice
@@ -1950,7 +1725,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Return
 		return '
 <div id="tl_buttons">
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+' . DataContainerOperationsBuilder::generateBackButton() . '
 </div>' . $return;
 	}
 
@@ -2093,49 +1868,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$version = '';
 		}
 
-		// Submit buttons
-		$arrButtons = array();
-		$arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['save'] . '</button>';
-		$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['saveNclose'] . '</button>';
-
-		// Call the buttons_callback (see #4691)
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] as $callback)
-			{
-				if (\is_array($callback))
-				{
-					$arrButtons = System::importStatic($callback[0])->{$callback[1]}($arrButtons, $this);
-				}
-				elseif (\is_callable($callback))
-				{
-					$arrButtons = $callback($arrButtons, $this);
-				}
-			}
-		}
-
-		if (\count($arrButtons) < 3)
-		{
-			$strButtons = implode(' ', $arrButtons);
-		}
-		else
-		{
-			$strButtons = array_shift($arrButtons) . ' ';
-			$strButtons .= '<div class="split-button">';
-			$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
-
-			foreach ($arrButtons as $strButton)
-			{
-				$strButtons .= '<li>' . $strButton . '</li>';
-			}
-
-			$strButtons .= '</ul></div>';
-		}
+		$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditButtons($this->strTable, false, false, false, $this);
 
 		// Add the form
 		return $version . Message::generate() . '
 <div id="tl_buttons">
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" data-action="contao--scroll-offset#discard">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+' . DataContainerOperationsBuilder::generateBackButton() . '
 </div>
 <form id="tl_files" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
@@ -2149,11 +1887,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
   </div>
 </div>
 </div>
-<div class="tl_formbody_submit">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>' . "\n\n" . $codeEditor;
 	}
 
@@ -2241,6 +1975,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 						$varValue = $callback($varValue, $this);
 					}
 				}
+			}
+
+			// Check the full path to see if the file extension has changed, because if
+			// $this->strExtension is empty, a new extension could otherwise be added to
+			// $varValue and change the file type!
+			if (Path::getExtension($varValue . $this->strExtension) !== Path::getExtension($this->varValue . $this->strExtension))
+			{
+				throw new \Exception($GLOBALS['TL_LANG']['ERR']['invalidName']);
 			}
 
 			// The target exists
@@ -2443,7 +2185,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$changeSet = $container->get('contao.filesystem.dbafs_manager')->sync();
 
 		return $container->get('twig')->render(
-			'@ContaoCore/Backend/be_filesync_report.html.twig',
+			'@Contao/backend/file_manager/filesync_report.html.twig',
 			array(
 				'change_set' => $changeSet,
 				'referer' => $this->getReferer(true),
@@ -2501,20 +2243,8 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			throw new AccessDeniedException('Folder "' . $strFolder . '" is not mounted, not within the visible root trails or cannot be found.');
 		}
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-		$blnClipboard = false;
-		$arrClipboard = $objSession->get('CLIPBOARD');
-
-		// Check clipboard
-		if (!empty($arrClipboard[$this->strTable]))
-		{
-			$blnClipboard = true;
-			$arrClipboard = $arrClipboard[$this->strTable];
-		}
-		else
-		{
-			$arrClipboard = null;
-		}
+		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
+		$blnClipboard = null !== $arrClipboard;
 
 		return $this->generateTree($this->strRootDir . '/' . $strFolder, ($level + 1) * 16, false, $this->isProtectedPath($strFolder), $blnClipboard ? $arrClipboard : false);
 	}
@@ -2667,7 +2397,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$blnIsOpen = true;
 			}
 
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_folder click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 16 : 0)) . 'px">';
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_folder toggle_select hover-div" data-controller="contao--deeplink"><div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 16 : 0)) . 'px">';
 
 			// Add a toggle button if there are children
 			if ($countFiles > 0)
@@ -2781,7 +2511,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			$currentEncoded = $this->urlEncode($currentFile);
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing) . 'px">';
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file toggle_select hover-div" data-controller="contao--deeplink"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing) . 'px">';
 			$thumbnail .= ' <span class="tl_gray">(' . $this->getReadableSize($objFile->filesize);
 
 			if ($objFile->width && $objFile->height)

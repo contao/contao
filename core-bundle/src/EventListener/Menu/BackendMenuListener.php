@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener\Menu;
 
 use Contao\Backend;
 use Contao\BackendUser;
+use Contao\CoreBundle\Controller\BackendTemplateStudioController;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\StringUtil;
@@ -37,6 +38,7 @@ class BackendMenuListener
         private readonly RequestStack $requestStack,
         private readonly TranslatorInterface $translator,
         private readonly ContaoFramework $framework,
+        private readonly bool $templateStudioEnabled,
     ) {
     }
 
@@ -105,6 +107,17 @@ class BackendMenuListener
 
                 $categoryNode->addChild($moduleNode);
             }
+
+            if ($this->templateStudioEnabled && 'design' === $categoryName) {
+                $templateStudioNode = $factory
+                    ->createItem('template-studio')
+                    ->setLabel('Template Studio')
+                    ->setUri('/contao/template-studio')
+                    ->setCurrent(BackendTemplateStudioController::class === $this->requestStack->getCurrentRequest()?->get('_controller'))
+                ;
+
+                $categoryNode->addChild($templateStudioNode);
+            }
         }
     }
 
@@ -164,8 +177,11 @@ class BackendMenuListener
 
         $submenu = $factory
             ->createItem('submenu')
-            ->setLabel('<button type="button">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
+            ->setLabel('<button type="button" data-contao--profile-target="button" data-action="contao--profile#toggle">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
             ->setAttribute('class', 'submenu')
+            ->setAttribute('data-controller', 'contao--profile')
+            ->setAttribute('data-contao--profile-target', 'menu')
+            ->setAttribute('data-action', 'click@document->contao--profile#documentClick')
             ->setExtra('safe_label', true)
             ->setLabelAttribute('class', 'profile')
             ->setExtra('translation_domain', false)
@@ -213,7 +229,7 @@ class BackendMenuListener
 
         $submenu->addChild($favorites);
 
-        $buger = $factory
+        $burger = $factory
             ->createItem('burger')
             ->setLabel('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
             ->setAttribute('class', 'burger')
@@ -221,7 +237,7 @@ class BackendMenuListener
             ->setExtra('translation_domain', false)
         ;
 
-        $tree->addChild($buger);
+        $tree->addChild($burger);
     }
 
     private function getAlertsLabel(): string

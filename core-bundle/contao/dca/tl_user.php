@@ -70,11 +70,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'operations' => array
 		(
-			'edit',
-			'copy',
-			'delete',
-			'toggle',
-			'show',
 			'su' => array
 			(
 				'href'                => 'key=su',
@@ -271,7 +266,8 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		(
 			'inputType'               => 'pageTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox'),
-			'sql'                     => "blob NULL"
+			'sql'                     => "blob NULL",
+			'relation'                => array('table'=>'tl_page', 'type'=>'hasMany', 'load'=>'lazy')
 		),
 		'alpty' => array
 		(
@@ -312,7 +308,8 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_form.title',
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => "blob NULL",
+			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 		),
 		'formp' => array
 		(
@@ -327,7 +324,8 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'inputType'               => 'checkbox',
 			'foreignKey'              => 'tl_member_group.name',
 			'eval'                    => array('multiple'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => "blob NULL",
+			'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 		),
 		'disable' => array
 		(
@@ -457,7 +455,12 @@ class tl_user extends Backend
 			return;
 		}
 
-		$objResult = Database::getInstance()->query("SELECT EXISTS(SELECT * FROM tl_user WHERE admin=0 AND modules LIKE '%\"tpl_editor\"%') as showTemplateWarning, EXISTS(SELECT * FROM tl_user WHERE admin=0 AND themes LIKE '%\"theme_import\"%') as showThemeWarning, EXISTS(SELECT * FROM tl_user WHERE elements LIKE '%\"unfiltered_html\"%') as showUnfilteredHtmlWarning");
+		$objResult = Database::getInstance()->query("
+			SELECT
+				EXISTS(SELECT * FROM tl_user WHERE admin = 0 AND inherit != 'group' AND modules LIKE '%\"tpl_editor\"%') as showTemplateWarning,
+				EXISTS(SELECT * FROM tl_user WHERE admin = 0 AND inherit != 'group' AND themes LIKE '%\"theme_import\"%') as showThemeWarning,
+				EXISTS(SELECT * FROM tl_user WHERE inherit != 'group' AND elements LIKE '%\"unfiltered_html\"%') as showUnfilteredHtmlWarning
+		");
 
 		if ($objResult->showTemplateWarning)
 		{

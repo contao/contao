@@ -24,7 +24,8 @@ $GLOBALS['TL_DCA']['tl_user_group']['fields']['faqs'] = array
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_faq_category.title',
 	'eval'                    => array('multiple'=>true),
-	'sql'                     => "blob NULL"
+	'sql'                     => "blob NULL",
+	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
 
 $GLOBALS['TL_DCA']['tl_user_group']['fields']['faqp'] = array

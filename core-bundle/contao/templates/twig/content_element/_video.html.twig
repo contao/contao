@@ -18,6 +18,7 @@
             {% else %}
                 {% block iframe %}
                     {% set iframe_attrs = attrs({width, height, src: source.url, allowfullscreen: true})
+                        .setIfExists('title', title|default)
                         .mergeWith(iframe_attrs|default)
                     %}
                     {% do csp_source('frame-src', iframe_attrs.src) %}

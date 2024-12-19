@@ -27,8 +27,9 @@
         }
     ],
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "ext-json": "*",
+        "cmsig/seal-loupe-adapter": "^0.6.x-dev",
         "contao/core-bundle": "self.version",
         "contao/manager-plugin": "^2.4",
         "doctrine/dbal": "^3.6",

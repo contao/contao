@@ -50,7 +50,7 @@ class CalendarContentVoterTest extends TestCase
         $accessDecisionMap = [[$token, [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], null, true]];
 
         foreach ($events as $calendarId) {
-            $accessDecisionMap[] = [$token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], $calendarId, true];
+            $accessDecisionMap[] = [$token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], (int) $calendarId, true];
         }
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
@@ -61,11 +61,23 @@ class CalendarContentVoterTest extends TestCase
         ;
 
         $fetchAllAssociativeMap = [];
+        $fetchAssociativeMap = [];
 
-        foreach ($parentRecords as $id => $records) {
+        foreach ($parentRecords as $id => &$records) {
+            if (\count($records) > 1 && 'tl_content' !== end($records)['ptable']) {
+                $parent = array_pop($records);
+
+                $fetchAssociativeMap[] = [
+                    'SELECT id, pid, ptable FROM tl_content WHERE id=?',
+                    [(int) end($records)['pid']],
+                    [],
+                    $parent,
+                ];
+            }
+
             $fetchAllAssociativeMap[] = [
-                'SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=?'.str_repeat(' UNION SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=@pid', 9),
-                [$id],
+                'SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=:id'.str_repeat(' UNION SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=@pid AND ptable=:ptable', 9),
+                ['id' => $id, 'ptable' => 'tl_content'],
                 [],
                 $records,
             ];
@@ -90,6 +102,12 @@ class CalendarContentVoterTest extends TestCase
         ;
 
         $connection
+            ->expects($this->exactly(\count($fetchAssociativeMap)))
+            ->method('fetchAssociative')
+            ->willReturnMap($fetchAssociativeMap)
+        ;
+
+        $connection
             ->expects($this->exactly(\count($events)))
             ->method('fetchOne')
             ->willReturnMap($fetchOneMap)
@@ -106,7 +124,7 @@ class CalendarContentVoterTest extends TestCase
         yield 'Check access to calendar when creating element in events' => [
             new CreateAction('tl_content', ['ptable' => 'tl_calendar_events', 'pid' => 1]),
             [],
-            [1 => 1],
+            [1 => '1'],
         ];
 
         yield 'Check access to news archive when creating nested element' => [

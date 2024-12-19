@@ -281,8 +281,11 @@
       <trans-unit id="ERR.noAdminEmail">
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
       </trans-unit>
+      <trans-unit id="ERR.altchaJavaScriptRequired">
+        <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.</source>
+      </trans-unit>
       <trans-unit id="ERR.altchaVerificationFailed">
-        <source>ALTCHA antispam verification failed. Are you a human or a robot?</source>
+        <source>Anti-spam verification failed. Are you a human or a robot?</source>
       </trans-unit>
       <trans-unit id="ERR.altchaWidgetError">
         <source>Verification failed. Try again later.</source>
@@ -292,6 +295,15 @@
       </trans-unit>
       <trans-unit id="ERR.personalDataPassword">
         <source>There is at least one "personal data" module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the "change password" module instead.</source>
+      </trans-unit>
+      <trans-unit id="ERR.passkeysUnsupported">
+        <source>Passkeys are not supported on this device.</source>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAssertionFailure">
+        <source>Login with passkey failed.</source>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAttestationFailure">
+        <source>Passkey could not be created.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -899,6 +911,9 @@
       <trans-unit id="MSC.target.1">
         <source>Open the link in a new browser window.</source>
       </trans-unit>
+      <trans-unit id="MSC.openTab">
+        <source>Open in a new tab</source>
+      </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
       </trans-unit>
@@ -1321,6 +1336,9 @@
       </trans-unit>
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
+      </trans-unit>
+      <trans-unit id="MSC.confirm">
+          <source>Are you sure?</source>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete element ID %s?</source>
@@ -1889,9 +1907,6 @@
       <trans-unit id="MSC.printPage">
         <source>Print this page</source>
       </trans-unit>
-      <trans-unit id="MSC.printAsPdf">
-        <source>Save article as PDF</source>
-      </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>
       </trans-unit>
@@ -1957,6 +1972,9 @@
       </trans-unit>
       <trans-unit id="MSC.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
+      </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
@@ -2188,6 +2206,45 @@
       </trans-unit>
       <trans-unit id="MSC.altchaWaitAlert">
         <source>Verifying … please wait.</source>
+      </trans-unit>
+      <trans-unit id="MSC.passkeys">
+        <source>Passkeys</source>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysDescription">
+        <source>Passkeys allow you to log in securely and easily without the need for a password and two-factor token.</source>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyLogin">
+        <source>Sign in with a passkey</source>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysName">
+        <source>Name/ID</source>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyNameInput">
+        <source>Name this passkey …</source>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysCreatedAt">
+        <source>Created at</source>
+      </trans-unit>
+      <trans-unit id="MSC.addPasskey">
+        <source>Add passkey</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsPlaceholder">
+        <source>Type to start searching</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsMin">
+        <source>Please enter at least %s characters</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsLoading">
+        <source>Loading results...</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsEmpty">
+        <source>No results found!</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitView">
+        <source>View %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitEdit">
+        <source>Edit %s</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>

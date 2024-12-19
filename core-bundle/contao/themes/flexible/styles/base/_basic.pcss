@@ -1,0 +1,486 @@
+/* Font */
+body {
+	font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+	font-weight: 400;
+	font-size: .875rem;
+	line-height: 1;
+	color: var(--text);
+}
+
+h1, h2, h3, h4, h5, h6, strong, b, th {
+	font-weight: 600;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+	body {
+		font-weight: 300;
+	}
+
+	h1, h2, h3, h4, h5, h6, strong, b, th {
+		font-weight: 500;
+	}
+}
+
+pre, code, .tl_textarea.monospace {
+	font: 300 .75rem/1.25 SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-size: 1rem;
+}
+
+input, textarea, select, button {
+	font: inherit;
+	color: inherit;
+	line-height: inherit;
+}
+
+input, select {
+	line-height: 17px; /* see #501 and #79 */
+}
+
+@supports (display:-ms-grid) {
+	input, select {
+		line-height: 1.1;
+	}
+}
+
+.tl_gray {
+    color: var(--gray);
+}
+
+.tl_green {
+    color: var(--green);
+}
+
+.tl_red {
+    color: var(--red);
+}
+
+.tl_blue {
+    color: var(--blue);
+}
+
+.tl_orange {
+    color: var(--orange);
+}
+
+span.mandatory {
+	color: var(--red);
+}
+
+.upper {
+	text-transform: uppercase;
+}
+
+/* Basic elements */
+a {
+	color: var(--text);
+	text-decoration: none;
+
+	&:hover,
+	&:active {
+		color: var(--contao);
+	}
+}
+
+hr {
+	height: 1px;
+	margin: 18px 0;
+	border: 0;
+	background: var(--border);
+	color: var(--border);
+}
+
+p {
+	margin-bottom: 1em;
+	padding: 0;
+}
+
+.hidden {
+	display: none !important;
+}
+
+.unselectable {
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	-webkit-touch-callout: none;
+}
+
+/* Tables */
+table {
+
+	&.with-border {
+
+		th, td {
+			border: solid var(--border);
+			border-width: 1px 0;
+		}
+
+		th {
+			background-color: var(--table-header);
+		}
+	}
+
+	&.with-padding {
+
+		th, td {
+			padding: 6px;
+		}
+	}
+
+	&.with-zebra {
+
+		th {
+			background-color: var(--table-nb-header);
+		}
+
+		tbody {
+
+			tr {
+
+				&:nth-child(odd) td {
+					background-color: var(--table-nb-odd);
+				}
+
+				&:nth-child(even) td {
+					background-color: var(--table-nb-even);
+				}
+			}
+		}
+	}
+}
+
+/* Invisible elements */
+.clear {
+	clear: both;
+	height: 0.1px;
+	line-height: 0.1px;
+	font-size: 0.1px;
+}
+
+.cf {
+
+	&:before,
+	&:after {
+		content: " ";
+		display: table;
+	}
+
+	&:after {
+		clear: both;
+	}
+}
+
+.invisible {
+	border: 0;
+	clip: rect(0 0 0 0);
+	height: 1px;
+	margin: -1px;
+	overflow: hidden;
+	padding: 0;
+	position: absolute;
+	width: 1px;
+}
+
+/** ToDo: reorder following styles after forms.scss into components to match *exact* output */
+
+/* Split buttons */
+.split-button {
+	display: inline-block;
+	position: relative;
+	z-index: 1;
+}
+
+.split-button ul, .split-button li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+/* Placeholders */
+::-moz-placeholder {
+	padding-top: 1px;
+}
+
+::-webkit-input-placeholder {
+	padding-top: 1px;
+}
+
+.wizard > a {
+	position: relative;
+	top: -2px;
+	vertical-align: middle;
+}
+
+.wizard > .image-button {
+	padding: 0;
+	border: 0;
+	background: none;
+	vertical-align: middle;
+}
+
+.wizard .tl_text, .wizard .tl_select, .wizard .tl_image_size {
+	width: calc(100% - 24px);
+}
+
+.wizard .tl_text_2 {
+	width: 45%;
+}
+
+.wizard .tl_image_size {
+	display: inline-block;
+}
+
+.wizard img {
+	margin-left: 4px;
+}
+
+.wizard h3 img {
+	margin-left: 0;
+}
+
+.long .tl_text, .long .tl_select {
+	width: 100%;
+}
+
+.subpal {
+	clear: both;
+}
+
+.inline div {
+	display: inline;
+}
+
+.autoheight {
+	height: auto;
+}
+
+/* Tips */
+.tl_tip {
+	height: 15px;
+	overflow: hidden;
+	cursor: help;
+}
+
+.tip {
+	position: relative;
+	max-width: 80vw;
+	padding: 6px 9px;
+	border-radius: 2px;
+	background: var(--invert-bg);
+	z-index: 99;
+}
+
+.tip div {
+	line-height: 1.3;
+}
+
+.tip div, .tip a, .tip span {
+	color: var(--invert-text);
+}
+
+.tip:before {
+	content: "";
+	height: 6px;
+	position: absolute;
+	top: -13px;
+	left: 9px;
+	border-left: 7px solid transparent;
+	border-right: 7px solid transparent;
+	border-bottom: 7px solid var(--invert-bg);
+}
+
+.tip--rtl:before {
+	left: auto;
+	right: 9px;
+}
+
+/* Row highlighting */
+.hover-div:hover, .hover-row:hover td {
+	background-color: var(--hover-row) !important;
+}
+
+/* Badge */
+.badge-title {
+	float: right;
+	margin-left: 8px;
+	margin-top: -8px;
+	border-radius: 8px;
+	padding: 2px 5px;
+	background: var(--invert-bg);
+	color: var(--invert-text);
+	font-size: .75rem;
+	font-weight: 600;
+}
+
+/* Tablets */
+@media (min-width: 768px) {
+	.widget-group {
+		--widget-gap-cols: 30px;
+	}
+
+	.w16, .w25, .w33, .w50, .w75 {
+		--widget-cols: 6;
+	}
+
+	.tip {
+		max-width: 320px;
+	}
+
+	/* Backwards compatibility */
+	:not(.widget-group) > .m12 {
+		margin: 0 15px;
+		padding: 16px 0;
+	}
+
+	:not(.widget-group) > .w50 {
+		width: calc(50% - 30px);
+		float: left;
+		min-height: 80px;
+	}
+
+	.nogrid :not(.widget-group) > :is(.w25, .w33, .w50, .w66, .w75) {
+		float: none;
+	}
+
+	:not(.widget-group) > .cbx {
+		min-height: 46px;
+	}
+
+	:not(.widget-group) > .cbx.m12 {
+		min-height: 80px;
+		box-sizing: border-box;
+	}
+}
+
+/* Large screens */
+@media (min-width: 1280px) {
+	.w16 {
+		--widget-cols: 2;
+	}
+
+	.w25 {
+		--widget-cols: 3;
+	}
+
+	.w33 {
+		--widget-cols: 4;
+	}
+
+	.w50 {
+		--widget-cols: 6;
+	}
+
+	.w75 {
+		--widget-cols: 9;
+	}
+
+	#sbtog {
+		display: none;
+	}
+
+	.split-button ul {
+		display: inline-flex;
+		clip: initial;
+		height: auto;
+		margin: 0 0 0 -4px;
+		overflow: initial;
+		position: initial;
+		width: auto;
+	}
+
+	.split-button li {
+		margin-left: 4px;
+	}
+}
+
+/* Split button */
+@media (max-width: 1279.98px) {
+	.split-button {
+		display: inline-flex;
+	}
+
+	.split-button ul {
+		position: absolute;
+		right: 0;
+		bottom: 20px;
+		min-width: 100%;
+		background: var(--form-bg);
+		border: 1px solid var(--form-border);
+		border-radius: 2px;
+		box-sizing: border-box;
+		padding: 3px 0;
+		margin-bottom: 1em;
+	}
+
+	.split-button ul button {
+		border: 0;
+		width: 100%;
+		text-align: left;
+		white-space: nowrap;
+	}
+
+	.split-button ul .tl_submit {
+		margin-top: 0;
+		margin-bottom: 0;
+		background: var(--form-bg);
+	}
+
+	.split-button ul .tl_submit:hover {
+		background: var(--form-button-hover);
+	}
+
+	.split-button ul:before {
+		content: "";
+		display: block;
+		height: 0;
+		width: 0;
+		position: absolute;
+		right: 4px;
+		bottom: -12px;
+		z-index: 89;
+		border: 6px inset transparent;
+		border-top: 6px solid var(--form-bg);
+	}
+
+	.split-button ul:after {
+		content: "";
+		display: block;
+		height: 0;
+		width: 0;
+		position: absolute;
+		right: 3px;
+		bottom: -14px;
+		z-index: 88;
+		border: 7px inset transparent;
+		border-top: 7px solid var(--form-border);
+	}
+
+	.split-button > button[type="submit"] {
+		position: relative;
+		border-radius: 2px 0 0 2px;
+	}
+
+	.split-button > button[type="button"] {
+		height: 30px;
+		margin: 2px 0;
+		padding: 7px 4px;
+		background: var(--form-bg);
+		border: 1px solid var(--form-border);
+		border-left: 0;
+		border-radius: 0 2px 2px 0;
+		box-sizing: border-box;
+		transition: background .2s ease;
+	}
+
+	.split-button > button[type="button"].active, .split-button > button[type="button"]:hover {
+		background: var(--form-button-hover);
+	}
+
+	.split-button > button[type="button"]:focus {
+		outline: none;
+	}
+}

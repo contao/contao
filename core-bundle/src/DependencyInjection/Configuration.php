@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\ArrayUtil;
 use Contao\Config;
 use Contao\CoreBundle\Altcha\Config\Algorithm;
 use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
@@ -105,6 +106,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addImageNode())
                 ->append($this->addSecurityNode())
                 ->append($this->addSearchNode())
+                ->append($this->addBackendSearchNode())
                 ->append($this->addCrawlNode())
                 ->append($this->addMailerNode())
                 ->append($this->addBackendNode())
@@ -114,6 +116,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addCronNode())
                 ->append($this->addCspNode())
                 ->append($this->addAltchaNode())
+                ->append($this->addTemplateStudioNode())
             ->end()
         ;
 
@@ -377,8 +380,33 @@ class Configuration implements ConfigurationInterface
                     ->defaultNull()
                 ->end()
                 ->arrayNode('valid_extensions')
+                    ->info('Adds, removes or overwrites the list of enabled image extensions that can be used.')
                     ->prototype('scalar')->end()
                     ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'avif'])
+                    ->example(['+heic', '-svgz'])
+                    ->validate()
+                        ->ifTrue(
+                            static function (array $extensions): bool {
+                                foreach ($extensions as $extension) {
+                                    if (!preg_match('/^[+-]?[a-z0-9]+$/', $extension)) {
+                                        return true;
+                                    }
+                                }
+
+                                return false;
+                            },
+                        )
+                        ->thenInvalid('Make sure your provided image extensions are valid and optionally start with +/- to add/remove the extension to/from the default list.')
+                    ->end()
+                    ->validate()
+                        ->always(
+                            static function (array $extensions): array {
+                                $default = ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'avif'];
+
+                                return ArrayUtil::alterListByConfig($default, $extensions);
+                            },
+                        )
+                    ->end()
                 ->end()
                 ->arrayNode('preview')
                     ->addDefaultsIfNotSet()
@@ -460,7 +488,23 @@ class Configuration implements ConfigurationInterface
                     ->info('Allows to disable the layer flattening of animated images. Set this option to false to support animations. It has no effect with Gd as Imagine service.')
                 ->end()
                 ->scalarNode('interlace')
+                    ->info('One of the Imagine\Image\ImageInterface::INTERLACE_* constants.')
                 ->end()
+                ->scalarNode('resampling_filter')
+                    ->info('Filter used when downsampling images. One of the Imagine\Image\ImageInterface::FILTER_* constants. It has no effect with Gd or SVG as Imagine service.')
+                ->end()
+            ->end()
+            ->validate()
+                ->always(
+                    static function (array $options): array {
+                        if (isset($options['resampling_filter'])) {
+                            $options['resampling-filter'] = $options['resampling_filter'];
+                            unset($options['resampling_filter']);
+                        }
+
+                        return $options;
+                    },
+                )
             ->end()
         ;
 
@@ -629,6 +673,24 @@ class Configuration implements ConfigurationInterface
                             ->defaultTrue()
                         ->end()
                     ->end()
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addBackendSearchNode(): NodeDefinition
+    {
+        return (new TreeBuilder('backend_search'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->canBeEnabled()
+            ->children()
+                ->scalarNode('dsn')
+                    ->info('The DSN of the search adapter.')
+                ->end()
+                ->scalarNode('index_name')
+                    ->info('The name of the search index')
+                    ->defaultValue('contao_backend')
                 ->end()
             ->end()
         ;
@@ -922,6 +984,15 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(86400)
                 ->end()
             ->end()
+        ;
+    }
+
+    private function addTemplateStudioNode(): NodeDefinition
+    {
+        return (new TreeBuilder('template_studio'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->canBeDisabled()
         ;
     }
 }

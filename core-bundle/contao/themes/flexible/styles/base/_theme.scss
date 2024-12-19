@@ -1,9 +1,0 @@
-@use "../colors";
-
-html[data-color-scheme="dark"] .color-scheme--light, .color-scheme--dark {
-	display: none;
-}
-
-html[data-color-scheme="dark"] .color-scheme--dark, .color-scheme--light {
-	display: initial;
-}

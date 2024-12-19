@@ -1,5 +1,0 @@
-// Sass loader - Resolve the path based on the theme
-// https://webpack.js.org/loaders/sass-loader/#problems-with-url
-@function resolve-path($url, $theme: 'flexible') {
-	@return url('../' + $theme + '/' + $url);
-}

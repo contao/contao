@@ -27,13 +27,13 @@
         }
     ],
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "ext-dom": "*",
         "ext-filter": "*",
-        "ext-gd": "*",
         "ext-hash": "*",
         "ext-intl": "*",
         "ext-json": "*",
+        "ext-mbstring": "*",
         "ext-pcre": "*",
         "ext-pdo": "*",
         "ext-session": "*",
@@ -41,8 +41,11 @@
         "composer-runtime-api": "^2.0.14",
         "ausi/slug-generator": "^1.1",
         "bacon/bacon-qr-code": "^2.0",
+        "cmsig/seal": "^0.6.x-dev",
+        "cmsig/seal-loupe-adapter": "^0.6.x-dev",
+        "cmsig/seal-symfony-bundle": "^0.6.x-dev",
         "contao-components/ace": "^1.8",
-        "contao-components/altcha": "^0.6.2 || ^0.7 || ^0.8 || ^0.9",
+        "contao-components/altcha": "^1.0",
         "contao-components/chosen": "^2.0",
         "contao-components/colorbox": "^1.6",
         "contao-components/colorpicker": "^1.5",
@@ -66,7 +69,7 @@
         "contao/manager-plugin": "^2.6.2",
         "debril/feed-io": "^6.0",
         "doctrine/collections": "^2.1",
-        "doctrine/dbal": "^3.6",
+        "doctrine/dbal": "^3.6.2",
         "doctrine/doctrine-bundle": "^2.8",
         "doctrine/orm": "^2.17",
         "doctrine/persistence": "^3.2",
@@ -167,8 +170,11 @@
         "toflar/psr6-symfony-http-cache-store": "^4.0",
         "twig/extra-bundle": "^3.0",
         "twig/string-extra": "^3.0",
-        "twig/twig": "^3.10.2",
+        "twig/twig": "^3.12",
         "ua-parser/uap-php": "^3.9",
+        "web-auth/webauthn-lib": "^5.0",
+        "web-auth/webauthn-stimulus": "^5.0",
+        "web-auth/webauthn-symfony-bundle": "^5.0",
         "webignition/robots-txt-file": "^3.0",
         "wikimedia/less.php": "^1.7"
     },
@@ -179,6 +185,8 @@
         "doctrine/annotations": "^2.0",
         "league/flysystem-memory": "^3.0",
         "sebastian/diff": "^4.0",
+        "cmsig/seal-memory-adapter": "^0.6.x-dev",
+        "shipmonk/composer-dependency-analyser": "^1.4",
         "symfony/browser-kit": "^6.4 || ^7.0",
         "symfony/phpunit-bridge": "^6.4 || ^7.0"
     },
@@ -290,7 +298,7 @@
     "extra": {
         "bamarni-bin": {
             "bin-links": false,
-            "forward-command": true
+            "forward-command": false
         },
         "contao-manager-plugin": {
             "contao/calendar-bundle": "Contao\\CalendarBundle\\ContaoManager\\Plugin",
@@ -320,7 +328,7 @@
             "@ecs-legacy",
             "@ecs-template"
         ],
-        "depcheck": "@php vendor-bin/depcheck/vendor/bin/composer-dependency-analyser --config=depcheck.php",
+        "depcheck": "@php vendor/bin/composer-dependency-analyser --config=depcheck.php",
         "ecs-default": "@php vendor-bin/ecs/vendor/bin/ecs check --fix",
         "ecs-legacy": "@php vendor-bin/ecs/vendor/bin/ecs check --config=vendor-bin/ecs/config/legacy.php --fix",
         "ecs-template": "@php vendor-bin/ecs/vendor/bin/ecs check --config=vendor-bin/ecs/config/template.php --fix",

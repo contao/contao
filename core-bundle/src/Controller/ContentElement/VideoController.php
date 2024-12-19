@@ -56,6 +56,7 @@ class VideoController extends AbstractContentElementController
         $template->set('aspect_ratio', $model->playerAspect);
 
         // Meta data
+        $template->set('title', $model->playerTitle);
         $template->set('caption', $model->playerCaption);
 
         // Splash image

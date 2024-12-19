@@ -1148,9 +1148,14 @@ abstract class Controller extends System
 	 * @param boolean $inline  Show the file in the browser instead of opening the download dialog
 	 *
 	 * @throws AccessDeniedException
+	 *
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use the Symfony BinaryFileResponse instead.
 	 */
 	public static function sendFileToBrowser($strFile, $inline=false)
 	{
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the Symfony BinaryFileResponse instead.', __METHOD__);
+
 		// Make sure there are no attempts to hack the file system
 		if (preg_match('@^\.+@', $strFile) || preg_match('@\.+/@', $strFile) || preg_match('@(://)+@', $strFile))
 		{

@@ -12,46 +12,20 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Inspector;
 
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Extension\ContaoExtension;
-use Contao\CoreBundle\Twig\Global\ContaoVariable;
-use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
-use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
-use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
-use Twig\Loader\ArrayLoader;
 
 class ContaoInspectorNodeVisitorTest extends TestCase
 {
-    public function testHashLowPriority(): void
+    public function testHasLowPriority(): void
     {
-        $this->assertSame(128, (new InspectorNodeVisitor(new NullAdapter()))->getPriority());
-    }
-
-    public function testAnalyzesSlots(): void
-    {
-        $environment = new Environment(
-            new ArrayLoader(['template.html.twig' => '{% slot B %}{% endslot %}{% block foo %}{% slot A %}body{% endslot %}{% slot A %}{% endslot %}{% endblock %}']),
+        $inspectorNodeVisitor = new InspectorNodeVisitor(
+            new NullAdapter(),
+            $this->createMock(Environment::class),
         );
 
-        $cache = new ArrayAdapter();
-
-        $environment->addExtension(
-            new ContaoExtension(
-                $environment,
-                $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class),
-                $this->createMock(ContaoCsrfTokenManager::class),
-                $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor($cache),
-            ),
-        );
-
-        $inspector = new Inspector($environment, $cache, $filesystemLoader);
-        $information = $inspector->inspectTemplate('template.html.twig');
-
-        $this->assertSame(['A', 'B'], $information->getSlots());
+        $this->assertSame(128, $inspectorNodeVisitor->getPriority());
     }
 }

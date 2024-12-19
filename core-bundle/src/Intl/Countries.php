@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Intl;
 
+use Contao\ArrayUtil;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -30,7 +31,7 @@ class Countries
         array $configCountries,
         private readonly string $defaultLocale,
     ) {
-        $this->countries = $this->filterCountries($defaultCountries, $configCountries);
+        $this->countries = ArrayUtil::alterListByConfig($defaultCountries, $configCountries);
     }
 
     /**
@@ -65,34 +66,5 @@ class Countries
     public function getCountryCodes(): array
     {
         return $this->countries;
-    }
-
-    /**
-     * Add, remove or replace countries as configured in the container configuration.
-     *
-     * @return list<string>
-     */
-    private function filterCountries(array $countries, array $filter): array
-    {
-        $newList = array_filter($filter, static fn ($country) => !\in_array($country[0], ['-', '+'], true));
-
-        if ($newList) {
-            $countries = $newList;
-        }
-
-        foreach ($filter as $country) {
-            $prefix = $country[0];
-            $countryCode = substr($country, 1);
-
-            if ('-' === $prefix && \in_array($countryCode, $countries, true)) {
-                unset($countries[array_search($countryCode, $countries, true)]);
-            } elseif ('+' === $prefix && !\in_array($countryCode, $countries, true)) {
-                $countries[] = $countryCode;
-            }
-        }
-
-        sort($countries);
-
-        return $countries;
     }
 }

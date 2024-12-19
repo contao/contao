@@ -18,7 +18,6 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\Persistence\Mapping\MappingException;
-use FOS\HttpCache\CacheInvalidator;
 use FOS\HttpCache\ResponseTagger;
 
 /**
@@ -36,8 +35,8 @@ class EntityCacheTags
 
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
+        private readonly CacheTagInvalidator $cacheTagInvalidator,
         private readonly ResponseTagger|null $responseTagger = null,
-        private readonly CacheInvalidator|null $cacheInvalidator = null,
     ) {
     }
 
@@ -223,11 +222,7 @@ class EntityCacheTags
      */
     public function invalidateTagsForEntityClass(string $className): void
     {
-        if (!$this->cacheInvalidator) {
-            return;
-        }
-
-        $this->cacheInvalidator->invalidateTags([$this->getTagForEntityClass($className)]);
+        $this->cacheTagInvalidator->invalidateTags([$this->getTagForEntityClass($className)]);
     }
 
     /**
@@ -235,11 +230,7 @@ class EntityCacheTags
      */
     public function invalidateTagsForEntityInstance(object $instance): void
     {
-        if (!$this->cacheInvalidator) {
-            return;
-        }
-
-        $this->cacheInvalidator->invalidateTags([$this->getTagForEntityInstance($instance)]);
+        $this->cacheTagInvalidator->invalidateTags([$this->getTagForEntityInstance($instance)]);
     }
 
     /**
@@ -247,11 +238,7 @@ class EntityCacheTags
      */
     public function invalidateTagsForModelClass(string $className): void
     {
-        if (!$this->cacheInvalidator) {
-            return;
-        }
-
-        $this->cacheInvalidator->invalidateTags([$this->getTagForModelClass($className)]);
+        $this->cacheTagInvalidator->invalidateTags([$this->getTagForModelClass($className)]);
     }
 
     /**
@@ -259,11 +246,7 @@ class EntityCacheTags
      */
     public function invalidateTagsForModelInstance(Model $instance): void
     {
-        if (!$this->cacheInvalidator) {
-            return;
-        }
-
-        $this->cacheInvalidator->invalidateTags([$this->getTagForModelInstance($instance)]);
+        $this->cacheTagInvalidator->invalidateTags([$this->getTagForModelInstance($instance)]);
     }
 
     /**
@@ -273,11 +256,7 @@ class EntityCacheTags
      */
     public function invalidateTagsFor(array|object|string|null $target): void
     {
-        if (!$this->cacheInvalidator) {
-            return;
-        }
-
-        $this->cacheInvalidator->invalidateTags($this->getTagsFor($target));
+        $this->cacheTagInvalidator->invalidateTags($this->getTagsFor($target));
     }
 
     /**

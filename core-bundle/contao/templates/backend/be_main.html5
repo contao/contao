@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="<?= $this->asset('css/simplemodal.min.css', 'contao-components/simplemodal') ?>">
     <link rel="stylesheet" href="<?= $this->asset('css/datepicker.min.css', 'contao-components/datepicker') ?>">
     <link rel="stylesheet" href="<?= $this->asset('backend.css', 'system/themes/'.$this->theme) ?>">
+    <link rel="stylesheet" href="<?= $this->asset('backend.css', 'contao_core') ?>">
     <?= $this->stylesheets ?>
 
     <script><?= $this->getLocaleString() ?></script>
@@ -37,14 +38,14 @@
   <?php /* If the following hash changes, Turbo will reload the entire page instead of merging contents. */ ?>
   <meta data-turbo-track="reload" content="<?= md5($this->stylesheets."\0".$this->javascripts); ?>">
 </head>
-<body id="top" class="be_main<?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->attributes ?> data-controller="contao--tooltip">
+<body id="top" class="be_main<?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->attributes ?> data-controller="contao--tooltips">
 
   <?php $this->block('header'); ?>
     <?php if (!$this->isPopup): ?>
       <header id="header">
         <div class="inner">
           <h1>
-            <a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>">
+            <a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>" data-contao--tooltips-target="tooltip">
               <span class="app-title">Contao</span>
               <?php if ($this->badgeTitle): ?>
                 <span class="badge-title"><?= $this->badgeTitle ?></span>
