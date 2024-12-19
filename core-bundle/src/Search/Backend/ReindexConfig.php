@@ -44,6 +44,11 @@ final class ReindexConfig
         return $clone;
     }
 
+    public function equals(self $otherConfig): bool
+    {
+        return $this->toArray() === $otherConfig->toArray();
+    }
+
     public function toArray(): array
     {
         return [
