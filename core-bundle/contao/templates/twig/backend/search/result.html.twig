@@ -18,9 +18,7 @@
                 <div class="hit_actions">
                     <a class="hit_title" href="{{ hit.viewUrl }}" title="{{ 'MSC.searchHitView'|trans([hit.title]) }}">{{ hit.title }}</a>
                     {% if hit.editUrl %}
-                        <a class="hit_edit" href="{{ hit.editUrl }}" title="{{ 'MSC.searchHitEdit'|trans([hit.title]) }}">
-                            <img src="/system/themes/flexible/icons/edit.svg" width="16" height="16" alt="{{ 'MSC.searchHitEdit'|trans([hit.title]) }}">
-                        </a>
+                        <a class="hit_edit" href="{{ hit.editUrl }}" title="{{ 'MSC.searchHitEdit'|trans([hit.title]) }}">{{ backend_icon('edit.svg') }}</a>
                     {% endif %}
                 </div>
             </div>
