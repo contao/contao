@@ -48,7 +48,7 @@ class SealUtil
     {
         $internalConfig = new ReindexConfig();
 
-        if (null !== $sealReindexConfig->getDateTimeBoundary()) {
+        if ($sealReindexConfig->getDateTimeBoundary()) {
             $internalConfig = $internalConfig->limitToDocumentsNewerThan($sealReindexConfig->getDateTimeBoundary());
         }
 
