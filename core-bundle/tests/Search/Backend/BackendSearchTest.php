@@ -65,7 +65,7 @@ class BackendSearchTest extends TestCase
     public function testReindexSync(): void
     {
         $reindexConfig = (new ReindexConfig())
-            ->limitToDocumentIds(new GroupedDocumentIds(['foo' => ['bar']])) // Non-existent document anymore, must be deleted!
+            ->limitToDocumentIds(new GroupedDocumentIds(['foo' => ['bar']])) // Non-existent document, must be deleted!
             ->limitToDocumentsNewerThan(new \DateTimeImmutable('2024-01-01T00:00:00+00:00'))
         ;
 

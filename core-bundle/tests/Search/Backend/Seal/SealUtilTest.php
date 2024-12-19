@@ -24,7 +24,6 @@ class SealUtilTest extends TestCase
     public function testInternalConfigToSealConfig(): void
     {
         $reindexConfig = new ReindexConfig();
-
         $sealReindexConfig = SealUtil::internalReindexConfigToSealReindexConfig($reindexConfig);
 
         $this->assertSame([], $sealReindexConfig->getIdentifiers());
@@ -32,7 +31,6 @@ class SealUtilTest extends TestCase
 
         $dateTime = new \DateTime();
         $reindexConfig = $reindexConfig->limitToDocumentsNewerThan($dateTime);
-
         $sealReindexConfig = SealUtil::internalReindexConfigToSealReindexConfig($reindexConfig);
 
         $this->assertSame([], $sealReindexConfig->getIdentifiers());
@@ -51,7 +49,6 @@ class SealUtilTest extends TestCase
     public function testSealConfigToInternalConfig(): void
     {
         $sealReindexConfig = new SealReindexConfig();
-
         $reindexConfig = SealUtil::sealReindexConfigToInternalReindexConfig($sealReindexConfig);
 
         $this->assertTrue($reindexConfig->getLimitedDocumentIds()->isEmpty());
@@ -59,14 +56,12 @@ class SealUtilTest extends TestCase
 
         $dateTime = new \DateTime();
         $sealReindexConfig = $sealReindexConfig->withDateTimeBoundary($dateTime);
-
         $reindexConfig = SealUtil::sealReindexConfigToInternalReindexConfig($sealReindexConfig);
 
         $this->assertTrue($reindexConfig->getLimitedDocumentIds()->isEmpty());
         $this->assertSame($dateTime, $reindexConfig->getUpdateSince());
 
         $sealReindexConfig = $sealReindexConfig->withIdentifiers(['foobar__42', 'foobar__99', 'other__12']);
-
         $reindexConfig = SealUtil::sealReindexConfigToInternalReindexConfig($sealReindexConfig);
 
         $this->assertSame(

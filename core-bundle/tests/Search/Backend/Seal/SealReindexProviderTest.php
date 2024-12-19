@@ -54,6 +54,7 @@ class SealReindexProviderTest extends TestCase
     public function testProvideProcessesDocuments(): void
     {
         $document = new Document('42', 'type', 'searchable');
+
         $internalProvider = $this->createMock(ProviderInterface::class);
         $internalProvider
             ->expects($this->once())
