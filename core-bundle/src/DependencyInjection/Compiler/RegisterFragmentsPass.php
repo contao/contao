@@ -127,7 +127,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
                         throw new InvalidConfigurationException(\sprintf('Missing category for "%s" fragment on service ID "%s"', $tag, $reference));
                     }
 
-                    $globals[$this->globalsKey][$attributes['category']][$attributes['type']] = $this->proxyClass;
+                    $globals[$this->globalsKey][$attributes['priority']][$attributes['category']][$attributes['type']] = $this->proxyClass;
                 }
             }
         }

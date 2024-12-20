@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
 
-#[AsFrontendModule(category: 'miscellaneous')]
+#[AsFrontendModule(category: 'miscellaneous', priority: -1)]
 class FeedReaderController extends AbstractFrontendModuleController
 {
     public function __construct(

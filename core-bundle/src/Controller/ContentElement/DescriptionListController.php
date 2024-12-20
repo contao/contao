@@ -19,7 +19,7 @@ use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsContentElement(category: 'texts')]
+#[AsContentElement(category: 'texts', priority: -1)]
 class DescriptionListController extends AbstractContentElementController
 {
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response

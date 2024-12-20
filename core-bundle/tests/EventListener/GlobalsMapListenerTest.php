@@ -36,25 +36,31 @@ class GlobalsMapListenerTest extends TestCase
     {
         yield 'add single' => [
             [],
-            ['text' => 'HeadlineFragment'],
+            [0 => ['text' => 'HeadlineFragment']],
             ['text' => 'HeadlineFragment'],
         ];
 
         yield 'add group' => [
             [],
-            ['texts' => ['headline' => 'HeadlineFragment']],
+            [0 => ['texts' => ['headline' => 'HeadlineFragment']]],
             ['texts' => ['headline' => 'HeadlineFragment']],
         ];
 
         yield 'add to existing group' => [
             ['texts' => ['text' => 'LegacyText']],
-            ['texts' => ['headline' => 'HeadlineFragment']],
+            [0 => ['texts' => ['headline' => 'HeadlineFragment']]],
             ['texts' => ['text' => 'LegacyText', 'headline' => 'HeadlineFragment']],
         ];
 
-        yield 'prefer existing entries' => [
+        yield 'prefer default priority entries' => [
             ['texts' => ['headline' => 'LegacyHeadline']],
+            [0 => ['texts' => ['headline' => 'HeadlineFragment']]],
             ['texts' => ['headline' => 'HeadlineFragment']],
+        ];
+
+        yield 'keeps existing entries' => [
+            ['texts' => ['headline' => 'LegacyHeadline']],
+            [-1 => ['texts' => ['headline' => 'HeadlineFragment']]],
             ['texts' => ['headline' => 'LegacyHeadline']],
         ];
     }

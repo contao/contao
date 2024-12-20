@@ -18,7 +18,7 @@ use Contao\CoreBundle\Twig\FragmentTemplate;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsContentElement(category: 'links')]
+#[AsContentElement(category: 'links', priority: -1)]
 class ToplinkController extends AbstractContentElementController
 {
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
