@@ -16,10 +16,10 @@ use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\Crawl\Monolog\CrawlCsvLogHandler;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\GroupHandler;
-use Monolog\Logger as BaseLogger;
+use Monolog\Level;
+use Monolog\Logger;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Monolog\Handler\ConsoleHandler;
-use Symfony\Bridge\Monolog\Logger;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
@@ -143,7 +143,7 @@ class CrawlCommand extends Command
         $output->writeln('');
 
         $io->comment(
-            sprintf(
+            \sprintf(
                 '[Job ID: %s] Finished crawling! Find the details for each subscriber below:',
                 $this->escargot->getJobId(),
             ),
@@ -181,7 +181,7 @@ class CrawlCommand extends Command
                 $this->filesystem->remove($input->getOption('debug-csv-path'));
             }
 
-            $csvDebugHandler = new CrawlCsvLogHandler($input->getOption('debug-csv-path'), BaseLogger::DEBUG);
+            $csvDebugHandler = new CrawlCsvLogHandler($input->getOption('debug-csv-path'), Level::Debug);
             $handlers[] = $csvDebugHandler;
         }
 
@@ -220,7 +220,8 @@ class CrawlCommand extends Command
 
             public function shouldRequest(CrawlUri $crawlUri): string
             {
-                // We advance with every shouldRequest() call to update the progress bar frequently enough
+                // We advance with every shouldRequest() call to update the progress bar
+                // frequently enough
                 $this->progressBar->advance();
                 $this->progressBar->setMaxSteps($this->escargot->getQueue()->countAll($this->escargot->getJobId()));
 

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Image\Preview;
 
+use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
@@ -79,12 +80,16 @@ class PreviewFactory
     /**
      * @return iterable<ImageInterface>
      *
-     * @throws UnableToGeneratePreviewException|MissingPreviewProviderException
+     * @throws UnableToGeneratePreviewException|MissingPreviewProviderException|InvalidResourceException
      */
     public function createPreviews(string $path, int $size = 0, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $previewOptions = []): iterable
     {
         if ($firstPage < 1 || $lastPage < 1 || $firstPage > $lastPage) {
             throw new \InvalidArgumentException();
+        }
+
+        if (!(new Filesystem())->exists($path)) {
+            throw new InvalidResourceException(\sprintf('No resource could be located at path "%s".', $path));
         }
 
         // Supported image formats do not need an extra preview image
@@ -123,8 +128,8 @@ class PreviewFactory
                         $previews = iterator_to_array($previews, false);
                     }
 
-                    // We reached the last page if the number of returned
-                    // previews was less than the number of pages requested
+                    // We reached the last page if the number of returned previews was less than the
+                    // number of pages requested
                     if ($previews && \count($previews) <= $lastPage - $firstPage) {
                         $lastPreview = $previews[array_key_last($previews)];
                         $fileExtension = pathinfo($lastPreview, PATHINFO_EXTENSION);
@@ -132,7 +137,7 @@ class PreviewFactory
                     }
 
                     if (\count($previews) > 1 + $lastPage - $firstPage) {
-                        throw new \LogicException(sprintf('Preview provider "%s" returned %s pages instead of the requested %s.', $provider::class, \count($previews), 1 + $lastPage - $firstPage));
+                        throw new \LogicException(\sprintf('Preview provider "%s" returned %s pages instead of the requested %s.', $provider::class, \count($previews), 1 + $lastPage - $firstPage));
                     }
 
                     return array_map(fn ($path) => $this->imageFactory->create($path), $previews);
@@ -142,7 +147,7 @@ class PreviewFactory
             }
         }
 
-        throw $lastProviderException ?? new MissingPreviewProviderException();
+        throw $lastProviderException ?? new MissingPreviewProviderException(\sprintf('Missing preview provider to handle "%s".', $path));
     }
 
     public function createPreviewImage(string $path, ResizeConfiguration|array|int|string|null $size = null, ResizeOptions|null $resizeOptions = null, int $page = 1, array $previewOptions = []): ImageInterface
@@ -228,12 +233,21 @@ class PreviewFactory
 
     public function createPreviewFigureBuilder(string $path, PictureConfiguration|array|int|string|null $size = null, ResizeOptions|null $resizeOptions = null, int $page = 1, array $previewOptions = []): FigureBuilder
     {
-        return $this->imageStudio
+        $figureBuilder = $this->imageStudio
             ->createFigureBuilder()
-            ->fromImage($this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $page, $previewOptions))
             ->setSize($size)
             ->setResizeOptions($resizeOptions)
         ;
+
+        try {
+            $figureBuilder->fromImage($this->createPreview($path, $this->getPreviewSizeFromImageSize($size), $page, $previewOptions));
+        } catch (InvalidResourceException $exception) {
+            $figureBuilder->setLastException($exception);
+        } catch (\Throwable $exception) {
+            $figureBuilder->setLastException(new InvalidResourceException($exception->getMessage(), $exception->getCode(), $exception));
+        }
+
+        return $figureBuilder;
     }
 
     public function getPreviewSizeFromImageSize(PictureConfiguration|ResizeConfiguration|array|int|string|null $size): int
@@ -294,7 +308,7 @@ class PreviewFactory
         }
 
         if (is_numeric($size[2])) {
-            $imageSize = $this->framework->getAdapter(ImageSizeModel::class)->findByPk($size[2]);
+            $imageSize = $this->framework->getAdapter(ImageSizeModel::class)->findById($size[2]);
 
             if (!$imageSize) {
                 return 0;

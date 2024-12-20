@@ -94,6 +94,12 @@ abstract class Model
 	protected $arrRelated = array();
 
 	/**
+	 * Enums
+	 * @var array
+	 */
+	protected $arrEnums = array();
+
+	/**
 	 * Prevent saving
 	 * @var boolean
 	 */
@@ -115,6 +121,7 @@ abstract class Model
 
 		$objDca = DcaExtractor::getInstance(static::$strTable);
 		$this->arrRelations = $objDca->getRelations();
+		$this->arrEnums = $objDca->getEnums();
 
 		if ($objResult !== null)
 		{
@@ -132,7 +139,7 @@ abstract class Model
 			// Look for joined fields
 			foreach ($arrData as $k=>$v)
 			{
-				if (strpos($k, '__') !== false)
+				if (static::isJoinedField($k))
 				{
 					list($key, $field) = explode('__', $k, 2);
 
@@ -161,7 +168,7 @@ abstract class Model
 
 				$table = $this->arrRelations[$key]['table'];
 
-				/** @var static $strClass */
+				/** @var class-string<Model> $strClass */
 				$strClass = static::getClassFromTable($table);
 				$intPk = $strClass::getPk();
 
@@ -217,6 +224,25 @@ abstract class Model
 	}
 
 	/**
+	 * Clone a model with all data and prevent saving
+	 *
+	 * @return static The model
+	 */
+	public function cloneDetached()
+	{
+		$clone = clone $this;
+
+		if (isset($this->arrData[static::$strPk]))
+		{
+			$clone->arrData[static::$strPk] = $this->arrData[static::$strPk];
+		}
+
+		$clone->preventSaving(false);
+
+		return $clone;
+	}
+
+	/**
 	 * Set an object property
 	 *
 	 * @param string $strKey   The property name
@@ -236,7 +262,7 @@ abstract class Model
 
 		if ($varValue !== ($varNewValue = static::convertToPhpValue($strKey, $varValue)))
 		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s has been deprecated and will no longer work in Contao 6.0. Use type %s instead.', static::class, $strKey, get_debug_type($varValue), get_debug_type($varNewValue));
+			trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s has been deprecated and will no longer work in Contao 6. Use type "%s" instead.', static::class, $strKey, get_debug_type($varValue), get_debug_type($varNewValue));
 		}
 	}
 
@@ -349,9 +375,9 @@ abstract class Model
 	 */
 	public function setRow(array $arrData)
 	{
-		foreach ($arrData as $k=>$v)
+		foreach ($arrData as $k => $v)
 		{
-			if (strpos($k, '__') !== false)
+			if (static::isJoinedField($k))
 			{
 				unset($arrData[$k]);
 			}
@@ -378,7 +404,7 @@ abstract class Model
 	{
 		foreach ($arrData as $k=>$v)
 		{
-			if (strpos($k, '__') !== false)
+			if (static::isJoinedField($k))
 			{
 				continue;
 			}
@@ -686,7 +712,7 @@ abstract class Model
 
 		$arrRelation = $this->arrRelations[$strKey];
 
-		/** @var static $strClass */
+		/** @var class-string<Model> $strClass */
 		$strClass = static::getClassFromTable($arrRelation['table']);
 
 		// Load the related record(s)
@@ -712,8 +738,7 @@ abstract class Model
 				// Handle UUIDs (see #6525 and #8850)
 				if ($arrRelation['table'] == 'tl_files' && $arrRelation['field'] == 'uuid')
 				{
-					/** @var FilesModel $strClass */
-					$objModel = $strClass::findMultipleByUuids($arrValues, $arrOptions);
+					$objModel = FilesModel::findMultipleByUuids($arrValues, $arrOptions);
 				}
 				else
 				{
@@ -736,6 +761,27 @@ abstract class Model
 		}
 
 		return $this->arrRelated[$strKey];
+	}
+
+	public function getEnum($strKey): \BackedEnum|null
+	{
+		$enum = $this->arrEnums[$strKey] ?? null;
+
+		// The enum does not exist
+		if (null === $enum)
+		{
+			throw new \Exception(\sprintf('Field %s.%s has no enum configured', static::getTable(), $strKey));
+		}
+
+		$varValue = $this->{$strKey};
+
+		// The value is invalid
+		if (!\is_string($varValue) && !\is_int($varValue))
+		{
+			throw new \Exception(\sprintf('Value of %s.%s must be a string or an integer to resolve a backed enumeration', static::getTable(), $strKey));
+		}
+
+		return $this->arrEnums[$strKey]::tryFrom($varValue);
 	}
 
 	/**
@@ -869,6 +915,42 @@ abstract class Model
 	}
 
 	/**
+	 * Find a single record by its ID
+	 *
+	 * @param int|string $intId      The ID
+	 * @param array      $arrOptions An optional options array
+	 *
+	 * @return static|null The model or null if the result is empty
+	 */
+	public static function findById($intId, array $arrOptions=array())
+	{
+		// Try to load from the registry
+		if (empty($arrOptions))
+		{
+			$objModel = Registry::getInstance()->fetch(static::$strTable, $intId);
+
+			if ($objModel !== null)
+			{
+				return $objModel;
+			}
+		}
+
+		$arrOptions = array_merge
+		(
+			array
+			(
+				'limit'  => 1,
+				'column' => 'id',
+				'value'  => $intId,
+				'return' => 'Model'
+			),
+			$arrOptions
+		);
+
+		return static::find($arrOptions);
+	}
+
+	/**
 	 * Find a single record by its ID or alias
 	 *
 	 * @param mixed $varId      The ID or alias
@@ -898,7 +980,7 @@ abstract class Model
 			array
 			(
 				'limit'  => 1,
-				'column' => $isAlias ? array("BINARY $t.alias=?") : array("$t.id=?"),
+				'column' => $isAlias ? array("CAST($t.alias AS BINARY)=?") : array("$t.id=?"),
 				'value'  => $varId,
 				'return' => 'Model'
 			),
@@ -1070,21 +1152,21 @@ abstract class Model
 	 */
 	public static function __callStatic($name, $args)
 	{
-		if (strncmp($name, 'findBy', 6) === 0)
+		if (str_starts_with($name, 'findBy'))
 		{
 			array_unshift($args, lcfirst(substr($name, 6)));
 
 			return static::findBy(...$args);
 		}
 
-		if (strncmp($name, 'findOneBy', 9) === 0)
+		if (str_starts_with($name, 'findOneBy'))
 		{
 			array_unshift($args, lcfirst(substr($name, 9)));
 
 			return static::findOneBy(...$args);
 		}
 
-		if (strncmp($name, 'countBy', 7) === 0)
+		if (str_starts_with($name, 'countBy'))
 		{
 			array_unshift($args, lcfirst(substr($name, 7)));
 
@@ -1181,7 +1263,7 @@ abstract class Model
 		{
 			if (($arrOptions['return'] ?? null) == 'Array')
 			{
-				trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries has been deprecated and will no longer work in Contao 6. Use the getModels() method instead.');
+				trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries has been deprecated and will no longer work in Contao 6. Use the "getModels()" method instead.');
 
 				return array();
 			}
@@ -1206,7 +1288,7 @@ abstract class Model
 
 		if (($arrOptions['return'] ?? null) == 'Array')
 		{
-			trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries has been deprecated and will no longer work in Contao 6. Use the getModels() method instead.');
+			trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries has been deprecated and will no longer work in Contao 6. Use the "getModels()" method instead.');
 
 			return static::createCollectionFromDbResult($objResult, static::$strTable)->getModels();
 		}
@@ -1291,7 +1373,7 @@ abstract class Model
 	{
 		if (!isset($GLOBALS['TL_MODELS'][$strTable]))
 		{
-			throw new \RuntimeException(sprintf('There is no class for table "%s" registered in $GLOBALS[\'TL_MODELS\'].', $strTable));
+			throw new \RuntimeException(\sprintf('There is no class for table "%s" registered in $GLOBALS[\'TL_MODELS\'].', $strTable));
 		}
 
 		return $GLOBALS['TL_MODELS'][$strTable];
@@ -1330,10 +1412,7 @@ abstract class Model
 	 */
 	protected static function createModelFromDbResult(Result $objResult)
 	{
-		/**
-		 * @var static               $strClass
-		 * @var class-string<static> $strClass
-		 */
+		/** @var class-string<static> $strClass */
 		$strClass = static::getClassFromTable(static::$strTable);
 
 		return new $strClass($objResult);
@@ -1380,5 +1459,15 @@ abstract class Model
 		}
 
 		return System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
+	}
+
+	/**
+	 * This method is a hot path so caching the keys gets rid of thousands of str_contains() calls.
+	 */
+	protected static function isJoinedField(string $key): bool
+	{
+		static $cache = array();
+
+		return $cache[$key] ??= str_contains($key, '__');
 	}
 }

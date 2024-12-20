@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<?= $this->language ?>">
+<html lang="<?= $this->language ?>" data-controller="contao--scroll-offset" data-action="store-scroll-offset@window->contao--scroll-offset#store contao--tinymce:editor-loaded->contao--scroll-offset#scrollToWidgetError">
 <head>
 
   <?php $this->block('head'); ?>
@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="<?= $this->asset('css/simplemodal.min.css', 'contao-components/simplemodal') ?>">
     <link rel="stylesheet" href="<?= $this->asset('css/datepicker.min.css', 'contao-components/datepicker') ?>">
     <link rel="stylesheet" href="<?= $this->asset('backend.css', 'system/themes/'.$this->theme) ?>">
+    <link rel="stylesheet" href="<?= $this->asset('backend.css', 'contao_core') ?>">
     <?= $this->stylesheets ?>
 
     <script><?= $this->getLocaleString() ?></script>
@@ -25,20 +26,26 @@
     <script src="<?= $this->asset('js/choices.min.js', 'contao-components/choices') ?>"></script>
     <script src="<?= $this->asset('js/simplemodal.min.js', 'contao-components/simplemodal') ?>"></script>
     <script src="<?= $this->asset('js/datepicker.min.js', 'contao-components/datepicker') ?>"></script>
+    <script src="<?= $this->asset('js/tinymce.min.js', 'contao-components/tinymce4') ?>"></script>
+    <script src="<?= $this->asset('js/ace.js', 'contao-components/ace') ?>"></script>
+    <script src="<?= $this->asset('js/ext-language_tools.js', 'contao-components/ace') ?>"></script>
+    <script src="<?= $this->asset('js/ext-whitespace.js', 'contao-components/ace') ?>"></script>
     <script src="<?= $this->asset('backend.js', 'contao_core') ?>"></script>
     <script><?= $this->getDateString() ?></script>
     <?= $this->javascripts ?>
   <?php $this->endblock(); ?>
 
+  <?php /* If the following hash changes, Turbo will reload the entire page instead of merging contents. */ ?>
+  <meta data-turbo-track="reload" content="<?= md5($this->stylesheets."\0".$this->javascripts); ?>">
 </head>
-<body id="top" class="be_main<?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->attributes ?>>
+<body id="top" class="be_main<?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->attributes ?> data-controller="contao--tooltips">
 
   <?php $this->block('header'); ?>
     <?php if (!$this->isPopup): ?>
       <header id="header">
         <div class="inner">
           <h1>
-            <a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>">
+            <a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>" data-contao--tooltips-target="tooltip">
               <span class="app-title">Contao</span>
               <?php if ($this->badgeTitle): ?>
                 <span class="badge-title"><?= $this->badgeTitle ?></span>
@@ -100,8 +107,6 @@
   <?php endif; ?>
 
   <?= $this->mootools ?>
-
-  <script>Backend.initScrollOffset()</script>
 
 </body>
 </html>

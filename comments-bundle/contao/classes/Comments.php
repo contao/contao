@@ -10,8 +10,10 @@
 
 namespace Contao;
 
+use Contao\CommentsBundle\Util\BbCode;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Contao\CoreBundle\Util\UrlUtil;
 use Nyholm\Psr7\Uri;
 
 /**
@@ -30,7 +32,6 @@ class Comments extends Frontend
 	 */
 	public function addCommentsToTemplate(FrontendTemplate $objTemplate, \stdClass $objConfig, $strSource, $intParent, $varNotifies)
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$limit = 0;
@@ -50,7 +51,7 @@ class Comments extends Frontend
 
 			// Calculate the key (e.g. tl_form_field becomes page_cff12)
 			$key = '';
-			$chunks = explode('_', substr($strSource, (strncmp($strSource, 'tl_', 3) === 0) ? 3 : 0));
+			$chunks = explode('_', substr($strSource, (str_starts_with($strSource, 'tl_')) ? 3 : 0));
 
 			foreach ($chunks as $chunk)
 			{
@@ -111,7 +112,7 @@ class Comments extends Frontend
 				$objPartial->addReply = false;
 
 				// Reply
-				if ($objComments->addReply && $objComments->reply && ($objAuthor = $objComments->getRelated('author')) instanceof UserModel)
+				if ($objComments->addReply && $objComments->reply && ($objAuthor = UserModel::findById($objComments->author)))
 				{
 					$objPartial->addReply = true;
 					$objPartial->rby = $GLOBALS['TL_LANG']['MSC']['com_reply'];
@@ -164,7 +165,7 @@ class Comments extends Frontend
 		}
 
 		// Confirm or remove a subscription
-		if (strncmp(Input::get('token'), 'com-', 4) === 0 || strncmp(Input::get('token'), 'cor-', 4) === 0)
+		if (str_starts_with(Input::get('token'), 'com-') || str_starts_with(Input::get('token'), 'cor-'))
 		{
 			static::changeSubscriptionStatus($objTemplate);
 
@@ -238,6 +239,7 @@ class Comments extends Frontend
 		// Initialize the widgets
 		foreach ($arrFields as $arrField)
 		{
+			/** @var class-string<Widget> $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']] ?? null;
 
 			// Continue if the class is not defined
@@ -248,7 +250,6 @@ class Comments extends Frontend
 
 			$arrField['eval']['required'] = $arrField['eval']['mandatory'] ?? null;
 
-			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name'], $arrField['value'] ?? null));
 
 			// Append the parent ID to prevent duplicate IDs (see #1493)
@@ -360,14 +361,14 @@ class Comments extends Frontend
 			$objEmail = new Email();
 			$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
 			$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
-			$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_subject'], Idna::decode(Environment::get('host')));
+			$objEmail->subject = \sprintf($GLOBALS['TL_LANG']['MSC']['com_subject'], Idna::decode(Environment::get('host')));
 
 			// Convert the comment to plain text
 			$strComment = strip_tags($strComment);
 			$strComment = StringUtil::decodeEntities($strComment);
 
 			// Add the comment details
-			$objEmail->text = sprintf(
+			$objEmail->text = \sprintf(
 				$GLOBALS['TL_LANG']['MSC']['com_message'],
 				$arrSet['name'] . ' (' . $arrSet['email'] . ')',
 				$strComment,
@@ -408,70 +409,13 @@ class Comments extends Frontend
 	/**
 	 * Replace bbcode and return the HTML string
 	 *
-	 * Supports the following tags:
-	 *
-	 * * [b][/b] bold
-	 * * [i][/i] italic
-	 * * [u][/u] underline
-	 * * [img][/img]
-	 * * [code][/code]
-	 * * [color=#ff0000][/color]
-	 * * [quote][/quote]
-	 * * [quote=tim][/quote]
-	 * * [url][/url]
-	 * * [url=http://][/url]
-	 * * [email][/email]
-	 * * [email=name@example.com][/email]
-	 *
 	 * @param string $strComment
 	 *
 	 * @return string
 	 */
 	public function parseBbCode($strComment)
 	{
-		$arrSearch = array
-		(
-			'@\[b\](.*)\[/b\]@Uis',
-			'@\[i\](.*)\[/i\]@Uis',
-			'@\[u\](.*)\[/u\]@Uis',
-			'@\s*\[code\](.*)\[/code\]\s*@Uis',
-			'@\[color=([^\]" ]+)\](.*)\[/color\]@Uis',
-			'@\s*\[quote\](.*)\[/quote\]\s*@Uis',
-			'@\s*\[quote=([^\]]+)\](.*)\[/quote\]\s*@Uis',
-			'@\[img\]\s*([^\[" ]+\.(jpe?g|png|gif|bmp|tiff?|ico))\s*\[/img\]@i',
-			'@\[url\]\s*([^\[" ]+)\s*\[/url\]@i',
-			'@\[url=([^\]" ]+)\](.*)\[/url\]@Uis',
-			'@\[email\]\s*([^\[" ]+)\s*\[/email\]@i',
-			'@\[email=([^\]" ]+)\](.*)\[/email\]@Uis',
-			'@href="(([a-z0-9]+\.)*[a-z0-9]+\.([a-z]{2}|asia|biz|com|info|name|net|org|tel)(/|"))@i'
-		);
-
-		$arrReplace = array
-		(
-			'<strong>$1</strong>',
-			'<em>$1</em>',
-			'<span style="text-decoration:underline">$1</span>',
-			"\n\n" . '<div class="code"><p>' . $GLOBALS['TL_LANG']['MSC']['com_code'] . '</p><pre>$1</pre></div>' . "\n\n",
-			'<span style="color:$1">$2</span>',
-			"\n\n" . '<blockquote>$1</blockquote>' . "\n\n",
-			"\n\n" . '<blockquote><p>' . sprintf($GLOBALS['TL_LANG']['MSC']['com_quote'], '$1') . '</p>$2</blockquote>' . "\n\n",
-			'<img src="$1" alt="" />',
-			'<a href="$1">$1</a>',
-			'<a href="$1">$2</a>',
-			'<a href="mailto:$1">$1</a>',
-			'<a href="mailto:$1">$2</a>',
-			'href="http://$1'
-		);
-
-		$strComment = preg_replace($arrSearch, $arrReplace, $strComment);
-
-		// Encode e-mail addresses
-		if (strpos($strComment, 'mailto:') !== false)
-		{
-			$strComment = StringUtil::encodeEmail($strComment);
-		}
-
-		return $strComment;
+		return (new BbCode())->toHtml($strComment);
 	}
 
 	/**
@@ -505,12 +449,12 @@ class Comments extends Frontend
 	/**
 	 * Purge subscriptions that have not been activated within 24 hours
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
-	 *             Use CommentsNotifyModel::findExpiredSubscriptions() instead.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6;
+	 *             use CommentsNotifyModel::findExpiredSubscriptions() instead.
 	 */
 	public function purgeSubscriptions()
 	{
-		trigger_deprecation('contao/comments-bundle', '5.0', 'Calling "%s()" has been deprecated and will no longer work in Contao 6.0. Use CommentsNotifyModel::findExpiredSubscriptions() instead.', __METHOD__);
+		trigger_deprecation('contao/comments-bundle', '5.0', 'Calling "%s()" has been deprecated and will no longer work in Contao 6. Use "CommentsNotifyModel::findExpiredSubscriptions()" instead.', __METHOD__);
 
 		$objNotify = CommentsNotifyModel::findExpiredSubscriptions();
 
@@ -565,14 +509,14 @@ class Comments extends Frontend
 		$objNotify = new CommentsNotifyModel();
 		$objNotify->setRow($arrSet)->save();
 
-		$strUrl = Idna::decode(Environment::get('base')) . $request;
-		$strConnector = (strpos($strUrl, '?') !== false) ? '&' : '?';
+		$strUrl = UrlUtil::makeAbsolute($request, Idna::decode(Environment::get('base')));
+		$strConnector = (str_contains($strUrl, '?')) ? '&' : '?';
 
 		$optIn = System::getContainer()->get('contao.opt_in');
 		$optInToken = $optIn->create('com', $objComment->email, array('tl_comments_notify'=>array($objNotify->id)));
 
 		// Send the token
-		$optInToken->send(sprintf($GLOBALS['TL_LANG']['MSC']['com_optInSubject'], Idna::decode(Environment::get('host'))), sprintf($GLOBALS['TL_LANG']['MSC']['com_optInMessage'], $objComment->name, $strUrl, $strUrl . $strConnector . 'token=' . $optInToken->getIdentifier(), $strUrl . $strConnector . 'token=' . $objNotify->tokenRemove));
+		$optInToken->send(\sprintf($GLOBALS['TL_LANG']['MSC']['com_optInSubject'], Idna::decode(Environment::get('host'))), \sprintf($GLOBALS['TL_LANG']['MSC']['com_optInMessage'], $objComment->name, $strUrl, $strUrl . $strConnector . 'token=' . $optInToken->getIdentifier(), $strUrl . $strConnector . 'token=' . $objNotify->tokenRemove));
 	}
 
 	/**
@@ -582,21 +526,14 @@ class Comments extends Frontend
 	 */
 	public static function changeSubscriptionStatus(FrontendTemplate $objTemplate)
 	{
-		if (strncmp(Input::get('token'), 'com-', 4) === 0)
+		if (str_starts_with(Input::get('token'), 'com-'))
 		{
 			$optIn = System::getContainer()->get('contao.opt_in');
 
 			// Find an unconfirmed token with only one related record
-			if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_comments_notify' || \count($arrIds = current($arrRelated)) != 1 || (!$objNotify = CommentsNotifyModel::findByPk($arrIds[0])))
+			if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_comments_notify' || \count($arrIds = current($arrRelated)) != 1 || (!$objNotify = CommentsNotifyModel::findById($arrIds[0])))
 			{
 				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
-
-				return;
-			}
-
-			if ($optInToken->isConfirmed())
-			{
-				$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['tokenConfirmed'];
 
 				return;
 			}
@@ -608,14 +545,17 @@ class Comments extends Frontend
 				return;
 			}
 
-			$objNotify->active = true;
-			$objNotify->save();
+			if (!$optInToken->isConfirmed())
+			{
+				$objNotify->active = true;
+				$objNotify->save();
 
-			$optInToken->confirm();
+				$optInToken->confirm();
+			}
 
 			$objTemplate->confirm = $GLOBALS['TL_LANG']['MSC']['com_optInConfirm'];
 		}
-		elseif (strncmp(Input::get('token'), 'cor-', 4) === 0)
+		elseif (str_starts_with(Input::get('token'), 'cor-'))
 		{
 			$objNotify = CommentsNotifyModel::findOneByTokenRemove(Input::get('token'));
 
@@ -650,6 +590,7 @@ class Comments extends Frontend
 		{
 			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 			$isFrontend = $request && System::getContainer()->get('contao.routing.scope_matcher')->isFrontendRequest($request);
+			$baseUrl = Idna::decode(Environment::get('base'));
 
 			while ($objNotify->next())
 			{
@@ -667,13 +608,13 @@ class Comments extends Frontend
 				}
 
 				// Prepare the URL
-				$strUrl = Idna::decode(Environment::get('base')) . $objNotify->url;
+				$strUrl = UrlUtil::makeAbsolute($objNotify->url, $baseUrl);
 
 				$objEmail = new Email();
 				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
 				$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
-				$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifySubject'], Idna::decode(Environment::get('host')));
-				$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyMessage'], $objNotify->name, $strUrl . '#c' . $objComment->id, $strUrl . '?token=' . $objNotify->tokenRemove);
+				$objEmail->subject = \sprintf($GLOBALS['TL_LANG']['MSC']['com_notifySubject'], Idna::decode(Environment::get('host')));
+				$objEmail->text = \sprintf($GLOBALS['TL_LANG']['MSC']['com_notifyMessage'], $objNotify->name, $strUrl . '#c' . $objComment->id, $strUrl . '?token=' . $objNotify->tokenRemove);
 				$objEmail->sendTo($objNotify->email);
 			}
 		}

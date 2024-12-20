@@ -313,31 +313,31 @@ class Validator
 		}
 
 		// Begins with ./
-		if (0 === strncmp($strPath, './', 2))
+		if (str_starts_with($strPath, './'))
 		{
 			return true;
 		}
 
 		// Begins with ../
-		if (0 === strncmp($strPath, '../', 3))
+		if (str_starts_with($strPath, '../'))
 		{
 			return true;
 		}
 
 		// Ends with /.
-		if (substr($strPath, -2) == '/.')
+		if (str_ends_with($strPath, '/.'))
 		{
 			return true;
 		}
 
 		// Ends with /..
-		if (substr($strPath, -3) == '/..')
+		if (str_ends_with($strPath, '/..'))
 		{
 			return true;
 		}
 
 		// Contains /../
-		if (strpos($strPath, '/../') !== false)
+		if (str_contains($strPath, '/../'))
 		{
 			return true;
 		}

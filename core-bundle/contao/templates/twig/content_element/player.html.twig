@@ -21,7 +21,12 @@
 {% block media %}
     <{{ figure.media.type }}{{ figure.media.attributes }}>
         {% for source_attributes in figure.media.sources %}
+            {% do csp_source('media-src', source_attributes.src) %}
             <source{{ source_attributes }}>
+        {% endfor %}
+        {% for track_attributes in figure.media.tracks %}
+            {% do csp_source('media-src', track_attributes.src) %}
+            <track{{ track_attributes }}/>
         {% endfor %}
     </{{ figure.media.type }}>
 {% endblock %}

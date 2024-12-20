@@ -75,7 +75,7 @@ class MetadataBagTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $this->expectExceptionMessage('The locale "it" does not exist in this metadata bag.');
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore expr.resultUnused */
         $bag['it'];
     }
 
@@ -110,15 +110,15 @@ class MetadataBagTest extends TestCase
         new MetadataBag($elements);
     }
 
-    public function provideInvalidElements(): \Generator
+    public static function provideInvalidElements(): iterable
     {
         yield 'not an object' => [
             ['en' => new Metadata([]), 'de' => 'foo'],
             'string',
         ];
 
-        yield 'invalid object' => [[
-            'en' => new Metadata([]), 'de' => new \stdClass(), ],
+        yield 'invalid object' => [
+            ['en' => new Metadata([]), 'de' => new \stdClass()],
             \stdClass::class,
         ];
     }
@@ -134,7 +134,7 @@ class MetadataBagTest extends TestCase
         new MetadataBag([], $locales);
     }
 
-    public function provideInvalidLocales(): \Generator
+    public static function provideInvalidLocales(): iterable
     {
         yield 'contains non-string literal' => [
             ['en', 42],

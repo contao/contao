@@ -92,22 +92,6 @@ class PageRegistryTest extends TestCase
         $this->assertSame('(/.+?)?', $route->getRequirement('parameters'));
     }
 
-    public function testReturnsUnparameteredPageRouteForRedirectPages(): void
-    {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, [
-            'type' => 'redirect',
-            'alias' => 'bar',
-            'urlPrefix' => 'foo',
-            'urlSuffix' => '.baz',
-        ]);
-
-        $registry = new PageRegistry($this->createMock(Connection::class));
-        $route = $registry->getRoute($pageModel);
-
-        $this->assertSame('/foo/bar.baz', $route->getPath());
-        $this->assertNull($route->getDefault('parameters'));
-    }
-
     /**
      * @dataProvider pageRouteWithPathProvider
      */
@@ -128,7 +112,7 @@ class PageRegistryTest extends TestCase
         $this->assertSame($expectedPath, $route->getPath());
     }
 
-    public function pageRouteWithPathProvider(): \Generator
+    public static function pageRouteWithPathProvider(): iterable
     {
         yield 'Does not add parameters for empty path' => [
             new RouteConfig(''),
@@ -197,7 +181,11 @@ class PageRegistryTest extends TestCase
 
     public function testConfiguresTheRoute(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'foo',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
+        ]);
 
         $enhancer1 = $this->createMock(DynamicRouteInterface::class);
         $enhancer1
@@ -319,7 +307,11 @@ class PageRegistryTest extends TestCase
 
     public function testOverwritesExistingTypes(): void
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foo']);
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'foo',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
+        ]);
 
         $config1 = new RouteConfig();
         $config2 = new RouteConfig();
@@ -400,6 +392,26 @@ class PageRegistryTest extends TestCase
         $registry->add('foobar', new RouteConfig(false, null, null, []));
 
         $this->assertFalse($registry->isRoutable($pageModel));
+    }
+
+    public function testServiceIsResetable(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->exactly(2))
+            ->method('fetchAllAssociative')
+            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
+            ->willReturn(['', '.html'])
+        ;
+
+        $registry = new PageRegistry($connection);
+
+        $this->assertEmpty($registry->getUrlPrefixes());
+        $this->assertEmpty($registry->getUrlPrefixes());
+
+        $registry->reset();
+
+        $this->assertEmpty($registry->getUrlPrefixes());
     }
 
     private function mockConnectionWithPrefixAndSuffix(string $urlPrefix = '', string $urlSuffix = '.html'): Connection

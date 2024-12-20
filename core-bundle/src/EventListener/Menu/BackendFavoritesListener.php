@@ -15,11 +15,13 @@ namespace Contao\CoreBundle\EventListener\Menu;
 use Contao\BackendUser;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Event\MenuEvent;
+use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\Util\MenuManipulator;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
@@ -29,6 +31,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * @internal
  */
+#[AsEventListener]
 class BackendFavoritesListener
 {
     public function __construct(
@@ -168,10 +171,10 @@ class BackendFavoritesListener
 
             $item = $factory
                 ->createItem('favorite_'.$node['id'])
-                ->setLabel($node['title'])
+                ->setLabel(StringUtil::decodeEntities($node['title']))
                 ->setUri($node['url'].(str_contains((string) $node['url'], '?') ? '&' : '?').'ref='.$ref)
                 ->setLinkAttribute('class', 'navigation')
-                ->setLinkAttribute('title', $node['title'])
+                ->setLinkAttribute('title', StringUtil::decodeEntities($node['title']))
                 ->setCurrent($node['url'] === $requestUri)
                 ->setExtra('translation_domain', false)
             ;
@@ -234,7 +237,7 @@ class BackendFavoritesListener
 
             unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
 
-            if (!empty($pairs)) {
+            if ([] !== $pairs) {
                 $qs = '?'.http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
             }
         }

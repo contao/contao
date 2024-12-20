@@ -175,8 +175,6 @@ class AddAvailableTransportsPassTest extends TestCase
         $definition = $container->getDefinition('contao.mailer.available_transports');
         $methodCalls = $definition->getMethodCalls();
 
-        $this->assertIsArray($methodCalls);
-
         $transports = [];
 
         foreach ($methodCalls as $methodCall) {

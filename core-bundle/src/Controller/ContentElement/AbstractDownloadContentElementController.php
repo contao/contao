@@ -32,9 +32,9 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
 {
     public function __invoke(Request $request, ContentModel $model, string $section, array|null $classes = null): Response
     {
-        // TODO: Remove method and move logic into its own action, once we have
-        // a strategy how to handle permissions for downloads via a real route.
-        // See #4862 for more details.
+        // TODO: Remove method and move logic into its own action, once we have a
+        // strategy how to handle permissions for downloads via a real route. See #4862
+        // for more details.
         $this->handleDownload($request, $model);
 
         return parent::__invoke($request, $model, $section, $classes);
@@ -77,8 +77,8 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
             $request,
             $this->getVirtualFilesystem(),
             function (FilesystemItem $item, array $context) use ($model, $request): Response|null {
-                // Do not handle downloads from other DownloadController
-                // elements on the same page (see #5568)
+                // Do not handle downloads from other DownloadController elements on the same
+                // page (see #5568)
                 if ($model->id !== ($context['id'] ?? null)) {
                     return new Response('', Response::HTTP_NO_CONTENT);
                 }
@@ -98,30 +98,23 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
 
     protected function applyDownloadableFileExtensionsFilter(FilesystemItemIterator $filesystemItemIterator): FilesystemItemIterator
     {
-        // Only allow certain file extensions
-        $getAllowedFileExtensions = function (): array {
-            if (null !== $this->getParameter('contao.downloadable_files')) {
-                return $this->getParameter('contao.downloadable_files');
-            }
+        $this->initializeContaoFramework();
 
-            $this->initializeContaoFramework();
-
-            return StringUtil::trimsplit(',', $this->getContaoAdapter(Config::class)->get('allowedDownload'));
-        };
+        $allowedDownload = StringUtil::trimsplit(',', $this->getContaoAdapter(Config::class)->get('allowedDownload'));
 
         return $filesystemItemIterator->filter(
             static fn (FilesystemItem $item): bool => \in_array(
                 Path::getExtension($item->getPath(), true),
-                array_map('strtolower', $getAllowedFileExtensions()),
+                array_map(strtolower(...), $allowedDownload),
                 true,
             ),
         );
     }
 
     /**
-     * If the content should be displayed inline or if the resource does not
-     * have a public URI, a URL pointing to this controller's download action
-     * will be generated, otherwise the direct download URL will be returned.
+     * If the content should be displayed inline or if the resource does not have a
+     * public URI, a URL pointing to this controller's download action will be
+     * generated, otherwise the direct download URL will be returned.
      */
     protected function generateDownloadUrl(FilesystemItem $filesystemItem, ContentModel $model, Request $request): string
     {
@@ -132,9 +125,9 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
             return (string) $publicUri;
         }
 
-        // TODO: Use an exclusive route once we have a strategy how to handle
-        // permissions for it. Right now we use the current route and then
-        // throw a ResponseException to initiate the download.
+        // TODO: Use an exclusive route once we have a strategy how to handle permissions
+        // for it. Right now we use the current route and then throw a ResponseException
+        // to initiate the download.
         $currentUrl = $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo();
         $context = ['id' => $model->id];
 
@@ -144,7 +137,8 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
     }
 
     /**
-     * Generate file preview images on the fly for a content model (default Contao controller behaviour).
+     * Generate file preview images on the fly for a content model (default Contao
+     * controller behaviour).
      *
      * @return \Generator<Figure>
      */
@@ -155,7 +149,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
             ->setSize($size = $model->size)
             ->enableLightbox($fullsize = $model->fullsize)
             ->disableMetadata()
-            ->setLightboxGroupIdentifier(sprintf('dl_%s_%s', $model->id, md5($filesystemItem->getPath())))
+            ->setLightboxGroupIdentifier(\sprintf('dl_%s_%s', $model->id, md5($filesystemItem->getPath())))
         ;
 
         $getLightboxSize = function (): string|null {
@@ -165,7 +159,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
                 return null;
             }
 
-            $layoutModel = $this->getContaoAdapter(LayoutModel::class)->findByPk($page->layout);
+            $layoutModel = $this->getContaoAdapter(LayoutModel::class)->findById($page->layout);
 
             return $layoutModel?->lightboxSize ?: null;
         };
@@ -183,7 +177,8 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
         $path = $filesystemItem->getPath();
         $vfs = $this->getVirtualFilesystem();
 
-        // TODO: As soon as our image libraries support this case, read from the public path instead and drop this check
+        // TODO: As soon as our image libraries support this case, read from the public
+        // path instead and drop this check
         if (!method_exists($vfs, 'getPrefix')) {
             throw new \LogicException('Your virtual file system has to implement the getPrefix() method for now!');
         }
@@ -192,7 +187,8 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
             $previewSize = $this->container->get('contao.image.preview_factory')->getPreviewSizeFromImageSize($size);
 
             $previews = $this->container->get('contao.image.preview_factory')->createPreviews(
-                // TODO: As soon as our image libraries support this case, read from the public path instead.
+                // TODO: As soon as our image libraries support this case, read from the public
+                // path instead.
                 Path::join($this->getParameter('kernel.project_dir'), $vfs->getPrefix(), $path),
                 $previewSize,
                 $numberOfItems,

@@ -42,7 +42,7 @@ class PhpFileLoader extends Loader
         [$code, $namespace] = $this->parseFile((string) $resource);
 
         if ('namespaced' === $type) {
-            $code = sprintf("\nnamespace %s{%s}\n", ltrim($namespace.' '), $code);
+            $code = \sprintf("\nnamespace %s{%s}\n", ltrim($namespace.' '), $code);
         }
 
         return $code;
@@ -61,7 +61,7 @@ class PhpFileLoader extends Loader
     private function parseFile(string $file): array
     {
         $ast = (new ParserFactory())
-            ->create(ParserFactory::PREFER_PHP7)
+            ->createForHostVersion()
             ->parse(trim(file_get_contents($file)))
         ;
 
@@ -87,7 +87,7 @@ class PhpFileLoader extends Loader
                         }
                     }
 
-                    if (empty($node->declares)) {
+                    if ([] === $node->declares) {
                         return NodeTraverser::REMOVE_NODE;
                     }
                 }
@@ -133,11 +133,12 @@ class PhpFileLoader extends Loader
 
         // Emit code and namespace information
         $prettyPrinter = new PrettyPrinter();
-        $code = sprintf("\n%s\n", $prettyPrinter->prettyPrint($ast));
+        $code = \sprintf("\n%s\n", $prettyPrinter->prettyPrint($ast));
         $namespaceNode = $namespaceResolver->getNameContext()->getNamespace();
         $namespace = $namespaceNode ? $namespaceNode->toString() : '';
 
-        // Force GC collection to reduce the total memory required when building the cache (see #4069)
+        // Force GC collection to reduce the total memory required when building the
+        // cache (see #4069)
         gc_collect_cycles();
 
         return [$code, $namespace];

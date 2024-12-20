@@ -4,14 +4,15 @@
 <!-- indexer::stop -->
 {%- endif %}
 
-{% block wrapper %}
-    {# Wrapper attributes: add the user defined ID/classes and also add the
-       template name (e.g. "content_element/text") as a class #}
-    {% set attributes = attrs(attributes|default)
-        .setIfExists('id', element_html_id)
-        .addClass([element_css_classes, "content-#{type}"])
-    %}
+{# Wrapper attributes: add the user defined ID/classes and also add the
+   template name (e.g. "content_element/text") as a class #}
+{% set attributes = attrs()
+    .setIfExists('id', element_html_id)
+    .addClass([element_css_classes, "content-#{type|replace({'_': '-'})}"])
+    .mergeWith(attributes|default)
+%}
 
+{% block wrapper %}
     {# Wrapper element around headline and content #}
     <{% block wrapper_tag %}div{% endblock %}{% block attributes %}{{ attributes }}{% endblock %}>
         {%- block inner %}
@@ -30,3 +31,7 @@
 
 {# Add metadata #}
 {% block metadata %}{% endblock %}
+
+{# Add styles and scripts #}
+{% block style %}{% endblock %}
+{% block script %}{% endblock %}

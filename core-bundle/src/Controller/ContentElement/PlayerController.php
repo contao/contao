@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
  *      media: array{
  *          type: 'video'|'audio',
  *          attributes: HtmlAttributes,
- *          sources: list<HtmlAttributes>,
+ *          sources: list<HtmlAttributes>
  *      },
  *      metadata: Metadata
  *  }
@@ -96,14 +96,14 @@ class PlayerController extends AbstractContentElementController
         ;
 
         $range = $model->playerStart || $model->playerStop
-            ? sprintf('#t=%s', implode(',', [$model->playerStart ?: '', $model->playerStop ?: '']))
+            ? '#t='.$model->playerStart.($model->playerStop ? ','.$model->playerStop : '')
             : '';
 
         $captions = [$model->playerCaption];
 
         $sources = array_map(
             function (FilesystemItem $item) use (&$captions, $range): HtmlAttributes {
-                $captions[] = ($item->getExtraMetadata()['metadata'] ?? null)?->getDefault()?->getCaption();
+                $captions[] = $item->getExtraMetadata()->getLocalized()?->getDefault()?->getCaption();
 
                 return (new HtmlAttributes())
                     ->setIfExists('type', $item->getMimeType(''))
@@ -113,11 +113,44 @@ class PlayerController extends AbstractContentElementController
             $sourceFiles,
         );
 
+        $tracks = [];
+
+        if (null !== $model->textTrackSRC) {
+            $trackItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->textTrackSRC);
+
+            foreach ($trackItems as $trackItem) {
+                if (!$publicUri = $this->filesStorage->generatePublicUri($trackItem->getPath())) {
+                    continue;
+                }
+
+                $extraMetadata = $trackItem->getExtraMetadata();
+
+                if (!$textTrack = $extraMetadata->getTextTrack()) {
+                    continue;
+                }
+
+                if (!$label = $extraMetadata->getLocalized()?->getFirst()?->getTitle()) {
+                    continue;
+                }
+
+                $tracks[] = (new HtmlAttributes())
+                    ->setIfExists('kind', $textTrack->getType()?->value)
+                    ->set('label', $label)
+                    ->set('srclang', $textTrack->getSourceLanguage())
+                    ->set('src', $publicUri)
+                ;
+            }
+
+            // Set the first file as the default track
+            ($tracks[0] ?? null)?->set('default');
+        }
+
         return [
             'media' => [
                 'type' => 'video',
                 'attributes' => $attributes,
                 'sources' => $sources,
+                'tracks' => $tracks,
             ],
             'metadata' => new Metadata([
                 Metadata::VALUE_CAPTION => array_filter($captions)[0] ?? '',
@@ -143,7 +176,7 @@ class PlayerController extends AbstractContentElementController
 
         $sources = array_map(
             function (FilesystemItem $item) use (&$captions): HtmlAttributes {
-                $captions[] = ($item->getExtraMetadata()['metadata'] ?? null)?->getDefault()?->getCaption();
+                $captions[] = $item->getExtraMetadata()->getLocalized()?->getDefault()?->getCaption();
 
                 return (new HtmlAttributes())
                     ->setIfExists('type', $item->getMimeType(''))

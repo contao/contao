@@ -11,13 +11,11 @@
 use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Controller;
-use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
+use Symfony\Component\Yaml\Yaml;
 
 $GLOBALS['TL_DCA']['tl_undo'] = array
 (
@@ -27,16 +25,20 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'dataContainer'               => DC_Table::class,
 		'closed'                      => true,
 		'notEditable'                 => true,
+		'notCopyable'                 => true,
+		'notDeletable'                => true,
 		'sql' => array
 		(
 			'keys' => array
 			(
-				'id' => 'primary'
+				'id' => 'primary',
+				'pid' => 'index',
+				'tstamp' => 'index'
 			)
 		),
 		'onload_callback' => array
 		(
-			array('tl_undo', 'checkPermission')
+			array('tl_undo', 'adjustDca')
 		),
 		'onshow_callback' => array
 		(
@@ -130,11 +132,9 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 class tl_undo extends Backend
 {
 	/**
-	 * Check permissions to use table tl_undo
-	 *
-	 * @throws AccessDeniedException
+	 * Set the user filter.
 	 */
-	public function checkPermission()
+	public function adjustDca()
 	{
 		$user = BackendUser::getInstance();
 
@@ -143,19 +143,7 @@ class tl_undo extends Backend
 			return;
 		}
 
-		// Show only own undo steps
-		$objSteps = Database::getInstance()
-			->prepare("SELECT id FROM tl_undo WHERE pid=?")
-			->execute($user->id);
-
-		// Restrict the list
-		$GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root'] = $objSteps->numRows ? $objSteps->fetchEach('id') : array(0);
-
-		// Redirect if there is an error
-		if (Input::get('act') && !in_array(Input::get('id'), $GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['root'] ?? array()))
-		{
-			throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' undo step ID ' . Input::get('id') . '.');
-		}
+		$GLOBALS['TL_DCA']['tl_undo']['list']['sorting']['filter'][] = array('pid=?', $user->id);
 	}
 
 	/**
@@ -196,7 +184,14 @@ class tl_undo extends Backend
 						}
 						else
 						{
-							$v = implode(', ', $array);
+							if (array_filter($array, static fn ($val) => is_array($val)))
+							{
+								$v = Yaml::dump($array, 1);
+							}
+							else
+							{
+								$v = substr(Yaml::dump($array, 0), 1, -1);
+							}
 						}
 					}
 

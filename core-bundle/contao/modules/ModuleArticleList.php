@@ -54,7 +54,6 @@ class ModuleArticleList extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		if (!$this->inColumn)
@@ -64,16 +63,16 @@ class ModuleArticleList extends Module
 
 		$id = $objPage->id;
 		$objTarget = null;
+		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
 		$this->Template->request = Environment::get('requestUri');
 
 		// Show the articles of a different page
-		if ($this->defineRoot && ($objTarget = $this->objModel->getRelated('rootPage')) instanceof PageModel)
+		if ($this->defineRoot && ($objTarget = PageModel::findById($this->objModel->rootPage)))
 		{
 			$id = $objTarget->id;
 
-			/** @var PageModel $objTarget */
-			$this->Template->request = $objTarget->getFrontendUrl();
+			$this->Template->request = $urlGenerator->generate($objTarget);
 		}
 
 		// Get published articles
@@ -100,7 +99,7 @@ class ModuleArticleList extends Module
 
 			try
 			{
-				$href = $objHelper->getFrontendUrl('/articles/' . ($objArticles->alias ?: $objArticles->id));
+				$href = $urlGenerator->generate($objArticles->current());
 			}
 			catch (ExceptionInterface)
 			{

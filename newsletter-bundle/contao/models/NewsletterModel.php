@@ -20,6 +20,7 @@ use Contao\Model\Collection;
  * @property integer     $tstamp
  * @property string      $subject
  * @property string      $alias
+ * @property string      $preheader
  * @property string|null $content
  * @property string|null $text
  * @property boolean     $addFile
@@ -42,6 +43,7 @@ use Contao\Model\Collection;
  * @method static NewsletterModel|null findOneByTstamp($val, array $opt=array())
  * @method static NewsletterModel|null findOneBySubject($val, array $opt=array())
  * @method static NewsletterModel|null findOneByAlias($val, array $opt=array())
+ * @method static NewsletterModel|null findOneByPreheader($val, array $opt=array())
  * @method static NewsletterModel|null findOneByContent($val, array $opt=array())
  * @method static NewsletterModel|null findOneByText($val, array $opt=array())
  * @method static NewsletterModel|null findOneByAddFile($val, array $opt=array())
@@ -58,6 +60,7 @@ use Contao\Model\Collection;
  * @method static Collection<NewsletterModel>|NewsletterModel[]|null findByPid($val, array $opt=array())
  * @method static Collection<NewsletterModel>|NewsletterModel[]|null findByTstamp($val, array $opt=array())
  * @method static Collection<NewsletterModel>|NewsletterModel[]|null findBySubject($val, array $opt=array())
+ * @method static Collection<NewsletterModel>|NewsletterModel[]|null findByPreheader($val, array $opt=array())
  * @method static Collection<NewsletterModel>|NewsletterModel[]|null findByContent($val, array $opt=array())
  * @method static Collection<NewsletterModel>|NewsletterModel[]|null findByText($val, array $opt=array())
  * @method static Collection<NewsletterModel>|NewsletterModel[]|null findByAddFile($val, array $opt=array())
@@ -79,6 +82,7 @@ use Contao\Model\Collection;
  * @method static integer countByTstamp($val, array $opt=array())
  * @method static integer countBySubject($val, array $opt=array())
  * @method static integer countByAlias($val, array $opt=array())
+ * @method static integer countByPreheader($val, array $opt=array())
  * @method static integer countByContent($val, array $opt=array())
  * @method static integer countByText($val, array $opt=array())
  * @method static integer countByAddFile($val, array $opt=array())
@@ -117,7 +121,7 @@ class NewsletterModel extends Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = !preg_match('/^[1-9]\d*$/', $varId) ? array("BINARY $t.alias=?") : array("$t.id=?");
+		$arrColumns = !preg_match('/^[1-9]\d*$/', $varId) ? array("CAST($t.alias AS BINARY)=?") : array("$t.id=?");
 		$arrColumns[] = "$t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ")";
 
 		if (!static::isPreviewMode($arrOptions))

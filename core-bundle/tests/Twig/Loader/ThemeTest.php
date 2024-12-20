@@ -26,7 +26,7 @@ class ThemeTest extends TestCase
         $this->assertSame($expectedSlug, (new ThemeNamespace())->generateSlug($path));
     }
 
-    public function providePaths(): \Generator
+    public static function providePaths(): iterable
     {
         yield 'simple' => ['foo', 'foo'];
 
@@ -79,7 +79,7 @@ class ThemeTest extends TestCase
         $this->assertSame($expectedSlug, (new ThemeNamespace())->match($name));
     }
 
-    public function provideNamespaces(): \Generator
+    public static function provideNamespaces(): iterable
     {
         yield 'theme namespace' => [
             '@Contao_Theme_foo_bar-baz/a.html.twig',

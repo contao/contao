@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\ContaoManager;
 
+use CmsIg\Seal\Integration\Symfony\SealBundle;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\GenerateJwtCookieCommand;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\GetConfigCommand;
@@ -33,6 +34,7 @@ use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use League\FlysystemBundle\FlysystemBundle;
+use Loupe\Loupe\LoupeFactory;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
 use Symfony\Bundle\DebugBundle\DebugBundle;
@@ -83,6 +85,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             BundleConfig::create(NelmioCorsBundle::class),
             BundleConfig::create(NelmioSecurityBundle::class),
             BundleConfig::create(FOSHttpCacheBundle::class),
+            BundleConfig::create(SealBundle::class),
             BundleConfig::create(ContaoManagerBundle::class)->setLoadAfter([ContaoCoreBundle::class]),
             BundleConfig::create(DebugBundle::class)->setLoadInProduction(false),
             BundleConfig::create(WebProfilerBundle::class)->setLoadInProduction(false),
@@ -130,23 +133,25 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel): RouteCollection|null
     {
-        if ('dev' !== $kernel->getEnvironment()) {
-            return null;
-        }
-
-        $collections = [];
-
-        $files = [
-            '_wdt' => '@WebProfilerBundle/Resources/config/routing/wdt.xml',
-            '_profiler' => '@WebProfilerBundle/Resources/config/routing/profiler.xml',
+        $collections = [
+            $resolver
+                ->resolve('@WebauthnBundle/Resources/config/routing.php')
+                ->load('@WebauthnBundle/Resources/config/routing.php'),
         ];
 
-        foreach ($files as $prefix => $file) {
-            /** @var RouteCollection $collection */
-            $collection = $resolver->resolve($file)->load($file);
-            $collection->addPrefix($prefix);
+        if ('dev' === $kernel->getEnvironment()) {
+            $files = [
+                '_wdt' => '@WebProfilerBundle/Resources/config/routing/wdt.xml',
+                '_profiler' => '@WebProfilerBundle/Resources/config/routing/profiler.xml',
+            ];
 
-            $collections[] = $collection;
+            foreach ($files as $prefix => $file) {
+                /** @var RouteCollection $collection */
+                $collection = $resolver->resolve($file)->load($file);
+                $collection->addPrefix($prefix);
+
+                $collections[] = $collection;
+            }
         }
 
         return array_reduce(
@@ -199,6 +204,14 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     public function getExtensionConfig($extensionName, array $extensionConfigs, PluginContainerBuilder $container): array
     {
         switch ($extensionName) {
+            case 'contao':
+                if (!$container->hasParameter('contao.dns_mapping')) {
+                    $container->setParameter('env(DNS_MAPPING)', '[]');
+                    $container->setParameter('contao.dns_mapping', '%env(json:DNS_MAPPING)%');
+                }
+
+                return $this->addDefaultBackendSearchProvider($extensionConfigs);
+
             case 'framework':
                 $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
                 $extensionConfigs = $this->addDefaultMailer($extensionConfigs);
@@ -308,8 +321,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             return $extensionConfigs;
         }
 
-        // Skip if a mapping with the name or alias "App" already exists or any
-        // mapping already targets "%kernel.project_dir%/src/Entity".
+        // Skip if a mapping with the name or alias "App" already exists or any mapping
+        // already targets "%kernel.project_dir%/src/Entity".
         foreach (array_replace(...$mappings) as $name => $values) {
             if (
                 'App' === $name
@@ -432,8 +445,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Dynamically adds a default mailer to the config, if no mailer is defined.
      *
-     * We cannot add a default mailer configuration to the skeleton config.yaml,
-     * since different types of configurations are not allowed.
+     * We cannot add a default mailer configuration to the skeleton config.yaml, since
+     * different types of configurations are not allowed.
      *
      * For example, if the Manager Bundle defined
      *
@@ -448,10 +461,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      *             transports:
      *                 foobar: 'smtps://smtp.example.com'
      *
-     * to their config.yaml, the merged configuration will lead to an error, since
-     * you cannot use "framework.mailer.dsn" together with "framework.mailer.transports".
-     * Thus, the default mailer configuration needs to be added dynamically if
-     * not already present.
+     * to their config.yaml, the merged configuration will lead to an error, since you
+     * cannot use "framework.mailer.dsn" together with "framework.mailer.transports".
+     * Thus, the default mailer configuration needs to be added dynamically if not
+     * already present.
      *
      * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
@@ -466,6 +479,38 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $extensionConfigs[] = [
             'mailer' => [
                 'dsn' => '%env(MAILER_DSN)%',
+            ],
+        ];
+
+        return $extensionConfigs;
+    }
+
+    /**
+     * Dynamically configures the back end search adapter if none was configured and
+     * the system supports it.
+     */
+    private function addDefaultBackendSearchProvider(array $extensionConfigs): array
+    {
+        foreach ($extensionConfigs as $config) {
+            // Configured a custom adapter (e.g. MeiliSearch or whatever)
+            if (isset($config['backend_search']['dsn'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        if (!class_exists(LoupeFactory::class)) {
+            return $extensionConfigs;
+        }
+
+        $loupeFactory = new LoupeFactory();
+
+        if (!$loupeFactory->isSupported()) {
+            return $extensionConfigs;
+        }
+
+        $extensionConfigs[] = [
+            'backend_search' => [
+                'dsn' => 'loupe://%kernel.project_dir%/var/backend_search',
             ],
         ];
 
@@ -563,7 +608,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $dbName .= '?serverVersion='.$this->encodeUrlParameter((string) $version);
         }
 
-        return sprintf(
+        return \sprintf(
             '%s://%s%s:%s%s',
             str_replace('_', '-', $driver),
             $userPassword,
@@ -601,7 +646,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $portSuffix = ':'.$port;
         }
 
-        return sprintf(
+        return \sprintf(
             '%s://%s%s%s',
             $transport,
             $credentials,

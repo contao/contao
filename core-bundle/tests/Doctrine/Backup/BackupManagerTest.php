@@ -248,7 +248,7 @@ class BackupManagerTest extends ContaoTestCase
         // Do not write it to vfs === backup does not exist
 
         $this->expectException(BackupManagerException::class);
-        $this->expectExceptionMessage(sprintf('Dump "%s" does not exist.', $backup->getFilename()));
+        $this->expectExceptionMessage(\sprintf('Dump "%s" does not exist.', $backup->getFilename()));
 
         $manager = $this->getBackupManager($this->mockConnection());
         $manager->restore(new RestoreConfig($backup));
@@ -304,7 +304,7 @@ class BackupManagerTest extends ContaoTestCase
         $manager->restore(new RestoreConfig($backup));
     }
 
-    public function successfulRestoreProvider(): \Generator
+    public static function successfulRestoreProvider(): iterable
     {
         $backup = Backup::createNew();
 

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\FaqBundle\Picker;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\CoreBundle\Picker\AbstractInsertTagPickerProvider;
@@ -24,6 +25,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+#[AsPickerProvider(priority: 64)]
 class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
@@ -77,14 +79,14 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
 
     public function convertDcaValue(PickerConfig $config, mixed $value): string
     {
-        return sprintf($this->getInsertTag($config), $value);
+        return \sprintf($this->getInsertTag($config), $value);
     }
 
     protected function getRouteParameters(PickerConfig|null $config = null): array
     {
         $params = ['do' => 'faq'];
 
-        if (!$config || !$config->getValue() || !$this->supportsValue($config)) {
+        if (!$config?->getValue() || !$this->supportsValue($config)) {
             return $params;
         }
 
@@ -104,15 +106,12 @@ class FaqPickerProvider extends AbstractInsertTagPickerProvider implements DcaPi
     private function getFaqCategoryId(int|string $id): int|null
     {
         $faqAdapter = $this->framework->getAdapter(FaqModel::class);
-        $faqModel = $faqAdapter->findById($id);
 
-        if (!$faqModel instanceof FaqModel) {
+        if (!$faqModel = $faqAdapter->findById($id)) {
             return null;
         }
 
-        $faqCategory = $faqModel->getRelated('pid');
-
-        if (!$faqCategory instanceof FaqCategoryModel) {
+        if (!$faqCategory = $this->framework->getAdapter(FaqCategoryModel::class)->findById($faqModel->pid)) {
             return null;
         }
 

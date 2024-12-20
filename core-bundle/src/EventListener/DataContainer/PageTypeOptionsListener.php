@@ -16,6 +16,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Event\FilterPageTypeEvent;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -47,11 +48,16 @@ class PageTypeOptionsListener
             ;
         }
 
+        // Return if there is no current page, e.g. in the help wizard (see #7137)
+        if (!$currentRecord = $dc->getCurrentRecord()) {
+            return array_values($options);
+        }
+
         // Allow the currently selected option and anything the user has access to
         foreach ($options as $k => $pageType) {
             if (
                 $pageType !== $dc->value
-                && !$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $pageType)
+                && !$this->security->isGranted(ContaoCorePermissions::DC_PREFIX.'tl_page', new UpdateAction('tl_page', $currentRecord, ['type' => $pageType]))
             ) {
                 unset($options[$k]);
             }

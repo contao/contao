@@ -2,6 +2,14 @@
 
 ## Version 4.* to 5.0
 
+### postDownload hook
+
+The `postDownload` hook is only triggered in the legacy download content elements.
+
+To apply business logic to all file responses, use an event listener instead that listens for the `ResponseEvent` event
+and checks whether the response is a `BinaryFileResponse`. The event listener works for both the legacy elements and the
+new Twig-based download elements.
+
 ### Contao 3 theme icons
 
 The old `.gif` images that were used for the back end theme in Contao 3 have been removed. Use the `.svg` icons instead.
@@ -189,20 +197,15 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class Test {
-    private $requestStack;
-    private $scopeMatcher;
-
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher) {
-        $this->requestStack = $requestStack;
-        $this->scopeMatcher = $scopeMatcher;
+    public function __construct(private ScopeMatcher $scopeMatcher) {
     }
 
     public function isBackend() {
-        return $this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest());
+        return $this->scopeMatcher->isBackendRequest();
     }
 
     public function isFrontend() {
-        return $this->scopeMatcher->isFrontendRequest($this->requestStack->getCurrentRequest());
+        return $this->scopeMatcher->isFrontendRequest();
     }
 }
 ```
@@ -366,7 +369,7 @@ instead.
 
 ### Template changes
 
-The items in the `ce_list` and `ce_table` templates no longer consist of an associative array containing the item‘s CSS
+The items in the `ce_list` and `ce_table` templates no longer consist of an associative array containing the item's CSS
 class and content. Instead, it will only be the content.
 
 ```php

@@ -32,6 +32,8 @@ class FrontendPreviewAuthenticator
 
     /**
      * @internal
+     *
+     * @param UserProviderInterface<FrontendUser> $userProvider
      */
     public function __construct(
         private readonly Security $security,
@@ -94,8 +96,8 @@ class FrontendPreviewAuthenticator
     }
 
     /**
-     * Replaces the current token if the frontend firewall is active.
-     * Otherwise, the token is stored in the session.
+     * Replaces the current token if the frontend firewall is active. Otherwise, the
+     * token is stored in the session.
      */
     private function updateToken(UsernamePasswordToken|null $token): void
     {
@@ -122,7 +124,7 @@ class FrontendPreviewAuthenticator
             }
         } catch (UserNotFoundException) {
             $this->logger?->info(
-                sprintf('Could not find a front end user with the username "%s"', $username),
+                \sprintf('Could not find a front end user with the username "%s"', $username),
                 ['contao' => new ContaoContext(__METHOD__, ContaoContext::ACCESS, '')],
             );
 
@@ -131,7 +133,8 @@ class FrontendPreviewAuthenticator
 
         $frontendGroups = StringUtil::deserialize($frontendUser->groups, true);
 
-        // The front end user does not belong to a group that the back end user is allowed to log in
+        // The front end user does not belong to a group that the back end user is
+        // allowed to log in
         if (!$this->security->isGranted('contao_user.amg', $frontendGroups)) {
             return null;
         }

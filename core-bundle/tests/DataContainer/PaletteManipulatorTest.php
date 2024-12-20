@@ -309,10 +309,6 @@ class PaletteManipulatorTest extends TestCase
                 function (array $config, array $action, bool $skipLegends) use (&$closureCalled): void {
                     $closureCalled = true;
 
-                    $this->assertIsArray($config);
-                    $this->assertIsArray($action);
-                    $this->assertIsBool($skipLegends);
-
                     $this->assertArrayHasKey('fields', $action);
                     $this->assertArrayHasKey('parents', $action);
                     $this->assertArrayHasKey('position', $action);
@@ -332,7 +328,8 @@ class PaletteManipulatorTest extends TestCase
             ->addField(['foo', 'bar'], 'foobar_legend', 'append')
         ;
 
-        // Make sure the palette is not here (for whatever reason another test might have set it)
+        // Make sure the palette is not here (for whatever reason another test might have
+        // set it)
         unset($GLOBALS['TL_DCA']['tl_test']['palettes']['default']);
 
         $this->expectException(PaletteNotFoundException::class);
@@ -346,7 +343,8 @@ class PaletteManipulatorTest extends TestCase
             ->addField(['foo', 'bar'], 'lastname')
         ;
 
-        // Make sure the palette is not here (for whatever reason another test might have set it)
+        // Make sure the palette is not here (for whatever reason another test might have
+        // set it)
         unset($GLOBALS['TL_DCA']['tl_test']['subpalettes']['name']);
 
         $this->expectException(PaletteNotFoundException::class);

@@ -219,7 +219,7 @@ class ContentElementControllerTest extends TestCase
         $this->assertSame($model->row(), $template['data']);
     }
 
-    public function provideScope(): \Generator
+    public static function provideScope(): iterable
     {
         yield 'frontend' => [false];
         yield 'backend' => [true];

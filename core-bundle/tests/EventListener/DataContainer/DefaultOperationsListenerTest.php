@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
+use Contao\Controller;
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\EventListener\DataContainer\DefaultOperationsListener;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -37,8 +38,11 @@ class DefaultOperationsListenerTest extends TestCase
 
         unset($GLOBALS['TL_DCA']);
 
+        $controllerAdapter = $this->mockAdapter(['loadDataContainer']);
+        $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter]);
+
         $this->security = $this->createMock(Security::class);
-        $this->listener = new DefaultOperationsListener($this->security, $this->createMock(Connection::class));
+        $this->listener = new DefaultOperationsListener($framework, $this->security, $this->createMock(Connection::class));
     }
 
     protected function tearDown(): void
@@ -92,7 +96,7 @@ class DefaultOperationsListenerTest extends TestCase
 
         $this->assertSame(['edit', 'children', 'copy', 'delete', 'show'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
-        $this->assertOperation($operations['children'], 'table=tl_bar', 'children.svg', false);
+        $this->assertOperation($operations['children'], 'table=tl_bar', 'children.svg', true);
         $this->assertOperation($operations['copy'], 'act=copy', 'copy.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
@@ -141,10 +145,10 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
         $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
 
-        $this->assertSame(['edit', 'copy', 'copyChilds', 'cut', 'delete', 'show'], array_keys($operations));
+        $this->assertSame(['edit', 'copy', 'copyChildren', 'cut', 'delete', 'show'], array_keys($operations));
         $this->assertOperation($operations['edit'], 'act=edit', 'edit.svg', true);
         $this->assertOperation($operations['copy'], 'act=paste&amp;mode=copy', 'copy.svg', true);
-        $this->assertOperation($operations['copyChilds'], 'act=paste&amp;mode=copy&amp;childs=1', 'copychilds.svg', true);
+        $this->assertOperation($operations['copyChildren'], 'act=paste&amp;mode=copy&amp;children=1', 'copychildren.svg', true);
         $this->assertOperation($operations['cut'], 'act=paste&amp;mode=cut', 'cut.svg', true);
         $this->assertOperation($operations['delete'], 'act=delete', 'delete.svg', true);
         $this->assertOperation($operations['show'], 'act=show', 'show.svg', false);
@@ -379,6 +383,32 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertSame(['foo', 'delete'], array_keys($operations));
     }
 
+    public function testDoesNotAddDefaultsIfOneOperationHasADefaultKey(): void
+    {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
+        $GLOBALS['TL_DCA']['tl_foo'] = [
+            'list' => [
+                'sorting' => [
+                    'mode' => DataContainer::MODE_SORTED,
+                ],
+                'operations' => [
+                    'show' => false,
+                    'foo' => [
+                        'href' => 'foo=bar',
+                        'icon' => 'foo.svg',
+                    ],
+                ],
+            ],
+        ];
+
+        ($this->listener)('tl_foo');
+
+        $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+        $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
+
+        $this->assertSame(['foo'], array_keys($operations));
+    }
+
     public function testDoesNotAddEditOperationIfTableIsNotEditable(): void
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
@@ -558,7 +588,7 @@ class DefaultOperationsListenerTest extends TestCase
         $operation['button_callback']($config);
     }
 
-    public function checkPermissionsProvider(): \Generator
+    public static function checkPermissionsProvider(): iterable
     {
         yield 'edit operation' => [
             'edit',
@@ -571,7 +601,7 @@ class DefaultOperationsListenerTest extends TestCase
             CreateAction::class,
             ['id' => 15, 'pid' => 42, 'foo' => 'bar'],
             [],
-            ['pid' => 42, 'foo' => 'bar', 'tstamp' => 0],
+            ['id' => 15, 'pid' => 42, 'foo' => 'bar'],
         ];
 
         yield 'delete operation' => [
@@ -585,7 +615,7 @@ class DefaultOperationsListenerTest extends TestCase
             CreateAction::class,
             ['id' => 15, 'pid' => 0, 'foo' => 'bar'],
             ['list' => ['sorting' => ['mode' => DataContainer::MODE_TREE]]],
-            ['foo' => 'bar', 'tstamp' => 0],
+            ['id' => 15, 'pid' => 0, 'foo' => 'bar', 'sorting' => null],
         ];
 
         yield 'copy operation with parent table' => [
@@ -593,15 +623,15 @@ class DefaultOperationsListenerTest extends TestCase
             CreateAction::class,
             ['id' => 15, 'pid' => 42, 'sorting' => 128, 'foo' => 'bar'],
             ['config' => ['ptable' => 'tl_bar']],
-            ['foo' => 'bar', 'tstamp' => 0],
+            ['id' => 15, 'pid' => 42, 'sorting' => null, 'foo' => 'bar'],
         ];
 
-        yield 'copyChilds operation in tree mode' => [
-            'copyChilds',
+        yield 'copyChildren operation in tree mode' => [
+            'copyChildren',
             CreateAction::class,
             ['id' => 15, 'pid' => 42, 'sorting' => 128, 'foo' => 'bar'],
             ['list' => ['sorting' => ['mode' => DataContainer::MODE_TREE]]],
-            ['foo' => 'bar', 'tstamp' => 0],
+            ['id' => 15, 'pid' => 42, 'sorting' => null, 'foo' => 'bar'],
         ];
 
         yield 'cut operation in tree mode' => [
@@ -648,8 +678,9 @@ class DefaultOperationsListenerTest extends TestCase
 
             $this->assertSame(1, $ref->getNumberOfParameters());
 
-            /** @var \ReflectionNamedType $type */
             $type = $ref->getParameters()[0]->getType();
+
+            $this->assertInstanceOf(\ReflectionNamedType::class, $type);
             $this->assertSame(DataContainerOperation::class, $type->getName());
         } else {
             $this->assertArrayNotHasKey('button_callback', $operation);

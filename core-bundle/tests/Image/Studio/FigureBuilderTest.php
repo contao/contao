@@ -17,6 +17,7 @@ use Contao\CoreBundle\Event\FileMetadataEvent;
 use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
+use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Framework\Adapter;
@@ -27,6 +28,7 @@ use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Image\Studio\LightboxResult;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DcaLoader;
@@ -45,8 +47,10 @@ use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 class FigureBuilderTest extends TestCase
 {
@@ -155,9 +159,9 @@ class FigureBuilderTest extends TestCase
         $model->type = 'file';
         $model->path = $relativeFilePath;
 
-        $filesModelAdapter = $this->mockAdapter(['findByPk']);
+        $filesModelAdapter = $this->mockAdapter(['findById']);
         $filesModelAdapter
-            ->method('findByPk')
+            ->method('findById')
             ->with(5)
             ->willReturn($model)
         ;
@@ -170,7 +174,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromIdFailsWithNonExistingResource(): void
     {
-        $filesModelAdapter = $this->mockAdapter(['findByPk']);
+        $filesModelAdapter = $this->mockAdapter(['findById']);
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
 
         $figureBuilder = $this->getFigureBuilder(null, $framework)->fromId(99);
@@ -381,6 +385,34 @@ class FigureBuilderTest extends TestCase
         $figureBuilder->build();
     }
 
+    public function testFromFilesystemItem(): void
+    {
+        $basePath = Path::canonicalize(__DIR__.'/../../Fixtures/files');
+        $absoluteFilePath = Path::join($basePath, 'public/foo.jpg');
+
+        $model = $this->mockClassWithProperties(FilesModel::class);
+        $model->type = 'file';
+        $model->path = 'files/public/foo.jpg';
+
+        $filesModelAdapter = $this->mockAdapter(['findByPath']);
+        $filesModelAdapter
+            ->method('findByPath')
+            ->with($absoluteFilePath)
+            ->willReturn($model)
+        ;
+
+        $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
+        $studio = $this->mockStudioForImage($absoluteFilePath);
+
+        $mountManager = new MountManager();
+        $mountManager->mount(new LocalFilesystemAdapter($basePath), 'files');
+
+        $storage = new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class), 'files');
+        $item = new FilesystemItem(true, 'public/foo.jpg', storage: $storage);
+
+        $this->getFigureBuilder($studio, $framework)->fromFilesystemItem($item)->build();
+    }
+
     /**
      * @dataProvider provideMixedIdentifiers
      */
@@ -392,7 +424,7 @@ class FigureBuilderTest extends TestCase
         $filesModel->type = 'file';
         $filesModel->path = $relativeFilePath;
 
-        $filesModelAdapter = $this->mockAdapter(['findByUuid', 'findByPk', 'findByPath']);
+        $filesModelAdapter = $this->mockAdapter(['findByUuid', 'findById', 'findByPath']);
         $filesModelAdapter
             ->method('findByUuid')
             ->with('1d902bf1-2683-406e-b004-f0b59095e5a1')
@@ -400,7 +432,7 @@ class FigureBuilderTest extends TestCase
         ;
 
         $filesModelAdapter
-            ->method('findByPk')
+            ->method('findById')
             ->with(5)
             ->willReturn($filesModel)
         ;
@@ -517,7 +549,7 @@ class FigureBuilderTest extends TestCase
         $figureBuilder->build();
     }
 
-    public function provideMixedIdentifiers(): \Generator
+    public function provideMixedIdentifiers(): iterable
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
@@ -590,7 +622,7 @@ class FigureBuilderTest extends TestCase
         $invalidModel = $this->mockClassWithProperties(FilesModel::class);
         $invalidModel->type = 'folder';
 
-        $filesModelAdapter = $this->mockAdapter(['findByUuid', 'findByPk', 'findByPath']);
+        $filesModelAdapter = $this->mockAdapter(['findByUuid', 'findById', 'findByPath']);
         $filesModelAdapter
             ->method('findByUuid')
             ->willReturnMap([
@@ -600,7 +632,7 @@ class FigureBuilderTest extends TestCase
         ;
 
         $filesModelAdapter
-            ->method('findByPk')
+            ->method('findById')
             ->willReturnMap([
                 [5, $model],
                 [123, null],
@@ -647,9 +679,6 @@ class FigureBuilderTest extends TestCase
 
         foreach ($setValidResourceOperations as [$method, $argument]) {
             $figureBuilder->from($invalidModel);
-
-            $this->assertInstanceOf(InvalidResourceException::class, $exception);
-
             $figureBuilder->$method($argument);
 
             $this->assertNull(
@@ -744,8 +773,6 @@ class FigureBuilderTest extends TestCase
         $currentPage->language = 'es';
         $currentPage->rootFallbackLanguage = 'de';
 
-        $GLOBALS['objPage'] = $currentPage;
-
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
         $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
@@ -764,7 +791,7 @@ class FigureBuilderTest extends TestCase
         $framework = $this->mockContaoFramework([FilesModel::class => $filesModelAdapter]);
         $studio = $this->mockStudioForImage($absoluteFilePath);
 
-        $figure = $this->getFigureBuilder($studio, $framework)
+        $figure = $this->getFigureBuilder($studio, $framework, null, $currentPage)
             ->fromFilesModel($filesModel)
             ->setLocale($locale)
             ->setOverwriteMetadata($overwriteMetadata)
@@ -773,10 +800,10 @@ class FigureBuilderTest extends TestCase
 
         $this->assertSame($expectedMetadata, $figure->getMetadata()->all());
 
-        unset($GLOBALS['TL_DCA'], $GLOBALS['objPage']);
+        unset($GLOBALS['TL_DCA']);
     }
 
-    public function provideMetadataAutoFetchCases(): \Generator
+    public static function provideMetadataAutoFetchCases(): iterable
     {
         yield 'complete metadata available in defined locale' => [
             serialize([
@@ -917,7 +944,6 @@ class FigureBuilderTest extends TestCase
             Metadata::VALUE_CAPTION => '',
         ];
 
-        // Note: $GLOBALS['objPage'] is not set at this point
         $this->assertSame($emptyMetadata, $figure->getMetadata()->all());
     }
 
@@ -926,7 +952,8 @@ class FigureBuilderTest extends TestCase
      */
     public function testAutoSetUuidFromFilesModelWhenDefiningMetadata(FilesModel|ImageInterface|string|null $resource, Metadata|null $metadataToSet, string|null $locale, array $expectedMetadata): void
     {
-        System::setContainer($this->getContainerWithContaoConfiguration());
+        $container = $this->getContainerWithContaoConfiguration();
+        System::setContainer($container);
 
         $GLOBALS['TL_DCA']['tl_files']['fields']['meta']['eval']['metaFields'] = ['title' => ''];
 
@@ -934,7 +961,10 @@ class FigureBuilderTest extends TestCase
         $currentPage->language = 'en';
         $currentPage->rootFallbackLanguage = 'de';
 
-        $GLOBALS['objPage'] = $currentPage;
+        $request = Request::create('https://localhost');
+        $request->attributes->set('pageModel', $currentPage);
+
+        $container->get('request_stack')->push($request);
 
         [$absoluteFilePath] = $this->getTestFilePaths();
 
@@ -965,10 +995,10 @@ class FigureBuilderTest extends TestCase
 
         $this->assertSame($expectedMetadata, $figure->getMetadata()->all());
 
-        unset($GLOBALS['TL_DCA'], $GLOBALS['objPage']);
+        unset($GLOBALS['TL_DCA']);
     }
 
-    public function provideUuidMetadataAutoFetchCases(): \Generator
+    public function provideUuidMetadataAutoFetchCases(): iterable
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
@@ -1092,7 +1122,7 @@ class FigureBuilderTest extends TestCase
         $figureBuilder->setLinkAttributes($attributes);
     }
 
-    public function provideInvalidLinkAttributes(): \Generator
+    public static function provideInvalidLinkAttributes(): iterable
     {
         yield 'non-string keys' => [['foo', 'bar']];
 
@@ -1166,7 +1196,7 @@ class FigureBuilderTest extends TestCase
         $this->assertSame($hasLightbox, $figure->hasLightbox());
     }
 
-    public function provideLightboxResourcesOrUrls(): \Generator
+    public function provideLightboxResourcesOrUrls(): iterable
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
 
@@ -1252,7 +1282,7 @@ class FigureBuilderTest extends TestCase
         $this->assertTrue($figure->hasLightbox());
     }
 
-    public function provideLightboxFallbackResources(): \Generator
+    public function provideLightboxFallbackResources(): iterable
     {
         [$absoluteFilePath] = $this->getTestFilePaths();
 
@@ -1470,16 +1500,29 @@ class FigureBuilderTest extends TestCase
         return $studio;
     }
 
-    private function getFigureBuilder(Studio|null $studio = null, ContaoFramework|null $framework = null, EventDispatcher|null $eventDispatcher = null): FigureBuilder
+    private function getFigureBuilder(Studio|null $studio = null, ContaoFramework|null $framework = null, EventDispatcher|null $eventDispatcher = null, PageModel|null $pageModel = null): FigureBuilder
     {
         [, , $projectDir, $uploadPath, $webDir] = $this->getTestFilePaths();
         $validExtensions = $this->getTestFileExtensions();
+
+        $request = Request::create('https://localhost');
+        $request->attributes->set('pageModel', $pageModel);
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $pageFinder = new PageFinder(
+            $framework ?? $this->mockContaoFramework(),
+            $this->createMock(RequestMatcherInterface::class),
+            $requestStack,
+        );
 
         $locator = $this->createMock(ContainerInterface::class);
         $locator
             ->method('get')
             ->willReturnMap([
                 ['contao.image.studio', $studio],
+                ['contao.routing.page_finder', $pageFinder],
                 ['contao.framework', $framework],
                 ['event_dispatcher', $eventDispatcher ?? new EventDispatcher()],
             ])

@@ -73,8 +73,14 @@ class TokenChecker
      */
     public function hasFrontendGuest(): bool
     {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (!$request?->hasPreviousSession()) {
+            return false;
+        }
+
         try {
-            $session = $this->requestStack->getSession();
+            $session = $request->getSession();
         } catch (SessionNotFoundException) {
             return false;
         }
@@ -137,7 +143,7 @@ class TokenChecker
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!$request || !$request->attributes->get('_preview', false) || !$this->canAccessPreview()) {
+        if (!$request?->attributes->get('_preview', false) || !$this->canAccessPreview()) {
             return false;
         }
 
@@ -215,7 +221,7 @@ class TokenChecker
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (!$request || !$request->hasSession()) {
+        if (!$request?->hasSession()) {
             return null;
         }
 

@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Lexer;
@@ -26,7 +26,7 @@ class DynamicExtendsTokenParserTest extends TestCase
 {
     public function testGetTag(): void
     {
-        $tokenParser = new DynamicExtendsTokenParser($this->createMock(TemplateHierarchyInterface::class));
+        $tokenParser = new DynamicExtendsTokenParser($this->createMock(ContaoFilesystemLoader::class));
 
         $this->assertSame('extends', $tokenParser->getTag());
     }
@@ -36,8 +36,8 @@ class DynamicExtendsTokenParserTest extends TestCase
      */
     public function testHandlesContaoExtends(string $code, string ...$expectedStrings): void
     {
-        $templateHierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        $templateHierarchy
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
             ->method('getDynamicParent')
             ->willReturnCallback(
                 function (string $name, string $path) {
@@ -58,7 +58,7 @@ class DynamicExtendsTokenParserTest extends TestCase
         ;
 
         $environment = new Environment($this->createMock(LoaderInterface::class));
-        $environment->addTokenParser(new DynamicExtendsTokenParser($templateHierarchy));
+        $environment->addTokenParser(new DynamicExtendsTokenParser($filesystemLoader));
 
         $source = new Source(
             $code,
@@ -74,7 +74,7 @@ class DynamicExtendsTokenParserTest extends TestCase
         }
     }
 
-    public function provideSources(): \Generator
+    public static function provideSources(): iterable
     {
         yield 'regular extend' => [
             "{% extends '@Foo/bar.html.twig' %}",
@@ -110,18 +110,18 @@ class DynamicExtendsTokenParserTest extends TestCase
 
     public function testFailsWhenExtendingAnInvalidTemplate(): void
     {
-        $templateHierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        $templateHierarchy
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
             ->method('getDynamicParent')
             ->with('foo')
             ->willThrowException(new \LogicException('Template not found in hierarchy.'))
         ;
 
         $environment = new Environment($this->createMock(LoaderInterface::class));
-        $environment->addTokenParser(new DynamicExtendsTokenParser($templateHierarchy));
+        $environment->addTokenParser(new DynamicExtendsTokenParser($filesystemLoader));
 
-        // Use a conditional expression here, so that we can test rethrowing
-        // exceptions in case the parent node is not an ArrayExpression
+        // Use a conditional expression here, so that we can test rethrowing exceptions
+        // in case the parent node is not an ArrayExpression
         $source = new Source("{% extends true ? '@Contao/foo' : '' %}", 'template.html.twig');
         $tokenStream = (new Lexer($environment))->tokenize($source);
         $parser = new Parser($environment);
@@ -140,7 +140,7 @@ class DynamicExtendsTokenParserTest extends TestCase
         $environment = new Environment($this->createMock(LoaderInterface::class));
 
         $environment->addTokenParser(new DynamicExtendsTokenParser(
-            $this->createMock(TemplateHierarchyInterface::class),
+            $this->createMock(ContaoFilesystemLoader::class),
         ));
 
         $source = new Source(
@@ -158,7 +158,7 @@ class DynamicExtendsTokenParserTest extends TestCase
         $parser->parse($tokenStream);
     }
 
-    public function provideSourcesWithErrors(): \Generator
+    public static function provideSourcesWithErrors(): iterable
     {
         yield 'extend from within a block' => [
             "{% block b %}{% extends '@Foo/bar.html.twig' %}{% endblock %}",
@@ -168,11 +168,6 @@ class DynamicExtendsTokenParserTest extends TestCase
         yield 'extend from within macro' => [
             "{% macro m() %}{% extends '@Foo/bar.html.twig' %}{% endmacro %}",
             'Cannot use "extends" in a macro.',
-        ];
-
-        yield 'multiple extends' => [
-            "{% extends '@Foo/bar1.html.twig' %}{% extends '@Foo/bar2.html.twig' %}",
-            'Multiple extends tags are forbidden.',
         ];
     }
 }

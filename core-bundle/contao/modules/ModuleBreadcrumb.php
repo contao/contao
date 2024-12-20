@@ -52,7 +52,6 @@ class ModuleBreadcrumb extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$type = null;
@@ -84,7 +83,7 @@ class ModuleBreadcrumb extends Module
 			(
 				'isRoot'   => true,
 				'isActive' => false,
-				'href'     => (($objFirstPage !== null) ? $this->getPageFrontendUrl($objFirstPage) : Environment::get('base')),
+				'href'     => (($objFirstPage !== null) ? $this->generateContentUrl($objFirstPage) : Environment::get('base')),
 				'title'    => StringUtil::specialchars($objPages->pageTitle ?: $objPages->title, true),
 				'link'     => $objPages->title,
 				'data'     => (($objFirstPage !== null) ? $objFirstPage->row() : array()),
@@ -125,13 +124,13 @@ class ModuleBreadcrumb extends Module
 
 					if ($objNext instanceof PageModel)
 					{
-						$href = $this->getPageFrontendUrl($objNext);
+						$href = $this->generateContentUrl($objNext);
 						break;
 					}
 					// no break
 
 				default:
-					$href = $this->getPageFrontendUrl($pages[$i]);
+					$href = $this->generateContentUrl($pages[$i]);
 					break;
 			}
 
@@ -157,26 +156,13 @@ class ModuleBreadcrumb extends Module
 			(
 				'isRoot'   => false,
 				'isActive' => false,
-				'href'     => $this->getPageFrontendUrl($pages[0]),
+				'href'     => $this->generateContentUrl($pages[0]),
 				'title'    => StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title, true),
 				'link'     => $pages[0]->title,
 				'data'     => $pages[0]->row(),
 			);
 
-			list($strSection, $strArticle) = explode(':', Input::get('articles')) + array(null, null);
-
-			if ($strArticle === null)
-			{
-				$strArticle = $strSection;
-			}
-
-			$objArticle = ArticleModel::findByIdOrAlias($strArticle);
-			$strAlias = $objArticle->alias ?: $objArticle->id;
-
-			if ($objArticle->inColumn != 'main')
-			{
-				$strAlias = $objArticle->inColumn . ':' . $strAlias;
-			}
+			$objArticle = ArticleModel::findByIdOrAlias(Input::get('articles'));
 
 			if ($objArticle !== null)
 			{
@@ -184,7 +170,7 @@ class ModuleBreadcrumb extends Module
 				(
 					'isRoot'   => false,
 					'isActive' => true,
-					'href'     => $this->getPageFrontendUrl($pages[0], '/articles/' . $strAlias),
+					'href'     => $this->generateContentUrl($objArticle),
 					'title'    => StringUtil::specialchars($objArticle->title, true),
 					'link'     => $objArticle->title,
 					'data'     => $objArticle->row(),
@@ -265,11 +251,11 @@ class ModuleBreadcrumb extends Module
 		}
 	}
 
-	private function getPageFrontendUrl(PageModel $pageModel, $strParams=null)
+	private function generateContentUrl(object $content): string
 	{
 		try
 		{
-			return $pageModel->getFrontendUrl($strParams);
+			return System::getContainer()->get('contao.routing.content_url_generator')->generate($content);
 		}
 		catch (ExceptionInterface $exception)
 		{

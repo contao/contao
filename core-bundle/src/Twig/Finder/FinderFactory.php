@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Finder;
 
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -23,7 +23,7 @@ class FinderFactory
      * @internal
      */
     public function __construct(
-        private readonly TemplateHierarchyInterface $hierarchy,
+        private readonly ContaoFilesystemLoader $filesystemLoader,
         private readonly ThemeNamespace $themeNamespace,
         private readonly TranslatorBagInterface|TranslatorInterface $translator,
     ) {
@@ -34,6 +34,6 @@ class FinderFactory
      */
     public function create(): Finder
     {
-        return new Finder($this->hierarchy, $this->themeNamespace, $this->translator);
+        return new Finder($this->filesystemLoader, $this->themeNamespace, $this->translator);
     }
 }

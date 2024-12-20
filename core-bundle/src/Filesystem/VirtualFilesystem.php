@@ -21,14 +21,14 @@ use Symfony\Component\Uid\Uuid;
 
 /**
  * Use the VirtualFilesystem to access resources from mounted adapters and
- * registered DBAFS instances. The class can be instantiated with a path
- * prefix (e.g. "assets/images") to get a different root and/or as a readonly
- * view to prevent accidental mutations.
+ * registered DBAFS instances. The class can be instantiated with a path prefix
+ * (e.g. "assets/images") to get a different root and/or as a readonly view to
+ * prevent accidental mutations.
  *
  * In each method you can either pass in a path (string) or an Uuid object to
- * target resources. For operations that can be short-circuited via a DBAFS,
- * you can optionally set access flags to bypass the DBAFS or to force a
- * (partial) synchronization beforehand.
+ * target resources. For operations that can be short-circuited via a DBAFS, you
+ * can optionally set access flags to bypass the DBAFS or to force a (partial)
+ * synchronization beforehand.
  *
  * @see Uuid
  *
@@ -174,6 +174,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
                 fn () => $this->getFileSize($relativePath, $accessFlags),
                 fn () => $this->getMimeType($relativePath, $accessFlags),
                 fn () => $this->getExtraMetadata($relativePath, $accessFlags),
+                $this,
             );
         }
 
@@ -185,6 +186,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
                 null,
                 null,
                 fn () => $this->getExtraMetadata($relativePath, $accessFlags),
+                $this,
             );
         }
 
@@ -247,7 +249,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         return $this->mountManager->getMimeType($path);
     }
 
-    public function getExtraMetadata(Uuid|string $location, int $accessFlags = self::NONE): array
+    public function getExtraMetadata(Uuid|string $location, int $accessFlags = self::NONE): ExtraMetadata
     {
         $path = $this->resolve($location);
 
@@ -256,17 +258,22 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         }
 
         if ($accessFlags & self::BYPASS_DBAFS) {
-            return [];
+            return new ExtraMetadata();
         }
 
         return $this->dbafsManager->getExtraMetadata($path);
     }
 
-    public function setExtraMetadata(Uuid|string $location, array $metadata): void
+    public function setExtraMetadata(Uuid|string $location, ExtraMetadata $metadata): void
     {
         $this->ensureNotReadonly();
 
         $this->dbafsManager->setExtraMetadata($this->resolve($location), $metadata);
+    }
+
+    public function resolveUuid(Uuid $uuid): string
+    {
+        return $this->dbafsManager->resolveUuid($uuid, $this->prefix);
     }
 
     public function generatePublicUri(Uuid|string $location, OptionsInterface|null $options = null): UriInterface|null
@@ -294,8 +301,8 @@ class VirtualFilesystem implements VirtualFilesystemInterface
                 return false;
             }
 
-            // Do not care about VirtualFilesystem::FORCE_SYNC at this point as
-            // the resource was already found.
+            // Do not care about VirtualFilesystem::FORCE_SYNC at this point as the resource
+            // was already found.
 
             return true;
         }
@@ -324,7 +331,11 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         if (!($accessFlags & self::BYPASS_DBAFS) && $this->dbafsManager->match($path)) {
             foreach ($this->dbafsManager->listContents($path, $deep) as $item) {
                 $path = $item->getPath();
-                $item = $item->withPath(Path::makeRelative($path, $this->prefix));
+
+                $item = $item
+                    ->withPath(Path::makeRelative($path, $this->prefix))
+                    ->withStorage($this)
+                ;
 
                 if (!$item->isFile()) {
                     yield $item;
@@ -353,6 +364,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
 
             yield $item
                 ->withPath(Path::makeRelative($path, $this->prefix))
+                ->withStorage($this)
                 ->withExtraMetadata(fn () => $this->dbafsManager->getExtraMetadata($path))
             ;
         }
@@ -365,11 +377,11 @@ class VirtualFilesystem implements VirtualFilesystemInterface
             : Path::canonicalize($location);
 
         if (Path::isAbsolute($path)) {
-            throw new \OutOfBoundsException(sprintf('Virtual filesystem path "%s" cannot be absolute.', $path));
+            throw new \OutOfBoundsException(\sprintf('Virtual filesystem path "%s" cannot be absolute.', $path));
         }
 
         if (str_starts_with($path, '..')) {
-            throw new \OutOfBoundsException(sprintf('Virtual filesystem path "%s" must not escape the filesystem boundary.', $path));
+            throw new \OutOfBoundsException(\sprintf('Virtual filesystem path "%s" must not escape the filesystem boundary.', $path));
         }
 
         return Path::join($this->prefix, $path);

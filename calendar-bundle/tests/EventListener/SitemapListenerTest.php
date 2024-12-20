@@ -16,6 +16,7 @@ use Contao\CalendarBundle\EventListener\SitemapListener;
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\CoreBundle\Event\SitemapEvent;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\Database;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
@@ -50,10 +51,6 @@ class SitemapListenerTest extends ContaoTestCase
     public function testCalendarEventIsAdded(array $pageProperties, array $calendarProperties, bool $hasAuthenticatedMember): void
     {
         $jumpToPage = $this->mockClassWithProperties(PageModel::class, $pageProperties);
-        $jumpToPage
-            ->method('getAbsoluteUrl')
-            ->willReturn('https://contao.org')
-        ;
 
         $adapters = [
             CalendarModel::class => $this->mockConfiguredAdapter([
@@ -81,7 +78,7 @@ class SitemapListenerTest extends ContaoTestCase
         $this->assertStringContainsString('<url><loc>https://contao.org</loc></url>', (string) $sitemapEvent->getDocument()->saveXML());
     }
 
-    public function getCalendarEvents(): \Generator
+    public static function getCalendarEvents(): iterable
     {
         yield [
             [
@@ -143,7 +140,13 @@ class SitemapListenerTest extends ContaoTestCase
             ;
         }
 
-        return new SitemapListener($framework, $security);
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->method('generate')
+            ->willReturn('https://contao.org')
+        ;
+
+        return new SitemapListener($framework, $security, $urlGenerator);
     }
 
     private function createSitemapEvent(array $rootPages): SitemapEvent

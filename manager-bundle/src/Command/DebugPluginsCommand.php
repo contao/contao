@@ -170,7 +170,7 @@ class DebugPluginsCommand extends Command
 
         if (!$plugin instanceof BundlePluginInterface) {
             $this->io->error(
-                sprintf(
+                \sprintf(
                     'The "%s" plugin does not implement the "%s" interface.',
                     $plugin::class,
                     BundlePluginInterface::class,
@@ -180,7 +180,7 @@ class DebugPluginsCommand extends Command
             return -1;
         }
 
-        $title = sprintf('Bundles Registered by Plugin "%s"', $plugin::class);
+        $title = \sprintf('Bundles Registered by Plugin "%s"', $plugin::class);
         $headers = ['Bundle', 'Replaces', 'Load After', 'Environment'];
         $rows = [];
         $configs = $plugin->getBundles($this->getBundleParser());
@@ -223,7 +223,7 @@ class DebugPluginsCommand extends Command
             }
         }
 
-        $this->io->error(sprintf('No plugin with the class or package name "%s" found.', $name));
+        $this->io->error(\sprintf('No plugin with the class or package name "%s" found.', $name));
 
         return null;
     }

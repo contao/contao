@@ -25,7 +25,7 @@ use FeedIo\Specification;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsPage(contentComposition: false)]
+#[AsPage(path: '', contentComposition: false)]
 class NewsFeedController extends AbstractController implements DynamicRouteInterface
 {
     final public const TYPE = 'news_feed';
@@ -53,12 +53,12 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
     {
         $this->initializeContaoFramework();
 
-        $staticUrl = $this->contaoContext->getStaticUrl();
+        $staticUrl = $this->contaoContext->getBasePath();
         $baseUrl = $staticUrl ?: $request->getSchemeAndHttpHost();
 
         $feed = new Feed();
-        $feed->setTitle(html_entity_decode($pageModel->title, ENT_QUOTES, $this->charset));
-        $feed->setDescription(html_entity_decode($pageModel->feedDescription ?? '', ENT_QUOTES, $this->charset));
+        $feed->setTitle(html_entity_decode($pageModel->title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $this->charset));
+        $feed->setDescription(html_entity_decode($pageModel->feedDescription ?? '', ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $this->charset));
         $feed->setLanguage($pageModel->language);
 
         $event = new FetchArticlesForFeedEvent($feed, $request, $pageModel);
@@ -93,7 +93,7 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
         $format = $route->getPageModel()->feedFormat;
 
         if (!isset($this->urlSuffixes[$format])) {
-            throw new \RuntimeException(sprintf('%s is not a valid format. Must be one of: %s', $format, implode(',', array_keys($this->urlSuffixes))));
+            throw new \RuntimeException(\sprintf('%s is not a valid format. Must be one of: %s', $format, implode(',', array_keys($this->urlSuffixes))));
         }
 
         $route->setUrlSuffix($this->urlSuffixes[$format]);

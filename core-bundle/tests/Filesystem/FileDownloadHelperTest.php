@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\HttpKernel\UriSigner;
+use Symfony\Component\HttpFoundation\UriSigner;
 
 class FileDownloadHelperTest extends TestCase
 {
@@ -73,7 +73,7 @@ class FileDownloadHelperTest extends TestCase
         $this->assertSame('foo', $this->getResponseContent($response));
     }
 
-    public function provideInlineContext(): \Generator
+    public static function provideInlineContext(): iterable
     {
         yield 'without context' => [
             null,
@@ -131,7 +131,7 @@ class FileDownloadHelperTest extends TestCase
         $this->assertSame("foo,bar\n", $this->getResponseContent($response));
     }
 
-    public function provideDownloadContext(): \Generator
+    public static function provideDownloadContext(): iterable
     {
         yield 'without filename or context' => [
             null,

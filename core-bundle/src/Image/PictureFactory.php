@@ -101,7 +101,7 @@ class PictureFactory implements PictureFactoryInterface
             && !isset($this->predefinedSizes[$size[2]])
             && 1 === substr_count($size[2], '_')
         ) {
-            trigger_deprecation('contao/core-bundle', '5.0', 'Using the legacy resize mode "%s" has been deprecated and will no longer work in Contao 6.0.', $size[2]);
+            trigger_deprecation('contao/core-bundle', '5.0', 'Using the legacy resize mode "%s" has been deprecated and will no longer work in Contao 6.', $size[2]);
 
             $image->setImportantPart($this->imageFactory->getImportantPartFromLegacyMode($image, $size[2]));
             $size[2] = ResizeConfiguration::MODE_CROP;
@@ -135,7 +135,7 @@ class PictureFactory implements PictureFactoryInterface
     /**
      * Creates a picture configuration.
      *
-     * @phpstan-return array{0:PictureConfiguration, 1:array<string, string>, 2:ResizeOptions}
+     * @return array{0: PictureConfiguration, 1: array<string, string>, 2: ResizeOptions}
      */
     private function createConfig(array|int|string|null $size): array
     {
@@ -153,7 +153,7 @@ class PictureFactory implements PictureFactoryInterface
             // Database record
             if (is_numeric($size[2])) {
                 $imageSizeModel = $this->framework->getAdapter(ImageSizeModel::class);
-                $imageSizes = $imageSizeModel->findByPk($size[2]);
+                $imageSizes = $imageSizeModel->findById($size[2]);
 
                 $config->setSize($this->createConfigItem($imageSizes?->row()));
 
@@ -336,33 +336,33 @@ class PictureFactory implements PictureFactoryInterface
         $resizeConfig = new ResizeConfiguration();
 
         if (null !== $imageSize) {
-            if (isset($imageSize['width'])) {
+            if (!empty($imageSize['width'])) {
                 $resizeConfig->setWidth((int) $imageSize['width']);
             }
 
-            if (isset($imageSize['height'])) {
+            if (!empty($imageSize['height'])) {
                 $resizeConfig->setHeight((int) $imageSize['height']);
             }
 
-            if (isset($imageSize['zoom'])) {
+            if (!empty($imageSize['zoom'])) {
                 $resizeConfig->setZoomLevel((int) $imageSize['zoom']);
             }
 
-            if (isset($imageSize['resizeMode'])) {
+            if (!empty($imageSize['resizeMode'])) {
                 $resizeConfig->setMode((string) $imageSize['resizeMode']);
             }
 
             $configItem->setResizeConfig($resizeConfig);
 
-            if (isset($imageSize['sizes'])) {
+            if (!empty($imageSize['sizes'])) {
                 $configItem->setSizes((string) $imageSize['sizes']);
             }
 
-            if (isset($imageSize['densities'])) {
+            if (!empty($imageSize['densities'])) {
                 $configItem->setDensities((string) $imageSize['densities']);
             }
 
-            if (isset($imageSize['media'])) {
+            if (!empty($imageSize['media'])) {
                 $configItem->setMedia((string) $imageSize['media']);
             }
         }
@@ -386,8 +386,8 @@ class PictureFactory implements PictureFactoryInterface
     }
 
     /**
-     * Returns true if the aspect ratios of all sources of the picture are
-     * nearly the same and differ less than the ASPECT_RATIO_THRESHOLD.
+     * Returns true if the aspect ratios of all sources of the picture are nearly the
+     * same and differ less than the ASPECT_RATIO_THRESHOLD.
      */
     private function hasSingleAspectRatio(PictureInterface $picture): bool
     {

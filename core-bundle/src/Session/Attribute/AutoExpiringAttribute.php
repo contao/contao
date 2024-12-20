@@ -39,7 +39,7 @@ class AutoExpiringAttribute
 
     public function isExpired(\DateTimeInterface|null $now = null): bool
     {
-        $now = $now ?? new \DateTime();
+        $now ??= new \DateTime();
 
         return $this->tstamp + $this->getTtl() < $now->getTimestamp();
     }

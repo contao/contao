@@ -21,7 +21,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -85,7 +84,7 @@ class UserPasswordCommand extends Command
         $minLength = $config->get('minPasswordLength') ?: 8;
 
         if (mb_strlen($input->getOption('password')) < $minLength) {
-            throw new InvalidArgumentException(sprintf('The password must be at least %s characters long.', $minLength));
+            throw new InvalidArgumentException(\sprintf('The password must be at least %s characters long.', $minLength));
         }
 
         $passwordHasher = $this->passwordHasherFactory->getPasswordHasher(BackendUser::class);
@@ -102,7 +101,7 @@ class UserPasswordCommand extends Command
         );
 
         if (0 === $affected) {
-            throw new InvalidArgumentException(sprintf('Invalid username: %s', $input->getArgument('username')));
+            throw new InvalidArgumentException(\sprintf('Invalid username: %s', $input->getArgument('username')));
         }
 
         $io = new SymfonyStyle($input, $output);
@@ -120,7 +119,6 @@ class UserPasswordCommand extends Command
         $question->setHidden(true);
         $question->setMaxAttempts(3);
 
-        /** @var QuestionHelper $helper */
         $helper = $this->getHelper('question');
 
         return $helper->ask($input, $output, $question);

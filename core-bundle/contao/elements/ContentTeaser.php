@@ -66,20 +66,13 @@ class ContentTeaser extends ContentElement
 	 */
 	protected function compile()
 	{
-		$link = '/articles/';
 		$objArticle = $this->objArticle;
+		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
-		if ($objArticle->inColumn != 'main')
-		{
-			$link .= $objArticle->inColumn . ':';
-		}
-
-		$link .= $objArticle->alias ?: $objArticle->id;
-		$this->Template->href = $this->objParent->getFrontendUrl($link);
-
+		$this->Template->href = $urlGenerator->generate($objArticle);
 		$this->Template->text = $objArticle->teaser;
 		$this->Template->headline = $objArticle->title;
-		$this->Template->readMore = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->title));
+		$this->Template->readMore = StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->title));
 		$this->Template->more = $GLOBALS['TL_LANG']['MSC']['more'];
 	}
 }

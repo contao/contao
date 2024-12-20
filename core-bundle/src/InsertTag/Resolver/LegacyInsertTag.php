@@ -22,7 +22,6 @@ use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\Database;
-use Contao\Database\Result;
 use Contao\Date;
 use Contao\Environment;
 use Contao\File;
@@ -31,7 +30,6 @@ use Contao\Frontend;
 use Contao\FrontendTemplate;
 use Contao\FrontendUser;
 use Contao\Idna;
-use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
@@ -39,6 +37,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[AsInsertTag('lang')]
 #[AsInsertTag('br')]
@@ -248,7 +247,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         $result = Date::parse($GLOBALS['objPage']->datimFormat ?? $GLOBALS['TL_CONFIG']['datimFormat'] ?? '', $value);
                     } elseif (\is_array($value)) {
                         $result = implode(', ', $value);
-                    } elseif (\is_array($opts) && ArrayUtil::isAssoc($opts)) {
+                    } elseif (ArrayUtil::isAssoc($opts)) {
                         $result = $opts[$value] ?? $value;
                     } elseif (\is_array($rfrc)) {
                         $result = isset($rfrc[$value]) ? (\is_array($rfrc[$value]) ? $rfrc[$value][0] : $rfrc[$value]) : $value;
@@ -271,7 +270,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 if (false !== ($strOutput = Controller::getArticle($insertTag->getParameters()->get(0), false, true))) {
                     $result = ltrim($strOutput);
                 } else {
-                    $result = '<p class="error">'.sprintf($GLOBALS['TL_LANG']['MSC']['invalidPage'], $insertTag->getParameters()->get(0)).'</p>';
+                    $result = '<p class="error">'.\sprintf($GLOBALS['TL_LANG']['MSC']['invalidPage'], $insertTag->getParameters()->get(0)).'</p>';
                 }
                 break;
 
@@ -294,25 +293,16 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             case 'article':
             case 'article_open':
             case 'article_url':
-            case 'article_title':
-                $objArticle = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0));
-
-                if (!$objArticle instanceof ArticleModel) {
+                if (!$objArticle = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0))) {
                     break;
                 }
 
-                $objPid = $objArticle->getRelated('pid');
-
-                if (!$objPid instanceof PageModel) {
-                    break;
-                }
-
-                $params = '/articles/'.($objArticle->alias ?: $objArticle->id);
                 $strTarget = \in_array('blank', \array_slice($insertTag->getParameters()->all(), 1), true) ? ' target="_blank" rel="noreferrer noopener"' : '';
+                $blnAbsolute = \in_array('absolute', \array_slice($insertTag->getParameters()->all(), 1), true);
                 $strUrl = '';
 
                 try {
-                    $strUrl = \in_array('absolute', \array_slice($insertTag->getParameters()->all(), 1), true) ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params);
+                    $strUrl = $this->container->get('contao.routing.content_url_generator')->generate($objArticle, [], $blnAbsolute ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
                 } catch (ExceptionInterface) {
                     // Ignore routing exception
                 }
@@ -320,20 +310,23 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 // Replace the tag
                 switch ($insertTag->getName()) {
                     case 'article':
-                        $result = sprintf('<a href="%s" title="%s"%s>%s</a>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $strTarget, $objArticle->title);
+                        $result = \sprintf('<a href="%s" title="%s"%s>%s</a>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $strTarget, $objArticle->title);
                         break;
 
                     case 'article_open':
-                        $result = sprintf('<a href="%s" title="%s"%s>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $strTarget);
+                        $result = \sprintf('<a href="%s" title="%s"%s>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $strTarget);
                         break;
 
                     case 'article_url':
                         $result = $strUrl;
                         break;
+                }
+                break;
 
-                    case 'article_title':
-                        $result = StringUtil::specialcharsAttribute($objArticle->title);
-                        break;
+            // Article title
+            case 'article_title':
+                if ($objArticle = ArticleModel::findByIdOrAlias($insertTag->getParameters()->get(0))) {
+                    $result = StringUtil::specialcharsAttribute($objArticle->title);
                 }
                 break;
 
@@ -360,8 +353,6 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 }
 
                 $strQuery .= ' FROM tl_content';
-
-                /** @var Result&object{tc:int, tn:int, te:int} $objUpdate */
                 $objUpdate = Database::getInstance()->query($strQuery);
 
                 if ($objUpdate->numRows) {
@@ -389,9 +380,9 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         $result = Idna::decode(Environment::get('url'));
                         break;
 
-                    // As the "env::path" insert tag returned the base URL ever since, we
-                    // keep it as an alias to the "env::base" tag. Use "env::base_path" to
-                    // output the actual base path.
+                    // As the "env::path" insert tag returned the base URL ever since, we keep it as
+                    // an alias to the "env::base" tag. Use "env::base_path" to output the actual
+                    // base path.
                     case 'path':
                     case 'base':
                         $result = Idna::decode(Environment::get('base'));
@@ -449,8 +440,8 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     $htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 
                     $result = match ($property) {
-                        'pageTitle' => htmlspecialchars($htmlHeadBag->getTitle()),
-                        'description' => htmlspecialchars($htmlHeadBag->getMetaDescription()),
+                        'pageTitle' => htmlspecialchars($htmlHeadBag->getTitle(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
+                        'description' => htmlspecialchars($htmlHeadBag->getMetaDescription(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
                     };
                 } elseif ($GLOBALS['objPage']) {
                     // Do not use StringUtil::specialchars() here (see #4687)
@@ -510,12 +501,12 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
                 // Take arguments
                 if (str_contains($insertTag->getParameters()->get(0), '?')) {
-                    $arrChunks = explode('?', urldecode($insertTag->getParameters()->get(0)), 2);
+                    $arrChunks = explode('?', $insertTag->getParameters()->get(0), 2);
                     $strSource = StringUtil::decodeEntities($arrChunks[1]);
                     $arrParams = explode('&', $strSource);
 
                     foreach ($arrParams as $strParam) {
-                        [$key, $value] = explode('=', $strParam);
+                        [$key, $value] = explode('=', urldecode($strParam), 2);
 
                         switch ($key) {
                             case 'width':
@@ -564,7 +555,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     $strFile = $objFile->path;
                 } elseif (is_numeric($strFile)) {
                     // Handle numeric IDs (see #4805)
-                    if (!$objFile = FilesModel::findByPk($strFile)) {
+                    if (!$objFile = FilesModel::findById($strFile)) {
                         break;
                     }
 
@@ -630,19 +621,23 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     break;
                 }
 
-                trigger_deprecation('contao/core-bundle', '5.0', 'Using the file insert tag to include templates has been deprecated and will no longer work in Contao 6.0. Use the Template content element instead.');
+                trigger_deprecation('contao/core-bundle', '5.0', 'Using the file insert tag to include templates has been deprecated and will no longer work in Contao 6. Use the "Template" content element instead.');
 
+                $requestStack = $this->container->get('request_stack');
+                $subRequest = null;
                 $arrGet = $_GET;
                 $strFile = $insertTag->getParameters()->get(0);
 
                 // Take arguments and add them to the $_GET array
                 if (str_contains($strFile, '?')) {
+                    $subRequest = $requestStack->getCurrentRequest()->duplicate();
                     $arrChunks = explode('?', urldecode($strFile));
                     $strSource = StringUtil::decodeEntities($arrChunks[1]);
                     $arrParams = explode('&', $strSource);
 
                     foreach ($arrParams as $strParam) {
                         $arrParam = explode('=', $strParam);
+                        $subRequest->query->set($arrParam[0], $arrParam[1]);
                         $_GET[$arrParam[0]] = $arrParam[1];
                     }
 
@@ -656,6 +651,10 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
                 // Include .php, .tpl, .xhtml and .html5 files
                 if (preg_match('/\.(php|tpl|xhtml|html5)$/', $strFile) && (new Filesystem())->exists($this->container->getParameter('kernel.project_dir').'/templates/'.$strFile)) {
+                    if ($subRequest) {
+                        $requestStack->push($subRequest);
+                    }
+
                     ob_start();
 
                     try {
@@ -663,6 +662,10 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         $result = ob_get_contents();
                     } finally {
                         ob_end_clean();
+
+                        if ($subRequest) {
+                            $requestStack->pop();
+                        }
                     }
                 }
 

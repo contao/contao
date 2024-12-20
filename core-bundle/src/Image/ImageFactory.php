@@ -64,16 +64,11 @@ class ImageFactory implements ImageFactoryInterface
         $this->preserveMetadataFields = $preserveMetadataFields;
     }
 
-    public function create($path, ResizeConfiguration|array|int|string|null $size = null, $options = null): ImageInterface
+    public function create(ImageInterface|string $path, ResizeConfiguration|array|int|string|null $size = null, ResizeOptions|string|null $options = null): ImageInterface
     {
-        if (null !== $options && !\is_string($options) && !$options instanceof ResizeOptions) {
-            throw new \InvalidArgumentException('Options must be of type null, string or '.ResizeOptions::class);
-        }
-
         if ($path instanceof ImageInterface) {
             $image = $path;
         } else {
-            $path = (string) $path;
             $fileExtension = Path::getExtension($path, true);
 
             if (\in_array($fileExtension, ['svg', 'svgz'], true)) {
@@ -83,11 +78,11 @@ class ImageFactory implements ImageFactoryInterface
             }
 
             if (!\in_array($fileExtension, $this->validExtensions, true)) {
-                throw new \InvalidArgumentException(sprintf('Image type "%s" was not allowed to be processed', $fileExtension));
+                throw new \InvalidArgumentException(\sprintf('Image type "%s" was not allowed to be processed', $fileExtension));
             }
 
             if (!Path::isAbsolute($path)) {
-                throw new \InvalidArgumentException(sprintf('Image path "%s" must be absolute', $path));
+                throw new \InvalidArgumentException(\sprintf('Image path "%s" must be absolute', $path));
             }
 
             if (
@@ -113,12 +108,12 @@ class ImageFactory implements ImageFactoryInterface
             [$resizeConfig, $importantPart, $options] = $this->createConfig($size, $image);
         }
 
-        if (!\is_object($path) || !$path instanceof ImageInterface) {
+        if (!$path instanceof ImageInterface) {
             if (null === $importantPart) {
                 try {
                     $importantPart = $this->createImportantPart($image);
                 } catch (CoordinatesOutOfBoundsException $exception) {
-                    throw new CoordinatesOutOfBoundsException(sprintf('%s for file "%s"', $exception->getMessage(), $path), $exception->getCode(), $exception);
+                    throw new CoordinatesOutOfBoundsException(\sprintf('%s for file "%s"', $exception->getMessage(), $path), $exception->getCode(), $exception);
                 }
             }
 
@@ -150,10 +145,10 @@ class ImageFactory implements ImageFactoryInterface
         return $this->resizer->resize($image, $resizeConfig, $options);
     }
 
-    public function getImportantPartFromLegacyMode(ImageInterface $image, $mode): ImportantPart
+    public function getImportantPartFromLegacyMode(ImageInterface $image, string $mode): ImportantPart
     {
         if (1 !== substr_count($mode, '_')) {
-            throw new \InvalidArgumentException(sprintf('"%s" is not a legacy resize mode', $mode));
+            throw new \InvalidArgumentException(\sprintf('"%s" is not a legacy resize mode', $mode));
         }
 
         $importantPart = [0, 0, 1, 1];
@@ -199,7 +194,7 @@ class ImageFactory implements ImageFactoryInterface
             if (is_numeric($size[2])) {
                 $imageModel = $this->framework->getAdapter(ImageSizeModel::class);
 
-                if ($imageSize = $imageModel->findByPk($size[2])) {
+                if ($imageSize = $imageModel->findById($size[2])) {
                     $this->enhanceResizeConfig($config, $imageSize->row());
                     $options->setSkipIfDimensionsMatch((bool) $imageSize->skipIfDimensionsMatch);
 
@@ -282,7 +277,7 @@ class ImageFactory implements ImageFactoryInterface
             return [$config, null, null];
         }
 
-        trigger_deprecation('contao/core-bundle', '5.0', 'Using the legacy resize mode "%s" has been deprecated and will no longer work in Contao 6.0.', $size[2]);
+        trigger_deprecation('contao/core-bundle', '5.0', 'Using the legacy resize mode "%s" has been deprecated and will no longer work in Contao 6.', $size[2]);
 
         $config->setMode(ResizeConfiguration::MODE_CROP);
 
@@ -327,7 +322,7 @@ class ImageFactory implements ImageFactoryInterface
         $filesModel = $this->framework->getAdapter(FilesModel::class);
         $file = $filesModel->findByPath($image->getPath());
 
-        if (!$file || !$file->importantPartWidth || !$file->importantPartHeight) {
+        if (!$file?->importantPartWidth || !$file->importantPartHeight) {
             return null;
         }
 

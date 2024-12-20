@@ -135,7 +135,6 @@ class ContentDownloads extends ContentDownload
 				}
 				else
 				{
-					/** @var PageModel $objPage */
 					global $objPage;
 
 					$arrMeta = $this->getMetaData($objFiles->meta, $objPage->language);
@@ -173,7 +172,7 @@ class ContentDownloads extends ContentDownload
 					$strHref = preg_replace('/(&(amp;)?|\?)cid=\d+/', '', $strHref);
 				}
 
-				$strHref .= (strpos($strHref, '?') !== false ? '&amp;' : '?') . 'file=' . System::urlEncode($objFiles->path) . '&amp;cid=' . $this->id;
+				$strHref .= (str_contains($strHref, '?') ? '&amp;' : '?') . 'file=' . System::urlEncode($objFiles->path) . '&amp;cid=' . $this->id;
 
 				// Add the image
 				$files[$objFiles->path] = array
@@ -181,7 +180,7 @@ class ContentDownloads extends ContentDownload
 					'id'        => $objFiles->id,
 					'uuid'      => $objFiles->uuid,
 					'name'      => $objFile->basename,
-					'title'     => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
+					'title'     => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
 					'link'      => $arrMeta['title'] ?? null,
 					'caption'   => $arrMeta['caption'] ?? null,
 					'href'      => $strHref,
@@ -227,7 +226,6 @@ class ContentDownloads extends ContentDownload
 					}
 					else
 					{
-						/** @var PageModel $objPage */
 						global $objPage;
 
 						$arrMeta = $this->getMetaData($objSubfiles->meta, $objPage->language);
@@ -260,7 +258,7 @@ class ContentDownloads extends ContentDownload
 						$strHref = preg_replace('/(&(amp;)?|\?)file=[^&]+/', '', $strHref);
 					}
 
-					$strHref .= (strpos($strHref, '?') !== false ? '&amp;' : '?') . 'file=' . System::urlEncode($objSubfiles->path);
+					$strHref .= (str_contains($strHref, '?') ? '&amp;' : '?') . 'file=' . System::urlEncode($objSubfiles->path);
 
 					// Add the image
 					$files[$objSubfiles->path] = array
@@ -268,7 +266,7 @@ class ContentDownloads extends ContentDownload
 						'id'        => $objSubfiles->id,
 						'uuid'      => $objSubfiles->uuid,
 						'name'      => $objFile->basename,
-						'title'     => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
+						'title'     => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename)),
 						'link'      => $arrMeta['title'],
 						'caption'   => $arrMeta['caption'] ?? null,
 						'href'      => $strHref,

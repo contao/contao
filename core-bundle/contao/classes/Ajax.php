@@ -15,7 +15,6 @@ use Contao\CoreBundle\Exception\NoContentResponseException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
@@ -70,7 +69,6 @@ class Ajax extends Backend
 	 */
 	public function executePreActions()
 	{
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		switch ($this->strAction)
@@ -155,7 +153,7 @@ class Ajax extends Backend
 	 * @throws ResponseException
 	 * @throws BadRequestHttpException
 	 */
-	public function executePostActions(DataContainer $dc)
+	public function executePostActions(DataContainer $dc): never
 	{
 		// Bypass any core logic for non-core drivers (see #5957)
 		if (!$dc instanceof DC_File && !$dc instanceof DC_Folder && !$dc instanceof DC_Table)
@@ -306,10 +304,8 @@ class Ajax extends Backend
 					$varValue = serialize($varValue);
 				}
 
-				/** @var FileTree|PageTree|Picker $strClass */
+				/** @var class-string<FileTree|PageTree|Picker> $strClass */
 				$strClass = $GLOBALS['BE_FFL'][$strKey] ?? null;
-
-				/** @var FileTree|PageTree|Picker $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->inputName, $varValue, $strField, $dc->table, $dc));
 
 				throw new ResponseException($this->convertToResponse($objWidget->generate()));

@@ -36,7 +36,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'markAsCopy'                  => 'label',
 		'onload_callback' => array
 		(
-			array('tl_form_field', 'checkPermission'),
 			array('tl_form_field', 'filterFormFields')
 		),
 		'sql' => array
@@ -44,7 +43,8 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid,invisible' => 'index'
+				'pid,invisible' => 'index',
+				'tstamp' => 'index'
 			)
 		)
 	),
@@ -68,14 +68,16 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'edit' => array
 			(
 				'href'                => 'act=edit',
+				'prefetch'            => true,
 				'icon'                => 'edit.svg',
+				'attributes'          => 'data-contao--deeplink-target="primary"',
 				'button_callback'     => array('tl_form_field', 'disableButton')
 			),
 			'copy' => array
 			(
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"',
+				'attributes'          => 'data-action="contao--scroll-offset#store"',
 				'button_callback'     => array('tl_form_field', 'disableButton')
 			),
 			'cut',
@@ -83,7 +85,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			(
 				'href'                => 'act=delete',
 				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
+				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false"',
 				'button_callback'     => array('tl_form_field', 'disableButton')
 			),
 			'toggle' => array
@@ -106,13 +108,13 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'fieldsetStart'               => '{type_legend},type;{fconfig_legend},label;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'fieldsetStop'                => '{type_legend},type;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'html'                        => '{type_legend},type;{text_legend},html;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'text'                        => '{type_legend},type,name,label;{fconfig_legend},mandatory,rgxp,placeholder;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'textdigit'                   => '{type_legend},type,name,label;{fconfig_legend},mandatory,rgxp,placeholder;{expert_legend:hide},class,value,minval,maxval,step,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'textcustom'                  => '{type_legend},type,name,label;{fconfig_legend},mandatory,rgxp,placeholder,customRgxp,errorMsg;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'password'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,rgxp,placeholder;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'passwordcustom'              => '{type_legend},type,name,label;{fconfig_legend},mandatory,rgxp,placeholder,customRgxp,errorMsg;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'textarea'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,rgxp,placeholder;{size_legend},size;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'textareacustom'              => '{type_legend},type,name,label;{fconfig_legend},mandatory,rgxp,placeholder,customRgxp,errorMsg;{size_legend},size;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'text'                        => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'textdigit'                   => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minval,maxval,step,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'textcustom'                  => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp,customRgxp,errorMsg;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'password'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'passwordcustom'              => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp,customRgxp,errorMsg;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'textarea'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp;{size_legend},size;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'textareacustom'              => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp,customRgxp,errorMsg;{size_legend},size;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'select'                      => '{type_legend},type,name,label;{fconfig_legend},mandatory,multiple;{options_legend},options;{expert_legend:hide},class,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'radio'                       => '{type_legend},type,name,label;{fconfig_legend},mandatory;{options_legend},options;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'checkbox'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory;{options_legend},options;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
@@ -121,6 +123,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'hidden'                      => '{type_legend},type,name,value;{fconfig_legend},mandatory,rgxp;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'hiddencustom'                => '{type_legend},type,name,value;{fconfig_legend},mandatory,rgxp,customRgxp;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'captcha'                     => '{type_legend},type,label;{fconfig_legend},placeholder;{expert_legend:hide},class,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'altcha'                      => '{type_legend},type,name,label;{fconfig_legend},altchaAuto,altchaHideLogo,altchaHideFooter;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'submit'                      => '{type_legend},type,slabel;{image_legend:hide},imageSubmit;{expert_legend:hide},class,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible'
 	),
 
@@ -225,7 +228,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'customRgxp' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'mandatory'=>true),
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr', 'mandatory'=>true),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'errorMsg' => array
@@ -380,6 +383,33 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'eval'                    => array('fieldType'=>'radio', 'filesOnly'=>true, 'mandatory'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "binary(16) NULL"
 		),
+		'altchaAuto' => array
+		(
+			'inputType'               => 'select',
+			'options'                 => array('onfocus', 'onsubmit'),
+			'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(12) NOT NULL default ''"
+		),
+		'altchaHideLogo' => array
+		(
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w25'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
+		),
+		'altchaHideFooter' => array
+		(
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w25'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
+		),
+		'autocomplete' => array
+		(
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'explanation'             => 'autocomplete',
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
 		'invisible' => array
 		(
 			'reverseToggle'           => true,
@@ -397,133 +427,6 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
  */
 class tl_form_field extends Backend
 {
-	/**
-	 * Check permissions to edit table tl_form_field
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission(DataContainer $dc)
-	{
-		$user = BackendUser::getInstance();
-
-		if ($user->isAdmin)
-		{
-			return;
-		}
-
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		// Set root IDs
-		if (empty($user->forms) || !is_array($user->forms))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $user->forms;
-		}
-
-		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
-
-		// Check current action
-		switch (Input::get('act'))
-		{
-			case 'paste':
-			case 'select':
-				// Check currentId here (see #247)
-				if (!in_array($dc->currentPid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
-				}
-				break;
-
-			case 'create':
-			case 'cut':
-			case 'copy':
-				$pid = Input::get('pid');
-
-				// Get form ID
-				if (Input::get('mode') == 1)
-				{
-					$objField = Database::getInstance()
-						->prepare("SELECT pid FROM tl_form_field WHERE id=?")
-						->limit(1)
-						->execute(Input::get('pid'));
-
-					if ($objField->numRows < 1)
-					{
-						throw new AccessDeniedException('Invalid form field ID ' . Input::get('pid') . '.');
-					}
-
-					$pid = $objField->pid;
-				}
-
-				if (!in_array($pid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' form field ID ' . $id . ' to form ID ' . $pid . '.');
-				}
-
-				if (Input::get('act') == 'create')
-				{
-					break;
-				}
-				// no break
-
-			case 'edit':
-			case 'show':
-			case 'delete':
-			case 'toggle':
-				$objField = Database::getInstance()
-					->prepare("SELECT pid FROM tl_form_field WHERE id=?")
-					->limit(1)
-					->execute($id);
-
-				if ($objField->numRows < 1)
-				{
-					throw new AccessDeniedException('Invalid form field ID ' . $id . '.');
-				}
-
-				if (!in_array($objField->pid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' form field ID ' . $id . ' of form ID ' . $objField->pid . '.');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-			case 'cutAll':
-			case 'copyAll':
-				if (!in_array($id, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
-				}
-
-				$objForm = Database::getInstance()
-					->prepare("SELECT id FROM tl_form_field WHERE pid=?")
-					->execute($id);
-
-				$session = $objSession->all();
-				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objForm->fetchEach('id'));
-				$objSession->replace($session);
-				break;
-
-			default:
-				if (Input::get('act'))
-				{
-					throw new AccessDeniedException('Invalid command "' . Input::get('act') . '".');
-				}
-
-				if (!in_array($id, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access form ID ' . $id . '.');
-				}
-				break;
-		}
-	}
-
 	/**
 	 * Filter the form fields
 	 */
@@ -600,7 +503,7 @@ class tl_form_field extends Backend
 				else
 				{
 					$objFields = $db
-						->prepare("SELECT id, type FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_form_field']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($user->fields), '?')) . ")")
+						->prepare("SELECT id, type FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_form_field']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($user->fields), '?')) . ") ORDER BY sorting")
 						->execute(...$user->fields);
 
 					$session['CLIPBOARD']['tl_form_field']['id'] = $objFields->fetchEach('id');
@@ -621,6 +524,8 @@ class tl_form_field extends Backend
 	public function listFormFields($arrRow)
 	{
 		$arrRow['required'] = $arrRow['mandatory'];
+
+		/** @var class-string<Widget> $strClass */
 		$strClass = $GLOBALS['TL_FFL'][$arrRow['type']] ?? null;
 
 		if (!class_exists($strClass))
@@ -628,7 +533,6 @@ class tl_form_field extends Backend
 			return '';
 		}
 
-		/** @var Widget $objWidget */
 		$objWidget = new $strClass($arrRow);
 		$key = $arrRow['invisible'] ? 'unpublished' : 'published';
 
@@ -656,7 +560,7 @@ class tl_form_field extends Backend
 	 */
 	public function optionImportWizard()
 	{
-		return ' <a href="' . $this->addToUrl('key=option') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['ow_import'][1]) . '" onclick="Backend.getScrollOffset()">' . Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['ow_import'][0]) . '</a>';
+		return ' <a href="' . $this->addToUrl('key=option') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['ow_import'][1]) . '" data-action="contao--scroll-offset#store">' . Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['ow_import'][0]) . '</a>';
 	}
 
 	/**
@@ -718,7 +622,7 @@ class tl_form_field extends Backend
 	 */
 	public function disableButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FIELD_TYPE, $row['type']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id'], addRequestToken: false) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -758,6 +662,6 @@ class tl_form_field extends Backend
 
 		$titleDisabled = (is_array($GLOBALS['TL_DCA']['tl_form_field']['list']['operations']['toggle']['label']) && isset($GLOBALS['TL_DCA']['tl_form_field']['list']['operations']['toggle']['label'][2])) ? sprintf($GLOBALS['TL_DCA']['tl_form_field']['list']['operations']['toggle']['label'][2], $row['id']) : $title;
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars(!$row['invisible'] ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars(!$row['invisible'] ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['invisible'] ? 0 : 1) . '"') . '</a> ';
 	}
 }

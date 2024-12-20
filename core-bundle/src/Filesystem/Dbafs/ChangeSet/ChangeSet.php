@@ -57,8 +57,8 @@ class ChangeSet
     }
 
     /**
-     * Returns a copy of this ChangeSet with another one appended. Optionally
-     * all paths of the appended ChangeSet will be prefixed with $pathPrefix.
+     * Returns a copy of this ChangeSet with another one appended. Optionally all
+     * paths of the appended ChangeSet will be prefixed with $pathPrefix.
      */
     public function withOther(self $changeSet, string $pathPrefix = ''): self
     {
@@ -101,8 +101,8 @@ class ChangeSet
     /**
      * Returns true if there are no changes.
      *
-     * If $includeLastModified is set to true, changes to last modified
-     * timestamps will be considered as well.
+     * If $includeLastModified is set to true, changes to last modified timestamps
+     * will be considered as well.
      */
     public function isEmpty(bool $includeLastModified = false): bool
     {
@@ -135,8 +135,8 @@ class ChangeSet
     /**
      * Returns a list of changes that should be applied to existing items.
      *
-     * If $includeLastModified is set to true, changes to last modified
-     * timestamps will be included in the definitions.
+     * If $includeLastModified is set to true, changes to last modified timestamps
+     * will be included in the definitions.
      *
      * @return list<ItemToUpdate>
      */
@@ -145,7 +145,7 @@ class ChangeSet
         $lastModifiedUpdates = $this->lastModifiedUpdates;
 
         $items = array_map(
-            static function (string|int $existingPath, array $item) use ($includeLastModified, &$lastModifiedUpdates) {
+            static function (int|string $existingPath, array $item) use ($includeLastModified, &$lastModifiedUpdates) {
                 $lastModified = $includeLastModified && \array_key_exists($existingPath, $lastModifiedUpdates)
                     ? $lastModifiedUpdates[$existingPath]
                     : false;
@@ -168,7 +168,7 @@ class ChangeSet
         }
 
         return [...array_map(
-            static fn (string|int $existingPath, int $lastModified) => new ItemToUpdate(
+            static fn (int|string $existingPath, int $lastModified) => new ItemToUpdate(
                 (string) $existingPath,
                 null,
                 null,
@@ -187,7 +187,7 @@ class ChangeSet
     public function getItemsToDelete(): array
     {
         return array_map(
-            static fn (string|int $path, int $type): ItemToDelete => new ItemToDelete(
+            static fn (int|string $path, int $type): ItemToDelete => new ItemToDelete(
                 (string) $path,
                 self::TYPE_FILE === $type,
             ),

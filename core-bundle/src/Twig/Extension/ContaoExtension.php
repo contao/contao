@@ -14,18 +14,24 @@ namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\BackendTemplateTrait;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\String\HtmlAttributes;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNode;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
+use Contao\CoreBundle\Twig\Runtime\BackendHelperRuntime;
+use Contao\CoreBundle\Twig\Runtime\ContentUrlRuntime;
+use Contao\CoreBundle\Twig\Runtime\CspRuntime;
 use Contao\CoreBundle\Twig\Runtime\FigureRuntime;
 use Contao\CoreBundle\Twig\Runtime\FormatterRuntime;
 use Contao\CoreBundle\Twig\Runtime\FragmentRuntime;
@@ -36,44 +42,52 @@ use Contao\CoreBundle\Twig\Runtime\LegacyTemplateFunctionsRuntime;
 use Contao\CoreBundle\Twig\Runtime\PictureConfigurationRuntime;
 use Contao\CoreBundle\Twig\Runtime\SanitizerRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
+use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\CoreBundle\Twig\Runtime\UrlRuntime;
+use Contao\CoreBundle\Twig\Slots\SlotTokenParser;
+use Contao\FrontendTemplate;
 use Contao\FrontendTemplateTrait;
-use Contao\Template;
+use Contao\StringUtil;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
+use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
-use Twig\Extension\EscaperExtension;
+use Twig\Extension\GlobalsInterface;
+use Twig\Node\Expression\ConstantExpression;
+use Twig\Node\Node;
+use Twig\Runtime\EscaperRuntime;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 /**
  * @experimental
  */
-final class ContaoExtension extends AbstractExtension
+final class ContaoExtension extends AbstractExtension implements GlobalsInterface
 {
     private array $contaoEscaperFilterRules = [];
 
     public function __construct(
         private readonly Environment $environment,
-        private readonly TemplateHierarchyInterface $hierarchy,
+        private readonly ContaoFilesystemLoader $filesystemLoader,
         ContaoCsrfTokenManager $tokenManager,
+        private readonly ContaoVariable $contaoVariable,
+        private readonly InspectorNodeVisitor $inspectorNodeVisitor,
     ) {
         $contaoEscaper = new ContaoEscaper();
 
-        $escaperExtension = $environment->getExtension(EscaperExtension::class);
-        $escaperExtension->setEscaper('contao_html', $contaoEscaper->escapeHtml(...));
-        $escaperExtension->setEscaper('contao_html_attr', $contaoEscaper->escapeHtmlAttr(...));
+        $escaperRuntime = $this->environment->getRuntime(EscaperRuntime::class);
+        $escaperRuntime->setEscaper('contao_html', $contaoEscaper->escapeHtml(...));
+        $escaperRuntime->setEscaper('contao_html_attr', $contaoEscaper->escapeHtmlAttr(...));
 
-        // Use our escaper on all templates in the "@Contao" and "@Contao_*"
-        // namespaces, as well as the existing bundle templates we're already
-        // shipping.
+        // Use our escaper on all templates in the "@Contao" and "@Contao_*" namespaces,
+        // as well as the existing bundle templates we're already shipping.
         $this->addContaoEscaperRule('%^@Contao(_[a-zA-Z0-9_-]*)?/%');
         $this->addContaoEscaperRule('%^@ContaoCore/%');
 
         // Mark classes as safe for HTML that already escape their output themselves
-        $escaperExtension->addSafeClass(HtmlAttributes::class, ['html', 'contao_html']);
-        $escaperExtension->addSafeClass(HighlightResult::class, ['html', 'contao_html']);
+        $escaperRuntime->addSafeClass(HtmlAttributes::class, ['html', 'contao_html']);
+        $escaperRuntime->addSafeClass(HighlightResult::class, ['html', 'contao_html']);
 
         $this->environment->addGlobal(
             'request_token',
@@ -84,18 +98,25 @@ final class ContaoExtension extends AbstractExtension
 
                 public function __toString(): string
                 {
+                    trigger_deprecation('contao/core-bundle', '5.3', 'The "request_token" Twig variable has been deprecated and will no longer work in Contao 6. Use the "contao.request_token" variable instead.');
+
                     return $this->tokenManager->getDefaultTokenValue();
                 }
             },
         );
     }
 
+    public function getGlobals(): array
+    {
+        return ['contao' => $this->contaoVariable];
+    }
+
     /**
      * Adds a Contao escaper rule.
      *
-     * If a template name matches any of the defined rules, it will be processed
-     * with the "contao_html" escaper strategy. Make sure your rule will only
-     * match templates with input encoded contexts!
+     * If a template name matches any of the defined rules, it will be processed with
+     * the "contao_html" escaper strategy. Make sure your rule will only match
+     * templates with input encoded contexts!
      */
     public function addContaoEscaperRule(string $regularExpression): void
     {
@@ -109,16 +130,17 @@ final class ContaoExtension extends AbstractExtension
     public function getNodeVisitors(): array
     {
         return [
-            // Enables the "contao_twig" escaper for Contao templates with
-            // input encoding
+            // Enables the "contao_twig" escaper for Contao templates with input encoding
             new ContaoEscaperNodeVisitor(
                 fn () => $this->contaoEscaperFilterRules,
             ),
-            // Allows rendering PHP templates with the legacy framework by
-            // installing proxy nodes
+            // Records data about a template during compilation, so that they get available
+            // at runtime
+            $this->inspectorNodeVisitor,
+            // Allows rendering PHP templates with the legacy framework by installing proxy nodes
             new PhpTemplateProxyNodeVisitor(self::class),
-            // Triggers PHP deprecations if deprecated constructs are found in
-            // the parsed templates.
+            // Triggers PHP deprecations if deprecated constructs are found in the
+            // parsed templates.
             new DeprecationsNodeVisitor(),
         ];
     }
@@ -126,13 +148,15 @@ final class ContaoExtension extends AbstractExtension
     public function getTokenParsers(): array
     {
         return [
-            // Overwrite the parsers for the "extends", "include" and "use"
-            // tags to additionally support the Contao template hierarchy
-            new DynamicExtendsTokenParser($this->hierarchy),
-            new DynamicIncludeTokenParser($this->hierarchy),
-            new DynamicUseTokenParser($this->hierarchy),
+            // Overwrite the parsers for the "extends", "include" and "use" tags to
+            // additionally support the Contao template hierarchy
+            new DynamicExtendsTokenParser($this->filesystemLoader),
+            new DynamicIncludeTokenParser($this->filesystemLoader),
+            new DynamicUseTokenParser($this->filesystemLoader),
             // Add a parser for the Contao specific "add" tag
             new AddTokenParser(self::class),
+            // Add a parser for the Contao specific "slot" tag
+            new SlotTokenParser(),
         ];
     }
 
@@ -141,13 +165,13 @@ final class ContaoExtension extends AbstractExtension
         $includeFunctionCallable = $this->getTwigIncludeFunction()->getCallable();
 
         return [
-            // Overwrite the "include" function to additionally support the
-            // Contao template hierarchy
+            // Overwrite the "include" function to additionally support the Contao
+            // template hierarchy
             new TwigFunction(
                 'include',
-                function (Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false /* we need named arguments here */) use ($includeFunctionCallable) {
+                function (Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false) use ($includeFunctionCallable) {
                     $args = \func_get_args();
-                    $args[2] = DynamicIncludeTokenParser::adjustTemplateName((string) $template, $this->hierarchy);
+                    $args[2] = DynamicIncludeTokenParser::adjustTemplateName($template, $this->filesystemLoader);
 
                     return $includeFunctionCallable(...$args);
                 },
@@ -155,7 +179,7 @@ final class ContaoExtension extends AbstractExtension
             ),
             new TwigFunction(
                 'attrs',
-                static fn (iterable|string|HtmlAttributes|null $attributes = null): HtmlAttributes => new HtmlAttributes($attributes),
+                static fn (HtmlAttributes|iterable|string|null $attributes = null): HtmlAttributes => new HtmlAttributes($attributes),
             ),
             new TwigFunction(
                 'figure',
@@ -164,7 +188,7 @@ final class ContaoExtension extends AbstractExtension
             new TwigFunction(
                 'contao_figure',
                 [FigureRuntime::class, 'renderFigure'],
-                ['is_safe' => ['html']],
+                ['is_safe' => ['html'], 'deprecated' => true],
             ),
             new TwigFunction(
                 'picture_config',
@@ -202,38 +226,92 @@ final class ContaoExtension extends AbstractExtension
                 [FragmentRuntime::class, 'renderContent'],
                 ['is_safe' => ['html']],
             ),
+            // Overwrites the 'csp_nonce' method from nelmio/security-bundle
+            new TwigFunction(
+                'csp_nonce',
+                [CspRuntime::class, 'getNonce'],
+            ),
+            new TwigFunction(
+                'csp_source',
+                [CspRuntime::class, 'addSource'],
+            ),
+            new TwigFunction(
+                'csp_hash',
+                [CspRuntime::class, 'addHash'],
+            ),
+            new TwigFunction(
+                'content_url',
+                [ContentUrlRuntime::class, 'generate'],
+            ),
+            new TwigFunction(
+                'slot',
+                static fn () => throw new SyntaxError('You cannot use the slot() function outside of a slot.'),
+            ),
+            // Backend functions
+            new TwigFunction(
+                'backend_icon',
+                [BackendHelperRuntime::class, 'icon'],
+                ['is_safe' => ['html']],
+            ),
         ];
     }
 
     public function getFilters(): array
     {
-        $escaperFilter = static function (Environment $env, $string, $strategy = 'html', $charset = null, $autoescape = false) {
+        $escaperFilter = static function (Environment $env, $string, string $strategy = 'html', string|null $charset = null, bool $autoescape = false) {
+            $runtime = $env->getRuntime(EscaperRuntime::class);
+
             if ($string instanceof ChunkedText) {
                 $parts = [];
 
                 foreach ($string as [$type, $chunk]) {
-                    $parts[] = ChunkedText::TYPE_RAW === $type
-                        ? $chunk
-                        : twig_escape_filter($env, $chunk, $strategy, $charset);
+                    if (ChunkedText::TYPE_RAW === $type) {
+                        $parts[] = $chunk;
+                    } else {
+                        $parts[] = $runtime->escape($chunk, $strategy, $charset);
+                    }
                 }
 
                 return implode('', $parts);
             }
 
-            return twig_escape_filter($env, $string, $strategy, $charset, $autoescape);
+            return $runtime->escape($string, $strategy, $charset, $autoescape);
+        };
+
+        /** @see \Twig\Extension\EscaperExtension::escapeFilterIsSafe() */
+        $twigEscaperFilterIsSafe = static function (Node $filterArgs): array {
+            foreach ($filterArgs as $arg) {
+                if ($arg instanceof ConstantExpression) {
+                    $value = $arg->getAttribute('value');
+
+                    // Our escaper strategy variants that tolerate input encoding are also safe in
+                    // the original context (e.g. for the filter argument 'contao_html' we will
+                    // return ['contao_html', 'html']).
+                    if (\in_array($value, ['contao_html', 'contao_html_attr'], true)) {
+                        return [$value, substr($value, 7)];
+                    }
+
+                    return [$value];
+                }
+
+                return [];
+            }
+
+            return ['html'];
         };
 
         return [
-            // Overwrite the "escape" filter to additionally support chunked text
+            // Overwrite the "escape" filter to additionally support chunked text and our
+            // escaper strategies
             new TwigFilter(
                 'escape',
                 $escaperFilter,
-                ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe'],
+                ['needs_environment' => true, 'is_safe_callback' => $twigEscaperFilterIsSafe],
             ),
             new TwigFilter(
                 'e',
                 $escaperFilter,
-                ['needs_environment' => true, 'is_safe_callback' => 'twig_escape_filter_is_safe'],
+                ['needs_environment' => true, 'is_safe_callback' => $twigEscaperFilterIsSafe],
             ),
             new TwigFilter(
                 'insert_tag',
@@ -263,6 +341,25 @@ final class ContaoExtension extends AbstractExtension
                 [SanitizerRuntime::class, 'sanitizeHtml'],
                 ['is_safe' => ['html']],
             ),
+            new TwigFilter(
+                'csp_unsafe_inline_style',
+                [CspRuntime::class, 'unsafeInlineStyle'],
+                ['preserves_safety' => ['html']],
+            ),
+            new TwigFilter(
+                'csp_inline_styles',
+                [CspRuntime::class, 'inlineStyles'],
+                ['preserves_safety' => ['html']],
+            ),
+            new TwigFilter(
+                'encode_email',
+                [StringRuntime::class, 'encodeEmail'],
+                ['preserves_safety' => ['contao_html', 'html']],
+            ),
+            new TwigFilter(
+                'deserialize',
+                static fn (mixed $value): array => StringUtil::deserialize($value, true),
+            ),
         ];
     }
 
@@ -276,13 +373,13 @@ final class ContaoExtension extends AbstractExtension
     {
         $template = Path::getFilenameWithoutExtension($name);
 
-        $partialTemplate = new class($template) extends Template {
+        $partialTemplate = new class($template) extends FrontendTemplate {
             use BackendTemplateTrait;
             use FrontendTemplateTrait;
 
             public function setBlocks(array $blocks): void
             {
-                $this->arrBlocks = array_map(static fn ($block) => \is_array($block) ? $block : [$block], $blocks);
+                $this->arrBlocks = $blocks;
             }
 
             public function parse(): string
@@ -296,10 +393,23 @@ final class ContaoExtension extends AbstractExtension
             }
         };
 
+        // Prevent replacing insert tags in output from Twig
+        $nonce = ContaoFramework::getNonce();
+        $from = ['{{', '}}'];
+        $to = ["[[TL_IT_OPEN_$nonce]]", "[[TL_IT_CLOSE_$nonce]]"];
+
+        $blocks = array_map(
+            static fn ($block) => array_map(
+                static fn ($content) => str_replace($from, $to, $content),
+                \is_array($block) ? $block : [$block],
+            ),
+            $blocks,
+        );
+
         $partialTemplate->setData($context);
         $partialTemplate->setBlocks($blocks);
 
-        return $partialTemplate->parse();
+        return str_replace($to, $from, $partialTemplate->parse());
     }
 
     /**
@@ -317,15 +427,17 @@ final class ContaoExtension extends AbstractExtension
             } else {
                 $GLOBALS['TL_HEAD'][] = $content;
             }
-
-            return;
-        }
-
-        if (DocumentLocation::endOfBody === $location) {
+        } elseif (DocumentLocation::endOfBody === $location) {
             if (null !== $identifier) {
                 $GLOBALS['TL_BODY'][$identifier] = $content;
             } else {
                 $GLOBALS['TL_BODY'][] = $content;
+            }
+        } elseif (DocumentLocation::stylesheets === $location) {
+            if (null !== $identifier) {
+                $GLOBALS['TL_STYLE_SHEETS'][$identifier] = $content;
+            } else {
+                $GLOBALS['TL_STYLE_SHEETS'][] = $content;
             }
         }
     }
@@ -338,6 +450,6 @@ final class ContaoExtension extends AbstractExtension
             }
         }
 
-        throw new \RuntimeException(sprintf('The %s class was expected to register the "include" Twig function but did not.', CoreExtension::class));
+        throw new \RuntimeException(\sprintf('The %s class was expected to register the "include" Twig function but did not.', CoreExtension::class));
     }
 }

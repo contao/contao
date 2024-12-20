@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Intl;
 
-use Contao\ArrayUtil;
 use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
@@ -45,9 +44,8 @@ class LocalesTest extends TestCase
     {
         $localeIds = $this->getLocalesService()->getLocaleIds();
 
-        $this->assertIsArray($localeIds);
         $this->assertNotEmpty($localeIds);
-        $this->assertFalse(ArrayUtil::isAssoc($localeIds));
+        $this->assertTrue(array_is_list($localeIds));
 
         foreach ($localeIds as $localeId) {
             $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
@@ -67,9 +65,8 @@ class LocalesTest extends TestCase
     {
         $localeIds = $this->getLocalesService()->getLanguageLocaleIds();
 
-        $this->assertIsArray($localeIds);
         $this->assertNotEmpty($localeIds);
-        $this->assertFalse(ArrayUtil::isAssoc($localeIds));
+        $this->assertTrue(array_is_list($localeIds));
 
         foreach ($localeIds as $localeId) {
             $this->assertEmpty(\Locale::getRegion($localeId), $localeId.' should have no region');
@@ -80,9 +77,7 @@ class LocalesTest extends TestCase
     {
         $locales = $this->getLocalesService()->getLocales('de');
 
-        $this->assertIsArray($locales);
         $this->assertNotEmpty($locales);
-        $this->assertTrue(ArrayUtil::isAssoc($locales));
 
         foreach ($locales as $localeId => $label) {
             $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
@@ -122,10 +117,7 @@ class LocalesTest extends TestCase
     {
         $languages = $this->getLocalesService()->getLanguages('de');
 
-        $this->assertIsArray($languages);
         $this->assertNotEmpty($languages);
-        $this->assertTrue(ArrayUtil::isAssoc($languages));
-
         $this->assertArrayNotHasKey('en_POSIX', $languages);
         $this->assertArrayNotHasKey('en_US_POSIX', $languages);
 
@@ -288,7 +280,7 @@ class LocalesTest extends TestCase
         }
     }
 
-    public function getLocalesConfig(): \Generator
+    public static function getLocalesConfig(): iterable
     {
         yield [
             ['en', 'de'],

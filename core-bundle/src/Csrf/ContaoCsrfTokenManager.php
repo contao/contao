@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Csrf;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManager;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
@@ -26,6 +27,11 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
      * @var array<int, string>
      */
     private array $usedTokenValues = [];
+
+    /**
+     * @var array<string, CsrfToken>
+     */
+    private array $tokenCache = [];
 
     public function __construct(
         private readonly RequestStack $requestStack,
@@ -48,18 +54,25 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
 
     public function getToken($tokenId): CsrfToken
     {
-        $token = parent::getToken($tokenId);
-        $this->usedTokenValues[] = $token->getValue();
+        $this->tokenCache[$tokenId] ??= parent::getToken($tokenId);
+        $this->usedTokenValues[] = $this->tokenCache[$tokenId]->getValue();
 
-        return $token;
+        return $this->tokenCache[$tokenId];
     }
 
     public function refreshToken($tokenId): CsrfToken
     {
-        $token = parent::refreshToken($tokenId);
-        $this->usedTokenValues[] = $token->getValue();
+        $this->tokenCache[$tokenId] = parent::refreshToken($tokenId);
+        $this->usedTokenValues[] = $this->tokenCache[$tokenId]->getValue();
 
-        return $token;
+        return $this->tokenCache[$tokenId];
+    }
+
+    public function removeToken(string $tokenId): string|null
+    {
+        unset($this->tokenCache[$tokenId]);
+
+        return parent::removeToken($tokenId);
     }
 
     public function isTokenValid(CsrfToken $token): bool
@@ -76,8 +89,8 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
     }
 
     /**
-     * Skip the CSRF token validation if the request has no cookies, no
-     * authenticated user and the session has not been started.
+     * Skip the CSRF token validation if the request has no cookies, no authenticated
+     * user and the session has not been started.
      */
     public function canSkipTokenValidation(Request $request, string $tokenCookieName): bool
     {
@@ -87,7 +100,7 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
                 0 === $request->cookies->count()
                 || [$tokenCookieName] === $request->cookies->keys()
             )
-            && !($request->hasSession() && $request->getSession()->isStarted());
+            && $this->isSessionEmpty($request);
     }
 
     public function getDefaultTokenValue(): string
@@ -102,5 +115,26 @@ class ContaoCsrfTokenManager extends CsrfTokenManager implements ResetInterface
     public function reset(): void
     {
         $this->usedTokenValues = [];
+        $this->tokenCache = [];
+    }
+
+    private function isSessionEmpty(Request $request): bool
+    {
+        if (!$request->hasSession()) {
+            return true;
+        }
+
+        $session = $request->getSession();
+
+        if (!$session->isStarted()) {
+            return true;
+        }
+
+        if ($session instanceof Session) {
+            // Marked @internal but no other way to check all attribute bags
+            return $session->isEmpty();
+        }
+
+        return [] === $session->all();
     }
 }

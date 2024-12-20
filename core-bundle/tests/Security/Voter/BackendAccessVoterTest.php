@@ -153,7 +153,7 @@ class BackendAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_DENIED, $voter->vote($token, $subject, [$attribute]));
     }
 
-    public function userDataProvider(): \Generator
+    public static function userDataProvider(): iterable
     {
         yield 'Check access on table fields' => [
             ['alexf' => ['tl_user.field']],
@@ -167,9 +167,15 @@ class BackendAccessVoterTest extends TestCase
             'text',
         ];
 
+        yield 'Check access on front end module' => [
+            ['frontendModules' => ['navigation']],
+            ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE,
+            'navigation',
+        ];
+
         yield 'Compares numeric strings and integers' => [
             ['forms' => [15]],
-            ContaoCorePermissions::USER_CAN_ACCESS_FORM,
+            ContaoCorePermissions::USER_CAN_EDIT_FORM,
             '15',
         ];
 
@@ -392,10 +398,10 @@ class BackendAccessVoterTest extends TestCase
             ])
         ;
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(1)
             ->willReturn($page)
         ;
@@ -429,10 +435,10 @@ class BackendAccessVoterTest extends TestCase
             ])
         ;
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(1)
             ->willReturn($page)
         ;
@@ -454,10 +460,10 @@ class BackendAccessVoterTest extends TestCase
             ->willReturn($user)
         ;
 
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
-            ->method('findByPk')
+            ->method('findById')
             ->with(1)
             ->willReturn(null)
         ;
@@ -492,7 +498,7 @@ class BackendAccessVoterTest extends TestCase
         $this->assertSame($expected, $this->voter->vote($token, $page, [$attribute]));
     }
 
-    public function getPageAndArticlePermissions(): \Generator
+    public static function getPageAndArticlePermissions(): iterable
     {
         yield 'Denies access if tl_page.chmod is empty' => [
             ContaoCorePermissions::USER_CAN_EDIT_PAGE,

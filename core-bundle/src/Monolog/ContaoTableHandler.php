@@ -17,35 +17,32 @@ use Doctrine\DBAL\Connection;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Monolog\Level;
+use Monolog\LogRecord;
 
-class ContaoTableHandler extends AbstractProcessingHandler implements ContainerAwareInterface
+class ContaoTableHandler extends AbstractProcessingHandler
 {
-    use ContainerAwareTrait;
-
-    private string $dbalServiceName = 'doctrine.dbal.default_connection';
-
-    public function getDbalServiceName(): string
-    {
-        return $this->dbalServiceName;
+    /**
+     * @param \Closure(): Connection $connection
+     */
+    public function __construct(
+        private readonly \Closure $connection,
+        $level = Level::Debug,
+        bool $bubble = true,
+    ) {
+        parent::__construct($level, $bubble);
     }
 
-    public function setDbalServiceName(string $name): void
-    {
-        $this->dbalServiceName = $name;
-    }
-
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
         if (!$this->isHandling($record)) {
             return false;
         }
 
         $record = $this->processRecord($record);
-        $record['formatted'] = $this->getFormatter()->format($record);
+        $record->formatted = $this->getFormatter()->format($record);
 
-        if (!isset($record['extra']['contao']) || !$record['extra']['contao'] instanceof ContaoContext) {
+        if (!isset($record->extra['contao']) || !$record->extra['contao'] instanceof ContaoContext) {
             return false;
         }
 
@@ -58,17 +55,14 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
         return !$this->bubble;
     }
 
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
-        /** @var \DateTime $date */
-        $date = $record['datetime'];
-
         /** @var ContaoContext $context */
-        $context = $record['extra']['contao'];
+        $context = $record->extra['contao'];
 
-        $this->getConnection()->insert('tl_log', [
-            'tstamp' => $date->format('U'),
-            'text' => StringUtil::specialchars((string) $record['formatted']),
+        ($this->connection)()->insert('tl_log', [
+            'tstamp' => $record->datetime->format('U'),
+            'text' => StringUtil::specialchars((string) $record->formatted),
             'source' => (string) $context->getSource(),
             'action' => (string) $context->getAction(),
             'username' => (string) $context->getUsername(),
@@ -82,15 +76,5 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
     protected function getDefaultFormatter(): FormatterInterface
     {
         return new LineFormatter('%message%');
-    }
-
-    private function getConnection(): Connection
-    {
-        if (!$this->container || !$this->container->has($this->dbalServiceName)) {
-            throw new \RuntimeException('The container has not been injected or the database service is missing');
-        }
-
-        /** @var Connection */
-        return $this->container->get($this->dbalServiceName);
     }
 }

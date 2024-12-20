@@ -18,10 +18,10 @@ use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\Environment;
 use Contao\File;
 use Contao\FilesModel;
-use Contao\News;
 use Contao\NewsBundle\Event\FetchArticlesForFeedEvent;
 use Contao\NewsBundle\Event\TransformArticleForFeedEvent;
 use Contao\NewsModel;
@@ -34,12 +34,17 @@ use FeedIo\Feed\Item\Media;
 use FeedIo\Feed\ItemInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
+/**
+ * @internal
+ */
 class NewsFeedListener
 {
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly ImageFactoryInterface $imageFactory,
+        private readonly ContentUrlGenerator $urlGenerator,
         private readonly InsertTagParser $insertTags,
         private readonly string $projectDir,
         private readonly EntityCacheTags $cacheTags,
@@ -71,9 +76,9 @@ class NewsFeedListener
         $article = $event->getArticle();
 
         $item = new Item();
-        $item->setTitle(html_entity_decode($article->headline, ENT_QUOTES, $this->charset));
+        $item->setTitle(html_entity_decode($article->headline, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $this->charset));
         $item->setLastModified((new \DateTime())->setTimestamp($article->date));
-        $item->setLink($this->getLink($article));
+        $item->setLink($this->urlGenerator->generate($article, [], UrlGeneratorInterface::ABSOLUTE_URL));
         $item->setContent($this->getContent($article, $item, $event));
         $item->setPublicId($item->getLink());
 
@@ -88,11 +93,6 @@ class NewsFeedListener
         }
 
         $event->setItem($item);
-    }
-
-    private function getLink(NewsModel $article): string
-    {
-        return $this->framework->getAdapter(News::class)->generateNewsUrl($article, false, true);
     }
 
     private function getContent(NewsModel $article, ItemInterface $item, TransformArticleForFeedEvent $event): string
@@ -132,9 +132,7 @@ class NewsFeedListener
 
     private function getAuthor(NewsModel $article): AuthorInterface|null
     {
-        $authorModel = $article->getRelated('author');
-
-        if ($authorModel instanceof UserModel) {
+        if ($authorModel = $this->framework->getAdapter(UserModel::class)->findById($article->author)) {
             return (new Author())->setName($authorModel->name);
         }
 

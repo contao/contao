@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -121,17 +122,17 @@ class FileUpload extends Backend
 			{
 				if ($file['error'] == 1 || $file['error'] == 2)
 				{
-					Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb_readable));
+					Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb_readable));
 					$this->blnHasError = true;
 				}
 				elseif ($file['error'] == 3)
 				{
-					Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filepartial'], $file['name']));
+					Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filepartial'], $file['name']));
 					$this->blnHasError = true;
 				}
 				elseif ($file['error'] > 0)
 				{
-					Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileerror'], $file['error'], $file['name']));
+					Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['fileerror'], $file['error'], $file['name']));
 					$this->blnHasError = true;
 				}
 			}
@@ -139,12 +140,12 @@ class FileUpload extends Backend
 			// File is too big
 			elseif ($file['size'] > $maxlength_kb)
 			{
-				Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb_readable));
+				Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb_readable));
 				$this->blnHasError = true;
 			}
 			else
 			{
-				$strExtension = strtolower(substr($file['name'], strrpos($file['name'], '.') + 1));
+				$strExtension = Path::getExtension($file['name'], true);
 
 				// Image is too big
 				if (\in_array($strExtension, array('gif', 'jpg', 'jpeg', 'png', 'webp', 'avif', 'heic', 'jxl')) && Config::get('imageWidth') && Config::get('imageHeight') && System::getContainer()->getParameter('contao.image.reject_large_uploads'))
@@ -153,7 +154,7 @@ class FileUpload extends Backend
 
 					if ($arrImageSize[0] > Config::get('imageWidth') || $arrImageSize[1] > Config::get('imageHeight'))
 					{
-						Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['largeImage'], Config::get('imageWidth'), Config::get('imageHeight')));
+						Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['largeImage'], Config::get('imageWidth'), Config::get('imageHeight')));
 						$this->blnHasError = true;
 
 						continue;
@@ -163,7 +164,7 @@ class FileUpload extends Backend
 				// File type not allowed
 				if (!\in_array($strExtension, StringUtil::trimsplit(',', strtolower(Config::get('uploadTypes')))))
 				{
-					Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $strExtension));
+					Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $strExtension));
 					$this->blnHasError = true;
 				}
 
@@ -179,7 +180,7 @@ class FileUpload extends Backend
 						$filesObj->chmod($strNewFile, 0666 & ~umask());
 
 						// Notify the user
-						Message::addConfirmation(sprintf($GLOBALS['TL_LANG']['MSC']['fileUploaded'], $file['name']));
+						Message::addConfirmation(\sprintf($GLOBALS['TL_LANG']['MSC']['fileUploaded'], $file['name']));
 						System::getContainer()->get('monolog.logger.contao.files')->info('File "' . $strNewFile . '" has been uploaded');
 
 						// Resize the uploaded image if necessary
@@ -203,13 +204,13 @@ class FileUpload extends Backend
 	{
 		$return = '
   <div>
-    <input type="file" name="' . $this->strName . '[]" class="tl_upload_field" onfocus="Backend.getScrollOffset()" multiple required>
+    <input type="file" name="' . $this->strName . '[]" class="tl_upload_field" data-action="focus->contao--scroll-offset#store" multiple required>
   </div>';
 
 		if (isset($GLOBALS['TL_LANG']['tl_files']['fileupload'][1]))
 		{
 			$return .= '
-  <p class="tl_help tl_tip">' . sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], System::getReadableSize(static::getMaxUploadSize()), Config::get('imageWidth') . 'x' . Config::get('imageHeight')) . '</p>';
+  <p class="tl_help tl_tip">' . \sprintf($GLOBALS['TL_LANG']['tl_files']['fileupload'][1], System::getReadableSize(static::getMaxUploadSize()), Config::get('imageWidth') . 'x' . Config::get('imageHeight')) . '</p>';
 		}
 
 		return $return;
@@ -318,7 +319,7 @@ class FileUpload extends Backend
 			$objFile->resizeTo($arrImageSize[0], $arrImageSize[1]);
 			$this->blnHasResized = true;
 
-			Message::addInfo(sprintf($GLOBALS['TL_LANG']['MSC']['fileResized'], $objFile->basename));
+			Message::addInfo(\sprintf($GLOBALS['TL_LANG']['MSC']['fileResized'], $objFile->basename));
 			System::getContainer()->get('monolog.logger.contao.files')->info('File "' . $strImage . '" was scaled down to the maximum dimensions');
 
 			return true;

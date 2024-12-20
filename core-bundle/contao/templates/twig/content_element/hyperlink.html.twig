@@ -6,7 +6,7 @@
         {# Link wrapping text #}
         {% block text_link %}
             {{- text_before -}}
-            <a{{ attrs(link_attributes|default) }}>{{ link_text }}</a>
+            <a{{ attrs(link_attributes|default) }}>{{ link_text|insert_tag }}</a>
             {{- text_after -}}
         {% endblock %}
     {% else %}

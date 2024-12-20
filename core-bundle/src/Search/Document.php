@@ -26,8 +26,8 @@ class Document
     private array|null $jsonLds = null;
 
     /**
-     * The key is the header name in lowercase letters and the value is again
-     * an array of header values.
+     * The key is the header name in lowercase letters and the value is again an array
+     * of header values.
      *
      * @param array<string, array> $headers
      */
@@ -108,8 +108,9 @@ class Document
     }
 
     /**
-     * Extracts all <script type="application/ld+json"> script tags and returns their contents as a JSON decoded
-     * array. Optionally allows to restrict it to a given context and type.
+     * Extracts all <script type="application/ld+json"> script tags and returns their
+     * contents as a JSON decoded array. Optionally allows to restrict it to a given
+     * context and type.
      */
     public function extractJsonLdScripts(string $context = '', string $type = ''): array
     {
@@ -138,8 +139,9 @@ class Document
 
         // Filter invalid (null) and parse all values
         foreach (array_filter($jsonLds) as $jsonLd) {
-            // If array has numeric keys, it likely contains multiple data inside it which should be
-            // treated as if coming from separate sources, and thus moved to the root of an array.
+            // If array has numeric keys, it likely contains multiple data inside it which
+            // should be treated as if coming from separate sources, and thus moved to the
+            // root of an array.
             $jsonLdItems = ArrayUtil::isAssoc($jsonLd) ? [$jsonLd] : $jsonLd;
 
             // Parsed the grouped values under the @graph within the same context

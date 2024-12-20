@@ -258,11 +258,8 @@ window.AjaxRequest =
 			onSuccess: function(txt, json) {
 				var div = new Element('div', {
 					'id': id,
-					'class': 'subpal cf',
-					'html': txt,
-					'styles': {
-						'display': 'block'
-					}
+					'class': 'subpal widget-group',
+					'html': txt
 				}).inject($(el).getParent('div').getParent('div'), 'after');
 
 				// Execute scripts after the DOM has been updated
@@ -532,6 +529,7 @@ window.Backend =
 			'hideFooter': true,
 			'draggable': false,
 			'overlayOpacity': .7,
+			'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		}).show({
@@ -558,7 +556,7 @@ window.Backend =
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
 		M.show({
-			'title': opt.title,
+			'title': opt.title?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;'),
 			'contents': '<img src="' + opt.url + '" alt="">'
 		});
 	},
@@ -579,11 +577,12 @@ window.Backend =
 			'hideFooter': true,
 			'draggable': false,
 			'overlayOpacity': .7,
+			'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
 		M.show({
-			'title': opt.title,
+			'title': opt.title?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;'),
 			'contents': '<iframe src="' + opt.url + '" width="100%" height="' + opt.height + '" frameborder="0"></iframe>',
 			'model': 'modal'
 		});
@@ -605,6 +604,7 @@ window.Backend =
 			'width': opt.width,
 			'draggable': false,
 			'overlayOpacity': .7,
+			'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
@@ -648,7 +648,7 @@ window.Backend =
 			this.hide();
 		});
 		M.show({
-			'title': opt.title,
+			'title': opt.title?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;'),
 			'contents': '<iframe src="' + opt.url + '" name="simple-modal-iframe" width="100%" height="' + opt.height + '" frameborder="0"></iframe>',
 			'model': 'modal'
 		});
@@ -675,79 +675,12 @@ window.Backend =
 	},
 
 	/**
-	 * Store the current scroll offset in sessionStorage
-	 */
-	getScrollOffset: function() {
-		window.sessionStorage.setItem('contao_backend_offset', window.getScroll().y);
-	},
-
-	/**
-	 * Scroll to the current offset if
-	 * it was defined and add the "down" CSS class to the header.
-	 */
-	initScrollOffset: function() {
-		// Add events to the submit buttons, so they can reset the offset
-		// (except for "save", which always stays on the same page)
-		$$('.tl_submit_container button[name][name!="save"]').each(function(button) {
-			button.addEvent('click', function() {
-				window.sessionStorage.removeItem('contao_backend_offset');
-			});
-		});
-
-		var offset = window.sessionStorage.getItem('contao_backend_offset');
-		window.sessionStorage.removeItem('contao_backend_offset');
-
-		if (!offset) return;
-
-		var additionalOffset = 0;
-
-		$$('[data-add-to-scroll-offset]').each(function(el) {
-			var offset = el.get('data-add-to-scroll-offset'),
-				scrollSize = el.getScrollSize().y,
-				negative = false,
-				percent = false;
-
-			// No specific offset desired, take scrollSize
-			if (!offset) {
-				additionalOffset += scrollSize;
-				return;
-			}
-
-			// Negative
-			if (offset.charAt(0) === '-') {
-				negative = true;
-				offset = offset.substring(1);
-			}
-
-			// Percent
-			if (offset.charAt(offset.length - 1) === '%') {
-				percent = true;
-				offset = offset.substring(0, offset.length - 1);
-			}
-
-			offset = parseInt(offset, 10);
-
-			if (percent) {
-				offset = Math.round(scrollSize * offset / 100);
-			}
-
-			if (negative) {
-				offset = offset * -1;
-			}
-
-			additionalOffset += offset;
-		});
-
-		this.vScrollTo(parseInt(offset, 10) + additionalOffset);
-	},
-
-	/**
 	 * Automatically submit a form
 	 *
 	 * @param {object} el The DOM element
 	 */
 	autoSubmit: function(el) {
-		Backend.getScrollOffset();
+		window.dispatchEvent(new Event('store-scroll-offset'));
 
 		var hidden = new Element('input', {
 			'type': 'hidden',
@@ -766,6 +699,10 @@ window.Backend =
 	 * @param {int} offset The offset to scroll to
 	 */
 	vScrollTo: function(offset) {
+		if (window.console) {
+			console.warn('Backend.vScrollTo() is deprecated. Please use the Stimulus controller instead.');
+		}
+
 		window.addEvent('load', function() {
 			window.scrollTo(null, parseInt(offset));
 		});
@@ -813,7 +750,7 @@ window.Backend =
 			});
 		}
 
-		Backend.getScrollOffset();
+		window.dispatchEvent(new Event('store-scroll-offset'));
 	},
 
 	/**
@@ -831,7 +768,7 @@ window.Backend =
 			}
 		});
 
-		Backend.getScrollOffset();
+		window.dispatchEvent(new Event('store-scroll-offset'));
 	},
 
 	/**
@@ -1085,7 +1022,7 @@ window.Backend =
 						return;
 					}
 
-					Backend.getScrollOffset();
+					window.dispatchEvent(new Event('store-scroll-offset'));
 					document.location.href = options.url + '&id=' + encodeURIComponent(id) + '&pid=' + encodeURIComponent(pid);
 				},
 				onLeave: function(element, droppable) {
@@ -1140,17 +1077,18 @@ window.Backend =
 					switch (command) {
 						case 'copy':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								clone = li.clone(true).inject(li, 'before');
 								if (input = li.getFirst('input')) {
 									clone.getFirst('input').value = input.value;
 								}
 								addEventsTo(clone);
+								input.select();
 							});
 							break;
 						case 'delete':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								if (ul.getChildren().length > 1) {
 									li.destroy();
 								}
@@ -1199,12 +1137,12 @@ window.Backend =
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
 				var rows = tbody.getChildren(),
-					textarea, childs, i, j;
+					textarea, children, i, j;
 
 				for (i=0; i<rows.length; i++) {
-					childs = rows[i].getChildren();
-					for (j=0; j<childs.length; j++) {
-						if (textarea = childs[j].getFirst('textarea')) {
+					children = rows[i].getChildren();
+					for (j=0; j<children.length; j++) {
+						if (textarea = children[j].getFirst('textarea')) {
 							textarea.name = textarea.name.replace(/\[[0-9]+][[0-9]+]/g, '[' + i + '][' + j + ']')
 						}
 					}
@@ -1221,7 +1159,7 @@ window.Backend =
 			},
 			addEventsTo = function(tr) {
 				var head = thead.getFirst('tr'),
-					command, textarea, current, next, ntr, childs, index, i;
+					command, textarea, current, next, ntr, children, index, i;
 
 				tr.getElements('button').each(function(bt) {
 					if (bt.hasEvent('click')) return;
@@ -1230,23 +1168,24 @@ window.Backend =
 					switch (command) {
 						case 'rcopy':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								ntr = new Element('tr');
-								childs = tr.getChildren();
-								for (i=0; i<childs.length; i++) {
-									next = childs[i].clone(true).inject(ntr, 'bottom');
-									if (textarea = childs[i].getFirst('textarea')) {
+								children = tr.getChildren();
+								for (i=0; i<children.length; i++) {
+									next = children[i].clone(true).inject(ntr, 'bottom');
+									if (textarea = children[i].getFirst('textarea')) {
 										next.getFirst('textarea').value = textarea.value;
 									}
 								}
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
+								ntr.getFirst('td').getFirst('textarea').select();
 							});
 							break;
 						case 'rdelete':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								if (tbody.getChildren().length > 1) {
 									tr.destroy();
 								}
@@ -1255,11 +1194,11 @@ window.Backend =
 							break;
 						case 'ccopy':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								index = getIndex(bt);
-								childs = tbody.getChildren();
-								for (i=0; i<childs.length; i++) {
-									current = childs[i].getChildren()[index];
+								children = tbody.getChildren();
+								for (i=0; i<children.length; i++) {
+									current = children[i].getChildren()[index];
 									next = current.clone(true).inject(current, 'after');
 									if (textarea = current.getFirst('textarea')) {
 										next.getFirst('textarea').value = textarea.value;
@@ -1270,22 +1209,23 @@ window.Backend =
 								next = headFirst.clone(true).inject(head.getLast('td'), 'before');
 								addEventsTo(next);
 								makeSortable(tbody);
+								children[0].getChildren()[index + 1].getFirst('textarea').select();
 							});
 							break;
 						case 'cmovel':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								index = getIndex(bt);
-								childs = tbody.getChildren();
+								children = tbody.getChildren();
 								if (index > 0) {
-									for (i=0; i<childs.length; i++) {
-										current = childs[i].getChildren()[index];
+									for (i=0; i<children.length; i++) {
+										current = children[i].getChildren()[index];
 										current.inject(current.getPrevious(), 'before');
 									}
 								} else {
-									for (i=0; i<childs.length; i++) {
-										current = childs[i].getChildren()[index];
-										current.inject(childs[i].getLast(), 'before');
+									for (i=0; i<children.length; i++) {
+										current = children[i].getChildren()[index];
+										current.inject(children[i].getLast(), 'before');
 									}
 								}
 								makeSortable(tbody);
@@ -1293,18 +1233,18 @@ window.Backend =
 							break;
 						case 'cmover':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								index = getIndex(bt);
-								childs = tbody.getChildren();
+								children = tbody.getChildren();
 								if (index < (tr.getChildren().length - 2)) {
-									for (i=0; i<childs.length; i++) {
-										current = childs[i].getChildren()[index];
+									for (i=0; i<children.length; i++) {
+										current = children[i].getChildren()[index];
 										current.inject(current.getNext(), 'after');
 									}
 								} else {
-									for (i=0; i<childs.length; i++) {
-										current = childs[i].getChildren()[index];
-										current.inject(childs[i].getFirst(), 'before');
+									for (i=0; i<children.length; i++) {
+										current = children[i].getChildren()[index];
+										current.inject(children[i].getFirst(), 'before');
 									}
 								}
 								makeSortable(tbody);
@@ -1312,12 +1252,12 @@ window.Backend =
 							break;
 						case 'cdelete':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								index = getIndex(bt);
-								childs = tbody.getChildren();
+								children = tbody.getChildren();
 								if (tr.getChildren().length > 2) {
-									for (i=0; i<childs.length; i++) {
-										childs[i].getChildren()[index].destroy();
+									for (i=0; i<children.length; i++) {
+										children[i].getChildren()[index].destroy();
 									}
 									head.getFirst('td').destroy();
 								}
@@ -1425,12 +1365,12 @@ window.Backend =
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
 				var rows = tbody.getChildren(),
-					childs, i, j, input;
+					children, i, j, input;
 
 				for (i=0; i<rows.length; i++) {
-					childs = rows[i].getChildren();
-					for (j=0; j<childs.length; j++) {
-						if (input = childs[j].getFirst('input')) {
+					children = rows[i].getChildren();
+					for (j=0; j<children.length; j++) {
+						if (input = children[j].getFirst('input')) {
 							input.name = input.name.replace(/\[[0-9]+]/g, '[' + i + ']');
 							if (input.type == 'checkbox') {
 								input.id = input.name.replace(/\[[0-9]+]/g, '').replace(/\[/g, '_').replace(/]/g, '') + '_' + i;
@@ -1450,7 +1390,7 @@ window.Backend =
 				});
 			},
 			addEventsTo = function(tr) {
-				var command, input, next, ntr, childs, i;
+				var command, input, next, ntr, children, i;
 				tr.getElements('button').each(function(bt) {
 					if (bt.hasEvent('click')) return;
 					command = bt.getProperty('data-command');
@@ -1458,12 +1398,12 @@ window.Backend =
 					switch (command) {
 						case 'copy':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								ntr = new Element('tr');
-								childs = tr.getChildren();
-								for (i=0; i<childs.length; i++) {
-									next = childs[i].clone(true).inject(ntr, 'bottom');
-									if (input = childs[i].getFirst('input')) {
+								children = tr.getChildren();
+								for (i=0; i<children.length; i++) {
+									next = children[i].clone(true).inject(ntr, 'bottom');
+									if (input = children[i].getFirst('input')) {
 										next.getFirst('input').value = input.value;
 										if (input.type == 'checkbox') {
 											next.getFirst('input').checked = input.checked ? 'checked' : '';
@@ -1473,11 +1413,12 @@ window.Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
+								ntr.getFirst('td').getFirst('input').select();
 							});
 							break;
 						case 'delete':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								if (tbody.getChildren().length > 1) {
 									tr.destroy();
 								}
@@ -1528,12 +1469,12 @@ window.Backend =
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
 				var rows = tbody.getChildren(),
-					childs, i, j, input;
+					children, i, j, input;
 
 				for (i=0; i<rows.length; i++) {
-					childs = rows[i].getChildren();
-					for (j=0; j<childs.length; j++) {
-						if (input = childs[j].getFirst('input')) {
+					children = rows[i].getChildren();
+					for (j=0; j<children.length; j++) {
+						if (input = children[j].getFirst('input')) {
 							input.name = input.name.replace(/\[[0-9]+]/g, '[' + i + ']')
 						}
 					}
@@ -1549,7 +1490,7 @@ window.Backend =
 				});
 			},
 			addEventsTo = function(tr) {
-				var command, input, next, ntr, childs, i;
+				var command, input, next, ntr, children, i;
 				tr.getElements('button').each(function(bt) {
 					if (bt.hasEvent('click')) return;
 					command = bt.getProperty('data-command');
@@ -1557,23 +1498,24 @@ window.Backend =
 					switch (command) {
 						case 'copy':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								ntr = new Element('tr');
-								childs = tr.getChildren();
-								for (i=0; i<childs.length; i++) {
-									next = childs[i].clone(true).inject(ntr, 'bottom');
-									if (input = childs[i].getFirst('input')) {
+								children = tr.getChildren();
+								for (i=0; i<children.length; i++) {
+									next = children[i].clone(true).inject(ntr, 'bottom');
+									if (input = children[i].getFirst('input')) {
 										next.getFirst().value = input.value;
 									}
 								}
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
+								ntr.getFirst('td').getFirst('input').select();
 							});
 							break;
 						case 'delete':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								if (tbody.getChildren().length > 1) {
 									tr.destroy();
 								}
@@ -1993,7 +1935,7 @@ window.Backend =
 			}
 
 			dzElement.addClass('dropzone-filetree-enabled');
-			Backend.getScrollOffset();
+			window.dispatchEvent(new Event('store-scroll-offset'));
 		});
 
 		dz.on('dragleave', function() {
@@ -2123,56 +2065,6 @@ window.Theme =
 	},
 
 	/**
-	 * Set up the [Ctrl] + click to edit functionality
-	 */
-	setupCtrlClick: function() {
-		$$('.click2edit').each(function(el) {
-
-			// Do not propagate the click events of the default buttons (see #5731)
-			el.getElements('a').each(function(a) {
-				a.addEvent('click', function(e) {
-					e.stopPropagation();
-				});
-			});
-
-			// Set up regular click events on touch devices
-			if (Browser.Features.Touch) {
-				el.addEvent('click', function() {
-					if (!el.getAttribute('data-visited')) {
-						el.setAttribute('data-visited', '1');
-					} else {
-						el.getElements('a').each(function(a) {
-							if (a.hasClass('edit')) {
-								document.location.href = a.href;
-							}
-						});
-						el.removeAttribute('data-visited');
-					}
-				});
-			} else {
-				el.addEvent('click', function(e) {
-					var key = Browser.Platform.mac ? e.event.metaKey : e.event.ctrlKey;
-					if (!key) return;
-
-					if (e.event.shiftKey) {
-						el.getElements('a').each(function(a) {
-							if (a.hasClass('children')) {
-								document.location.href = a.href;
-							}
-						});
-					} else {
-						el.getElements('a').each(function(a) {
-							if (a.hasClass('edit')) {
-								document.location.href = a.href;
-							}
-						});
-					}
-				});
-			}
-		});
-	},
-
-	/**
 	 * Set up the textarea resizing
 	 */
 	setupTextareaResizing: function() {
@@ -2259,6 +2151,10 @@ window.Theme =
 	 * Set up the profile toggle
 	 */
 	setupProfileToggle: function() {
+		if (window.console) {
+			console.warn('Theme.setupProfileToggle() is deprecated. Please use the stimulus controller instead.');
+		}
+
 		var tmenu = $('tmenu');
 		if (!tmenu) return;
 
@@ -2352,10 +2248,8 @@ window.addEvent('domready', function() {
 	Backend.enableToggleSelect();
 
 	Theme.stopClickPropagation();
-	Theme.setupCtrlClick();
 	Theme.setupTextareaResizing();
 	Theme.setupMenuToggle();
-	Theme.setupProfileToggle();
 	Theme.setupSplitButtonToggle();
 });
 
@@ -2370,6 +2264,5 @@ window.addEvent('ajax_change', function() {
 	Backend.enableToggleSelect();
 
 	Theme.stopClickPropagation();
-	Theme.setupCtrlClick();
 	Theme.setupTextareaResizing();
 });

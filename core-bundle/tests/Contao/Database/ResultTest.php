@@ -197,7 +197,7 @@ class ResultTest extends TestCase
         new Result($statement, 'SELECT * FROM test');
     }
 
-    public function getInvalidStatements(): \Generator
+    public static function getInvalidStatements(): iterable
     {
         yield 'String' => ['foo'];
         yield 'Object' => [new \stdClass()];

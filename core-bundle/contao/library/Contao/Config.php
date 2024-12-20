@@ -306,7 +306,7 @@ class Config
 	/**
 	 * Return true if the installation is complete
 	 *
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 *
 	 * @return boolean True if the installation is complete
 	 */
@@ -430,7 +430,7 @@ class Config
 	{
 		$objConfig = static::getInstance();
 
-		if (strncmp($strKey, '$GLOBALS', 8) !== 0)
+		if (!str_starts_with($strKey, '$GLOBALS'))
 		{
 			$strKey = "\$GLOBALS['TL_CONFIG']['$strKey']";
 		}
@@ -447,7 +447,7 @@ class Config
 	{
 		$objConfig = static::getInstance();
 
-		if (strncmp($strKey, '$GLOBALS', 8) !== 0)
+		if (!str_starts_with($strKey, '$GLOBALS'))
 		{
 			$strKey = "\$GLOBALS['TL_CONFIG']['$strKey']";
 		}
@@ -467,7 +467,7 @@ class Config
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
 		// Include the local configuration file
-		if (($blnHasLcf = file_exists($projectDir . '/system/config/localconfig.php')) === true)
+		if ($blnHasLcf = file_exists($projectDir . '/system/config/localconfig.php'))
 		{
 			include $projectDir . '/system/config/localconfig.php';
 		}
@@ -505,13 +505,15 @@ class Config
 			}
 		}
 
-		$objRequest = $container->get('request_stack')->getCurrentRequest();
-
-		/** @var PageModel $objPage */
-		if (null !== $objRequest && ($objPage = $objRequest->attributes->get('pageModel')) instanceof PageModel)
+		if ($objRequest = $container->get('request_stack')->getCurrentRequest())
 		{
-			$GLOBALS['TL_CONFIG']['addLanguageToUrl'] = $objPage->urlPrefix !== '';
-			$GLOBALS['TL_CONFIG']['urlSuffix'] = $objPage->urlSuffix;
+			$objPage = $objRequest->attributes->get('pageModel');
+
+			if ($objPage instanceof PageModel)
+			{
+				$GLOBALS['TL_CONFIG']['addLanguageToUrl'] = $objPage->urlPrefix !== '';
+				$GLOBALS['TL_CONFIG']['urlSuffix'] = $objPage->urlSuffix;
+			}
 		}
 	}
 

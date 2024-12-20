@@ -19,8 +19,8 @@ use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\UriSigner;
 
 class PreviewLinkControllerTest extends TestCase
 {
@@ -42,7 +42,7 @@ class PreviewLinkControllerTest extends TestCase
         $this->assertSame($url, $response->getTargetUrl());
     }
 
-    public function authenticateGuestProvider(): \Generator
+    public static function authenticateGuestProvider(): iterable
     {
         yield 'show unpublished' => ['/foo/bar', true];
         yield 'hide unpublished' => ['/foo/baz', false];

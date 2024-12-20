@@ -16,6 +16,7 @@ use Contao\CoreBundle\Routing\Candidates\LocaleCandidates;
 use Contao\CoreBundle\Routing\Candidates\PageCandidates;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Tests\TestCase;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Result;
@@ -49,7 +50,7 @@ class PageCandidatesTest extends TestCase
         $this->assertSame($expected['locale'] ?? $expected['default'], $candidates->getCandidates($request));
     }
 
-    public function getCandidatesProvider(): \Generator
+    public static function getCandidatesProvider(): iterable
     {
         yield [
             '/foo.html',
@@ -356,7 +357,8 @@ class PageCandidatesTest extends TestCase
             ],
         ];
 
-        // Ensure that 0 does not trigger the "AbstractCandidates::getCandidates cannot handle empty path" exception
+        // Ensure that 0 does not trigger the "AbstractCandidates::getCandidates cannot
+        // handle empty path" exception
         yield [
             '/0',
             ['.html'],
@@ -382,7 +384,7 @@ class PageCandidatesTest extends TestCase
         $queryBuilder
             ->expects($this->once())
             ->method('setParameter')
-            ->with('types', ['foo', 'bar'], Connection::PARAM_STR_ARRAY)
+            ->with('types', ['foo', 'bar'], ArrayParameterType::STRING)
             ->willReturnSelf()
         ;
 
@@ -416,7 +418,7 @@ class PageCandidatesTest extends TestCase
         $queryBuilder
             ->expects($this->once())
             ->method('setParameter')
-            ->with('types', ['foo', 'bar'], Connection::PARAM_STR_ARRAY)
+            ->with('types', ['foo', 'bar'], ArrayParameterType::STRING)
             ->willReturnSelf()
         ;
 
@@ -450,7 +452,7 @@ class PageCandidatesTest extends TestCase
         $queryBuilder
             ->expects($this->once())
             ->method('setParameter')
-            ->with('types', ['foo', 'bar'], Connection::PARAM_STR_ARRAY)
+            ->with('types', ['foo', 'bar'], ArrayParameterType::STRING)
             ->willReturnSelf()
         ;
 

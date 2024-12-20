@@ -116,7 +116,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 		$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
 
-		if ($memberWidget && $memberWidget->value)
+		if ($memberWidget?->value)
 		{
 			$objMember = Database::getInstance()->prepare('SELECT username FROM tl_member WHERE id=?')
 												->execute((int) $memberWidget->value);
@@ -128,12 +128,9 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			}
 			else
 			{
-				$session = System::getContainer()->get('request_stack')->getSession();
-				$clientOptions = array('headers' => array('Cookie' => sprintf('%s=%s', $session->getName(), $session->getId())));
-
-				// Closing the session is necessary here as otherwise we run into our own session lock
 				// TODO: we need a way to authenticate with a token instead of our own cookie
-				$session->save();
+				$session = System::getContainer()->get('request_stack')->getSession();
+				$clientOptions = array('headers' => array('Cookie' => \sprintf('%s=%s', $session->getName(), $session->getId())));
 			}
 		}
 		else
@@ -200,7 +197,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			->withMaxDurationInSeconds(20)
 			->withLogger($this->createLogger($factory, $activeSubscribers, $jobId, $debugLogPath));
 
-		$template->hint = sprintf($GLOBALS['TL_LANG']['tl_maintenance']['crawlHint'], $concurrency, 'contao.backend.crawl_concurrency');
+		$template->hint = \sprintf($GLOBALS['TL_LANG']['tl_maintenance']['crawlHint'], $concurrency, 'contao.backend.crawl_concurrency', 'https://to.contao.org/docs/crawler');
 
 		if (Environment::get('isAjaxRequest'))
 		{
@@ -310,7 +307,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			return $this->logDir;
 		}
 
-		$this->logDir = sprintf('%s/%s/contao-crawl', sys_get_temp_dir(), md5(System::getContainer()->getParameter('kernel.project_dir')));
+		$this->logDir = \sprintf('%s/%s/contao-crawl', sys_get_temp_dir(), md5(System::getContainer()->getParameter('kernel.project_dir')));
 
 		if (!is_dir($this->logDir))
 		{

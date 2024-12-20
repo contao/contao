@@ -14,6 +14,8 @@ namespace Contao\NewsletterBundle\Security;
 
 final class ContaoNewsletterPermissions
 {
+    public const USER_CAN_ACCESS_MODULE = 'contao_user.modules.newsletter';
+
     public const USER_CAN_EDIT_CHANNEL = 'contao_user.newsletters';
 
     public const USER_CAN_CREATE_CHANNELS = 'contao_user.newsletterp.create';

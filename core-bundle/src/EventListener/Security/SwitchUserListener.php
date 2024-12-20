@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\Security;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
@@ -20,6 +21,7 @@ use Symfony\Component\Security\Http\Event\SwitchUserEvent;
 /**
  * @internal
  */
+#[AsEventListener]
 class SwitchUserListener
 {
     public function __construct(
@@ -47,13 +49,13 @@ class SwitchUserListener
         }
 
         if ($originalUser === $targetUser) {
-            $this->logger->info(sprintf('User "%s" has quit the impersonation of user "%s"', $originalUser, $sourceUser));
+            $this->logger->info(\sprintf('User "%s" has quit the impersonation of user "%s"', $originalUser, $sourceUser));
         } else {
             if ($originalUser) {
                 $sourceUser = $originalUser;
             }
 
-            $this->logger->info(sprintf('User "%s" has switched to user "%s"', $sourceUser, $targetUser));
+            $this->logger->info(\sprintf('User "%s" has switched to user "%s"', $sourceUser, $targetUser));
         }
     }
 }

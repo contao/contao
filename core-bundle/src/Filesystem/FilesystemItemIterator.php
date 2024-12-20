@@ -139,7 +139,7 @@ class FilesystemItemIterator implements \IteratorAggregate
     public function limit(int $numberOfElements): self
     {
         if ($numberOfElements < 0) {
-            throw new \OutOfRangeException(sprintf('Illegal limit value "%d", must be greater or equal to zero.', $numberOfElements));
+            throw new \OutOfRangeException(\sprintf('Illegal limit value "%d", must be greater or equal to zero.', $numberOfElements));
         }
 
         $listLimited = static function (iterable $listing) use ($numberOfElements): \Generator {
@@ -173,7 +173,7 @@ class FilesystemItemIterator implements \IteratorAggregate
     {
         foreach ($this->listing as $item) {
             if (!$item instanceof FilesystemItem) {
-                throw new \TypeError(sprintf('%s can only iterate over elements of type %s, got %s.', self::class, FilesystemItem::class, get_debug_type($item)));
+                throw new \TypeError(\sprintf('%s can only iterate over elements of type %s, got %s.', self::class, FilesystemItem::class, get_debug_type($item)));
             }
 
             yield $item;

@@ -25,7 +25,7 @@ class ProcessUtilTest extends TestCase
         $util = new ProcessUtil('bin/console');
         $process = $util->createSymfonyConsoleProcess('foobar', 'argument-1', 'argument-2');
 
-        $this->assertSame('bin/console foobar argument-1 argument-2', $this->getCommandLine($process));
+        $this->assertStringEndsWith('bin/console foobar argument-1 argument-2', $this->getCommandLine($process));
     }
 
     public function testGetters(): void
@@ -62,7 +62,7 @@ class ProcessUtilTest extends TestCase
         $this->assertSame(!$successful, Is::rejected($promise));
     }
 
-    public function promiseTestProvider(): \Generator
+    public static function promiseTestProvider(): iterable
     {
         yield 'Successful, autostart promise' => [true, true];
         yield 'Successful, non-autostart promise' => [true, false];
@@ -72,8 +72,8 @@ class ProcessUtilTest extends TestCase
 
     private function getCommandLine(Process $process): string
     {
-        // Remove the PHP binary path and undo proper quoting (not relevant for
-        // this test and required for easier cross-platform CI runs
+        // Remove the PHP binary path and undo proper quoting (not relevant for this test
+        // and required for easier cross-platform CI runs
         return str_replace(["'", '"'], '', trim(strstr($process->getCommandLine(), ' ')));
     }
 

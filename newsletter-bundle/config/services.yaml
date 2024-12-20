@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        autoconfigure: true
+
     contao_newsletter.cron.purge_subscriptions:
         class: Contao\NewsletterBundle\Cron\PurgeSubscriptionsCron
         arguments:
@@ -9,13 +12,30 @@ services:
         class: Contao\NewsletterBundle\EventListener\MemberActivationMailListener
         arguments:
             - '@database_connection'
-        tags:
-            - kernel.event_listener
 
     contao_newsletter.listener.sitemap:
         class: Contao\NewsletterBundle\EventListener\SitemapListener
         arguments:
             - '@contao.framework'
             - '@security.helper'
-        tags:
-            - kernel.event_listener
+            - '@contao.routing.content_url_generator'
+
+    contao_newsletter.routing.newsletter_resolver:
+        class: Contao\NewsletterBundle\Routing\NewsletterResolver
+        arguments:
+            - '@contao.framework'
+
+    contao_newsletter.security.newsletter_access_voter:
+        class: Contao\NewsletterBundle\Security\Voter\NewsletterAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
+    contao_newsletter.security.newsletter_channel_access_voter:
+        class: Contao\NewsletterBundle\Security\Voter\NewsletterChannelAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
+
+    contao_newsletter.security.newsletter_recipients_access_voter:
+        class: Contao\NewsletterBundle\Security\Voter\NewsletterRecipientsAccessVoter
+        arguments:
+            - '@security.access.decision_manager'

@@ -14,27 +14,28 @@ namespace Contao\CoreBundle\Routing\Page;
 
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
+use Symfony\Contracts\Service\ResetInterface;
 
-class PageRegistry
+class PageRegistry implements ResetInterface
 {
-    private const DISABLE_CONTENT_COMPOSITION = ['redirect', 'forward', 'logout'];
+    private const DISABLE_CONTENT_COMPOSITION = ['forward', 'logout'];
 
     private array|null $urlPrefixes = null;
 
     private array|null $urlSuffixes = null;
 
     /**
-     * @var array<RouteConfig>
+     * @var array<string, RouteConfig>
      */
     private array $routeConfigs = [];
 
     /**
-     * @var array<DynamicRouteInterface>
+     * @var array<string, DynamicRouteInterface>
      */
     private array $routeEnhancers = [];
 
     /**
-     * @var array<ContentCompositionInterface|bool>
+     * @var array<string, ContentCompositionInterface|bool>
      */
     private array $contentComposition = [];
 
@@ -45,8 +46,8 @@ class PageRegistry
     /**
      * Returns the route for a page.
      *
-     * If no path is configured (is null), the route will accept
-     * any parameters after the page alias (e.g. "en/page-alias/foo/bar.html").
+     * If no path is configured (is null), the route will accept any parameters after
+     * the page alias (e.g. "en/page-alias/foo/bar.html").
      *
      * A route enhancer might enhance the route for a specific page.
      */
@@ -149,6 +150,7 @@ class PageRegistry
 
         $this->contentComposition[$type] = $contentComposition;
 
+        // Make sure to reset caches when a page type is added
         $this->urlPrefixes = null;
         $this->urlSuffixes = null;
 
@@ -160,7 +162,7 @@ class PageRegistry
         unset(
             $this->routeConfigs[$type],
             $this->routeEnhancers[$type],
-            $this->contentComposition[$type]
+            $this->contentComposition[$type],
         );
 
         $this->urlPrefixes = $this->urlSuffixes = null;
@@ -205,6 +207,12 @@ class PageRegistry
         return $types;
     }
 
+    public function reset(): void
+    {
+        $this->urlPrefixes = null;
+        $this->urlSuffixes = null;
+    }
+
     private function initializePrefixAndSuffix(): void
     {
         if (null !== $this->urlPrefixes || null !== $this->urlSuffixes) {
@@ -237,10 +245,6 @@ class PageRegistry
 
     private function isParameterless(PageModel $pageModel): bool
     {
-        if ('redirect' === $pageModel->type) {
-            return true;
-        }
-
         return 'forward' === $pageModel->type && !$pageModel->alwaysForward;
     }
 }

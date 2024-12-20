@@ -71,6 +71,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
             [$phpPath, ...$phpFlags, $consolePath, 'cache:clear', '--no-warmup', '--env=prod', ...$flags],
             [$phpPath, ...$phpFlags, $consolePath, 'cache:clear', '--no-warmup', '--env=dev', ...$flags],
             [$phpPath, ...$phpFlags, $consolePath, 'cache:warmup', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'cmsig:seal:index-create', '--env=prod', ...$flags],
         ];
 
         $memoryLimit = ini_set('memory_limit', '1G');
@@ -79,12 +80,12 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
         (new CommandTester($command))->execute([], $options);
 
-        $this->assertSame(7, $invocationCount);
+        $this->assertSame(8, $invocationCount);
 
         ini_set('memory_limit', $memoryLimit);
     }
 
-    public function provideCommands(): \Generator
+    public static function provideCommands(): iterable
     {
         yield 'no arguments' => [
             [],
@@ -242,7 +243,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $filesystem->remove([$dotEnvFile, $dotEnvLocalFile, $dotEnvLocalTargetFile]);
     }
 
-    public function provideKernelSecretValues(): \Generator
+    public static function provideKernelSecretValues(): iterable
     {
         yield 'no secret set, no .env file' => ['', false];
         yield 'default secret set, no .env file' => ['ThisTokenIsNotSoSecretChangeIt', false];
@@ -259,7 +260,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
         return static function (array $command) use ($validateCommandArguments, &$invocationCount, $processes): Process {
             if (null !== $validateCommandArguments) {
-                self::assertEquals($validateCommandArguments[$invocationCount], $command);
+                self::assertSame($validateCommandArguments[$invocationCount], $command);
             }
 
             return $processes[$invocationCount++];
@@ -270,7 +271,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
     {
         $processes = [];
 
-        for ($i = 1; $i <= 7; ++$i) {
+        for ($i = 1; $i <= 8; ++$i) {
             $process = $this->createMock(Process::class);
             $process
                 ->method('isSuccessful')

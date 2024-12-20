@@ -24,7 +24,8 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['news'] = array
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_news_archive.title',
 	'eval'                    => array('multiple'=>true),
-	'sql'                     => "blob NULL"
+	'sql'                     => "blob NULL",
+	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
 
 $GLOBALS['TL_DCA']['tl_user']['fields']['newp'] = array

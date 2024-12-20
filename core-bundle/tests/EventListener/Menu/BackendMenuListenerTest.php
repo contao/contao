@@ -51,6 +51,7 @@ class BackendMenuListenerTest extends TestCase
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoFramework::class),
+            false,
         );
 
         $listener($event);
@@ -77,6 +78,7 @@ class BackendMenuListenerTest extends TestCase
                 'data-action' => 'contao--toggle-navigation#toggle:prevent',
                 'data-contao--toggle-navigation-category-param' => 'category1',
                 'aria-controls' => 'category1',
+                'data-turbo-prefetch' => 'false',
                 'aria-expanded' => 'true',
             ],
             $children['category1']->getLinkAttributes(),
@@ -112,6 +114,7 @@ class BackendMenuListenerTest extends TestCase
                 'data-action' => 'contao--toggle-navigation#toggle:prevent',
                 'data-contao--toggle-navigation-category-param' => 'category2',
                 'aria-controls' => 'category2',
+                'data-turbo-prefetch' => 'false',
                 'aria-expanded' => 'false',
             ],
             $children['category2']->getLinkAttributes(),
@@ -141,6 +144,7 @@ class BackendMenuListenerTest extends TestCase
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoFramework::class),
+            false,
         );
 
         $listener($event);
@@ -173,6 +177,7 @@ class BackendMenuListenerTest extends TestCase
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoFramework::class),
+            false,
         );
 
         $listener($event);
@@ -180,6 +185,49 @@ class BackendMenuListenerTest extends TestCase
         $tree = $event->getTree();
 
         $this->assertCount(0, $tree->getChildren());
+    }
+
+    public function testAddsTheTemplateStudioMenuItemToTheMainMenu(): void
+    {
+        $user = $this->createMock(BackendUser::class);
+        $user
+            ->expects($this->once())
+            ->method('navigation')
+            ->willReturn([
+                'design' => [
+                    'label' => 'Layout',
+                    'title' => 'Layout',
+                    'href' => '/',
+                    'class' => 'design-category node-expanded trail',
+                    'modules' => [],
+                ],
+            ])
+        ;
+
+        $security = $this->createMock(Security::class);
+        $security
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $nodeFactory = new MenuFactory();
+        $event = new MenuEvent($nodeFactory, $nodeFactory->createItem('mainMenu'));
+
+        $listener = new BackendMenuListener(
+            $security,
+            $this->createMock(RouterInterface::class),
+            new RequestStack(),
+            $this->createMock(TranslatorInterface::class),
+            $this->createMock(ContaoFramework::class),
+            true,
+        );
+
+        $listener($event);
+
+        $children = $event->getTree()->getChildren()['design']->getChildren();
+
+        $this->assertArrayHasKey('template-studio', $children);
+        $this->assertSame('Template Studio', $children['template-studio']->getLabel());
     }
 
     public function testBuildsTheHeaderMenu(): void
@@ -232,6 +280,7 @@ class BackendMenuListenerTest extends TestCase
             $requestStack,
             $this->getTranslator(),
             $this->mockContaoFramework([Backend::class => $systemMessages]),
+            false,
         );
 
         $listener($event);
@@ -259,7 +308,7 @@ class BackendMenuListenerTest extends TestCase
         );
 
         // Alerts
-        $this->assertSame('<a href="/contao/alerts" class="icon-alert" title="MSC.systemMessages" onclick="Backend.openModalIframe({\'title\':\'MSC.systemMessages\',\'url\':this.href});return false">MSC.systemMessages</a><sup>1</sup>', $children['alerts']->getLabel());
+        $this->assertSame('<a href="/contao/alerts" class="icon-alert" title="MSC.systemMessages" data-turbo-prefetch="false" onclick="Backend.openModalIframe({\'title\':\'MSC.systemMessages\',\'url\':this.href});return false">MSC.systemMessages</a><sup>1</sup>', $children['alerts']->getLabel());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['alerts']->getExtras());
 
         // Color scheme
@@ -279,8 +328,8 @@ class BackendMenuListenerTest extends TestCase
         );
 
         // Submenu
-        $this->assertSame('<button type="button">MSC.user foo</button>', $children['submenu']->getLabel());
-        $this->assertSame(['class' => 'submenu'], $children['submenu']->getAttributes());
+        $this->assertSame('<button type="button" data-contao--profile-target="button" data-action="contao--profile#toggle">MSC.user foo</button>', $children['submenu']->getLabel());
+        $this->assertSame(['class' => 'submenu', 'data-controller' => 'contao--profile', 'data-contao--profile-target' => 'menu', 'data-action' => 'click@document->contao--profile#documentClick'], $children['submenu']->getAttributes());
         $this->assertSame(['class' => 'profile'], $children['submenu']->getLabelAttributes());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['submenu']->getExtras());
 
@@ -341,6 +390,7 @@ class BackendMenuListenerTest extends TestCase
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoFramework::class),
+            false,
         );
 
         $listener($event);
@@ -373,6 +423,7 @@ class BackendMenuListenerTest extends TestCase
             new RequestStack(),
             $this->createMock(TranslatorInterface::class),
             $this->createMock(ContaoFramework::class),
+            false,
         );
 
         $listener($event);

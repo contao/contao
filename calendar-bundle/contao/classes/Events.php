@@ -11,6 +11,8 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Provide methods to get all events of a certain period from the database.
@@ -42,12 +44,6 @@ abstract class Events extends Module
 	 * @var array
 	 */
 	protected $arrEvents = array();
-
-	/**
-	 * URL cache array
-	 * @var array
-	 */
-	private static $arrUrlCache = array();
 
 	/**
 	 * Sort out protected archives
@@ -100,6 +96,9 @@ abstract class Events extends Module
 		{
 			return array();
 		}
+
+		// Include all events of the day, expired events will be filtered out later
+		$intStart = strtotime(date('Y-m-d', $intStart) . ' 00:00:00');
 
 		$this->arrEvents = array();
 
@@ -192,7 +191,6 @@ abstract class Events extends Module
 	 */
 	protected function addEvent($objEvents, $intStart, $intEnd, $intBegin, $intLimit, $intCalendar)
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$intDate = $intStart;
@@ -242,25 +240,25 @@ abstract class Events extends Module
 				}
 				else
 				{
-					$repeat = sprintf($GLOBALS['TL_LANG']['MSC']['cal_multiple_' . $arrRange['unit']], $arrRange['value']);
+					$repeat = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_multiple_' . $arrRange['unit']], $arrRange['value']);
 				}
 
 				if ($objEvents->recurrences > 0)
 				{
-					$until = ' ' . sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], Date::parse($objPage->dateFormat, $objEvents->repeatEnd));
+					$until = ' ' . \sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], Date::parse($objPage->dateFormat, $objEvents->repeatEnd));
 				}
 
 				if ($objEvents->recurrences > 0 && $intEnd < time())
 				{
-					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat_ended'], $repeat, $until);
+					$recurring = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat_ended'], $repeat, $until);
 				}
 				elseif ($objEvents->addTime)
 				{
-					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d\TH:i:sP', $intStart), $strDate . ($strTime ? ' ' . $strTime : ''));
+					$recurring = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d\TH:i:sP', $intStart), $strDate . ($strTime ? ' ' . $strTime : ''));
 				}
 				else
 				{
-					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d', $intStart), $strDate);
+					$recurring = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d', $intStart), $strDate);
 				}
 			}
 		}
@@ -275,6 +273,15 @@ abstract class Events extends Module
 		// Store raw data
 		$arrEvent = $objEvents->row();
 
+		try
+		{
+			$url = System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvents);
+		}
+		catch (ExceptionInterface)
+		{
+			$url = null;
+		}
+
 		// Overwrite some settings
 		$arrEvent['date'] = $strDate;
 		$arrEvent['time'] = $strTime;
@@ -282,18 +289,25 @@ abstract class Events extends Module
 		$arrEvent['day'] = $strDay;
 		$arrEvent['month'] = $strMonth;
 		$arrEvent['parent'] = $intCalendar;
-		$arrEvent['calendar'] = $objEvents->getRelated('pid');
+		$arrEvent['calendar'] = CalendarModel::findById($objEvents->pid);
 		$arrEvent['link'] = $objEvents->title;
 		$arrEvent['target'] = '';
 		$arrEvent['title'] = StringUtil::specialchars($objEvents->title, true);
-		$arrEvent['href'] = $this->generateEventUrl($objEvents);
+		$arrEvent['href'] = $url;
 		$arrEvent['class'] = $objEvents->cssClass ? ' ' . $objEvents->cssClass : '';
 		$arrEvent['recurring'] = $recurring;
 		$arrEvent['until'] = $until;
 		$arrEvent['begin'] = $intStart;
 		$arrEvent['end'] = $intEnd;
+		$arrEvent['effectiveEndTime'] = $arrEvent['endTime'];
 		$arrEvent['details'] = '';
 		$arrEvent['hasTeaser'] = false;
+
+		// Set open-end events to 23:59:59, so they run until the end of the day (see #4476)
+		if ($intStart == $intEnd && $objEvents->addTime)
+		{
+			$arrEvent['effectiveEndTime'] = strtotime(date('Y-m-d', $arrEvent['endTime']) . ' 23:59:59');
+		}
 
 		// Override the link target
 		if ($objEvents->source == 'external' && $objEvents->target)
@@ -311,7 +325,7 @@ abstract class Events extends Module
 		// Display the "read more" button for external/article links
 		if ($objEvents->source != 'default')
 		{
-			$arrEvent['hasDetails'] = true;
+			$arrEvent['hasDetails'] = null !== $url;
 		}
 
 		// Compile the event text
@@ -319,7 +333,7 @@ abstract class Events extends Module
 		{
 			$id = $objEvents->id;
 
-			$arrEvent['details'] = function () use ($id) {
+			$arrEvent['details'] = Template::once(function () use ($id) {
 				$strDetails = '';
 				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_calendar_events');
 
@@ -332,11 +346,11 @@ abstract class Events extends Module
 				}
 
 				return $strDetails;
-			};
+			});
 
-			$arrEvent['hasDetails'] = static function () use ($id) {
+			$arrEvent['hasDetails'] = null === $url ? false : Template::once(static function () use ($id) {
 				return ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0;
-			};
+			});
 		}
 
 		// Get today's start and end timestamp
@@ -398,80 +412,24 @@ abstract class Events extends Module
 	 * @param boolean             $blnAbsolute
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use the content URL generator instead.
 	 */
 	public static function generateEventUrl($objEvent, $blnAbsolute=false)
 	{
-		$strCacheKey = 'id_' . $objEvent->id . ($blnAbsolute ? '_absolute' : '');
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the content URL generator instead.', __METHOD__);
 
-		// Load the URL from cache
-		if (isset(self::$arrUrlCache[$strCacheKey]))
+		try
 		{
-			return self::$arrUrlCache[$strCacheKey];
+			$url = System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvent, array(), $blnAbsolute ? UrlGeneratorInterface::ABSOLUTE_URL : UrlGeneratorInterface::ABSOLUTE_PATH);
+		}
+		catch (ExceptionInterface)
+		{
+			return StringUtil::ampersand(Environment::get('requestUri'));
 		}
 
-		// Initialize the cache
-		self::$arrUrlCache[$strCacheKey] = null;
-
-		switch ($objEvent->source)
-		{
-			// Link to an external page
-			case 'external':
-				if (0 === strncmp($objEvent->url, 'mailto:', 7))
-				{
-					self::$arrUrlCache[$strCacheKey] = StringUtil::encodeEmail($objEvent->url);
-				}
-				else
-				{
-					$url = $objEvent->url;
-
-					if (Validator::isRelativeUrl($url))
-					{
-						$url = Environment::get('path') . '/' . $url;
-					}
-
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($url);
-				}
-				break;
-
-			// Link to an internal page
-			case 'internal':
-				if (($objTarget = $objEvent->getRelated('jumpTo')) instanceof PageModel)
-				{
-					/** @var PageModel $objTarget */
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objTarget->getAbsoluteUrl() : $objTarget->getFrontendUrl());
-				}
-				break;
-
-			// Link to an article
-			case 'article':
-				if (($objArticle = ArticleModel::findByPk($objEvent->articleId)) instanceof ArticleModel && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
-				{
-					$params = '/articles/' . ($objArticle->alias ?: $objArticle->id);
-
-					/** @var PageModel $objPid */
-					self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPid->getAbsoluteUrl($params) : $objPid->getFrontendUrl($params));
-				}
-				break;
-		}
-
-		// Link to the default page
-		if (self::$arrUrlCache[$strCacheKey] === null)
-		{
-			$objPage = PageModel::findByPk($objEvent->getRelated('pid')->jumpTo);
-
-			if (!$objPage instanceof PageModel)
-			{
-				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand(Environment::get('requestUri'));
-			}
-			else
-			{
-				$params = '/' . ($objEvent->alias ?: $objEvent->id);
-
-				self::$arrUrlCache[$strCacheKey] = StringUtil::ampersand($blnAbsolute ? $objPage->getAbsoluteUrl($params) : $objPage->getFrontendUrl($params));
-			}
-		}
-
-		return self::$arrUrlCache[$strCacheKey];
+		return $url;
 	}
 
 	/**
@@ -484,14 +442,23 @@ abstract class Events extends Module
 	public static function getSchemaOrgData(CalendarEventsModel $objEvent): array
 	{
 		$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
+		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
 		$jsonLd = array(
 			'@type' => 'Event',
 			'identifier' => '#/schema/events/' . $objEvent->id,
 			'name' => $htmlDecoder->inputEncodedToPlainText($objEvent->title),
-			'url' => self::generateEventUrl($objEvent),
 			'startDate' => $objEvent->addTime ? date('Y-m-d\TH:i:sP', $objEvent->startTime) : date('Y-m-d', $objEvent->startTime)
 		);
+
+		try
+		{
+			$jsonLd['url'] = $urlGenerator->generate($objEvent);
+		}
+		catch (ExceptionInterface)
+		{
+			// noop
+		}
 
 		if ($objEvent->startTime !== $objEvent->endTime)
 		{

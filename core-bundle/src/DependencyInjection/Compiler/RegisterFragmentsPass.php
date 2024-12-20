@@ -41,6 +41,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         private readonly string|null $globalsKey = null,
         private readonly string|null $proxyClass = null,
         private readonly string|null $templateOptionsListener = null,
+        private readonly string|null $dca = null,
     ) {
     }
 
@@ -65,13 +66,13 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $preHandlers = [];
         $templates = [];
         $registry = $container->findDefinition('contao.fragment.registry');
-        $command = $container->hasDefinition('contao.command.debug_fragments') ? $container->findDefinition('contao.command.debug_fragments') : null;
+        $compositor = $container->findDefinition('contao.fragment.compositor');
 
         foreach ($this->findAndSortTaggedServices($tag, $container) as $reference) {
-            // If a controller has multiple methods for different fragment types (e.g. a content
-            // element and a front end module), the first pass creates a child definition that
-            // inherits all tags from the original. On the next run, the pass would pick up the
-            // child definition and try to create duplicate fragments.
+            // If a controller has multiple methods for different fragment types (e.g. a
+            // content element and a front end module), the first pass creates a child
+            // definition that inherits all tags from the original. On the next run, the pass
+            // would pick up the child definition and try to create duplicate fragments.
             if (str_starts_with((string) $reference, 'contao.fragment._')) {
                 continue;
             }
@@ -84,8 +85,13 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 $attributes['type'] = $this->getFragmentType($definition, $attributes);
                 $attributes['debugController'] = $this->getControllerName(new Reference($definition->getClass()), $attributes);
 
-                $identifier = sprintf('%s.%s', $tag, $attributes['type']);
+                $identifier = \sprintf('%s.%s', $tag, $attributes['type']);
                 $serviceId = 'contao.fragment._'.$identifier;
+
+                // Skip redefinition of services that already exist
+                if ($container->has($serviceId)) {
+                    continue;
+                }
 
                 $childDefinition = new ChildDefinition((string) $reference);
                 $childDefinition->setPublic(true);
@@ -108,14 +114,17 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 }
 
                 $registry->addMethodCall('add', [$identifier, $config]);
-                $command?->addMethodCall('add', [$identifier, $config, $attributes]);
+
+                if (isset($attributes['nestedFragments'])) {
+                    $compositor->addMethodCall('add', [$identifier, $attributes['nestedFragments']]);
+                }
 
                 $childDefinition->setTags($definition->getTags());
                 $container->setDefinition($serviceId, $childDefinition);
 
                 if ($this->globalsKey && $this->proxyClass) {
                     if (!isset($attributes['category'])) {
-                        throw new InvalidConfigurationException(sprintf('Missing category for "%s" fragment on service ID "%s"', $tag, $reference));
+                        throw new InvalidConfigurationException(\sprintf('Missing category for "%s" fragment on service ID "%s"', $tag, $reference));
                     }
 
                     $globals[$this->globalsKey][$attributes['category']][$attributes['type']] = $this->proxyClass;
@@ -126,8 +135,8 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $this->addPreHandlers($container, $preHandlers);
         $this->addGlobalsMapListener($globals, $container);
 
-        if (null !== $this->templateOptionsListener && $container->hasDefinition($this->templateOptionsListener)) {
-            $container->findDefinition($this->templateOptionsListener)->addMethodCall('setDefaultIdentifiersByType', [$templates]);
+        if (null !== $this->dca && null !== $this->templateOptionsListener && $container->hasDefinition($this->templateOptionsListener)) {
+            $container->findDefinition($this->templateOptionsListener)->addMethodCall('setDefaultIdentifiersByType', [$this->dca, $templates]);
         }
     }
 

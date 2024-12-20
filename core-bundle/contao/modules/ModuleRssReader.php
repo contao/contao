@@ -91,7 +91,6 @@ class ModuleRssReader extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		if ($this->rss_template != 'rss_default')

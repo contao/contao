@@ -18,8 +18,18 @@ framework:
     session:
         handler_id: ~
         storage_factory_id: session.storage.factory.mock_file
+        cookie_secure: true
+        cookie_samesite: lax
     fragments: { path: /_fragment }
     http_method_override: false
+    php_errors:
+        log: true
+    uid:
+        default_uuid_version: 7
+        time_based_uuid_version: 7
+    annotations:
+        enabled: false
+    handle_all_throwables: true
 
 twig:
     debug: '%kernel.debug%'
@@ -43,6 +53,7 @@ doctrine:
     orm:
         auto_mapping: true
         auto_generate_proxy_classes: true
+        enable_lazy_ghost_objects: true
 
 contao:
     cron:
@@ -56,6 +67,30 @@ scheb_two_factor:
         enabled: true
     backup_codes:
         enabled: true
+
+webauthn:
+    logger: logger
+    credential_repository: contao.repository.webauthn_credential
+    user_repository: contao.repository.webauthn_user_entity
+    creation_profiles:
+        contao_backend:
+            rp:
+                name: Contao Open Source CMS
+            authenticator_selection_criteria:
+                require_resident_key: true
+                user_verification: !php/const Webauthn\AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED
+                resident_key: !php/const Webauthn\AuthenticatorSelectionCriteria::RESIDENT_KEY_REQUIREMENT_REQUIRED
+    request_profiles:
+        contao_backend:
+            user_verification: !php/const Webauthn\AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED
+    controllers:
+        enabled: true
+        creation:
+            contao_backend_add_authenticator:
+                options_path: '%contao.backend.route_prefix%/webauthn/add/options'
+                result_path: '%contao.backend.route_prefix%/webauthn/add/result'
+                user_entity_guesser: Webauthn\Bundle\Security\Guesser\CurrentUserEntityGuesser
+                profile: contao_backend
 
 services:
     doctrine.orm.default_entity_manager.validator_loader:

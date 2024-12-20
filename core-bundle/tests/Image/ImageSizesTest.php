@@ -20,7 +20,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Contracts\Service\ResetInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ImageSizesTest extends TestCase
@@ -82,8 +81,8 @@ class ImageSizesTest extends TestCase
 
         $options = $this->imageSizes->getOptionsForUser($user);
 
-        // Default options would not be returned without the admin check,
-        // because it is not within the allowed image sizes
+        // Default options would not be returned without the admin check, because it is
+        // not within the allowed image sizes
         $this->assertArrayHasKey('custom', $options);
     }
 
@@ -128,8 +127,6 @@ class ImageSizesTest extends TestCase
 
     public function testServiceIsResetable(): void
     {
-        $this->assertInstanceOf(ResetInterface::class, $this->imageSizes);
-
         $this->eventDispatcher
             ->expects($this->exactly(3))
             ->method('dispatch')

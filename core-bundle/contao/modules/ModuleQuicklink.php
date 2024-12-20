@@ -67,7 +67,6 @@ class ModuleQuicklink extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Get all active pages
@@ -82,8 +81,8 @@ class ModuleQuicklink extends Module
 		$items = array();
 		$container = System::getContainer();
 		$security = $container->get('security.helper');
+		$urlGenerator = $container->get('contao.routing.content_url_generator');
 
-		/** @var PageModel[] $objPages */
 		foreach ($objPages as $objSubpage)
 		{
 			$objSubpage->loadDetails();
@@ -94,40 +93,13 @@ class ModuleQuicklink extends Module
 				$objSubpage->title = StringUtil::stripInsertTags($objSubpage->title);
 				$objSubpage->pageTitle = StringUtil::stripInsertTags($objSubpage->pageTitle);
 
-				// Get href
-				switch ($objSubpage->type)
+				try
 				{
-					case 'redirect':
-						$href = $objSubpage->url;
-						break;
-
-					case 'forward':
-						if ($objSubpage->jumpTo)
-						{
-							$objNext = PageModel::findPublishedById($objSubpage->jumpTo);
-						}
-						else
-						{
-							$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
-						}
-
-						if ($objNext instanceof PageModel)
-						{
-							$href = $objNext->getFrontendUrl();
-							break;
-						}
-						// no break
-
-					default:
-						try
-						{
-							$href = $objSubpage->getFrontendUrl();
-						}
-						catch (ExceptionInterface $exception)
-						{
-							continue 2;
-						}
-						break;
+					$href = $urlGenerator->generate($objSubpage);
+				}
+				catch (ExceptionInterface)
+				{
+					continue;
 				}
 
 				$items[] = array

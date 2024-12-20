@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle;
 
 use Composer\InstalledVersions;
+use Contao\CoreBundle\DependencyInjection\Compiler\AccessDecisionStrategyPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
@@ -45,11 +46,11 @@ use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Event\SlugValidCharactersEvent;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
-use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ContaoCoreBundle extends Bundle
@@ -57,6 +58,11 @@ class ContaoCoreBundle extends Bundle
     final public const SCOPE_BACKEND = 'backend';
 
     final public const SCOPE_FRONTEND = 'frontend';
+
+    public function boot(): void
+    {
+        (new Request())->setFormat('turbo_stream', 'text/vnd.turbo-stream.html');
+    }
 
     public function getContainerExtension(): ContaoCoreExtension
     {
@@ -67,7 +73,6 @@ class ContaoCoreBundle extends Bundle
     {
         parent::build($container);
 
-        /** @var SecurityExtension $extension */
         $extension = $container->getExtension('security');
         $extension->addAuthenticatorFactory(new ContaoLoginFactory());
 
@@ -95,7 +100,8 @@ class ContaoCoreBundle extends Bundle
                 FrontendModuleReference::TAG_NAME,
                 FrontendModuleReference::GLOBALS_KEY,
                 FrontendModuleReference::PROXY_CLASS,
-                'contao.listener.module_template_options',
+                'contao.listener.data_container.template_options',
+                'tl_module',
             ),
         );
 
@@ -104,7 +110,8 @@ class ContaoCoreBundle extends Bundle
                 ContentElementReference::TAG_NAME,
                 ContentElementReference::GLOBALS_KEY,
                 ContentElementReference::PROXY_CLASS,
-                'contao.listener.element_template_options',
+                'contao.listener.data_container.template_options',
+                'tl_content',
             ),
         );
 
@@ -122,6 +129,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new LoggerChannelPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -1);
         $container->addCompilerPass(new ConfigureFilesystemPass());
         $container->addCompilerPass(new AddInsertTagsPass());
+        $container->addCompilerPass(new AccessDecisionStrategyPass());
     }
 
     public static function getVersion(): string

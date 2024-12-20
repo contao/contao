@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\String;
 
+use Contao\Input;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LogLevel;
@@ -59,7 +60,7 @@ class SimpleTokenParser implements LoggerAwareInterface
 
         foreach ($tags as $tag) {
             $decodedTag = $allowHtml
-                ? html_entity_decode($tag, ENT_QUOTES, 'UTF-8')
+                ? html_entity_decode($tag, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8')
                 : $tag;
 
             // True if it is inside a matching if-tag
@@ -100,15 +101,15 @@ class SimpleTokenParser implements LoggerAwareInterface
     {
         // Replace tokens
         return preg_replace_callback(
-            '/##([^=!<>\s]+?)##/',
+            '/##([^#=!<>\s][^=!<>\s]*?)##/',
             function (array $matches) use ($data) {
                 if (!\array_key_exists($matches[1], $data)) {
-                    $this->logger?->log(LogLevel::INFO, sprintf('Tried to parse unknown simple token "%s".', $matches[1]));
+                    $this->logger?->log(LogLevel::INFO, \sprintf('Tried to parse unknown simple token "%s".', $matches[1]));
 
                     return '##'.$matches[1].'##';
                 }
 
-                return $data[$matches[1]];
+                return Input::encodeInsertTags($data[$matches[1]]);
             },
             $subject,
         );
@@ -160,7 +161,8 @@ class SimpleTokenParser implements LoggerAwareInterface
 
             $value = $tokens[$i]->value;
 
-            // Skip constant nodes (see Symfony/Component/ExpressionLanguage/Parser#parsePrimaryExpression()
+            // Skip constant nodes
+            /** @see Symfony/Component/ExpressionLanguage/Parser#parsePrimaryExpression() */
             if (\in_array($value, ['true', 'TRUE', 'false', 'FALSE', 'null'], true)) {
                 continue;
             }
@@ -184,7 +186,7 @@ class SimpleTokenParser implements LoggerAwareInterface
     {
         $this->logger?->log(
             LogLevel::INFO,
-            sprintf('Tried to evaluate unknown simple token(s): "%s".', implode('", "', $tokenNames)),
+            \sprintf('Tried to evaluate unknown simple token(s): "%s".', implode('", "', $tokenNames)),
         );
     }
 }

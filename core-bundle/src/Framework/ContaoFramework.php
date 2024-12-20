@@ -22,8 +22,7 @@ use Contao\Model\Registry;
 use Contao\PageModel;
 use Contao\System;
 use Contao\TemplateLoader;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -32,13 +31,13 @@ use Symfony\Contracts\Service\ResetInterface;
 /**
  * @internal Do not use this class in your code; use the "contao.framework" service instead
  */
-class ContaoFramework implements ContainerAwareInterface, ResetInterface
+class ContaoFramework implements ResetInterface
 {
-    use ContainerAwareTrait;
-
     private static bool $initialized = false;
 
     private static string $nonce = '';
+
+    private ContainerInterface|null $container = null;
 
     private Request|null $request = null;
 
@@ -96,6 +95,11 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
         $this->initializeFramework();
     }
 
+    public function setContainer(ContainerInterface $container): void
+    {
+        $this->container = $container;
+    }
+
     public function setHookListeners(array $hookListeners): void
     {
         $this->hookListeners = $hookListeners;
@@ -124,7 +128,7 @@ class ContaoFramework implements ContainerAwareInterface, ResetInterface
      *
      * @param class-string<T> $class
      *
-     * @return Adapter<T>&T
+     * @return Adapter&T
      *
      * @phpstan-return Adapter<T>
      */

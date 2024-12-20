@@ -17,8 +17,8 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Contao\DC_File;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
 
 /**
@@ -26,7 +26,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
  */
 class TableAccessVoter implements CacheableVoterInterface
 {
-    public function __construct(private readonly Security $security)
+    public function __construct(private readonly AccessDecisionManagerInterface $accessDecisionManager)
     {
     }
 
@@ -56,8 +56,8 @@ class TableAccessVoter implements CacheableVoterInterface
 
             $hasNotExcluded = false;
 
-            // Intentionally do not load DCA, it should already be loaded. If DCA is not loaded,
-            // the voter just always abstains because it can't decide.
+            // Intentionally do not load DCA, it should already be loaded. If DCA is not
+            // loaded, the voter just always abstains because it can't decide.
             foreach ($GLOBALS['TL_DCA'][$subject->getDataSource()]['fields'] ?? [] as $config) {
                 if (!($config['exclude'] ?? true)) {
                     $hasNotExcluded = true;
@@ -65,7 +65,7 @@ class TableAccessVoter implements CacheableVoterInterface
                 }
             }
 
-            if (!$hasNotExcluded && !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, $subject->getDataSource())) {
+            if (!$hasNotExcluded && !$this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE], $subject->getDataSource())) {
                 return self::ACCESS_DENIED;
             }
         }

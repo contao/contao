@@ -43,8 +43,10 @@ class ModuleChangePassword extends Module
 			return $objTemplate->parse();
 		}
 
+		$security = $container->get('security.helper');
+
 		// Return if there is no logged-in user
-		if (!$container->get('contao.security.token_checker')->hasFrontendUser())
+		if (!$security->getUser() instanceof FrontendUser)
 		{
 			return '';
 		}
@@ -93,7 +95,7 @@ class ModuleChangePassword extends Module
 		$strFields = '';
 		$doNotSubmit = false;
 		$user = FrontendUser::getInstance();
-		$objMember = MemberModel::findByPk($user->id);
+		$objMember = MemberModel::findById($user->id);
 		$strFormId = 'tl_change_password_' . $this->id;
 		$strTable = $objMember->getTable();
 		$session = System::getContainer()->get('request_stack')->getSession();
@@ -111,6 +113,7 @@ class ModuleChangePassword extends Module
 		// Initialize the widgets
 		foreach ($arrFields as $strKey=>$arrField)
 		{
+			/** @var class-string<Widget> $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrField['inputType']] ?? null;
 
 			// Continue if the class is not defined
@@ -121,7 +124,6 @@ class ModuleChangePassword extends Module
 
 			$arrField['eval']['required'] = $arrField['eval']['mandatory'] ?? null;
 
-			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));
 			$objWidget->storeValues = true;
 			$objWidget->currentRecord = $objMember->id;
@@ -166,6 +168,14 @@ class ModuleChangePassword extends Module
 			$objMember->password = $objNewPassword->value;
 			$objMember->save();
 
+			// Delete unconfirmed "change password" tokens
+			$models = OptInModel::findUnconfirmedByRelatedTableAndId('tl_member', $objMember->id);
+
+			foreach ($models ?? array() as $model)
+			{
+				$model->delete();
+			}
+
 			// Create a new version
 			if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'] ?? null)
 			{
@@ -181,11 +191,14 @@ class ModuleChangePassword extends Module
 				}
 			}
 
+			// Generate a new session ID
+			$session->migrate();
+
 			// Update the current user, so they are not logged out automatically
 			$user->findBy('id', $objMember->id);
 
 			// Check whether there is a jumpTo page
-			if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+			if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
 			{
 				$this->jumpToOrReload($objJumpTo->row());
 			}

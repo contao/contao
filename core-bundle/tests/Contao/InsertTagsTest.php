@@ -30,9 +30,9 @@ use Contao\System;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\FileLocatorInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class InsertTagsTest extends TestCase
 {
@@ -56,7 +56,7 @@ class InsertTagsTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_MIME']);
+        unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_MIME'], $GLOBALS['objPage']);
 
         InsertTags::reset();
 
@@ -121,16 +121,16 @@ class InsertTagsTest extends TestCase
         $insertTagParser->addFlagCallback('standardize', new StringUtilFlag(), 'standardize');
         $insertTagParser->addFlagCallback('ampersand', new StringUtilFlag(), 'ampersand');
         $insertTagParser->addFlagCallback('specialchars', new StringUtilFlag(), 'specialchars');
-        $insertTagParser->addFlagCallback('utf8_strtolower', new StringUtilFlag(), 'utf8Strtolower');
-        $insertTagParser->addFlagCallback('utf8_strtoupper', new StringUtilFlag(), 'utf8Strtoupper');
+        $insertTagParser->addFlagCallback('utf8_strtolower', new StringUtilFlag(), 'strtolower');
+        $insertTagParser->addFlagCallback('utf8_strtoupper', new StringUtilFlag(), 'strtoupper');
         $insertTagParser->addFlagCallback('utf8_romanize', new StringUtilFlag(), 'utf8Romanize');
         $insertTagParser->addFlagCallback('nl2br', new StringUtilFlag(), 'nl2Br');
         $insertTagParser->addFlagCallback('addslashes', new PhpFunctionFlag(), '__invoke');
-        $insertTagParser->addFlagCallback('strtolower', new PhpFunctionFlag(), '__invoke');
-        $insertTagParser->addFlagCallback('strtoupper', new PhpFunctionFlag(), '__invoke');
-        $insertTagParser->addFlagCallback('ucfirst', new PhpFunctionFlag(), '__invoke');
-        $insertTagParser->addFlagCallback('lcfirst', new PhpFunctionFlag(), '__invoke');
-        $insertTagParser->addFlagCallback('ucwords', new PhpFunctionFlag(), '__invoke');
+        $insertTagParser->addFlagCallback('strtolower', new StringUtilFlag(), 'strtolower');
+        $insertTagParser->addFlagCallback('strtoupper', new StringUtilFlag(), 'strtoupper');
+        $insertTagParser->addFlagCallback('ucfirst', new StringUtilFlag(), 'ucfirst');
+        $insertTagParser->addFlagCallback('lcfirst', new StringUtilFlag(), 'lcfirst');
+        $insertTagParser->addFlagCallback('ucwords', new StringUtilFlag(), 'ucwords');
         $insertTagParser->addFlagCallback('trim', new PhpFunctionFlag(), '__invoke');
         $insertTagParser->addFlagCallback('rtrim', new PhpFunctionFlag(), '__invoke');
         $insertTagParser->addFlagCallback('ltrim', new PhpFunctionFlag(), '__invoke');
@@ -146,7 +146,7 @@ class InsertTagsTest extends TestCase
         $this->assertSame($expected, $output);
     }
 
-    public function insertTagsProvider(): \Generator
+    public static function insertTagsProvider(): iterable
     {
         yield 'Simple' => [
             'foo{{plain::bar}}baz',
@@ -285,6 +285,31 @@ class InsertTagsTest extends TestCase
             '{{plain::foo & bar|rawurlencode}}',
             'foo%20%26%20bar',
         ];
+
+        yield 'Flag strtoupper utf-8' => [
+            '{{plain::österreich|strtoupper}}',
+            'ÖSTERREICH',
+        ];
+
+        yield 'Flag strtolower utf-8' => [
+            '{{plain::ÖSTERREICH|strtolower}}',
+            'österreich',
+        ];
+
+        yield 'Flag ucfirst utf-8' => [
+            '{{plain::österreich|ucfirst}}',
+            'Österreich',
+        ];
+
+        yield 'Flag lcfirst utf-8' => [
+            '{{plain::ÖSTERREICH|lcfirst}}',
+            'öSTERREICH',
+        ];
+
+        yield 'Flag ucwords utf-8' => [
+            "{{plain::deutschland österreich\nschweiz-züriCH|ucwords}}",
+            "Deutschland Österreich\nSchweiz-züriCH",
+        ];
     }
 
     /**
@@ -320,7 +345,7 @@ class InsertTagsTest extends TestCase
         $this->assertSame($expectedArguments, $usedArguments);
     }
 
-    public function provideFigureInsertTags(): \Generator
+    public static function provideFigureInsertTags(): iterable
     {
         $defaultTemplate = '@ContaoCore/Image/Studio/figure.html.twig';
 
@@ -427,7 +452,7 @@ class InsertTagsTest extends TestCase
         $this->assertSame('', $output);
     }
 
-    public function provideInvalidFigureInsertTags(): \Generator
+    public static function provideInvalidFigureInsertTags(): iterable
     {
         yield 'missing resource' => [
             '{{figure}}', false,
@@ -476,7 +501,7 @@ class InsertTagsTest extends TestCase
         $this->assertSame($expected, $output);
     }
 
-    public function allowedInsertTagsProvider(): \Generator
+    public static function allowedInsertTagsProvider(): iterable
     {
         yield 'All allowed' => [
             'foo{{plain1::1}}bar{{plain2::2}}baz',
@@ -546,7 +571,7 @@ class InsertTagsTest extends TestCase
         $this->assertSame($expected, $output);
     }
 
-    public function encodeHtmlAttributesProvider(): \Generator
+    public static function encodeHtmlAttributesProvider(): iterable
     {
         yield 'Simple tag' => [
             'bar{{plain::foo}}baz',
@@ -580,7 +605,7 @@ class InsertTagsTest extends TestCase
 
         yield 'Quote in single quoted attribute' => [
             '<span title="{{plain::\'}}">',
-            '<span title="&#039;">',
+            '<span title="&apos;">',
         ];
 
         yield 'Quote outside attribute' => [
@@ -600,7 +625,7 @@ class InsertTagsTest extends TestCase
 
         yield 'Trick tag detection with two tags' => [
             '<span /="notanattribute title="> {{plain::\'}} " > {{plain::\'}}',
-            '<span /="notanattribute title="> &#039; " > \'',
+            '<span /="notanattribute title="> &apos; " > \'',
         ];
 
         yield 'Trick tag detection with not a tag' => [
@@ -754,18 +779,12 @@ class InsertTagsTest extends TestCase
      *
      * @group legacy
      */
-    public function testRemovesLanguageInsertTags(string $source, string $expected, string $pageLanguage = 'en'): void
+    public function testRemovesLanguageInsertTags(string $source, string $expected, string $translatorLocale = 'en'): void
     {
-        $request = $this->createMock(Request::class);
-        $request
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
             ->method('getLocale')
-            ->willReturn($pageLanguage)
-        ;
-
-        $requestStack = $this->createMock(RequestStack::class);
-        $requestStack
-            ->method('getCurrentRequest')
-            ->willReturn($request)
+            ->willReturn($translatorLocale)
         ;
 
         $reflectionClass = new \ReflectionClass(InsertTags::class);
@@ -776,7 +795,7 @@ class InsertTagsTest extends TestCase
         System::getContainer()->set('contao.insert_tag.parser', $insertTagParser);
 
         $insertTagParser->addBlockSubscription(new InsertTagSubscription(
-            new IfLanguageInsertTag($requestStack),
+            new IfLanguageInsertTag($translator),
             '__invoke',
             'iflng',
             'iflng',
@@ -785,7 +804,7 @@ class InsertTagsTest extends TestCase
         ));
 
         $insertTagParser->addBlockSubscription(new InsertTagSubscription(
-            new IfLanguageInsertTag($requestStack),
+            new IfLanguageInsertTag($translator),
             '__invoke',
             'ifnlng',
             'ifnlng',
@@ -812,8 +831,8 @@ class InsertTagsTest extends TestCase
         $this->assertSame($expected, $insertTagParser->replace($source));
         $this->assertSame($expected.$expected, $insertTagParser->replace($source.$source));
 
-        $source = '<a href="'.htmlspecialchars($source).'" title="'.htmlspecialchars($source).'">';
-        $expected = '<a href="'.htmlspecialchars($expected).'" title="'.htmlspecialchars($expected).'">';
+        $source = '<a href="'.htmlspecialchars($source, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5).'" title="'.htmlspecialchars($source, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5).'">';
+        $expected = '<a href="'.htmlspecialchars($expected, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5).'" title="'.htmlspecialchars($expected, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5).'">';
 
         $this->assertSame($expected, $insertTagParser->replaceInline($source));
         $this->assertSame($expected.$expected, $insertTagParser->replaceInline($source.$source));
@@ -822,7 +841,7 @@ class InsertTagsTest extends TestCase
         $this->assertSame($expected.$expected, $insertTagParser->replace($source.$source));
     }
 
-    public function languageInsertTagsProvider(): \Generator
+    public static function languageInsertTagsProvider(): iterable
     {
         yield [
             'no insert tag',

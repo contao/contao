@@ -35,8 +35,13 @@ class DefaultGlobalOperationsListener
 
     private function getForTable(string $table): array
     {
-        $defaults = $this->getDefaults($table);
         $dca = $GLOBALS['TL_DCA'][$table]['list']['global_operations'] ?? null;
+
+        if ([] === $dca) {
+            return [];
+        }
+
+        $defaults = $this->getDefaults($table);
 
         if (!\is_array($dca)) {
             return $defaults;
@@ -44,18 +49,23 @@ class DefaultGlobalOperationsListener
 
         $operations = [];
 
-        // If none of the defined operations are name-only, we append the operations to the defaults.
-        if (!array_filter($dca, static fn ($v, $k) => isset($defaults[$k]) || (\is_string($v) && isset($defaults[$v])), ARRAY_FILTER_USE_BOTH)) {
-            $operations = $defaults;
-        }
-
         foreach ($dca as $k => $v) {
             if (\is_string($v) && isset($defaults[$v])) {
                 $operations[$v] = $defaults[$v];
                 continue;
             }
 
-            $operations[$k] = \is_array($v) ? $v : [$v];
+            if (!\is_array($v)) {
+                continue;
+            }
+
+            $operations[$k] = $v;
+        }
+
+        // If none of the defined operations are name-only, we append the defaults operations.
+        if (!array_filter($dca, static fn ($v, $k) => isset($defaults[$k]) || (\is_string($v) && isset($defaults[$v])), ARRAY_FILTER_USE_BOTH)) {
+            // Keeps $operations first in array but does not override it from $defaults
+            $operations = array_replace($operations, $defaults, $operations);
         }
 
         return $operations;
@@ -79,6 +89,7 @@ class DefaultGlobalOperationsListener
 
         $canEdit = !($GLOBALS['TL_DCA'][$table]['config']['notEditable'] ?? false);
         $canCopy = !($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? false) && !($GLOBALS['TL_DCA'][$table]['config']['notCopyable'] ?? false);
+        $canDelete = !($GLOBALS['TL_DCA'][$table]['config']['notDeletable'] ?? false);
 
         if ($isDcFolder || $isTreeMode || $isExtendedTreeMode) {
             $operations += [
@@ -98,12 +109,13 @@ class DefaultGlobalOperationsListener
             ];
         }
 
-        if ($canEdit || $canCopy) {
+        if ($canEdit || $canCopy || $canDelete) {
             $operations += [
                 'all' => [
                     'href' => 'act=select',
+                    'prefetch' => true,
                     'class' => 'header_edit_all',
-                    'attributes' => 'onclick="Backend.getScrollOffset()" accesskey="e"',
+                    'attributes' => 'accesskey="e"',
                 ],
             ];
         }

@@ -20,6 +20,7 @@ use Contao\CoreBundle\InsertTag\InsertTagSubscription;
 use Contao\CoreBundle\InsertTag\ParsedInsertTag;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\FragmentInsertTag;
+use Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
@@ -31,6 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class InsertTagParserTest extends TestCase
 {
@@ -53,7 +55,7 @@ class InsertTagParserTest extends TestCase
 
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_MIME'], $GLOBALS['TL_HOOKS']);
+        unset($GLOBALS['TL_MIME'], $GLOBALS['TL_HOOKS'], $GLOBALS['objPage']);
 
         $this->resetStaticProperties([InsertTags::class, System::class, Config::class]);
 
@@ -88,9 +90,9 @@ class InsertTagParserTest extends TestCase
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'env', null, true, false));
         System::getContainer()->set('contao.insert_tag.parser', $parser);
 
-        $this->assertSame('<br>', $parser->render('br'));
-        $this->assertSame('', $parser->render('env::empty-insert-tag'));
-        $this->assertSame('{{does_not_exist}}', $parser->render('does_not_exist'));
+        $this->assertSame('<br>', $parser->renderTag('br')->getValue());
+        $this->assertSame('', $parser->renderTag('env::empty-insert-tag')->getValue());
+        $this->assertSame('{{does_not_exist}}', $parser->renderTag('does_not_exist')->getValue());
 
         $this->expectExceptionMessage('Rendering a single insert tag has to return a single chunk');
         $this->expectDeprecation('%sInvalid insert tag name%s');
@@ -161,7 +163,7 @@ class InsertTagParserTest extends TestCase
 
         $this->expectDeprecation('%sInsert tags with uppercase letters%s');
 
-        $this->assertSame('<br>', $parser->render('bR'));
+        $this->assertSame('<br>', $parser->renderTag('bR')->getValue());
     }
 
     public function testReplaceFragment(): void
@@ -197,10 +199,7 @@ class InsertTagParserTest extends TestCase
                     {
                     }
 
-                    /**
-                     * @phpstan-ignore-next-line
-                     */
-                    public function __invoke(&$a, &$b, $c, &$d, &$e, $f, &$g, &$h)
+                    public function __invoke(string &$a, bool &$b, string $c, array &$d, array &$e, array $f, int &$g, int|string &$h): string
                     {
                         return ($this->hook)($a, $b, $c, $d, $e, $f, $g, $h);
                     }
@@ -216,12 +215,13 @@ class InsertTagParserTest extends TestCase
 
         $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
+        $parser->addBlockSubscription(new InsertTagSubscription(new IfLanguageInsertTag($this->createMock(TranslatorInterface::class)), '__invoke', 'ifnlng', 'ifnlng', true, false));
         System::getContainer()->set('contao.insert_tag.parser', $parser);
 
         $this->assertSame($expected, $parser->replaceInline($source));
     }
 
-    public function getLegacyReplaceInsertTagsHooks(): \Generator
+    public function getLegacyReplaceInsertTagsHooks(): iterable
     {
         yield [
             'foo {{tag}} bar',
@@ -275,6 +275,17 @@ class InsertTagParserTest extends TestCase
                 return '';
             },
         ];
+
+        yield [
+            'a{{ifnlng::xx}}b{{tag}}c{{ifnlng}}d',
+            'abTAGcd',
+            function ($tag, $useCache, $cachedValue, $flags) {
+                $this->assertSame('tag', $tag);
+                $this->assertSame([], $flags);
+
+                return 'TAG';
+            },
+        ];
     }
 
     /**
@@ -289,10 +300,7 @@ class InsertTagParserTest extends TestCase
                     {
                     }
 
-                    /**
-                     * @phpstan-ignore-next-line
-                     */
-                    public function __invoke(&$a, &$b, &$c, &$d, &$e, &$f, $g, &$h, &$i)
+                    public function __invoke(string &$a, string &$b, string &$c, array &$d, bool &$e, array &$f, array $g, int &$h, int &$i): string
                     {
                         return ($this->hook)($a, $b, $c, $d, $e, $f, $g, $h, $i);
                     }
@@ -312,7 +320,7 @@ class InsertTagParserTest extends TestCase
         $this->assertSame($expected, $parser->replaceInline($source));
     }
 
-    public function getLegacyInsertTagFlagsHooks(): \Generator
+    public function getLegacyInsertTagFlagsHooks(): iterable
     {
         yield [
             'foo{{br|flag}}bar',

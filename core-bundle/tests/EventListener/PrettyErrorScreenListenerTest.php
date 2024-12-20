@@ -13,10 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\PrettyErrorScreenListener;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
 use Contao\CoreBundle\Exception\InsecureInstallationException;
-use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\InternalServerErrorHttpException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
@@ -32,11 +30,9 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
@@ -115,6 +111,8 @@ class PrettyErrorScreenListenerTest extends TestCase
             'pid' => 1,
             'type' => 'error_'.$type,
             'rootLanguage' => '',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $request = $this->getRequest('frontend');
@@ -136,50 +134,20 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->assertSame($type, $event->getResponse()->getStatusCode());
     }
 
-    public function getErrorTypes(): \Generator
+    public static function getErrorTypes(): iterable
     {
-        yield [401, new UnauthorizedHttpException('', '', new InsufficientAuthenticationException())];
-        yield [403, new AccessDeniedHttpException('', new AccessDeniedException())];
+        yield [503, new ServiceUnavailableHttpException()];
         yield [404, new NotFoundHttpException('', new PageNotFoundException())];
-    }
-
-    public function testUnprotectsErrorPage(): void
-    {
-        $errorPage = $this->mockPageWithProperties([
-            'pid' => 1,
-            'type' => 'error_401',
-            'rootLanguage' => '',
-            'protected' => true,
-            'groups' => '',
-        ]);
-
-        $request = $this->getRequest('frontend');
-        $request->attributes->set('pageModel', $this->mockPageWithProperties(['rootId' => 1]));
-
-        $httpKernel = $this->createMock(HttpKernelInterface::class);
-        $httpKernel
-            ->expects($this->once())
-            ->method('handle')
-            ->willReturn(new Response('foo', 401))
-        ;
-
-        $exception = new UnauthorizedHttpException('', '', new InsufficientAuthenticationException());
-        $event = $this->getResponseEvent($exception, $request);
-
-        $listener = $this->getListener(false, null, $errorPage, $httpKernel);
-        $listener($event);
-
-        $this->assertTrue($event->hasResponse());
-        $this->assertSame(401, $event->getResponse()->getStatusCode());
-        $this->assertFalse($errorPage->protected);
     }
 
     public function testHandlesResponseExceptionsWhenForwarding(): void
     {
         $errorPage = $this->mockPageWithProperties([
             'pid' => 1,
-            'type' => 'error_403',
+            'type' => 'error_404',
             'rootLanguage' => '',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $request = $this->getRequest('frontend');
@@ -192,7 +160,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             ->willThrowException(new ResponseException(new Response('foo')))
         ;
 
-        $exception = new AccessDeniedHttpException('', new AccessDeniedException());
+        $exception = new NotFoundHttpException();
         $event = $this->getResponseEvent($exception, $request);
 
         $listener = $this->getListener(false, null, $errorPage, $httpKernel);
@@ -206,8 +174,10 @@ class PrettyErrorScreenListenerTest extends TestCase
     {
         $errorPage = $this->mockPageWithProperties([
             'pid' => 1,
-            'type' => 'error_403',
+            'type' => 'error_404',
             'rootLanguage' => '',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $request = $this->getRequest('frontend');
@@ -222,7 +192,7 @@ class PrettyErrorScreenListenerTest extends TestCase
             ->willThrowException($throwable)
         ;
 
-        $exception = new AccessDeniedHttpException('', new AccessDeniedException());
+        $exception = new NotFoundHttpException();
         $event = $this->getResponseEvent($exception, $request);
 
         $listener = $this->getListener(false, null, $errorPage, $httpKernel);
@@ -383,7 +353,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
     public function testDoesNothingIfThePageHandlerDoesNotExist(): void
     {
-        $exception = new AccessDeniedHttpException('', new AccessDeniedException());
+        $exception = new NotFoundHttpException();
         $event = $this->getResponseEvent($exception);
 
         $listener = $this->getListener();

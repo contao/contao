@@ -71,6 +71,12 @@ class DcaExtractor extends Controller
 	protected $arrRelations = array();
 
 	/**
+	 * Enums
+	 * @var array
+	 */
+	protected $arrEnums = array();
+
+	/**
 	 * SQL buffer
 	 * @var array
 	 */
@@ -238,6 +244,16 @@ class DcaExtractor extends Controller
 	}
 
 	/**
+	 * Return the enums as array
+	 *
+	 * @return array The enums array
+	 */
+	public function getEnums()
+	{
+		return $this->arrEnums;
+	}
+
+	/**
 	 * Return true if the extract relates to a database table
 	 *
 	 * @return boolean True if the extract relates to a database table
@@ -280,7 +296,7 @@ class DcaExtractor extends Controller
 		foreach ($this->arrKeys as $k=>$v)
 		{
 			// Handle multi-column indexes (see #5556)
-			if (strpos($k, ',') !== false)
+			if (str_contains($k, ','))
 			{
 				$f = array_map($quote, StringUtil::trimsplit(',', $k));
 				$k = str_replace(',', '_', $k);
@@ -391,6 +407,11 @@ class DcaExtractor extends Controller
 					{
 						throw new \Exception('Incomplete relation defined for ' . $this->strTable . '.' . $field);
 					}
+				}
+
+				if (isset($config['enum']))
+				{
+					$this->arrEnums[$field] = $config['enum'];
 				}
 			}
 		}

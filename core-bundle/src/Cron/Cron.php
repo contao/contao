@@ -37,8 +37,8 @@ class Cron
     private array $cronJobs = [];
 
     /**
-     * @param \Closure():CronJobRepository      $repository
-     * @param \Closure():EntityManagerInterface $entityManager
+     * @param \Closure(): CronJobRepository      $repository
+     * @param \Closure(): EntityManagerInterface $entityManager
      */
     public function __construct(
         private readonly \Closure $repository,
@@ -65,9 +65,9 @@ class Cron
 
         $this->cachePool->saveDeferred($cacheItem);
 
-        // Using a promise here not because the cache file takes forever to create but in order to make sure
-        // it's one of the first cron jobs that are executed. The fact that we can use deferred cache item
-        // saving is an added bonus.
+        // Using a promise here not because the cache file takes forever to create but in
+        // order to make sure it's one of the first cron jobs that are executed. The fact
+        // that we can use deferred cache item saving is an added bonus.
         return $promise = new Promise(
             function () use (&$promise): void {
                 $this->cachePool->commit();
@@ -110,7 +110,7 @@ class Cron
             }
         }
 
-        throw new \InvalidArgumentException(sprintf('Cronjob "%s" does not exist.', $name));
+        throw new \InvalidArgumentException(\sprintf('Cronjob "%s" does not exist.', $name));
     }
 
     /**
@@ -150,7 +150,7 @@ class Cron
                 }
 
                 // Check if the cron should be run
-                $expression = CronExpression::factory($interval);
+                $expression = new CronExpression($interval);
 
                 if (!$force && $lastRunDate && $now < $expression->getNextRunDate($lastRunDate)) {
                     continue;
@@ -192,7 +192,7 @@ class Cron
 
         foreach ($crons as $cron) {
             try {
-                $this->logger?->debug(sprintf('Executing cron job "%s"', $cron->getName()));
+                $this->logger?->debug(\sprintf('Executing cron job "%s"', $cron->getName()));
 
                 $promise = $cron($scope);
 
@@ -202,13 +202,13 @@ class Cron
 
                 $promise->then(
                     function () use ($cron): void {
-                        $this->logger?->debug(sprintf('Asynchronous cron job "%s" finished successfully', $cron->getName()));
+                        $this->logger?->debug(\sprintf('Asynchronous cron job "%s" finished successfully', $cron->getName()));
                     },
                     function ($reason) use ($onSkip, $cron): void {
                         if ($reason instanceof CronExecutionSkippedException) {
                             $onSkip($cron);
                         } else {
-                            $this->logger?->debug(sprintf('Asynchronous cron job "%s" failed: %s', $cron->getName(), $reason));
+                            $this->logger?->debug(\sprintf('Asynchronous cron job "%s" failed: %s', $cron->getName(), $reason));
                         }
                     },
                 );

@@ -77,7 +77,7 @@ class PageUrlListenerTest extends TestCase
         $this->assertSame($expectedAlias, $listener->generateAlias('', $dc));
     }
 
-    public function generatesAliasProvider(): \Generator
+    public static function generatesAliasProvider(): iterable
     {
         yield 'Test alias without changes and no folderUrl' => [
             [
@@ -392,7 +392,7 @@ class PageUrlListenerTest extends TestCase
         $this->assertSame($value, $listener->generateAlias($value, $dc));
     }
 
-    public function duplicateAliasProvider(): \Generator
+    public static function duplicateAliasProvider(): iterable
     {
         yield 'No duplicate aliases' => [
             [
@@ -1319,10 +1319,10 @@ class PageUrlListenerTest extends TestCase
 
     public function testDoesNotValidateTheUrlPrefixIfPageTypeIsNotRoot(): void
     {
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->never())
-            ->method('findByPk')
+            ->method('findById')
         ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
@@ -1351,10 +1351,10 @@ class PageUrlListenerTest extends TestCase
 
     public function testDoesNotValidateTheUrlPrefixIfTheValueHasNotChanged(): void
     {
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->never())
-            ->method('findByPk')
+            ->method('findById')
         ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
@@ -1581,10 +1581,10 @@ class PageUrlListenerTest extends TestCase
 
     public function testDoesNotValidateTheUrlSuffixIfPageTypeIsNotRoot(): void
     {
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->never())
-            ->method('findByPk')
+            ->method('findById')
         ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
@@ -1613,10 +1613,10 @@ class PageUrlListenerTest extends TestCase
 
     public function testDoesNotValidateTheUrlSuffixIfTheValueHasNotChanged(): void
     {
-        $pageAdapter = $this->mockAdapter(['findByPk']);
+        $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->never())
-            ->method('findByPk')
+            ->method('findById')
         ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);

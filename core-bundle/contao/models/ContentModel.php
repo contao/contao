@@ -10,8 +10,8 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\File\ModelMetadataTrait;
 use Contao\Model\Collection;
+use Contao\Model\MetadataTrait;
 
 /**
  * Reads and writes content elements
@@ -23,6 +23,7 @@ use Contao\Model\Collection;
  * @property integer           $tstamp
  * @property string            $type
  * @property string            $headline
+ * @property string            $sectionHeadline
  * @property string|null       $text
  * @property boolean           $addImage
  * @property boolean           $inline
@@ -47,6 +48,7 @@ use Contao\Model\Collection;
  * @property boolean           $sortable
  * @property integer           $sortIndex
  * @property string            $sortOrder
+ * @property boolean           $closeSections
  * @property string            $mooHeadline
  * @property string            $mooStyle
  * @property string            $mooClasses
@@ -81,10 +83,12 @@ use Contao\Model\Collection;
  * @property string            $playerCaption
  * @property string            $playerAspect
  * @property boolean           $splashImage
+ * @property string            $playerTitle
  * @property string            $playerPreload
  * @property string            $playerColor
  * @property string|array|null $youtubeOptions
  * @property string|array|null $vimeoOptions
+ * @property string|null       $textTrackSRC
  * @property integer           $sliderDelay
  * @property integer           $sliderSpeed
  * @property integer           $sliderStartSlide
@@ -116,6 +120,7 @@ use Contao\Model\Collection;
  * @method static ContentModel|null findOneByTstamp($val, array $opt=array())
  * @method static ContentModel|null findOneByType($val, array $opt=array())
  * @method static ContentModel|null findOneByHeadline($val, array $opt=array())
+ * @method static ContentModel|null findOneBySectionHeadline($val, array $opt=array())
  * @method static ContentModel|null findOneByText($val, array $opt=array())
  * @method static ContentModel|null findOneByAddImage($val, array $opt=array())
  * @method static ContentModel|null findOneByInline($val, array $opt=array())
@@ -140,6 +145,7 @@ use Contao\Model\Collection;
  * @method static ContentModel|null findOneBySortable($val, array $opt=array())
  * @method static ContentModel|null findOneBySortIndex($val, array $opt=array())
  * @method static ContentModel|null findOneBySortOrder($val, array $opt=array())
+ * @method static ContentModel|null findOneByCloseSections($val, array $opt=array())
  * @method static ContentModel|null findOneByMooHeadline($val, array $opt=array())
  * @method static ContentModel|null findOneByMooStyle($val, array $opt=array())
  * @method static ContentModel|null findOneByMooClasses($val, array $opt=array())
@@ -174,10 +180,12 @@ use Contao\Model\Collection;
  * @method static ContentModel|null findOneByPlayerCaption($val, array $opt=array())
  * @method static ContentModel|null findOneByPlayerAspect($val, array $opt=array())
  * @method static ContentModel|null findOneBySplashImage($val, array $opt=array())
+ * @method static ContentModel|null findOneByPlayerTitle($val, array $opt=array())
  * @method static ContentModel|null findOneByPlayerPreload($val, array $opt=array())
  * @method static ContentModel|null findOneByPlayerColor($val, array $opt=array())
  * @method static ContentModel|null findOneByYoutubeOptions($val, array $opt=array())
  * @method static ContentModel|null findOneByVimeoOptions($val, array $opt=array())
+ * @method static ContentModel|null findOneByTextTrackSRC($val, array $opt = array())
  * @method static ContentModel|null findOneBySliderDelay($val, array $opt=array())
  * @method static ContentModel|null findOneBySliderSpeed($val, array $opt=array())
  * @method static ContentModel|null findOneBySliderStartSlide($val, array $opt=array())
@@ -202,6 +210,7 @@ use Contao\Model\Collection;
  * @method static Collection<ContentModel>|ContentModel[]|null findByTstamp($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByType($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByHeadline($val, array $opt=array())
+ * @method static Collection<ContentModel>|ContentModel[]|null findBySectionHeadline($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByText($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByAddImage($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByInline($val, array $opt=array())
@@ -226,6 +235,7 @@ use Contao\Model\Collection;
  * @method static Collection<ContentModel>|ContentModel[]|null findBySortable($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findBySortIndex($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findBySortOrder($val, array $opt=array())
+ * @method static Collection<ContentModel>|ContentModel[]|null findByCloseSections($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByMooHeadline($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByMooStyle($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByMooClasses($val, array $opt=array())
@@ -260,10 +270,12 @@ use Contao\Model\Collection;
  * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerCaption($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerAspect($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findBySplashImage($val, array $opt=array())
+ * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerTitle($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerPreload($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByPlayerColor($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByYoutubeOptions($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findByVimeoOptions($val, array $opt=array())
+ * @method static Collection<ContentModel>|ContentModel[]|null findByTextTrackSRC($val, array $opt = array())
  * @method static Collection<ContentModel>|ContentModel[]|null findBySliderDelay($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findBySliderSpeed($val, array $opt=array())
  * @method static Collection<ContentModel>|ContentModel[]|null findBySliderStartSlide($val, array $opt=array())
@@ -292,6 +304,7 @@ use Contao\Model\Collection;
  * @method static integer countByTstamp($val, array $opt=array())
  * @method static integer countByType($val, array $opt=array())
  * @method static integer countByHeadline($val, array $opt=array())
+ * @method static integer countBySectionHeadline($val, array $opt=array())
  * @method static integer countByText($val, array $opt=array())
  * @method static integer countByAddImage($val, array $opt=array())
  * @method static integer countByInline($val, array $opt=array())
@@ -316,6 +329,7 @@ use Contao\Model\Collection;
  * @method static integer countBySortable($val, array $opt=array())
  * @method static integer countBySortIndex($val, array $opt=array())
  * @method static integer countBySortOrder($val, array $opt=array())
+ * @method static integer countByCloseSections($val, array $opt=array())
  * @method static integer countByMooHeadline($val, array $opt=array())
  * @method static integer countByMooStyle($val, array $opt=array())
  * @method static integer countByMooClasses($val, array $opt=array())
@@ -350,10 +364,12 @@ use Contao\Model\Collection;
  * @method static integer countByPlayerCaption($val, array $opt=array())
  * @method static integer countByPlayerAspect($val, array $opt=array())
  * @method static integer countBySplashImage($val, array $opt=array())
+ * @method static integer countByPlayerTitle($val, array $opt=array())
  * @method static integer countByPlayerPreload($val, array $opt=array())
  * @method static integer countByPlayerColor($val, array $opt=array())
  * @method static integer countByYoutubeOptions($val, array $opt=array())
  * @method static integer countByVimeoOptions($val, array $opt=array())
+ * @method static integer countByTextTrackSRC($val, array $opt = array())
  * @method static integer countBySliderDelay($val, array $opt=array())
  * @method static integer countBySliderSpeed($val, array $opt=array())
  * @method static integer countBySliderStartSlide($val, array $opt=array())
@@ -374,7 +390,7 @@ use Contao\Model\Collection;
  */
 class ContentModel extends Model
 {
-	use ModelMetadataTrait;
+	use MetadataTrait;
 
 	/**
 	 * Table name

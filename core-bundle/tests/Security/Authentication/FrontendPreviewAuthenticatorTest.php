@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class FrontendPreviewAuthenticatorTest extends TestCase
@@ -93,10 +94,8 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->expects($this->once())
             ->method('setToken')
             ->with($this->callback(
-                static function (UsernamePasswordToken $token) use ($user): bool {
-                    return $user === $token->getUser()
-                        && ['ROLE_MEMBER'] === $token->getRoleNames();
-                },
+                static fn (UsernamePasswordToken $token): bool => $user === $token->getUser()
+                    && ['ROLE_MEMBER'] === $token->getRoleNames(),
             ))
         ;
 
@@ -123,7 +122,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $this->assertSame($showUnpublished, $session->get(FrontendPreviewAuthenticator::SESSION_NAME)['showUnpublished']);
     }
 
-    public function getShowUnpublishedData(): \Generator
+    public static function getShowUnpublishedData(): iterable
     {
         yield [true];
         yield [false];
@@ -205,7 +204,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $this->assertSame($previewLinkId, $session->get(FrontendPreviewAuthenticator::SESSION_NAME)['previewLinkId']);
     }
 
-    public function getShowUnpublishedPreviewLinkIdData(): \Generator
+    public static function getShowUnpublishedPreviewLinkIdData(): iterable
     {
         yield [true, null];
         yield [true, 123];
@@ -275,6 +274,9 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $this->assertFalse($authenticator->removeFrontendAuthentication());
     }
 
+    /**
+     * @param UserProviderInterface<UserInterface>|null $userProvider
+     */
     private function getAuthenticator(Security|null $security = null, TokenStorageInterface|null $tokenStorage = null, TokenChecker|null $tokenChecker = null, SessionInterface|null $session = null, UserProviderInterface|null $userProvider = null, LoggerInterface|null $logger = null): FrontendPreviewAuthenticator
     {
         if (!$session) {

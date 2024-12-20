@@ -13,17 +13,19 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Inheritance;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\IncludeNode;
 use Twig\Node\Node;
+use Twig\TemplateWrapper;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 use Twig\TokenParser\IncludeTokenParser;
 
 /**
- * This parser is a drop in replacement for the IncludeTokenParser
- * that adds support for the Contao template hierarchy.
+ * This parser is a drop in replacement for the IncludeTokenParser that adds
+ * support for the Contao template hierarchy.
  *
  * @see IncludeTokenParser
  *
@@ -31,7 +33,7 @@ use Twig\TokenParser\IncludeTokenParser;
  */
 final class DynamicIncludeTokenParser extends AbstractTokenParser
 {
-    public function __construct(private readonly TemplateHierarchyInterface $hierarchy)
+    public function __construct(private readonly ContaoFilesystemLoader $filesystemLoader)
     {
     }
 
@@ -43,7 +45,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
         // Handle Contao includes
         $this->traverseAndAdjustTemplateNames($expr);
 
-        return new IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
+        return new IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine());
     }
 
     public function getTag(): string
@@ -52,11 +54,15 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
     }
 
     /**
-     * Return the adjusted logical name or the unchanged input if it does not
-     * match the Contao Twig namespace.
+     * Return the adjusted logical name or the unchanged input if it does not match
+     * the Contao Twig namespace.
      */
-    public static function adjustTemplateName(string $name, TemplateHierarchyInterface $hierarchy): string
+    public static function adjustTemplateName(TemplateWrapper|string $name, ContaoFilesystemLoader $filesystemLoader): TemplateWrapper|string
     {
+        if ($name instanceof TemplateWrapper) {
+            return $name;
+        }
+
         $parts = ContaoTwigUtil::parseContaoName($name);
 
         if ('Contao' !== ($parts[0] ?? null)) {
@@ -64,7 +70,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
         }
 
         try {
-            return $hierarchy->getFirst($parts[1] ?? '');
+            return $filesystemLoader->getFirst($parts[1] ?? '');
         } catch (\LogicException $e) {
             throw new \LogicException($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?', 0, $e);
         }
@@ -106,8 +112,8 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
                 try {
                     $this->traverseAndAdjustTemplateNames($child);
                 } catch (\LogicException $e) {
-                    // Allow missing templates if they are listed in an array
-                    // like "{% include ['@Contao/missing', '@Contao/existing'] %}"
+                    // Allow missing templates if they are listed in an array like "{% include
+                    // ['@Contao/missing', '@Contao/existing'] %}"
                     if (!$node instanceof ArrayExpression) {
                         throw $e;
                     }
@@ -118,7 +124,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
         }
 
         $name = (string) $node->getAttribute('value');
-        $adjustedName = self::adjustTemplateName($name, $this->hierarchy);
+        $adjustedName = self::adjustTemplateName($name, $this->filesystemLoader);
 
         if ($name !== $adjustedName) {
             $node->setAttribute('value', $adjustedName);

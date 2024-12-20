@@ -136,7 +136,19 @@ abstract class ContaoTestCase extends TestCase
         if ($instances) {
             $framework
                 ->method('createInstance')
-                ->willReturnCallback(static fn (string $key): mixed => $instances[$key] ?? null)
+                ->willReturnCallback(
+                    static function (string $key) use ($instances): mixed {
+                        if (!isset($instances[$key])) {
+                            return null;
+                        }
+
+                        if ($instances[$key] instanceof \Closure) {
+                            return $instances[$key]();
+                        }
+
+                        return $instances[$key];
+                    },
+                )
             ;
         }
 
@@ -261,7 +273,7 @@ abstract class ContaoTestCase extends TestCase
     protected function mockTokenStorage(string $class): TokenStorageInterface
     {
         if (!is_a($class, User::class, true)) {
-            throw new \InvalidArgumentException(sprintf('Class "%s" is not a Contao\User class', $class));
+            throw new \InvalidArgumentException(\sprintf('Class "%s" is not a Contao\User class', $class));
         }
 
         $token = $this->createMock(TokenInterface::class);

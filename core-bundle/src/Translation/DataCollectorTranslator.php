@@ -21,18 +21,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
+ *
+ * @phpstan-ignore class.extendsFinalByPhpDoc
  */
 class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements ResetInterface
 {
     private array $messages = [];
 
-    private readonly LocaleAwareInterface|TranslatorBagInterface|TranslatorInterface $translator;
-
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(private readonly TranslatorInterface&TranslatorBagInterface&LocaleAwareInterface $translator)
     {
         parent::__construct($translator);
-
-        $this->translator = $translator;
     }
 
     /**

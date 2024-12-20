@@ -114,7 +114,7 @@ class ImageSizes implements ResetInterface
         $options = [];
 
         foreach ($this->predefinedSizes as $name => $imageSize) {
-            $options['image_sizes'][$name] = sprintf(
+            $options['image_sizes'][$name] = \sprintf(
                 '%s (%sx%s)',
                 $this->translator->trans(substr($name, 1), [], 'image_sizes') ?: substr($name, 1),
                 $imageSize['width'] ?? '',
@@ -132,7 +132,7 @@ class ImageSizes implements ResetInterface
                 $options[$imageSize['theme']] = [];
             }
 
-            $options[$imageSize['theme']][$imageSize['id']] = sprintf(
+            $options[$imageSize['theme']][$imageSize['id']] = \sprintf(
                 '%s (%sx%s)',
                 $imageSize['name'],
                 $imageSize['width'],

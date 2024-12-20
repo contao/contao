@@ -25,6 +25,7 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'tstamp' => 'index',
 				'pid,user' => 'index',
 				'url' => 'index'
 			)
@@ -59,8 +60,6 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 	(
 		'id' => array
 		(
-			'label'                   => array('ID'),
-			'search'                  => true,
 			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
 		),
 		'pid' => array

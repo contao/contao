@@ -17,27 +17,26 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
-use Twig\NodeVisitor\AbstractNodeVisitor;
 use Twig\NodeVisitor\EscaperNodeVisitor;
+use Twig\NodeVisitor\NodeVisitorInterface;
 
 /**
- * This NodeVisitor alters all "escape('html')" and "escape('html_attr')"
- * filter expressions into "escape('contao_html')" and
- * "escape('contao_html_attr')" filter expressions if the template they belong
- * to is amongst the configured affected templates.
+ * This NodeVisitor alters all "escape('html')" and "escape('html_attr')" filter
+ * expressions into "escape('contao_html')" and "escape('contao_html_attr')"
+ * filter expressions if the template they belong to is amongst the configured
+ * affected templates.
  *
  * @experimental
  */
-final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
+final class ContaoEscaperNodeVisitor implements NodeVisitorInterface
 {
     private array|null $escaperFilterNodes = null;
 
     public function __construct(
         /**
-         * We evaluate affected templates on the fly so that rules can be
-         * adjusted after building the container. Expects a list of regular
-         * expressions to be returned. A template counts as "affected" if it
-         * matches any of the rules.
+         * We evaluate affected templates on the fly so that rules can be adjusted after
+         * building the container. Expects a list of regular expressions to be returned. A
+         * template counts as "affected" if it matches any of the rules.
          */
         private readonly \Closure $rules,
     ) {
@@ -53,7 +52,7 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
         return 1;
     }
 
-    protected function doEnterNode(Node $node, Environment $env): Node
+    public function enterNode(Node $node, Environment $env): Node
     {
         $isAffected = static function (array $rules, string $name): bool {
             foreach ($rules as $rule) {
@@ -77,7 +76,7 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
         return $node;
     }
 
-    protected function doLeaveNode(Node $node, Environment $env): Node|null
+    public function leaveNode(Node $node, Environment $env): Node
     {
         if ($node instanceof ModuleNode && null !== $this->escaperFilterNodes) {
             foreach ($this->escaperFilterNodes as [$escaperFilterNode, $strategy]) {
@@ -107,8 +106,19 @@ final class ContaoEscaperNodeVisitor extends AbstractNodeVisitor
             return false;
         }
 
-        if (!\in_array($node->getNode('filter')->getAttribute('value'), ['escape', 'e'], true)) {
+        if (!\in_array($node->getAttribute('twig_callable')->getName(), ['escape', 'e'], true)) {
             return false;
+        }
+
+        $doubleEncode = $node->getNode('arguments')->hasNode('double_encode') ? $node->getNode('arguments')->getNode('double_encode') : null;
+
+        if ($doubleEncode instanceof ConstantExpression && \is_bool($doubleEncode->getAttribute('value'))) {
+            $node->getNode('arguments')->removeNode('double_encode');
+
+            // Do not use the Contao escaper if `double_encode = true` is passed
+            if ($doubleEncode->getAttribute('value')) {
+                return false;
+            }
         }
 
         $type = $argument->getAttribute('value');

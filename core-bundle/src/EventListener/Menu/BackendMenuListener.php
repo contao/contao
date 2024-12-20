@@ -14,17 +14,22 @@ namespace Contao\CoreBundle\EventListener\Menu;
 
 use Contao\Backend;
 use Contao\BackendUser;
+use Contao\CoreBundle\Controller\BackendTemplateStudioController;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
+ * Make sure this listener comes before the other ones adding to its tree.
+ *
  * @internal
  */
+#[AsEventListener(priority: 10)]
 class BackendMenuListener
 {
     public function __construct(
@@ -33,6 +38,7 @@ class BackendMenuListener
         private readonly RequestStack $requestStack,
         private readonly TranslatorInterface $translator,
         private readonly ContaoFramework $framework,
+        private readonly bool $templateStudioEnabled,
     ) {
     }
 
@@ -72,6 +78,7 @@ class BackendMenuListener
                     ->setLinkAttribute('data-action', 'contao--toggle-navigation#toggle:prevent')
                     ->setLinkAttribute('data-contao--toggle-navigation-category-param', $categoryName)
                     ->setLinkAttribute('aria-controls', $categoryName)
+                    ->setLinkAttribute('data-turbo-prefetch', 'false')
                     ->setChildrenAttribute('id', $categoryName)
                     ->setExtra('translation_domain', false)
                 ;
@@ -99,6 +106,17 @@ class BackendMenuListener
                 ;
 
                 $categoryNode->addChild($moduleNode);
+            }
+
+            if ($this->templateStudioEnabled && 'design' === $categoryName) {
+                $templateStudioNode = $factory
+                    ->createItem('template-studio')
+                    ->setLabel('Template Studio')
+                    ->setUri('/contao/template-studio')
+                    ->setCurrent(BackendTemplateStudioController::class === $this->requestStack->getCurrentRequest()?->get('_controller'))
+                ;
+
+                $categoryNode->addChild($templateStudioNode);
             }
         }
     }
@@ -159,8 +177,11 @@ class BackendMenuListener
 
         $submenu = $factory
             ->createItem('submenu')
-            ->setLabel('<button type="button">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
+            ->setLabel('<button type="button" data-contao--profile-target="button" data-action="contao--profile#toggle">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
             ->setAttribute('class', 'submenu')
+            ->setAttribute('data-controller', 'contao--profile')
+            ->setAttribute('data-contao--profile-target', 'menu')
+            ->setAttribute('data-action', 'click@document->contao--profile#documentClick')
             ->setExtra('safe_label', true)
             ->setLabelAttribute('class', 'profile')
             ->setExtra('translation_domain', false)
@@ -170,7 +191,7 @@ class BackendMenuListener
 
         $info = $factory
             ->createItem('info')
-            ->setLabel(sprintf('<strong>%s</strong> %s', $user->name, $user->email))
+            ->setLabel(\sprintf('<strong>%s</strong> %s', $user->name, $user->email))
             ->setAttribute('class', 'info')
             ->setExtra('safe_label', true)
             ->setExtra('translation_domain', false)
@@ -208,7 +229,7 @@ class BackendMenuListener
 
         $submenu->addChild($favorites);
 
-        $buger = $factory
+        $burger = $factory
             ->createItem('burger')
             ->setLabel('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
             ->setAttribute('class', 'burger')
@@ -216,17 +237,17 @@ class BackendMenuListener
             ->setExtra('translation_domain', false)
         ;
 
-        $tree->addChild($buger);
+        $tree->addChild($burger);
     }
 
     private function getAlertsLabel(): string
     {
         $systemMessages = $this->translator->trans('MSC.systemMessages', [], 'contao_default');
 
-        $label = sprintf(
-            '<a href="%s" class="icon-alert" title="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
+        $label = \sprintf(
+            '<a href="%s" class="icon-alert" title="%s" data-turbo-prefetch="false" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
             $this->router->generate('contao_backend_alerts'),
-            htmlspecialchars($systemMessages),
+            htmlspecialchars($systemMessages, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
             StringUtil::specialchars(str_replace("'", "\\'", $systemMessages)),
             $systemMessages,
         );

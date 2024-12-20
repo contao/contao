@@ -93,7 +93,7 @@ class UserCheckerTest extends TestCase
         $user->start = (string) $time;
 
         $userChecker = new UserChecker($this->mockContaoFramework());
-        $message = sprintf('The account is not active yet (activation date: %s)', date('Y-m-d', $time));
+        $message = \sprintf('The account is not active yet (activation date: %s)', date('Y-m-d', $time));
 
         $this->expectException(DisabledException::class);
         $this->expectExceptionMessage($message);
@@ -113,7 +113,7 @@ class UserCheckerTest extends TestCase
         $user->stop = (string) $time;
 
         $userChecker = new UserChecker($this->mockContaoFramework());
-        $message = sprintf('The account is not active anymore (deactivation date: %s)', date('Y-m-d', $time));
+        $message = \sprintf('The account is not active anymore (deactivation date: %s)', date('Y-m-d', $time));
 
         $this->expectException(DisabledException::class);
         $this->expectExceptionMessage($message);

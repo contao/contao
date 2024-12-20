@@ -21,11 +21,14 @@ use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\InsertTags;
 use Contao\System;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Twig\Environment;
@@ -53,7 +56,7 @@ class InsertTagTest extends TestCase
         $this->assertSame($expected, $this->render($content, $context));
     }
 
-    public function provideVariableStatements(): \Generator
+    public static function provideVariableStatements(): iterable
     {
         yield 'no insert tag replacement' => [
             '{{ text }}',
@@ -92,8 +95,10 @@ class InsertTagTest extends TestCase
         $environment->setExtensions([
             new ContaoExtension(
                 $environment,
-                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
+                new InspectorNodeVisitor(new NullAdapter(), $environment),
             ),
         ]);
 

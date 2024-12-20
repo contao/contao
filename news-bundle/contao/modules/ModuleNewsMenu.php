@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Front end module "news archive".
@@ -72,10 +73,15 @@ class ModuleNewsMenu extends ModuleNews
 
 		$this->strUrl = preg_replace('/\?.*$/', '', Environment::get('requestUri'));
 
-		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if ($objTarget = PageModel::findById($this->objModel->jumpTo))
 		{
-			/** @var PageModel $objTarget */
-			$this->strUrl = $objTarget->getFrontendUrl();
+			try
+			{
+				$this->strUrl = System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget);
+			}
+			catch (ExceptionInterface)
+			{
+			}
 		}
 
 		return parent::generate();
@@ -133,7 +139,7 @@ class ModuleNewsMenu extends ModuleNews
 		foreach ($arrData as $intYear=>$intCount)
 		{
 			$intDate = $intYear;
-			$quantity = sprintf(($intCount < 2) ? $GLOBALS['TL_LANG']['MSC']['entry'] : $GLOBALS['TL_LANG']['MSC']['entries'], $intCount);
+			$quantity = \sprintf(($intCount < 2) ? $GLOBALS['TL_LANG']['MSC']['entry'] : $GLOBALS['TL_LANG']['MSC']['entries'], $intCount);
 
 			$arrItems[$intYear]['date'] = $intDate;
 			$arrItems[$intYear]['link'] = $intYear;
@@ -185,7 +191,7 @@ class ModuleNewsMenu extends ModuleNews
 				$intDate = $intYear . $intMonth;
 				$intMonth = (int) $intMonth - 1;
 
-				$quantity = sprintf(($intCount < 2) ? $GLOBALS['TL_LANG']['MSC']['entry'] : $GLOBALS['TL_LANG']['MSC']['entries'], $intCount);
+				$quantity = \sprintf(($intCount < 2) ? $GLOBALS['TL_LANG']['MSC']['entry'] : $GLOBALS['TL_LANG']['MSC']['entries'], $intCount);
 
 				$arrItems[$intYear][$intMonth]['date'] = $intDate;
 				$arrItems[$intYear][$intMonth]['link'] = $GLOBALS['TL_LANG']['MONTHS'][$intMonth] . ' ' . $intYear;
@@ -357,7 +363,7 @@ class ModuleNewsMenu extends ModuleNews
 			$arrDays[$strWeekClass][$i]['label'] = $intDay;
 			$arrDays[$strWeekClass][$i]['class'] = 'days active' . $strClass;
 			$arrDays[$strWeekClass][$i]['href'] = $this->strUrl . '?day=' . $intKey;
-			$arrDays[$strWeekClass][$i]['title'] = sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['news_items']), $arrData[$intKey]);
+			$arrDays[$strWeekClass][$i]['title'] = \sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['news_items']), $arrData[$intKey]);
 		}
 
 		return $arrDays;

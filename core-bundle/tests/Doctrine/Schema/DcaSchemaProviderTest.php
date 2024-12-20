@@ -37,7 +37,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertTrue($table->getColumn('id')->getNotnull());
         $this->assertFalse($table->getColumn('id')->getFixed());
 
-        /** @var int|null $idDefault */
         $idDefault = $table->getColumn('id')->getDefault();
 
         if (null !== $idDefault) {
@@ -94,7 +93,6 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame(6, $table->getColumn('price')->getPrecision());
         $this->assertSame(2, $table->getColumn('price')->getScale());
 
-        /** @var float|null $priceDefault */
         $priceDefault = $table->getColumn('price')->getDefault();
 
         if (null !== $priceDefault) {
@@ -131,7 +129,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         }
     }
 
-    public function provideDefinitions(): \Generator
+    public static function provideDefinitions(): iterable
     {
         yield 'table fields SQL string from DCA file' => [
             [
@@ -214,7 +212,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $assertions($table);
     }
 
-    public function provideTableOptions(): \Generator
+    public function provideTableOptions(): iterable
     {
         yield [
             'ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
@@ -318,7 +316,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                         return ['Value' => $map[$query]];
                     }
 
-                    throw new \RuntimeException(sprintf('Test does not mirror actual query, got: "%s"', $query));
+                    throw new \RuntimeException(\sprintf('Test does not mirror actual query, got: "%s"', $query));
                 },
             )
         ;
@@ -341,6 +339,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertFalse($table->getIndex('name')->isUnique());
         $this->assertSame([$expected], $table->getIndex('name')->getOption('lengths'));
 
+        /** @phpstan-ignore function.alreadyNarrowedType */
         if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
             $this->assertSame(['name'], $table->getIndex('name')->getColumns());
         } else {
@@ -354,7 +353,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         }
     }
 
-    public function provideIndexes(): \Generator
+    public static function provideIndexes(): iterable
     {
         yield 'MyISAM, utf8' => [
             null,
@@ -530,6 +529,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertFalse($table->getIndex('col123')->isUnique());
         $this->assertSame([100, null, 99], $table->getIndex('col123')->getOption('lengths'));
 
+        /** @phpstan-ignore function.alreadyNarrowedType */
         if (method_exists(AbstractPlatform::class, 'supportsColumnLengthIndexes')) {
             $this->assertSame(['col1', 'col2', 'col3'], $table->getIndex('col123')->getColumns());
         } else {
@@ -591,7 +591,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $dcaSchemaProvider->appendToSchema($schema);
     }
 
-    public function provideInvalidIndexDefinitions(): \Generator
+    public static function provideInvalidIndexDefinitions(): iterable
     {
         yield 'invalid primary key' => [
             [

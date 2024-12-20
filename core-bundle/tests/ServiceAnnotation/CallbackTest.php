@@ -14,11 +14,19 @@ namespace Contao\CoreBundle\Tests\ServiceAnnotation;
 
 use Contao\CoreBundle\ServiceAnnotation\Callback;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class CallbackTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
+    /**
+     * @group legacy
+     */
     public function testReturnsTheTagName(): void
     {
+        $this->expectDeprecation('Since contao/core-bundle 5.4: %s Use the #[AsCallback] attribute instead.');
+
         $annotation = new Callback();
         $annotation->table = 'tl_foobar';
         $annotation->target = 'foo.bar';

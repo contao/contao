@@ -25,6 +25,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'tstamp' => 'index',
 				'id,published,expiresAt' => 'index'
 			)
 		)
@@ -46,10 +47,6 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 		),
 		'operations' => array
 		(
-			'edit',
-			'delete',
-			'toggle',
-			'show',
 			'share' => array
 			(
 				'icon'                => 'share.svg'
@@ -128,6 +125,7 @@ $GLOBALS['TL_DCA']['tl_preview_link'] = array
 		(
 			'foreignKey'              => 'tl_user.name',
 			'sql'                     => "int(10) unsigned NOT NULL default 0",
+			'relation'                => array('type'=>'hasOne', 'load'=>'lazy')
 		)
 	)
 );
