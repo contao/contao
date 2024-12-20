@@ -22,8 +22,14 @@
                 allowHTML: false,
                 searchEnabled: select.options.length > 7,
                 classNames: {
-                    containerOuter: 'choices ' + select.className,
+                    containerOuter: ['choices', ...Array.from(select.classList)],
                     flippedState: ''
+                },
+                callbackOnInit: () => {
+                   const choices = select.closest('.choices')?.querySelector('.choices__list--dropdown > .choices__list');
+                   if (choices && select.dataset.placeholder) {
+                       choices.dataset.placeholder = select.dataset.placeholder;
+                   }
                 }
             })
         });
