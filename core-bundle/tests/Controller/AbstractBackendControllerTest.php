@@ -95,7 +95,6 @@ class AbstractBackendControllerTest extends TestCase
             'learnMore' => 'learn more',
             'menu' => '<menu>',
             'headerMenu' => '<header_menu>',
-            'searchEnabled' => false,
             'badgeTitle' => '',
             'foo' => 'bar',
         ];
@@ -165,7 +164,6 @@ class AbstractBackendControllerTest extends TestCase
             'learnMore' => 'learn more',
             'menu' => '<menu>',
             'headerMenu' => '<header_menu>',
-            'searchEnabled' => false,
             'badgeTitle' => '',
         ];
 
