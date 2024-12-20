@@ -54,6 +54,17 @@ class WebWorker
     ) {
     }
 
+    public function hasCliWorkersRunning(): bool
+    {
+        foreach ($this->transports as $transportName) {
+            if ($this->getCacheItemForTransportName($transportName)->isHit()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /**
      * The priority must be lower than the one of the profiler listener, so resetting
      * the services will not affect collecting the profiler information.

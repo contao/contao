@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\ContaoManager;
 
+use CmsIg\Seal\Integration\Symfony\SealBundle;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerBundle\ContaoManagerBundle;
@@ -26,7 +27,6 @@ use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use League\FlysystemBundle\FlysystemBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
-use Schranz\Search\Integration\Symfony\SearchBundle;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
@@ -122,7 +122,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame([], $bundles[8]->getReplace());
         $this->assertSame([], $bundles[8]->getLoadAfter());
 
-        $this->assertSame(SearchBundle::class, $bundles[9]->getName());
+        $this->assertSame(SealBundle::class, $bundles[9]->getName());
         $this->assertSame([], $bundles[9]->getReplace());
         $this->assertSame([], $bundles[9]->getLoadAfter());
 

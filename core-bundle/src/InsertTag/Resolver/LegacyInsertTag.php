@@ -501,12 +501,12 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
 
                 // Take arguments
                 if (str_contains($insertTag->getParameters()->get(0), '?')) {
-                    $arrChunks = explode('?', urldecode($insertTag->getParameters()->get(0)), 2);
+                    $arrChunks = explode('?', $insertTag->getParameters()->get(0), 2);
                     $strSource = StringUtil::decodeEntities($arrChunks[1]);
                     $arrParams = explode('&', $strSource);
 
                     foreach ($arrParams as $strParam) {
-                        [$key, $value] = explode('=', $strParam);
+                        [$key, $value] = explode('=', urldecode($strParam), 2);
 
                         switch ($key) {
                             case 'width':

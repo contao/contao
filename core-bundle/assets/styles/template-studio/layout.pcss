@@ -14,15 +14,19 @@
     overflow: hidden;
 
     display: grid;
-    grid-template-areas: "nav tabs info";
+    grid-template-areas: "tree tabs info";
     grid-template-columns: auto 1fr min-content;
     position: relative;
+
+    * {
+        scrollbar-width: thin;
+    }
 
     > *:not(:has(*)) {
         display: none;
     }
 
-    #template-studio--nav{
+    #template-studio--nav {
         grid-area: nav;
         border-right: 1px solid var(--border);
         overflow: auto;
@@ -32,22 +36,23 @@
 
         display: flex;
         flex-direction: column;
+    }
 
-        #template-studio--theme-selector {
-            border-bottom: 1px solid var(--border);
-            padding: 6px;
+    #template-studio--theme-selector {
+        border-bottom: 1px solid var(--border);
+        padding: 6px;
+        max-width: 300px;
 
-            label > span {
-                font-size: .8em;
-                margin-left: 4px;
-                color: var(--info);
-            }
+        label > span {
+            font-size: .8em;
+            margin-left: 4px;
+            color: var(--info);
         }
+    }
 
-        #template-studio--tree {
-            padding-top: 4px;
-            overflow: auto;
-        }
+    #template-studio--tree {
+        padding-top: 4px;
+        overflow: auto;
     }
 
     #template-studio--tabs {
@@ -60,6 +65,23 @@
         grid-area: info;
         border-left: 1px solid var(--border);
         overflow-y: auto;
+        min-width: 220px;
+
+        .block {
+            text-align: right;
+        }
+
+        .template_name {
+            row-gap: 8px;
+
+            .structure {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+        }
+
+        .badges {
+            justify-content: flex-end;
+        }
     }
 }
-
