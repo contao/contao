@@ -114,8 +114,7 @@
         <target>Recriar ficheiros XML</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
-        <source>Recreates the XML files in the &lt;code&gt;shared&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
-        <target>Recria os ficheiros XML na pasta &lt;code&gt;partilhada&lt;/code&gt; e depois limpa a cache partilhada, pelo que não existem ligações a recursos eliminados.</target>
+        <source>Recreates the XML files in the &lt;code&gt;share&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>

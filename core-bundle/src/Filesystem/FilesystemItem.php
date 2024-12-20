@@ -41,7 +41,7 @@ class FilesystemItem
     private $mimeType;
 
     /**
-     * @var array<string, mixed>|\Closure(self):array<string, mixed>
+     * @var ExtraMetadata|\Closure(self):ExtraMetadata|null
      */
     private $extraMetadata;
 
@@ -49,9 +49,9 @@ class FilesystemItem
      * @param int|(\Closure(self):int|null)|null $lastModified
      * @param int|\Closure(self):int|null $fileSize
      * @param string|\Closure(self):string|null $mimeType
-     * @param array<string, mixed>|\Closure(self):array<string, mixed> $extraMetadata
+     * @param ExtraMetadata|(\Closure(self): ExtraMetadata|null)|null $extraMetadata
      */
-    public function __construct(bool $isFile, string $path, $lastModified = null, $fileSize = null, $mimeType = null, $extraMetadata = [])
+    public function __construct(bool $isFile, string $path, $lastModified = null, $fileSize = null, $mimeType = null, $extraMetadata = null)
     {
         $this->isFile = $isFile;
         $this->path = $path;
@@ -80,7 +80,7 @@ class FilesystemItem
                 $attributes->lastModified(),
                 $attributes->fileSize(),
                 $attributes->mimeType(),
-                $attributes->extraMetadata()
+                new ExtraMetadata($attributes->extraMetadata())
             );
         }
 
@@ -88,7 +88,7 @@ class FilesystemItem
     }
 
     /**
-     * @param array<string, mixed>|\Closure(self):array<string, mixed> $extraMetadata
+     * @param ExtraMetadata|\Closure(self):ExtraMetadata $extraMetadata
      */
     public function withExtraMetadata($extraMetadata): self
     {
@@ -180,11 +180,11 @@ class FilesystemItem
         return $this->mimeType ?? $default;
     }
 
-    public function getExtraMetadata(): array
+    public function getExtraMetadata(): ExtraMetadata
     {
         $this->resolveIfClosure($this->extraMetadata);
 
-        return $this->extraMetadata;
+        return $this->extraMetadata ?? new ExtraMetadata();
     }
 
     public function getUuid(): ?Uuid

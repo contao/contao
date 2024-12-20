@@ -20,12 +20,12 @@ class CronJob
     private string $name;
     private \DateTimeInterface $previousRun;
 
-    public function __construct(object $service, string $interval, ?string $method = null)
+    public function __construct(object $service, string $interval, ?string $method = null, ?string $name = null)
     {
         $this->service = $service;
         $this->method = $method;
         $this->interval = $interval;
-        $this->name = \get_class($service);
+        $this->name = $name ?? \get_class($service);
 
         if (!\is_callable($service)) {
             if (null === $this->method) {

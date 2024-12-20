@@ -127,6 +127,7 @@
       </trans-unit>
       <trans-unit id="MOD.preview_link.1">
         <source>Manage preview links for the front end.</source>
+        <target>پیوندهای پیش‌نمایش را برای وب‌سایت مدیریت کنید.</target>
       </trans-unit>
       <trans-unit id="MOD.maintenance.0">
         <source>Maintenance</source>
@@ -422,6 +423,7 @@
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.1">
         <source>Generates different modules depending on the root page</source>
+        <target>بسته به برگه‌ی ریشه، ماژول‌های مختلفی تولید می‌کند</target>
       </trans-unit>
     </body>
   </file>

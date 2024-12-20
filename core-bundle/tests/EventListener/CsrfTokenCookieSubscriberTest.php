@@ -136,7 +136,7 @@ class CsrfTokenCookieSubscriberTest extends TestCase
 
         $this->assertCount(1, $cookies);
         $this->assertSame('unrelated-cookie', $cookies[0]->getName());
-        $this->asserTtrue($cookies[0]->isCleared());
+        $this->assertTrue($cookies[0]->isCleared());
     }
 
     public function testDoesNotAddTheTokenCookiesToTheResponseIfTheyAlreadyExist(): void

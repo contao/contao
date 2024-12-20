@@ -2,6 +2,28 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.50] (2024-11-15)
+
+**Fixed issues:**
+
+- [#7713] Use the `RateLimiter` component to limit password reset requests ([bytehead])
+- [#7703] Backport the VFS interface adjustments ([m-vo])
+- [#7581] Add a rate limit for password resets ([bytehead])
+- [#7480] Fix search results overwriting root limit ([aschempp])
+- [#7444] Use the service ID instead of the class name for cron jobs ([Toflar])
+- [#7564] Decode entities in the `CustomRgxpListener` ([fritzmg])
+- [#7550] Delete related opt-in tokens after a password change ([bytehead])
+- [#7545] Add `includeBlankOption` for `module` and `form` content element ([fritzmg])
+- [#7559] Fix warning in `ModuleRegistration` if editable field does not exist anymore ([fritzmg])
+- [#7595] Add the `resampling-filter` Imagine option ([ausi])
+- [#7605] Fix login redirect and session usage ([fritzmg])
+- [#7629] Use UTC in `BackupListCommandTest` ([fritzmg])
+- [#7692] Fix typo for purge XML files ([zonky2])
+- [#7532] Rename `$buger` to `$burger` in the `BackendMenuListener` ([zoglo])
+- [#7547] Fix erroneous tag on `contao.listener.make_response_private` ([fritzmg])
+- [#7535] Fix hardcoded limit to 30 in database statement ([Toflar])
+- [#7533] Update `box-size` translation for image-size ([zoglo])
+
 ## [4.13.49] (2024-09-17)
 
 **Security fixes:**
@@ -1068,6 +1090,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.50]: https://github.com/contao/contao/releases/tag/4.13.50
 [4.13.49]: https://github.com/contao/contao/releases/tag/4.13.49
 [4.13.48]: https://github.com/contao/contao/releases/tag/4.13.48
 [4.13.47]: https://github.com/contao/contao/releases/tag/4.13.47
@@ -1121,6 +1144,9 @@ This project adheres to [Semantic Versioning].
 [4.13.0-RC3]: https://github.com/contao/contao/releases/tag/4.13.0-RC3
 [4.13.0-RC2]: https://github.com/contao/contao/releases/tag/4.13.0-RC2
 [4.13.0-RC1]: https://github.com/contao/contao/releases/tag/4.13.0-RC1
+[CVE-2024-45604]: https://github.com/contao/contao/security/advisories/GHSA-4p75-5p53-65m9
+[CVE-2024-45398]: https://github.com/contao/contao/security/advisories/GHSA-vm6r-j788-hjh5
+[CVE-2024-45612]: https://github.com/contao/contao/security/advisories/GHSA-2xpq-xp6c-5mgj
 [CVE-2024-28235]: https://github.com/contao/contao/security/advisories/GHSA-9jh5-qf84-x6pr
 [CVE-2024-28190]: https://github.com/contao/contao/security/advisories/GHSA-v24p-7p4j-qvvf
 [CVE-2024-28191]: https://github.com/contao/contao/security/advisories/GHSA-747v-52c4-8vj8
@@ -1129,9 +1155,6 @@ This project adheres to [Semantic Versioning].
 [CVE-2023-36806]: https://github.com/contao/contao/security/advisories/GHSA-4gpr-p634-922x
 [CVE-2023-29200]: https://github.com/contao/contao/security/advisories/GHSA-fp7q-xhhw-6rj3
 [CVE-2022-24899]: https://github.com/contao/contao/security/advisories/GHSA-m8x6-6r63-qvj2
-[CVE-2024-45604]: https://github.com/contao/contao/security/advisories/GHSA-4p75-5p53-65m9
-[CVE-2024-45398]: https://github.com/contao/contao/security/advisories/GHSA-vm6r-j788-hjh5
-[CVE-2024-45612]: https://github.com/contao/contao/security/advisories/GHSA-2xpq-xp6c-5mgj
 [a-v-l]: https://github.com/a-v-l
 [agonyz]: https://github.com/agonyz
 [AlexanderWillner]: https://github.com/AlexanderWillner
@@ -1934,12 +1957,29 @@ This project adheres to [Semantic Versioning].
 [#7380]: https://github.com/contao/contao/pull/7380
 [#7425]: https://github.com/contao/contao/pull/7425
 [#7433]: https://github.com/contao/contao/pull/7433
+[#7444]: https://github.com/contao/contao/pull/7444
 [#7459]: https://github.com/contao/contao/pull/7459
 [#7462]: https://github.com/contao/contao/pull/7462
 [#7466]: https://github.com/contao/contao/pull/7466
+[#7480]: https://github.com/contao/contao/pull/7480
 [#7481]: https://github.com/contao/contao/pull/7481
 [#7483]: https://github.com/contao/contao/pull/7483
 [#7497]: https://github.com/contao/contao/pull/7497
 [#7506]: https://github.com/contao/contao/pull/7506
 [#7512]: https://github.com/contao/contao/pull/7512
 [#7517]: https://github.com/contao/contao/pull/7517
+[#7532]: https://github.com/contao/contao/pull/7532
+[#7533]: https://github.com/contao/contao/pull/7533
+[#7535]: https://github.com/contao/contao/pull/7535
+[#7545]: https://github.com/contao/contao/pull/7545
+[#7547]: https://github.com/contao/contao/pull/7547
+[#7550]: https://github.com/contao/contao/pull/7550
+[#7559]: https://github.com/contao/contao/pull/7559
+[#7564]: https://github.com/contao/contao/pull/7564
+[#7581]: https://github.com/contao/contao/pull/7581
+[#7595]: https://github.com/contao/contao/pull/7595
+[#7605]: https://github.com/contao/contao/pull/7605
+[#7629]: https://github.com/contao/contao/pull/7629
+[#7692]: https://github.com/contao/contao/pull/7692
+[#7703]: https://github.com/contao/contao/pull/7703
+[#7713]: https://github.com/contao/contao/pull/7713

@@ -1370,8 +1370,7 @@
         <target>Стани у оквир</target>
       </trans-unit>
       <trans-unit id="MSC.box.1">
-        <source>The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
-        <target>Краћа страница слике је прилагођена наведеним димензијама и величина слике је промењена пропорционално.</target>
+        <source>The image will be resized proportionally so that neither side exceeds any of the given dimensions. This is similar to the &lt;em&gt;contain&lt;/em&gt; value in CSS.</source>
       </trans-unit>
       <trans-unit id="MSC.exact.0">
         <source>Exact dimensions</source>
@@ -1386,8 +1385,7 @@
         <target>Важан део</target>
       </trans-unit>
       <trans-unit id="MSC.crop.1">
-        <source>Preserves the important part of an image as specified in the file manager.</source>
-        <target>Важан део слике биће сачуван по спецификацији у менаџеру фајлова.</target>
+        <source>The image will be resized to the exact dimensions given, cropping the image if necessary while preserving the important part if specified. This is similar to the &lt;em&gt;cover&lt;/em&gt; value in CSS.</source>
       </trans-unit>
       <trans-unit id="MSC.left_top.0">
         <source>Left | Top</source>
@@ -2544,6 +2542,9 @@
       <trans-unit id="MSC.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
         <target>Линк који покушавате да отворите не може бити проверен. Ако сте сами кликнули на линк или сте га примили од особе од поверења, можете потврдити поступак испод.</target>
+      </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>

@@ -537,6 +537,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $request->attributes->set('_scope', $scope);
         $request->attributes->set('_format', $format);
         $request->headers->set('Accept', $accept);
+        $request->headers->set('Host', 'localhost');
 
         return $request;
     }

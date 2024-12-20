@@ -1,4 +1,4 @@
-<p align="center"><img src="https://contao.org/files/contao/logo/contao-logo-corporate.svg"></p>
+<p align="center"><img src="https://contao.org/files/contao/logo/contao-logo-corporate.svg" alt></p>
 
 <p align="center">
 <a href="https://github.com/contao/contao/actions"><img src="https://github.com/contao/contao/actions/workflows/ci.yml/badge.svg?branch=4.13" alt></a>

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Filesystem\Dbafs;
 
 use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Symfony\Component\Uid\Uuid;
 
@@ -51,16 +52,13 @@ interface DbafsInterface
     /**
      * Sets extra metadata for a record.
      *
-     * The given array may contain additional keys that simply will be ignored
-     * if they do not match the internal data structure.
+     * Metadata keys, that do not match the internal data structure, will be ignored.
      *
      * The given $path must be relative to the DBAFS root.
      *
-     * @param array<string, mixed> $metadata
-     *
      * @throws \InvalidArgumentException if provided $path is invalid
      */
-    public function setExtraMetadata(string $path, array $metadata): void;
+    public function setExtraMetadata(string $path, ExtraMetadata $metadata): void;
 
     /**
      * Updates the DBAFS database.

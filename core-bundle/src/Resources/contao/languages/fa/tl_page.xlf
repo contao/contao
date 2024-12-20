@@ -103,6 +103,7 @@
       </trans-unit>
       <trans-unit id="tl_page.alwaysForward.1">
         <source>Redirect to the target page even if there are query or path parameters.</source>
+        <target>حتی اگر پارامترهای کوئری یا مسیر وجود داشته باشد، به برگه‌ی هدف تغییر مسیر دهید.</target>
       </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
@@ -198,6 +199,7 @@
       </trans-unit>
       <trans-unit id="tl_page.canonicalLink.1">
         <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>در اینجا می‌توانید یک URL کانونیکال سفارشی مانند https://example.com/ تنظیم کنید.</target>
       </trans-unit>
       <trans-unit id="tl_page.canonicalKeepParams.0">
         <source>Query parameters</source>
@@ -325,6 +327,7 @@
       </trans-unit>
       <trans-unit id="tl_page.subpageLayout.1">
         <source>Here you can select a different layout for subpages.</source>
+        <target>در اینجا می‌توانید یک طرح‌بندی متفاوت برای زیربرگه‌ها انتخاب کنید.</target>
       </trans-unit>
       <trans-unit id="tl_page.includeCache.0">
         <source>Set cache timeouts</source>
@@ -656,6 +659,7 @@
       </trans-unit>
       <trans-unit id="tl_page.relCanonical">
         <source>Enable canonical URLs in the website root page to enable this configuration.</source>
+        <target>برای فعال کردن این پیکربندی، URLهای کانونیکال را در برگه‌ی ریشه وب‌سایت فعال کنید.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

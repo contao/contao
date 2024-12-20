@@ -1370,8 +1370,8 @@
         <target>An Rahmen anpassen</target>
       </trans-unit>
       <trans-unit id="MSC.box.1">
-        <source>The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
-        <target>Die kürzere Seite des Bildes wird an die vorgegebenen Abmessungen angepasst und das Bild proportional verkleinert.</target>
+        <source>The image will be resized proportionally so that neither side exceeds any of the given dimensions. This is similar to the &lt;em&gt;contain&lt;/em&gt; value in CSS.</source>
+        <target>Die Größe des Bildes wird proportional angepasst, sodass keine Seite die angegebenen Abmessungen überschreitet. Ähnlich dem Wert &lt;em&gt;contain&lt;/em&gt; in CSS.</target>
       </trans-unit>
       <trans-unit id="MSC.exact.0">
         <source>Exact dimensions</source>
@@ -1386,8 +1386,8 @@
         <target>Wichtiger Teil</target>
       </trans-unit>
       <trans-unit id="MSC.crop.1">
-        <source>Preserves the important part of an image as specified in the file manager.</source>
-        <target>Erhält den wichtigen Teil des Bildes wie in der Dateiverwaltung angegeben.</target>
+        <source>The image will be resized to the exact dimensions given, cropping the image if necessary while preserving the important part if specified. This is similar to the &lt;em&gt;cover&lt;/em&gt; value in CSS.</source>
+        <target>Die Größe des Bildes wird genau auf die angegebenen Abmessungen angepasst. Bei Bedarf wird das Bild zugeschnitten, wobei der wichtige Teil (falls angegeben) erhalten bleibt. Ähnlich dem Wert &lt;em&gt;cover&lt;/em&gt; in CSS.</target>
       </trans-unit>
       <trans-unit id="MSC.left_top.0">
         <source>Left | Top</source>
@@ -2544,6 +2544,10 @@
       <trans-unit id="MSC.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
         <target>Der Link, den Sie aufgerufen haben, konnte nicht verifiziert werden. Wenn Sie den Link selbst aufgerufen oder von einer vertrauenswürdigen Person erhalten haben, können Sie den Vorgang fortsetzen.</target>
+      </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>Sie haben zu oft versucht, Ihr Passwort zurückzusetzen. Bitte versuchen Sie es in 15 Minuten erneut.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
