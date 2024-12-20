@@ -45,6 +45,7 @@ class DataContainerOperationsBuilder implements \Stringable
 
         return $this->twig->render('@Contao/backend/data_container/operations.html.twig', [
             'operations' => $this->operations,
+            'has_primary' => [] !== array_filter(array_column($this->operations, 'primary'), static fn ($v) => null !== $v),
         ]);
     }
 
@@ -207,7 +208,7 @@ class DataContainerOperationsBuilder implements \Stringable
 
             return [
                 'html' => $html,
-                'primary' => (bool) ($config['primary'] ?? false),
+                'primary' => $config['primary'] ?? null,
             ];
         }
 
@@ -225,7 +226,7 @@ class DataContainerOperationsBuilder implements \Stringable
             'label' => $config['label'],
             'attributes' => $config['attributes'],
             'icon' => Image::getHtml($config['icon'], $config['label']),
-            'primary' => (bool) ($config['primary'] ?? false),
+            'primary' => $config['primary'] ?? null,
         ];
     }
 
@@ -312,7 +313,7 @@ class DataContainerOperationsBuilder implements \Stringable
             'label' => $config['label'],
             'attributes' => ' data-title="'.StringUtil::specialchars($config['title']).'" data-title-disabled="'.StringUtil::specialchars($titleDisabled).'" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,'.('visible.svg' === $icon ? 'true' : 'false').')"',
             'icon' => Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="'.$icon.'" data-icon-disabled="'.$_icon.'" data-state="'.$state.'"'),
-            'primary' => (bool) ($config['primary'] ?? false),
+            'primary' => $config['primary'] ?? null,
         ];
     }
 }

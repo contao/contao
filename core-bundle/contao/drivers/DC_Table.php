@@ -3831,15 +3831,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][0];
 				$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][1];
 
-				$operations->append(array('html'=>System::importStatic($strClass)->$strMethod($this, array('id'=>0), $table, false, $arrClipboard)));
+				$operations->append(array('primary' => true, 'html'=>System::importStatic($strClass)->$strMethod($this, array('id'=>0), $table, false, $arrClipboard)));
 			}
 			elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
 			{
-				$operations->append(array('html'=>$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, array('id'=>0), $table, false, $arrClipboard)));
+				$operations->append(array('primary' => true, 'html'=>$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, array('id'=>0), $table, false, $arrClipboard)));
 			}
 			elseif (!$this->canPasteClipboard($arrClipboard, array('pid'=>0, 'sorting'=>0)))
 			{
-				$operations->append(array('icon'=>Image::getHtml('pasteinto--disabled.svg')));
+				$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteinto--disabled.svg')));
 			}
 			else
 			{
@@ -3851,6 +3851,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					'title' => $labelPasteInto[0],
 					'attributes' => 'data-action="contao--scroll-offset#store"',
 					'icon' => $imagePasteInto,
+					'primary' => true,
 				));
 			}
 
@@ -4087,19 +4088,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$session[$node][$id] = (\is_int($session[$node][$id] ?? null)) ? $session[$node][$id] : 0;
 
 		$mouseover = '';
-		$menu = false;
 
 		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table == $this->strTable)
 		{
 			$mouseover = ' toggle_select hover-div';
-			$menu = true;
 		}
 		elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED && $arrClipboard !== false)
 		{
 			$mouseover = ' hover-div';
 		}
 
-		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && ($currentRecord['type'] ?? null) == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ((string) ($currentRecord['tstamp'] ?? null) === '0' ? ' draft' : '') . $mouseover . ' cf" data-controller="contao--deeplink '.($menu ? ' contao--operations-menu" data-action="contextmenu->contao--operations-menu#contextmenu' : '').'"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($children) ? 16 : 0)) . 'px">';
+		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && ($currentRecord['type'] ?? null) == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ((string) ($currentRecord['tstamp'] ?? null) === '0' ? ' draft' : '') . $mouseover . ' cf" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#contextmenu"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($children) ? 16 : 0)) . 'px">';
 
 		// Calculate label and add a toggle button
 		$level = $intMargin / $intSpacing + 1;
@@ -4164,11 +4163,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][0];
 					$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][1];
 
-					$operations->append(array('html'=>System::importStatic($strClass)->$strMethod($this, $currentRecord, $table, $blnCircularReference, $arrClipboard, $children, $previous, $next)));
+					$operations->append(array('primary' => true, 'html'=>System::importStatic($strClass)->$strMethod($this, $currentRecord, $table, $blnCircularReference, $arrClipboard, $children, $previous, $next)));
 				}
 				elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
 				{
-					$operations->append(array('html'=>$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, $currentRecord, $table, $blnCircularReference, $arrClipboard, $children, $previous, $next)));
+					$operations->append(array('primary' => true, 'html'=>$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, $currentRecord, $table, $blnCircularReference, $arrClipboard, $children, $previous, $next)));
 				}
 				else
 				{
@@ -4184,14 +4183,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Disable buttons of the page and all its children on cut to avoid circular references
 						if ($blnCircularReference || !System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $id))
 						{
-							$operations->append(array('icon'=>Image::getHtml('pasteafter--disabled.svg')));
-							$operations->append(array('icon'=>Image::getHtml('pasteinto--disabled.svg')));
+							$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
+							$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteinto--disabled.svg')));
 						}
 						else
 						{
 							if ((!$this->rootPaste && \in_array($id, $this->root)) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1)))
 							{
-								$operations->append(array('icon'=>Image::getHtml('pasteafter--disabled.svg')));
+								$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
 							}
 							else
 							{
@@ -4200,12 +4199,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 									'title' => \sprintf($labelPasteAfter[1], $id),
 									'attributes' => 'data-action="contao--scroll-offset#store"',
 									'icon' => $imagePasteAfter,
+									'primary' => true,
 								));
 							}
 
 							if (!$this->canPasteClipboard($arrClipboard, array('pid' => $id, 'sorting' => 0)))
 							{
-								$operations->append(array('icon'=>Image::getHtml('pasteinto--disabled.svg')));
+								$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteinto--disabled.svg')));
 							}
 							else
 							{
@@ -4214,6 +4214,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 									'title' => \sprintf($labelPasteInto[1], $id),
 									'attributes' => 'data-action="contao--scroll-offset#store"',
 									'icon' => $imagePasteInto,
+									'primary' => true,
 								));
 							}
 						}
@@ -4227,7 +4228,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							if ($blnCircularReference || System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $id) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1)))
 							{
-								$operations->append(array('icon'=>Image::getHtml('pasteafter--disabled.svg')));
+								$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
 							}
 							else
 							{
@@ -4236,6 +4237,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 									'title' => \sprintf($labelPasteAfter[1], $id),
 									'attributes' => 'data-action="contao--scroll-offset#store"',
 									'icon' => $imagePasteAfter,
+									'primary' => true,
 								));
 							}
 						}
@@ -4245,7 +4247,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							if (!$this->canPasteClipboard($arrClipboard, array('pid' => $id, 'sorting' => 0)))
 							{
-								$operations->append(array('icon'=>Image::getHtml('pasteinto--disabled.svg')));
+								$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteinto--disabled.svg')));
 							}
 							else
 							{
@@ -4254,6 +4256,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 									'title' => \sprintf($labelPasteInto[1], $id),
 									'attributes' => 'data-action="contao--scroll-offset#store"',
 									'icon' => $imagePasteInto,
+									'primary' => true,
 								));
 							}
 						}
@@ -4750,7 +4753,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Prevent circular references
 						if ($blnClipboard && !System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $row[$i]['id']))
 						{
-							$operations->append(array('icon'=>Image::getHtml('pasteafter--disabled.svg')));
+							$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
 						}
 
 						// Copy/move multiple
@@ -4761,6 +4764,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 								'title' => \sprintf($labelPasteAfter[1], $row[$i]['id']),
 								'attributes' => 'data-action="contao--scroll-offset#store"',
 								'icon' => $imagePasteAfter,
+								'primary' => true,
 							));
 						}
 
@@ -4772,13 +4776,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 								'title' => \sprintf($labelPasteAfter[1], $row[$i]['id']),
 								'attributes' => 'data-action="contao--scroll-offset#store"',
 								'icon' => $imagePasteAfter,
+								'primary' => true,
 							));
 						}
 
 						// Drag handle
 						if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $row[$i])))
 						{
-							$operations->append(array('html'=>'<button type="button" class="drag-handle" title="' . StringUtil::specialchars(\sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button>'));
+							$operations->append(array('primary' => true, 'html'=>'<button type="button" class="drag-handle" title="' . StringUtil::specialchars(\sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button>'));
 						}
 					}
 

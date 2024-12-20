@@ -90,6 +90,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 				'prefetch'            => true,
 				'icon'                => 'edit.svg',
 				'attributes'          => 'data-contao--deeplink-target="primary"',
+				'primary'             => true,
 				'button_callback'     => array('tl_comments', 'editComment')
 			),
 			'delete' => array
@@ -103,6 +104,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			(
 				'href'                => 'act=toggle&amp;field=published',
 				'icon'                => 'visible.svg',
+				'primary'             => true,
 				'button_callback'     => array('tl_comments', 'toggleIcon')
 			),
 			'show'

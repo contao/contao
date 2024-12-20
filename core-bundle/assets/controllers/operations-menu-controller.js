@@ -9,6 +9,17 @@ export default class extends Controller {
     }
 
     connect () {
+        if (!this.hasMenuTarget) {
+            return;
+        }
+
+        this.menuTarget.addEventListener('contextmenu', e => e.stopPropagation());
+        document.addEventListener('mousedown', this.close);
+
+        if (!this.hasControllerTarget) {
+            return;
+        }
+
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,
             containerElement: this.element,
@@ -22,10 +33,6 @@ export default class extends Controller {
         this.$menu.dom.controller.addEventListener('accessibleMenuCollapse', () => {
             this.element.classList.remove('hover');
         });
-
-        this.menuTarget.addEventListener('contextmenu', e => e.stopPropagation());
-
-        document.addEventListener('mousedown', this.close);
     }
 
     disconnect () {
@@ -33,10 +40,15 @@ export default class extends Controller {
     }
 
     contextmenu (event) {
+        if (!this.hasMenuTarget) {
+            return;
+        }
+
         event.preventDefault();
 
         this.$contextmenu = this.menuTarget.clone();
         this.$contextmenu.classList.add('contextmenu');
+        this.$contextmenu.classList.add('operations-menu');
         this.$contextmenu.classList.add('show');
         this.setFixedPosition(this.$contextmenu, event)
 
@@ -48,7 +60,7 @@ export default class extends Controller {
     }
 
     close (event) {
-        if (!this.element.contains(event.target)) {
+        if (this.$menu && !this.element.contains(event.target)) {
             this.$menu.elements.controller.close();
         }
 
