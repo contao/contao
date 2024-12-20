@@ -19,5 +19,8 @@
         "build": "encore production --progress"
     },
     "private": true,
-    "packageManager": "npm@10.8.2"
+    "packageManager": "npm@10.8.2",
+    "dependencies": {
+        "accessible-menu": "^4.1.2"
+    }
 }

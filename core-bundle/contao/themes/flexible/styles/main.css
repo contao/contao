@@ -1516,7 +1516,15 @@ table.tl_listing {
 	background: var(--table-header);
 }
 
-.tl_right button, .tl_content_right button {
+.tl_right > nav > ul,
+.tl_right_nowrap > nav > ul,
+.tl_content_right > nav > ul {
+	display: flex;
+	justify-content: flex-end;
+	gap: 3px;
+}
+
+.tl_right button, .tl_right_nowrap button, .tl_content_right button {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -1527,6 +1535,57 @@ table.tl_listing {
 .tl_right img, .tl_content_right img, .tl_right_nowrap img,
 .tl_right button, .tl_content_right button, .tl_right_nowrap button {
 	margin-left: 1px;
+}
+
+.operations-menu-container {
+	position: relative;
+}
+
+.operations-menu {
+	display: none;
+}
+
+.operations-menu {
+	position: absolute;
+	right: 0;
+	top: 1.5em;
+	padding: 10px !important;
+	background: #fff !important;
+	border: 1px solid var(--border);
+	z-index: 10;
+	margin: 0;
+	list-style: none;
+	flex-direction: column;
+	gap: 5px;
+}
+
+.operations-menu.show {
+	display: flex;
+}
+
+.operations-menu.contextmenu {
+	right: auto;
+	top: auto;
+}
+
+.operations-menu li {
+	display: flex;
+	align-items: center;
+}
+
+.operations-menu a {
+	display: block;
+	white-space: nowrap;
+}
+
+.operations-menu a:after {
+	content: attr(title);
+	padding-left: 5px;
+}
+
+.operations-menu a[data-original-title]:after {
+	content: attr(data-original-title);
+	padding-left: 5px;
 }
 
 .cte_type {

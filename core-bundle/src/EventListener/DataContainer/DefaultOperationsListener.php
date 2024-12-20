@@ -106,6 +106,7 @@ class DefaultOperationsListener
                     'prefetch' => true,
                     'attributes' => 'data-contao--deeplink-target="primary"',
                     'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
+                    'primary' => true,
                     'showInHeader' => true,
                 ],
             ];
@@ -122,6 +123,7 @@ class DefaultOperationsListener
                         'prefetch' => true,
                         'attributes' => 'data-contao--deeplink-target="secondary"',
                         'button_callback' => $this->accessChildrenCallback($ctable, $table),
+                        'primary' => true,
                     ],
                 ];
             }
@@ -177,6 +179,7 @@ class DefaultOperationsListener
                 'icon' => 'visible.svg',
                 'showInHeader' => (bool) $ctable,
                 'button_callback' => $this->toggleCallback($table, $toggleField),
+                'primary' => true,
             ];
         }
 

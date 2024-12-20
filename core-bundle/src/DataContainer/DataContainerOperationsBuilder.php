@@ -225,6 +225,7 @@ class DataContainerOperationsBuilder implements \Stringable
             'label' => $config['label'],
             'attributes' => $config['attributes'],
             'icon' => Image::getHtml($config['icon'], $config['label']),
+            'primary' => (bool) ($config['primary'] ?? false),
         ];
     }
 
