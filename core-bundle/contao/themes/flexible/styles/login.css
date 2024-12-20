@@ -1,6 +1,14 @@
 @import 'fonts.css';
 @import 'basic.css';
 
+:root {
+	--icon-passkey: url("icons/passkey.svg");
+}
+
+html[data-color-scheme="dark"] {
+	--icon-passkey: url("icons/passkey--dark.svg");
+}
+
 /* Body */
 body {
 	background: var(--body-bg) url("icons/contao.svg") center 4.5em no-repeat;
@@ -37,27 +45,46 @@ body {
 }
 
 /* Login form */
-.tl_login_form, .passkey_login {
+.tl_login_form, .login-providers {
 	background: var(--content-bg);
 	border-radius: 2px;
 }
 
 .formbody {
-	padding: 35px 45px;
+	padding: 35px 45px 25px;
 }
 
-.passkey_login {
-	max-width: 320px;
-	margin: 25px auto 0;
-	padding: 15px;
+.login-providers {
+	padding: 0 45px 25px;
+}
+
+.login-providers .or {
+	display: grid;
+	grid-template-columns: 1fr auto 1fr;
+	gap: 1rem;
+	padding-bottom: 15px;
+}
+
+.login-providers .or::before, .login-providers .or::after {
+	content: "";
+	border-top: 1px solid var(--border);
+	align-self: center;
+}
+
+.login-providers ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.login-providers li {
+	margin-bottom: 10px;
 	text-align: center;
 }
 
-.passkey_login button {
-	border: 0;
+.login-providers .passkey button {
 	padding-left: 36px;
-	background-color: transparent !important;
-	background: url("icons/passkey.svg") 12px center no-repeat;
+	background: var(--form-button) var(--icon-passkey) 12px center no-repeat;
 }
 
 .passkey_login button:hover {
@@ -144,12 +171,12 @@ label[for="verify"] {
 
 /* Error messages */
 .tl_message {
-	max-width: 420px;
-	margin: 12px auto 0;
+	max-width: 600px;
+	margin: 30px auto 0;
 	text-align: center;
 }
 
-.tl_message.passkey_message:not(:has(.tl_error, .tl_info, .tl_confirm)) {
+.tl_message.passkey_message:empty {
 	display: none;
 }
 

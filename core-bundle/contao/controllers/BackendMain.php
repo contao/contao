@@ -248,7 +248,7 @@ class BackendMain extends Backend
 		$searchEnabled = $container->has('contao.search.backend') && $container->get('contao.search.backend')->isAvailable();
 
 		$data['menu'] = $twig->render('@Contao/backend/chrome/main_menu.html.twig');
-		$data['headerMenu'] = $twig->render('@Contao/backend/chrome/header_menu.html.twig', ['searchEnabled' => $searchEnabled]);
+		$data['headerMenu'] = $twig->render('@Contao/backend/chrome/header_menu.html.twig', array('searchEnabled' => $searchEnabled));
 
 		return $data;
 	}

@@ -369,6 +369,11 @@ services:
             - '@translator'
             - '@contao.csrf.token_manager'
 
+    contao.listener.menu.backend_login:
+        class: Contao\CoreBundle\EventListener\Menu\BackendLoginListener
+        arguments:
+            - '@translator'
+
     contao.listener.menu.backend_logout:
         class: Contao\CoreBundle\EventListener\Menu\BackendLogoutListener
         arguments:
