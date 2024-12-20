@@ -28,9 +28,8 @@ class DeleteDocumentsMessageHandler
 
     public function __invoke(DeleteDocumentsMessage $message): void
     {
-        // Cannot run in a web request. TODO: Make this feature generally available as
-        // WebWorker config for all kinds of messages
-        if (\PHP_SAPI !== 'cli') {
+        // Cannot run in a web request.
+        if ($message->wasDispatchedByWebworker()) {
             return;
         }
 

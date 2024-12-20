@@ -13,13 +13,17 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Messenger\Message\BackendSearch;
 
 use Contao\CoreBundle\Messenger\Message\LowPriorityMessageInterface;
+use Contao\CoreBundle\Messenger\Message\WebworkerAwareInterface;
+use Contao\CoreBundle\Messenger\Message\WebworkerAwareMessageTrait;
 use Contao\CoreBundle\Search\Backend\GroupedDocumentIds;
 
 /**
  * @experimental
  */
-class DeleteDocumentsMessage implements LowPriorityMessageInterface
+class DeleteDocumentsMessage implements LowPriorityMessageInterface, WebworkerAwareInterface
 {
+    use WebworkerAwareMessageTrait;
+
     /**
      * @var array<string, array<string>>
      */
