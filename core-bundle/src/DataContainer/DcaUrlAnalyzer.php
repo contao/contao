@@ -82,11 +82,13 @@ class DcaUrlAnalyzer
             $childTable = $trail[$index + 1][0] ?? null;
 
             if ($index === \count($trail) - 1) {
-                if (\in_array(
-                    Input::findGet('table', $request),
-                    $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? [],
-                    true,
-                )) {
+                if (
+                    \in_array(
+                        Input::findGet('table', $request),
+                        $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? [],
+                        true,
+                    )
+                ) {
                     $childTable = Input::findGet('table', $request);
                 }
                 if (Input::findGet('act', $request)) {
