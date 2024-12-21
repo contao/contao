@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DataContainer;
 
-use Contao\CoreBundle\Event\DataContainerRecordLabelEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
@@ -21,7 +20,6 @@ use Contao\DcaLoader;
 use Contao\Input;
 use Contao\System;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
@@ -36,7 +34,7 @@ class DcaUrlAnalyzer
         private readonly Security $securityHelper,
         private readonly RouterInterface $router,
         private readonly TranslatorBagInterface&TranslatorInterface $translator,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly RecordLabeler $recordLabeler,
     ) {
     }
 
@@ -86,7 +84,7 @@ class DcaUrlAnalyzer
 
             $links[] = [
                 'url' => $this->router->generate('contao_backend', $query),
-                'label' => $this->renderLabel($row, $table),
+                'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
             ];
         }
 
@@ -101,34 +99,6 @@ class DcaUrlAnalyzer
         ];
 
         return array_reverse($links);
-    }
-
-    private function renderLabel(array $row, string $table): string
-    {
-        $event = new DataContainerRecordLabelEvent("contao.db.$table.$row[id]", $row);
-        $this->eventDispatcher->dispatch($event);
-
-        if (null !== $event->getLabel()) {
-            return $event->getLabel();
-        }
-
-        // TODO: Move the fallback to a low priority event listener
-        System::loadLanguageFile($table);
-        (new DcaLoader($table))->load();
-
-        $dc = (new \ReflectionClass(DC_Table::class))->newInstanceWithoutConstructor();
-        $mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? DataContainer::MODE_SORTED;
-
-        if (DataContainer::MODE_PARENT === $mode && ($GLOBALS['TL_DCA'][$table]['list']['sorting']['child_record_callback'] ?? null)) {
-            $messageDomain = "contao_tl_$table";
-            $labelKey = $this->translator->getCatalogue()->has("$table.edit", $messageDomain) ? "$table.edit" : 'DCA.edit';
-
-            return $this->translator->trans($labelKey, [$row['id']], $messageDomain);
-        }
-
-        $label = trim(strip_tags($dc->generateRecordLabel($row, $table)));
-
-        return $label ?: $row['id'] ?? '';
     }
 
     private function getModule(string $do): array|null
