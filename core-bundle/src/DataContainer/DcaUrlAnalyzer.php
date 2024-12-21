@@ -52,22 +52,47 @@ class DcaUrlAnalyzer
     public function getTrail(Request|null $request = null): array
     {
         [$table, $id] = $this->getCurrentTableId($request);
+        $do = Input::findGet('do', $request);
 
         if (!$table || !$id) {
-            return [];
+            if (!$do) {
+                return [];
+            }
+
+            return [
+                [
+                    'url' => $this->router->generate('contao_backend', ['do' => $do]),
+                    'label' => $this->translator->trans("MOD.$do.0", [], 'contao_modules'),
+                ],
+            ];
         }
 
         $links = [];
-
-        $do = Input::findGet('do', $request);
         $trail = $this->findTrail($table, $id);
 
-        for ($i = \count($trail) - 1; $i >= 0; --$i) {
-            [$table, $row] = $trail[$i];
-            $childTable = $trail[$i + 1][0] ?? null;
+        foreach (array_reverse($trail, true) as $index => [$table, $row]) {
+            System::loadLanguageFile($table);
+            (new DcaLoader($table))->load();
 
-            $query = ['do' => $do];
-            $query['id'] = (int) $row['id'];
+            $query = [
+                'do' => $do,
+                'id' => (int) $row['id'],
+            ];
+
+            $childTable = $trail[$index + 1][0] ?? null;
+
+            if ($index === \count($trail) - 1) {
+                if (\in_array(
+                    Input::findGet('table', $request),
+                    $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? [],
+                    true,
+                )) {
+                    $childTable = Input::findGet('table', $request);
+                }
+                if (Input::findGet('act', $request)) {
+                    $query['act'] = Input::findGet('act', $request);
+                }
+            }
 
             if ($childTable) {
                 $query['table'] = $childTable;
@@ -76,21 +101,13 @@ class DcaUrlAnalyzer
                 }
             } else {
                 $query['table'] = $table;
-                $query['act'] = 'edit';
+                $query['act'] ??= 'edit';
             }
-
-            System::loadLanguageFile($table);
-            (new DcaLoader($table))->load();
 
             $links[] = [
                 'url' => $this->router->generate('contao_backend', $query),
                 'label' => $this->recordLabeler->getLabel("contao.db.$table.$row[id]", $row),
             ];
-        }
-
-        // Add table name
-        if (isset($GLOBALS['TL_LANG']['MOD'][$table])) {
-            $trail[] = ' <span>'.$GLOBALS['TL_LANG']['MOD'][$table].'</span>';
         }
 
         $links[] = [

@@ -443,17 +443,6 @@ abstract class Backend extends Controller
 						$this->Template->headline .= ' <span>' . Input::get('id') . '</span>';
 					}
 				}
-				elseif (isset($GLOBALS['TL_LANG'][$strTable][$act]))
-				{
-					if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
-					{
-						$this->Template->headline .= ' <span>' . \sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('id')) . '</span>';
-					}
-					else
-					{
-						$this->Template->headline .= ' <span>' . \sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('id')) . '</span>';
-					}
-				}
 			}
 			elseif (Input::get('pid'))
 			{
@@ -466,17 +455,6 @@ abstract class Backend extends Controller
 					else
 					{
 						$this->Template->headline .= ' <span>' . Input::get('pid') . '</span>';
-					}
-				}
-				elseif (isset($GLOBALS['TL_LANG'][$strTable][$act]))
-				{
-					if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
-					{
-						$this->Template->headline .= ' <span>' . \sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('pid')) . '</span>';
-					}
-					else
-					{
-						$this->Template->headline .= ' <span>' . \sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('pid')) . '</span>';
 					}
 				}
 			}
