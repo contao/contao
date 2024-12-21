@@ -21,7 +21,7 @@
                 duplicateItemsAllowed: false,
                 allowHTML: false,
                 removeItemButton: true,
-                searchEnabled: select.options.length > 7,
+                //searchEnabled: select.options.length > 7,
                 classNames: {
                     containerOuter: ['choices', ...Array.from(select.classList)],
                     flippedState: ''
