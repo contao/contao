@@ -182,7 +182,13 @@ class DcaUrlAnalyzer
         $mode = $this->findGet('mode');
 
         // For these actions the id parameter refers to the parent record
-        if (('paste' === $act && 'create' === $mode) || \in_array($act, [null, 'select', 'editAll', 'overrideAll', 'deleteAll'], true)) {
+        if (
+            $id
+            && (
+                ('paste' === $act && 'create' === $mode)
+                || \in_array($act, [null, 'select', 'editAll', 'overrideAll', 'deleteAll'], true)
+            )
+        ) {
             return [$this->findPtable($table, $id), $id];
         }
 
@@ -220,6 +226,10 @@ class DcaUrlAnalyzer
     private function findPtable(string $table, int|null $id): string|null
     {
         (new DcaLoader($table))->load();
+
+        if (DataContainer::MODE_TREE_EXTENDED === $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode']) {
+            return null;
+        }
 
         if ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null) {
             $act = $this->findGet('act');
