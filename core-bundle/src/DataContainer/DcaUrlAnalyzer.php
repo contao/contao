@@ -40,6 +40,9 @@ class DcaUrlAnalyzer
     ) {
     }
 
+    /**
+     * @return array{string|null, int|null}
+     */
     public function getCurrentTableId(Request|null $request = null): array
     {
         $this->request = $request ?? $this->requestStack->getCurrentRequest();
@@ -47,6 +50,9 @@ class DcaUrlAnalyzer
         return $this->findTableAndId();
     }
 
+    /**
+     * @return list<array{url: string, label: string}>
+     */
     public function getTrail(Request|null $request = null): array
     {
         [$table, $id] = $this->getCurrentTableId($request);
