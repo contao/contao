@@ -28,6 +28,8 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DcaUrlAnalyzer
 {
+    private Request $request;
+
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly RequestStack $requestStack,
@@ -40,19 +42,15 @@ class DcaUrlAnalyzer
 
     public function getCurrentTableId(Request|null $request = null): array
     {
-        $request ??= $this->requestStack->getCurrentRequest();
+        $this->request = $request ?? $this->requestStack->getCurrentRequest();
 
-        if (!$request) {
-            return [null, null];
-        }
-
-        return $this->findTableAndId($request);
+        return $this->findTableAndId();
     }
 
     public function getTrail(Request|null $request = null): array
     {
         [$table, $id] = $this->getCurrentTableId($request);
-        $do = Input::findGet('do', $request);
+        $do = $this->findGet('do');
 
         if (!$table || !$id) {
             if (!$do) {
@@ -71,7 +69,7 @@ class DcaUrlAnalyzer
         $trail = $this->findTrail($table, $id);
 
         foreach (array_reverse($trail, true) as $index => [$table, $row]) {
-            System::loadLanguageFile($table);
+            $this->framework->getAdapter(System::class)->loadLanguageFile($table);
             (new DcaLoader($table))->load();
 
             $query = [
@@ -84,15 +82,15 @@ class DcaUrlAnalyzer
             if ($index === \count($trail) - 1) {
                 if (
                     \in_array(
-                        Input::findGet('table', $request),
+                        $this->findGet('table'),
                         $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? [],
                         true,
                     )
                 ) {
-                    $childTable = Input::findGet('table', $request);
+                    $childTable = $this->findGet('table');
                 }
-                if (Input::findGet('act', $request)) {
-                    $query['act'] = Input::findGet('act', $request);
+                if ($this->findGet('act')) {
+                    $query['act'] = $this->findGet('act');
                 }
             }
 
@@ -120,6 +118,13 @@ class DcaUrlAnalyzer
         return array_reverse($links);
     }
 
+    private function findGet(string $key): string|null
+    {
+        $value = $this->framework->getAdapter(Input::class)->findGet($key, $this->request);
+
+        return \is_string($value) ? $value : null;
+    }
+
     private function getModule(string $do): array|null
     {
         $this->framework->initialize();
@@ -133,17 +138,23 @@ class DcaUrlAnalyzer
         return null;
     }
 
-    private function findTableAndId(Request $request): array
+    private function findTableAndId(): array
     {
-        $do = (string) Input::findGet('do', $request);
+        $do = (string) $this->findGet('do');
         $module = $this->getModule($do);
 
-        if (!$module || (($module['disablePermissionChecks'] ?? null) !== true && !$this->securityHelper->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $do))) {
+        if (
+            !$module
+            || (
+                ($module['disablePermissionChecks'] ?? null) !== true
+                && !$this->securityHelper->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $do)
+            )
+        ) {
             return [null, null];
         }
 
         $tables = (array) ($module['tables'] ?? []);
-        $table = (string) Input::findGet('table', $request) ?: $module['tables'][0] ?? null;
+        $table = (string) $this->findGet('table') ?: $module['tables'][0] ?? null;
 
         if (!\in_array($table, $tables, true)) {
             return [null, null];
@@ -155,25 +166,25 @@ class DcaUrlAnalyzer
             return [null, null];
         }
 
-        if (isset($module['callback']) || isset($module[(string) Input::findGet('key', $request)])) {
+        if (isset($module['callback']) || isset($module[(string) $this->findGet('key')])) {
             return [$table, null];
         }
 
-        $id = (int) Input::findGet('id', $request) ?: null;
-        $pid = (int) Input::findGet('pid', $request) ?: null;
-        $act = Input::findGet('act', $request);
-        $mode = Input::findGet('mode', $request);
+        $id = (int) $this->findGet('id') ?: null;
+        $pid = (int) $this->findGet('pid') ?: null;
+        $act = $this->findGet('act');
+        $mode = $this->findGet('mode');
 
         // For these actions the id parameter refers to the parent record
         if (('paste' === $act && 'create' === $mode) || \in_array($act, [null, 'select', 'editAll', 'overrideAll', 'deleteAll'], true)) {
-            return [$this->findPtable($table, $id, $request), $id];
+            return [$this->findPtable($table, $id), $id];
         }
 
         // For these actions the pid parameter refers to the insert position
         if (\in_array($act, ['create', 'cut', 'copy', 'cutAll', 'copyAll'], true)) {
             // Mode “paste into”
             if ('2' === $mode) {
-                return [$this->findPtable($table, $pid, $request), $pid];
+                return [$this->findPtable($table, $pid), $pid];
             }
 
             // Mode “paste after”
@@ -181,8 +192,7 @@ class DcaUrlAnalyzer
         }
 
         if ('paste' === $act) {
-            $dc = (new \ReflectionClass(DC_Table::class))->newInstanceWithoutConstructor();
-            $currentRecord = $dc->getCurrentRecord($id, $table);
+            $currentRecord = $id ? $this->getCurrentRecord($id, $table) : null;
 
             if ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null) {
                 $table = (string) ($currentRecord['ptable'] ?? null);
@@ -201,19 +211,22 @@ class DcaUrlAnalyzer
         return [$table, $id];
     }
 
-    private function findPtable(string $table, int|null $id, Request $request): string|null
+    private function findPtable(string $table, int|null $id): string|null
     {
         (new DcaLoader($table))->load();
 
         if ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null) {
-            $act = Input::findGet('act', $request);
-            $mode = Input::findGet('mode', $request);
+            $act = $this->findGet('act');
+            $mode = $this->findGet('mode');
 
             // For these actions the id parameter refers to the parent record (or the old
             // record for copy and cut), so they need to be excluded
-            if ($id && ('paste' !== $act || 'create' !== $mode) && !\in_array($act, [null, 'copy', 'cut', 'create', 'select', 'copyAll', 'cutAll', 'editAll', 'overrideAll', 'deleteAll'], true)) {
-                $dc = (new \ReflectionClass(DC_Table::class))->newInstanceWithoutConstructor();
-                $currentRecord = $dc->getCurrentRecord($id, $table);
+            if (
+                $id
+                && ('paste' !== $act || 'create' !== $mode)
+                && !\in_array($act, [null, 'copy', 'cut', 'create', 'select', 'copyAll', 'cutAll', 'editAll', 'overrideAll', 'deleteAll'], true)
+            ) {
+                $currentRecord = $this->getCurrentRecord($id, $table);
 
                 if (!empty($currentRecord['ptable'])) {
                     return $currentRecord['ptable'];
@@ -221,7 +234,7 @@ class DcaUrlAnalyzer
             }
 
             // Use the ptable query parameter if it points to itself (nested elements case)
-            if (Input::findGet('ptable', $request) === $table && \in_array($table, $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? [], true)) {
+            if ($this->findGet('ptable') === $table && \in_array($table, $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? [], true)) {
                 return $table;
             }
         }
@@ -231,8 +244,7 @@ class DcaUrlAnalyzer
 
     private function findTrail(string $table, int $id): array
     {
-        $dc = (new \ReflectionClass(DC_Table::class))->newInstanceWithoutConstructor();
-        $currentRecord = $dc->getCurrentRecord($id, $table);
+        $currentRecord = $this->getCurrentRecord($id, $table);
 
         if (!$currentRecord) {
             return [];
@@ -253,5 +265,13 @@ class DcaUrlAnalyzer
         }
 
         return [...$this->findTrail($ptable, $pid), [$table, $currentRecord]];
+    }
+
+    private function getCurrentRecord(int $id, string $table): array|null
+    {
+        return (new \ReflectionClass(DC_Table::class))
+            ->newInstanceWithoutConstructor()
+            ->getCurrentRecord($id, $table)
+        ;
     }
 }
