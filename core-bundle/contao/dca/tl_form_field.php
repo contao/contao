@@ -473,7 +473,7 @@ class tl_form_field extends Backend
 				else
 				{
 					$objFields = $db
-						->prepare("SELECT id, type FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_form_field']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($user->fields), '?')) . ")")
+						->prepare("SELECT id, type FROM tl_form_field WHERE id IN(" . implode(',', array_map('\intval', $session['CLIPBOARD']['tl_form_field']['id'])) . ") AND type IN(" . implode(',', array_fill(0, count($user->fields), '?')) . ") ORDER BY sorting")
 						->execute(...$user->fields);
 
 					$session['CLIPBOARD']['tl_form_field']['id'] = $objFields->fetchEach('id');

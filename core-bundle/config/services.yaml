@@ -186,8 +186,7 @@ services:
     contao.doctrine.backup.retention_policy:
         class: Contao\CoreBundle\Doctrine\Backup\RetentionPolicy
         arguments:
-            - ~
-            - ~
+            - 0
 
     contao.doctrine.backup_manager:
         class: Contao\CoreBundle\Doctrine\Backup\BackupManager
@@ -195,7 +194,7 @@ services:
             - '@database_connection'
             - '@contao.doctrine.backup.dumper'
             - '@contao.filesystem.virtual.backups'
-            - ~
+            - []
             - '@contao.doctrine.backup.retention_policy'
 
     contao.doctrine.dca_schema_provider:
@@ -516,7 +515,7 @@ services:
         arguments:
             - '@translator'
             - '@request_stack'
-            - ~
+            - []
             - '%contao.intl.countries%'
             - '%kernel.default_locale%'
 
@@ -526,8 +525,8 @@ services:
         arguments:
             - '@translator'
             - '@request_stack'
-            - ~
-            - ~
+            - []
+            - []
             - '%contao.intl.locales%'
             - '%contao.intl.enabled_locales%'
             - '%kernel.default_locale%'
@@ -650,6 +649,19 @@ services:
         class: Contao\CoreBundle\Util\ProcessUtil
         arguments:
             - '%contao.console_path%'
+
+    contao.rate_limit.member_password_factory:
+        class: Symfony\Component\RateLimiter\RateLimiterFactory
+        public: true
+        arguments:
+            - { id: contao.member_password_reset, policy: fixed_window, limit: 3, interval: 15 minutes }
+            - '@contao.rate_limit.member_password_storage'
+            - '@?lock_factory'
+
+    contao.rate_limit.member_password_storage:
+        class: Symfony\Component\RateLimiter\Storage\CacheStorage
+        arguments:
+            - '@cache.rate_limiter'
 
     contao.repository.cron_job:
         class: Contao\CoreBundle\Repository\CronJobRepository
@@ -1037,7 +1049,7 @@ services:
             - '@security.firewall.map'
             - '@security.token_storage'
             - '@security.authentication.trust_resolver'
-            - ~
+            - '@security.access.simple_role_voter'
             - '@database_connection'
 
     contao.security.two_factor.authenticator:
@@ -1253,8 +1265,7 @@ services:
         class: Contao\CoreBundle\Twig\Loader\TemplateLocator
         arguments:
             - '%kernel.project_dir%'
-            - '%kernel.bundles%'
-            - '%kernel.bundles_metadata%'
+            - '@contao.resource_finder'
             - '@contao.twig.loader.theme_namespace'
             - '@database_connection'
 
@@ -1305,6 +1316,7 @@ services:
     Contao\CoreBundle\Routing\ContentUrlGenerator: '@contao.routing.content_url_generator'
     Contao\CoreBundle\Routing\PageFinder: '@contao.routing.page_finder'
     Contao\CoreBundle\Routing\Page\PageRegistry: '@contao.routing.page_registry'
+    Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory: '@contao.routing.response_context_factory'
     Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor: '@contao.routing.response_context_accessor'
     Contao\CoreBundle\Routing\ScopeMatcher: '@contao.routing.scope_matcher'
     Contao\CoreBundle\Security\Authentication\Token\TokenChecker: '@contao.security.token_checker'

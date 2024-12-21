@@ -50,8 +50,13 @@ class DefaultOperationsListener
 
     private function getForTable(string $table): array
     {
-        $defaults = $this->getDefaults($table);
         $dca = $GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null;
+
+        if ([] === $dca) {
+            return [];
+        }
+
+        $defaults = $this->getDefaults($table);
 
         if (!\is_array($dca)) {
             return $defaults;
@@ -59,8 +64,7 @@ class DefaultOperationsListener
 
         $operations = [];
 
-        // If none of the defined operations are name-only, we append the operations to
-        // the defaults.
+        // If none of the defined operations are name-only, we prepend the default operations.
         if (!array_filter($dca, static fn ($v, $k) => isset($defaults[$k]) || (\is_string($v) && isset($defaults[$v])), ARRAY_FILTER_USE_BOTH)) {
             $operations = $defaults;
         }
@@ -71,7 +75,11 @@ class DefaultOperationsListener
                 continue;
             }
 
-            $operations[$k] = \is_array($v) ? $v : [$v];
+            if (!\is_array($v)) {
+                continue;
+            }
+
+            $operations[$k] = $v;
         }
 
         return $operations;
@@ -86,7 +94,7 @@ class DefaultOperationsListener
         $ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'][0] ?? null;
 
         $canEdit = !($GLOBALS['TL_DCA'][$table]['config']['notEditable'] ?? false);
-        $canCopy = !($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? false) && !($GLOBALS['TL_DCA'][$table]['config']['notCopyable'] ?? false);
+        $canCopy = !($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? false) && !($GLOBALS['TL_DCA'][$table]['config']['notCreatable'] ?? false) && !($GLOBALS['TL_DCA'][$table]['config']['notCopyable'] ?? false);
         $canSort = !($GLOBALS['TL_DCA'][$table]['config']['notSortable'] ?? false);
         $canDelete = !($GLOBALS['TL_DCA'][$table]['config']['notDeletable'] ?? false);
 

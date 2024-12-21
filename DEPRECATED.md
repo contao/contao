@@ -1,5 +1,10 @@
 # Deprecated features
 
+## `Controller::sendFileToBrowser()`
+
+Using `Controller::sendFileToBrowser()` has been deprecated in Contao 5.3 and will no longer work in Contao 6.
+Use the Symfony `BinaryFileResponse` instead.
+
 ## Base tag
 
 Relying on the `<base>` tag has been deprecated in Contao 5.0 and will no longer work in Contao 6. Use absolute paths

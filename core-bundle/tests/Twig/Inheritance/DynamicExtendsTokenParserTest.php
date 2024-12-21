@@ -169,10 +169,5 @@ class DynamicExtendsTokenParserTest extends TestCase
             "{% macro m() %}{% extends '@Foo/bar.html.twig' %}{% endmacro %}",
             'Cannot use "extends" in a macro.',
         ];
-
-        yield 'multiple extends' => [
-            "{% extends '@Foo/bar1.html.twig' %}{% extends '@Foo/bar2.html.twig' %}",
-            'Multiple extends tags are forbidden.',
-        ];
     }
 }

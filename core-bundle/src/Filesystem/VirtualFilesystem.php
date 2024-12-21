@@ -247,7 +247,7 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         return $this->mountManager->getMimeType($path);
     }
 
-    public function getExtraMetadata(Uuid|string $location, int $accessFlags = self::NONE): array
+    public function getExtraMetadata(Uuid|string $location, int $accessFlags = self::NONE): ExtraMetadata
     {
         $path = $this->resolve($location);
 
@@ -256,17 +256,22 @@ class VirtualFilesystem implements VirtualFilesystemInterface
         }
 
         if ($accessFlags & self::BYPASS_DBAFS) {
-            return [];
+            return new ExtraMetadata();
         }
 
         return $this->dbafsManager->getExtraMetadata($path);
     }
 
-    public function setExtraMetadata(Uuid|string $location, array $metadata): void
+    public function setExtraMetadata(Uuid|string $location, ExtraMetadata $metadata): void
     {
         $this->ensureNotReadonly();
 
         $this->dbafsManager->setExtraMetadata($this->resolve($location), $metadata);
+    }
+
+    public function resolveUuid(Uuid $uuid): string
+    {
+        return $this->dbafsManager->resolveUuid($uuid, $this->prefix);
     }
 
     public function generatePublicUri(Uuid|string $location, OptionsInterface|null $options = null): UriInterface|null

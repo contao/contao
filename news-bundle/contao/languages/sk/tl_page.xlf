@@ -1,0 +1,83 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_page.php" source-language="en" target-language="sk">
+    <body>
+      <trans-unit id="tl_page.newsArchives.0">
+        <source>News archives</source>
+        <target>Archívy noviniek</target>
+      </trans-unit>
+      <trans-unit id="tl_page.newsArchives.1">
+        <source>Here you can choose the news archives to be included in the feed.</source>
+        <target>Tu môžete zvoliť archív správ, ktorý sa zahrnie do kanála RSS.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFormat.0">
+        <source>Feed format</source>
+        <target>Formát kanálu RSS</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFormat.1">
+        <source>Please choose a feed format.</source>
+        <target>Vyberte prosím formát kanálu RSS.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedSource.0">
+        <source>Export settings</source>
+        <target>Nastavenia exportu</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedSource.1">
+        <source>Here you can choose what will be exported.</source>
+        <target>Tu môžete vybrať, čo bude exportované.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maxFeedItems.0">
+        <source>Maximum number of items</source>
+        <target>Maximálny počet položiek</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maxFeedItems.1">
+        <source>Here you can limit the number of feed items. Set to 0 to export all.</source>
+        <target>Tu môžete limitovať počet položiek kanála RSS. Zadajte 0 ak chcete exportovať všetky.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFeatured.0">
+        <source>Featured items</source>
+        <target>Len zvýraznené novinky</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFeatured.1">
+        <source>Here you can choose how featured items are handled.</source>
+        <target>Zobraziť v zozname len zvýraznené novinky.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedDescription.0">
+        <source>Feed description</source>
+        <target>Popis kanála RSS</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedDescription.1">
+        <source>Here you can enter a short description of the news feed.</source>
+        <target>Tu môžete zadať krátky popis kanála správ.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.archives_legend">
+        <source>News archives</source>
+        <target>Archívy noviniek</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feed_legend">
+        <source>Feed settings</source>
+        <target>Nastavenia kanálu</target>
+      </trans-unit>
+      <trans-unit id="tl_page.image_legend">
+        <source>Image settings</source>
+        <target>Nastavenia obrazku</target>
+      </trans-unit>
+      <trans-unit id="tl_page.source_teaser">
+        <source>News teasers</source>
+        <target>Ukážka novinky</target>
+      </trans-unit>
+      <trans-unit id="tl_page.source_text">
+        <source>Full stories</source>
+        <target>Celé príbehy</target>
+      </trans-unit>
+      <trans-unit id="tl_page.all_items">
+        <source>Show all items</source>
+      </trans-unit>
+      <trans-unit id="tl_page.featured">
+        <source>Show featured items only</source>
+      </trans-unit>
+      <trans-unit id="tl_page.unfeatured">
+        <source>Skip featured items</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

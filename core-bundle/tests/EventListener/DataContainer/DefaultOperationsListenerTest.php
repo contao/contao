@@ -383,6 +383,32 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertSame(['foo', 'delete'], array_keys($operations));
     }
 
+    public function testDoesNotAddDefaultsIfOneOperationHasADefaultKey(): void
+    {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
+        $GLOBALS['TL_DCA']['tl_foo'] = [
+            'list' => [
+                'sorting' => [
+                    'mode' => DataContainer::MODE_SORTED,
+                ],
+                'operations' => [
+                    'show' => false,
+                    'foo' => [
+                        'href' => 'foo=bar',
+                        'icon' => 'foo.svg',
+                    ],
+                ],
+            ],
+        ];
+
+        ($this->listener)('tl_foo');
+
+        $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+        $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
+
+        $this->assertSame(['foo'], array_keys($operations));
+    }
+
     public function testDoesNotAddEditOperationIfTableIsNotEditable(): void
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */

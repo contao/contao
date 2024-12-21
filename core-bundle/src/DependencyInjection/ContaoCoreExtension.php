@@ -468,8 +468,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         if ($container->hasParameter('security.role_hierarchy.roles') && \count($container->getParameter('security.role_hierarchy.roles')) > 0) {
             $tokenChecker->replaceArgument(4, new Reference('security.access.role_hierarchy_voter'));
-        } else {
-            $tokenChecker->replaceArgument(4, new Reference('security.access.simple_role_voter'));
         }
     }
 

@@ -60,12 +60,12 @@ class CalendarContentVoter extends AbstractDynamicPtableVoter
             && $this->accessDecisionManager->decide($token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], $calendarId);
     }
 
-    private function getCalendarId(int $eventId): int|null
+    private function getCalendarId(int $eventId): int
     {
         if (!isset($this->calendars[$eventId])) {
-            $this->calendars[$eventId] = $this->connection->fetchOne('SELECT pid FROM tl_calendar_events WHERE id=?', [$eventId]);
+            $this->calendars[$eventId] = (int) $this->connection->fetchOne('SELECT pid FROM tl_calendar_events WHERE id=?', [$eventId]);
         }
 
-        return $this->calendars[$eventId] ?: null;
+        return $this->calendars[$eventId];
     }
 }

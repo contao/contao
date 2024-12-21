@@ -522,8 +522,8 @@
         <target>すべてのウェブサイトのルートのページのモジュールを選択してください。</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Choose module for &quot;%s&quot;</source>
-        <target>&quot;%s&quot;用のモジュールを選択</target>
+        <source>Choose module for &quot;%s&quot; [%s]</source>
+        <target>&quot;%s&quot; [%s]にモジュールを選択</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
