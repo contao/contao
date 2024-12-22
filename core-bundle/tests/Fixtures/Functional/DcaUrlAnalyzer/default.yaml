@@ -28,7 +28,7 @@ tl_content:
       tstamp: 1234567890
       pid: 2
       ptable: tl_content
-      type: element_group
+      type: headline
 
 tl_theme:
     - id: 1
@@ -38,6 +38,7 @@ tl_theme:
 
 tl_layout:
     - id: 1
+      pid: 1
       tstamp: 1234567890
       name: Default
       rows: 1rw

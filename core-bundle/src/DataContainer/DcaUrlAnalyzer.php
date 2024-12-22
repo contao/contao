@@ -65,7 +65,7 @@ class DcaUrlAnalyzer
 
             return [
                 [
-                    'url' => $this->router->generate('contao_backend', ['do' => $do]),
+                    'url' => $this->router->generate('contao_backend', ['do' => $do, 'table' => $table]),
                     'label' => $this->translator->trans("MOD.$do.0", [], 'contao_modules'),
                 ],
             ];

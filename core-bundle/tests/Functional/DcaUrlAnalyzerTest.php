@@ -36,15 +36,11 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
      */
     public function testGetCurrentTableId(string $url, array $expected): void
     {
-        $_SERVER['REQUEST_URI'] = "/contao?$url";
-        $_SERVER['HTTP_HOST'] = 'example.com';
-        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en';
-        $_SERVER['HTTP_ACCEPT'] = 'text/html';
-
-        $client = $this->createClient([], $_SERVER);
-        $container = $client->getContainer();
+        $container = self::createClient()->getContainer();
         System::setContainer($container);
+
         $container->get('request_stack')->push($request = Request::create("https://example.com/contao?$url"));
+
         $container->set(
             'security.authorization_checker',
             new class() implements AuthorizationCheckerInterface {
@@ -56,6 +52,11 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         );
 
         $this->loadFixtureFile('default');
+
+        // TODO: fix DCA state by making reloadable DCAs possible
+        if ($GLOBALS['TL_DCA']['tl_content'] ?? null) {
+            $GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_article';
+        }
 
         $this->assertSame($expected, $container->get('contao.data_container.dca_url_analyzer')->getCurrentTableId());
     }
@@ -84,7 +85,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
 
         yield [
             'do=article&table=tl_content&id=1',
-            [null, 1], // TODO: fix DCA state ['tl_article', 1]
+            ['tl_article', 1],
         ];
 
         yield [
@@ -114,7 +115,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
 
         yield [
             'do=article&id=1&table=tl_content&act=select',
-            [null, 1], // TODO: fix DCA state ['tl_article', 1]
+            ['tl_article', 1],
         ];
 
         yield [
@@ -124,7 +125,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
 
         yield [
             'do=article&id=1&table=tl_content&act=editAll',
-            [null, 1], // TODO: fix DCA state ['tl_article', 1]
+            ['tl_article', 1],
         ];
 
         yield [
@@ -165,6 +166,150 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         yield [
             'do=themes&id=123&table=tl_image_size_item&act=edit',
             ['tl_image_size_item', 123],
+        ];
+    }
+
+    /**
+     * @dataProvider getTrail
+     */
+    public function testGetTrail(string $url, array $expected): void
+    {
+        $container = self::createClient()->getContainer();
+        System::setContainer($container);
+
+        $container->get('request_stack')->push($request = Request::create("https://example.com/contao?$url"));
+
+        $container->set(
+            'security.authorization_checker',
+            new class() implements AuthorizationCheckerInterface {
+                public function isGranted(mixed $attribute, mixed $subject = null): bool
+                {
+                    return true;
+                }
+            },
+        );
+
+        $this->loadFixtureFile('default');
+
+        // TODO: fix DCA state by making reloadable DCAs possible
+        if ($GLOBALS['TL_DCA']['tl_content'] ?? null) {
+            $GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_article';
+        }
+
+        $this->assertSame($expected, $container->get('contao.data_container.dca_url_analyzer')->getTrail());
+    }
+
+    public static function getTrail(): iterable
+    {
+        yield [
+            'do=article&act=edit&id=1',
+            [
+                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
+                ['url' => '/contao?do=article&id=1&act=edit&table=tl_article', 'label' => 'Article 1 [Main column]'],
+            ],
+        ];
+
+        yield [
+            'do=article',
+            [
+                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
+            ],
+        ];
+
+        yield [
+            'do=article&act=select',
+            [
+                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
+            ],
+        ];
+
+        yield [
+            'do=article&act=show&id=1&popup=1',
+            [
+                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
+                ['url' => '/contao?do=article&id=1&act=show&table=tl_article', 'label' => 'Article 1 [Main column]'],
+            ],
+        ];
+
+        yield [
+            'do=article&table=tl_content&id=1',
+            [
+                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
+                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1 [Main column]'],
+            ],
+        ];
+
+        yield [
+            'do=article&id=1&table=tl_content&act=edit',
+            [
+                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
+                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1 [Main column]'],
+                ['url' => '/contao?do=article&id=1&act=edit&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
+            ],
+        ];
+
+        yield [
+            'do=article&id=1&table=tl_content&act=show&popup=1',
+            [
+                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
+                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1 [Main column]'],
+                ['url' => '/contao?do=article&id=1&act=show&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
+            ],
+        ];
+
+        yield [
+            'do=article&id=1&table=tl_content&ptable=tl_content',
+            [
+                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
+                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1 [Main column]'],
+                ['url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
+            ],
+        ];
+
+        yield [
+            'do=article&id=2&ptable=tl_content&table=tl_content&act=edit',
+            [
+                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
+                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1 [Main column]'],
+                ['url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
+                ['url' => '/contao?do=article&id=2&act=edit&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
+            ],
+        ];
+
+        yield [
+            'do=article&id=3&ptable=tl_content&table=tl_content&act=edit',
+            [
+                ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
+                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1 [Main column]'],
+                ['url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
+                ['url' => '/contao?do=article&id=2&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
+                ['url' => '/contao?do=article&id=3&act=edit&table=tl_content&ptable=tl_content', 'label' => 'Headline'],
+            ],
+        ];
+
+        yield [
+            'do=themes&table=tl_image_size&id=1',
+            [
+                ['url' => '/contao?do=themes&table=tl_theme', 'label' => 'Themes'],
+                ['url' => '/contao?do=themes&id=1&table=tl_image_size', 'label' => 'Default'],
+            ],
+        ];
+
+        yield [
+            'do=themes&id=1&table=tl_layout',
+            [
+                ['url' => '/contao?do=themes&table=tl_theme', 'label' => 'Themes'],
+                ['url' => '/contao?do=themes&id=1&table=tl_layout', 'label' => 'Default'],
+            ],
+        ];
+
+        yield [
+            'do=themes&id=1&table=tl_layout&act=edit',
+            [
+                ['url' => '/contao?do=themes&table=tl_theme', 'label' => 'Themes'],
+                ['url' => '/contao?do=themes&id=1&table=tl_layout', 'label' => 'Default'],
+                ['url' => '/contao?do=themes&id=1&act=edit&table=tl_layout', 'label' => 'Edit page layout ID 1'],
+            ],
         ];
     }
 
