@@ -2246,22 +2246,19 @@
       <trans-unit id="MSC.searchHitEdit">
         <source>Edit %s</source>
       </trans-unit>
-      <trans-unit id="MSC.choicesLoading">
-        <source>Loading...</source>
-      </trans-unit>
-      <trans-unit id="MSC.choicesNoResults">
+      <trans-unit id="MSC.noResults">
         <source>No results found</source>
       </trans-unit>
-      <trans-unit id="MSC.choicesNoOptions">
+      <trans-unit id="MSC.noOptions">
         <source>No options to choose from</source>
       </trans-unit>
-      <trans-unit id="MSC.choicesItemSelect">
+      <trans-unit id="MSC.pressToSelect">
         <source>Press to select</source>
       </trans-unit>
-      <trans-unit id="MSC.choicesUniqueItem">
+      <trans-unit id="MSC.onlyUnique">
         <source>Only unique values can be added</source>
       </trans-unit>
-      <trans-unit id="MSC.choicesCustomAddItem">
+      <trans-unit id="MSC.onlyConditions">
         <source>Only values matching specific conditions can be added</source>
       </trans-unit>
       <trans-unit id="UNITS.0">

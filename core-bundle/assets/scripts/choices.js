@@ -9,8 +9,6 @@
     let choicesList = [];
 
     function initChoices(node) {
-        const translations = JSON.parse(document.documentElement.getAttribute('data-choices-translations')) ?? {};
-
         node.querySelectorAll('select.tl_chosen').forEach(function (select) {
             if (choicesList.includes(select)) {
                 return;
@@ -18,7 +16,7 @@
 
             choicesList.push(select);
 
-            new Choices(select, Object.assign({
+            new Choices(select, {
                 shouldSort: false,
                 duplicateItemsAllowed: false,
                 allowHTML: false,
@@ -33,8 +31,14 @@
                    if (choices && select.dataset.placeholder) {
                        choices.dataset.placeholder = select.dataset.placeholder;
                    }
-                }
-            }, translations))
+                },
+                loadingText: Contao.lang.loading,
+                noResultsText: Contao.lang.noResults,
+                noChoicesText: Contao.lang.noChoices,
+                itemSelectText: Contao.lang.pressToSelect,
+                uniqueItemText: Contao.lang.onlyUnique,
+                customAddItemText: Contao.lang.onlyConditions,
+            })
         });
     }
 
