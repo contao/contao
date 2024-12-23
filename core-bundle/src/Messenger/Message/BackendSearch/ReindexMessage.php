@@ -13,16 +13,16 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Messenger\Message\BackendSearch;
 
 use Contao\CoreBundle\Messenger\Message\LowPriorityMessageInterface;
-use Contao\CoreBundle\Messenger\Message\WebworkerAwareInterface;
-use Contao\CoreBundle\Messenger\Message\WebworkerAwareMessageTrait;
+use Contao\CoreBundle\Messenger\Message\ScopeAwareMessageInterface;
+use Contao\CoreBundle\Messenger\Message\ScopeAwareMessageTrait;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
 
 /**
  * @experimental
  */
-class ReindexMessage implements LowPriorityMessageInterface, WebworkerAwareInterface
+class ReindexMessage implements LowPriorityMessageInterface, ScopeAwareMessageInterface
 {
-    use WebworkerAwareMessageTrait;
+    use ScopeAwareMessageTrait;
 
     private array $asArray = [];
 

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Messenger\MessageHandler\BackendSearch;
 
 use Contao\CoreBundle\Messenger\Message\BackendSearch\ReindexMessage;
+use Contao\CoreBundle\Messenger\Message\ScopeAwareMessageInterface;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
@@ -29,7 +30,7 @@ class ReindexMessageHandler
     public function __invoke(ReindexMessage $message): void
     {
         // Cannot run in a web request.
-        if ($message->wasDispatchedByWebworker()) {
+        if (ScopeAwareMessageInterface::SCOPE_CLI !== $message->getScope()) {
             return;
         }
 

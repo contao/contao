@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Messenger;
 
-use Contao\CoreBundle\Messenger\Message\WebworkerAwareInterface;
+use Contao\CoreBundle\Messenger\Message\ScopeAwareMessageInterface;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -109,8 +109,8 @@ class WebWorker
     {
         $message = $event->getEnvelope()->getMessage();
 
-        if ($message instanceof WebworkerAwareInterface) {
-            $message->setWasDispatchedByWebworker($this->webWorkerRunning);
+        if ($message instanceof ScopeAwareMessageInterface) {
+            $message->setScope($this->webWorkerRunning ? ScopeAwareMessageInterface::SCOPE_WEB : ScopeAwareMessageInterface::SCOPE_CLI);
         }
     }
 

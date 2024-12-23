@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Messenger;
 
 use Contao\CoreBundle\Messenger\Message\BackendSearch\ReindexMessage;
+use Contao\CoreBundle\Messenger\Message\ScopeAwareMessageInterface;
 use Contao\CoreBundle\Messenger\WebWorker;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Tests\TestCase;
@@ -136,7 +137,7 @@ class WebWorkerTest extends TestCase
 
         $webWorker->onWorkerMessageReceived($event);
 
-        $this->assertFalse($message->wasDispatchedByWebworker());
+        $this->assertSame(ScopeAwareMessageInterface::SCOPE_CLI, $message->getScope());
 
         // Use reflection to simulate the web worker running. Testing it without
         // reflection would require setting up the entire message handler with all the
@@ -148,7 +149,7 @@ class WebWorkerTest extends TestCase
 
         $webWorker->onWorkerMessageReceived($event);
 
-        $this->assertTrue($message->wasDispatchedByWebworker());
+        $this->assertSame(ScopeAwareMessageInterface::SCOPE_WEB, $message->getScope());
     }
 
     private function triggerWebWorker(): void
