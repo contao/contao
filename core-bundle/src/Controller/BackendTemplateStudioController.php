@@ -477,13 +477,15 @@ class BackendTemplateStudioController extends AbstractBackendController
     {
         // Filter out themes that either have no valid template path set or where the
         // template path is outside the template directory and remove duplicates.
-        $themes = $this->connection->fetchAllKeyValue(
-            "SELECT SUBSTR(templates, 11), name
-                    FROM tl_theme
-                    WHERE templates != '' AND templates != 'templates' AND templates NOT LIKE '%..%'
-                    GROUP BY templates, name
-                    ORDER BY name",
-        );
+        $themes = $this->connection->fetchAllKeyValue("
+            SELECT SUBSTR(templates, 11), name
+            FROM tl_theme
+            WHERE templates != ''
+                AND templates != 'templates'
+                AND templates NOT LIKE '%..%'
+            GROUP BY templates, name
+            ORDER BY name
+        ");
 
         return array_combine(
             array_map(

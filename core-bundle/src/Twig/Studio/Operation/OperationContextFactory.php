@@ -17,11 +17,6 @@ class OperationContextFactory
 
     public function create(string $identifier, string $extension, string|null $themeSlug): OperationContext
     {
-        return new OperationContext(
-            $this->themeNamespace,
-            $identifier,
-            $extension,
-            $themeSlug,
-        );
+        return new OperationContext($this->themeNamespace, $identifier, $extension, $themeSlug);
     }
 }

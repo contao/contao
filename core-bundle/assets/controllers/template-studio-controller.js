@@ -23,12 +23,12 @@ export default class extends Controller {
 
         this.element.addEventListener('turbo:submit-start', event => {
             // Add the currently open editor tabs to the request when selecting a theme
-            if(event.target === this.themeSelectorTarget) {
+            if (event.target === this.themeSelectorTarget) {
                 this._addOpenEditorTabsToRequest(event);
             }
 
             // Include the active editor's content when the save operation was triggered
-            if(event.detail.formSubmission.submitter?.dataset?.operation === 'save') {
+            if (event.detail.formSubmission.submitter?.dataset?.operation === 'save') {
                 this._addEditorContentToRequest(event);
                 this._getActiveMutableEditor()?.focus();
             }
