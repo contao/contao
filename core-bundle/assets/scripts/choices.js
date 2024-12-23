@@ -9,6 +9,8 @@
     let choicesList = [];
 
     function initChoices(node) {
+        const translations = JSON.parse(document.documentElement.getAttribute('data-choices-translations')) ?? {};
+
         node.querySelectorAll('select.tl_chosen').forEach(function (select) {
             if (choicesList.includes(select)) {
                 return;
@@ -16,7 +18,7 @@
 
             choicesList.push(select);
 
-            new Choices(select, {
+            new Choices(select, Object.assign({
                 shouldSort: false,
                 duplicateItemsAllowed: false,
                 allowHTML: false,
@@ -32,7 +34,7 @@
                        choices.dataset.placeholder = select.dataset.placeholder;
                    }
                 }
-            })
+            }, translations))
         });
     }
 

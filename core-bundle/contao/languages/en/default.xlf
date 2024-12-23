@@ -2246,6 +2246,24 @@
       <trans-unit id="MSC.searchHitEdit">
         <source>Edit %s</source>
       </trans-unit>
+      <trans-unit id="MSC.choicesLoading">
+        <source>Loading...</source>
+      </trans-unit>
+      <trans-unit id="MSC.choicesNoResults">
+        <source>No results found</source>
+      </trans-unit>
+      <trans-unit id="MSC.choicesNoOptions">
+        <source>No options to choose from</source>
+      </trans-unit>
+      <trans-unit id="MSC.choicesItemSelect">
+        <source>Press to select</source>
+      </trans-unit>
+      <trans-unit id="MSC.choicesUniqueItem">
+        <source>Only unique values can be added</source>
+      </trans-unit>
+      <trans-unit id="MSC.choicesCustomAddItem">
+        <source>Only values matching specific conditions can be added</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
       </trans-unit>
