@@ -128,6 +128,12 @@
       <trans-unit id="tl_form_field.placeholder.1">
         <source>Show this text as long as the field is empty (requires HTML5).</source>
       </trans-unit>
+      <trans-unit id="tl_form_field.help.0">
+        <source>Help text</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.help.1">
+        <source>Optional help text associated with the field.</source>
+      </trans-unit>
       <trans-unit id="tl_form_field.customRgxp.0">
         <source>Custom regular expression</source>
       </trans-unit>

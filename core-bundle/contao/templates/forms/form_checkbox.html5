@@ -1,7 +1,7 @@
 <?php $this->extend('form_row'); ?>
 
 <?php $this->block('field'); ?>
-  <fieldset id="ctrl_<?= $this->id ?>" class="checkbox_container<?php if ($this->class): ?> <?= $this->class ?><?php endif; ?>">
+  <fieldset id="ctrl_<?= $this->id ?>" class="checkbox_container<?php if ($this->class): ?> <?= $this->class ?><?php endif; ?>"<?php if ($this->help): ?> aria-describedby="help_<?= $this->id ?>"<?php endif; ?>>
 
     <?php if ($this->label): ?>
       <legend>
@@ -33,6 +33,10 @@
         </fieldset>
       <?php endif; ?>
     <?php endforeach; ?>
+
+    <?php if ($this->help): ?>
+      <span class="help" id="help_<?= $this->id ?>"><?= $this->help ?></span>
+    <?php endif; ?>
 
   </fieldset>
 <?php $this->endblock(); ?>
