@@ -30,6 +30,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
+use Twig\Error\Error;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 /**
  * @experimental
@@ -151,7 +155,7 @@ class BackendTemplateStudioController extends AbstractBackendController
         }
 
         $themeSlug = $this->getThemeContext();
-        $chains = $this->loader->getInheritanceChains($themeSlug)[$identifier];
+        $logicalNamesChain = array_values($this->loader->getInheritanceChains($themeSlug)[$identifier]);
         $operationContext = $this->getOperationContext($identifier);
 
         $operationNames = array_keys(
@@ -163,23 +167,57 @@ class BackendTemplateStudioController extends AbstractBackendController
 
         $canEdit = \in_array('save', $operationNames, true);
 
+        $templates = [];
+        $shadowed = false;
+        $numTemplates = \count($logicalNamesChain);
+
+        for ($i = 0; $i < $numTemplates; ++$i) {
+            $logicalName = $logicalNamesChain[$i];
+            $source = $this->loader->getSourceContext($logicalName);
+            $templateInformation = $this->inspector->inspectTemplate($logicalName);
+            $isComponent = $templateInformation->isComponent();
+
+            $template = [
+                ...$this->getTemplateNameInformation($logicalName),
+                'path' => $source->getPath(),
+                'code' => $source->getCode(),
+                'is_origin' => $i === $numTemplates - 1,
+                'is_component' => $isComponent,
+                'relation' => [
+                    'shadowed' => $shadowed,
+                    'warning' => false,
+                    'not_analyzable' => false,
+                ],
+                'annotations' => ($canEdit && $i === 0) ? $this->getAnnotations(
+                    $logicalName, $templateInformation->getError()
+                ) : [],
+            ];
+
+            // Analyze relation to see if the templates breaks the hierarchy
+            if (null !==($previous = $logicalNamesChain[$i + 1] ?? null)) {
+                if($templateInformation->hasValidInformation()) {
+                    $breaksHierarchy = static fn(): bool => match($isComponent) {
+                        true => !$templateInformation->isUsing($previous),
+                        false => $templateInformation->getExtends() !== $previous,
+                    };
+
+                    if($breaksHierarchy()) {
+                        $template['relation']['warning'] = true;
+                        $shadowed = true;
+                    }
+                } else {
+                    $template['relation']['not_analyzable'] = true;
+                }
+            }
+
+            $templates[] = $template;
+        }
+
         return $this->render('@Contao/backend/template_studio/editor/add_editor_tab.stream.html.twig', [
             'identifier' => $identifier,
-            'templates' => array_map(
-                function (string $logicalName): array {
-                    $source = $this->loader->getSourceContext($logicalName);
-
-                    return [
-                        ...$this->getTemplateNameInformation($logicalName),
-                        'path' => $source->getPath(),
-                        'code' => $source->getCode(),
-                    ];
-                },
-                $chains,
-            ),
+            'templates' => $templates,
             'operations' => $operationNames,
             'can_edit' => $canEdit,
-            'autocomplete' => $canEdit ? $this->autocomplete->getCompletions($identifier) : [],
         ]);
     }
 
@@ -292,16 +330,16 @@ class BackendTemplateStudioController extends AbstractBackendController
     }
 
     /**
-     * Stream data for code autocompletion for the given template.
+     * Stream data for code annotations (such as autocompletion data) for the given template.
      */
     #[Route(
-        '/%contao.backend.route_prefix%/template-studio-autocomplete-data',
-        name: '_contao_template_studio_autocomplete_data.stream',
+        '/%contao.backend.route_prefix%/template-studio-annotations-data',
+        name: '_contao_template_studio_annotations_data.stream',
         defaults: ['_scope' => 'backend'],
         methods: ['GET'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
-    public function autocompleteData(#[MapQueryParameter] string $identifier): Response
+    public function annotationsData(#[MapQueryParameter] string $identifier): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
@@ -312,9 +350,12 @@ class BackendTemplateStudioController extends AbstractBackendController
             );
         }
 
-        return $this->render('@Contao/backend/template_studio/editor/autocomplete.stream.html.twig', [
+        $logicalName = $this->loader->getFirst($identifier);
+        $error =  $this->inspector->inspectTemplate($logicalName)->getError();
+
+        return $this->render('@Contao/backend/template_studio/editor/annotations.stream.html.twig', [
             'identifier' => $identifier,
-            'autocomplete' => $this->autocomplete->getCompletions($identifier),
+            'annotations' => $this->getAnnotations($logicalName, $error),
         ]);
     }
 
@@ -426,6 +467,39 @@ class BackendTemplateStudioController extends AbstractBackendController
             'identifier' => ContaoTwigUtil::getIdentifier($shortName) ?: '?',
             'extension' => ContaoTwigUtil::getExtension($shortName) ?: '?',
         ];
+    }
+
+    private function getAnnotations(string $logicalName, Error|null $error): array
+    {
+        $data = [
+            'autocomplete' => $this->autocomplete->getCompletions($logicalName),
+        ];
+
+        $getRootError = static function (\Throwable $e) use (&$getRootError): \Throwable {
+            return (null === ($previous = $e->getPrevious())) ? $e : $getRootError($previous);
+        };
+
+        if ($error instanceof SyntaxError) {
+            $rootError = $getRootError($error);
+
+            $data['error'] = [
+                'line' => $rootError instanceof SyntaxError ? $rootError->getLine() : 1,
+                'message' => "Syntax Error\n\n{$rootError->getMessage()}",
+            ];
+        } elseif ($error instanceof LoaderError) {
+            $data['error'] = [
+                'line' => 1,
+                'message' => "Loader Error\n\n{$error->getMessage()}",
+            ];
+        } elseif ($error instanceof RuntimeError) {
+            $data['error'] = [
+                'type' => 'warning',
+                'line' => $error->getLine(),
+                'message' => "Runtime Error\n\n{$error->getMessage()}",
+            ];
+        }
+
+        return $data;
     }
 
     private function isAllowedIdentifier(string $identifier): bool

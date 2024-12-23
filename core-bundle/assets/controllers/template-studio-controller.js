@@ -9,7 +9,7 @@ export default class extends Controller {
         blockInfoUrl: String,
     };
 
-    static targets = ['themeSelector', 'tabs', 'editor', 'editorAutocomplete', 'dialog'];
+    static targets = ['themeSelector', 'tabs', 'editor', 'editorAnnotations', 'dialog'];
 
     connect() {
         // Subscribe to events dispatched by the editors
@@ -48,10 +48,10 @@ export default class extends Controller {
         this.editors.delete(el);
     }
 
-    editorAutocompleteTargetConnected(el) {
+    editorAnnotationsTargetConnected(el) {
         this.editors
             .get(el.closest('*[data-contao--template-studio-target="editor"]'))
-            ?.setAutoCompletionData(JSON.parse(el.innerText))
+            ?.setAnnotationsData(JSON.parse(el.innerText))
         ;
     }
 

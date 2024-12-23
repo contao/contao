@@ -92,6 +92,15 @@
             <trans-unit id="dialog.rename_variant">
                 <source>Please define a new unique name for the variant template %s.</source>
             </trans-unit>
+            <trans-unit id="editor_tab.relation.not_analyzable">
+                <source>The template's relation cannot be analyzed because it contains errors.</source>
+            </trans-unit>
+            <trans-unit id="editor_tab.relation.no_extend_warning">
+                <source>This template overwrites all previously defined content, because it does not extend from %previous%.</source>
+            </trans-unit>
+            <trans-unit id="editor_tab.relation.no_use_warning">
+                <source>This template ignores all previously defined content, because it does not use %previous%.</source>
+            </trans-unit>
             <trans-unit id="info.block.title">
                 <source>Hierarchy of block %block%</source>
             </trans-unit>

@@ -42,7 +42,6 @@ class Autocomplete
     public function __construct(
         private readonly Inspector $inspector,
         FinderFactory $finderFactory,
-        private readonly ContaoFilesystemLoader $loader,
         private readonly Environment $twig,
     ) {
         $this->components = $finderFactory
@@ -87,10 +86,8 @@ class Autocomplete
     /**
      * @return list<array<string, mixed>>
      */
-    public function getCompletions(string $identifier): array
+    public function getCompletions(string $logicalName): array
     {
-        $logicalName = $this->loader->getFirst($identifier);
-
         try {
             $templateInformation = $this->inspector->inspectTemplate($logicalName);
         } catch (InspectionException) {
@@ -100,7 +97,7 @@ class Autocomplete
         $completions = [
             $this->getCompletionForExtendsTag(
                 $templateInformation,
-                $identifier,
+                ContaoTwigUtil::getIdentifier($logicalName),
                 ContaoTwigUtil::getExtension($logicalName),
             ),
             ...$this->getCompletionsForUseTags($templateInformation),

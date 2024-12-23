@@ -46,8 +46,19 @@ class Inspector
             $name = $this->filesystemLoader->getFirst($name);
         }
 
-        $blockNames = $this->loadTemplate($name)->getBlockNames();
         $source = $this->twig->getLoader()->getSourceContext($name);
+        $error = null;
+
+        try {
+            // Request blocks to trigger loading all parent templates
+            $blockNames = $this->twig->load($name)->getBlockNames();
+        } catch (LoaderError|SyntaxError $e) {
+            // In case of a syntax or loader error we cannot inspect the template
+            return new TemplateInformation($source, error: $e);
+        } catch (RuntimeError $e) {
+            $error = $e;
+            $blockNames = [];
+        }
 
         $data = $this->getData($name);
 
@@ -63,7 +74,7 @@ class Inspector
         sort($blockNames);
         sort($slots);
 
-        return new TemplateInformation($source, $blockNames, $slots, $parent, $uses);
+        return new TemplateInformation($source, $blockNames, $slots, $parent, $uses, $error);
     }
 
     /**
@@ -151,19 +162,12 @@ class Inspector
         }
     }
 
-    private function loadTemplate(string $name): TemplateWrapper
-    {
-        try {
-            return $this->twig->load($name);
-        } catch (LoaderError|RuntimeError|SyntaxError $e) {
-            throw new InspectionException($name, $e);
-        }
-    }
-
     private function getData(string $templateName): array
     {
         // Make sure the template was compiled
-        $this->twig->load($templateName);
+        try {
+            $this->twig->load($templateName);
+        } catch (LoaderError|RuntimeError|SyntaxError) {}
 
         $cache = $this->cachePool->getItem(self::CACHE_KEY)->get();
 
