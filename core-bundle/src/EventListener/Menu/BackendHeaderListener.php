@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\EventListener\Menu;
 
 use Contao\Backend;
 use Contao\BackendUser;
-use Contao\CoreBundle\Controller\BackendTemplateStudioController;
 use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\StringUtil;
@@ -30,7 +29,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  * @internal
  */
 #[AsEventListener(priority: 10)]
-class BackendMenuListener
+class BackendHeaderListener
 {
     public function __construct(
         private readonly Security $security,
@@ -38,7 +37,6 @@ class BackendMenuListener
         private readonly RequestStack $requestStack,
         private readonly TranslatorInterface $translator,
         private readonly ContaoFramework $framework,
-        private readonly bool $templateStudioEnabled,
     ) {
     }
 
@@ -52,77 +50,10 @@ class BackendMenuListener
 
         $name = $event->getTree()->getName();
 
-        if ('mainMenu' === $name) {
-            $this->buildMainMenu($event, $user);
-        } elseif ('headerMenu' === $name) {
-            $this->buildHeaderMenu($event, $user);
+        if ('headerMenu' !== $name) {
+            return;
         }
-    }
 
-    private function buildMainMenu(MenuEvent $event, BackendUser $user): void
-    {
-        $factory = $event->getFactory();
-        $tree = $event->getTree();
-        $modules = $user->navigation();
-
-        foreach ($modules as $categoryName => $categoryData) {
-            $categoryNode = $tree->getChild($categoryName);
-
-            if (!$categoryNode) {
-                $categoryNode = $factory
-                    ->createItem($categoryName)
-                    ->setLabel($categoryData['label'])
-                    ->setUri($categoryData['href'])
-                    ->setLinkAttribute('class', $this->getClassFromAttributes($categoryData))
-                    ->setLinkAttribute('title', $categoryData['title'])
-                    ->setLinkAttribute('data-action', 'contao--toggle-navigation#toggle:prevent')
-                    ->setLinkAttribute('data-contao--toggle-navigation-category-param', $categoryName)
-                    ->setLinkAttribute('aria-controls', $categoryName)
-                    ->setLinkAttribute('data-turbo-prefetch', 'false')
-                    ->setChildrenAttribute('id', $categoryName)
-                    ->setExtra('translation_domain', false)
-                ;
-
-                if (isset($categoryData['class']) && preg_match('/\bnode-collapsed\b/', (string) $categoryData['class'])) {
-                    $categoryNode->setAttribute('class', 'collapsed');
-                    $categoryNode->setLinkAttribute('aria-expanded', 'false');
-                } else {
-                    $categoryNode->setLinkAttribute('aria-expanded', 'true');
-                }
-
-                $tree->addChild($categoryNode);
-            }
-
-            // Create the child nodes
-            foreach ($categoryData['modules'] as $nodeName => $nodeData) {
-                $moduleNode = $factory
-                    ->createItem($nodeName)
-                    ->setLabel($nodeData['label'])
-                    ->setUri($nodeData['href'])
-                    ->setLinkAttribute('class', $this->getClassFromAttributes($nodeData))
-                    ->setLinkAttribute('title', $nodeData['title'])
-                    ->setCurrent((bool) $nodeData['isActive'])
-                    ->setExtra('translation_domain', false)
-                ;
-
-                $categoryNode->addChild($moduleNode);
-            }
-
-            if ($this->templateStudioEnabled && 'design' === $categoryName) {
-                $templateStudioNode = $factory
-                    ->createItem('template-studio')
-                    ->setLabel('Template Studio')
-                    ->setUri('/contao/template-studio')
-                    ->setCurrent(BackendTemplateStudioController::class === $this->requestStack->getCurrentRequest()?->get('_controller'))
-                ;
-
-                $categoryNode->addChild($templateStudioNode);
-            }
-        }
-    }
-
-    private function buildHeaderMenu(MenuEvent $event, BackendUser $user): void
-    {
         $factory = $event->getFactory();
         $tree = $event->getTree();
         $ref = $this->getRefererId();
@@ -269,18 +200,5 @@ class BackendMenuListener
         }
 
         return $request->attributes->get('_contao_referer_id');
-    }
-
-    private function getClassFromAttributes(array $attributes): string
-    {
-        $classes = [];
-
-        // Remove the default CSS classes and keep potentially existing custom ones (see #1357)
-        if (isset($attributes['class'])) {
-            $classes = array_flip(array_filter(explode(' ', (string) $attributes['class'])));
-            unset($classes['node-expanded'], $classes['node-collapsed'], $classes['trail']);
-        }
-
-        return implode(' ', array_keys($classes));
     }
 }
