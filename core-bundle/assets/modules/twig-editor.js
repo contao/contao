@@ -106,7 +106,7 @@ export class TwigEditor {
                 ) {
                     const name = tokens[i + 4].value.replace(/["']/g, '');
 
-                    if (name.test(/^@Contao(_.+)?\//)) {
+                    if (/^@Contao(_.+)?\//.test(name)) {
                         references.push({name, row, column: tokens[i].start});
                     }
                 }
