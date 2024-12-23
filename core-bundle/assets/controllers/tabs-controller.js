@@ -110,4 +110,11 @@ export default class TabsController extends Controller {
     getActiveTab() {
         return this.activeTab;
     }
+
+    getTabs() {
+        return this.panelTargets.reduce((result, panel) => {
+            result[panel.id] = panel;
+            return result;
+        }, {});
+    }
 }
