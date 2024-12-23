@@ -2,6 +2,12 @@
 <xliff version="1.1">
     <file source-language="en">
         <body>
+            <trans-unit id="theme-selector">
+                <source>Theme context</source>
+            </trans-unit>
+            <trans-unit id="no_theme_context">
+                <source>Default/None</source>
+            </trans-unit>
             <trans-unit id="operation.save.0">
                 <source>Save</source>
             </trans-unit>
