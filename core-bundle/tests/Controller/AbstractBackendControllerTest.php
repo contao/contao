@@ -77,12 +77,6 @@ class AbstractBackendControllerTest extends TestCase
             'dashboard' => 'dashboard',
             'home' => 'home',
             'learnMore' => 'learn more',
-            'choicesLoading' => 'loading',
-            'choicesNoResults' => 'no results',
-            'choicesNoOptions' => 'no options',
-            'choicesItemSelect' => 'item select',
-            'choicesUniqueItem' => 'unique item',
-            'choicesCustomAddItem' => 'custom add item',
         ];
 
         $GLOBALS['TL_LANGUAGE'] = 'en';
@@ -102,7 +96,6 @@ class AbstractBackendControllerTest extends TestCase
             'home' => 'home',
             'isPopup' => null,
             'learnMore' => 'learn more',
-            'choicesTranslations' => '{&quot;loadingText&quot;:&quot;loading&quot;,&quot;noResultsText&quot;:&quot;no results&quot;,&quot;noChoicesText&quot;:&quot;no options&quot;,&quot;itemSelectText&quot;:&quot;item select&quot;,&quot;uniqueItemText&quot;:&quot;unique item&quot;,&quot;customAddItemText&quot;:&quot;custom add item&quot;}',
             'menu' => '<menu>',
             'headerMenu' => '<header_menu>',
             'badgeTitle' => '',
@@ -145,12 +138,6 @@ class AbstractBackendControllerTest extends TestCase
             'dashboard' => 'dashboard',
             'home' => 'home',
             'learnMore' => 'learn more',
-            'choicesLoading' => 'loading',
-            'choicesNoResults' => 'no results',
-            'choicesNoOptions' => 'no options',
-            'choicesItemSelect' => 'item select',
-            'choicesUniqueItem' => 'unique item',
-            'choicesCustomAddItem' => 'custom add item',
         ];
 
         $GLOBALS['TL_LANGUAGE'] = 'en';
@@ -178,7 +165,6 @@ class AbstractBackendControllerTest extends TestCase
             'home' => 'home',
             'isPopup' => null,
             'learnMore' => 'learn more',
-            'choicesTranslations' => '{&quot;loadingText&quot;:&quot;loading&quot;,&quot;noResultsText&quot;:&quot;no results&quot;,&quot;noChoicesText&quot;:&quot;no options&quot;,&quot;itemSelectText&quot;:&quot;item select&quot;,&quot;uniqueItemText&quot;:&quot;unique item&quot;,&quot;customAddItemText&quot;:&quot;custom add item&quot;}',
             'menu' => '<menu>',
             'headerMenu' => '<header_menu>',
             'badgeTitle' => '',
