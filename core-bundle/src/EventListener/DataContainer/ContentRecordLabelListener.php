@@ -29,7 +29,10 @@ class ContentRecordLabelListener
 
     public function __invoke(DataContainerRecordLabelEvent $event): void
     {
-        if (!str_starts_with($event->getIdentifier(), 'contao.db.tl_content.')) {
+        if (
+            !str_starts_with($event->getIdentifier(), 'contao.db.tl_content.')
+            || !isset($event->getData()['type'])
+        ) {
             return;
         }
 
@@ -37,9 +40,11 @@ class ContentRecordLabelListener
         $labelKey = "CTE.$type.0";
 
         if ($this->translator->getCatalogue()->has($labelKey, 'contao_default')) {
-            $event->setLabel($this->translator->trans($labelKey, [], 'contao_default'));
+            $label = $this->translator->trans($labelKey, [], 'contao_default');
         } else {
-            $event->setLabel($type);
+            $label = $type;
         }
+
+        $event->setLabel($label);
     }
 }
