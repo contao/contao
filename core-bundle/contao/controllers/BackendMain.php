@@ -244,15 +244,6 @@ class BackendMain extends Backend
 		$data['isPopup'] = Input::get('popup');
 		$data['learnMore'] = \sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');
 
-		$data['choicesTranslations'] = htmlspecialchars(json_encode([
-			'loadingText' => $GLOBALS['TL_LANG']['MSC']['choicesLoading'],
-			'noResultsText' => $GLOBALS['TL_LANG']['MSC']['choicesNoResults'],
-			'noChoicesText' => $GLOBALS['TL_LANG']['MSC']['choicesNoOptions'],
-			'itemSelectText' => $GLOBALS['TL_LANG']['MSC']['choicesItemSelect'],
-			'uniqueItemText' => $GLOBALS['TL_LANG']['MSC']['choicesUniqueItem'],
-			'customAddItemText' => $GLOBALS['TL_LANG']['MSC']['choicesCustomAddItem']
-		]));
-
 		$twig = $container->get('twig');
 		$searchEnabled = $container->has('contao.search.backend') && $container->get('contao.search.backend')->isAvailable();
 
