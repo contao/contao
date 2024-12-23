@@ -54,7 +54,13 @@ class FallbackRecordLabelListener
 
             $event->setLabel($this->translator->trans($labelKey, [$event->getData()['id']], $messageDomain));
         } else {
-            $event->setLabel(trim(StringUtil::decodeEntities(strip_tags($dc->generateRecordLabel($event->getData(), $table)))) ?: null);
+            $label = $dc->generateRecordLabel($event->getData(), $table);
+
+            if (\is_array($label)) {
+                $label = trim(implode(' ', $label));
+            }
+
+            $event->setLabel(trim(StringUtil::decodeEntities(strip_tags((string) $label))) ?: null);
         }
     }
 }
