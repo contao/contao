@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Studio\Operation;
 
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
+use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Finder\Finder;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
@@ -29,7 +30,7 @@ abstract class AbstractOperation extends AbstractController implements Operation
         $this->name = $name;
     }
 
-    public function success(TemplateContext $context): Response
+    public function success(OperationContext $context): Response
     {
         $name = $this->getName();
 
@@ -41,7 +42,7 @@ abstract class AbstractOperation extends AbstractController implements Operation
         ]);
     }
 
-    public function error(TemplateContext $context, string|null $customTranslation = null): Response
+    public function error(OperationContext $context, string|null $customTranslation = null): Response
     {
         $name = $this->getName();
 
@@ -83,6 +84,19 @@ abstract class AbstractOperation extends AbstractController implements Operation
     public function getTwigFinder(): Finder
     {
         return $this->container->get('contao.twig.finder_factory')->create();
+    }
+
+    protected function userTemplateExists(OperationContext $context): bool
+    {
+        // Check if the first template in the chain is a custom template from the
+        // Contao_Global or any theme namespace.
+        $first = $this->getContaoFilesystemLoader()->getFirst($context->getIdentifier(), $context->getThemeSlug());
+        $namespace = ContaoTwigUtil::parseContaoName($first)[0] ?? '';
+
+        return match ($context->isThemeContext()) {
+            true => str_starts_with($namespace, 'Contao_Theme_'),
+            false => 'Contao_Global' === $namespace,
+        };
     }
 
     protected function getName(): string
