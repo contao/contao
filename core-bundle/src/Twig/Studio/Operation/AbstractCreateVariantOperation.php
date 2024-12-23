@@ -12,12 +12,16 @@ use Symfony\Component\HttpFoundation\Response;
  */
 abstract class AbstractCreateVariantOperation extends AbstractOperation
 {
-    public function canExecute(TemplateContext $context): bool
+    public function canExecute(OperationContext $context): bool
     {
+        if ($context->isThemeContext()) {
+            return false;
+        }
+
         return 1 === preg_match('%^'.preg_quote($this->getPrefix(), '%').'/[^_/][^/]*$%', $context->getIdentifier());
     }
 
-    public function execute(Request $request, TemplateContext $context): Response|null
+    public function execute(Request $request, OperationContext $context): Response|null
     {
         // Show a confirmation dialog
         if (!$identifierFragment = $request->request->getString('identifier_fragment')) {
