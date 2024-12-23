@@ -8,11 +8,11 @@ export default class extends ColorPicker {
         if (color) {
             let value = color.toHEXA().toString();
 
-            if (value.charAt(0) === '#') {
+            if ('#' === value.charAt(0)) {
                 value = value.substring(1);
             }
 
-            this.inputTarget.value = value;
+            this.inputTarget.value = value.toLowerCase();
         }
 
         this.picker.hide();
