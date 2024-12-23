@@ -86,15 +86,10 @@ class DcaUrlAnalyzer
             $childTable = $trail[$index + 1][0] ?? null;
 
             if ($index === \count($trail) - 1) {
-                if (
-                    \in_array(
-                        $this->findGet('table'),
-                        $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? [],
-                        true,
-                    )
-                ) {
+                if (\in_array($this->findGet('table'), $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? [], true)) {
                     $childTable = $this->findGet('table');
                 }
+
                 if ($this->findGet('act')) {
                     $query['act'] = $this->findGet('act');
                 }
@@ -102,6 +97,7 @@ class DcaUrlAnalyzer
 
             if ($childTable) {
                 $query['table'] = $childTable;
+
                 if ($childTable === $table) {
                     $query['ptable'] = $table;
                 }
@@ -152,7 +148,7 @@ class DcaUrlAnalyzer
         if (
             !$module
             || (
-                ($module['disablePermissionChecks'] ?? null) !== true
+                true !== ($module['disablePermissionChecks'] ?? null)
                 && !$this->securityHelper->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $do)
             )
         ) {
@@ -194,12 +190,12 @@ class DcaUrlAnalyzer
 
         // For these actions the pid parameter refers to the insert position
         if (\in_array($act, ['create', 'cut', 'copy', 'cutAll', 'copyAll'], true)) {
-            // Mode “paste into”
+            // Mode "paste into"
             if ('2' === $mode) {
                 return [$this->findPtable($table, $pid), $pid];
             }
 
-            // Mode “paste after”
+            // Mode "paste after"
             $id = $pid;
         }
 
@@ -276,7 +272,7 @@ class DcaUrlAnalyzer
             $ptable = (string) ($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null);
         }
 
-        if (!$ptable || !$pid || ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) !== DataContainer::MODE_PARENT) {
+        if (!$ptable || !$pid || DataContainer::MODE_PARENT !== ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null)) {
             return [[$table, $currentRecord]];
         }
 

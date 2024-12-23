@@ -39,7 +39,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         $container = self::createClient()->getContainer();
         System::setContainer($container);
 
-        $container->get('request_stack')->push($request = Request::create("https://example.com/contao?$url"));
+        $container->get('request_stack')->push(Request::create("https://example.com/contao?$url"));
 
         $container->set(
             'security.authorization_checker',
@@ -177,7 +177,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         $container = self::createClient()->getContainer();
         System::setContainer($container);
 
-        $container->get('request_stack')->push($request = Request::create("https://example.com/contao?$url"));
+        $container->get('request_stack')->push(Request::create("https://example.com/contao?$url"));
 
         $container->set(
             'security.authorization_checker',
