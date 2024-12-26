@@ -35,7 +35,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 /**
  * @experimental
  */
-#[IsGranted('ROLE_ADMIN')]
+#[IsGranted('ROLE_ADMIN', message: 'Access restricted to administrators.')]
 class BackendTemplateStudioController extends AbstractBackendController
 {
     /**
