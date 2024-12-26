@@ -30,10 +30,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * @experimental
  */
+#[IsGranted('ROLE_ADMIN')]
 class BackendTemplateStudioController extends AbstractBackendController
 {
     /**
@@ -65,8 +67,6 @@ class BackendTemplateStudioController extends AbstractBackendController
     )]
     public function __invoke(): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         $availableThemes = $this->getAvailableThemes();
         $themeContext = $this->getThemeContext();
 
@@ -96,8 +96,6 @@ class BackendTemplateStudioController extends AbstractBackendController
     )]
     public function tree(): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         return $this->render('@Contao/backend/template_studio/tree/tree.stream.html.twig', [
             'tree' => $this->generateTree(),
         ]);
@@ -115,8 +113,6 @@ class BackendTemplateStudioController extends AbstractBackendController
     )]
     public function selectTheme(Request $request, #[MapQueryParameter('open_tab')] array $openTabs = []): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         $slug = $request->request->getString('theme') ?: null;
 
         if (null !== $slug && !isset($this->getAvailableThemes()[$slug])) {
@@ -144,8 +140,6 @@ class BackendTemplateStudioController extends AbstractBackendController
     )]
     public function editorTab(string $identifier): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         if (!$this->isAllowedIdentifier($identifier)) {
             return new Response('The given template identifier cannot be opened in an editor tab.', Response::HTTP_FORBIDDEN);
         }
@@ -196,8 +190,6 @@ class BackendTemplateStudioController extends AbstractBackendController
     )]
     public function follow(#[MapQueryParameter('name')] string $logicalName): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         if (!($identifier = ContaoTwigUtil::getIdentifier($logicalName))) {
             return new Response('Could not retrieve template identifier.', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
@@ -217,8 +209,6 @@ class BackendTemplateStudioController extends AbstractBackendController
     )]
     public function blockInfo(#[MapQueryParameter('block')] string $blockName, #[MapQueryParameter('name')] string $logicalName): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         if (!$this->isAllowedIdentifier(ContaoTwigUtil::getIdentifier($logicalName))) {
             return new Response(
                 'The given template cannot be inspected.',
@@ -303,8 +293,6 @@ class BackendTemplateStudioController extends AbstractBackendController
     )]
     public function autocompleteData(#[MapQueryParameter] string $identifier): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         if (!$this->isAllowedIdentifier($identifier)) {
             return new Response(
                 'No autocompletion data can be generated for the given template.',
@@ -331,8 +319,6 @@ class BackendTemplateStudioController extends AbstractBackendController
     )]
     public function operation(Request $request, string $identifier, #[MapQueryParameter('operation')] string $operationName): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         if (null === ($operation = ($this->operations[$operationName] ?? null)) || !$this->isAllowedIdentifier($identifier)) {
             return new Response(
                 'Cannot execute given operation for the given template identifier.',
