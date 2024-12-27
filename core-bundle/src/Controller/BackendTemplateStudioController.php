@@ -191,20 +191,20 @@ class BackendTemplateStudioController extends AbstractBackendController
                     'warning' => false,
                     'not_analyzable' => false,
                 ],
-                'annotations' => ($canEdit && $i === 0) ? $this->getAnnotations(
-                    $logicalName, $templateInformation->getError()
+                'annotations' => $canEdit && 0 === $i ? $this->getAnnotations(
+                    $logicalName, $templateInformation->getError(),
                 ) : [],
             ];
 
             // Analyze relation to see if the templates breaks the hierarchy
-            if (null !==($previous = $logicalNamesChain[$i + 1] ?? null)) {
-                if($templateInformation->hasValidInformation()) {
-                    $breaksHierarchy = static fn(): bool => match($isComponent) {
+            if (null !== ($previous = $logicalNamesChain[$i + 1] ?? null)) {
+                if ($templateInformation->hasValidInformation()) {
+                    $breaksHierarchy = static fn (): bool => match ($isComponent) {
                         true => !$templateInformation->isUsing($previous),
                         false => $templateInformation->getExtends() !== $previous,
                     };
 
-                    if($breaksHierarchy()) {
+                    if ($breaksHierarchy()) {
                         $template['relation']['warning'] = true;
                         $shadowed = true;
                     }
@@ -292,7 +292,7 @@ class BackendTemplateStudioController extends AbstractBackendController
             ),
         );
 
-        if(\count($blockHierarchy) === 0) {
+        if ([] === $blockHierarchy) {
             return $this->render(
                 '@Contao/backend/template_studio/info/failed_to_open_block.stream.html.twig',
                 ['block' => $blockName],
@@ -340,7 +340,8 @@ class BackendTemplateStudioController extends AbstractBackendController
     }
 
     /**
-     * Stream data for code annotations (such as autocompletion data) for the given template.
+     * Stream data for code annotations (such as autocompletion data) for the
+     * given template.
      */
     #[Route(
         '/%contao.backend.route_prefix%/template-studio-annotations-data',
@@ -361,7 +362,7 @@ class BackendTemplateStudioController extends AbstractBackendController
         }
 
         $logicalName = $this->loader->getFirst($identifier);
-        $error =  $this->inspector->inspectTemplate($logicalName)->getError();
+        $error = $this->inspector->inspectTemplate($logicalName)->getError();
 
         return $this->render('@Contao/backend/template_studio/editor/annotations.stream.html.twig', [
             'identifier' => $identifier,
@@ -486,7 +487,7 @@ class BackendTemplateStudioController extends AbstractBackendController
         ];
 
         $getRootError = static function (\Throwable $e) use (&$getRootError): \Throwable {
-            return (null === ($previous = $e->getPrevious())) ? $e : $getRootError($previous);
+            return (!($previous = $e->getPrevious())) ? $e : $getRootError($previous);
         };
 
         if ($error instanceof SyntaxError) {

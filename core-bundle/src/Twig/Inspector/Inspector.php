@@ -18,7 +18,6 @@ use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
-use Twig\TemplateWrapper;
 
 /**
  * @experimental
@@ -167,7 +166,8 @@ class Inspector
         // Make sure the template was compiled
         try {
             $this->twig->load($templateName);
-        } catch (LoaderError|RuntimeError|SyntaxError) {}
+        } catch (LoaderError|RuntimeError|SyntaxError) {
+        }
 
         $cache = $this->cachePool->getItem(self::CACHE_KEY)->get();
 

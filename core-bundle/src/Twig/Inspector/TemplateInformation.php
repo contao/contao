@@ -85,7 +85,7 @@ final class TemplateInformation
     public function isUsing(string $logicalName): bool
     {
         foreach ($this->uses as [$name, $importMap]) {
-            if($name === $logicalName) {
+            if ($name === $logicalName) {
                 return true;
             }
         }
@@ -103,6 +103,6 @@ final class TemplateInformation
      */
     public function hasValidInformation(): bool
     {
-        return $this->error === null || $this->error instanceof RuntimeError;
+        return !$this->error || $this->error instanceof RuntimeError;
     }
 }

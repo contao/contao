@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Studio\Operation;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsOperationForTemplateStudioElement;
-use Contao\CoreBundle\Twig\Inspector\InspectionException;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,8 +40,8 @@ class SaveOperation extends AbstractOperation
 
         return $this->render('@Contao/backend/template_studio/operation/save_result.stream.html.twig', [
             'identifier' => $context->getIdentifier(),
-            // In case anything changed regarding the template's relation to
-            // others, reload the tab in order to update the displayed information.
+            // In case anything changed regarding the template's relation to others, reload
+            // the tab in order to update the displayed information.
             'full_reload' => $stateHash !== $this->getStateHash($context),
         ]);
     }
@@ -55,7 +54,7 @@ class SaveOperation extends AbstractOperation
             'error' => $templateInformation->getError()?->getMessage(),
         ];
 
-        if($templateInformation->isComponent()) {
+        if ($templateInformation->isComponent()) {
             $state['uses'] = $templateInformation->getUses();
         } else {
             $state['extends'] = $templateInformation->getExtends();
