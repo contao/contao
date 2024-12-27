@@ -151,7 +151,10 @@ class BackendTemplateStudioController extends AbstractBackendController
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         if (!$this->isAllowedIdentifier($identifier)) {
-            return new Response('The given template identifier cannot be opened in an editor tab.', Response::HTTP_FORBIDDEN);
+            return $this->render(
+                '@Contao/backend/template_studio/editor/failed_to_open_tab.stream.html.twig',
+                ['identifier' => $identifier],
+            );
         }
 
         $themeSlug = $this->getThemeContext();
@@ -288,6 +291,13 @@ class BackendTemplateStudioController extends AbstractBackendController
                 ),
             ),
         );
+
+        if(\count($blockHierarchy) === 0) {
+            return $this->render(
+                '@Contao/backend/template_studio/info/failed_to_open_block.stream.html.twig',
+                ['block' => $blockName],
+            );
+        }
 
         $numBlocks = \count($blockHierarchy);
 
