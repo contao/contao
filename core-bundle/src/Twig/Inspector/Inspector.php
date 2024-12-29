@@ -182,7 +182,7 @@ class Inspector
         }
 
         // Rebuild cache if path was not found
-        foreach ($this->filesystemLoader->getInheritanceChains() as $chain) {
+        foreach ($this->filesystemLoader->getInheritanceChains(true) as $chain) {
             foreach ($chain as $path => $name) {
                 $this->pathByTemplateName[$name] = $path;
             }
