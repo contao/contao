@@ -8,7 +8,6 @@
     {% elseif operation.href|default %}
         <a
             href="{{ operation.href }}"
-            {% if operation.title|default %}title="{{ operation.title }}"{% endif %}
             {% if operation.popup|default %}
                 onclick="Backend.openModalIframe({title:'{{ operation.label|default|replace({"'": "\'"}) }}', url:this.href});return false"
             {% endif%}

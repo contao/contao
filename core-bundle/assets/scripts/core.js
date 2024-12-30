@@ -390,6 +390,7 @@ window.AjaxRequest =
 		images.forEach(function(image) {
 			const newSrc = !published ? image.get('data-icon') : image.get('data-icon-disabled');
 			image.src = (image.src.includes('/') && !newSrc.includes('/')) ? image.src.slice(0, image.src.lastIndexOf('/') + 1) + newSrc : newSrc;
+			image.alt = !published ? image.get('data-alt') : image.get('data-alt-disabled');
 			image.set('data-state', !published ? 1 : 0);
 		});
 

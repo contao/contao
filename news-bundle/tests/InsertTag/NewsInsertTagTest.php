@@ -67,32 +67,32 @@ class NewsInsertTagTest extends ContaoTestCase
         $listener = new NewsInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
 
         $this->assertSame(
-            '<a href="news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;">"Foo" is not "bar"</a>',
+            '<a href="news/foo-is-not-bar.html">"Foo" is not "bar"</a>',
             $listener(new ResolvedInsertTag('news', new ResolvedParameters(['2']), []))->getValue(),
         );
 
         $this->assertSame(
-            '<a href="news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;" target="_blank" rel="noreferrer noopener">"Foo" is not "bar"</a>',
+            '<a href="news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">"Foo" is not "bar"</a>',
             $listener(new ResolvedInsertTag('news', new ResolvedParameters(['2', 'blank']), []))->getValue(),
         );
 
         $this->assertSame(
-            '<a href="news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;">',
+            '<a href="news/foo-is-not-bar.html">',
             $listener(new ResolvedInsertTag('news_open', new ResolvedParameters(['2']), []))->getValue(),
         );
 
         $this->assertSame(
-            '<a href="news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;" target="_blank" rel="noreferrer noopener">',
+            '<a href="news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">',
             $listener(new ResolvedInsertTag('news_open', new ResolvedParameters(['2', 'blank']), []))->getValue(),
         );
 
         $this->assertSame(
-            '<a href="http://domain.tld/news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;" target="_blank" rel="noreferrer noopener">',
+            '<a href="http://domain.tld/news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">',
             $listener(new ResolvedInsertTag('news_open', new ResolvedParameters(['2', 'absolute', 'blank']), []))->getValue(),
         );
 
         $this->assertSame(
-            '<a href="http://domain.tld/news/foo-is-not-bar.html" title="&quot;Foo&quot; is not &quot;bar&quot;" target="_blank" rel="noreferrer noopener">',
+            '<a href="http://domain.tld/news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">',
             $listener(new ResolvedInsertTag('news_open', new ResolvedParameters(['2', 'blank', 'absolute']), []))->getValue(),
         );
 

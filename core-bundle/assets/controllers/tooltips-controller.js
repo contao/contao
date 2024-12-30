@@ -2,9 +2,11 @@ import {Controller} from "@hotwired/stimulus";
 
 export default class TooltipsController extends Controller {
     static defaultOptionsMap = {
+        'a img[alt]': {x: -9, y: 30},
         'p.tl_tip': {x: 0, y: 23, useContent: true},
         '#home[title]': {x: 6, y: 42},
         '#tmenu a[title]': {x: 0, y: 42},
+        'a.link[title]': {x: -9, y: 27},
         'a[title][class^="group-"]': {x: -6, y: 27},
         'a[title].navigation': {x: 25, y: 32},
         'img[title].gimage': {x: -9, y: 60},
@@ -90,6 +92,9 @@ export default class TooltipsController extends Controller {
 
         if (options.useContent) {
             text = el.innerHTML;
+        } else if ('img' === el.nodeName.toLowerCase()) {
+            text = el.getAttribute('alt');
+            text = text?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
         } else {
             text = el.getAttribute('title');
             el.setAttribute('data-original-title', text);

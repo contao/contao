@@ -38,15 +38,15 @@
             <td><?= $version['active'] ? '<strong>'.$version['version'].'</strong>' : $version['version'] ?></td>
             <td>
               <?php if ($version['deleted']): ?>
-                <a href="<?= $this->route('contao_backend', ['do' => 'undo']) ?>" title="<?= Contao\StringUtil::specialchars($this->trans('MSC.restore')) ?>"><?= Contao\Image::getHtml('undo.svg', '', 'class="undo"') ?></a>
+                <a href="<?= $this->route('contao_backend', ['do' => 'undo']) ?>"><?= Contao\Image::getHtml('undo.svg', $this->trans('MSC.restore'), 'class="undo"') ?></a>
               <?php else: ?>
                 <?php if ($version['editUrl']): ?>
-                  <a href="<?= $version['editUrl'] ?>" title="<?= $this->editElement ?>" class="edit"><?= Contao\Image::getHtml('edit.svg', '', 'style="padding:0 2px"') ?></a>
+                  <a href="<?= $version['editUrl'] ?>" class="edit"><?= Contao\Image::getHtml('edit.svg', $this->editElement, 'style="padding:0 2px"') ?></a>
                 <?php else: ?>
                   <?= Contao\Image::getHtml('edit--disabled.svg', '', 'style="padding:0 2px"') ?>
                 <?php endif; ?>
                 <?php if ($version['to'] > 1): ?>
-                  <a href="<?= $version['editUrl'] ?>&amp;from=<?= $version['from'] ?>&amp;to=<?= $version['to'] ?>&amp;versions=1&amp;popup=1" title="<?= $this->showDifferences ?>" onclick="Backend.openModalIframe({'title':'<?= sprintf($this->recordOfTable, $version['pid'], $version['fromTable']) ?>','url':this.href});return false"><?= Contao\Image::getHtml('diff.svg') ?></a>
+                  <a href="<?= $version['editUrl'] ?>&amp;from=<?= $version['from'] ?>&amp;to=<?= $version['to'] ?>&amp;versions=1&amp;popup=1" onclick="Backend.openModalIframe({'title':'<?= sprintf($this->recordOfTable, $version['pid'], $version['fromTable']) ?>','url':this.href});return false"><?= Contao\Image::getHtml('diff.svg', $this->showDifferences) ?></a>
                 <?php else: ?>
                   <?= Contao\Image::getHtml('diff--disabled.svg') ?>
                 <?php endif; ?>
