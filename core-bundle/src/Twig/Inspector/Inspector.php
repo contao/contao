@@ -45,10 +45,10 @@ class Inspector
             $name = $this->filesystemLoader->getFirst($name);
         }
 
-        $loader = $source = $this->twig->getLoader();
+        $loader = $this->twig->getLoader();
 
         try {
-            $loader->getSourceContext($name);
+            $source = $loader->getSourceContext($name);
         } catch (LoaderError $e) {
             throw new InspectionException($name, reason: 'The template does not exist.');
         }
