@@ -77,6 +77,9 @@
             <trans-unit id="message.save.success">
                 <source>Your template for %s was saved.</source>
             </trans-unit>
+            <trans-unit id="message.save.error">
+                <source>Your template for %s could not be saved.</source>
+            </trans-unit>
             <trans-unit id="message.delete.success">
                 <source>Your template for %s was deleted.</source>
             </trans-unit>

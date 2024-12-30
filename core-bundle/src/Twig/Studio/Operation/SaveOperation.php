@@ -26,12 +26,14 @@ class SaveOperation extends AbstractOperation
 
     public function execute(Request $request, OperationContext $context): Response|null
     {
+        $storage = $this->getUserTemplatesStorage();
         $stateHash = $this->getStateHash($context);
 
-        $this->getUserTemplatesStorage()->write(
-            $context->getUserTemplatesStoragePath(),
-            $request->get('code'),
-        );
+        if (!$storage->fileExists($context->getUserTemplatesStoragePath())) {
+            return $this->error($context);
+        }
+
+        $storage->write($context->getUserTemplatesStoragePath(), $request->get('code'));
 
         // Invalidate template
         $this->getTwig()->removeCache(
