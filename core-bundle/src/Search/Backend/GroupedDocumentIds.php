@@ -116,7 +116,7 @@ final class GroupedDocumentIds
             }
         }
 
-        if (!empty($currentChunk)) {
+        if ($currentChunk !== []) {
             $chunks[] = new self($currentChunk);
         }
 

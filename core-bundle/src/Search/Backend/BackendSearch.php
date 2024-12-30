@@ -58,7 +58,8 @@ class BackendSearch
         }
 
         if ($async) {
-            // Split into multiple messages of max 64kb if needed otherwise messages with hundreds of IDs would fail
+            // Split into multiple messages of max 64kb if needed otherwise messages with
+            // hundreds of IDs would fail
             foreach ($groupedDocumentIds->split(65536) as $group) {
                 $this->messageBus->dispatch(new DeleteDocumentsMessage($group));
             }
@@ -82,7 +83,8 @@ class BackendSearch
     public function reindex(ReindexConfig $config, bool $async = true): self
     {
         if ($async) {
-            // Split into multiple messages of max 64kb if needed otherwise messages with hundreds of IDs would fail
+            // Split into multiple messages of max 64kb if needed otherwise messages with
+            // hundreds of IDs would fail
             foreach ($config->getLimitedDocumentIds()->split(65536) as $group) {
                 $this->messageBus->dispatch(new ReindexMessage($config->limitToDocumentIds($group)));
             }
