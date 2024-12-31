@@ -6,6 +6,8 @@ namespace Contao\CoreBundle\Tests\Twig\Studio\Operation;
 
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\Finder\Finder;
+use Contao\CoreBundle\Twig\Finder\FinderFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
@@ -13,6 +15,7 @@ use Contao\CoreBundle\Twig\Studio\TemplateSkeleton;
 use Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 abstract class AbstractOperationTest extends TestCase
@@ -62,14 +65,20 @@ abstract class AbstractOperationTest extends TestCase
         ];
     }
 
-    protected function getContainer(ContaoFilesystemLoader|null $loader = null, VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null): Container
+    protected function getContainer(ContaoFilesystemLoader|null $loader = null, VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null, TemplateSkeletonFactory|null $skeletonFactory = null): Container
     {
         $container = new Container();
 
-        $container->set('contao.twig.filesystem_loader', $loader ?? $this->mockContaoFilesystemLoader());
-        $container->set('contao.filesystem.virtual.user_templates', $storage ?? $this->mockUserTemplatesStorage());
-        $container->set('contao.twig.studio.template_skeleton_factory', $this->mockTemplateSkeletonFactory());
-        $container->set('twig', $twig ?? $this->mockTwigEnvironment());
+        $loader ??= $this->mockContaoFilesystemLoader();
+        $storage ??= $this->mockUserTemplatesStorage();
+        $twig ??= $this->mockTwigEnvironment();
+        $skeletonFactory ??= $this->mockTemplateSkeletonFactory();
+
+        $container->set('contao.twig.filesystem_loader', $loader);
+        $container->set('contao.filesystem.virtual.user_templates', $storage);
+        $container->set('twig', $twig);
+        $container->set('contao.twig.studio.template_skeleton_factory', $skeletonFactory);
+        $container->set('contao.twig.finder_factory', $this->mockTwigFinderFactory($loader));
 
         return $container;
     }
@@ -106,17 +115,19 @@ abstract class AbstractOperationTest extends TestCase
     /**
      * @return VirtualFilesystemInterface&MockObject<VirtualFilesystemInterface>
      */
-    protected function mockUserTemplatesStorage(): VirtualFilesystemInterface
+    protected function mockUserTemplatesStorage(array|null $existingFiles = null): VirtualFilesystemInterface
     {
+        $existingFiles ??= [
+            'content_element/existing_user_template.html.twig',
+            'my/theme/content_element/existing_user_template.html.twig',
+        ];
+
         $storage = $this->createMock(VirtualFilesystemInterface::class);
         $storage
             ->method('fileExists')
-            ->willReturnMap([
-                ['content_element/existing_user_template.html.twig', VirtualFilesystemInterface::NONE, true],
-                ['content_element/no_user_template.html.twig', VirtualFilesystemInterface::NONE, false],
-                ['my/theme/content_element/existing_user_template.html.twig', VirtualFilesystemInterface::NONE, true],
-                ['my/theme/content_element/no_user_template.html.twig', VirtualFilesystemInterface::NONE, false],
-            ])
+            ->willReturnCallback(
+                static fn (string $name) => \in_array($name, $existingFiles, true),
+            )
         ;
 
         return $storage;
@@ -125,20 +136,41 @@ abstract class AbstractOperationTest extends TestCase
     /**
      * @return TemplateSkeletonFactory&MockObject<TemplateSkeletonFactory>
      */
-    protected function mockTemplateSkeletonFactory(): TemplateSkeletonFactory
+    protected function mockTemplateSkeletonFactory(string $basedOnName = '@Contao/content_element/no_user_template.html.twig'): TemplateSkeletonFactory
     {
         $factory = $this->createMock(TemplateSkeletonFactory::class);
 
         $skeleton = $this->createMock(TemplateSkeleton::class);
         $skeleton
             ->method('getContent')
-            ->with('@Contao/content_element/no_user_template.html.twig')
+            ->with($basedOnName)
             ->willReturn('new template content')
         ;
 
         $factory
             ->method('create')
             ->willReturn($skeleton)
+        ;
+
+        return $factory;
+    }
+
+    /**
+     * @return FinderFactory&MockObject<FinderFactory>
+     */
+    protected function mockTwigFinderFactory(ContaoFilesystemLoader $loader): FinderFactory
+    {
+        $factory = $this->createMock(FinderFactory::class);
+
+        $finder = new Finder(
+            $loader,
+            new ThemeNamespace(),
+            $this->createMock(TranslatorInterface::class),
+        );
+
+        $factory
+            ->method('create')
+            ->willReturn($finder)
         ;
 
         return $factory;
