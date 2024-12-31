@@ -169,7 +169,7 @@
         "toflar/psr6-symfony-http-cache-store": "^4.0",
         "twig/extra-bundle": "^3.0",
         "twig/string-extra": "^3.0",
-        "twig/twig": "^3.12",
+        "twig/twig": "^3.15",
         "ua-parser/uap-php": "^3.9",
         "web-auth/webauthn-lib": "^5.0",
         "web-auth/webauthn-stimulus": "^5.0",
@@ -180,11 +180,11 @@
     "require-dev": {
         "ext-fileinfo": "*",
         "bamarni/composer-bin-plugin": "^1.4",
+        "cmsig/seal-memory-adapter": "^0.6.x-dev",
         "composer/composer": "^2.0",
         "doctrine/annotations": "^2.0",
         "league/flysystem-memory": "^3.0",
         "sebastian/diff": "^4.0",
-        "cmsig/seal-memory-adapter": "^0.6.x-dev",
         "shipmonk/composer-dependency-analyser": "^1.4",
         "symfony/browser-kit": "^6.4 || ^7.0",
         "symfony/phpunit-bridge": "^6.4 || ^7.0"
