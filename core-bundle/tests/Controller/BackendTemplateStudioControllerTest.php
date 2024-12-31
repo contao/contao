@@ -17,6 +17,7 @@ use Contao\CoreBundle\Twig\Studio\Operation\AbstractOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContextFactory;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -161,7 +162,7 @@ class BackendTemplateStudioControllerTest extends TestCase
     }
 
     /**
-     * @param Environment&MockObject<Environment>|null $twig
+     * @param (Environment&MockObject)|null $twig
      */
     private function getBackendTemplatedStudioController(AuthorizationCheckerInterface|null $authorizationChecker = null, Environment|null $twig = null, Request|null $request = null): BackendTemplateStudioController
     {

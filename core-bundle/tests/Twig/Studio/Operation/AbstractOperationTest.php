@@ -94,7 +94,7 @@ abstract class AbstractOperationTest extends TestCase
     }
 
     /**
-     * @return ContaoFilesystemLoader&MockObject<ContaoFilesystemLoader>
+     * @return ContaoFilesystemLoader&MockObject
      */
     protected function mockContaoFilesystemLoader(): ContaoFilesystemLoader
     {
@@ -113,7 +113,7 @@ abstract class AbstractOperationTest extends TestCase
     }
 
     /**
-     * @return VirtualFilesystemInterface&MockObject<VirtualFilesystemInterface>
+     * @return VirtualFilesystemInterface&MockObject
      */
     protected function mockUserTemplatesStorage(array|null $existingFiles = null): VirtualFilesystemInterface
     {
@@ -134,7 +134,7 @@ abstract class AbstractOperationTest extends TestCase
     }
 
     /**
-     * @return TemplateSkeletonFactory&MockObject<TemplateSkeletonFactory>
+     * @return TemplateSkeletonFactory&MockObject
      */
     protected function mockTemplateSkeletonFactory(string $basedOnName = '@Contao/content_element/no_user_template.html.twig'): TemplateSkeletonFactory
     {
@@ -156,7 +156,7 @@ abstract class AbstractOperationTest extends TestCase
     }
 
     /**
-     * @return FinderFactory&MockObject<FinderFactory>
+     * @return FinderFactory&MockObject
      */
     protected function mockTwigFinderFactory(ContaoFilesystemLoader $loader): FinderFactory
     {
@@ -177,7 +177,7 @@ abstract class AbstractOperationTest extends TestCase
     }
 
     /**
-     * @return Environment&MockObject<Environment>
+     * @return Environment&MockObject
      */
     protected function mockTwigEnvironment(): Environment
     {
