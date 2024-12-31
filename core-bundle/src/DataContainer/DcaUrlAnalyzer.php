@@ -120,6 +120,24 @@ class DcaUrlAnalyzer
         return array_reverse($links);
     }
 
+    public function getEditUrl(string $table, int $id): string|null
+    {
+        $do = $this->findModuleFromTableId($table, $id, null);
+
+        if (!$do) {
+            return null;
+        }
+
+        $query = [
+            'do' => $do,
+            'id' => $id,
+            'table' => $table,
+            'act' => 'edit',
+        ];
+
+        return $this->router->generate('contao_backend', $query);
+    }
+
     private function findGet(string $key): string|null
     {
         $value = $this->framework->getAdapter(Input::class)->findGet($key, $this->request);
@@ -285,5 +303,32 @@ class DcaUrlAnalyzer
             ->newInstanceWithoutConstructor()
             ->getCurrentRecord($id, $table)
         ;
+    }
+
+    private function findModuleFromTableId(string $table, int $id, array|null $filteredModules): string|null
+    {
+        $this->framework->initialize();
+
+        $modules = [];
+
+        foreach (null === $filteredModules ? $GLOBALS['BE_MOD'] : [$filteredModules] as $group) {
+            foreach ($group as $do => $module) {
+                if (\in_array($table, $module['tables'] ?? [], true)) {
+                    $modules[$do] = $module;
+                }
+            }
+        }
+
+        if (1 === \count($modules)) {
+            return array_keys($modules)[0];
+        }
+
+        $record = $this->getCurrentRecord($id, $table);
+
+        if (isset($record['ptable'], $record['pid'])) {
+            return $this->findModuleFromTableId($record['ptable'], (int) $record['pid'], $modules);
+        }
+
+        return array_keys($modules)[0] ?? null;
     }
 }

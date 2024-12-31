@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Search\Backend\Provider;
 
 use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\DataContainer\RecordLabeler;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Search\Backend\Document;
@@ -46,6 +47,7 @@ class TableDataContainerProvider implements ProviderInterface
         private readonly RecordLabeler $recordLabeler,
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
     ) {
     }
 
@@ -86,10 +88,6 @@ class TableDataContainerProvider implements ProviderInterface
 
     public function convertDocumentToHit(Document $document): Hit|null
     {
-        // TODO: service for view and edit URLs
-        $viewUrl = 'https://todo.com?view='.$document->getId();
-        $editUrl = 'https://todo.com?edit='.$document->getId();
-
         $row = $this->loadRow($this->getTableFromDocument($document), (int) $document->getId());
 
         // Entry does not exist anymore -> no hit
@@ -97,9 +95,16 @@ class TableDataContainerProvider implements ProviderInterface
             return null;
         }
 
+        $editUrl = $this->dcaUrlAnalyzer->getEditUrl($this->getTableFromDocument($document), (int) $document->getId());
+
+        // No URL for the entry could be found
+        if (null === $editUrl) {
+            return null;
+        }
+
         $title = $this->recordLabeler->getLabel(\sprintf('contao.db.%s.id', $this->getTableFromDocument($document)), $row);
 
-        return (new Hit($document, $title, $viewUrl))
+        return (new Hit($document, $title, $editUrl))
             ->withEditUrl($editUrl)
             ->withContext($document->getSearchableContent())
             ->withMetadata(['row' => $row]) // Used for permission checks in isHitGranted()
