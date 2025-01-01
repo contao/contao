@@ -344,6 +344,14 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
     }
 
     /**
+     * @internal
+     */
+    public function getCurrentThemeSlug(): string|null
+    {
+        return $this->filesystemLoader->getCurrentThemeSlug();
+    }
+
+    /**
      * @see PhpTemplateProxyNode
      * @see PhpTemplateProxyNodeVisitor
      *
