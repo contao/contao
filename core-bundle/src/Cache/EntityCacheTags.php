@@ -20,13 +20,14 @@ use Contao\Model;
  * directly tag the response or invalidate tags. If your application does not use
  * response tagging, these methods are no-ops.
  *
- * @deprecated Deprecated since Contao 5.5, to be removed in Contao 6.0. Use the CacheTagManager instead.
+ * @deprecated Deprecated since Contao 5.5, to be removed in Contao 6;
+ *             use the CacheTagManager instead.
  */
 class EntityCacheTags
 {
     public function __construct(private readonly CacheTagManager $cacheTagManager)
     {
-        trigger_deprecation('contao/core-bundle', '5.5', 'Deprecated since Contao 5.5, to be removed in Contao 6.0. Use the CacheTagManager instead.');
+        trigger_deprecation('contao/core-bundle', '5.5', 'Using the EntityCacheTags service has been deprecated and will no longer work in Contao 6. Use the CacheTagManager instead.');
     }
 
     /**
