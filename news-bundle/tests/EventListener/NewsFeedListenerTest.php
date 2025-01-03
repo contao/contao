@@ -14,7 +14,7 @@ namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\ContentModel;
 use Contao\Controller;
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
@@ -55,7 +55,7 @@ class NewsFeedListenerTest extends ContaoTestCase
     {
         $insertTags = $this->createMock(InsertTagParser::class);
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
-        $cacheTags = $this->createMock(EntityCacheTags::class);
+        $cacheTags = $this->createMock(CacheTagManager::class);
         $newsModel = $this->createMock(NewsModel::class);
 
         $collection = $this->createMock(Collection::class);
@@ -210,7 +210,7 @@ class NewsFeedListenerTest extends ContaoTestCase
         $framework->setContainer($container);
 
         $feed = $this->createMock(Feed::class);
-        $cacheTags = $this->createMock(EntityCacheTags::class);
+        $cacheTags = $this->createMock(CacheTagManager::class);
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
