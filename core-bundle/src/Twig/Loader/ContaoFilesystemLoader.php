@@ -282,7 +282,11 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         $allFirst = [];
 
         foreach ($this->getAllThemeSlugs() as $themeSlug) {
-            $name = $this->getFirst($shortNameOrIdentifier, $themeSlug);
+            try {
+                $name = $this->getFirst($shortNameOrIdentifier, $themeSlug);
+            } catch (\LogicException) {
+                continue;
+            }
 
             if (str_starts_with($name, $this->themeNamespace->getFromSlug($themeSlug).'/')) {
                 $allFirst[$themeSlug] = $name;
