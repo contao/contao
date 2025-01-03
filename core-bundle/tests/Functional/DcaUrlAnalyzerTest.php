@@ -21,16 +21,6 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
 {
     private static string|null $lastImport = null;
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-    }
-
     /**
      * @dataProvider getCurrentTableId
      */
