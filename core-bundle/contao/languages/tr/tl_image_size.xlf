@@ -167,7 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_image_size.crop.1">
         <source>The image will be resized to the exact dimensions given, cropping the image if necessary while preserving the important part if specified. This is similar to the &lt;em&gt;cover&lt;/em&gt; value in CSS.</source>
-        <target>Görsel, belirtilen tam boyutlara göre yeniden boyutlandırılır. Gerekirse kırpılır ve belirtilmiş ise önemli kısımlar korunur. CSS içindeki &lt;em&gt;cover&lt;/em&gt; değerine benzer.</target>
+        <target>Görsel, belirtilen tam boyutlara göre yeniden boyutlandırılır. Gerekirse kırpılır ve belirtilmiş ise önemli bölümler korunur. CSS içindeki &lt;em&gt;cover&lt;/em&gt; değerine benzer.</target>
       </trans-unit>
       <trans-unit id="tl_image_size.preserveMetadataOptions.default">
         <source>Use default settings</source>
