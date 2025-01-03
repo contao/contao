@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.4.9] (2025-01-03)
+
+**Fixed issues:**
+
+- [#7841] Register folders, pages and nodes as tooltip targets ([zoglo])
+
 ## [5.4.8] (2024-12-10)
 
 **Fixed issues:**
@@ -139,6 +145,7 @@ This project adheres to [Semantic Versioning].
 - [#7229] Fix the `.nogrid` backwards compatibility layer ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.4.9]: https://github.com/contao/contao/releases/tag/5.4.9
 [5.4.8]: https://github.com/contao/contao/releases/tag/5.4.8
 [5.4.7]: https://github.com/contao/contao/releases/tag/5.4.7
 [5.4.6]: https://github.com/contao/contao/releases/tag/5.4.6
@@ -233,3 +240,4 @@ This project adheres to [Semantic Versioning].
 [#7737]: https://github.com/contao/contao/pull/7737
 [#7739]: https://github.com/contao/contao/pull/7739
 [#7741]: https://github.com/contao/contao/pull/7741
+[#7841]: https://github.com/contao/contao/pull/7841
