@@ -18,10 +18,8 @@ class DbafsChangeEvent
     /**
      * @interal
      */
-    public function __construct(
-        private readonly ChangeSet $changeSet,
-        private readonly DbafsManager $dbafsManager,
-    ) {
+    public function __construct(private readonly ChangeSet $changeSet)
+    {
     }
 
     public function getChangeSet(): ChangeSet
@@ -47,11 +45,11 @@ class DbafsChangeEvent
     /**
      * @return \Generator<FilesystemItem>
      */
-    private function listCreatedFilesystemItems(VirtualFilesystem $filesStorage): \Generator
+    private function listCreatedFilesystemItems(VirtualFilesystem $storage): \Generator
     {
         foreach ($this->changeSet->getItemsToCreate() as $itemToCreate) {
-            if (null !== ($path = $this->match($itemToCreate->getPath(), $filesStorage))) {
-                yield $filesStorage->get($path);
+            if (null !== ($path = $this->match($itemToCreate->getPath(), $storage))) {
+                yield $storage->get($path);
             }
         }
     }
@@ -59,19 +57,21 @@ class DbafsChangeEvent
     /**
      * @return \Generator<FilesystemItem>
      */
-    private function listUpdatedFilesystemItems(VirtualFilesystem $filesStorage, bool $includeLastModified): \Generator
+    private function listUpdatedFilesystemItems(VirtualFilesystem $storage, bool $includeLastModified): \Generator
     {
         foreach ($this->changeSet->getItemsToUpdate($includeLastModified) as $itemToUpdate) {
             $item = null;
 
-            if ($itemToUpdate->updatesPath() && null !== ($path = $this->match($itemToUpdate->getNewPath(), $filesStorage))) {
-                yield $item = $filesStorage->get($path);
+            if ($itemToUpdate->updatesPath() && null !== ($path = $this->match($itemToUpdate->getNewPath(), $storage))) {
+                yield $item = $storage->get($path);
             }
 
-            if (null !== ($path = $this->match($itemToUpdate->getExistingPath(), $filesStorage))) {
-                $type = $item?->isFile() ?? $this->dbafsManager->fileExists($itemToUpdate->getExistingPath());
-
-                yield $itemToUpdate->updatesPath() ? new FilesystemItem($type, $path) : $filesStorage->get($path);
+            if (null !== ($path = $this->match($itemToUpdate->getExistingPath(), $storage))) {
+                if (!$itemToUpdate->updatesPath()) {
+                    yield $storage->get($path);
+                } elseif (null !== ($type = $item?->isFile())) {
+                    yield new FilesystemItem($type, $path);
+                }
             }
         }
     }
@@ -79,10 +79,10 @@ class DbafsChangeEvent
     /**
      * @return \Generator<FilesystemItem>
      */
-    private function listDeletedFilesystemItems(VirtualFilesystem $filesStorage): \Generator
+    private function listDeletedFilesystemItems(VirtualFilesystem $storage): \Generator
     {
         foreach ($this->changeSet->getItemsToDelete() as $itemToDelete) {
-            if (null !== ($path = $this->match($itemToDelete->getPath(), $filesStorage))) {
+            if (null !== ($path = $this->match($itemToDelete->getPath(), $storage))) {
                 yield new FilesystemItem($itemToDelete->isFile(), $path);
             }
         }

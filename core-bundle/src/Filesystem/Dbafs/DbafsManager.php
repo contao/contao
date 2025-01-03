@@ -274,7 +274,7 @@ class DbafsManager
             $changeSet = $changeSet->withOther($dbafs->sync(...$matchingPaths), (string) $prefix);
         }
 
-        $this->eventDispatcher->dispatch(new DbafsChangeEvent($changeSet, $this));
+        $this->eventDispatcher->dispatch(new DbafsChangeEvent($changeSet));
 
         return $changeSet;
     }
