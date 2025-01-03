@@ -23,7 +23,7 @@ class DeleteDocumentsMessage implements LowPriorityMessageInterface
     /**
      * @var array<string, array<string>>
      */
-    private array $asArray = [];
+    private readonly array $asArray;
 
     public function __construct(GroupedDocumentIds $groupedDocumentIds)
     {

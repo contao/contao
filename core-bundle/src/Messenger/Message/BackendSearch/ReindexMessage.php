@@ -20,7 +20,7 @@ use Contao\CoreBundle\Search\Backend\ReindexConfig;
  */
 class ReindexMessage implements LowPriorityMessageInterface
 {
-    private array $asArray = [];
+    private readonly array $asArray;
 
     public function __construct(ReindexConfig $reindexConfig)
     {
