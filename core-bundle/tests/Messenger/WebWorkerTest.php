@@ -124,7 +124,8 @@ class WebWorkerTest extends TestCase
 
     public function testSkipsMessagesThatRequireRealWorkersInWebWorker(): void
     {
-        $webWorker = new WebWorker(new ArrayAdapter(),
+        $webWorker = new WebWorker(
+            new ArrayAdapter(),
             $this->command,
             [],
         );
@@ -134,7 +135,6 @@ class WebWorkerTest extends TestCase
         $envelope = new Envelope($message);
 
         $event = new WorkerMessageReceivedEvent($envelope, 'receiver');
-
         $webWorker->onWorkerMessageReceived($event);
 
         $this->assertSame(ScopeAwareMessageInterface::SCOPE_CLI, $message->getScope());
@@ -144,7 +144,6 @@ class WebWorkerTest extends TestCase
         // middleware which is not something we need to test
         $reflection = new \ReflectionObject($webWorker);
         $property = $reflection->getProperty('webWorkerRunning');
-        $property->setAccessible(true);
         $property->setValue($webWorker, true);
 
         $webWorker->onWorkerMessageReceived($event);
