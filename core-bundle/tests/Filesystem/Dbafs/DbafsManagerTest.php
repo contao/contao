@@ -483,6 +483,54 @@ class DbafsManagerTest extends TestCase
         $this->assertTrue($itemsToDelete[1]->isFile());
     }
 
+    public function testDispatchesEvent(): void
+    {
+        $filesDbafs = $this->createMock(DbafsInterface::class);
+        $filesDbafs
+            ->expects($this->once())
+            ->method('sync')
+            ->with()
+            ->willReturn(
+                new ChangeSet(
+                    [
+                        ['hash' => '1234', 'path' => 'foo', 'type' => ChangeSet::TYPE_FILE],
+                    ],
+                    [
+                        'bar' => ['path' => 'bar2'],
+                    ],
+                    [
+                        'baz' => ChangeSet::TYPE_FILE,
+                    ],
+                ),
+            )
+        ;
+
+        $changeSetFromEvent = null;
+
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->willReturnCallback(
+                function (DbafsChangeEvent $event) use (&$changeSetFromEvent): DbafsChangeEvent {
+                    $changeSetFromEvent = $event->getChangeSet();
+
+                    $this->assertSame('files/foo', $changeSetFromEvent->getItemsToCreate()[0]->getPath());
+                    $this->assertSame('files/bar', $changeSetFromEvent->getItemsToUpdate()[0]->getExistingPath());
+                    $this->assertSame('files/baz', $changeSetFromEvent->getItemsToDelete()[0]->getPath());
+
+                    return $event;
+                },
+            )
+        ;
+
+        $manager = $this->getDbafsManager($eventDispatcher);
+        $manager->register($filesDbafs, 'files');
+
+        $changeSet = $manager->sync();
+        $this->assertSame($changeSetFromEvent, $changeSet);
+    }
+
     /**
      * @param EventDispatcherInterface&MockObject|null $eventDispatcher
      */
