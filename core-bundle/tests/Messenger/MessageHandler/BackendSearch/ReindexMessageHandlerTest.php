@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Messenger\MessageHandler\BackendSearch;
 
 use Contao\CoreBundle\Messenger\Message\BackendSearch\ReindexMessage;
+use Contao\CoreBundle\Messenger\Message\ScopeAwareMessageInterface;
 use Contao\CoreBundle\Messenger\MessageHandler\BackendSearch\ReindexMessageHandler;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Search\Backend\GroupedDocumentIds;
@@ -29,6 +30,7 @@ class ReindexMessageHandlerTest extends TestCase
         ;
 
         $message = new ReindexMessage($reindexConfig);
+        $message->setScope(ScopeAwareMessageInterface::SCOPE_CLI);
 
         $backendSearch = $this->createMock(BackendSearch::class);
         $backendSearch

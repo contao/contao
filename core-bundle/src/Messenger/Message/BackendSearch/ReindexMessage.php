@@ -13,13 +13,17 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Messenger\Message\BackendSearch;
 
 use Contao\CoreBundle\Messenger\Message\LowPriorityMessageInterface;
+use Contao\CoreBundle\Messenger\Message\ScopeAwareMessageInterface;
+use Contao\CoreBundle\Messenger\Message\ScopeAwareMessageTrait;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
 
 /**
  * @experimental
  */
-class ReindexMessage implements LowPriorityMessageInterface
+class ReindexMessage implements LowPriorityMessageInterface, ScopeAwareMessageInterface
 {
+    use ScopeAwareMessageTrait;
+
     private readonly array $asArray;
 
     public function __construct(ReindexConfig $reindexConfig)

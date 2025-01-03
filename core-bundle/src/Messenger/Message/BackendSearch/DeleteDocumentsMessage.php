@@ -13,13 +13,17 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Messenger\Message\BackendSearch;
 
 use Contao\CoreBundle\Messenger\Message\LowPriorityMessageInterface;
+use Contao\CoreBundle\Messenger\Message\ScopeAwareMessageInterface;
+use Contao\CoreBundle\Messenger\Message\ScopeAwareMessageTrait;
 use Contao\CoreBundle\Search\Backend\GroupedDocumentIds;
 
 /**
  * @experimental
  */
-class DeleteDocumentsMessage implements LowPriorityMessageInterface
+class DeleteDocumentsMessage implements LowPriorityMessageInterface, ScopeAwareMessageInterface
 {
+    use ScopeAwareMessageTrait;
+
     /**
      * @var array<string, array<string>>
      */
