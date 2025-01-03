@@ -20,9 +20,12 @@ use Contao\CoreBundle\Twig\Inspector\BlockType;
 use Contao\CoreBundle\Twig\Inspector\InspectionException;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\CoreBundle\Twig\Studio\Autocomplete;
+use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
+use Contao\CoreBundle\Twig\Studio\Operation\OperationContextFactory;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationInterface;
-use Contao\CoreBundle\Twig\Studio\Operation\TemplateContext;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
@@ -45,7 +48,10 @@ class BackendTemplateStudioController extends AbstractBackendController
         private readonly ContaoFilesystemLoader $loader,
         private readonly FinderFactory $finder,
         private readonly Inspector $inspector,
+        private readonly ThemeNamespace $themeNamespace,
+        private readonly OperationContextFactory $operationContextFactory,
         private readonly Autocomplete $autocomplete,
+        private readonly Connection $connection,
         iterable $operations,
     ) {
         $this->operations = $operations instanceof \Traversable ? iterator_to_array($operations) : $operations;
@@ -61,10 +67,20 @@ class BackendTemplateStudioController extends AbstractBackendController
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
+        $availableThemes = $this->getAvailableThemes();
+        $themeContext = $this->getThemeContext();
+
+        // Reset theme context if not existent
+        if (!isset($availableThemes[$themeContext])) {
+            $this->setThemeContext($themeContext = null);
+        }
+
         return $this->render('@Contao/backend/template_studio/index.html.twig', [
             'title' => 'Template Studio',
             'headline' => 'Template Studio',
             'tree' => $this->generateTree(),
+            'themes' => $availableThemes,
+            'current_theme' => $themeContext,
         ]);
     }
 
@@ -88,6 +104,34 @@ class BackendTemplateStudioController extends AbstractBackendController
     }
 
     /**
+     * (De-)select a theme and stream the changes to all open tabs.
+     */
+    #[Route(
+        '/%contao.backend.route_prefix%/template-studio/select_theme',
+        name: '_contao_template_studio_select_theme.stream',
+        defaults: ['_scope' => 'backend', '_token_check' => false],
+        methods: ['POST'],
+        condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
+    )]
+    public function selectTheme(Request $request, #[MapQueryParameter('open_tab')] array $openTabs = []): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
+        $slug = $request->request->getString('theme') ?: null;
+
+        if (null !== $slug && !isset($this->getAvailableThemes()[$slug])) {
+            return new Response('The given theme slug is not valid.', Response::HTTP_FORBIDDEN);
+        }
+
+        $this->setThemeContext($slug);
+
+        return $this->render('@Contao/backend/template_studio/select_theme.stream.html.twig', [
+            'tree' => $this->generateTree(),
+            'open_tabs' => array_filter($openTabs, $this->isAllowedIdentifier(...)),
+        ]);
+    }
+
+    /**
      * Stream an editor tab for the given identifier.
      */
     #[Route(
@@ -106,12 +150,9 @@ class BackendTemplateStudioController extends AbstractBackendController
             return new Response('The given template identifier cannot be opened in an editor tab.', Response::HTTP_FORBIDDEN);
         }
 
-        $chains = $this->loader->getInheritanceChains()[$identifier];
-
-        $operationContext = new TemplateContext(
-            $identifier,
-            ContaoTwigUtil::getExtension($chains[array_key_first($chains)]),
-        );
+        $themeSlug = $this->getThemeContext();
+        $chains = $this->loader->getInheritanceChains($themeSlug)[$identifier];
+        $operationContext = $this->getOperationContext($identifier);
 
         $operationNames = array_keys(
             array_filter(
@@ -299,10 +340,7 @@ class BackendTemplateStudioController extends AbstractBackendController
             );
         }
 
-        $operationContext = new TemplateContext(
-            $identifier,
-            ContaoTwigUtil::getExtension($this->loader->getFirst($identifier)),
-        );
+        $operationContext = $this->getOperationContext($identifier);
 
         $result = $operation->execute($request, $operationContext);
 
@@ -316,8 +354,23 @@ class BackendTemplateStudioController extends AbstractBackendController
         ]);
     }
 
+    protected function getOperationContext(string $identifier): OperationContext
+    {
+        return $this->operationContextFactory->create(
+            $identifier,
+            ContaoTwigUtil::getExtension($this->loader->getFirst($identifier)),
+            $this->getThemeContext(),
+        );
+    }
+
     private function generateTree(): array
     {
+        $userNamespace = '@Contao_Global';
+
+        if (null !== ($themeSlug = $this->getThemeContext())) {
+            $userNamespace = $this->themeNamespace->getFromSlug($themeSlug);
+        }
+
         $prefixTree = [];
 
         foreach ($this->getFinder() as $identifier => $extension) {
@@ -333,7 +386,7 @@ class BackendTemplateStudioController extends AbstractBackendController
                 $node = &$node[$part];
             }
 
-            $hasUserTemplate = $this->loader->exists("@Contao_Global/$identifier.$extension");
+            $hasUserTemplate = $this->loader->exists("$userNamespace/$identifier.$extension");
 
             $leaf = new class($identifier, $hasUserTemplate) {
                 public function __construct(
@@ -393,9 +446,58 @@ class BackendTemplateStudioController extends AbstractBackendController
 
     private function getFinder(): Finder
     {
+        $suppressedPrefixes = ['backend', 'frontend_preview', 'web_debug_toolbar'];
+
+        // TODO: In Contao 6, do not add theme paths in the ContaoFilesystemLoader to
+        // begin with and remove this logic to suppress them (see #7027).
+        foreach (array_keys($this->getAvailableThemes()) as $slug) {
+            $suppressedPrefixes[] = $this->themeNamespace->getPath($slug);
+        }
+
+        $regex = \sprintf('#^(%s)/#', implode('|', array_map(
+            static fn (string $path): string => preg_quote($path, '#'),
+            $suppressedPrefixes,
+        )));
+
         return $this->finder
             ->create()
-            ->identifierRegex('%^(?:backend|frontend_preview|web_debug_toolbar|)/%', false)
+            ->identifierRegex($regex, false)
         ;
+    }
+
+    private function setThemeContext(string|null $slug): void
+    {
+        $this->getBackendSessionBag()?->set('template_studio_theme_slug', $slug);
+    }
+
+    private function getThemeContext(): string|null
+    {
+        return $this->getBackendSessionBag()?->get('template_studio_theme_slug');
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function getAvailableThemes(): array
+    {
+        // Filter out themes that either have no valid template path set or where the
+        // template path is outside the template directory and remove duplicates.
+        $themes = $this->connection->fetchAllKeyValue("
+            SELECT SUBSTR(templates, 11), name
+            FROM tl_theme
+            WHERE templates != ''
+                AND templates != 'templates'
+                AND templates NOT LIKE '%..%'
+            GROUP BY templates, name
+            ORDER BY name
+        ");
+
+        return array_combine(
+            array_map(
+                fn (string $path): string => $this->themeNamespace->generateSlug($path),
+                array_keys($themes),
+            ),
+            array_values($themes),
+        );
     }
 }

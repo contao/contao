@@ -16,6 +16,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Controller\AbstractBackendController;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
 use Contao\Environment as ContaoEnvironment;
@@ -28,7 +29,9 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -95,7 +98,6 @@ class AbstractBackendControllerTest extends TestCase
             'learnMore' => 'learn more',
             'menu' => '<menu>',
             'headerMenu' => '<header_menu>',
-            'searchEnabled' => false,
             'badgeTitle' => '',
             'foo' => 'bar',
         ];
@@ -165,7 +167,6 @@ class AbstractBackendControllerTest extends TestCase
             'learnMore' => 'learn more',
             'menu' => '<menu>',
             'headerMenu' => '<header_menu>',
-            'searchEnabled' => false,
             'badgeTitle' => '',
         ];
 
@@ -237,6 +238,35 @@ class AbstractBackendControllerTest extends TestCase
             false,
             $customContext,
         ];
+    }
+
+    public function testGetSessionBag(): void
+    {
+        $controller = new class() extends AbstractBackendController {
+            public function getBackendSessionBagDelegate(): AttributeBagInterface|null
+            {
+                return $this->getBackendSessionBag();
+            }
+        };
+
+        $sessionBag = new ArrayAttributeBag();
+        $sessionBag->setName('contao_backend');
+
+        $sessionStorage = new MockArraySessionStorage();
+        $sessionStorage->registerBag($sessionBag);
+
+        $request = new Request();
+        $request->setSession(new Session($sessionStorage));
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $container = new ContainerBuilder();
+        $container->set('request_stack', $requestStack);
+
+        $controller->setContainer($container);
+
+        $this->assertSame($sessionBag, $controller->getBackendSessionBagDelegate());
     }
 
     private function getContainerWithDefaultConfiguration(array $expectedContext, Request|null $request = null): ContainerBuilder

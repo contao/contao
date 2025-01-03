@@ -338,9 +338,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     private function handleBackendSearchConfig(array $config, ContainerBuilder $container, LoaderInterface $loader): void
     {
-        // Used to display/hide the search box in the back end
-        $container->setParameter('contao.backend_search.enabled', $config['backend_search']['enabled']);
-
         if (!$config['backend_search']['enabled']) {
             return;
         }
@@ -369,7 +366,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         ;
 
         $factory = $container->getDefinition('contao.search.backend');
-        $factory->setArgument(6, $indexName);
+        $factory->setArgument('$indexName', $indexName);
     }
 
     private function handleCrawlConfig(array $config, ContainerBuilder $container): void

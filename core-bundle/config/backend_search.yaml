@@ -9,11 +9,6 @@ services:
             - '@contao.search.backend'
             - '@twig'
 
-    contao.command.backend_search.index:
-        class: Contao\CoreBundle\Command\BackendSearch\IndexCommand
-        arguments:
-            - '@contao.search.backend'
-
     contao.messenger.backend_search.delete_documents_message_handler:
         class: Contao\CoreBundle\Messenger\MessageHandler\BackendSearch\DeleteDocumentsMessageHandler
         arguments:
@@ -34,6 +29,7 @@ services:
             - '@event_dispatcher'
             - '@messenger.bus.default'
             - '@contao.messenger.web_worker'
+            - '@contao.search.backend.seal_reindex_provider'
 
     contao.search.backend.files_storage_provider:
         class: Contao\CoreBundle\Search\Backend\Provider\FilesStorageProvider
@@ -44,6 +40,14 @@ services:
 
     contao.search.backend.format_core_widget_results_listener:
         class: Contao\CoreBundle\Search\Backend\EventListener\FormatCoreWidgetSearchResultsListener
+
+    contao.search.backend.seal_reindex_provider:
+        class: Contao\CoreBundle\Search\Backend\Seal\SealReindexProvider
+        arguments:
+            - !tagged_iterator contao.backend_search_provider
+            - '@event_dispatcher'
+        tags:
+            - { name: cmsig_seal.reindex_provider }
 
     contao.search.backend.table_data_container_provider:
         class: Contao\CoreBundle\Search\Backend\Provider\TableDataContainerProvider

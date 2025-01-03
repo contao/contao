@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Studio\Operation;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsOperationForTemplateStudioElement;
-use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,16 +14,12 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsOperationForTemplateStudioElement]
 class DeleteOperation extends AbstractOperation
 {
-    public function canExecute(TemplateContext $context): bool
+    public function canExecute(OperationContext $context): bool
     {
-        // Check if the first template in the chain is a custom template from the
-        // Contao_Global namespace.
-        $first = $this->getContaoFilesystemLoader()->getFirst($context->getIdentifier());
-
-        return 'Contao_Global' === (ContaoTwigUtil::parseContaoName($first)[0] ?? '');
+        return $this->userTemplateExists($context);
     }
 
-    public function execute(Request $request, TemplateContext $context): Response|null
+    public function execute(Request $request, OperationContext $context): Response|null
     {
         $storage = $this->getUserTemplatesStorage();
 
