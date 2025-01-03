@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Slots;
 
+use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\Filter\RawFilter;
@@ -114,7 +115,7 @@ final class SlotTokenParser extends AbstractTokenParser
         return new FilterExpression(
             $node,
             new ConstantExpression('raw', $line),
-            new Node(),
+            new EmptyNode($line),
             $line,
         );
     }

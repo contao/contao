@@ -17,6 +17,7 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\NodeVisitor\EscaperNodeVisitor;
 use Twig\NodeVisitor\NodeVisitorInterface;
 
@@ -130,7 +131,7 @@ final class ContaoEscaperNodeVisitor implements NodeVisitorInterface
     {
         $line = $node->getTemplateLine();
 
-        $arguments = new Node([
+        $arguments = new Nodes([
             new ConstantExpression("contao_$strategy", $line),
             new ConstantExpression(null, $line),
             new ConstantExpression(true, $line),
