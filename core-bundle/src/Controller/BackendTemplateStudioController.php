@@ -365,7 +365,12 @@ class BackendTemplateStudioController extends AbstractBackendController
 
     private function generateTree(): array
     {
-        $userNamespace = ($themeSlug = $this->getThemeContext()) !== null ? $this->themeNamespace->getFromSlug($themeSlug) : '@Contao_Global';
+        $userNamespace = '@Contao_Global';
+
+        if (null !== ($themeSlug = $this->getThemeContext())) {
+            $userNamespace = $this->themeNamespace->getFromSlug($themeSlug);
+        }
+
         $prefixTree = [];
 
         foreach ($this->getFinder() as $identifier => $extension) {
