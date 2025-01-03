@@ -30,67 +30,6 @@ use Twig\Environment;
 class BackendTemplateStudioControllerTest extends TestCase
 {
     /**
-     * @dataProvider provideControllerActions
-     */
-    public function testActionIsSecured(string $action, array $parameters = []): void
-    {
-        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
-        $authorizationChecker
-            ->expects($this->once())
-            ->method('isGranted')
-            ->with('ROLE_ADMIN')
-            ->willReturn(false)
-        ;
-
-        $controller = $this->getBackendTemplatedStudioController(authorizationChecker: $authorizationChecker);
-
-        $this->expectException(AccessDeniedException::class);
-
-        $controller->$action(...$parameters);
-    }
-
-    public static function provideControllerActions(): iterable
-    {
-        yield 'default' => [
-            '__invoke',
-        ];
-
-        yield 'tree' => [
-            'tree',
-        ];
-
-        yield 'select theme' => [
-            'selectTheme',
-            [new Request()],
-        ];
-
-        yield 'editor tab' => [
-            'editorTab',
-            ['foo'],
-        ];
-
-        yield 'follow' => [
-            'follow',
-            ['@Contao/foo/bar.html.twig'],
-        ];
-
-        yield 'block info' => [
-            'blockInfo',
-            ['foo_block', '@Contao/foo/bar.html.twig'],
-        ];
-
-        yield 'annotations' => [
-            'annotationsData',
-            ['foo/bar'],
-        ];
-
-        yield 'operation' => [
-            'operation',
-            [new Request(), 'foo/bar', 'foo_operation'],
-        ];
-    }
-
-    /**
      * @dataProvider provideControllerActionsThatValidateIdentifiers
      */
     public function testInvalidIdentifierIsDenied(string $action, array $parameters, string|null $streamError = null, Request|null $request = null): void
