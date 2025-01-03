@@ -336,7 +336,7 @@ class BackendTemplateStudioController extends AbstractBackendController
     #[Route(
         '/%contao.backend.route_prefix%/template-studio-annotations-data',
         name: '_contao_template_studio_annotations_data.stream',
-        defaults: ['_scope' => 'backend', '_store_referrer' => false,  '_unauthenticated_redirect_route' => 'contao_template_studio'],
+        defaults: ['_scope' => 'backend', '_store_referrer' => false, '_unauthenticated_redirect_route' => 'contao_template_studio'],
         methods: ['GET'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
