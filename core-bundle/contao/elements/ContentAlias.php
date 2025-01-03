@@ -33,7 +33,7 @@ class ContentAlias extends ContentElement
 		}
 
 		// Tag the included element (see #5248)
-		System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($objElement);
+		System::getContainer()->get('contao.cache.tag_manager')->tagWithModelInstance($objElement);
 
 		// Clone the model, so we do not modify the shared model in the registry
 		$objModel = $objElement->cloneDetached();
