@@ -13,15 +13,15 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\CoreBundle\Twig\Inheritance\RuntimeThemeExpression;
+use Contao\CoreBundle\Twig\Inheritance\RuntimeThemeDependentExpression;
 use Twig\Compiler;
 use Twig\Environment;
 
-class RuntimeThemeExpressionTest extends TestCase
+class RuntimeThemeDependentExpressionTest extends TestCase
 {
     public function testCompilesExpressionCode(): void
     {
-        $expression = new RuntimeThemeExpression([
+        $expression = new RuntimeThemeDependentExpression([
             'foo' => '@Contao_Theme_foo/element.html.twig',
             'bar' => '@Contao_Theme_bar/element.html.twig',
             '' => '@Contao_ContaoCoreBundle/element.html.twig',
@@ -39,7 +39,7 @@ class RuntimeThemeExpressionTest extends TestCase
 
     public function testCompilesExpressionCodeWithSingleName(): void
     {
-        $expression = new RuntimeThemeExpression([
+        $expression = new RuntimeThemeDependentExpression([
             '' => '@Contao_ContaoCoreBundle/element.html.twig',
         ]);
 
@@ -58,7 +58,7 @@ class RuntimeThemeExpressionTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('The value mapping needs a default value.');
 
-        new RuntimeThemeExpression([
+        new RuntimeThemeDependentExpression([
             'foo' => '@Contao_Theme_foo/element.html.twig',
             'bar' => '@Contao_Theme_bar/element.html.twig',
         ]);

@@ -16,27 +16,33 @@ use Twig\Compiler;
 use Twig\Node\Expression\AbstractExpression;
 
 /**
+ * This expression evaluates the theme slug at runtime and resolves to a matching
+ * value of the given value mapping.
+ *
  * @experimental
  */
-class RuntimeThemeExpression extends AbstractExpression
+class RuntimeThemeDependentExpression extends AbstractExpression
 {
-    public function __construct(array $valuesByTheme)
+    /**
+     * @param array<string|int, string> $valuesByThemeSlug
+     */
+    public function __construct(array $valuesByThemeSlug)
     {
-        $defaultValue = $valuesByTheme[''] ?? throw new \InvalidArgumentException('The value mapping needs a default value.');
-        unset($valuesByTheme['']);
+        $defaultValue = $valuesByThemeSlug[''] ?? throw new \InvalidArgumentException('The value mapping needs a default value.');
+        unset($valuesByThemeSlug['']);
 
         parent::__construct([], [
             'default_value' => $defaultValue,
-            'values_by_theme' => $valuesByTheme,
+            'values_by_theme' => $valuesByThemeSlug,
         ]);
     }
 
     public function compile(Compiler $compiler): void
     {
-        $valuesByTheme = $this->getAttribute('values_by_theme');
+        $valuesByThemeSlug = $this->getAttribute('values_by_theme');
         $defaultValue = $this->getAttribute('default_value');
 
-        if (0 === \count($valuesByTheme)) {
+        if (0 === \count($valuesByThemeSlug)) {
             $compiler->repr($this->getAttribute('default_value'));
 
             return;
@@ -47,7 +53,7 @@ class RuntimeThemeExpression extends AbstractExpression
             ->raw('match($this->extensions[\\Contao\\CoreBundle\\Twig\\Extension\\ContaoExtension::class]->getCurrentThemeSlug()) {')
         ;
 
-        foreach ($valuesByTheme as $theme => $value) {
+        foreach ($valuesByThemeSlug as $theme => $value) {
             $compiler->raw("'$theme' => '$value', ");
         }
 

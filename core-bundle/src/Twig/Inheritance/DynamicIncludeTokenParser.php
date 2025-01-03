@@ -121,6 +121,6 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
             throw new \LogicException($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?', 0, $e);
         }
 
-        return new RuntimeThemeExpression($allFirstByThemeSlug);
+        return new RuntimeThemeDependentExpression($allFirstByThemeSlug);
     }
 }

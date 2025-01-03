@@ -93,7 +93,7 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
             return null;
         }
 
-        return new RuntimeThemeExpression(
+        return new RuntimeThemeDependentExpression(
             $this->filesystemLoader->getAllDynamicParentsByThemeSlug($parts[1] ?? '', $sourcePath),
         );
     }
