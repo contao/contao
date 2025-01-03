@@ -180,7 +180,7 @@
     "require-dev": {
         "ext-fileinfo": "*",
         "bamarni/composer-bin-plugin": "^1.4",
-        "cmsig/seal-memory-adapter": "^0.6.x-dev",
+        "cmsig/seal-memory-adapter": "^0.6",
         "composer/composer": "^2.0",
         "doctrine/annotations": "^2.0",
         "league/flysystem-memory": "^3.0",
