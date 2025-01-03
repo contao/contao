@@ -58,16 +58,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.12",
+            "version": "1.12.14",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "b5ae1b88f471d3fd4ba1aa0046234b5ca3776dd0"
+                "reference": "e73868f809e68fff33be961ad4946e2e43ec9e38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/b5ae1b88f471d3fd4ba1aa0046234b5ca3776dd0",
-                "reference": "b5ae1b88f471d3fd4ba1aa0046234b5ca3776dd0",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e73868f809e68fff33be961ad4946e2e43ec9e38",
+                "reference": "e73868f809e68fff33be961ad4946e2e43ec9e38",
                 "shasum": ""
             },
             "require": {
@@ -112,7 +112,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-11-28T22:13:23+00:00"
+            "time": "2024-12-31T07:26:13+00:00"
         },
         {
             "name": "rector/rector",

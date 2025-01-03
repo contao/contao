@@ -44,8 +44,8 @@ class BackendController extends AbstractController
         return $controller->run();
     }
 
-    #[Route('/login', name: 'contao_backend_login', defaults: ['_store_referer' => false])]
-    #[Route('/login-link', name: 'contao_backend_login_link', defaults: ['_store_referer' => false])]
+    #[Route('/login', name: 'contao_backend_login', defaults: ['_store_referrer' => false])]
+    #[Route('/login-link', name: 'contao_backend_login_link', defaults: ['_store_referrer' => false])]
     public function loginAction(Request $request): Response
     {
         $this->initializeContaoFramework();
@@ -72,13 +72,13 @@ class BackendController extends AbstractController
     /**
      * Symfony will un-authenticate the user automatically by calling this route.
      */
-    #[Route('/logout', name: 'contao_backend_logout', defaults: ['_store_referer' => false])]
+    #[Route('/logout', name: 'contao_backend_logout', defaults: ['_store_referrer' => false])]
     public function logoutAction(): RedirectResponse
     {
         return $this->redirectToRoute('contao_backend_login');
     }
 
-    #[Route('/password', name: 'contao_backend_password', defaults: ['_store_referer' => false])]
+    #[Route('/password', name: 'contao_backend_password', defaults: ['_store_referrer' => false])]
     public function passwordAction(): Response
     {
         $this->initializeContaoFramework();
@@ -88,7 +88,7 @@ class BackendController extends AbstractController
         return $controller->run();
     }
 
-    #[Route('/confirm', name: 'contao_backend_confirm', defaults: ['_store_referer' => false])]
+    #[Route('/confirm', name: 'contao_backend_confirm', defaults: ['_store_referrer' => false])]
     public function confirmAction(): Response
     {
         $this->initializeContaoFramework();
@@ -98,7 +98,7 @@ class BackendController extends AbstractController
         return $controller->run();
     }
 
-    #[Route('/help', name: 'contao_backend_help', defaults: ['_store_referer' => false])]
+    #[Route('/help', name: 'contao_backend_help', defaults: ['_store_referrer' => false])]
     public function helpAction(): Response
     {
         $this->initializeContaoFramework();
@@ -108,7 +108,7 @@ class BackendController extends AbstractController
         return $controller->run();
     }
 
-    #[Route('/popup', name: 'contao_backend_popup', defaults: ['_store_referer' => false])]
+    #[Route('/popup', name: 'contao_backend_popup', defaults: ['_store_referrer' => false])]
     public function popupAction(): Response
     {
         $this->initializeContaoFramework();
@@ -118,7 +118,7 @@ class BackendController extends AbstractController
         return $controller->run();
     }
 
-    #[Route('/alerts', name: 'contao_backend_alerts', defaults: ['_store_referer' => false])]
+    #[Route('/alerts', name: 'contao_backend_alerts', defaults: ['_store_referrer' => false])]
     public function alertsAction(): Response
     {
         $this->initializeContaoFramework();
@@ -133,7 +133,7 @@ class BackendController extends AbstractController
      * It will determine the current provider URL based on the value, which is usually
      * read dynamically via JavaScript.
      */
-    #[Route('/picker', name: 'contao_backend_picker', defaults: ['_store_referer' => false])]
+    #[Route('/picker', name: 'contao_backend_picker', defaults: ['_store_referrer' => false])]
     public function pickerAction(Request $request): RedirectResponse
     {
         $extras = [];
@@ -156,7 +156,7 @@ class BackendController extends AbstractController
         return new RedirectResponse($picker->getCurrentUrl());
     }
 
-    #[Route('/{parameters}', name: 'contao_backend_fallback', requirements: ['parameters' => '.*'], defaults: ['_store_referer' => false], priority: -1000)]
+    #[Route('/{parameters}', name: 'contao_backend_fallback', requirements: ['parameters' => '.*'], defaults: ['_store_referrer' => false], priority: -1000)]
     public function backendFallback(): Response
     {
         return $this->render(

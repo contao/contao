@@ -260,7 +260,7 @@ abstract class Module extends Frontend
 			return array();
 		}
 
-		return array(System::getContainer()->get('contao.cache.entity_tags')->getTagForModelInstance($this->objModel));
+		return array(System::getContainer()->get('contao.cache.tag_manager')->getTagForModelInstance($this->objModel));
 	}
 
 	/**
