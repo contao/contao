@@ -19,7 +19,7 @@ use Twig\Node\Expression\Filter\RawFilter;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\Expression\FunctionExpression;
 use Twig\Node\Expression\GetAttrExpression;
-use Twig\Node\Expression\NameExpression;
+use Twig\Node\Expression\Variable\ContextVariable;
 use Twig\Node\Node;
 use Twig\Node\PrintNode;
 use Twig\Token;
@@ -101,7 +101,7 @@ final class SlotTokenParser extends AbstractTokenParser
     private function getSlotReferenceExpression(string $name, int $line): AbstractExpression
     {
         $node = new GetAttrExpression(
-            new NameExpression('_slots', $line),
+            new ContextVariable('_slots', $line),
             new ConstantExpression($name, $line),
             null,
             'array',
