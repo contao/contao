@@ -732,7 +732,7 @@ class tl_page extends Backend
 		{
 			$GLOBALS['TL_DCA']['tl_page']['fields']['type']['default'] = 'root';
 		}
-		elseif (Input::get('mode') == 1)
+		elseif (Input::get('mode') == DataContainer::PASTE_AFTER)
 		{
 			$objPage = Database::getInstance()
 				->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
