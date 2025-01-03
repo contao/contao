@@ -1,0 +1,60 @@
+tl_page:
+    - id: 1
+      type: root
+      language: de
+    - id: 2
+      pid: 1
+      type: regular
+
+tl_article:
+    - id: 1
+      tstamp: 1234567890
+      pid: 1
+      title: Article 1
+      inColumn: main
+
+tl_content:
+    - id: 1
+      tstamp: 1234567890
+      pid: 1
+      ptable: tl_article
+      type: element_group
+    - id: 2
+      tstamp: 1234567890
+      pid: 1
+      ptable: tl_content
+      type: element_group
+    - id: 3
+      tstamp: 1234567890
+      pid: 2
+      ptable: tl_content
+      type: headline
+
+tl_theme:
+    - id: 1
+      tstamp: 1234567890
+      name: Default
+      author: Leo Feyer
+
+tl_layout:
+    - id: 1
+      pid: 1
+      tstamp: 1234567890
+      name: Default
+      rows: 1rw
+      cols: 1cl
+      modules: a:1:{i:0;a:3:{s:3:"mod";s:1:"0";s:3:"col";s:4:"main";s:6:"enable";s:1:"1";}}
+      template: fe_page
+
+tl_user:
+    - id: 1
+      tstamp: 1234567890
+      username: k.jones
+      name: Kevin Jones
+      email: k.jones@example.com
+      language: de
+      password: $argon2id$v=19$m=65536,t=4,p=1$Qz+phxHnVCqYnMd3xZWmbQ$86GiZ3h9sDmXrbvzwXwjxgXNf1jwSitZr4fsbEkp7/U
+      admin: 1
+      dateAdded: 1539598726
+      lastLogin: 1539686648
+      currentLogin: 1539694637

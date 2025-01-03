@@ -75,4 +75,20 @@ class FallbackRecordLabelListenerTest extends TestCase
 
         $this->assertSame('Edit 123', $event->getLabel());
     }
+
+    public function testGetsLabelFromDcaWithShowColumnsEnabled(): void
+    {
+        $GLOBALS['TL_DCA']['tl_foo']['list']['label']['showColumns'] = true;
+        $GLOBALS['TL_DCA']['tl_foo']['list']['label']['fields'] = ['fieldA', 'fieldB'];
+
+        System::setContainer($this->getContainerWithContaoConfiguration());
+        (new \ReflectionClass(DcaLoader::class))->setStaticPropertyValue('arrLoaded', ['dcaFiles' => ['tl_foo' => true]]);
+
+        $translator = $this->createMock(TranslatorStub::class);
+
+        $listener = new FallbackRecordLabelListener($translator);
+        $listener($event = new DataContainerRecordLabelEvent('contao.db.tl_foo.123', ['id' => 123, 'fieldA' => 'A', 'fieldB' => '<span>(B &amp; B)</span>']));
+
+        $this->assertSame('A (B & B)', $event->getLabel());
+    }
 }
