@@ -96,7 +96,7 @@ class SitemapController extends AbstractController
 
     private function getPageAndArticleUrls(PageModel $parentPageModel): array
     {
-        if ($parentPageModel->type === 'root' && $parentPageModel->maintenanceMode) {
+        if ('root' === $parentPageModel->type && $parentPageModel->maintenanceMode) {
             return [];
         }
 
