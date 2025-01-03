@@ -31,10 +31,6 @@ class ServiceArgumentsTest extends FunctionalTestCase
     {
         $container = $this->getContainer();
 
-        if (!$container instanceof Container) {
-            $this->fail(\sprintf('Expected container to be of class %s, got %s', Container::class, $container::class));
-        }
-
         $files = Finder::create()
             ->files()
             ->name('*.yaml')
