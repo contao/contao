@@ -118,14 +118,17 @@ class GroupedDocumentIdsTest extends TestCase
 
         $chunks = $groupedDocumentIds->split(20);
         $this->assertCount(3, $chunks);
+
         $this->assertSame(
             ['type1' => ['id1', 'id2']],
             $chunks[0]->toArray(),
         );
+
         $this->assertSame(
             ['type1' => ['id3'], 'type2' => ['id4']],
             $chunks[1]->toArray(),
         );
+
         $this->assertSame(
             ['type2' => ['id5']],
             $chunks[2]->toArray(),
