@@ -194,7 +194,7 @@ class Form extends Hybrid
 				}
 			}
 
-			System::getContainer()->get('contao.cache.entity_tags')->tagWith($objFields);
+			System::getContainer()->get('contao.cache.tag_manager')->tagWith($objFields);
 		}
 
 		// HOOK: compile form fields

@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Twig\Error\Error;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -38,6 +39,7 @@ use Twig\Error\SyntaxError;
 /**
  * @experimental
  */
+#[IsGranted('ROLE_ADMIN', message: 'Access restricted to administrators.')]
 class BackendTemplateStudioController extends AbstractBackendController
 {
     /**
@@ -69,8 +71,6 @@ class BackendTemplateStudioController extends AbstractBackendController
     )]
     public function __invoke(): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         $availableThemes = $this->getAvailableThemes();
         $themeContext = $this->getThemeContext();
 
@@ -94,14 +94,12 @@ class BackendTemplateStudioController extends AbstractBackendController
     #[Route(
         '/%contao.backend.route_prefix%/template-studio-tree',
         name: '_contao_template_studio_tree.stream',
-        defaults: ['_scope' => 'backend', '_store_referrer' => false],
+        defaults: ['_scope' => 'backend', '_store_referrer' => false, '_unauthenticated_redirect_route' => 'contao_template_studio'],
         methods: ['GET'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
     public function tree(): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         return $this->render('@Contao/backend/template_studio/tree/tree.stream.html.twig', [
             'tree' => $this->generateTree(),
         ]);
@@ -113,14 +111,12 @@ class BackendTemplateStudioController extends AbstractBackendController
     #[Route(
         '/%contao.backend.route_prefix%/template-studio/select_theme',
         name: '_contao_template_studio_select_theme.stream',
-        defaults: ['_scope' => 'backend', '_token_check' => false, '_store_referrer' => false],
+        defaults: ['_scope' => 'backend', '_token_check' => false, '_store_referrer' => false, '_unauthenticated_redirect_route' => 'contao_template_studio'],
         methods: ['POST'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
     public function selectTheme(Request $request, #[MapQueryParameter('open_tab')] array $openTabs = []): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         $slug = $request->request->getString('theme') ?: null;
 
         if (null !== $slug && !isset($this->getAvailableThemes()[$slug])) {
@@ -142,14 +138,12 @@ class BackendTemplateStudioController extends AbstractBackendController
         '/%contao.backend.route_prefix%/template-studio/resource/{identifier}',
         name: '_contao_template_studio_editor_tab.stream',
         requirements: ['identifier' => '.+'],
-        defaults: ['_scope' => 'backend', '_store_referrer' => false],
+        defaults: ['_scope' => 'backend', '_store_referrer' => false, '_unauthenticated_redirect_route' => 'contao_template_studio'],
         methods: ['GET'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
     public function editorTab(string $identifier): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         if (!$this->isAllowedIdentifier($identifier)) {
             return $this->render(
                 '@Contao/backend/template_studio/editor/failed_to_open_tab.stream.html.twig',
@@ -231,14 +225,12 @@ class BackendTemplateStudioController extends AbstractBackendController
     #[Route(
         '/%contao.backend.route_prefix%/template-studio-follow',
         name: '_contao_template_studio_follow.stream',
-        defaults: ['_scope' => 'backend', '_store_referrer' => false],
+        defaults: ['_scope' => 'backend', '_store_referrer' => false, '_unauthenticated_redirect_route' => 'contao_template_studio'],
         methods: ['GET'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
     public function follow(#[MapQueryParameter('name')] string $logicalName): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         if (!($identifier = ContaoTwigUtil::getIdentifier($logicalName))) {
             return new Response('Could not retrieve template identifier.', Response::HTTP_UNPROCESSABLE_ENTITY);
         }
@@ -252,14 +244,12 @@ class BackendTemplateStudioController extends AbstractBackendController
     #[Route(
         '/%contao.backend.route_prefix%/template-studio-block-info',
         name: '_contao_template_studio_block_info.stream',
-        defaults: ['_scope' => 'backend', '_store_referrer' => false],
+        defaults: ['_scope' => 'backend', '_store_referrer' => false, '_unauthenticated_redirect_route' => 'contao_template_studio'],
         methods: ['GET'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
     public function blockInfo(#[MapQueryParameter('block')] string $blockName, #[MapQueryParameter('name')] string $logicalName): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         if (!$this->isAllowedIdentifier(ContaoTwigUtil::getIdentifier($logicalName))) {
             return new Response(
                 'The given template cannot be inspected.',
@@ -346,14 +336,12 @@ class BackendTemplateStudioController extends AbstractBackendController
     #[Route(
         '/%contao.backend.route_prefix%/template-studio-annotations-data',
         name: '_contao_template_studio_annotations_data.stream',
-        defaults: ['_scope' => 'backend', '_store_referrer' => false],
+        defaults: ['_scope' => 'backend', '_store_referrer' => false,  '_unauthenticated_redirect_route' => 'contao_template_studio'],
         methods: ['GET'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
     public function annotationsData(#[MapQueryParameter] string $identifier): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         if (!$this->isAllowedIdentifier($identifier)) {
             return new Response(
                 'No autocompletion data can be generated for the given template.',
@@ -377,14 +365,12 @@ class BackendTemplateStudioController extends AbstractBackendController
         '/%contao.backend.route_prefix%/template-studio/resource/{identifier}',
         name: '_contao_template_studio_operation.stream',
         requirements: ['identifier' => '.+'],
-        defaults: ['_scope' => 'backend', '_token_check' => false, '_store_referrer' => false],
+        defaults: ['_scope' => 'backend', '_token_check' => false, '_store_referrer' => false, '_unauthenticated_redirect_route' => 'contao_template_studio'],
         methods: ['POST'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
     public function operation(Request $request, string $identifier, #[MapQueryParameter('operation')] string $operationName): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-
         if (null === ($operation = ($this->operations[$operationName] ?? null)) || !$this->isAllowedIdentifier($identifier)) {
             return new Response(
                 'Cannot execute given operation for the given template identifier.',
@@ -417,7 +403,12 @@ class BackendTemplateStudioController extends AbstractBackendController
 
     private function generateTree(): array
     {
-        $userNamespace = ($themeSlug = $this->getThemeContext()) !== null ? $this->themeNamespace->getFromSlug($themeSlug) : '@Contao_Global';
+        $userNamespace = '@Contao_Global';
+
+        if (null !== ($themeSlug = $this->getThemeContext())) {
+            $userNamespace = $this->themeNamespace->getFromSlug($themeSlug);
+        }
+
         $prefixTree = [];
 
         foreach ($this->getFinder() as $identifier => $extension) {

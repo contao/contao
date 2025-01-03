@@ -164,6 +164,16 @@ abstract class DataContainer extends Backend
 	public const SORT_BOTH = 18;
 
 	/**
+	 * Paste after the parent
+	 */
+	public const PASTE_AFTER = 1;
+
+	/**
+	 * Paste into the parent
+	 */
+	public const PASTE_INTO = 2;
+
+	/**
 	 * Current ID
 	 * @var integer|string
 	 */
@@ -1300,7 +1310,7 @@ abstract class DataContainer extends Backend
 		// Make sure tags are unique and empty ones are removed
 		$tags = array_filter(array_unique($tags));
 
-		System::getContainer()->get('contao.cache.tag_invalidator')->invalidateTags($tags);
+		System::getContainer()->get('contao.cache.tag_manager')->invalidateTags($tags);
 	}
 
 	public function addPtableTags($strTable, $intId, &$tags)
