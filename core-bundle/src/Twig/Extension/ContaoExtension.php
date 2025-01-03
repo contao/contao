@@ -49,6 +49,7 @@ use Contao\FrontendTemplate;
 use Contao\FrontendTemplateTrait;
 use Contao\StringUtil;
 use Symfony\Component\Filesystem\Path;
+use Twig\DeprecatedCallableInfo;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Extension\AbstractExtension;
@@ -188,7 +189,14 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFunction(
                 'contao_figure',
                 [FigureRuntime::class, 'renderFigure'],
-                ['is_safe' => ['html'], 'deprecated' => true],
+                [
+                    'is_safe' => ['html'],
+                    'deprecated_info' => new DeprecatedCallableInfo(
+                        'contao/core-bundle',
+                        '5.0',
+                        'The "contao_figure" function is deprecated, use the "figure" together with the "component/_figure.html.twig" component instead.',
+                    ),
+                ],
             ),
             new TwigFunction(
                 'picture_config',
