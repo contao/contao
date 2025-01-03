@@ -27,6 +27,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use League\Flysystem\Config;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class FilesStorageProviderTest extends AbstractProviderTestCase
@@ -87,7 +88,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             ]))
         ;
 
-        $dbafsManager = new DbafsManager();
+        $dbafsManager = new DbafsManager($this->createMock(EventDispatcherInterface::class));
         $dbafsManager->register($dbafs, '');
 
         $filesystem = new VirtualFilesystem(
@@ -125,7 +126,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             ]))
         ;
 
-        $dbafsManager = new DbafsManager();
+        $dbafsManager = new DbafsManager($this->createMock(EventDispatcherInterface::class));
         $dbafsManager->register($dbafs, '');
 
         $filesystem = new VirtualFilesystem(
