@@ -23,6 +23,7 @@
             },
             callbackOnInit: () => {
                 const choices = select.closest('.choices')?.querySelector('.choices__list--dropdown > .choices__list');
+
                 if (choices && select.dataset.placeholder) {
                     choices.dataset.placeholder = select.dataset.placeholder;
                 }
@@ -32,16 +33,16 @@
             noChoicesText: Contao.lang.noChoices,
             itemSelectText: Contao.lang.pressToSelect,
             uniqueItemText: Contao.lang.onlyUnique,
-            customAddItemText: Contao.lang.onlyConditions,
+            customAddItemText: Contao.lang.onlyConditions
         })
     }
 
     new MutationObserver(function (mutationsList) {
-        for(const mutation of mutationsList) {
+        for (const mutation of mutationsList) {
             if (mutation.type === 'childList') {
                 mutation.addedNodes.forEach(function (element) {
                     if (element.matches && element.matches('select.tl_chosen')) {
-                        init(element)
+                        init(element);
                     }
                 })
             }
