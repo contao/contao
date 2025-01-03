@@ -24,7 +24,7 @@ class ReindexMessage implements LowPriorityMessageInterface, ScopeAwareMessageIn
 {
     use ScopeAwareMessageTrait;
 
-    private array $asArray = [];
+    private readonly array $asArray;
 
     public function __construct(ReindexConfig $reindexConfig)
     {
