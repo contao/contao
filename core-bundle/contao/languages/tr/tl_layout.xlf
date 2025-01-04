@@ -191,7 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_layout.icons.css.1">
         <source>Adds basic mime icons for downloads and enclosures.</source>
-        <target>Bu seçenek etkinleştirildiğinde, indirmeler ve ek dosyalar için temel MIME simgeleri eklenir.</target>
+        <target>Bu seçenek etkinleştirildiğinde, indirmeler ve zarflar için temel MIME simgeleri eklenir.</target>
       </trans-unit>
       <trans-unit id="tl_layout.external.0">
         <source>External style sheets</source>
