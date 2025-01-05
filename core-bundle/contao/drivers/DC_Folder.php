@@ -16,6 +16,9 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\BadRequestException;
 use Contao\CoreBundle\Exception\NotFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\File\MetadataBag;
+use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
@@ -653,21 +656,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Update the database AFTER the file has been moved
 			if ($this->blnIsDbAssisted)
 			{
-				$syncSource = Dbafs::shouldBeSynchronized($source);
-				$syncTarget = Dbafs::shouldBeSynchronized($destination);
-
-				if ($syncSource && $syncTarget)
-				{
-					Dbafs::moveResource($source, $destination);
-				}
-				elseif ($syncSource)
-				{
-					Dbafs::deleteResource($source);
-				}
-				elseif ($syncTarget)
-				{
-					Dbafs::addResource($destination);
-				}
+				System::getContainer()->get('contao.filesystem.dbafs_manager')->sync($source, $destination);
 			}
 
 			// Call the oncut_callback
@@ -837,17 +826,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Update the database AFTER the file has been copied
 		if ($this->blnIsDbAssisted)
 		{
-			$syncSource = Dbafs::shouldBeSynchronized($source);
-			$syncTarget = Dbafs::shouldBeSynchronized($destination);
-
-			if ($syncSource && $syncTarget)
-			{
-				Dbafs::copyResource($source, $destination);
-			}
-			elseif ($syncTarget)
-			{
-				Dbafs::addResource($destination);
-			}
+			System::getContainer()->get('contao.filesystem.dbafs_manager')->sync($source, $destination);
 		}
 
 		// Call the oncopy_callback
@@ -989,9 +968,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		// Update the database AFTER the resource has been deleted
-		if ($this->blnIsDbAssisted && Dbafs::shouldBeSynchronized($source))
+		if ($this->blnIsDbAssisted)
 		{
-			Dbafs::deleteResource($source);
+			System::getContainer()->get('contao.filesystem.dbafs_manager')->sync($source);
 		}
 
 		System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been deleted');
@@ -1109,10 +1088,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$this->reload();
 				}
 
-				foreach ($arrUploaded as $strFile)
-				{
-					Dbafs::addResource($strFile);
-				}
+				System::getContainer()->get('contao.filesystem.dbafs_manager')->sync(...$arrUploaded);
 			}
 			else
 			{
@@ -1137,9 +1113,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			// Update the hash of the target folder
-			if ($this->blnIsDbAssisted && Dbafs::shouldBeSynchronized($strFolder))
+			if ($this->blnIsDbAssisted)
 			{
-				Dbafs::updateFolderHashes($strFolder);
+				System::getContainer()->get('contao.filesystem.dbafs_manager')->sync($strFolder);
 			}
 
 			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
@@ -1237,7 +1213,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				if ($objModel === null)
 				{
-					$objModel = Dbafs::addResource($this->intId);
+					System::getContainer()->get('contao.filesystem.dbafs_manager')->sync($this->intId);
+
+					$objModel = FilesModel::findByPath($this->intId);
 				}
 
 				$this->objActiveRecord = $objModel;
@@ -1526,7 +1504,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 					if ($objModel === null)
 					{
-						$objModel = Dbafs::addResource($id);
+						System::getContainer()->get('contao.filesystem.dbafs_manager')->sync($id);
+
+						$objModel = FilesModel::findByPath($id);
 					}
 
 					$this->objActiveRecord = $objModel;
@@ -1772,7 +1752,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			if ($objMeta === null)
 			{
-				$objMeta = Dbafs::addResource($objFile->value);
+				System::getContainer()->get('contao.filesystem.dbafs_manager')->sync($objFile->value);
+
+				$objMeta = FilesModel::findByPath($objFile->value);
 			}
 
 			$objVersions = new Versions($this->strTable, $objMeta->id);
@@ -2014,7 +1996,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				// Update the database
 				if ($this->blnIsDbAssisted && Dbafs::shouldBeSynchronized($this->strPath . '/' . $varValue . $this->strExtension))
 				{
-					$this->objActiveRecord = Dbafs::addResource($this->strPath . '/' . $varValue . $this->strExtension);
+					System::getContainer()->get('contao.filesystem.dbafs_manager')->sync($this->strPath . '/' . $varValue . $this->strExtension);
+
+					$this->objActiveRecord = FilesModel::findByPath($this->strPath . '/' . $varValue . $this->strExtension);
 				}
 
 				System::getContainer()->get('monolog.logger.contao.files')->info('Folder "' . $this->strPath . '/' . $varValue . $this->strExtension . '" has been created');
@@ -2024,21 +2008,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				// Update the database
 				if ($this->blnIsDbAssisted)
 				{
-					$syncSource = Dbafs::shouldBeSynchronized($this->strPath . '/' . $this->varValue . $this->strExtension);
-					$syncTarget = Dbafs::shouldBeSynchronized($this->strPath . '/' . $varValue . $this->strExtension);
-
-					if ($syncSource && $syncTarget)
-					{
-						Dbafs::moveResource($this->strPath . '/' . $this->varValue . $this->strExtension, $this->strPath . '/' . $varValue . $this->strExtension);
-					}
-					elseif ($syncSource)
-					{
-						Dbafs::deleteResource($this->strPath . '/' . $this->varValue . $this->strExtension);
-					}
-					elseif ($syncTarget)
-					{
-						Dbafs::addResource($this->strPath . '/' . $varValue . $this->strExtension);
-					}
+					System::getContainer()->get('contao.filesystem.dbafs_manager')->sync(
+						$this->strPath . '/' . $this->varValue . $this->strExtension,
+						$this->strPath . '/' . $varValue . $this->strExtension,
+					);
 				}
 
 				System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $this->strPath . '/' . $this->varValue . $this->strExtension . '" has been renamed to "' . $this->strPath . '/' . $varValue . $this->strExtension . '"');
@@ -2154,8 +2127,29 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$varValue = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
 				}
 
-				$this->objActiveRecord->{$this->strField} = $varValue;
-				$this->objActiveRecord->save();
+				if ($this->strTable === 'tl_files' && $this->strField === 'meta')
+				{
+					/** @var DbafsManager $dbafsManager */
+					$dbafsManager = System::getContainer()->get('contao.filesystem.dbafs_manager');
+					$path = $this->objActiveRecord->path;
+
+					$metadata = $dbafsManager->getExtraMetadata($path);
+					$metadata->setLocalized(
+						new MetadataBag(
+							array_map(
+								static fn ($values) => new Metadata($values),
+								StringUtil::deserialize($varValue, true)
+							)
+						)
+					);
+
+					$dbafsManager->setExtraMetadata($path, $metadata);
+				}
+				else
+				{
+					$this->objActiveRecord->{$this->strField} = $varValue;
+					$this->objActiveRecord->save();
+				}
 
 				if (!isset($arrData['eval']['versionize']) || $arrData['eval']['versionize'] !== false)
 				{
