@@ -532,7 +532,7 @@ class DbafsManagerTest extends TestCase
     }
 
     /**
-     * @param EventDispatcherInterface&MockObject|null $eventDispatcher
+     * @param (EventDispatcherInterface&MockObject)|null $eventDispatcher
      */
     private function getDbafsManager(EventDispatcherInterface|null $eventDispatcher = null): DbafsManager
     {
