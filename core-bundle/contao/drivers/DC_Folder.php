@@ -656,7 +656,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Update the database AFTER the file has been moved
 			if ($this->blnIsDbAssisted)
 			{
-				System::getContainer()->get('contao.filesystem.dbafs_manager')->sync($source, $destination);
+				$this->syncDbafsAndUpdateModelCache($source, $destination);
 			}
 
 			// Call the oncut_callback
@@ -826,7 +826,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Update the database AFTER the file has been copied
 		if ($this->blnIsDbAssisted)
 		{
-			System::getContainer()->get('contao.filesystem.dbafs_manager')->sync($source, $destination);
+			$this->syncDbafsAndUpdateModelCache($source, $destination);
 		}
 
 		// Call the oncopy_callback
@@ -970,7 +970,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Update the database AFTER the resource has been deleted
 		if ($this->blnIsDbAssisted)
 		{
-			System::getContainer()->get('contao.filesystem.dbafs_manager')->sync($source);
+			$this->syncDbafsAndUpdateModelCache($source);
 		}
 
 		System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been deleted');
@@ -1088,7 +1088,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$this->reload();
 				}
 
-				System::getContainer()->get('contao.filesystem.dbafs_manager')->sync(...$arrUploaded);
+				$this->syncDbafsAndUpdateModelCache(...$arrUploaded);
 			}
 			else
 			{
@@ -1115,7 +1115,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Update the hash of the target folder
 			if ($this->blnIsDbAssisted)
 			{
-				System::getContainer()->get('contao.filesystem.dbafs_manager')->sync($strFolder);
+				$this->syncDbafsAndUpdateModelCache($strFolder);
 			}
 
 			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
@@ -1213,7 +1213,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				if ($objModel === null)
 				{
-					System::getContainer()->get('contao.filesystem.dbafs_manager')->sync($this->intId);
+					$this->syncDbafsAndUpdateModelCache($this->intId);
 
 					$objModel = FilesModel::findByPath($this->intId);
 				}
@@ -1504,7 +1504,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 					if ($objModel === null)
 					{
-						System::getContainer()->get('contao.filesystem.dbafs_manager')->sync($id);
+						$this->syncDbafsAndUpdateModelCache($id);
 
 						$objModel = FilesModel::findByPath($id);
 					}
@@ -1752,7 +1752,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			if ($objMeta === null)
 			{
-				System::getContainer()->get('contao.filesystem.dbafs_manager')->sync($objFile->value);
+				$this->syncDbafsAndUpdateModelCache($objFile->value);
 
 				$objMeta = FilesModel::findByPath($objFile->value);
 			}
@@ -1996,7 +1996,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				// Update the database
 				if ($this->blnIsDbAssisted && Dbafs::shouldBeSynchronized($this->strPath . '/' . $varValue . $this->strExtension))
 				{
-					System::getContainer()->get('contao.filesystem.dbafs_manager')->sync($this->strPath . '/' . $varValue . $this->strExtension);
+					$this->syncDbafsAndUpdateModelCache($this->strPath . '/' . $varValue . $this->strExtension);
 
 					$this->objActiveRecord = FilesModel::findByPath($this->strPath . '/' . $varValue . $this->strExtension);
 				}
@@ -2008,10 +2008,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				// Update the database
 				if ($this->blnIsDbAssisted)
 				{
-					System::getContainer()->get('contao.filesystem.dbafs_manager')->sync(
+					$this->syncDbafsAndUpdateModelCache(
 						$this->strPath . '/' . $this->varValue . $this->strExtension,
 						$this->strPath . '/' . $varValue . $this->strExtension,
 					);
+
+					// Update the model cache
+					FilesModel::findByPath($this->strPath . '/' . $varValue . $this->strExtension);
 				}
 
 				System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $this->strPath . '/' . $this->varValue . $this->strExtension . '" has been renamed to "' . $this->strPath . '/' . $varValue . $this->strExtension . '"');
@@ -2897,5 +2900,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$img = $picture->getImg($projectDir, $container->get('contao.assets.files_context')->getStaticUrl());
 
 		return \sprintf('<img src="%s"%s width="%s" height="%s" alt class="%s" loading="lazy">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], $isImportantPath ? 'preview-important' : 'preview-image');
+	}
+
+	private function syncDbafsAndUpdateModelCache(string ...$locations): void
+	{
+		System::getContainer()->get('contao.filesystem.dbafs_manager')->sync(...$locations);
+
+		FilesModel::findMultipleByPaths($locations);
 	}
 }
