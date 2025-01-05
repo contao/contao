@@ -1040,6 +1040,9 @@ services:
         arguments:
             - '@security.access.decision_manager'
 
+    contao.security.data_container.legacy_templates_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\LegacyTemplatesVoter
+
     contao.security.data_container.page_permission_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\PagePermissionVoter
         arguments:
@@ -1091,9 +1094,6 @@ services:
         arguments:
             - '@contao.framework'
             - Contao\FrontendUser
-
-    contao.security.legacy_templates_voter:
-        class: Contao\CoreBundle\Security\Voter\DataContainer\LegacyTemplatesVoter
 
     contao.security.login_authenticator:
         class: Contao\CoreBundle\Security\Authenticator\ContaoLoginAuthenticator
