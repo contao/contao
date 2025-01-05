@@ -1092,6 +1092,9 @@ services:
             - '@contao.framework'
             - Contao\FrontendUser
 
+    contao.security.legacy_templates_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\LegacyTemplatesVoter
+
     contao.security.login_authenticator:
         class: Contao\CoreBundle\Security\Authenticator\ContaoLoginAuthenticator
         arguments:
