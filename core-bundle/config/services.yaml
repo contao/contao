@@ -301,6 +301,11 @@ services:
         arguments:
             - !tagged_iterator contao.public_file_uri_provider
 
+    contao.filesystem.public_uri.flysystem_default_provider:
+        class: Contao\CoreBundle\Filesystem\PublicUri\FlysystemDefaultProvider
+        tags:
+            - { name: contao.public_file_uri_provider }
+
     contao.filesystem.public_uri.symlinked_local_files_provider:
         class: Contao\CoreBundle\Filesystem\PublicUri\SymlinkedLocalFilesProvider
         arguments:
@@ -309,11 +314,6 @@ services:
             - '@request_stack'
         tags:
             - { name: contao.public_file_uri_provider }
-
-    contao.filesystem.public_uri.flysystem_default_provider:
-        class: Contao\CoreBundle\Filesystem\PublicUri\FlysystemDefaultProvider
-        tags:
-            - { name: contao.public_file_uri_provider}
 
     contao.filesystem.virtual_factory:
         class: Contao\CoreBundle\Filesystem\VirtualFilesystemFactory
