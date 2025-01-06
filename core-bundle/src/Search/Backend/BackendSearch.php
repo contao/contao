@@ -42,7 +42,6 @@ class BackendSearch
         private readonly MessageBusInterface $messageBus,
         private readonly WebWorker $webWorker,
         private readonly SealReindexProvider $reindexProvider,
-        private readonly string $indexName,
     ) {
     }
 
@@ -75,7 +74,7 @@ class BackendSearch
             }
         }
 
-        $this->engine->bulk($this->indexName, [], $documentIds);
+        $this->engine->bulk(self::SEAL_INTERNAL_INDEX_NAME, [], $documentIds);
 
         return $this;
     }
@@ -158,8 +157,8 @@ class BackendSearch
     public function clear(): void
     {
         // TODO: We need an API for that in SEAL
-        $this->engine->dropIndex($this->indexName);
-        $this->engine->createIndex($this->indexName);
+        $this->engine->dropIndex(self::SEAL_INTERNAL_INDEX_NAME);
+        $this->engine->createIndex(self::SEAL_INTERNAL_INDEX_NAME);
     }
 
     private function createSearchBuilder(Query $query): SearchBuilder

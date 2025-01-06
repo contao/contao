@@ -56,7 +56,6 @@ class BackendSearchTest extends TestCase
             $this->createMock(MessageBusInterface::class),
             $webWorker,
             $this->createMock(SealReindexProvider::class),
-            'contao_backend_search',
         );
 
         $this->assertTrue($backendSearch->isAvailable());
@@ -97,7 +96,6 @@ class BackendSearchTest extends TestCase
             $this->createMock(MessageBusInterface::class),
             $this->createMock(WebWorker::class),
             $reindexProvider,
-            'contao_backend_search',
         );
 
         $backendSearch->reindex($reindexConfig, false);
@@ -126,7 +124,6 @@ class BackendSearchTest extends TestCase
             $messageBus,
             $this->createMock(WebWorker::class),
             $this->createMock(SealReindexProvider::class),
-            'contao_backend_search',
         );
 
         $backendSearch->reindex($reindexConfig);
@@ -188,7 +185,6 @@ class BackendSearchTest extends TestCase
             $this->createMock(MessageBusInterface::class),
             $this->createMock(WebWorker::class),
             $this->createMock(SealReindexProvider::class),
-            $indexName,
         );
         $result = $backendSearch->search(new Query(20, 'search me'));
 
@@ -251,7 +247,6 @@ class BackendSearchTest extends TestCase
             $messageBus,
             $this->createMock(WebWorker::class),
             $this->createMock(SealReindexProvider::class),
-            $indexName,
         );
 
         $result = $backendSearch->search(new Query(20, 'search me'));
@@ -284,7 +279,6 @@ class BackendSearchTest extends TestCase
             $this->createMock(MessageBusInterface::class),
             $this->createMock(WebWorker::class),
             $this->createMock(SealReindexProvider::class),
-            'contao_backend_search',
         );
 
         $backendSearch->deleteDocuments($documentTypesAndIds, false);
@@ -313,7 +307,6 @@ class BackendSearchTest extends TestCase
             $messageBus,
             $this->createMock(WebWorker::class),
             $this->createMock(SealReindexProvider::class),
-            'contao_backend_search',
         );
 
         $backendSearch->deleteDocuments($documentTypesAndIds);
