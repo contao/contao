@@ -555,9 +555,7 @@ class DbafsManagerTest extends TestCase
      */
     private function getDbafsManager(EventDispatcherInterface|null $eventDispatcher = null): DbafsManager
     {
-        return new DbafsManager(
-            $eventDispatcher ?? $this->createMock(EventDispatcherInterface::class),
-        );
+        return new DbafsManager($eventDispatcher ?? $this->createMock(EventDispatcherInterface::class));
     }
 
     private function getDbafsListingRecords(string $path, array $listing, bool $deep): DbafsInterface
