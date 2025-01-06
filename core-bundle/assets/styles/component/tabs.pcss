@@ -7,14 +7,14 @@
 
     /* Navigation */
     *[data-contao--tabs-target="navigation"] {
-        display: flex;
-        flex-wrap: wrap;
         list-style: none;
         padding: 0;
         margin: 0;
+        white-space: nowrap;
+        overflow: auto hidden;
 
         > li {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             font-size: .75rem;
             padding: 4px 8px;
@@ -67,7 +67,7 @@
     .tab-panels:not(:has(*)) {
         height: 100%;
         position: relative;
-        background-color: var(--chosen-bg);
+        background-color: var(--panel-bg);
 
         &+.initial {
             position: absolute;

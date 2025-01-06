@@ -87,7 +87,9 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'edit' => array
 			(
 				'href'                => 'act=edit',
+				'prefetch'            => true,
 				'icon'                => 'edit.svg',
+				'attributes'          => 'data-contao--deeplink-target="primary"',
 				'button_callback'     => array('tl_comments', 'editComment')
 			),
 			'delete' => array
@@ -579,7 +581,7 @@ class tl_comments extends Backend
 	 */
 	public function editComment($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->isAllowedToEditComment($row['parent'], $row['source']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return $this->isAllowedToEditComment($row['parent'], $row['source']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id'], addRequestToken: false) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**

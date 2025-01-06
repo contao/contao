@@ -62,8 +62,6 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'href'                => 'key=new_tpl',
 				'class'               => 'header_new'
 			),
-			'toggleNodes',
-			'all'
 		),
 		'operations' => array
 		(
@@ -200,7 +198,7 @@ class tl_templates extends Backend
 			}
 			else
 			{
-				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . $this->addToUrl('fn=' . $strPath) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $strFolder . '</a>';
+				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . $this->addToUrl('fn=' . $strPath) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $strFolder . '</a>';
 			}
 		}
 

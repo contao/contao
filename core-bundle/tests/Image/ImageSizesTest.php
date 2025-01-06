@@ -20,7 +20,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Contracts\Service\ResetInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ImageSizesTest extends TestCase
@@ -128,8 +127,6 @@ class ImageSizesTest extends TestCase
 
     public function testServiceIsResetable(): void
     {
-        $this->assertInstanceOf(ResetInterface::class, $this->imageSizes);
-
         $this->eventDispatcher
             ->expects($this->exactly(3))
             ->method('dispatch')

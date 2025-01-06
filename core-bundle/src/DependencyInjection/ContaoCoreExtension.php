@@ -338,9 +338,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
     private function handleBackendSearchConfig(array $config, ContainerBuilder $container, LoaderInterface $loader): void
     {
-        // Used to display/hide the search box in the back end
-        $container->setParameter('contao.backend_search.enabled', $config['backend_search']['enabled']);
-
         if (!$config['backend_search']['enabled']) {
             return;
         }
@@ -364,12 +361,9 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $engine
             ->setArgument(1, (new Definition(BackendSearch::class))
                 ->setFactory([null, 'getSearchEngineSchema'])
-                ->setArgument(0, $indexName),
+                ->setArgument('$indexName', $indexName),
             )
         ;
-
-        $factory = $container->getDefinition('contao.search.backend');
-        $factory->setArgument(5, $indexName);
     }
 
     private function handleCrawlConfig(array $config, ContainerBuilder $container): void
@@ -517,8 +511,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         if ($container->hasParameter('security.role_hierarchy.roles') && \count($container->getParameter('security.role_hierarchy.roles')) > 0) {
             $tokenChecker->replaceArgument(4, new Reference('security.access.role_hierarchy_voter'));
-        } else {
-            $tokenChecker->replaceArgument(4, new Reference('security.access.simple_role_voter'));
         }
     }
 

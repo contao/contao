@@ -204,7 +204,7 @@ class InspectorTest extends TestCase
         $inspector = $this->getInspector();
 
         $this->expectException(InspectionException::class);
-        $this->expectExceptionMessage('Could not inspect template "foo.html.twig".');
+        $this->expectExceptionMessage('Could not inspect template "foo.html.twig". The template does not exist.');
 
         $inspector->inspectTemplate('foo.html.twig');
     }

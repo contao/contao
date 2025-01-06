@@ -19,13 +19,15 @@ use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Search\Backend\Document;
+use Contao\CoreBundle\Search\Backend\GroupedDocumentIds;
 use Contao\CoreBundle\Search\Backend\Hit;
-use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\UpdateAllProvidersConfig;
 use Contao\CoreBundle\Search\Backend\Provider\FilesStorageProvider;
+use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use League\Flysystem\Config;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class FilesStorageProviderTest extends AbstractProviderTestCase
@@ -59,7 +61,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             $this->createMock(Studio::class),
         );
 
-        $documents = iterator_to_array($provider->updateIndex(new UpdateAllProvidersConfig()));
+        $documents = iterator_to_array($provider->updateIndex(new ReindexConfig()));
 
         $this->assertCount(1, $documents);
 
@@ -86,7 +88,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             ]))
         ;
 
-        $dbafsManager = new DbafsManager();
+        $dbafsManager = new DbafsManager($this->createMock(EventDispatcherInterface::class));
         $dbafsManager->register($dbafs, '');
 
         $filesystem = new VirtualFilesystem(
@@ -101,7 +103,44 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
         );
 
         $since = new \DateTimeImmutable('1970-01-01 01:00:00');
-        $documents = iterator_to_array($provider->updateIndex(new UpdateAllProvidersConfig($since)));
+        $documents = iterator_to_array($provider->updateIndex((new ReindexConfig())->limitToDocumentsNewerThan($since)));
+
+        $this->assertCount(1, $documents);
+
+        /** @var Document $document */
+        $document = $documents[0];
+
+        $this->assertSame('bar', $document->getId());
+    }
+
+    public function testLimitToDocumentIds(): void
+    {
+        $dbafs = $this->createMock(DbafsInterface::class);
+        $dbafs
+            ->method('getRecords')
+            ->with('', true)
+            ->willReturn(new \ArrayIterator([
+                new FilesystemItem(true, 'foo', 3600),
+                new FilesystemItem(true, 'bar', 3601),
+                new FilesystemItem(true, 'baz', 0),
+            ]))
+        ;
+
+        $dbafsManager = new DbafsManager($this->createMock(EventDispatcherInterface::class));
+        $dbafsManager->register($dbafs, '');
+
+        $filesystem = new VirtualFilesystem(
+            $this->createMock(MountManager::class),
+            $dbafsManager,
+        );
+
+        $provider = new FilesStorageProvider(
+            $filesystem,
+            $this->createMock(Security::class),
+            $this->createMock(Studio::class),
+        );
+
+        $documents = iterator_to_array($provider->updateIndex((new ReindexConfig())->limitToDocumentIds(new GroupedDocumentIds([FilesStorageProvider::TYPE => ['bar']]))));
 
         $this->assertCount(1, $documents);
 

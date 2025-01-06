@@ -12,7 +12,6 @@
       <meta name="referrer" content="origin">
     <?php $this->endblock(); ?>
 
-    <link rel="stylesheet" href="<?= $this->asset('css/mooRainbow.min.css', 'contao-components/colorpicker') ?>">
     <link rel="stylesheet" href="<?= $this->asset('css/chosen.min.css', 'contao-components/chosen') ?>">
     <link rel="stylesheet" href="<?= $this->asset('css/simplemodal.min.css', 'contao-components/simplemodal') ?>">
     <link rel="stylesheet" href="<?= $this->asset('css/datepicker.min.css', 'contao-components/datepicker') ?>">
@@ -22,7 +21,6 @@
 
     <script><?= $this->getLocaleString() ?></script>
     <script src="<?= $this->asset('js/mootools.min.js', 'contao-components/mootools') ?>"></script>
-    <script src="<?= $this->asset('js/mooRainbow.min.js', 'contao-components/colorpicker') ?>"></script>
     <script src="<?= $this->asset('js/chosen.min.js', 'contao-components/chosen') ?>"></script>
     <script src="<?= $this->asset('js/simplemodal.min.js', 'contao-components/simplemodal') ?>"></script>
     <script src="<?= $this->asset('js/datepicker.min.js', 'contao-components/datepicker') ?>"></script>
@@ -37,28 +35,21 @@
 
   <?php /* If the following hash changes, Turbo will reload the entire page instead of merging contents. */ ?>
   <meta data-turbo-track="reload" content="<?= md5($this->stylesheets."\0".$this->javascripts); ?>">
-  <meta name="turbo-root" content="<?= $this->turboRoot ?>">
 </head>
-<body id="top" class="be_main<?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->attributes ?> data-controller="contao--tooltip">
+<body id="top" class="be_main<?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->attributes ?> data-controller="contao--tooltips">
 
   <?php $this->block('header'); ?>
     <?php if (!$this->isPopup): ?>
       <header id="header">
         <div class="inner">
           <h1>
-            <a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>">
+            <a href="<?= $this->route('contao_backend') ?>" accesskey="h" id="home" title="<?= $this->home ?>" data-contao--tooltips-target="tooltip">
               <span class="app-title">Contao</span>
               <?php if ($this->badgeTitle): ?>
                 <span class="badge-title"><?= $this->badgeTitle ?></span>
               <?php endif; ?>
             </a>
           </h1>
-          <?php if ($this->searchEnabled): ?>
-            <div style="position: absolute;left: 200px;top: 7px;" >
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-              <form style="float:right;margin-left:5px" action="contao/search" method="GET" target="_blank"><input type="text" name="keywords"></form>
-            </div>
-          <?php endif; ?>
           <?= $this->headerMenu ?>
         </div>
       </header>

@@ -1072,9 +1072,9 @@ class Input
 	 *
 	 * @return mixed The variable value
 	 */
-	public static function findGet($strKey)
+	public static function findGet($strKey, Request|null $request = null)
 	{
-		if ($request = static::getRequest())
+		if ($request ??= static::getRequest())
 		{
 			if ('auto_item' === $strKey && $request->attributes->has('auto_item'))
 			{

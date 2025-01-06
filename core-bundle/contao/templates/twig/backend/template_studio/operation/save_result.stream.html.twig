@@ -11,5 +11,10 @@
     </template>
 </turbo-stream>
 
-{# Reload autocompletions #}
-{{ render(path('_contao_template_studio_autocomplete_data.stream', {identifier})) }}
+{% if full_reload %}
+    {# Reopen the current tab #}
+    {{ render(path('_contao_template_studio_editor_tab.stream', {identifier: identifier})) }}
+{% else %}
+    {# Reload annotations #}
+    {{ render(path('_contao_template_studio_annotations_data.stream', {identifier})) }}
+{% endif %}

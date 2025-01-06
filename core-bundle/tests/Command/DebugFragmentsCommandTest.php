@@ -19,6 +19,7 @@ use Contao\CoreBundle\Fragment\FragmentConfig;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\ModuleArticle;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -59,7 +60,10 @@ class DebugFragmentsCommandTest extends TestCase
 
             /** @var FragmentOptionsAwareInterface $instance */
             $instance = (new \ReflectionClass($config->getController()))->newInstanceWithoutConstructor();
-            $instance->setFragmentOptions($options);
+
+            if ($instance instanceof FragmentOptionsAwareInterface) {
+                $instance->setFragmentOptions($options);
+            }
 
             $container->set($config->getController(), $instance);
         }
@@ -129,6 +133,23 @@ class DebugFragmentsCommandTest extends TestCase
                   contao.foo.bar   Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController   esi        ignore_errors : false   category : esi
                                                                                                                                             foo      : bar
                  ---------------- --------------------------------------------------------------------- ---------- ----------------------- ------------------
+
+
+                OUTPUT,
+        ];
+
+        yield 'Legacy modules' => [
+            [
+                ['contao.foo.bar', new FragmentConfig(ModuleArticle::class), []],
+            ],
+            <<<'OUTPUT'
+
+                Contao Fragments
+                ================
+
+                 ------------ ------------ ---------- ---------------- ------------------
+                  Identifier   Controller   Renderer   Render Options   Fragment Options
+                 ------------ ------------ ---------- ---------------- ------------------
 
 
                 OUTPUT,

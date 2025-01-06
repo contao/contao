@@ -23,7 +23,7 @@ class ExtraMetadataTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
-    public function testSetAndGetValues(): void
+    public function testGetValues(): void
     {
         $data = [
             'foo' => 42,
@@ -49,6 +49,15 @@ class ExtraMetadataTest extends TestCase
         $this->assertFalse(isset($extraMetadata['non-existent']));
 
         $this->assertSame($data, $extraMetadata->all());
+    }
+
+    public function testSetLocalizedMetadata(): void
+    {
+        $extraMetadata = new ExtraMetadata(['foo' => 42]);
+        $extraMetadata->setLocalized(new MetadataBag(['en' => new Metadata(['bar' => 'baz'])]));
+
+        $this->assertSame(42, $extraMetadata->get('foo'));
+        $this->assertSame('baz', $extraMetadata->getLocalized()->get('en')->get('bar'));
     }
 
     /**

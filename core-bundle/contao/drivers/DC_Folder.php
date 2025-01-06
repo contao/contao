@@ -16,6 +16,9 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\BadRequestException;
 use Contao\CoreBundle\Exception\NotFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\File\MetadataBag;
+use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
@@ -653,21 +656,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Update the database AFTER the file has been moved
 			if ($this->blnIsDbAssisted)
 			{
-				$syncSource = Dbafs::shouldBeSynchronized($source);
-				$syncTarget = Dbafs::shouldBeSynchronized($destination);
-
-				if ($syncSource && $syncTarget)
-				{
-					Dbafs::moveResource($source, $destination);
-				}
-				elseif ($syncSource)
-				{
-					Dbafs::deleteResource($source);
-				}
-				elseif ($syncTarget)
-				{
-					Dbafs::addResource($destination);
-				}
+				$this->syncDbafsAndUpdateModelCache($source, $destination);
 			}
 
 			// Call the oncut_callback
@@ -837,17 +826,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Update the database AFTER the file has been copied
 		if ($this->blnIsDbAssisted)
 		{
-			$syncSource = Dbafs::shouldBeSynchronized($source);
-			$syncTarget = Dbafs::shouldBeSynchronized($destination);
-
-			if ($syncSource && $syncTarget)
-			{
-				Dbafs::copyResource($source, $destination);
-			}
-			elseif ($syncTarget)
-			{
-				Dbafs::addResource($destination);
-			}
+			$this->syncDbafsAndUpdateModelCache($source, $destination);
 		}
 
 		// Call the oncopy_callback
@@ -989,9 +968,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		// Update the database AFTER the resource has been deleted
-		if ($this->blnIsDbAssisted && Dbafs::shouldBeSynchronized($source))
+		if ($this->blnIsDbAssisted)
 		{
-			Dbafs::deleteResource($source);
+			$this->syncDbafsAndUpdateModelCache($source);
 		}
 
 		System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been deleted');
@@ -1109,10 +1088,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$this->reload();
 				}
 
-				foreach ($arrUploaded as $strFile)
-				{
-					Dbafs::addResource($strFile);
-				}
+				$this->syncDbafsAndUpdateModelCache(...$arrUploaded);
 			}
 			else
 			{
@@ -1137,9 +1113,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			// Update the hash of the target folder
-			if ($this->blnIsDbAssisted && Dbafs::shouldBeSynchronized($strFolder))
+			if ($this->blnIsDbAssisted)
 			{
-				Dbafs::updateFolderHashes($strFolder);
+				$this->syncDbafsAndUpdateModelCache($strFolder);
 			}
 
 			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
@@ -1237,7 +1213,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				if ($objModel === null)
 				{
-					$objModel = Dbafs::addResource($this->intId);
+					$this->syncDbafsAndUpdateModelCache($this->intId);
+
+					$objModel = FilesModel::findByPath($this->intId);
 				}
 
 				$this->objActiveRecord = $objModel;
@@ -1381,7 +1359,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$version = '';
 		}
 
-		$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditButtons($this->strTable, false, false, $this);
+		$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditButtons($this->strTable, false, false, false, $this);
 
 		// Add the buttons and end the form
 		$return .= '
@@ -1526,7 +1504,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 					if ($objModel === null)
 					{
-						$objModel = Dbafs::addResource($id);
+						$this->syncDbafsAndUpdateModelCache($id);
+
+						$objModel = FilesModel::findByPath($id);
 					}
 
 					$this->objActiveRecord = $objModel;
@@ -1772,7 +1752,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			if ($objMeta === null)
 			{
-				$objMeta = Dbafs::addResource($objFile->value);
+				$this->syncDbafsAndUpdateModelCache($objFile->value);
+
+				$objMeta = FilesModel::findByPath($objFile->value);
 			}
 
 			$objVersions = new Versions($this->strTable, $objMeta->id);
@@ -1868,7 +1850,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$version = '';
 		}
 
-		$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditButtons($this->strTable, false, false, $this);
+		$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditButtons($this->strTable, false, false, false, $this);
 
 		// Add the form
 		return $version . Message::generate() . '
@@ -2014,7 +1996,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				// Update the database
 				if ($this->blnIsDbAssisted && Dbafs::shouldBeSynchronized($this->strPath . '/' . $varValue . $this->strExtension))
 				{
-					$this->objActiveRecord = Dbafs::addResource($this->strPath . '/' . $varValue . $this->strExtension);
+					$this->syncDbafsAndUpdateModelCache($this->strPath . '/' . $varValue . $this->strExtension);
+
+					$this->objActiveRecord = FilesModel::findByPath($this->strPath . '/' . $varValue . $this->strExtension);
 				}
 
 				System::getContainer()->get('monolog.logger.contao.files')->info('Folder "' . $this->strPath . '/' . $varValue . $this->strExtension . '" has been created');
@@ -2024,21 +2008,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				// Update the database
 				if ($this->blnIsDbAssisted)
 				{
-					$syncSource = Dbafs::shouldBeSynchronized($this->strPath . '/' . $this->varValue . $this->strExtension);
-					$syncTarget = Dbafs::shouldBeSynchronized($this->strPath . '/' . $varValue . $this->strExtension);
-
-					if ($syncSource && $syncTarget)
-					{
-						Dbafs::moveResource($this->strPath . '/' . $this->varValue . $this->strExtension, $this->strPath . '/' . $varValue . $this->strExtension);
-					}
-					elseif ($syncSource)
-					{
-						Dbafs::deleteResource($this->strPath . '/' . $this->varValue . $this->strExtension);
-					}
-					elseif ($syncTarget)
-					{
-						Dbafs::addResource($this->strPath . '/' . $varValue . $this->strExtension);
-					}
+					$this->syncDbafsAndUpdateModelCache(
+						$this->strPath . '/' . $this->varValue . $this->strExtension,
+						$this->strPath . '/' . $varValue . $this->strExtension,
+					);
 				}
 
 				System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $this->strPath . '/' . $this->varValue . $this->strExtension . '" has been renamed to "' . $this->strPath . '/' . $varValue . $this->strExtension . '"');
@@ -2154,8 +2127,29 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$varValue = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
 				}
 
-				$this->objActiveRecord->{$this->strField} = $varValue;
-				$this->objActiveRecord->save();
+				if ($this->strTable === 'tl_files' && $this->strField === 'meta')
+				{
+					/** @var DbafsManager $dbafsManager */
+					$dbafsManager = System::getContainer()->get('contao.filesystem.dbafs_manager');
+					$path = $this->objActiveRecord->path;
+
+					$metadata = $dbafsManager->getExtraMetadata($path);
+					$metadata->setLocalized(
+						new MetadataBag(
+							array_map(
+								static fn ($values) => new Metadata($values),
+								StringUtil::deserialize($varValue, true)
+							)
+						)
+					);
+
+					$dbafsManager->setExtraMetadata($path, $metadata);
+				}
+				else
+				{
+					$this->objActiveRecord->{$this->strField} = $varValue;
+					$this->objActiveRecord->save();
+				}
 
 				if (!isset($arrData['eval']['versionize']) || $arrData['eval']['versionize'] !== false)
 				{
@@ -2185,7 +2179,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$changeSet = $container->get('contao.filesystem.dbafs_manager')->sync();
 
 		return $container->get('twig')->render(
-			'@ContaoCore/Backend/be_filesync_report.html.twig',
+			'@Contao/backend/file_manager/filesync_report.html.twig',
 			array(
 				'change_set' => $changeSet,
 				'referer' => $this->getReferer(true),
@@ -2397,7 +2391,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$blnIsOpen = true;
 			}
 
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_folder click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 16 : 0)) . 'px">';
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_folder toggle_select hover-div" data-controller="contao--deeplink"><div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 16 : 0)) . 'px">';
 
 			// Add a toggle button if there are children
 			if ($countFiles > 0)
@@ -2424,7 +2418,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			if ($this->isMounted($currentFolder))
 			{
-				$strFolderLabel = '<a href="' . $this->addToUrl('fn=' . $currentEncoded) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $strFolderLabel . '</a>';
+				$strFolderLabel = '<a href="' . $this->addToUrl('fn=' . $currentEncoded) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $strFolderLabel . '</a>';
 			}
 
 			$return .= Image::getHtml($folderImg, $folderAlt) . ' ' . $strFolderLabel . '</div> <div class="tl_right">';
@@ -2511,7 +2505,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			$currentEncoded = $this->urlEncode($currentFile);
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file click2edit toggle_select hover-div"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing) . 'px">';
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file toggle_select hover-div" data-controller="contao--deeplink"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing) . 'px">';
 			$thumbnail .= ' <span class="tl_gray">(' . $this->getReadableSize($objFile->filesize);
 
 			if ($objFile->width && $objFile->height)
@@ -2551,7 +2545,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 			else
 			{
-				$return .= '<a href="' . $staticUrl . $currentEncoded . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($objFile->icon, $iconAlt) . '</a> ' . $strFileNameEncoded . $thumbnail . '</div> <div class="tl_right">';
+				$return .= '<a href="' . $staticUrl . $currentEncoded . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank" data-contao--tooltips-target="tooltip">' . Image::getHtml($objFile->icon, $iconAlt) . '</a> ' . $strFileNameEncoded . $thumbnail . '</div> <div class="tl_right">';
 			}
 
 			// Buttons
@@ -2903,5 +2897,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$img = $picture->getImg($projectDir, $container->get('contao.assets.files_context')->getStaticUrl());
 
 		return \sprintf('<img src="%s"%s width="%s" height="%s" alt class="%s" loading="lazy">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], $isImportantPath ? 'preview-important' : 'preview-image');
+	}
+
+	private function syncDbafsAndUpdateModelCache(string ...$locations): void
+	{
+		System::getContainer()->get('contao.filesystem.dbafs_manager')->sync(...$locations);
+
+		FilesModel::findMultipleByPaths($locations);
 	}
 }
