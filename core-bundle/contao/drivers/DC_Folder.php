@@ -2012,9 +2012,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 						$this->strPath . '/' . $this->varValue . $this->strExtension,
 						$this->strPath . '/' . $varValue . $this->strExtension,
 					);
-
-					// Update the model cache
-					FilesModel::findByPath($this->strPath . '/' . $varValue . $this->strExtension);
 				}
 
 				System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $this->strPath . '/' . $this->varValue . $this->strExtension . '" has been renamed to "' . $this->strPath . '/' . $varValue . $this->strExtension . '"');

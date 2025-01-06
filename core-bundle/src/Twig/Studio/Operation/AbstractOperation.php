@@ -13,6 +13,7 @@ use Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Service\Attribute\Required;
+use Twig\Environment;
 
 /**
  * @experimental
@@ -58,12 +59,18 @@ abstract class AbstractOperation extends AbstractController implements Operation
     {
         $services = parent::getSubscribedServices();
 
+        $services['twig'] = Environment::class;
         $services['contao.twig.filesystem_loader'] = ContaoFilesystemLoader::class;
         $services['contao.filesystem.virtual.user_templates'] = VirtualFilesystemInterface::class;
         $services['contao.twig.studio.template_skeleton_factory'] = TemplateSkeletonFactory::class;
         $services['contao.twig.finder_factory'] = FinderFactory::class;
 
         return $services;
+    }
+
+    public function getTwig(): Environment
+    {
+        return $this->container->get('twig');
     }
 
     public function getContaoFilesystemLoader(): ContaoFilesystemLoader
