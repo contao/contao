@@ -24,6 +24,7 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Uid\Uuid;
 
 class VirtualFilesystemTest extends TestCase
@@ -521,7 +522,7 @@ class VirtualFilesystemTest extends TestCase
             ->willReturn(new ChangeSet([], [], []))
         ;
 
-        $dbafsManager = new DbafsManager();
+        $dbafsManager = new DbafsManager($this->createMock(EventDispatcherInterface::class));
         $dbafsManager->register($dbafs, 'foo');
 
         $filesystem = new VirtualFilesystem($mountManager, $dbafsManager, 'foo');

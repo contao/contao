@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Filesystem\Dbafs;
 
 use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
+use Contao\CoreBundle\Filesystem\Dbafs\DbafsChangeEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
@@ -20,13 +21,14 @@ use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Uid\Uuid;
 
 class DbafsManagerTest extends TestCase
 {
     public function testRegisterAndMatchDbafs(): void
     {
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
 
         $manager->register(
             $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED),
@@ -58,7 +60,7 @@ class DbafsManagerTest extends TestCase
      */
     public function testValidatesTransitiveProperties(array $paths, string $exception): void
     {
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage($exception);
@@ -111,7 +113,7 @@ class DbafsManagerTest extends TestCase
         $uuid2 = Uuid::v1();
         $uuid3 = Uuid::v1();
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
 
         $manager->register(
             $this->getDbafsCoveringUuids([
@@ -165,7 +167,7 @@ class DbafsManagerTest extends TestCase
             )
         ;
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
         $manager->register($dbafs, 'foo');
 
         $this->assertTrue($manager->has('foo/bar.file'));
@@ -200,7 +202,7 @@ class DbafsManagerTest extends TestCase
             ->method('getRecord')
         ;
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
         $manager->register($dbafs1, 'foo');
         $manager->register($dbafs2, '');
 
@@ -223,7 +225,7 @@ class DbafsManagerTest extends TestCase
             ->method('getRecord')
         ;
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
         $manager->register($dbafs1, 'foo');
         $manager->register($dbafs2, '');
 
@@ -246,7 +248,7 @@ class DbafsManagerTest extends TestCase
             ->method('getRecord')
         ;
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
         $manager->register($dbafs1, 'foo');
         $manager->register($dbafs2, '');
 
@@ -265,7 +267,7 @@ class DbafsManagerTest extends TestCase
             'baz' => true,
         ]));
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
         $manager->register($filesDbafs, 'files');
         $manager->register($filesMediaDbafs, 'files/media');
 
@@ -293,7 +295,7 @@ class DbafsManagerTest extends TestCase
             'compressed' => true,
         ]));
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
         $manager->register($assetsDbafs, 'assets');
         $manager->register($assetsImagesDbafs, 'assets/images');
 
@@ -328,7 +330,26 @@ class DbafsManagerTest extends TestCase
             ->method('setExtraMetadata')
         ;
 
-        $manager = new DbafsManager();
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with($this->callback(
+                function (DbafsChangeEvent $event) {
+                    $itemsToUpdate = $event->getChangeSet()->getItemsToUpdate();
+
+                    $this->assertCount(1, $itemsToUpdate);
+                    $this->assertSame('foo/bar/baz', $itemsToUpdate[0]->getExistingPath());
+                    $this->assertFalse($itemsToUpdate[0]->updatesHash());
+                    $this->assertFalse($itemsToUpdate[0]->updatesPath());
+
+                    return true;
+                },
+            ))
+            ->willReturnArgument(0)
+        ;
+
+        $manager = $this->getDbafsManager($eventDispatcher);
         $manager->register($dbafs1, 'foo');
         $manager->register($dbafs2, 'foo/bar');
         $manager->register($dbafs3, 'other');
@@ -356,7 +377,7 @@ class DbafsManagerTest extends TestCase
             ->willThrowException(new \InvalidArgumentException())
         ;
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
         $manager->register($dbafs1, 'foo');
         $manager->register($dbafs2, 'foo/bar');
 
@@ -374,7 +395,7 @@ class DbafsManagerTest extends TestCase
         $dbafs1 = $this->getDbafsListingRecords('bar', ['bar', 'baz', 'bar/file1'], $deep);
         $dbafs2 = $this->getDbafsListingRecords('', ['file1', 'file2'], $deep);
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
         $manager->register($dbafs1, 'foo');
         $manager->register($dbafs2, 'foo/bar');
 
@@ -421,7 +442,7 @@ class DbafsManagerTest extends TestCase
             ->method('sync')
         ;
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
         $manager->register($filesDbafs, 'files');
         $manager->register($filesFooBarDbafs, 'files/foo/bar');
         $manager->register($assetsDbafs, 'assets');
@@ -464,7 +485,7 @@ class DbafsManagerTest extends TestCase
             ->willReturn(ChangeSet::createEmpty())
         ;
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
         $manager->register($filesDbafs, 'files');
         $manager->register($filesFooBarDbafs, 'files/foo/bar');
         $manager->register($assetsDbafs, 'assets');
@@ -479,6 +500,62 @@ class DbafsManagerTest extends TestCase
 
         $this->assertSame('files/foo/bar/file2', $itemsToDelete[1]->getPath());
         $this->assertTrue($itemsToDelete[1]->isFile());
+    }
+
+    public function testDispatchesEventOnSync(): void
+    {
+        $filesDbafs = $this->createMock(DbafsInterface::class);
+        $filesDbafs
+            ->expects($this->once())
+            ->method('sync')
+            ->with()
+            ->willReturn(
+                new ChangeSet(
+                    [
+                        ['hash' => '1234', 'path' => 'foo', 'type' => ChangeSet::TYPE_FILE],
+                    ],
+                    [
+                        'bar' => ['path' => 'bar2'],
+                    ],
+                    [
+                        'baz' => ChangeSet::TYPE_FILE,
+                    ],
+                ),
+            )
+        ;
+
+        $changeSetFromEvent = null;
+
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->willReturnCallback(
+                function (DbafsChangeEvent $event) use (&$changeSetFromEvent): DbafsChangeEvent {
+                    $changeSetFromEvent = $event->getChangeSet();
+
+                    $this->assertSame('files/foo', $changeSetFromEvent->getItemsToCreate()[0]->getPath());
+                    $this->assertSame('files/bar', $changeSetFromEvent->getItemsToUpdate()[0]->getExistingPath());
+                    $this->assertSame('files/baz', $changeSetFromEvent->getItemsToDelete()[0]->getPath());
+
+                    return $event;
+                },
+            )
+        ;
+
+        $manager = $this->getDbafsManager($eventDispatcher);
+        $manager->register($filesDbafs, 'files');
+
+        $changeSet = $manager->sync();
+        $this->assertSame($changeSetFromEvent, $changeSet);
+    }
+
+    /**
+     * @param (EventDispatcherInterface&MockObject)|null $eventDispatcher
+     */
+    private function getDbafsManager(EventDispatcherInterface|null $eventDispatcher = null): DbafsManager
+    {
+        return new DbafsManager($eventDispatcher ?? $this->createMock(EventDispatcherInterface::class));
     }
 
     private function getDbafsListingRecords(string $path, array $listing, bool $deep): DbafsInterface

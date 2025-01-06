@@ -18,11 +18,22 @@ use Contao\BackendTemplate;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\Environment;
 use Contao\Input;
-use Contao\System;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 abstract class AbstractBackendController extends AbstractController
 {
+    public static function getSubscribedServices(): array
+    {
+        $services = parent::getSubscribedServices();
+
+        $services['request_stack'] = RequestStack::class;
+
+        return $services;
+    }
+
     /**
      * Renders a Twig template with additional context for "@Contao/be_main".
      *
@@ -32,7 +43,7 @@ abstract class AbstractBackendController extends AbstractController
      */
     protected function render(string $view, array $parameters = [], Response|null $response = null, bool|null $includeChromeContext = null): Response
     {
-        $getBackendContext = (new class() extends BackendMain {
+        $getBackendContext = static fn () => (new class() extends BackendMain {
             public function __invoke(): array
             {
                 $this->Template = new BackendTemplate('be_main');
@@ -51,9 +62,9 @@ abstract class AbstractBackendController extends AbstractController
 
                 return $this->Template->getData();
             }
-        });
+        })();
 
-        $request = System::getContainer()->get('request_stack')->getCurrentRequest();
+        $request = $this->getCurrentRequest();
 
         if (\in_array('text/vnd.turbo-stream.html', $request->getAcceptableContentTypes(), true)) {
             // Setting the request format will add the correct ContentType header and make
@@ -72,5 +83,17 @@ abstract class AbstractBackendController extends AbstractController
         }
 
         return parent::render($view, $parameters, $response);
+    }
+
+    protected function getBackendSessionBag(): AttributeBagInterface|null
+    {
+        $sessionBag = $this->getCurrentRequest()->getSession()->getBag('contao_backend');
+
+        return $sessionBag instanceof AttributeBagInterface ? $sessionBag : null;
+    }
+
+    private function getCurrentRequest(): Request
+    {
+        return $this->container->get('request_stack')->getCurrentRequest();
     }
 }

@@ -9,7 +9,7 @@ export default class extends Controller {
         blockInfoUrl: String,
     };
 
-    static targets = ['tabs', 'editor', 'editorAutocomplete', 'dialog'];
+    static targets = ['themeSelector', 'tabs', 'editor', 'editorAnnotations', 'dialog'];
 
     connect() {
         // Subscribe to events dispatched by the editors
@@ -21,13 +21,17 @@ export default class extends Controller {
             this._visit(this.blockInfoUrlValue, event.detail);
         });
 
-        // Include the active editor's content when the save operation was triggered
         this.element.addEventListener('turbo:submit-start', event => {
-            if(event.detail.formSubmission.submitter.dataset?.operation === 'save') {
-                this._addEditorContentToRequest(event);
+            // Add the currently open editor tabs to the request when selecting a theme
+            if (event.target === this.themeSelectorTarget) {
+                this._addOpenEditorTabsToRequest(event);
             }
 
-            this._getActiveMutableEditor()?.focus();
+            // Include the active editor's content when the save operation was triggered
+            if (event.detail.formSubmission.submitter?.dataset?.operation === 'save') {
+                this._addEditorContentToRequest(event);
+                this._getActiveMutableEditor()?.focus();
+            }
         });
     }
 
@@ -44,10 +48,10 @@ export default class extends Controller {
         this.editors.delete(el);
     }
 
-    editorAutocompleteTargetConnected(el) {
+    editorAnnotationsTargetConnected(el) {
         this.editors
             .get(el.closest('*[data-contao--template-studio-target="editor"]'))
-            ?.setAutoCompletionData(JSON.parse(el.innerText))
+            ?.setAnnotationsData(JSON.parse(el.innerText))
         ;
     }
 
@@ -64,6 +68,20 @@ export default class extends Controller {
     colorChange(event) {
         this.editors.forEach(editor => {
             editor.setColorScheme(event.detail.mode);
+        })
+    }
+
+    _addOpenEditorTabsToRequest(event) {
+        const searchParams = event.detail.formSubmission.location.searchParams;
+
+        const tabs = this.application
+            .getControllerForElementAndIdentifier(this.tabsTarget, 'contao--tabs')
+            .getTabs()
+        ;
+
+        Object.keys(tabs).forEach(tabId => {
+            // Extract identifier from tabId "template-studio--tab_<identifier>"
+            searchParams.append('open_tab[]', tabId.substring(21));
         })
     }
 
@@ -92,11 +110,31 @@ export default class extends Controller {
         return null;
     }
 
-    _visit(url, params) {
+    async _visit(url, params) {
         if (params !== null) {
             url += '?' + new URLSearchParams(params).toString();
         }
 
-        Turbo.visit(url, {acceptsStreamResponse: true});
+        const response = await fetch(url, {
+            method: 'get',
+            headers: {
+                'Accept': 'text/vnd.turbo-stream.html',
+            }
+        });
+
+        if (response.redirected) {
+            document.location = response.url;
+
+            return;
+        }
+
+        if (!response.headers.get('content-type').startsWith('text/vnd.turbo-stream.html') || response.status >= 300) {
+            console.error(`There was an error processing the Turbo stream response from "${url}"`);
+
+            return;
+        }
+
+       const html = await response.text()
+       Turbo.renderStreamMessage(html);
     }
 }

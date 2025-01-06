@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\Config;
 use Contao\ContentModel;
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestController;
 use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestSharedMaxAgeController;
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -35,7 +35,7 @@ class ContentElementControllerTest extends TestCase
         parent::setUp();
 
         $this->container = $this->getContainerWithContaoConfiguration();
-        $this->container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
+        $this->container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
         $this->container->set('contao.twig.filesystem_loader', $this->createMock(ContaoFilesystemLoader::class));
 
         System::setContainer($this->container);
@@ -229,14 +229,14 @@ class ContentElementControllerTest extends TestCase
     {
         $model = $this->mockClassWithProperties(ContentModel::class, ['id' => 42]);
 
-        $entityCacheTags = $this->createMock(EntityCacheTags::class);
-        $entityCacheTags
+        $cacheTagManager = $this->createMock(CacheTagManager::class);
+        $cacheTagManager
             ->expects($this->once())
             ->method('tagWith')
             ->with($model)
         ;
 
-        $this->container->set('contao.cache.entity_tags', $entityCacheTags);
+        $this->container->set('contao.cache.tag_manager', $cacheTagManager);
 
         $controller = $this->getTestController();
 

@@ -24,4 +24,9 @@ class RenameFrontendModuleVariantOperation extends AbstractRenameVariantOperatio
     {
         return 'frontend_module';
     }
+
+    protected function getDatabaseReferencesThatShouldBeMigrated(): array
+    {
+        return ['tl_modules.customTpl'];
+    }
 }

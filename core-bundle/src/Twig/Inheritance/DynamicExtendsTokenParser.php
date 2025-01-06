@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Twig\Inheritance;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Twig\Error\SyntaxError;
+use Twig\Node\EmptyNode;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
@@ -58,7 +59,7 @@ final class DynamicExtendsTokenParser extends AbstractTokenParser
 
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        return new Node();
+        return new EmptyNode($token->getLine());
     }
 
     public function getTag(): string

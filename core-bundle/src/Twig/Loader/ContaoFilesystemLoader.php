@@ -252,8 +252,8 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      * are arrays [<absolute path> => <template logical name>] in the order they
      * should appear in the inheritance chain for the respective template identifier.
      *
-     * If a $themeSlug is given the result will additionally include templates of that
-     * theme if there are any.
+     * If a $themeSlug is given, the result will additionally include templates of that
+     * theme if there are any. If $themeSlug is set to true, all themes will be included.
      *
      * For example:
      *   [
@@ -265,7 +265,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
      *
      * @return array<string, array<string, string>>
      */
-    public function getInheritanceChains(string|null $themeSlug = null): array
+    public function getInheritanceChains(true|string|null $themeSlug = null): array
     {
         $this->ensureHierarchyIsBuilt();
 
@@ -274,7 +274,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         foreach ($this->inheritanceChains as $identifier => $chain) {
             foreach ($chain as $path => $name) {
                 // Filter out theme paths that do not match the given slug.
-                if (null !== ($namespace = $this->themeNamespace->match($name)) && $namespace !== $themeSlug) {
+                if (true !== $themeSlug && null !== ($namespace = $this->themeNamespace->match($name)) && $namespace !== $themeSlug) {
                     continue;
                 }
 
