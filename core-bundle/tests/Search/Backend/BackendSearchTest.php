@@ -247,7 +247,6 @@ class BackendSearchTest extends TestCase
             $messageBus,
             $this->createMock(WebWorker::class),
             $this->createMock(SealReindexProvider::class),
-            $indexName,
         );
 
         $result = $backendSearch->search(new Query(20, 'search me'));
