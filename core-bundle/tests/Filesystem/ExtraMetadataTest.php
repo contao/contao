@@ -54,7 +54,6 @@ class ExtraMetadataTest extends TestCase
     public function testSetLocalizedMetadata(): void
     {
         $extraMetadata = new ExtraMetadata(['foo' => 42]);
-
         $extraMetadata->setLocalized(new MetadataBag(['en' => new Metadata(['bar' => 'baz'])]));
 
         $this->assertSame(42, $extraMetadata->get('foo'));
