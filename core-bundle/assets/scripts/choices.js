@@ -22,6 +22,7 @@
                 flippedState: ''
             },
             fuseOptions: {
+                includeScore: true,
                 threshold: 0.4,
             },
             callbackOnInit: () => {
