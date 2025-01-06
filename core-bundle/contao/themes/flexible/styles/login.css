@@ -84,11 +84,9 @@ body {
 
 .login-providers .passkey button {
 	padding-left: 36px;
-	background: var(--form-button) var(--icon-passkey) 12px center no-repeat;
-}
-
-.passkey_login button:hover {
-	color: var(--contao);
+	background-image: var(--icon-passkey);
+	background-position: 12px center;
+	background-repeat: no-repeat;
 }
 
 .widget {
