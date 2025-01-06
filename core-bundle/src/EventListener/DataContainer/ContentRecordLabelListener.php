@@ -29,7 +29,10 @@ class ContentRecordLabelListener
 
     public function __invoke(DataContainerRecordLabelEvent $event): void
     {
-        if (!str_starts_with($event->getIdentifier(), 'contao.db.tl_content.')) {
+        if (
+            !str_starts_with($event->getIdentifier(), 'contao.db.tl_content.')
+            || !isset($event->getData()['type'])
+        ) {
             return;
         }
 

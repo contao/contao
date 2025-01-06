@@ -518,7 +518,7 @@ body.popup {
 	flex: 1 0 0;
 }
 
-#main_headline span:nth-child(even) {
+#main_headline span:nth-child(n+2) {
 	font-weight: 400;
 }
 
@@ -528,7 +528,7 @@ body.popup {
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-	#main_headline span:nth-child(even) {
+	#main_headline span:nth-child(n+2) {
 		font-weight: 300;
 	}
 

@@ -96,7 +96,8 @@ class LinkInsertTag
                     switch ($insertTag->getName()) {
                         case 'link':
                         case 'link_open':
-                        case 'link_url': return new InsertTagResult('');
+                        case 'link_url':
+                            return new InsertTagResult('');
                     }
                 }
             }

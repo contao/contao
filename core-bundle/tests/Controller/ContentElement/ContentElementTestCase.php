@@ -16,7 +16,7 @@ use Contao\ArticleModel;
 use Contao\Config;
 use Contao\ContentModel;
 use Contao\Controller;
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
@@ -143,7 +143,7 @@ abstract class ContentElementTestCase extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
+        $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
         $container->set('contao.routing.content_url_generator', $this->createMock(ContentUrlGenerator::class));
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));

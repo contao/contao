@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Cache;
 
 use Contao\ArticleModel;
-use Contao\CoreBundle\Cache\CacheTagInvalidator;
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
+use Contao\CoreBundle\Event\InvalidateCacheTagsEvent;
 use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
 use Contao\CoreBundle\Tests\Fixtures\Entity\Author;
 use Contao\CoreBundle\Tests\Fixtures\Entity\BlogPost;
@@ -25,9 +25,12 @@ use Contao\PageModel;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\DocParser;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
+use FOS\HttpCache\CacheInvalidator;
 use FOS\HttpCache\ResponseTagger;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class EntityCacheTagsTest extends DoctrineTestCase
+class CacheTagManagerTest extends DoctrineTestCase
 {
     protected function tearDown(): void
     {
@@ -36,67 +39,92 @@ class EntityCacheTagsTest extends DoctrineTestCase
         parent::tearDown();
     }
 
+    public function testDispatchesEvent(): void
+    {
+        $tags = ['foo', 'bar'];
+
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with($this->callback(
+                function (InvalidateCacheTagsEvent $event) use ($tags) {
+                    $this->assertSame($tags, $event->getTags());
+
+                    return true;
+                },
+            ))
+        ;
+
+        $cacheTagManager = new CacheTagManager(
+            $this->createMock(EntityManagerInterface::class),
+            $eventDispatcher,
+        );
+
+        $cacheTagManager->invalidateTags($tags);
+    }
+
     public function testGetTagForEntityClass(): void
     {
-        $entityCacheTags = $this->getEntityCacheTags($this->createMock(CacheTagInvalidator::class));
+        $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class));
 
-        $this->assertSame('contao.db.tl_blog_post', $entityCacheTags->getTagForEntityClass(BlogPost::class));
+        $this->assertSame('contao.db.tl_blog_post', $cacheTagManager->getTagForEntityClass(BlogPost::class));
     }
 
     public function testThrowsIfClassIsNoEntity(): void
     {
-        $entityCacheTags = $this->getEntityCacheTags($this->createMock(CacheTagInvalidator::class));
+        $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class));
 
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('The given class name "stdClass" is no valid entity class.');
 
-        $entityCacheTags->getTagForEntityClass(\stdClass::class);
+        $cacheTagManager->getTagForEntityClass(\stdClass::class);
     }
 
     public function testGetTagForEntityInstance(): void
     {
-        $entityCacheTags = $this->getEntityCacheTags($this->createMock(CacheTagInvalidator::class));
+        $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class));
         $post = (new BlogPost())->setId(5);
 
-        $this->assertSame('contao.db.tl_blog_post.5', $entityCacheTags->getTagForEntityInstance($post));
+        $this->assertSame('contao.db.tl_blog_post.5', $cacheTagManager->getTagForEntityInstance($post));
     }
 
     public function testThrowsIfInstanceIsNoEntity(): void
     {
-        $entityCacheTags = $this->getEntityCacheTags($this->createMock(CacheTagInvalidator::class));
+        $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class));
 
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('The given object of type "stdClass" is no valid entity instance.');
 
-        $entityCacheTags->getTagForEntityInstance(new \stdClass());
+        $cacheTagManager->getTagForEntityInstance(new \stdClass());
     }
 
     public function testGetTagForModelClass(): void
     {
-        $entityCacheTags = $this->getEntityCacheTags($this->createMock(CacheTagInvalidator::class));
+        $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class));
 
-        $this->assertSame('contao.db.tl_page', $entityCacheTags->getTagForModelClass(PageModel::class));
+        $this->assertSame('contao.db.tl_page', $cacheTagManager->getTagForModelClass(PageModel::class));
     }
 
     public function testThrowsIfClassIsNoModel(): void
     {
-        $entityCacheTags = $this->getEntityCacheTags($this->createMock(CacheTagInvalidator::class));
+        $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class));
 
         $this->expectException('InvalidArgumentException');
         $this->expectExceptionMessage('The given class name "stdClass" is no valid model class.');
 
         /** @phpstan-ignore argument.type */
-        $entityCacheTags->getTagForModelClass(\stdClass::class);
+        $cacheTagManager->getTagForModelClass(\stdClass::class);
     }
 
     public function testGetTagForModelInstance(): void
     {
-        $entityCacheTags = $this->getEntityCacheTags($this->createMock(CacheTagInvalidator::class));
+        $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class));
 
         $page = $this->mockClassWithProperties(PageModel::class, except: ['getTable']);
         $page->id = 5;
 
-        $this->assertSame('contao.db.tl_page.5', $entityCacheTags->getTagForModelInstance($page));
+        $this->assertSame('contao.db.tl_page.5', $cacheTagManager->getTagForModelInstance($page));
     }
 
     /**
@@ -104,9 +132,9 @@ class EntityCacheTagsTest extends DoctrineTestCase
      */
     public function testGetTags(mixed $argument, array $expectedTags): void
     {
-        $entityCacheTags = $this->getEntityCacheTags($this->createMock(CacheTagInvalidator::class));
+        $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class));
 
-        $this->assertSame($expectedTags, $entityCacheTags->getTagsFor($argument));
+        $this->assertSame($expectedTags, $cacheTagManager->getTagsFor($argument));
     }
 
     public static function getArguments(): iterable
@@ -181,10 +209,10 @@ class EntityCacheTagsTest extends DoctrineTestCase
         $page2->id = 6;
 
         $modelCollection = new Collection([$page1, $page2], 'tl_page');
-        $entityCacheTags = $this->getEntityCacheTags($this->createMock(CacheTagInvalidator::class));
+        $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class));
 
-        $this->assertSame(['contao.db.tl_page.5'], $entityCacheTags->getTagsFor($page1));
-        $this->assertSame(['contao.db.tl_page.5', 'contao.db.tl_page.6'], $entityCacheTags->getTagsFor($modelCollection));
+        $this->assertSame(['contao.db.tl_page.5'], $cacheTagManager->getTagsFor($page1));
+        $this->assertSame(['contao.db.tl_page.5', 'contao.db.tl_page.6'], $cacheTagManager->getTagsFor($modelCollection));
     }
 
     public function testDelegatesToResponseTagger(): void
@@ -207,17 +235,17 @@ class EntityCacheTagsTest extends DoctrineTestCase
         $page = $this->mockClassWithProperties(PageModel::class, except: ['getTable']);
         $page->id = 2;
 
-        $entityCacheTags = $this->getEntityCacheTags($this->createMock(CacheTagInvalidator::class), $responseTagger);
-        $entityCacheTags->tagWithEntityClass(BlogPost::class);
-        $entityCacheTags->tagWithEntityInstance($post);
-        $entityCacheTags->tagWithModelClass(PageModel::class);
-        $entityCacheTags->tagWithModelInstance($page);
-        $entityCacheTags->tagWith([$post, $page, 'foo']);
+        $cacheTagManager = $this->getCacheTagManager($this->createMock(CacheInvalidator::class), $responseTagger);
+        $cacheTagManager->tagWithEntityClass(BlogPost::class);
+        $cacheTagManager->tagWithEntityInstance($post);
+        $cacheTagManager->tagWithModelClass(PageModel::class);
+        $cacheTagManager->tagWithModelInstance($page);
+        $cacheTagManager->tagWith([$post, $page, 'foo']);
     }
 
     public function testDelegatesToCacheInvalidator(): void
     {
-        $cacheTagInvalidator = $this->createMock(CacheTagInvalidator::class);
+        $cacheTagInvalidator = $this->createMock(CacheInvalidator::class);
         $cacheTagInvalidator
             ->expects($this->exactly(5))
             ->method('invalidateTags')
@@ -235,20 +263,21 @@ class EntityCacheTagsTest extends DoctrineTestCase
         $page = $this->mockClassWithProperties(PageModel::class, except: ['getTable']);
         $page->id = 2;
 
-        $entityCacheTags = $this->getEntityCacheTags($cacheTagInvalidator);
-        $entityCacheTags->invalidateTagsForEntityClass(BlogPost::class);
-        $entityCacheTags->invalidateTagsForEntityInstance($post);
-        $entityCacheTags->invalidateTagsForModelClass(PageModel::class);
-        $entityCacheTags->invalidateTagsForModelInstance($page);
-        $entityCacheTags->invalidateTagsFor([$post, $page, 'foo']);
+        $cacheTagManager = $this->getCacheTagManager($cacheTagInvalidator);
+        $cacheTagManager->invalidateTagsForEntityClass(BlogPost::class);
+        $cacheTagManager->invalidateTagsForEntityInstance($post);
+        $cacheTagManager->invalidateTagsForModelClass(PageModel::class);
+        $cacheTagManager->invalidateTagsForModelInstance($page);
+        $cacheTagManager->invalidateTagsFor([$post, $page, 'foo']);
     }
 
-    private function getEntityCacheTags(CacheTagInvalidator $cacheTagInvalidator, ResponseTagger|null $responseTagger = null): EntityCacheTags
+    private function getCacheTagManager(CacheInvalidator $cacheTagInvalidator, ResponseTagger|null $responseTagger = null): CacheTagManager
     {
-        return new EntityCacheTags(
+        return new CacheTagManager(
             $this->getTestEntityManager(),
-            $cacheTagInvalidator,
+            $this->createMock(EventDispatcherInterface::class),
             $responseTagger ?? $this->createMock(ResponseTagger::class),
+            $cacheTagInvalidator,
         );
     }
 }
