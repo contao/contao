@@ -330,7 +330,26 @@ class DbafsManagerTest extends TestCase
             ->method('setExtraMetadata')
         ;
 
-        $manager = $this->getDbafsManager();
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with($this->callback(
+                function (DbafsChangeEvent $event) {
+                    $itemsToUpdate = $event->getChangeSet()->getItemsToUpdate();
+
+                    $this->assertCount(1, $itemsToUpdate);
+                    $this->assertSame('foo/bar/baz', $itemsToUpdate[0]->getExistingPath());
+                    $this->assertFalse($itemsToUpdate[0]->updatesHash());
+                    $this->assertFalse($itemsToUpdate[0]->updatesPath());
+
+                    return true;
+                },
+            ))
+            ->willReturnArgument(0)
+        ;
+
+        $manager = $this->getDbafsManager($eventDispatcher);
         $manager->register($dbafs1, 'foo');
         $manager->register($dbafs2, 'foo/bar');
         $manager->register($dbafs3, 'other');
@@ -483,7 +502,7 @@ class DbafsManagerTest extends TestCase
         $this->assertTrue($itemsToDelete[1]->isFile());
     }
 
-    public function testDispatchesEvent(): void
+    public function testDispatchesEventOnSync(): void
     {
         $filesDbafs = $this->createMock(DbafsInterface::class);
         $filesDbafs

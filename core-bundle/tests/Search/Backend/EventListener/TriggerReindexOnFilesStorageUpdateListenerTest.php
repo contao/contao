@@ -37,6 +37,7 @@ class TriggerReindexOnFilesStorageUpdateListenerTest extends TestCase
             ->willReturnMap([
                 ['foo', VirtualFilesystemInterface::NONE, new FilesystemItem(true, 'foo')],
                 ['bar2', VirtualFilesystemInterface::NONE, new FilesystemItem(true, 'bar2')],
+                ['meta', VirtualFilesystemInterface::NONE, new FilesystemItem(true, 'meta')],
                 ['dir1', VirtualFilesystemInterface::NONE, new FilesystemItem(false, 'dir1')],
                 ['dir2', VirtualFilesystemInterface::NONE, new FilesystemItem(false, 'dir2')],
             ])
@@ -51,6 +52,7 @@ class TriggerReindexOnFilesStorageUpdateListenerTest extends TestCase
                     'foo', // created file
                     'bar2', // renamed file (new)
                     'bar', // renamed file (old)
+                    'meta', // file with updated metadata
                     'baz', // deleted file
                 ]] === $config->getLimitedDocumentIds()->toArray(),
             ))
@@ -65,6 +67,7 @@ class TriggerReindexOnFilesStorageUpdateListenerTest extends TestCase
                 [
                     'files/bar' => ['path' => 'files/bar2'],
                     'files/dir2' => ['hash' => '123'],
+                    'files/meta' => [],
                 ],
                 [
                     'files/baz' => ChangeSet::TYPE_FILE,

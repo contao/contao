@@ -213,6 +213,9 @@ class DbafsManager
         if (!$success) {
             throw new \InvalidArgumentException(\sprintf('No resource exists for the given path "%s".', $path));
         }
+
+        $changeSet = new ChangeSet([], [$path => []], []);
+        $this->eventDispatcher->dispatch(new DbafsChangeEvent($changeSet));
     }
 
     /**
