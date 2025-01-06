@@ -546,7 +546,7 @@ abstract class Backend extends Controller
 				}
 				else
 				{
-					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . self::addToUrl('pn=' . $objPage->id) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $objPage->title . '</a>';
+					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . self::addToUrl('pn=' . $objPage->id) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $objPage->title . '</a>';
 				}
 
 				$intId = $objPage->pid;
@@ -618,7 +618,7 @@ abstract class Backend extends Controller
 		// Add the breadcrumb link if you have access to that page
 		if (!$isVisibleRootTrailPage)
 		{
-			$label = '<a href="' . self::addToUrl('pn=' . $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
+			$label = '<a href="' . self::addToUrl('pn=' . $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $label . '</a>';
 		}
 		else
 		{
@@ -631,7 +631,7 @@ abstract class Backend extends Controller
 		}
 
 		// Return the image
-		return '<a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_preview', array('page'=>$row['id']))) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image, '', $imageAttribute) . '</a> ' . $label;
+		return '<a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_preview', array('page'=>$row['id']))) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank" data-contao--tooltips-target="tooltip">' . Image::getHtml($image, '', $imageAttribute) . '</a> ' . $label;
 	}
 
 	/**
@@ -742,7 +742,7 @@ abstract class Backend extends Controller
 			}
 			else
 			{
-				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . self::addToUrl('fn=' . $strPath) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $strFolder . '</a>';
+				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . self::addToUrl('fn=' . $strPath) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $strFolder . '</a>';
 			}
 		}
 

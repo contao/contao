@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Messenger\MessageHandler\BackendSearch;
 
 use Contao\CoreBundle\Messenger\Message\BackendSearch\DeleteDocumentsMessage;
+use Contao\CoreBundle\Messenger\Message\ScopeAwareMessageInterface;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
@@ -28,9 +29,8 @@ class DeleteDocumentsMessageHandler
 
     public function __invoke(DeleteDocumentsMessage $message): void
     {
-        // Cannot run in a web request. TODO: Make this feature generally available as
-        // WebWorker config for all kinds of messages
-        if (\PHP_SAPI !== 'cli') {
+        // Cannot run in a web request.
+        if (ScopeAwareMessageInterface::SCOPE_CLI !== $message->getScope()) {
             return;
         }
 
