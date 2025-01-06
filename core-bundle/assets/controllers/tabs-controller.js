@@ -87,7 +87,7 @@ export default class TabsController extends Controller {
             el.style.display = isTarget ? 'revert' : 'none';
 
             // Re-enable/disable the button access keys
-            if(isTarget) {
+            if (isTarget) {
                 el.querySelectorAll('button[data-disabled-accesskey]').forEach(button => {
                     button.setAttribute('accesskey', button.getAttribute('data-disabled-accesskey'));
                     button.removeAttribute('data-disabled-accesskey');
