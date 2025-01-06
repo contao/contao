@@ -1,10 +1,16 @@
 #template-studio--dialog {
     dialog {
-        border: 1px solid var(--border);
-        box-shadow: 0 0 1em rgb(0 0 0 / .3);
-        border-radius: var(--border-radius);
-        max-width: 60ch;
-        padding: 1.5em;
+        border: none;
+        background: none;
+        padding: 0;
+
+        .dialog_wrapper {
+            background: var(--content-bg);
+            border: 1px solid var(--border);
+            box-shadow: 0 0 1em rgb(0 0 0 / .3);
+            border-radius: 2px;
+            max-width: 60ch;
+        }
 
         form {
             display: flex;
@@ -12,8 +18,8 @@
             row-gap: 1em;
         }
 
-        &:has(.description--warning) {
-            border-color: var(--red);
+        .header_wrapper, .description, .widget {
+            padding: 8px 12px;
         }
 
         &::backdrop {
@@ -22,7 +28,14 @@
 
         .description {
             line-height: 1.5;
-            margin: 0;
+            border: 1px solid var(--border);
+            margin: 5px 12px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            &.description--warning {
+                border-color: var(--red);
+            }
         }
 
         .header_wrapper h3 {
@@ -34,19 +47,22 @@
         }
 
         .buttons {
+            padding: 8px 12px;
+            border-top: 1px solid var(--border);
+
             display: flex;
             flex-wrap: wrap;
             justify-content: flex-end;
-            gap: .75rem;
+            gap: 4px;
             text-align: right;
         }
 
         button {
             padding: .5rem 1.25rem;
-            border: 1px solid var(--form-button);
-            border-radius: 6px;
+            border: 1px solid var(--form-border);
+            border-radius: 2px;
             box-sizing: border-box;
-            background: var(--form-button);
+            background: var(--form-bg);
             transition: background .2s ease;
 
             &:is(:hover,:focus) {
