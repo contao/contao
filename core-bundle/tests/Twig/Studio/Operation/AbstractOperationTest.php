@@ -67,13 +67,12 @@ abstract class AbstractOperationTest extends TestCase
 
     protected function getContainer(ContaoFilesystemLoader|null $loader = null, VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null, TemplateSkeletonFactory|null $skeletonFactory = null): Container
     {
-        $container = new Container();
-
         $loader ??= $this->mockContaoFilesystemLoader();
         $storage ??= $this->mockUserTemplatesStorage();
         $twig ??= $this->mockTwigEnvironment();
         $skeletonFactory ??= $this->mockTemplateSkeletonFactory();
 
+        $container = new Container();
         $container->set('contao.twig.filesystem_loader', $loader);
         $container->set('contao.filesystem.virtual.user_templates', $storage);
         $container->set('twig', $twig);

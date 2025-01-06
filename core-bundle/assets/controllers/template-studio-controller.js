@@ -122,13 +122,13 @@ export default class extends Controller {
             }
         });
 
-        if(response.redirected) {
+        if (response.redirected) {
             document.location = response.url;
 
             return;
         }
 
-        if(!response.headers.get('content-type').startsWith('text/vnd.turbo-stream.html') || response.status >= 300) {
+        if (!response.headers.get('content-type').startsWith('text/vnd.turbo-stream.html') || response.status >= 300) {
             console.error(`There was an error processing the Turbo stream response from "${url}"`);
 
             return;

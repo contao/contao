@@ -185,9 +185,9 @@ class BackendTemplateStudioController extends AbstractBackendController
                     'warning' => false,
                     'not_analyzable' => false,
                 ],
-                'annotations' => $canEdit && 0 === $i ? $this->getAnnotations(
-                    $logicalName, $templateInformation->getError(),
-                ) : [],
+                'annotations' => $canEdit && 0 === $i
+                    ? $this->getAnnotations($logicalName, $templateInformation->getError())
+                    : [],
             ];
 
             // Analyze relation to see if the templates breaks the hierarchy

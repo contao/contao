@@ -49,7 +49,6 @@ class BackendTemplateStudioControllerTest extends TestCase
         }
 
         $controller = $this->getBackendTemplatedStudioController(twig: $twig, request: $request);
-
         $response = $controller->$action(...$parameters);
 
         if (null === $streamError) {
@@ -184,7 +183,6 @@ class BackendTemplateStudioControllerTest extends TestCase
         $requestStack->push($request ?? new Request());
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
-
         $container->set('security.token_storage', $this->createMock(TokenStorageInterface::class));
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('security.authorization_checker', $authorizationChecker);

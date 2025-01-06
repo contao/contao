@@ -144,7 +144,7 @@ export class TwigEditor {
             },
         }];
 
-        if('error' in data) {
+        if ('error' in data) {
             this.editor.getSession().setAnnotations([
                 {
                     row: data.error.line - 1,

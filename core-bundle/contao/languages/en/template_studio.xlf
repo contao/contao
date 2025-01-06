@@ -90,7 +90,7 @@
                 <source>The template %s cannot be found or opened in an editor tab.</source>
             </trans-unit>
             <trans-unit id="message.open_block_info.error">
-                <source>The block %s was not found yet - did you save the template?</source>
+                <source>The block %s was not found yet. Did you save the template?</source>
             </trans-unit>
             <trans-unit id="dialog.delete.confirm">
                 <source>This deletes your template for %s and cannot be undone.</source>
@@ -105,10 +105,10 @@
                 <source>The template's relation cannot be analyzed because it contains errors.</source>
             </trans-unit>
             <trans-unit id="editor_tab.relation.no_extend_warning">
-                <source>This template overwrites all previously defined content, because it does not extend from %previous%.</source>
+                <source>This template overwrites all previously defined content because it does not extend from %previous%.</source>
             </trans-unit>
             <trans-unit id="editor_tab.relation.no_use_warning">
-                <source>This template ignores all previously defined content, because it does not use %previous%.</source>
+                <source>This template ignores all previously defined content because it does not use %previous%.</source>
             </trans-unit>
             <trans-unit id="info.block.title">
                 <source>Hierarchy of block %block%</source>
