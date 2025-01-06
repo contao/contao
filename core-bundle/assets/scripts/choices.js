@@ -16,10 +16,13 @@
             duplicateItemsAllowed: false,
             allowHTML: false,
             removeItemButton: true,
-            //searchEnabled: select.options.length > 7,
+            searchEnabled: select.options.length > 7,
             classNames: {
                 containerOuter: ['choices', ...Array.from(select.classList)],
                 flippedState: ''
+            },
+            fuseOptions: {
+                threshold: 0.4,
             },
             callbackOnInit: () => {
                 const choices = select.closest('.choices')?.querySelector('.choices__list--dropdown > .choices__list');
