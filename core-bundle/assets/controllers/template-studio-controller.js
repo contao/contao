@@ -9,7 +9,7 @@ export default class extends Controller {
         blockInfoUrl: String,
     };
 
-    static targets = ['themeSelector', 'tabs', 'editor', 'editorAutocomplete', 'dialog'];
+    static targets = ['themeSelector', 'tabs', 'editor', 'editorAnnotations', 'dialog'];
 
     connect() {
         // Subscribe to events dispatched by the editors
@@ -48,10 +48,10 @@ export default class extends Controller {
         this.editors.delete(el);
     }
 
-    editorAutocompleteTargetConnected(el) {
+    editorAnnotationsTargetConnected(el) {
         this.editors
             .get(el.closest('*[data-contao--template-studio-target="editor"]'))
-            ?.setAutoCompletionData(JSON.parse(el.innerText))
+            ?.setAnnotationsData(JSON.parse(el.innerText))
         ;
     }
 
@@ -110,11 +110,31 @@ export default class extends Controller {
         return null;
     }
 
-    _visit(url, params) {
+    async _visit(url, params) {
         if (params !== null) {
             url += '?' + new URLSearchParams(params).toString();
         }
 
-        Turbo.visit(url, {acceptsStreamResponse: true});
+        const response = await fetch(url, {
+            method: 'get',
+            headers: {
+                'Accept': 'text/vnd.turbo-stream.html',
+            }
+        });
+
+        if (response.redirected) {
+            document.location = response.url;
+
+            return;
+        }
+
+        if (!response.headers.get('content-type').startsWith('text/vnd.turbo-stream.html') || response.status >= 300) {
+            console.error(`There was an error processing the Turbo stream response from "${url}"`);
+
+            return;
+        }
+
+       const html = await response.text()
+       Turbo.renderStreamMessage(html);
     }
 }
