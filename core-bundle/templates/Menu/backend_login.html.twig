@@ -1,0 +1,24 @@
+{% extends '@KnpMenu/menu.html.twig' %}
+
+{% block item %}
+    {% if item.extras.icon|default %}
+        <style>
+            :root {
+                --icon-{{ item.name }}: url({{ item.extras.icon }});
+            }
+
+            {% if item.extras.icon_dark|default %}
+                html[data-color-scheme="dark"] {
+                    --icon-{{ item.name }}: url({{ item.extras.icon_dark }});
+                }
+            {% endif %}
+
+            .login-providers .{{ item.name}} .tl_submit {
+                padding-left: 36px;
+                background-image: var(--icon-{{ item.name }});
+            }
+        </style>
+    {% endif %}
+
+    {{ parent() }}
+{% endblock %}
