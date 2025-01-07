@@ -18,6 +18,10 @@ use Symfony\Contracts\Service\ResetInterface;
 
 class PageRegistry implements ResetInterface
 {
+    public const REGEX_REQUIRE_ITEM = '/[^/]*(/[^/]*/[^/]*)*[^/]*?';
+
+    public const REGEX = '(/.+?)?';
+
     private const DISABLE_CONTENT_COMPOSITION = ['forward', 'logout'];
 
     private array|null $urlPrefixes = null;
@@ -69,7 +73,7 @@ class PageRegistry implements ResetInterface
             } else {
                 $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
                 $defaults['parameters'] = '';
-                $requirements['parameters'] = $pageModel->requireItem ? '/.+?' : '(/.+?)?';
+                $requirements['parameters'] = $pageModel->requireItem ? self::REGEX_REQUIRE_ITEM : self::REGEX;
             }
         }
 

@@ -186,11 +186,11 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             $paramA = $a->getRequirement('parameters');
             $paramB = $b->getRequirement('parameters');
 
-            if ('/.+?' === $paramA && '(/.+?)?' === $paramB) {
+            if (PageRegistry::REGEX_REQUIRE_ITEM === $paramA && PageRegistry::REGEX === $paramB) {
                 return -1;
             }
 
-            if ('(/.+?)?' === $paramA && '/.+?' === $paramB) {
+            if (PageRegistry::REGEX === $paramA && PageRegistry::REGEX_REQUIRE_ITEM === $paramB) {
                 return 1;
             }
         }

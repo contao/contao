@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing;
 
 use Contao\CoreBundle\Routing\AbstractPageRouteProvider;
+use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -189,22 +190,22 @@ class AbstractPageRouteProviderTest extends TestCase
         ];
 
         yield 'Sorts route with required parameters first (1)' => [
-            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+?']),
-            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '(/.+?)?']),
+            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => PageRegistry::REGEX_REQUIRE_ITEM]),
+            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => PageRegistry::REGEX]),
             ['de', 'de'],
             -1,
         ];
 
         yield 'Sorts route with required parameters first (2)' => [
-            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '(/.+?)?']),
-            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+?']),
+            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => PageRegistry::REGEX]),
+            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => PageRegistry::REGEX_REQUIRE_ITEM]),
             ['de', 'de'],
             1,
         ];
 
         yield 'Ignores required parameters with equal requirement' => [
-            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+?']),
-            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => '/.+?']),
+            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => PageRegistry::REGEX_REQUIRE_ITEM]),
+            new Route('/foo{!parameters}', ['pageModel' => $this->mockPageModel('de')], ['parameters' => PageRegistry::REGEX_REQUIRE_ITEM]),
             ['de', 'de'],
             0,
         ];
