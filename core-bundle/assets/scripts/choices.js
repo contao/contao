@@ -34,10 +34,10 @@
             },
             loadingText: Contao.lang.loading,
             noResultsText: Contao.lang.noResults,
-            noChoicesText: Contao.lang.noChoices,
-            itemSelectText: Contao.lang.pressToSelect,
-            uniqueItemText: Contao.lang.onlyUnique,
-            customAddItemText: Contao.lang.onlyConditions
+            noChoicesText: Contao.lang.noOptions,
+            removeItemLabelText: function (value) {
+                return Contao.lang.removeItem.concat(' ').concat(value);
+            },
         })
     }
 
