@@ -40,7 +40,7 @@ class BackendLoginListener
 
         $passkey = $factory
             ->createItem('passkey')
-            ->setLabel('<button type="button" class="tl_submit" data-action="contao--webauthn#signin">'.$passkeyLogin.'</button>')
+            ->setLabel('<button type="button" class="tl_submit has-icon" data-action="contao--webauthn#signin">'.$passkeyLogin.'</button>')
             ->setAttribute('class', 'passkey')
             ->setExtra('safe_label', true)
             ->setExtra('translation_domain', false)

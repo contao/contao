@@ -82,14 +82,14 @@ body {
 	text-align: center;
 }
 
-.login-providers .passkey button {
+.login-providers .has-icon {
 	padding-left: 36px;
-	background-image: var(--icon-passkey);
-}
-
-.login-providers .tl_submit {
 	background-position: 12px center;
 	background-repeat: no-repeat;
+}
+
+.login-providers .passkey .tl_submit {
+	background-image: var(--icon-passkey);
 }
 
 .widget {

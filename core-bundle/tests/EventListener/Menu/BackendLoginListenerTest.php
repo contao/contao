@@ -36,7 +36,7 @@ class BackendLoginListenerTest extends ContaoTestCase
         $this->assertSame(['passkey'], array_keys($children));
 
         $this->assertSame(
-            '<button type="button" class="tl_submit" data-action="contao--webauthn#signin">MSC.passkeyLogin</button>',
+            '<button type="button" class="tl_submit has-icon" data-action="contao--webauthn#signin">MSC.passkeyLogin</button>',
             $children['passkey']->getLabel(),
         );
 
