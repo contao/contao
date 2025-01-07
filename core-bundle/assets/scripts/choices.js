@@ -45,7 +45,7 @@
         for (const mutation of mutationsList) {
             if (mutation.type === 'childList') {
                 mutation.addedNodes.forEach(function (element) {
-                    if (element.matches && element.matches('select.tl_chosen')) {
+                    if (element.matches && element.matches('select.init-choices')) {
                         init(element);
                     }
                 })

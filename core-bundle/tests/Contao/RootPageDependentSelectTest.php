@@ -85,7 +85,7 @@ class RootPageDependentSelectTest extends TestCase
             <select
                 name="rootPageDependentModules[]"
                 id="ctrl_rootPageDependentModules-1"
-                class="tl_select tl_chosen"
+                class="tl_select init-choices"
                 data-action="focus->contao--scroll-offset#store"
             >
                 <option value="">Choose module for "Root Page 1"</option>
@@ -96,7 +96,7 @@ class RootPageDependentSelectTest extends TestCase
             <select
                 name="rootPageDependentModules[]"
                 id="ctrl_rootPageDependentModules-2"
-                class="tl_select tl_chosen"
+                class="tl_select init-choices"
                 data-action="focus->contao--scroll-offset#store"
             >
                 <option value="">Choose module for "Root Page 2"</option>
@@ -107,7 +107,7 @@ class RootPageDependentSelectTest extends TestCase
             <select
                 name="rootPageDependentModules[]"
                 id="ctrl_rootPageDependentModules-3"
-                class="tl_select tl_chosen"
+                class="tl_select init-choices"
                 data-action="focus->contao--scroll-offset#store"
             >
                 <option value="">Choose module for "Root Page 3"</option>

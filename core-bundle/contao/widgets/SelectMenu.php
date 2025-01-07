@@ -190,7 +190,7 @@ class SelectMenu extends Widget
 		// Chosen
 		if ($this->chosen)
 		{
-			$strClass .= ' tl_chosen';
+			$strClass .= ' init-choices';
 		}
 
 		return \sprintf(
