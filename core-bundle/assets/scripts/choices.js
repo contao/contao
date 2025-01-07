@@ -48,6 +48,12 @@
                     if (element.matches && element.matches('select.init-choices')) {
                         init(element);
                     }
+
+                    if (element.querySelectorAll) {
+                        element.querySelectorAll('select.init-choices').forEach((e) => {
+                            init(e);
+                        });
+                    }
                 })
             }
         }
