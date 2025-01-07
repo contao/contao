@@ -1937,6 +1937,9 @@
       <trans-unit id="MSC.list_perPage">
         <source>Results per page</source>
       </trans-unit>
+      <trans-unit id="MSC.or">
+        <source>or</source>
+      </trans-unit>
       <trans-unit id="MSC.published">
         <source>Published</source>
       </trans-unit>
