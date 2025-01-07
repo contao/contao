@@ -106,4 +106,23 @@
             }
         }
     }
+
+    .shadowed {
+        background-image: linear-gradient(45deg, var(--panel-bg) 25%, transparent 25%, transparent 50%, var(--panel-bg) 50%, var(--panel-bg) 75%, transparent 75%);
+        background-size: 10px 10px;
+    }
+
+    .warning {
+        background-color: var(--error-bg);
+        color: var(--red);
+        padding: 12px;
+        margin: 6px 12px;
+        border-radius: 8px;
+        font-size: 0.8rem;
+
+        svg {
+            vertical-align: middle;
+            padding-bottom: 2px;
+        }
+    }
 }
