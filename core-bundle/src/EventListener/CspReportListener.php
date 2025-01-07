@@ -40,7 +40,7 @@ class CspReportListener
             uri: $report->getData()['document-uri'] ?? '',
         );
 
-        $msg = sprintf('Content-Security-Policy violation reported for "%s"', $report->getDirective());
+        $msg = \sprintf('Content-Security-Policy violation reported for "%s"', $report->getDirective());
 
         if (null !== ($line = ($report->getData()['line-number'] ?? null))) {
             $msg .= ' on line '.$line;

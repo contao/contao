@@ -105,7 +105,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
         return $filesystemItemIterator->filter(
             static fn (FilesystemItem $item): bool => \in_array(
                 Path::getExtension($item->getPath(), true),
-                array_map('strtolower', $allowedDownload),
+                array_map(strtolower(...), $allowedDownload),
                 true,
             ),
         );
@@ -149,7 +149,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
             ->setSize($size = $model->size)
             ->enableLightbox($fullsize = $model->fullsize)
             ->disableMetadata()
-            ->setLightboxGroupIdentifier(sprintf('dl_%s_%s', $model->id, md5($filesystemItem->getPath())))
+            ->setLightboxGroupIdentifier(\sprintf('dl_%s_%s', $model->id, md5($filesystemItem->getPath())))
         ;
 
         $getLightboxSize = function (): string|null {

@@ -23,7 +23,7 @@
       </trans-unit>
       <trans-unit id="MOD.design">
         <source>Layout</source>
-        <target>Düzen</target>
+        <target>Yerleşim</target>
       </trans-unit>
       <trans-unit id="MOD.themes.0">
         <source>Themes</source>
@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="MOD.themes.1">
         <source>Manage themes, front end modules, page layouts or image sizes</source>
-        <target>Temaları, ön yüz modüllerini, sayfa düzenlerini ya da görsel boyutlarını yönetin</target>
+        <target>Temaları, ön yüz modüllerini, sayfa yerleşimlerini ya da görsel boyutlarını yönetin</target>
       </trans-unit>
       <trans-unit id="MOD.page.0">
         <source>Pages</source>
@@ -187,7 +187,7 @@
       </trans-unit>
       <trans-unit id="MOD.tl_layout">
         <source>Page layouts</source>
-        <target>Sayfa düzenleri</target>
+        <target>Sayfa yerleşimleri</target>
       </trans-unit>
       <trans-unit id="MOD.tl_module">
         <source>Front end modules</source>
@@ -199,7 +199,7 @@
       </trans-unit>
       <trans-unit id="MOD.layout">
         <source>Page layouts</source>
-        <target>Sayfa düzenleri</target>
+        <target>Sayfa yerleşimleri</target>
       </trans-unit>
       <trans-unit id="MOD.image_sizes">
         <source>Image sizes</source>
@@ -423,11 +423,11 @@
       </trans-unit>
       <trans-unit id="FMD.two_factor.0">
         <source>Two-factor authentication</source>
-        <target>İki aşamalı kimlik doğrulama</target>
+        <target>İki adımlı doğrulama</target>
       </trans-unit>
       <trans-unit id="FMD.two_factor.1">
         <source>Generates a form to set up or change two-factor authentication</source>
-        <target>İki aşamalı kimlik doğrulamasını ayarlayan ya da değiştiren bir form oluşturur</target>
+        <target>İki adımlı doğrulamayı ayarlayan ya da değiştiren bir form oluşturur</target>
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.0">
         <source>Root page dependent modules</source>

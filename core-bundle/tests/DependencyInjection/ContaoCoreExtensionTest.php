@@ -83,7 +83,7 @@ class ContaoCoreExtensionTest extends TestCase
         $container = $this->getContainerBuilder();
 
         $makeResponsePrivateDefinition = $container->getDefinition('contao.listener.make_response_private');
-        $attribute = (new \ReflectionClass($makeResponsePrivateDefinition->getClass()))->getAttributes()[0];
+        $attribute = (new \ReflectionClass($makeResponsePrivateDefinition->getClass()))->getMethod('makeResponsePrivate')->getAttributes()[0];
         $makeResponsePrivatePriority = $attribute->getArguments()['priority'];
 
         $mergeHeadersListenerDefinition = $container->getDefinition('contao.listener.merge_http_headers');
@@ -444,6 +444,27 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($container->hasDefinition('contao.search.default_indexer'));
     }
 
+    public function testRemovesWebWorkerIfNoTransportsAreConfigured(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $extension = new ContaoCoreExtension();
+        $extension->load(
+            [
+                'contao' => [
+                    'messenger' => [
+                        'web_worker' => [
+                            'transports' => [],
+                        ],
+                    ],
+                ],
+            ],
+            $container,
+        );
+
+        $this->assertFalse($container->hasDefinition('contao.messenger.web_worker'));
+    }
+
     public function testSetsTheCorrectFeatureFlagOnTheSearchIndexListener(): void
     {
         $container = $this->getContainerBuilder();
@@ -740,6 +761,7 @@ class ContaoCoreExtensionTest extends TestCase
                     'method' => 'aMethod',
                     'renderer' => 'inline',
                     'nestedFragments' => false,
+                    'priority' => 0,
                 ],
             )
         ;
@@ -753,6 +775,7 @@ class ContaoCoreExtensionTest extends TestCase
                 'method' => 'aMethod',
                 'renderer' => 'inline',
                 'nestedFragments' => false,
+                'priority' => 0,
                 'foo' => 'bar',
                 'baz' => 42,
             ]),
@@ -781,6 +804,7 @@ class ContaoCoreExtensionTest extends TestCase
                     'template' => 'a_template',
                     'method' => 'aMethod',
                     'renderer' => 'inline',
+                    'priority' => 0,
                 ],
             )
         ;

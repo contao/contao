@@ -96,7 +96,7 @@ class UserAccessVoter extends AbstractDataContainerVoter implements ResetInterfa
     {
         if (null === $this->adminIds) {
             $this->adminIds = $this->connection->fetchFirstColumn('SELECT id FROM tl_user WHERE `admin` = 1');
-            $this->adminIds = array_map('intval', $this->adminIds);
+            $this->adminIds = array_map(\intval(...), $this->adminIds);
         }
 
         return $this->adminIds;

@@ -34,15 +34,16 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Twig\Attribute\FirstClassTwigCallableReady;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
+use Twig\Node\BodyNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
-use Twig\Node\TextNode;
 use Twig\NodeTraverser;
 use Twig\Runtime\EscaperRuntime;
 use Twig\Source;
@@ -213,17 +214,25 @@ class ContaoExtensionTest extends TestCase
             [$escaperNodeVisitor],
         );
 
+        // TODO: Always use "new TwigFilter('escape')" as soon as we require at least
+        // Twig 3.12.
+        $filter = class_exists(FirstClassTwigCallableReady::class)
+            ? new TwigFilter('escape')
+            : new ConstantExpression('escape', 1);
+
         $node = new ModuleNode(
-            new FilterExpression(
-                new TextNode('text', 1),
-                new ConstantExpression('escape', 1),
-                new Node([
-                    new ConstantExpression('html', 1),
-                    new ConstantExpression(null, 1),
-                    new ConstantExpression(true, 1),
-                ]),
-                1,
-            ),
+            new BodyNode([
+                new FilterExpression(
+                    new ConstantExpression('text', 1),
+                    $filter,
+                    new Node([
+                        new ConstantExpression('html', 1),
+                        new ConstantExpression(null, 1),
+                        new ConstantExpression(true, 1),
+                    ]),
+                    1,
+                ),
+            ]),
             null,
             new Node(),
             new Node(),
@@ -364,7 +373,7 @@ class ContaoExtensionTest extends TestCase
             }
         }
 
-        $this->fail(sprintf('No escaper rule matched template "%s".', $templateName));
+        $this->fail(\sprintf('No escaper rule matched template "%s".', $templateName));
     }
 
     public static function provideTemplateNames(): iterable

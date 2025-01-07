@@ -386,7 +386,7 @@ class MountManager
             return [$adapter, $path, ''];
         }
 
-        throw new \RuntimeException(sprintf('No adapter was mounted to serve path "%s".', $path));
+        throw new \RuntimeException(\sprintf('No adapter was mounted to serve path "%s".', $path));
     }
 
     /**

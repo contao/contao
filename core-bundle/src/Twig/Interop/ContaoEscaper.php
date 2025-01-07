@@ -35,28 +35,31 @@ final class ContaoEscaper
     public function escapeHtml(mixed $string, string|null $charset): string
     {
         if (null !== $charset && 'UTF-8' !== strtoupper($charset)) {
-            throw new RuntimeError(sprintf('The "contao_html" escape filter does not support the %s charset, use UTF-8 instead.', $charset));
+            throw new RuntimeError(\sprintf('The "contao_html" escape filter does not support the %s charset, use UTF-8 instead.', $charset));
         }
 
         $string = (string) $string;
 
-        return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8', false);
+        return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8', 1 === preg_match('/["\'<>]/', $string));
     }
 
     /**
-     * This implementation is a clone of Twig's html_attr escape strategy but replaces
-     * insert tags and decodes entities beforehand.
+     * This implementation is a clone of Twig's html_attr escape strategy but decodes
+     * entities beforehand.
      *
      * @see twig_escape_filter
      */
     public function escapeHtmlAttr(mixed $string, string|null $charset): string
     {
         if (null !== $charset && 'UTF-8' !== strtoupper($charset)) {
-            throw new RuntimeError(sprintf('The "contao_html_attr" escape filter does not support the %s charset, use UTF-8 instead.', $charset));
+            throw new RuntimeError(\sprintf('The "contao_html_attr" escape filter does not support the %s charset, use UTF-8 instead.', $charset));
         }
 
         $string = (string) $string;
-        $string = StringUtil::decodeEntities($string);
+
+        if (1 !== preg_match('/["\'<>]/', $string)) {
+            $string = StringUtil::decodeEntities($string);
+        }
 
         // Original logic
         if (!preg_match('//u', $string)) {
@@ -95,12 +98,12 @@ final class ContaoEscaper
                         62 => '&gt;', /* greater-than sign */
                     ];
 
-                    return $entityMap[$ord] ?? sprintf('&#x%02X;', $ord);
+                    return $entityMap[$ord] ?? \sprintf('&#x%02X;', $ord);
                 }
 
                 // Per OWASP recommendations, we'll use hex entities for any other characters
                 // where a named entity does not exist.
-                return sprintf('&#x%04X;', mb_ord($chr, 'UTF-8'));
+                return \sprintf('&#x%04X;', mb_ord($chr, 'UTF-8'));
             },
             $string,
         );

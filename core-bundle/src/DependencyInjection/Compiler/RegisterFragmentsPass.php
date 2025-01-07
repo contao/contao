@@ -85,8 +85,13 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 $attributes['type'] = $this->getFragmentType($definition, $attributes);
                 $attributes['debugController'] = $this->getControllerName(new Reference($definition->getClass()), $attributes);
 
-                $identifier = sprintf('%s.%s', $tag, $attributes['type']);
+                $identifier = \sprintf('%s.%s', $tag, $attributes['type']);
                 $serviceId = 'contao.fragment._'.$identifier;
+
+                // Skip redefinition of services that already exist
+                if ($container->has($serviceId)) {
+                    continue;
+                }
 
                 $childDefinition = new ChildDefinition((string) $reference);
                 $childDefinition->setPublic(true);
@@ -119,7 +124,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
                 if ($this->globalsKey && $this->proxyClass) {
                     if (!isset($attributes['category'])) {
-                        throw new InvalidConfigurationException(sprintf('Missing category for "%s" fragment on service ID "%s"', $tag, $reference));
+                        throw new InvalidConfigurationException(\sprintf('Missing category for "%s" fragment on service ID "%s"', $tag, $reference));
                     }
 
                     $globals[$this->globalsKey][$attributes['category']][$attributes['type']] = $this->proxyClass;

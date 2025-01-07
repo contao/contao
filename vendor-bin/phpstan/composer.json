@@ -1,6 +1,6 @@
 {
     "require": {
-        "phpstan/phpstan": "^1.0",
+        "phpstan/phpstan": "^1.11",
         "phpstan/phpstan-phpunit": "^1.0",
         "phpstan/phpstan-symfony": "^1.0",
         "slam/phpstan-extensions": "^6.0",
@@ -9,6 +9,11 @@
     "autoload": {
         "psr-4": {
             "Contao\\Tools\\PHPStan\\": "src/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.1"
         }
     }
 }

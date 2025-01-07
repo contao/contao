@@ -168,6 +168,14 @@ class ModuleChangePassword extends Module
 			$objMember->password = $objNewPassword->value;
 			$objMember->save();
 
+			// Delete unconfirmed "change password" tokens
+			$models = OptInModel::findUnconfirmedByRelatedTableAndId('tl_member', $objMember->id);
+
+			foreach ($models ?? array() as $model)
+			{
+				$model->delete();
+			}
+
 			// Create a new version
 			if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'] ?? null)
 			{
@@ -182,6 +190,9 @@ class ModuleChangePassword extends Module
 					System::importStatic($callback[0])->{$callback[1]}($objMember, $objNewPassword->value, $this);
 				}
 			}
+
+			// Generate a new session ID
+			$session->migrate();
 
 			// Update the current user, so they are not logged out automatically
 			$user->findBy('id', $objMember->id);

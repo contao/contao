@@ -19,9 +19,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.preheader.0">
         <source>Preheader text</source>
+        <target>Text předhlavičky</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.preheader.1">
         <source>Here you can enter a preheader text. A preheader text should be between 40-130 characters long.</source>
+        <target>Zde můžeš zadat text předhlavičky. Měl by mít mezi 40 - 130 znaky. </target>
       </trans-unit>
       <trans-unit id="tl_newsletter.content.0">
         <source>HTML content</source>

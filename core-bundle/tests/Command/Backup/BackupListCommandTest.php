@@ -37,15 +37,14 @@ class BackupListCommandTest extends TestCase
     {
         $command = new BackupListCommand($this->mockBackupManager());
 
+        $tz = date_default_timezone_get();
+        date_default_timezone_set('UTC');
+
         $commandTester = new CommandTester($command);
         $code = $commandTester->execute($arguments);
         $normalizedOutput = preg_replace("/\\s+\n/", "\n", $commandTester->getDisplay(true));
 
-        $expectedOutput = str_replace(
-            '<TIMEZONE>',
-            BackupListCommand::getFormattedTimeZoneOffset(new \DateTimeZone(date_default_timezone_get())),
-            $expectedOutput,
-        );
+        date_default_timezone_set($tz);
 
         $this->assertStringContainsString($expectedOutput, $normalizedOutput);
         $this->assertSame(0, $code);
@@ -57,7 +56,7 @@ class BackupListCommandTest extends TestCase
             [],
             <<<'OUTPUT'
                  --------------------- ----------- ------------------------------
-                  Created (<TIMEZONE>)      Size        Name
+                  Created (+00:00)      Size        Name
                  --------------------- ----------- ------------------------------
                   2021-11-01 14:12:54   48.83 KiB   test__20211101141254.sql.gz
                   2021-10-31 14:12:54   5.73 MiB    test2__20211031141254.sql.gz

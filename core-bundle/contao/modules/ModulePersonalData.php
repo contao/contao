@@ -136,6 +136,7 @@ class ModulePersonalData extends Module
 
 		$arrSubmitted = array();
 		$arrFiles = array();
+		$migrateSession = false;
 
 		$db = Database::getInstance();
 
@@ -239,7 +240,7 @@ class ModulePersonalData extends Module
 					}
 					catch (\OutOfBoundsException $e)
 					{
-						$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidDate'], $varValue));
+						$objWidget->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['invalidDate'], $varValue));
 					}
 				}
 
@@ -252,7 +253,7 @@ class ModulePersonalData extends Module
 				// Make sure that unique fields are unique (check the eval setting first -> #3063)
 				if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$db->isUniqueValue('tl_member', $field, $varValue, $user->id))
 				{
-					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?? $field));
+					$objWidget->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?? $field));
 				}
 
 				// Trigger the save_callback (see #5247)
@@ -307,6 +308,22 @@ class ModulePersonalData extends Module
 						// Set the new field in the member model
 						$blnModified = true;
 						$objMember->$field = $varValue;
+
+						if (\in_array($field, array('username', 'password')))
+						{
+							$migrateSession = true;
+						}
+
+						if ($field == 'password')
+						{
+							// Delete unconfirmed "change password" tokens
+							$models = OptInModel::findUnconfirmedByRelatedTableAndId('tl_member', $objMember->id);
+
+							foreach ($models ?? array() as $model)
+							{
+								$model->delete();
+							}
+						}
 					}
 				}
 			}
@@ -334,6 +351,12 @@ class ModulePersonalData extends Module
 		{
 			$objMember->tstamp = time();
 			$objMember->save();
+
+			// Generate a new session ID
+			if ($migrateSession)
+			{
+				$session->migrate();
+			}
 		}
 
 		$this->Template->hasError = $doNotSubmit;

@@ -76,6 +76,16 @@ services:
             - '@database_connection'
             - '@request_stack'
 
+    contao.listener.data_container.content_element_type:
+        class: Contao\CoreBundle\EventListener\DataContainer\ContentElementTypeListener
+        arguments:
+            - '@security.helper'
+
+    contao.listener.data_container.content_record_label:
+        class: Contao\CoreBundle\EventListener\DataContainer\ContentRecordLabelListener
+        arguments:
+            - '@translator'
+
     contao.listener.data_container.csp_save_callback:
         class: Contao\CoreBundle\EventListener\DataContainer\CspSaveCallbackListener
         arguments:
@@ -123,6 +133,11 @@ services:
         arguments:
             - '@translator'
 
+    contao.listener.data_container.fallback_record_label:
+        class: Contao\CoreBundle\EventListener\DataContainer\FallbackRecordLabelListener
+        arguments:
+            - '@translator'
+
     contao.listener.data_container.frontend_module_permissions:
         class: Contao\CoreBundle\EventListener\DataContainer\FrontendModulePermissionsListener
         arguments:
@@ -133,6 +148,9 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
         arguments:
             - '@database_connection'
+
+    contao.listener.data_container.legacy_gallery_palette:
+        class: Contao\CoreBundle\EventListener\DataContainer\LegacyGalleryPaletteListener
 
     contao.listener.data_container.logout_page_redirect:
         class: Contao\CoreBundle\EventListener\DataContainer\LogoutPageRedirectListener
@@ -182,6 +200,13 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\PageUseSslDefaultListener
         arguments:
             - '@request_stack'
+
+    contao.listener.data_container.personal_data_password:
+        class: Contao\CoreBundle\EventListener\DataContainer\PersonalDataPasswordListener
+        arguments:
+            - '@database_connection'
+            - '@translator'
+            - '@security.helper'
 
     contao.listener.data_container.preview_link:
         class: Contao\CoreBundle\EventListener\DataContainer\PreviewLinkListener
@@ -513,11 +538,6 @@ services:
         class: Contao\CoreBundle\Messenger\EventListener\MessageListener
         arguments:
             - '@monolog.logger.contao.error'
-
-    contao.messenger.worker_listener:
-        class: Contao\CoreBundle\Messenger\EventListener\WorkerListener
-        arguments:
-            - '@contao.messenger.auto_fallback_notifier'
 
     contao.twig.loader.auto_refresh_template_hierarchy_listener:
         class: Contao\CoreBundle\Twig\Loader\AutoRefreshTemplateHierarchyListener

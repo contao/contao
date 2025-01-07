@@ -84,7 +84,7 @@ class Folder extends System
 		// Check whether it is a directory
 		if (is_file($this->strRootDir . '/' . $strFolder))
 		{
-			throw new \Exception(sprintf('File "%s" is not a directory', $strFolder));
+			throw new \Exception(\sprintf('File "%s" is not a directory', $strFolder));
 		}
 
 		$this->strFolder = $strFolder;
@@ -317,13 +317,13 @@ class Folder extends System
 		// Check if .public is a directory (see #3465)
 		if (is_dir($this->strRootDir . '/' . $this->strFolder . '/.public'))
 		{
-			throw new \RuntimeException(sprintf('Cannot protect folder "%s" because it contains a directory called ".public"', $this->strFolder));
+			throw new \RuntimeException(\sprintf('Cannot protect folder "%s" because it contains a directory called ".public"', $this->strFolder));
 		}
 
 		// Check if the .public file exists
 		if (!is_file($this->strRootDir . '/' . $this->strFolder . '/.public'))
 		{
-			throw new \RuntimeException(sprintf('Cannot protect folder "%s" because one of its parent folders is public', $this->strFolder));
+			throw new \RuntimeException(\sprintf('Cannot protect folder "%s" because one of its parent folders is public', $this->strFolder));
 		}
 
 		(new File($this->strFolder . '/.public'))->delete();
@@ -337,7 +337,7 @@ class Folder extends System
 		// Check if .public is a directory (see #3465)
 		if (is_dir($this->strRootDir . '/' . $this->strFolder . '/.public'))
 		{
-			throw new \RuntimeException(sprintf('Cannot unprotect folder "%s" because it contains a directory called ".public"', $this->strFolder));
+			throw new \RuntimeException(\sprintf('Cannot unprotect folder "%s" because it contains a directory called ".public"', $this->strFolder));
 		}
 
 		if (!is_file($this->strRootDir . '/' . $this->strFolder . '/.public'))
@@ -384,7 +384,7 @@ class Folder extends System
 		// Check if the .nosync file exists
 		if (!file_exists($this->strRootDir . '/' . $this->strFolder . '/.nosync'))
 		{
-			throw new \RuntimeException(sprintf('Cannot synchronize the folder "%s" because one of its parent folders is unsynchronized', $this->strFolder));
+			throw new \RuntimeException(\sprintf('Cannot synchronize the folder "%s" because one of its parent folders is unsynchronized', $this->strFolder));
 		}
 
 		(new File($this->strFolder . '/.nosync'))->delete();

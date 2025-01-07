@@ -32,9 +32,9 @@ class FilesystemUtil
      *  - If the UUID points to a directory, its file contents are used (only first level).
      *  - Duplicate files are stripped.
      *
-     * @param string|array<string|null> $sources
+     * @param string|array<string|null>|null $sources
      */
-    public static function listContentsFromSerialized(VirtualFilesystemInterface $storage, array|string $sources): FilesystemItemIterator
+    public static function listContentsFromSerialized(VirtualFilesystemInterface $storage, array|string|null $sources): FilesystemItemIterator
     {
         $uuids = array_filter(StringUtil::deserialize($sources, true));
 
@@ -51,11 +51,11 @@ class FilesystemUtil
         if (!\is_resource($contents)) {
             $type = \gettype($contents);
 
-            throw new \LogicException(sprintf('Invalid stream provided, expected stream resource, received "%s".', $type));
+            throw new \LogicException(\sprintf('Invalid stream provided, expected stream resource, received "%s".', $type));
         }
 
         if ('stream' !== ($type = get_resource_type($contents))) {
-            throw new \LogicException(sprintf('Invalid stream provided, expected stream resource, received resource of type "%s".', $type));
+            throw new \LogicException(\sprintf('Invalid stream provided, expected stream resource, received resource of type "%s".', $type));
         }
     }
 

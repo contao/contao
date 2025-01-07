@@ -184,14 +184,14 @@ class FormCaptcha extends Widget
 		$this->generateCaptcha();
 
 		$question = $GLOBALS['TL_LANG']['SEC']['question' . random_int(1, 3)];
-		$question = sprintf($question, $this->arrCaptcha['int1'], $this->arrCaptcha['int2']);
+		$question = \sprintf($question, $this->arrCaptcha['int1'], $this->arrCaptcha['int2']);
 
 		$strEncoded = '';
 		$arrCharacters = mb_str_split($question);
 
 		foreach ($arrCharacters as $index => $strCharacter)
 		{
-			$strEncoded .= sprintf(($index % 2) ? '&#x%X;' : '&#%s;', mb_ord($strCharacter));
+			$strEncoded .= \sprintf(($index % 2) ? '&#x%X;' : '&#%s;', mb_ord($strCharacter));
 		}
 
 		return $strEncoded;
@@ -248,7 +248,7 @@ class FormCaptcha extends Widget
 			return '';
 		}
 
-		return sprintf(
+		return \sprintf(
 			'<label for="ctrl_%s" class="mandatory%s"><span class="invisible">%s </span>%s<span class="mandatory">*</span><span class="invisible"> %s</span></label>',
 			$this->strId,
 			$this->strClass ? ' ' . $this->strClass : '',
@@ -265,7 +265,7 @@ class FormCaptcha extends Widget
 	 */
 	public function generate()
 	{
-		return sprintf(
+		return \sprintf(
 			'<input type="text" name="%s" id="ctrl_%s" class="captcha mandatory%s" value="" aria-describedby="captcha_text_%s"%s%s',
 			$this->strCaptchaKey,
 			$this->strId,
@@ -283,7 +283,7 @@ class FormCaptcha extends Widget
 	 */
 	public function generateQuestion()
 	{
-		return sprintf(
+		return \sprintf(
 			'<span id="captcha_text_%s" class="captcha_text%s">%s</span>',
 			$this->strId,
 			$this->strClass ? ' ' . $this->strClass : '',

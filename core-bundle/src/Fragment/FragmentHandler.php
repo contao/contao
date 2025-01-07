@@ -29,6 +29,7 @@ class FragmentHandler extends BaseFragmentHandler
      * @internal
      */
     public function __construct(
+        /** @phpstan-ignore property.phpDocType */
         private readonly ContainerInterface $renderers,
         private readonly BaseFragmentHandler $fragmentHandler,
         RequestStack $requestStack,
@@ -46,7 +47,7 @@ class FragmentHandler extends BaseFragmentHandler
         }
 
         if (!$config = $this->fragmentRegistry->get($uri->controller)) {
-            throw new UnknownFragmentException(sprintf('Invalid fragment identifier "%s"', $uri->controller));
+            throw new UnknownFragmentException(\sprintf('Invalid fragment identifier "%s"', $uri->controller));
         }
 
         $this->preHandleFragment($uri, $config);

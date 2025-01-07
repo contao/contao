@@ -53,6 +53,7 @@ class IntlInstalledLocalesAndCountriesPass implements CompilerPassInterface
         }
 
         // The default locale must be the first supported language (see contao/core#6533)
+        /** @var array<string> $languages */
         $languages = [$defaultLocale];
 
         $finder = Finder::create()->directories()->depth(0)->name('/^[a-z]{2,}/')->in($dirs);

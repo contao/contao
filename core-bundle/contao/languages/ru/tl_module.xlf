@@ -522,8 +522,8 @@
         <target>Выберите модуль для каждой корневой страницы веб-сайта.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Choose module for &quot;%s&quot;</source>
-        <target>Выберите модуль для &quot;%s&quot;</target>
+        <source>Choose module for &quot;%s&quot; [%s]</source>
+        <target>Выберите модуль для &quot;%s&quot; [%s]</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

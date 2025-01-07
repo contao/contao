@@ -24,6 +24,7 @@ class TemplateControllerTest extends ContentElementTestCase
                 'type' => 'template',
                 'data' => serialize([
                     ['key' => 'f&o', 'value' => '"bar"'],
+                    ['key' => 'lorem', 'value' => 'ipsum'],
                 ]),
             ],
         );
@@ -33,6 +34,8 @@ class TemplateControllerTest extends ContentElementTestCase
                 <dl>
                     <dt>f&amp;o</dt>
                     <dd>&quot;bar&quot;</dd>
+                    <dt>lorem</dt>
+                    <dd>ipsum</dd>
                 </dl>
             </div>
             HTML;

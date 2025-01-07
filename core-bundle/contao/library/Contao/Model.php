@@ -139,7 +139,7 @@ abstract class Model
 			// Look for joined fields
 			foreach ($arrData as $k=>$v)
 			{
-				if (str_contains($k, '__'))
+				if (static::isJoinedField($k))
 				{
 					list($key, $field) = explode('__', $k, 2);
 
@@ -219,6 +219,25 @@ abstract class Model
 	{
 		$clone = clone $this;
 		$clone->setRow($this->originalRow());
+
+		return $clone;
+	}
+
+	/**
+	 * Clone a model with all data and prevent saving
+	 *
+	 * @return static The model
+	 */
+	public function cloneDetached()
+	{
+		$clone = clone $this;
+
+		if (isset($this->arrData[static::$strPk]))
+		{
+			$clone->arrData[static::$strPk] = $this->arrData[static::$strPk];
+		}
+
+		$clone->preventSaving(false);
 
 		return $clone;
 	}
@@ -356,9 +375,9 @@ abstract class Model
 	 */
 	public function setRow(array $arrData)
 	{
-		foreach ($arrData as $k=>$v)
+		foreach ($arrData as $k => $v)
 		{
-			if (str_contains($k, '__'))
+			if (static::isJoinedField($k))
 			{
 				unset($arrData[$k]);
 			}
@@ -385,7 +404,7 @@ abstract class Model
 	{
 		foreach ($arrData as $k=>$v)
 		{
-			if (str_contains($k, '__'))
+			if (static::isJoinedField($k))
 			{
 				continue;
 			}
@@ -751,7 +770,7 @@ abstract class Model
 		// The enum does not exist
 		if (null === $enum)
 		{
-			throw new \Exception(sprintf('Field %s.%s has no enum configured', static::getTable(), $strKey));
+			throw new \Exception(\sprintf('Field %s.%s has no enum configured', static::getTable(), $strKey));
 		}
 
 		$varValue = $this->{$strKey};
@@ -759,7 +778,7 @@ abstract class Model
 		// The value is invalid
 		if (!\is_string($varValue) && !\is_int($varValue))
 		{
-			throw new \Exception(sprintf('Value of %s.%s must be a string or an integer to resolve a backed enumeration', static::getTable(), $strKey));
+			throw new \Exception(\sprintf('Value of %s.%s must be a string or an integer to resolve a backed enumeration', static::getTable(), $strKey));
 		}
 
 		return $this->arrEnums[$strKey]::tryFrom($varValue);
@@ -961,7 +980,7 @@ abstract class Model
 			array
 			(
 				'limit'  => 1,
-				'column' => $isAlias ? array("BINARY $t.alias=?") : array("$t.id=?"),
+				'column' => $isAlias ? array("CAST($t.alias AS BINARY)=?") : array("$t.id=?"),
 				'value'  => $varId,
 				'return' => 'Model'
 			),
@@ -1354,7 +1373,7 @@ abstract class Model
 	{
 		if (!isset($GLOBALS['TL_MODELS'][$strTable]))
 		{
-			throw new \RuntimeException(sprintf('There is no class for table "%s" registered in $GLOBALS[\'TL_MODELS\'].', $strTable));
+			throw new \RuntimeException(\sprintf('There is no class for table "%s" registered in $GLOBALS[\'TL_MODELS\'].', $strTable));
 		}
 
 		return $GLOBALS['TL_MODELS'][$strTable];
@@ -1440,5 +1459,15 @@ abstract class Model
 		}
 
 		return System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
+	}
+
+	/**
+	 * This method is a hot path so caching the keys gets rid of thousands of str_contains() calls.
+	 */
+	protected static function isJoinedField(string $key): bool
+	{
+		static $cache = array();
+
+		return $cache[$key] ??= str_contains($key, '__');
 	}
 }

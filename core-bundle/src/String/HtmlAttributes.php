@@ -19,7 +19,7 @@ namespace Contao\CoreBundle\String;
 class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggregate, \ArrayAccess
 {
     /**
-     * @var array<string, string>
+     * @var array<array-key, string>
      */
     private array $attributes = [];
 
@@ -81,7 +81,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         }
 
         foreach ($attributes as $name => $value) {
-            $mergeSet($name, $value);
+            $mergeSet((string) $name, $value);
         }
 
         return $this;
@@ -102,12 +102,8 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
 
         $name = strtolower($name);
 
-        // Even though the HTML 5 parser supports attribute names starting with an equal
-        // sign, we have to disallow that in order to support serializing boolean
-        // attributes. Otherwise, serializing and parsing back something like `hidden=""
-        // =attr="value"` would fail the roundtrip.
-        if (1 !== preg_match('(^[^>\s/=]+$)', $name) || 1 !== preg_match('//u', $name)) {
-            throw new \InvalidArgumentException(sprintf('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got "%s".', $name));
+        if (!preg_match('(^[^>\s/][^>\s/=]*$)', $name) || !preg_match('//u', $name) || str_contains($name, "\x00")) {
+            throw new \InvalidArgumentException(\sprintf('An HTML attribute name must be valid UTF-8 and not contain the characters >, /, = or whitespace, got "%s".', $name));
         }
 
         // Unset if value is set to false
@@ -314,8 +310,14 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     {
         $attributes = [];
 
-        foreach ($this->attributes as $name => $value) {
-            $attributes[] = '' !== $value ? sprintf('%s="%s"', $name, $this->escapeValue($name, $value)) : $name;
+        foreach ($this->getIterator() as $name => $value) {
+            // Special case if the attribute name starts with an equals sign and the previous
+            // attribute was a boolean attribute
+            if ('=' === $name[0] && !str_ends_with($attributes[\count($attributes) - 1] ?? '"', '"')) {
+                $attributes[\count($attributes) - 1] .= '=""';
+            }
+
+            $attributes[] = '' !== $value ? \sprintf('%s="%s"', $name, $this->escapeValue($name, $value)) : $name;
         }
 
         $string = implode(' ', $attributes);
@@ -324,11 +326,13 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     }
 
     /**
-     * @return \ArrayIterator<string, string>
+     * @return \Generator<string, string>
      */
-    public function getIterator(): \Traversable
+    public function getIterator(): \Generator
     {
-        return new \ArrayIterator($this->attributes);
+        foreach ($this->attributes as $name => $value) {
+            yield (string) $name => $value;
+        }
     }
 
     public function offsetExists(mixed $offset): bool
@@ -339,7 +343,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     public function offsetGet(mixed $offset): mixed
     {
         if (!$this->offsetExists($offset)) {
-            throw new \OutOfBoundsException(sprintf('The attribute property "%s" does not exist.', $offset));
+            throw new \OutOfBoundsException(\sprintf('The attribute property "%s" does not exist.', $offset));
         }
 
         return $this->attributes[$offset];
@@ -355,9 +359,10 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
         unset($this->attributes[$offset]);
     }
 
-    public function jsonSerialize(): array
+    public function jsonSerialize(): object
     {
-        return $this->attributes;
+        // Ensure string keys by casting to object
+        return (object) $this->attributes;
     }
 
     /**
@@ -387,6 +392,19 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      */
     private function parseString(string $attributesString): \Generator
     {
+        // Normalize to UTF-8 according to:
+        // https://encoding.spec.whatwg.org/#utf-8
+        // https://html.spec.whatwg.org/multipage/parsing.html#the-input-byte-stream
+        // https://html.spec.whatwg.org/multipage/parsing.html#preprocessing-the-input-stream
+        if (!preg_match('//u', $attributesString) || str_contains($attributesString, "\x00")) {
+            $substituteCharacter = mb_substitute_character();
+            mb_substitute_character(0xFFFD);
+
+            $attributesString = mb_convert_encoding(str_replace("\x00", "\u{FFFD}", $attributesString), 'UTF-8', 'UTF-8');
+
+            mb_substitute_character($substituteCharacter);
+        }
+
         // Regular expression to match attributes according to
         // https://html.spec.whatwg.org/#before-attribute-name-state
         $attributeRegex = '(
@@ -402,22 +420,28 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
                     |([^\s>]*+)                        # Or unquoted or missing value
                 )                                      # Value end
             )?+                                        # Assignment is optional
+            |>(*COMMIT)(*FAIL)                         # End of HTML tag
         )ix';
 
         preg_match_all($attributeRegex, $attributesString, $matches, PREG_SET_ORDER | PREG_UNMATCHED_AS_NULL);
 
+        $usedNames = [];
+
         foreach ($matches as [1 => $name, 2 => $value]) {
-            yield strtolower($name) => html_entity_decode($value ?? '', ENT_QUOTES | ENT_HTML5);
+            if (!isset($usedNames[$name = strtolower($name)])) {
+                $usedNames[$name] = true;
+                yield $name => html_entity_decode($value ?? '', ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
+            }
         }
     }
 
     private function escapeValue(string $name, string $value): string
     {
-        if (!preg_match('//u', $value)) {
-            throw new \RuntimeException(sprintf('The value of property "%s" is not a valid UTF-8 string.', $name));
+        if (!preg_match('//u', $value) || str_contains($value, "\x00")) {
+            throw new \RuntimeException(\sprintf('The value of property "%s" is not a valid UTF-8 string.', $name));
         }
 
-        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, null, $this->doubleEncoding);
+        $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, null, $this->doubleEncoding || 1 === preg_match('/["\'<>]/', $value));
 
         return str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $value);
     }

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Twig\Extension;
 
 use Contao\BackendTemplateTrait;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
@@ -41,9 +42,9 @@ use Contao\CoreBundle\Twig\Runtime\SanitizerRuntime;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
 use Contao\CoreBundle\Twig\Runtime\StringRuntime;
 use Contao\CoreBundle\Twig\Runtime\UrlRuntime;
+use Contao\FrontendTemplate;
 use Contao\FrontendTemplateTrait;
 use Contao\StringUtil;
-use Contao\Template;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
@@ -177,7 +178,7 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             new TwigFunction(
                 'contao_figure',
                 [FigureRuntime::class, 'renderFigure'],
-                ['is_safe' => ['html']],
+                ['is_safe' => ['html'], 'deprecated' => true],
             ),
             new TwigFunction(
                 'picture_config',
@@ -352,13 +353,13 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
     {
         $template = Path::getFilenameWithoutExtension($name);
 
-        $partialTemplate = new class($template) extends Template {
+        $partialTemplate = new class($template) extends FrontendTemplate {
             use BackendTemplateTrait;
             use FrontendTemplateTrait;
 
             public function setBlocks(array $blocks): void
             {
-                $this->arrBlocks = array_map(static fn ($block) => \is_array($block) ? $block : [$block], $blocks);
+                $this->arrBlocks = $blocks;
             }
 
             public function parse(): string
@@ -372,10 +373,23 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             }
         };
 
+        // Prevent replacing insert tags in output from Twig
+        $nonce = ContaoFramework::getNonce();
+        $from = ['{{', '}}'];
+        $to = ["[[TL_IT_OPEN_$nonce]]", "[[TL_IT_CLOSE_$nonce]]"];
+
+        $blocks = array_map(
+            static fn ($block) => array_map(
+                static fn ($content) => str_replace($from, $to, $content),
+                \is_array($block) ? $block : [$block],
+            ),
+            $blocks,
+        );
+
         $partialTemplate->setData($context);
         $partialTemplate->setBlocks($blocks);
 
-        return $partialTemplate->parse();
+        return str_replace($to, $from, $partialTemplate->parse());
     }
 
     /**
@@ -416,6 +430,6 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
             }
         }
 
-        throw new \RuntimeException(sprintf('The %s class was expected to register the "include" Twig function but did not.', CoreExtension::class));
+        throw new \RuntimeException(\sprintf('The %s class was expected to register the "include" Twig function but did not.', CoreExtension::class));
     }
 }

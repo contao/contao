@@ -71,14 +71,32 @@ class FragmentTemplateTest extends TestCase
         $template = $this->getFragmentTemplate();
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage(sprintf('Calling the "%s()" function on a FragmentTemplate is not allowed. Set template data instead and optionally output it with getResponse().', $method));
+        $this->expectExceptionMessage(\sprintf('Calling the "%s()" function on a FragmentTemplate is not allowed. Set template data instead and optionally output it with getResponse().', $method));
 
         $template->$method(...$args);
     }
 
     public function provideIllegalParentMethods(): iterable
     {
-        $excluded = ['__construct', '__set', '__get', '__isset', 'setData', 'getData', 'setName', 'getName', 'getResponse', 'addCspSource', 'addCspHash', 'cspInlineStyle', 'cspInlineStyles', 'nonce', 'attr'];
+        $excluded = [
+            '__construct',
+            '__set',
+            '__get',
+            '__isset',
+            'once',
+            'setData',
+            'getData',
+            'setName',
+            'getName',
+            'getResponse',
+            'addCspSource',
+            'addCspHash',
+            'cspInlineStyle',
+            'cspInlineStyles',
+            'nonce',
+            'attr',
+        ];
+
         $parent = (new \ReflectionClass(FragmentTemplate::class))->getParentClass();
 
         foreach ($parent->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
@@ -98,7 +116,7 @@ class FragmentTemplateTest extends TestCase
                         'bool' => false,
                         'string' => '',
                         'array' => [],
-                        /** @phpstan-ignore-next-line because mocked type cannot be inferred */
+                        /** @phpstan-ignore argument.templateType */
                         default => $this->createMock($name),
                     };
                 },

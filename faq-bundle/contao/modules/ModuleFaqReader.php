@@ -156,7 +156,7 @@ class ModuleFaqReader extends Module
 			$strAuthor = $objAuthor->name;
 		}
 
-		$this->Template->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
+		$this->Template->info = \sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
 
 		// Tag the FAQ (see #2137)
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))

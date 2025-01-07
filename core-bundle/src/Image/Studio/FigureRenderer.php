@@ -93,7 +93,7 @@ class FigureRenderer
         }
 
         if (1 !== preg_match('/^[^\/.\s]*$/', $template)) {
-            throw new \InvalidArgumentException(sprintf('Invalid Contao template name "%s".', $template));
+            throw new \InvalidArgumentException(\sprintf('Invalid Contao template name "%s".', $template));
         }
 
         $imageTemplate = new FrontendTemplate($template);

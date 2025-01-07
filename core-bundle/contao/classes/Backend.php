@@ -353,7 +353,7 @@ abstract class Backend extends Controller
 			// Add the name of the submodule
 			if (isset($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1]))
 			{
-				$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1] ?? '%s', Input::get('id')) . '</span>';
+				$this->Template->headline .= ' <span>' . \sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1] ?? '%s', Input::get('id')) . '</span>';
 			}
 			else
 			{
@@ -401,77 +401,15 @@ abstract class Backend extends Controller
 					break;
 			}
 
-			// Add the name of the parent elements
-			if ($strTable && \in_array($strTable, $arrTables) && $strTable != $arrTables[0])
+			$container = System::getContainer();
+			$request = $container->get('request_stack')->getCurrentRequest();
+			$trail = array();
+
+			$this->Template->headline = '';
+
+			foreach ($container->get('contao.data_container.dca_url_analyzer')->getTrail() as list('url' => $linkUrl, 'label' => $linkLabel))
 			{
-				$trail = array();
-
-				$pid = $dc->id;
-				$table = $strTable;
-				$ptable = $act != 'edit' ? ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] ?? null) : $strTable;
-				$container = System::getContainer();
-
-				if ($ptable)
-				{
-					$this->loadDataContainer($ptable);
-				}
-
-				$db = Database::getInstance();
-				$request = $container->get('request_stack')->getCurrentRequest();
-
-				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && is_a($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null, DC_Table::class, true))
-				{
-					$objRow = $db
-						->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
-						->limit(1)
-						->execute($pid);
-
-					// Add only parent tables to the trail
-					if ($table != $ptable)
-					{
-						// Add table name
-						if (isset($GLOBALS['TL_LANG']['MOD'][$table]))
-						{
-							$trail[] = ' <span>' . $GLOBALS['TL_LANG']['MOD'][$table] . '</span>';
-						}
-
-						// Add object title or name
-						if ($linkLabel = ($objRow->title ?: $objRow->name ?: $objRow->headline))
-						{
-							$strUrl = $container->get('router')->generate('contao_backend', array
-							(
-								'do' => $request->query->get('do'),
-								'table' => $table,
-								'id' => $objRow->id,
-								'ref' => $request->attributes->get('_contao_referer_id'),
-							));
-
-							$trail[] = sprintf(' <span><a href="%s">%s</a></span>', $strUrl, $linkLabel);
-						}
-					}
-
-					// Next parent table
-					$pid = $objRow->pid;
-					$table = $ptable;
-					$ptable = ($GLOBALS['TL_DCA'][$ptable]['config']['dynamicPtable'] ?? null) ? $objRow->ptable : ($GLOBALS['TL_DCA'][$ptable]['config']['ptable'] ?? null);
-
-					if ($ptable)
-					{
-						$this->loadDataContainer($ptable);
-					}
-				}
-
-				// Add the last parent table
-				if (isset($GLOBALS['TL_LANG']['MOD'][$table]))
-				{
-					$trail[] = ' <span>' . $GLOBALS['TL_LANG']['MOD'][$table] . '</span>';
-				}
-
-				// Add the breadcrumb trail in reverse order
-				foreach (array_reverse($trail) as $breadcrumb)
-				{
-					$this->Template->headline .= $breadcrumb;
-				}
+				$this->Template->headline .= \sprintf(' <span><a href="%s">%s</a></span>', StringUtil::specialchars($linkUrl), StringUtil::specialchars($linkLabel));
 			}
 
 			$do = Input::get('do');
@@ -505,17 +443,6 @@ abstract class Backend extends Controller
 						$this->Template->headline .= ' <span>' . Input::get('id') . '</span>';
 					}
 				}
-				elseif (isset($GLOBALS['TL_LANG'][$strTable][$act]))
-				{
-					if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
-					{
-						$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('id')) . '</span>';
-					}
-					else
-					{
-						$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('id')) . '</span>';
-					}
-				}
 			}
 			elseif (Input::get('pid'))
 			{
@@ -528,17 +455,6 @@ abstract class Backend extends Controller
 					else
 					{
 						$this->Template->headline .= ' <span>' . Input::get('pid') . '</span>';
-					}
-				}
-				elseif (isset($GLOBALS['TL_LANG'][$strTable][$act]))
-				{
-					if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
-					{
-						$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('pid')) . '</span>';
-					}
-					else
-					{
-						$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('pid')) . '</span>';
 					}
 				}
 			}
@@ -643,7 +559,7 @@ abstract class Backend extends Controller
 
 		// Limit tree and disable root trails
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array($intNode);
-		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['showRootTrails'] = false;
+		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['visibleRoot'] = $intNode;
 
 		// Add root link
 		$arrLinks[] = Image::getHtml('pagemounts.svg') . ' <a href="' . self::addToUrl('pn=0') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
@@ -1079,7 +995,7 @@ abstract class Backend extends Controller
 			}
 			else
 			{
-				$strOptions .= sprintf('<option value="{{link_url::%s}}"%s>%s%s</option>', $objPages->id, ('{{link_url::' . $objPages->id . '}}' == Input::get('value')) ? ' selected="selected"' : '', str_repeat(' &nbsp; &nbsp; ', $level), StringUtil::specialchars($objPages->title));
+				$strOptions .= \sprintf('<option value="{{link_url::%s}}"%s>%s%s</option>', $objPages->id, ('{{link_url::' . $objPages->id . '}}' == Input::get('value')) ? ' selected="selected"' : '', str_repeat(' &nbsp; &nbsp; ', $level), StringUtil::specialchars($objPages->title));
 				$strOptions .= $this->doCreatePageList($objPages->id, $level);
 			}
 		}
@@ -1181,7 +1097,7 @@ abstract class Backend extends Controller
 					continue;
 				}
 
-				$strFiles .= sprintf('<option value="%s"%s>%s</option>', $strFolder . '/' . $strFile, ($strFolder . '/' . $strFile == Input::get('value')) ? ' selected="selected"' : '', StringUtil::specialchars($strFile));
+				$strFiles .= \sprintf('<option value="%s"%s>%s</option>', $strFolder . '/' . $strFile, ($strFolder . '/' . $strFile == Input::get('value')) ? ' selected="selected"' : '', StringUtil::specialchars($strFile));
 			}
 		}
 

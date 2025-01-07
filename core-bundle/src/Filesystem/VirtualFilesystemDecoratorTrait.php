@@ -104,14 +104,19 @@ trait VirtualFilesystemDecoratorTrait
         return $this->inner->getMimeType($location, $accessFlags);
     }
 
-    public function getExtraMetadata(Uuid|string $location, int $accessFlags = VirtualFilesystemInterface::NONE): array
+    public function getExtraMetadata(Uuid|string $location, int $accessFlags = VirtualFilesystemInterface::NONE): ExtraMetadata
     {
         return $this->inner->getExtraMetadata($location, $accessFlags);
     }
 
-    public function setExtraMetadata(Uuid|string $location, array $metadata): void
+    public function setExtraMetadata(Uuid|string $location, ExtraMetadata $metadata): void
     {
         $this->inner->setExtraMetadata($location, $metadata);
+    }
+
+    public function resolveUuid(Uuid $uuid): string
+    {
+        return $this->inner->resolveUuid($uuid);
     }
 
     public function generatePublicUri(Uuid|string $location, OptionsInterface|null $options = null): UriInterface|null

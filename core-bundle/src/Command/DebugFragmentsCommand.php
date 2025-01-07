@@ -42,7 +42,13 @@ class DebugFragmentsCommand extends Command
 
         foreach ($fragments as $identifier => $config) {
             $class = new \ReflectionClass(AbstractFragmentController::class);
-            $attributes = $class->getProperty('options')->getValue($this->container->get($config->getController()));
+
+            try {
+                $attributes = $class->getProperty('options')->getValue($this->container->get($config->getController()));
+            } catch (\ReflectionException) {
+                continue; // skip fragments which don't inherit from AbstractFragmentController
+            }
+
             $controller = $attributes['debugController'] ?? $config->getController();
 
             unset($attributes['debugController']);
@@ -82,7 +88,7 @@ class DebugFragmentsCommand extends Command
                 $v = $v ? 'true' : 'false';
             }
 
-            $return[] = sprintf('%s : %s', str_pad($k, $length, ' ', STR_PAD_RIGHT), $v);
+            $return[] = \sprintf('%s : %s', str_pad($k, $length, ' ', STR_PAD_RIGHT), $v);
         }
 
         return implode("\n", $return);

@@ -1,14 +1,14 @@
 const Encore = require('@symfony/webpack-encore');
-const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 
+// Core bundle assets
 Encore
     .setOutputPath('core-bundle/public/')
     .setPublicPath('/bundles/contaocore')
     .setManifestKeyPrefix('')
     .cleanupOutputBeforeBuild()
     .disableSingleRuntimeChunk()
-    .enableSourceMaps()
-    .enableVersioning()
+    .enableSourceMaps(!Encore.isProduction())
+    .enableVersioning(Encore.isProduction())
     .addEntry('backend', './core-bundle/assets/backend.js')
 ;
 
@@ -16,16 +16,19 @@ const jsConfig = Encore.getWebpackConfig();
 
 Encore.reset();
 
+// Back end theme "flexible"
 Encore
     .setOutputPath('core-bundle/contao/themes/flexible')
     .setPublicPath('/system/themes/flexible')
     .setManifestKeyPrefix('')
-    .cleanupOutputBeforeBuild(['*.css', '*.json', '*.map'])
     .disableSingleRuntimeChunk()
-    .enableSourceMaps()
-    .enableVersioning()
+    .enableSourceMaps(!Encore.isProduction())
+    .enableVersioning(Encore.isProduction())
     .configureCssLoader(config => {
         config.url = false;
+    })
+    .cleanupOutputBeforeBuild(config => {
+        config.keep = /(fonts|icons|styles)\//;
     })
     .addStyleEntry('backend', './core-bundle/contao/themes/flexible/styles/main.css')
     .addStyleEntry('confirm', './core-bundle/contao/themes/flexible/styles/confirm.css')
@@ -40,43 +43,4 @@ Encore
 
 const themeConfig = Encore.getWebpackConfig();
 
-Encore.reset();
-
-Encore
-    .setOutputPath('core-bundle/contao/themes/flexible/icons')
-    .setPublicPath('/system/themes/flexible/icons')
-    .setManifestKeyPrefix('')
-    .disableSingleRuntimeChunk()
-    .addPlugin(new ImageMinimizerPlugin({
-        minimizer: {
-            implementation: ImageMinimizerPlugin.svgoMinify,
-            options: {
-                encodeOptions: {
-                    multipass: true,
-                    plugins: [{
-                        name: 'preset-default',
-                        params: {
-                            overrides: {
-                                inlineStyles: {
-                                    onlyMatchedOnce: false,
-                                },
-                                convertPathData: {
-                                    noSpaceAfterFlags: true,
-                                },
-                            },
-                        },
-                    }],
-                },
-            },
-        },
-    }))
-    .copyFiles({
-        from: './core-bundle/contao/themes/flexible/icons',
-        to: '[name].[ext]',
-        pattern: /\.svg$/,
-    })
-;
-
-const iconConfig = Encore.getWebpackConfig();
-
-module.exports = [jsConfig, themeConfig, iconConfig];
+module.exports = [jsConfig, themeConfig];

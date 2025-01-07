@@ -60,7 +60,7 @@ class SimpleTokenParser implements LoggerAwareInterface
 
         foreach ($tags as $tag) {
             $decodedTag = $allowHtml
-                ? html_entity_decode($tag, ENT_QUOTES, 'UTF-8')
+                ? html_entity_decode($tag, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8')
                 : $tag;
 
             // True if it is inside a matching if-tag
@@ -104,7 +104,7 @@ class SimpleTokenParser implements LoggerAwareInterface
             '/##([^#=!<>\s][^=!<>\s]*?)##/',
             function (array $matches) use ($data) {
                 if (!\array_key_exists($matches[1], $data)) {
-                    $this->logger?->log(LogLevel::INFO, sprintf('Tried to parse unknown simple token "%s".', $matches[1]));
+                    $this->logger?->log(LogLevel::INFO, \sprintf('Tried to parse unknown simple token "%s".', $matches[1]));
 
                     return '##'.$matches[1].'##';
                 }
@@ -186,7 +186,7 @@ class SimpleTokenParser implements LoggerAwareInterface
     {
         $this->logger?->log(
             LogLevel::INFO,
-            sprintf('Tried to evaluate unknown simple token(s): "%s".', implode('", "', $tokenNames)),
+            \sprintf('Tried to evaluate unknown simple token(s): "%s".', implode('", "', $tokenNames)),
         );
     }
 }

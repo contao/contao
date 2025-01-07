@@ -23,7 +23,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.2
+                  php-version: 8.1
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: pcov
 
@@ -43,4 +43,4 @@ jobs:
               with:
                   files: ./clover.xml
                   fail_ci_if_error: true
-                  token: c9fc8445-628e-41c3-886a-a37ebd3c4807
+                  token: ${{ secrets.CODECOV_TOKEN }}

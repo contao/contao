@@ -35,7 +35,7 @@
       </trans-unit>
       <trans-unit id="FMD.eventlist.1">
         <source>Adds a list of events to the page</source>
-        <target>Maakt een lijst van alle gebeurtenissen (bv. per maand, per week of per dag).</target>
+        <target>Voegt een lijst met evenementen toe aan de pagina</target>
       </trans-unit>
       <trans-unit id="FMD.eventreader.0">
         <source>Event reader</source>

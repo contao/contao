@@ -94,14 +94,14 @@ class CoreResponseContextFactory
                     throw new \RuntimeException('The request stack did not contain a request');
                 }
 
-                $url = UrlUtil::makeAbsolute($url, $request->getUri());
+                $url = UrlUtil::makeAbsolute($url, $request->getSchemeAndHttpHost().$request->getBasePath().'/');
             }
 
             $htmlHeadBag->setCanonicalUri($url);
         }
 
         if ($pageModel->enableCanonical && $pageModel->canonicalKeepParams) {
-            $htmlHeadBag->setKeepParamsForCanonical(array_map('trim', explode(',', $pageModel->canonicalKeepParams)));
+            $htmlHeadBag->setKeepParamsForCanonical(array_map(trim(...), explode(',', $pageModel->canonicalKeepParams)));
         }
 
         $jsonLdManager = $context->get(JsonLdManager::class);
@@ -113,7 +113,7 @@ class CoreResponseContextFactory
                     $pageModel->id,
                     $pageModel->noSearch,
                     $pageModel->protected,
-                    array_map('intval', array_filter((array) $pageModel->groups)),
+                    array_map(\intval(...), array_filter((array) $pageModel->groups)),
                     $this->tokenChecker->isPreviewMode(),
                 ),
             )

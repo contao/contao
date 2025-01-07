@@ -174,7 +174,7 @@ class BackendMenuListener
 
         $info = $factory
             ->createItem('info')
-            ->setLabel(sprintf('<strong>%s</strong> %s', $user->name, $user->email))
+            ->setLabel(\sprintf('<strong>%s</strong> %s', $user->name, $user->email))
             ->setAttribute('class', 'info')
             ->setExtra('safe_label', true)
             ->setExtra('translation_domain', false)
@@ -212,7 +212,7 @@ class BackendMenuListener
 
         $submenu->addChild($favorites);
 
-        $buger = $factory
+        $burger = $factory
             ->createItem('burger')
             ->setLabel('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
             ->setAttribute('class', 'burger')
@@ -220,17 +220,17 @@ class BackendMenuListener
             ->setExtra('translation_domain', false)
         ;
 
-        $tree->addChild($buger);
+        $tree->addChild($burger);
     }
 
     private function getAlertsLabel(): string
     {
         $systemMessages = $this->translator->trans('MSC.systemMessages', [], 'contao_default');
 
-        $label = sprintf(
+        $label = \sprintf(
             '<a href="%s" class="icon-alert" title="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
             $this->router->generate('contao_backend_alerts'),
-            htmlspecialchars($systemMessages),
+            htmlspecialchars($systemMessages, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
             StringUtil::specialchars(str_replace("'", "\\'", $systemMessages)),
             $systemMessages,
         );

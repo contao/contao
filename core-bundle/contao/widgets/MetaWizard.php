@@ -101,8 +101,8 @@ class MetaWizard extends Widget
 						$fieldLabel = $GLOBALS['TL_LANG']['MSC']['aw_' . $kk];
 
 						$errorMsg = isset($this->metaFields[$kk]['rgxpErrMsg'])
-							? sprintf($this->metaFields[$kk]['rgxpErrMsg'], $fieldLabel, $langTrans, $rgxp)
-							: sprintf($GLOBALS['TL_LANG']['tl_files']['metaRgxpError'], $fieldLabel, $langTrans, $rgxp);
+							? \sprintf($this->metaFields[$kk]['rgxpErrMsg'], $fieldLabel, $langTrans, $rgxp)
+							: \sprintf($GLOBALS['TL_LANG']['tl_files']['metaRgxpError'], $fieldLabel, $langTrans, $rgxp);
 
 						$this->addError($errorMsg);
 						$this->arrFieldErrors[$lang][$kk] = true;
@@ -123,6 +123,11 @@ class MetaWizard extends Widget
 			}
 		}
 
+		// Remove empty locales (see #7569)
+		$varInput = array_filter($varInput, static function ($localeArray) {
+			return array_filter($localeArray, static fn ($value) => !empty($value));
+		});
+
 		// Sort the metadata by key (see #3818)
 		ksort($varInput);
 
@@ -137,11 +142,11 @@ class MetaWizard extends Widget
 	public function generate()
 	{
 		$count = 0;
-		$return = '';
 
-		// Only show the root page languages (see #7112, #7667)
+		// Only show the root page languages plus their primary language (see #7112, #7667, #7569)
 		$objRootLangs = Database::getInstance()->query("SELECT language FROM tl_page WHERE type='root' AND language!=''");
 		$existing = $objRootLangs->fetchEach('language');
+		$existing = array_unique(array_merge($existing, array_map(static fn ($locale) => LocaleUtil::getPrimaryLanguage($locale), $existing)));
 
 		foreach ($existing as $lang)
 		{

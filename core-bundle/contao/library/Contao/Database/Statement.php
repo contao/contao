@@ -132,7 +132,7 @@ class Statement
 	{
 		if (substr_count((string) $this->strQuery, '%s') !== 1 || !\in_array(strtoupper(substr($this->strQuery, 0, 6)), array('INSERT', 'UPDATE'), true))
 		{
-			throw new \InvalidArgumentException(sprintf('Using "%s()" is only supported for INSERT and UPDATE queries with the "%%s" placeholder.', __METHOD__));
+			throw new \InvalidArgumentException(\sprintf('Using "%s()" is only supported for INSERT and UPDATE queries with the "%%s" placeholder.', __METHOD__));
 		}
 
 		$this->arrSetParams = array_values($arrParams);
@@ -141,7 +141,7 @@ class Statement
 			static function ($strName) {
 				if (!preg_match('/^(?:[A-Za-z0-9_$]+|`[^`]+`)$/', $strName))
 				{
-					throw new \RuntimeException(sprintf('Invalid column name "%s" in %s()', $strName, __METHOD__));
+					throw new \RuntimeException(\sprintf('Invalid column name "%s" in %s()', $strName, __METHOD__));
 				}
 
 				return Database::quoteIdentifier($strName);
@@ -152,7 +152,7 @@ class Statement
 		// INSERT
 		if (strncasecmp($this->strQuery, 'INSERT', 6) === 0)
 		{
-			$strQuery = sprintf(
+			$strQuery = \sprintf(
 				'(%s) VALUES (%s)',
 				implode(', ', $arrParamNames),
 				implode(', ', array_fill(0, \count($arrParams), '?'))
@@ -187,7 +187,8 @@ class Statement
 	{
 		if ($intRows <= 0)
 		{
-			$intRows = 30;
+			// 2^64-1 is the maximum of unsigned BIGINT, the biggest limit possible
+			$intRows = '18446744073709551615';
 		}
 
 		if ($intOffset < 0)
