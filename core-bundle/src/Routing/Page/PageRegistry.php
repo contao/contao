@@ -18,7 +18,7 @@ use Symfony\Contracts\Service\ResetInterface;
 
 class PageRegistry implements ResetInterface
 {
-    public const REGEX_REQUIRE_ITEM = '/[^/]*(/[^/]*/[^/]*)*[^/]*?';
+    public const REGEX_REQUIRE_ITEM = '/[^/]+(/[^/]+/[^/]+)*?';
 
     public const REGEX = '(/.+?)?';
 
