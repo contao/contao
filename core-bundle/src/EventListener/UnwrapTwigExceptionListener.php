@@ -55,7 +55,7 @@ class UnwrapTwigExceptionListener
         }
 
         foreach (array_keys(ExceptionConverterListener::MAPPER) as $class) {
-            if (\is_a($throwable, $class)) {
+            if (is_a($throwable, $class)) {
                 return true;
             }
         }
