@@ -64,9 +64,7 @@ class ExceptionConverterListener
             return;
         }
 
-        if ($httpException = $this->convertToHttpException($exception, $class)) {
-            $event->setThrowable($httpException);
-        }
+        $event->setThrowable($this->convertToHttpException($exception, $class));
     }
 
     private function getTargetClass(\Throwable $exception): string|null
