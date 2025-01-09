@@ -40,16 +40,16 @@ use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 class ExceptionConverterListener
 {
     public const MAPPER = [
-        ForwardPageNotFoundException::class => 'InternalServerErrorHttpException',
-        InsecureInstallationException::class => 'InternalServerErrorHttpException',
-        InternalServerErrorException::class => 'InternalServerErrorHttpException',
-        InvalidRequestTokenException::class => 'BadRequestHttpException',
-        NoActivePageFoundException::class => 'NotFoundHttpException',
-        NoLayoutSpecifiedException::class => 'InternalServerErrorHttpException',
-        NoRootPageFoundException::class => 'NotFoundHttpException',
-        PageNotFoundException::class => 'NotFoundHttpException',
-        ServiceUnavailableException::class => 'ServiceUnavailableHttpException',
-        UnusedArgumentsException::class => 'NotFoundHttpException',
+        ForwardPageNotFoundException::class => InternalServerErrorHttpException::class,
+        InsecureInstallationException::class => InternalServerErrorHttpException::class,
+        InternalServerErrorException::class => InternalServerErrorHttpException::class,
+        InvalidRequestTokenException::class => BadRequestHttpException::class,
+        NoActivePageFoundException::class => NotFoundHttpException::class,
+        NoLayoutSpecifiedException::class => InternalServerErrorHttpException::class,
+        NoRootPageFoundException::class => NotFoundHttpException::class,
+        PageNotFoundException::class => NotFoundHttpException::class,
+        ServiceUnavailableException::class => ServiceUnavailableHttpException::class,
+        UnusedArgumentsException::class => NotFoundHttpException::class,
     ];
 
     /**
@@ -80,14 +80,11 @@ class ExceptionConverterListener
         return null;
     }
 
-    private function convertToHttpException(\Throwable $exception, string $target): HttpException|null
+    private function convertToHttpException(\Throwable $exception, string $class): HttpException
     {
-        return match ($target) {
-            'BadRequestHttpException' => new BadRequestHttpException($exception->getMessage(), $exception),
-            'InternalServerErrorHttpException' => new InternalServerErrorHttpException($exception->getMessage(), $exception),
-            'NotFoundHttpException' => new NotFoundHttpException($exception->getMessage(), $exception),
-            'ServiceUnavailableHttpException' => new ServiceUnavailableHttpException('', $exception->getMessage(), $exception),
-            default => null,
+        return match ($class) {
+            ServiceUnavailableHttpException::class => new ServiceUnavailableHttpException('', $exception->getMessage(), $exception),
+            default => new $class($exception->getMessage(), $exception),
         };
     }
 }
