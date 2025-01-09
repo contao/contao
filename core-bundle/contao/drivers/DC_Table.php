@@ -245,20 +245,32 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$objSession->set($strKey, $session);
 		}
 
+		$blnClipboardModified = false;
 		if (!empty($arrClipboard[$this->strTable]) && $arrClipboard[$this->strTable]['mode'] != 'create')
 		{
 			if (\is_array($arrClipboard[$this->strTable]['id']))
 			{
-				$arrClipboard[$this->strTable]['id'] = array_filter($arrClipboard[$this->strTable]['id'], fn ($record) => $this->getCurrentRecord($record) !== null);
-				if (empty($arrClipboard[$this->strTable]['id']))
+				$arrIds = $arrClipboard[$this->strTable]['id'];
+				$arrFilteredIds = array_filter($arrIds, fn ($id) => $this->getCurrentRecord($id) !== null);
+				if ($arrFilteredIds !== $arrIds)
 				{
-					unset($arrClipboard[$this->strTable]);
+					$blnClipboardModified = true;
+					$arrClipboard[$this->strTable]['id'] = $arrFilteredIds;
+					if (empty($arrFilteredIds))
+					{
+						unset($arrClipboard[$this->strTable]);
+					}
 				}
 			}
 			elseif ($this->getCurrentRecord($arrClipboard[$this->strTable]['id']) === null)
 			{
+				$blnClipboardModified = true;
 				unset($arrClipboard[$this->strTable]);
 			}
+		}
+
+		if ($blnClipboardModified)
+		{
 			$objSession->set('CLIPBOARD', $arrClipboard);
 		}
 	}
