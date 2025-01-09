@@ -21,7 +21,7 @@ use Contao\StringUtil;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsContentElement(category: 'miscellaneous', nestedFragments: true, priority: -1)]
+#[AsContentElement(category: 'miscellaneous', nestedFragments: true)]
 class AccordionController extends AbstractContentElementController
 {
     public function __construct(private readonly ContaoFramework $framework)

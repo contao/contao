@@ -26,8 +26,8 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsContentElement('download', category: 'files', priority: -1)]
-#[AsContentElement('downloads', category: 'files', priority: -1)]
+#[AsContentElement('download', category: 'files')]
+#[AsContentElement('downloads', category: 'files')]
 class DownloadsController extends AbstractDownloadContentElementController
 {
     public function __construct(

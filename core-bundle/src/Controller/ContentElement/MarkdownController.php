@@ -34,7 +34,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsContentElement(category: 'texts', priority: -1)]
+#[AsContentElement(category: 'texts')]
 class MarkdownController extends AbstractContentElementController
 {
     public static function getSubscribedServices(): array

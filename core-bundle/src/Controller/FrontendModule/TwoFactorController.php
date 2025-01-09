@@ -34,7 +34,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 /**
  * @internal
  */
-#[AsFrontendModule(category: 'user', template: 'mod_two_factor', priority: -1)]
+#[AsFrontendModule(category: 'user', template: 'mod_two_factor')]
 class TwoFactorController extends AbstractFrontendModuleController
 {
     public static function getSubscribedServices(): array

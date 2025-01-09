@@ -20,11 +20,11 @@ class GlobalsMapListenerTest extends TestCase
     /**
      * @dataProvider getValuesData
      */
-    public function testMergesTheValuesIntoTheGlobalsArray(array $existing, array $new, array $expected): void
+    public function testMergesTheValuesIntoTheGlobalsArray(array $globals, array $fragments, array $expected): void
     {
-        $GLOBALS['TL_CTE'] = $existing;
+        $GLOBALS['TL_CTE'] = $globals;
 
-        $listener = new GlobalsMapListener(['TL_CTE' => $new]);
+        $listener = new GlobalsMapListener(['TL_CTE' => $fragments]);
         $listener->onInitializeSystem();
 
         $this->assertSame($expected, $GLOBALS['TL_CTE']);
@@ -52,16 +52,16 @@ class GlobalsMapListenerTest extends TestCase
             ['texts' => ['text' => 'LegacyText', 'headline' => 'HeadlineFragment']],
         ];
 
-        yield 'prefer default priority entries' => [
+        yield 'globals overrides fragment with priority 0' => [
             ['texts' => ['headline' => 'LegacyHeadline']],
             [0 => ['texts' => ['headline' => 'HeadlineFragment']]],
-            ['texts' => ['headline' => 'HeadlineFragment']],
+            ['texts' => ['headline' => 'LegacyHeadline']],
         ];
 
-        yield 'keeps existing entries' => [
+        yield 'priority > 0 overrides globals' => [
             ['texts' => ['headline' => 'LegacyHeadline']],
-            [-1 => ['texts' => ['headline' => 'HeadlineFragment']]],
-            ['texts' => ['headline' => 'LegacyHeadline']],
+            [1 => ['texts' => ['headline' => 'HeadlineFragment']]],
+            ['texts' => ['headline' => 'HeadlineFragment']],
         ];
     }
 }

@@ -38,7 +38,7 @@ use Symfony\Component\HttpFoundation\Response;
  *      metadata: Metadata
  *  }
  */
-#[AsContentElement(category: 'media', priority: -1)]
+#[AsContentElement(category: 'media')]
 class PlayerController extends AbstractContentElementController
 {
     /**

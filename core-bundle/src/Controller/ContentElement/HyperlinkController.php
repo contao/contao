@@ -22,7 +22,7 @@ use Contao\Validator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsContentElement(category: 'links', priority: -1)]
+#[AsContentElement(category: 'links')]
 class HyperlinkController extends AbstractContentElementController
 {
     public function __construct(
