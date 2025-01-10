@@ -56,17 +56,15 @@
               <label for="password"><?= $this->password ?></label>
               <input type="password" name="password" id="password" class="tl_text" value="" autocomplete="current-password" placeholder="<?= $this->password ?>" required>
             </div>
-            <div class="submit_container cf">
+            <div class="submit_container">
+              <a href="/">‹ <?= $this->feLink ?></a>
               <button type="submit" name="login" id="login" class="tl_submit"><?= $this->loginButton ?></button>
-              <a href="/" class="footer_preview"><?= $this->feLink ?> ›</a>
             </div>
           </div>
         </form>
+        <?= $this->loginMenu ?>
       </main>
       <?= $this->messages ?>
-      <div class="passkey_login">
-        <button type="button" class="tl_submit" data-action="contao--webauthn#signin"><?= $this->passkeyLogin ?></button>
-      </div>
       <div class="tl_message passkey_message" data-contao--webauthn-error-target="message"></div>
     </div>
   <?php $this->endblock(); ?>

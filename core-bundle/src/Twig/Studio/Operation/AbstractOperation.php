@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Studio\Operation;
 
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
+use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Finder\Finder;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
@@ -12,6 +13,7 @@ use Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\Service\Attribute\Required;
+use Twig\Environment;
 
 /**
  * @experimental
@@ -29,7 +31,7 @@ abstract class AbstractOperation extends AbstractController implements Operation
         $this->name = $name;
     }
 
-    public function success(TemplateContext $context): Response
+    public function success(OperationContext $context): Response
     {
         $name = $this->getName();
 
@@ -41,7 +43,7 @@ abstract class AbstractOperation extends AbstractController implements Operation
         ]);
     }
 
-    public function error(TemplateContext $context, string|null $customTranslation = null): Response
+    public function error(OperationContext $context, string|null $customTranslation = null): Response
     {
         $name = $this->getName();
 
@@ -57,12 +59,18 @@ abstract class AbstractOperation extends AbstractController implements Operation
     {
         $services = parent::getSubscribedServices();
 
+        $services['twig'] = Environment::class;
         $services['contao.twig.filesystem_loader'] = ContaoFilesystemLoader::class;
         $services['contao.filesystem.virtual.user_templates'] = VirtualFilesystemInterface::class;
         $services['contao.twig.studio.template_skeleton_factory'] = TemplateSkeletonFactory::class;
         $services['contao.twig.finder_factory'] = FinderFactory::class;
 
         return $services;
+    }
+
+    public function getTwig(): Environment
+    {
+        return $this->container->get('twig');
     }
 
     public function getContaoFilesystemLoader(): ContaoFilesystemLoader
@@ -83,6 +91,19 @@ abstract class AbstractOperation extends AbstractController implements Operation
     public function getTwigFinder(): Finder
     {
         return $this->container->get('contao.twig.finder_factory')->create();
+    }
+
+    protected function userTemplateExists(OperationContext $context): bool
+    {
+        // Check if the first template in the chain is a custom template from the
+        // Contao_Global or any theme namespace.
+        $first = $this->getContaoFilesystemLoader()->getFirst($context->getIdentifier(), $context->getThemeSlug());
+        $namespace = ContaoTwigUtil::parseContaoName($first)[0] ?? '';
+
+        return match ($context->isThemeContext()) {
+            true => str_starts_with($namespace, 'Contao_Theme_'),
+            false => 'Contao_Global' === $namespace,
+        };
     }
 
     protected function getName(): string

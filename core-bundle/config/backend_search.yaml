@@ -59,6 +59,12 @@ services:
             - '@security.access.decision_manager'
             - '@event_dispatcher'
 
+    contao.search.backend.trigger_reindex_on_files_storage_update_listener:
+        class: Contao\CoreBundle\Search\Backend\EventListener\TriggerReindexOnFilesStorageUpdateListener
+        arguments:
+            - '@contao.search.backend'
+            - '@contao.filesystem.virtual.files'
+
     contao.search.backend.trigger_reindex_on_table_data_container_invalidation_listener:
         class: Contao\CoreBundle\Search\Backend\EventListener\TriggerReindexOnTableDataContainerInvalidationListener
         arguments:
