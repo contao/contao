@@ -138,6 +138,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			(
 				'href'                => 'act=move&amp;mode=2',
 				'icon'                => 'new.svg',
+				'primary'             => true,
 				'button_callback'     => array('tl_files', 'uploadFile')
 			),
 			'drag' => array

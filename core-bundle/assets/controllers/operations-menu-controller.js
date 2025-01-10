@@ -50,7 +50,7 @@ export default class extends Controller {
         this.$contextmenu.classList.add('contextmenu');
         this.$contextmenu.classList.add('operations-menu');
         this.$contextmenu.classList.add('show');
-        this.setFixedPosition(this.$contextmenu, event)
+        this.setFixedPosition(this.$contextmenu, event);
 
         if (this.element.classList.contains('hover-div')) {
             this.element.classList.add('hover');
