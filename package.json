@@ -7,6 +7,7 @@
         "@stimulus-components/color-picker": "^2.0.0",
         "@symfony/webpack-encore": "^5.0.1",
         "@web-auth/webauthn-stimulus": "file:vendor/web-auth/webauthn-stimulus/assets",
+        "accessible-menu": "^4.1.2",
         "postcss": "^8.4.47",
         "postcss-loader": "^8.1.1",
         "postcss-preset-env": "^10.0.7"
@@ -21,8 +22,5 @@
         "build": "encore production --progress"
     },
     "private": true,
-    "packageManager": "npm@10.8.2",
-    "dependencies": {
-        "accessible-menu": "^4.1.2"
-    }
+    "packageManager": "npm@10.8.2"
 }
