@@ -97,8 +97,11 @@ class FilesStorageProvider implements ProviderInterface
             return null;
         }
 
-        $viewUrl = $this->router->generate('contao_backend_popup', [
-            'src' => base64_encode($this->uploadPath.'/'.$document->getId()),
+        $parentFolder = \dirname($document->getId()) ?: '.';
+
+        $viewUrl = $this->router->generate('contao_backend', [
+            'do' => 'files',
+            'fn' => '.' === $parentFolder ? '' : "$this->uploadPath/$parentFolder",
         ]);
 
         $editUrl = $this->router->generate('contao_backend', [

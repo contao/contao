@@ -95,16 +95,18 @@ class TableDataContainerProvider implements ProviderInterface
             return null;
         }
 
-        $editUrl = $this->dcaUrlAnalyzer->getEditUrl($this->getTableFromDocument($document), (int) $document->getId());
+        $table = $this->getTableFromDocument($document);
+        $editUrl = $this->dcaUrlAnalyzer->getEditUrl($table, (int) $document->getId());
+        $viewUrl = $this->dcaUrlAnalyzer->getViewUrl($table, (int) $document->getId());
 
-        // No URL for the entry could be found
-        if (null === $editUrl) {
+        // No view URL for the entry could be found
+        if (null === $viewUrl) {
             return null;
         }
 
-        $title = $this->recordLabeler->getLabel(\sprintf('contao.db.%s.id', $this->getTableFromDocument($document)), $row);
+        $title = $this->recordLabeler->getLabel(\sprintf('contao.db.%s.id', $table), $row);
 
-        return (new Hit($document, $title, $editUrl))
+        return (new Hit($document, $title, $viewUrl))
             ->withEditUrl($editUrl)
             ->withContext($document->getSearchableContent())
             ->withMetadata(['row' => $row]) // Used for permission checks in isHitGranted()
