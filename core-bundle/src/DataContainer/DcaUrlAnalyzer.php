@@ -43,9 +43,15 @@ class DcaUrlAnalyzer
     /**
      * @return array{string|null, int|null}
      */
-    public function getCurrentTableId(): array
+    public function getCurrentTableId(Request|string|null $request = null): array
     {
-        $this->request = $this->requestStack->getCurrentRequest() ?? throw new \LogicException('Unable to retrieve DCA information from empty request stack.');
+        $request ??= $this->requestStack->getCurrentRequest() ?? throw new \LogicException('Unable to retrieve DCA information from empty request stack.');
+
+        if (!$request instanceof Request) {
+            $request = Request::create($request);
+        }
+
+        $this->request = $request;
 
         return $this->findTableAndId();
     }
@@ -53,9 +59,9 @@ class DcaUrlAnalyzer
     /**
      * @return list<array{url: string, label: string}>
      */
-    public function getTrail(): array
+    public function getTrail(Request|string|null $request = null): array
     {
-        [$table, $id] = $this->getCurrentTableId();
+        [$table, $id] = $this->getCurrentTableId($request);
         $do = $this->findGet('do');
 
         if (!$table || !$id) {

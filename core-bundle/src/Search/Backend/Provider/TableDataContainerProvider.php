@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Search\Backend\Provider;
 
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
-use Contao\CoreBundle\DataContainer\RecordLabeler;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Event\FormatTableDataContainerDocumentEvent;
@@ -44,7 +43,6 @@ class TableDataContainerProvider implements ProviderInterface
         private readonly ContaoFramework $contaoFramework,
         private readonly ResourceFinder $resourceFinder,
         private readonly Connection $connection,
-        private readonly RecordLabeler $recordLabeler,
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
@@ -104,7 +102,7 @@ class TableDataContainerProvider implements ProviderInterface
             return null;
         }
 
-        $title = $this->recordLabeler->getLabel(\sprintf('contao.db.%s.id', $table), $row);
+        $title = implode(' › ', array_map(static fn ($item) => $item['label'], $this->dcaUrlAnalyzer->getTrail($editUrl)));
 
         return (new Hit($document, $title, $viewUrl))
             ->withEditUrl($editUrl)
