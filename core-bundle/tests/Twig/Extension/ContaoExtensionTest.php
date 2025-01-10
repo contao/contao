@@ -44,10 +44,12 @@ use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Node\BodyNode;
+use Twig\Node\EmptyNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\NodeTraverser;
 use Twig\Runtime\EscaperRuntime;
 use Twig\Source;
@@ -242,7 +244,7 @@ class ContaoExtensionTest extends TestCase
                 new FilterExpression(
                     new ConstantExpression('text', 1),
                     new TwigFilter('escape'),
-                    new Node([
+                    new Nodes([
                         new ConstantExpression('html', 1),
                         new ConstantExpression(null, 1),
                         new ConstantExpression(true, 1),
@@ -251,9 +253,9 @@ class ContaoExtensionTest extends TestCase
                 ),
             ]),
             null,
-            new Node(),
-            new Node(),
-            new Node(),
+            new EmptyNode(),
+            new EmptyNode(),
+            new EmptyNode(),
             null,
             new Source('<code>', 'foo.html.twig'),
         );

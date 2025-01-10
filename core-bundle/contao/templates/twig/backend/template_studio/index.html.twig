@@ -47,6 +47,22 @@
                     .set('data-contao--template-studio-target', 'tabs'),
                 panels_container_id: 'template-studio--tab-panels',
             } %}
+                {% trans_default_domain "contao_template_studio" %}
+
+                {% block initial_content %}
+                    <div class="explainer">
+                        <h3>{{ 'getting-started.0'|trans }}</h3>
+                        <p>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="m12 19-7-7 7-7"/>
+                                <path d="M19 12H5"/>
+                            </svg>
+                            {{ 'getting-started.1'|trans }}
+                        </p>
+                    </div>
+                {% endblock %}
             {% endembed %}
 
             {# Info panel #}

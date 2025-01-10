@@ -92,7 +92,7 @@ abstract class AbstractCreateVariantOperation extends AbstractOperation
 
         $index = 2;
 
-        while ($loader->exists("@Contao/$identifier}/$identifierFragment.$extension")) {
+        while ($loader->exists("@Contao/$identifier/$identifierFragment.$extension")) {
             $identifierFragment = "$identifierFragmentBase$index";
             ++$index;
         }

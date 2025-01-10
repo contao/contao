@@ -23,7 +23,6 @@ services:
         arguments:
             - '@contao.twig.inspector'
             - '@contao.twig.finder_factory'
-            - '@contao.twig.filesystem_loader'
             - '@twig'
 
     contao.twig.studio.create_content_element_variant_operation:
@@ -51,6 +50,8 @@ services:
 
     contao.twig.studio.save_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\SaveOperation
+        arguments:
+            - '@contao.twig.inspector'
 
     contao.twig.studio.template_skeleton_factory:
         class: Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory
