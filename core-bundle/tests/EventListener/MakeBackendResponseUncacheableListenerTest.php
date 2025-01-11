@@ -55,7 +55,7 @@ class MakeBackendResponseUncacheableListenerTest extends TestCase
         $this->assertFalse($response->headers->hasCacheControlDirective('no-store'));
     }
 
-    public function testMakesResponseUncachableForMainBackendRequest(): void
+    public function testMakesResponseUncacheableForMainBackendRequest(): void
     {
         $response = new Response();
 
