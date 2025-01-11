@@ -24,6 +24,7 @@ export default class BackendSearchController extends Controller {
         "loading",
         "invalid",
         "results",
+        "error",
     ]
 
     connect() {
@@ -49,10 +50,19 @@ export default class BackendSearchController extends Controller {
         this.setState("loading");
 
         fetch(this.searchRoute)
-            .then(res => res.text())
+            .then(res=> {
+                if (!res.ok) {
+                    throw new Error(res.statusText)
+                }
+
+                return res.text()
+            })
             .then(html => {
                 this.resultsTarget.innerHTML = html
                 this.setState("results")
+            })
+            .catch(e => {
+                this.setState("error")
             });
     }
 
