@@ -1549,8 +1549,8 @@ table.tl_listing {
 	right: 0;
 	top: 1.5em;
 	padding: 10px !important;
-	background: #fff !important;
-	border: 1px solid var(--border);
+	background: var(--content-bg) !important;
+	border: 1px solid var(--content-border);
 	z-index: 10;
 	margin: 0;
 	list-style: none;
