@@ -1,5 +1,5 @@
 {% set has_submenu = false %}
-<nav>
+<div class="operations">
     <ul>
         {% for operation in operations %}
             {% if has_primary and not operation.primary|default(false) %}
@@ -23,7 +23,7 @@
             </li>
         {% endif %}
     </ul>
-</nav>
+</div>
 
 {% macro operation(operation, linksOnly = false) %}
     {% if operation.html|default and (not linksOnly or '<a ' in operation.html) %}

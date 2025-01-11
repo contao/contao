@@ -1516,14 +1516,6 @@ table.tl_listing {
 	background: var(--table-header);
 }
 
-.tl_right > nav > ul,
-.tl_right_nowrap > nav > ul,
-.tl_content_right > nav > ul {
-	display: flex;
-	justify-content: flex-end;
-	gap: 3px;
-}
-
 .tl_right button, .tl_right_nowrap button, .tl_content_right button {
 	margin: 0;
 	padding: 0;
@@ -1537,8 +1529,15 @@ table.tl_listing {
 	margin-left: 1px;
 }
 
+.operations > ul {
+	display: flex;
+	justify-content: flex-end;
+	gap: 3px;
+}
+
 .operations-menu-container {
 	position: relative;
+	align-items: center;
 }
 
 .operations-menu {
