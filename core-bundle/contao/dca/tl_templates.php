@@ -65,7 +65,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 		),
 		'operations' => array
 		(
-			'edit',
+			'!edit',
 			'copy' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['copy'],

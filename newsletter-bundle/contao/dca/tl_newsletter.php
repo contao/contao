@@ -56,7 +56,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'operations' => array
 		(
-			'edit',
+			'!edit',
 			'copy',
 			'cut',
 			'delete',
@@ -64,7 +64,8 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'send' => array
 			(
 				'href'                => 'key=send',
-				'icon'                => 'bundles/contaonewsletter/send.svg'
+				'icon'                => 'bundles/contaonewsletter/send.svg',
+				'primary'             => true,
 			)
 		)
 	),

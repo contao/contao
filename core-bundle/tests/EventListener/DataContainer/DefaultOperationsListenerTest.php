@@ -418,8 +418,8 @@ class DefaultOperationsListenerTest extends TestCase
                     'mode' => DataContainer::MODE_SORTED,
                 ],
                 'operations' => [
-                    '-edit',
-                    '+show',
+                    'edit',
+                    '!show',
                     'foo' => [
                         'href' => 'foo=bar',
                         'icon' => 'foo.svg',
@@ -436,7 +436,7 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('edit', $operations);
         $this->assertArrayHasKey('show', $operations);
         $this->assertArrayHasKey('foo', $operations);
-        $this->assertFalse($operations['edit']['primary']);
+        $this->assertArrayNotHasKey('primary', $operations['edit']);
         $this->assertTrue($operations['show']['primary']);
         $this->assertArrayNotHasKey('primary', $operations['foo']);
     }

@@ -71,7 +71,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		),
 		'operations' => array
 		(
-			'edit',
+			'!edit',
 			'delete',
 			'modules' => array
 			(
