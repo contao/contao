@@ -33,10 +33,10 @@
         <source>Set up the pages of your website(s)</source>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
-        <source>Legacy Templates</source>
+        <source>Templates</source>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.1">
-        <source>Add or edit custom legacy templates</source>
+        <source>Add or edit custom templates</source>
       </trans-unit>
       <trans-unit id="MOD.accounts">
         <source>Accounts</source>
