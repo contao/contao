@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import AccessibleMenu from 'accessible-menu';
 
 export default class extends Controller {
-    static targets = ['menu', 'container', 'controller'];
+    static targets = ['menu', 'controller'];
 
     initialize () {
         this.close = this.close.bind(this);
@@ -13,12 +13,8 @@ export default class extends Controller {
             return;
         }
 
-        this.menuTarget.addEventListener('contextmenu', e => e.stopPropagation());
-        document.addEventListener('mousedown', this.close);
-
-        if (!this.hasControllerTarget) {
-            return;
-        }
+        document.addEventListener('pointerdown', this.close);
+        this.controllerTarget?.addEventListener('pointerup', () => { this.setFixedPosition() })
 
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,
@@ -36,58 +32,52 @@ export default class extends Controller {
     }
 
     disconnect () {
-        document.removeEventListener('mousedown', this.close);
+        document.removeEventListener('pointerdown', this.close);
     }
 
-    contextmenu (event) {
+    open (event) {
         if (!this.hasMenuTarget) {
             return;
         }
 
         event.preventDefault();
+        event.stopPropagation();
 
-        this.$contextmenu = this.menuTarget.clone();
-        this.$contextmenu.classList.add('contextmenu');
-        this.$contextmenu.classList.add('operations-menu');
-        this.$contextmenu.classList.add('show');
-        this.setFixedPosition(this.$contextmenu, event);
-
-        if (this.element.classList.contains('hover-div')) {
-            this.element.classList.add('hover');
-        }
-
-        document.body.append(this.$contextmenu);
+        this.$menu.elements.controller.preview();
+        this.setFixedPosition(event);
     }
 
     close (event) {
-        if (this.$menu && !this.element.contains(event.target)) {
+        if (this.$menu && !this.menuTarget.contains(event.target) && !this.controllerTarget?.contains(event.target)) {
             this.$menu.elements.controller.close();
-        }
-
-        if (this.$contextmenu && !this.$contextmenu.contains(event.target)) {
-            this.$contextmenu.remove();
-            this.element.classList.remove('hover');
-            delete this.$contextmenu;
         }
     }
 
-    setFixedPosition (element, event) {
-        setTimeout(() => {
-            const rect = element.getBoundingClientRect();
+    setFixedPosition (event) {
+        const rect = this.menuTarget.getBoundingClientRect();
+        let x, y;
 
-            element.style.position = 'fixed';
+        if (event) {
+            x = event.clientX;
+            y = event.clientY;
+        } else {
+            const r = this.controllerTarget.getBoundingClientRect();
+            x = r.x + 20;
+            y = r.y + 20;
+        }
 
-            if (window.innerHeight < event.clientY + rect.height) {
-                element.style.top = `${event.clientY - rect.height}px`;
-            } else {
-                element.style.top = `${event.clientY}px`;
-            }
+        this.menuTarget.style.position = 'fixed';
 
-            if (window.innerWidth < window.scrollX + event.clientX + rect.width) {
-                element.style.left = `${window.scrollX + event.clientX - rect.width}px`;
-            } else {
-                element.style.left = `${window.scrollX + event.clientX}px`;
-            }
-        }, 0);
+        if (window.innerHeight < y + rect.height) {
+            this.menuTarget.style.top = `${y - rect.height}px`;
+        } else {
+            this.menuTarget.style.top = `${y}px`;
+        }
+
+        if (window.innerWidth < window.scrollX + x + rect.width) {
+            this.menuTarget.style.left = `${window.scrollX + x - rect.width}px`;
+        } else {
+            this.menuTarget.style.left = `${window.scrollX + x}px`;
+        }
     }
 }

@@ -1385,7 +1385,6 @@ table.tl_listing {
 
 .tl_content .inside {
 	padding: var(--row-padding) 6px;
-	background-color: var(--content-bg);
 }
 
 .tl_content.draft .inside {
@@ -1533,6 +1532,7 @@ table.tl_listing {
 	display: flex;
 	justify-content: flex-end;
 	gap: 3px;
+	list-style: none;
 }
 
 .operations-menu-container {
@@ -1545,31 +1545,28 @@ table.tl_listing {
 }
 
 .operations-menu {
-	position: absolute;
-	right: 0;
-	top: 1.5em;
-	padding: 10px !important;
-	background: var(--content-bg) !important;
-	border: 1px solid var(--content-border);
+	position: fixed;
 	z-index: 10;
-	margin: 0;
-	list-style: none;
+	display: flex;
 	flex-direction: column;
 	gap: 5px;
+	margin: 0;
+	padding: 10px !important;
+	text-align: left;
+	background: var(--content-bg) !important;
+	border: 1px solid var(--content-border);
+	list-style: none;
+	visibility: hidden;
+	pointer-events: none;
 }
 
 .operations-menu.show {
-	display: flex;
-}
-
-.operations-menu.contextmenu {
-	right: auto;
-	top: auto;
+	visibility: visible;
+	pointer-events: auto;
 }
 
 .operations-menu li {
-	display: flex;
-	align-items: center;
+	display: block !important;
 }
 
 .operations-menu a {
@@ -1766,7 +1763,8 @@ table.tl_listing {
 	background: linear-gradient(transparent, var(--content-bg) 60%);
 }
 
-[data-contao--limit-height-target][style*="max-height"]:hover .limit_toggler {
+[data-contao--limit-height-target][style*="max-height"]:hover .limit_toggler,
+[data-contao--limit-height-target][style*="max-height"].hover .limit_toggler {
 	background: linear-gradient(transparent, var(--hover-row) 60%);
 }
 
