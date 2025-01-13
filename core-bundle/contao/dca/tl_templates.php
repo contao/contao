@@ -526,7 +526,7 @@ class tl_templates extends Backend
 	{
 		if ($this->isTwigFile($row))
 		{
-			$attributes .= ' disabled="true"';
+			return Image::getHtml($icon, $label);
 		}
 
 		return '<button type="button" title="' . StringUtil::specialchars($title) . '" ' . $attributes . '>' . Image::getHtml($icon, $label) . '</button> ';
