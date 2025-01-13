@@ -70,6 +70,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
 				'attributes'          => 'data-action="contao--scroll-offset#store"',
+				// TODO: remove this again once #7854 has been fixed
 				'button_callback'     => array('tl_templates', 'copy')
 			),
 			'cut' => array
