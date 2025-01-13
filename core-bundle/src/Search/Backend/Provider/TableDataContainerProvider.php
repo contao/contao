@@ -13,7 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Search\Backend\Provider;
 
 use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\DataContainer\RecordLabeler;
+use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Event\FormatTableDataContainerDocumentEvent;
@@ -46,6 +48,7 @@ class TableDataContainerProvider implements ProviderInterface
         private readonly RecordLabeler $recordLabeler,
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
     ) {
     }
 
@@ -86,18 +89,29 @@ class TableDataContainerProvider implements ProviderInterface
 
     public function convertDocumentToHit(Document $document): Hit|null
     {
-        // TODO: service for view and edit URLs
-        $viewUrl = 'https://todo.com?view='.$document->getId();
-        $editUrl = 'https://todo.com?edit='.$document->getId();
-
-        $row = $this->loadRow($this->getTableFromDocument($document), (int) $document->getId());
+        $document = $this->addCurrentRowToDocumentIfNotAlreadyLoaded($document);
+        $row = $document->getMetadata()['row'] ?? null;
 
         // Entry does not exist anymore -> no hit
-        if (false === $row) {
+        if (null === $row) {
             return null;
         }
 
-        $title = $this->recordLabeler->getLabel(\sprintf('contao.db.%s.id', $this->getTableFromDocument($document)), $row);
+        $table = $this->getTableFromDocument($document);
+
+        try {
+            $editUrl = $this->dcaUrlAnalyzer->getEditUrl($table, (int) $document->getId());
+            $viewUrl = $this->dcaUrlAnalyzer->getViewUrl($table, (int) $document->getId());
+        } catch (AccessDeniedException) {
+            return null;
+        }
+
+        // No view URL for the entry could be found
+        if (null === $viewUrl) {
+            return null;
+        }
+
+        $title = $this->recordLabeler->getLabel(\sprintf('contao.db.%s.id', $table), $row);
 
         return (new Hit($document, $title, $viewUrl))
             ->withEditUrl($editUrl)
@@ -106,20 +120,34 @@ class TableDataContainerProvider implements ProviderInterface
         ;
     }
 
-    public function isHitGranted(TokenInterface $token, Hit $hit): bool
+    public function isDocumentGranted(TokenInterface $token, Document $document): bool
     {
-        $table = $this->getTableFromDocument($hit->getDocument());
-        $row = $hit->getMetadata()['row'] ?? null;
+        $document = $this->addCurrentRowToDocumentIfNotAlreadyLoaded($document);
+        $row = $document->getMetadata()['row'] ?? null;
 
+        // Entry does not exist anymore -> no access
         if (null === $row) {
             return false;
         }
+
+        $table = $this->getTableFromDocument($document);
 
         return $this->accessDecisionManager->decide(
             $token,
             [ContaoCorePermissions::DC_PREFIX.$table],
             new ReadAction($table, $row),
         );
+    }
+
+    private function addCurrentRowToDocumentIfNotAlreadyLoaded(Document $document): Document
+    {
+        if (isset($document->getMetadata()['row'])) {
+            return $document;
+        }
+
+        $row = $this->loadRow($this->getTableFromDocument($document), (int) $document->getId());
+
+        return $document->withMetadata(['row' => false === $row ? null : $row]);
     }
 
     private function getTableFromDocument(Document $document): string

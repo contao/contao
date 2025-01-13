@@ -2012,9 +2012,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 						$this->strPath . '/' . $this->varValue . $this->strExtension,
 						$this->strPath . '/' . $varValue . $this->strExtension,
 					);
-
-					// Update the model cache
-					FilesModel::findByPath($this->strPath . '/' . $varValue . $this->strExtension);
 				}
 
 				System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $this->strPath . '/' . $this->varValue . $this->strExtension . '" has been renamed to "' . $this->strPath . '/' . $varValue . $this->strExtension . '"');
@@ -2595,10 +2592,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$active = isset($session['search'][$this->strTable]['value']) && (string) $session['search'][$this->strTable]['value'] !== '';
 
+		$this->setPanelState($active);
+
 		return '
     <div class="tl_search tl_subpanel">
       <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
-      <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '" data-controller="contao--chosen">
+      <select name="tl_field" class="tl_select init-choices' . ($active ? ' active' : '') . '">
         <option value="name">' . ($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['label'][0] ?: (\is_array($GLOBALS['TL_LANG']['MSC']['name'] ?? null) ? $GLOBALS['TL_LANG']['MSC']['name'][0] : ($GLOBALS['TL_LANG']['MSC']['name'] ?? null))) . '</option>
       </select>
       <span>=</span>
