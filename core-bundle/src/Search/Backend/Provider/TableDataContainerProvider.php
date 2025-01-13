@@ -109,10 +109,12 @@ class TableDataContainerProvider implements ProviderInterface
             return null;
         }
 
-        $title = implode(' › ', array_map(static fn ($item) => $item['label'], $this->dcaUrlAnalyzer->getTrail($editUrl)));
+        $trail = $this->dcaUrlAnalyzer->getTrail($editUrl);
+        $title = array_pop($trail)['label'];
 
         return (new Hit($document, $title, $viewUrl))
             ->withEditUrl($editUrl)
+            ->withBreadcrumbs($trail)
             ->withContext($document->getSearchableContent())
             ->withMetadata(['row' => $row]) // Used for permission checks in isHitGranted()
         ;
@@ -145,7 +147,7 @@ class TableDataContainerProvider implements ProviderInterface
 
         $row = $this->loadRow($this->getTableFromDocument($document), (int) $document->getId());
 
-        return $document->withMetadata(['row' => false === $row ? null : $row]);
+        return $document->withMetadata([...$document->getMetadata(), 'row' => false === $row ? null : $row]);
     }
 
     private function getTableFromDocument(Document $document): string
