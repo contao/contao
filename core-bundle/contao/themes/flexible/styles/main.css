@@ -1551,6 +1551,10 @@ table.tl_listing {
 	margin-left: 1px;
 }
 
+.tl_right button img, .tl_content_right button img, .tl_right_nowrap button img {
+	margin-left: 0;
+}
+
 .cte_type {
 	margin: 0 0 4px;
 	font-size: .75rem;

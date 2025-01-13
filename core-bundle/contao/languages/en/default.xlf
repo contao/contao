@@ -2240,9 +2240,6 @@
       <trans-unit id="MSC.searchResultsLoading">
         <source>Loading results...</source>
       </trans-unit>
-      <trans-unit id="MSC.searchResultsEmpty">
-        <source>No results found!</source>
-      </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
       </trans-unit>
