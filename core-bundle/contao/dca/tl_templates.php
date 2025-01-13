@@ -70,6 +70,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
 				'attributes'          => 'data-action="contao--scroll-offset#store"',
+				'button_callback'     => array('tl_templates', 'copy')
 			),
 			'cut' => array
 			(
@@ -77,6 +78,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.svg',
 				'attributes'          => 'data-action="contao--scroll-offset#store"',
+				'button_callback'     => array('tl_templates', 'cut')
 			),
 			'delete',
 			'source' => array
@@ -521,7 +523,54 @@ class tl_templates extends Backend
 	 */
 	public function dragFile($row, $href, $label, $title, $icon, $attributes)
 	{
+		if ($this->isTwigFile($row))
+		{
+			$attributes .= ' disabled="true"';
+		}
+
 		return '<button type="button" title="' . StringUtil::specialchars($title) . '" ' . $attributes . '>' . Image::getHtml($icon, $label) . '</button> ';
+	}
+
+	/**
+	 * Return the copy button
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function copy($row, $href, $label, $title, $icon, $attributes)
+	{
+		return !$this->isTwigFile($row) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+	}
+
+	/**
+	 * Return the copy button
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function cut($row, $href, $label, $title, $icon, $attributes)
+	{
+		return !$this->isTwigFile($row) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+	}
+
+	/**
+	 * @param array $row
+	 */
+	private function isTwigFile($row): bool
+	{
+		return $row['type'] === 'file' && Path::getExtension($row['id']) === 'twig';
 	}
 
 	/**
