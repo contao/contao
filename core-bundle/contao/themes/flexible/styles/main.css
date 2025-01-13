@@ -624,7 +624,7 @@ h2.sub_headline {
 	display: flex;
 	justify-content: flex-end;
 	align-items: center;
-	gap: 4px;
+	gap: 3px;
 }
 
 /* Limit, search and submit */
@@ -691,16 +691,16 @@ h2.sub_headline {
 
 .tl_img_submit {
 	white-space: nowrap;
-	background-color: var(--form-button);
-	background-position: 8px center !important;
+	background-color: var(--form-bg);
+	background-position: 6px 6px;
 	background-repeat: no-repeat;
 	margin: 0;
-	padding: 7px 12px 7px 20px;
 	border: 1px solid var(--form-border);
 	border-radius: 2px;
 	box-sizing: border-box;
 	transition: background .2s ease;
 	width: 30px;
+	padding-left: 20px;
 	text-indent: 20px;
 	overflow: hidden;
 }
