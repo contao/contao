@@ -12,7 +12,7 @@
         {% if has_submenu or not has_primary %}
             <li class="operations-menu-container" data-contao--operations-menu-target="container">
                 {% if has_primary %}
-                    <button type="button" title="{{ 'MSC.more'|trans }}" data-contao--operations-menu-target="controller">
+                    <button type="button" title="{{ 'DCA.operations'|trans([id]) }}" data-contao--operations-menu-target="controller">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
                     </button>
                 {% endif %}
@@ -26,9 +26,9 @@
     </ul>
 </div>
 
-{% macro operation(operation, linksOnly = false) %}
-    {% if operation.html|default and (not linksOnly or '<a ' in operation.html) %}
-        <li>{{ operation.html|raw }}</li>
+{% macro operation(operation, menu = false) %}
+    {% if operation.html is defined and (not menu or '<a ' in operation.html) %}
+        {% if operation.html|trim is not empty %}<li class="virtual-title">{{ operation.html|raw }}</li>{% endif %}
     {% elseif operation.href|default %}
         <li>
             <a
@@ -36,9 +36,12 @@
                 {% if operation.title|default %}title="{{ operation.title }}"{% endif %}
                 {% if operation.popup|default %}onclick="Backend.openModalIframe({title:'{{ operation.label|default|replace({"'": "\'"}) }}', url:this.href});return false"{% endif%}
                 {{ operation.attributes|default|raw }}
-            >{{ operation.icon|raw }}</a>
+            >
+                {{ operation.icon|raw }}
+                {% if menu %}{{ operation.title|default }}{% endif %}
+            </a>
         </li>
-    {% elseif operation.icon|default and not linksOnly %}
+    {% elseif operation.icon|default and not menu %}
         <li>{{ operation.icon|raw }}</li>
     {% endif %}
 {% endmacro %}

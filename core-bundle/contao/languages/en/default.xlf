@@ -2387,6 +2387,9 @@
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
       </trans-unit>
+      <trans-unit id="DCA.operations">
+        <source>Operations for ID %s</source>
+      </trans-unit>
       <trans-unit id="DCA.children">
         <source>Edit the child elements of element ID %s</source>
       </trans-unit>

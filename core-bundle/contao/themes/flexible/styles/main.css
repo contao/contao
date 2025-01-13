@@ -1531,17 +1531,15 @@ table.tl_listing {
 .operations > ul {
 	display: flex;
 	justify-content: flex-end;
+	align-items: center;
 	gap: 3px;
+	flex-wrap: wrap;
 	list-style: none;
 }
 
 .operations-menu-container {
 	position: relative;
 	align-items: center;
-}
-
-.operations-menu {
-	display: none;
 }
 
 .operations-menu {
@@ -1570,16 +1568,18 @@ table.tl_listing {
 }
 
 .operations-menu a {
-	display: block;
+	display: flex;
+	gap: 5px;
+	align-items: center;
 	white-space: nowrap;
 }
 
-.operations-menu a:after {
+.operations-menu .virtual-title a:after {
 	content: attr(title);
 	padding-left: 5px;
 }
 
-.operations-menu a[data-original-title]:after {
+.operations-menu .virtual-title a[data-original-title]:after {
 	content: attr(data-original-title);
 	padding-left: 5px;
 }

@@ -28,6 +28,7 @@ use Twig\Environment;
  */
 class DataContainerOperationsBuilder implements \Stringable
 {
+    private int|string|null $id = null;
     private array|null $operations = null;
 
     public function __construct(
@@ -44,6 +45,7 @@ class DataContainerOperationsBuilder implements \Stringable
         }
 
         return $this->twig->render('@Contao/backend/data_container/operations.html.twig', [
+            'id' => $this->id,
             'operations' => $this->operations,
             'has_primary' => [] !== array_filter(array_column($this->operations, 'primary'), static fn ($v) => null !== $v),
         ]);
@@ -68,7 +70,7 @@ class DataContainerOperationsBuilder implements \Stringable
         return ' <a href="'.$href.'" class="header_new" title="'.StringUtil::specialchars($labelNew[1] ?? '').'" accesskey="n" data-action="contao--scroll-offset#store">'.$labelNew[0].'</a> ';
     }
 
-    public function initialize(): self
+    public function initialize(int|string|null $id = null): self
     {
         if (null !== $this->operations) {
             throw new \RuntimeException(self::class.' has already been initialized.');
@@ -82,7 +84,7 @@ class DataContainerOperationsBuilder implements \Stringable
 
     public function initializeWithButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
     {
-        $builder = $this->initialize();
+        $builder = $this->initialize($record['id'] ?? null);
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
             return $this;
@@ -102,7 +104,7 @@ class DataContainerOperationsBuilder implements \Stringable
 
     public function initializeWithHeaderButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
     {
-        $builder = $this->initialize();
+        $builder = $this->initialize($record['id'] ?? null);
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
             return $this;
