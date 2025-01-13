@@ -106,10 +106,10 @@ class TableDataContainerProvider implements ProviderInterface
         ;
     }
 
-    public function isHitGranted(TokenInterface $token, Hit $hit): bool
+    public function isDocumentGranted(TokenInterface $token, Document $document): bool
     {
-        $table = $this->getTableFromDocument($hit->getDocument());
-        $row = $hit->getMetadata()['row'] ?? null;
+        $table = $this->getTableFromDocument($document->getDocument());
+        $row = $document->getMetadata()['row'] ?? null;
 
         if (null === $row) {
             return false;

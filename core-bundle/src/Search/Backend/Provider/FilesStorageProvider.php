@@ -119,10 +119,10 @@ class FilesStorageProvider implements ProviderInterface
         return $hit;
     }
 
-    public function isHitGranted(TokenInterface $token, Hit $hit): bool
+    public function isDocumentGranted(TokenInterface $token, Document $document): bool
     {
         return $this->permissionCheckingFilesStorage->canAccessLocation(
-            $hit->getDocument()->getMetadata()['path'] ?? '',
+            $document->getMetadata()['path'] ?? '',
         );
     }
 }
