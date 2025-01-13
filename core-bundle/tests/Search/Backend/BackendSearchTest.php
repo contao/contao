@@ -24,7 +24,7 @@ use Contao\CoreBundle\Messenger\Message\BackendSearch\ReindexMessage;
 use Contao\CoreBundle\Messenger\WebWorker;
 use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Search\Backend\Document;
-use Contao\CoreBundle\Search\Backend\GroupedDocumentIds;
+use Contao\CoreBundle\Search\Backend\GroupedDocumentIds;t
 use Contao\CoreBundle\Search\Backend\Hit;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Search\Backend\Query;
