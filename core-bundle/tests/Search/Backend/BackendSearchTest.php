@@ -153,8 +153,8 @@ class BackendSearchTest extends TestCase
             ->expects($this->once())
             ->method('isGranted')
             ->with(
-                ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_HIT,
-                $this->callback(static fn (Hit $hit): bool => '42' === $hit->getDocument()->getId()),
+                ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT,
+                $this->callback(static fn (Document $document): bool => '42' === $document->getId()),
             )
             ->willReturn(true)
         ;
@@ -214,6 +214,17 @@ class BackendSearchTest extends TestCase
             ->willReturn(null) // No hit anymore
         ;
 
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with(
+                ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT,
+                $this->callback(static fn (Document $document): bool => '42' === $document->getId()),
+            )
+            ->willReturn(true)
+        ;
+
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
         $eventDispatcher
             ->expects($this->never())
@@ -241,7 +252,7 @@ class BackendSearchTest extends TestCase
 
         $backendSearch = new BackendSearch(
             [$provider],
-            $this->createMock(Security::class),
+            $security,
             $engine,
             $eventDispatcher,
             $messageBus,
