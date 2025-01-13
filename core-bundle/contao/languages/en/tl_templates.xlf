@@ -57,7 +57,7 @@
         <source>Compare "%s" with another template</source>
       </trans-unit>
       <trans-unit id="tl_templates.twig_studio_hint">
-        <source>If you want to create or editor Twig templates, use the %s instead.</source>
+        <source>If you want to create or edit Twig templates, use the %s instead.</source>
       </trans-unit>
     </body>
   </file>
