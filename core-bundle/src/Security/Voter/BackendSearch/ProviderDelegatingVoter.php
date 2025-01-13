@@ -13,14 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\Voter\BackendSearch;
 
 use Contao\CoreBundle\Search\Backend\Document;
-use Contao\CoreBundle\Search\Backend\Hit;
 use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 /**
- * @extends Voter<string, Hit>
+ * @extends Voter<string, Document>
  *
  * @experimental
  */
