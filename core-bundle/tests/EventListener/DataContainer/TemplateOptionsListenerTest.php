@@ -228,6 +228,9 @@ class TemplateOptionsListenerTest extends TestCase
                 'content_element/foo/variant' => [
                     '/templates/content_element/foo/variant.html.twig' => '@Contao_Global/content_element/foo/variant.html.twig',
                 ],
+                'frontend_module/_partial' => [
+                    '/templates/frontend_module/_partial.html.twig' => '@Contao_App/frontend_module/_partial.html.twig',
+                ],
                 'frontend_module/foo' => [
                     '/templates/frontend_module/foo.html.twig' => '@Contao_App/frontend_module/foo.html.twig',
                 ],

@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Search\Backend;
 
-use Contao\FilesModel;
-use Contao\Image\ImageInterface;
+use Contao\CoreBundle\Image\Studio\FigureBuilder;
 
 /**
  * @experimental
@@ -16,11 +15,8 @@ final class Hit
 
     private string|null $context = null;
 
-    private FilesModel|ImageInterface|int|string|null $image = null;
+    private FigureBuilder|null $imageFigureBuilder = null;
 
-    /**
-     * @var array<mixed>
-     */
     private array $metadata = [];
 
     public function __construct(
@@ -55,14 +51,11 @@ final class Hit
         return $this->context;
     }
 
-    public function getImage(): FilesModel|ImageInterface|int|string|null
+    public function getImageFigureBuilder(): FigureBuilder|null
     {
-        return $this->image;
+        return $this->imageFigureBuilder;
     }
 
-    /**
-     * @return array<mixed>
-     */
     public function getMetadata(): array
     {
         return $this->metadata;
@@ -84,10 +77,10 @@ final class Hit
         return $clone;
     }
 
-    public function withImage(FilesModel|ImageInterface|int|string|null $image): self
+    public function withImageFigureBuilder(FigureBuilder $figureBuilder): self
     {
         $clone = clone $this;
-        $clone->image = $image;
+        $clone->imageFigureBuilder = $figureBuilder;
 
         return $clone;
     }

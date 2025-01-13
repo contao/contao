@@ -76,6 +76,11 @@ services:
             - '@database_connection'
             - '@request_stack'
 
+    contao.listener.data_container.content_element_type:
+        class: Contao\CoreBundle\EventListener\DataContainer\ContentElementTypeListener
+        arguments:
+            - '@security.helper'
+
     contao.listener.data_container.content_record_label:
         class: Contao\CoreBundle\EventListener\DataContainer\ContentRecordLabelListener
         arguments:
@@ -252,6 +257,9 @@ services:
             - '@contao.twig.loader.theme_namespace'
             - '@translator'
 
+    contao.listener.data_container.track_fields:
+        class: Contao\CoreBundle\EventListener\DataContainer\TrackFieldsListener
+
     contao.listener.data_container.undo.jump_to_parent_operation:
         class: Contao\CoreBundle\EventListener\DataContainer\Undo\JumpToParentOperationListener
         arguments:
@@ -341,15 +349,6 @@ services:
         arguments:
             - '@contao.routing.scope_matcher'
 
-    contao.listener.menu.backend:
-        class: Contao\CoreBundle\EventListener\Menu\BackendMenuListener
-        arguments:
-            - '@security.helper'
-            - '@router'
-            - '@request_stack'
-            - '@translator'
-            - '@contao.framework'
-
     contao.listener.menu.backend_favorites:
         class: Contao\CoreBundle\EventListener\Menu\BackendFavoritesListener
         arguments:
@@ -360,6 +359,20 @@ services:
             - '@translator'
             - '@contao.csrf.token_manager'
 
+    contao.listener.menu.backend_header:
+        class: Contao\CoreBundle\EventListener\Menu\BackendHeaderListener
+        arguments:
+            - '@security.helper'
+            - '@router'
+            - '@request_stack'
+            - '@translator'
+            - '@contao.framework'
+
+    contao.listener.menu.backend_login:
+        class: Contao\CoreBundle\EventListener\Menu\BackendLoginListener
+        arguments:
+            - '@translator'
+
     contao.listener.menu.backend_logout:
         class: Contao\CoreBundle\EventListener\Menu\BackendLogoutListener
         arguments:
@@ -367,6 +380,13 @@ services:
             - '@router'
             - '@security.logout_url_generator'
             - '@translator'
+
+    contao.listener.menu.backend_main:
+        class: Contao\CoreBundle\EventListener\Menu\BackendMainListener
+        arguments:
+            - '@security.helper'
+            - '@request_stack'
+            - '%contao.template_studio.enabled%'
 
     contao.listener.menu.backend_preview:
         class: Contao\CoreBundle\EventListener\Menu\BackendPreviewListener
@@ -522,6 +542,15 @@ services:
             - '@security.helper'
             - '@contao.routing.scope_matcher'
             - '@event_dispatcher'
+
+    contao.listener.webauthn_backend_route:
+        class: Contao\CoreBundle\EventListener\WebauthnBackendRouteListener
+        arguments:
+            -
+                - webauthn.controller.creation.request.contao_backend_add_authenticator
+                - webauthn.controller.creation.response.contao_backend_add_authenticator
+                - webauthn.controller.security.contao_backend.request.options
+                - webauthn.controller.security.contao_backend.request.result
 
     contao.listener.widget.custom_rgxp:
         class: Contao\CoreBundle\EventListener\Widget\CustomRgxpListener

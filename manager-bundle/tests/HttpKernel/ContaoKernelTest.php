@@ -342,13 +342,13 @@ class ContaoKernelTest extends ContaoTestCase
         unset($_SERVER['TRUSTED_HOSTS']);
     }
 
-    public function testEnablesRequestHttpMethodParameterOverride(): void
+    public function testDoesNotEnableRequestHttpMethodParameterOverride(): void
     {
         $this->assertFalse(Request::getHttpMethodParameterOverride());
 
         ContaoKernel::fromRequest($this->getTempDir(), Request::create('/'));
 
-        $this->assertTrue(Request::getHttpMethodParameterOverride());
+        $this->assertFalse(Request::getHttpMethodParameterOverride());
     }
 
     public function testSetsProjectDirFromInput(): void

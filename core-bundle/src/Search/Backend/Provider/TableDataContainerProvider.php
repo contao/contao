@@ -13,19 +13,23 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Search\Backend\Provider;
 
 use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\DataContainer\RecordLabeler;
+use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Search\Backend\Document;
+use Contao\CoreBundle\Search\Backend\Event\FormatTableDataContainerDocumentEvent;
 use Contao\CoreBundle\Search\Backend\Hit;
-use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\IndexUpdateConfigInterface;
-use Contao\CoreBundle\Search\Backend\IndexUpdateConfig\UpdateAllProvidersConfig;
+use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\DC_Table;
 use Contao\DcaLoader;
+use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -43,6 +47,8 @@ class TableDataContainerProvider implements ProviderInterface
         private readonly Connection $connection,
         private readonly RecordLabeler $recordLabeler,
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
     ) {
     }
 
@@ -54,13 +60,9 @@ class TableDataContainerProvider implements ProviderInterface
     /**
      * @return iterable<Document>
      */
-    public function updateIndex(IndexUpdateConfigInterface $trigger): iterable
+    public function updateIndex(ReindexConfig $config): iterable
     {
-        if (!$trigger instanceof UpdateAllProvidersConfig) {
-            return new \EmptyIterator();
-        }
-
-        foreach ($this->getTables() as $table) {
+        foreach ($this->getTables($config) as $table) {
             try {
                 $dcaLoader = new DcaLoader($table);
                 $dcaLoader->load();
@@ -79,7 +81,7 @@ class TableDataContainerProvider implements ProviderInterface
                 continue;
             }
 
-            foreach ($this->findDocuments($table, $trigger) as $document) {
+            foreach ($this->findDocuments($table, $config) as $document) {
                 yield $document;
             }
         }
@@ -87,18 +89,29 @@ class TableDataContainerProvider implements ProviderInterface
 
     public function convertDocumentToHit(Document $document): Hit|null
     {
-        // TODO: service for view and edit URLs
-        $viewUrl = 'https://todo.com?view='.$document->getId();
-        $editUrl = 'https://todo.com?edit='.$document->getId();
-
-        $row = $this->loadRow($this->getTableFromDocument($document), (int) $document->getId());
+        $document = $this->addCurrentRowToDocumentIfNotAlreadyLoaded($document);
+        $row = $document->getMetadata()['row'] ?? null;
 
         // Entry does not exist anymore -> no hit
-        if (false === $row) {
+        if (null === $row) {
             return null;
         }
 
-        $title = $this->recordLabeler->getLabel(\sprintf('contao.db.%s.id', $this->getTableFromDocument($document)), $row);
+        $table = $this->getTableFromDocument($document);
+
+        try {
+            $editUrl = $this->dcaUrlAnalyzer->getEditUrl($table, (int) $document->getId());
+            $viewUrl = $this->dcaUrlAnalyzer->getViewUrl($table, (int) $document->getId());
+        } catch (AccessDeniedException) {
+            return null;
+        }
+
+        // No view URL for the entry could be found
+        if (null === $viewUrl) {
+            return null;
+        }
+
+        $title = $this->recordLabeler->getLabel(\sprintf('contao.db.%s.id', $table), $row);
 
         return (new Hit($document, $title, $viewUrl))
             ->withEditUrl($editUrl)
@@ -107,20 +120,34 @@ class TableDataContainerProvider implements ProviderInterface
         ;
     }
 
-    public function isHitGranted(TokenInterface $token, Hit $hit): bool
+    public function isDocumentGranted(TokenInterface $token, Document $document): bool
     {
-        $table = $this->getTableFromDocument($hit->getDocument());
-        $row = $hit->getMetadata()['row'] ?? null;
+        $document = $this->addCurrentRowToDocumentIfNotAlreadyLoaded($document);
+        $row = $document->getMetadata()['row'] ?? null;
 
+        // Entry does not exist anymore -> no access
         if (null === $row) {
             return false;
         }
+
+        $table = $this->getTableFromDocument($document);
 
         return $this->accessDecisionManager->decide(
             $token,
             [ContaoCorePermissions::DC_PREFIX.$table],
             new ReadAction($table, $row),
         );
+    }
+
+    private function addCurrentRowToDocumentIfNotAlreadyLoaded(Document $document): Document
+    {
+        if (isset($document->getMetadata()['row'])) {
+            return $document;
+        }
+
+        $row = $this->loadRow($this->getTableFromDocument($document), (int) $document->getId());
+
+        return $document->withMetadata(['row' => false === $row ? null : $row]);
     }
 
     private function getTableFromDocument(Document $document): string
@@ -131,41 +158,51 @@ class TableDataContainerProvider implements ProviderInterface
     /**
      * @return array<int, string>
      */
-    private function getTables(): array
+    private function getTables(ReindexConfig $config): array
     {
         $this->contaoFramework->initialize();
 
         $files = $this->resourceFinder->findIn('dca')->depth(0)->files()->name('*.php');
 
-        $tables = array_map(
+        $tables = array_unique(array_values(array_map(
             static fn (SplFileInfo $input) => str_replace('.php', '', $input->getRelativePathname()),
             iterator_to_array($files->getIterator()),
-        );
+        )));
 
-        $tables = array_values($tables);
+        // No document ID limits, consider all tables
+        if ($config->getLimitedDocumentIds()->isEmpty()) {
+            return $tables;
+        }
 
-        return array_unique($tables);
+        // Only consider tables that were asked for
+        return array_filter($tables, fn (string $table): bool => $config->getLimitedDocumentIds()->hasType($this->getTypeFromTable($table)));
     }
 
-    private function findDocuments(string $table, IndexUpdateConfigInterface $indexUpdateConfig): \Generator
+    private function findDocuments(string $table, ReindexConfig $reindexConfig): \Generator
     {
         if (!isset($GLOBALS['TL_DCA'][$table]['fields'])) {
             return [];
         }
 
+        $fieldsConfig = $GLOBALS['TL_DCA'][$table]['fields'];
+
         $searchableFields = array_filter(
-            $GLOBALS['TL_DCA'][$table]['fields'] ?? [],
+            $fieldsConfig,
             static fn (array $config): bool => isset($config['search']) && true === $config['search'],
         );
 
         $qb = $this->createQueryBuilderForTable($table);
 
-        if ($indexUpdateConfig->getUpdateSince() && isset($GLOBALS['TL_DCA'][$table]['fields']['tstamp'])) {
-            $qb->andWhere('tstamp <= ', $qb->createNamedParameter($indexUpdateConfig->getUpdateSince()));
+        if ($reindexConfig->getUpdateSince() && isset($GLOBALS['TL_DCA'][$table]['fields']['tstamp'])) {
+            $qb->andWhere('tstamp <= ', $qb->createNamedParameter($reindexConfig->getUpdateSince()));
+        }
+
+        if ($documentIds = $reindexConfig->getLimitedDocumentIds()->getDocumentIdsForType($this->getTypeFromTable($table))) {
+            $qb->expr()->in('id', $qb->createNamedParameter($documentIds, ArrayParameterType::STRING));
         }
 
         foreach ($qb->executeQuery()->iterateAssociative() as $row) {
-            $document = $this->createDocumentFromRow($table, $row, $searchableFields);
+            $document = $this->createDocumentFromRow($table, $row, $fieldsConfig, $searchableFields);
 
             if ($document) {
                 yield $document;
@@ -173,9 +210,9 @@ class TableDataContainerProvider implements ProviderInterface
         }
     }
 
-    private function createDocumentFromRow(string $table, array $row, array $searchableFields): Document|null
+    private function createDocumentFromRow(string $table, array $row, array $fieldsConfig, array $searchableFields): Document|null
     {
-        $searchableContent = $this->extractSearchableContent($row, $searchableFields);
+        $searchableContent = $this->extractSearchableContent($row, $fieldsConfig, $searchableFields);
 
         if ('' === $searchableContent) {
             return null;
@@ -189,14 +226,15 @@ class TableDataContainerProvider implements ProviderInterface
         return self::TYPE_PREFIX.$table;
     }
 
-    private function extractSearchableContent(array $row, array $searchableFields): string
+    private function extractSearchableContent(array $row, array $fieldsConfig, array $searchableFields): string
     {
         $searchableContent = [];
 
         foreach (array_keys($searchableFields) as $field) {
             if (isset($row[$field])) {
-                // TODO: Decode, optimize serialized data maybe? Strip HTML tags? Event for e.g. RSCE?
-                $searchableContent[] = $row[$field];
+                $event = new FormatTableDataContainerDocumentEvent($row[$field], $fieldsConfig[$field] ?? []);
+                $this->eventDispatcher->dispatch($event);
+                $searchableContent[] = $event->getSearchableContent();
             }
         }
 

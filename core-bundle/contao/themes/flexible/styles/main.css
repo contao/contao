@@ -518,7 +518,7 @@ body.popup {
 	flex: 1 0 0;
 }
 
-#main_headline span:nth-child(even) {
+#main_headline span:nth-child(n+2) {
 	font-weight: 400;
 }
 
@@ -528,7 +528,7 @@ body.popup {
 }
 
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
-	#main_headline span:nth-child(even) {
+	#main_headline span:nth-child(n+2) {
 		font-weight: 300;
 	}
 
@@ -1118,6 +1118,36 @@ h2.sub_headline {
 
 .two-factor .tl_trusted_devices th, .two-factor .tl_trusted_devices td {
 	line-height: 16px;
+}
+
+/* Passkeys */
+.passkeys .credential-list td.created {
+	width: 30%;
+}
+
+.passkeys .credential-list td.actions {
+	text-align: right;
+	width: 50px;
+}
+
+.passkeys .credential-list td.actions button {
+	border: 0;
+	padding: 0;
+	background-color: transparent;
+}
+
+.passkeys input[name="passkey_name"] {
+	border: 0;
+	background-color: transparent;
+	height: 1em;
+	width: 100%;
+	display: block;
+	margin: -5px;
+	padding: 5px;
+}
+
+.tl_message.passkey_message:not(:has(.tl_error, .tl_info, .tl_confirm)) {
+	display: none;
 }
 
 /* Picker search */
@@ -2808,16 +2838,21 @@ fieldset.tl_tbox.nolegend, fieldset.tl_box.nolegend {
 	border-top: 0;
 }
 
-fieldset.tl_tbox > legend, fieldset.tl_box > legend {
+fieldset:is(.tl_tbox,.tl_box) > legend {
 	box-sizing: border-box;
 	color: var(--legend);
 	padding: 9px 12px 9px 28px;
 	background: url("icons/navcol.svg") 13px 10px no-repeat;
+	width: 100%;
+}
+
+fieldset:is(.tl_tbox,.tl_box) > legend[onclick] {
 	cursor: pointer;
 }
 
-fieldset:is(.tl_tbox,.tl_box) > legend {
-	width: 100%;
+fieldset:is(.tl_tbox,.tl_box) > legend:has(> button) {
+	padding: 0;
+	background: none;
 }
 
 fieldset:is(.tl_tbox,.tl_box) > legend > button {
@@ -2825,8 +2860,10 @@ fieldset:is(.tl_tbox,.tl_box) > legend > button {
 	border: 0 none;
 	width: 100%;
 	line-height: inherit;
-	padding: 0;
-	background: transparent;
+	box-sizing: border-box;
+	padding: 9px 12px 9px 28px;
+	background: transparent url("icons/navcol.svg") 13px 10px no-repeat;
+	cursor: pointer;
 }
 
 fieldset.collapsed {
@@ -2838,8 +2875,9 @@ fieldset.collapsed div {
 	display: none !important;
 }
 
-fieldset.collapsed > legend {
-	background: url("icons/navexp.svg") 13px 10px no-repeat;
+fieldset.collapsed > legend > button,
+fieldset.collapsed > legend:not(:has(> button)) {
+	background-image: url("icons/navexp.svg");
 }
 
 /* Maintenance */
@@ -3202,6 +3240,11 @@ fieldset.collapsed > legend {
 
 	.tl_sorting, .tl_limit {
 		width: 60%;
+	}
+
+  .passkeys .credential-list td.actions,
+	.passkeys .credential-list td.created {
+		width: auto;
 	}
 }
 

@@ -259,10 +259,7 @@ window.AjaxRequest =
 				var div = new Element('div', {
 					'id': id,
 					'class': 'subpal widget-group',
-					'html': txt,
-					'styles': {
-						'display': 'block'
-					}
+					'html': txt
 				}).inject($(el).getParent('div').getParent('div'), 'after');
 
 				// Execute scripts after the DOM has been updated
@@ -532,6 +529,7 @@ window.Backend =
 			'hideFooter': true,
 			'draggable': false,
 			'overlayOpacity': .7,
+			'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		}).show({
@@ -579,6 +577,7 @@ window.Backend =
 			'hideFooter': true,
 			'draggable': false,
 			'overlayOpacity': .7,
+			'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
@@ -605,6 +604,7 @@ window.Backend =
 			'width': opt.width,
 			'draggable': false,
 			'overlayOpacity': .7,
+			'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
@@ -2065,56 +2065,6 @@ window.Theme =
 	},
 
 	/**
-	 * Set up the [Ctrl] + click to edit functionality
-	 */
-	setupCtrlClick: function() {
-		$$('.click2edit').each(function(el) {
-
-			// Do not propagate the click events of the default buttons (see #5731)
-			el.getElements('a').each(function(a) {
-				a.addEvent('click', function(e) {
-					e.stopPropagation();
-				});
-			});
-
-			// Set up regular click events on touch devices
-			if (Browser.Features.Touch) {
-				el.addEvent('click', function() {
-					if (!el.getAttribute('data-visited')) {
-						el.setAttribute('data-visited', '1');
-					} else {
-						el.getElements('a').each(function(a) {
-							if (a.hasClass('edit')) {
-								document.location.href = a.href;
-							}
-						});
-						el.removeAttribute('data-visited');
-					}
-				});
-			} else {
-				el.addEvent('click', function(e) {
-					var key = Browser.Platform.mac ? e.event.metaKey : e.event.ctrlKey;
-					if (!key) return;
-
-					if (e.event.shiftKey) {
-						el.getElements('a').each(function(a) {
-							if (a.hasClass('children')) {
-								document.location.href = a.href;
-							}
-						});
-					} else {
-						el.getElements('a').each(function(a) {
-							if (a.hasClass('edit')) {
-								document.location.href = a.href;
-							}
-						});
-					}
-				});
-			}
-		});
-	},
-
-	/**
 	 * Set up the textarea resizing
 	 */
 	setupTextareaResizing: function() {
@@ -2201,6 +2151,10 @@ window.Theme =
 	 * Set up the profile toggle
 	 */
 	setupProfileToggle: function() {
+		if (window.console) {
+			console.warn('Theme.setupProfileToggle() is deprecated. Please use the stimulus controller instead.');
+		}
+
 		var tmenu = $('tmenu');
 		if (!tmenu) return;
 
@@ -2294,10 +2248,8 @@ window.addEvent('domready', function() {
 	Backend.enableToggleSelect();
 
 	Theme.stopClickPropagation();
-	Theme.setupCtrlClick();
 	Theme.setupTextareaResizing();
 	Theme.setupMenuToggle();
-	Theme.setupProfileToggle();
 	Theme.setupSplitButtonToggle();
 });
 
@@ -2312,6 +2264,5 @@ window.addEvent('ajax_change', function() {
 	Backend.enableToggleSelect();
 
 	Theme.stopClickPropagation();
-	Theme.setupCtrlClick();
 	Theme.setupTextareaResizing();
 });

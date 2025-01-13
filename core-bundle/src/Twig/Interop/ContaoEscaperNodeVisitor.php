@@ -17,6 +17,7 @@ use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\NodeVisitor\EscaperNodeVisitor;
 use Twig\NodeVisitor\NodeVisitorInterface;
 
@@ -106,8 +107,19 @@ final class ContaoEscaperNodeVisitor implements NodeVisitorInterface
             return false;
         }
 
-        if (!\in_array($node->getNode('filter')->getAttribute('value'), ['escape', 'e'], true)) {
+        if (!\in_array($node->getAttribute('twig_callable')->getName(), ['escape', 'e'], true)) {
             return false;
+        }
+
+        $doubleEncode = $node->getNode('arguments')->hasNode('double_encode') ? $node->getNode('arguments')->getNode('double_encode') : null;
+
+        if ($doubleEncode instanceof ConstantExpression && \is_bool($doubleEncode->getAttribute('value'))) {
+            $node->getNode('arguments')->removeNode('double_encode');
+
+            // Do not use the Contao escaper if `double_encode = true` is passed
+            if ($doubleEncode->getAttribute('value')) {
+                return false;
+            }
         }
 
         $type = $argument->getAttribute('value');
@@ -119,7 +131,7 @@ final class ContaoEscaperNodeVisitor implements NodeVisitorInterface
     {
         $line = $node->getTemplateLine();
 
-        $arguments = new Node([
+        $arguments = new Nodes([
             new ConstantExpression("contao_$strategy", $line),
             new ConstantExpression(null, $line),
             new ConstantExpression(true, $line),

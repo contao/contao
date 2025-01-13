@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
 use Contao\Config;
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\FrontendModule\FeedReaderController;
 use Contao\CoreBundle\Exception\PageNotFoundException;
@@ -52,7 +52,7 @@ class FeedReaderControllerTest extends TestCase
         parent::setUp();
 
         $this->container = $this->getContainerWithContaoConfiguration();
-        $this->container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
+        $this->container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
         $this->container->set('monolog.logger.contao.error', new NullLogger());
         $this->container->set('fragment.handler', $this->createMock(FragmentHandler::class));
 

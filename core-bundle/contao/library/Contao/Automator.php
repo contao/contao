@@ -320,8 +320,7 @@ class Automator extends System
 			$tag .= '.' . $intId;
 		}
 
-		$cacheTagInvalidator = System::getContainer()->get('contao.cache.tag_invalidator');
-		$cacheTagInvalidator->invalidateTags(array($tag));
+		System::getContainer()->get('contao.cache.tag_manager')->invalidateTags(array($tag));
 	}
 
 	/**

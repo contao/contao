@@ -24,7 +24,8 @@ $GLOBALS['TL_DCA']['tl_user_group']['fields']['newsletters'] = array
 	'inputType'               => 'checkbox',
 	'foreignKey'              => 'tl_newsletter_channel.title',
 	'eval'                    => array('multiple'=>true),
-	'sql'                     => "blob NULL"
+	'sql'                     => "blob NULL",
+	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
 
 $GLOBALS['TL_DCA']['tl_user_group']['fields']['newsletterp'] = array

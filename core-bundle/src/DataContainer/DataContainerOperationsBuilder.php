@@ -39,7 +39,7 @@ class DataContainerOperationsBuilder implements \Stringable
 
     public function __toString(): string
     {
-        if (null === $this->operations) {
+        if (!$this->operations) {
             return '';
         }
 
@@ -48,7 +48,26 @@ class DataContainerOperationsBuilder implements \Stringable
         ]);
     }
 
-    public function initializeButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
+    public static function generateBackButton(string|null $href = null): string
+    {
+        $href ??= System::getReferer(true);
+
+        return ' <a href="'.$href.'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" data-action="contao--scroll-offset#discard">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a> ';
+    }
+
+    public static function generateClearClipboardButton(): string
+    {
+        return ' <a href="'.Backend::addToUrl('clipboard=1').'" class="header_clipboard" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']).'" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['clearClipboard'].'</a> ';
+    }
+
+    public static function generateNewButton(string $table, string $href): string
+    {
+        $labelNew = $GLOBALS['TL_LANG'][$table]['new'] ?? $GLOBALS['TL_LANG']['DCA']['new'];
+
+        return ' <a href="'.$href.'" class="header_new" title="'.StringUtil::specialchars($labelNew[1] ?? '').'" accesskey="n" data-action="contao--scroll-offset#store">'.$labelNew[0].'</a> ';
+    }
+
+    public function initialize(): self
     {
         if (null !== $this->operations) {
             throw new \RuntimeException(self::class.' has already been initialized.');
@@ -56,6 +75,13 @@ class DataContainerOperationsBuilder implements \Stringable
 
         $builder = clone $this;
         $builder->operations = [];
+
+        return $builder;
+    }
+
+    public function initializeWithButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
+    {
+        $builder = $this->initialize();
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
             return $this;
@@ -73,14 +99,9 @@ class DataContainerOperationsBuilder implements \Stringable
         return $builder;
     }
 
-    public function initializeHeaderButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
+    public function initializeWithHeaderButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
     {
-        if (null !== $this->operations) {
-            throw new \RuntimeException(self::class.' has already been initialized.');
-        }
-
-        $builder = clone $this;
-        $builder->operations = [];
+        $builder = $this->initialize();
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
             return $this;
@@ -224,7 +245,7 @@ class DataContainerOperationsBuilder implements \Stringable
         }
 
         if (isset($config['href'])) {
-            return Backend::addToUrl($config['href'].'&amp;id='.$record['id'].(Input::get('nb') ? '&amp;nc=1' : '').($isPopup ? '&amp;popup=1' : ''));
+            return Backend::addToUrl($config['href'].'&amp;id='.$record['id'].(Input::get('nb') ? '&amp;nc=1' : '').($isPopup ? '&amp;popup=1' : ''), addRequestToken: !($config['prefetch'] ?? false));
         }
 
         return null;

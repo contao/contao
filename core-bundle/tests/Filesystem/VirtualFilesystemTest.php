@@ -16,6 +16,7 @@ use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
@@ -23,6 +24,7 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Uid\Uuid;
 
 class VirtualFilesystemTest extends TestCase
@@ -503,7 +505,7 @@ class VirtualFilesystemTest extends TestCase
                             static function () use (&$handlerInvocationCount) {
                                 ++$handlerInvocationCount;
 
-                                return ['extra' => 'data'];
+                                return new ExtraMetadata(['extra' => 'data']);
                             },
                         ),
                         'dir_b' => new FilesystemItem(false, 'foo/dir_b'),
@@ -520,7 +522,7 @@ class VirtualFilesystemTest extends TestCase
             ->willReturn(new ChangeSet([], [], []))
         ;
 
-        $dbafsManager = new DbafsManager();
+        $dbafsManager = new DbafsManager($this->createMock(EventDispatcherInterface::class));
         $dbafsManager->register($dbafs, 'foo');
 
         $filesystem = new VirtualFilesystem($mountManager, $dbafsManager, 'foo');
@@ -566,7 +568,7 @@ class VirtualFilesystemTest extends TestCase
         $this->assertSame(12345, $fileB->getLastModified());
         $this->assertSame(1024, $fileB->getFileSize());
         $this->assertSame('image/png', $fileB->getMimeType());
-        $this->assertSame(['extra' => 'data'], $fileB->getExtraMetadata());
+        $this->assertSame(['extra' => 'data'], $fileB->getExtraMetadata()->all());
 
         /** @phpstan-ignore method.impossibleType */
         $this->assertSame(7, $handlerInvocationCount);
@@ -594,13 +596,13 @@ class VirtualFilesystemTest extends TestCase
             ->expects($this->once())
             ->method('getExtraMetadata')
             ->with('prefix/foo/bar/file')
-            ->willReturn(['extra' => 'data'])
+            ->willReturn(new ExtraMetadata(['extra' => 'data']))
         ;
 
         $filesystem = new VirtualFilesystem($mountManager, $dbafsManager, 'prefix');
         $listedContents = $filesystem->listContents('foo/bar', $deep, VirtualFilesystemInterface::BYPASS_DBAFS)->toArray();
 
-        $this->assertSame(['extra' => 'data'], $listedContents[0]->getExtraMetadata());
+        $this->assertSame(['extra' => 'data'], $listedContents[0]->getExtraMetadata()->all());
 
         // Normalize listing for comparison
         $listing = array_map(
@@ -681,7 +683,7 @@ class VirtualFilesystemTest extends TestCase
         $filesystem = new VirtualFilesystem($mountManager, $dbafsManager, 'prefix');
         $listedContents = $filesystem->listContents('foo/bar', $deep)->toArray();
 
-        $this->assertSame(['extra' => 'data'], $listedContents[0]->getExtraMetadata());
+        $this->assertSame(['extra' => 'data'], $listedContents[0]->getExtraMetadata()->all());
         $this->assertSame(1024, $listedContents[0]->getFileSize());
 
         // Normalize listing for comparison
@@ -706,7 +708,7 @@ class VirtualFilesystemTest extends TestCase
                     null,
                     null,
                     null,
-                    ['extra' => 'data'],
+                    new ExtraMetadata(['extra' => 'data']),
                 ),
                 new FilesystemItem(false, 'prefix/foo/bar/things'),
             ],
@@ -725,7 +727,7 @@ class VirtualFilesystemTest extends TestCase
                     null,
                     null,
                     null,
-                    ['extra' => 'data'],
+                    new ExtraMetadata(['extra' => 'data']),
                 ),
                 new FilesystemItem(false, 'prefix/foo/bar/things'),
                 new FilesystemItem(true, 'prefix/foo/bar/things/a'),
@@ -816,7 +818,7 @@ class VirtualFilesystemTest extends TestCase
             ->expects($shouldReadFromDbafs ? $this->exactly(2) : $this->never())
             ->method('getExtraMetadata')
             ->with('prefix/path')
-            ->willReturn(['extra' => 'data'])
+            ->willReturn(new ExtraMetadata(['extra' => 'data']))
         ;
 
         $filesystem = new VirtualFilesystem(
@@ -827,8 +829,8 @@ class VirtualFilesystemTest extends TestCase
 
         $expected = $shouldReadFromDbafs ? ['extra' => 'data'] : [];
 
-        $this->assertSame($expected, $filesystem->getExtraMetadata('path', $accessFlags));
-        $this->assertSame($expected, $filesystem->getExtraMetadata($this->defaultUuid, $accessFlags));
+        $this->assertSame($expected, $filesystem->getExtraMetadata('path', $accessFlags)->all());
+        $this->assertSame($expected, $filesystem->getExtraMetadata($this->defaultUuid, $accessFlags)->all());
     }
 
     public static function provideAccessFlags(): iterable
@@ -852,6 +854,8 @@ class VirtualFilesystemTest extends TestCase
 
     public function testSetExtraMetadata(): void
     {
+        $extraMetadata = new ExtraMetadata(['extra' => 'data']);
+
         $dbafsManager = $this->createMock(DbafsManager::class);
         $dbafsManager
             ->expects($this->once())
@@ -863,7 +867,7 @@ class VirtualFilesystemTest extends TestCase
         $dbafsManager
             ->expects($this->exactly(2))
             ->method('setExtraMetadata')
-            ->with('prefix/path', ['extra' => 'data'])
+            ->with('prefix/path', $extraMetadata)
         ;
 
         $filesystem = new VirtualFilesystem(
@@ -872,8 +876,8 @@ class VirtualFilesystemTest extends TestCase
             'prefix',
         );
 
-        $filesystem->setExtraMetadata('path', ['extra' => 'data']);
-        $filesystem->setExtraMetadata($this->defaultUuid, ['extra' => 'data']);
+        $filesystem->setExtraMetadata('path', $extraMetadata);
+        $filesystem->setExtraMetadata($this->defaultUuid, $extraMetadata);
     }
 
     /**
@@ -927,7 +931,7 @@ class VirtualFilesystemTest extends TestCase
         ];
 
         yield 'set extra metadata' => [
-            'setExtraMetadata', 'foo/bar', ['some' => 'data'],
+            'setExtraMetadata', 'foo/bar', new ExtraMetadata(['some' => 'data']),
         ];
     }
 

@@ -86,11 +86,35 @@ export default class TabsController extends Controller {
             el.toggleAttribute('data-active', isTarget);
             el.style.display = isTarget ? 'revert' : 'none';
 
+            // Re-enable/disable the button access keys
+            if (isTarget) {
+                el.querySelectorAll('button[data-disabled-accesskey]').forEach(button => {
+                    button.setAttribute('accesskey', button.getAttribute('data-disabled-accesskey'));
+                    button.removeAttribute('data-disabled-accesskey');
+                })
+            } else {
+                el.querySelectorAll('button[accesskey]').forEach(button => {
+                    button.setAttribute('data-disabled-accesskey', button.getAttribute('accesskey'));
+                    button.removeAttribute('accesskey');
+                })
+            }
+
             const selectButton = document.getElementById(el.getAttribute('aria-labelledby'));
             selectButton?.toggleAttribute('aria-selected', isTarget);
             selectButton?.parentElement.toggleAttribute('data-active', isTarget);
         });
 
         this.activeTab = panel;
+    }
+
+    getActiveTab() {
+        return this.activeTab;
+    }
+
+    getTabs() {
+        return this.panelTargets.reduce((result, panel) => {
+            result[panel.id] = panel;
+            return result;
+        }, {});
     }
 }

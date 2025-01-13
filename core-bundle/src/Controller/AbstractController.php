@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
 use Contao\CoreBundle\Framework\Adapter;
@@ -38,7 +38,7 @@ abstract class AbstractController extends SymfonyAbstractController
         $services['logger'] = '?'.LoggerInterface::class;
         $services['fos_http_cache.http.symfony_response_tagger'] = '?'.SymfonyResponseTagger::class;
         $services['contao.csrf.token_manager'] = ContaoCsrfTokenManager::class;
-        $services['contao.cache.entity_tags'] = EntityCacheTags::class;
+        $services['contao.cache.tag_manager'] = CacheTagManager::class;
 
         return $services;
     }
@@ -64,7 +64,7 @@ abstract class AbstractController extends SymfonyAbstractController
 
     protected function tagResponse(array|object|string|null $tags): void
     {
-        $this->container->get('contao.cache.entity_tags')->tagWith($tags);
+        $this->container->get('contao.cache.tag_manager')->tagWith($tags);
     }
 
     /**
@@ -121,7 +121,7 @@ abstract class AbstractController extends SymfonyAbstractController
             }
 
             // Tag the page (see #2137)
-            $this->container->get('contao.cache.entity_tags')->tagWithModelInstance($pageModel);
+            $this->container->get('contao.cache.tag_manager')->tagWithModelInstance($pageModel);
         }
 
         return $response;

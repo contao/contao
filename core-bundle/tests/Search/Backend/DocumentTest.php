@@ -31,9 +31,11 @@ class DocumentTest extends TestCase
             ->withTags(['tag-one', 'tag-two'])
         ;
 
+        $document = $document->withSearchableContent($document->getSearchableContent().' more data');
+
         $this->assertSame('id', $document->getId());
         $this->assertSame('type', $document->getType());
-        $this->assertSame('searchContent', $document->getSearchableContent());
+        $this->assertSame('searchContent more data', $document->getSearchableContent());
         $this->assertSame(['meta' => 'data', 'recursive' => ['also' => 'works']], $document->getMetadata());
         $this->assertSame(['tag-one', 'tag-two'], $document->getTags());
     }

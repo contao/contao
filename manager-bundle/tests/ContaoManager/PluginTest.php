@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\ContaoManager;
 
+use CmsIg\Seal\Integration\Symfony\SealBundle;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerBundle\ContaoManagerBundle;
@@ -26,7 +27,6 @@ use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use League\FlysystemBundle\FlysystemBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
-use Schranz\Search\Integration\Symfony\SearchBundle;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
@@ -122,7 +122,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame([], $bundles[8]->getReplace());
         $this->assertSame([], $bundles[8]->getLoadAfter());
 
-        $this->assertSame(SearchBundle::class, $bundles[9]->getName());
+        $this->assertSame(SealBundle::class, $bundles[9]->getName());
         $this->assertSame([], $bundles[9]->getReplace());
         $this->assertSame([], $bundles[9]->getLoadAfter());
 
@@ -228,6 +228,27 @@ class PluginTest extends ContaoTestCase
 
     public function testGetRouteCollectionInProd(): void
     {
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->expects($this->atLeastOnce())
+            ->method('load')
+            ->willReturnCallback(
+                static function (string $file): RouteCollection {
+                    $collection = new RouteCollection();
+                    $collection->add(basename($file).'_foobar', new Route('/foobar'));
+
+                    return $collection;
+                },
+            )
+        ;
+
+        $resolver = $this->createMock(LoaderResolverInterface::class);
+        $resolver
+            ->expects($this->atLeastOnce())
+            ->method('resolve')
+            ->willReturn($loader)
+        ;
+
         $kernel = $this->createMock(KernelInterface::class);
         $kernel
             ->expects($this->once())
@@ -236,9 +257,11 @@ class PluginTest extends ContaoTestCase
         ;
 
         $plugin = new Plugin();
-        $resolver = $this->createMock(LoaderResolverInterface::class);
+        $collection = $plugin->getRouteCollection($resolver, $kernel);
+        $routes = array_values($collection->all());
 
-        $this->assertNull($plugin->getRouteCollection($resolver, $kernel));
+        $this->assertCount(1, $routes);
+        $this->assertSame('/foobar', $routes[0]->getPath());
     }
 
     public function testGetRouteCollectionInDev(): void
@@ -275,9 +298,10 @@ class PluginTest extends ContaoTestCase
         $collection = $plugin->getRouteCollection($resolver, $kernel);
         $routes = array_values($collection->all());
 
-        $this->assertCount(2, $routes);
-        $this->assertSame('/_wdt/foobar', $routes[0]->getPath());
-        $this->assertSame('/_profiler/foobar', $routes[1]->getPath());
+        $this->assertCount(3, $routes);
+        $this->assertSame('/foobar', $routes[0]->getPath());
+        $this->assertSame('/_wdt/foobar', $routes[1]->getPath());
+        $this->assertSame('/_profiler/foobar', $routes[2]->getPath());
     }
 
     public function testReturnsApiCommands(): void

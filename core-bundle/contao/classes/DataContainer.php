@@ -164,6 +164,16 @@ abstract class DataContainer extends Backend
 	public const SORT_BOTH = 18;
 
 	/**
+	 * Paste after the parent
+	 */
+	public const PASTE_AFTER = 1;
+
+	/**
+	 * Paste into the parent
+	 */
+	public const PASTE_INTO = 2;
+
+	/**
 	 * Current ID
 	 * @var integer|string
 	 */
@@ -486,6 +496,12 @@ abstract class DataContainer extends Backend
 		}
 
 		$arrAttributes = $strClass::getAttributesFromDca($arrData, $this->strInputName, $this->varValue, $this->strField, $this->strTable, $this);
+		$blnColorPicker = isset($arrAttributes['colorpicker']);
+
+		if ($blnColorPicker)
+		{
+			$arrAttributes['data-contao--color-picker-target'] = 'input';
+		}
 
 		$objWidget = new $strClass($arrAttributes);
 		$objWidget->xlabel = $xlabel;
@@ -596,25 +612,9 @@ abstract class DataContainer extends Backend
 		}
 
 		// Color picker
-		if ($arrAttributes['colorpicker'] ?? null)
+		if ($blnColorPicker)
 		{
-			// Support single fields as well (see #5240)
-			$strKey = ($arrAttributes['multiple'] ?? null) ? $this->strField . '_0' : $this->strField;
-
-			$wizard .= ' ' . Image::getHtml('pickcolor.svg', $GLOBALS['TL_LANG']['MSC']['colorpicker'], 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['colorpicker']) . '" id="moo_' . $this->strField . '" style="cursor:pointer"') . '
-  <script>
-    window.addEvent("domready", function() {
-      var cl = $("ctrl_' . $strKey . '").value.hexToRgb(true) || [255, 0, 0];
-      new MooRainbow("moo_' . $this->strField . '", {
-        id: "ctrl_' . $strKey . '",
-        startColor: cl,
-        imgPath: "assets/colorpicker/images/",
-        onComplete: function(color) {
-          $("ctrl_' . $strKey . '").value = color.hex.replace("#", "");
-        }
-      });
-    });
-  </script>';
+			$wizard .= '<div data-contao--color-picker-target="button"></div>';
 		}
 
 		$arrClasses = StringUtil::trimsplit(' ', $arrAttributes['tl_class'] ?? '');
@@ -783,7 +783,7 @@ abstract class DataContainer extends Backend
 		}
 
 		return $strPreview . '
-<div' . (!empty($arrAttributes['tl_class']) ? ' class="' . trim($arrAttributes['tl_class']) . '"' : '') . ($objWidget->hasErrors() ? ' data-contao--scroll-offset-target="widgetError"' : '') . '>' . $objWidget->parse() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass, $objWidget->description) : '') . '
+<div' . (!empty($arrAttributes['tl_class']) ? ' class="' . trim($arrAttributes['tl_class']) . '"' : '') . ($objWidget->hasErrors() ? ' data-contao--scroll-offset-target="widgetError"' : '') . ($blnColorPicker ? ' data-controller="contao--color-picker" data-contao--color-picker-theme-value="monolith"' : '') . '>' . $objWidget->parse() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass, $objWidget->description) : '') . '
 </div>';
 	}
 
@@ -903,7 +903,7 @@ abstract class DataContainer extends Backend
 	 */
 	protected function generateButtons($arrRow, $strTable, $arrRootIds=array(), $blnCircularReference=false, $arrChildRecordIds=null, $strPrevious=null, $strNext=null)
 	{
-		return System::getContainer()->get('contao.data_container.operations_builder')->initializeButtons(
+		return System::getContainer()->get('contao.data_container.operations_builder')->initializeWithButtons(
 			$strTable,
 			$arrRow,
 			$this,
@@ -1017,7 +1017,7 @@ abstract class DataContainer extends Backend
 	 */
 	protected function generateHeaderButtons($arrRow, $strPtable)
 	{
-		return System::getContainer()->get('contao.data_container.operations_builder')->initializeHeaderButtons(
+		return System::getContainer()->get('contao.data_container.operations_builder')->initializeWithHeaderButtons(
 			$strPtable,
 			$arrRow,
 			$this,
@@ -1055,17 +1055,26 @@ abstract class DataContainer extends Backend
 
 		$attributes = $provider->getDcaAttributes($picker->getConfig());
 
+		if (isset($attributes['value']))
+		{
+			$this->arrPickerValue = (array) $attributes['value'];
+		}
+
+		$objSession = System::getContainer()->get('request_stack')->getSession();
+		$arrClipboard = $objSession->get('CLIPBOARD');
+
+		// Hide picker if the clipboard is not empty
+		if (!empty($arrClipboard[$this->strTable]) || Input::get('act') == 'select')
+		{
+			return null;
+		}
+
 		$this->objPicker = $picker;
 		$this->strPickerFieldType = $attributes['fieldType'];
 
 		$this->objPickerCallback = static function ($value) use ($provider, $picker) {
 			return $provider->convertDcaValue($picker->getConfig(), $value);
 		};
-
-		if (isset($attributes['value']))
-		{
-			$this->arrPickerValue = (array) $attributes['value'];
-		}
 
 		return $attributes;
 	}
@@ -1307,7 +1316,7 @@ abstract class DataContainer extends Backend
 		// Make sure tags are unique and empty ones are removed
 		$tags = array_filter(array_unique($tags));
 
-		System::getContainer()->get('contao.cache.tag_invalidator')->invalidateTags($tags);
+		System::getContainer()->get('contao.cache.tag_manager')->invalidateTags($tags);
 	}
 
 	public function addPtableTags($strTable, $intId, &$tags)

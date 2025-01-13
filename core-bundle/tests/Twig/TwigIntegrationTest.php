@@ -13,10 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig;
 
 use Contao\Config;
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\InsertTagSubscription;
+use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
@@ -34,11 +37,13 @@ use Contao\System;
 use Contao\TemplateLoader;
 use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
@@ -148,8 +153,7 @@ class TwigIntegrationTest extends TestCase
 
         $templateLocator = new TemplateLocator(
             $this->getTempDir(),
-            [],
-            [],
+            $this->createMock(ResourceFinder::class),
             $themeNamespace = new ThemeNamespace(),
             $this->createMock(Connection::class),
         );
@@ -179,13 +183,18 @@ class TwigIntegrationTest extends TestCase
         $container->set('twig', $environment);
         $container->set(ContextFactory::class, new ContextFactory());
 
+        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
+        $insertTagParser->addSubscription(new InsertTagSubscription(new LegacyInsertTag($container), '__invoke', 'br', null, true, false));
+
+        $container->set('contao.insert_tag.parser', $insertTagParser);
+
         System::setContainer($container);
 
         $template = new FrontendTemplate('twig_template');
-        $template->setData(['value' => 'value']);
+        $template->setData(['value' => 'value{{br}}']);
 
         $obLevel = ob_get_level();
-        $this->assertSame('value,test1<<,test2>>,test3,test4,test5,(value),test6,test7', $template->parse());
+        $this->assertSame('value<br>,test1<<,test2>>,test3,test4,test5,(value{{br}}),test6,test7', $template->parse());
         $this->assertSame($obLevel, ob_get_level());
     }
 

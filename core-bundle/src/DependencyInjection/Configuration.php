@@ -116,6 +116,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addCronNode())
                 ->append($this->addCspNode())
                 ->append($this->addAltchaNode())
+                ->append($this->addTemplateStudioNode())
             ->end()
         ;
 
@@ -487,7 +488,23 @@ class Configuration implements ConfigurationInterface
                     ->info('Allows to disable the layer flattening of animated images. Set this option to false to support animations. It has no effect with Gd as Imagine service.')
                 ->end()
                 ->scalarNode('interlace')
+                    ->info('One of the Imagine\Image\ImageInterface::INTERLACE_* constants.')
                 ->end()
+                ->scalarNode('resampling_filter')
+                    ->info('Filter used when downsampling images. One of the Imagine\Image\ImageInterface::FILTER_* constants. It has no effect with Gd or SVG as Imagine service.')
+                ->end()
+            ->end()
+            ->validate()
+                ->always(
+                    static function (array $options): array {
+                        if (isset($options['resampling_filter'])) {
+                            $options['resampling-filter'] = $options['resampling_filter'];
+                            unset($options['resampling_filter']);
+                        }
+
+                        return $options;
+                    },
+                )
             ->end()
         ;
 
@@ -967,6 +984,15 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(86400)
                 ->end()
             ->end()
+        ;
+    }
+
+    private function addTemplateStudioNode(): NodeDefinition
+    {
+        return (new TreeBuilder('template_studio'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->canBeDisabled()
         ;
     }
 }

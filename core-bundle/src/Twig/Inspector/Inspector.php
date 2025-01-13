@@ -18,7 +18,6 @@ use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
-use Twig\TemplateWrapper;
 
 /**
  * @experimental
@@ -30,22 +29,13 @@ class Inspector
      */
     public const CACHE_KEY = 'contao.twig.inspector';
 
-    private readonly array $pathByTemplateName;
+    private array $pathByTemplateName = [];
 
     public function __construct(
         private readonly Environment $twig,
         private readonly CacheItemPoolInterface $cachePool,
         private readonly ContaoFilesystemLoader $filesystemLoader,
     ) {
-        $pathByTemplateName = [];
-
-        foreach ($this->filesystemLoader->getInheritanceChains() as $chain) {
-            foreach ($chain as $path => $name) {
-                $pathByTemplateName[$name] = $path;
-            }
-        }
-
-        $this->pathByTemplateName = $pathByTemplateName;
     }
 
     public function inspectTemplate(string $name): TemplateInformation
@@ -55,22 +45,42 @@ class Inspector
             $name = $this->filesystemLoader->getFirst($name);
         }
 
-        $blockNames = $this->loadTemplate($name)->getBlockNames();
-        $source = $this->twig->getLoader()->getSourceContext($name);
+        $loader = $this->twig->getLoader();
 
-        // Accumulate slots data for the template as well as all statically set parents
+        try {
+            $source = $loader->getSourceContext($name);
+        } catch (LoaderError $e) {
+            throw new InspectionException($name, reason: 'The template does not exist.');
+        }
+
+        $error = null;
+
+        try {
+            // Request blocks to trigger loading all parent templates
+            $blockNames = $this->twig->load($name)->getBlockNames();
+        } catch (LoaderError|SyntaxError $e) {
+            // In case of a syntax or loader error we cannot inspect the template
+            return new TemplateInformation($source, error: $e);
+        } catch (RuntimeError $e) {
+            $error = $e;
+            $blockNames = [];
+        }
+
+        $data = $this->getData($name);
+
+        $parent = $data['parent'];
+        $uses = $data['uses'];
         $slots = [];
 
-        do {
-            $data = $this->getData($name);
-            $slots = array_unique([...$slots, ...$data['slots']]);
-            $name = $data['parent'] ?? false;
-        } while ($name);
+        // Accumulate slots data for the template as well as all statically set parents
+        foreach ($this->getDataFromAll($data) as $parentData) {
+            $slots = array_unique([...$slots, ...$parentData['slots']]);
+        }
 
         sort($blockNames);
         sort($slots);
 
-        return new TemplateInformation($source, $blockNames, $slots, $data['parent'], $data['uses']);
+        return new TemplateInformation($source, $blockNames, $slots, $parent, $uses, $error);
     }
 
     /**
@@ -149,23 +159,42 @@ class Inspector
         return $hierarchy;
     }
 
-    private function loadTemplate(string $name): TemplateWrapper
+    private function getDataFromAll(array $data): \Generator
     {
-        try {
-            return $this->twig->load($name);
-        } catch (LoaderError|RuntimeError|SyntaxError $e) {
-            throw new InspectionException($name, $e);
+        yield $data;
+
+        if ($data['parent'] ?? false) {
+            yield from $this->getDataFromAll($this->getData($data['parent']));
         }
     }
 
     private function getData(string $templateName): array
     {
         // Make sure the template was compiled
-        $this->twig->load($templateName);
+        try {
+            $this->twig->load($templateName);
+        } catch (LoaderError|RuntimeError|SyntaxError) {
+        }
 
         $cache = $this->cachePool->getItem(self::CACHE_KEY)->get();
 
-        return $cache[$this->pathByTemplateName[$templateName] ?? null] ??
+        return $cache[$this->getPathByTemplateName($templateName)] ??
             throw new InspectionException($templateName, reason: 'No recorded information was found. Please clear the Twig template cache to make sure templates are recompiled.');
+    }
+
+    private function getPathByTemplateName(string $templateName): string|null
+    {
+        if (null !== ($cachedPath = $this->pathByTemplateName[$templateName] ?? null)) {
+            return $cachedPath;
+        }
+
+        // Rebuild cache if path was not found
+        foreach ($this->filesystemLoader->getInheritanceChains(true) as $chain) {
+            foreach ($chain as $path => $name) {
+                $this->pathByTemplateName[$name] = $path;
+            }
+        }
+
+        return $this->pathByTemplateName[$templateName] ?? null;
     }
 }

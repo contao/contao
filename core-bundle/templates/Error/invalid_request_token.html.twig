@@ -1,16 +1,8 @@
-{% trans_default_domain 'contao_exception' %}
-{% extends "@ContaoCore/Error/layout.html.twig" %}
-{% block title %}
-    {{ 'XPT.requestToken'|trans }}
-{% endblock %}
-{% block matter %}
-    <p>{{ 'XPT.invalidToken'|trans }}</p>
-{% endblock %}
-{% block howToFix %}
-    <p><a href="javascript:window.location.href=window.location.href" class="button">{{ 'XPT.tokenReload'|trans }}</a></p>
-    <p>{{ 'XPT.tokenRetry'|trans|raw }}</p>
-{% endblock %}
-{% block explain %}
-    <p>{{ 'XPT.tokenExplainOne'|trans|raw }}</p>
-    <p>{{ 'XPT.tokenExplainTwo'|trans(['https://to.contao.org/support'])|raw }}</p>
-{% endblock %}
+{% extends "@Contao/error/invalid_request_token.html.twig" %}
+
+{#
+    ! DEPRECATED !
+
+    The "@ContaoCore/error/invalid_request_token.html.twig" template will be removed in Contao 6.
+    Use the "@Contao/error/invalid_request_token.html.twig" template from the @Contao namespace instead.
+#}

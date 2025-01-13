@@ -25,7 +25,7 @@ export default class extends Controller {
         tinymce?.init(config).then((editors) => {
             this.editorId = editors[0]?.id;
 
-            // Fire a custom event when the editor finished intializing.
+            // Fire a custom event when the editor finished initializing.
             this.dispatch('editor-loaded', { detail: { content: editors[0] ?? null } });
         });
 
@@ -39,7 +39,7 @@ export default class extends Controller {
     leave(event) {
         const editor = tinymce?.get(this.editorId)
 
-        if(!editor || !editor.plugins.hasOwnProperty('autosave') || editor.isNotDirty) {
+        if (!editor || !editor.plugins.hasOwnProperty('autosave') || editor.isNotDirty) {
             return;
         }
 
@@ -47,7 +47,7 @@ export default class extends Controller {
         const delegate = document.createEvent('BeforeUnloadEvent');
         delegate.initEvent('beforeunload', false, true);
 
-        if(!window.dispatchEvent(delegate) && !confirm(delegate.returnValue)) {
+        if (!window.dispatchEvent(delegate) && !confirm(delegate.returnValue)) {
             event.preventDefault();
         }
     }
