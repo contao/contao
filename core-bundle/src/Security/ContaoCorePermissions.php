@@ -202,11 +202,11 @@ final class ContaoCorePermissions
     public const USER_CAN_DELETE_FORMS = 'contao_user.formp.delete';
 
     /**
-     * Access is granted if the current user is allowed to see a given search hit.
+     * Access is granted if the current user is allowed to see a given search document.
      *
      * @experimental
      */
-    public const USER_CAN_ACCESS_BACKEND_SEARCH_HIT = 'contao_backend_search.can_access_hit';
+    public const USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT = 'contao_backend_search.can_access_document';
 
     /**
      * Access is granted if the front end member is in at least one of the groups, or

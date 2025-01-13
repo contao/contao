@@ -189,6 +189,11 @@ class BackendSearch
         }
 
         $document = Document::fromArray(json_decode($document['document'], true, 512, JSON_THROW_ON_ERROR));
+
+        if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT, $document)) {
+            return null;
+        }
+
         $hit = $fileProvider->convertDocumentToHit($document);
 
         // The provider did not find any hit for it anymore so it must have been removed
@@ -196,10 +201,6 @@ class BackendSearch
         if (!$hit) {
             $this->deleteDocuments(new GroupedDocumentIds([$document->getType() => [$document->getId()]]));
 
-            return null;
-        }
-
-        if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_HIT, $hit)) {
             return null;
         }
 

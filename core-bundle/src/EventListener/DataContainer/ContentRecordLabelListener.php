@@ -40,9 +40,11 @@ class ContentRecordLabelListener
         $labelKey = "CTE.$type.0";
 
         if ($this->translator->getCatalogue()->has($labelKey, 'contao_default')) {
-            $event->setLabel($this->translator->trans($labelKey, [], 'contao_default'));
+            $label = $this->translator->trans($labelKey, [], 'contao_default');
         } else {
-            $event->setLabel($type);
+            $label = $type;
         }
+
+        $event->setLabel($label);
     }
 }
