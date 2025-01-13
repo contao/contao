@@ -29,6 +29,7 @@ use Twig\Environment;
 class DataContainerOperationsBuilder implements \Stringable
 {
     private int|string|null $id = null;
+
     private array|null $operations = null;
 
     public function __construct(
@@ -77,6 +78,7 @@ class DataContainerOperationsBuilder implements \Stringable
         }
 
         $builder = clone $this;
+        $builder->id = $id;
         $builder->operations = [];
 
         return $builder;
