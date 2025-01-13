@@ -195,7 +195,7 @@ class FormSelect extends Widget
 		// Chosen
 		if ($this->chosen)
 		{
-			$arrAttributes['data-controller'] = 'contao--chosen';
+			$strClass .= ' init-choices';
 		}
 
 		// Custom class

@@ -63,13 +63,6 @@
                             initializedRows.set(ntr, true);
                             tr.parentNode.insertBefore(ntr, tr.nextSibling);
 
-                            // Remove the ID of the select (used by Chosen)
-                            const select = ntr.querySelector('select.tl_select');
-                            select.removeAttribute('id');
-
-                            // Remove the existing Chosen container
-                            ntr.querySelector('.chzn-container').remove();
-
                             addEventsTo(ntr);
                             makeSortable(tbody);
                         });
@@ -166,9 +159,6 @@
             };
 
             select.addEventListener('change', updateLink);
-
-            // Backwards compatibility with MooTools "Chosen" script that fires non-native change event
-            select.addEvent('change', updateLink);
         };
 
         makeSortable(tbody);

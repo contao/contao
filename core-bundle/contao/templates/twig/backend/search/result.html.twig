@@ -2,7 +2,7 @@
 {% use "@Contao/component/_figure.html.twig" %}
 
 {% if hits is empty %}
-    <li class="search-message--empty">{{ 'MSC.searchResultsEmpty'|trans }}</li>
+    <li class="search-message--empty">{{ 'MSC.noResults'|trans }}</li>
 {% else %}
     {% for hit in hits %}
         <li class="tl_search_hit">
