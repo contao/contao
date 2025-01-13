@@ -20,7 +20,6 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\GroupedDocumentIds;
-use Contao\CoreBundle\Search\Backend\Hit;
 use Contao\CoreBundle\Search\Backend\Provider\FilesStorageProvider;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
@@ -178,25 +177,12 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             'files',
         );
 
-        $allowedHit = new Hit(
-            (new Document('', '', ''))->withMetadata(
-                ['path' => 'foo'],
-            ),
-            '',
-            '',
-        );
-
-        $disallowedHit = new Hit(
-            (new Document('', '', ''))->withMetadata(
-                ['path' => 'bar'],
-            ),
-            '',
-            '',
-        );
+        $allowedDocument = (new Document('', '', ''))->withMetadata(['path' => 'foo']);
+        $disallowedDocument = (new Document('', '', ''))->withMetadata(['path' => 'bar']);
 
         $token = $this->createMock(TokenInterface::class);
 
-        $this->assertTrue($provider->isHitGranted($token, $allowedHit));
-        $this->assertFalse($provider->isHitGranted($token, $disallowedHit));
+        $this->assertTrue($provider->isDocumentGranted($token, $allowedDocument));
+        $this->assertFalse($provider->isDocumentGranted($token, $disallowedDocument));
     }
 }
