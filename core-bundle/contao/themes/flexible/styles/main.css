@@ -3242,7 +3242,7 @@ fieldset.collapsed > legend:not(:has(> button)) {
 		width: 60%;
 	}
 
-  .passkeys .credential-list td.actions,
+	.passkeys .credential-list td.actions,
 	.passkeys .credential-list td.created {
 		width: auto;
 	}
