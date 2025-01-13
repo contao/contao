@@ -13,7 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Search\Backend\Provider;
 
 use Contao\CoreBundle\Config\ResourceFinder;
+use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\DataContainer\RecordLabeler;
+use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Event\FormatTableDataContainerDocumentEvent;
@@ -46,6 +48,7 @@ class TableDataContainerProvider implements ProviderInterface
         private readonly RecordLabeler $recordLabeler,
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
     ) {
     }
 
@@ -94,11 +97,21 @@ class TableDataContainerProvider implements ProviderInterface
             return null;
         }
 
-        // TODO: service for view and edit URLs
-        $viewUrl = 'https://todo.com?view='.$document->getId();
-        $editUrl = 'https://todo.com?edit='.$document->getId();
+        $table = $this->getTableFromDocument($document);
 
-        $title = $this->recordLabeler->getLabel(\sprintf('contao.db.%s.id', $this->getTableFromDocument($document)), $row);
+        try {
+            $editUrl = $this->dcaUrlAnalyzer->getEditUrl($table, (int) $document->getId());
+            $viewUrl = $this->dcaUrlAnalyzer->getViewUrl($table, (int) $document->getId());
+        } catch (AccessDeniedException) {
+            return null;
+        }
+
+        // No view URL for the entry could be found
+        if (null === $viewUrl) {
+            return null;
+        }
+
+        $title = $this->recordLabeler->getLabel(\sprintf('contao.db.%s.id', $table), $row);
 
         return (new Hit($document, $title, $viewUrl))
             ->withEditUrl($editUrl)

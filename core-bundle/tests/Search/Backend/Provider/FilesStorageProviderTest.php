@@ -27,6 +27,7 @@ use League\Flysystem\Config;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class FilesStorageProviderTest extends AbstractProviderTestCase
@@ -37,6 +38,8 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             $this->createMock(VirtualFilesystem::class),
             $this->createMock(Security::class),
             $this->createMock(Studio::class),
+            $this->createMock(RouterInterface::class),
+            'files',
         );
 
         $this->assertTrue($provider->supportsType(FilesStorageProvider::TYPE));
@@ -58,6 +61,8 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             $filesystem,
             $this->createMock(Security::class),
             $this->createMock(Studio::class),
+            $this->createMock(RouterInterface::class),
+            'files',
         );
 
         $documents = iterator_to_array($provider->updateIndex(new ReindexConfig()));
@@ -99,6 +104,8 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             $filesystem,
             $this->createMock(Security::class),
             $this->createMock(Studio::class),
+            $this->createMock(RouterInterface::class),
+            'files',
         );
 
         $since = new \DateTimeImmutable('1970-01-01 01:00:00');
@@ -137,6 +144,8 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             $filesystem,
             $this->createMock(Security::class),
             $this->createMock(Studio::class),
+            $this->createMock(RouterInterface::class),
+            'files',
         );
 
         $documents = iterator_to_array($provider->updateIndex((new ReindexConfig())->limitToDocumentIds(new GroupedDocumentIds([FilesStorageProvider::TYPE => ['bar']]))));
@@ -164,6 +173,8 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             $this->createMock(VirtualFilesystem::class),
             $security,
             $this->createMock(Studio::class),
+            $this->createMock(RouterInterface::class),
+            'files',
         );
 
         $allowedDocument = (new Document('', '', ''))->withMetadata(['path' => 'foo']);
