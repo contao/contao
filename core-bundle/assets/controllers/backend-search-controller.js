@@ -42,7 +42,7 @@ export default class BackendSearchController extends Controller {
         clearTimeout(this.timeout);
 
         this.timeout = setTimeout(() => {
-            this.loadResults()
+            this.loadResults();
         }, this.delayValue);
     }
 
@@ -52,17 +52,17 @@ export default class BackendSearchController extends Controller {
         fetch(this.searchRoute)
             .then(res=> {
                 if (!res.ok) {
-                    throw new Error(res.statusText)
+                    throw new Error(res.statusText);
                 }
 
-                return res.text()
+                return res.text();
             })
             .then(html => {
-                this.resultsTarget.innerHTML = html
-                this.setState("results")
+                this.resultsTarget.innerHTML = html;
+                this.setState("results");
             })
             .catch(e => {
-                this.setState("error")
+                this.setState("error");
             });
     }
 
@@ -93,7 +93,7 @@ export default class BackendSearchController extends Controller {
 
     setState(state) {
         BackendSearchController.classes.forEach(className => {
-            this.element.classList.toggle(this[`${className}Class`], className === state)
+            this.element.classList.toggle(this[`${className}Class`], className === state);
         });
     }
 
