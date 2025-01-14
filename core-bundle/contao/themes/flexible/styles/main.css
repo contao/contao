@@ -1611,6 +1611,10 @@ table.tl_listing {
 	padding-left: 5px;
 }
 
+.tl_content_right:has(.operations-menu.show) {
+	z-index: 2;
+}
+
 .cte_type {
 	margin: 0 0 4px;
 	font-size: .75rem;

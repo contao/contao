@@ -1,7 +1,7 @@
 {% trans_default_domain 'contao_default' %}
 {% set has_submenu = false %}
 
-<div class="operations">
+<div class="operations" data-action="contextmenu->contao--operations-menu#close:stop">
     <ul>
         {% for operation in operations %}
             {% if has_primary and not operation.primary|default(false) %}
