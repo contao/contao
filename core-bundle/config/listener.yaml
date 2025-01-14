@@ -152,6 +152,13 @@ services:
     contao.listener.data_container.legacy_gallery_palette:
         class: Contao\CoreBundle\EventListener\DataContainer\LegacyGalleryPaletteListener
 
+    contao.listener.data_container.legacy_templates:
+        class: Contao\CoreBundle\EventListener\DataContainer\LegacyTemplatesListener
+        arguments:
+            - '@contao.framework'
+            - '@translator'
+            - '@router'
+
     contao.listener.data_container.logout_page_redirect:
         class: Contao\CoreBundle\EventListener\DataContainer\LogoutPageRedirectListener
 

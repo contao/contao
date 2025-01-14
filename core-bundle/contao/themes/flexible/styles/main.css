@@ -584,10 +584,6 @@ h2.sub_headline {
 	color: var(--red);
 }
 
-.tl_gerror a, .tl_error a {
-	text-decoration: underline;
-}
-
 .tl_confirm, .tl_confirm a {
 	color: var(--green);
 }
@@ -598,6 +594,10 @@ h2.sub_headline {
 
 .tl_new, .tl_new a {
 	color: var(--orange);
+}
+
+.tl_gerror a, .tl_error a, .tl_confirm a, .tl_info a, .tl_new  {
+	text-decoration: underline;
 }
 
 .widget .tl_error, .widget .tl_confirm, .widget .tl_info, .widget .tl_new {
@@ -2965,6 +2965,7 @@ fieldset.collapsed > legend:not(:has(> button)) {
 
 #tl_maintenance_cache .tl_checkbox_container {
 	margin-top: 3px;
+	margin-bottom: 3px;
 }
 
 #tl_maintenance_cache .tl_checkbox_container label {
@@ -2976,6 +2977,10 @@ fieldset.collapsed > legend:not(:has(> button)) {
 	#tl_maintenance_cache .tl_checkbox_container label {
 		font-weight: 500;
 	}
+}
+
+#tl_maintenance_search .tl_submit_container {
+	margin-top: 10px;
 }
 
 /* Pagination */
