@@ -35,6 +35,7 @@
 	--panel-bg: #f3f3f5;
 	--tree-header: #f3f3f5;
 	--tree-header-border: #dddddf;
+	--tree-line: #ddd;
 	--form-text-disabled: #bbb;
 	--form-border: #aaa;
 	--form-border-disabled: #c8c8c8;
@@ -102,6 +103,7 @@ html[data-color-scheme="dark"] {
 	--panel-bg: #272a30;
 	--tree-header: #272a30;
 	--tree-header-border: #3f4146;
+	--tree-line: #30343b;
 	--form-text-disabled: #666;
 	--form-border: #44464b;
 	--form-border-disabled: #3a3c40;

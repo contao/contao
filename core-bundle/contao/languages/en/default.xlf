@@ -2240,14 +2240,20 @@
       <trans-unit id="MSC.searchResultsLoading">
         <source>Loading results...</source>
       </trans-unit>
-      <trans-unit id="MSC.searchResultsEmpty">
-        <source>No results found!</source>
-      </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
       </trans-unit>
       <trans-unit id="MSC.searchHitEdit">
         <source>Edit %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.noResults">
+        <source>No results found.</source>
+      </trans-unit>
+      <trans-unit id="MSC.noOptions">
+        <source>No options to choose from.</source>
+      </trans-unit>
+      <trans-unit id="MSC.removeItem">
+        <source>Remove item</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
