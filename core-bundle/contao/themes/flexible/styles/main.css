@@ -1407,7 +1407,6 @@ table.tl_listing {
 
 .tl_content .inside {
 	padding: var(--row-padding) 6px;
-	background-color: var(--content-bg);
 }
 
 .tl_content.draft .inside {
@@ -1538,7 +1537,7 @@ table.tl_listing {
 	background: var(--table-header);
 }
 
-.tl_right button, .tl_content_right button {
+.tl_right button, .tl_right_nowrap button, .tl_content_right button {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -1553,6 +1552,67 @@ table.tl_listing {
 
 .tl_right button img, .tl_content_right button img, .tl_right_nowrap button img {
 	margin-left: 0;
+}
+
+.operations > ul {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	gap: 3px;
+	list-style: none;
+	margin: 0;
+}
+
+.operations-menu-container {
+	position: relative;
+	align-items: center;
+}
+
+.operations-menu {
+	position: fixed;
+	right: 0;
+	z-index: 10;
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	margin: 0;
+	padding: 10px !important;
+	text-align: left;
+	background: var(--content-bg) !important;
+	border: 1px solid var(--content-border);
+	list-style: none;
+	visibility: hidden;
+	pointer-events: none;
+}
+
+.operations-menu.show {
+	visibility: visible;
+	pointer-events: auto;
+}
+
+.operations-menu li {
+	display: block !important;
+}
+
+.operations-menu a {
+	display: flex;
+	gap: 5px;
+	align-items: center;
+	white-space: nowrap;
+}
+
+.operations-menu .virtual-title a:after {
+	content: attr(title);
+	padding-left: 5px;
+}
+
+.operations-menu .virtual-title a[data-original-title]:after {
+	content: attr(data-original-title);
+	padding-left: 5px;
+}
+
+.tl_content_right:has(.operations-menu.show) {
+	z-index: 2;
 }
 
 .cte_type {
@@ -1734,7 +1794,8 @@ table.tl_listing {
 	background: linear-gradient(transparent, var(--content-bg) 60%);
 }
 
-[data-contao--limit-height-target][style*="max-height"]:hover .limit_toggler {
+[data-contao--limit-height-target][style*="max-height"]:hover .limit_toggler,
+[data-contao--limit-height-target][style*="max-height"].hover .limit_toggler {
 	background: linear-gradient(transparent, var(--hover-row) 60%);
 }
 
@@ -3079,7 +3140,6 @@ fieldset.collapsed > legend:not(:has(> button)) {
 		transition: transform .2s ease;
 		-webkit-transform: none;
 		transform: none;
-		will-change: transform;
 	}
 
 	.show-navigation #main {

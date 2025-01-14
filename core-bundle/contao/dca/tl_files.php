@@ -97,6 +97,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 				'prefetch'            => true,
 				'icon'                => 'edit.svg',
 				'attributes'          => 'data-contao--deeplink-target="primary"',
+				'primary'             => true,
 				'button_callback'     => array('tl_files', 'editFile')
 			),
 			'copy' => array
@@ -130,18 +131,21 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			(
 				'href'                => 'act=source',
 				'icon'                => 'editor.svg',
+				'primary'             => true,
 				'button_callback'     => array('tl_files', 'editSource')
 			),
 			'upload' => array
 			(
 				'href'                => 'act=move&amp;mode=2',
 				'icon'                => 'new.svg',
+				'primary'             => true,
 				'button_callback'     => array('tl_files', 'uploadFile')
 			),
 			'drag' => array
 			(
 				'icon'                => 'drag.svg',
 				'attributes'          => 'class="drag-handle" aria-hidden="true"',
+				'primary'             => true,
 				'button_callback'     => array('tl_files', 'dragFile')
 			)
 		)
