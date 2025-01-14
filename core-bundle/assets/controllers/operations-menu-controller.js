@@ -14,7 +14,7 @@ export default class extends Controller {
         }
 
         document.addEventListener('pointerdown', this.close);
-        this.controllerTarget?.addEventListener('pointerdown', () => { this.setFixedPosition() })
+        this.controllerTarget?.addEventListener('pointerdown', () => { this.setFixedPosition() });
 
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,

@@ -74,6 +74,7 @@ export default class extends Controller {
 
         if (!this.element.getAttribute('data-visited')) {
             this.element.setAttribute('data-visited', '1');
+
             this.$timer = setTimeout(() => {
                 this.element.removeAttribute('data-visited');
             }, 2000);
