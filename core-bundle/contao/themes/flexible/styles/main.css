@@ -1533,7 +1533,6 @@ table.tl_listing {
 	justify-content: flex-end;
 	align-items: center;
 	gap: 3px;
-	flex-wrap: wrap;
 	list-style: none;
 	margin: 0;
 }
