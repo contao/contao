@@ -83,11 +83,6 @@ export default class TooltipsController extends Controller {
 
     _showTooltip(el, delay = 0) {
         const options = this._getOptionsForElement(el);
-
-        if (options === null) {
-            return;
-        }
-
         let text;
 
         if (options.useContent) {
@@ -163,7 +158,7 @@ export default class TooltipsController extends Controller {
             }
         }
 
-        return null;
+        return {x: -9, y: 30};
     }
 
     /**
