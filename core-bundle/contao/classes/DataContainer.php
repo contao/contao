@@ -313,6 +313,12 @@ abstract class DataContainer extends Backend
 	private static $arrCurrentRecordCache = array();
 
 	/**
+	 * Current panel state
+	 * @var bool
+	 */
+	protected $panelActive = false;
+
+	/**
 	 * Set an object property
 	 *
 	 * @param string $strKey
@@ -1213,7 +1219,7 @@ abstract class DataContainer extends Backend
 				// Add the panel if it is not empty
 				if ($panel)
 				{
-					$panels = $panel . $panels;
+					$panels .= $panel;
 				}
 			}
 
@@ -1258,18 +1264,18 @@ abstract class DataContainer extends Backend
 				$submit = '
 <div class="tl_submit_panel tl_subpanel">
   <button name="filter" id="filter" class="tl_img_submit filter_apply" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['apply'] . '</button>
-  <button name="filter_reset" id="filter_reset" value="1" class="tl_img_submit filter_reset" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['resetTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['reset'] . '</button>
+  <button' . ($this->panelActive ? '' : ' disabled') . ' name="filter_reset" id="filter_reset" value="1" class="tl_img_submit filter_reset" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['resetTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['reset'] . '</button>
 </div>';
 			}
 
 			$return .= '
-<div class="tl_panel cf">
-  ' . $submit . $arrPanels[$i] . '
+<div class="tl_panel">
+  ' . $arrPanels[$i] . $submit . '
 </div>';
 		}
 
 		$return = '
-<form class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
+<form class="tl_form has-panels" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
 <div class="tl_formbody">
   <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
   <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
@@ -1688,5 +1694,15 @@ abstract class DataContainer extends Backend
 				unset(self::$arrCurrentRecordCache[$key]);
 			}
 		}
+	}
+
+	public function setPanelState(bool $state): void
+	{
+		if ($this->panelActive)
+		{
+			return;
+		}
+
+		$this->panelActive = $state;
 	}
 }

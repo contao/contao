@@ -120,6 +120,58 @@ class DcaUrlAnalyzer
         return array_reverse($links);
     }
 
+    public function getEditUrl(string $table, int $id): string|null
+    {
+        $do = $this->findModuleFromTableId($table, $id, null);
+
+        if (!$do) {
+            return null;
+        }
+
+        $query = [
+            'do' => $do,
+            'id' => $id,
+            'table' => $table,
+            'act' => 'edit',
+        ];
+
+        return $this->router->generate('contao_backend', $query);
+    }
+
+    public function getViewUrl(string $table, int $id): string|null
+    {
+        $do = $this->findModuleFromTableId($table, $id, null);
+
+        if (!$do) {
+            return null;
+        }
+
+        [$ptable, $pid] = $this->findParentFromRecord($table, $id) ?? [null, null];
+
+        $query = [
+            'do' => $do,
+            'table' => $table,
+            'ptable' => $ptable === $table ? $ptable : null,
+            'id' => $pid,
+        ];
+
+        (new DcaLoader($table))->load();
+        $currentRecord = $this->getCurrentRecord($id, $table);
+
+        // Select the parent node
+        if (
+            \in_array(
+                $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null,
+                [DataContainer::MODE_TREE_EXTENDED, DataContainer::MODE_TREE],
+                true,
+            )
+        ) {
+            $query['pn'] = (int) ($currentRecord['pid'] ?? null);
+        }
+
+        return $this->router->generate('contao_backend', $query);
+    }
+
     private function findGet(string $key): string|null
     {
         $value = $this->framework->getAdapter(Input::class)->findGet($key, $this->request);
@@ -254,6 +306,37 @@ class DcaUrlAnalyzer
         return $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null;
     }
 
+    /**
+     * @return array{string, int}|null
+     */
+    private function findParentFromRecord(string $table, int $id): array|null
+    {
+        (new DcaLoader($table))->load();
+
+        if (DataContainer::MODE_TREE_EXTENDED === $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode']) {
+            return null;
+        }
+
+        $currentRecord = $this->getCurrentRecord($id, $table);
+        $pid = (int) ($currentRecord['pid'] ?? null);
+
+        if (!$pid) {
+            return null;
+        }
+
+        if (!empty($currentRecord['ptable']) && ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null)) {
+            $ptable = (string) $currentRecord['ptable'];
+        } else {
+            $ptable = $GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null;
+        }
+
+        if (!$ptable) {
+            return null;
+        }
+
+        return [$ptable, $pid];
+    }
+
     private function findTrail(string $table, int $id): array
     {
         $currentRecord = $this->getCurrentRecord($id, $table);
@@ -285,5 +368,32 @@ class DcaUrlAnalyzer
             ->newInstanceWithoutConstructor()
             ->getCurrentRecord($id, $table)
         ;
+    }
+
+    private function findModuleFromTableId(string $table, int $id, array|null $filteredModules): string|null
+    {
+        $this->framework->initialize();
+
+        $modules = [];
+
+        foreach (null === $filteredModules ? $GLOBALS['BE_MOD'] : [$filteredModules] as $group) {
+            foreach ($group as $do => $module) {
+                if (\in_array($table, $module['tables'] ?? [], true)) {
+                    $modules[$do] = $module;
+                }
+            }
+        }
+
+        if (1 === \count($modules)) {
+            return array_keys($modules)[0];
+        }
+
+        $record = $this->getCurrentRecord($id, $table);
+
+        if (isset($record['ptable'], $record['pid'])) {
+            return $this->findModuleFromTableId($record['ptable'], (int) $record['pid'], $modules);
+        }
+
+        return array_keys($modules)[0] ?? null;
     }
 }
