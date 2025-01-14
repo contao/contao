@@ -5632,7 +5632,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$active = $limit != 'all' && $this->total > $resultsPerPage ? ' active' : '';
 
 			// Only disable reset button if it is not on the first page
-			if ($limit !== ('0,' . $resultsPerPage) && $limit !== null) {
+			if ($limit !== ('0,' . $resultsPerPage) && $limit !== null)
+			{
 				$this->setPanelState($active);
 			}
 
