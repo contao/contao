@@ -14,7 +14,7 @@ export default class extends Controller {
         }
 
         document.addEventListener('pointerdown', this.close);
-        this.controllerTarget?.addEventListener('pointerup', () => { this.setFixedPosition() })
+        this.controllerTarget?.addEventListener('pointerdown', () => { this.setFixedPosition() })
 
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,
@@ -55,29 +55,31 @@ export default class extends Controller {
 
     setFixedPosition (event) {
         const rect = this.menuTarget.getBoundingClientRect();
-        let x, y;
+        let x, y, offset = 0;
 
         if (event) {
             x = event.clientX;
             y = event.clientY;
         } else {
             const r = this.controllerTarget.getBoundingClientRect();
-            x = r.x + 20;
-            y = r.y + 20;
+            x = r.x;
+            y = r.y;
+            offset = 20;
         }
 
         this.menuTarget.style.position = 'fixed';
+        this.menuTarget.style.right = 'auto';
 
         if (window.innerHeight < y + rect.height) {
             this.menuTarget.style.top = `${y - rect.height}px`;
         } else {
-            this.menuTarget.style.top = `${y}px`;
+            this.menuTarget.style.top = `${y + offset}px`;
         }
 
-        if (window.innerWidth < window.scrollX + x + rect.width) {
-            this.menuTarget.style.left = `${window.scrollX + x - rect.width}px`;
+        if (window.innerWidth < x + rect.width) {
+            this.menuTarget.style.left = `${x - rect.width + offset}px`;
         } else {
-            this.menuTarget.style.left = `${window.scrollX + x}px`;
+            this.menuTarget.style.left = `${x + offset}px`;
         }
     }
 }

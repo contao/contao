@@ -1545,6 +1545,7 @@ table.tl_listing {
 
 .operations-menu {
 	position: fixed;
+	right: 0;
 	z-index: 10;
 	display: flex;
 	flex-direction: column;
@@ -3105,7 +3106,6 @@ fieldset.collapsed > legend:not(:has(> button)) {
 		transition: transform .2s ease;
 		-webkit-transform: none;
 		transform: none;
-		will-change: transform;
 	}
 
 	.show-navigation #main {

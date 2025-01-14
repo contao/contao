@@ -70,8 +70,13 @@ export default class extends Controller {
             return;
         }
 
+        clearTimeout(this.$timer);
+
         if (!this.element.getAttribute('data-visited')) {
             this.element.setAttribute('data-visited', '1');
+            this.$timer = setTimeout(() => {
+                this.element.removeAttribute('data-visited');
+            }, 2000);
         } else {
             this.element.removeAttribute('data-visited');
             Turbo.visit(this.primaryTarget.href);
@@ -91,6 +96,6 @@ export default class extends Controller {
     }
 
     isValid (element) {
-        return 'a' !== element.tagName && !element.closest('a');
+        return 'a' !== element.tagName && !element.closest('a, button');
     }
 }
