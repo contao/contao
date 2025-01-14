@@ -749,7 +749,7 @@ class tl_files extends Backend
 	 */
 	public function dragFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<button type="button" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon) . '</button> ' : ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<button type="button"' . $attributes . '>' . Image::getHtml($icon, $title) . '</button> ' : ' ';
 	}
 
 	/**
