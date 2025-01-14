@@ -23,8 +23,6 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Translation\TranslatorBagInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DcaUrlAnalyzer
 {
@@ -35,7 +33,6 @@ class DcaUrlAnalyzer
         private readonly RequestStack $requestStack,
         private readonly Security $securityHelper,
         private readonly RouterInterface $router,
-        private readonly TranslatorBagInterface&TranslatorInterface $translator,
         private readonly RecordLabeler $recordLabeler,
     ) {
     }

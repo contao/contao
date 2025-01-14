@@ -213,7 +213,6 @@ services:
             - '@request_stack'
             - '@security.helper'
             - '@router'
-            - '@contao.translation.translator'
             - '@contao.data_container.record_labeler'
 
     contao.data_container.operations_builder:
