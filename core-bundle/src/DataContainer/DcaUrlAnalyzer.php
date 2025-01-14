@@ -66,7 +66,7 @@ class DcaUrlAnalyzer
             return [
                 [
                     'url' => $this->router->generate('contao_backend', ['do' => $do, 'table' => $table]),
-                    'label' => $this->translator->trans("MOD.$do.0", [], 'contao_modules'),
+                    'label' => $this->recordLabeler->getLabel("contao.mod.$do", []),
                 ],
             ];
         }
@@ -114,7 +114,7 @@ class DcaUrlAnalyzer
 
         $links[] = [
             'url' => $this->router->generate('contao_backend', ['do' => $do, 'table' => $table]),
-            'label' => $this->translator->trans("MOD.$do.0", [], 'contao_modules'),
+            'label' => $this->recordLabeler->getLabel("contao.mod.$do", []),
         ];
 
         return array_reverse($links);
