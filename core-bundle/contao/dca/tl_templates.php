@@ -528,10 +528,10 @@ class tl_templates extends Backend
 	{
 		if ($this->isTwigFile($row))
 		{
-			return Image::getHtml($icon, $label);
+			return Image::getHtml($icon) . ' ';
 		}
 
-		return '<button type="button" ' . $attributes . '>' . Image::getHtml($icon, $label) . '</button> ';
+		return '<button type="button" ' . $attributes . '>' . Image::getHtml($icon, $title) . '</button> ';
 	}
 
 	/**
@@ -548,7 +548,7 @@ class tl_templates extends Backend
 	 */
 	public function copy($row, $href, $label, $title, $icon, $attributes)
 	{
-		return !$this->isTwigFile($row) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return !$this->isTwigFile($row) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -565,7 +565,7 @@ class tl_templates extends Backend
 	 */
 	public function cut($row, $href, $label, $title, $icon, $attributes)
 	{
-		return !$this->isTwigFile($row) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return !$this->isTwigFile($row) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**

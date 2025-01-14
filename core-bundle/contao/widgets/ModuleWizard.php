@@ -216,7 +216,7 @@ class ModuleWizard extends Widget
 				}
 				elseif ($button == 'drag')
 				{
-					$return .= ' <button type="button" class="drag-handle" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button>';
+					$return .= ' <button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', $GLOBALS['TL_LANG']['MSC']['move']) . '</button>';
 				}
 				elseif ($button == 'enable')
 				{
@@ -224,7 +224,7 @@ class ModuleWizard extends Widget
 				}
 				else
 				{
-					$return .= ' <button type="button" data-command="' . $button . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_' . $button]) . '">' . Image::getHtml($button . '.svg') . '</button>';
+					$return .= ' <button type="button" data-command="' . $button . '">' . Image::getHtml($button . '.svg', $GLOBALS['TL_LANG']['MSC']['mw_' . $button]) . '</button>';
 				}
 			}
 

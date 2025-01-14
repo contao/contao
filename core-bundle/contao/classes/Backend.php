@@ -843,7 +843,7 @@ abstract class Backend extends Controller
 	 */
 	public static function getTogglePasswordWizard($inputName)
 	{
-		return ' <button type="button" class="image-button" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['showPassword']) . '" id="pw_' . $inputName . '">' . Image::getHtml('visible.svg') . '</button>
+		return ' <button type="button" class="image-button" id="pw_' . $inputName . '">' . Image::getHtml('visible.svg', $GLOBALS['TL_LANG']['MSC']['showPassword']) . '</button>
   <script>
     $("pw_' . $inputName . '").addEvent("click", function(e) {
       e.preventDefault();

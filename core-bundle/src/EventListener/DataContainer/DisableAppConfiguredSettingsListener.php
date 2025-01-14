@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Image;
-use Contao\StringUtil;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AsCallback(table: 'tl_settings', target: 'config.onload')]
@@ -52,8 +51,8 @@ class DisableAppConfiguredSettingsListener
 
         return ' '.$adapter->getHtml(
             'info.svg',
-            StringUtil::specialchars($this->translator->trans('tl_settings.configuredInApp', [], 'contao_tl_settings')),
-            ' data-contao--tooltips-target="tooltip"',
+            $this->translator->trans('tl_settings.configuredInApp', [], 'contao_tl_settings'),
+            'data-contao--tooltips-target="tooltip"',
         );
     }
 }

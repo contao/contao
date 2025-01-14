@@ -594,7 +594,7 @@ abstract class DataContainer extends Backend
 				$strOnSelect = ",\n        onSelect: function() { Backend.autoSubmit(\"" . $this->strTable . "\"); }";
 			}
 
-			$wizard .= ' ' . Image::getHtml('assets/datepicker/images/icon.svg', '', 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['datepicker']) . '" id="toggle_' . $objWidget->id . '" style="cursor:pointer"') . '
+			$wizard .= ' ' . Image::getHtml('assets/datepicker/images/icon.svg', $GLOBALS['TL_LANG']['MSC']['datepicker'], 'id="toggle_' . $objWidget->id . '" style="cursor:pointer" data-contao--tooltips-target="tooltip"') . '
   <script>
     window.addEvent("domready", function() {
       new Picker.Date($("ctrl_' . $objWidget->id . '"), {
