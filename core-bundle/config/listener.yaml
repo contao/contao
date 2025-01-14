@@ -152,6 +152,13 @@ services:
     contao.listener.data_container.legacy_gallery_palette:
         class: Contao\CoreBundle\EventListener\DataContainer\LegacyGalleryPaletteListener
 
+    contao.listener.data_container.legacy_templates:
+        class: Contao\CoreBundle\EventListener\DataContainer\LegacyTemplatesListener
+        arguments:
+            - '@contao.framework'
+            - '@translator'
+            - '@router'
+
     contao.listener.data_container.logout_page_redirect:
         class: Contao\CoreBundle\EventListener\DataContainer\LogoutPageRedirectListener
 
@@ -349,16 +356,6 @@ services:
         arguments:
             - '@contao.routing.scope_matcher'
 
-    contao.listener.menu.backend:
-        class: Contao\CoreBundle\EventListener\Menu\BackendMenuListener
-        arguments:
-            - '@security.helper'
-            - '@router'
-            - '@request_stack'
-            - '@translator'
-            - '@contao.framework'
-            - '%contao.template_studio.enabled%'
-
     contao.listener.menu.backend_favorites:
         class: Contao\CoreBundle\EventListener\Menu\BackendFavoritesListener
         arguments:
@@ -369,6 +366,20 @@ services:
             - '@translator'
             - '@contao.csrf.token_manager'
 
+    contao.listener.menu.backend_header:
+        class: Contao\CoreBundle\EventListener\Menu\BackendHeaderListener
+        arguments:
+            - '@security.helper'
+            - '@router'
+            - '@request_stack'
+            - '@translator'
+            - '@contao.framework'
+
+    contao.listener.menu.backend_login:
+        class: Contao\CoreBundle\EventListener\Menu\BackendLoginListener
+        arguments:
+            - '@translator'
+
     contao.listener.menu.backend_logout:
         class: Contao\CoreBundle\EventListener\Menu\BackendLogoutListener
         arguments:
@@ -376,6 +387,13 @@ services:
             - '@router'
             - '@security.logout_url_generator'
             - '@translator'
+
+    contao.listener.menu.backend_main:
+        class: Contao\CoreBundle\EventListener\Menu\BackendMainListener
+        arguments:
+            - '@security.helper'
+            - '@request_stack'
+            - '%contao.template_studio.enabled%'
 
     contao.listener.menu.backend_preview:
         class: Contao\CoreBundle\EventListener\Menu\BackendPreviewListener

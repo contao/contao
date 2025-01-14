@@ -10,6 +10,7 @@
     .set('data-contao--backend-search-loading-class', 'search--loading')
     .set('data-contao--backend-search-invalid-class', 'search--invalid')
     .set('data-contao--backend-search-results-class', 'search--results')
+    .set('data-contao--backend-search-error-class', 'search--error')
     .set('data-contao--backend-search-route-value', path('contao_backend') ~ '/search?keywords=')
     .mergeWith(tabs_container_attributes|default)
 %}
@@ -26,7 +27,7 @@
 <div {{ search_container_attributes }}>
     <div class="backend-search_overlay"></div>
     <div class="backend-search_inner">
-        <label for="backend-search-input">
+        <label>
             <span class="invisible">{{ 'MSC.search'|trans }}</span>
             {{ backend_icon('search.svg') }}
             <input id="backend-search" type="text" {{ search_input_attributes }}>
@@ -35,6 +36,7 @@
             <span class="backend-search_message search-message--placeholder">{{ 'MSC.searchResultsPlaceholder'|trans }}</span>
             <span class="backend-search_message search-message--invalid">{{ 'MSC.searchResultsMin'|trans(['3']) }}</span>
             <span class="backend-search_message search-message--loading">{{ 'MSC.searchResultsLoading'|trans }}</span>
+            <span class="backend-search_message search-message--error">{{ 'ERR.general'|trans }}</span>
             <ul class="backend-search_results" data-contao--backend-search-target="results"></ul>
         </div>
     </div>

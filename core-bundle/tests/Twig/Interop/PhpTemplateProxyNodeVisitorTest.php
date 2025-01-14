@@ -20,8 +20,8 @@ use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Twig\Environment;
 use Twig\Node\BlockNode;
 use Twig\Node\BodyNode;
+use Twig\Node\EmptyNode;
 use Twig\Node\ModuleNode;
-use Twig\Node\Node;
 use Twig\NodeTraverser;
 use Twig\Source;
 
@@ -48,9 +48,9 @@ class PhpTemplateProxyNodeVisitorTest extends TestCase
         $module = new ModuleNode(
             new BodyNode(),
             null,
-            new Node(),
-            new Node(),
-            new Node(),
+            new EmptyNode(),
+            new EmptyNode(),
+            new EmptyNode(),
             null,
             new Source("a\n<?php invalid block\nb", '@Contao_Foo/foo.html5'),
         );

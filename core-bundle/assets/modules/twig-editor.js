@@ -106,7 +106,7 @@ export class TwigEditor {
                 ) {
                     const name = tokens[i + 4].value.replace(/["']/g, '');
 
-                    if (name.test(/^@Contao(_.+)?\//)) {
+                    if (/^@Contao(_.+)?\//.test(name)) {
                         references.push({name, row, column: tokens[i].start});
                     }
                 }
@@ -137,12 +137,22 @@ export class TwigEditor {
         return blocks;
     }
 
-    setAutoCompletionData(data) {
+    setAnnotationsData(data) {
         this.editor.completers = [{
             getCompletions: function(editor, session, pos, prefix, callback) {
-                callback(null, data);
+                callback(null, data.autocomplete);
             },
         }];
+
+        if ('error' in data) {
+            this.editor.getSession().setAnnotations([
+                {
+                    row: data.error.line - 1,
+                    type: data.error.type || 'error',
+                    text: ` ${data.error.message}`,
+                }
+            ]);
+        }
     }
 
     setColorScheme(mode) {

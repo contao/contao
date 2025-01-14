@@ -301,7 +301,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if (\in_array($act, array('create', 'cut', 'copy', 'cutAll', 'copyAll'), true))
 		{
 			// Mode “paste into”
-			if ($mode === '2')
+			if ($mode == self::PASTE_INTO)
 			{
 				return $pid;
 			}
@@ -725,7 +725,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Get the new position
-		$this->getNewPosition('new', Input::get('pid'), Input::get('mode') == '2');
+		$this->getNewPosition('new', Input::get('pid'), Input::get('mode') == self::PASTE_INTO);
 
 		// Dynamically set the parent table
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
@@ -833,7 +833,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$db = Database::getInstance();
 
 		// Get the new position
-		$this->getNewPosition('cut', Input::get('pid'), Input::get('mode') == '2');
+		$this->getNewPosition('cut', Input::get('pid'), Input::get('mode') == self::PASTE_INTO);
 
 		// Avoid circular references when there is no parent table
 		if (!$this->ptable && $db->fieldExists('pid', $this->strTable))
@@ -912,7 +912,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			Input::setGet('pid', $id);
-			Input::setGet('mode', 1);
+			Input::setGet('mode', DataContainer::PASTE_AFTER);
 		}
 
 		$this->redirect($this->getReferer());
@@ -994,7 +994,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Get the new position
-		$this->getNewPosition('copy', Input::get('pid'), Input::get('mode') == '2');
+		$this->getNewPosition('copy', Input::get('pid'), Input::get('mode') == self::PASTE_INTO);
 
 		// Dynamically set the parent table of tl_content
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
@@ -5357,10 +5357,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$active = isset($session['search'][$this->strTable]['value']) && (string) $session['search'][$this->strTable]['value'] !== '';
 
+		$this->setPanelState($active);
+
 		return '
 <div class="tl_search tl_subpanel">
 <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
-<select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '" data-controller="contao--chosen">
+<select name="tl_field" class="tl_select init-choices' . ($active ? ' active' : '') . '">
 ' . implode("\n", $options_sorter) . '
 </select>
 <span>=</span>
@@ -5495,7 +5497,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return '
 <div class="tl_sorting tl_subpanel">
 <strong>' . $GLOBALS['TL_LANG']['MSC']['sortBy'] . ':</strong>
-<select name="tl_sort" id="tl_sort" class="tl_select" data-controller="contao--chosen">
+<select name="tl_sort" id="tl_sort" class="tl_select init-choices">
 ' . implode("\n", $options_sorter) . '
 </select>
 </div>';
@@ -5624,9 +5626,20 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				return '';
 			}
 
+			$resultsPerPage = Config::get('resultsPerPage');
+
+			$limit = $session['filter'][$filter]['limit'] ?? null;
+			$active = $limit != 'all' && $this->total > $resultsPerPage ? ' active' : '';
+
+			// Only disable reset button if it is not on the first page
+			if ($limit !== ('0,' . $resultsPerPage) && $limit !== null)
+			{
+				$this->setPanelState($active);
+			}
+
 			$fields = '
-<select name="tl_limit" class="tl_select' . (($session['filter'][$filter]['limit'] ?? null) != 'all' && $this->total > Config::get('resultsPerPage') ? ' active' : '') . '" data-controller="contao--chosen" onchange="this.form.submit()">
-  <option value="tl_limit">' . $GLOBALS['TL_LANG']['MSC']['filterRecords'] . '</option>' . $options . '
+<select name="tl_limit" class="tl_select init-choices' . ($active ? ' active' : '') . '" onchange="this.form.submit()">
+  ' . $options . '
 </select> ';
 		}
 
@@ -5861,10 +5874,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				->prepare("SELECT DISTINCT " . $what . " FROM " . $this->strTable . ((\is_array($arrProcedure) && isset($arrProcedure[0])) ? ' WHERE ' . implode(' AND ', $arrProcedure) : ''))
 				->execute(...$arrValues);
 
+			$active = isset($session['filter'][$filter][$field]);
+
+			$this->setPanelState($active);
+
 			// Begin select menu
 			$fields .= '
-<select name="' . $field . '" id="' . $field . '" class="tl_select' . (isset($session['filter'][$filter][$field]) ? ' active' : '') . '" data-controller="contao--chosen">
-  <option value="tl_' . $field . '">' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) . '</option>
+<select name="' . $field . '" id="' . $field . '" class="tl_select init-choices' . ($active ? ' active' : '') . '" data-placeholder="' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) . '">
   <option value="tl_' . $field . '">---</option>';
 
 			if ($objFields->numRows)
@@ -6098,12 +6114,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// End select menu
 			$fields .= '
 </select> ';
-
-			// Force a line-break after six elements (see #3777)
-			if ((($cnt + 1) % 6) == 0)
-			{
-				$fields .= '<br>';
-			}
 		}
 
 		return '
