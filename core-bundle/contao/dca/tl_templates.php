@@ -13,7 +13,6 @@ use Contao\BackendTemplate;
 use Contao\Config;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Twig\Inspector\InspectionException;
 use Contao\DataContainer;
 use Contao\DC_Folder;
 use Contao\DiffRenderer;
@@ -28,7 +27,6 @@ use Contao\TemplateLoader;
 use Contao\Validator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Twig\Error\LoaderError;
 
 System::loadLanguageFile('tl_files');
 
@@ -39,7 +37,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 	(
 		'dataContainer'               => DC_Folder::class,
 		'uploadPath'                  => 'templates',
-		'editableFileTypes'           => 'html5,twig',
+		'editableFileTypes'           => 'html5',
 		'closed'                      => true,
 		'onload_callback' => array
 		(
@@ -72,6 +70,8 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
 				'attributes'          => 'data-action="contao--scroll-offset#store"',
+				// TODO: remove this again once #7854 has been fixed
+				'button_callback'     => array('tl_templates', 'copy')
 			),
 			'cut' => array
 			(
@@ -79,6 +79,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.svg',
 				'attributes'          => 'data-action="contao--scroll-offset#store"',
+				'button_callback'     => array('tl_templates', 'cut')
 			),
 			'delete',
 			'source' => array
@@ -223,25 +224,7 @@ class tl_templates extends Backend
 	public function addNewTemplate()
 	{
 		$arrAllTemplates = array();
-
-		// Add modern templates
 		$container = System::getContainer();
-		$chains = $container->get('contao.twig.filesystem_loader')->getInheritanceChains();
-
-		foreach ($chains as $identifier => $chain)
-		{
-			if (!str_contains($identifier, '/'))
-			{
-				continue;
-			}
-
-			$parts = explode('/', $identifier);
-			$rootCategory = array_shift($parts);
-
-			$arrAllTemplates[$rootCategory]["@Contao/$identifier.html.twig"] = sprintf('%s [%s.html.twig]', implode('/', $parts), $identifier);
-
-			ksort($arrAllTemplates[$rootCategory]);
-		}
 
 		$files = $container->get('contao.resource_finder')->findIn('templates')->files()->name('/\.html5$/');
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
@@ -273,44 +256,6 @@ class tl_templates extends Backend
 		// Handle creating a new template
 		if (Input::post('FORM_SUBMIT') == 'tl_create_template')
 		{
-			$createModernTemplate = static function (string $template, string $target) use ($container, &$strError): void {
-				$filesystem = new Filesystem();
-				$targetFile = Path::join($container->getParameter('kernel.project_dir'), $target, substr($template, 8));
-
-				if ($filesystem->exists($targetFile))
-				{
-					$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['exists'], $targetFile);
-
-					return;
-				}
-
-				try
-				{
-					$info = $container->get('contao.twig.inspector')->inspectTemplate($template);
-				}
-				catch (InspectionException $e)
-				{
-					if ($e->getPrevious() instanceof LoaderError)
-					{
-						throw new RuntimeException('Invalid template ' . $template);
-					}
-
-					$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['hasErrors'], $template, $e->getPrevious()->getMessage());
-
-					return;
-				}
-
-				$content = $container->get('twig')->render(
-					'@Contao/backend/template_skeleton.html.twig',
-					array(
-						'type' => str_starts_with($template, '@Contao/component') ? 'use' : 'extends',
-						'template' => $info,
-					)
-				);
-
-				$filesystem->dumpFile($targetFile, $content);
-			};
-
 			$createLegacyTemplate = static function (string $strOriginal, $strTarget) use (&$strError, $arrAllTemplates): void {
 				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
@@ -366,14 +311,7 @@ class tl_templates extends Backend
 
 			$strOriginal = Input::post('original', true);
 
-			if (str_starts_with($strOriginal, '@'))
-			{
-				$createModernTemplate($strOriginal, $strTarget);
-			}
-			else
-			{
-				$createLegacyTemplate($strOriginal, $strTarget);
-			}
+			$createLegacyTemplate($strOriginal, $strTarget);
 
 			if (!$strError)
 			{
@@ -586,7 +524,54 @@ class tl_templates extends Backend
 	 */
 	public function dragFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		return '<button type="button"' . $attributes . '>' . Image::getHtml($icon, $title) . '</button> ';
+		if ($this->isTwigFile($row))
+		{
+			return Image::getHtml($icon, $label);
+		}
+
+		return '<button type="button" ' . $attributes . '>' . Image::getHtml($icon, $label) . '</button> ';
+	}
+
+	/**
+	 * Return the copy button
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function copy($row, $href, $label, $title, $icon, $attributes)
+	{
+		return !$this->isTwigFile($row) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+	}
+
+	/**
+	 * Return the copy button
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function cut($row, $href, $label, $title, $icon, $attributes)
+	{
+		return !$this->isTwigFile($row) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+	}
+
+	/**
+	 * @param array $row
+	 */
+	private function isTwigFile($row): bool
+	{
+		return $row['type'] === 'file' && Path::getExtension($row['id']) === 'twig';
 	}
 
 	/**

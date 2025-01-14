@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Search\Backend\Provider;
 
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
-use Contao\CoreBundle\DataContainer\RecordLabeler;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Search\Backend\Document;
@@ -45,7 +44,6 @@ class TableDataContainerProvider implements ProviderInterface
         private readonly ContaoFramework $contaoFramework,
         private readonly ResourceFinder $resourceFinder,
         private readonly Connection $connection,
-        private readonly RecordLabeler $recordLabeler,
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
@@ -111,10 +109,12 @@ class TableDataContainerProvider implements ProviderInterface
             return null;
         }
 
-        $title = $this->recordLabeler->getLabel(\sprintf('contao.db.%s.id', $table), $row);
+        $trail = $this->dcaUrlAnalyzer->getTrail($editUrl);
+        $title = array_pop($trail)['label'];
 
         return (new Hit($document, $title, $viewUrl))
             ->withEditUrl($editUrl)
+            ->withBreadcrumbs($trail)
             ->withContext($document->getSearchableContent())
             ->withMetadata(['row' => $row]) // Used for permission checks in isHitGranted()
         ;
@@ -147,7 +147,7 @@ class TableDataContainerProvider implements ProviderInterface
 
         $row = $this->loadRow($this->getTableFromDocument($document), (int) $document->getId());
 
-        return $document->withMetadata(['row' => false === $row ? null : $row]);
+        return $document->withMetadata([...$document->getMetadata(), 'row' => false === $row ? null : $row]);
     }
 
     private function getTableFromDocument(Document $document): string

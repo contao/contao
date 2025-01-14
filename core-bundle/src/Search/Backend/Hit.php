@@ -13,6 +13,8 @@ final class Hit
 {
     private string|null $editUrl = null;
 
+    private array $breadcrumbs = [];
+
     private string|null $context = null;
 
     private FigureBuilder|null $imageFigureBuilder = null;
@@ -46,6 +48,11 @@ final class Hit
         return $this->editUrl;
     }
 
+    public function getBreadcrumbs(): array
+    {
+        return $this->breadcrumbs;
+    }
+
     public function getContext(): string|null
     {
         return $this->context;
@@ -65,6 +72,14 @@ final class Hit
     {
         $clone = clone $this;
         $clone->editUrl = $editUrl;
+
+        return $clone;
+    }
+
+    public function withBreadcrumbs(array $breadcrumbs): self
+    {
+        $clone = clone $this;
+        $clone->breadcrumbs = $breadcrumbs;
 
         return $clone;
     }
