@@ -69,6 +69,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			(
 				'href'                => 'key=su',
 				'icon'                => 'su.svg',
+				'primary'             => true,
 				'button_callback'     => array('tl_member', 'switchUser')
 			)
 		)
