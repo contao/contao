@@ -3,6 +3,7 @@ import {Controller} from "@hotwired/stimulus";
 export default class TooltipsController extends Controller {
     static defaultOptionsMap = {
         'a img[alt]': {x: -9, y: 30},
+        '.sgallery img[alt]': {x: 0, y: 75},
         'p.tl_tip': {x: 0, y: 23, useContent: true},
         '#home[title]': {x: 6, y: 42},
         '#tmenu a[title]': {x: 0, y: 42},
