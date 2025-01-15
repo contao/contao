@@ -2,9 +2,7 @@
 {% use "@Contao/component/_figure.html.twig" %}
 
 {% block content %}
-{% if images %}
-    {% set figure = images|first %}
-    {% set figure.linkHref = contao.page.alias|default != 'index' ? '/' : '' %}
-    {% with {figure} %}{{ block('figure_component') }}{% endwith %}
-{% endif %}
+    {% if images %}
+        {% with {figure: images|first} %}{{ block('figure_component') }}{% endwith %}
+    {% endif %}
 {% endblock %}
