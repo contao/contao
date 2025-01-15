@@ -177,6 +177,14 @@
         <source>Here you can select the allowed form field types.</source>
         <target>Buradan kullanılmasına izin verilecek form alanı türlerini seçebilirsiniz.</target>
       </trans-unit>
+      <trans-unit id="tl_user.frontendModules.0">
+        <source>Front end modules</source>
+        <target>Ön yüz modülleri</target>
+      </trans-unit>
+      <trans-unit id="tl_user.frontendModules.1">
+        <source>Here you can select the allowed front end module types.</source>
+        <target>Buradan kullanılmasına izin verilecek ön yüz modülü türlerini seçebilirsiniz.</target>
+      </trans-unit>
       <trans-unit id="tl_user.pagemounts.0">
         <source>Pagemounts</source>
         <target>Sayfa bağlantıları</target>
@@ -363,7 +371,7 @@
       </trans-unit>
       <trans-unit id="tl_user.useTwoFactor">
         <source>Use two-factor authentication</source>
-        <target>İki aşamalı kimlik doğrulama kullanılsın</target>
+        <target>İki adımlı doğrulama kullanılsın</target>
       </trans-unit>
       <trans-unit id="tl_user.new.0">
         <source>New</source>

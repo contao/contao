@@ -209,6 +209,42 @@
         <source>Synchronize the file system and the database</source>
         <target>ファイルシステムとデータベースを同期</target>
       </trans-unit>
+      <trans-unit id="tl_files.textTrackLanguage.0">
+        <source>Language</source>
+        <target>言語</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackLanguage.1">
+        <source>Please select the language of the file.</source>
+        <target>このファイルの言語を選択してください。</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackType.0">
+        <source>Track type</source>
+        <target>テキストトラックの種類</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackType.1">
+        <source>Here you can select the type of text track.</source>
+        <target>テキストトラックの種類を選択できます。</target>
+      </trans-unit>
+      <trans-unit id="tl_files.captions">
+        <source>Closed captions</source>
+        <target>字幕</target>
+      </trans-unit>
+      <trans-unit id="tl_files.descriptions">
+        <source>Audio descriptions</source>
+        <target>音声付き解説</target>
+      </trans-unit>
+      <trans-unit id="tl_files.subtitles">
+        <source>Subtitles</source>
+        <target>副題</target>
+      </trans-unit>
+      <trans-unit id="tl_files.chapters">
+        <source>Chapters</source>
+        <target>チャプター</target>
+      </trans-unit>
+      <trans-unit id="tl_files.metadata">
+        <source>Metadata</source>
+        <target>メタデータ</target>
+      </trans-unit>
       <trans-unit id="tl_files.show">
         <source>Show the details of file or folder &quot;%s&quot;</source>
         <target>&quot;%s&quot;というファイルまたはフォルダーの詳細</target>

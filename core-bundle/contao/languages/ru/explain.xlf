@@ -14,8 +14,8 @@
         <target>Вставка тегов</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.1.1">
-        <source>For more information about insert tags, see &lt;a href=&quot;https://docs.contao.org/dev/framework/insert-tags/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt;.</source>
-        <target>Для получения дополнительной информации о вставке тегов, см. &lt;a href=&quot;https://docs.contao.org/dev/framework/insert-tags/&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://docs.contao.org/dev/framework/insert-tags/&lt;/a&gt;.</target>
+        <source>For more information about insert tags, see the &lt;a href=&quot;https://to.contao.org/docs/insert-tags?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
+        <target>Для получения дополнительной информации о вставке тегов см. &lt;a href=&quot;https://to.contao.org/docs/insert-tags?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Инструкцию Contao&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.2.0">
         <source>Code editor</source>
@@ -30,8 +30,8 @@
         <target>Маркдаун (Markdown)</target>
       </trans-unit>
       <trans-unit id="XPL.insertTags.3.1">
-        <source>To learn more about markdown, see the &lt;a href=&quot;https://docs.contao.org/manual/en/article-management/content-elements/text-elements/#markdown&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
-        <target>Для получения дополнительной информации о markdown см. &lt;a href=&quot;https://docs.contao.org/manual/en/article-management/content-elements/text-elements/#markdown&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Инструкцию Contao&lt;/a&gt;.</target>
+        <source>To learn more about markdown, see the &lt;a href=&quot;https://to.contao.org/docs/markdown?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt;.</source>
+        <target>Для получения дополнительной информации о markdown см. &lt;a href=&quot;https://to.contao.org/docs/markdown?lang=en&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Инструкцию Contao&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="XPL.dateFormat.0.0">
         <source>colspan</source>
@@ -112,6 +112,14 @@
       <trans-unit id="XPL.imageSizeDensities.1.1">
         <source>If the sizes attribute is not defined, this setting simply defines the pixel densities you want to support. The dimensions of the images are adjusted automatically. E.g. &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 1x, img-b.jpg 1.5x, img-c.jpg 2x&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;If the sizes attribute is defined, the same image sizes are generated but width descriptors are used for the srcset attribute. E.g. a 200 pixel wide image with the densities &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;For more information about the srcset attribute please visit &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-srcset&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt;.</source>
         <target>Если атрибут размеры (sizes) не определен, этот параметр просто определяет плотность пикселей, которую вы хотите поддерживать. Размеры изображений корректируются автоматически. Напр. &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; создает следующий HTML-код: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 1x, img-b.jpg 1.5x, img-c.jpg 2x&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;Если атрибут размеры (sizes) определен, генерируются те же размеры изображения, но для атрибута srcset используются дескрипторы ширины. Напр. изображение шириной 200 пикселей с плотностью &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; создает следующий HTML-код: &lt;code&gt;&amp;lt;img srcset=&quot;img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w&quot;&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;Для получения дополнительной информации о атрибуте srcset, посетите &lt;a href=&quot;https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-srcset&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;w3.org&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPL.autocomplete.0.0">
+        <source>Autocomplete attributes</source>
+        <target>Атрибуты автозаполнения</target>
+      </trans-unit>
+      <trans-unit id="XPL.autocomplete.0.1">
+        <source>For more information about autocomplete attributes, see &lt;a href=&quot;https://www.w3.org/TR/WCAG21/#input-purposes&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.w3.org/TR/WCAG21/#input-purposes&lt;/a&gt;.</source>
+        <target>Для получения дополнительной информации об атрибутах автозаполнения см. &lt;a href=&quot;https://www.w3.org/TR/WCAG21/#input-purposes&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;https://www.w3.org/TR/WCAG21/#input-purposes&lt;/a&gt;.</target>
       </trans-unit>
     </body>
   </file>

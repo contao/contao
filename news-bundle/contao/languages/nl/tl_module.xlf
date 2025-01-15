@@ -73,6 +73,18 @@
         <source>Show the number of news items of each month.</source>
         <target>Toon het aantal nieuwsberichten per maand.</target>
       </trans-unit>
+      <trans-unit id="tl_module.news_keepCanonical.0">
+        <source>Use the current URL for canonical links</source>
+        <target>Gebruik de huidige URL voor canonieke links</target>
+      </trans-unit>
+      <trans-unit id="tl_module.news_keepCanonical.1">
+        <source>Keep the current URL instead of the configured reader page for canonical links.</source>
+        <target>Behoud de huidige URL in plaats van de geconfigureerde lezerpagina voor canonieke links.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.news_overview_legend">
+        <source>Overview page</source>
+        <target>Overzichtspagina</target>
+      </trans-unit>
       <trans-unit id="tl_module.news_day">
         <source>Day</source>
         <target>Dag</target>

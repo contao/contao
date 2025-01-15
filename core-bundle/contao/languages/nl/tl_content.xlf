@@ -17,6 +17,14 @@
         <source>Here you can add a headline to the content element.</source>
         <target>Als u een hoofdtitel opgeeft zal die weergegeven worden bovenaan het inhoudselement.</target>
       </trans-unit>
+      <trans-unit id="tl_content.sectionHeadline.0">
+        <source>Section headline</source>
+        <target>Accordeon titel</target>
+      </trans-unit>
+      <trans-unit id="tl_content.sectionHeadline.1">
+        <source>Here you can add a section headline, e.g. a tab title or accordion header.</source>
+        <target>Hier kunt u een sectiekop toevoegen, b.v. een tabbladtitel of accordeonkop.</target>
+      </trans-unit>
       <trans-unit id="tl_content.text.0">
         <source>Text</source>
         <target>Tekst</target>
@@ -209,6 +217,14 @@
         <source>Please choose the sort order.</source>
         <target>Kies de sorteervolgorde.</target>
       </trans-unit>
+      <trans-unit id="tl_content.closeSections.0">
+        <source>Close all sections</source>
+        <target>Sluit alle secties</target>
+      </trans-unit>
+      <trans-unit id="tl_content.closeSections.1">
+        <source>Do not open the first section by default.</source>
+        <target>Open standaard niet de eerste sectie.</target>
+      </trans-unit>
       <trans-unit id="tl_content.mooType.0">
         <source>Operation mode</source>
         <target>Bedrijfsmodus</target>
@@ -310,8 +326,8 @@
         <target>Templategegevens</target>
       </trans-unit>
       <trans-unit id="tl_content.data.1">
-        <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
-        <target>Deze waarden zijn beschikbaar als &lt;code&gt;$this-&gt;data&lt;/code&gt; in de template.</target>
+        <source>These values are available as &lt;code&gt;$this-&gt;keys&lt;/code&gt; in the template.</source>
+        <target>Deze waarden zijn beschikbaar als &lt;code&gt;$this-&gt;keys&lt;/code&gt; in de template.</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
@@ -323,9 +339,11 @@
       </trans-unit>
       <trans-unit id="tl_content.overwriteLink.0">
         <source>Overwrite link</source>
+        <target>Link overschrijven</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteLink.1">
         <source>Set a custom link text and link title.</source>
+        <target>Stel een aangepaste linktekst en linktitel in.</target>
       </trans-unit>
       <trans-unit id="tl_content.titleText.0">
         <source>Link title</source>
@@ -365,7 +383,7 @@
       </trans-unit>
       <trans-unit id="tl_content.multiSRC.1">
         <source>Please select one or more files or folders from the files directory. If you select a folder, its files will be included automatically.</source>
-        <target>Selecteer een of meerdere bestanden of mappen (bestanden in een map worden automatisch geselecteerd).</target>
+        <target>Selecteer een of meer bestanden of mappen uit de bestandendirectory. Als u een map selecteert, worden de bestanden automatisch opgenomen.</target>
       </trans-unit>
       <trans-unit id="tl_content.useHomeDir.0">
         <source>Use home directory</source>
@@ -431,6 +449,14 @@
         <source>Here you can add the video/audio file or multiple files if you are using different codecs.</source>
         <target>Hier kunt u het video/audio-bestand of meerdere bestanden toevoegen als u gebruik maakt van verschillende codecs.</target>
       </trans-unit>
+      <trans-unit id="tl_content.textTrackSRC.0">
+        <source>Text track files</source>
+        <target>Teksttrack bestanden</target>
+      </trans-unit>
+      <trans-unit id="tl_content.textTrackSRC.1">
+        <source>The topmost .vtt file is loaded as the default track. Additional settings can be made within the .vtt file.</source>
+        <target>Het bovenste .vtt-bestand wordt geladen als de standaardtrack. Extra instellingen kunnen worden gemaakt binnen het .vtt-bestand.</target>
+      </trans-unit>
       <trans-unit id="tl_content.youtube.0">
         <source>YouTube ID</source>
         <target>YouTube ID</target>
@@ -494,6 +520,14 @@
       <trans-unit id="tl_content.playerStop.1">
         <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
         <target>Stopt het afspelen van de video met het opgegeven aantal seconden. Stel in op 0 om dit uit te schakelen.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerTitle.0">
+        <source>Title</source>
+        <target>Titel</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerTitle.1">
+        <source>Here you can enter a title.</source>
+        <target>Hier kunt u een titel invoeren.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerCaption.0">
         <source>Caption</source>
@@ -621,7 +655,7 @@
       </trans-unit>
       <trans-unit id="tl_content.cssID.1">
         <source>Here you can set an ID and one or more classes.</source>
-        <target>Hier kunt u een style sheet ID (id attribute) en een of meerdere style sheet classes opgeven.</target>
+        <target>Hier kunt u een ID en een of meerdere classes opgeven.</target>
       </trans-unit>
       <trans-unit id="tl_content.invisible.0">
         <source>Invisible</source>
@@ -647,9 +681,21 @@
         <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</target>
       </trans-unit>
+      <trans-unit id="tl_content.tstamp.0">
+        <source>Revision date</source>
+        <target>Datum van aanpassing</target>
+      </trans-unit>
+      <trans-unit id="tl_content.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Datum en tijdstip van de laatste aanpassing.</target>
+      </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
         <target>Element type</target>
+      </trans-unit>
+      <trans-unit id="tl_content.section_legend">
+        <source>Section settings</source>
+        <target>Sectie instellingen</target>
       </trans-unit>
       <trans-unit id="tl_content.text_legend">
         <source>Text/HTML/Code</source>
@@ -688,6 +734,10 @@
         <target>Sorteer opties</target>
       </trans-unit>
       <trans-unit id="tl_content.moo_legend">
+        <source>Accordion settings</source>
+        <target>Accordeon instellingen</target>
+      </trans-unit>
+      <trans-unit id="tl_content.accordion_legend">
         <source>Accordion settings</source>
         <target>Accordeon instellingen</target>
       </trans-unit>
@@ -730,6 +780,10 @@
       <trans-unit id="tl_content.poster_legend">
         <source>Preview image</source>
         <target>Voorbeeld afbeelding</target>
+      </trans-unit>
+      <trans-unit id="tl_content.texttrack_legend">
+        <source>Text tracks</source>
+        <target>Teksttracks</target>
       </trans-unit>
       <trans-unit id="tl_content.invisible_legend">
         <source>Visibility</source>
@@ -938,6 +992,22 @@
       <trans-unit id="tl_content.table.1">
         <source>Import table items from a CSV file</source>
         <target>Importeer tabel items van een CSV bestand</target>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_label.0">
+        <source>Description list items</source>
+        <target>Beschrijving lijstitems</target>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_label.1">
+        <source>Please enter a list of terms and details for the description list. You can leave the term field empty to create multiple details for one term.</source>
+        <target>Voer een lijst met termen en details in voor de beschrijvingslijst. U kunt het termveld leeg laten om meerdere details voor één term aan te maken.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_key">
+        <source>Term</source>
+        <target>Term</target>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_value">
+        <source>Details</source>
+        <target>Details</target>
       </trans-unit>
     </body>
   </file>

@@ -1,0 +1,218 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_image_size.php" source-language="en" target-language="fa">
+    <body>
+      <trans-unit id="tl_image_size.name.0">
+        <source>Name</source>
+        <target>نام</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.name.1">
+        <source>Please enter the image size name.</source>
+        <target>لطفا نام اندازه تصویر را وارد نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.width.0">
+        <source>Width</source>
+        <target>عرض</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.width.1">
+        <source>Here you can enter the width in pixels.</source>
+        <target>اینجا می‌توانید عرض را به پیکسل وارد نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.height.0">
+        <source>Height</source>
+        <target>ارتفاع</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.height.1">
+        <source>Here you can enter the height in pixels.</source>
+        <target>اینجا می‌توانید ارتفاع را به پیکسل وارد نمایید.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.resizeMode.0">
+        <source>Resize mode</source>
+        <target>روش تغییر اندازه</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.resizeMode.1">
+        <source>Only applicable if width and height are specified.</source>
+        <target>فقط زمانی که عرض و ارتفاع مشخص شده باشند قابل استفاده است.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.zoom.0">
+        <source>Zoom</source>
+        <target>بزرگنمایی</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.zoom.1">
+        <source>0 = the whole image is visible, 100 = only the important part of the image is visible.</source>
+        <target>0 = همه تصویر قابل مشاهده است، 100 = فقط قسمت مهم تصویر قابل مشاهده است.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.sizes.0">
+        <source>Sizes attribute</source>
+        <target>ویژگی اندازه‌ها</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.sizes.1">
+        <source>Here you can define the intended layout width of the image, the actual size should be defined via CSS. Example: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</source>
+        <target>اینجا می‌توانید عرض چیدمان موردنظر تصویر را تعریف کنید، اندازه‌ی واقعی باید از طریق CSS تعریف شود. مثال: &lt;em&gt;(max-width: 600px) 100vw, 50vw&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.densities.0">
+        <source>Pixel densities/scale factors</source>
+        <target>چگالی‌های پیکسل/عامل‌های مقیاس</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.densities.1">
+        <source>Here you can define the pixel densities (e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;) or width descriptors (e.g. &lt;em&gt;100w, 200w&lt;/em&gt;).</source>
+        <target>اینجا می‌توانید چگالی پیکسل را تعریف کنید (مثلا &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;) یا توصیف‌کننده‌های عرض (مثلا &lt;em&gt;100w, 200w&lt;/em&gt;).</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.cssClass.0">
+        <source>CSS classes</source>
+        <target>کلاسی‌های CSS</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.cssClass.1">
+        <source>The CSS classes will be added to the image tag.</source>
+        <target>کلاس‌های CSS به برچسب تصویر اضافه خواهند شد.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.formats.0">
+        <source>Convert image formats</source>
+        <target>تبدیل فرمت‌های تصویر</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.formats.1">
+        <source>Here you can select which image formats shall be converted.</source>
+        <target>اینجا می‌توانید فرمت‌های تصویر که باید تبدیل شوند را انتخاب کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.formatsNotSupported">
+        <source>The following formats are not supported on your server: %s</source>
+        <target>فرمت‌های ذیل در سرور شما پشتیبانی نمی‌شوند: %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadata.0">
+        <source>Preserve copyright metadata</source>
+        <target>ابرداده کپی‌رایت را حفظ کنید</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadata.1">
+        <source>Preserve copyright-related metadata fields (EXIF, IPTC, XMP).</source>
+        <target>فیلدهای فراداده مربوط به کپی‌رایت (EXIF، IPTC، XMP) را حفظ کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataFields.0">
+        <source>Metadata fields</source>
+        <target>فیلدهای فراداده</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataFields.1">
+        <source>Please select the metadata fields to preserve.</source>
+        <target>لطفاً فیلدهای فراداده را برای حفظ انتخاب کنید.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.skipIfDimensionsMatch.0">
+        <source>Use original image if dimensions match</source>
+        <target>استفاده از تصویر اصلی وقتی ابعاد مطابقت داشته باشد</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.skipIfDimensionsMatch.1">
+        <source>Note that no optimizations such as metadata stripping or JPEG compression will be applied in this case.</source>
+        <target>توجه داشته باشید که در این حالت هیچ بهینه‌سازی مانند حذف فراداده یا فشرده‌سازی JPEG اعمال نخواهد شد.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.imageQuality.0">
+        <source>Image quality</source>
+        <target>کیفیت تصویر</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.imageQuality.1">
+        <source>Here you can set the image compression quality between 0 (lowest quality) and 100 (highest quality). Leave blank to use the system default.</source>
+        <target>در اینجا می‌توانید کیفیت فشرده‌سازی تصویر را بین 0 (کمترین کیفیت) و 100 (بالاترین کیفیت) تنظیم کنید. برای استفاده از پیش‌فرض سیستم، آن را خالی بگذارید.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.lazyLoading.0">
+        <source>Enable lazy loading</source>
+        <target>فعال کردن lazy loading</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.lazyLoading.1">
+        <source>Defer loading the image until it is scrolled into the viewport.</source>
+        <target>بارگذاری تصویر را تا زمانی که به نمای‌دید اسکرول شود به تاخیر می‌اندازد.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.tstamp.0">
+        <source>Revision date</source>
+        <target>تاریخ بازنگری</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>تاریخ و ساعت آخرین بازنگری</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.title_legend">
+        <source>Image size settings</source>
+        <target>تنظیمات اندازه تصویر</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.source_legend">
+        <source>Image source settings</source>
+        <target>تنظیمات منبع تصویر</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.loading_legend">
+        <source>Loading options</source>
+        <target>گزینه‌های بارگذاری</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.metadata_legend">
+        <source>Metadata settings</source>
+        <target>تنظیمات فراداده</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.expert_legend">
+        <source>Expert settings</source>
+        <target>تنطیمات پیشرفته</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.proportional.0">
+        <source>Proportional</source>
+        <target>متناسب</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.proportional.1">
+        <source>The longer side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
+        <target>ضلع بزرگ‌تر تصویر به اندازه داده شده تنظیم شده و تصویر به صورت متناسب تغییر خواهد کرد.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.box.0">
+        <source>Fit the box</source>
+        <target>تطبیق با جعبه</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.box.1">
+        <source>The image will be resized proportionally so that neither side exceeds any of the given dimensions. This is similar to the &lt;em&gt;contain&lt;/em&gt; value in CSS.</source>
+        <target>اندازه تصویر به طور متناسب تغییر خواهد کرد به طوری که هیچ یک از طرفین از هیچ یک از ابعاد داده‌شده تجاوز نکند. این شبیه به مقدار &lt;em&gt;contain&lt;/em&gt; در CSS است.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.crop.0">
+        <source>Crop</source>
+        <target>کوتاه کردن</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.crop.1">
+        <source>The image will be resized to the exact dimensions given, cropping the image if necessary while preserving the important part if specified. This is similar to the &lt;em&gt;cover&lt;/em&gt; value in CSS.</source>
+        <target>اندازه تصویر به ابعاد دقیق داده‌شده تغییر می‌کند، در صورت لزوم تصویر را برش می‌دهد و در صورت مشخص شدن قسمت مهم را حفظ می‌کند. این شبیه به مقدار &lt;em&gt;cover&lt;/em&gt; در CSS است.</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataOptions.default">
+        <source>Use default settings</source>
+        <target>استفاده از تنظیمات پیش‌فرض</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataOptions.overwrite">
+        <source>Select custom metadata fields</source>
+        <target>فیلدهای سفارشی فراداده را انتخاب کنید</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.preserveMetadataOptions.delete">
+        <source>Remove all metadata fields</source>
+        <target>حذف کردن همه فیلدها فراداده</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.new.0">
+        <source>New</source>
+        <target>جدید</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.new.1">
+        <source>Create a new image size</source>
+        <target>ایجاد یک اندازه تصویر جدید</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.show">
+        <source>Show the details of image size ID %s</source>
+        <target>نمایش جزئیات اندازه تصویر شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.edit">
+        <source>Edit image size ID %s</source>
+        <target>ویرایش اندازه تصویر شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.children">
+        <source>Edit the media queries of image size ID %s</source>
+        <target>ویرایش مدیا کوئری‌های اندازه تصویر شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.cut">
+        <source>Move image size ID %s</source>
+        <target>جابجایی اندازه تصویر شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.copy">
+        <source>Duplicate image size ID %s</source>
+        <target>تکثیر اندازه تصویر شناسه %s</target>
+      </trans-unit>
+      <trans-unit id="tl_image_size.delete">
+        <source>Delete image size ID %s</source>
+        <target>حذف اندازه تصویر شناسه %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

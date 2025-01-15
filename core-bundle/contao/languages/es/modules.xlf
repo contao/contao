@@ -163,9 +163,11 @@
       </trans-unit>
       <trans-unit id="MOD.favorites.0">
         <source>Favorites</source>
+        <target>Favoritos</target>
       </trans-unit>
       <trans-unit id="MOD.favorites.1">
         <source>Manage your back end menu favorites</source>
+        <target>Administre los favoritos de su menú back-end</target>
       </trans-unit>
       <trans-unit id="MOD.tl_content">
         <source>Content elements</source>
@@ -405,6 +407,7 @@
       </trans-unit>
       <trans-unit id="FMD.rssReader.0">
         <source>RSS reader (deprecated)</source>
+        <target>Lector de RSS (obsoleto)</target>
       </trans-unit>
       <trans-unit id="FMD.rssReader.1">
         <source>Adds an RSS feed to the page</source>
@@ -412,9 +415,11 @@
       </trans-unit>
       <trans-unit id="FMD.feed_reader.0">
         <source>Feed reader</source>
+        <target>Lector de noticias</target>
       </trans-unit>
       <trans-unit id="FMD.feed_reader.1">
         <source>Adds an RSS, Atom or JSON feed to the page</source>
+        <target>Agrega una fuente RSS, Atom o JSON a la página</target>
       </trans-unit>
       <trans-unit id="FMD.two_factor.0">
         <source>Two-factor authentication</source>

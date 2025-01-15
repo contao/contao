@@ -17,6 +17,14 @@
         <source>Here you can add a headline to the content element.</source>
         <target>Jeśli wprowadzisz nagłówek, będzie on widoczny na górze zawartości elementu.</target>
       </trans-unit>
+      <trans-unit id="tl_content.sectionHeadline.0">
+        <source>Section headline</source>
+        <target>Nagłówek rozwinięcia</target>
+      </trans-unit>
+      <trans-unit id="tl_content.sectionHeadline.1">
+        <source>Here you can add a section headline, e.g. a tab title or accordion header.</source>
+        <target>Tutaj możesz dodać nagłówek sekcji, np. tytuł zakładki lub nagłówek akordeonu.</target>
+      </trans-unit>
       <trans-unit id="tl_content.text.0">
         <source>Text</source>
         <target>Tekst</target>
@@ -167,6 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_content.thead.1">
         <source>Make the first row the table header.</source>
+        <target>Ustaw pierwszy wiersz jako nagłówek tabeli.</target>
       </trans-unit>
       <trans-unit id="tl_content.tfoot.0">
         <source>Add table footer</source>
@@ -174,6 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_content.tfoot.1">
         <source>Make the last row the table footer.</source>
+        <target>Ustaw ostatni wiersz jako stopkę tabeli.</target>
       </trans-unit>
       <trans-unit id="tl_content.tleft.0">
         <source>Use row headers</source>
@@ -206,6 +216,14 @@
       <trans-unit id="tl_content.sortOrder.1">
         <source>Please choose the sort order.</source>
         <target>Wybierz rodzaj sortowania.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.closeSections.0">
+        <source>Close all sections</source>
+        <target>Zamknij wszystkie sekcje</target>
+      </trans-unit>
+      <trans-unit id="tl_content.closeSections.1">
+        <source>Do not open the first section by default.</source>
+        <target>Nie otwieraj domyślnie pierwszej sekcji.</target>
       </trans-unit>
       <trans-unit id="tl_content.mooType.0">
         <source>Operation mode</source>
@@ -308,8 +326,8 @@
         <target>Dane szablonu</target>
       </trans-unit>
       <trans-unit id="tl_content.data.1">
-        <source>These values are available as &lt;code&gt;$this-&gt;data&lt;/code&gt; in the template.</source>
-        <target>Te wartości są dostępne jako &lt;code&gt;$this-&gt;data&lt;/code&gt; w szablonie.</target>
+        <source>These values are available as &lt;code&gt;$this-&gt;keys&lt;/code&gt; in the template.</source>
+        <target>Te wartości są dostępne jako &lt;code&gt;$this-&gt;keys&lt;/code&gt; w szablonie.</target>
       </trans-unit>
       <trans-unit id="tl_content.linkTitle.0">
         <source>Link text</source>
@@ -321,9 +339,11 @@
       </trans-unit>
       <trans-unit id="tl_content.overwriteLink.0">
         <source>Overwrite link</source>
+        <target>Nadpisz link</target>
       </trans-unit>
       <trans-unit id="tl_content.overwriteLink.1">
         <source>Set a custom link text and link title.</source>
+        <target>Ustaw niestandardowy tekst linku i tytuł linku.</target>
       </trans-unit>
       <trans-unit id="tl_content.titleText.0">
         <source>Link title</source>
@@ -429,6 +449,12 @@
         <source>Here you can add the video/audio file or multiple files if you are using different codecs.</source>
         <target>Tutaj możesz dodać plik video/audio lub kilka plików, jeśli używasz różnych kodeków.</target>
       </trans-unit>
+      <trans-unit id="tl_content.textTrackSRC.0">
+        <source>Text track files</source>
+      </trans-unit>
+      <trans-unit id="tl_content.textTrackSRC.1">
+        <source>The topmost .vtt file is loaded as the default track. Additional settings can be made within the .vtt file.</source>
+      </trans-unit>
       <trans-unit id="tl_content.youtube.0">
         <source>YouTube ID</source>
         <target>YouTube ID</target>
@@ -492,6 +518,13 @@
       <trans-unit id="tl_content.playerStop.1">
         <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
         <target>Zatrzymaj odtwarzanie wideo przy określonej liczbie sekund. Ustaw na 0, aby wyłączyć.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerTitle.0">
+        <source>Title</source>
+        <target>Nagłówek</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerTitle.1">
+        <source>Here you can enter a title.</source>
       </trans-unit>
       <trans-unit id="tl_content.playerCaption.0">
         <source>Caption</source>
@@ -635,6 +668,7 @@
       </trans-unit>
       <trans-unit id="tl_content.start.1">
         <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Jeśli chcesz zapobiec wyświetlaniu elementu na stronie internetowej przed określoną datą/czasem, możesz to wpisać tutaj. W przeciwnym razie pozostaw pole puste.</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
@@ -642,10 +676,23 @@
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
         <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Jeśli chcesz zapobiec wyświetlaniu elementu na stronie po określonej dacie/czasie, możesz wpisać to tutaj. W przeciwnym razie pozostaw pole puste.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.tstamp.0">
+        <source>Revision date</source>
+        <target>Data rewizji</target>
+      </trans-unit>
+      <trans-unit id="tl_content.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Data i czas ostatniej rewizji</target>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
         <target>Typ elementu</target>
+      </trans-unit>
+      <trans-unit id="tl_content.section_legend">
+        <source>Section settings</source>
+        <target>Ustawienia sekcji</target>
       </trans-unit>
       <trans-unit id="tl_content.text_legend">
         <source>Text/HTML/Code</source>
@@ -684,6 +731,10 @@
         <target>Opcje sortowania</target>
       </trans-unit>
       <trans-unit id="tl_content.moo_legend">
+        <source>Accordion settings</source>
+        <target>Ustawienia rozwijania</target>
+      </trans-unit>
+      <trans-unit id="tl_content.accordion_legend">
         <source>Accordion settings</source>
         <target>Ustawienia rozwijania</target>
       </trans-unit>
@@ -726,6 +777,9 @@
       <trans-unit id="tl_content.poster_legend">
         <source>Preview image</source>
         <target>Obrazek poglądowy</target>
+      </trans-unit>
+      <trans-unit id="tl_content.texttrack_legend">
+        <source>Text tracks</source>
       </trans-unit>
       <trans-unit id="tl_content.invisible_legend">
         <source>Visibility</source>
@@ -897,12 +951,15 @@
       </trans-unit>
       <trans-unit id="tl_content.toggle.0">
         <source>Hide/unhide content element</source>
+        <target>Ukryj/pokaż element treści</target>
       </trans-unit>
       <trans-unit id="tl_content.toggle.1">
         <source>Hide content element ID %s</source>
+        <target>Ukryj element treści ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.toggle.2">
         <source>Unhide content element ID %s</source>
+        <target>Pokaż element treści ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>
@@ -931,6 +988,22 @@
       <trans-unit id="tl_content.table.1">
         <source>Import table items from a CSV file</source>
         <target>Import elementów tabeli z pliku CSV</target>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_label.0">
+        <source>Description list items</source>
+        <target>Elementy listy opisowej</target>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_label.1">
+        <source>Please enter a list of terms and details for the description list. You can leave the term field empty to create multiple details for one term.</source>
+        <target>Proszę wprowadzić listę terminów i szczegółów dla listy opisowej. Możesz pozostawić pole terminu puste, aby utworzyć wiele szczegółów dla jednego terminu.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_key">
+        <source>Term</source>
+        <target>Termin</target>
+      </trans-unit>
+      <trans-unit id="tl_content.dl_value">
+        <source>Details</source>
+        <target>Szczegóły</target>
       </trans-unit>
     </body>
   </file>

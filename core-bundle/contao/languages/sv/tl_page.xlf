@@ -70,8 +70,8 @@
         <target>Robot-tag</target>
       </trans-unit>
       <trans-unit id="tl_page.robots.1">
-        <source>Here you can define how search engines handle the page.</source>
-        <target>Här kan du specificera hur sökmotorer ska hantera sidan.</target>
+        <source>Here you can define how search engines handle the page. The setting also determines whether the page appears in the &lt;code&gt;sitemap.xml&lt;/code&gt; file or not.</source>
+        <target>Här kan du definiera hur sökmotorer ska hantera sidan. Inställningen avgör också om sidan ska visas i filen &lt;code&gt;sitemap.xml&lt;/code&gt; eller inte.</target>
       </trans-unit>
       <trans-unit id="tl_page.maintenanceMode.0">
         <source>Maintenance mode</source>
@@ -99,9 +99,11 @@
       </trans-unit>
       <trans-unit id="tl_page.alwaysForward.0">
         <source>Always redirect</source>
+        <target>Omdirigera alltid</target>
       </trans-unit>
       <trans-unit id="tl_page.alwaysForward.1">
         <source>Redirect to the target page even if there are query or path parameters.</source>
+        <target>Omdirigera till målsidan även om det finns fråge- eller sökvägsparametrar.</target>
       </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
@@ -471,6 +473,38 @@
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
         <target>Välj den sida till vilken medlemmarna kommer att omdirigeras för att ställa in tvåfaktorautentisering.</target>
       </trans-unit>
+      <trans-unit id="tl_page.enableCsp.0">
+        <source>Enable CSP</source>
+        <target>Aktivera CSP</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCsp.1">
+        <source>Enable Content Security Policy for this website.</source>
+        <target>Aktivera säkerhetspolicy för innehåll för denna webbplats.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.0">
+        <source>Content Security Policy</source>
+        <target>Policy för innehållssäkerhet</target>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.1">
+        <source>Here you can enter custom Content Security Policy directives.</source>
+        <target>Här kan du ange anpassade direktiv för säkerhetspolicy för innehåll.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.0">
+        <source>Reporting only</source>
+        <target>Endast rapportering</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.1">
+        <source>Only report policy violations without enforcing them.</source>
+        <target>Rapportera endast policyöverträdelser utan att verkställa dem.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.0">
+        <source>Enable report logging</source>
+        <target>Aktivera loggning av rapporter</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.1">
+        <source>Log CSP violations to the Contao system log.</source>
+        <target>Logga överträdelser av CSP i Contaos systemlogg.</target>
+      </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
         <target>Namn och typ</target>
@@ -551,6 +585,10 @@
         <source>Two-factor authentication</source>
         <target>Tvåfaktorautentisering</target>
       </trans-unit>
+      <trans-unit id="tl_page.csp_legend">
+        <source>Content Security Policy</source>
+        <target>Policy för innehållssäkerhet</target>
+      </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
         <target>301 Permanent omdirigering</target>
@@ -599,7 +637,7 @@
         <source>Duplicate page ID %s</source>
         <target>Kopiera sidan med ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.copyChilds">
+      <trans-unit id="tl_page.copyChildren">
         <source>Duplicate page ID %s with its subpages</source>
         <target>Kopiera sidan med ID %s tillsammans med ev. undersidor</target>
       </trans-unit>

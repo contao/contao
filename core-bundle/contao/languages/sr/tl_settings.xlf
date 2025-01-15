@@ -1,0 +1,206 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_settings.php" source-language="en" target-language="sr">
+    <body>
+      <trans-unit id="tl_settings.adminEmail.0">
+        <source>E-mail address of the system administrator</source>
+        <target>Имејл адреса администратора система</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.adminEmail.1">
+        <source>This e-mail address will be used to send and receive system messages.</source>
+        <target>Ова имејл адреса че бити кориштена за слање и примање системских порука. </target>
+      </trans-unit>
+      <trans-unit id="tl_settings.dateFormat.0">
+        <source>Date format</source>
+        <target>Формат датума</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.dateFormat.1">
+        <source>The date format string will be parsed with the PHP date() function.</source>
+        <target>Формат датума биће прослеђен преко функције PHP date().</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.timeFormat.0">
+        <source>Time format</source>
+        <target>Формат времена</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.timeFormat.1">
+        <source>The time format string will be parsed with the PHP date() function.</source>
+        <target>Формат времена биће прослеђен преко функције PHP date().</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.datimFormat.0">
+        <source>Date and time format</source>
+        <target>Формат датума и времена</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.datimFormat.1">
+        <source>The date and time format string will be parsed with the PHP date() function.</source>
+        <target>Формат датума и времена биће прослеђен преко функције PHP date().</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.timeZone.0">
+        <source>Time zone</source>
+        <target>Временска зона</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.timeZone.1">
+        <source>Please select the server time zone.</source>
+        <target>Изаберите временску зону сервера.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.resultsPerPage.0">
+        <source>Items per page</source>
+        <target>Ставки по страници</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.resultsPerPage.1">
+        <source>Here you can define the number of items per page in the back end.</source>
+        <target>Овде можете дефинисати број ставки по страници у БекЕнду.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.maxResultsPerPage.0">
+        <source>Maximum items per page</source>
+        <target>Максималан број ставки по страници</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.maxResultsPerPage.1">
+        <source>This overall limit takes effect if a user chooses the &quot;show all records&quot; option.</source>
+        <target>Овај лимит постаје битан ако корисник изабере опцију &quot;прикажи све записе&quot;.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedTags.0">
+        <source>Allowed HTML tags</source>
+        <target>Дозвољени HTML тагови</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedTags.1">
+        <source>Here you can enter a list of allowed HTML tags that will not be stripped.</source>
+        <target>Унесите листу дозвољених HTML тагова. Сви остали тагови ће бити избрисани из уноса корисника.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedAttributes.0">
+        <source>Allowed HTML attributes</source>
+        <target>Дозвољени HTML атрибути</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedAttributes.1">
+        <source>List of allowed HTML attributes that will not be stripped. The tag or attribute name &lt;code&gt;*&lt;/code&gt; stands for all tags or attributes. Wildcards can be used for attributes with dashes like &lt;code&gt;data-*&lt;/code&gt;.</source>
+        <target>Листа дозвољених HTML атрибута који неће бити уклољени. Ако поставите звездицу са &lt;code&gt;*&lt;/code&gt;, то ће подразумевати све тагове или атрибуте. Џокери могу да се користе уз атрибуте употребом цртице као у примеру  &lt;code&gt;data-*&lt;/code&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedAttributesWarning">
+        <source>Allowing &lt;code&gt;*&lt;/code&gt; attributes can be exploited for XSS attacks. Only do this if all backend users are trusted!</source>
+        <target>Дозвољавање &lt;code&gt;*&lt;/code&gt; атрибута може да доведе до напада искориштавањем XSS-а. Ово одобрите само ако су сви Бек Енд корисници поуздани!</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedDownload.0">
+        <source>Download file types</source>
+        <target>Дозвољене врсте фајлова који се могу преузимати</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.allowedDownload.1">
+        <source>Here you can enter a comma separated list of downloadable file types.</source>
+        <target>Овде можете унети, запетом раздвојене, врсте фајлова који ће моћи да се преузму са сајта.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.uploadTypes.0">
+        <source>Upload file types</source>
+        <target>Подешавање постављања фајлова</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.uploadTypes.1">
+        <source>Here you can enter a comma separated list of uploadable file types.</source>
+        <target>Овде можете унети, запетом раздвојене, врсте фајлова које ће моћи да се копирају на сервер.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.maxFileSize.0">
+        <source>Maximum upload file size</source>
+        <target>Максимална величина фајла који се копира на сервер</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.maxFileSize.1">
+        <source>Here you can enter the maximum upload file size in bytes (1 MB = 1000 kB = 1000000 byte).</source>
+        <target>Овде можете унети максималну величину фајла који се копира на сервер у бајтима (1 MB = 1000 kB = 1000000 бајтова).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.imageWidth.0">
+        <source>Maximum image width</source>
+        <target>Максимална ширина слике</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.imageWidth.1">
+        <source>Here you can enter the maximum width for image uploads in pixels.</source>
+        <target>Овде можете унети максималну ширину слике, у пикселима, која се копира на сервер.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.imageHeight.0">
+        <source>Maximum image height</source>
+        <target>Максимална висина слике</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.imageHeight.1">
+        <source>Here you can enter the maximum height for image uploads in pixels.</source>
+        <target>Овде можете унети максималну висину слике, у пикселима, која се копира на сервер</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.undoPeriod.0">
+        <source>Storage time for undo steps</source>
+        <target>Време чувања измена</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.undoPeriod.1">
+        <source>Here you can enter the storage time for undo steps in seconds (24 hours = 86400 seconds).</source>
+        <target>Овде можете унети време чувања измена, а које је могуће накнадно опозвати  (24 часа = 86400 секунди).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.versionPeriod.0">
+        <source>Storage time for versions</source>
+        <target>Време чувања верзија</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.versionPeriod.1">
+        <source>Here you can enter the storage time for different versions of a record in seconds (90 days = 7776000 seconds).</source>
+        <target>Овде можете унети време чувања различитих верзија записа  (90 дана = 7776000 секунди).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.logPeriod.0">
+        <source>Storage time for log entries</source>
+        <target>Време чувања записа дневника</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.logPeriod.1">
+        <source>Here you can enter the storage time for log entries in seconds (14 days = 1209600 seconds).</source>
+        <target>Овде можете унети време чувања записа дневника (14 дана = 1209600 секунди).</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.defaultUser.0">
+        <source>Default page owner</source>
+        <target>Подразумевани власник странице</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.defaultUser.1">
+        <source>Here you can select a user as the default owner of a page.</source>
+        <target>Овде можете одабрати подразумеваног власника странице.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.defaultGroup.0">
+        <source>Default page group</source>
+        <target>Подразумевана група странице</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.defaultGroup.1">
+        <source>Here you can select a user group as the default owner of a page.</source>
+        <target>Овде можете изабрати корисничку групу као подразумеваног корисника странице.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.defaultChmod.0">
+        <source>Default access rights</source>
+        <target>Подразумевана права приступа</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.defaultChmod.1">
+        <source>Please assign the default access rights for pages and articles.</source>
+        <target>Доделите подразумевана права приступа страницама и чланцима.</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.date_legend">
+        <source>Date and time</source>
+        <target>Датум и време</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.global_legend">
+        <source>Global configuration</source>
+        <target>Глобална подешавања</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.backend_legend">
+        <source>Back end configuration</source>
+        <target>Конфигурација БекЕнда</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.security_legend">
+        <source>Security settings</source>
+        <target>Подешавања сигурности</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.files_legend">
+        <source>Files and images</source>
+        <target>Фајлови и слике</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.uploads_legend">
+        <source>Upload settings</source>
+        <target>Подешавања фајлова који се копирају на сервер</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.timeout_legend">
+        <source>Timeout values</source>
+        <target>Вредности тајмаута</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.chmod_legend">
+        <source>Default access rights</source>
+        <target>Подразумевана права приступа</target>
+      </trans-unit>
+      <trans-unit id="tl_settings.configuredInApp">
+        <source>This setting has been defined in the app configuration and cannot be changed here anymore.</source>
+        <target>Ово подешавање је дефинисано у конфигурацији апликације и више се не може променити на овом месту.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

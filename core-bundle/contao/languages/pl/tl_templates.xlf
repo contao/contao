@@ -73,6 +73,9 @@
         <source>Compare &quot;%s&quot; with another template</source>
         <target>Porównaj &quot;%s&quot; z innym szablonem</target>
       </trans-unit>
+      <trans-unit id="tl_templates.twig_studio_hint">
+        <source>If you want to create or edit Twig templates, use the %s instead.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

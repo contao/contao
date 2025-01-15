@@ -67,7 +67,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.addEnclosure.0">
         <source>Add enclosures</source>
-        <target>Dosya ekle</target>
+        <target>Zarflar ekle</target>
       </trans-unit>
       <trans-unit id="tl_faq.addEnclosure.1">
         <source>Add one or more downloadable files to the FAQ.</source>
@@ -75,19 +75,11 @@
       </trans-unit>
       <trans-unit id="tl_faq.enclosure.0">
         <source>Enclosures</source>
-        <target>Dosyalar</target>
+        <target>Zarflar</target>
       </trans-unit>
       <trans-unit id="tl_faq.enclosure.1">
         <source>Please choose the files you want to attach.</source>
         <target>Eklemek istediğiniz dosyaları seçin</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.noComments.0">
-        <source>Disable comments</source>
-        <target>Yorum yapılamasın</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.noComments.1">
-        <source>Do not allow comments for this particular FAQ.</source>
-        <target>Bu seçenek etkinleştirildiğinde, bu SSS ögesine yorum yapılamaz.</target>
       </trans-unit>
       <trans-unit id="tl_faq.published.0">
         <source>Publish the FAQ</source>
@@ -115,11 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.enclosure_legend">
         <source>Enclosures</source>
-        <target>Dosyalar</target>
-      </trans-unit>
-      <trans-unit id="tl_faq.expert_legend">
-        <source>Expert settings</source>
-        <target>Uzman ayarları</target>
+        <target>Zarflar</target>
       </trans-unit>
       <trans-unit id="tl_faq.publish_legend">
         <source>Publish settings</source>
@@ -155,7 +143,7 @@
       </trans-unit>
       <trans-unit id="tl_faq.toggle.0">
         <source>Publish/unpublish question</source>
-        <target>Soruyu yayınla/yayınlama</target>
+        <target>Soruyu yayınla/yayından kaldır</target>
       </trans-unit>
       <trans-unit id="tl_faq.toggle.1">
         <source>Unpublish question ID %s</source>

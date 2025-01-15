@@ -17,6 +17,14 @@
         <source>The newsletter alias is a unique reference to the newsletter which can be called instead of its numeric ID.</source>
         <target>Un alias de boletín es una referencia única al boletín que puede utilizarse para llamarlo en vez de su ID.</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.preheader.0">
+        <source>Preheader text</source>
+        <target>Texto previo al encabezado</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.preheader.1">
+        <source>Here you can enter a preheader text. A preheader text should be between 40-130 characters long.</source>
+        <target>Aquí puede ingresar un texto previo al encabezado. El texto previo al encabezado debe tener entre 40 y 130 caracteres.</target>
+      </trans-unit>
       <trans-unit id="tl_newsletter.content.0">
         <source>HTML content</source>
         <target>Contenido</target>
@@ -163,6 +171,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.sentOn">
         <source>Sent at %s</source>
+        <target>Enviado a %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.notSent">
         <source>Not sent yet</source>

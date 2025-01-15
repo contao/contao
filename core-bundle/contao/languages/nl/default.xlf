@@ -373,6 +373,38 @@
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
         <target>Er is geen beheerder e-mailadres ingesteld, neem contact op met de sitebeheerder.</target>
       </trans-unit>
+      <trans-unit id="ERR.altchaJavaScriptRequired">
+        <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.</source>
+        <target>JavaScript is momenteel uitgeschakeld of geblokkeerd. Zonder JavaScript werkt de anti spam verificatie niet. Schakel JavaScript tijdelijk in om het formulier in te dienen.</target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaVerificationFailed">
+        <source>Anti-spam verification failed. Are you a human or a robot?</source>
+        <target>Anti spam verificatie mislukt. Bent u een mens of een robot?</target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaWidgetError">
+        <source>Verification failed. Try again later.</source>
+        <target>Verificatie mislukt. Probeer het later opnieuw.</target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaInsecureConnection">
+        <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
+        <target>ALTCHA is niet beschikbaar zonder een beveiligde HTTPS-verbinding. Als uw productiewebsite geen HTTPS gebruikt (niet aanbevolen), gebruik dan de beveiligingsvraag.</target>
+      </trans-unit>
+      <trans-unit id="ERR.personalDataPassword">
+        <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
+        <target>Er is minstens één &quot;persoonlijke gegevens&quot; module die het mogelijk maakt om het wachtwoord te veranderen. Dit is een beveiligingszwakte en zal niet meer werken in Contao 6. Gebruik in plaats daarvan de &quot;wijzig wachtwoord&quot; module.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeysUnsupported">
+        <source>Passkeys are not supported on this device.</source>
+        <target>Passkeys worden niet ondersteund op dit apparaat.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAssertionFailure">
+        <source>Login with passkey failed.</source>
+        <target>Inloggen met passkey mislukt.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAttestationFailure">
+        <source>Passkey could not be created.</source>
+        <target>Passkey kon niet aangemaakt worden.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Tel %d en %d bij elkaar op.</target>
@@ -433,6 +465,14 @@
         <source>Generates an ordered or unordered list.</source>
         <target>Maakt een geordende of ongeordende lijst.</target>
       </trans-unit>
+      <trans-unit id="CTE.description_list.0">
+        <source>Description list</source>
+        <target>Beschrijving lijst</target>
+      </trans-unit>
+      <trans-unit id="CTE.description_list.1">
+        <source>Generates a description list with terms and details.</source>
+        <target>Genereert een beschrijvingslijst met termen en details.</target>
+      </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
         <target>Tabel</target>
@@ -441,29 +481,41 @@
         <source>Generates an optionally sortable table.</source>
         <target>Maakt een tabel, die optioneel gesorteerd kan worden.</target>
       </trans-unit>
-      <trans-unit id="CTE.accordion">
+      <trans-unit id="CTE.accordion.0">
         <source>Accordion</source>
         <target>Accordeon</target>
       </trans-unit>
+      <trans-unit id="CTE.accordion.1">
+        <source>Generates an accordion.</source>
+        <target>Genereert een accordeon</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.0">
+        <source>Element group</source>
+        <target>Element groep</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.1">
+        <source>Generates a group of nested elements.</source>
+        <target>Genereert een groep geneste elementen.</target>
+      </trans-unit>
       <trans-unit id="CTE.accordionStart.0">
-        <source>Wrapper start</source>
-        <target>Wrapper start</target>
+        <source>Accordion wrapper start</source>
+        <target>Accordion-wrapper starten</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.1">
         <source>Generates the opening part of the accordion wrapper.</source>
         <target>Markeert het beginnende gedeelte van de accordeon wrapper.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.0">
-        <source>Wrapper stop</source>
-        <target>Wrapper stop</target>
+        <source>Accordion wrapper stop</source>
+        <target>Accordion-wrapper stoppen</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.1">
         <source>Generates the closing part of the accordion wrapper.</source>
         <target>Markeert het afsluitende gedeelte van de accordeon wrapper.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.0">
-        <source>Single element</source>
-        <target>Enkel element</target>
+        <source>Accordion single element</source>
+        <target>Enkel Accordeon element</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.1">
         <source>Generates a single accordion element.</source>
@@ -493,21 +545,29 @@
         <source>Generates an element to insert a custom template.</source>
         <target>Genereert een element om een aangepaste sjabloon in te voegen.</target>
       </trans-unit>
+      <trans-unit id="CTE.swiper.0">
+        <source>Content slider</source>
+        <target>Content slider</target>
+      </trans-unit>
+      <trans-unit id="CTE.swiper.1">
+        <source>Generates a content slider element.</source>
+        <target>Genereert een content slider element.</target>
+      </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
         <target>Content slider</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.0">
-        <source>Wrapper start</source>
-        <target>Wrapper start</target>
+        <source>Slider wrapper start</source>
+        <target>Slider-wrapper starten</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.1">
         <source>Generates the opening part of the slider wrapper.</source>
         <target>Markeert het beginnende gedeelte van de slider wrapper.</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.0">
-        <source>Wrapper stop</source>
-        <target>Wrapper stop</target>
+        <source>Slider wrapper stop</source>
+        <target>Slider-wrapper stoppen</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.1">
         <source>Generates the closing part of the slider wrapper.</source>
@@ -641,6 +701,10 @@
         <source>Displays the teaser text of an article.</source>
         <target>Toont de teaser tekst van een artikel.</target>
       </trans-unit>
+      <trans-unit id="CTE.legacy">
+        <source>Legacy elements</source>
+        <target>Legacy elementen</target>
+      </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
         <target>Toelichting</target>
@@ -744,6 +808,14 @@
       <trans-unit id="FFL.hidden.1">
         <source>A single-line input field that is not visible in the form.</source>
         <target>Eenregelig invoerveld dat niet zichtbaar is in het formulier.</target>
+      </trans-unit>
+      <trans-unit id="FFL.altcha.0">
+        <source>ALTCHA antispam</source>
+        <target>ALTCHA antispam</target>
+      </trans-unit>
+      <trans-unit id="FFL.altcha.1">
+        <source>Provides an ALTCHA antispam form field to verify that the form is submitted by a human (CAPTCHA).</source>
+        <target>Biedt een ALTCHA antispam-formulierveld om te verifiëren dat het formulier door een mens is verzonden (CAPTCHA).</target>
       </trans-unit>
       <trans-unit id="FFL.captcha.0">
         <source>Security question</source>
@@ -1140,6 +1212,10 @@
       <trans-unit id="MSC.target.1">
         <source>Open the link in a new browser window.</source>
         <target>Open de link in een nieuw browser venster.</target>
+      </trans-unit>
+      <trans-unit id="MSC.openTab">
+        <source>Open in a new tab</source>
+        <target>Openen in een nieuw tabblad</target>
       </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
@@ -1602,8 +1678,8 @@
         <target>Back-end sneltoetsen</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Meer informatie over het versnellen van uw workflow door &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;sneltoetsen&lt;/a&gt; te gebruiken.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Meer informatie over het versnellen van uw workflow door &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;sneltoetsen&lt;/a&gt; te gebruiken.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1704,6 +1780,10 @@
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
         <target>Annuleer</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirm">
+          <source>Are you sure?</source>
+          <target>Weet je het zeker?</target>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete element ID %s?</source>
@@ -2211,7 +2291,7 @@
       </trans-unit>
       <trans-unit id="MSC.adminText">
         <source>A new member (ID %s) has registered at your website.%sIf you did not allow e-mail activation, you have to enable the account manually in the back end.</source>
-        <target>Een nieuw lid (ID %s) registreerde op uw website. In het geval dat u geen gebruik maakt van activatie via e-mail, moet u dit account handmatig activeren in het backend van de site.</target>
+        <target>Een nieuw lid (ID %s) registreerde op uw website.%sIn het geval dat u geen gebruik maakt van activatie via e-mail, moet u dit account handmatig activeren in het backend van de site.</target>
       </trans-unit>
       <trans-unit id="MSC.requestPassword">
         <source>Request password</source>
@@ -2325,6 +2405,10 @@
         <source>Quick link</source>
         <target>Snelkeuze</target>
       </trans-unit>
+      <trans-unit id="MSC.lostPassword">
+        <source>Forgot your password?</source>
+        <target>Wachtwoord vergeten?</target>
+      </trans-unit>
       <trans-unit id="MSC.username">
         <source>Username</source>
         <target>Gebruikersnaam</target>
@@ -2344,6 +2428,14 @@
       <trans-unit id="MSC.emptyField">
         <source>Please enter your username and password!</source>
         <target>Vul uw gebruikersnaam en wachtwoord in!</target>
+      </trans-unit>
+      <trans-unit id="MSC.reauthenticate">
+        <source>Please enter your password to verify your identity.</source>
+        <target>Voer uw wachtwoord in om uw identiteit te verifiëren.</target>
+      </trans-unit>
+      <trans-unit id="MSC.verify">
+        <source>Verify</source>
+        <target>Verifiëren</target>
       </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
@@ -2449,17 +2541,13 @@
         <source>Print this page</source>
         <target>Deze pagina printen</target>
       </trans-unit>
-      <trans-unit id="MSC.printAsPdf">
-        <source>Save article as PDF</source>
-        <target>Bewaar artikel als PDF</target>
-      </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>
         <target>Delen op Facebook</target>
       </trans-unit>
       <trans-unit id="MSC.twitterShare">
-        <source>Share on Twitter</source>
-        <target>Delen op Twitter</target>
+        <source>Share on X (formerly Twitter)</source>
+        <target>Deel op X (voorheen Twitter)</target>
       </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>
@@ -2492,6 +2580,9 @@
       <trans-unit id="MSC.list_perPage">
         <source>Results per page</source>
         <target>Resultaten per pagina</target>
+      </trans-unit>
+      <trans-unit id="MSC.or">
+        <source>or</source>
       </trans-unit>
       <trans-unit id="MSC.published">
         <source>Published</source>
@@ -2541,6 +2632,10 @@
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
         <target>De link die u probeert te openen kon niet worden geverifieerd. Als u zelf op de link geklikt heeft of deze heeft ontvangen uit een betrouwbare bron, kunt u dit hieronder bevestigen.</target>
       </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>U hebt te vaak geprobeerd uw wachtwoord te resetten. Probeer het over 15 minuten opnieuw.</target>
+      </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
         <target>Versie conflict</target>
@@ -2574,20 +2669,20 @@
         <target>U moet een hoofdpagina van een website toevoegen om de metagegevens van het bestand in te voeren.</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
-        <source>Breadcrumb menu</source>
-        <target>Broodkruimel menu</target>
+        <source>Breadcrumb</source>
+        <target>Broodkruimel</target>
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
-        <source>Main navigation</source>
-        <target>Hoofdnavigatie</target>
+        <source>Main</source>
+        <target>Hoofd</target>
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
-        <source>Header navigation</source>
-        <target>Header navigatie</target>
+        <source>Header</source>
+        <target>Kop</target>
       </trans-unit>
       <trans-unit id="MSC.pagination">
-        <source>Pagination menu</source>
-        <target>Paginering menu</target>
+        <source>Pagination</source>
+        <target>Paginering</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
         <source>Unicode numbers and lowercase letters</source>
@@ -2829,6 +2924,78 @@
         <source>Light mode</source>
         <target>Lichte modus</target>
       </trans-unit>
+      <trans-unit id="MSC.altchaFooter">
+        <source>Protected by &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</source>
+        <target>Beschermd door &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaLabel">
+        <source>I'm not a robot</source>
+        <target>Ik ben geen robot</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaVerified">
+        <source>I'm human</source>
+        <target>Ik ben een mens</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaVerifying">
+        <source>Verifying …</source>
+        <target>Verifiëren …</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaWaitAlert">
+        <source>Verifying … please wait.</source>
+        <target>Verifiëren … even geduld.</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeys">
+        <source>Passkeys</source>
+        <target>Passkeys</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysDescription">
+        <source>Passkeys allow you to log in securely and easily without the need for a password and two-factor token.</source>
+        <target>Met passkeys kunt u veilig en eenvoudig inloggen, zonder dat u een wachtwoord of een tweefactorauthenticatie nodig hebt.</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyLogin">
+        <source>Sign in with a passkey</source>
+        <target>Meld u aan met een passkey</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysName">
+        <source>Name/ID</source>
+        <target>Naam/ID</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyNameInput">
+        <source>Name this passkey …</source>
+        <target>Geef deze passkey een naam …</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysCreatedAt">
+        <source>Created at</source>
+        <target>Gemaakt bij</target>
+      </trans-unit>
+      <trans-unit id="MSC.addPasskey">
+        <source>Add passkey</source>
+        <target>Passkey toevoegen</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsPlaceholder">
+        <source>Type to start searching</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsMin">
+        <source>Please enter at least %s characters</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsLoading">
+        <source>Loading results...</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitView">
+        <source>View %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitEdit">
+        <source>Edit %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.noResults">
+        <source>No results found.</source>
+      </trans-unit>
+      <trans-unit id="MSC.noOptions">
+        <source>No options to choose from.</source>
+      </trans-unit>
+      <trans-unit id="MSC.removeItem">
+        <source>Remove item</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
         <target>Byte</target>
@@ -3012,6 +3179,9 @@
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
         <target>Sleep element ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.operations">
+        <source>Show operations for element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.children">
         <source>Edit the child elements of element ID %s</source>
