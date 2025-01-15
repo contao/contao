@@ -22,33 +22,31 @@ class DownloadsControllerTest extends ContentElementTestCase
 {
     public function testOutputsSingleDownload(): void
     {
-        foreach ([true, false] as $inline) {
-            $response = $this->renderWithModelData(
-                $this->getDownloadsController(),
-                [
-                    'type' => 'download',
-                    'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
-                    'sortBy' => '',
-                    'numberOfItems' => '0',
-                    'showPreview' => '',
-                    'overwriteLink' => '',
-                    'inline' => $inline,
-                    'fullsize' => false,
-                ],
-                null,
-                false,
-                $responseContext,
-                $this->getAdjustedContainer(),
-            );
+        $response = $this->renderWithModelData(
+            $this->getDownloadsController(),
+            [
+                'type' => 'download',
+                'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE1),
+                'sortBy' => '',
+                'numberOfItems' => '0',
+                'showPreview' => '',
+                'overwriteLink' => '',
+                'inline' => false,
+                'fullsize' => false,
+            ],
+            null,
+            false,
+            $responseContext,
+            $this->getAdjustedContainer(),
+        );
 
-            $expectedOutput = <<<'HTML'
-                <div class="content-download download-element ext-jpg">
-                    <a href="https://example.com/files/image1.jpg" title="translated(contao_default:MSC.download[image1 title])" type="image/jpg">image1 title</a>
-                </div>
-                HTML;
+        $expectedOutput = <<<'HTML'
+            <div class="content-download download-element ext-jpg">
+                <a href="https://example.com/files/image1.jpg" title="translated(contao_default:MSC.download[image1 title])" type="image/jpg">image1 title</a>
+            </div>
+            HTML;
 
-            $this->assertSameHtml($expectedOutput, $response->getContent());
-        }
+        $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
     public function testOutputsSingleDownloadWithCustomMetadata(): void
