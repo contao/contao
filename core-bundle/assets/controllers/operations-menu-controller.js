@@ -36,7 +36,7 @@ export default class extends Controller {
     }
 
     open (event) {
-        if (!this.hasMenuTarget) {
+        if (!this.hasMenuTarget || this.isInteractive(event.target)) {
             return;
         }
 
@@ -81,5 +81,18 @@ export default class extends Controller {
         } else {
             this.menuTarget.style.left = `${x + offset}px`;
         }
+    }
+
+    isInteractive (el) {
+        let node = el.nodeName.toLowerCase();
+
+        if ('a' === node || 'button' === node) {
+            return true;
+        }
+
+        // Also check the parent element if el is not interactive
+        node = el.parentElement.nodeName.toLowerCase();
+
+        return 'a' === node || 'button' === node;
     }
 }

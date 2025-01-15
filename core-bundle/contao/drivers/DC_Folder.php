@@ -2398,7 +2398,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				$class = $blnIsOpen ? 'foldable foldable--open' : 'foldable';
 				$alt = $blnIsOpen ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
-				$return .= '<a href="' . $this->addToUrl('tg=' . $md5) . '" title="' . StringUtil::specialchars($alt) . '" class="' . $class . '" data-contao--toggle-nodes-target="toggle" data-action="contao--toggle-nodes#toggle" data-contao--toggle-nodes-id-param="filetree_' . $md5 . '" data-contao--toggle-nodes-folder-param="' . $currentFolder . '" data-contao--toggle-nodes-level-param="' . $level . '">' . Image::getHtml('chevron-right.svg') . '</a>';
+				$return .= '<a href="' . $this->addToUrl('tg=' . $md5) . '" class="' . $class . '" data-contao--toggle-nodes-target="toggle" data-action="contao--toggle-nodes#toggle" data-contao--toggle-nodes-id-param="filetree_' . $md5 . '" data-contao--toggle-nodes-folder-param="' . $currentFolder . '" data-contao--toggle-nodes-level-param="' . $level . '">' . Image::getHtml('chevron-right.svg', $alt) . '</a>';
 			}
 
 			$protected = $blnProtected;
