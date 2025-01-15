@@ -45,13 +45,13 @@ class DcaUrlAnalyzer
      */
     public function getCurrentTableId(Request|string|null $request = null): array
     {
-        $request ??= $this->requestStack->getCurrentRequest() ?? throw new \LogicException('Unable to retrieve DCA information from empty request stack.');
-
-        if (!$request instanceof Request) {
-            $request = Request::create($request);
+        if (\is_string($request)) {
+            $this->request = Request::create($request);
+        } elseif ($request instanceof Request) {
+            $this->request = $request;
+        } elseif (!$this->request = $this->requestStack->getCurrentRequest()) {
+            throw new \LogicException('Unable to retrieve DCA information from empty request stack.');
         }
-
-        $this->request = $request;
 
         return $this->findTableAndId();
     }
