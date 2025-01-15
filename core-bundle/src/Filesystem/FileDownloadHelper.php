@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Filesystem;
 
 use Contao\StringUtil;
+use League\Uri\Uri;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\HeaderUtils;
@@ -137,7 +138,11 @@ class FileDownloadHelper
 
     private function generate(string $url, array $params): string
     {
-        return $this->signer->sign($url.'?'.http_build_query(array_filter($params)));
+        $uri = Uri::new($url);
+        parse_str($uri->getQuery() ?? '', $existingParams);
+        $params = [...$existingParams, ...array_filter($params)];
+
+        return $this->signer->sign((string) $uri->withQuery(http_build_query($params)));
     }
 
     private function getFile(Request $request, VirtualFilesystemInterface $storage): FilesystemItem|null
