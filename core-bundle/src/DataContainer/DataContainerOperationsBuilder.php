@@ -315,8 +315,8 @@ class DataContainerOperationsBuilder implements \Stringable
             'href' => $href,
             'title' => $state ? $config['title'] : $titleDisabled,
             'label' => $config['label'],
-            'attributes' => ' data-title="'.StringUtil::specialchars($config['title']).'" data-title-disabled="'.StringUtil::specialchars($titleDisabled).'" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,'.('visible.svg' === $icon ? 'true' : 'false').')"',
-            'icon' => Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="'.$icon.'" data-icon-disabled="'.$_icon.'" data-state="'.$state.'"'),
+            'attributes' => ' data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,'.('visible.svg' === $icon ? 'true' : 'false').')"',
+            'icon' => Image::getHtml($state ? $icon : $_icon, $state ? $config['title'] : $titleDisabled, 'data-icon="'.$icon.'" data-icon-disabled="'.$_icon.'" data-state="'.$state.'" data-alt="'.StringUtil::specialchars($config['title']).'" data-alt-disabled="'.StringUtil::specialchars($titleDisabled).'"'),
             'primary' => $config['primary'] ?? null,
         ];
     }

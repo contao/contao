@@ -441,7 +441,7 @@ class tl_member extends Backend
 
 		$url = System::getContainer()->get('router')->generate('contao_backend_preview', array('user'=>$row['username']));
 
-		return '<a href="' . StringUtil::specialcharsUrl($url) . '" title="' . StringUtil::specialchars($title) . '" target="_blank">' . Image::getHtml($icon, $label) . '</a> ';
+		return '<a href="' . StringUtil::specialcharsUrl($url) . '" target="_blank">' . Image::getHtml($icon, $title) . '</a> ';
 	}
 
 	/**

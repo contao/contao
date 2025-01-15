@@ -23,7 +23,7 @@
                         {{ hit.title }}
                     </a>
                     {% if hit.editUrl %}
-                        <a class="hit_edit" href="{{ hit.editUrl }}" title="{{ 'MSC.searchHitEdit'|trans([hit.title]) }}">{{ backend_icon('edit.svg') }}</a>
+                        <a class="hit_edit" href="{{ hit.editUrl }}">{{ backend_icon('edit.svg', 'MSC.searchHitEdit'|trans([hit.title])) }}</a>
                     {% endif %}
                 </div>
             </div>

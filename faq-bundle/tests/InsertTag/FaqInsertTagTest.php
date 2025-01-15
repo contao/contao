@@ -83,32 +83,32 @@ class FaqInsertTagTest extends ContaoTestCase
         $listener = new FaqInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
 
         $this->assertSame(
-            '<a href="faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?">What does "foobar" mean?</a>',
+            '<a href="faq/what-does-foobar-mean.html">What does "foobar" mean?</a>',
             $listener(new ResolvedInsertTag('faq', new ResolvedParameters(['2']), []))->getValue(),
         );
 
         $this->assertSame(
-            '<a href="faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?" target="_blank" rel="noreferrer noopener">What does "foobar" mean?</a>',
+            '<a href="faq/what-does-foobar-mean.html" target="_blank" rel="noreferrer noopener">What does "foobar" mean?</a>',
             $listener(new ResolvedInsertTag('faq', new ResolvedParameters(['2', 'blank']), []))->getValue(),
         );
 
         $this->assertSame(
-            '<a href="faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?">',
+            '<a href="faq/what-does-foobar-mean.html">',
             $listener(new ResolvedInsertTag('faq_open', new ResolvedParameters(['2']), []))->getValue(),
         );
 
         $this->assertSame(
-            '<a href="faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?" target="_blank" rel="noreferrer noopener">',
+            '<a href="faq/what-does-foobar-mean.html" target="_blank" rel="noreferrer noopener">',
             $listener(new ResolvedInsertTag('faq_open', new ResolvedParameters(['2', 'blank']), []))->getValue(),
         );
 
         $this->assertSame(
-            '<a href="http://domain.tld/faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?" target="_blank" rel="noreferrer noopener">',
+            '<a href="http://domain.tld/faq/what-does-foobar-mean.html" target="_blank" rel="noreferrer noopener">',
             $listener(new ResolvedInsertTag('faq_open', new ResolvedParameters(['2', 'blank', 'absolute']), []))->getValue(),
         );
 
         $this->assertSame(
-            '<a href="http://domain.tld/faq/what-does-foobar-mean.html" title="What does &quot;foobar&quot; mean?" target="_blank" rel="noreferrer noopener">',
+            '<a href="http://domain.tld/faq/what-does-foobar-mean.html" target="_blank" rel="noreferrer noopener">',
             $listener(new ResolvedInsertTag('faq_open', new ResolvedParameters(['2', 'absolute', 'blank']), []))->getValue(),
         );
 
@@ -168,12 +168,12 @@ class FaqInsertTagTest extends ContaoTestCase
         $listener = new FaqInsertTag($this->mockContaoFramework($adapters), $this->createMock(ContentUrlGenerator::class));
 
         $this->assertSame(
-            '<a href="./" title="What does &quot;foobar&quot; mean?">What does "foobar" mean?</a>',
+            '<a href="./">What does "foobar" mean?</a>',
             $listener(new ResolvedInsertTag('faq', new ResolvedParameters(['2']), []))->getValue(),
         );
 
         $this->assertSame(
-            '<a href="./" title="What does &quot;foobar&quot; mean?">',
+            '<a href="./">',
             $listener(new ResolvedInsertTag('faq_open', new ResolvedParameters(['2']), []))->getValue(),
         );
 

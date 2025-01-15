@@ -1,7 +1,7 @@
 {% trans_default_domain 'contao_default' %}
 {% set has_submenu = false %}
 
-<div class="operations" data-action="contextmenu->contao--operations-menu#close:stop">
+<div class="operations">
     <ul>
         {% for operation in operations %}
             {% if has_primary and not operation.primary|default(false) %}
@@ -34,7 +34,6 @@
         <li>
             <a
                 href="{{ operation.href }}"
-                {% if operation.title|default %}title="{{ operation.title }}"{% endif %}
                 {% if operation.popup|default %}onclick="Backend.openModalIframe({title:'{{ operation.label|default|replace({"'": "\'"}) }}', url:this.href});return false"{% endif%}
                 {{ operation.attributes|default|raw }}
             >
