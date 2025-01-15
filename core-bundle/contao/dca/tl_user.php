@@ -74,6 +74,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			(
 				'href'                => 'key=su',
 				'icon'                => 'su.svg',
+				'primary'             => true,
 				'button_callback'     => array('tl_user', 'switchUser')
 			)
 		)
@@ -570,7 +571,7 @@ class tl_user extends Backend
 		$router = System::getContainer()->get('router');
 		$url = $router->generate('contao_backend', array('_switch_user'=>$row['username']));
 
-		return '<a href="' . $url . '" title="' . StringUtil::specialchars($title) . '">' . Image::getHtml($icon, $label) . '</a> ';
+		return '<a href="' . $url . '">' . Image::getHtml($icon, $title) . '</a> ';
 	}
 
 	/**

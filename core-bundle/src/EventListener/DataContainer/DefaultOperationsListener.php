@@ -65,13 +65,20 @@ class DefaultOperationsListener
         $operations = [];
 
         // If none of the defined operations are name-only, we prepend the default operations.
-        if (!array_filter($dca, static fn ($v, $k) => isset($defaults[$k]) || (\is_string($v) && isset($defaults[$v])), ARRAY_FILTER_USE_BOTH)) {
+        if (!array_filter($dca, static fn ($v, $k) => isset($defaults[$k]) || (\is_string($v) && isset($defaults[ltrim($v, '!')])), ARRAY_FILTER_USE_BOTH)) {
             $operations = $defaults;
         }
 
         foreach ($dca as $k => $v) {
-            if (\is_string($v) && isset($defaults[$v])) {
-                $operations[$v] = $defaults[$v];
+            if (\is_string($v) && ($key = ltrim($v, '!')) && isset($defaults[$key])) {
+                $operations[$key] = $defaults[$key];
+
+                if (str_starts_with($v, '!')) {
+                    $operations[$key]['primary'] = true;
+                } else {
+                    unset($operations[$key]['primary']);
+                }
+
                 continue;
             }
 
@@ -106,6 +113,7 @@ class DefaultOperationsListener
                     'prefetch' => true,
                     'attributes' => 'data-contao--deeplink-target="primary"',
                     'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
+                    'primary' => true,
                     'showInHeader' => true,
                 ],
             ];
@@ -122,6 +130,7 @@ class DefaultOperationsListener
                         'prefetch' => true,
                         'attributes' => 'data-contao--deeplink-target="secondary"',
                         'button_callback' => $this->accessChildrenCallback($ctable, $table),
+                        'primary' => true,
                     ],
                 ];
             }
@@ -177,6 +186,7 @@ class DefaultOperationsListener
                 'icon' => 'visible.svg',
                 'showInHeader' => (bool) $ctable,
                 'button_callback' => $this->toggleCallback($table, $toggleField),
+                'primary' => true,
             ];
         }
 

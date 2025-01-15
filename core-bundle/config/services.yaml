@@ -613,6 +613,7 @@ services:
         tags:
             - { name: knp_menu.menu_builder, method: buildMainMenu, alias: be_menu }
             - { name: knp_menu.menu_builder, method: buildHeaderMenu, alias: be_header_menu }
+            - { name: knp_menu.menu_builder, method: buildLoginMenu, alias: be_login_menu }
 
     contao.menu.matcher:
         class: Knp\Menu\Matcher\Matcher
@@ -1046,6 +1047,9 @@ services:
         class: Contao\CoreBundle\Security\Voter\DataContainer\LayoutAccessVoter
         arguments:
             - '@security.access.decision_manager'
+
+    contao.security.data_container.legacy_templates_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\LegacyTemplatesVoter
 
     contao.security.data_container.page_permission_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\PagePermissionVoter

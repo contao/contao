@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Search\Backend\Provider;
 
 use Contao\Config;
 use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\DataContainer\RecordLabeler;
+use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Provider\TableDataContainerProvider;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
@@ -47,9 +47,9 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             $this->mockContaoFramework(),
             $this->createMock(ResourceFinder::class),
             $this->createMock(Connection::class),
-            $this->createMock(RecordLabeler::class),
             $this->createMock(AccessDecisionManagerInterface::class),
             $this->createMock(EventDispatcherInterface::class),
+            $this->createMock(DcaUrlAnalyzer::class),
         );
 
         $this->assertTrue($provider->supportsType(TableDataContainerProvider::TYPE_PREFIX.'foobar'));
@@ -110,9 +110,9 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             $framework,
             $resourceFinder,
             $connection,
-            $this->createMock(RecordLabeler::class),
             $this->createMock(AccessDecisionManagerInterface::class),
             $this->createMock(EventDispatcherInterface::class),
+            $this->createMock(DcaUrlAnalyzer::class),
         );
 
         $documentsIterator = $provider->updateIndex(new ReindexConfig());

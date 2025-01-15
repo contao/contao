@@ -120,13 +120,13 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->willReturn('<img src="system/themes/icons/info.svg" alt="" title="title">')
+            ->willReturn('<img src="system/themes/icons/info.svg" alt="" data-contao--tooltips-target="tooltip">')
         ;
 
         $listener = $this->createListener(null, $translator, [Image::class => $imageAdapter]);
 
         $this->assertSame(
-            ' <img src="system/themes/icons/info.svg" alt="" title="title">',
+            ' <img src="system/themes/icons/info.svg" alt="" data-contao--tooltips-target="tooltip">',
             $listener->renderHelpIcon(),
         );
     }

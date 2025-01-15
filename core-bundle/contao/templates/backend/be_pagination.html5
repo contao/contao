@@ -5,27 +5,27 @@
 
   <ul>
     <?php if ($this->hasFirst): ?>
-      <li class="first"><a href="<?= $this->first['href'] ?>" class="first" title="<?= $this->first['title'] ?>"><?= $this->first['link'] ?></a></li>
+      <li class="first"><a href="<?= $this->first['href'] ?>" class="first" title="<?= $this->first['title'] ?>" data-contao--tooltips-target="tooltip"><?= $this->first['link'] ?></a></li>
     <?php endif; ?>
 
     <?php if ($this->hasPrevious): ?>
-      <li class="previous"><a href="<?= $this->previous['href'] ?>" class="previous" title="<?= $this->previous['title'] ?>"><?= $this->previous['link'] ?></a></li>
+      <li class="previous"><a href="<?= $this->previous['href'] ?>" class="previous" title="<?= $this->previous['title'] ?>" data-contao--tooltips-target="tooltip"><?= $this->previous['link'] ?></a></li>
     <?php endif; ?>
 
     <?php foreach ($this->pages as $page): ?>
       <?php if (null === $page['href']): ?>
         <li><strong class="active"><?= $page['page'] ?></strong></li>
       <?php else: ?>
-        <li><a href="<?= $page['href'] ?>" class="link" title="<?= $page['title'] ?>"><?= $page['page'] ?></a></li>
+        <li><a href="<?= $page['href'] ?>" class="link" title="<?= $page['title'] ?>" data-contao--tooltips-target="tooltip"><?= $page['page'] ?></a></li>
       <?php endif; ?>
     <?php endforeach; ?>
 
     <?php if ($this->hasNext): ?>
-      <li class="next"><a href="<?= $this->next['href'] ?>" class="next" title="<?= $this->next['title'] ?>"><?= $this->next['link'] ?></a></li>
+      <li class="next"><a href="<?= $this->next['href'] ?>" class="next" title="<?= $this->next['title'] ?>" data-contao--tooltips-target="tooltip"><?= $this->next['link'] ?></a></li>
     <?php endif; ?>
 
     <?php if ($this->hasLast): ?>
-      <li class="last"><a href="<?= $this->last['href'] ?>" class="last" title="<?= $this->last['title'] ?>"><?= $this->last['link'] ?></a></li>
+      <li class="last"><a href="<?= $this->last['href'] ?>" class="last" title="<?= $this->last['title'] ?>" data-contao--tooltips-target="tooltip"><?= $this->last['link'] ?></a></li>
     <?php endif; ?>
   </ul>
 

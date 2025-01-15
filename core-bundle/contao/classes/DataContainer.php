@@ -313,6 +313,12 @@ abstract class DataContainer extends Backend
 	private static $arrCurrentRecordCache = array();
 
 	/**
+	 * Current panel state
+	 * @var bool
+	 */
+	protected $panelActive = false;
+
+	/**
 	 * Set an object property
 	 *
 	 * @param string $strKey
@@ -417,7 +423,7 @@ abstract class DataContainer extends Backend
 		// Add the help wizard
 		if ($arrData['eval']['helpwizard'] ?? null)
 		{
-			$xlabel .= ' <a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_help', array('table' => $this->strTable, 'field' => $this->strField))) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('help.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
+			$xlabel .= ' <a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_help', array('table' => $this->strTable, 'field' => $this->strField))) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('help.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
 		}
 
 		// Add a custom xlabel
@@ -588,7 +594,7 @@ abstract class DataContainer extends Backend
 				$strOnSelect = ",\n        onSelect: function() { Backend.autoSubmit(\"" . $this->strTable . "\"); }";
 			}
 
-			$wizard .= ' ' . Image::getHtml('assets/datepicker/images/icon.svg', '', 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['datepicker']) . '" id="toggle_' . $objWidget->id . '" style="cursor:pointer"') . '
+			$wizard .= ' ' . Image::getHtml('assets/datepicker/images/icon.svg', $GLOBALS['TL_LANG']['MSC']['datepicker'], 'id="toggle_' . $objWidget->id . '" style="cursor:pointer" data-contao--tooltips-target="tooltip"') . '
   <script>
     window.addEvent("domready", function() {
       new Picker.Date($("ctrl_' . $objWidget->id . '"), {
@@ -1213,7 +1219,7 @@ abstract class DataContainer extends Backend
 				// Add the panel if it is not empty
 				if ($panel)
 				{
-					$panels = $panel . $panels;
+					$panels .= $panel;
 				}
 			}
 
@@ -1258,18 +1264,18 @@ abstract class DataContainer extends Backend
 				$submit = '
 <div class="tl_submit_panel tl_subpanel">
   <button name="filter" id="filter" class="tl_img_submit filter_apply" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['apply'] . '</button>
-  <button name="filter_reset" id="filter_reset" value="1" class="tl_img_submit filter_reset" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['resetTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['reset'] . '</button>
+  <button' . ($this->panelActive ? '' : ' disabled') . ' name="filter_reset" id="filter_reset" value="1" class="tl_img_submit filter_reset" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['resetTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['reset'] . '</button>
 </div>';
 			}
 
 			$return .= '
-<div class="tl_panel cf">
-  ' . $submit . $arrPanels[$i] . '
+<div class="tl_panel">
+  ' . $arrPanels[$i] . $submit . '
 </div>';
 		}
 
 		$return = '
-<form class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
+<form class="tl_form has-panels" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
 <div class="tl_formbody">
   <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
   <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
@@ -1688,5 +1694,15 @@ abstract class DataContainer extends Backend
 				unset(self::$arrCurrentRecordCache[$key]);
 			}
 		}
+	}
+
+	public function setPanelState(bool $state): void
+	{
+		if ($this->panelActive)
+		{
+			return;
+		}
+
+		$this->panelActive = $state;
 	}
 }

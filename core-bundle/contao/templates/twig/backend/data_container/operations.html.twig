@@ -1,20 +1,47 @@
-{% for operation in operations %}
-    {{ _self.operation(operation) }}
-{% endfor %}
+{% trans_default_domain 'contao_default' %}
+{% set has_submenu = false %}
 
-{% macro operation(operation) %}
-    {% if operation.html|default %}
-        {{ operation.html|raw }}
+<div class="operations">
+    <ul>
+        {% for operation in operations %}
+            {% if has_primary and not operation.primary|default(false) %}
+                {% set has_submenu = true %}
+            {% else %}
+                {{ _self.operation(operation) }}
+            {% endif %}
+        {% endfor %}
+        {% if has_submenu or not has_primary %}
+            <li class="operations-menu-container" data-contao--operations-menu-target="container">
+                {% if has_primary %}
+                    <button type="button" title="{{ 'DCA.operations'|trans([id]) }}" data-contao--operations-menu-target="controller">
+                        {{ backend_icon('more.svg') }}
+                    </button>
+                {% endif %}
+                <ul class="operations-menu" data-contao--operations-menu-target="menu">
+                    {% for operation in operations %}
+                        {{ _self.operation(operation, true) }}
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endif %}
+    </ul>
+</div>
+
+{% macro operation(operation, menu = false) %}
+    {% if operation.html is defined and (not menu or '<a ' in operation.html) %}
+        {% if operation.html|trim is not empty %}<li class="virtual-title">{{ operation.html|raw }}</li>{% endif %}
     {% elseif operation.href|default %}
-        <a
-            href="{{ operation.href }}"
-            {% if operation.title|default %}title="{{ operation.title }}"{% endif %}
-            {% if operation.popup|default %}
-                onclick="Backend.openModalIframe({title:'{{ operation.label|default|replace({"'": "\'"}) }}', url:this.href});return false"
-            {% endif%}
-            {{ operation.attributes|default|raw }}
-        >{{ operation.icon|raw }}</a>
-    {% elseif operation.icon|default %}
-        {{ operation.icon|raw }}
+        <li>
+            <a
+                href="{{ operation.href }}"
+                {% if operation.popup|default %}onclick="Backend.openModalIframe({title:'{{ operation.label|default|replace({"'": "\'"}) }}', url:this.href});return false"{% endif%}
+                {{ operation.attributes|default|raw }}
+            >
+                {{ operation.icon|raw }}
+                {% if menu %}{{ operation.title|default }}{% endif %}
+            </a>
+        </li>
+    {% elseif operation.icon|default and not menu %}
+        <li>{{ operation.icon|raw }}</li>
     {% endif %}
 {% endmacro %}

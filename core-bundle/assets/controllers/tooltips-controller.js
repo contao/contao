@@ -2,6 +2,8 @@ import {Controller} from "@hotwired/stimulus";
 
 export default class TooltipsController extends Controller {
     static defaultOptionsMap = {
+        'a img[alt]': {x: -9, y: 30},
+        '.sgallery img[alt]': {x: 0, y: 75},
         'p.tl_tip': {x: 0, y: 23, useContent: true},
         '#home[title]': {x: 6, y: 42},
         '#tmenu a[title]': {x: 0, y: 42},
@@ -10,6 +12,7 @@ export default class TooltipsController extends Controller {
         'img[title].gimage': {x: -9, y: 60},
         'img[title]:not(.gimage)': {x: -9, y: 30},
         'a[title].picker-wizard': {x: -4, y: 30},
+        'button img[alt]': {x: -9, y: 30},
         'button[title].unselectable': {x: -4, y: 20},
         'button[title]:not(.unselectable)': {x: -9, y: 30},
         'a[title]:not(.picker-wizard)': {x: -9, y: 30},
@@ -81,15 +84,13 @@ export default class TooltipsController extends Controller {
 
     _showTooltip(el, delay = 0) {
         const options = this._getOptionsForElement(el);
-
-        if (options === null) {
-            return;
-        }
-
         let text;
 
         if (options.useContent) {
             text = el.innerHTML;
+        } else if ('img' === el.nodeName.toLowerCase()) {
+            text = el.getAttribute('alt');
+            text = text?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
         } else {
             text = el.getAttribute('title');
             el.setAttribute('data-original-title', text);
@@ -158,7 +159,7 @@ export default class TooltipsController extends Controller {
             }
         }
 
-        return null;
+        return {x: -9, y: 30};
     }
 
     /**
