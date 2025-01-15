@@ -6,7 +6,6 @@ export default class TooltipsController extends Controller {
         'p.tl_tip': {x: 0, y: 23, useContent: true},
         '#home[title]': {x: 6, y: 42},
         '#tmenu a[title]': {x: 0, y: 42},
-        'a.link[title]': {x: -9, y: 27},
         'a[title][class^="group-"]': {x: -6, y: 27},
         'a[title].navigation': {x: 25, y: 32},
         'img[title].gimage': {x: -9, y: 60},
