@@ -139,7 +139,7 @@ class FileDownloadHelper
     private function generate(string $url, array $params): string
     {
         $uri = new Uri($url);
-        parse_str($uri->getQuery() ?? '', $existingParams);
+        parse_str($uri->getQuery(), $existingParams);
         $params = [...$existingParams, ...array_filter($params)];
 
         return $this->signer->sign((string) $uri->withQuery(http_build_query($params)));
