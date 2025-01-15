@@ -16,7 +16,7 @@
 
             {% block buttons %}
                 {{ parent() }}
-                <button name="confirm_delete">{{ 'MSC.deleteSelected'|trans(domain: 'contao_default') }}</button>
+                <button class="confirm" name="confirm_delete">{{ 'MSC.deleteSelected'|trans(domain: 'contao_default') }}</button>
             {% endblock %}
         {% endembed %}
     </template>
