@@ -139,6 +139,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$ids = null;
+		$arrClipboard = $objSession->get('CLIPBOARD');
 
 		// Set IDs
 		if (Input::post('FORM_SUBMIT') == 'tl_select' || (\in_array(Input::post('FORM_SUBMIT'), array($strTable, $strTable . '_all')) && \in_array(Input::get('act'), array('editAll', 'overrideAll'))))
@@ -175,7 +176,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 			elseif (Input::post('cut') !== null || Input::post('copy') !== null || Input::post('copyMultiple') !== null)
 			{
-				$arrClipboard = $objSession->get('CLIPBOARD');
 				$security = $container->get('security.helper');
 
 				$mode = Input::post('cut') !== null ? 'cutAll' : 'copyAll';
@@ -244,6 +244,32 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$session = $objSession->get($strKey);
 			$session[$strRefererId][$this->strTable] = Environment::get('requestUri');
 			$objSession->set($strKey, $session);
+		}
+
+		if (!empty($arrClipboard[$this->strTable]) && $arrClipboard[$this->strTable]['mode'] != 'create')
+		{
+			if (\is_array($arrClipboard[$this->strTable]['id']))
+			{
+				$arrIds = $arrClipboard[$this->strTable]['id'];
+				$arrFilteredIds = array_filter($arrIds, fn ($id) => $this->getCurrentRecord($id) !== null);
+
+				if ($arrFilteredIds !== $arrIds)
+				{
+					$arrClipboard[$this->strTable]['id'] = $arrFilteredIds;
+
+					if (empty($arrFilteredIds))
+					{
+						unset($arrClipboard[$this->strTable]);
+					}
+
+					$objSession->set('CLIPBOARD', $arrClipboard);
+				}
+			}
+			elseif ($this->getCurrentRecord($arrClipboard[$this->strTable]['id']) === null)
+			{
+				unset($arrClipboard[$this->strTable]);
+				$objSession->set('CLIPBOARD', $arrClipboard);
+			}
 		}
 	}
 
