@@ -245,33 +245,30 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$objSession->set($strKey, $session);
 		}
 
-		$blnClipboardModified = false;
 		if (!empty($arrClipboard[$this->strTable]) && $arrClipboard[$this->strTable]['mode'] != 'create')
 		{
 			if (\is_array($arrClipboard[$this->strTable]['id']))
 			{
 				$arrIds = $arrClipboard[$this->strTable]['id'];
 				$arrFilteredIds = array_filter($arrIds, fn ($id) => $this->getCurrentRecord($id) !== null);
+
 				if ($arrFilteredIds !== $arrIds)
 				{
-					$blnClipboardModified = true;
 					$arrClipboard[$this->strTable]['id'] = $arrFilteredIds;
+
 					if (empty($arrFilteredIds))
 					{
 						unset($arrClipboard[$this->strTable]);
 					}
+
+					$objSession->set('CLIPBOARD', $arrClipboard);
 				}
 			}
 			elseif ($this->getCurrentRecord($arrClipboard[$this->strTable]['id']) === null)
 			{
-				$blnClipboardModified = true;
 				unset($arrClipboard[$this->strTable]);
+				$objSession->set('CLIPBOARD', $arrClipboard);
 			}
-		}
-
-		if ($blnClipboardModified)
-		{
-			$objSession->set('CLIPBOARD', $arrClipboard);
 		}
 	}
 
