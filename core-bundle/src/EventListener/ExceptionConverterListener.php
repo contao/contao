@@ -80,9 +80,10 @@ class ExceptionConverterListener
 
     private function convertToHttpException(\Throwable $exception, string $class): HttpException
     {
-        return match ($class) {
-            ServiceUnavailableHttpException::class => new ServiceUnavailableHttpException('', $exception->getMessage(), $exception),
-            default => new $class($exception->getMessage(), $exception),
-        };
+        if (ServiceUnavailableHttpException::class === $class) {
+            return new ServiceUnavailableHttpException('', $exception->getMessage(), $exception);
+        }
+
+        return new $class($exception->getMessage(), $exception);
     }
 }

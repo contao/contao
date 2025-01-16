@@ -47,10 +47,7 @@ class UnwrapTwigExceptionListener
 
     private function shouldUnwrap(\Throwable $throwable): bool
     {
-        if (
-            $throwable instanceof ResponseException
-            || $throwable instanceof HttpExceptionInterface
-        ) {
+        if ($throwable instanceof ResponseException || $throwable instanceof HttpExceptionInterface) {
             return true;
         }
 
