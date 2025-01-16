@@ -29,7 +29,7 @@ class NewsletterRecipientsEditButtonsListenerTest extends TestCase
 
     public static function buttonProvider(): iterable
     {
-        yield 'Removes the saveNclose button' => [
+        yield 'Removes the saveNduplicate button' => [
             ['save' => true, 'saveNduplicate' => true, 'saveNcreate' => true],
             ['save' => true, 'saveNcreate' => true],
         ];
