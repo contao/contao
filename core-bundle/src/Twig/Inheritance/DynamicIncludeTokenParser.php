@@ -18,7 +18,6 @@ use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\IncludeNode;
 use Twig\Node\Node;
-use Twig\TemplateWrapper;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 use Twig\TokenParser\IncludeTokenParser;
@@ -39,42 +38,21 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
 
     public function parse(Token $token): IncludeNode
     {
-        $expr = $this->parser->getExpressionParser()->parseExpression();
+        $nameExpression = $this->parser->getExpressionParser()->parseExpression();
         [$variables, $only, $ignoreMissing] = $this->parseArguments();
 
         // Handle Contao includes
-        $this->traverseAndAdjustTemplateNames($expr);
+        if ($contaoNameExpression = $this->traverseAndAdjustTemplateNames($nameExpression)) {
+            $nameExpression = $contaoNameExpression;
+        }
 
         /** @phpstan-ignore arguments.count */
-        return new IncludeNode($expr, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
+        return new IncludeNode($nameExpression, $variables, $only, $ignoreMissing, $token->getLine(), $this->getTag());
     }
 
     public function getTag(): string
     {
         return 'include';
-    }
-
-    /**
-     * Return the adjusted logical name or the unchanged input if it does not match
-     * the Contao Twig namespace.
-     */
-    public static function adjustTemplateName(TemplateWrapper|string $name, ContaoFilesystemLoader $filesystemLoader): TemplateWrapper|string
-    {
-        if ($name instanceof TemplateWrapper) {
-            return $name;
-        }
-
-        $parts = ContaoTwigUtil::parseContaoName($name);
-
-        if ('Contao' !== ($parts[0] ?? null)) {
-            return $name;
-        }
-
-        try {
-            return $filesystemLoader->getFirst($parts[1] ?? '');
-        } catch (\LogicException $e) {
-            throw new \LogicException($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?', 0, $e);
-        }
     }
 
     private function parseArguments(): array
@@ -106,11 +84,18 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
         return [$variables, $only, $ignoreMissing];
     }
 
-    private function traverseAndAdjustTemplateNames(Node $node): void
+    /**
+     * Returns a Node if the given $node should be replaced, null otherwise.
+     */
+    private function traverseAndAdjustTemplateNames(Node $node): Node|null
     {
         if (!$node instanceof ConstantExpression) {
-            foreach ($node as $child) {
+            foreach ($node as $name => $child) {
                 try {
+                    if ($adjustedNode = $this->traverseAndAdjustTemplateNames($child)) {
+                        $node->setNode((string) $name, $adjustedNode);
+                    }
+
                     $this->traverseAndAdjustTemplateNames($child);
                 } catch (\LogicException $e) {
                     // Allow missing templates if they are listed in an array like "{% include
@@ -121,14 +106,22 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
                 }
             }
 
-            return;
+            return null;
         }
 
         $name = (string) $node->getAttribute('value');
-        $adjustedName = self::adjustTemplateName($name, $this->filesystemLoader);
+        $parts = ContaoTwigUtil::parseContaoName($name);
 
-        if ($name !== $adjustedName) {
-            $node->setAttribute('value', $adjustedName);
+        if ('Contao' !== ($parts[0] ?? null)) {
+            return null;
         }
+
+        try {
+            $allFirstByThemeSlug = $this->filesystemLoader->getAllFirstByThemeSlug($parts[1] ?? '');
+        } catch (\LogicException $e) {
+            throw new \LogicException($e->getMessage().' Did you try to include a non-existent template or a template from a theme directory?', 0, $e);
+        }
+
+        return new RuntimeThemeDependentExpression($allFirstByThemeSlug);
     }
 }

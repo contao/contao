@@ -511,6 +511,66 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader->getDynamicParent('text.html.twig', $corePath);
     }
 
+    public function testGetAllDynamicParentByThemeSlug(): void
+    {
+        $loader = $this->getContaoFilesystemLoaderWithTemplates(
+            [
+                'foo.html.twig' => '/test/foo.html.twig',
+            ],
+            [
+                'foo.html.twig' => '/theme/foo.html.twig',
+            ],
+        );
+
+        $this->assertSame(
+            [
+                'demo' => '@Contao_Theme_demo/foo.html.twig',
+                '' => '@Contao_Test/foo.html.twig',
+            ],
+            $loader->getAllDynamicParentsByThemeSlug('foo.html.twig', ''),
+        );
+    }
+
+    public function testGetAllFirstByThemeSlug(): void
+    {
+        $loader = $this->getContaoFilesystemLoaderWithTemplates(
+            [
+                'foo.html.twig' => '/test/foo.html.twig',
+            ],
+            [
+                'foo.html.twig' => '/theme/foo.html.twig',
+            ],
+        );
+
+        $this->assertSame(
+            [
+                'demo' => '@Contao_Theme_demo/foo.html.twig',
+                '' => '@Contao_Test/foo.html.twig',
+            ],
+            $loader->getAllFirstByThemeSlug('foo.html.twig'),
+        );
+    }
+
+    public function testGetCurrentThemeSlug(): void
+    {
+        $loader = new ContaoFilesystemLoader(
+            new NullAdapter(),
+            $this->createMock(TemplateLocator::class),
+            new ThemeNamespace(),
+            $this->createMock(ContaoFramework::class),
+            '/',
+        );
+
+        $this->assertNull($loader->getCurrentThemeSlug(), 'no theme slug by default');
+
+        $loader->reset();
+        $GLOBALS['objPage'] = $this->mockClassWithProperties(PageModel::class, ['templateGroup' => 'templates/foo/bar']);
+
+        $this->assertSame('foo_bar', $loader->getCurrentThemeSlug(), 'read theme slug from context');
+
+        unset($GLOBALS['objPage']);
+    }
+
     public function testPersistsAndRecallsHierarchy(): void
     {
         $cacheAdapter = new ArrayAdapter();
