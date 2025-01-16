@@ -36,25 +36,25 @@ class GlobalsMapListenerTest extends TestCase
     {
         yield 'add single' => [
             [],
-            [0 => ['text' => 'HeadlineFragment']],
+            [['text' => 'HeadlineFragment']],
             ['text' => 'HeadlineFragment'],
         ];
 
         yield 'add group' => [
             [],
-            [0 => ['texts' => ['headline' => 'HeadlineFragment']]],
+            [['texts' => ['headline' => 'HeadlineFragment']]],
             ['texts' => ['headline' => 'HeadlineFragment']],
         ];
 
         yield 'add to existing group' => [
             ['texts' => ['text' => 'LegacyText']],
-            [0 => ['texts' => ['headline' => 'HeadlineFragment']]],
+            [['texts' => ['headline' => 'HeadlineFragment']]],
             ['texts' => ['text' => 'LegacyText', 'headline' => 'HeadlineFragment']],
         ];
 
         yield 'globals overrides fragment with priority 0' => [
             ['texts' => ['headline' => 'LegacyHeadline']],
-            [0 => ['texts' => ['headline' => 'HeadlineFragment']]],
+            [['texts' => ['headline' => 'HeadlineFragment']]],
             ['texts' => ['headline' => 'LegacyHeadline']],
         ];
 

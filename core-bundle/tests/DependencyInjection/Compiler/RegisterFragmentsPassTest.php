@@ -286,13 +286,11 @@ class RegisterFragmentsPassTest extends TestCase
 
         $this->assertSame(
             [
-                'TL_CTE' => [
-                    0 => [
-                        'content' => [
-                            'text' => ContentProxy::class,
-                        ],
+                'TL_CTE' => [[
+                    'content' => [
+                        'text' => ContentProxy::class,
                     ],
-                ],
+                ]],
             ],
             $definition->getArguments()[0],
         );
