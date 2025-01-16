@@ -285,7 +285,7 @@
         <source>There is at least one "personal data" module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the "change password" module instead.</source>
       </trans-unit>
       <trans-unit id="ERR.copyUnique">
-        <source>Could not copy record ID %d because its data conflicts with an existing record.</source>
+        <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
