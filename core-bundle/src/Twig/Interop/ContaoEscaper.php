@@ -43,12 +43,12 @@ final class ContaoEscaper
 
         $string = (string) $string;
 
-        return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8', false);
+        return htmlspecialchars($string, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8', 1 === preg_match('/["\'<>]/', $string));
     }
 
     /**
-     * This implementation is a clone of Twig's html_attr escape strategy but
-     * replaces insert tags and decodes entities beforehand.
+     * This implementation is a clone of Twig's html_attr escape strategy but decodes
+     * entities beforehand.
      *
      * @param mixed $string
      *
@@ -61,7 +61,10 @@ final class ContaoEscaper
         }
 
         $string = (string) $string;
-        $string = StringUtil::decodeEntities($string);
+
+        if (1 !== preg_match('/["\'<>]/', $string)) {
+            $string = StringUtil::decodeEntities($string);
+        }
 
         // Original logic
         if (!preg_match('//u', $string)) {
