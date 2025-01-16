@@ -2,6 +2,21 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.21] (2025-01-03)
+
+**Fixed issues:**
+
+- [#7832] Use the correct `_store_referrer` request attribute ([fritzmg])
+- [#7827] Do not overwrite the current referrer with the table referrer ([ausi])
+- [#7795] Remove empty locales in the meta wizard and add the primary language ([Toflar])
+- [#7797] Ignore pages in maintenance mode when generating the sitemap ([qzminski])
+- [#7799] Introduce constants for paste into/after ([fritzmg])
+- [#7798] Do not force HTTP method parameter override ([fritzmg])
+- [#7789] Consider the `addImage` checkbox when collecting RSS enclosures ([CMSworker])
+- [#7821] Add `chosen` to `tl_form_field.type` ([zoglo])
+- [#7010] Handle nested content elements in the back end breadcrumb menu ([ausi])
+- [#7822] Backport the record labeler service ([ausi])
+
 ## [5.3.20] (2024-12-10)
 
 **Fixed issues:**
@@ -504,6 +519,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.21]: https://github.com/contao/contao/releases/tag/5.3.21
 [5.3.20]: https://github.com/contao/contao/releases/tag/5.3.20
 [5.3.19]: https://github.com/contao/contao/releases/tag/5.3.19
 [5.3.18]: https://github.com/contao/contao/releases/tag/5.3.18
@@ -540,6 +556,7 @@ This project adheres to [Semantic Versioning].
 [bennyborn]: https://github.com/bennyborn
 [bezin]: https://github.com/bezin
 [bytehead]: https://github.com/bytehead
+[CMSworker]: https://github.com/CMSworker
 [de-es]: https://github.com/de-es
 [falkgeist]: https://github.com/falkgeist
 [fritzmg]: https://github.com/fritzmg
@@ -742,6 +759,7 @@ This project adheres to [Semantic Versioning].
 [#7006]: https://github.com/contao/contao/pull/7006
 [#7007]: https://github.com/contao/contao/pull/7007
 [#7008]: https://github.com/contao/contao/pull/7008
+[#7010]: https://github.com/contao/contao/pull/7010
 [#7012]: https://github.com/contao/contao/pull/7012
 [#7016]: https://github.com/contao/contao/pull/7016
 [#7017]: https://github.com/contao/contao/pull/7017
@@ -910,3 +928,12 @@ This project adheres to [Semantic Versioning].
 [#7773]: https://github.com/contao/contao/pull/7773
 [#7778]: https://github.com/contao/contao/pull/7778
 [#7785]: https://github.com/contao/contao/pull/7785
+[#7789]: https://github.com/contao/contao/pull/7789
+[#7795]: https://github.com/contao/contao/pull/7795
+[#7797]: https://github.com/contao/contao/pull/7797
+[#7798]: https://github.com/contao/contao/pull/7798
+[#7799]: https://github.com/contao/contao/pull/7799
+[#7821]: https://github.com/contao/contao/pull/7821
+[#7822]: https://github.com/contao/contao/pull/7822
+[#7827]: https://github.com/contao/contao/pull/7827
+[#7832]: https://github.com/contao/contao/pull/7832
