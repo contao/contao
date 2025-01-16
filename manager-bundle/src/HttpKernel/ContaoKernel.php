@@ -240,8 +240,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             Request::setTrustedProxies(explode(',', $trustedProxies), $trustedHeaderSet);
         }
 
-        Request::enableHttpMethodParameterOverride();
-
         $jwtManager = null;
         $env = null;
         $parseJwt = 'jwt' === $_SERVER['APP_ENV'];
