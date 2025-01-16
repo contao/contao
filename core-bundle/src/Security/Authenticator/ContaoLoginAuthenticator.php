@@ -51,6 +51,7 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 use Symfony\Component\Security\Http\ParameterBagUtils;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Twig\Environment;
 
 class ContaoLoginAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface, InteractiveAuthenticatorInterface
 {
@@ -75,6 +76,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         private readonly RequestStack $requestStack,
         private readonly TwoFactorAuthenticator $twoFactorAuthenticator,
         array $options,
+        private readonly Environment $twig,
     ) {
         $this->options = [
             'username_parameter' => 'username',
@@ -214,8 +216,15 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         return $credentials;
     }
 
-    private function redirectToBackend(Request $request): RedirectResponse
+    private function redirectToBackend(Request $request): Response
     {
+        // If the current request was for a Turbo stream, make the page reload itself
+        // with the current browser URL. This way the redirect URL for the login page
+        // will be an endpoint, that a user can actually visit.
+        if (\in_array('text/vnd.turbo-stream.html', $request->getAcceptableContentTypes(), true)) {
+            return new Response($this->twig->render('@Contao/backend/reload.stream.html.twig'));
+        }
+
         // No redirect parameter required if the 'contao_backend' route was requested
         // without any parameters.
         if ('contao_backend' === $request->attributes->get('_route') && [] === $request->query->all()) {
