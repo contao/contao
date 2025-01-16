@@ -86,8 +86,14 @@ class DebugFragmentsCommand extends Command
         foreach ($values as $k => $v) {
             if (\is_bool($v)) {
                 $v = $v ? 'true' : 'false';
-            } elseif ('nestedFragments' === $k && \array_key_exists('allowedTypes', $v)) {
-                $v = 'true (allowed types: '.implode(', ', $v['allowedTypes']).')';
+            } elseif (\is_array($v) && array_is_list($v)) {
+                $v = implode(', ', $v);
+            } elseif (!is_scalar($v)) {
+                // For non-list arrays, use YAML notation and fix indentation on multiline strings
+                $v = Yaml::dump($v, indent: 2);
+                $v = explode("\n", $v);
+                array_walk($v, static fn (&$vv, $i) => $vv = $i > 0 ? str_repeat(' ', $length+3).$vv : $vv);
+                $v = implode("\n", $v);
             }
 
             $return[] = \sprintf('%s : %s', str_pad($k, $length, ' ', STR_PAD_RIGHT), $v);
