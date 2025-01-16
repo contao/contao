@@ -29,9 +29,6 @@ class MakeBackendResponseUncacheableListener
             return;
         }
 
-        $event->getResponse()
-            ->headers
-            ->set('Cache-Control', 'no-cache, no-store, must-revalidate')
-        ;
+        $event->getResponse()->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate');
     }
 }
