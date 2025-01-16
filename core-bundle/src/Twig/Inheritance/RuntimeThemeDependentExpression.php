@@ -49,9 +49,7 @@ class RuntimeThemeDependentExpression extends AbstractExpression
         }
 
         /** @see RuntimeThemeExpressionTest::testCompilesExpressionCode() */
-        $compiler
-            ->raw('match($this->extensions[\\Contao\\CoreBundle\\Twig\\Extension\\ContaoExtension::class]->getCurrentThemeSlug()) {')
-        ;
+        $compiler->raw('match($this->extensions[\\Contao\\CoreBundle\\Twig\\Extension\\ContaoExtension::class]->getCurrentThemeSlug()) {');
 
         foreach ($valuesByThemeSlug as $theme => $value) {
             $compiler->raw("'$theme' => '$value', ");

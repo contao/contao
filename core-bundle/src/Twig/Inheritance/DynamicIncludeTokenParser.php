@@ -95,6 +95,7 @@ final class DynamicIncludeTokenParser extends AbstractTokenParser
                     if ($adjustedNode = $this->traverseAndAdjustTemplateNames($child)) {
                         $node->setNode((string) $name, $adjustedNode);
                     }
+
                     $this->traverseAndAdjustTemplateNames($child);
                 } catch (\LogicException $e) {
                     // Allow missing templates if they are listed in an array like "{% include
