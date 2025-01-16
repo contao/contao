@@ -12,11 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\Extension\ContaoExtension;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Twig\Environment;
 use Twig\Lexer;
+use Twig\Loader\ArrayLoader;
 use Twig\Loader\LoaderInterface;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
@@ -40,7 +44,7 @@ class DynamicIncludeTokenParserTest extends TestCase
     {
         $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
         $filesystemLoader
-            ->method('getFirst')
+            ->method('getAllFirstByThemeSlug')
             ->willReturnCallback(
                 static function (string $name) {
                     $hierarchy = [
@@ -49,7 +53,7 @@ class DynamicIncludeTokenParserTest extends TestCase
                     ];
 
                     if (null !== ($resolved = $hierarchy[$name] ?? null)) {
-                        return $resolved;
+                        return ['' => $resolved];
                     }
 
                     throw new \LogicException('Template not found in hierarchy.');
@@ -103,11 +107,42 @@ class DynamicIncludeTokenParserTest extends TestCase
         ];
     }
 
+    public function testHandlesContaoIncludesWithThemeDifferentContexts(): void
+    {
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
+            ->method('getAllFirstByThemeSlug')
+            ->with('foo.html.twig')
+            ->willReturn(['theme' => '@Contao_Theme_theme/foo.html.twig', '' => '@Contao_ContaoCoreBundle/foo.html.twig'])
+        ;
+
+        $filesystemLoader
+            ->method('getCurrentThemeSlug')
+            ->willReturn('theme')
+        ;
+
+        $environment = new Environment(new ArrayLoader([
+            'template.twig' => '{% include "@Contao/foo.html.twig" %}',
+            '@Contao_ContaoCoreBundle/foo.html.twig' => '<foo-core>',
+            '@Contao_Theme_theme/foo.html.twig' => '<foo-theme>',
+        ]));
+
+        $environment->addTokenParser(new DynamicIncludeTokenParser($filesystemLoader));
+        $environment->addExtension(new ContaoExtension(
+            $environment,
+            $filesystemLoader,
+            $this->createMock(ContaoCsrfTokenManager::class),
+            $this->createMock(ContaoVariable::class),
+        ));
+
+        $this->assertSame('<foo-theme>', $environment->render('template.twig'));
+    }
+
     public function testEnhancesErrorMessageWhenIncludingAnInvalidTemplate(): void
     {
         $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
         $filesystemLoader
-            ->method('getFirst')
+            ->method('getAllFirstByThemeSlug')
             ->with('foo')
             ->willThrowException(new \LogicException('<original message>'))
         ;
