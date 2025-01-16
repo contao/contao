@@ -17,8 +17,11 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 class MakeBackendResponseUncacheableListener
 {
-    public function __construct(private readonly ScopeMatcher $scopeMatcher)
+    private ScopeMatcher $scopeMatcher;
+
+    public function __construct(ScopeMatcher $scopeMatcher)
     {
+        $this->scopeMatcher = $scopeMatcher;
     }
 
     public function __invoke(ResponseEvent $event): void
