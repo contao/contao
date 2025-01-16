@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
+use Contao\CoreBundle\EventListener\ExceptionConverterListener;
 use Contao\CoreBundle\EventListener\UnwrapTwigExceptionListener;
 use Contao\CoreBundle\Exception\NoContentResponseException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
@@ -50,6 +51,10 @@ class UnwrapTwigExceptionListenerTest extends TestCase
         yield 'RedirectResponseException' => [
             new RedirectResponseException('/foo'),
         ];
+
+        foreach (array_unique(ExceptionConverterListener::MAPPER) as $exception) {
+            yield $exception => [new $exception()];
+        }
     }
 
     /**
