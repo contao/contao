@@ -365,7 +365,7 @@ class BackendTemplateStudioController extends AbstractBackendController
         '/%contao.backend.route_prefix%/template-studio/resource/{identifier}',
         name: '_contao_template_studio_operation.stream',
         requirements: ['identifier' => '.+'],
-        defaults: ['_scope' => 'backend', '_token_check' => false],
+        defaults: ['_scope' => 'backend', '_token_check' => false, '_store_referrer' => false],
         methods: ['POST'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
