@@ -183,9 +183,41 @@ class ContaoExtensionTest extends TestCase
 
         $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
         $filesystemLoader
-            ->method('getFirst')
+            ->method('getAllFirstByThemeSlug')
             ->with('foo')
-            ->willReturn('@Contao_Bar/foo.html.twig')
+            ->willReturn(['' => '@Contao_Bar/foo.html.twig'])
+        ;
+
+        $includeFunction = $this->getContaoExtension($environment, $filesystemLoader)->getFunctions()[0];
+        $args = [$environment, [], '@Contao/foo'];
+
+        $this->expectExceptionObject($methodCalledException);
+
+        ($includeFunction->getCallable())(...$args);
+    }
+
+    public function testIncludeFunctionDelegatesToTwigIncludeWithThemeContext(): void
+    {
+        $methodCalledException = new \Exception();
+
+        $environment = $this->createMock(Environment::class);
+        $environment
+            ->expects($this->once())
+            ->method('resolveTemplate')
+            ->with('@Contao_Theme_theme/foo.html.twig')
+            ->willThrowException($methodCalledException)
+        ;
+
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
+            ->method('getAllFirstByThemeSlug')
+            ->with('foo')
+            ->willReturn(['theme' => '@Contao_Theme_theme/foo.html.twig', '' => '@Contao_Bar/foo.html.twig'])
+        ;
+
+        $filesystemLoader
+            ->method('getCurrentThemeSlug')
+            ->willReturn('theme')
         ;
 
         $includeFunction = $this->getContaoExtension($environment, $filesystemLoader)->getFunctions()[0];

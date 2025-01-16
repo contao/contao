@@ -47,6 +47,11 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     private array|null $inheritanceChains = null;
 
     /**
+     * @var list<string>|null
+     */
+    private array|null $themeSlugs = null;
+
+    /**
      * @var array<string, string>
      */
     private array $lookupCache = [];
@@ -233,6 +238,28 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
     }
 
     /**
+     * @internal
+     *
+     * @return array<string|int, string>
+     */
+    public function getAllDynamicParentsByThemeSlug(string $shortNameOrIdentifier, string $sourcePath): array
+    {
+        $allDynamicParents = [];
+
+        foreach ($this->getAllThemeSlugs() as $themeSlug) {
+            $name = $this->getDynamicParent($shortNameOrIdentifier, $sourcePath, $themeSlug);
+
+            if (str_starts_with($name, $this->themeNamespace->getFromSlug($themeSlug).'/')) {
+                $allDynamicParents[$themeSlug] = $name;
+            }
+        }
+
+        $allDynamicParents[''] = $this->getDynamicParent($shortNameOrIdentifier, $sourcePath);
+
+        return $allDynamicParents;
+    }
+
+    /**
      * Finds the first template in the hierarchy and returns the logical name.
      */
     public function getFirst(string $shortNameOrIdentifier, string|null $themeSlug = null): string
@@ -245,6 +272,32 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         }
 
         return $chain[array_key_first($chain)];
+    }
+
+    /**
+     * @internal
+     *
+     * @return array<string|int, string>
+     */
+    public function getAllFirstByThemeSlug(string $shortNameOrIdentifier): array
+    {
+        $allFirst = [];
+
+        foreach ($this->getAllThemeSlugs() as $themeSlug) {
+            try {
+                $name = $this->getFirst($shortNameOrIdentifier, $themeSlug);
+            } catch (\LogicException) {
+                continue;
+            }
+
+            if (str_starts_with($name, $this->themeNamespace->getFromSlug($themeSlug).'/')) {
+                $allFirst[$themeSlug] = $name;
+            }
+        }
+
+        $allFirst[''] = $this->getFirst($shortNameOrIdentifier);
+
+        return $allFirst;
     }
 
     /**
@@ -300,8 +353,29 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         }
 
         $this->inheritanceChains = null;
+        $this->themeSlugs = null;
         $this->lookupCache = [];
         $this->ensureHierarchyIsBuilt(false);
+    }
+
+    /**
+     * @internal
+     */
+    public function getCurrentThemeSlug(): string|null
+    {
+        $themeSlug = $this->currentThemeSlug ?? $this->getThemeSlug();
+
+        return false === $themeSlug ? null : $themeSlug;
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function getAllThemeSlugs(): array
+    {
+        $this->ensureHierarchyIsBuilt();
+
+        return $this->themeSlugs;
     }
 
     private function ensureHierarchyIsBuilt(bool $useCacheForLookup = true): void
@@ -312,31 +386,33 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
 
         $hierarchyItem = $this->cachePool->getItem(self::CACHE_KEY_HIERARCHY);
 
-        // Restore hierarchy from cache
+        // Restore hierarchy and theme slugs from cache
         if ($useCacheForLookup && $hierarchyItem->isHit() && null !== ($hierarchy = $hierarchyItem->get())) {
-            $this->inheritanceChains = $hierarchy;
+            [$this->inheritanceChains, $this->themeSlugs] = $hierarchy;
 
             return;
         }
 
         // Find templates and build the hierarchy
-        $this->inheritanceChains = $this->buildInheritanceChains();
+        [$this->inheritanceChains, $this->themeSlugs] = $this->buildInheritanceChains();
 
         // Persist
-        $hierarchyItem->set($this->inheritanceChains);
+        $hierarchyItem->set([$this->inheritanceChains, $this->themeSlugs]);
         $this->cachePool->save($hierarchyItem);
     }
 
     /**
-     * @return array<string, array<string, string>>
+     * @return array{0: array<string, array<string, string>>, 1: list<string>}
      */
     private function buildInheritanceChains(): array
     {
         /** @var list<array{string, string}> $sources */
         $sources = [];
+        $themeSlugs = [];
 
         foreach ($this->templateLocator->findThemeDirectories() as $slug => $path) {
             $sources[] = [$path, "Contao_Theme_$slug"];
+            $themeSlugs[] = $slug;
         }
 
         $sources[] = [Path::join($this->projectDir, 'templates'), 'Contao_Global'];
@@ -386,7 +462,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
             }
         }
 
-        return $hierarchy;
+        return [$hierarchy, $themeSlugs];
     }
 
     /**

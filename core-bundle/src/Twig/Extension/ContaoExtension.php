@@ -17,6 +17,7 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\String\HtmlAttributes;
+use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
@@ -170,7 +171,15 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 'include',
                 function (Environment $env, $context, $template, $variables = [], $withContext = true, $ignoreMissing = false, $sandboxed = false) use ($includeFunctionCallable) {
                     $args = \func_get_args();
-                    $args[2] = DynamicIncludeTokenParser::adjustTemplateName($template, $this->filesystemLoader);
+
+                    if (\is_string($template)) {
+                        $parts = ContaoTwigUtil::parseContaoName($template);
+
+                        if ('Contao' === ($parts[0] ?? null)) {
+                            $candidates = $this->filesystemLoader->getAllFirstByThemeSlug($parts[1] ?? '');
+                            $args[2] = $candidates[$this->filesystemLoader->getCurrentThemeSlug()] ?? $candidates[''];
+                        }
+                    }
 
                     return $includeFunctionCallable(...$args);
                 },
@@ -354,6 +363,14 @@ final class ContaoExtension extends AbstractExtension implements GlobalsInterfac
                 static fn (mixed $value): array => StringUtil::deserialize($value, true),
             ),
         ];
+    }
+
+    /**
+     * @internal
+     */
+    public function getCurrentThemeSlug(): string|null
+    {
+        return $this->filesystemLoader->getCurrentThemeSlug();
     }
 
     /**
