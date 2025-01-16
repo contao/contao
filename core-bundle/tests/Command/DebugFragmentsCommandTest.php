@@ -138,27 +138,27 @@ class DebugFragmentsCommandTest extends TestCase
                 OUTPUT,
         ];
 
-        yield 'Nested fragment' => [
+        yield 'Fragment with options' => [
             [
-                ['contao.foo.bar', new FragmentConfig(TestController::class), ['category' => 'test', 'nestedFragments' => true]],
+                ['contao.foo.bar', new FragmentConfig(TestController::class), ['category' => 'test', 'foo' => ['bar', 'baz']]],
             ],
             <<<'OUTPUT'
 
                 Contao Fragments
                 ================
 
-                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ------------------------
+                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ---------------------
                   Identifier       Controller                                                            Renderer   Render Options   Fragment Options
-                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ------------------------
-                  contao.foo.bar   Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController   forward                     category        : test
-                                                                                                                                     nestedFragments : true
-                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ------------------------
+                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ---------------------
+                  contao.foo.bar   Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController   forward                     category : test
+                                                                                                                                     foo      : bar, baz
+                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ---------------------
 
 
                 OUTPUT,
         ];
 
-        yield 'Nested fragment with allowed types' => [
+        yield 'Nested fragment' => [
             [
                 ['contao.foo.bar', new FragmentConfig(TestController::class), ['category' => 'test', 'nestedFragments' => ['allowedTypes' => ['alias', 'link']]]],
             ],
