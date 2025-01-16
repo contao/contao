@@ -166,7 +166,8 @@ $GLOBALS['TL_DCA']['tl_news_feed'] = array
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_news_feed', 'getAllowedArchives'),
 			'eval'                    => array('multiple'=>true, 'mandatory'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => "blob NULL",
+			'relation'                => array('table'=>'tl_news_archive', 'type'=>'hasMany', 'load'=>'lazy')
 		),
 		'format' => array
 		(
