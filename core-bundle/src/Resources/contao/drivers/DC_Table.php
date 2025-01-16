@@ -377,11 +377,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$temp = array();
 				$chunks = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$i]['foreignKey'], 2);
+				$strRelationField = $objDcaExtractor->getRelations()[$i]['field'] ?? 'id';
 
 				foreach ((array) $value as $v)
 				{
-					$strRelationField = $objDcaExtractor->getRelations()[$i]['field'] ?? 'id';
-
 					$objKey = $this->Database->prepare("SELECT " . Database::quoteIdentifier($chunks[1]) . " AS value FROM " . $chunks[0] . " WHERE " .Database::quoteIdentifier($strRelationField) ."=?")
 											 ->limit(1)
 											 ->execute($v);
