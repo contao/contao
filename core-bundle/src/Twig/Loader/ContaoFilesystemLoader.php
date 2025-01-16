@@ -384,9 +384,9 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
 
         $hierarchyItem = $this->cachePool->getItem(self::CACHE_KEY_HIERARCHY);
 
-        // Restore hierarchy from cache
+        // Restore hierarchy and theme slugs from cache
         if ($useCacheForLookup && $hierarchyItem->isHit() && null !== ($hierarchy = $hierarchyItem->get())) {
-            $this->inheritanceChains = $hierarchy;
+            [$this->inheritanceChains, $this->themeSlugs] = $hierarchy;
 
             return;
         }
@@ -395,7 +395,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
         [$this->inheritanceChains, $this->themeSlugs] = $this->buildInheritanceChains();
 
         // Persist
-        $hierarchyItem->set($this->inheritanceChains);
+        $hierarchyItem->set([$this->inheritanceChains, $this->themeSlugs]);
         $this->cachePool->save($hierarchyItem);
     }
 
