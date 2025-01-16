@@ -89,11 +89,11 @@ class DebugFragmentsCommand extends Command
                 $v = $v ? 'true' : 'false';
             } elseif (\is_array($v) && array_is_list($v)) {
                 $v = implode(', ', $v);
-            } elseif (!is_scalar($v)) {
+            } elseif (!\is_scalar($v)) {
                 // For non-list arrays, use YAML notation and fix indentation on multiline strings
                 $v = Yaml::dump($v, indent: 2);
                 $v = explode("\n", $v);
-                array_walk($v, static fn (&$vv, $i) => $vv = $i > 0 ? str_repeat(' ', $length+3).$vv : $vv);
+                array_walk($v, static fn (&$vv, $i) => $vv = $i > 0 ? str_repeat(' ', $length + 3).$vv : $vv);
                 $v = implode("\n", $v);
             }
 
