@@ -49,19 +49,6 @@ class BackendTemplate extends Template
 	}
 
 	/**
-	 * Return a response object
-	 *
-	 * @return Response The response object
-	 */
-	public function getResponse()
-	{
-		$response = parent::getResponse();
-		$response->headers->set('Cache-Control', 'no-cache, no-store');
-
-		return $response->setPrivate();
-	}
-
-	/**
 	 * Compile the template
 	 *
 	 * @internal Do not call this method in your code. It will be made private in Contao 5.0.
