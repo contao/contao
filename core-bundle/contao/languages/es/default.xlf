@@ -377,6 +377,9 @@
         <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
         <target>Existe al menos un módulo de &quot;datos personales&quot; que permite cambiar la contraseña. Esto es un punto débil de seguridad y ya no funcionará en Contao 6. Utilice el módulo &quot;cambiar contraseña&quot; en su lugar.</target>
       </trans-unit>
+      <trans-unit id="ERR.copyUnique">
+        <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Por favor, suma %d y %d.</target>

@@ -25,7 +25,6 @@ use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\String\UnicodeString;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Provide methods to modify the database.

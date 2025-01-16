@@ -2,6 +2,25 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.22] (2025-01-16)
+
+**Fixed issues:**
+
+- [#7889] Also persist theme slugs in the Twig hierarchy cache ([m-vo])
+- [#7762] Show an error message when copying newsletter recipient records ([fritzmg])
+- [#7843] Fix dynamic Twig inheritance when in a theme context ([m-vo])
+- [#7882] Fix a PHP 8 issue in the `tl_user_group::getExcludedFields()` method ([leofeyer])
+- [#7793] Unwrap Twig exceptions ([aschempp])
+- [#7880] Ensure that `Widget::$arrOptions` is always an array ([leofeyer])
+- [#7801] Correctly render nested fragments with the `allowedTypes` option in the debug view ([bytehead])
+- [#7874] Handle query parameters when generating download URLs ([fritzmg])
+- [#7415] Fix an error if a record in the clipboard is deleted before pasting ([lukasbableck])
+- [#7865] Add `no-store` to back end responses ([fritzmg])
+- [#7800] Increase the blob size for `tl_user.session` ([fritzmg])
+- [#7815] Correctly handle fragment priority ([aschempp])
+- [#7856] Fix an SQL syntax error in the `FileExtensionMigration` ([lukasbableck])
+- [#7860] Set `$dc->table` and `$dc->id` in the `FallbackRecordLabelListener` ([lukasbableck])
+
 ## [5.3.21] (2025-01-03)
 
 **Fixed issues:**
@@ -519,6 +538,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.22]: https://github.com/contao/contao/releases/tag/5.3.22
 [5.3.21]: https://github.com/contao/contao/releases/tag/5.3.21
 [5.3.20]: https://github.com/contao/contao/releases/tag/5.3.20
 [5.3.19]: https://github.com/contao/contao/releases/tag/5.3.19
@@ -859,6 +879,7 @@ This project adheres to [Semantic Versioning].
 [#7398]: https://github.com/contao/contao/pull/7398
 [#7407]: https://github.com/contao/contao/pull/7407
 [#7411]: https://github.com/contao/contao/pull/7411
+[#7415]: https://github.com/contao/contao/pull/7415
 [#7416]: https://github.com/contao/contao/pull/7416
 [#7422]: https://github.com/contao/contao/pull/7422
 [#7428]: https://github.com/contao/contao/pull/7428
@@ -922,6 +943,7 @@ This project adheres to [Semantic Versioning].
 [#7755]: https://github.com/contao/contao/pull/7755
 [#7757]: https://github.com/contao/contao/pull/7757
 [#7758]: https://github.com/contao/contao/pull/7758
+[#7762]: https://github.com/contao/contao/pull/7762
 [#7765]: https://github.com/contao/contao/pull/7765
 [#7767]: https://github.com/contao/contao/pull/7767
 [#7772]: https://github.com/contao/contao/pull/7772
@@ -929,11 +951,23 @@ This project adheres to [Semantic Versioning].
 [#7778]: https://github.com/contao/contao/pull/7778
 [#7785]: https://github.com/contao/contao/pull/7785
 [#7789]: https://github.com/contao/contao/pull/7789
+[#7793]: https://github.com/contao/contao/pull/7793
 [#7795]: https://github.com/contao/contao/pull/7795
 [#7797]: https://github.com/contao/contao/pull/7797
 [#7798]: https://github.com/contao/contao/pull/7798
 [#7799]: https://github.com/contao/contao/pull/7799
+[#7800]: https://github.com/contao/contao/pull/7800
+[#7801]: https://github.com/contao/contao/pull/7801
+[#7815]: https://github.com/contao/contao/pull/7815
 [#7821]: https://github.com/contao/contao/pull/7821
 [#7822]: https://github.com/contao/contao/pull/7822
 [#7827]: https://github.com/contao/contao/pull/7827
 [#7832]: https://github.com/contao/contao/pull/7832
+[#7843]: https://github.com/contao/contao/pull/7843
+[#7856]: https://github.com/contao/contao/pull/7856
+[#7860]: https://github.com/contao/contao/pull/7860
+[#7865]: https://github.com/contao/contao/pull/7865
+[#7874]: https://github.com/contao/contao/pull/7874
+[#7880]: https://github.com/contao/contao/pull/7880
+[#7882]: https://github.com/contao/contao/pull/7882
+[#7889]: https://github.com/contao/contao/pull/7889
