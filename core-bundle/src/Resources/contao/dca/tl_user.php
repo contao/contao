@@ -22,6 +22,7 @@ use Contao\Input;
 use Contao\Message;
 use Contao\StringUtil;
 use Contao\System;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -425,7 +426,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'exclude'                 => true,
 			'input_field_callback'    => array('tl_user', 'sessionField'),
 			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type' => 'blob', 'length' => MySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull' => false)
 		),
 		'dateAdded' => array
 		(
