@@ -94,7 +94,7 @@ class BackendTemplateStudioController extends AbstractBackendController
     #[Route(
         '/%contao.backend.route_prefix%/template-studio-tree',
         name: '_contao_template_studio_tree.stream',
-        defaults: ['_scope' => 'backend', '_store_referrer' => false, '_unauthenticated_redirect_route' => 'contao_template_studio'],
+        defaults: ['_scope' => 'backend', '_store_referrer' => false],
         methods: ['GET'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
@@ -111,7 +111,7 @@ class BackendTemplateStudioController extends AbstractBackendController
     #[Route(
         '/%contao.backend.route_prefix%/template-studio/select_theme',
         name: '_contao_template_studio_select_theme.stream',
-        defaults: ['_scope' => 'backend', '_token_check' => false, '_store_referrer' => false, '_unauthenticated_redirect_route' => 'contao_template_studio'],
+        defaults: ['_scope' => 'backend', '_token_check' => false, '_store_referrer' => false],
         methods: ['POST'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
@@ -138,7 +138,7 @@ class BackendTemplateStudioController extends AbstractBackendController
         '/%contao.backend.route_prefix%/template-studio/resource/{identifier}',
         name: '_contao_template_studio_editor_tab.stream',
         requirements: ['identifier' => '.+'],
-        defaults: ['_scope' => 'backend', '_store_referrer' => false, '_unauthenticated_redirect_route' => 'contao_template_studio'],
+        defaults: ['_scope' => 'backend', '_store_referrer' => false],
         methods: ['GET'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
@@ -225,7 +225,7 @@ class BackendTemplateStudioController extends AbstractBackendController
     #[Route(
         '/%contao.backend.route_prefix%/template-studio-follow',
         name: '_contao_template_studio_follow.stream',
-        defaults: ['_scope' => 'backend', '_store_referrer' => false, '_unauthenticated_redirect_route' => 'contao_template_studio'],
+        defaults: ['_scope' => 'backend', '_store_referrer' => false],
         methods: ['GET'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
@@ -244,7 +244,7 @@ class BackendTemplateStudioController extends AbstractBackendController
     #[Route(
         '/%contao.backend.route_prefix%/template-studio-block-info',
         name: '_contao_template_studio_block_info.stream',
-        defaults: ['_scope' => 'backend', '_store_referrer' => false, '_unauthenticated_redirect_route' => 'contao_template_studio'],
+        defaults: ['_scope' => 'backend', '_store_referrer' => false],
         methods: ['GET'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
@@ -336,7 +336,7 @@ class BackendTemplateStudioController extends AbstractBackendController
     #[Route(
         '/%contao.backend.route_prefix%/template-studio-annotations-data',
         name: '_contao_template_studio_annotations_data.stream',
-        defaults: ['_scope' => 'backend', '_store_referrer' => false, '_unauthenticated_redirect_route' => 'contao_template_studio'],
+        defaults: ['_scope' => 'backend', '_store_referrer' => false],
         methods: ['GET'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
@@ -365,7 +365,7 @@ class BackendTemplateStudioController extends AbstractBackendController
         '/%contao.backend.route_prefix%/template-studio/resource/{identifier}',
         name: '_contao_template_studio_operation.stream',
         requirements: ['identifier' => '.+'],
-        defaults: ['_scope' => 'backend', '_token_check' => false, '_store_referrer' => false, '_unauthenticated_redirect_route' => 'contao_template_studio'],
+        defaults: ['_scope' => 'backend', '_token_check' => false],
         methods: ['POST'],
         condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]

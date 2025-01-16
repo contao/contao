@@ -355,46 +355,6 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $this->assertSame('/contao/login', $response->getTargetUrl());
     }
 
-    public function testUsesCustomRedirectParameter(): void
-    {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $scopeMatcher
-            ->expects($this->once())
-            ->method('isBackendRequest')
-            ->willReturn(true)
-        ;
-
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->expects($this->exactly(2))
-            ->method('generate')
-            ->willReturnMap([
-                ['my_fallback_route', [], UrlGeneratorInterface::ABSOLUTE_URL, 'https://example.com/my_fallback'],
-                ['contao_backend_login', ['redirect' => 'https://example.com/my_fallback'], UrlGeneratorInterface::ABSOLUTE_URL, '/contao/login?redirect=https://example.com/my_fallback'],
-            ])
-        ;
-
-        $uriSigner = $this->createMock(UriSigner::class);
-        $uriSigner
-            ->method('sign')
-            ->willReturnArgument(0)
-        ;
-
-        $authenticator = $this->getContaoLoginAuthenticator(
-            scopeMatcher: $scopeMatcher,
-            router: $router,
-            uriSigner: $uriSigner,
-        );
-
-        $request = Request::create('https://example.com/foo/bar');
-        $request->attributes->set('_unauthenticated_redirect_route', 'my_fallback_route');
-
-        $response = $authenticator->start($request);
-
-        $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('/contao/login?redirect=https://example.com/my_fallback', $response->getTargetUrl());
-    }
-
     /**
      * @dataProvider getAuthenticationData
      */

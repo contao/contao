@@ -220,8 +220,6 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         // without any parameters.
         if ('contao_backend' === $request->attributes->get('_route') && [] === $request->query->all()) {
             $loginParams = [];
-        } elseif (null !== ($redirectRoute = $request->attributes->get('_unauthenticated_redirect_route'))) {
-            $loginParams = ['redirect' => $this->router->generate($redirectRoute, referenceType: UrlGeneratorInterface::ABSOLUTE_URL)];
         } else {
             $loginParams = ['redirect' => $request->getUri()];
         }
