@@ -1149,10 +1149,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 			catch (UniqueConstraintViolationException $e)
 			{
-				/** @var TranslatorInterface $translator */
-				$translator = System::getContainer()->get('translator');
-
-				Message::addError(\sprintf($translator->trans('ERR.copyUnique', array(), 'contao_default'), (int) $currentRecord['id']));
+				Message::addError(\sprintf(System::getContainer()->get('translator')->trans('ERR.copyUnique', array(), 'contao_default'), (int) $currentRecord['id']));
 			}
 		}
 
