@@ -309,7 +309,7 @@ class tl_newsletter extends Backend
 			$root = $this->User->newsletters;
 		}
 
-		$currentId = \defined('CURRENT_ID') ? CURRENT_ID : 0;
+		$currentId = defined('CURRENT_ID') ? CURRENT_ID : 0;
 		$id = strlen(Input::get('id')) ? Input::get('id') : $currentId;
 
 		// Check current action
