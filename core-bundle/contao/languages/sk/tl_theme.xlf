@@ -1,0 +1,194 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_theme.php" source-language="en" target-language="sk">
+    <body>
+      <trans-unit id="tl_theme.name.0">
+        <source>Theme title</source>
+        <target>Názov témy vzhľadu</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.name.1">
+        <source>Please enter a unique theme title.</source>
+        <target>Zadajte prosím jedinečný názov témy vzhľadu.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.author.0">
+        <source>Author</source>
+        <target>Autor</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.author.1">
+        <source>Please enter the name of the theme designer.</source>
+        <target>Zadajte prosím meno osoby, ktorá túto tému vzhľadu navrhla.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.folders.0">
+        <source>Folders</source>
+        <target>Priečinky</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.folders.1">
+        <source>Please select the folders that belong to the theme from the files directory.</source>
+        <target>Vyberte adresáre, ktoré patria tejto téme vzhľadu.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.templates.0">
+        <source>Templates folder</source>
+        <target>Priečinok šablón</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.templates.1">
+        <source>Here you can select a templates folder that will be exported with the theme.</source>
+        <target>Tu môžte vybrať adresár šablón, ktorý bude exportovaný spolu s témou vzhľadu.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.screenshot.0">
+        <source>Screenshot</source>
+        <target>Náhľad</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.screenshot.1">
+        <source>Here you can choose a screenshot of the theme.</source>
+        <target>Tu môžte vybrať náhľad (screenshot) témy vzhľadu.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.source.0">
+        <source>Source files</source>
+        <target>Zdrojové súbory</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.source.1">
+        <source>Here you can upload one or more .cto, .zip or .sql files to be imported.</source>
+        <target>Tu môžete nahrať jeden alebo viac súborov .cto, .zip alebo .sql, ktoré chcete importovať.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.tstamp.0">
+        <source>Revision date</source>
+        <target>Dátum zmeny</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.tstamp.1">
+        <source>Date and time of the latest revision</source>
+        <target>Dátum a čas poslednej úpravy</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.title_legend">
+        <source>Title and author</source>
+        <target>Názov a autor</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.config_legend">
+        <source>Configuration</source>
+        <target>Nastavenie</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.theme_imported">
+        <source>Theme &quot;%s&quot; has been imported.</source>
+        <target>Téma vzhľadu &quot;%s&quot; bola úspešne importovaná.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.checking_theme">
+        <source>The theme data is being checked</source>
+        <target>Dáta témy vzhľadu boli pridané</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.tables_fields">
+        <source>Tables and fields</source>
+        <target>Tabuľky a polia</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.missing_field">
+        <source>The field &lt;strong&gt;%s&lt;/strong&gt; is missing in the database and will not be imported.</source>
+        <target>Pole &lt;strong&gt;%s&lt;/strong&gt; chýba v databáze a preto nebude importované.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.tables_ok">
+        <source>The tables have been successfully checked.</source>
+        <target>Tabuľky boli úspešne overené.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.missing_xml">
+        <source>Theme &quot;%s&quot; is corrupt and cannot be imported.</source>
+        <target>Téma vzhľadu &quot;%s&quot; je poškodená a nemôže byť importovaná.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.custom_templates">
+        <source>Custom templates</source>
+        <target>Vlastné šablóny</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.template_exists">
+        <source>The template &lt;strong&gt;&quot;%s&quot;&lt;/strong&gt; exists and will be overwritten.</source>
+        <target>Šablóna &lt;strong&gt;&quot;%s&quot;&lt;/strong&gt; existuje a bude prepísaná.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.templates_ok">
+        <source>No conflicts detected.</source>
+        <target>Nie sú zistené žiadne konflikty.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.store.0">
+        <source>Theme store</source>
+        <target>Obchod - Témy vzhľadu</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.store.1">
+        <source>Find more themes in the Contao theme store</source>
+        <target>Nájsť viac Tém vzhľadu v Contao obchode</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.importTheme.0">
+        <source>Import</source>
+        <target>Importovať</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.importTheme.1">
+        <source>Import a theme</source>
+        <target>Importovať tému vzhľadu</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.selectExampleWebsite.0">
+        <source>Import an example website</source>
+        <target>Importujte vzorový web</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.selectExampleWebsite.1">
+        <source>Here you can import an &lt;code&gt;.sql&lt;/code&gt; file. Any existing data will be deleted! If you only want to import a theme, do not select a file here.</source>
+        <target>Tu môžete importovať súbor  &lt;code&gt;.sql&lt;/code&gt; Všetky existujúce údaje budú vymazané! Ak chcete iba importovať motív, nevyberajte tu súbor.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImportType.0">
+        <source>Import type</source>
+        <target>Typ importu</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImportType.1">
+        <source>Here you can select the import type.</source>
+        <target>Tu môžete vybrať typ importu.</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.full">
+        <source>Full SQL import</source>
+        <target>Úplný SQL import</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.data">
+        <source>Data only</source>
+        <target>Len dáta</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exampleWebsiteImport.data_no_truncate">
+        <source>Data only without truncating tables</source>
+        <target>Iba údaje bez skrátených tabuliek</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.editmeta">
+        <source>Edit the theme settings</source>
+        <target>Upraviť nastavenia témy vzhľadu</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.new.0">
+        <source>New</source>
+        <target>Nová</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.new.1">
+        <source>Create a new theme</source>
+        <target>Vytvoriť novú tému vzhľadu</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.show">
+        <source>Show the details of theme ID %s</source>
+        <target>Zobraziť detaily témy vzhľadu ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.edit">
+        <source>Edit theme ID %s</source>
+        <target>Upraviť tému vzhľadu ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.delete">
+        <source>Delete theme ID %s</source>
+        <target>Odstrániť tému vzhľadu ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.css">
+        <source>Edit the style sheets of theme ID %s</source>
+        <target>Upraviť kaskádové štýly témy vzhľadu ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.modules">
+        <source>Edit the front end modules of theme ID %s</source>
+        <target>Upraviť frontend moduly témy vzhľadu ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.layout">
+        <source>Edit the page layouts of theme ID %s</source>
+        <target>Upraviť layouty témy vzhľadu ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.imageSizes">
+        <source>Edit the image sizes of theme ID %s</source>
+        <target>Upraviť veľkosti obrázkov témy vzhľadu ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.exportTheme">
+        <source>Export theme ID %s</source>
+        <target>Exportovať tému vzhľadu ID %s</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

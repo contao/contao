@@ -174,8 +174,8 @@
         <target>Dela på Facebook</target>
       </trans-unit>
       <trans-unit id="tl_article.twitter">
-        <source>Share on Twitter</source>
-        <target>Dela på Twitter</target>
+        <source>Share on X (formerly Twitter)</source>
+        <target>Dela på X (tidigare Twitter)</target>
       </trans-unit>
       <trans-unit id="tl_article.new.0">
         <source>New</source>

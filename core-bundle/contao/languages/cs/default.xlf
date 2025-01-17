@@ -373,6 +373,38 @@
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
         <target>Dosud není zadaná mailová adresa administrátora. Prosím kontaktujte správce webové stránky. </target>
       </trans-unit>
+      <trans-unit id="ERR.altchaJavaScriptRequired">
+        <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.</source>
+        <target>JavaScript je momentálně vypnutý nebo blokovaný. Bez JavaScriptu nebude ochrana proti spamu fungovat. Zapněte prosím dočasně JavaScript, aby se podařilo odeslat daný formulář.</target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaVerificationFailed">
+        <source>Anti-spam verification failed. Are you a human or a robot?</source>
+        <target>Ochrana před spamem selhala. Jste robot nebo člověk? </target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaWidgetError">
+        <source>Verification failed. Try again later.</source>
+        <target>Ověření selhalo. Zkuste to prosím znovu.</target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaInsecureConnection">
+        <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
+        <target>ALTCHA není dostupná bez bezpečného připojení pomocí HTTPS. Pokud ho vaše webová stránka nepoužívá, což není doporučené, použijte místo toho bezpečností otázku.</target>
+      </trans-unit>
+      <trans-unit id="ERR.personalDataPassword">
+        <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
+        <target>Existuje alespoň jeden &quot;osobní datový&quot; modul, který umožňuje změnu hesla. To je bezpečností riziko a nebude nadále fungovat v Contau 6. Použijte místo toho modul &quot;Změna hesla&quot;.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeysUnsupported">
+        <source>Passkeys are not supported on this device.</source>
+        <target>Passkeys není na tomto zařízení podporován.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAssertionFailure">
+        <source>Login with passkey failed.</source>
+        <target>Přihlášení pomocí passkey selhalo.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAttestationFailure">
+        <source>Passkey could not be created.</source>
+        <target>Nešlo vytvořit passkey.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Prosím sečtěte %d a %d.</target>
@@ -433,6 +465,14 @@
         <source>Generates an ordered or unordered list.</source>
         <target>Uspořádaný nebo neuspořádaný seznam.</target>
       </trans-unit>
+      <trans-unit id="CTE.description_list.0">
+        <source>Description list</source>
+        <target>Popisný seznam</target>
+      </trans-unit>
+      <trans-unit id="CTE.description_list.1">
+        <source>Generates a description list with terms and details.</source>
+        <target>Vytvoří popisný seznam s termíny a podrobnostmi.</target>
+      </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
         <target>Tabulka</target>
@@ -441,29 +481,41 @@
         <source>Generates an optionally sortable table.</source>
         <target>Tento prvek obsahuje tabulku.</target>
       </trans-unit>
-      <trans-unit id="CTE.accordion">
+      <trans-unit id="CTE.accordion.0">
         <source>Accordion</source>
         <target>Skládačka</target>
       </trans-unit>
+      <trans-unit id="CTE.accordion.1">
+        <source>Generates an accordion.</source>
+        <target>Vytvoří akordeon.</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.0">
+        <source>Element group</source>
+        <target>Skupina elementů</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.1">
+        <source>Generates a group of nested elements.</source>
+        <target>Vytvoří skupinu podružných elementů</target>
+      </trans-unit>
       <trans-unit id="CTE.accordionStart.0">
-        <source>Wrapper start</source>
-        <target>Začátek obálky</target>
+        <source>Accordion wrapper start</source>
+        <target>Začátek obálky akordeonu</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.1">
         <source>Generates the opening part of the accordion wrapper.</source>
         <target>Vytvoří počáteční část obálky skládačky</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.0">
-        <source>Wrapper stop</source>
-        <target>Konec obálky jezdce</target>
+        <source>Accordion wrapper stop</source>
+        <target>Konec obálky akordeonu</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.1">
         <source>Generates the closing part of the accordion wrapper.</source>
         <target>Vytvoří závěrečnou část obálky skládačky.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.0">
-        <source>Single element</source>
-        <target>Samostatný element</target>
+        <source>Accordion single element</source>
+        <target>Samostatný akordeon</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.1">
         <source>Generates a single accordion element.</source>
@@ -493,21 +545,29 @@
         <source>Generates an element to insert a custom template.</source>
         <target>Vytvoří element pro vložení vlastní předlohy.</target>
       </trans-unit>
+      <trans-unit id="CTE.swiper.0">
+        <source>Content slider</source>
+        <target>Jezdec obsahových elementů</target>
+      </trans-unit>
+      <trans-unit id="CTE.swiper.1">
+        <source>Generates a content slider element.</source>
+        <target>Vytvoří element obsahového slideru</target>
+      </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
         <target>Jezdec obsahových elementů</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.0">
-        <source>Wrapper start</source>
-        <target>Začátek obálky</target>
+        <source>Slider wrapper start</source>
+        <target>Začátek obálky slideru</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.1">
         <source>Generates the opening part of the slider wrapper.</source>
         <target>Vytvoří počáteční část obálky jezdce.</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.0">
-        <source>Wrapper stop</source>
-        <target>Konec obálky jezdce</target>
+        <source>Slider wrapper stop</source>
+        <target>Konec obálky slideru</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.1">
         <source>Generates the closing part of the slider wrapper.</source>
@@ -641,6 +701,10 @@
         <source>Displays the teaser text of an article.</source>
         <target>Začlenění perexu (ukázky) konkrétního článku.</target>
       </trans-unit>
+      <trans-unit id="CTE.legacy">
+        <source>Legacy elements</source>
+        <target>Starší elementy</target>
+      </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
         <target>Vysvětlivka</target>
@@ -744,6 +808,14 @@
       <trans-unit id="FFL.hidden.1">
         <source>A single-line input field that is not visible in the form.</source>
         <target>jednořádkové pole, které je skryté.</target>
+      </trans-unit>
+      <trans-unit id="FFL.altcha.0">
+        <source>ALTCHA antispam</source>
+        <target>Ochrana před spamem ALTCHA</target>
+      </trans-unit>
+      <trans-unit id="FFL.altcha.1">
+        <source>Provides an ALTCHA antispam form field to verify that the form is submitted by a human (CAPTCHA).</source>
+        <target>Zobrazí pole ochrany před spamem ALTCHA, které ověří, zda formulář odesílá člověk (CAPTCHA).</target>
       </trans-unit>
       <trans-unit id="FFL.captcha.0">
         <source>Security question</source>
@@ -1139,6 +1211,10 @@
       <trans-unit id="MSC.target.1">
         <source>Open the link in a new browser window.</source>
         <target>Pokud vyberete tuto možnost, bude cílená URL otevřena v novém okně prohlížeče.</target>
+      </trans-unit>
+      <trans-unit id="MSC.openTab">
+        <source>Open in a new tab</source>
+        <target>Otevřít v novém okně</target>
       </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
@@ -1601,8 +1677,8 @@
         <target>Klávesové zkratky backendu</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Více o zrychlení vašeho pracovního postupu pomocí &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;klávesových zkratek&lt;/a&gt;.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Dozvědět se více o zrychlení práce použitím &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;klávesových zkratek&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1703,6 +1779,10 @@
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
         <target>Zrušit</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirm">
+          <source>Are you sure?</source>
+          <target>Jste si jistá/ý? </target>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete element ID %s?</source>
@@ -2324,6 +2404,10 @@
         <source>Quick link</source>
         <target>Rychlý odkaz</target>
       </trans-unit>
+      <trans-unit id="MSC.lostPassword">
+        <source>Forgot your password?</source>
+        <target>Zapomněl jsi své heslo? </target>
+      </trans-unit>
       <trans-unit id="MSC.username">
         <source>Username</source>
         <target>Uživatelské jméno</target>
@@ -2343,6 +2427,14 @@
       <trans-unit id="MSC.emptyField">
         <source>Please enter your username and password!</source>
         <target>Prosím vyplňte uživatelské jméno a heslo</target>
+      </trans-unit>
+      <trans-unit id="MSC.reauthenticate">
+        <source>Please enter your password to verify your identity.</source>
+        <target>Zadej prosím své heslo, aby ověřil svou totožnost.</target>
+      </trans-unit>
+      <trans-unit id="MSC.verify">
+        <source>Verify</source>
+        <target>Ověřit</target>
       </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
@@ -2448,17 +2540,13 @@
         <source>Print this page</source>
         <target>Vytisknout tuto stránku</target>
       </trans-unit>
-      <trans-unit id="MSC.printAsPdf">
-        <source>Save article as PDF</source>
-        <target>Uložit článek jako PDF</target>
-      </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>
         <target>Sdílet přes Facebook</target>
       </trans-unit>
       <trans-unit id="MSC.twitterShare">
-        <source>Share on Twitter</source>
-        <target>Sdílet přes Twitter</target>
+        <source>Share on X (formerly Twitter)</source>
+        <target>Sdílet přes X (dříve Twitter)</target>
       </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>
@@ -2491,6 +2579,9 @@
       <trans-unit id="MSC.list_perPage">
         <source>Results per page</source>
         <target>Výsledků na stranu</target>
+      </trans-unit>
+      <trans-unit id="MSC.or">
+        <source>or</source>
       </trans-unit>
       <trans-unit id="MSC.published">
         <source>Published</source>
@@ -2540,6 +2631,10 @@
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
         <target>Odkaz, který se snažíte otevřít, nemůže být ověřen. Pokud jste ho otevřeli sami, nebo ho obdrželi od důvěryhodné osoby, můžete potvrdit jeho otevření v dalším kroku. </target>
       </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>Několikrát jste se pokusili restartovat vaše heslo. Pokuste se o to prosím za 15 minut znovu.</target>
+      </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
         <target>Konflikt verzí</target>
@@ -2573,19 +2668,19 @@
         <target>Chcete-li zadat metadata souboru, musíte přidat kořenovou stránku webu.</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
-        <source>Breadcrumb menu</source>
-        <target>Navigační cesta</target>
+        <source>Breadcrumb</source>
+        <target>Drobečková navigace</target>
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
-        <source>Main navigation</source>
-        <target>Hlavní navigace</target>
+        <source>Main</source>
+        <target>Hlavní</target>
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
-        <source>Header navigation</source>
-        <target>Hlavičková navigace</target>
+        <source>Header</source>
+        <target>Záhlaví</target>
       </trans-unit>
       <trans-unit id="MSC.pagination">
-        <source>Pagination menu</source>
+        <source>Pagination</source>
         <target>Navigace stránek</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
@@ -2829,6 +2924,78 @@
         <source>Light mode</source>
         <target>`Světlý vzhled</target>
       </trans-unit>
+      <trans-unit id="MSC.altchaFooter">
+        <source>Protected by &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</source>
+        <target>Chráněno pomocí &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaLabel">
+        <source>I'm not a robot</source>
+        <target>Jsem robot</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaVerified">
+        <source>I'm human</source>
+        <target>Jsem člověk</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaVerifying">
+        <source>Verifying …</source>
+        <target>Ověřuji...</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaWaitAlert">
+        <source>Verifying … please wait.</source>
+        <target>Ověřuji… počkejte prosím.</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeys">
+        <source>Passkeys</source>
+        <target>Passkeys</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysDescription">
+        <source>Passkeys allow you to log in securely and easily without the need for a password and two-factor token.</source>
+        <target>Passkeys dovolují bezpečné a jednoduché přihlášení bez potřeby zadávání hesla a dvoufaktorových kódů.</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyLogin">
+        <source>Sign in with a passkey</source>
+        <target>Přihlásit se pomocí passkey</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysName">
+        <source>Name/ID</source>
+        <target>Jméno/ID</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyNameInput">
+        <source>Name this passkey …</source>
+        <target>Pojmenujte tento passkey...</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysCreatedAt">
+        <source>Created at</source>
+        <target>Vytvořeno</target>
+      </trans-unit>
+      <trans-unit id="MSC.addPasskey">
+        <source>Add passkey</source>
+        <target>Přidat passkey</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsPlaceholder">
+        <source>Type to start searching</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsMin">
+        <source>Please enter at least %s characters</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsLoading">
+        <source>Loading results...</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitView">
+        <source>View %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitEdit">
+        <source>Edit %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.noResults">
+        <source>No results found.</source>
+      </trans-unit>
+      <trans-unit id="MSC.noOptions">
+        <source>No options to choose from.</source>
+      </trans-unit>
+      <trans-unit id="MSC.removeItem">
+        <source>Remove item</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
         <target>Byte</target>
@@ -3012,6 +3179,9 @@
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
         <target>Uchopit položku ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.operations">
+        <source>Show operations for element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.children">
         <source>Edit the child elements of element ID %s</source>

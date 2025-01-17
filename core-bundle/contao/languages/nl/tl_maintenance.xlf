@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.versions.1">
         <source>Truncates the &lt;code&gt;tl_version&lt;/code&gt; table which stores the previous versions of a record. This job permanently deletes these records.</source>
-        <target>Kort de &lt;code&gt;tl_version&lt;/ code&gt; tabel in welke de vorige versies van een opgeslagen record bevat. Deze actie zal de records permanent verwijderen.</target>
+        <target>Kort de &lt;code&gt;tl_version&lt;/code&gt; tabel in welke de vorige versies van een opgeslagen record bevat. Deze actie zal de records permanent verwijderen.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.log.0">
         <source>Purge the system log</source>
@@ -114,7 +114,7 @@
         <target>XML bestanden opnieuw opbouwen</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
-        <source>Recreates the XML files in the &lt;code&gt;shared&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
+        <source>Recreates the XML files in the &lt;code&gt;share&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
         <target>Maakt de XML-bestanden opnieuw aan in de &lt;code&gt;gedeelde&lt;/code&gt; map en verwijdert vervolgens de gedeelde cache, zodat er geen koppelingen zijn naar verwijderde bronnen.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
@@ -141,6 +141,14 @@
         <source>The crawler crawls all URLs it finds. Here you can decide what to do with these results.</source>
         <target>De crawler crawlt alle gevonden URL's. Hier kunt u beslissen wat u met deze resultaten wilt doen.</target>
       </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDepth.0">
+        <source>Maximum depth</source>
+        <target>Maximale diepte</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlDepth.1">
+        <source>The maximum depth to crawl.</source>
+        <target>De maximale diepte om te crawlen.</target>
+      </trans-unit>
       <trans-unit id="tl_maintenance.crawlMember.0">
         <source>Front end member</source>
         <target>Front-end lid</target>
@@ -148,6 +156,10 @@
       <trans-unit id="tl_maintenance.crawlMember.1">
         <source>Automatically log in a front end member to index protected pages.</source>
         <target>Automatisch inloggen van front-end member om beveiligde pagina's te indexeren.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.crawlHint">
+        <source>Your website is currently crawled with %d concurrent requests. If your server can handle more than %1$d concurrent requests, ask your system administrator to increase the &lt;code&gt;%s&lt;/code&gt; setting in the system configuration to speed up the crawling process. Refer to the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao manual&lt;/a&gt; for more information.</source>
+        <target>Uw website wordt momenteel gecrawld met %d gelijktijdige verzoeken. Als uw server meer dan %1$d gelijktijdige verzoeken kan verwerken, vraag dan uw systeembeheerder om de &lt;code&gt;%s&lt;/code&gt; instelling in de systeemconfiguratie te verhogen om het crawlproces te versnellen. Raadpleeg de &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao-handleiding&lt;/a&gt; voor meer informatie.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.crawlWaitToBeFinished">
         <source>The crawler is currently working. Please wait for it to finish to see the results.</source>
@@ -172,6 +184,19 @@
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
         <target>Controleer op gebroken links</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.title">
+        <source>Back end search</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.disabled">
+        <source>To use the back end search, please enable the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot;&gt;Contao cronjob framework&lt;/a&gt;.</source>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.button">
+        <source>Rebuild index</source>
+        <target>Index heropbouwen</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.confirmation">
+        <source>Rebuilding is in progress. Unfortunately, there is currently no way of knowing when it is finished. Please check your search results regularly. A future version of Contao will give information about the progress.</source>
       </trans-unit>
     </body>
   </file>

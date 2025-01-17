@@ -89,6 +89,14 @@
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
         <target>Buraya varsayılan sayfa açıklamasının yerini alacak özel bir üst veri açıklaması yazabilirsiniz.</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.canonicalLink.0">
+        <source>Canonical URL</source>
+        <target>Kanonik adres</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.canonicalLink.1">
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>Buradan bir özel kanonik adres ayarlayabilirsiniz. Örnek: https://sitem.com/.</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>
         <target>Yer adı</target>
@@ -159,7 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.addEnclosure.0">
         <source>Add enclosures</source>
-        <target>Dosya ekle</target>
+        <target>Zarflar ekle</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.addEnclosure.1">
         <source>Add one or more downloadable files to the event.</source>
@@ -167,7 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.enclosure.0">
         <source>Enclosures</source>
-        <target>Dosyalar</target>
+        <target>Zarflar</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.enclosure.1">
         <source>Please choose the files you want to attach.</source>
@@ -215,7 +223,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.linkText.0">
         <source>Link text</source>
-        <target>Bağlantı metmi</target>
+        <target>Bağlantı metni</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.linkText.1">
         <source>Here you can override the default &quot;read more…&quot; link text.</source>
@@ -245,17 +253,9 @@
         <source>Here you can enter one or more classes.</source>
         <target>Buraya bir ya da birkaç sınıf ekleyebilirsiniz.</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.noComments.0">
-        <source>Disable comments</source>
-        <target>Yorum yapılamasın</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.noComments.1">
-        <source>Do not allow comments for this particular event.</source>
-        <target>Bu etkinliğe yorum yapılmasını engeller.</target>
-      </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
-        <target>Etkinliği öne çıkarılmışlara ekle</target>
+        <target>Etkinlik öne çıkarılsın</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.1">
         <source>Show the event in a featured event list.</source>
@@ -263,7 +263,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.0">
         <source>Publish event</source>
-        <target>Etkinliği yayınla</target>
+        <target>Etkinlik yayınlansın</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.1">
         <source>Make the event publicly visible on the website.</source>
@@ -319,7 +319,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.enclosure_legend">
         <source>Enclosures</source>
-        <target>Dosyalar</target>
+        <target>Zarflar</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.source_legend">
         <source>Redirect target</source>
@@ -387,7 +387,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.0">
         <source>Publish/unpublish event</source>
-        <target>Etkinliği yayımla/yayımlama</target>
+        <target>Etkinliği yayınla/yayından kaldır</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.toggle.1">
         <source>Unpublish event ID %s</source>

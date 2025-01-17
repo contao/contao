@@ -183,6 +183,7 @@
       </trans-unit>
       <trans-unit id="tl_member.start.1">
         <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Jeśli chcesz zapobiec aktywacji konta przed określoną datą/czasem, możesz to wpisać tutaj. W przeciwnym razie pozostaw pole puste.</target>
       </trans-unit>
       <trans-unit id="tl_member.stop.0">
         <source>Deactivate on</source>
@@ -190,6 +191,7 @@
       </trans-unit>
       <trans-unit id="tl_member.stop.1">
         <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Jeśli chcesz zapobiec aktywacji konta po określonej dacie/czasie, możesz to wpisać tutaj. W przeciwnym razie pozostaw pole puste.</target>
       </trans-unit>
       <trans-unit id="tl_member.useTwoFactor">
         <source>Use two-factor authentication</source>
@@ -239,6 +241,9 @@
         <source>Login details</source>
         <target>Szczegóły loginu</target>
       </trans-unit>
+      <trans-unit id="tl_member.captchaDetails">
+        <source>Verification</source>
+      </trans-unit>
       <trans-unit id="tl_member.new.0">
         <source>New</source>
         <target>Nowy</target>
@@ -269,9 +274,11 @@
       </trans-unit>
       <trans-unit id="tl_member.toggle.1">
         <source>Deactivate member ID %s</source>
+        <target>Dezaktywuj użytkownika ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member.toggle.2">
         <source>Activate member ID %s</source>
+        <target>Aktywuj użytkownika ID %s</target>
       </trans-unit>
       <trans-unit id="tl_member.su">
         <source>Preview the front end as member ID %s</source>

@@ -89,6 +89,14 @@
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
         <target>独自のメタデスクリプションを追加して、ページの説明の初期値を上書きできます。</target>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.canonicalLink.0">
+        <source>Canonical URL</source>
+        <target>基準のURL</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.canonicalLink.1">
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>https://example.com/ の様な独自の標準のURLを設定できます。</target>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>
         <target>会場の名前</target>
@@ -244,14 +252,6 @@
       <trans-unit id="tl_calendar_events.cssClass.1">
         <source>Here you can enter one or more classes.</source>
         <target>1つ以上のclassを入力できます。</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.noComments.0">
-        <source>Disable comments</source>
-        <target>コメントを不使用</target>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.noComments.1">
-        <source>Do not allow comments for this particular event.</source>
-        <target>この特定のイベントにコメントを許可しません。</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>

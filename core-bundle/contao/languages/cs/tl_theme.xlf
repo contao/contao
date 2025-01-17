@@ -46,8 +46,8 @@
         <target>Zdroj souborů</target>
       </trans-unit>
       <trans-unit id="tl_theme.source.1">
-        <source>Here you can upload one or more .cto or .sql files to be imported.</source>
-        <target>Zvolte prosím jeden nebo více souborů končících na &quot;.cto&quot; nebo &quot;.sql&quot;.</target>
+        <source>Here you can upload one or more .cto, .zip or .sql files to be imported.</source>
+        <target>Můžete importovat jeden nebo více souborů končících na .cto, .zip nebo .sql.</target>
       </trans-unit>
       <trans-unit id="tl_theme.tstamp.0">
         <source>Revision date</source>

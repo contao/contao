@@ -241,6 +241,10 @@
         <source>Login details</source>
         <target>Detail přihlášení</target>
       </trans-unit>
+      <trans-unit id="tl_member.captchaDetails">
+        <source>Verification</source>
+        <target>Ověření</target>
+      </trans-unit>
       <trans-unit id="tl_member.new.0">
         <source>New</source>
         <target>Nové</target>

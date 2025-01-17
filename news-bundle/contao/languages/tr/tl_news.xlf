@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_news.date.1">
         <source>Please enter the date according to the global date format.</source>
-        <target>Lütfen küresel tarih biçimine uygun olarak tarihi yazın.</target>
+        <target>Lütfen genel tarih biçimine uygun olarak tarihi yazın.</target>
       </trans-unit>
       <trans-unit id="tl_news.time.0">
         <source>Time</source>
@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_news.time.1">
         <source>Please enter the time according to the global time format.</source>
-        <target>Lütfen küresel zaman biçimine uygun olarak saati yazın.</target>
+        <target>Lütfen genel saat biçimine uygun olarak saati yazın.</target>
       </trans-unit>
       <trans-unit id="tl_news.pageTitle.0">
         <source>Meta title</source>
@@ -64,6 +64,14 @@
       <trans-unit id="tl_news.description.1">
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
         <target>Buraya varsayılan sayfa açıklamasının yerini alacak özel bir üst veri açıklaması yazabilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.0">
+        <source>Canonical URL</source>
+        <target>Kanonik adres</target>
+      </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.1">
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>Buradan bir özel kanonik adres ayarlayabilirsiniz. Örnek: https://sitem.com/.</target>
       </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
@@ -99,7 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_news.addEnclosure.0">
         <source>Add enclosures</source>
-        <target>Dosya ekle</target>
+        <target>Zarflar ekle</target>
       </trans-unit>
       <trans-unit id="tl_news.addEnclosure.1">
         <source>Add one or more downloadable files to the news item.</source>
@@ -107,7 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_news.enclosure.0">
         <source>Enclosures</source>
-        <target>Dosyalar</target>
+        <target>Zarflar</target>
       </trans-unit>
       <trans-unit id="tl_news.enclosure.1">
         <source>Please choose the files you want to attach.</source>
@@ -155,7 +163,7 @@
       </trans-unit>
       <trans-unit id="tl_news.linkText.0">
         <source>Link text</source>
-        <target>Bağlantı metmi</target>
+        <target>Bağlantı metni</target>
       </trans-unit>
       <trans-unit id="tl_news.linkText.1">
         <source>Here you can override the default &quot;read more…&quot; link text.</source>
@@ -185,14 +193,6 @@
         <source>Here you can enter one or more classes.</source>
         <target>Buraya bir ya da birkaç sınıf ekleyebilirsiniz.</target>
       </trans-unit>
-      <trans-unit id="tl_news.noComments.0">
-        <source>Disable comments</source>
-        <target>Yorum yapılamasın</target>
-      </trans-unit>
-      <trans-unit id="tl_news.noComments.1">
-        <source>Do not allow comments for this particular news item.</source>
-        <target>Bu habere yorum yapılmasını engeller.</target>
-      </trans-unit>
       <trans-unit id="tl_news.featured.0">
         <source>Feature item</source>
         <target>Ögeyi öne çıkarılmışlara ekle</target>
@@ -203,7 +203,7 @@
       </trans-unit>
       <trans-unit id="tl_news.published.0">
         <source>Publish item</source>
-        <target>Öğeyi yayınla</target>
+        <target>Ögeyi yayınla</target>
       </trans-unit>
       <trans-unit id="tl_news.published.1">
         <source>Make the news item publicly visible on the website.</source>
@@ -255,7 +255,7 @@
       </trans-unit>
       <trans-unit id="tl_news.enclosure_legend">
         <source>Enclosures</source>
-        <target>Dosyalar</target>
+        <target>Zarflar</target>
       </trans-unit>
       <trans-unit id="tl_news.source_legend">
         <source>Redirect target</source>

@@ -70,8 +70,8 @@
         <target>Etiqueta Robots</target>
       </trans-unit>
       <trans-unit id="tl_page.robots.1">
-        <source>Here you can define how search engines handle the page.</source>
-        <target>Aquí puedes definir cómo los motores de búsqueda acceden a la página.</target>
+        <source>Here you can define how search engines handle the page. The setting also determines whether the page appears in the &lt;code&gt;sitemap.xml&lt;/code&gt; file or not.</source>
+        <target>Aquí puede definir cómo los motores de búsqueda manejan la página. La configuración también determina si la página aparece en el archivo &lt;code&gt;sitemap.xml&lt;/code&gt; o no.</target>
       </trans-unit>
       <trans-unit id="tl_page.maintenanceMode.0">
         <source>Maintenance mode</source>
@@ -99,9 +99,11 @@
       </trans-unit>
       <trans-unit id="tl_page.alwaysForward.0">
         <source>Always redirect</source>
+        <target>Redirigir siempre</target>
       </trans-unit>
       <trans-unit id="tl_page.alwaysForward.1">
         <source>Redirect to the target page even if there are query or path parameters.</source>
+        <target>Redirija a la página de destino incluso si hay parámetros de consulta o ruta.</target>
       </trans-unit>
       <trans-unit id="tl_page.jumpTo.0">
         <source>Redirect page</source>
@@ -445,6 +447,7 @@
       </trans-unit>
       <trans-unit id="tl_page.start.1">
         <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Si desea evitar que la página se muestre en el sitio web antes de una fecha/hora determinada, puede ingresarlo aquí. De lo contrario, deje el campo en blanco.</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
@@ -452,6 +455,7 @@
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
         <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Si desea evitar que la página se muestre en el sitio web después de una fecha/hora determinada, puede ingresarlo aquí. De lo contrario, deje el campo en blanco.</target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
@@ -468,6 +472,38 @@
       <trans-unit id="tl_page.twoFactorJumpTo.1">
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
         <target>Elija la página a la que se redirigirá a los miembros para configurar la autenticación de dos factores.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCsp.0">
+        <source>Enable CSP</source>
+        <target>Habilitar CSP</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCsp.1">
+        <source>Enable Content Security Policy for this website.</source>
+        <target>Habilite la Política de seguridad de contenido para este sitio web.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.0">
+        <source>Content Security Policy</source>
+        <target>Política de seguridad de contenido</target>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.1">
+        <source>Here you can enter custom Content Security Policy directives.</source>
+        <target>Aquí puede ingresar directivas personalizadas de Política de seguridad de contenido.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.0">
+        <source>Reporting only</source>
+        <target>Sólo informes</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.1">
+        <source>Only report policy violations without enforcing them.</source>
+        <target>Sólo informe violaciones de políticas sin hacerlas cumplir.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.0">
+        <source>Enable report logging</source>
+        <target>Habilitar el registro de informes</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.1">
+        <source>Log CSP violations to the Contao system log.</source>
+        <target>Registre las infracciones de CSP en el registro del sistema de Contao.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -549,6 +585,10 @@
         <source>Two-factor authentication</source>
         <target>Autenticación de dos factores</target>
       </trans-unit>
+      <trans-unit id="tl_page.csp_legend">
+        <source>Content Security Policy</source>
+        <target>Política de seguridad de contenido</target>
+      </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
         <target>Redirección 301 permanente</target>
@@ -597,7 +637,7 @@
         <source>Duplicate page ID %s</source>
         <target>Duplicar página con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_page.copyChilds">
+      <trans-unit id="tl_page.copyChildren">
         <source>Duplicate page ID %s with its subpages</source>
         <target>Duplicar la página con ID %s y subpáginas</target>
       </trans-unit>
@@ -611,9 +651,11 @@
       </trans-unit>
       <trans-unit id="tl_page.toggle.1">
         <source>Unpublish page ID %s</source>
+        <target>Despublicarde ID de página %s</target>
       </trans-unit>
       <trans-unit id="tl_page.toggle.2">
         <source>Publish page ID %s</source>
+        <target>Publicar ID de página %s</target>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.0">
         <source>Paste at the top</source>

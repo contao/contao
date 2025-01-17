@@ -105,6 +105,18 @@
         <source>Here you can choose how featured events are handled.</source>
         <target>Här kan du välja hur utvalda händelser ska hanteras.</target>
       </trans-unit>
+      <trans-unit id="tl_module.cal_keepCanonical.0">
+        <source>Use the current URL for canonical links</source>
+        <target>Använd den aktuella URL:en för kanoniska länkar</target>
+      </trans-unit>
+      <trans-unit id="tl_module.cal_keepCanonical.1">
+        <source>Keep the current URL instead of the configured reader page for canonical links.</source>
+        <target>Behåll den aktuella URL:en i stället för den konfigurerade läsarsidan för kanoniska länkar.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.cal_overview_legend">
+        <source>Overview page</source>
+        <target>Översiktssida</target>
+      </trans-unit>
       <trans-unit id="tl_module.cal_list">
         <source>Event list</source>
         <target>Händelselista</target>

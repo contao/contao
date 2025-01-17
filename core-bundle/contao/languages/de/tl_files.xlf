@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_files.meta.1">
         <source>Here you can enter the file metadata. To add a language, create a matching website root page.</source>
-        <target>Hier können Sie die Metadaten der Datei eingeben. Um eine Sprache hinzuzufügen, legen Sie eine passende Website-Startseite an.</target>
+        <target>Hier können Sie die Metadaten der Datei eingeben. Um eine Sprache hinzuzufügen, legen Sie einen passenden Website-Startpunkt an.</target>
       </trans-unit>
       <trans-unit id="tl_files.metaRgxpError">
         <source>Field &quot;%s&quot; for language &quot;%s&quot; must match &quot;%s&quot;.</source>
@@ -208,6 +208,42 @@
       <trans-unit id="tl_files.sync.1">
         <source>Synchronize the file system and the database</source>
         <target>Dateisystem und Datenbank synchronisieren</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackLanguage.0">
+        <source>Language</source>
+        <target>Sprache</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackLanguage.1">
+        <source>Please select the language of the file.</source>
+        <target>Bitte wählen Sie die Sprache der Datei aus.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackType.0">
+        <source>Track type</source>
+        <target>Art der Spur</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackType.1">
+        <source>Here you can select the type of text track.</source>
+        <target>Hier können Sie die Art der Text-Spur auswählen.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.captions">
+        <source>Closed captions</source>
+        <target>Closed Captions</target>
+      </trans-unit>
+      <trans-unit id="tl_files.descriptions">
+        <source>Audio descriptions</source>
+        <target>Audio-Beschreibung</target>
+      </trans-unit>
+      <trans-unit id="tl_files.subtitles">
+        <source>Subtitles</source>
+        <target>Untertitel</target>
+      </trans-unit>
+      <trans-unit id="tl_files.chapters">
+        <source>Chapters</source>
+        <target>Kapitel</target>
+      </trans-unit>
+      <trans-unit id="tl_files.metadata">
+        <source>Metadata</source>
+        <target>Metadaten</target>
       </trans-unit>
       <trans-unit id="tl_files.show">
         <source>Show the details of file or folder &quot;%s&quot;</source>

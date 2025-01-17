@@ -73,6 +73,18 @@
         <source>Show the number of news items of each month.</source>
         <target>Si selecciona esta opción, se mostrará el número de artículos de noticias por mes en el menú de archivos.</target>
       </trans-unit>
+      <trans-unit id="tl_module.news_keepCanonical.0">
+        <source>Use the current URL for canonical links</source>
+        <target>Utilice la URL actual para enlaces canónicos</target>
+      </trans-unit>
+      <trans-unit id="tl_module.news_keepCanonical.1">
+        <source>Keep the current URL instead of the configured reader page for canonical links.</source>
+        <target>Mantenga la URL actual en lugar de la página del lector configurada para enlaces canónicos.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.news_overview_legend">
+        <source>Overview page</source>
+        <target>Página de descripción general </target>
+      </trans-unit>
       <trans-unit id="tl_module.news_day">
         <source>Day</source>
         <target>Día</target>

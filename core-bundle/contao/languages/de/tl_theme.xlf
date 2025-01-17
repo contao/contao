@@ -46,8 +46,8 @@
         <target>Quelldateien</target>
       </trans-unit>
       <trans-unit id="tl_theme.source.1">
-        <source>Here you can upload one or more .cto or .sql files to be imported.</source>
-        <target>Hier können Sie eine oder mehrere .cto- oder .sql-Dateien für den Import hochladen.</target>
+        <source>Here you can upload one or more .cto, .zip or .sql files to be imported.</source>
+        <target>Hier können Sie eine oder mehrere .cto-, .zip- oder .sql-Dateien für den Import hochladen.</target>
       </trans-unit>
       <trans-unit id="tl_theme.tstamp.0">
         <source>Revision date</source>
