@@ -1119,6 +1119,7 @@ services:
             - '@request_stack'
             - ~
             - ~
+            - '@twig'
 
     contao.security.member_group_voter:
         class: Contao\CoreBundle\Security\Voter\MemberGroupVoter
