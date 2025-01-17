@@ -31,7 +31,7 @@ export default class ChoicesController extends Controller {
             removeItemLabelText: function (value) {
                 return Contao.lang.removeItem.concat(' ').concat(value);
             },
-        });
+        })
     }
 
     selectTargetDisconnected(select) {
