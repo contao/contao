@@ -37,7 +37,7 @@ class GlobalsMapListener
 
             ksort($priorities);
 
-            $GLOBALS[$key] = array_replace_recursive($GLOBALS[$key] ?? [], ...$priorities);
+            $GLOBALS[$key] = array_replace_recursive($GLOBALS[$key] ?? [], ...array_values($priorities));
         }
     }
 }
