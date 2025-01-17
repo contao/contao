@@ -5369,7 +5369,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return '
 <div class="tl_search tl_subpanel">
 <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
-<select name="tl_field" class="tl_select init-choices' . ($active ? ' active' : '') . '">
+<select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '" data-contao--choices-target="select">
 ' . implode("\n", $options_sorter) . '
 </select>
 <span>=</span>
@@ -5504,7 +5504,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return '
 <div class="tl_sorting tl_subpanel">
 <strong>' . $GLOBALS['TL_LANG']['MSC']['sortBy'] . ':</strong>
-<select name="tl_sort" id="tl_sort" class="tl_select init-choices">
+<select name="tl_sort" id="tl_sort" class="tl_select" data-contao--choices-target="select">
 ' . implode("\n", $options_sorter) . '
 </select>
 </div>';
@@ -5645,7 +5645,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			$fields = '
-<select name="tl_limit" class="tl_select init-choices' . ($active ? ' active' : '') . '" onchange="this.form.submit()">
+<select name="tl_limit" class="tl_select' . ($active ? ' active' : '') . '" onchange="this.form.submit()" data-contao--choices-target="select">
   ' . $options . '
 </select> ';
 		}
@@ -5887,7 +5887,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			// Begin select menu
 			$fields .= '
-<select name="' . $field . '" id="' . $field . '" class="tl_select init-choices' . ($active ? ' active' : '') . '" data-placeholder="' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) . '">
+<select name="' . $field . '" id="' . $field . '" class="tl_select' . ($active ? ' active' : '') . '" data-placeholder="' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) . '" data-contao--choices-target="select">
   <option value="tl_' . $field . '">---</option>';
 
 			if ($objFields->numRows)

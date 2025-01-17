@@ -5,7 +5,6 @@ import WebAuthn from '@web-auth/webauthn-stimulus';
 
 import './scripts/mootao.js';
 import './scripts/core.js';
-import './scripts/choices.js'
 import './scripts/limit-height.js';
 import './scripts/modulewizard.js';
 import './scripts/sectionwizard.js';

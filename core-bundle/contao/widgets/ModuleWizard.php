@@ -192,7 +192,7 @@ class ModuleWizard extends Widget
 
 			$return .= '
   <tr>
-    <td><select name="' . $this->strId . '[' . $i . '][mod]" class="tl_select init-choices" data-action="focus->contao--scroll-offset#store">' . $options . '</select></td>';
+    <td><select name="' . $this->strId . '[' . $i . '][mod]" class="tl_select" data-action="focus->contao--scroll-offset#store" data-contao--choices-target="select">' . $options . '</select></td>';
 
 			$options = '<option value="">-</option>';
 
