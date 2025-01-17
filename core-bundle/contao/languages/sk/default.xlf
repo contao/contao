@@ -390,6 +390,9 @@ Tento záznam už existuje!</target>
         <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
         <target>Existuje aspoň jeden modul „osobných údajov“, ktorý umožňuje zmenu hesla. Toto je slabá stránka zabezpečenia a v Contao 6 už nebude fungovať. Namiesto toho použite modul „zmena hesla“.</target>
       </trans-unit>
+      <trans-unit id="ERR.copyUnique">
+        <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Prosím spočítajte %d a %d.</target>
