@@ -2,7 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import AccessibleMenu from 'accessible-menu';
 
 export default class extends Controller {
-    static targets = ['menu', 'controller'];
+    static targets = ['menu', 'controller', 'title'];
 
     initialize () {
         this.close = this.close.bind(this);
@@ -33,6 +33,19 @@ export default class extends Controller {
 
     disconnect () {
         document.removeEventListener('pointerdown', this.close);
+    }
+
+    titleTargetConnected (el) {
+        const link = el.querySelector('a[title]');
+        if (link && link.getAttribute('title') !== '') {
+            link.append(link.getAttribute('title'));
+            return;
+        }
+
+        const img = el.querySelector('img[alt]');
+        if (img && img.getAttribute('alt') !== '') {
+            img.after(img.getAttribute('alt'));
+        }
     }
 
     open (event) {
