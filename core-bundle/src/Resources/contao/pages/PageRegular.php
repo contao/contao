@@ -91,7 +91,13 @@ class PageRegular extends Frontend
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$request->setLocale($locale);
 
-		$this->responseContext = $container->get('contao.routing.response_context_factory')->createContaoWebpageResponseContext($objPage);
+		$responseContextAccessor = System::getContainer()->get('contao.routing.response_context_accessor');
+
+		if (!$this->responseContext = $responseContextAccessor->getResponseContext())
+		{
+			$this->responseContext = $container->get('contao.routing.response_context_factory')->createContaoWebpageResponseContext($objPage);
+		}
+
 		$blnShowUnpublished = $container->get('contao.security.token_checker')->isPreviewMode();
 
 		System::loadLanguageFile('default');
