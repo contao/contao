@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpFoundation\Response;
-
 /**
  * Provide methods to handle back end templates.
  *

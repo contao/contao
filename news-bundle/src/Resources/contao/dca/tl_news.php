@@ -544,7 +544,7 @@ class tl_news extends Backend
 			$root = $this->User->news;
 		}
 
-		$currentId = \defined('CURRENT_ID') ? CURRENT_ID : 0;
+		$currentId = defined('CURRENT_ID') ? CURRENT_ID : 0;
 		$id = strlen(Input::get('id')) ? Input::get('id') : $currentId;
 
 		// Check current action
