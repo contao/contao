@@ -173,6 +173,8 @@ class ContaoFramework implements ResetInterface
 
         $this->setTimezone();
         $this->triggerInitializeSystemHook();
+
+        System::loadLanguageFile('default');
     }
 
     /**
