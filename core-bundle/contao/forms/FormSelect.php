@@ -192,12 +192,6 @@ class FormSelect extends Widget
 			$this->varValue = $this->varValue[0] ?? null;
 		}
 
-		// Chosen
-		if ($this->chosen)
-		{
-			$this->arrAttributes['data-contao--choices-target'] = 'select';
-		}
-
 		// Custom class
 		if ($this->strClass)
 		{

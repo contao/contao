@@ -1,10 +1,18 @@
 import {Controller} from "@hotwired/stimulus"
 
 export default class ChoicesController extends Controller {
-    static targets = ['select'];
+    connect() {
+        if (this.initGuard) {
+            return;
+        }
 
-    selectTargetConnected(select) {
-        select.choices = new Choices(select, {
+        // Choices wraps the element multiple times during initialization, leading to
+        // multiple disconnecs/reconnects of the controller, that we need to ignore.
+        this.initGuard = true;
+
+        const select = this.element;
+
+        this.choices = new Choices(select, {
             shouldSort: false,
             duplicateItemsAllowed: false,
             allowHTML: false,
@@ -12,7 +20,7 @@ export default class ChoicesController extends Controller {
             searchEnabled: select.options.length > 7,
             classNames: {
                 containerOuter: ['choices', ...Array.from(select.classList)],
-                flippedState: ''
+                flippedState: '',
             },
             fuseOptions: {
                 includeScore: true,
@@ -24,6 +32,11 @@ export default class ChoicesController extends Controller {
                 if (choices && select.dataset.placeholder) {
                     choices.dataset.placeholder = select.dataset.placeholder;
                 }
+
+                // Reset guard as soon as the call stack has cleared
+                setTimeout(() => {
+                    this.initGuard = false;
+                }, 0);
             },
             loadingText: Contao.lang.loading,
             noResultsText: Contao.lang.noResults,
@@ -34,7 +47,12 @@ export default class ChoicesController extends Controller {
         })
     }
 
-    selectTargetDisconnected(select) {
-        select.choices.destroy();
+    disconnect() {
+        if (this.initGuard) {
+            return;
+        }
+
+        this.choices.destroy();
+        this.choices = null;
     }
 }
