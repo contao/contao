@@ -6344,8 +6344,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	{
 		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
 		$this->root = $this->eliminateNestedPages($root, $table);
-		$this->visibleRootTrails = [];
-		$this->rootChildren = [];
+		$this->visibleRootTrails = array();
+		$this->rootChildren = array();
 
 		if ($this->treeView)
 		{
@@ -6365,7 +6365,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if ($isSearch)
 			{
-				$parents = [];
+				$parents = array();
 
 				foreach ($root as $id)
 				{

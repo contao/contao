@@ -2,6 +2,30 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.51] (2025-01-20)
+
+**Fixed issues:**
+
+- [#7872] Fix tree rendering with filters and trails ([aschempp])
+- [#7781] Allow page controllers to create the response context ([fritzmg])
+- [#7460] Check if `CURRENT_ID` is defined in the DCA permission checks ([aschempp])
+- [#7884] Add `no-store` to back end responses ([fritzmg])
+- [#7883] Increase blob size for `tl_user.session` ([fritzmg])
+- [#7875] Do not force HTTP method parameter override ([fritzmg])
+- [#7876] Ignore pages in maintenance mode when generating the sitemap ([fritzmg])
+- [#7809] Make sure the correct test-case package is installed in Contao ([aschempp])
+- [#7770] Disable `overlayClick` for SimpleModal ([zoglo])
+- [#7563] Add the missing relations to the DCAs ([aschempp])
+- [#7820] Add the domain to the "root page dependent module" configuration ([aschempp])
+- [#7551] Handle DCAs without fields in `tl_user_group` ([lukasbableck])
+- [#7768] Fix the base path for canonical URLs ([fritzmg])
+- [#7779] Do not normalize the `resampling-filter` array key ([ausi])
+- [#7775] Consider the `doNotDeleteRecords` setting when deleting child records ([fritzmg])
+- [#7766] Fix the sorting when copying multiple form fields as a non-admin user ([fritzmg])
+- [#7756] Handle null result in 404 router provider ([aschempp])
+- [#7747] Enable double encoding for JSON in Twig ([ausi])
+- [#7725] Cache hot path in model ([fritzmg])
+
 ## [4.13.50] (2024-11-15)
 
 **Fixed issues:**
@@ -1090,6 +1114,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.51]: https://github.com/contao/contao/releases/tag/4.13.51
 [4.13.50]: https://github.com/contao/contao/releases/tag/4.13.50
 [4.13.49]: https://github.com/contao/contao/releases/tag/4.13.49
 [4.13.48]: https://github.com/contao/contao/releases/tag/4.13.48
@@ -1959,6 +1984,7 @@ This project adheres to [Semantic Versioning].
 [#7433]: https://github.com/contao/contao/pull/7433
 [#7444]: https://github.com/contao/contao/pull/7444
 [#7459]: https://github.com/contao/contao/pull/7459
+[#7460]: https://github.com/contao/contao/pull/7460
 [#7462]: https://github.com/contao/contao/pull/7462
 [#7466]: https://github.com/contao/contao/pull/7466
 [#7480]: https://github.com/contao/contao/pull/7480
@@ -1974,7 +2000,9 @@ This project adheres to [Semantic Versioning].
 [#7545]: https://github.com/contao/contao/pull/7545
 [#7547]: https://github.com/contao/contao/pull/7547
 [#7550]: https://github.com/contao/contao/pull/7550
+[#7551]: https://github.com/contao/contao/pull/7551
 [#7559]: https://github.com/contao/contao/pull/7559
+[#7563]: https://github.com/contao/contao/pull/7563
 [#7564]: https://github.com/contao/contao/pull/7564
 [#7581]: https://github.com/contao/contao/pull/7581
 [#7595]: https://github.com/contao/contao/pull/7595
@@ -1983,3 +2011,19 @@ This project adheres to [Semantic Versioning].
 [#7692]: https://github.com/contao/contao/pull/7692
 [#7703]: https://github.com/contao/contao/pull/7703
 [#7713]: https://github.com/contao/contao/pull/7713
+[#7725]: https://github.com/contao/contao/pull/7725
+[#7747]: https://github.com/contao/contao/pull/7747
+[#7756]: https://github.com/contao/contao/pull/7756
+[#7766]: https://github.com/contao/contao/pull/7766
+[#7768]: https://github.com/contao/contao/pull/7768
+[#7770]: https://github.com/contao/contao/pull/7770
+[#7775]: https://github.com/contao/contao/pull/7775
+[#7779]: https://github.com/contao/contao/pull/7779
+[#7781]: https://github.com/contao/contao/pull/7781
+[#7809]: https://github.com/contao/contao/pull/7809
+[#7820]: https://github.com/contao/contao/pull/7820
+[#7872]: https://github.com/contao/contao/pull/7872
+[#7875]: https://github.com/contao/contao/pull/7875
+[#7876]: https://github.com/contao/contao/pull/7876
+[#7883]: https://github.com/contao/contao/pull/7883
+[#7884]: https://github.com/contao/contao/pull/7884

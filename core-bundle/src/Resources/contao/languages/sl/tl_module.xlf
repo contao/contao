@@ -509,8 +509,7 @@
         <target>Prosimo, izberite modul za vsako od vrhnjih strani.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Choose module for &quot;%s&quot;</source>
-        <target>Izberite modul za &quot;%s&quot;</target>
+        <source>Choose module for &quot;%s&quot; [%s]</source>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

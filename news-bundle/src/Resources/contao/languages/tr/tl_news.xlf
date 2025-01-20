@@ -99,7 +99,7 @@
       </trans-unit>
       <trans-unit id="tl_news.addEnclosure.0">
         <source>Add enclosures</source>
-        <target>Dosya ekle</target>
+        <target>Zarflar ekle</target>
       </trans-unit>
       <trans-unit id="tl_news.addEnclosure.1">
         <source>Add one or more downloadable files to the news item.</source>
@@ -107,7 +107,7 @@
       </trans-unit>
       <trans-unit id="tl_news.enclosure.0">
         <source>Enclosures</source>
-        <target>Dosyalar</target>
+        <target>Zarflar</target>
       </trans-unit>
       <trans-unit id="tl_news.enclosure.1">
         <source>Please choose the files you want to attach.</source>
@@ -247,7 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_news.enclosure_legend">
         <source>Enclosures</source>
-        <target>Dosyalar</target>
+        <target>Zarflar</target>
       </trans-unit>
       <trans-unit id="tl_news.source_legend">
         <source>Redirect target</source>

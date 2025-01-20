@@ -514,8 +514,7 @@
         <target>Vyberte prosím modul pro každou kořenovou stránku</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Choose module for &quot;%s&quot;</source>
-        <target>Vybrat modul pro &quot;%s&quot;</target>
+        <source>Choose module for &quot;%s&quot; [%s]</source>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
