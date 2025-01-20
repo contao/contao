@@ -1030,6 +1030,7 @@ abstract class Backend extends Controller
 
 		$image = Controller::getPageStatusIcon((object) $row);
 		$imageAttribute = trim($imageAttribute . ' data-icon="' . Image::getPath(Controller::getPageStatusIcon((object) array_merge($row, array('published'=>'1')))) . '" data-icon-disabled="' . Image::getPath(Controller::getPageStatusIcon((object) array_merge($row, array('published'=>'')))) . '"');
+		$objUser = BackendUser::getInstance();
 
 		// Return the image only
 		if ($blnReturnImage)
@@ -1044,7 +1045,7 @@ abstract class Backend extends Controller
 		}
 
 		// Add the breadcrumb link if you have access to that page
-		if (!$isVisibleRootTrailPage)
+		if ($objUser->hasAccess($row['id'], 'pagemounts'))
 		{
 			$label = '<a href="' . self::addToUrl('pn=' . $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
 		}
