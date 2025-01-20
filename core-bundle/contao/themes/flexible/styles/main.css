@@ -1601,16 +1601,6 @@ table.tl_listing {
 	white-space: nowrap;
 }
 
-.operations-menu .virtual-title a:after {
-	content: attr(title);
-	padding-left: 5px;
-}
-
-.operations-menu .virtual-title a[data-original-title]:after {
-	content: attr(data-original-title);
-	padding-left: 5px;
-}
-
 .tl_content_right:has(.operations-menu.show) {
 	z-index: 2;
 }
