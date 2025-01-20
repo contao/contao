@@ -2,6 +2,8 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.4.11] (2025-01-20)
+
 ## [5.4.10] (2025-01-17)
 
 **Fixed issues:**
@@ -151,6 +153,7 @@ This project adheres to [Semantic Versioning].
 - [#7229] Fix the `.nogrid` backwards compatibility layer ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.4.11]: https://github.com/contao/contao/releases/tag/5.4.11
 [5.4.10]: https://github.com/contao/contao/releases/tag/5.4.10
 [5.4.9]: https://github.com/contao/contao/releases/tag/5.4.9
 [5.4.8]: https://github.com/contao/contao/releases/tag/5.4.8
