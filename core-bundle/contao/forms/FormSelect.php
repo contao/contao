@@ -192,6 +192,12 @@ class FormSelect extends Widget
 			$this->varValue = $this->varValue[0] ?? null;
 		}
 
+		// Chosen
+		if ($this->chosen)
+		{
+			$strClass .= ' init-choices';
+		}
+
 		// Custom class
 		if ($this->strClass)
 		{
