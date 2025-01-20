@@ -37,13 +37,13 @@ export default class extends Controller {
 
     titleTargetConnected (el) {
         const link = el.querySelector('a[title]');
-        if (link && link.getAttribute('title') !== '') {
+        if (link && '' !== link.getAttribute('title')) {
             link.append(link.getAttribute('title'));
             return;
         }
 
         const img = el.querySelector('img[alt]');
-        if (img && img.getAttribute('alt') !== '') {
+        if (img && '' !== img.getAttribute('alt')) {
             img.after(img.getAttribute('alt'));
         }
     }
