@@ -173,6 +173,12 @@ export default class TooltipsController extends Controller {
                 if (!el.hasAttribute(`data-${identifier}-target`) && el.match(target)) {
                     el.setAttribute(`data-${identifier}-target`, 'tooltip');
                 }
+
+                el.querySelectorAll(target).forEach(sel => {
+                    if (!sel.hasAttribute(`data-${identifier}-target`)) {
+                        sel.setAttribute(`data-${identifier}-target`, 'tooltip');
+                    }
+                })
             })
         };
 

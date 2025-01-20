@@ -13,6 +13,9 @@ services:
         arguments:
             - '@database_connection'
 
+    contao_newsletter.listener.newsletter_recipients_edit_buttons:
+        class: Contao\NewsletterBundle\EventListener\NewsletterRecipientsEditButtonsListener
+
     contao_newsletter.listener.sitemap:
         class: Contao\NewsletterBundle\EventListener\SitemapListener
         arguments:

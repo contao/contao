@@ -351,6 +351,11 @@ services:
             - '@contao.routing.scope_matcher'
             - '@contao.intl.locales'
 
+    contao.listener.make_backend_response_uncacheable:
+        class: Contao\CoreBundle\EventListener\MakeBackendResponseUncacheableListener
+        arguments:
+            - '@contao.routing.scope_matcher'
+
     contao.listener.make_response_private:
         class: Contao\CoreBundle\EventListener\MakeResponsePrivateListener
         arguments:
