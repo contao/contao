@@ -529,6 +529,73 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader->getDynamicParent('text.html.twig', $corePath);
     }
 
+    public function testGetAllDynamicParentByThemeSlug(): void
+    {
+        $loader = $this->getContaoFilesystemLoaderWithTemplates(
+            [
+                'foo.html.twig' => '/test/foo.html.twig',
+            ],
+            [
+                'foo.html.twig' => '/theme/foo.html.twig',
+            ],
+        );
+
+        $this->assertSame(
+            [
+                'demo' => '@Contao_Theme_demo/foo.html.twig',
+                '' => '@Contao_Test/foo.html.twig',
+            ],
+            $loader->getAllDynamicParentsByThemeSlug('foo.html.twig', ''),
+        );
+    }
+
+    public function testGetAllFirstByThemeSlug(): void
+    {
+        $loader = $this->getContaoFilesystemLoaderWithTemplates(
+            [
+                'foo.html.twig' => '/test/foo.html.twig',
+            ],
+            [
+                'foo.html.twig' => '/theme/foo.html.twig',
+            ],
+        );
+
+        $this->assertSame(
+            [
+                'demo' => '@Contao_Theme_demo/foo.html.twig',
+                '' => '@Contao_Test/foo.html.twig',
+            ],
+            $loader->getAllFirstByThemeSlug('foo.html.twig'),
+        );
+    }
+
+    public function testGetCurrentThemeSlug(): void
+    {
+        $page1 = $this->mockClassWithProperties(PageModel::class, ['templateGroup' => null]);
+        $page2 = $this->mockClassWithProperties(PageModel::class, ['templateGroup' => 'templates/foo/bar']);
+
+        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder
+            ->method('getCurrentPage')
+            ->willReturnOnConsecutiveCalls($page1, $page2)
+        ;
+
+        $loader = new ContaoFilesystemLoader(
+            new NullAdapter(),
+            $this->createMock(TemplateLocator::class),
+            new ThemeNamespace(),
+            $this->createMock(ContaoFramework::class),
+            $pageFinder,
+            '/',
+        );
+
+        $this->assertNull($loader->getCurrentThemeSlug(), 'no theme slug (page 1)');
+
+        $loader->reset();
+
+        $this->assertSame('foo_bar', $loader->getCurrentThemeSlug(), 'theme slug from context (page 2)');
+    }
+
     public function testPersistsAndRecallsHierarchy(): void
     {
         $cacheAdapter = new ArrayAdapter();
