@@ -12,11 +12,9 @@
         {% endfor %}
         {% if has_submenu or not has_primary %}
             <li class="operations-menu-container" data-contao--operations-menu-target="container">
-                {% if has_primary %}
-                    <button type="button" title="{{ 'DCA.operations'|trans([id]) }}" data-contao--operations-menu-target="controller">
-                        {{ backend_icon('more.svg') }}
-                    </button>
-                {% endif %}
+                <button type="button" title="{{ 'DCA.operations'|trans([id]) }}" data-contao--operations-menu-target="controller"{% if not has_primary %} style="display:none"{% endif %}>
+                    {{ backend_icon('more.svg') }}
+                </button>
                 <ul class="operations-menu" data-contao--operations-menu-target="menu">
                     {% for operation in operations %}
                         {{ _self.operation(operation, true) }}
@@ -29,7 +27,7 @@
 
 {% macro operation(operation, menu = false) %}
     {% if operation.html is defined and (not menu or '<a ' in operation.html) %}
-        {% if operation.html|trim is not empty %}<li class="virtual-title">{{ operation.html|raw }}</li>{% endif %}
+        {% if operation.html|trim is not empty %}<li{% if menu %} data-contao--operations-menu-target="title"{% endif %}>{{ operation.html|raw }}</li>{% endif %}
     {% elseif operation.href|default %}
         <li>
             <a
