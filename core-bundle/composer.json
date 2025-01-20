@@ -185,7 +185,8 @@
         "contao/manager-plugin": "<2.0 || >=3.0",
         "doctrine/cache": "<1.10",
         "terminal42/contao-ce-access": "<3.0",
-        "thecodingmachine/safe": "<1.2"
+        "thecodingmachine/safe": "<1.2",
+        "web-auth/webauthn-symfony-bundle": "5.1.0 || 5.1.1"
     },
     "autoload": {
         "psr-4": {

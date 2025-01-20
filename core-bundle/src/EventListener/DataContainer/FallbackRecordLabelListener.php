@@ -46,6 +46,9 @@ class FallbackRecordLabelListener
         (new DcaLoader($table))->load();
 
         $dc = (new \ReflectionClass(DC_Table::class))->newInstanceWithoutConstructor();
+        $dc->table = $table;
+        $dc->id = (int) $id;
+
         $mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? DataContainer::MODE_SORTED;
 
         if (DataContainer::MODE_PARENT === $mode && ($GLOBALS['TL_DCA'][$table]['list']['sorting']['child_record_callback'] ?? null)) {

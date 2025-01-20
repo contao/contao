@@ -138,6 +138,49 @@ class DebugFragmentsCommandTest extends TestCase
                 OUTPUT,
         ];
 
+        yield 'Fragment with options' => [
+            [
+                ['contao.foo.bar', new FragmentConfig(TestController::class), ['category' => 'test', 'foo' => ['bar', 'baz']]],
+            ],
+            <<<'OUTPUT'
+
+                Contao Fragments
+                ================
+
+                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ---------------------
+                  Identifier       Controller                                                            Renderer   Render Options   Fragment Options
+                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ---------------------
+                  contao.foo.bar   Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController   forward                     category : test
+                                                                                                                                     foo      : bar, baz
+                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ---------------------
+
+
+                OUTPUT,
+        ];
+
+        yield 'Nested fragment' => [
+            [
+                ['contao.foo.bar', new FragmentConfig(TestController::class), ['category' => 'test', 'nestedFragments' => ['allowedTypes' => ['alias', 'link']]]],
+            ],
+            <<<'OUTPUT'
+
+                Contao Fragments
+                ================
+
+                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ---------------------------------
+                  Identifier       Controller                                                            Renderer   Render Options   Fragment Options
+                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ---------------------------------
+                  contao.foo.bar   Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController   forward                     category        : test
+                                                                                                                                     nestedFragments : allowedTypes:
+                                                                                                                                                         - alias
+                                                                                                                                                         - link
+
+                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ---------------------------------
+
+
+                OUTPUT,
+        ];
+
         yield 'Legacy modules' => [
             [
                 ['contao.foo.bar', new FragmentConfig(ModuleArticle::class), []],
