@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\DependencyInjection\Attribute;
 /**
  * @experimental
  *
- * Service tag to autoconfigure template studio element operations.
+ * Service tag to autoconfigure Template Studio element operations.
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 class AsOperationForTemplateStudioElement
