@@ -52,7 +52,7 @@ class CheckBoxWizard extends Widget
 	{
 		if ($strKey == 'options')
 		{
-			$this->arrOptions = StringUtil::deserialize($varValue);
+			$this->arrOptions = StringUtil::deserialize($varValue, true);
 		}
 		else
 		{
