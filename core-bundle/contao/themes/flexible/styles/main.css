@@ -1596,8 +1596,9 @@ table.tl_listing {
 
 .operations-menu a {
 	display: flex;
-	gap: 5px;
+	gap: 6px;
 	align-items: center;
+	padding: 1px 0;
 	white-space: nowrap;
 }
 
@@ -2253,7 +2254,7 @@ ul.sgallery li {
 }
 
 .tl_optionwizard td, .tl_key_value_wizard td {
-	padding: 0 3px 0 0;
+	padding: 0 6px 0 0;
 }
 
 .tl_optionwizard th, .tl_key_value_wizard th {
