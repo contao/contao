@@ -2,6 +2,14 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.23] (2025-01-20)
+
+**Fixed issues:**
+
+- [#7899] Fix tree rendering with filters and trails ([aschempp])
+- [#7904] Add custom template settings for the feed reader module ([de-es])
+- [#7898] Fix variadic parameters with string keys ([aschempp])
+
 ## [5.3.22] (2025-01-16)
 
 **Fixed issues:**
@@ -538,6 +546,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.23]: https://github.com/contao/contao/releases/tag/5.3.23
 [5.3.22]: https://github.com/contao/contao/releases/tag/5.3.22
 [5.3.21]: https://github.com/contao/contao/releases/tag/5.3.21
 [5.3.20]: https://github.com/contao/contao/releases/tag/5.3.20
@@ -971,3 +980,6 @@ This project adheres to [Semantic Versioning].
 [#7880]: https://github.com/contao/contao/pull/7880
 [#7882]: https://github.com/contao/contao/pull/7882
 [#7889]: https://github.com/contao/contao/pull/7889
+[#7898]: https://github.com/contao/contao/pull/7898
+[#7899]: https://github.com/contao/contao/pull/7899
+[#7904]: https://github.com/contao/contao/pull/7904
