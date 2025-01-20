@@ -3963,12 +3963,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				$this->updateRoot($arrFound);
+				$this->updateRoot($arrFound, true);
 			}
 			else
 			{
 				$arrFound = $objFound->fetchEach('id');
-				$this->updateRoot($arrFound);
+				$this->updateRoot($arrFound, true);
 			}
 		}
 
@@ -4343,18 +4343,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$allowedChildIds = array();
 
-				if (!empty($arrFound))
-				{
-					$allowedChildIds = array_merge($arrFound, $this->visibleRootTrails);
-				}
-
 				$objChildren = $db
-					->prepare("SELECT id FROM " . $table . " WHERE pid=?" . (!empty($allowedChildIds) ? " AND id IN(" . implode(',', array_map('\intval', $allowedChildIds)) . ")" : '') . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
+					->prepare("SELECT id FROM " . $table . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
 					->execute($id);
 
 				if ($objChildren->numRows)
 				{
-					$children = $objChildren->fetchEach('id');
+					$children = array_values(array_intersect($objChildren->fetchEach('id'), array_merge($this->visibleRootTrails, $this->root, $this->rootChildren)));
 				}
 			}
 		}
@@ -6637,8 +6632,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function initRoots()
 	{
-		$table = $this->strTable;
-		$this->rootPaste = $GLOBALS['TL_DCA'][$table]['list']['sorting']['rootPaste'] ?? false;
+		$this->rootPaste = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['rootPaste'] ?? false;
 
 		// Get the IDs of all root records (tree view)
 		if ($this->treeView)
@@ -6657,7 +6651,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			// Get root records from global configuration file
+			// Get root records from DCA
 			elseif (\is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']))
 			{
 				if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] == array(0))
@@ -6672,39 +6666,54 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Get the IDs of all root records (list view or parent view)
-		elseif (\is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] ?? null))
+		elseif (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null))
 		{
-			$this->updateRoot(array_unique($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']));
+			$this->updateRoot(array_unique($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']));
 		}
 	}
 
-	protected function updateRoot(array $root)
+	protected function updateRoot(array $root, bool $isSearch = false)
 	{
-		$this->root = $root;
-
 		$db = Database::getInstance();
 		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
+		$this->root = $this->eliminateNestedPages($root, $table);
+		$this->visibleRootTrails = array();
+		$this->rootChildren = array();
 
-		// Fetch visible root trails if enabled
-		if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['showRootTrails'] ?? null)
+		if ($this->treeView)
 		{
-			foreach ($this->root as $id)
+			// Fetch visible root trails if enabled
+			if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['showRootTrails'] ?? null)
 			{
-				$this->visibleRootTrails = array_unique(array_merge($this->visibleRootTrails, $db->getParentRecords($id, $table, true)));
+				foreach ($this->root as $id)
+				{
+					$this->visibleRootTrails[] = $db->getParentRecords($id, $table, true);
+				}
+
+				$this->visibleRootTrails = array_unique(array_merge(...$this->visibleRootTrails));
+			}
+
+			// Fetch all children of the root
+			$this->rootChildren = $db->getChildRecords($this->root, $table);
+
+			if ($isSearch)
+			{
+				$parents = array();
+
+				foreach ($root as $id)
+				{
+					$parents[] = $db->getParentRecords($id, $table);
+				}
+
+				$this->rootChildren = array_intersect($this->rootChildren, array_merge(...$parents));
+				$this->visibleRootTrails = array_merge($this->visibleRootTrails, array_diff($this->rootChildren, $root));
 			}
 		}
 
-		// $this->root might not have a correct order here, so let‘s make sure it‘s ordered by sorting, but only in
-		// case there are no visible root trails (aka the array contains only top-level IDs)
-		if ($this->root && empty($this->visibleRootTrails) && $db->fieldExists('sorting', $table))
+		// $this->root might not have a correct order here, let's make sure it's ordered by sorting
+		elseif ($this->root && $db->fieldExists('sorting', $table))
 		{
 			$this->root = $db->execute("SELECT id FROM $table WHERE id IN (" . implode(',', $this->root) . ") ORDER BY sorting, id")->fetchEach('id');
-		}
-
-		// Fetch all children of the root
-		if ($this->treeView)
-		{
-			$this->rootChildren = $db->getChildRecords($this->root, $table, $db->fieldExists('sorting', $table));
 		}
 	}
 
