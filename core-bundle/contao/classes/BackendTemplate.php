@@ -56,10 +56,7 @@ class BackendTemplate extends Template
 	{
 		$this->compile();
 
-		$response = parent::getResponse();
-		$response->headers->set('Cache-Control', 'no-cache, no-store');
-
-		return $response->setPrivate();
+		return parent::getResponse();
 	}
 
 	/**

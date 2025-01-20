@@ -1596,19 +1596,10 @@ table.tl_listing {
 
 .operations-menu a {
 	display: flex;
-	gap: 5px;
+	gap: 6px;
 	align-items: center;
+	padding: 1px 0;
 	white-space: nowrap;
-}
-
-.operations-menu .virtual-title a:after {
-	content: attr(title);
-	padding-left: 5px;
-}
-
-.operations-menu .virtual-title a[data-original-title]:after {
-	content: attr(data-original-title);
-	padding-left: 5px;
 }
 
 .tl_content_right:has(.operations-menu.show) {
@@ -2267,7 +2258,7 @@ ul.sgallery li {
 }
 
 .tl_optionwizard td, .tl_key_value_wizard td {
-	padding: 0 3px 0 0;
+	padding: 0 6px 0 0;
 }
 
 .tl_optionwizard th, .tl_key_value_wizard th {

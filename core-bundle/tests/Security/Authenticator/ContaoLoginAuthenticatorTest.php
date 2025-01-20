@@ -49,6 +49,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
+use Twig\Environment;
 
 class ContaoLoginAuthenticatorTest extends TestCase
 {
@@ -355,7 +356,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $this->assertSame('/contao/login', $response->getTargetUrl());
     }
 
-    public function testUsesCustomRedirectParameter(): void
+    public function testTriggersClientSideReloadOnATurboStreamRequest(): void
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $scopeMatcher
@@ -364,35 +365,25 @@ class ContaoLoginAuthenticatorTest extends TestCase
             ->willReturn(true)
         ;
 
-        $router = $this->createMock(RouterInterface::class);
-        $router
-            ->expects($this->exactly(2))
-            ->method('generate')
-            ->willReturnMap([
-                ['my_fallback_route', [], UrlGeneratorInterface::ABSOLUTE_URL, 'https://example.com/my_fallback'],
-                ['contao_backend_login', ['redirect' => 'https://example.com/my_fallback'], UrlGeneratorInterface::ABSOLUTE_URL, '/contao/login?redirect=https://example.com/my_fallback'],
-            ])
-        ;
-
-        $uriSigner = $this->createMock(UriSigner::class);
-        $uriSigner
-            ->method('sign')
-            ->willReturnArgument(0)
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with('@Contao/backend/reload.stream.html.twig')
+            ->willReturn('<stream content>')
         ;
 
         $authenticator = $this->getContaoLoginAuthenticator(
             scopeMatcher: $scopeMatcher,
-            router: $router,
-            uriSigner: $uriSigner,
+            twig: $twig,
         );
 
         $request = Request::create('https://example.com/foo/bar');
-        $request->attributes->set('_unauthenticated_redirect_route', 'my_fallback_route');
+        $request->headers->set('Accept', 'text/vnd.turbo-stream.html; charset=utf-8', true);
 
         $response = $authenticator->start($request);
 
-        $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertSame('/contao/login?redirect=https://example.com/my_fallback', $response->getTargetUrl());
+        $this->assertSame('<stream content>', $response->getContent());
     }
 
     /**
@@ -499,7 +490,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
     /**
      * @param UserProviderInterface<UserInterface>|null $userProvider
      */
-    private function getContaoLoginAuthenticator(UserProviderInterface|null $userProvider = null, AuthenticationSuccessHandlerInterface|null $successHandler = null, AuthenticationFailureHandlerInterface|null $failureHandler = null, ScopeMatcher|null $scopeMatcher = null, RouterInterface|null $router = null, UriSigner|null $uriSigner = null, PageModel|null $errorPage = null, TokenStorageInterface|null $tokenStorage = null, PageRegistry|null $pageRegistry = null, HttpKernelInterface|null $httpKernel = null, RequestStack|null $requestStack = null, TwoFactorAuthenticator|null $twoFactorAuthenticator = null, array $options = []): ContaoLoginAuthenticator
+    private function getContaoLoginAuthenticator(UserProviderInterface|null $userProvider = null, AuthenticationSuccessHandlerInterface|null $successHandler = null, AuthenticationFailureHandlerInterface|null $failureHandler = null, ScopeMatcher|null $scopeMatcher = null, RouterInterface|null $router = null, UriSigner|null $uriSigner = null, PageModel|null $errorPage = null, TokenStorageInterface|null $tokenStorage = null, PageRegistry|null $pageRegistry = null, HttpKernelInterface|null $httpKernel = null, RequestStack|null $requestStack = null, TwoFactorAuthenticator|null $twoFactorAuthenticator = null, array $options = [], Environment|null $twig = null): ContaoLoginAuthenticator
     {
         $pageFinder = $this->createMock(PageFinder::class);
         $pageFinder
@@ -523,6 +514,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
             $requestStack ?? $this->mockRequestStack(),
             $twoFactorAuthenticator ?? $this->mockTwoFactorAuthenticator(),
             $options,
+            $twig ?? $this->mockTwig(),
         );
     }
 
@@ -572,5 +564,10 @@ class ContaoLoginAuthenticatorTest extends TestCase
     private function mockTwoFactorAuthenticator(): TwoFactorAuthenticator
     {
         return $this->createMock(TwoFactorAuthenticator::class);
+    }
+
+    private function mockTwig(): Environment
+    {
+        return $this->createMock(Environment::class);
     }
 }
