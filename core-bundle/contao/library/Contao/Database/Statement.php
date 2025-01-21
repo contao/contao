@@ -257,11 +257,6 @@ class Statement
 			$arrParams[$key] = serialize($varParam);
 		}
 
-		// null types are deprecated in doctrine/dbal 3.x
-		$arrTypes = array_map(static function ($type) {
-			return null === $type ? ParameterType::STRING : $type;
-		}, $arrTypes);
-
 		// Execute the query
 		$this->statement = $this->resConnection->executeQuery($this->strQuery, $arrParams, $arrTypes);
 
