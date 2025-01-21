@@ -126,6 +126,7 @@ export default class extends Controller {
 
             const ul = document.createElement('ul');
             ul.classList.add('level_' + level);
+            ul.style.setProperty('--treeview-level', level);
             ul.innerHTML = txt;
             li.append(ul);
 

@@ -1194,6 +1194,23 @@ table.tl_listing {
 	width: 100%;
 }
 
+:root{
+	--treeview-listing-spacing-base: 16px;
+	--treeview-listing-spacing: 16px;
+}
+
+.tree_view .tl_folder .tl_left {
+	padding-left: calc(var(--treeview-listing-spacing) * (var(--treeview-level,-1) + 1) + var(--treeview-listing-spacing-base));
+}
+
+.tree_view .tl_folder:not(:has(.foldable)) .tl_left {
+	padding-left: calc(var(--treeview-listing-spacing) * (var(--treeview-level,-1) + 1));
+}
+
+.tree_view .tl_file .tl_left {
+	padding-left: calc(var(--treeview-listing-spacing) * (var(--treeview-level,-1) + 1) + var(--treeview-listing-spacing-base));
+}
+
 .tl_listing_container {
 	margin: 18px 0;
 	padding: 0 15px;

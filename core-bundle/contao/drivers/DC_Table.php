@@ -4141,7 +4141,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$mouseover = ' hover-div';
 		}
 
-		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && ($currentRecord['type'] ?? null) == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ((string) ($currentRecord['tstamp'] ?? null) === '0' ? ' draft' : '') . $mouseover . ' cf" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($children) ? 16 : 0)) . 'px">';
+		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && ($currentRecord['type'] ?? null) == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ((string) ($currentRecord['tstamp'] ?? null) === '0' ? ' draft' : '') . $mouseover . ' cf" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"><div class="tl_left">';
 
 		// Calculate label and add a toggle button
 		$level = $intMargin / $intSpacing + 1;
@@ -4354,7 +4354,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// is an active filter and all matching nodes have to be loaded to avoid Ajax requests).
 		if (!$blnNoRecursion && !empty($children) && ($blnIsOpen || !empty($arrFound)))
 		{
-			$return .= '<li class="parent" id="' . $node . '_' . $id . '"' . (!$blnIsOpen ? ' style="display:none"' : '') . ' data-contao--toggle-nodes-target="child' . ($level === 0 ? ' rootChild"' : '') . '"><ul class="level_' . $level . '">';
+			$return .= '<li class="parent" id="' . $node . '_' . $id . '"' . (!$blnIsOpen ? ' style="display:none"' : '') . ' data-contao--toggle-nodes-target="child' . ($level === 0 ? ' rootChild"' : '') . '"><ul class="level_' . $level . '" style="--treeview-level:' . $level . '">';
 
 			static::preloadCurrentRecords($children, $table);
 
