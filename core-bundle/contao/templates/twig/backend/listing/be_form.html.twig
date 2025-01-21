@@ -1,0 +1,8 @@
+<form {{ attributes }}>
+    <div class="tl_formbody_edit">
+        <input type="hidden" name="FORM_SUBMIT" value="{{ submit }}">
+        <input type="hidden" name="REQUEST_TOKEN" value="{{ rt }}">
+        {{ children|raw }}
+    </div>
+    {{ actions|raw }}
+</form>

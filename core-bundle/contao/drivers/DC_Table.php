@@ -3828,36 +3828,19 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
+		$context = [
+			'mode' => 'tree_view',
+			'request' => System::getContainer()->get('request_stack')->getCurrentRequest()
+		];
+
 		$breadcrumb = $GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb'] ?? '';
-
-		// Return if there are no records
-		if (!$tree && !$blnClipboard)
-		{
-			if ($breadcrumb)
-			{
-				$return .= '<div class="tl_listing_container">' . $breadcrumb . '</div>';
-			}
-
-			return $return . '
-<p class="tl_empty">' . $GLOBALS['TL_LANG']['MSC']['noResult'] . '</p>';
-		}
-
-		$requestToken = htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
-		$strRefererId = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
-
-		$return .= ($blnClipboard ? $twig->render('@Contao/hint.html.twig', ['label' => $GLOBALS['TL_LANG']['MSC']['selectNewPosition']]) : '');
-		$return .= '
-<div class="tl_listing_container tree_view" id="tl_listing"' . $this->getPickerValueAttribute() . '>' . $breadcrumb . ($this->strPickerFieldType == 'checkbox' ? '
-<div class="tl_select_trigger">
-<label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
-</div>' : '') . '
-<ul class="tl_listing ' . $treeClass . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">
-  <li class="tl_folder_top cf"><div class="tl_left"></div> <div class="tl_right">';
+		$help = $blnClipboard ? $twig->render('@Contao/backend/listing/be_hint.html.twig', ['label' => $GLOBALS['TL_LANG']['MSC']['selectNewPosition'], 'context'=>$context]) : '';
+		$globalOperations = $this->strPickerFieldType == 'checkbox' ? $twig->render('@Contao/backend/listing/be_hint.html.twig', ['label' => $GLOBALS['TL_LANG']['MSC']['selectAll'], 'context'=>$context]) : '';
 
 		$_buttons = '&nbsp;';
 
 		// Show paste button only if there are no root records specified
-		if ($blnClipboard && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $this->rootPaste && Input::get('act') != 'select')
+		if ($blnClipboard && $strMode == self::MODE_TREE && $this->rootPaste && Input::get('act') != 'select')
 		{
 			$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize();
 
@@ -3894,13 +3877,28 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$_buttons .= $operations;
 		}
 
-		// End table
-		$return .= $_buttons . '</div></li>' . $tree . '
-</ul>' . ($this->strPickerFieldType == 'radio' ? '
-<div class="tl_radio_reset">
-<label for="tl_radio_reset" class="tl_radio_label">' . $GLOBALS['TL_LANG']['MSC']['resetSelected'] . '</label> <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
-</div>' : '') . '
-</div>';
+		$reset = $this->strPickerFieldType == 'radio' ? $twig->render('@Contao/backend/listing/be_hint.html.twig', ['label' => $GLOBALS['TL_LANG']['MSC']['resetSelected'], 'context'=>$context]) :'';
+
+		$objAttributes = new HtmlAttributes([
+			$this->getPickerValueAttribute(),
+		]);
+
+		$objAttributesInner = new HtmlAttributes([
+			'class' => "tl_listing ' . $treeClass . ($this->strPickerFieldType ? ' picker unselectable' : '') . '"
+		]);
+
+		$return .= $twig->render('@Contao/backend/listing/be_listing.html.twig', [
+			'attributes' => $objAttributes,
+			'wrapper_attributes' => $objAttributesInner,
+			'view_mode' => 'tree_view',
+			'help' => $help,
+			'breadcrumbs' => $breadcrumb,
+			'globalOperations' => $globalOperations,
+			'operations' => $_buttons,
+			'children' => $tree,
+			'reset' => $reset,
+			'context'=>$context
+		]);
 
 		// Form
 		if (Input::get('act') == 'select') {
@@ -3913,15 +3911,19 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				'novalidate' => true
 			]);
 
-			$return = $twig->render('@Contao/be_action_form.html.twig', [
+			$return = $twig->render('@Contao/backend/listing/be_form.html.twig', [
 				'attributes' => $objAttributes->addClass('tl_form'),
 				'submit' => 'tl_select',
 				'rt' => htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()),
 				'children' => $return,
-				'actions' => $strButtons
+				'actions' => $strButtons,
+				'emptyLabel' => $GLOBALS['TL_LANG']['MSC']['noResult'],
+				'context'=>$context
 			]);
 		}
 
+		$requestToken = htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+		$strRefererId = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 		return '<div
 				data-controller="contao--toggle-nodes"
 				data-contao--toggle-nodes-mode-value="' . (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? 0) . '"
