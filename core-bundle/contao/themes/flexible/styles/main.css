@@ -1203,11 +1203,15 @@ table.tl_listing {
 	padding-left: calc(var(--treeview-listing-spacing) * (var(--treeview-level,-1) + 1) + var(--treeview-listing-spacing-base));
 }
 
-.tree_view .tl_folder:not(:has(.foldable)) .tl_left {
+.tree_view .tl_folder:has(.foldable) .tl_left {
 	padding-left: calc(var(--treeview-listing-spacing) * (var(--treeview-level,-1) + 1));
 }
 
 .tree_view .tl_file .tl_left {
+	padding-left: calc(var(--treeview-listing-spacing) * (var(--treeview-level,-1) + 1) + var(--treeview-listing-spacing-base));
+}
+
+.tree_view .tl_file:has(.foldable) .tl_left {
 	padding-left: calc(var(--treeview-listing-spacing) * (var(--treeview-level,-1) + 1) + var(--treeview-listing-spacing-base));
 }
 
