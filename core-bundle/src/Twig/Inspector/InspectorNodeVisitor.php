@@ -62,26 +62,16 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
         }
 
         // Retrieve the parent template
-        $getParent = static function (ModuleNode $node): string|null {
+        $getParent = function (ModuleNode $node): string|null {
             if (!$node->hasNode('parent')) {
                 return null;
             }
 
-            $parent = $node->getNode('parent');
-
-            if ($parent instanceof ConstantExpression) {
-                return $parent->getAttribute('value');
-            }
-
-            if ($parent instanceof RuntimeThemeDependentExpression) {
-                return $parent->getAttribute('default_value');
-            }
-
-            return null;
+            return $this->getValue($node->getNode('parent'));
         };
 
         // Retrieve used templates
-        $getUses = static function (ModuleNode $node): array {
+        $getUses = function (ModuleNode $node): array {
             if (!$node->hasNode('traits')) {
                 return [];
             }
@@ -89,14 +79,14 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
             $uses = [];
 
             foreach ($node->getNode('traits') as $trait) {
-                if (($template = $trait->getNode('template')) instanceof ConstantExpression) {
+                if (null !== ($template = $this->getValue($trait->getNode('template')))) {
                     $targets = [];
 
                     foreach ($trait->getNode('targets') as $original => $target) {
                         $targets[$original] = $target->getAttribute('value');
                     }
 
-                    $uses[] = [$template->getAttribute('value'), $targets];
+                    $uses[] = [$template, $targets];
                 }
             }
 
@@ -171,5 +161,18 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
         $this->prototypeBlocks[$source] = $prototypeBlocks;
 
         return \in_array($blockName, $prototypeBlocks, true);
+    }
+
+    private function getValue(Node $node): string|null
+    {
+        if ($node instanceof ConstantExpression) {
+            return $node->getAttribute('value');
+        }
+
+        if ($node instanceof RuntimeThemeDependentExpression) {
+            return $node->getAttribute('default_value');
+        }
+
+        return null;
     }
 }
