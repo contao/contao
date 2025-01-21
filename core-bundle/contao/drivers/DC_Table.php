@@ -3881,6 +3881,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$objAttributes = new HtmlAttributes([
 			$this->getPickerValueAttribute(),
+			'id' => 'tl_listing',
+			'class' => 'tl_listing_container tree_view'
 		]);
 
 		$objAttributesInner = new HtmlAttributes([
@@ -3890,7 +3892,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$return .= $twig->render('@Contao/backend/listing/be_listing.html.twig', [
 			'attributes' => $objAttributes,
 			'wrapper_attributes' => $objAttributesInner,
-			'view_mode' => 'tree_view',
 			'help' => $help,
 			'breadcrumbs' => $breadcrumb,
 			'globalOperations' => $globalOperations,
