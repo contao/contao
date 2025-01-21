@@ -21,6 +21,7 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\Database\Statement;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
@@ -3651,10 +3652,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function treeView()
 	{
+		$twig = System::getContainer()->get('twig');
+		$strMode = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null;
+
 		$table = $this->strTable;
 		$treeClass = 'tl_tree';
 
-		$blnModeTreeExtended = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED;
+		$blnModeTreeExtended = $strMode == self::MODE_TREE_EXTENDED;
 
 		if ($blnModeTreeExtended)
 		{
@@ -3841,14 +3845,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$requestToken = htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 		$strRefererId = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 
-		$return .= ((Input::get('act') == 'select') ? '
-<form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
-<div class="tl_formbody_edit">
-<input type="hidden" name="FORM_SUBMIT" value="tl_select">
-<input type="hidden" name="REQUEST_TOKEN" value="' . $requestToken . '">' : '') . ($blnClipboard ? '
-<div id="paste_hint">
-  <p>' . $GLOBALS['TL_LANG']['MSC']['selectNewPosition'] . '</p>
-</div>' : '') . '
+		$return .= ($blnClipboard ? $twig->render('@Contao/hint.html.twig', ['label' => $GLOBALS['TL_LANG']['MSC']['selectNewPosition']]) : '');
+		$return .= '
 <div class="tl_listing_container tree_view" id="tl_listing"' . $this->getPickerValueAttribute() . '>' . $breadcrumb . ($this->strPickerFieldType == 'checkbox' ? '
 <div class="tl_select_trigger">
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
@@ -3904,15 +3902,24 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>' : '') . '
 </div>';
 
-		// Close the form
-		if (Input::get('act') == 'select')
-		{
+		// Form
+		if (Input::get('act') == 'select') {
 			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($this->strTable, $blnHasSorting, $this);
 
-			$return .= '
-</div>
-  ' . $strButtons . '
-</form>';
+			$objAttributes = new HtmlAttributes([
+				'id' => 'tl_select',
+				'class' => (Input::get('act') == 'select') ? ' unselectable' : '',
+				'method' => 'post',
+				'novalidate' => true
+			]);
+
+			$return = $twig->render('@Contao/be_action_form.html.twig', [
+				'attributes' => $objAttributes->addClass('tl_form'),
+				'submit' => 'tl_select',
+				'rt' => htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()),
+				'children' => $return,
+				'actions' => $strButtons
+			]);
 		}
 
 		return '<div
