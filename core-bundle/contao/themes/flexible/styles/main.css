@@ -1606,6 +1606,10 @@ table.tl_listing {
 	z-index: 2;
 }
 
+.tl_right:has(.operations + [name="picker"]) {
+	display: flex;
+}
+
 .cte_type {
 	margin: 0 0 4px;
 	font-size: .75rem;
