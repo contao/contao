@@ -69,27 +69,26 @@ class DcaSchemaProvider
                     }
 
                     $options = $conf;
-                    unset($options['name'], $options['type']);
+
+                    if (isset($options['customSchemaOptions'])) {
+                        trigger_deprecation('contao/core-bundle', '5.3', 'Using the "customSchemaOptions" option has been deprecated and will no longer work in Contao 6. Use the "platformOptions" option instead.');
+
+                        $options['platformOptions'] = [...($options['platformOptions'] ?? []), ...$options['customSchemaOptions']];
+
+                        // Deprecated in doctrine/dbal 3.x and removed in 4.x
+                        unset($options['customSchemaOptions']);
+                    }
 
                     // Use the binary collation if the "case_sensitive" option is set
-                    if ($this->isCaseSensitive($conf)) {
+                    if (true === ($options['platformOptions']['case_sensitive'] ?? null)) {
                         $options['platformOptions']['collation'] = $this->getBinaryCollation($table);
                     }
 
-                    if (isset($options['customSchemaOptions']['charset'])) {
-                        $options['platformOptions']['charset'] = $options['customSchemaOptions']['charset'];
+                    if (isset($options['platformOptions']['collation']) && !isset($options['platformOptions']['charset'])) {
+                        $options['platformOptions']['charset'] = explode('_', (string) $options['platformOptions']['collation'], 2)[0];
                     }
 
-                    if (isset($options['customSchemaOptions']['collation'])) {
-                        if (!isset($options['customSchemaOptions']['charset'])) {
-                            $options['platformOptions']['charset'] = explode('_', (string) $options['customSchemaOptions']['collation'], 2)[0];
-                        }
-
-                        $options['platformOptions']['collation'] = $options['customSchemaOptions']['collation'];
-                    }
-
-                    // Deprecated in doctrine/dbal 3.x and removed in 4.x
-                    unset($options['customSchemaOptions']);
+                    unset($options['name'], $options['type']);
 
                     $table->addColumn($conf['name'], $conf['type'], $options);
                 }
@@ -298,7 +297,7 @@ class DcaSchemaProvider
     /**
      * Returns the SQL definitions from the Contao installer.
      *
-     * @return array<string, array<string, string|array<string, string|array<string>>>>
+     * @return array<string, array<string, string|array<string, string|array<string|array>>>>
      */
     private function getSqlDefinitions(): array
     {
@@ -405,15 +404,6 @@ class DcaSchemaProvider
         }
 
         return $this->defaultIndexLength = 3072;
-    }
-
-    private function isCaseSensitive(array $config): bool
-    {
-        if (!isset($config['customSchemaOptions']['case_sensitive'])) {
-            return false;
-        }
-
-        return true === $config['customSchemaOptions']['case_sensitive'];
     }
 
     /**

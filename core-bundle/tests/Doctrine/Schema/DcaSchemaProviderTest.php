@@ -158,7 +158,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                     'SCHEMA_FIELDS' => [
                         ['name' => 'id', 'type' => 'integer'],
                         ['name' => 'pid', 'type' => 'integer', 'notnull' => false],
-                        ['name' => 'title', 'type' => 'string', 'length' => 128, 'customSchemaOptions' => ['case_sensitive' => true]],
+                        ['name' => 'title', 'type' => 'string', 'length' => 128, 'platformOptions' => ['case_sensitive' => true]],
                         ['name' => 'uppercase', 'type' => 'string', 'length' => 64, 'default' => '1.00'],
                         ['name' => 'teaser', 'type' => 'text', 'notnull' => false, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT],
                         ['name' => 'description', 'type' => 'text', 'notnull' => false, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT],
