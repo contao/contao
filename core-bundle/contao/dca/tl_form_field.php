@@ -71,6 +71,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 				'prefetch'            => true,
 				'icon'                => 'edit.svg',
 				'attributes'          => 'data-contao--deeplink-target="primary"',
+				'primary'             => true,
 				'button_callback'     => array('tl_form_field', 'disableButton')
 			),
 			'copy' => array
@@ -93,6 +94,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 				'href'                => 'act=toggle&amp;field=invisible',
 				'icon'                => 'visible.svg',
 				'reverse'             => true,
+				'primary'             => true,
 				'button_callback'     => array('tl_form_field', 'toggleIcon')
 			),
 			'show'

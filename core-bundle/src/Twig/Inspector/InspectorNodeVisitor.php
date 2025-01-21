@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Inspector;
 
+use Contao\CoreBundle\Twig\Inheritance\RuntimeThemeDependentExpression;
 use Contao\CoreBundle\Twig\Slots\SlotNode;
 use Psr\Cache\CacheItemPoolInterface;
 use Twig\Environment;
@@ -60,7 +61,7 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
             return $node;
         }
 
-        // Retrieve the parent template if it was set statically
+        // Retrieve the parent template
         $getParent = static function (ModuleNode $node): string|null {
             if (!$node->hasNode('parent')) {
                 return null;
@@ -68,14 +69,18 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
 
             $parent = $node->getNode('parent');
 
-            if (!$parent instanceof ConstantExpression) {
-                return null;
+            if ($parent instanceof ConstantExpression) {
+                return $parent->getAttribute('value');
             }
 
-            return $parent->getAttribute('value');
+            if ($parent instanceof RuntimeThemeDependentExpression) {
+                return $parent->getAttribute('default_value');
+            }
+
+            return null;
         };
 
-        // Retrieve the parent template if it was set statically
+        // Retrieve used templates
         $getUses = static function (ModuleNode $node): array {
             if (!$node->hasNode('traits')) {
                 return [];
