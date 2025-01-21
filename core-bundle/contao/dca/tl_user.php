@@ -571,7 +571,7 @@ class tl_user extends Backend
 		$router = System::getContainer()->get('router');
 		$url = $router->generate('contao_backend', array('_switch_user'=>$row['username']));
 
-		return '<a href="' . $url . '" title="' . StringUtil::specialchars($title) . '">' . Image::getHtml($icon, $label) . '</a> ';
+		return '<a href="' . $url . '" title="' . StringUtil::specialchars($title) . '" data-turbo-prefetch="false">' . Image::getHtml($icon, $label) . '</a> ';
 	}
 
 	/**
