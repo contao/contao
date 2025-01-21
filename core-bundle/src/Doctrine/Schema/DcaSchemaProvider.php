@@ -90,7 +90,7 @@ class DcaSchemaProvider
 
                     unset($options['name'], $options['type']);
 
-                    $table->addColumn($conf['name'], $conf['type'], $options);
+                    $table->addColumn($conf['name'] ?? $fieldName, $conf['type'], $options);
                 }
             }
 
