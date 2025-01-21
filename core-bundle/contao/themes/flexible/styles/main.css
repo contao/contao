@@ -1258,8 +1258,8 @@ table.tl_listing {
 }
 
 .tl_listing.picker .tl_tree_checkbox, .tl_listing.picker .tl_tree_radio, .tl_listing_container.picker .tl_tree_checkbox, .tl_listing_container.picker .tl_tree_radio {
-	margin-top: 2px;
-	margin-left: 8px;
+	margin-top: 3px;
+	margin-left: 9px;
 }
 
 .tl_listing.picker .tl_tree_checkbox:disabled, .tl_listing.picker .tl_tree_radio:disabled, .tl_listing_container.picker .tl_tree_checkbox:disabled, .tl_listing_container.picker .tl_tree_radio:disabled {
@@ -1606,7 +1606,7 @@ table.tl_listing {
 	z-index: 2;
 }
 
-.tl_right:has(.operations + [name="picker"]) {
+.tl_right:has(.operations + :is(.tl_tree_checkbox, .tl_tree_radio)) {
 	display: flex;
 }
 
