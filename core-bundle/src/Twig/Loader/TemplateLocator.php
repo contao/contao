@@ -101,7 +101,6 @@ class TemplateLocator
             ->files()
             ->in($path)
             ->name('/(\.twig|\.html5)$/')
-            ->sortByName()
         ;
 
         if (!$this->isNamespaceRoot($path)) {
@@ -113,6 +112,8 @@ class TemplateLocator
         foreach ($finder as $file) {
             $templates[Path::normalize($file->getRelativePathname())] = Path::canonicalize($file->getPathname());
         }
+
+        ksort($templates);
 
         return $templates;
     }
