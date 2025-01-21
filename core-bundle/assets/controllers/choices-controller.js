@@ -7,7 +7,7 @@ export default class ChoicesController extends Controller {
         }
 
         // Choices wraps the element multiple times during initialization, leading to
-        // multiple disconnecs/reconnects of the controller, that we need to ignore.
+        // multiple disconnects/reconnects of the controller that we need to ignore.
         this.initGuard = true;
 
         const select = this.element;
@@ -34,9 +34,7 @@ export default class ChoicesController extends Controller {
                 }
 
                 // Reset guard as soon as the call stack has cleared
-                setTimeout(() => {
-                    this.initGuard = false;
-                }, 0);
+                setTimeout(() => { this.initGuard = false; }, 0);
             },
             loadingText: Contao.lang.loading,
             noResultsText: Contao.lang.noResults,
