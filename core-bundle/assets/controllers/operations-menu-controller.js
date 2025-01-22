@@ -36,6 +36,8 @@ export default class extends Controller {
     }
 
     titleTargetConnected (el) {
+        el.removeAttribute(`data-${this.identifier}-target`);
+
         const link = el.querySelector('a[title]');
         if (link && '' !== link.getAttribute('title')) {
             link.append(link.getAttribute('title'));
