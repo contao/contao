@@ -1,0 +1,11 @@
+{% extends '@Contao/backend/listing/be_listing.html.twig' %}
+
+{% block content %}
+    {{ help ?? ''|raw }}
+    {{ globalOperations ?? ''|raw }}
+
+    <table {{ wrapper_attributes }}>
+    {{ children ?? ''|raw }}
+    </table>
+    {{ reset }}
+{% endblock %}

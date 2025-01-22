@@ -1,4 +1,4 @@
-<div {{ attributes.addClass(['tl_listing_container', context.mode]).setIfExists('id','tl_listing') }}>
+<div {{ attributes.addClass(['tl_listing_container', context.mode ~ '_view']).setIfExists('id','tl_listing') }}>
     {% block content %}
     {% endblock content %}
 </div>

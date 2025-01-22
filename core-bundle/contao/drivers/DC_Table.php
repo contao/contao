@@ -2725,6 +2725,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$blnIsError = Input::isPost() && !Input::post('all_fields');
 
+
 			// Return the select menu
 			$return .= '
 
@@ -3827,7 +3828,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		$return .= (new TreeView($this))->render($table, $strMode, $tree, $strClass, $blnHasSorting);
+		$return .= (new TreeView($this, $table, $strMode))->render($tree, $strClass, $blnHasSorting);
 
 		$requestToken = htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 		$strRefererId = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
@@ -4285,8 +4286,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function parentView()
 	{
+		$strMode = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null);
 		$twig = System::getContainer()->get('twig');
-		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
+		$table = $strMode == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
 		$blnHasSorting = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'][0] ?? null) == 'sorting';
 
 		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
@@ -4798,7 +4800,7 @@ $return.='
 			$return .= $this->paginationMenu();
 		}
 
-		$return = (new ParentView($this))->render($table, $return, $blnHasSorting);
+		$return = (new ParentView($this, $table, $strMode))->render($return, $blnHasSorting);
 
 		if ($limitHeight)
 		{
@@ -4824,7 +4826,8 @@ $return.='
 	 */
 	protected function listView()
 	{
-		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
+		$strMode = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null;
+		$table = $strMode == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
 		$orderBy = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'] ?? array('id');
 		$firstOrderBy = preg_replace('/\s+.*$/', '', $orderBy[0]);
 
@@ -4861,7 +4864,7 @@ $return.='
 				// If there is no direction, check the global flag in sorting mode 1 or the field flag in all other sorting modes
 				if (!$direction)
 				{
-					if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_SORTED && \in_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] ?? null, array(self::SORT_INITIAL_LETTER_DESC, self::SORT_INITIAL_LETTERS_DESC, self::SORT_DAY_DESC, self::SORT_MONTH_DESC, self::SORT_YEAR_DESC, self::SORT_DESC)))
+					if ($strMode == self::MODE_SORTED && \in_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] ?? null, array(self::SORT_INITIAL_LETTER_DESC, self::SORT_INITIAL_LETTERS_DESC, self::SORT_DAY_DESC, self::SORT_MONTH_DESC, self::SORT_YEAR_DESC, self::SORT_DESC)))
 					{
 						$direction = 'DESC';
 					}
@@ -4914,7 +4917,7 @@ $return.='
 				}
 			}
 
-			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_SORTED_PARENT)
+			if ($strMode == self::MODE_SORTED_PARENT)
 			{
 				$firstOrderBy = 'pid';
 				$showFields = $GLOBALS['TL_DCA'][$table]['list']['label']['fields'];
@@ -4962,7 +4965,7 @@ $return.='
 
 		if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable)))
 		{
-			$buttons .= DataContainerOperationsBuilder::generateNewButton($this->strTable, $this->ptable ? $this->addToUrl('act=create' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) < self::MODE_PARENT) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create'));
+			$buttons .= DataContainerOperationsBuilder::generateNewButton($this->strTable, $this->ptable ? $this->addToUrl('act=create' . (($strMode < self::MODE_PARENT) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create'));
 		}
 
 		$buttons .= $this->generateGlobalButtons();
@@ -4980,15 +4983,8 @@ $return.='
 		{
 			$result = $objRow->fetchAllAssoc();
 
-			$return .= ((Input::get('act') == 'select') ? '
-<form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
-<div class="tl_formbody_edit">
-<input type="hidden" name="FORM_SUBMIT" value="tl_select">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">' : '') . '
-<div class="tl_listing_container list_view" id="tl_listing"' . $this->getPickerValueAttribute() . '>' . ($this->strPickerFieldType == 'checkbox' ? '
-<div class="tl_select_trigger">
-<label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
-</div>' : '') . '
+
+			$return .= '
 <table class="tl_listing' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) ? ' showColumns' : '') . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">';
 
 			// Automatically add the "order by" field as last column if we do not have group headers
@@ -5057,7 +5053,7 @@ $return.='
 				$label = $this->generateRecordLabel($row, $this->strTable);
 
 				// Build the sorting groups
-				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) > 0)
+				if ($strMode > 0)
 				{
 					$current = $row[$firstOrderBy];
 					$orderBy = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'] ?? array('id');
@@ -5124,13 +5120,7 @@ $return.='
 				$return .= '</tbody>';
 			}
 
-			// Close the table
-			$return .= '
-</table>' . ($this->strPickerFieldType == 'radio' ? '
-<div class="tl_radio_reset">
-<label for="tl_radio_reset" class="tl_radio_label">' . $GLOBALS['TL_LANG']['MSC']['resetSelected'] . '</label> <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
-</div>' : '') . '
-</div>';
+			$return = (new ListView($this, $table, $strMode))->render($return);
 
 			// Add another panel at the end of the page
 			if (str_contains($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit'))
@@ -5143,10 +5133,9 @@ $return.='
 			{
 				$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($this->strTable, false, $this);
 
-				$return .= '
-</div>
-  ' . $strButtons . '
-</form>';
+
+				$return .= '</div>';
+				$return = (new ListView($this, $table, $strMode))->renderSelectForm($return, $strButtons);
 			}
 		}
 
@@ -5324,7 +5313,8 @@ $return.='
 	 */
 	protected function sortMenu()
 	{
-		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) != self::MODE_SORTABLE && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) != self::MODE_PARENT)
+		$strMode = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null);
+		if ($strMode != self::MODE_SORTABLE && $strMode != self::MODE_PARENT)
 		{
 			return '';
 		}
@@ -5361,7 +5351,7 @@ $return.='
 		$firstOrderBy = preg_replace('/\s+.*$/', '', $orderBy[0]);
 
 		// Add PID to order fields
-		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_SORTED_PARENT && Database::getInstance()->fieldExists('pid', $this->strTable))
+		if ($strMode == self::MODE_SORTED_PARENT && Database::getInstance()->fieldExists('pid', $this->strTable))
 		{
 			array_unshift($orderBy, 'pid');
 		}
