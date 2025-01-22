@@ -6343,12 +6343,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	protected function updateRoot(array $root, bool $isSearch = false)
 	{
 		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
-		$this->root = $this->eliminateNestedPages($root, $table);
-		$this->visibleRootTrails = array();
-		$this->rootChildren = array();
 
 		if ($this->treeView)
 		{
+			$this->root = $this->eliminateNestedPages($root, $table);
+			$this->visibleRootTrails = array();
+
 			// Fetch visible root trails if enabled
 			if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['showRootTrails'] ?? null)
 			{
@@ -6375,10 +6375,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$this->rootChildren = array_intersect($this->rootChildren, array_merge(...$parents));
 				$this->visibleRootTrails = array_merge($this->visibleRootTrails, array_diff($this->rootChildren, $root));
 			}
+
+			return;
 		}
 
+		$this->root = $root;
+
 		// $this->root might not have a correct order here, let's make sure it's ordered by sorting
-		elseif ($this->root && $this->Database->fieldExists('sorting', $table))
+		if ($this->root && $this->Database->fieldExists('sorting', $table))
 		{
 			$this->root = $this->Database->execute("SELECT id FROM $table WHERE id IN (" . implode(',', $this->root) . ") ORDER BY sorting, id")->fetchEach('id');
 		}
