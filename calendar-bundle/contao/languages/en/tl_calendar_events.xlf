@@ -272,6 +272,9 @@
       <trans-unit id="tl_calendar_events.new.1">
         <source>Create a new event</source>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.record_label">
+        <source>Event ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.show">
         <source>Show the details of event ID %s</source>
       </trans-unit>

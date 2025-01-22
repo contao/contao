@@ -18,6 +18,11 @@ services:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
 
+    contao_calendar.listener.data_container.calendar_events_record_label:
+        class: Contao\CalendarBundle\EventListener\DataContainer\CalendarEventsRecordLabelListener
+        arguments:
+            - '@translator'
+
     contao_calendar.listener.data_container.start_stop_validation:
         class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
         arguments:
