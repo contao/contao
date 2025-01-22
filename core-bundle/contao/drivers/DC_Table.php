@@ -5402,7 +5402,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return '
 <div class="tl_search tl_subpanel">
 <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
-<select name="tl_field" class="tl_select init-choices' . ($active ? ' active' : '') . '">
+<select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '" data-controller="contao--choices">
 ' . implode("\n", $options_sorter) . '
 </select>
 <span>=</span>
@@ -5537,7 +5537,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return '
 <div class="tl_sorting tl_subpanel">
 <strong>' . $GLOBALS['TL_LANG']['MSC']['sortBy'] . ':</strong>
-<select name="tl_sort" id="tl_sort" class="tl_select init-choices">
+<select name="tl_sort" id="tl_sort" class="tl_select" data-controller="contao--choices">
 ' . implode("\n", $options_sorter) . '
 </select>
 </div>';
@@ -5678,7 +5678,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			$fields = '
-<select name="tl_limit" class="tl_select init-choices' . ($active ? ' active' : '') . '" onchange="this.form.submit()">
+<select name="tl_limit" class="tl_select' . ($active ? ' active' : '') . '" onchange="this.form.submit()" data-controller="contao--choices">
   ' . $options . '
 </select> ';
 		}
@@ -5920,7 +5920,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			// Begin select menu
 			$fields .= '
-<select name="' . $field . '" id="' . $field . '" class="tl_select init-choices' . ($active ? ' active' : '') . '" data-placeholder="' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) . '">
+<select name="' . $field . '" id="' . $field . '" class="tl_select' . ($active ? ' active' : '') . '" data-placeholder="' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) . '" data-controller="contao--choices">
   <option value="tl_' . $field . '">---</option>';
 
 			if ($objFields->numRows)
@@ -6408,12 +6408,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	{
 		$db = Database::getInstance();
 		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
-		$this->root = $this->eliminateNestedPages($root, $table);
-		$this->visibleRootTrails = array();
-		$this->rootChildren = array();
 
 		if ($this->treeView)
 		{
+			$this->root = $this->eliminateNestedPages($root, $table);
+			$this->visibleRootTrails = array();
+
 			// Fetch visible root trails if enabled
 			if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['showRootTrails'] ?? null)
 			{
@@ -6440,10 +6440,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$this->rootChildren = array_intersect($this->rootChildren, array_merge(...$parents));
 				$this->visibleRootTrails = array_merge($this->visibleRootTrails, array_diff($this->rootChildren, $root));
 			}
+
+			return;
 		}
 
+		$this->root = $root;
+
 		// $this->root might not have a correct order here, let's make sure it's ordered by sorting
-		elseif ($this->root && $db->fieldExists('sorting', $table))
+		if ($this->root && $db->fieldExists('sorting', $table))
 		{
 			$this->root = $db->execute("SELECT id FROM $table WHERE id IN (" . implode(',', $this->root) . ") ORDER BY sorting, id")->fetchEach('id');
 		}

@@ -99,13 +99,13 @@ export default class extends Controller {
     isInteractive (el) {
         let node = el.nodeName.toLowerCase();
 
-        if ('a' === node || 'button' === node) {
+        if ('a' === node || 'button' === node || 'input' === node) {
             return true;
         }
 
         // Also check the parent element if el is not interactive
         node = el.parentElement.nodeName.toLowerCase();
 
-        return 'a' === node || 'button' === node;
+        return 'a' === node || 'button' === node || 'input' === node;
     }
 }

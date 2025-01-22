@@ -1258,8 +1258,8 @@ table.tl_listing {
 }
 
 .tl_listing.picker .tl_tree_checkbox, .tl_listing.picker .tl_tree_radio, .tl_listing_container.picker .tl_tree_checkbox, .tl_listing_container.picker .tl_tree_radio {
-	margin-top: 2px;
-	margin-left: 8px;
+	margin-top: 3px;
+	margin-left: 9px;
 }
 
 .tl_listing.picker .tl_tree_checkbox:disabled, .tl_listing.picker .tl_tree_radio:disabled, .tl_listing_container.picker .tl_tree_checkbox:disabled, .tl_listing_container.picker .tl_tree_radio:disabled {
@@ -1596,13 +1596,18 @@ table.tl_listing {
 
 .operations-menu a {
 	display: flex;
-	gap: 5px;
+	gap: 6px;
 	align-items: center;
+	padding: 1px 0;
 	white-space: nowrap;
 }
 
 .tl_content_right:has(.operations-menu.show) {
 	z-index: 2;
+}
+
+.tl_right:has(.operations + :is(.tl_tree_checkbox, .tl_tree_radio)) {
+	display: flex;
 }
 
 .cte_type {
@@ -1784,8 +1789,7 @@ table.tl_listing {
 	background: linear-gradient(transparent, var(--content-bg) 60%);
 }
 
-[data-contao--limit-height-target][style*="max-height"]:hover .limit_toggler,
-[data-contao--limit-height-target][style*="max-height"].hover .limit_toggler {
+:is(.hover-div, .hover-row):hover [data-contao--limit-height-target][style*="max-height"] .limit_toggler {
 	background: linear-gradient(transparent, var(--hover-row) 60%);
 }
 
@@ -2253,7 +2257,7 @@ ul.sgallery li {
 }
 
 .tl_optionwizard td, .tl_key_value_wizard td {
-	padding: 0 3px 0 0;
+	padding: 0 6px 0 0;
 }
 
 .tl_optionwizard th, .tl_key_value_wizard th {

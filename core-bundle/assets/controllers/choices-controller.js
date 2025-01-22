@@ -1,17 +1,18 @@
-(function () {
-    'use strict';
+import {Controller} from "@hotwired/stimulus"
 
-    const initializedChoices = new WeakMap();
-
-    const init = (select) => {
-        // Check if this select has already been initialized
-        if (initializedChoices.has(select)) {
+export default class ChoicesController extends Controller {
+    connect() {
+        if (this.initGuard) {
             return;
         }
 
-        initializedChoices.set(select, true);
+        // Choices wraps the element multiple times during initialization, leading to
+        // multiple disconnects/reconnects of the controller that we need to ignore.
+        this.initGuard = true;
 
-        new Choices(select, {
+        const select = this.element;
+
+        this.choices = new Choices(select, {
             shouldSort: false,
             duplicateItemsAllowed: false,
             allowHTML: false,
@@ -19,7 +20,7 @@
             searchEnabled: select.options.length > 7,
             classNames: {
                 containerOuter: ['choices', ...Array.from(select.classList)],
-                flippedState: ''
+                flippedState: '',
             },
             fuseOptions: {
                 includeScore: true,
@@ -31,6 +32,9 @@
                 if (choices && select.dataset.placeholder) {
                     choices.dataset.placeholder = select.dataset.placeholder;
                 }
+
+                // Reset guard as soon as the call stack has cleared
+                setTimeout(() => { this.initGuard = false; }, 0);
             },
             loadingText: Contao.lang.loading,
             noResultsText: Contao.lang.noResults,
@@ -41,25 +45,12 @@
         })
     }
 
-    new MutationObserver(function (mutationsList) {
-        for (const mutation of mutationsList) {
-            if (mutation.type === 'childList') {
-                mutation.addedNodes.forEach(function (element) {
-                    if (element.matches && element.matches('select.init-choices')) {
-                        init(element);
-                    }
-
-                    if (element.querySelectorAll) {
-                        element.querySelectorAll('select.init-choices').forEach((e) => {
-                            init(e);
-                        });
-                    }
-                })
-            }
+    disconnect() {
+        if (this.initGuard) {
+            return;
         }
-    }).observe(document, {
-        attributes: false,
-        childList: true,
-        subtree: true
-    });
-})();
+
+        this.choices.destroy();
+        this.choices = null;
+    }
+}
