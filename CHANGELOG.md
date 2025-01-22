@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.4.12] (2025-01-22)
+
+**Fixed issues:**
+
+- [#7922] Do not prefetch the "switch user" URLs ([fritzmg])
+
 ## [5.4.11] (2025-01-20)
 
 ## [5.4.10] (2025-01-17)
@@ -153,6 +159,7 @@ This project adheres to [Semantic Versioning].
 - [#7229] Fix the `.nogrid` backwards compatibility layer ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.4.12]: https://github.com/contao/contao/releases/tag/5.4.12
 [5.4.11]: https://github.com/contao/contao/releases/tag/5.4.11
 [5.4.10]: https://github.com/contao/contao/releases/tag/5.4.10
 [5.4.9]: https://github.com/contao/contao/releases/tag/5.4.9
@@ -252,3 +259,4 @@ This project adheres to [Semantic Versioning].
 [#7741]: https://github.com/contao/contao/pull/7741
 [#7841]: https://github.com/contao/contao/pull/7841
 [#7873]: https://github.com/contao/contao/pull/7873
+[#7922]: https://github.com/contao/contao/pull/7922
