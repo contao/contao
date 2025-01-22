@@ -395,6 +395,9 @@ abstract class DataContainer extends Backend
 
 			case 'currentPid':
 				return $this->intCurrentPid;
+
+			case 'strPickerFieldType':
+				return $this->strPickerFieldType;
 		}
 
 		return parent::__get($strKey);
