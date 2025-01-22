@@ -24,6 +24,7 @@ use Twig\Node\EmptyNode;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\ModuleNode;
+use Twig\Node\Nodes;
 use Twig\Source;
 
 class InspectorNodeVisitorTest extends TestCase
@@ -39,7 +40,7 @@ class InspectorNodeVisitorTest extends TestCase
     }
 
     /**
-     * @dataProvider provideParentExpressions
+     * @dataProvider provideReferenceExpressions
      */
     public function testAnalyzesParent(AbstractExpression $parentExpression, string|null $expectedName): void
     {
@@ -62,7 +63,33 @@ class InspectorNodeVisitorTest extends TestCase
         $this->assertSame($expectedName, $item->get()['path/to/template.html.twig']['parent']);
     }
 
-    public static function provideParentExpressions(): iterable
+    /**
+     * @dataProvider provideReferenceExpressions
+     */
+    public function testAnalyzesUses(AbstractExpression $useExpression, string|null $expectedName): void
+    {
+        $arrayAdapter = new ArrayAdapter();
+        $environment = $this->createMock(Environment::class);
+
+        $moduleNode = new ModuleNode(
+            new BodyNode(),
+            null,
+            new EmptyNode(),
+            new EmptyNode(),
+            new Nodes([
+                new Nodes(['template' => $useExpression, 'targets' => new Nodes()]),
+            ]),
+            null,
+            new Source('…', 'template.html.twig', 'path/to/template.html.twig'),
+        );
+
+        (new InspectorNodeVisitor($arrayAdapter, $environment))->leaveNode($moduleNode, $environment);
+
+        $item = $arrayAdapter->getItem(Inspector::CACHE_KEY);
+        $this->assertSame($expectedName, $item->get()['path/to/template.html.twig']['uses'][0][0] ?? null);
+    }
+
+    public static function provideReferenceExpressions(): iterable
     {
         yield 'constant' => [
             new ConstantExpression('foo', 0),
