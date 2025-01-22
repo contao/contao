@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.24] (2025-01-22)
+
+**Fixed issues:**
+
+- [#7930] Fix a permission error in non-tree views ([aschempp])
+- [#7915] Adjust the `:hover` of the limit-toggler ([zoglo])
+
 ## [5.3.23] (2025-01-20)
 
 **Fixed issues:**
@@ -546,6 +553,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.24]: https://github.com/contao/contao/releases/tag/5.3.24
 [5.3.23]: https://github.com/contao/contao/releases/tag/5.3.23
 [5.3.22]: https://github.com/contao/contao/releases/tag/5.3.22
 [5.3.21]: https://github.com/contao/contao/releases/tag/5.3.21
@@ -983,3 +991,5 @@ This project adheres to [Semantic Versioning].
 [#7898]: https://github.com/contao/contao/pull/7898
 [#7899]: https://github.com/contao/contao/pull/7899
 [#7904]: https://github.com/contao/contao/pull/7904
+[#7915]: https://github.com/contao/contao/pull/7915
+[#7930]: https://github.com/contao/contao/pull/7930
