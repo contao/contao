@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.52] (2025-01-22)
+
+**Fixed issues:**
+
+- [#7929] Fix a permission error in non-tree views ([aschempp])
+
 ## [4.13.51] (2025-01-20)
 
 **Fixed issues:**
@@ -1114,6 +1120,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.52]: https://github.com/contao/contao/releases/tag/4.13.52
 [4.13.51]: https://github.com/contao/contao/releases/tag/4.13.51
 [4.13.50]: https://github.com/contao/contao/releases/tag/4.13.50
 [4.13.49]: https://github.com/contao/contao/releases/tag/4.13.49
@@ -2027,3 +2034,4 @@ This project adheres to [Semantic Versioning].
 [#7876]: https://github.com/contao/contao/pull/7876
 [#7883]: https://github.com/contao/contao/pull/7883
 [#7884]: https://github.com/contao/contao/pull/7884
+[#7929]: https://github.com/contao/contao/pull/7929
