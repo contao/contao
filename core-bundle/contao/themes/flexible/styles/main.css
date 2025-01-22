@@ -1678,7 +1678,7 @@ table.tl_listing {
 	background: linear-gradient(transparent, var(--content-bg) 60%);
 }
 
-[data-contao--limit-height-target][style*="max-height"]:hover .limit_toggler {
+:is(.hover-div, .hover-row):hover [data-contao--limit-height-target][style*="max-height"] .limit_toggler {
 	background: linear-gradient(transparent, var(--hover-row) 60%);
 }
 
