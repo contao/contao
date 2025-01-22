@@ -5,7 +5,10 @@
     {{ globalOperations ?? ''|raw }}
 
     <table {{ wrapper_attributes }}>
-    {{ children ?? ''|raw }}
+        {% block table %}
+            {{ children ?? ''|raw }}
+        {% endblock table %}
     </table>
+
     {{ reset }}
-{% endblock %}
+{% endblock content %}

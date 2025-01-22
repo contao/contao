@@ -1,0 +1,17 @@
+{% extends '@Contao/backend/listing/be_list_view.html.twig' %}
+
+{% block table %}
+    <thead>
+    <tr>
+        {% for field in headerFields %}
+            <th class="tl_folder_tlist col_{{ field }}{% if field == initialOrderBy %} ordered_by{% endif %}">
+                {{ fields[field].label[0] ?? fields[field].label ?? "" }}
+            </th>
+        {% endfor %}
+        <th class="tl_folder_tlist tl_right_nowrap"></th>
+    </tr>
+    </thead>
+    <tbody>
+    {{ parent() }}
+    </tbody>
+{% endblock table %}

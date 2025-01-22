@@ -4983,10 +4983,6 @@ $return.='
 		{
 			$result = $objRow->fetchAllAssoc();
 
-
-			$return .= '
-<table class="tl_listing' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) ? ' showColumns' : '') . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">';
-
 			// Automatically add the "order by" field as last column if we do not have group headers
 			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) && false !== ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showFirstOrderBy'] ?? null))
 			{
@@ -5011,31 +5007,6 @@ $return.='
 				{
 					$GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'][] = $firstOrderBy;
 				}
-			}
-
-			// Generate the table header if the "show columns" option is active
-			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
-			{
-				$return .= '
-<thead>
-  <tr>';
-
-				foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] as $f)
-				{
-					if (str_contains($f, ':'))
-					{
-						list($f) = explode(':', $f, 2);
-					}
-
-					$return .= '
-    <th class="tl_folder_tlist col_' . $f . (($f == $firstOrderBy) ? ' ordered_by' : '') . '">' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$f]['label'] ?? $f)) . '</th>';
-				}
-
-				$return .= '
-    <th class="tl_folder_tlist tl_right_nowrap"></th>
-  </tr>
-</thead>
-<tbody>';
 			}
 
 			// Process result and add label and buttons
@@ -5120,7 +5091,8 @@ $return.='
 				$return .= '</tbody>';
 			}
 
-			$return = (new ListView($this, $table, $strMode))->render($return);
+			$objListView = new ListView($this, $table, $strMode);
+			$return = $objListView->render($return,$firstOrderBy);
 
 			// Add another panel at the end of the page
 			if (str_contains($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit'))
@@ -5133,9 +5105,8 @@ $return.='
 			{
 				$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($this->strTable, false, $this);
 
-
 				$return .= '</div>';
-				$return = (new ListView($this, $table, $strMode))->renderSelectForm($return, $strButtons);
+				$return = $objListView->renderSelectForm($return, $strButtons);
 			}
 		}
 
