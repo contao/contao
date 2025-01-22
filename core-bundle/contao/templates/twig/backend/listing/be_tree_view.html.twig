@@ -1,0 +1,21 @@
+{% extends '@Contao/backend/listing/be_listing.html.twig' %}
+
+{% block content %}
+    {{ help ?? ''|raw }}
+    {{ breadcrumbs ?? ''|raw }}
+    {{ globalOperations ?? ''|raw }}
+
+    <ul {{ wrapper_attributes ?? '' }}>
+        <li class="tl_folder_top cf">
+            <div class="tl_left"></div>
+            <div class="tl_right">
+                {{ operations ?? '' }}
+            </div>
+        </li>
+        {{ children ?? ''|raw }}
+    </ul>
+
+    {% if not children ?? true %}
+        <p class="tl_empty">{{ emptyLabel ?? '' }}</p>
+    {% endif %}
+{% endblock %}

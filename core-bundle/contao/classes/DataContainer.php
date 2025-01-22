@@ -1121,7 +1121,7 @@ abstract class DataContainer extends Backend
 	 *
 	 * @return string
 	 */
-	protected function getPickerValueAttribute()
+	public function getPickerValueAttribute()
 	{
 		// Only load the previously selected values for the checkbox field type (see #2346)
 		if ($this->strPickerFieldType != 'checkbox')
