@@ -322,7 +322,7 @@ window.AjaxRequest =
 		var img = null,
 			images = $(el).getElements('img'),
 			published = (images[0].get('data-state') == 1),
-			div = el.getParent('div'),
+			div = el.getParent('div:not(.operations)'),
 			next, pa;
 
 		if (rowIcon) {
