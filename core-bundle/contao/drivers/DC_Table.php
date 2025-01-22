@@ -3645,28 +3645,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 	}
 
-	protected function viewAddSelectForm($children, $strButtons, $context){
-		$twig = System::getContainer()->get('twig');
-		$context['request'] = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		$objAttributes = new HtmlAttributes([
-			'id' => 'tl_select',
-			'class' => (Input::get('act') == 'select') ? ' unselectable' : '',
-			'method' => 'post',
-			'novalidate' => true
-		]);
-
-		return $twig->render('@Contao/backend/listing/be_form.html.twig', [
-			'attributes' => $objAttributes->addClass('tl_form'),
-			'submit' => 'tl_select',
-			'rt' => htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()),
-			'children' => $children,
-			'actions' => $strButtons,
-			'emptyLabel' => $GLOBALS['TL_LANG']['MSC']['noResult'],
-			'context'=>$context
-		]);
-	}
-
 	/**
 	 * List all records of the current table as tree and return them as HTML string
 	 *
@@ -3674,7 +3652,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function treeView()
 	{
-		$twig = System::getContainer()->get('twig');
 		$strMode = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null;
 
 		$table = $this->strTable;
@@ -4821,13 +4798,7 @@ $return.='
 			$return .= $this->paginationMenu();
 		}
 
-		// Form
-		if (Input::get('act') == 'select')
-		{
-			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($this->strTable, $blnHasSorting, $this);
-
-			$return = $this->viewAddSelectForm($return, $strButtons, $context);
-		}
+		$return = (new ParentView($this))->render($table, $return, $blnHasSorting);
 
 		if ($limitHeight)
 		{

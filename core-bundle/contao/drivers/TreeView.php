@@ -78,7 +78,7 @@ class TreeView extends View
 		if (Input::get('act') == 'select') {
 			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($table, $blnHasSorting, $this->dc);
 
-			$return = $this->dc->viewAddSelectForm($return, $strButtons, $this->getContext());
+			$return = $this->renderSelectForm($return, $strButtons, $this->getContext());
 		}
 
 		return $return;
