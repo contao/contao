@@ -75,6 +75,7 @@
       </trans-unit>
       <trans-unit id="tl_templates.twig_studio_hint">
         <source>If you want to create or edit Twig templates, use the %s instead.</source>
+        <target>Если вы хотите создать или изменить шаблоны Twig, используйте %s.</target>
       </trans-unit>
     </body>
   </file>

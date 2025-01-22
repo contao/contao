@@ -2583,6 +2583,7 @@
       </trans-unit>
       <trans-unit id="MSC.or">
         <source>or</source>
+        <target>veya</target>
       </trans-unit>
       <trans-unit id="MSC.published">
         <source>Published</source>
@@ -2974,27 +2975,35 @@
       </trans-unit>
       <trans-unit id="MSC.searchResultsPlaceholder">
         <source>Type to start searching</source>
+        <target>Aramak için yazmaya başlayın</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsMin">
         <source>Please enter at least %s characters</source>
+        <target>Lütfen en az %s karakter yazın</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
         <source>Loading results...</source>
+        <target>Sonuçlar yükleniyor...</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
+        <target>%s görüntüle</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitEdit">
         <source>Edit %s</source>
+        <target>%s düzenle</target>
       </trans-unit>
       <trans-unit id="MSC.noResults">
         <source>No results found.</source>
+        <target>Herhangi bir sonuç bulunamadı.</target>
       </trans-unit>
       <trans-unit id="MSC.noOptions">
         <source>No options to choose from.</source>
+        <target>Seçilebilecek bir seçenek yok.</target>
       </trans-unit>
       <trans-unit id="MSC.removeItem">
         <source>Remove item</source>
+        <target>Ögeyi kaldır</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -3182,6 +3191,7 @@
       </trans-unit>
       <trans-unit id="DCA.operations">
         <source>Show operations for element ID %s</source>
+        <target>%s kimlikli bileşenin işlemlerini görüntüle</target>
       </trans-unit>
       <trans-unit id="DCA.children">
         <source>Edit the child elements of element ID %s</source>

@@ -3191,6 +3191,7 @@
       </trans-unit>
       <trans-unit id="DCA.operations">
         <source>Show operations for element ID %s</source>
+        <target>ID %sの要素の操作を表示</target>
       </trans-unit>
       <trans-unit id="DCA.children">
         <source>Edit the child elements of element ID %s</source>

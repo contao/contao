@@ -2,6 +2,19 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.5.0-RC2] (2025-01-22)
+
+**Fixed issues:**
+
+- [#7925] Make the Twig inspector aware of the `RuntimeThemeExpression` (part 2) ([m-vo])
+- [#7901] Fix the Choices.js initialization ([fritzmg])
+- [#7916] Inline the operations and picker ([zoglo])
+- [#7914] Make the Twig inspector aware of the `RuntimeThemeExpression` ([m-vo])
+- [#7909] Revert the changes to `FormSelect` regarding `Chosen` ([fritzmg])
+- [#7897] Fix the context menu issues ([aschempp])
+- [#7903] Fix a small formatting issue in the Template Studio ([m-vo])
+- [#7886] Improve handling of Turbo stream requests when unauthenticated ([m-vo])
+
 ## [5.5.0-RC1] (2025-01-15)
 
 **New features:**
@@ -102,6 +115,7 @@ This project adheres to [Semantic Versioning].
 - [#7582] Add PostCSS as described in Symfony Encore ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.5.0-RC2]: https://github.com/contao/contao/releases/tag/5.5.0-RC2
 [5.5.0-RC1]: https://github.com/contao/contao/releases/tag/5.5.0-RC1
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
@@ -201,3 +215,11 @@ This project adheres to [Semantic Versioning].
 [#7864]: https://github.com/contao/contao/pull/7864
 [#7866]: https://github.com/contao/contao/pull/7866
 [#7867]: https://github.com/contao/contao/pull/7867
+[#7886]: https://github.com/contao/contao/pull/7886
+[#7897]: https://github.com/contao/contao/pull/7897
+[#7901]: https://github.com/contao/contao/pull/7901
+[#7903]: https://github.com/contao/contao/pull/7903
+[#7909]: https://github.com/contao/contao/pull/7909
+[#7914]: https://github.com/contao/contao/pull/7914
+[#7916]: https://github.com/contao/contao/pull/7916
+[#7925]: https://github.com/contao/contao/pull/7925
