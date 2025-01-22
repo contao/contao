@@ -44,7 +44,7 @@ export default class extends Controller {
 
         const img = el.querySelector('img[alt]');
         if (img && '' !== img.getAttribute('alt')) {
-            img.after(img.getAttribute('alt'));
+            img.parentNode.append(img.getAttribute('alt'));
         }
     }
 
