@@ -311,25 +311,32 @@ window.AjaxRequest =
 	/**
 	 * Toggle the state of a checkbox field
 	 *
-	 * @param {object}  el      The DOM element
-	 * @param {boolean} rowIcon Whether the row icon should be toggled as well
+	 * @param {object}  el       The DOM element
+	 * @param {boolean} rowIcon  Whether the row icon should be toggled as well
+	 * @param {boolean} iconOnly If only the icon should be toggled (without sending a request)
 	 *
 	 * @returns {boolean}
 	 */
-	toggleField: function(el, rowIcon) {
+	toggleField: function(el, rowIcon, iconOnly = false) {
 		el.blur();
 
 		var img = null,
 			images = $(el).getElements('img'),
 			published = (images[0].get('data-state') == 1),
-			div = el.getParent('div'),
-			next, pa;
+			div, next, pa, title;
 
 		if (rowIcon) {
 			// Find the icon depending on the view (tree view, list view, parent view)
-			if (div.hasClass('tl_right')) {
+			if ((div = el.closest('.tl_right'))) {
 				img = div.getPrevious('div').getElements('img');
-			} else if (div.hasClass('tl_listing_container')) {
+			} else if ((div = el.closest('.tl_content_right')) && (next = div.getNext('div'))) {
+                if (next.hasClass('cte_type')) {
+                    img = next;
+                }
+                if (img === null) { // newsletter recipients
+                    img = next.getFirst('div.list_icon');
+                }
+            } else if ((div = el.closest('.tl_listing_container')) && el.getParent('tr')) {
 				img = el.getParent('td').getPrevious('td').getFirst('div.list_icon');
 				if (img === null) { // comments
 					img = el.getParent('td').getPrevious('td').getElement('div.cte_type');
@@ -337,14 +344,17 @@ window.AjaxRequest =
 				if (img === null) { // showColumns
 					img = el.getParent('tr').getFirst('td').getElement('div.list_icon_new');
 				}
-			} else if (next = div.getNext('div')) {
-				if (next.hasClass('cte_type')) {
-					img = next;
-				}
-				if (img === null) { // newsletter recipients
-					img = next.getFirst('div.list_icon');
-				}
 			}
+
+            if (!iconOnly) {
+                document.body.querySelectorAll(`a[href="${el.getAttribute('href')}"]`).forEach((clone) => {
+                    if (el === clone) {
+                        return;
+                    }
+
+                    AjaxRequest.toggleField(clone, rowIcon, true);
+                });
+            }
 
 			// Change the row icon
 			if (img !== null) {
@@ -390,15 +400,23 @@ window.AjaxRequest =
 		images.forEach(function(image) {
 			const newSrc = !published ? image.get('data-icon') : image.get('data-icon-disabled');
 			image.src = (image.src.includes('/') && !newSrc.includes('/')) ? image.src.slice(0, image.src.lastIndexOf('/') + 1) + newSrc : newSrc;
-			image.alt = !published ? image.get('data-alt') : image.get('data-alt-disabled');
+			image.alt = title = !published ? image.get('data-alt') : image.get('data-alt-disabled');
 			image.set('data-state', !published ? 1 : 0);
 		});
 
 		if (!published && $(el).get('data-title')) {
-			el.title = $(el).get('data-title');
+			el.title = title = $(el).get('data-title');
 		} else if (published && $(el).get('data-title-disabled')) {
-			el.title = $(el).get('data-title-disabled');
+			el.title = title = $(el).get('data-title-disabled');
 		}
+
+        if (title) {
+            el.childNodes.forEach((child) => {
+                if (child instanceof Text && child.nodeValue.trim()) {
+                    child.replaceWith(new Text(title));
+                }
+            })
+        }
 
 		new Request.Contao({'url':el.href, 'followRedirects':false}).get();
 
