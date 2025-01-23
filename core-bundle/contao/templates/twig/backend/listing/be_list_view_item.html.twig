@@ -1,0 +1,31 @@
+{% if header %}
+    <tr>
+        <th colspan="2" class="{{ loop == 0 ? 'tl_folder_tlist' : 'tl_folder_list' }}">{{ header }}</th>
+    </tr>
+{% endif %}
+<tr {{ attributes.addClass(['toggle_selec','hover-row']) }} data-controller="contao--deeplink contao--operations-menu"
+                                                            data-action="contextmenu->contao--operations-menu#open">
+    {% if showColumns %}
+        {% for field in fields %}
+            <td colspan="{{ colspan }}"
+                class="tl_file_list col_{{ field.class }} {{ field.name == initialOrderBy ? 'order-by' }}">
+                {{ field.value|raw }}
+            </td>
+        {% endfor %}
+    {% else %}
+        <td class="tl_file_list">
+            {% if limitHeight %}
+                <div data-contao--limit-height-target="node">{{ label }}</div>
+            {% else %}
+                {{ label }}
+            {% endif %}
+        </td>
+    {% endif %}
+
+    {% if isSelecting %}
+    <td class="tl_file_list tl_right_nowrap">
+        <input type="checkbox" name="IDS[]" id="ids_{{ item.id }}" class="tl_tree_checkbox" value="{{ item.id }}">
+    </td>
+    {% endif %}
+    <td class="tl_file_list tl_right_nowrap">{{ buttons|raw }}</td>
+</tr>

@@ -5009,90 +5009,8 @@ $return.='
 				}
 			}
 
-			// Process result and add label and buttons
-			$remoteCur = false;
-			$groupclass = 'tl_folder_tlist';
-
-			foreach ($result as $row)
-			{
-				// Improve performance for $dc->getCurrentRecord($id);
-				static::setCurrentRecordCache($row['id'], $this->strTable, $row);
-
-				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $row));
-
-				$this->current[] = $row['id'];
-				$label = $this->generateRecordLabel($row, $this->strTable);
-
-				// Build the sorting groups
-				if ($strMode > 0)
-				{
-					$current = $row[$firstOrderBy];
-					$orderBy = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'] ?? array('id');
-					$sortingMode = (\count($orderBy) == 1 && $firstOrderBy == $orderBy[0] && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'] ?? null)) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['flag'] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$firstOrderBy]['flag'] ?? null);
-					$remoteNew = $this->formatCurrentValue($firstOrderBy, $current, $sortingMode);
-
-					// Add the group header
-					if (($remoteNew != $remoteCur || $remoteCur === false) && !($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['disableGrouping'] ?? null))
-					{
-						$group = $this->formatGroupHeader($firstOrderBy, $remoteNew, $sortingMode, $row);
-						$remoteCur = $remoteNew;
-
-						$return .= '
-  <tr>
-    <th colspan="2" class="' . $groupclass . '">' . $group . '</th>
-  </tr>';
-						$groupclass = 'tl_folder_list';
-					}
-				}
-
-				$return .= '
-  <tr class="' . ((string) ($row['tstamp'] ?? null) === '0' ? 'draft ' : '') . 'toggle_select hover-row" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
-    ';
-
-				$colspan = 1;
-
-				// Handle strings and arrays
-				if (!($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null))
-				{
-					$label = \is_array($label) ? implode(' ', $label) : $label;
-				}
-				elseif (!\is_array($label))
-				{
-					$label = array($label);
-					$colspan = \count($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] ?? array());
-				}
-
-				// Show columns
-				if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
-				{
-					foreach ($label as $j=>$arg)
-					{
-						$field = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'][$j] ?? null;
-						$value = (string) $arg !== '' ? $arg : '-';
-
-						$return .= '<td colspan="' . $colspan . '" class="tl_file_list col_' . explode(':', $field, 2)[0] . ($field == $firstOrderBy ? ' ordered_by' : '') . '">' . $value . '</td>';
-					}
-				}
-				else
-				{
-					$return .= '<td class="tl_file_list">' . ($limitHeight ? '<div data-contao--limit-height-target="node">' : '') . $label . ($limitHeight ? '</div>' : '') . '</td>';
-				}
-
-				// Buttons ($row, $table, $root, $blnCircularReference, $children, $previous, $next)
-				$return .= ((Input::get('act') == 'select') ? '
-    <td class="tl_file_list tl_right_nowrap"><input type="checkbox" name="IDS[]" id="ids_' . $row['id'] . '" class="tl_tree_checkbox" value="' . $row['id'] . '"></td>' : '
-    <td class="tl_file_list tl_right_nowrap">' . $this->generateButtons($row, $this->strTable, $this->root) . ($this->strPickerFieldType ? $this->getPickerInputField($row['id']) : '') . '</td>') . '
-  </tr>';
-			}
-
-			// Close the table body if the "show columns" option is active
-			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
-			{
-				$return .= '</tbody>';
-			}
-
-			$objListView = new ListView($this, $table, $strMode);
-			$return = $objListView->render($return,$this->paginationMenu(),$firstOrderBy);
+			$objListView = new ListView($this, $table, $strMode, $result, $firstOrderBy);
+			$return = $objListView->render($this->paginationMenu());
 		}
 
 		if ($limitHeight)
@@ -6062,7 +5980,7 @@ $return.='
 	 *
 	 * @return string
 	 */
-	protected function formatCurrentValue($field, $value, $mode)
+	public function formatCurrentValue($field, $value, $mode)
 	{
 		$remoteNew = $value; // see #3861
 

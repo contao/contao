@@ -10,7 +10,6 @@ class TreeView extends View
 
 	public function render($children, $strClass ,$blnHasSorting)
 	{
-		$twig = System::getContainer()->get('twig');
 		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->table);
 		$blnClipboard = null !== $arrClipboard;
 
@@ -50,7 +49,7 @@ class TreeView extends View
 			$_buttons .= $operations;
 		}
 
-		$reset = $this->dc->strPickerFieldType == 'radio' ? $twig->render('@Contao/backend/listing/be_select_reset.html.twig', ['label' => $GLOBALS['TL_LANG']['MSC']['resetSelected'], 'context' => $this->getContext()]) : '';
+		$reset = $this->dc->strPickerFieldType == 'radio' ? $this->twig->render('@Contao/backend/listing/be_select_reset.html.twig', ['label' => $GLOBALS['TL_LANG']['MSC']['resetSelected'], 'context' => $this->getContext()]) : '';
 
 		$objAttributes = new HtmlAttributes([
 			$this->dc->getPickerValueAttribute()
@@ -60,7 +59,7 @@ class TreeView extends View
 			'class' => "tl_listing $strClass" . ($this->dc->strPickerFieldType ? ' picker unselectable' : '')
 		]);
 
-		$return .= $twig->render('@Contao/backend/listing/be_tree_view.html.twig', [
+		$return .= $this->twig->render('@Contao/backend/listing/be_tree_view.html.twig', [
 			'attributes' => $objAttributes,
 			'wrapper_attributes' => $objAttributesInner,
 			'breadcrumbs' => $breadcrumb,

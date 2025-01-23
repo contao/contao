@@ -866,7 +866,7 @@ abstract class DataContainer extends Backend
 	/**
 	 * @throws AccessDeniedException
 	 */
-	protected function denyAccessUnlessGranted($attribute, $subject): void
+	public function denyAccessUnlessGranted($attribute, $subject): void
 	{
 		$security = System::getContainer()->get('security.helper');
 
@@ -904,7 +904,7 @@ abstract class DataContainer extends Backend
 	 *
 	 * @return DataContainerOperationsBuilder
 	 */
-	protected function generateButtons($arrRow, $strTable, $arrRootIds=array(), $blnCircularReference=false, $arrChildRecordIds=null, $strPrevious=null, $strNext=null)
+	public function generateButtons($arrRow, $strTable, $arrRootIds=array(), $blnCircularReference=false, $arrChildRecordIds=null, $strPrevious=null, $strNext=null)
 	{
 		return System::getContainer()->get('contao.data_container.operations_builder')->initializeWithButtons(
 			$strTable,
@@ -1619,7 +1619,7 @@ abstract class DataContainer extends Backend
 	/**
 	 * @param array<string, mixed>|null $row Pass null to remove a given cache entry
 	 */
-	protected static function setCurrentRecordCache(int|string $id, string $table, array $row): void
+	public static function setCurrentRecordCache(int|string $id, string $table, array $row): void
 	{
 		self::$arrCurrentRecordCache[$table . '.' . $id] = $row;
 	}
