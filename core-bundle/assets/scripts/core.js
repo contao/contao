@@ -330,13 +330,13 @@ window.AjaxRequest =
 			if ((div = el.closest('.tl_right'))) {
 				img = div.getPrevious('div').getElements('img');
 			} else if ((div = el.closest('.tl_content_right')) && (next = div.getNext('div'))) {
-                if (next.hasClass('cte_type')) {
-                    img = next;
-                }
-                if (img === null) { // newsletter recipients
-                    img = next.getFirst('div.list_icon');
-                }
-            } else if ((div = el.closest('.tl_listing_container')) && el.getParent('tr')) {
+				if (next.hasClass('cte_type')) {
+					img = next;
+				}
+				if (img === null) { // newsletter recipients
+					img = next.getFirst('div.list_icon');
+				}
+			} else if (el.closest('.tl_listing_container') && el.getParent('tr')) {
 				img = el.getParent('td').getPrevious('td').getFirst('div.list_icon');
 				if (img === null) { // comments
 					img = el.getParent('td').getPrevious('td').getElement('div.cte_type');
@@ -386,15 +386,13 @@ window.AjaxRequest =
 			}
 		}
 
-        if (!iconOnly) {
-            document.body.querySelectorAll(`a[href="${el.getAttribute('href')}"]`).forEach((clone) => {
-                if (el === clone) {
-                    return;
-                }
-
-                AjaxRequest.toggleField(clone, rowIcon, true);
-            });
-        }
+		if (!iconOnly) {
+			document.body.querySelectorAll(`a[href="${el.getAttribute('href')}"]`).forEach((clone) => {
+				if (el !== clone) {
+					AjaxRequest.toggleField(clone, rowIcon, true);
+				}
+			});
+		}
 
 		// Send request
 		images.forEach(function(image) {
@@ -410,13 +408,13 @@ window.AjaxRequest =
 			el.title = title = $(el).get('data-title-disabled');
 		}
 
-        if (title) {
-            el.childNodes.forEach((child) => {
-                if (child instanceof Text && child.nodeValue.trim()) {
-                    child.replaceWith(new Text(title));
-                }
-            })
-        }
+		if (title) {
+			el.childNodes.forEach((child) => {
+				if (child instanceof Text && child.nodeValue.trim()) {
+					child.replaceWith(new Text(title));
+				}
+			});
+		}
 
 		new Request.Contao({'url':el.href, 'followRedirects':false}).get();
 
