@@ -386,14 +386,6 @@ window.AjaxRequest =
 			}
 		}
 
-		if (!iconOnly) {
-			document.body.querySelectorAll(`a[href="${el.getAttribute('href')}"]`).forEach((clone) => {
-				if (el !== clone) {
-					AjaxRequest.toggleField(clone, rowIcon, true);
-				}
-			});
-		}
-
 		// Send request
 		images.forEach(function(image) {
 			const newSrc = !published ? image.get('data-icon') : image.get('data-icon-disabled');
@@ -416,7 +408,15 @@ window.AjaxRequest =
 			});
 		}
 
-		new Request.Contao({'url':el.href, 'followRedirects':false}).get();
+		if (!iconOnly) {
+			document.body.querySelectorAll(`a[href="${el.getAttribute('href')}"]`).forEach((clone) => {
+				if (el !== clone) {
+					AjaxRequest.toggleField(clone, rowIcon, true);
+				}
+			});
+
+			new Request.Contao({'url':el.href, 'followRedirects':false}).get();
+		}
 
 		// Return false to stop the click event on link
 		return false;
