@@ -374,4 +374,23 @@ class InsertTagParserTest extends TestCase
             },
         ];
     }
+
+    public function testBlockSubscriptionEndTagExists(): void
+    {
+        $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
+        $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'foo', null, true, false));
+        $parser->addBlockSubscription(new InsertTagSubscription(new IfLanguageInsertTag($this->createMock(TranslatorInterface::class)), '__invoke', 'foo_start', 'foo_end', true, false));
+        System::getContainer()->set('contao.insert_tag.parser', $parser);
+
+        $this->assertTrue($parser->hasInsertTag('foo'));
+        $this->assertTrue($parser->hasInsertTag('foo_start'));
+        $this->assertTrue($parser->hasInsertTag('foo_end'));
+        $this->assertFalse($parser->hasInsertTag('bar'));
+
+        $parser->addBlockSubscription(new InsertTagSubscription(new IfLanguageInsertTag($this->createMock(TranslatorInterface::class)), '__invoke', 'foo_start', 'foo_end_different', true, false));
+
+        $this->assertTrue($parser->hasInsertTag('foo_start'));
+        $this->assertFalse($parser->hasInsertTag('foo_end'));
+        $this->assertTrue($parser->hasInsertTag('foo_end_different'));
+    }
 }
