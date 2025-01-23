@@ -18,6 +18,6 @@
     {{ reset ?? ''|raw }}
 
     {% if not children ?? true %}
-        <p class="tl_empty">{{ emptyLabel ?? '' }}</p>
+        {{ include('@Contao/backend/listing/be_empty.html.tiwg', {label: emptyLabel}) }}
     {% endif %}
 {% endblock %}

@@ -4974,8 +4974,7 @@ $return.='
 		// Return "no records found" message
 		if ($objRow->numRows < 1)
 		{
-			$return .= '
-<p class="tl_empty">' . $GLOBALS['TL_LANG']['MSC']['noResult'] . '</p>';
+			$return .= $twig->render('@Contao/backend/listing/be_empty.html.tiwg', ['label'=>$GLOBALS['TL_LANG']['MSC']['noResult']]);
 		}
 
 		// List records
@@ -5010,7 +5009,7 @@ $return.='
 			}
 
 			$objListView = new ListView($this, $table, $strMode, $result, $firstOrderBy);
-			$return = $objListView->render($this->paginationMenu());
+			$return .= $objListView->render($this->paginationMenu());
 		}
 
 		if ($limitHeight)
