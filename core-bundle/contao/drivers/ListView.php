@@ -108,7 +108,7 @@ class ListView extends View
 				'header' => $header ?? false,
 				'loop' => $i,
 				'showColumns' => $showColumns,
-				'fields' => $arrFieldValues,
+				'fields' => $arrFieldValues ?? null,
 				'initialOrderBy' => $this->initialOrderBy,
 				'limitHeight' => $limitHeight,
 				'label' => $label,
@@ -153,8 +153,6 @@ class ListView extends View
 		if (Input::get('act') == 'select') {
 			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($this->table, false, $this);
 
-			//MISSING OPENER
-			$return .= '</div>';
 			$return = $this->renderSelectForm($return, $strButtons);
 		}
 

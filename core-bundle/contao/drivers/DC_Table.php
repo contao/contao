@@ -6071,7 +6071,7 @@ $return.='
 	 *
 	 * @return string
 	 */
-	protected function formatGroupHeader($field, $value, $mode, $row)
+	public function formatGroupHeader($field, $value, $mode, $row)
 	{
 		static $lookup = array();
 
