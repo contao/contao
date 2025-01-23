@@ -15,7 +15,7 @@
         {{ children ?? ''|raw }}
     </ul>
 
-    {{ reset ?? '' }}
+    {{ reset ?? ''|raw }}
 
     {% if not children ?? true %}
         <p class="tl_empty">{{ emptyLabel ?? '' }}</p>

@@ -10,5 +10,6 @@
         {% endblock table %}
     </table>
 
-    {{ reset }}
+    {{ reset|raw }}
+    {{ pagination ?? ''|raw }}
 {% endblock content %}

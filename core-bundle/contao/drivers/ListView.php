@@ -29,7 +29,7 @@ class ListView extends View
 		]);
 	}
 
-	public function render($children, $initialOrderBy)
+	public function render($children, $pagination, $initialOrderBy)
 	{
 		$twig = System::getContainer()->get('twig');
 
@@ -49,12 +49,22 @@ class ListView extends View
 			'context' => $this->getContext(),
 			'children' => $children,
 			'reset' => $reset,
+			'pagination' => str_contains($GLOBALS['TL_DCA'][$this->table]['list']['sorting']['panelLayout'] ?? '', 'limit') ? $pagination :'',
 			...$this->getClipboardStuff()
 		];
 
 
 		$showColumns = ($GLOBALS['TL_DCA'][$this->table]['list']['label']['showColumns'] ?? null);
 		$return = $showColumns ? $this->renderWithTableHeader($arrVars, $initialOrderBy) : $twig->render('@Contao/backend/listing/be_list_view.html.twig', $arrVars);
+
+		if (Input::get('act') == 'select')
+		{
+			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($this->strTable, false, $this);
+
+			//MISSING OPENER
+			$return .= '</div>';
+			$return = $this->renderSelectForm($return, $strButtons);
+		}
 
 		return $return;
 	}

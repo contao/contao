@@ -5092,22 +5092,7 @@ $return.='
 			}
 
 			$objListView = new ListView($this, $table, $strMode);
-			$return = $objListView->render($return,$firstOrderBy);
-
-			// Add another panel at the end of the page
-			if (str_contains($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit'))
-			{
-				$return .= $this->paginationMenu();
-			}
-
-			// Close the form
-			if (Input::get('act') == 'select')
-			{
-				$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($this->strTable, false, $this);
-
-				$return .= '</div>';
-				$return = $objListView->renderSelectForm($return, $strButtons);
-			}
+			$return = $objListView->render($return,$this->paginationMenu(),$firstOrderBy);
 		}
 
 		if ($limitHeight)
