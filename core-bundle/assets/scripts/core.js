@@ -325,7 +325,7 @@ window.AjaxRequest =
 			published = (images[0].get('data-state') == 1),
 			div, next, pa, title;
 
-		if (rowIcon) {
+		if (rowIcon && !iconOnly) {
 			// Find the icon depending on the view (tree view, list view, parent view)
 			if ((div = el.closest('.tl_right'))) {
 				img = div.getPrevious('div').getElements('img');
@@ -345,16 +345,6 @@ window.AjaxRequest =
 					img = el.getParent('tr').getFirst('td').getElement('div.list_icon_new');
 				}
 			}
-
-            if (!iconOnly) {
-                document.body.querySelectorAll(`a[href="${el.getAttribute('href')}"]`).forEach((clone) => {
-                    if (el === clone) {
-                        return;
-                    }
-
-                    AjaxRequest.toggleField(clone, rowIcon, true);
-                });
-            }
 
 			// Change the row icon
 			if (img !== null) {
@@ -395,6 +385,16 @@ window.AjaxRequest =
 				}
 			}
 		}
+
+        if (!iconOnly) {
+            document.body.querySelectorAll(`a[href="${el.getAttribute('href')}"]`).forEach((clone) => {
+                if (el === clone) {
+                    return;
+                }
+
+                AjaxRequest.toggleField(clone, rowIcon, true);
+            });
+        }
 
 		// Send request
 		images.forEach(function(image) {
