@@ -411,7 +411,7 @@
       </trans-unit>
       <trans-unit id="tl_user.su">
         <source>Switch to user ID %s</source>
-        <target>Zu Benutzer ID %s wechseln</target>
+        <target>Zum Benutzer ID %s wechseln</target>
       </trans-unit>
     </body>
   </file>
