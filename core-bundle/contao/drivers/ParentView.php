@@ -19,15 +19,19 @@ class ParentView extends View
 		parent::__construct($dc, $table, $intMode);
 	}
 
+	public function renderHeaderFields(){
+		return $this->twig->render('@Contao/backend/listing/be_parent_view_headerfields.html.twig',['fields'=>$this->formatHeaderFields()]);
+	}
+
 	public function formatHeaderFields(){
 		$security = System::getContainer()->get('security.helper');
 		$headerFields = $GLOBALS['TL_DCA'][$this->table]['list']['sorting']['headerFields'];
-		foreach ($headerFields as $v)
+		foreach ($headerFields as $strField)
 		{
-			$_v = StringUtil::deserialize($this->objParent->$v);
+			$_v = StringUtil::deserialize($this->objParent->$strField);
 
 			// Translate UUIDs to paths
-			if (($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['inputType'] ?? null) == 'fileTree')
+			if (($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['inputType'] ?? null) == 'fileTree')
 			{
 				$objFiles = FilesModel::findMultipleByUuids((array) $_v);
 
@@ -41,29 +45,29 @@ class ParentView extends View
 			{
 				$_v = implode(', ', $_v);
 			}
-			elseif (($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['eval']['isBoolean'] ?? null) || (($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['eval']['multiple'] ?? null)))
+			elseif (($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['eval']['isBoolean'] ?? null) || (($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['eval']['multiple'] ?? null)))
 			{
 				$_v = $_v ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
 			}
-			elseif (($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['eval']['rgxp'] ?? null) == 'date')
+			elseif (($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['eval']['rgxp'] ?? null) == 'date')
 			{
 				$_v = $_v ? Date::parse(Config::get('dateFormat'), $_v) : '-';
 			}
-			elseif (($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['eval']['rgxp'] ?? null) == 'time')
+			elseif (($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['eval']['rgxp'] ?? null) == 'time')
 			{
 				$_v = $_v ? Date::parse(Config::get('timeFormat'), $_v) : '-';
 			}
-			elseif (($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['eval']['rgxp'] ?? null) == 'datim')
+			elseif (($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['eval']['rgxp'] ?? null) == 'datim')
 			{
 				$_v = $_v ? Date::parse(Config::get('datimFormat'), $_v) : '-';
 			}
-			elseif ($v == 'tstamp')
+			elseif ($strField == 'tstamp')
 			{
 				$_v = Date::parse(Config::get('datimFormat'), $this->objParent->tstamp);
 			}
-			elseif (isset($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['foreignKey']))
+			elseif (isset($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['foreignKey']))
 			{
-				$arrForeignKey = explode('.', $GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['foreignKey'], 2);
+				$arrForeignKey = explode('.', $GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['foreignKey'], 2);
 
 				$objLabel = Database::getInstance()
 					->prepare("SELECT " . Database::quoteIdentifier($arrForeignKey[1]) . " AS value FROM " . $arrForeignKey[0] . " WHERE id=?")
@@ -72,30 +76,30 @@ class ParentView extends View
 
 				$_v = $objLabel->numRows ? $objLabel->value : '-';
 			}
-			elseif (\is_array($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['reference'][$_v] ?? null))
+			elseif (\is_array($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['reference'][$_v] ?? null))
 			{
-				$_v = $GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['reference'][$_v][0];
+				$_v = $GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['reference'][$_v][0];
 			}
-			elseif (isset($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['reference'][$_v]))
+			elseif (isset($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['reference'][$_v]))
 			{
-				$_v = $GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['reference'][$_v];
+				$_v = $GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['reference'][$_v];
 			}
-			elseif (($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['options'] ?? null))
+			elseif (($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['options'] ?? null))
 			{
-				$_v = $GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['options'][$_v] ?? null;
+				$_v = $GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['options'][$_v] ?? null;
 			}
-			elseif (\is_array($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['options_callback'] ?? null))
+			elseif (\is_array($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['options_callback'] ?? null))
 			{
-				$strClass = $GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['options_callback'][0];
-				$strMethod = $GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['options_callback'][1];
+				$strClass = $GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['options_callback'][0];
+				$strMethod = $GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['options_callback'][1];
 
 				$options_callback = System::importStatic($strClass)->$strMethod($this);
 
 				$_v = $options_callback[$_v] ?? '-';
 			}
-			elseif (\is_callable($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['options_callback'] ?? null))
+			elseif (\is_callable($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['options_callback'] ?? null))
 			{
-				$options_callback = $GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['options_callback']($this);
+				$options_callback = $GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['options_callback']($this);
 
 				$_v = $options_callback[$_v] ?? '-';
 			}
@@ -103,13 +107,13 @@ class ParentView extends View
 			// Add the sorting field
 			if ($_v)
 			{
-				if (isset($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['label']))
+				if (isset($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['label']))
 				{
-					$key = \is_array($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['label']) ? $GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['label'][0] : $GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$v]['label'];
+					$key = \is_array($GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['label']) ? $GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['label'][0] : $GLOBALS['TL_DCA'][$this->dc->ptable]['fields'][$strField]['label'];
 				}
 				else
 				{
-					$key = $GLOBALS['TL_LANG'][$this->dc->ptable][$v][0] ?? $v;
+					$key = $GLOBALS['TL_LANG'][$this->dc->ptable][$strField][0] ?? $strField;
 				}
 
 				$add[$key] = $_v;

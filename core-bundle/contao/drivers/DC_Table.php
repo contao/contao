@@ -4358,30 +4358,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$security = System::getContainer()->get('security.helper');
 
 			// Format header fields
-			$add = $objParentView->formatHeaderFields();
-
-			// Output the header data
-			$return .= '
-
-<table class="tl_header_table">';
-
-			foreach ($add as $k=>$v)
-			{
-				if (\is_array($v))
-				{
-					$v = $v[0];
-				}
-
-				$return .= '
-  <tr>
-    <td><span class="tl_label">' . $k . ':</span> </td>
-    <td>' . $v . '</td>
-  </tr>';
-			}
-
-			$return .= '
-</table>
-</div>';
+			$return .= $objParentView->renderHeaderFields();
+			$return .= "</div>";
 
 			$orderBy = array();
 			$firstOrderBy = array();

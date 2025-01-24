@@ -1,0 +1,8 @@
+<table class="tl_header_table">
+    {% for name,field in fields %}
+        <tr>
+            <td><span class="tl_label">{{ name }}</span></td>
+            <td>{{ field[0] ?? field }}</td>
+        </tr>
+    {% endfor %}
+</table>
