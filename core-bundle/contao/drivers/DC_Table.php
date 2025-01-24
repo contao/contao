@@ -4299,9 +4299,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		System::loadLanguageFile($this->ptable);
 		$this->loadDataContainer($this->ptable);
 
-		$labelCut = $GLOBALS['TL_LANG'][$this->strTable]['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
-		$labelPasteNew = $GLOBALS['TL_LANG'][$this->strTable]['pastenew'] ?? $GLOBALS['TL_LANG']['DCA']['pastenew'];
-		$labelPasteAfter = $GLOBALS['TL_LANG'][$this->strTable]['pasteafter'] ?? $GLOBALS['TL_LANG']['DCA']['pasteafter'];
 		$limitHeight = BackendUser::getInstance()->doNotCollapse ? false : (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['limitHeight'] ?? 0);
 
 		$db = Database::getInstance();
@@ -4334,7 +4331,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$buttons .= $this->generateGlobalButtons();
 		}
 
-		$return = Message::generate() . ($buttons ? '<div id="tl_buttons">' . $buttons . '</div>' : '');
+		$return="";
+		$_buttons = Message::generate() . ($buttons ? '<div id="tl_buttons">' . $buttons . '</div>' : '');
 
 		// Get all details of the parent record
 		$objParent = $db
@@ -4344,170 +4342,23 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if ($objParent->numRows < 1)
 		{
-			return $return;
+			return $_buttons;
 		}
 
-		$context = [
-			'mode' => 'parent_view'
-		];
 
-
-		$return .= $blnClipboard ? $twig->render('@Contao/backend/listing/be_hint.html.twig', ['label' => $GLOBALS['TL_LANG']['MSC']['selectNewPosition'], 'context'=>$context]) : '';
-		$return .= '
-<div class="tl_listing_container parent_view' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['renderAsGrid'] ?? false) ? ' as-grid' : '') . ($this->strPickerFieldType ? ' picker unselectable' : '') . '" id="tl_listing"' . $this->getPickerValueAttribute() . '>';
-$return.='
-<div class="tl_header toggle_select hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">';
-
+		$objParentView = new ParentView($this, $table, $strMode, $objParent, $blnHasSorting);
 		// List all records of the child table
 		if (\in_array(Input::get('act'), array('select', null)))
 		{
+			$labelCut = $GLOBALS['TL_LANG'][$this->strTable]['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
+			$labelPasteNew = $GLOBALS['TL_LANG'][$this->strTable]['pastenew'] ?? $GLOBALS['TL_LANG']['DCA']['pastenew'];
+			$labelPasteAfter = $GLOBALS['TL_LANG'][$this->strTable]['pasteafter'] ?? $GLOBALS['TL_LANG']['DCA']['pasteafter'];
+
 			// Header
-			$imagePasteNew = Image::getHtml('new.svg', $labelPasteNew[0]);
-			$imagePasteAfter = Image::getHtml('pasteafter.svg', $labelPasteAfter[0]);
 			$security = System::getContainer()->get('security.helper');
 
-			$return .= '
-<div class="tl_content_right">';
-
-			if (Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox')
-			{
-				$return .= '
-<label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">';
-			}
-			else
-			{
-				if ($blnClipboard)
-				{
-					$return .= '
-<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $objParent->id . (!$blnMultiboard ? '&amp;id=' . $arrClipboard['id'] : '')) . '" data-action="contao--scroll-offset#store">' . $imagePasteAfter . '</a>';
-				}
-				else
-				{
-					$operations = $this->generateHeaderButtons($objParent->row(), $this->ptable);
-
-					if ($blnHasSorting && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $objParent->id, 'sorting' => 0)))))
-					{
-						$operations->append(array(
-							'href' => $this->addToUrl('act=create&amp;mode=2&amp;pid=' . $objParent->id . '&amp;id=' . $this->intId),
-							'title' => $labelPasteNew[0],
-							'icon' => $imagePasteNew,
-						));
-					}
-
-					$return .= $operations;
-				}
-			}
-
-			$return .= '
-</div>';
-
 			// Format header fields
-			$add = array();
-			$headerFields = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['headerFields'];
-
-			foreach ($headerFields as $v)
-			{
-				$_v = StringUtil::deserialize($objParent->$v);
-
-				// Translate UUIDs to paths
-				if (($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['inputType'] ?? null) == 'fileTree')
-				{
-					$objFiles = FilesModel::findMultipleByUuids((array) $_v);
-
-					if ($objFiles !== null)
-					{
-						$_v = $objFiles->fetchEach('path');
-					}
-				}
-
-				if (\is_array($_v))
-				{
-					$_v = implode(', ', $_v);
-				}
-				elseif (($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['eval']['isBoolean'] ?? null) || (($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['eval']['multiple'] ?? null)))
-				{
-					$_v = $_v ? $GLOBALS['TL_LANG']['MSC']['yes'] : $GLOBALS['TL_LANG']['MSC']['no'];
-				}
-				elseif (($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['eval']['rgxp'] ?? null) == 'date')
-				{
-					$_v = $_v ? Date::parse(Config::get('dateFormat'), $_v) : '-';
-				}
-				elseif (($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['eval']['rgxp'] ?? null) == 'time')
-				{
-					$_v = $_v ? Date::parse(Config::get('timeFormat'), $_v) : '-';
-				}
-				elseif (($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['eval']['rgxp'] ?? null) == 'datim')
-				{
-					$_v = $_v ? Date::parse(Config::get('datimFormat'), $_v) : '-';
-				}
-				elseif ($v == 'tstamp')
-				{
-					$_v = Date::parse(Config::get('datimFormat'), $objParent->tstamp);
-				}
-				elseif (isset($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['foreignKey']))
-				{
-					$arrForeignKey = explode('.', $GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['foreignKey'], 2);
-
-					$objLabel = $db
-						->prepare("SELECT " . Database::quoteIdentifier($arrForeignKey[1]) . " AS value FROM " . $arrForeignKey[0] . " WHERE id=?")
-						->limit(1)
-						->execute($_v);
-
-					$_v = $objLabel->numRows ? $objLabel->value : '-';
-				}
-				elseif (\is_array($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['reference'][$_v] ?? null))
-				{
-					$_v = $GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['reference'][$_v][0];
-				}
-				elseif (isset($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['reference'][$_v]))
-				{
-					$_v = $GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['reference'][$_v];
-				}
-				elseif (($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['options'] ?? null))
-				{
-					$_v = $GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['options'][$_v] ?? null;
-				}
-				elseif (\is_array($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['options_callback'] ?? null))
-				{
-					$strClass = $GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['options_callback'][0];
-					$strMethod = $GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['options_callback'][1];
-
-					$options_callback = System::importStatic($strClass)->$strMethod($this);
-
-					$_v = $options_callback[$_v] ?? '-';
-				}
-				elseif (\is_callable($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['options_callback'] ?? null))
-				{
-					$options_callback = $GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['options_callback']($this);
-
-					$_v = $options_callback[$_v] ?? '-';
-				}
-
-				// Add the sorting field
-				if ($_v)
-				{
-					if (isset($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['label']))
-					{
-						$key = \is_array($GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['label']) ? $GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['label'][0] : $GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['label'];
-					}
-					else
-					{
-						$key = $GLOBALS['TL_LANG'][$this->ptable][$v][0] ?? $v;
-					}
-
-					$add[$key] = $_v;
-				}
-			}
-
-			// Trigger the header_callback (see #3417)
-			if (\is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback'] ?? null))
-			{
-				$add = System::importStatic($GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback'][0])->{$GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback'][1]}($add, $this);
-			}
-			elseif (\is_callable($GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback'] ?? null))
-			{
-				$add = $GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback']($add, $this);
-			}
+			$add = $objParentView->formatHeaderFields();
 
 			// Output the header data
 			$return .= '
@@ -4788,19 +4639,7 @@ $return.='
 			}
 		}
 
-		$return .= ($this->strPickerFieldType == 'radio' ? '
-<div class="tl_radio_reset">
-<label for="tl_radio_reset" class="tl_radio_label">' . $GLOBALS['TL_LANG']['MSC']['resetSelected'] . '</label> <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
-</div>' : '') . '
-</div>';
-
-		// Add another panel at the end of the page
-		if (str_contains($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit'))
-		{
-			$return .= $this->paginationMenu();
-		}
-
-		$return = (new ParentView($this, $table, $strMode))->render($return, $blnHasSorting);
+		$return = $_buttons.$objParentView->render($return, $this->paginationMenu(), $blnHasSorting);
 
 		if ($limitHeight)
 		{

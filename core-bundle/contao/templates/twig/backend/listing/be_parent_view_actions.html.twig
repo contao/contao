@@ -1,0 +1,11 @@
+<div class="tl_content_right">
+    {% if isSelecting %}
+        {{ globalOperations ?? ''|raw }}
+    {% else %}
+        {% if clipboardHasEntries ?? false %}
+            <a href="{{ clipboardInsertNew }}">{{ Image.getHtml('pasteafter.svg', actionsLabels.pasteAfter[0] ?? '')|raw }}</a>
+        {% else %}
+            {{ operations|raw }}
+        {% endif %}
+    {% endif %}
+</div>

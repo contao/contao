@@ -373,6 +373,9 @@ abstract class DataContainer extends Backend
 			case 'table':
 				return $this->strTable;
 
+			case 'ptable':
+				return $this->ptable ?? null;
+
 			case 'value':
 				return $this->varValue;
 
@@ -1018,7 +1021,7 @@ abstract class DataContainer extends Backend
 	 *
 	 * @return DataContainerOperationsBuilder
 	 */
-	protected function generateHeaderButtons($arrRow, $strPtable)
+	public function generateHeaderButtons($arrRow, $strPtable)
 	{
 		return System::getContainer()->get('contao.data_container.operations_builder')->initializeWithHeaderButtons(
 			$strPtable,

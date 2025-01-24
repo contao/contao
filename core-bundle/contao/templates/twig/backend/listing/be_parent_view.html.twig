@@ -1,0 +1,16 @@
+{% extends '@Contao/backend/listing/be_listing.html.twig' %}
+
+{% block content %}
+    {{ help ?? ''|raw }}
+
+    <div class="tl_header toggle_select hover-div" data-controller="contao--deeplink contao--operations-menu"
+         data-action="contextmenu->contao--operations-menu#open">
+
+        {{ actions|raw }}
+
+        {{ children ?? ''|raw }}
+
+        {{ reset ?? ''|raw }}
+        {{ pagination ?? ''|raw }}
+    </div>
+{% endblock content %}

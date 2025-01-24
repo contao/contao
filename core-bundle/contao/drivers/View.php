@@ -36,15 +36,19 @@ class View
 	public function getClipboardStuff(){
 		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->table);
 		$blnClipboard = null !== $arrClipboard;
+		$blnMultiboard = null !== $arrClipboard && \is_array($arrClipboard['id'] ?? null);
 
 		$arrHeader = [];
 
 		if($blnClipboard){
+			$arrHeader['clipboardHasEntries'] = $blnClipboard;
+			$arrHeader['clipboard'] = $arrClipboard;
 			$arrHeader['help'] = $this->twig->render('@Contao/backend/listing/be_hint.html.twig', ['label' => $GLOBALS['TL_LANG']['MSC']['selectNewPosition'], 'context' => $this->getContext()]);
+			if($this->objParent ?? false) $arrHeader['clipboardInsertNew'] = $this->dc->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $this->objParent->id . (!$blnMultiboard ? '&amp;id=' . $arrClipboard['id'] : ''));
 		}
 
 		if($this->dc->strPickerFieldType == 'checkbox'){
-			$arrHeader['breadcrumbs'] = $this->twig->render('@Contao/backend/listing/be_select_all.html.twig', ['label' => $GLOBALS['TL_LANG']['MSC']['selectAll'], 'context' => $this->getContext()]);
+			$arrHeader['globalOperations'] = $this->twig->render('@Contao/backend/listing/be_select_all.html.twig', ['label' => $GLOBALS['TL_LANG']['MSC']['selectAll'], 'context' => $this->getContext()]);
 		}
 		return $arrHeader;
 	}
