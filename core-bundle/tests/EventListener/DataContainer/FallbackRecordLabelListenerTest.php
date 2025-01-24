@@ -17,7 +17,6 @@ use Contao\CoreBundle\Event\DataContainerRecordLabelEvent;
 use Contao\CoreBundle\EventListener\DataContainer\FallbackRecordLabelListener;
 use Contao\CoreBundle\Tests\Fixtures\TranslatorStub;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\DataContainer;
 use Contao\DcaLoader;
 use Contao\System;
 use Symfony\Component\Translation\MessageCatalogueInterface;
@@ -43,9 +42,6 @@ class FallbackRecordLabelListenerTest extends TestCase
 
     public function testGetsLabelFromTranslator(): void
     {
-        $GLOBALS['TL_DCA']['tl_foo']['list']['sorting']['mode'] = DataContainer::MODE_PARENT;
-        $GLOBALS['TL_DCA']['tl_foo']['list']['sorting']['child_record_callback'] = static fn () => null;
-
         System::setContainer($this->getContainerWithContaoConfiguration());
         (new \ReflectionClass(DcaLoader::class))->setStaticPropertyValue('arrLoaded', ['dcaFiles' => ['tl_foo' => true]]);
 
@@ -76,10 +72,9 @@ class FallbackRecordLabelListenerTest extends TestCase
         $this->assertSame('Edit 123', $event->getLabel());
     }
 
-    public function testGetsLabelFromDcaWithShowColumnsEnabled(): void
+    public function testGetsLabelFromDcaWithDefaultSearchField(): void
     {
-        $GLOBALS['TL_DCA']['tl_foo']['list']['label']['showColumns'] = true;
-        $GLOBALS['TL_DCA']['tl_foo']['list']['label']['fields'] = ['fieldA', 'fieldB'];
+        $GLOBALS['TL_DCA']['tl_foo']['list']['sorting']['defaultSearchField'] = 'fieldA';
 
         System::setContainer($this->getContainerWithContaoConfiguration());
         (new \ReflectionClass(DcaLoader::class))->setStaticPropertyValue('arrLoaded', ['dcaFiles' => ['tl_foo' => true]]);
@@ -87,7 +82,7 @@ class FallbackRecordLabelListenerTest extends TestCase
         $translator = $this->createMock(TranslatorStub::class);
 
         $listener = new FallbackRecordLabelListener($translator);
-        $listener($event = new DataContainerRecordLabelEvent('contao.db.tl_foo.123', ['id' => 123, 'fieldA' => 'A', 'fieldB' => '<span>(B &amp; B)</span>']));
+        $listener($event = new DataContainerRecordLabelEvent('contao.db.tl_foo.123', ['id' => 123, 'fieldA' => 'A <span>(B &amp; B)</span>']));
 
         $this->assertSame('A (B & B)', $event->getLabel());
     }

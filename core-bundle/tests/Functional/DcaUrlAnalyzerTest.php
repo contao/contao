@@ -195,7 +195,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
             'do=article&act=edit&id=1',
             [
                 ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
-                ['url' => '/contao?do=article&id=1&act=edit&table=tl_article', 'label' => 'Article 1 [Main column]'],
+                ['url' => '/contao?do=article&id=1&act=edit&table=tl_article', 'label' => 'Article 1'],
             ],
         ];
 
@@ -217,7 +217,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
             'do=article&act=show&id=1&popup=1',
             [
                 ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
-                ['url' => '/contao?do=article&id=1&act=show&table=tl_article', 'label' => 'Article 1 [Main column]'],
+                ['url' => '/contao?do=article&id=1&act=show&table=tl_article', 'label' => 'Article 1'],
             ],
         ];
 
@@ -225,7 +225,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
             'do=article&table=tl_content&id=1',
             [
                 ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
-                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1 [Main column]'],
+                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1'],
             ],
         ];
 
@@ -233,7 +233,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
             'do=article&id=1&table=tl_content&act=edit',
             [
                 ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
-                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1 [Main column]'],
+                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1'],
                 ['url' => '/contao?do=article&id=1&act=edit&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
             ],
         ];
@@ -242,7 +242,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
             'do=article&id=1&table=tl_content&act=show&popup=1',
             [
                 ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
-                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1 [Main column]'],
+                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1'],
                 ['url' => '/contao?do=article&id=1&act=show&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
             ],
         ];
@@ -251,7 +251,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
             'do=article&id=1&table=tl_content&ptable=tl_content',
             [
                 ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
-                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1 [Main column]'],
+                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1'],
                 ['url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
             ],
         ];
@@ -260,7 +260,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
             'do=article&id=2&ptable=tl_content&table=tl_content&act=edit',
             [
                 ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
-                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1 [Main column]'],
+                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1'],
                 ['url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
                 ['url' => '/contao?do=article&id=2&act=edit&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
             ],
@@ -270,7 +270,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
             'do=article&id=3&ptable=tl_content&table=tl_content&act=edit',
             [
                 ['url' => '/contao?do=article&table=tl_article', 'label' => 'Articles'],
-                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1 [Main column]'],
+                ['url' => '/contao?do=article&id=1&table=tl_content', 'label' => 'Article 1'],
                 ['url' => '/contao?do=article&id=1&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
                 ['url' => '/contao?do=article&id=2&table=tl_content&ptable=tl_content', 'label' => 'Element group'],
                 ['url' => '/contao?do=article&id=3&act=edit&table=tl_content&ptable=tl_content', 'label' => 'Headline'],
@@ -281,7 +281,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
             'do=themes&table=tl_image_size&id=1',
             [
                 ['url' => '/contao?do=themes&table=tl_theme', 'label' => 'Themes'],
-                ['url' => '/contao?do=themes&id=1&table=tl_image_size', 'label' => 'Default'],
+                ['url' => '/contao?do=themes&id=1&table=tl_image_size', 'label' => 'Default Theme'],
             ],
         ];
 
@@ -289,7 +289,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
             'do=themes&id=1&table=tl_layout',
             [
                 ['url' => '/contao?do=themes&table=tl_theme', 'label' => 'Themes'],
-                ['url' => '/contao?do=themes&id=1&table=tl_layout', 'label' => 'Default'],
+                ['url' => '/contao?do=themes&id=1&table=tl_layout', 'label' => 'Default Theme'],
             ],
         ];
 
@@ -297,8 +297,8 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
             'do=themes&id=1&table=tl_layout&act=edit',
             [
                 ['url' => '/contao?do=themes&table=tl_theme', 'label' => 'Themes'],
-                ['url' => '/contao?do=themes&id=1&table=tl_layout', 'label' => 'Default'],
-                ['url' => '/contao?do=themes&id=1&act=edit&table=tl_layout', 'label' => 'Edit page layout ID 1'],
+                ['url' => '/contao?do=themes&id=1&table=tl_layout', 'label' => 'Default Theme'],
+                ['url' => '/contao?do=themes&id=1&act=edit&table=tl_layout', 'label' => 'Default Layout'],
             ],
         ];
     }
