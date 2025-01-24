@@ -17,12 +17,15 @@ class View
 
 	protected $twig;
 
+	protected $security;
+
 	public function __construct($dc, $table, $intMode)
 	{
 		$this->dc = $dc;
 		$this->table = $table;
 		$this->intMode = $intMode;
 		$this->twig = System::getContainer()->get('twig');
+		$this->security = System::getContainer()->get('security.helper');
 	}
 
 	public function getContext()

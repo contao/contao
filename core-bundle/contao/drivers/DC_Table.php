@@ -4791,7 +4791,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Return "no records found" message
 		if ($objRow->numRows < 1)
 		{
-			$return .= $twig->render('@Contao/backend/listing/be_empty.html.tiwg', ['label'=>$GLOBALS['TL_LANG']['MSC']['noResult']]);
+			$return .= System::getContainer()->get('twig')->render('@Contao/backend/listing/be_empty.html.twig', ['label'=>$GLOBALS['TL_LANG']['MSC']['noResult']]);
 		}
 
 		// List records
@@ -6074,7 +6074,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return $attributes;
 	}
 
-	private function addDynamicPtable(array $data): array
+	public function addDynamicPtable(array $data): array
 	{
 		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? false) && !isset($data['ptable']))
 		{

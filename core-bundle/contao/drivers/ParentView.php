@@ -24,7 +24,6 @@ class ParentView extends View
 	}
 
 	public function formatHeaderFields(){
-		$security = System::getContainer()->get('security.helper');
 		$headerFields = $GLOBALS['TL_DCA'][$this->table]['list']['sorting']['headerFields'];
 		foreach ($headerFields as $strField)
 		{
@@ -147,9 +146,9 @@ class ParentView extends View
 		$actionsLabels = $this->getActionsLabels();
 		$operations = $this->dc->generateHeaderButtons($this->objParent->row(), $this->dc->ptable);
 
-		if ($this->hasSorting && !($GLOBALS['TL_DCA'][$this->table]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->table]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->table, new CreateAction($this->table, $this->addDynamicPtable(['pid' => $this->objParent->id, 'sorting' => 0])))) {
+		if ($this->hasSorting && !($GLOBALS['TL_DCA'][$this->table]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->table]['config']['notCreatable'] ?? null) && $this->security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->table, new CreateAction($this->table, $this->dc->addDynamicPtable(['pid' => $this->objParent->id, 'sorting' => 0])))) {
 			$operations->append([
-				'href' => $this->addToUrl('act=create&amp;mode=2&amp;pid=' . $this->objParent->id . '&amp;id=' . $this->intId),
+				'href' => $this->dc->addToUrl('act=create&amp;mode=2&amp;pid=' . $this->objParent->id . '&amp;id=' . $this->dc->id),
 				'title' => $actionsLabels['pasteNew'][0],
 				'icon' => Image::getHtml('new.svg', $actionsLabels['pasteNew'][0]),
 			]);
