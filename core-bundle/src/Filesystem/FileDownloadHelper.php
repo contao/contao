@@ -160,7 +160,7 @@ class FileDownloadHelper
 
     private function addContentTypeHeader(Response $response, FilesystemItem $file): void
     {
-        $response->headers->set('Content-Type', $file->getMimeType());
+        $response->headers->set('Content-Type', $file->getMimeType('application/octet-stream'));
     }
 
     private function addContentDispositionHeader(Response $response, Request $request, FilesystemItem $file): void
