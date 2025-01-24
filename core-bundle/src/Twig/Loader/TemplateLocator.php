@@ -113,6 +113,7 @@ class TemplateLocator
             $templates[Path::normalize($file->getRelativePathname())] = Path::canonicalize($file->getPathname());
         }
 
+        // Sort the results manually as it is faster than using Finder#sortByName()
         ksort($templates);
 
         return $templates;
