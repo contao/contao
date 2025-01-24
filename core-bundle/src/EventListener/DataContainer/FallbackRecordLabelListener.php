@@ -13,8 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\Event\DataContainerRecordLabelEvent;
-use Contao\DataContainer;
-use Contao\DC_Table;
 use Contao\DcaLoader;
 use Contao\StringUtil;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
@@ -45,25 +43,16 @@ class FallbackRecordLabelListener
 
         (new DcaLoader($table))->load();
 
-        $dc = (new \ReflectionClass(DC_Table::class))->newInstanceWithoutConstructor();
-        $dc->table = $table;
-        $dc->id = (int) $id;
-
-        $mode = $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? DataContainer::MODE_SORTED;
-
-        if (DataContainer::MODE_PARENT === $mode && ($GLOBALS['TL_DCA'][$table]['list']['sorting']['child_record_callback'] ?? null)) {
+        if (
+            ($defaultSearchField = $GLOBALS['TL_DCA'][$table]['list']['sorting']['defaultSearchField'] ?? null)
+            && $label = $event->getData()[$defaultSearchField] ?? null
+        ) {
+            $event->setLabel(trim(StringUtil::decodeEntities(strip_tags((string) $label))));
+        } else {
             $messageDomain = "contao_$table";
             $labelKey = $this->translator->getCatalogue()->has("$table.edit", $messageDomain) ? "$table.edit" : 'DCA.edit';
 
             $event->setLabel($this->translator->trans($labelKey, [$event->getData()['id']], $messageDomain));
-        } else {
-            $label = $dc->generateRecordLabel($event->getData(), $table);
-
-            if (\is_array($label)) {
-                $label = trim(implode(' ', $label));
-            }
-
-            $event->setLabel(trim(StringUtil::decodeEntities(strip_tags((string) $label))) ?: null);
         }
     }
 }

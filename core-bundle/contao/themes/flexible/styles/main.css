@@ -1439,10 +1439,6 @@ table.tl_listing {
 	list-style: none;
 }
 
-.parent_view:not(.as-grid) > ul {
-	background-color: var(--table-header);
-}
-
 .tl_content.indent_1 {
 	margin-left: 20px;
 }
