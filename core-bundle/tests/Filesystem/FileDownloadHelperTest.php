@@ -131,6 +131,20 @@ class FileDownloadHelperTest extends TestCase
         $this->assertSame("foo,bar\n", $this->getResponseContent($response));
     }
 
+    public function testGenerateAndHandleDownloadUrlUnknownMimeType(): void
+    {
+        $helper = $this->getFileDownloadHelper();
+        $url = $helper->generateDownloadUrl('https://example.com/', 'my_file.unknown');
+
+        $response = $helper->handle(Request::create($url), $this->getInMemoryStorage());
+
+        $this->assertInstanceOf(StreamedResponse::class, $response);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('application/octet-stream', $response->headers->get('Content-Type'));
+        $this->assertSame('attachment; filename=my_file.unknown', $response->headers->get('Content-Disposition'));
+        $this->assertSame('foo', $this->getResponseContent($response));
+    }
+
     public function testPreservesQueryParameters(): void
     {
         $helper = $this->getFileDownloadHelper();
@@ -170,6 +184,7 @@ class FileDownloadHelperTest extends TestCase
     {
         $adapter = new InMemoryFilesystemAdapter();
         $adapter->write('my_file.txt', 'foo', new Config());
+        $adapter->write('my_file.unknown', 'foo', new Config());
 
         $mountManager = new MountManager();
         $mountManager->mount($adapter);
