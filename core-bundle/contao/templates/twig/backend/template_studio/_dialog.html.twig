@@ -3,7 +3,7 @@
 <dialog data-contao--template-studio-target="dialog">
     <div class="dialog_wrapper">
         <div class="header_wrapper">
-            <h3>{% block title %}{{ 'MSC.confirm'|trans }}{% endblock %}</h3>
+            <h3>{% block title %}{{ 'MSC.confirmTitle'|trans }}{% endblock %}</h3>
         </div>
         <form action="{{ app.request.uri }}" method="post">
             {% block content %}{% endblock %}
