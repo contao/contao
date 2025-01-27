@@ -97,6 +97,11 @@ final class GroupedDocumentIds
      */
     public function split(int $maxBytes): array
     {
+        // No IDs provided at all, make sure we return ourselves as a chunk
+        if ([] === $this->typeToIds) {
+            return [$this];
+        }
+
         $chunks = [];
         $currentChunk = [];
         $currentSize = 0;
