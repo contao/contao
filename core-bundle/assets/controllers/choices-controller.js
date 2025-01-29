@@ -17,7 +17,7 @@ export default class ChoicesController extends Controller {
             duplicateItemsAllowed: false,
             allowHTML: false,
             removeItemButton: true,
-            searchEnabled: select.options.length > 7,
+            //searchEnabled: select.options.length > 7, // ToDo: re-enable this, after it is fixed in the choices-component
             classNames: {
                 containerOuter: ['choices', ...Array.from(select.classList)],
                 flippedState: '',
