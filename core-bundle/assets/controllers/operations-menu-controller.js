@@ -26,6 +26,7 @@ export default class OperationsMenuController extends Controller {
 
         this.$menu.dom.controller.addEventListener('accessibleMenuExpand', () => {
             this._others('close');
+            this.setFixedPosition();
             this.element.classList.add('hover');
         });
 
