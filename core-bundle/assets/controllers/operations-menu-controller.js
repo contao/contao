@@ -7,6 +7,7 @@ export default class OperationsMenuController extends Controller {
 
     initialize () {
         this.close = this.close.bind(this);
+        this.closeOnEscape = this.closeOnEscape.bind(this);
         OperationsMenuController.instances.push(this);
     }
 
@@ -17,6 +18,8 @@ export default class OperationsMenuController extends Controller {
 
         document.addEventListener('pointerdown', this.close);
         this.controllerTarget?.addEventListener('pointerdown', () => { this.setFixedPosition() });
+
+        document.addEventListener('keydown', this.closeOnEscape);
 
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,
@@ -37,6 +40,7 @@ export default class OperationsMenuController extends Controller {
 
     disconnect () {
         document.removeEventListener('pointerdown', this.close);
+        document.removeEventListener('keydown', this.closeOnEscape);
     }
 
     titleTargetConnected (el) {
@@ -69,6 +73,12 @@ export default class OperationsMenuController extends Controller {
     close () {
         if (this.$menu) {
             this.$menu.elements.controller.close();
+        }
+    }
+
+    closeOnEscape(event) {
+        if (event.key === 'Escape') {
+            this.close();
         }
     }
 
