@@ -4259,7 +4259,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Paste after the selected record (e.g. paste article after article X)
 						if ($this->strTable == $table)
 						{
-							if ($blnCircularReference || System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $id) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1)))
+							if ($blnCircularReference || !System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $id) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1)))
 							{
 								$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
 							}
