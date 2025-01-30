@@ -14,8 +14,6 @@ export default class OperationsMenuController extends Controller {
             return;
         }
 
-        this.controllerTarget?.addEventListener('pointerdown', () => { this.setFixedPosition() });
-
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,
             containerElement: this.element,
