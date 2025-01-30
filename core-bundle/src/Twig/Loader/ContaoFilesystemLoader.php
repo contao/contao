@@ -410,7 +410,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
 
         foreach ($this->templateLocator->findThemeDirectories() as $slug => $path) {
             $sources[] = [$path, "Contao_Theme_$slug"];
-            $themeSlugs[] = $slug;
+            $themeSlugs[] = (string) $slug;
         }
 
         $sources[] = [Path::join($this->projectDir, 'templates'), 'Contao_Global'];
@@ -443,7 +443,7 @@ class ContaoFilesystemLoader implements LoaderInterface, ResetInterface
 
         foreach ($templatesByNamespace as $namespace => $templates) {
             foreach ($templates as $shortName => $path) {
-                $identifier = ContaoTwigUtil::getIdentifier($shortName);
+                $identifier = ContaoTwigUtil::getIdentifier((string) $shortName);
 
                 $type = \in_array($extension = ContaoTwigUtil::getExtension($path), ['html.twig', 'html5'], true)
                     ? 'html.twig/html5'
