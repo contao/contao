@@ -185,6 +185,7 @@ class BackendMenuListenerTest extends TestCase
     public function testBuildsTheHeaderMenu(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class);
+        $user->id = 1;
         $user->name = 'Foo Bar';
         $user->username = 'foo';
         $user->email = 'foo@bar.com';
@@ -296,7 +297,7 @@ class BackendMenuListenerTest extends TestCase
 
         // Login
         $this->assertSame('MSC.profile', $grandChildren['login']->getLabel());
-        $this->assertSame('/contao?do=login&ref=bar', $grandChildren['login']->getUri());
+        $this->assertSame('/contao?do=login&act=edit&id=1&ref=bar', $grandChildren['login']->getUri());
         $this->assertSame(['class' => 'icon-profile'], $grandChildren['login']->getLinkAttributes());
         $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['login']->getExtras());
 
