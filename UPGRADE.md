@@ -329,6 +329,8 @@ or decorate the `contao.intl.countries` service instead.
 To add or remove countries, you can use the `contao.intl.countries` configuration. `$GLOBALS['TL_LANG']['CNT']` can
 still be used for overwriting translations, but no longer to retrieve country names.
 
+Country codes have been changed to upper case letters.
+
 ### UnresolvableDependenciesException
 
 The following classes and interfaces have been removed from the global namespace:
