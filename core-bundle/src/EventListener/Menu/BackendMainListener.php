@@ -13,11 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\Menu;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Controller\BackendTemplateStudioController;
 use Contao\CoreBundle\Event\MenuEvent;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * Make sure this listener comes before the other ones adding to its tree.
@@ -27,11 +25,8 @@ use Symfony\Component\HttpFoundation\RequestStack;
 #[AsEventListener(priority: 10)]
 class BackendMainListener
 {
-    public function __construct(
-        private readonly Security $security,
-        private readonly RequestStack $requestStack,
-        private readonly bool $templateStudioEnabled,
-    ) {
+    public function __construct(private readonly Security $security)
+    {
     }
 
     public function __invoke(MenuEvent $event): void
@@ -93,17 +88,6 @@ class BackendMainListener
                 ;
 
                 $categoryNode->addChild($moduleNode);
-            }
-
-            if ($this->templateStudioEnabled && 'design' === $categoryName) {
-                $templateStudioNode = $factory
-                    ->createItem('template-studio')
-                    ->setLabel('Template Studio')
-                    ->setUri('/contao/template-studio')
-                    ->setCurrent(BackendTemplateStudioController::class === $this->requestStack->getCurrentRequest()?->get('_controller'))
-                ;
-
-                $categoryNode->addChild($templateStudioNode);
             }
         }
     }
