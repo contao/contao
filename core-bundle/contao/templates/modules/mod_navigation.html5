@@ -17,15 +17,11 @@ $this->wrapperAttributes = $this
     <<?= $this->hl ?>><?= $this->headline ?></<?= $this->hl ?>>
   <?php endif; ?>
 
-  <?php if ($this->addSkipLink): ?>
-    <a href="<?= $this->request ?>#<?= $this->skipId ?>" class="invisible"><?= $this->skipNavigation ?></a>
-  <?php endif; ?>
+  <a href="<?= $this->request ?>#<?= $this->skipId ?>" class="invisible"><?= $this->skipNavigation ?></a>
 
   <?= $this->items ?>
 
-  <?php if ($this->addSkipLink): ?>
-    <span id="<?= $this->skipId ?>" class="invisible"></span>
-  <?php endif; ?>
+  <span id="<?= $this->skipId ?>" class="invisible"></span>
 
 </nav>
 <!-- indexer::continue -->
