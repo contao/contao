@@ -45,7 +45,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_channels'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_text'] = array
 (
 	'inputType'               => 'textarea',
-	'eval'                    => array('rte'=>'tinyMCE', 'helpwizard'=>true),
+	'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'helpwizard'=>true),
 	'explanation'             => 'insertTags',
 	'sql'                     => "text NULL"
 );
