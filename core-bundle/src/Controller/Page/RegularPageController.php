@@ -18,7 +18,6 @@ use Contao\LayoutModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsPage]
 class RegularPageController extends AbstractLayoutPageController
 {
     protected function getResponse(LayoutTemplate $template, LayoutModel $model, Request $request): Response
