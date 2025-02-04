@@ -1064,8 +1064,8 @@
       <trans-unit id="MSC.mw_modules">
         <source>Frontend modules</source>
       </trans-unit>
-      <trans-unit id="MSC.mw_theme_contents">
-        <source>Theme contents</source>
+      <trans-unit id="MSC.mw_elements">
+        <source>Content elements</source>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
         <source>Title</source>

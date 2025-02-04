@@ -214,7 +214,7 @@ class ModuleWizard extends Widget
 				$options .= '<option value="' . self::specialcharsValue($v['id']) . '"' . static::optionSelected($v['id'], $this->varValue[$i]['mod'] ?? null) . '>' . $v['title'] . ' [' . $v['type'] . ']</option>';
 			}
 
-			$optionGroups[] = \sprintf('<optgroup label="%s">%s</optgroup>', $GLOBALS['TL_LANG']['MSC']['mw_theme_contents'], $options);
+			$optionGroups[] = \sprintf('<optgroup label="%s">%s</optgroup>', $GLOBALS['TL_LANG']['MSC']['mw_elements'], $options);
 			$options = '';
 
 			// Add modules
