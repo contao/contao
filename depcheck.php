@@ -24,7 +24,6 @@ return (new Configuration())
         'Swift_EmbeddedFile',
         'Swift_Mailer',
         'Swift_Message',
-        'tl_article',
     ])
     ->disableExtensionsAnalysis()
     ->disableReportingUnmatchedIgnores()

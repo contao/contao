@@ -28,25 +28,21 @@ class ArticleColumnListener
     ) {
     }
 
-    #[AsCallback(table: 'tl_article', target: 'fields.inColumn.options')]
-    public function getOptions(DataContainer $dc): array
+    #[AsCallback(table: 'tl_article', target: 'fields.inColumn.load')]
+    public function getOptions(string $value, DataContainer $dc): string
     {
         if (!$article = $this->framework->getAdapter(ArticleModel::class)->findById($dc->id)) {
-            return [];
+            return $value;
         }
 
         $page = $article->getRelated('pid');
 
         if (!$page instanceof PageModel) {
-            return [];
+            return $value;
         }
 
         if (!$layout = $this->framework->getAdapter(LayoutModel::class)->findById($page->loadDetails()->layout)) {
-            return [];
-        }
-
-        if ('modern' !== $layout->type) {
-            return (new \tl_article())->getActiveLayoutSections($dc);
+            return $value;
         }
 
         $slots = $this->inspector
@@ -60,6 +56,9 @@ class ArticleColumnListener
             $options[$slot] = "{% slot $slot %}";
         }
 
-        return $options;
+        $GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['options'] = $options;
+        unset($GLOBALS['TL_DCA']['tl_article']['fields']['inColumn']['options_callback']);
+
+        return $value;
     }
 }
