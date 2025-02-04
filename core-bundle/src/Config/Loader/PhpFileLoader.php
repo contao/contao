@@ -16,6 +16,7 @@ use PhpParser\Node;
 use PhpParser\Node\Arg;
 use PhpParser\Node\Expr\BooleanNot;
 use PhpParser\Node\Expr\ClassConstFetch;
+use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Expr\Exit_;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Identifier;
@@ -131,7 +132,7 @@ class PhpFileLoader extends Loader
         };
 
         // Add an if statement around all class declarations to skip them if they exist:
-        // if (!\class_exists(tl_foo::class)) { class tl_foo … { … } }
+        // if (!\class_exists(tl_foo::class, false)) { class tl_foo … { … } }
         $classWrapper = new class() extends NodeVisitorAbstract {
             public function leaveNode(Node $node): If_|null
             {
@@ -146,6 +147,9 @@ class PhpFileLoader extends Loader
                                             new Name([$node->name->name]),
                                             new Identifier('class'),
                                         ),
+                                    ),
+                                    new Arg(
+                                        new ConstFetch(new Name('false')),
                                     ),
                                 ],
                             ),

@@ -123,7 +123,7 @@ class PhpFileLoaderTest extends TestCase
 
             namespace {
             $GLOBALS['TL_DCA']['tl_test_with_class'] = ['config' => ['dataContainer' => \Contao\DC_Table::class], 'fields' => ['id' => ['sql' => 'int(10) unsigned NOT NULL auto_increment']]];
-            if (!\class_exists(tl_test_with_class::class)) {
+            if (!\class_exists(tl_test_with_class::class, false)) {
                 class tl_test_with_class
                 {
                     public function checkPermission(\Contao\DataContainer $dc)
@@ -147,7 +147,7 @@ class PhpFileLoaderTest extends TestCase
 
             namespace {
             $GLOBALS['TL_DCA']['tl_test_with_class'] = ['config' => ['dataContainer' => \Contao\DC_Table::class], 'fields' => ['id' => ['sql' => 'int(10) unsigned NOT NULL auto_increment']]];
-            if (!\class_exists(tl_test_with_classes1::class)) {
+            if (!\class_exists(tl_test_with_classes1::class, false)) {
                 class tl_test_with_classes1
                 {
                     public function checkPermission(\Contao\DataContainer $dc)
@@ -155,7 +155,7 @@ class PhpFileLoaderTest extends TestCase
                     }
                 }
             }
-            if (!\class_exists(tl_test_with_classes2::class)) {
+            if (!\class_exists(tl_test_with_classes2::class, false)) {
                 class tl_test_with_classes2
                 {
                     public function checkPermission(\Contao\DataContainer $dc)
@@ -179,7 +179,7 @@ class PhpFileLoaderTest extends TestCase
 
             namespace Foo\Bar {
             $GLOBALS['TL_DCA']['tl_test_with_class'] = ['config' => ['dataContainer' => \Contao\DC_Table::class], 'fields' => ['id' => ['sql' => 'int(10) unsigned NOT NULL auto_increment']]];
-            if (!\class_exists(tl_test_with_class_namespaced::class)) {
+            if (!\class_exists(tl_test_with_class_namespaced::class, false)) {
                 class tl_test_with_class_namespaced
                 {
                     public function checkPermission(\Contao\DataContainer $dc)
