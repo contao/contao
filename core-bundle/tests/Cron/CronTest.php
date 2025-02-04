@@ -418,7 +418,6 @@ class CronTest extends TestCase
         );
 
         $cron->addCronJob(new CronJob($cron, '* * * * *', 'updateMinutelyCliCron'));
-
         $cron->run(Cron::SCOPE_WEB);
     }
 
