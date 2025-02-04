@@ -63,6 +63,13 @@ class DcaLoader extends Controller
 		$this->strTable = $strTable;
 	}
 
+	public static function reset(): void
+	{
+		unset($GLOBALS['TL_DCA']);
+
+		self::$arrLoaded = array();
+	}
+
 	/**
 	 * Load a set of DCA files
 	 */
@@ -92,11 +99,6 @@ class DcaLoader extends Controller
 
 			throw $e;
 		}
-		finally
-		{
-			// TODO: We should probably make reloading optional or request dependent
-			static::$arrLoaded['dcaFiles'][$this->strTable] = false;
-		}
 
 		if (!isset($GLOBALS['TL_DCA'][$this->strTable]))
 		{
@@ -109,14 +111,12 @@ class DcaLoader extends Controller
 	 */
 	private function loadDcaFiles()
 	{
-		unset($GLOBALS['TL_DCA'][$this->strTable]);
-
 		$filesystem = new Filesystem();
 		$strCacheDir = System::getContainer()->getParameter('kernel.cache_dir');
 		$strCachePath = $strCacheDir . '/contao/dca/' . $this->strTable . '.php';
 
 		// Try to load from cache
-		if (file_exists($strCachePath))
+		if (file_exists($strCachePath) && !System::getContainer()->getParameter('kernel.debug'))
 		{
 			include $strCachePath;
 		}
@@ -140,9 +140,8 @@ class DcaLoader extends Controller
 				{
 					include $strCachePath;
 				}
-				finally
+				catch (\Throwable)
 				{
-					// TODO: instead of removing the cache file again we should probably check for %kernel.debug%
 					$filesystem->remove($strCachePath);
 				}
 			}

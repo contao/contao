@@ -27,6 +27,7 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
@@ -37,6 +38,8 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
         unset($GLOBALS['TL_MIME'], $GLOBALS['TL_LANG'], $GLOBALS['TL_DCA']);
 
         $this->resetStaticProperties([System::class, Config::class, DcaLoader::class]);
+
+        (new Filesystem())->remove(Path::join($this->getFixturesDir(), 'var/cache'));
 
         parent::tearDown();
     }

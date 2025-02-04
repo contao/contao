@@ -57,7 +57,7 @@ class DcaExtractorTest extends TestCase
 
         parent::tearDown();
 
-        (new Filesystem())->remove($this->getTempDir());
+        (new Filesystem())->remove([$this->getTempDir(), Path::join($this->getFixturesDir(), 'var/cache')]);
     }
 
     public function testDoesCreateTableWithSqlConfig(): void

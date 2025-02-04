@@ -114,7 +114,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
 
         $files = array_map(
             static fn ($path) => substr($path, \strlen($root) + 1),
-            glob("$root/*-bundle/tests/**/*"),
+            glob("$root/*-bundle/tests/{*,*/*,*/*/*,*/*/*/*,*/*/*/*/*,*/*/*/*/*/*,*/*/*/*/*/*/*}", GLOB_BRACE),
         );
 
         sort($files);
