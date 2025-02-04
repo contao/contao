@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller\Page;
 
+use Contao\Config;
 use Contao\CoreBundle\Fixtures\Controller\Page\LayoutPageController;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
@@ -22,6 +23,9 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DcaExtractor;
+use Contao\DcaLoader;
+use Contao\InsertTags;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\System;
@@ -32,6 +36,15 @@ use Twig\Environment;
 
 class AbstractLayoutPageControllerTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+
+        $this->resetStaticProperties([System::class]);
+
+        parent::tearDown();
+    }
+
     public function testCreateAndRenderLayoutTemplate(): void
     {
         $layoutPageController = $this->getLayoutPageController();
