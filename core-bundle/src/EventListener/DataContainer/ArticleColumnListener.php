@@ -29,7 +29,7 @@ class ArticleColumnListener
     }
 
     #[AsCallback(table: 'tl_article', target: 'fields.inColumn.load')]
-    public function getOptions(string $value, DataContainer $dc): string
+    public function setSlotOptions(string $value, DataContainer $dc): string
     {
         if (!$article = $this->framework->getAdapter(ArticleModel::class)->findById($dc->id)) {
             return $value;
@@ -42,6 +42,10 @@ class ArticleColumnListener
         }
 
         if (!$layout = $this->framework->getAdapter(LayoutModel::class)->findById($page->loadDetails()->layout)) {
+            return $value;
+        }
+
+        if ('modern' !== $layout->type) {
             return $value;
         }
 
