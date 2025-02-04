@@ -723,6 +723,7 @@ class FigureBuilder
         foreach ($overwriteMetadata as $key => $value) {
             if (str_starts_with($value, '{{empty')) {
                 $parsedValue = $this->locator->get('contao.insert_tag.parser')->parse($value);
+
                 if (1 === $parsedValue->count() && $parsedValue->get(0) instanceof InsertTag && 'empty' === $parsedValue->get(0)->getName()) {
                     $overwriteMetadata[$key] = '';
                 }
