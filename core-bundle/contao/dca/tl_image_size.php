@@ -329,8 +329,12 @@ class tl_image_size extends Backend
 		}
 
 		$imageExtensions = System::getContainer()->getParameter('contao.image.valid_extensions');
+		$supporedFormats = $this->getSupportedFormats();
+		$supporedFormats['jpg'] = true;
+		$supporedFormats['png'] = true;
+		$supporedFormats['gif'] = true;
 
-		foreach ($this->getSupportedFormats() as $format => $isSupported)
+		foreach ($supporedFormats as $format => $isSupported)
 		{
 			if (!in_array($format, $imageExtensions))
 			{
@@ -344,11 +348,26 @@ class tl_image_size extends Backend
 				continue;
 			}
 
-			$formats[] = "png:$format,png";
-			$formats[] = "jpg:$format,jpg;jpeg:$format,jpeg";
-			$formats[] = "gif:$format,gif";
-			$formats[] = "$format:$format,png";
-			$formats[] = "$format:$format,jpg";
+			foreach ($supporedFormats as $subFormat => $subFormatSupported)
+			{
+				if (
+					!$subFormatSupported
+					|| $subFormat === $format
+					|| $subFormat === 'gif'
+					|| (in_array($format, ['jpg', 'png', 'gif']) && in_array($subFormat, ['jpg', 'png', 'gif']))
+				) {
+					continue;
+				}
+
+				if ($format === 'jpg')
+				{
+					$formats[] = "jpg:jpg,$subFormat;jpeg:jpeg,$subFormat";
+				}
+				else
+				{
+					$formats[] = "$format:$format,$subFormat";
+				}
+			}
 		}
 
 		if ($missingSupport)
@@ -371,6 +390,8 @@ class tl_image_size extends Backend
 
 			$options[$format] = strtoupper($from) . ' → ' . strtoupper($chunks[0]);
 		}
+
+		asort($options);
 
 		return $options;
 	}
