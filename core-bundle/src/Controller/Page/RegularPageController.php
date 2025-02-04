@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\Page;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\Twig\LayoutTemplate;
 use Contao\LayoutModel;
 use Symfony\Component\HttpFoundation\Request;

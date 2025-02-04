@@ -201,7 +201,7 @@ services:
     Contao\CoreBundle\Controller\Page\RedirectPageController:
         arguments:
             - '@contao.routing.content_url_generator'
-            -
+
     Contao\CoreBundle\Controller\Page\RegularPageController: ~
 
     Contao\CoreBundle\Controller\Page\RootPageController:
