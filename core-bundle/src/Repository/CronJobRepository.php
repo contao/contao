@@ -40,7 +40,7 @@ class CronJobRepository extends ServiceEntityRepository
 
     /**
      * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
-	 *             use the Symfony Lock component instead.
+     *             use the Symfony Lock component instead.
      */
     public function lockTable(): void
     {
@@ -53,7 +53,7 @@ class CronJobRepository extends ServiceEntityRepository
 
     /**
      * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
-	 *             use the Symfony Lock component instead.
+     *             use the Symfony Lock component instead.
      */
     public function unlockTable(): void
     {
