@@ -59,7 +59,14 @@ export default class extends Controller {
     }
 
     connect () {
+        this.restore();
+    }
+
+    async restore () {
         if (!this.offset) return;
+
+        // Execute scroll restore after Turbo scrolled to top
+        await new Promise(requestAnimationFrame);
 
         window.scrollTo({
             top: this.offset,
