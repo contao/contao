@@ -161,12 +161,6 @@ class ModuleTwoFactor extends BackendModule
 	 */
 	protected function enableTwoFactor(BackendUser $user, $return)
 	{
-		// Return if 2FA is enabled already
-		if ($user->useTwoFactor)
-		{
-			return;
-		}
-
 		$container = System::getContainer();
 		$authenticator = $container->get('contao.security.two_factor.authenticator');
 		$verifyHelp = $GLOBALS['TL_LANG']['MSC']['twoFactorVerificationHelp'];

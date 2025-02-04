@@ -1088,6 +1088,10 @@ h2.sub_headline {
 	margin: 0 15px 12px;
 }
 
+.two-factor .submit_container a {
+	vertical-align: initial;
+}
+
 .two-factor .tl_message {
 	margin: 0 15px 12px;
 }

@@ -143,7 +143,7 @@ $GLOBALS['BE_MOD'] = array
 	(
 		'themes' => array
 		(
-			'tables'      => array('tl_theme', 'tl_module', 'tl_layout', 'tl_image_size', 'tl_image_size_item'),
+			'tables'      => array('tl_theme', 'tl_module', 'tl_layout', 'tl_image_size', 'tl_image_size_item', 'tl_content'),
 			'importTheme' => array(Theme::class, 'importTheme'),
 			'exportTheme' => array(Theme::class, 'exportTheme'),
 		),
