@@ -72,10 +72,10 @@ class AbstractLayoutPageControllerTest extends TestCase
         ;
 
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class, [
-                'modules' => serialize([]),
-                'defaultImageDensities' => 'foo_densities',
-                'template' => 'foo_template',
-            ]);
+            'modules' => serialize([]),
+            'defaultImageDensities' => 'foo_densities',
+            'template' => 'foo_template',
+        ]);
 
         $layoutAdapter = $this->mockAdapter(['findById']);
         $layoutAdapter

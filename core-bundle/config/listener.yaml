@@ -410,8 +410,6 @@ services:
         class: Contao\CoreBundle\EventListener\Menu\BackendMainListener
         arguments:
             - '@security.helper'
-            - '@request_stack'
-            - '%contao.template_studio.enabled%'
 
     contao.listener.menu.backend_preview:
         class: Contao\CoreBundle\EventListener\Menu\BackendPreviewListener
@@ -421,6 +419,15 @@ services:
             - '@request_stack'
             - '@translator'
             - '@event_dispatcher'
+
+    contao.listener.menu.backend_template_studio:
+        class: Contao\CoreBundle\EventListener\Menu\BackendTemplateStudioListener
+        arguments:
+            - '@security.helper'
+            - '@router'
+            - '@request_stack'
+            - '@translator'
+            - '%contao.template_studio.enabled%'
 
     contao.listener.merge_http_headers:
         class: Contao\CoreBundle\EventListener\MergeHttpHeadersListener

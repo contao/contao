@@ -195,7 +195,7 @@ class FormSelect extends Widget
 		// Chosen
 		if ($this->chosen)
 		{
-			$strClass .= ' init-choices';
+			$strClass .= ' tl_chosen';
 		}
 
 		// Custom class

@@ -74,7 +74,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		'operations' => array
 		(
 			'!edit',
-			'children',
+			'!children',
 			'copy',
 			'cut',
 			'delete',

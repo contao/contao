@@ -5,7 +5,6 @@ import WebAuthn from '@web-auth/webauthn-stimulus';
 
 import './scripts/mootao.js';
 import './scripts/core.js';
-import './scripts/choices.js'
 import './scripts/limit-height.js';
 import './scripts/modulewizard.js';
 import './scripts/sectionwizard.js';
@@ -40,6 +39,11 @@ document.documentElement.addEventListener('turbo:before-prefetch', e => {
 const mooDomready = () => {
     if (!document.body.mooDomreadyFired) {
         document.body.mooDomreadyFired = true;
+
+        if (Element.Events.removeEvents) {
+            Element.Events.removeEvents();
+        }
+
         window.fireEvent('domready');
     }
 }
