@@ -2,12 +2,7 @@ import { Controller } from '@hotwired/stimulus';
 import AccessibleMenu from 'accessible-menu';
 
 export default class OperationsMenuController extends Controller {
-    static instances = [];
-    static targets = ['menu', 'controller', 'title'];
-
-    initialize () {
-        OperationsMenuController.instances.push(this);
-    }
+    static targets = ['menu', 'submenu', 'controller', 'title'];
 
     connect () {
         if (!this.hasMenuTarget) {
@@ -16,17 +11,20 @@ export default class OperationsMenuController extends Controller {
 
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,
-            containerElement: this.element,
-            controllerElement: this.controllerTarget,
         });
 
-        this.$menu.dom.controller.addEventListener('accessibleMenuExpand', () => {
-            this._others('close');
+        this.controllerTarget?.addEventListener('accessibleMenuExpand', () => {
+            Object.values(window.AccessibleMenu.menus).forEach((menu) => {
+                if (menu !== this.$menu && menu.elements.submenuToggles[0].isOpen) {
+                    menu.elements.submenuToggles[0].close();
+                }
+            })
+
             this.setFixedPosition();
             this.element.classList.add('hover');
         });
 
-        this.$menu.dom.controller.addEventListener('accessibleMenuCollapse', () => {
+        this.controllerTarget?.addEventListener('accessibleMenuCollapse', () => {
             this.element.classList.remove('hover');
         });
     }
@@ -54,18 +52,12 @@ export default class OperationsMenuController extends Controller {
         event.preventDefault();
         event.stopPropagation();
 
-        this.$menu.elements.controller.preview();
+        this.$menu.elements.submenuToggles[0].open();
         this.setFixedPosition(event);
     }
 
-    close () {
-        if (this.$menu) {
-            this.$menu.elements.controller.close();
-        }
-    }
-
     setFixedPosition (event) {
-        const rect = this.menuTarget.getBoundingClientRect();
+        const rect = this.submenuTarget.getBoundingClientRect();
         let x, y, offset = 0;
 
         if (event) {
@@ -78,19 +70,19 @@ export default class OperationsMenuController extends Controller {
             offset = 20;
         }
 
-        this.menuTarget.style.position = 'fixed';
-        this.menuTarget.style.right = 'auto';
+        this.submenuTarget.style.position = 'fixed';
+        this.submenuTarget.style.right = 'auto';
 
         if (window.innerHeight < y + rect.height) {
-            this.menuTarget.style.top = `${y - rect.height}px`;
+            this.submenuTarget.style.top = `${y - rect.height}px`;
         } else {
-            this.menuTarget.style.top = `${y + offset}px`;
+            this.submenuTarget.style.top = `${y + offset}px`;
         }
 
         if (window.innerWidth < x + rect.width) {
-            this.menuTarget.style.left = `${x - rect.width + offset}px`;
+            this.submenuTarget.style.left = `${x - rect.width + offset}px`;
         } else {
-            this.menuTarget.style.left = `${x + offset}px`;
+            this.submenuTarget.style.left = `${x + offset}px`;
         }
     }
 
@@ -105,13 +97,5 @@ export default class OperationsMenuController extends Controller {
         node = el.parentElement.nodeName.toLowerCase();
 
         return 'a' === node || 'button' === node || 'input' === node;
-    }
-
-    _others(fn, args = []) {
-        OperationsMenuController.instances.forEach(instance => {
-            if(instance !== this) {
-                instance[fn](...args);
-            }
-        })
     }
 }
