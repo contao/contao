@@ -73,6 +73,15 @@ class DcaLoader extends Controller
 		$this->strTable = $strTable;
 	}
 
+	public static function reset(): void
+	{
+		self::$lastRequest = null;
+		self::$dcaByRequest = new \WeakMap();
+		self::$arrLoaded = array();
+
+		unset($GLOBALS['TL_DCA']);
+	}
+
 	public static function resetRequest(): void
 	{
 		self::switchGlobals(System::getContainer()->get('request_stack')->getCurrentRequest());

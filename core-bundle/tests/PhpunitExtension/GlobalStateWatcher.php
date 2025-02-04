@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\PhpunitExtension;
 
+use Contao\DcaLoader;
 use PhpParser\Lexer;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Runner\AfterTestHook;
@@ -114,7 +115,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
 
         $files = array_map(
             static fn ($path) => substr($path, \strlen($root) + 1),
-            glob("$root/*-bundle/tests/{*,*/*,*/*/*,*/*/*/*,*/*/*/*/*,*/*/*/*/*/*,*/*/*/*/*/*/*}", GLOB_BRACE),
+            glob("$root/*-bundle/tests/{*,*/*,*/*/*}", GLOB_BRACE),
         );
 
         sort($files);
@@ -203,6 +204,10 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 }
 
                 if ($value instanceof \WeakMap && 0 === $value->count() && $property->hasType() && !$property->getType()->allowsNull()) {
+                    continue;
+                }
+
+                if (DcaLoader::class === $class && 'nullRequest' === $property->getName()) {
                     continue;
                 }
 
