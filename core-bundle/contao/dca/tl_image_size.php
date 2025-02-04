@@ -152,7 +152,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		),
 		'formats' => array
 		(
-			'inputType'               => 'checkboxWizard',
+			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_image_size', 'getFormats'),
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "varchar(1024) NOT NULL default ''"
