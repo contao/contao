@@ -665,6 +665,45 @@ class ContaoFilesystemLoaderTest extends TestCase
         );
     }
 
+    public function testNumericNames(): void
+    {
+        $templateLocator = $this->createMock(TemplateLocator::class);
+        $templateLocator
+            ->method('findThemeDirectories')
+            ->willReturn(['2025' => '2025'])
+        ;
+
+        $templateLocator
+            ->method('findResourcesPaths')
+            ->willReturn([])
+        ;
+
+        $templateLocator
+            ->method('findTemplates')
+            ->willReturnMap([
+                ['2025', ['1.html.twig' => '2025/1.html.twig']],
+                ['/templates', ['1.html.twig' => '1.html.twig']],
+            ])
+        ;
+
+        $loader = new ContaoFilesystemLoader(
+            new NullAdapter(),
+            $templateLocator,
+            new ThemeNamespace(),
+            $this->createMock(ContaoFramework::class),
+            $this->createMock(PageFinder::class),
+            '/',
+        );
+
+        $this->assertSame(
+            [
+                2025 => '@Contao_Theme_2025/1.html.twig',
+                '' => '@Contao_Global/1.html.twig',
+            ],
+            $loader->getAllFirstByThemeSlug('1'),
+        );
+    }
+
     /**
      * @param array<string, string> $templates
      * @param array<string, string> $themeTemplates

@@ -131,7 +131,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('rte'=>'tinyNews', 'helpwizard'=>true),
+			'eval'                    => array('rte'=>'tinyNews', 'basicEntities'=>true, 'helpwizard'=>true),
 			'explanation'             => 'insertTags',
 			'load_callback' => array
 			(
