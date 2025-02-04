@@ -84,7 +84,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'showRootTrails'          => true,
 			'icon'                    => 'pagemounts.svg',
 			'panelLayout'             => 'filter;search',
-			'defaultSearchField'      => 'pageTitle'
+			'defaultSearchField'      => 'title'
 		),
 		'label' => array
 		(

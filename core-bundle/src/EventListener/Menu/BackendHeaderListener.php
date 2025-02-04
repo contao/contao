@@ -133,7 +133,7 @@ class BackendHeaderListener
         $login = $factory
             ->createItem('login')
             ->setLabel('MSC.profile')
-            ->setUri($this->router->generate('contao_backend', ['do' => 'login', 'ref' => $ref]))
+            ->setUri($this->router->generate('contao_backend', ['do' => 'login', 'act' => 'edit', 'id' => $user->id, 'ref' => $ref]))
             ->setLinkAttribute('class', 'icon-profile')
             ->setExtra('translation_domain', 'contao_default')
         ;
