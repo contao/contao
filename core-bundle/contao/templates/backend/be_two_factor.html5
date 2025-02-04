@@ -27,6 +27,7 @@
         </div>
         <div class="submit_container cf">
           <button type="submit" class="tl_submit"><?= $this->trans('MSC.enable') ?></button>
+          <a href="<?= $this->route('contao_backend', ['do' => 'security', 'ref' => $this->ref]) ?>" class="tl_submit" style="vertical-align: initial;"><?= $this->trans('MSC.cancelBT') ?></a>
         </div>
       </div>
     </form>

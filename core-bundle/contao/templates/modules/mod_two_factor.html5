@@ -35,6 +35,7 @@ $this->wrapperAttributes = $this
         </div>
         <div class="submit_container">
           <button type="submit" class="submit"><?= $this->trans('MSC.enable') ?></button>
+          <a href="<?= $this->targetPath ?>" class="tl_submit" ><?= $this->trans('MSC.cancelBT') ?></a>
         </div>
       </div>
     </form>
