@@ -29,11 +29,19 @@ final class FragmentRuntime implements RuntimeExtensionInterface
     {
     }
 
-    public function renderModule(int|string $typeOrId, array $data = []): string
+    public function renderModule(array $context, int|string $typeOrId, array $data = []): string
     {
-        $model = $this->getModel(ModuleModel::class, $typeOrId, $data);
+        if ('article' === $typeOrId) {
+            $typeOrId = 0;
+        }
 
-        return $this->framework->getAdapter(Controller::class)->getFrontendModule($model);
+        return $this->framework
+            ->getAdapter(Controller::class)
+            ->getFrontendModule(
+                0 !== $typeOrId ? $this->getModel(ModuleModel::class, $typeOrId, $data) : 0,
+                $context['_slot_name'] ?? 'main',
+            )
+        ;
     }
 
     public function renderContent(ContentElementReference|int|string $typeOrId, array $data = []): string

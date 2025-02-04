@@ -189,7 +189,7 @@ abstract class AbstractLayoutPageController extends AbstractController
     protected function renderSlot(string $slot, array $moduleIds, string $identifier = 'frontend_module/module_group'): string
     {
         $result = $this->renderView("@Contao/$identifier.html.twig", [
-            'slot' => $slot,
+            '_slot_name' => $slot,
             'modules' => $moduleIds,
         ]);
 
