@@ -78,8 +78,10 @@ class PageTypeAccessVoterTest extends TestCase
             ->expects($matcher)
             ->method('decide')
             ->willReturnCallback(
-                function (...$parameters) use ($matcher, $types): void {
+                function (...$parameters) use ($token, $matcher, $types): bool {
                     $this->assertSame(array_map(static fn ($type) => [$token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], $type], array_keys($types))[$matcher->numberOfInvocations() - 1], $parameters);
+                    $types = array_values($types);
+                    return $types[$matcher->numberOfInvocations() - 1];
                 }
             )
         ;
