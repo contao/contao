@@ -57,7 +57,7 @@ class CronJobRepository extends ServiceEntityRepository
      */
     public function unlockTable(): void
     {
-        trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the Symfony Lock compoenent instead.', __METHOD__);
+        trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the Symfony Lock component instead.', __METHOD__);
 
         $this->connection->executeStatement('UNLOCK TABLES');
     }
