@@ -897,10 +897,10 @@ class PagePermissionVoterTest extends TestCase
             ->expects($matcher)
             ->method('decide')
             ->willReturnCallback(
-                function (...$parameters) use ($matcher, $with): void {
-                    $this->assertSame($with[$matcher->numberOfInvocations() - 1], $parameters);
-                }
-            )
+                function (...$parameters) use ($matcher, $with, $return): bool {
+                    $this->assertSame($with[$matcher->numberOfInvocations() - 1][0], $parameters[0]);
+                    return $return[$matcher->numberOfInvocations() - 1];
+                })
         ;
 
         return $decisionManager;
