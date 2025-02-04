@@ -222,7 +222,7 @@ class CacheTagManagerTest extends DoctrineTestCase
             ->expects($matcher)
             ->method('addTags')
                 ->willReturnCallback(
-                    function (...$parameters) use ($matcher): void {
+                    function (...$parameters) use ($matcher, $responseTagger): ResponseTagger {
                         if (1 === $matcher->numberOfInvocations()) {
                             $this->assertSame(['contao.db.tl_blog_post'], $parameters[0]);
                         }
@@ -238,6 +238,8 @@ class CacheTagManagerTest extends DoctrineTestCase
                         if (5 === $matcher->numberOfInvocations()) {
                             $this->assertSame(['contao.db.tl_blog_post.1', 'contao.db.tl_page.2', 'foo'], $parameters[0]);
                         }
+
+                        return $responseTagger;
                     }
                 )
             ;
@@ -263,7 +265,7 @@ class CacheTagManagerTest extends DoctrineTestCase
             ->expects($matcher)
             ->method('invalidateTags')
                 ->willReturnCallback(
-                    function (...$parameters) use ($matcher): void {
+                    function (...$parameters) use ($matcher, $cacheTagInvalidator): CacheInvalidator {
                         if (1 === $matcher->numberOfInvocations()) {
                             $this->assertSame(['contao.db.tl_blog_post'], $parameters[0]);
                         }
@@ -279,6 +281,8 @@ class CacheTagManagerTest extends DoctrineTestCase
                         if (5 === $matcher->numberOfInvocations()) {
                             $this->assertSame(['contao.db.tl_blog_post.1', 'contao.db.tl_page.2', 'foo'], $parameters[0]);
                         }
+
+                        return $cacheTagInvalidator;
                     }
                 )
             ;

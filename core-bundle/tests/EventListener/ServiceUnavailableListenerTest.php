@@ -150,11 +150,13 @@ class ServiceUnavailableListenerTest extends TestCase
     {
         $event = $this->createMock(RequestEvent::class);
         $event
+            ->expects($this->atLeastOnce())
             ->method('isMainRequest')
             ->willReturn($isMainRequest)
         ;
 
         $event
+            ->expects($this->atLeastOnce())
             ->method('getRequest')
             ->willReturn($request)
         ;

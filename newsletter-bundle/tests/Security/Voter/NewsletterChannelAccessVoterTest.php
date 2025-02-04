@@ -46,7 +46,7 @@ class NewsletterChannelAccessVoterTest extends TestCase
                         if (2 === $matcher->numberOfInvocations()) {
                             $this->assertSame($token, $parameters[0]);
                             $this->assertSame([ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL], $parameters[1]);
-                            $this->assertSame(42, $parameters[2]);
+                            $this->assertSame('42', $parameters[2]);
 
                             return true;
                         }
@@ -65,7 +65,7 @@ class NewsletterChannelAccessVoterTest extends TestCase
                         if (5 === $matcher->numberOfInvocations()) {
                             $this->assertSame($token, $parameters[0]);
                             $this->assertSame([ContaoNewsletterPermissions::USER_CAN_EDIT_CHANNEL], $parameters[1]);
-                            $this->assertSame(42, $parameters[2]);
+                            $this->assertSame('42', $parameters[2]);
 
                             return false;
                         }
