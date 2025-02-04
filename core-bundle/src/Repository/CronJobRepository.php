@@ -38,15 +38,27 @@ class CronJobRepository extends ServiceEntityRepository
         $this->connection = $connection;
     }
 
+    /**
+     * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use the Symfony Lock component instead.
+     */
     public function lockTable(): void
     {
+        trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the Symfony Lock compoenent instead.', __METHOD__);
+
         $table = $this->getClassMetadata()->getTableName();
 
         $this->connection->executeStatement("LOCK TABLES $table WRITE, $table AS t0 WRITE, $table AS t0_ WRITE");
     }
 
+    /**
+     * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use the Symfony Lock component instead.
+     */
     public function unlockTable(): void
     {
+        trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the Symfony Lock compoenent instead.', __METHOD__);
+
         $this->connection->executeStatement('UNLOCK TABLES');
     }
 }

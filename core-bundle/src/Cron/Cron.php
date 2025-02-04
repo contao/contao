@@ -131,13 +131,13 @@ class Cron
 
         $now = new \DateTimeImmutable();
 
-        $lock = $this->lockFactory->createLock(__METHOD__);
+        $lock = $this->lockFactory->createLock(__METHOD__, 3600);
+
+        if (!$lock->acquire()) {
+            return;
+        }
 
         try {
-            if (!$lock->acquire()) {
-                return;
-            }
-
             // Go through each cron job
             foreach ($cronJobs as $cron) {
                 $interval = $cron->getInterval();
