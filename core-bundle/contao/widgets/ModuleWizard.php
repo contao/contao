@@ -68,6 +68,18 @@ class ModuleWizard extends Widget
 			$modules = array_merge($modules, $objModules->fetchAllAssoc());
 		}
 
+		// Get all content elements of the current theme
+		$elements = $db
+			->prepare("SELECT id, title FROM tl_theme_content WHERE pid=(SELECT pid FROM " . $this->strTable . " WHERE id=?) ORDER BY title")
+			->execute($this->currentRecord)
+			->fetchAllAssoc();
+
+		$elements = array_map(static function (array $element) {
+			$element['id'] = 'content-' . $element['id'];
+
+			return $element;
+		}, $elements);
+
 		$GLOBALS['TL_LANG']['FMD']['article'] = $GLOBALS['TL_LANG']['MOD']['article'];
 
 		// Add the module type (see #3835)
@@ -182,6 +194,16 @@ class ModuleWizard extends Widget
 		// Add the input fields
 		for ($i=0, $c=\count($this->varValue); $i<$c; $i++)
 		{
+			$optionGroups = array();
+			$options = '';
+
+			// Add content elements
+			foreach ($elements as $v)
+			{
+				$options .= '<option value="' . self::specialcharsValue($v['id']) . '"' . static::optionSelected($v['id'], $this->varValue[$i]['mod'] ?? null) . '>' . $v['title'] . '</option>';
+			}
+
+			$optionGroups[] = \sprintf('<optgroup label="%s">%s</optgroup>', $GLOBALS['TL_LANG']['MSC']['mw_theme_contents'], $options);
 			$options = '';
 
 			// Add modules
@@ -190,9 +212,11 @@ class ModuleWizard extends Widget
 				$options .= '<option value="' . self::specialcharsValue($v['id']) . '"' . static::optionSelected($v['id'], $this->varValue[$i]['mod'] ?? null) . '>' . $v['name'] . ' [' . $v['type'] . ']</option>';
 			}
 
+			$optionGroups[] = \sprintf('<optgroup label="%s">%s</optgroup>', $GLOBALS['TL_LANG']['MSC']['mw_modules'], $options);
+
 			$return .= '
   <tr>
-    <td><select name="' . $this->strId . '[' . $i . '][mod]" class="tl_select" data-action="focus->contao--scroll-offset#store" data-controller="contao--choices">' . $options . '</select></td>';
+    <td><select name="' . $this->strId . '[' . $i . '][mod]" class="tl_select" data-action="focus->contao--scroll-offset#store" data-controller="contao--choices">' . implode('', $optionGroups) . '</select></td>';
 
 			$options = '<option value="">-</option>';
 
@@ -209,10 +233,27 @@ class ModuleWizard extends Widget
 			// Add buttons
 			foreach ($arrButtons as $button)
 			{
+				$id = ($this->varValue[$i]['mod'] ?? null);
+				$isThemeContent = str_starts_with((string) $id, 'content-');
+				$id = (int) str_replace('content-', '', $id);
+
 				if ($button == 'edit')
 				{
-					$href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>($this->varValue[$i]['mod'] ?? null), 'popup'=>'1')));
-					$return .= ' <a href="' . $href . '" class="module_link' . (($this->varValue[$i]['mod'] ?? null) > 0 ? '' : ' hidden') . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_module'])) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg', $GLOBALS['TL_LANG']['tl_layout']['edit_module']) . '</a>' . Image::getHtml('edit--disabled.svg', '', 'class="module_image' . (($this->varValue[$i]['mod'] ?? null) > 0 ? ' hidden' : '') . '"');
+					$params = array(
+						'do' => 'themes',
+						'table' => $isThemeContent ? 'tl_content' : 'tl_module',
+						'id' => $id,
+						'popup' => 1,
+					);
+
+					if (!$isThemeContent)
+					{
+						$params['act'] = 'edit';
+					}
+
+					$href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', $params));
+					$title = $isThemeContent ? $GLOBALS['TL_LANG']['tl_layout']['edit_theme_content'] : $GLOBALS['TL_LANG']['tl_layout']['edit_module'];
+					$return .= ' <a href="' . $href . '" class="module_link' . ($id > 0 ? '' : ' hidden') . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg', $title) . '</a>' . Image::getHtml('edit--disabled.svg', '', 'class="module_image' . ($id > 0 ? ' hidden' : '') . '"');
 				}
 				elseif ($button == 'drag')
 				{

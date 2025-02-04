@@ -171,7 +171,7 @@
         <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
       </trans-unit>
       <trans-unit id="tl_layout.modules.0">
-        <source>Included modules</source>
+        <source>Included modules and theme contents</source>
       </trans-unit>
       <trans-unit id="tl_layout.modules.1">
         <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
@@ -306,7 +306,7 @@
         <source>Feeds</source>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
-        <source>Front end modules</source>
+        <source>Front end modules and contents</source>
       </trans-unit>
       <trans-unit id="tl_layout.expert_legend">
         <source>Expert settings</source>
@@ -331,6 +331,9 @@
       </trans-unit>
       <trans-unit id="tl_layout.edit_module">
         <source>Edit the module</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.edit_theme_content">
+        <source>Edit the theme content</source>
       </trans-unit>
       <trans-unit id="tl_layout.analytics_google">
         <source>Google Analytics</source>

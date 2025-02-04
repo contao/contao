@@ -116,22 +116,31 @@ class PageRegular extends Frontend
 		$arrSections = array('header', 'left', 'right', 'main', 'footer');
 		$arrModules = StringUtil::deserialize($objLayout->modules);
 		$arrModuleIds = array();
+		$arrThemeContentIds = array();
 
 		// Filter the disabled modules
 		foreach ($arrModules as $module)
 		{
 			if ($module['enable'] ?? null)
 			{
-				$arrModuleIds[] = (int) $module['mod'];
+				if (str_starts_with((string) $module['mod'], 'content-'))
+				{
+					$arrThemeContentIds[] = (int) str_replace('content-', '', (string) $module['mod']);
+				}
+				else
+				{
+					$arrModuleIds[] = (int) $module['mod'];
+				}
 			}
 		}
-
-		// Get all modules in a single DB query
+		// Get all modules and elements in a single DB query each
 		$objModules = ModuleModel::findMultipleByIds($arrModuleIds);
+		$objThemeContents = ThemeContentModel::findMultipleByIds($arrThemeContentIds);
 
-		if ($objModules !== null || \in_array(0, $arrModuleIds, true))
+		if ($objModules !== null || \in_array(0, $arrModuleIds, true) || $objThemeContents !== null)
 		{
 			$arrMapper = array();
+			$arrThemeContentsMapper = array();
 
 			// Create a mapper array in case a module is included more than once (see #4849)
 			if ($objModules !== null)
@@ -139,6 +148,14 @@ class PageRegular extends Frontend
 				while ($objModules->next())
 				{
 					$arrMapper[$objModules->id] = $objModules->current();
+				}
+			}
+
+			if ($objThemeContents !== null)
+			{
+				while ($objThemeContents->next())
+				{
+					$arrThemeContentsMapper[$objThemeContents->id] = $objThemeContents->current();
 				}
 			}
 
@@ -150,10 +167,17 @@ class PageRegular extends Frontend
 					continue;
 				}
 
-				// Replace the module ID with the module model
-				if ($arrModule['mod'] > 0 && isset($arrMapper[$arrModule['mod']]))
+				$isThemeContent = str_starts_with((string) $arrModule['mod'], 'content-');
+				$id = (int) str_replace('content-', '', (string) $arrModule['mod']);
+
+				// Replace the module ID with the models
+				if ($isThemeContent && isset($arrThemeContentsMapper[$id]))
 				{
-					$arrModule['mod'] = $arrMapper[$arrModule['mod']];
+					$arrModule['mod'] = $arrThemeContentsMapper[$id];
+				}
+				elseif ($id > 0 && isset($arrMapper[$id]))
+				{
+					$arrModule['mod'] = $arrMapper[$id];
 				}
 
 				// Generate the modules
@@ -180,7 +204,7 @@ class PageRegular extends Frontend
 						continue;
 					}
 
-					$this->Template->{$arrModule['col']} .= $this->getFrontendModule($arrModule['mod'], $arrModule['col']);
+					$this->Template->{$arrModule['col']} .= $this->renderFrontendModuleOrThemeContent($arrModule['mod'], $arrModule['col']);
 				}
 				else
 				{
@@ -189,7 +213,7 @@ class PageRegular extends Frontend
 						$arrCustomSections[$arrModule['col']] = '';
 					}
 
-					$arrCustomSections[$arrModule['col']] .= $this->getFrontendModule($arrModule['mod'], $arrModule['col']);
+					$arrCustomSections[$arrModule['col']] .= $this->renderFrontendModuleOrThemeContent($arrModule['mod'], $arrModule['col']);
 				}
 			}
 		}
@@ -659,5 +683,23 @@ class PageRegular extends Frontend
 
 			return $this->responseContext->get(JsonLdManager::class)->collectFinalScriptFromGraphs();
 		};
+	}
+
+	private function renderFrontendModuleOrThemeContent(ModuleModel|ThemeContentModel|string $model, string $column): string
+	{
+		if ($model instanceof ThemeContentModel)
+		{
+			$elements = '';
+			$contentElements = ContentModel::findPublishedByPidAndTable($model->id, 'tl_theme_content');
+
+			foreach ($contentElements as $contentElement)
+			{
+				$elements .= Controller::getContentElement($contentElement, $column);
+			}
+
+			return $elements;
+		}
+
+		return Controller::getFrontendModule($model, $column);
 	}
 }

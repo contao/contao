@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_theme_content.php" source-language="en">
+    <body>
+      <trans-unit id="tl_theme_content.title.0">
+        <source>Content title</source>
+      </trans-unit>
+      <trans-unit id="tl_theme_content.title.1">
+        <source>Please enter a unique content title.</source>
+      </trans-unit>
+      <trans-unit id="tl_theme_content.title_legend">
+        <source>Title</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
