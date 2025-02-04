@@ -318,8 +318,6 @@ window.AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleField: function(el, rowIcon, iconOnly = false) {
-		el.blur();
-
 		var img = null,
 			images = $(el).getElements('img'),
 			published = (images[0].get('data-state') == 1),
