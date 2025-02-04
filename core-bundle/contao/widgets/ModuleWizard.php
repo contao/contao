@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\DataContainer\RecordLabeler;
-
 /**
  * Provide methods to handle modules of a page layout.
  */

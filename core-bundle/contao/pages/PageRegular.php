@@ -116,7 +116,7 @@ class PageRegular extends Frontend
 		$arrSections = array('header', 'left', 'right', 'main', 'footer');
 		$arrModules = StringUtil::deserialize($objLayout->modules);
 		$arrModuleIds = array();
-		$arrContentElementIds = array();
+		$arrElementIds = array();
 
 		// Filter the disabled modules
 		foreach ($arrModules as $module)
@@ -125,7 +125,7 @@ class PageRegular extends Frontend
 			{
 				if (str_starts_with((string) $module['mod'], 'content-'))
 				{
-					$arrContentElementIds[] = (int) str_replace('content-', '', (string) $module['mod']);
+					$arrElementIds[] = (int) str_replace('content-', '', (string) $module['mod']);
 				}
 				else
 				{
@@ -136,19 +136,19 @@ class PageRegular extends Frontend
 
 		// Get all modules and elements in a single DB query each
 		$objModules = ModuleModel::findMultipleByIds($arrModuleIds);
-		$objElements = ContentModel::findMultipleByIds($arrContentElementIds);
+		$objElements = ContentModel::findMultipleByIds($arrElementIds);
 
 		if ($objModules !== null || $objElements !== null || \in_array(0, $arrModuleIds, true))
 		{
-			$arrMapper = array();
-			$arrContentElementsMapper = array();
+			$arrModuleMapper = array();
+			$arrElementsMapper = array();
 
 			// Create a mapper array in case a module is included more than once (see #4849)
 			if ($objModules !== null)
 			{
 				while ($objModules->next())
 				{
-					$arrMapper[$objModules->id] = $objModules->current();
+					$arrModuleMapper[$objModules->id] = $objModules->current();
 				}
 			}
 
@@ -156,7 +156,7 @@ class PageRegular extends Frontend
 			{
 				while ($objElements->next())
 				{
-					$arrContentElementsMapper[$objElements->id] = $objElements->current();
+					$arrElementsMapper[$objElements->id] = $objElements->current();
 				}
 			}
 
@@ -172,13 +172,13 @@ class PageRegular extends Frontend
 				$id = (int) str_replace('content-', '', (string) $arrModule['mod']);
 
 				// Replace the module ID with the models
-				if ($isContentElement && isset($arrContentElementsMapper[$id]))
+				if ($isContentElement && isset($arrElementsMapper[$id]))
 				{
-					$arrModule['mod'] = $arrContentElementsMapper[$id];
+					$arrModule['mod'] = $arrElementsMapper[$id];
 				}
-				elseif ($id > 0 && isset($arrMapper[$id]))
+				elseif ($id > 0 && isset($arrModuleMapper[$id]))
 				{
-					$arrModule['mod'] = $arrMapper[$id];
+					$arrModule['mod'] = $arrModuleMapper[$id];
 				}
 
 				// Generate the modules
