@@ -14,6 +14,7 @@ use Contao\CoreBundle\Config\Dumper\CombinedFileDumper;
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Loads a set of DCA files
@@ -32,6 +33,15 @@ class DcaLoader extends Controller
 	 * @var array
 	 */
 	protected static $arrLoaded = array();
+
+	/**
+	 * @var \WeakMap<Request, array{array, array}>
+	 */
+	protected static \WeakMap $dcaByRequest;
+
+	protected static Request $nullRequest;
+
+	protected static Request|null $lastRequest = null;
 
 	/**
 	 * Table name
@@ -63,18 +73,46 @@ class DcaLoader extends Controller
 		$this->strTable = $strTable;
 	}
 
-	public static function reset(): void
+	public static function resetRequest(): void
 	{
-		unset($GLOBALS['TL_DCA']);
+		self::switchGlobals(System::getContainer()->get('request_stack')->getCurrentRequest());
+	}
 
-		self::$arrLoaded = array();
+	protected static function switchGlobals(Request|null $request): void
+	{
+		if (self::$lastRequest === $request)
+		{
+			return;
+		}
+
+		self::$nullRequest ??= new Request();
+		self::$dcaByRequest ??= new \WeakMap();
+		self::$dcaByRequest->offsetSet(self::$lastRequest ?? self::$nullRequest, array($GLOBALS['TL_DCA'] ?? array(), self::$arrLoaded ?? array()));
+
+		self::$lastRequest = $request;
+		$request ??= self::$nullRequest;
+
+		if (self::$dcaByRequest->offsetExists($request))
+		{
+			[$GLOBALS['TL_DCA'], self::$arrLoaded] = self::$dcaByRequest->offsetGet($request);
+			self::$dcaByRequest->offsetUnset($request);
+		}
+		else
+		{
+			self::$arrLoaded = array();
+			unset($GLOBALS['TL_DCA']);
+		}
 	}
 
 	/**
 	 * Load a set of DCA files
 	 */
-	public function load()
+	public function load(Request|null $request = null)
 	{
+		$request ??= System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		self::switchGlobals($request);
+
 		// Return if the data has been loaded already
 		if (isset(static::$arrLoaded['dcaFiles'][$this->strTable]))
 		{
