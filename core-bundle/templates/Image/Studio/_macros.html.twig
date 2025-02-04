@@ -1,3 +1,5 @@
+{% deprecated 'The "@ContaoCore/Image/Studio/_macros.html.twig" template will be removed in Contao 6. Use the "component/_figure" component from the @Contao namespace instead.' %}
+
 {# @var \Contao\CoreBundle\Image\Studio\Figure figure #}
 
 {#
@@ -40,7 +42,6 @@
         :  </figure>
 #}
 
-
 {#
     Build a <figure> including a picture and - if available - a caption from
     Studio\Figure data.
@@ -81,14 +82,14 @@
     {%- if figure.image.sources -%}
         <picture{{ _self.html_attributes(picture_attributes) }}>
             {% for source in figure.image.sources %}
-                {%- set defineProportions = source.width|default(false) and source.height|default(false) -%}
+                {%- set define_proportions = source.width|default(false) and source.height|default(false) -%}
                 {%- set base_attributes = {
                     'srcset': source.srcset,
                     'sizes': source.sizes|default(null),
                     'media': source.media|default(null),
                     'type': source.type|default(null),
-                    'width': defineProportions ? source.width : null,
-                    'height': defineProportions ? source.height : null,
+                    'width': define_proportions ? source.width : null,
+                    'height': define_proportions ? source.height : null,
                 } -%}
                 <source{{ _self.html_attributes(base_attributes|merge(source_attributes)) }}>
             {%- endfor %}
@@ -104,25 +105,23 @@
     Build an <img> from Studio\Figure data.
 #}
 {%- macro img(figure, options = {}) -%}
-    {% apply spaceless %}
-        {% set img_attributes = figure.options.img_attr|default({})|merge(options.img_attr|default({})) %}
+    {% set img_attributes = figure.options.img_attr|default({})|merge(options.img_attr|default({})) %}
 
-        {% set img = figure.image.img %}
-        {% set defineProportions = img.width|default(false) and img.height|default(false) %}
+    {% set img = figure.image.img %}
+    {% set define_proportions = img.width|default(false) and img.height|default(false) %}
 
-        {% set base_attributes = {
-            'src': img.src,
-            'alt': figure.hasMetadata ? figure.metadata.alt : '',
-            'title': figure.hasMetadata ? (figure.metadata.title ?: null) : null,
-            'srcset': img.srcset is defined and img.srcset != img.src ? img.srcset : null,
-            'sizes': img.sizes|default(null),
-            'width': defineProportions ? img.width : null,
-            'height': defineProportions ? img.height : null,
-            'loading': img.loading|default(null),
-            'class': img.class|default(null),
-        } %}
-        <img{{ _self.html_attributes(base_attributes|merge(img_attributes)) }}>
-    {% endapply %}
+    {% set base_attributes = {
+        'src': img.src,
+        'alt': figure.hasMetadata ? figure.metadata.alt : '',
+        'title': figure.hasMetadata ? (figure.metadata.title ?: null) : null,
+        'srcset': img.srcset is defined and img.srcset != img.src ? img.srcset : null,
+        'sizes': img.sizes|default(null),
+        'width': define_proportions ? img.width : null,
+        'height': define_proportions ? img.height : null,
+        'loading': img.loading|default(null),
+        'class': img.class|default(null),
+    } %}
+    <img{{ _self.html_attributes(base_attributes|merge(img_attributes)) }}>
 {%- endmacro -%}
 
 {#
@@ -131,14 +130,12 @@
     If no metadata is present, nothing will be output.
 #}
 {%- macro caption(figure, options = {}) -%}
-    {% apply spaceless %}
-        {% if figure.hasMetadata and figure.metadata.caption %}
-            {% set caption_attributes = figure.options.caption_attr|default({})|merge(options.caption_attr|default({})) %}
-            <figcaption{{ _self.html_attributes(caption_attributes) }}>
-                {{- figure.metadata.caption|raw -}}
-            </figcaption>
-        {% endif %}
-    {% endapply %}
+    {% if figure.hasMetadata and figure.metadata.caption %}
+        {% set caption_attributes = figure.options.caption_attr|default({})|merge(options.caption_attr|default({})) %}
+        <figcaption{{ _self.html_attributes(caption_attributes) }}>
+            {{- figure.metadata.caption|raw -}}
+        </figcaption>
+    {% endif %}
 {%- endmacro -%}
 
 {#

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection;
 use Contao\CoreBundle\DependencyInjection\Configuration;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ResizeConfiguration;
+use Imagine\Image\ImageInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Definition\ArrayNode;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -31,7 +32,7 @@ class ConfigurationTest extends TestCase
     {
         parent::setUp();
 
-        $this->configuration = new Configuration($this->getTempDir());
+        $this->configuration = new Configuration();
     }
 
     public function testAddsTheImagineService(): void
@@ -54,6 +55,72 @@ class ConfigurationTest extends TestCase
         $this->assertSame('my_super_service', $configuration['image']['imagine_service']);
     }
 
+    public function testInvalidImageExtension(): void
+    {
+        $params = [
+            'contao' => [
+                'image' => [
+                    'valid_extensions' => ['', '+', '-'],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
+    public function testReplacesAllImageExtensions(): void
+    {
+        $extensions = ['jpeg', 'jpg', 'png'];
+
+        $params = [
+            'contao' => [
+                'image' => [
+                    'valid_extensions' => $extensions,
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame($extensions, $configuration['image']['valid_extensions']);
+    }
+
+    public function testAddsImageExtension(): void
+    {
+        $extensions = ['avif', 'bmp', 'gif', 'heic', 'jpeg', 'jpg', 'png', 'svg', 'svgz', 'tif', 'tiff', 'webp'];
+
+        $params = [
+            'contao' => [
+                'image' => [
+                    'valid_extensions' => ['+heic'],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame($extensions, $configuration['image']['valid_extensions']);
+    }
+
+    public function testRemovesImageExtension(): void
+    {
+        $extensions = ['avif', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'webp'];
+
+        $params = [
+            'contao' => [
+                'image' => [
+                    'valid_extensions' => ['-svg', '-svgz'],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame($extensions, $configuration['image']['valid_extensions']);
+    }
+
     /**
      * @dataProvider getPaths
      */
@@ -72,7 +139,7 @@ class ConfigurationTest extends TestCase
         $this->assertSame('C:/Temp/contao', $configuration['image']['target_dir']);
     }
 
-    public function getPaths(): \Generator
+    public static function getPaths(): iterable
     {
         yield ['/tmp/contao', 'C:\Temp\contao'];
         yield ['/tmp/foo/../contao', 'C:\Temp\foo\..\contao'];
@@ -100,7 +167,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    public function getInvalidUploadPaths(): \Generator
+    public static function getInvalidUploadPaths(): iterable
     {
         yield [''];
         yield ['app'];
@@ -157,7 +224,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    public function getReservedImageSizeNames(): \Generator
+    public static function getReservedImageSizeNames(): iterable
     {
         yield [ResizeConfiguration::MODE_BOX];
         yield [ResizeConfiguration::MODE_PROPORTIONAL];
@@ -310,6 +377,10 @@ class ConfigurationTest extends TestCase
                         ],
                     ],
                 ],
+                'web_worker' => [
+                    'transports' => [],
+                    'grace_period' => 'PT10M',
+                ],
             ],
             $configuration['messenger'],
         );
@@ -362,6 +433,24 @@ class ConfigurationTest extends TestCase
         }
     }
 
+    public function testFailsOnInvalidWebWorkerGracePeriod(): void
+    {
+        $params = [
+            [
+                'messenger' => [
+                    'web_worker' => [
+                        'grace_period' => 'nonsense',
+                    ],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+        $this->expectExceptionMessage('Invalid configuration for path "contao.messenger.web_worker.grace_period": Must be a valid string for \DateInterval(). "nonsense" given.');
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
     /**
      * @dataProvider invalidAllowedInlineStylesRegexProvider
      */
@@ -383,7 +472,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    public function invalidAllowedInlineStylesRegexProvider(): \Generator
+    public static function invalidAllowedInlineStylesRegexProvider(): iterable
     {
         yield [
             'te(st',
@@ -422,7 +511,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    public function cronConfigurationProvider(): \Generator
+    public static function cronConfigurationProvider(): iterable
     {
         yield 'Default value' => [
             [], 'auto',
@@ -439,6 +528,39 @@ class ConfigurationTest extends TestCase
         yield 'Explicit true' => [
             [['cron' => ['web_listener' => true]]], true,
         ];
+    }
+
+    public function testDoesNormalizeResamplingFilter(): void
+    {
+        $params = [
+            [
+                'image' => [
+                    'imagine_options' => [
+                        'resampling-filter' => ImageInterface::FILTER_LANCZOS,
+                    ],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertArrayHasKey('resampling-filter', $configuration['image']['imagine_options']);
+        $this->assertSame(ImageInterface::FILTER_LANCZOS, $configuration['image']['imagine_options']['resampling-filter']);
+
+        $params = [
+            [
+                'image' => [
+                    'imagine_options' => [
+                        'resampling_filter' => ImageInterface::FILTER_UNDEFINED,
+                    ],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertArrayHasKey('resampling-filter', $configuration['image']['imagine_options']);
+        $this->assertSame(ImageInterface::FILTER_UNDEFINED, $configuration['image']['imagine_options']['resampling-filter']);
     }
 
     /**
@@ -460,7 +582,7 @@ class ConfigurationTest extends TestCase
                 }
             }
 
-            if (\is_string($key) && !$value->isDeprecated()) {
+            if (\is_string($key) && !$value->isDeprecated() && 'resampling-filter' !== $key) {
                 $this->assertMatchesRegularExpression('/^[a-z][a-z_]+[a-z]$/', $key);
             }
         }

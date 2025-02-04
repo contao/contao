@@ -194,7 +194,7 @@ class Form extends Hybrid
 				}
 			}
 
-			System::getContainer()->get('contao.cache.entity_tags')->tagWith($objFields);
+			System::getContainer()->get('contao.cache.tag_manager')->tagWith($objFields);
 		}
 
 		// HOOK: compile form fields
@@ -310,7 +310,7 @@ class Form extends Hybrid
 		{
 			foreach ($arrFiles as $upload)
 			{
-				if (!empty($upload['uuid']) && null !== ($file = FilesModel::findByPk($upload['uuid'])))
+				if (!empty($upload['uuid']) && null !== ($file = FilesModel::findById($upload['uuid'])))
 				{
 					$file->delete();
 				}
@@ -355,7 +355,7 @@ class Form extends Hybrid
 		$this->Template->ajax = $this->isAjaxEnabled();
 
 		// Get the target URL
-		if ($this->method == 'GET' && ($objTarget = PageModel::findByPk($this->objModel->jumpTo)))
+		if ($this->method == 'GET' && ($objTarget = PageModel::findById($this->objModel->jumpTo)))
 		{
 			$this->Template->action = System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget);
 		}
@@ -492,7 +492,7 @@ class Form extends Hybrid
 			// Fallback to default subject
 			if (!$email->subject)
 			{
-				$email->subject = html_entity_decode(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->subject), ENT_QUOTES, 'UTF-8');
+				$email->subject = html_entity_decode(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->subject), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
 			}
 
 			// Send copy to sender
@@ -505,7 +505,7 @@ class Form extends Hybrid
 			if ($this->format == 'xml')
 			{
 				// Encode the values (see #6053)
-				array_walk_recursive($fields, static function (&$value) { $value = htmlspecialchars($value, ENT_QUOTES|ENT_SUBSTITUTE|ENT_XML1); });
+				array_walk_recursive($fields, static function (&$value) { $value = htmlspecialchars($value, ENT_QUOTES | ENT_SUBSTITUTE | ENT_XML1); });
 
 				$objTemplate = new FrontendTemplate('form_xml');
 				$objTemplate->fields = $fields;
@@ -532,7 +532,7 @@ class Form extends Hybrid
 				foreach ($arrFiles as $file)
 				{
 					// Add a link to the uploaded file
-					if (isset($file['uploaded']))
+					if ($file['uploaded'] ?? null)
 					{
 						$uploaded .= "\n" . Environment::get('base') . StringUtil::stripRootDir(\dirname($file['tmp_name'])) . '/' . rawurlencode($file['name']);
 						continue;
@@ -647,7 +647,7 @@ class Form extends Hybrid
 		$targetPageData = null;
 
 		// Check whether there is a jumpTo page
-		if ($objJumpTo = PageModel::findByPk($this->objModel->jumpTo))
+		if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
 		{
 			$targetPageData = $objJumpTo->row();
 		}

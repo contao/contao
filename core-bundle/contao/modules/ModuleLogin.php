@@ -117,7 +117,7 @@ class ModuleLogin extends Module
 		$isTwoFactorInProgress = $security->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS');
 
 		// The user can re-authenticate on the error_401 page or on the redirect page of the error_401 page
-		$canReauthenticate = $objPage->type == 'error_401' || $this->targetPath && $this->targetPath === $request?->query->get('redirect');
+		$canReauthenticate = $objPage?->type == 'error_401' || ($this->targetPath && $this->targetPath === $request?->query->get('redirect'));
 
 		// Show the logout button if the user is fully authenticated or cannot re-authenticate on the current page
 		if ($user instanceof FrontendUser && !$isTwoFactorInProgress && (!$isRemembered || !$canReauthenticate))
@@ -139,13 +139,13 @@ class ModuleLogin extends Module
 			$this->Template->logout = true;
 			$this->Template->formId = 'tl_logout_' . $this->id;
 			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['logout']);
-			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->getUserIdentifier());
+			$this->Template->loggedInAs = \sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->getUserIdentifier());
 			$this->Template->action = $container->get('security.logout_url_generator')->getLogoutPath();
 			$this->Template->targetPath = StringUtil::specialchars($strRedirect);
 
 			if ($user->lastLogin > 0)
 			{
-				$this->Template->lastLogin = sprintf($GLOBALS['TL_LANG']['MSC']['lastLogin'][1], Date::parse($objPage->datimFormat, $user->lastLogin));
+				$this->Template->lastLogin = \sprintf($GLOBALS['TL_LANG']['MSC']['lastLogin'][1], Date::parse($objPage->datimFormat, $user->lastLogin));
 			}
 
 			return;
@@ -197,7 +197,7 @@ class ModuleLogin extends Module
 		}
 
 		// Redirect to the jumpTo page
-		elseif ($objTarget = PageModel::findByPk($this->objModel->jumpTo))
+		elseif ($objTarget = PageModel::findById($this->objModel->jumpTo))
 		{
 			$strRedirect = $container->get('contao.routing.content_url_generator')->generate($objTarget, array(), UrlGeneratorInterface::ABSOLUTE_URL);
 		}
@@ -222,7 +222,7 @@ class ModuleLogin extends Module
 			return;
 		}
 
-		if ($pwResetPage = PageModel::findByPk($this->objModel->pwResetPage))
+		if ($pwResetPage = PageModel::findById($this->objModel->pwResetPage))
 		{
 			$this->Template->pwResetUrl = System::getContainer()->get('contao.routing.content_url_generator')->generate($pwResetPage);
 		}
@@ -238,7 +238,7 @@ class ModuleLogin extends Module
 		if ($isRemembered)
 		{
 			$this->Template->slabel = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['verify']);
-			$this->Template->loggedInAs = sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->getUserIdentifier());
+			$this->Template->loggedInAs = \sprintf($GLOBALS['TL_LANG']['MSC']['loggedInAs'], $user->getUserIdentifier());
 			$this->Template->reauthenticate = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['reauthenticate']);
 			$this->Template->value = Input::encodeInsertTags(StringUtil::specialchars($user->getUserIdentifier()));
 			$this->Template->remembered = true;

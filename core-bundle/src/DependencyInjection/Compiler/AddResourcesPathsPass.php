@@ -40,16 +40,16 @@ class AddResourcesPathsPass implements CompilerPassInterface
 
         foreach ($bundles as $name => $class) {
             if (ContaoModuleBundle::class === $class) {
-                $paths[] = $meta[$name]['path'];
+                $paths[$name] = $meta[$name]['path'];
             } elseif (is_dir($path = Path::join($meta[$name]['path'], 'Resources/contao'))) {
-                $paths[] = $path;
+                $paths[$name] = $path;
             } elseif (is_dir($path = Path::join($meta[$name]['path'], 'contao'))) {
-                $paths[] = $path;
+                $paths[$name] = $path;
             }
         }
 
         if (is_dir($path = Path::join($projectDir, 'contao'))) {
-            $paths[] = $path;
+            $paths['App'] = $path;
         }
 
         return $paths;

@@ -32,7 +32,8 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_calendar'] = array
 	'inputType'               => 'checkbox',
 	'options_callback'        => array('tl_module_calendar', 'getCalendars'),
 	'eval'                    => array('mandatory'=>true, 'multiple'=>true),
-	'sql'                     => "blob NULL"
+	'sql'                     => "blob NULL",
+	'relation'                => array('table'=>'tl_calendar', 'type'=>'hasMany', 'load'=>'lazy')
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_noSpan'] = array
@@ -89,7 +90,8 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_readerModule'] = array
 	'options_callback'        => array('tl_module_calendar', 'getReaderModules'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
-	'sql'                     => "int(10) unsigned NOT NULL default 0"
+	'sql'                     => "int(10) unsigned NOT NULL default 0",
+	'relation'                => array('table'=>'tl_module', 'type'=>'hasOne', 'load'=>'lazy')
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_limit'] = array
@@ -122,7 +124,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_ctemplate'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_showQuantity'] = array
 (
 	'inputType'               => 'checkbox',
-	'eval'                    => array('tl_class'=>'w50 m12'),
+	'eval'                    => array('tl_class'=>'w50'),
 	'sql'                     => array('type' => 'boolean', 'default' => false)
 );
 

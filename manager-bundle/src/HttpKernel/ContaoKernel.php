@@ -238,9 +238,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             Request::setTrustedProxies(explode(',', (string) $trustedProxies), $trustedHeaderSet);
         }
 
-        // TODO: Remove this line in Contao 5.4 with Symfony 7 only
-        Request::enableHttpMethodParameterOverride();
-
         $jwtManager = null;
         $env = null;
         $parseJwt = 'jwt' === $_SERVER['APP_ENV'];
@@ -363,13 +360,15 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
     private static function loadEnv(string $projectDir, string $defaultEnv = 'prod'): void
     {
         // Load cached env vars if the .env.local.php file exists.
-        // https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.2/config/bootstrap.php
+        // https://github.com/symfony/recipes/blob/master/symfony/framework-bundle/4.4/config/bootstrap.php
         if (\is_array($env = @include Path::join($projectDir, '.env.local.php'))) {
-            foreach ($env as $k => $v) {
-                $_ENV[$k] ??= isset($_SERVER[$k]) && !str_starts_with($k, 'HTTP_') ? $_SERVER[$k] : $v;
+            (new Dotenv())->populate($env);
+
+            if ('jwt' === ($_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? null)) {
+                $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = $defaultEnv;
             }
         } elseif (file_exists($filePath = Path::join($projectDir, '.env'))) {
-            (new Dotenv())->usePutenv(false)->loadEnv($filePath, 'APP_ENV', $defaultEnv);
+            (new Dotenv())->loadEnv($filePath, 'APP_ENV', $defaultEnv);
         }
 
         $_SERVER += $_ENV;

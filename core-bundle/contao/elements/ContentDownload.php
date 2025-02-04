@@ -118,7 +118,7 @@ class ContentDownload extends ContentElement
 
 		if (!$this->titleText || !$this->overwriteLink)
 		{
-			$this->titleText = sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename);
+			$this->titleText = \sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename);
 		}
 
 		$strHref = Environment::get('requestUri');
@@ -164,7 +164,7 @@ class ContentDownload extends ContentElement
 
 		if ($this->fullsize)
 		{
-			if (!empty($GLOBALS['objPage']) && ($layoutId = $GLOBALS['objPage']->layout) && ($layout = LayoutModel::findByPk($layoutId)))
+			if (!empty($GLOBALS['objPage']) && ($layoutId = $GLOBALS['objPage']->layout) && ($layout = LayoutModel::findById($layoutId)))
 			{
 				$lightboxSize = StringUtil::deserialize($layout->lightboxSize, true);
 			}

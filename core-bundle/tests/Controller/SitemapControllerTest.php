@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\ArticleModel;
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Controller\SitemapController;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -889,14 +889,14 @@ class SitemapControllerTest extends TestCase
                     function (string $attribute, array $pageGroups) use ($allowedPageIds) {
                         $this->assertSame(ContaoCorePermissions::MEMBER_IN_GROUPS, $attribute);
 
-                        return [] !== array_intersect(array_map('intval', $pageGroups), $allowedPageIds);
+                        return [] !== array_intersect(array_map(\intval(...), $pageGroups), $allowedPageIds);
                     },
                 )
             ;
         }
 
-        $entityCacheTags = $this->createMock(EntityCacheTags::class);
-        $entityCacheTags
+        $cacheTags = $this->createMock(CacheTagManager::class);
+        $cacheTags
             ->expects($this->once())
             ->method('tagWith')
             ->with([
@@ -910,7 +910,7 @@ class SitemapControllerTest extends TestCase
         $container->set('contao.framework', $framework);
         $container->set('event_dispatcher', $eventDispatcher);
         $container->set('security.authorization_checker', $authorizationChecker);
-        $container->set('contao.cache.entity_tags', $entityCacheTags);
+        $container->set('contao.cache.tag_manager', $cacheTags);
 
         return $container;
     }

@@ -143,7 +143,7 @@ class CteAliasListenerTest extends TestCase
         $listener = new CteAliasListener(new RequestStack(), $security, $this->mockConnection(), $framework);
         $result = $listener->deleteElement(['id' => 2, 'type' => 'foo'], null, '', '', 'delete.svg', '');
 
-        $this->assertSame('<a href="" title="">delete.svg</a> ', $result);
+        $this->assertSame('<a href="">delete.svg</a> ', $result);
     }
 
     /**

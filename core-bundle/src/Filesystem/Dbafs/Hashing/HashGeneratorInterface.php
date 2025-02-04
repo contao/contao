@@ -22,17 +22,16 @@ interface HashGeneratorInterface
     /**
      * Generates the hash for the content of a given file.
      *
-     * Use the $context to check if hashing may be skipped, to get additional
-     * metadata and to set the actual result of the operation.
+     * Use the $context to check if hashing may be skipped, to get additional metadata
+     * and to set the actual result of the operation.
      */
     public function hashFileContent(VirtualFilesystemInterface $filesystem, string $path, Context $context): void;
 
     /**
-     * Generates the hash for a string, preferably with the same hash function
-     * that is used for hashing file contents.
+     * Generates the hash for a string, preferably with the same hash function that is
+     * used for hashing file contents.
      *
-     * We use this to generate (db only) directory hashes from file hashes and
-     * path names.
+     * We use this to generate (db only) directory hashes from file hashes and path names.
      */
     public function hashString(string $string): string;
 }

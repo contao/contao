@@ -101,8 +101,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 	(
 		'id' => array
 		(
-			'label'                   => array('ID'),
-			'search'                  => true,
 			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
 		),
 		'pid' => array
@@ -160,7 +158,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'showTeaser' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'teaserCssID' => array
@@ -173,7 +171,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		(
 			'inputType'               => 'textarea',
 			'search'                  => true,
-			'eval'                    => array('rte'=>'tinyMCE', 'tl_class'=>'clr'),
+			'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
 		),
 		'printable' => array
@@ -259,7 +257,7 @@ class tl_article extends Backend
 
 		// Set the default page user and group
 		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = (int) Config::get('defaultUser') ?: $user->id;
-		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = (int) Config::get('defaultGroup') ?: (int) $user->groups[0];
+		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = (int) Config::get('defaultGroup') ?: (int) ($user->groups[0] ?? 0);
 
 		// Restrict the page tree
 		if (empty($user->pagemounts) || !is_array($user->pagemounts))
@@ -310,7 +308,7 @@ class tl_article extends Backend
 
 		$href = System::getContainer()->get('router')->generate('contao_backend_preview', array('page'=>$row['pid'], 'article'=>($row['alias'] ?: $row['id'])));
 
-		return '<a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image, '', $attributes) . '</a> ' . $label;
+		return '<a href="' . StringUtil::specialcharsUrl($href) . '" target="_blank">' . Image::getHtml($image, $GLOBALS['TL_LANG']['MSC']['view'], $attributes) . '</a> ' . $label;
 	}
 
 	/**
@@ -369,7 +367,7 @@ class tl_article extends Backend
 			// Get the layout sections
 			if ($objPage->layout)
 			{
-				$objLayout = LayoutModel::findByPk($objPage->layout);
+				$objLayout = LayoutModel::findById($objPage->layout);
 
 				if ($objLayout === null)
 				{
@@ -386,7 +384,7 @@ class tl_article extends Backend
 				// Find all sections with an article module (see #6094)
 				foreach ($arrModules as $arrModule)
 				{
-					if ($arrModule['mod'] == 0 && $arrModule['enable'])
+					if ($arrModule['mod'] == 0 && ($arrModule['enable'] ?? null))
 					{
 						$arrSections[] = $arrModule['col'];
 					}
@@ -441,13 +439,15 @@ class tl_article extends Backend
 		// Generate the aliases
 		if (Input::post('alias') !== null && Input::post('FORM_SUBMIT') == 'tl_select')
 		{
+			$router = System::getContainer()->get('router');
+
 			$objSession = System::getContainer()->get('request_stack')->getSession();
 			$session = $objSession->all();
 			$ids = $session['CURRENT']['IDS'] ?? array();
 
 			foreach ($ids as $id)
 			{
-				$objArticle = ArticleModel::findByPk($id);
+				$objArticle = ArticleModel::findById($id);
 
 				if ($objArticle === null)
 				{
@@ -488,6 +488,7 @@ class tl_article extends Backend
 
 				// Initialize the version manager
 				$objVersions = new Versions('tl_article', $id);
+				$objVersions->setEditUrl($router->generate('contao_backend', array('do'=>'article', 'act'=>'edit', 'id'=>$id, 'rt'=>'1')));
 				$objVersions->initialize();
 
 				// Store the new alias

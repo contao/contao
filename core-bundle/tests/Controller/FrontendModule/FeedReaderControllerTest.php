@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
 use Contao\Config;
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\FrontendModule\FeedReaderController;
 use Contao\CoreBundle\Exception\PageNotFoundException;
@@ -39,6 +39,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment as TwigEnvironment;
 use Twig\Loader\LoaderInterface;
 
@@ -51,7 +52,7 @@ class FeedReaderControllerTest extends TestCase
         parent::setUp();
 
         $this->container = $this->getContainerWithContaoConfiguration();
-        $this->container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
+        $this->container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
         $this->container->set('monolog.logger.contao.error', new NullLogger());
         $this->container->set('fragment.handler', $this->createMock(FragmentHandler::class));
 
@@ -363,6 +364,7 @@ class FeedReaderControllerTest extends TestCase
         $this->container->set('contao.framework', $framework);
         $this->container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
         $this->container->set('cache.system', $this->createMock(CacheInterface::class));
+        $this->container->set('translator', $this->createMock(TranslatorInterface::class));
 
         if ($requestStack instanceof RequestStack) {
             $this->container->set('request_stack', $requestStack);

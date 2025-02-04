@@ -1,9 +1,10 @@
 Fixes #
 
 <!--
-Bugfixes should be based on the 4.13 or 5.3 branch and features on the 5.x
-branch. Select the correct branch in the "base:" drop-down menu above.
+Bugfixes should be based on the 5.3 branch and features on the 5.x branch.
+Select the correct branch in the "base:" drop-down menu above.
 
-Replace this notice with a short README for your feature/bugfix. This will help
-people to understand your PR and can be used as a start for the documentation.
+Pull requests for Contao 4.13 are no longer merged upstream into Contao 5!
+If you want to fix a bug in Contao 4.13, please create a pull request for
+Contao 5.3 first and then a separate backport pull request for Contao 4.13.
 -->

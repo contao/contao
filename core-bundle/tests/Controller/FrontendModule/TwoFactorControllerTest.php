@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Controller\FrontendModule\TwoFactorController;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
@@ -488,9 +488,9 @@ class TwoFactorControllerTest extends TestCase
             ->willReturn(new Response())
         ;
 
-        $adapter = $this->mockAdapter(['findByPk']);
+        $adapter = $this->mockAdapter(['findById']);
         $adapter
-            ->method('findByPk')
+            ->method('findById')
             ->willReturn(null)
         ;
 
@@ -524,7 +524,7 @@ class TwoFactorControllerTest extends TestCase
         $container->set('security.authorization_checker', $authorizationChecker);
         $container->set('security.token_storage', $tokenStorage);
         $container->set('contao.security.two_factor.backup_code_manager', $this->createMock(BackupCodeManager::class));
-        $container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
+        $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
 
         System::setContainer($container);
 

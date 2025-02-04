@@ -43,7 +43,7 @@ class DcaLoaderTest extends TestCase
         // name is already in use" error
         (new Filesystem())->dumpFile(
             $this->getTempDir().'/var/cache/contao/dca/tl_foo.php',
-            sprintf(
+            \sprintf(
                 <<<'EOD'
                     <?php
                         class tl_foo_%s {}

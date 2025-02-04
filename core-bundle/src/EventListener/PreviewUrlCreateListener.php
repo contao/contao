@@ -40,7 +40,7 @@ class PreviewUrlCreateListener
         if ('article' === $event->getKey()) {
             $adapter = $this->framework->getAdapter(ArticleModel::class);
 
-            if (!$article = $adapter->findByPk($id)) {
+            if (!$article = $adapter->findById($id)) {
                 return;
             }
 
@@ -49,7 +49,7 @@ class PreviewUrlCreateListener
 
         $adapter = $this->framework->getAdapter(PageModel::class);
 
-        if ($adapter->findByPk($id)) {
+        if ($adapter->findById($id)) {
             $event->setQuery('page='.$id);
         }
     }

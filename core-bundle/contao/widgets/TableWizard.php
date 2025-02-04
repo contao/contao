@@ -97,7 +97,7 @@ class TableWizard extends Widget
 			// Add column buttons
 			foreach ($arrColButtons as $button)
 			{
-				$return .= ' <button type="button" data-command="' . $button . '" class="tl_tablewizard_img" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_' . $button]) . '">' . Image::getHtml(substr($button, 1) . '.svg', $GLOBALS['TL_LANG']['MSC']['tw_' . $button]) . '</button>';
+				$return .= ' <button type="button" data-command="' . $button . '" class="tl_tablewizard_img">' . Image::getHtml(substr($button, 1) . '.svg', $GLOBALS['TL_LANG']['MSC']['tw_' . $button]) . '</button>';
 			}
 
 			$return .= '</td>';
@@ -123,18 +123,18 @@ class TableWizard extends Widget
 			}
 
 			$return .= '
-      <td>';
+      <td class="tl_right">';
 
 			// Add row buttons
 			foreach ($arrRowButtons as $button)
 			{
 				if ($button == 'rdrag')
 				{
-					$return .= ' <button type="button" class="drag-handle" title="' . $GLOBALS['TL_LANG']['MSC']['move'] . '" aria-hidden="true">' . Image::getHtml('drag.svg', $GLOBALS['TL_LANG']['MSC']['move']) . '</button>';
+					$return .= ' <button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', $GLOBALS['TL_LANG']['MSC']['move']) . '</button>';
 				}
 				else
 				{
-					$return .= ' <button type="button" data-command="' . $button . '" class="tl_tablewizard_img" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_' . $button]) . '">' . Image::getHtml(substr($button, 1) . '.svg', $GLOBALS['TL_LANG']['MSC']['tw_' . $button]) . '</button>';
+					$return .= ' <button type="button" data-command="' . $button . '" class="tl_tablewizard_img">' . Image::getHtml(substr($button, 1) . '.svg', $GLOBALS['TL_LANG']['MSC']['tw_' . $button]) . '</button>';
 				}
 			}
 

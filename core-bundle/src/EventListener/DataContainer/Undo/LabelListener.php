@@ -44,14 +44,14 @@ class LabelListener
         $controller->loadDataContainer($table);
 
         return $this->twig->render(
-            '@ContaoCore/Backend/be_undo_label.html.twig',
+            '@Contao/backend/undo/label.html.twig',
             $this->getTemplateData($table, $row, $originalRow),
         );
     }
 
     private function getTemplateData(string $table, array $row, array $originalRow): array
     {
-        $user = $this->framework->getAdapter(UserModel::class)->findByPk($row['pid']);
+        $user = $this->framework->getAdapter(UserModel::class)->findById($row['pid']);
         $config = $this->framework->getAdapter(Config::class);
 
         $parent = null;

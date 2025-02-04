@@ -146,6 +146,7 @@ class EnumOptionsListenerTest extends TestCase
 
     public function testDoesNotOverwriteExistingReference(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $dca = $GLOBALS['TL_DCA']['tl_foo'] = [
             'fields' => [
                 'foo' => [
@@ -170,7 +171,7 @@ class EnumOptionsListenerTest extends TestCase
     /**
      * @return array<int, array<int, class-string<\BackedEnum>>>
      */
-    public function backedEnumProvider(): array
+    public static function backedEnumProvider(): iterable
     {
         return [
             [StringBackedEnum::class],
@@ -178,7 +179,7 @@ class EnumOptionsListenerTest extends TestCase
         ];
     }
 
-    public function translatableDcaConfigurationProvider(): array
+    public static function translatableDcaConfigurationProvider(): iterable
     {
         return [
             'without options' => [

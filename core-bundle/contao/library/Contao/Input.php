@@ -169,12 +169,12 @@ class Input
 				}
 			}
 
-			return array_map(strval(...), array_values($keys));
+			return array_map(\strval(...), array_values($keys));
 		}
 
 		trigger_deprecation('contao/core-bundle', '5.0', 'Getting data from $_GET with the "%s" class has been deprecated and will no longer work in Contao 6. Make sure the request_stack has a request instead.', __CLASS__);
 
-		return array_map(strval(...), array_keys($_GET ?? array()));
+		return array_map(\strval(...), array_keys($_GET ?? array()));
 	}
 
 	/**
@@ -952,7 +952,7 @@ class Input
 
 		// Preserve basic entities
 		$varValue = static::preserveBasicEntities($varValue);
-		$varValue = html_entity_decode($varValue, ENT_QUOTES, System::getContainer()->getParameter('kernel.charset'));
+		$varValue = html_entity_decode($varValue, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, System::getContainer()->getParameter('kernel.charset'));
 
 		return $varValue;
 	}
@@ -1059,7 +1059,10 @@ class Input
 			return $varValue;
 		}
 
-		return str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), (string) $varValue);
+		$varValue = str_replace(array('{{', '}}'), array('&#123;&#123;', '&#125;&#125;'), (string) $varValue);
+
+		// Encode single curly braces at the beginning and end of the string
+		return preg_replace(array('/^(\s*)\{|\{(\s*)$/', '/^(\s*)\}|\}(\s*)$/'), array('$1&#123;$2', '$1&#125;$2'), $varValue);
 	}
 
 	/**
@@ -1069,9 +1072,9 @@ class Input
 	 *
 	 * @return mixed The variable value
 	 */
-	public static function findGet($strKey)
+	public static function findGet($strKey, Request|null $request = null)
 	{
-		if ($request = static::getRequest())
+		if ($request ??= static::getRequest())
 		{
 			if ('auto_item' === $strKey && $request->attributes->has('auto_item'))
 			{

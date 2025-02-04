@@ -21,6 +21,10 @@ services:
                 - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
     # We explicitly allow autowiring and FQCN service IDs in controllers
+    Contao\CoreBundle\Controller\AltchaController:
+        arguments:
+            - '@contao.altcha'
+
     Contao\CoreBundle\Controller\BackendController: ~
 
     Contao\CoreBundle\Controller\BackendCsvImportController:
@@ -61,8 +65,6 @@ services:
     Contao\CoreBundle\Controller\CaptchaController:
         arguments:
             - '@contao.framework'
-            - '%kernel.project_dir%'
-            - '@contao.cache.entity_tags'
         tags:
             - controller.service_arguments
 
@@ -142,7 +144,7 @@ services:
             - '@contao.framework'
             - '@contao.routing.page_finder'
             - '%kernel.project_dir%'
-            - '@contao.cache.entity_tags'
+            - '@contao.cache.tag_manager'
         tags:
             - controller.service_arguments
 

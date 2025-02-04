@@ -20,13 +20,15 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\InsertTags;
 use Contao\System;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Twig\Environment;
@@ -76,6 +78,39 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         ]);
 
         $this->assertSame('<h1>&amp; will look like &amp;</h1><p>This is <i>raw HTML</i>.</p>', $output);
+    }
+
+    public function testDoesDoubleEncodeJson(): void
+    {
+        $templateContent = '<div data-json="{{ data|json_encode }}">{{ data }}</div>';
+
+        $output = $this->getEnvironment($templateContent)->render('legacy.html.twig', [
+            'data' => 'foo &quot; bar &quot; baz',
+        ]);
+
+        $this->assertSame('<div data-json="&quot;foo &amp;quot; bar &amp;quot; baz&quot;">foo &quot; bar &quot; baz</div>', $output);
+    }
+
+    public function testDoesDoubleEncodeByParameter(): void
+    {
+        $templateContent = '<div data-double-encoded="{{ data|e(\'html\', double_encode = true) }}">{{ data|escape(\'html\', double_encode = true) }}</div>';
+
+        $output = $this->getEnvironment($templateContent)->render('legacy.html.twig', [
+            'data' => 'foo &quot; bar &quot; baz',
+        ]);
+
+        $this->assertSame('<div data-double-encoded="foo &amp;quot; bar &amp;quot; baz">foo &amp;quot; bar &amp;quot; baz</div>', $output);
+    }
+
+    public function testDoesNotDoubleEncodeByParameter(): void
+    {
+        $templateContent = '<div data-not-double-encoded="{{ data|e(\'html\', double_encode = false) }}">{{ data|escape(\'html\', double_encode = false) }}</div>';
+
+        $output = $this->getEnvironment($templateContent)->render('legacy.html.twig', [
+            'data' => 'foo &quot; bar &quot; baz',
+        ]);
+
+        $this->assertSame('<div data-not-double-encoded="foo &quot; bar &quot; baz">foo &quot; bar &quot; baz</div>', $output);
     }
 
     public function testHandlesFiltersAndFunctions(): void
@@ -144,9 +179,10 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
         $contaoExtension = new ContaoExtension(
             $environment,
-            $this->createMock(TemplateHierarchyInterface::class),
+            $this->createMock(ContaoFilesystemLoader::class),
             $this->createMock(ContaoCsrfTokenManager::class),
             $this->createMock(ContaoVariable::class),
+            new InspectorNodeVisitor(new NullAdapter(), $environment),
         );
 
         $contaoExtension->addContaoEscaperRule('/legacy\.html\.twig/');

@@ -15,8 +15,8 @@ namespace Contao\CoreBundle\Twig\Runtime;
 use Highlight\HighlightResult as BaseHighlightResult;
 
 /**
- * This class is a thin wrapper around the HighlightResult
- * that provides an additional __toString() function.
+ * This class is a thin wrapper around the HighlightResult that provides an
+ * additional __toString() function.
  *
  * @see BaseHighlightResult
  */

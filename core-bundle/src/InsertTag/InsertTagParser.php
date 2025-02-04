@@ -67,6 +67,11 @@ class InsertTagParser implements ResetInterface
     private array $blockSubscriptions = [];
 
     /**
+     * @var array<string, int>
+     */
+    private array $blockSubscriptionEndTags = [];
+
+    /**
      * @var array<string, \Closure(InsertTagFlag, InsertTagResult):InsertTagResult>
      */
     private array $flagCallbacks = [];
@@ -84,7 +89,7 @@ class InsertTagParser implements ResetInterface
         $this->allowedTagsRegex = '('.implode(
             '|',
             array_map(
-                static fn ($allowedTag) => '^'.implode('.+', array_map('preg_quote', explode('*', $allowedTag))).'$',
+                static fn ($allowedTag) => '^'.implode('.+', array_map(preg_quote(...), explode('*', $allowedTag))).'$',
                 $allowedTags ?: [''],
             ),
         ).')';
@@ -97,7 +102,7 @@ class InsertTagParser implements ResetInterface
         }
 
         if (isset($this->blockSubscriptions[$subscription->name])) {
-            throw new \InvalidArgumentException(sprintf('The insert tag "%s" is already registered as a block insert tag.', $subscription->name));
+            throw new \InvalidArgumentException(\sprintf('The insert tag "%s" is already registered as a block insert tag.', $subscription->name));
         }
 
         $this->subscriptions[$subscription->name] = $subscription;
@@ -110,7 +115,16 @@ class InsertTagParser implements ResetInterface
         }
 
         if (isset($this->subscriptions[$subscription->name])) {
-            throw new \InvalidArgumentException(sprintf('The block insert tag "%s" is already registered as a regular insert tag.', $subscription->name));
+            throw new \InvalidArgumentException(\sprintf('The block insert tag "%s" is already registered as a regular insert tag.', $subscription->name));
+        }
+
+        if (null !== $subscription->endTag) {
+            $this->blockSubscriptionEndTags[$subscription->endTag] ??= 0;
+            ++$this->blockSubscriptionEndTags[$subscription->endTag];
+        }
+
+        if (null !== $previousEndTag = $this->blockSubscriptions[$subscription->name]->endTag ?? null) {
+            --$this->blockSubscriptionEndTags[$previousEndTag];
         }
 
         $this->blockSubscriptions[$subscription->name] = $subscription;
@@ -248,7 +262,7 @@ class InsertTagParser implements ResetInterface
         $name = array_shift($parameters);
 
         if (!preg_match('/^[a-z\x80-\xFF][a-z0-9_\x80-\xFF]*$/i', $name)) {
-            throw new \InvalidArgumentException(sprintf('Invalid insert tag name "%s"', $name));
+            throw new \InvalidArgumentException(\sprintf('Invalid insert tag name "%s"', $name));
         }
 
         if ($parameters) {
@@ -256,7 +270,7 @@ class InsertTagParser implements ResetInterface
 
             foreach ($parameterMatches[0] ?? [''] as $index => $parameterMatch) {
                 if (!str_starts_with($parameterMatch, '::')) {
-                    throw new \InvalidArgumentException(sprintf('Invalid insert tag parameter syntax "%s"', $parameters[0]));
+                    throw new \InvalidArgumentException(\sprintf('Invalid insert tag parameter syntax "%s"', $parameters[0]));
                 }
 
                 $parameterMatches[0][$index] = substr($parameterMatch, 2);
@@ -299,7 +313,7 @@ class InsertTagParser implements ResetInterface
      */
     public function hasInsertTag(string $name): bool
     {
-        return isset($this->subscriptions[$name]) || isset($this->blockSubscriptions[$name]);
+        return isset($this->subscriptions[$name]) || isset($this->blockSubscriptions[$name]) || ($this->blockSubscriptionEndTags[$name] ?? 0) > 0;
     }
 
     private function doParse(string $input): ParsedSequence
@@ -482,7 +496,7 @@ class InsertTagParser implements ResetInterface
             );
         }
 
-        throw new \InvalidArgumentException(sprintf('Unsupported insert tag class "%s"', $tag::class));
+        throw new \InvalidArgumentException(\sprintf('Unsupported insert tag class "%s"', $tag::class));
     }
 
     private function unresolveTag(InsertTag $tag): ParsedInsertTag
@@ -499,7 +513,7 @@ class InsertTagParser implements ResetInterface
             );
         }
 
-        throw new \InvalidArgumentException(sprintf('Unsupported insert tag class "%s"', $tag::class));
+        throw new \InvalidArgumentException(\sprintf('Unsupported insert tag class "%s"', $tag::class));
     }
 
     private function resolveParameters(ParsedParameters $parameters): ResolvedParameters

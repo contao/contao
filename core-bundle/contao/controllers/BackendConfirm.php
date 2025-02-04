@@ -65,7 +65,7 @@ class BackendConfirm extends Backend
 
 		// Prepare the URL
 		$url = preg_replace('/[?&]rt=[^&]*/', '', $objSession->get('INVALID_TOKEN_URL'));
-		$objTemplate->href = StringUtil::ampersand($url . (str_contains($url, '?') ? '&rt=' : '?rt=') . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()));
+		$objTemplate->href = StringUtil::ampersand($url . (str_contains($url, '?') ? '&rt=' : '?rt=') . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5));
 
 		$vars = array();
 		list(, $request) = explode('?', $url, 2);
@@ -150,7 +150,7 @@ class BackendConfirm extends Backend
 		// Replace the ID wildcard
 		if (str_contains($arrInfo['act'], '%s'))
 		{
-			$arrInfo['act'] = sprintf($arrInfo['act'], $vars['id']);
+			$arrInfo['act'] = \sprintf($arrInfo['act'], $vars['id']);
 		}
 
 		unset($arrInfo['pid'], $arrInfo['clipboard'], $arrInfo['ref'], $arrInfo['mode']);

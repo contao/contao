@@ -122,7 +122,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $this->assertSame($showUnpublished, $session->get(FrontendPreviewAuthenticator::SESSION_NAME)['showUnpublished']);
     }
 
-    public function getShowUnpublishedData(): \Generator
+    public static function getShowUnpublishedData(): iterable
     {
         yield [true];
         yield [false];
@@ -204,7 +204,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $this->assertSame($previewLinkId, $session->get(FrontendPreviewAuthenticator::SESSION_NAME)['previewLinkId']);
     }
 
-    public function getShowUnpublishedPreviewLinkIdData(): \Generator
+    public static function getShowUnpublishedPreviewLinkIdData(): iterable
     {
         yield [true, null];
         yield [true, 123];

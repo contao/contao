@@ -61,7 +61,6 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 				'href'                => 'key=import',
 				'class'               => 'header_css_import'
 			),
-			'all'
 		)
 	),
 
@@ -107,7 +106,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'addedOn' => array

@@ -12,9 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Command;
 
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
-use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -35,8 +34,7 @@ use Symfony\Component\Filesystem\Path;
 class DebugContaoTwigCommand extends Command
 {
     public function __construct(
-        private readonly TemplateHierarchyInterface $hierarchy,
-        private readonly ContaoFilesystemLoaderWarmer $cacheWarmer,
+        private readonly ContaoFilesystemLoader $filesystemLoader,
         private readonly ThemeNamespace $themeNamespace,
         private readonly string $projectDir,
         private readonly Inspector $inspector,
@@ -56,9 +54,9 @@ class DebugContaoTwigCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // Make sure the template hierarchy is up-to-date
-        $this->cacheWarmer->refresh();
+        $this->filesystemLoader->warmUp(true);
 
-        $chains = $this->hierarchy->getInheritanceChains($this->getThemeSlug($input));
+        $chains = $this->filesystemLoader->getInheritanceChains($this->getThemeSlug($input));
 
         if (null !== ($prefix = $input->getArgument('filter'))) {
             $chains = array_filter(
@@ -92,7 +90,7 @@ class DebugContaoTwigCommand extends Command
             $node = &$prefixTree;
 
             foreach ($parts as $part) {
-                /** @phpstan-ignore-next-line */
+                /** @phpstan-ignore isset.offset */
                 if (!isset($node[$part])) {
                     $node[$part] = [];
                 }
@@ -131,7 +129,7 @@ class DebugContaoTwigCommand extends Command
                     // display the effective @Contao name.
                     $identifier = ltrim("$namePrefix/$label", '/');
 
-                    $io->writeln(sprintf(
+                    $io->writeln(\sprintf(
                         '%s<fg=green;options=bold>%s</>%s',
                         $currentPrefix,
                         $label,
@@ -146,7 +144,7 @@ class DebugContaoTwigCommand extends Command
                 // Display file and logical name
                 $io->writeln($currentPrefix.$label);
 
-                $io->writeln(sprintf(
+                $io->writeln(\sprintf(
                     '%s<fg=white>Original name:</> <fg=yellow>%s</>',
                     $currentPrefixWithNewline,
                     $element,
@@ -164,6 +162,7 @@ class DebugContaoTwigCommand extends Command
     {
         $nameCellStyle = new TableCellStyle(['fg' => 'yellow']);
         $blockCellStyle = new TableCellStyle(['fg' => 'magenta']);
+        $slotCellStyle = new TableCellStyle(['fg' => 'blue']);
         $codeCellStyle = new TableCellStyle(['fg' => 'white']);
 
         foreach ($chains as $identifier => $chain) {
@@ -182,13 +181,25 @@ class DebugContaoTwigCommand extends Command
                     ['', ''],
                 ];
 
-                if ($blocks = $templateInformation->getBlocks()) {
+                if ($blocks = $templateInformation->getBlockNames()) {
                     $rows = [
                         ...$rows,
                         ...$this->formatMultiline(
                             'Blocks',
                             wordwrap(implode(', ', $blocks)),
                             $blockCellStyle,
+                        ),
+                        ['', ''],
+                    ];
+                }
+
+                if ($slots = $templateInformation->getSlots()) {
+                    $rows = [
+                        ...$rows,
+                        ...$this->formatMultiline(
+                            'Slots',
+                            wordwrap(implode(', ', $slots)),
+                            $slotCellStyle,
                         ),
                         ['', ''],
                     ];

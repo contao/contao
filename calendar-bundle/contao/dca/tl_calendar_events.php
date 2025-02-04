@@ -85,8 +85,8 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'operations' => array
 		(
-			'edit',
-			'children',
+			'!edit',
+			'!children',
 			'copy',
 			'cut',
 			'delete',
@@ -94,12 +94,14 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			(
 				'href'                => 'act=toggle&amp;field=published',
 				'icon'                => 'visible.svg',
+				'primary'             => true,
 				'showInHeader'        => true
 			),
 			'feature' => array
 			(
 				'href'                => 'act=toggle&amp;field=featured',
 				'icon'                => 'featured.svg',
+				'primary'             => true
 			),
 			'show'
 		)
@@ -156,7 +158,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 			'toggle'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'alias' => array
@@ -403,7 +405,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'source' => array
 		(
-			'filter'                  => true,
 			'inputType'               => 'radio',
 			'options_callback'        => array('tl_calendar_events', 'getSourceOptions'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_calendar_events'],
@@ -445,7 +446,7 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['target'],
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'cssClass' => array
@@ -510,7 +511,7 @@ class tl_calendar_events extends Backend
 		// Generate the alias if there is none
 		if (!$varValue)
 		{
-			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, CalendarModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
+			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->title, CalendarModel::findById($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
 		elseif (preg_match('/^[1-9]\d*$/', $varValue))
 		{
@@ -590,19 +591,19 @@ class tl_calendar_events extends Backend
 	 */
 	public function getTitleTag(CalendarEventsModel $model)
 	{
-		if (!$calendar = CalendarModel::findByPk($model->pid))
+		if (!$calendar = CalendarModel::findById($model->pid))
 		{
 			return '';
 		}
 
-		if (!$page = PageModel::findByPk($calendar->jumpTo))
+		if (!$page = PageModel::findById($calendar->jumpTo))
 		{
 			return '';
 		}
 
 		$page->loadDetails();
 
-		if (!$layout = LayoutModel::findByPk($page->layout))
+		if (!$layout = LayoutModel::findById($page->layout))
 		{
 			return '';
 		}
@@ -844,7 +845,7 @@ class tl_calendar_events extends Backend
 	 */
 	public function addSitemapCacheInvalidationTag($dc, array $tags)
 	{
-		$calendar = CalendarModel::findByPk($dc->activeRecord->pid);
+		$calendar = CalendarModel::findById($dc->activeRecord->pid);
 
 		if ($calendar === null)
 		{

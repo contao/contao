@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\Tests\Controller\Page;
 
 use Contao\CoreBundle\Asset\ContaoContext;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\NewsBundle\Controller\Page\NewsFeedController;
@@ -107,6 +108,7 @@ class NewsFeedControllerTest extends ContaoTestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
         $container->set('event_dispatcher', $this->createMock(EventDispatcher::class));
+        $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
 
         $controller = $this->getController();
         $controller->setContainer($container);
@@ -134,6 +136,7 @@ class NewsFeedControllerTest extends ContaoTestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
         $container->set('event_dispatcher', $this->createMock(EventDispatcher::class));
+        $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
 
         $controller = $this->getController();
         $controller->setContainer($container);
@@ -166,6 +169,7 @@ class NewsFeedControllerTest extends ContaoTestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
         $container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
+        $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
 
         $dispatcher = $this->createMock(EventDispatcher::class);
         $dispatcher
@@ -200,13 +204,13 @@ class NewsFeedControllerTest extends ContaoTestCase
         $this->assertSame($contentType, $response->headers->get('content-type'));
     }
 
-    public function getXMLFeedFormats(): \Generator
+    public static function getXMLFeedFormats(): iterable
     {
         yield 'RSS' => ['rss', '.xml', 'https://example.org/latest-news.xml', 'application/rss+xml'];
         yield 'Atom' => ['atom', '.xml', 'https://example.org/latest-news.xml', 'application/atom+xml'];
     }
 
-    public function getJSONFeedFormats(): \Generator
+    public static function getJSONFeedFormats(): iterable
     {
         yield 'JSON' => ['json', '.json', 'https://example.org/latest-news.json', 'application/feed+json'];
     }

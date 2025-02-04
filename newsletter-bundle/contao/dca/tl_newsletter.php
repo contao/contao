@@ -56,36 +56,16 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'operations' => array
 		(
-			'edit' => array
-			(
-				'href'                => 'act=edit',
-				'icon'                => 'edit.svg'
-			),
-			'copy' => array
-			(
-				'href'                => 'act=paste&amp;mode=copy',
-				'icon'                => 'copy.svg'
-			),
-			'cut' => array
-			(
-				'href'                => 'act=paste&amp;mode=cut',
-				'icon'                => 'cut.svg'
-			),
-			'delete' => array
-			(
-				'href'                => 'act=delete',
-				'icon'                => 'delete.svg',
-				'attributes'          => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false"'
-			),
-			'show' => array
-			(
-				'href'                => 'act=show',
-				'icon'                => 'show.svg'
-			),
+			'!edit',
+			'copy',
+			'cut',
+			'delete',
+			'show',
 			'send' => array
 			(
 				'href'                => 'key=send',
-				'icon'                => 'bundles/contaonewsletter/send.svg'
+				'icon'                => 'bundles/contaonewsletter/send.svg',
+				'primary'             => true,
 			)
 		)
 	),
@@ -151,7 +131,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('rte'=>'tinyNews', 'helpwizard'=>true),
+			'eval'                    => array('rte'=>'tinyNews', 'basicEntities'=>true, 'helpwizard'=>true),
 			'explanation'             => 'insertTags',
 			'load_callback' => array
 			(
@@ -325,7 +305,7 @@ class tl_newsletter extends Backend
 		// Generate alias if there is none
 		if (!$varValue)
 		{
-			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->subject, NewsletterChannelModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
+			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->subject, NewsletterChannelModel::findById($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
 		elseif (preg_match('/^[1-9]\d*$/', $varValue))
 		{

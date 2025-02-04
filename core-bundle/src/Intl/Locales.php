@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Intl;
 
+use Contao\ArrayUtil;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -148,24 +149,7 @@ class Locales
      */
     private function filterLocales(array $locales, array $filter, string|null $default = null): array
     {
-        $newList = array_filter($filter, static fn ($locale) => !\in_array($locale[0], ['-', '+'], true));
-
-        if ($newList) {
-            $locales = $newList;
-        }
-
-        foreach ($filter as $locale) {
-            $prefix = $locale[0];
-            $localeId = substr($locale, 1);
-
-            if ('-' === $prefix && \in_array($localeId, $locales, true)) {
-                unset($locales[array_search($localeId, $locales, true)]);
-            } elseif ('+' === $prefix && !\in_array($localeId, $locales, true)) {
-                $locales[] = $localeId;
-            }
-        }
-
-        sort($locales);
+        $locales = ArrayUtil::alterListByConfig($locales, $filter);
 
         // The default locale must be the first supported language (see contao/core#6533)
         if (null !== $default) {

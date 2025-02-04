@@ -68,31 +68,33 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 				'class'               => 'header_store',
 				'button_callback'     => array('tl_theme', 'themeStore')
 			),
-			'all'
 		),
 		'operations' => array
 		(
-			'edit',
+			'!edit',
 			'delete',
-			'show',
 			'modules' => array
 			(
 				'href'                => 'table=tl_module',
+				'prefetch'            => true,
 				'icon'                => 'modules.svg',
-				'button_callback'     => array('tl_theme', 'editModules')
+				'primary'             => true,
 			),
 			'layout' => array
 			(
 				'href'                => 'table=tl_layout',
+				'prefetch'            => true,
 				'icon'                => 'layout.svg',
-				'button_callback'     => array('tl_theme', 'editLayout')
+				'primary'             => true,
 			),
 			'imageSizes' => array
 			(
 				'href'                => 'table=tl_image_size',
+				'prefetch'            => true,
 				'icon'                => 'sizes.svg',
-				'button_callback'     => array('tl_theme', 'editImageSizes')
+				'primary'             => true,
 			),
+			'show',
 			'exportTheme' => array
 			(
 				'href'                => 'key=exportTheme',
@@ -252,57 +254,6 @@ class tl_theme extends Backend
 	}
 
 	/**
-	 * Return the "edit modules" button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function editModules($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the "edit page layouts" button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function editLayout($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_LAYOUTS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the "edit image sizes" button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function editImageSizes($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-	}
-
-	/**
 	 * Return the "export theme" button
 	 *
 	 * @param array  $row
@@ -316,6 +267,6 @@ class tl_theme extends Backend
 	 */
 	public function exportTheme($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EXPORT_THEMES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EXPORT_THEMES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 }

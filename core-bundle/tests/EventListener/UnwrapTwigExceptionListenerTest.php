@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
+use Contao\CoreBundle\EventListener\ExceptionConverterListener;
 use Contao\CoreBundle\EventListener\UnwrapTwigExceptionListener;
 use Contao\CoreBundle\Exception\NoContentResponseException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
@@ -29,18 +30,11 @@ class UnwrapTwigExceptionListenerTest extends TestCase
      */
     public function testUnwrapsException(\Exception $exception): void
     {
-        $wrappedException = new RuntimeError(
-            'An exception has been thrown during rendering of a template.',
-            -1,
-            null,
-            $exception,
-        );
-
         $event = new ExceptionEvent(
             $this->createMock(KernelInterface::class),
             new Request(),
             HttpKernelInterface::MAIN_REQUEST,
-            $wrappedException,
+            new RuntimeError('An exception has been thrown during rendering of a template.', -1, null, $exception),
         );
 
         (new UnwrapTwigExceptionListener())($event);
@@ -48,7 +42,7 @@ class UnwrapTwigExceptionListenerTest extends TestCase
         $this->assertSame($exception, $event->getThrowable(), 'exception should be unwrapped');
     }
 
-    public function provideExceptionsToUnwrap(): \Generator
+    public static function provideExceptionsToUnwrap(): iterable
     {
         yield 'NoContentResponseException' => [
             new NoContentResponseException(),
@@ -57,10 +51,14 @@ class UnwrapTwigExceptionListenerTest extends TestCase
         yield 'RedirectResponseException' => [
             new RedirectResponseException('/foo'),
         ];
+
+        foreach (array_unique(ExceptionConverterListener::MAPPER) as $exception) {
+            yield $exception => [new $exception()];
+        }
     }
 
     /**
-     * @dataProvider provideThrowablesToIgnore
+     * @dataProvider provideThrowableToIgnore
      */
     public function testIgnoresOtherExceptions(\Throwable $throwable): void
     {
@@ -76,19 +74,14 @@ class UnwrapTwigExceptionListenerTest extends TestCase
         $this->assertSame($throwable, $event->getThrowable(), 'throwable should be left untouched');
     }
 
-    public function provideThrowablesToIgnore(): \Generator
+    public static function provideThrowableToIgnore(): iterable
     {
         $exception = new \LogicException('Something went wrong.');
 
         yield 'arbitrary exception' => [$exception];
 
         yield 'Twig RuntimeError with arbitrary exception' => [
-            new RuntimeError(
-                'An exception has been thrown during rendering of a template.',
-                -1,
-                null,
-                $exception,
-            ),
+            new RuntimeError('An exception has been thrown during rendering of a template.', -1, null, $exception),
         ];
     }
 }

@@ -23,6 +23,7 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  * @property string  $name
  * @property string  $headline
  * @property string  $type
+ * @property string  $ariaLabel
  * @property integer $levelOffset
  * @property integer $showLevel
  * @property boolean $hardLimit
@@ -40,6 +41,7 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  * @property boolean $redirectBack
  * @property string  $cols
  * @property array   $editable
+ * @property boolean $reqFullAuth
  * @property string  $memberTpl
  * @property integer $form
  * @property string  $queryType
@@ -258,7 +260,7 @@ abstract class Module extends Frontend
 			return array();
 		}
 
-		return array(System::getContainer()->get('contao.cache.entity_tags')->getTagForModelInstance($this->objModel));
+		return array(System::getContainer()->get('contao.cache.tag_manager')->getTagForModelInstance($this->objModel));
 	}
 
 	/**
@@ -477,7 +479,7 @@ abstract class Module extends Frontend
 		return array_map(
 			static function (array $row): array {
 				return array(
-					'page' => PageModel::findByPk($row['id']),
+					'page' => PageModel::findById($row['id']),
 					'hasSubpages' => (bool) $row['hasSubpages'],
 				);
 			},

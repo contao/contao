@@ -105,7 +105,7 @@ class FormRange extends Widget
 	 */
 	public function generate()
 	{
-		return sprintf(
+		return \sprintf(
 			'<input type="%s" name="%s" id="ctrl_%s" class="range%s" value="%s"%s%s',
 			$this->type,
 			$this->strName,

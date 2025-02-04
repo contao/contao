@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle;
 
 use Composer\InstalledVersions;
+use Contao\CoreBundle\DependencyInjection\Compiler\AccessDecisionStrategyPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
@@ -49,6 +50,7 @@ use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnha
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ContaoCoreBundle extends Bundle
@@ -56,6 +58,11 @@ class ContaoCoreBundle extends Bundle
     final public const SCOPE_BACKEND = 'backend';
 
     final public const SCOPE_FRONTEND = 'frontend';
+
+    public function boot(): void
+    {
+        (new Request())->setFormat('turbo_stream', 'text/vnd.turbo-stream.html');
+    }
 
     public function getContainerExtension(): ContaoCoreExtension
     {
@@ -122,6 +129,7 @@ class ContaoCoreBundle extends Bundle
         $container->addCompilerPass(new LoggerChannelPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, -1);
         $container->addCompilerPass(new ConfigureFilesystemPass());
         $container->addCompilerPass(new AddInsertTagsPass());
+        $container->addCompilerPass(new AccessDecisionStrategyPass());
     }
 
     public static function getVersion(): string

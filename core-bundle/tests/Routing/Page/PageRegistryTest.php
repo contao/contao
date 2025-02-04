@@ -112,7 +112,7 @@ class PageRegistryTest extends TestCase
         $this->assertSame($expectedPath, $route->getPath());
     }
 
-    public function pageRouteWithPathProvider(): \Generator
+    public static function pageRouteWithPathProvider(): iterable
     {
         yield 'Does not add parameters for empty path' => [
             new RouteConfig(''),

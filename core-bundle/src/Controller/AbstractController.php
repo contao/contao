@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
 use Contao\CoreBundle\Framework\Adapter;
@@ -38,7 +38,7 @@ abstract class AbstractController extends SymfonyAbstractController
         $services['logger'] = '?'.LoggerInterface::class;
         $services['fos_http_cache.http.symfony_response_tagger'] = '?'.SymfonyResponseTagger::class;
         $services['contao.csrf.token_manager'] = ContaoCsrfTokenManager::class;
-        $services['contao.cache.entity_tags'] = EntityCacheTags::class;
+        $services['contao.cache.tag_manager'] = CacheTagManager::class;
 
         return $services;
     }
@@ -64,7 +64,7 @@ abstract class AbstractController extends SymfonyAbstractController
 
     protected function tagResponse(array|object|string|null $tags): void
     {
-        $this->container->get('contao.cache.entity_tags')->tagWith($tags);
+        $this->container->get('contao.cache.tag_manager')->tagWith($tags);
     }
 
     /**
@@ -103,27 +103,25 @@ abstract class AbstractController extends SymfonyAbstractController
             $response->setSharedMaxAge($pageModel->cache); // Automatically sets the response to public
 
             /**
-             * We vary on cookies if a response is cacheable by the shared
-             * cache, so a reverse proxy does not load a response from cache if
-             * the _request_ contains a cookie.
+             * We vary on cookies if a response is cacheable by the shared cache, so a reverse
+             * proxy does not load a response from cache if the _request_ contains a cookie.
              *
-             * This DOES NOT mean that we generate a cache entry for every
-             * response containing a cookie! Responses with cookies will always
-             * be private.
+             * This DOES NOT mean that we generate a cache entry for every response containing
+             * a cookie! Responses with cookies will always be private.
              *
              * @see MakeResponsePrivateListener
              *
-             * However, we want to be able to force the reverse proxy to load a
-             * response from cache, even if the request contains a cookie – in
-             * case the admin has configured to do so. A typical use case would
-             * be serving public pages from cache to logged in members.
+             * However, we want to be able to force the reverse proxy to load a response from
+             * cache, even if the request contains a cookie – in case the admin has
+             * configured to do so. A typical use case would be serving public pages from
+             * cache to logged in members.
              */
             if (!$pageModel->alwaysLoadFromCache) {
                 $response->setVary(['Cookie']);
             }
 
             // Tag the page (see #2137)
-            $this->container->get('contao.cache.entity_tags')->tagWithModelInstance($pageModel);
+            $this->container->get('contao.cache.tag_manager')->tagWithModelInstance($pageModel);
         }
 
         return $response;

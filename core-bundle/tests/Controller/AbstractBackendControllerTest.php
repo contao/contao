@@ -16,6 +16,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Controller\AbstractBackendController;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
 use Contao\Environment as ContaoEnvironment;
@@ -28,7 +29,9 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -107,7 +110,166 @@ class AbstractBackendControllerTest extends TestCase
         $this->assertSame('<custom_be_main>', $controller->fooAction()->getContent());
     }
 
-    private function getContainerWithDefaultConfiguration(array $expectedContext): ContainerBuilder
+    /**
+     * @dataProvider provideRequests
+     */
+    public function testHandlesTurboRequests(Request $request, bool|null $includeChromeContext, array $expectedContext, string $expectedRequestFormat = 'html'): void
+    {
+        $controller = new class() extends AbstractBackendController {
+            public function fooAction(bool|null $includeChromeContext): Response
+            {
+                return $this->render(
+                    'custom_be.html.twig',
+                    ['version' => 'my version'],
+                    includeChromeContext: $includeChromeContext,
+                );
+            }
+        };
+
+        // Legacy setup
+        ContaoEnvironment::reset();
+
+        $filesystem = new Filesystem();
+        $filesystem->mkdir(Path::join($this->getTempDir(), 'languages/en'));
+        $filesystem->touch(Path::join($this->getTempDir(), 'be_main.html5'));
+
+        $GLOBALS['TL_LANG']['MSC'] = [
+            'version' => 'version',
+            'dashboard' => 'dashboard',
+            'home' => 'home',
+            'learnMore' => 'learn more',
+        ];
+
+        $GLOBALS['TL_LANGUAGE'] = 'en';
+
+        TemplateLoader::addFile('be_main', '');
+
+        $container = $this->getContainerWithDefaultConfiguration($expectedContext, $request);
+
+        System::setContainer($container);
+        $controller->setContainer($container);
+
+        $this->assertSame('<custom_be_main>', $controller->fooAction($includeChromeContext)->getContent());
+        $this->assertSame($expectedRequestFormat, $request->getRequestFormat());
+    }
+
+    public static function provideRequests(): iterable
+    {
+        $defaultContext = [
+            'headline' => 'dashboard',
+            'title' => '',
+            'theme' => 'flexible',
+            'language' => 'en',
+            'host' => 'localhost',
+            'charset' => 'UTF-8',
+            'home' => 'home',
+            'isPopup' => null,
+            'learnMore' => 'learn more',
+            'menu' => '<menu>',
+            'headerMenu' => '<header_menu>',
+            'badgeTitle' => '',
+        ];
+
+        $customContext = [
+            'version' => 'my version',
+        ];
+
+        $turboFrameRequest = new Request(server: ['HTTP_HOST' => 'localhost']);
+        $turboFrameRequest->headers->set('Turbo-Frame', 'id');
+
+        yield 'default turbo frame' => [
+            $turboFrameRequest,
+            null,
+            $customContext,
+        ];
+
+        yield 'turbo frame with chrome' => [
+            $turboFrameRequest,
+            true,
+            [...$customContext, ...$defaultContext],
+        ];
+
+        yield 'default turbo frame explicitly without chrome' => [
+            $turboFrameRequest,
+            false,
+            $customContext,
+        ];
+
+        $turboStreamRequest = new Request(server: ['HTTP_HOST' => 'localhost']);
+        $turboStreamRequest->headers->set('Accept', 'text/vnd.turbo-stream.html; charset=utf-8');
+
+        yield 'default turbo stream' => [
+            $turboStreamRequest,
+            null,
+            $customContext,
+            'turbo_stream',
+        ];
+
+        yield 'turbo stream with chrome' => [
+            $turboStreamRequest,
+            true,
+            [...$customContext, ...$defaultContext],
+            'turbo_stream',
+        ];
+
+        yield 'turbo stream explicitly without chrome' => [
+            $turboStreamRequest,
+            false,
+            $customContext,
+            'turbo_stream',
+        ];
+
+        $plainRequest = new Request(server: ['HTTP_HOST' => 'localhost']);
+
+        yield 'plain request' => [
+            $plainRequest,
+            null,
+            [...$customContext, ...$defaultContext],
+        ];
+
+        yield 'plain request explicitly with chrome' => [
+            $plainRequest,
+            true,
+            [...$customContext, ...$defaultContext],
+        ];
+
+        yield 'plain request without chrome' => [
+            $plainRequest,
+            false,
+            $customContext,
+        ];
+    }
+
+    public function testGetSessionBag(): void
+    {
+        $controller = new class() extends AbstractBackendController {
+            public function getBackendSessionBagDelegate(): AttributeBagInterface|null
+            {
+                return $this->getBackendSessionBag();
+            }
+        };
+
+        $sessionBag = new ArrayAttributeBag();
+        $sessionBag->setName('contao_backend');
+
+        $sessionStorage = new MockArraySessionStorage();
+        $sessionStorage->registerBag($sessionBag);
+
+        $request = new Request();
+        $request->setSession(new Session($sessionStorage));
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request);
+
+        $container = new ContainerBuilder();
+        $container->set('request_stack', $requestStack);
+
+        $controller->setContainer($container);
+
+        $this->assertSame($sessionBag, $controller->getBackendSessionBagDelegate());
+    }
+
+    private function getContainerWithDefaultConfiguration(array $expectedContext, Request|null $request = null): ContainerBuilder
     {
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
 
@@ -120,7 +282,6 @@ class AbstractBackendControllerTest extends TestCase
 
         $twig = $this->createMock(Environment::class);
         $twig
-            ->expects($this->exactly(3))
             ->method('render')
             ->willReturnCallback(
                 function (string $template, array $context) use ($expectedContext) {
@@ -129,8 +290,8 @@ class AbstractBackendControllerTest extends TestCase
                     }
 
                     $map = [
-                        '@ContaoCore/Backend/be_menu.html.twig' => '<menu>',
-                        '@ContaoCore/Backend/be_header_menu.html.twig' => '<header_menu>',
+                        '@Contao/backend/chrome/main_menu.html.twig' => '<menu>',
+                        '@Contao/backend/chrome/header_menu.html.twig' => '<header_menu>',
                         'custom_be.html.twig' => '<custom_be_main>',
                     ];
 
@@ -140,7 +301,7 @@ class AbstractBackendControllerTest extends TestCase
         ;
 
         $requestStack = new RequestStack();
-        $requestStack->push(new Request(server: $_SERVER));
+        $requestStack->push($request ?? new Request(server: $_SERVER));
 
         $container->set('security.authorization_checker', $authorizationChecker);
         $container->set('security.token_storage', $this->createMock(TokenStorageInterface::class));

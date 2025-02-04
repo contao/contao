@@ -65,7 +65,7 @@ abstract class Frontend extends Controller
 			{
 				$objPage->loadDetails();
 
-				return PageModel::findByPk($objPage->rootId);
+				return PageModel::findById($objPage->rootId);
 			}
 		}
 

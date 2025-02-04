@@ -105,16 +105,16 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
         return $filesystemItemIterator->filter(
             static fn (FilesystemItem $item): bool => \in_array(
                 Path::getExtension($item->getPath(), true),
-                array_map('strtolower', $allowedDownload),
+                array_map(strtolower(...), $allowedDownload),
                 true,
             ),
         );
     }
 
     /**
-     * If the content should be displayed inline or if the resource does not
-     * have a public URI, a URL pointing to this controller's download action
-     * will be generated, otherwise the direct download URL will be returned.
+     * If the content should be displayed inline or if the resource does not have a
+     * public URI, a URL pointing to this controller's download action will be
+     * generated, otherwise the direct download URL will be returned.
      */
     protected function generateDownloadUrl(FilesystemItem $filesystemItem, ContentModel $model, Request $request): string
     {
@@ -128,16 +128,16 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
         // TODO: Use an exclusive route once we have a strategy how to handle permissions
         // for it. Right now we use the current route and then throw a ResponseException
         // to initiate the download.
-        $currentUrl = $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo();
         $context = ['id' => $model->id];
 
         return $inline
-            ? $this->container->get('contao.filesystem.file_download_helper')->generateInlineUrl($currentUrl, $path, $context)
-            : $this->container->get('contao.filesystem.file_download_helper')->generateDownloadUrl($currentUrl, $path, $filesystemItem->getName(), $context);
+            ? $this->container->get('contao.filesystem.file_download_helper')->generateInlineUrl($request->getUri(), $path, $context)
+            : $this->container->get('contao.filesystem.file_download_helper')->generateDownloadUrl($request->getUri(), $path, $filesystemItem->getName(), $context);
     }
 
     /**
-     * Generate file preview images on the fly for a content model (default Contao controller behaviour).
+     * Generate file preview images on the fly for a content model (default Contao
+     * controller behaviour).
      *
      * @return \Generator<Figure>
      */
@@ -148,7 +148,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
             ->setSize($size = $model->size)
             ->enableLightbox($fullsize = $model->fullsize)
             ->disableMetadata()
-            ->setLightboxGroupIdentifier(sprintf('dl_%s_%s', $model->id, md5($filesystemItem->getPath())))
+            ->setLightboxGroupIdentifier(\sprintf('dl_%s_%s', $model->id, md5($filesystemItem->getPath())))
         ;
 
         $getLightboxSize = function (): string|null {
@@ -158,7 +158,7 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
                 return null;
             }
 
-            $layoutModel = $this->getContaoAdapter(LayoutModel::class)->findByPk($page->layout);
+            $layoutModel = $this->getContaoAdapter(LayoutModel::class)->findById($page->layout);
 
             return $layoutModel?->lightboxSize ?: null;
         };

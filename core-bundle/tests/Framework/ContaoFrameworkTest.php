@@ -34,7 +34,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
-use Symfony\Contracts\Service\ResetInterface;
 
 class ContaoFrameworkTest extends TestCase
 {
@@ -336,8 +335,6 @@ class ContaoFrameworkTest extends TestCase
 
     public function testServiceIsResetable(): void
     {
-        $this->assertInstanceOf(ResetInterface::class, $this->getFramework());
-
         $framework = $this->getFramework();
         $adapter = $framework->getAdapter(Input::class);
 

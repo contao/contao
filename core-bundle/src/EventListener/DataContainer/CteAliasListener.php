@@ -18,7 +18,6 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Image;
-use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -50,13 +49,13 @@ class CteAliasListener implements ResetInterface
         $id = $request->query->get('id');
 
         if ($id && 'delete' === $request->query->get('act') && isset($aliasRefs[$id])) {
-            throw new InternalServerErrorException(sprintf('Content element ID %s is used in an alias element and can therefore not be deleted.', $id));
+            throw new InternalServerErrorException(\sprintf('Content element ID %s is used in an alias element and can therefore not be deleted.', $id));
         }
 
         if ('deleteAll' === $request->query->get('act')) {
             $session = $request->getSession();
             $sessionData = $session->all();
-            $sessionData['CURRENT']['IDS'] = array_diff($sessionData['CURRENT']['IDS'], array_map('intval', array_keys($aliasRefs)));
+            $sessionData['CURRENT']['IDS'] = array_diff($sessionData['CURRENT']['IDS'], array_map(\intval(...), array_keys($aliasRefs)));
             $session->replace($sessionData);
         }
     }
@@ -77,7 +76,7 @@ class CteAliasListener implements ResetInterface
 
         $backendAdapter = $this->framework->getAdapter(Backend::class);
 
-        return '<a href="'.$backendAdapter->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.$imageAdapter->getHtml($icon, $label).'</a> ';
+        return '<a href="'.$backendAdapter->addToUrl($href.'&amp;id='.$row['id']).'"'.$attributes.'>'.$imageAdapter->getHtml($icon, $title).'</a> ';
     }
 
     public function reset(): void

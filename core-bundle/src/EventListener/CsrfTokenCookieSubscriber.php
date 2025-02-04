@@ -22,8 +22,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
@@ -93,43 +91,45 @@ class CsrfTokenCookieSubscriber implements EventSubscriberInterface
             // (defaults to 32)
             KernelEvents::REQUEST => ['onKernelRequest', 36],
             // The priority must be higher than the one of the make-response-private listener
-            // (defaults to -896)
-            KernelEvents::RESPONSE => ['onKernelResponse', -832],
+            // (defaults to -1012) and lower than the one of the session listener (defaults
+            // to -1000)
+            KernelEvents::RESPONSE => ['onKernelResponse', -1006],
             ConsoleEvents::COMMAND => ['onCommand', 36],
         ];
     }
 
     private function requiresCsrf(Request $request, Response $response): bool
     {
-        foreach ($request->cookies as $key => $value) {
+        $requestCookies = $request->cookies->all();
+        $responseCookies = $response->headers->getCookies(ResponseHeaderBag::COOKIES_FLAT);
+
+        // Ignore any cookies in the request and response that are being deleted (see #7344)
+        $responseCookies = array_filter(
+            $responseCookies,
+            static function (Cookie $responseCookie) use (&$requestCookies): bool {
+                if ($responseCookie->isCleared()) {
+                    unset($requestCookies[$responseCookie->getName()]);
+
+                    return false;
+                }
+
+                return true;
+            },
+        );
+
+        // Check if any of the remaining request cookies is not a CSRF cookie
+        foreach ($requestCookies as $key => $value) {
             if (!$this->isCsrfCookie($key, $value)) {
                 return true;
             }
         }
 
-        if ($response->headers->getCookies(ResponseHeaderBag::COOKIES_ARRAY)) {
+        // Check if there are any unexpired cookies remaining in the response
+        if ([] !== $responseCookies) {
             return true;
         }
 
-        if ($request->getUserInfo()) {
-            return true;
-        }
-
-        return $request->hasSession() && !$this->isSessionEmpty($request->getSession());
-    }
-
-    private function isSessionEmpty(SessionInterface $session): bool
-    {
-        if (!$session->isStarted()) {
-            return true;
-        }
-
-        if ($session instanceof Session) {
-            // Marked @internal but no other way to check all attribute bags
-            return $session->isEmpty();
-        }
-
-        return [] === $session->all();
+        return (bool) $request->getUserInfo();
     }
 
     private function setCookies(Request $request, Response $response): void

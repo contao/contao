@@ -14,7 +14,7 @@ namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\ContentModel;
 use Contao\Controller;
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
@@ -55,7 +55,7 @@ class NewsFeedListenerTest extends ContaoTestCase
     {
         $insertTags = $this->createMock(InsertTagParser::class);
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
-        $cacheTags = $this->createMock(EntityCacheTags::class);
+        $cacheTags = $this->createMock(CacheTagManager::class);
         $newsModel = $this->createMock(NewsModel::class);
 
         $collection = $this->createMock(Collection::class);
@@ -166,6 +166,7 @@ class NewsFeedListenerTest extends ContaoTestCase
             'date' => 1656578758,
             'headline' => $headline[0],
             'teaser' => $content[0],
+            'addImage' => true,
             'singleSRC' => 'binary_uuid',
             'addEnclosure' => serialize(['binary_uuid2']),
         ]);
@@ -203,13 +204,13 @@ class NewsFeedListenerTest extends ContaoTestCase
             Controller::class => $controller,
             ContentModel::class => $contentModel,
             FilesModel::class => $filesModel,
-            UserModel::class => $this->mockConfiguredAdapter(['findByPk' => $userModel]),
+            UserModel::class => $this->mockConfiguredAdapter(['findById' => $userModel]),
         ]);
 
         $framework->setContainer($container);
 
         $feed = $this->createMock(Feed::class);
-        $cacheTags = $this->createMock(EntityCacheTags::class);
+        $cacheTags = $this->createMock(CacheTagManager::class);
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
@@ -244,14 +245,14 @@ class NewsFeedListenerTest extends ContaoTestCase
         $fs->remove($imageDir);
     }
 
-    public function featured(): \Generator
+    public static function featured(): iterable
     {
         yield 'All items' => ['all_items', null];
         yield 'Only featured' => ['featured', true];
         yield 'Only unfeatured items' => ['unfeatured', false];
     }
 
-    public function getFeedSource(): \Generator
+    public static function getFeedSource(): iterable
     {
         yield 'Teaser' => [
             'source_teaser',

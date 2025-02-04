@@ -38,6 +38,17 @@ class ContaoUserProviderTest extends TestCase
         $this->assertSame($user, $provider->loadUserByIdentifier('foobar'));
     }
 
+    public function testLoadsUsersById(): void
+    {
+        $user = $this->createMock(BackendUser::class);
+        $adapter = $this->mockConfiguredAdapter(['loadUserById' => $user]);
+        $framework = $this->mockContaoFramework([BackendUser::class => $adapter]);
+
+        $provider = $this->getProvider($framework);
+
+        $this->assertSame($user, $provider->loadUserById(1));
+    }
+
     public function testFailsToLoadAUserIfTheUsernameDoesNotExist(): void
     {
         $user = $this->createMock(UserInterface::class);
@@ -71,7 +82,7 @@ class ContaoUserProviderTest extends TestCase
         $provider = $this->getProvider();
 
         $this->expectException(UnsupportedUserException::class);
-        $this->expectExceptionMessage(sprintf('Unsupported class "%s".', $user::class));
+        $this->expectExceptionMessage(\sprintf('Unsupported class "%s".', $user::class));
 
         $provider->refreshUser($user);
     }
@@ -115,9 +126,9 @@ class ContaoUserProviderTest extends TestCase
         $provider = $this->getProvider();
 
         $this->expectException(UnsupportedUserException::class);
-        $this->expectExceptionMessage(sprintf('Unsupported class "%s".', $user::class));
+        $this->expectExceptionMessage(\sprintf('Unsupported class "%s".', $user::class));
 
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore argument.type */
         $provider->upgradePassword($user, 'newsuperhash');
     }
 

@@ -25,7 +25,7 @@ class UrlUtilTest extends TestCase
         $this->assertSame($expected, UrlUtil::makeAbsolute($url, $base));
     }
 
-    public function getMakeAbsolute(): \Generator
+    public static function getMakeAbsolute(): iterable
     {
         $fullUrl = 'https://user:pass@host:123/path/file?query#fragment';
 
@@ -64,10 +64,16 @@ class UrlUtilTest extends TestCase
         yield ['data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7', '', 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'];
     }
 
-    public function testMakeAbsoluteFailsForRelativeBasePath(): void
+    public function testFailsForRelativeBasePath(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
         UrlUtil::makeAbsolute('foo', 'path/foo');
+    }
+
+    public function testHandlesPunycodeDomains(): void
+    {
+        $this->assertSame('https://fööbar.de/foo', UrlUtil::makeAbsolute('/foo', 'https://fööbar.de/'));
+        $this->assertSame('https://xn--fbar-5qaa.de/foo', UrlUtil::makeAbsolute('/foo', 'https://xn--fbar-5qaa.de/'));
     }
 }

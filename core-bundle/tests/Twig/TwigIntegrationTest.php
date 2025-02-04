@@ -13,22 +13,37 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig;
 
 use Contao\Config;
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\InsertTagSubscription;
+use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Contao\CoreBundle\Twig\Loader\TemplateLocator;
+use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\FormText;
+use Contao\FrontendTemplate;
 use Contao\System;
 use Contao\TemplateLoader;
+use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
@@ -59,7 +74,7 @@ class TwigIntegrationTest extends TestCase
 
         unset($GLOBALS['TL_LANG'], $GLOBALS['TL_FFL'], $GLOBALS['TL_MIME']);
 
-        $this->resetStaticProperties([System::class, Config::class]);
+        $this->resetStaticProperties([ContaoFramework::class, System::class, Config::class]);
 
         parent::tearDown();
     }
@@ -77,15 +92,20 @@ class TwigIntegrationTest extends TestCase
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
+                new InspectorNodeVisitor(new NullAdapter(), $environment),
             ),
         );
+
+        $requestStack = new RequestStack();
+        $requestStack->push($request = new Request());
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('twig', $environment);
         $container->set(ContextFactory::class, new ContextFactory());
+        $container->set('request_stack', $requestStack);
 
         System::setContainer($container);
 
@@ -93,7 +113,89 @@ class TwigIntegrationTest extends TestCase
         $textField = new FormText(['class' => 'my_class', 'label' => 'foo']);
         $textField->addError('bar');
 
-        $this->assertSame("my_class error\nfoo foo\n bar", $textField->parse());
+        $this->assertSame("my_class error\nfoo foo\n bar", $textField->parse(), 'HTML is built correctly');
+        $this->assertTrue($request->attributes->get('_contao_widget_error'), 'error attribute is set');
+    }
+
+    public function testRendersTwigTemplateWithLegacyParent(): void
+    {
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'templates/legacy_template.html5'),
+            <<<'EOF'
+                <?php
+                    echo $this->value;
+                    echo ',test1';
+                    $this->block('a');
+                    echo ',test2';
+                    $this->endblock('a');
+                    echo ',test3';
+                    $this->block('b');
+                    echo ',test4';
+                    $this->block('b1');
+                    echo ',test5';
+                    $this->endblock('b1');
+                    echo ',test6';
+                    $this->endblock('b');
+                    echo ',test7';
+                EOF,
+        );
+
+        TemplateLoader::addFile('legacy_template', 'templates');
+
+        (new Filesystem())->dumpFile(
+            Path::join($this->getTempDir(), 'templates/twig_template.html.twig'),
+            <<<'EOF'
+                {% extends "@Contao/legacy_template.html5" %}
+                {% block a %}<<{{ parent() }}>>{% endblock %}
+                {% block b1 %}{{ parent() }},({{ value }}){% endblock %}
+                EOF,
+        );
+
+        $templateLocator = new TemplateLocator(
+            $this->getTempDir(),
+            $this->createMock(ResourceFinder::class),
+            $themeNamespace = new ThemeNamespace(),
+            $this->createMock(Connection::class),
+        );
+
+        $filesystemLoader = new ContaoFilesystemLoader(
+            new NullAdapter(),
+            $templateLocator,
+            $themeNamespace,
+            $this->createMock(ContaoFramework::class),
+            $this->createMock(PageFinder::class),
+            $this->getTempDir(),
+        );
+
+        $environment = new Environment($filesystemLoader);
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $filesystemLoader,
+                $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
+                new InspectorNodeVisitor(new NullAdapter(), $environment),
+            ),
+        );
+
+        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
+        $container->set('twig', $environment);
+        $container->set(ContextFactory::class, new ContextFactory());
+
+        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
+        $insertTagParser->addSubscription(new InsertTagSubscription(new LegacyInsertTag($container), '__invoke', 'br', null, true, false));
+
+        $container->set('contao.insert_tag.parser', $insertTagParser);
+
+        System::setContainer($container);
+
+        $template = new FrontendTemplate('twig_template');
+        $template->setData(['value' => 'value{{br}}']);
+
+        $obLevel = ob_get_level();
+        $this->assertSame('value<br>,test1<<,test2>>,test3,test4,test5,(value{{br}}),test6,test7', $template->parse());
+        $this->assertSame($obLevel, ob_get_level());
     }
 
     public function testRendersAttributes(): void
@@ -121,9 +223,10 @@ class TwigIntegrationTest extends TestCase
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
+                new InspectorNodeVisitor(new NullAdapter(), $environment),
             ),
         );
 
@@ -172,9 +275,10 @@ class TwigIntegrationTest extends TestCase
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
+                new InspectorNodeVisitor(new NullAdapter(), $environment),
             ),
         );
 
@@ -226,14 +330,124 @@ class TwigIntegrationTest extends TestCase
         $environment->addExtension(
             new ContaoExtension(
                 $environment,
-                $this->createMock(TemplateHierarchyInterface::class),
+                $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
+                new InspectorNodeVisitor(new NullAdapter(), $environment),
             ),
         );
 
         $output = $environment->render('test.html.twig', ['unsafe' => '<i>foo</i>{{br}}']);
 
         $this->assertSame($expectedOutput, $output);
+    }
+
+    /**
+     * @dataProvider provideDeserializeFilterValues
+     */
+    public function testDeserializeFilter(mixed $values, string $expectedOutput): void
+    {
+        $templateContent = <<<'TEMPLATE'
+            <ul>
+                {%- for key, value in values|deserialize ~%}
+                <li>{{ key }}: {{ value }}</li>
+                {%- endfor ~%}
+            </ul>
+            TEMPLATE;
+
+        $environment = new Environment(new ArrayLoader(['test.html.twig' => $templateContent]));
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $this->createMock(ContaoFilesystemLoader::class),
+                $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
+                new InspectorNodeVisitor(new NullAdapter(), $environment),
+            ),
+        );
+
+        $output = $environment->render('test.html.twig', [
+            'values' => $values,
+        ]);
+
+        $this->assertSame($expectedOutput, $output);
+    }
+
+    public static function provideDeserializeFilterValues(): iterable
+    {
+        yield [
+            serialize(['key1' => 'value1', 'key2' => 2]),
+            <<<'HTML'
+                <ul>
+                    <li>key1: value1</li>
+                    <li>key2: 2</li>
+                </ul>
+                HTML,
+        ];
+
+        yield [
+            serialize(['value1', 2]),
+            <<<'HTML'
+                <ul>
+                    <li>0: value1</li>
+                    <li>1: 2</li>
+                </ul>
+                HTML,
+        ];
+
+        yield [
+            ['key1' => 'value1', 'key2' => 2],
+            <<<'HTML'
+                <ul>
+                    <li>key1: value1</li>
+                    <li>key2: 2</li>
+                </ul>
+                HTML,
+        ];
+
+        yield [
+            ['value1', 2],
+            <<<'HTML'
+                <ul>
+                    <li>0: value1</li>
+                    <li>1: 2</li>
+                </ul>
+                HTML,
+        ];
+
+        yield [
+            'string',
+            <<<'HTML'
+                <ul>
+                    <li>0: string</li>
+                </ul>
+                HTML,
+        ];
+
+        yield [
+            123,
+            <<<'HTML'
+                <ul>
+                    <li>0: 123</li>
+                </ul>
+                HTML,
+        ];
+
+        yield [
+            '',
+            <<<'HTML'
+                <ul>
+                </ul>
+                HTML,
+        ];
+
+        yield [
+            null,
+            <<<'HTML'
+                <ul>
+                </ul>
+                HTML,
+        ];
     }
 }

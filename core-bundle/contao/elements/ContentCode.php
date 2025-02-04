@@ -34,7 +34,7 @@ class ContentCode extends ContentElement
 
 		if ($request && System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest($request))
 		{
-			$return = '<pre>' . htmlspecialchars($this->code) . '</pre>';
+			$return = '<pre>' . htmlspecialchars($this->code, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '</pre>';
 
 			if ($this->headline)
 			{
@@ -69,7 +69,7 @@ class ContentCode extends ContentElement
 		}
 		catch (\DomainException $e)
 		{
-			$this->Template->code = htmlspecialchars($this->code);
+			$this->Template->code = htmlspecialchars($this->code, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 		}
 
 		$this->Template->cssClass = 'hljs ' . (strtolower($this->highlight) ?: 'nohighlight');

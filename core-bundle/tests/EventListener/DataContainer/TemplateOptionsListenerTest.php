@@ -22,9 +22,9 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\Translator;
 use Contao\CoreBundle\Twig\Finder\Finder;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
-use Contao\DataContainer;
+use Contao\DC_Table;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
@@ -138,7 +138,7 @@ class TemplateOptionsListenerTest extends TestCase
         $connection
             ->method('executeQuery')
             ->with(
-                sprintf('SELECT type FROM %s WHERE id IN (?) GROUP BY type LIMIT 2', 'tl_content'),
+                \sprintf('SELECT type FROM %s WHERE id IN (?) GROUP BY type LIMIT 2', 'tl_content'),
                 [[1, 2, 3]],
                 [ArrayParameterType::STRING],
             )
@@ -150,7 +150,7 @@ class TemplateOptionsListenerTest extends TestCase
         $this->assertSame($expectedOptions, $callback($this->mockDataContainer('tl_content')));
     }
 
-    public function provideOverrideAllScenarios(): \Generator
+    public static function provideOverrideAllScenarios(): iterable
     {
         yield 'selected items share a common type' => [
             'foo_element_type',
@@ -218,8 +218,8 @@ class TemplateOptionsListenerTest extends TestCase
 
     private function getDefaultTemplateOptionsListener(RequestStack|null $requestStack = null, Connection|null $connection = null): TemplateOptionsListener
     {
-        $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        $hierarchy
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
             ->method('getInheritanceChains')
             ->willReturn([
                 'content_element/foo' => [
@@ -228,28 +228,31 @@ class TemplateOptionsListenerTest extends TestCase
                 'content_element/foo/variant' => [
                     '/templates/content_element/foo/variant.html.twig' => '@Contao_Global/content_element/foo/variant.html.twig',
                 ],
+                'frontend_module/_partial' => [
+                    '/templates/frontend_module/_partial.html.twig' => '@Contao_App/frontend_module/_partial.html.twig',
+                ],
                 'frontend_module/foo' => [
                     '/templates/frontend_module/foo.html.twig' => '@Contao_App/frontend_module/foo.html.twig',
                 ],
             ])
         ;
 
-        $listener = $this->getTemplateOptionsListener(null, $requestStack, $connection, $hierarchy);
+        $listener = $this->getTemplateOptionsListener(null, $requestStack, $connection, $filesystemLoader);
         $listener->setDefaultIdentifiersByType('tl_content', ['foo_element_type' => 'content_element/foo']);
         $listener->setDefaultIdentifiersByType('tl_module', ['foo_module_type' => 'frontend_module/foo']);
 
         return $listener;
     }
 
-    private function getTemplateOptionsListener(ContaoFramework|null $framework = null, RequestStack|null $requestStack = null, Connection|null $connection = null, TemplateHierarchyInterface|null $hierarchy = null): TemplateOptionsListener
+    private function getTemplateOptionsListener(ContaoFramework|null $framework = null, RequestStack|null $requestStack = null, Connection|null $connection = null, ContaoFilesystemLoader|null $filesystemLoader = null): TemplateOptionsListener
     {
-        $hierarchy ??= $this->createMock(TemplateHierarchyInterface::class);
+        $filesystemLoader ??= $this->createMock(ContaoFilesystemLoader::class);
         $connection ??= $this->createMock(Connection::class);
         $framework ??= $this->mockFramework();
         $requestStack ??= new RequestStack();
 
         $finder = new Finder(
-            $hierarchy,
+            $filesystemLoader,
             $this->createMock(ThemeNamespace::class),
             $this->createMock(Translator::class),
         );
@@ -265,7 +268,7 @@ class TemplateOptionsListenerTest extends TestCase
             $connection,
             $framework,
             $requestStack,
-            $hierarchy,
+            $filesystemLoader,
         );
     }
 
@@ -298,14 +301,14 @@ class TemplateOptionsListenerTest extends TestCase
         return $this->mockContaoFramework([Controller::class => $controllerAdapter]);
     }
 
-    private function mockDataContainer(string $table, array $currentRecord = []): DataContainer&MockObject
+    private function mockDataContainer(string $table, array $currentRecord = []): DC_Table&MockObject
     {
-        $dc = $this->mockClassWithProperties(DataContainer::class);
+        $dc = $this->mockClassWithProperties(DC_Table::class);
         $dc->table = $table;
 
         if ($currentRecord) {
             $dc
-                ->method('getCurrentRecord')
+                ->method('getActiveRecord')
                 ->willReturn($currentRecord)
             ;
         }

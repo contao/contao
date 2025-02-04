@@ -22,6 +22,7 @@ use Contao\TestCase\FunctionalTestCase;
 use League\Flysystem\Config;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class DbafsTest extends FunctionalTestCase
 {
@@ -37,7 +38,7 @@ class DbafsTest extends FunctionalTestCase
 
         $this->filesystem = new VirtualFilesystem(
             (new MountManager())->mount($this->adapter = new InMemoryFilesystemAdapter()),
-            $dbafsManager = new DbafsManager(),
+            $dbafsManager = new DbafsManager($this->createMock(EventDispatcherInterface::class)),
         );
 
         $container = $this->createClient()->getContainer();
@@ -106,6 +107,23 @@ class DbafsTest extends FunctionalTestCase
 
         $contents = $this->filesystem->listContents('')->toArray();
         $this->assertCount(0, $contents);
+    }
+
+    public function testCreateAndAccessFile(): void
+    {
+        // Ensure that "foo" is marked as non-existent resource in the DBFAS cache
+        $this->assertFalse($this->filesystem->fileExists('foo'));
+
+        // Creating a file should update the cache
+        $this->filesystem->write('foo', 'bar');
+
+        $this->assertTrue($this->filesystem->fileExists('foo'));
+        $this->assertTrue($this->filesystem->has('foo'));
+
+        $contents = $this->filesystem->listContents('')->toArray();
+
+        $this->assertCount(1, $contents);
+        $this->assertSame('foo', $contents[0]->getPath());
     }
 
     private function assertFile1MovedAndFile3Created(ChangeSet $changeSet): void

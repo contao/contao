@@ -140,7 +140,7 @@ class ContentCompositionListener
     {
         $pageModel->loadDetails();
 
-        if (!$layout = $this->framework->getAdapter(LayoutModel::class)->findByPk($pageModel->layout)) {
+        if (!$layout = $this->framework->getAdapter(LayoutModel::class)->findById($pageModel->layout)) {
             return 'main';
         }
 

@@ -14,7 +14,7 @@ namespace Contao\NewsBundle\EventListener;
 
 use Contao\ContentModel;
 use Contao\Controller;
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
@@ -47,7 +47,7 @@ class NewsFeedListener
         private readonly ContentUrlGenerator $urlGenerator,
         private readonly InsertTagParser $insertTags,
         private readonly string $projectDir,
-        private readonly EntityCacheTags $cacheTags,
+        private readonly CacheTagManager $cacheTags,
         private readonly string $charset,
     ) {
     }
@@ -76,7 +76,7 @@ class NewsFeedListener
         $article = $event->getArticle();
 
         $item = new Item();
-        $item->setTitle(html_entity_decode($article->headline, ENT_QUOTES, $this->charset));
+        $item->setTitle(html_entity_decode($article->headline, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $this->charset));
         $item->setLastModified((new \DateTime())->setTimestamp($article->date));
         $item->setLink($this->urlGenerator->generate($article, [], UrlGeneratorInterface::ABSOLUTE_URL));
         $item->setContent($this->getContent($article, $item, $event));
@@ -132,7 +132,7 @@ class NewsFeedListener
 
     private function getAuthor(NewsModel $article): AuthorInterface|null
     {
-        if ($authorModel = $this->framework->getAdapter(UserModel::class)->findByPk($article->author)) {
+        if ($authorModel = $this->framework->getAdapter(UserModel::class)->findById($article->author)) {
             return (new Author())->setName($authorModel->name);
         }
 
@@ -143,7 +143,7 @@ class NewsFeedListener
     {
         $uuids = [];
 
-        if ($article->singleSRC) {
+        if ($article->addImage && $article->singleSRC) {
             $uuids[] = $article->singleSRC;
         }
 

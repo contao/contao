@@ -73,7 +73,7 @@ class ModuleCalendar extends Events
 		$this->strUrl = preg_replace('/\?.*$/', '', Environment::get('requestUri'));
 		$this->strLink = $this->strUrl;
 
-		if ($objTarget = PageModel::findByPk($this->objModel->jumpTo))
+		if ($objTarget = PageModel::findById($this->objModel->jumpTo))
 		{
 			try
 			{
@@ -325,7 +325,7 @@ class ModuleCalendar extends Events
 			$arrDays[$intWeek][$i]['label'] = $intDay;
 			$arrDays[$intWeek][$i]['class'] = 'active' . $strClass;
 			$arrDays[$intWeek][$i]['href'] = $this->strLink . '?day=' . $intKey;
-			$arrDays[$intWeek][$i]['title'] = sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['cal_events']), \count($arrEvents));
+			$arrDays[$intWeek][$i]['title'] = \sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['cal_events']), \count($arrEvents));
 			$arrDays[$intWeek][$i]['events'] = $arrEvents;
 		}
 

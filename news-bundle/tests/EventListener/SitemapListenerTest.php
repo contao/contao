@@ -76,7 +76,7 @@ class SitemapListenerTest extends ContaoTestCase
         $this->assertStringContainsString('<url><loc>https://contao.org</loc></url>', (string) $sitemapEvent->getDocument()->saveXML());
     }
 
-    public function getNewsArticles(): \Generator
+    public static function getNewsArticles(): iterable
     {
         yield [
             [

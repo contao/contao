@@ -240,25 +240,25 @@ abstract class Events extends Module
 				}
 				else
 				{
-					$repeat = sprintf($GLOBALS['TL_LANG']['MSC']['cal_multiple_' . $arrRange['unit']], $arrRange['value']);
+					$repeat = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_multiple_' . $arrRange['unit']], $arrRange['value']);
 				}
 
 				if ($objEvents->recurrences > 0)
 				{
-					$until = ' ' . sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], Date::parse($objPage->dateFormat, $objEvents->repeatEnd));
+					$until = ' ' . \sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], Date::parse($objPage->dateFormat, $objEvents->repeatEnd));
 				}
 
 				if ($objEvents->recurrences > 0 && $intEnd < time())
 				{
-					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat_ended'], $repeat, $until);
+					$recurring = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat_ended'], $repeat, $until);
 				}
 				elseif ($objEvents->addTime)
 				{
-					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d\TH:i:sP', $intStart), $strDate . ($strTime ? ' ' . $strTime : ''));
+					$recurring = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d\TH:i:sP', $intStart), $strDate . ($strTime ? ' ' . $strTime : ''));
 				}
 				else
 				{
-					$recurring = sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d', $intStart), $strDate);
+					$recurring = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d', $intStart), $strDate);
 				}
 			}
 		}
@@ -289,7 +289,7 @@ abstract class Events extends Module
 		$arrEvent['day'] = $strDay;
 		$arrEvent['month'] = $strMonth;
 		$arrEvent['parent'] = $intCalendar;
-		$arrEvent['calendar'] = CalendarModel::findByPk($objEvents->pid);
+		$arrEvent['calendar'] = CalendarModel::findById($objEvents->pid);
 		$arrEvent['link'] = $objEvents->title;
 		$arrEvent['target'] = '';
 		$arrEvent['title'] = StringUtil::specialchars($objEvents->title, true);
@@ -333,7 +333,7 @@ abstract class Events extends Module
 		{
 			$id = $objEvents->id;
 
-			$arrEvent['details'] = function () use ($id) {
+			$arrEvent['details'] = Template::once(function () use ($id) {
 				$strDetails = '';
 				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_calendar_events');
 
@@ -346,11 +346,11 @@ abstract class Events extends Module
 				}
 
 				return $strDetails;
-			};
+			});
 
-			$arrEvent['hasDetails'] = null === $url ? false : static function () use ($id) {
+			$arrEvent['hasDetails'] = null === $url ? false : Template::once(static function () use ($id) {
 				return ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0;
-			};
+			});
 		}
 
 		// Get today's start and end timestamp

@@ -75,7 +75,7 @@ class FileTree extends Widget
 		{
 			if ($this->mandatory)
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
 			}
 
 			return '';
@@ -142,7 +142,7 @@ class FileTree extends Widget
 			// Only files within a custom path can be selected
 			if ($this->path && !str_starts_with($objFile->path, $this->path . '/'))
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['pathOnly'], $this->path));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['pathOnly'], $this->path));
 				break;
 			}
 
@@ -154,7 +154,7 @@ class FileTree extends Widget
 
 				if (!\in_array($objFile->extension, $extensions))
 				{
-					$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['extensionsOnly'], $this->extensions));
+					$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['extensionsOnly'], $this->extensions));
 					break;
 				}
 			}
@@ -204,7 +204,7 @@ class FileTree extends Widget
 
 							if ($this->showAsImage($objFile))
 							{
-								$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $strInfo);
+								$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $objFile->path);
 							}
 							else
 							{
@@ -239,7 +239,7 @@ class FileTree extends Widget
 								// Only show images
 								if ($objFile->isImage)
 								{
-									$arrValues[$objSubfiles->uuid] = $this->getPreviewImage($objFile, $strInfo);
+									$arrValues[$objSubfiles->uuid] = $this->getPreviewImage($objFile, $objFile->path);
 								}
 							}
 							// Only show allowed download types
@@ -247,7 +247,7 @@ class FileTree extends Widget
 							{
 								if ($this->showAsImage($objFile))
 								{
-									$arrValues[$objSubfiles->uuid] = $this->getPreviewImage($objFile, $strInfo);
+									$arrValues[$objSubfiles->uuid] = $this->getPreviewImage($objFile, $objFile->path);
 								}
 								else
 								{
@@ -266,7 +266,7 @@ class FileTree extends Widget
 							// Only show images
 							if ($objFile->isImage)
 							{
-								$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $strInfo, 'gimage removable');
+								$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $objFile->path, 'gimage removable');
 							}
 						}
 						// Only show allowed download types
@@ -274,7 +274,7 @@ class FileTree extends Widget
 						{
 							if ($this->showAsImage($objFile))
 							{
-								$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $strInfo, 'gimage removable');
+								$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $objFile->path, 'gimage removable');
 							}
 							else
 							{
@@ -414,12 +414,12 @@ class FileTree extends Widget
 				->get('contao.image.preview_factory')
 				->createPreviewPicture($projectDir . '/' . $objFile->path, $pictureConfig);
 
-			$img = $picture->getImg($projectDir);
+			$img = $picture->getImg($projectDir, $container->get('contao.assets.files_context')->getStaticUrl());
 
-			return sprintf('<img src="%s"%s width="%s" height="%s" alt class="%s" title="%s" loading="lazy">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], $strClass, StringUtil::specialchars($strInfo));
+			return \sprintf('<img src="%s"%s width="%s" height="%s" alt="%s" class="%s" loading="lazy" data-contao--tooltips-target="tooltip">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], $strInfo, $strClass);
 		}
 
-		return Image::getHtml('placeholder.svg', '', 'class="' . $strClass . '" title="' . StringUtil::specialchars($strInfo) . '"');
+		return Image::getHtml('placeholder.svg', $strInfo, 'class="' . $strClass . '" data-contao--tooltips-target="tooltip"');
 	}
 
 	private function getFilePreviewPath(string $path): string|null

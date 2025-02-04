@@ -13,8 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Filesystem\Dbafs;
 
 use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Uid\Uuid;
 
@@ -35,6 +37,10 @@ class DbafsManager
      * @var array<string|int, DbafsInterface>
      */
     private array $dbafs = [];
+
+    public function __construct(private readonly EventDispatcherInterface $eventDispatcher)
+    {
+    }
 
     public function register(DbafsInterface $dbafs, string $pathPrefix): void
     {
@@ -82,9 +88,9 @@ class DbafsManager
     /**
      * Resolves a UUID to a path.
      *
-     * All registered DBAFS are queried until the request can be fulfilled,
-     * otherwise an UnableToResolveUuidException will be thrown. You can
-     * constrain querying only a subset by providing a path $prefix.
+     * All registered DBAFS are queried until the request can be fulfilled, otherwise
+     * an UnableToResolveUuidException will be thrown. You can constrain querying only
+     * a subset by providing a path $prefix.
      *
      * The returned path will always be relative to the provided prefix:
      *
@@ -105,8 +111,8 @@ class DbafsManager
     }
 
     /**
-     * Returns the last modified time or null if no DBAFS exists for the given
-     * $path that supports the attribute and contains a matching record.
+     * Returns the last modified time or null if no DBAFS exists for the given $path
+     * that supports the attribute and contains a matching record.
      */
     public function getLastModified(string $path): int|null
     {
@@ -124,8 +130,8 @@ class DbafsManager
     }
 
     /**
-     * Returns the file size or null if no DBAFS exists for the given $path
-     * that supports the attribute and contains a matching record.
+     * Returns the file size or null if no DBAFS exists for the given $path that
+     * supports the attribute and contains a matching record.
      */
     public function getFileSize(string $path): int|null
     {
@@ -143,8 +149,8 @@ class DbafsManager
     }
 
     /**
-     * Returns the mime type or null if no DBAFS exists for the given $path
-     * that supports the attribute and contains a matching record.
+     * Returns the mime type or null if no DBAFS exists for the given $path that
+     * supports the attribute and contains a matching record.
      */
     public function getMimeType(string $path): string|null
     {
@@ -162,23 +168,20 @@ class DbafsManager
     }
 
     /**
-     * Returns merged extra metadata from all DBAFS that are able to serve the
-     * given $path.
-     *
-     * @return array<string, mixed>
+     * Returns merged extra metadata from all DBAFS that are able to serve the given $path.
      */
-    public function getExtraMetadata(string $path): array
+    public function getExtraMetadata(string $path): ExtraMetadata
     {
         $metadataChunks = [];
         $metadataKeys = [];
 
         foreach ($this->getDbafsForPath($path) as $prefix => $dbafs) {
             if ($record = $dbafs->getRecord(Path::makeRelative($path, $prefix))) {
-                $chunk = $record->getExtraMetadata();
+                $chunk = $record->getExtraMetadata()->all();
                 $keys = array_keys($chunk);
 
                 if ($duplicates = array_intersect($metadataKeys, $keys)) {
-                    throw new \LogicException(sprintf('The metadata key(s) "%s" appeared in more than one matching DBAFS for path "%s".', implode('", "', $duplicates), $path));
+                    throw new \LogicException(\sprintf('The metadata key(s) "%s" appeared in more than one matching DBAFS for path "%s".', implode('", "', $duplicates), $path));
                 }
 
                 $metadataChunks[] = $chunk;
@@ -186,15 +189,13 @@ class DbafsManager
             }
         }
 
-        return array_merge(...array_reverse($metadataChunks));
+        return new ExtraMetadata(array_merge(...array_reverse($metadataChunks)));
     }
 
     /**
      * Sets extra metadata to all DBAFS that are able to serve the given $path.
-     *
-     * @param array<string, mixed> $metadata
      */
-    public function setExtraMetadata(string $path, array $metadata): void
+    public function setExtraMetadata(string $path, ExtraMetadata $metadata): void
     {
         $success = false;
 
@@ -210,15 +211,18 @@ class DbafsManager
         }
 
         if (!$success) {
-            throw new \InvalidArgumentException(sprintf('No resource exists for the given path "%s".', $path));
+            throw new \InvalidArgumentException(\sprintf('No resource exists for the given path "%s".', $path));
         }
+
+        $changeSet = new ChangeSet([], [$path => []], []);
+        $this->eventDispatcher->dispatch(new DbafsChangeEvent($changeSet));
     }
 
     /**
      * List contents from all DBAFS that are able to serve the given $path.
      *
-     * Each path is guaranteed to be only reported once, i.e. identical paths
-     * from DBAFs with a lower specificity will be ignored.
+     * Each path is guaranteed to be only reported once, i.e. identical paths from
+     * DBAFs with a lower specificity will be ignored.
      *
      * @return \Generator<FilesystemItem>
      */
@@ -273,6 +277,8 @@ class DbafsManager
             $changeSet = $changeSet->withOther($dbafs->sync(...$matchingPaths), (string) $prefix);
         }
 
+        $this->eventDispatcher->dispatch(new DbafsChangeEvent($changeSet));
+
         return $changeSet;
     }
 
@@ -315,9 +321,9 @@ class DbafsManager
      * Ensures that all DBAFS with a more specific prefix are also supporting
      * everything each less specific one does.
      *
-     * For example, a DBAFS with prefix "files/media" must also support
-     * "fileSize" if the DBAFS under "files" does. It could, however, support
-     * additional properties like "mimeType" even if the "files" DBAFS does not.
+     * For example, a DBAFS with prefix "files/media" must also support "fileSize" if
+     * the DBAFS under "files" does. It could, however, support additional properties
+     * like "mimeType" even if the "files" DBAFS does not.
      */
     private function validateTransitiveProperties(): void
     {
@@ -332,7 +338,7 @@ class DbafsManager
                 if (0 !== $nonTransitive) {
                     $features = implode('" and "', $this->getFeatureFlagsAsNames($nonTransitive));
 
-                    throw new \LogicException(sprintf('The transitive feature(s) "%s" must be supported for any DBAFS with a path prefix "%s", because they are also supported for "%s".', $features, $prefix, $currentPrefix));
+                    throw new \LogicException(\sprintf('The transitive feature(s) "%s" must be supported for any DBAFS with a path prefix "%s", because they are also supported for "%s".', $features, $prefix, $currentPrefix));
                 }
             }
 

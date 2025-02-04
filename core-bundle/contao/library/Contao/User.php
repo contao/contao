@@ -329,6 +329,16 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 	public static function loadUserByIdentifier(string $identifier): self|null
 	{
+		return self::loadUserBy('username', $identifier);
+	}
+
+	public static function loadUserById(int $id): self|null
+	{
+		return self::loadUserBy('id', $id);
+	}
+
+	public static function loadUserBy(string $column, mixed $value): self|null
+	{
 		if (!System::getContainer()->get('request_stack')->getCurrentRequest())
 		{
 			return null;
@@ -337,7 +347,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		$user = new static();
 
 		// Load the user object
-		if ($user->findBy('username', $identifier) === false)
+		if ($user->findBy($column, $value) === false)
 		{
 			return null;
 		}
@@ -359,7 +369,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 		if (!\is_string($this->username))
 		{
-			throw new \RuntimeException(sprintf('Invalid type "%s" for username', \gettype($this->username)));
+			throw new \RuntimeException(\sprintf('Invalid type "%s" for username', \gettype($this->username)));
 		}
 
 		return $this->username;
@@ -406,7 +416,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * {@inheritdoc}
 	 */
-	public function eraseCredentials()
+	public function eraseCredentials(): void
 	{
 	}
 

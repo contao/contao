@@ -69,7 +69,7 @@ class FormRadio extends Widget
 				break;
 
 			case 'options':
-				$this->arrOptions = StringUtil::deserialize($varValue);
+				$this->arrOptions = StringUtil::deserialize($varValue, true);
 				break;
 
 			case 'rgxp':
@@ -203,7 +203,7 @@ class FormRadio extends Widget
 
 		foreach ($this->arrOptions as $i=>$arrOption)
 		{
-			$strOptions .= sprintf(
+			$strOptions .= \sprintf(
 				'<span><input type="radio" name="%s" id="opt_%s" class="radio" value="%s"%s%s%s <label id="lbl_%s" for="opt_%s">%s</label></span> ',
 				$this->strName,
 				$this->strId . '_' . $i,
@@ -219,7 +219,7 @@ class FormRadio extends Widget
 
 		if ($this->strLabel)
 		{
-			return sprintf(
+			return \sprintf(
 				'<fieldset id="ctrl_%s" class="radio_container%s"><legend>%s%s%s</legend>%s<input type="hidden" name="%s" value=""%s%s</fieldset>',
 				$this->strId,
 				$this->strClass ? ' ' . $this->strClass : '',
@@ -233,7 +233,7 @@ class FormRadio extends Widget
 			);
 		}
 
-		return sprintf(
+		return \sprintf(
 			'<fieldset id="ctrl_%s" class="radio_container%s">%s<input type="hidden" name="%s" value=""%s%s</fieldset>',
 			$this->strId,
 			$this->strClass ? ' ' . $this->strClass : '',

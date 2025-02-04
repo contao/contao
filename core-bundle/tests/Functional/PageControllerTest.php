@@ -61,13 +61,13 @@ class PageControllerTest extends FunctionalTestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    public function getPageController(): \Generator
+    public static function getPageController(): iterable
     {
         foreach (['/test', '/test/5', '/test/5/abc'] as $request) {
             foreach ([true, false] as $withDefault) {
                 foreach ([true, false] as $withSuffix) {
                     foreach ([true, false] as $withAlias) {
-                        $description = sprintf(
+                        $description = \sprintf(
                             'Request: %s, withDefault: %s, withSuffix: %s, withAlias: %s',
                             $request,
                             $withDefault ? 'yes' : 'no',

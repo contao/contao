@@ -153,7 +153,7 @@ class PictureFactory implements PictureFactoryInterface
             // Database record
             if (is_numeric($size[2])) {
                 $imageSizeModel = $this->framework->getAdapter(ImageSizeModel::class);
-                $imageSizes = $imageSizeModel->findByPk($size[2]);
+                $imageSizes = $imageSizeModel->findById($size[2]);
 
                 $config->setSize($this->createConfigItem($imageSizes?->row()));
 
@@ -205,14 +205,8 @@ class PictureFactory implements PictureFactoryInterface
 
                         foreach (explode(';', $formatsString) as $format) {
                             [$source, $targets] = explode(':', $format, 2);
-                            $targets = explode(',', $targets);
 
-                            if (!isset($formats[$source])) {
-                                $formats[$source] = $targets;
-                                continue;
-                            }
-
-                            $formats[$source] = array_unique([...$formats[$source], ...$targets]);
+                            $formats[$source] = array_unique([...($formats[$source] ?? []), ...explode(',', $targets)]);
 
                             usort(
                                 $formats[$source],
@@ -336,33 +330,33 @@ class PictureFactory implements PictureFactoryInterface
         $resizeConfig = new ResizeConfiguration();
 
         if (null !== $imageSize) {
-            if (isset($imageSize['width'])) {
+            if (!empty($imageSize['width'])) {
                 $resizeConfig->setWidth((int) $imageSize['width']);
             }
 
-            if (isset($imageSize['height'])) {
+            if (!empty($imageSize['height'])) {
                 $resizeConfig->setHeight((int) $imageSize['height']);
             }
 
-            if (isset($imageSize['zoom'])) {
+            if (!empty($imageSize['zoom'])) {
                 $resizeConfig->setZoomLevel((int) $imageSize['zoom']);
             }
 
-            if (isset($imageSize['resizeMode'])) {
+            if (!empty($imageSize['resizeMode'])) {
                 $resizeConfig->setMode((string) $imageSize['resizeMode']);
             }
 
             $configItem->setResizeConfig($resizeConfig);
 
-            if (isset($imageSize['sizes'])) {
+            if (!empty($imageSize['sizes'])) {
                 $configItem->setSizes((string) $imageSize['sizes']);
             }
 
-            if (isset($imageSize['densities'])) {
+            if (!empty($imageSize['densities'])) {
                 $configItem->setDensities((string) $imageSize['densities']);
             }
 
-            if (isset($imageSize['media'])) {
+            if (!empty($imageSize['media'])) {
                 $configItem->setMedia((string) $imageSize['media']);
             }
         }
@@ -386,8 +380,8 @@ class PictureFactory implements PictureFactoryInterface
     }
 
     /**
-     * Returns true if the aspect ratios of all sources of the picture are
-     * nearly the same and differ less than the ASPECT_RATIO_THRESHOLD.
+     * Returns true if the aspect ratios of all sources of the picture are nearly the
+     * same and differ less than the ASPECT_RATIO_THRESHOLD.
      */
     private function hasSingleAspectRatio(PictureInterface $picture): bool
     {

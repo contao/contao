@@ -94,7 +94,7 @@ class CalendarEventsResolverTest extends ContaoTestCase
 
         $framework = $this->mockContaoFramework([
             PageModel::class => $pageAdapter,
-            CalendarModel::class => $this->mockConfiguredAdapter(['findByPk' => $calendar]),
+            CalendarModel::class => $this->mockConfiguredAdapter(['findById' => $calendar]),
         ]);
 
         $resolver = new CalendarEventsResolver($framework);
@@ -115,7 +115,7 @@ class CalendarEventsResolverTest extends ContaoTestCase
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));
     }
 
-    public function getParametersForContentProvider(): \Generator
+    public function getParametersForContentProvider(): iterable
     {
         yield 'Uses the event alias' => [
             $this->mockClassWithProperties(CalendarEventsModel::class, ['id' => 42, 'alias' => 'foobar']),

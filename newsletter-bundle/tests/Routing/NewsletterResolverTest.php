@@ -36,7 +36,7 @@ class NewsletterResolverTest extends ContaoTestCase
 
         $framework = $this->mockContaoFramework([
             PageModel::class => $pageAdapter,
-            NewsletterChannelModel::class => $this->mockConfiguredAdapter(['findByPk' => $channel]),
+            NewsletterChannelModel::class => $this->mockConfiguredAdapter(['findById' => $channel]),
         ]);
 
         $resolver = new NewsletterResolver($framework);
@@ -57,7 +57,7 @@ class NewsletterResolverTest extends ContaoTestCase
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));
     }
 
-    public function getParametersForContentProvider(): \Generator
+    public function getParametersForContentProvider(): iterable
     {
         yield 'Uses the newsletter alias' => [
             $this->mockClassWithProperties(NewsletterModel::class, ['id' => 42, 'alias' => 'foobar']),

@@ -21,6 +21,7 @@ use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGenerator;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGeneratorInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\StoreDbafsMetadataEvent;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItemIterator;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
@@ -299,7 +300,7 @@ class DbafsTest extends TestCase
                             'bar' => 'complex b',
                             'baz' => 'complex c',
                         ],
-                        $event->getExtraMetadata(),
+                        $event->getExtraMetadata()->all(),
                     );
 
                     $event->set('foo', 'normalized a');
@@ -313,11 +314,11 @@ class DbafsTest extends TestCase
 
         $dbafs = $this->getDbafs($connection, null, $eventDispatcher);
 
-        $dbafs->setExtraMetadata('some/path', [
+        $dbafs->setExtraMetadata('some/path', new ExtraMetadata([
             'foo' => 'complex a',
             'bar' => 'complex b',
             'baz' => 'complex c',
-        ]);
+        ]));
 
         // Assert internal cache is cleared and file item correctly contains new metadata
         $item = $dbafs->getRecord('some/path');
@@ -339,7 +340,7 @@ class DbafsTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Record for path "some/invalid/path" does not exist.');
 
-        $dbafs->setExtraMetadata('some/invalid/path', []);
+        $dbafs->setExtraMetadata('some/invalid/path', new ExtraMetadata());
     }
 
     public function testNormalizesPathsIfDatabasePrefixWasSet(): void
@@ -421,7 +422,7 @@ class DbafsTest extends TestCase
         $this->assertSame($expectedParentPaths, $parentPaths, 'parent paths');
     }
 
-    public function provideSearchPaths(): \Generator
+    public static function provideSearchPaths(): iterable
     {
         yield 'single file' => [
             ['foo/bar/baz/cat.jpg'],
@@ -487,7 +488,7 @@ class DbafsTest extends TestCase
         $dbafs->computeChangeSet(...$paths);
     }
 
-    public function provideInvalidSearchPaths(): \Generator
+    public static function provideInvalidSearchPaths(): iterable
     {
         yield 'absolute path to file' => [
             ['foo', '/path/to/foo'],
@@ -561,7 +562,7 @@ class DbafsTest extends TestCase
         $this->assertSameChangeSet($expected, $changeSet);
     }
 
-    public function provideFilesystemsAndExpectedChangeSets(): \Generator
+    public function provideFilesystemsAndExpectedChangeSets(): iterable
     {
         $getFilesystem = function (): VirtualFilesystemInterface {
             $filesystem = new VirtualFilesystem(
@@ -1419,7 +1420,7 @@ class DbafsTest extends TestCase
     {
         $hash = md5((string) $index);
 
-        $uuid = sprintf(
+        $uuid = \sprintf(
             '%08s-%04s-1%03s-8000-000000000000',
             substr($hash, -8),
             substr($hash, -12, 4),

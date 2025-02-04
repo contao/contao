@@ -1,8 +1,18 @@
+<?php
+
+$this->wrapperAttributes = $this
+    ->attr($this->cssID)
+    ->addClass([$this->class, 'block'])
+    ->addStyle($this->style ?? '')
+    ->mergeWith($this->wrapperAttributes)
+;
+
+?>
 
 <?php if ($this->teaserOnly): ?>
 
   <?php $this->block('alias'); ?>
-    <article class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+    <article<?= $this->wrapperAttributes ?>>
       <div class="ce_text block">
         <h2><?= $this->headline ?></h2>
         <div class="teaser">
@@ -21,16 +31,13 @@
 
 <?php else: ?>
 
-  <div class="<?= $this->class ?> block"<?= $this->cssID ?><?php if ($this->style): ?> style="<?= $this->style ?>"<?php endif; ?>>
+  <div<?= $this->wrapperAttributes ?>>
     <?php if ($this->printable): ?>
       <?php $this->block('syndication'); ?>
         <!-- indexer::stop -->
         <div class="syndication">
           <?php if ($this->printButton): ?>
             <a href="<?= $this->print ?>" class="print" title="<?= $this->printTitle ?>" onclick="window.print();return false" data-skip-search-index><?= Contao\Image::getHtml('assets/contao/images/print.svg') ?></a>
-          <?php endif; ?>
-          <?php if ($this->pdfButton): ?>
-            <a href="<?= $this->href ?>" class="pdf" title="<?= $this->pdfTitle ?>" data-skip-search-index><?= Contao\Image::getHtml('assets/contao/images/pdf.svg') ?></a>
           <?php endif; ?>
           <?php if ($this->facebookButton): ?>
             <a href="<?= $this->route('contao_frontend_share', ['p' => 'facebook', 'u' => $this->encUrl]) ?>" class="facebook" rel="nofollow" title="<?= $this->facebookTitle ?>" onclick="var w=window.open(this.href,'','width=640,height=380,modal=yes,left=100,top=50,location=no,menubar=no,resizable=yes,scrollbars=yes,status=no,toolbar=no');w.opener=null;return false"><?= Contao\Image::getHtml('assets/contao/images/facebook.svg') ?></a>

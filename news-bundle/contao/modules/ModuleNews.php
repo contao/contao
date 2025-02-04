@@ -88,7 +88,7 @@ abstract class ModuleNews extends Module
 		$objTemplate->subHeadline = $objArticle->subheadline;
 		$objTemplate->hasSubHeadline = $objArticle->subheadline ? true : false;
 		$objTemplate->linkHeadline = $objArticle->headline;
-		$objTemplate->archive = NewsArchiveModel::findByPk($objArticle->pid);
+		$objTemplate->archive = NewsArchiveModel::findById($objArticle->pid);
 		$objTemplate->count = $intCount; // see #5708
 		$objTemplate->text = '';
 		$objTemplate->hasTeaser = false;
@@ -123,7 +123,7 @@ abstract class ModuleNews extends Module
 		{
 			$id = $objArticle->id;
 
-			$objTemplate->text = function () use ($id) {
+			$objTemplate->text = Template::once(function () use ($id) {
 				$strText = '';
 				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_news');
 
@@ -136,18 +136,18 @@ abstract class ModuleNews extends Module
 				}
 
 				return $strText;
-			};
+			});
 
-			$objTemplate->hasText = null === $url ? false : static function () use ($objArticle) {
+			$objTemplate->hasText = null === $url ? false : Template::once(static function () use ($objArticle) {
 				return ContentModel::countPublishedByPidAndTable($objArticle->id, 'tl_news') > 0;
-			};
+			});
 		}
 
 		global $objPage;
 
 		$objTemplate->date = Date::parse($objPage->datimFormat, $objArticle->date);
 
-		if ($objAuthor = UserModel::findByPk($objArticle->author))
+		if ($objAuthor = UserModel::findById($objArticle->author))
 		{
 			$objTemplate->author = $GLOBALS['TL_LANG']['MSC']['by'] . ' ' . $objAuthor->name;
 			$objTemplate->authorModel = $objAuthor;
@@ -158,7 +158,7 @@ abstract class ModuleNews extends Module
 			$intTotal = CommentsModel::countPublishedBySourceAndParent('tl_news', $objArticle->id);
 
 			$objTemplate->numberOfComments = $intTotal;
-			$objTemplate->commentCount = sprintf($GLOBALS['TL_LANG']['MSC']['commentCount'], $intTotal);
+			$objTemplate->commentCount = \sprintf($GLOBALS['TL_LANG']['MSC']['commentCount'], $intTotal);
 		}
 
 		// Add the meta information
@@ -204,7 +204,7 @@ abstract class ModuleNews extends Module
 				// set by the news list and news archive modules (see #5851).
 				if ($intCount > 0 && !$figure->getLinkHref())
 				{
-					$linkTitle = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
+					$linkTitle = StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
 
 					$figure = $figureBuilder
 						->setLinkHref($objTemplate->link)
@@ -311,10 +311,10 @@ abstract class ModuleNews extends Module
 		$strReadMore = $blnIsInternal ? $GLOBALS['TL_LANG']['MSC']['readMore'] : $GLOBALS['TL_LANG']['MSC']['open'];
 		$strArticleUrl = $this->generateContentUrl($objArticle, $blnAddArchive);
 
-		return sprintf(
+		return \sprintf(
 			'<a href="%s" title="%s"%s>%s%s</a>',
 			$strArticleUrl,
-			StringUtil::specialchars(sprintf($strReadMore, $blnIsInternal ? $objArticle->headline : $strArticleUrl), true),
+			StringUtil::specialchars(\sprintf($strReadMore, $blnIsInternal ? $objArticle->headline : $strArticleUrl), true),
 			$objArticle->target && !$blnIsInternal ? ' target="_blank" rel="noreferrer noopener"' : '',
 			$strLink,
 			$blnIsReadMore && $blnIsInternal ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : ''

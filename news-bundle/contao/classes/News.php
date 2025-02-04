@@ -87,7 +87,7 @@ class News extends Frontend
 			$jsonLd['description'] = $htmlDecoder->htmlToPlainText($objArticle->teaser);
 		}
 
-		if ($objAuthor = UserModel::findByPk($objArticle->author))
+		if ($objAuthor = UserModel::findById($objArticle->author))
 		{
 			$jsonLd['author'] = array(
 				'@type' => 'Person',

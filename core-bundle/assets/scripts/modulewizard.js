@@ -10,8 +10,9 @@
             return;
         }
 
-        // Check if this row has all necessary elements
-        if (9 !== row.querySelectorAll('select, button, a.module_link, img.module_image').length) {
+        // Check if the row has all necessary elements to prevent the mutation observer
+        // from initializing the incomplete widget.
+        if (!row.querySelector('button.drag-handle')) {
             return;
         }
 
@@ -44,7 +45,7 @@
                 switch (command) {
                     case 'copy':
                         bt.addEventListener('click', () => {
-                            window.dispatchEvent(saveScrollOffsetEvent)
+                            window.dispatchEvent(saveScrollOffsetEvent);
 
                             const ntr = tr.cloneNode(true);
                             const selects = tr.querySelectorAll('select');
@@ -61,13 +62,6 @@
 
                             initializedRows.set(ntr, true);
                             tr.parentNode.insertBefore(ntr, tr.nextSibling);
-
-                            // Remove the ID of the select before initializing Chosen
-                            const select = ntr.querySelector('select.tl_select')
-                            select.removeAttribute('id');
-
-                            ntr.querySelector('.chzn-container').remove();
-                            new Chosen(select);
 
                             addEventsTo(ntr);
                             makeSortable(tbody);
@@ -165,9 +159,6 @@
             };
 
             select.addEventListener('change', updateLink);
-
-            // Backwards compatibility with MooTools "Chosen" script that fires non-native change event
-            select.addEvent('change', updateLink);
         };
 
         makeSortable(tbody);

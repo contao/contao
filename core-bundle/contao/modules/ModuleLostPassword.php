@@ -174,7 +174,7 @@ class ModuleLostPassword extends Module
 		$optIn = System::getContainer()->get('contao.opt_in');
 
 		// Find an unconfirmed token with only one related record
-		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || \count($arrIds = current($arrRelated)) != 1 || (!$objMember = MemberModel::findByPk($arrIds[0])))
+		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || \count($arrIds = current($arrRelated)) != 1 || (!$objMember = MemberModel::findById($arrIds[0])))
 		{
 			$this->strTemplate = 'mod_message';
 
@@ -244,6 +244,14 @@ class ModuleLostPassword extends Module
 				$objMember->password = $objWidget->value;
 				$objMember->save();
 
+				// Delete unconfirmed "change password" tokens
+				$models = OptInModel::findUnconfirmedByRelatedTableAndId('tl_member', $objMember->id);
+
+				foreach ($models ?? array() as $model)
+				{
+					$model->delete();
+				}
+
 				$optInToken->confirm();
 
 				// Create a new version
@@ -262,7 +270,7 @@ class ModuleLostPassword extends Module
 				}
 
 				// Redirect to the jumpTo page
-				if ($objTarget = PageModel::findByPk($this->objModel->reg_jumpTo))
+				if ($objTarget = PageModel::findById($this->objModel->reg_jumpTo))
 				{
 					$this->redirect(System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget));
 				}
@@ -293,6 +301,20 @@ class ModuleLostPassword extends Module
 	 */
 	protected function sendPasswordLink($objMember)
 	{
+		$factory = System::getContainer()->get('contao.rate_limit.member_password_factory');
+		$limiter = $factory->create($objMember->id);
+
+		if (!$limiter->consume()->isAccepted())
+		{
+			$this->strTemplate = 'mod_message';
+
+			$this->Template = new FrontendTemplate($this->strTemplate);
+			$this->Template->type = 'error';
+			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tooManyPasswordResetAttempts'];
+
+			return;
+		}
+
 		$optIn = System::getContainer()->get('contao.opt_in');
 		$optInToken = $optIn->create('pw', $objMember->email, array('tl_member'=>array($objMember->id)));
 
@@ -304,14 +326,14 @@ class ModuleLostPassword extends Module
 
 		// Send the token
 		$optInToken->send(
-			sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], Idna::decode(Environment::get('host'))),
+			\sprintf($GLOBALS['TL_LANG']['MSC']['passwordSubject'], Idna::decode(Environment::get('host'))),
 			System::getContainer()->get('contao.string.simple_token_parser')->parse($this->reg_password, $arrData)
 		);
 
 		System::getContainer()->get('monolog.logger.contao.access')->info('A new password has been requested for user ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ')');
 
 		// Check whether there is a jumpTo page
-		if ($objJumpTo = PageModel::findByPk($this->objModel->jumpTo))
+		if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
 		{
 			$this->jumpToOrReload($objJumpTo->row());
 		}

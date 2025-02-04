@@ -51,7 +51,7 @@ class SectionWizard extends Widget
 			// Check for duplicate section titles
 			if (\in_array($arrSection['title'], $arrTitles))
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['duplicateSectionTitle'], $arrSection['title']));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['duplicateSectionTitle'], $arrSection['title']));
 			}
 
 			$arrSection['id'] = StringUtil::standardize($arrSection['id'], true);
@@ -65,7 +65,7 @@ class SectionWizard extends Widget
 			// Check for duplicate section IDs
 			if (\in_array($arrSection['id'], $arrIds))
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['duplicateSectionId'], $arrSection['id']));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['duplicateSectionId'], $arrSection['id']));
 			}
 
 			$arrTitles[] = $arrSection['title'];
@@ -133,18 +133,18 @@ class SectionWizard extends Widget
 
 			$return .= '
     <td><select name="' . $this->strId . '[' . $i . '][position]" class="tl_select" data-action="focus->contao--scroll-offset#store">' . $options . '</select></td>
-    <td>';
+    <td class="tl_right">';
 
 			// Add the buttons
 			foreach ($arrButtons as $button)
 			{
 				if ($button == 'drag')
 				{
-					$return .= ' <button type="button" class="drag-handle" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button>';
+					$return .= ' <button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', $GLOBALS['TL_LANG']['MSC']['move']) . '</button>';
 				}
 				else
 				{
-					$return .= ' <button type="button" data-command="' . $button . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_' . $button]) . '">' . Image::getHtml($button . '.svg') . '</button>';
+					$return .= ' <button type="button" data-command="' . $button . '">' . Image::getHtml($button . '.svg', $GLOBALS['TL_LANG']['MSC']['mw_' . $button]) . '</button>';
 				}
 			}
 

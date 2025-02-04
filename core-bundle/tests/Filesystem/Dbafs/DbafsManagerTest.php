@@ -13,19 +13,22 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Filesystem\Dbafs;
 
 use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
+use Contao\CoreBundle\Filesystem\Dbafs\DbafsChangeEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Uid\Uuid;
 
 class DbafsManagerTest extends TestCase
 {
     public function testRegisterAndMatchDbafs(): void
     {
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
 
         $manager->register(
             $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED),
@@ -57,7 +60,7 @@ class DbafsManagerTest extends TestCase
      */
     public function testValidatesTransitiveProperties(array $paths, string $exception): void
     {
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage($exception);
@@ -67,7 +70,7 @@ class DbafsManagerTest extends TestCase
         }
     }
 
-    public function provideInvalidConfigurations(): \Generator
+    public function provideInvalidConfigurations(): iterable
     {
         yield 'more specific one which does not support last modified should be reported' => [
             [
@@ -110,7 +113,7 @@ class DbafsManagerTest extends TestCase
         $uuid2 = Uuid::v1();
         $uuid3 = Uuid::v1();
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
 
         $manager->register(
             $this->getDbafsCoveringUuids([
@@ -164,7 +167,7 @@ class DbafsManagerTest extends TestCase
             )
         ;
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
         $manager->register($dbafs, 'foo');
 
         $this->assertTrue($manager->has('foo/bar.file'));
@@ -199,7 +202,7 @@ class DbafsManagerTest extends TestCase
             ->method('getRecord')
         ;
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
         $manager->register($dbafs1, 'foo');
         $manager->register($dbafs2, '');
 
@@ -222,7 +225,7 @@ class DbafsManagerTest extends TestCase
             ->method('getRecord')
         ;
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
         $manager->register($dbafs1, 'foo');
         $manager->register($dbafs2, '');
 
@@ -245,7 +248,7 @@ class DbafsManagerTest extends TestCase
             ->method('getRecord')
         ;
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
         $manager->register($dbafs1, 'foo');
         $manager->register($dbafs2, '');
 
@@ -255,16 +258,16 @@ class DbafsManagerTest extends TestCase
 
     public function testGetExtraMetadata(): void
     {
-        $filesDbafs = $this->getDbafsWithExtraMetadata('media/hilarious-cat.mov', [
+        $filesDbafs = $this->getDbafsWithExtraMetadata('media/hilarious-cat.mov', new ExtraMetadata([
             'foo' => 'foobar',
             'bar' => 42,
-        ]);
+        ]));
 
-        $filesMediaDbafs = $this->getDbafsWithExtraMetadata('hilarious-cat.mov', [
+        $filesMediaDbafs = $this->getDbafsWithExtraMetadata('hilarious-cat.mov', new ExtraMetadata([
             'baz' => true,
-        ]);
+        ]));
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
         $manager->register($filesDbafs, 'files');
         $manager->register($filesMediaDbafs, 'files/media');
 
@@ -274,25 +277,25 @@ class DbafsManagerTest extends TestCase
                 'bar' => 42,
                 'baz' => true,
             ],
-            $manager->getExtraMetadata('files/media/hilarious-cat.mov'),
+            $manager->getExtraMetadata('files/media/hilarious-cat.mov')->all(),
         );
     }
 
     public function testValidatesExtraMetadata(): void
     {
-        $assetsDbafs = $this->getDbafsWithExtraMetadata('images/a.jpg', [
+        $assetsDbafs = $this->getDbafsWithExtraMetadata('images/a.jpg', new ExtraMetadata([
             'accessed' => 123,
             'compressed' => true,
             'quality' => 'high',
-        ]);
+        ]));
 
-        $assetsImagesDbafs = $this->getDbafsWithExtraMetadata('a.jpg', [
+        $assetsImagesDbafs = $this->getDbafsWithExtraMetadata('a.jpg', new ExtraMetadata([
             'aspectRatio' => 1.5,
             'quality' => '50',
             'compressed' => true,
-        ]);
+        ]));
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
         $manager->register($assetsDbafs, 'assets');
         $manager->register($assetsImagesDbafs, 'assets/images');
 
@@ -304,18 +307,20 @@ class DbafsManagerTest extends TestCase
 
     public function testSetExtraMetadata(): void
     {
+        $extraMetadata = new ExtraMetadata(['some' => 'value']);
+
         $dbafs1 = $this->createMock(DbafsInterface::class);
         $dbafs1
             ->expects($this->once())
             ->method('setExtraMetadata')
-            ->with('bar/baz', ['some' => 'value'])
+            ->with('bar/baz', $extraMetadata)
         ;
 
         $dbafs2 = $this->createMock(DbafsInterface::class);
         $dbafs2
             ->expects($this->once())
             ->method('setExtraMetadata')
-            ->with('baz', ['some' => 'value'])
+            ->with('baz', $extraMetadata)
             ->willThrowException(new \InvalidArgumentException()) // should be ignored
         ;
 
@@ -325,21 +330,42 @@ class DbafsManagerTest extends TestCase
             ->method('setExtraMetadata')
         ;
 
-        $manager = new DbafsManager();
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->with($this->callback(
+                function (DbafsChangeEvent $event) {
+                    $itemsToUpdate = $event->getChangeSet()->getItemsToUpdate();
+
+                    $this->assertCount(1, $itemsToUpdate);
+                    $this->assertSame('foo/bar/baz', $itemsToUpdate[0]->getExistingPath());
+                    $this->assertFalse($itemsToUpdate[0]->updatesHash());
+                    $this->assertFalse($itemsToUpdate[0]->updatesPath());
+
+                    return true;
+                },
+            ))
+            ->willReturnArgument(0)
+        ;
+
+        $manager = $this->getDbafsManager($eventDispatcher);
         $manager->register($dbafs1, 'foo');
         $manager->register($dbafs2, 'foo/bar');
         $manager->register($dbafs3, 'other');
 
-        $manager->setExtraMetadata('foo/bar/baz', ['some' => 'value']);
+        $manager->setExtraMetadata('foo/bar/baz', $extraMetadata);
     }
 
     public function testSetExtraMetadataFailsIfNoResourceExists(): void
     {
+        $extraMetadata = new ExtraMetadata(['some' => 'value']);
+
         $dbafs1 = $this->createMock(DbafsInterface::class);
         $dbafs1
             ->expects($this->once())
             ->method('setExtraMetadata')
-            ->with('bar/baz', ['some' => 'value'])
+            ->with('bar/baz', $extraMetadata)
             ->willThrowException(new \InvalidArgumentException())
         ;
 
@@ -347,18 +373,18 @@ class DbafsManagerTest extends TestCase
         $dbafs2
             ->expects($this->once())
             ->method('setExtraMetadata')
-            ->with('baz', ['some' => 'value'])
+            ->with('baz', $extraMetadata)
             ->willThrowException(new \InvalidArgumentException())
         ;
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
         $manager->register($dbafs1, 'foo');
         $manager->register($dbafs2, 'foo/bar');
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('No resource exists for the given path "foo/bar/baz".');
 
-        $manager->setExtraMetadata('foo/bar/baz', ['some' => 'value']);
+        $manager->setExtraMetadata('foo/bar/baz', $extraMetadata);
     }
 
     /**
@@ -369,7 +395,7 @@ class DbafsManagerTest extends TestCase
         $dbafs1 = $this->getDbafsListingRecords('bar', ['bar', 'baz', 'bar/file1'], $deep);
         $dbafs2 = $this->getDbafsListingRecords('', ['file1', 'file2'], $deep);
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
         $manager->register($dbafs1, 'foo');
         $manager->register($dbafs2, 'foo/bar');
 
@@ -382,11 +408,11 @@ class DbafsManagerTest extends TestCase
                 'foo/bar',
                 'foo/baz',
             ],
-            array_map('strval', iterator_to_array($listing)),
+            array_map(\strval(...), iterator_to_array($listing)),
         );
     }
 
-    public function provideListModes(): \Generator
+    public static function provideListModes(): iterable
     {
         yield 'shallow' => [false];
         yield 'deep' => [true];
@@ -416,7 +442,7 @@ class DbafsManagerTest extends TestCase
             ->method('sync')
         ;
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
         $manager->register($filesDbafs, 'files');
         $manager->register($filesFooBarDbafs, 'files/foo/bar');
         $manager->register($assetsDbafs, 'assets');
@@ -459,7 +485,7 @@ class DbafsManagerTest extends TestCase
             ->willReturn(ChangeSet::createEmpty())
         ;
 
-        $manager = new DbafsManager();
+        $manager = $this->getDbafsManager();
         $manager->register($filesDbafs, 'files');
         $manager->register($filesFooBarDbafs, 'files/foo/bar');
         $manager->register($assetsDbafs, 'assets');
@@ -474,6 +500,62 @@ class DbafsManagerTest extends TestCase
 
         $this->assertSame('files/foo/bar/file2', $itemsToDelete[1]->getPath());
         $this->assertTrue($itemsToDelete[1]->isFile());
+    }
+
+    public function testDispatchesEventOnSync(): void
+    {
+        $filesDbafs = $this->createMock(DbafsInterface::class);
+        $filesDbafs
+            ->expects($this->once())
+            ->method('sync')
+            ->with()
+            ->willReturn(
+                new ChangeSet(
+                    [
+                        ['hash' => '1234', 'path' => 'foo', 'type' => ChangeSet::TYPE_FILE],
+                    ],
+                    [
+                        'bar' => ['path' => 'bar2'],
+                    ],
+                    [
+                        'baz' => ChangeSet::TYPE_FILE,
+                    ],
+                ),
+            )
+        ;
+
+        $changeSetFromEvent = null;
+
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+            ->willReturnCallback(
+                function (DbafsChangeEvent $event) use (&$changeSetFromEvent): DbafsChangeEvent {
+                    $changeSetFromEvent = $event->getChangeSet();
+
+                    $this->assertSame('files/foo', $changeSetFromEvent->getItemsToCreate()[0]->getPath());
+                    $this->assertSame('files/bar', $changeSetFromEvent->getItemsToUpdate()[0]->getExistingPath());
+                    $this->assertSame('files/baz', $changeSetFromEvent->getItemsToDelete()[0]->getPath());
+
+                    return $event;
+                },
+            )
+        ;
+
+        $manager = $this->getDbafsManager($eventDispatcher);
+        $manager->register($filesDbafs, 'files');
+
+        $changeSet = $manager->sync();
+        $this->assertSame($changeSetFromEvent, $changeSet);
+    }
+
+    /**
+     * @param (EventDispatcherInterface&MockObject)|null $eventDispatcher
+     */
+    private function getDbafsManager(EventDispatcherInterface|null $eventDispatcher = null): DbafsManager
+    {
+        return new DbafsManager($eventDispatcher ?? $this->createMock(EventDispatcherInterface::class));
     }
 
     private function getDbafsListingRecords(string $path, array $listing, bool $deep): DbafsInterface
@@ -528,7 +610,7 @@ class DbafsManagerTest extends TestCase
         return $dbafs;
     }
 
-    private function getDbafsWithExtraMetadata(string $path, array $extraMetadata): DbafsInterface
+    private function getDbafsWithExtraMetadata(string $path, ExtraMetadata $extraMetadata): DbafsInterface
     {
         $dbafs = $this->createMock(DbafsInterface::class);
         $dbafs

@@ -14,8 +14,9 @@ namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
 use Contao\Config;
 use Contao\Controller;
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\ModuleModel;
 use Contao\PageModel;
@@ -26,6 +27,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 class RootPageDependentModulesControllerTest extends TestCase
 {
@@ -36,7 +38,7 @@ class RootPageDependentModulesControllerTest extends TestCase
         parent::setUp();
 
         $this->container = $this->getContainerWithContaoConfiguration();
-        $this->container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
+        $this->container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
 
         System::setContainer($this->container);
     }
@@ -118,10 +120,10 @@ class RootPageDependentModulesControllerTest extends TestCase
 
     private function mockContainer(RequestStack|null $requestStack = null, string|null $content = null): ContainerBuilder
     {
-        $moduleAdapter = $this->mockAdapter(['findByPk']);
+        $moduleAdapter = $this->mockAdapter(['findById']);
         $moduleAdapter
             ->expects($content ? $this->once() : $this->never())
-            ->method('findByPk')
+            ->method('findById')
             ->willReturn($this->createMock(ModuleModel::class))
         ;
 
@@ -134,10 +136,17 @@ class RootPageDependentModulesControllerTest extends TestCase
 
         $framework = $this->mockContaoFramework([Controller::class => $controllerAdapter, ModuleModel::class => $moduleAdapter]);
 
+        $pageFinder = new PageFinder(
+            $framework,
+            $this->createMock(RequestMatcherInterface::class),
+            $requestStack ?? new RequestStack(),
+        );
+
         $this->container->set('contao.framework', $framework);
+        $this->container->set('contao.routing.page_finder', $pageFinder);
         $this->container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
 
-        if ($requestStack instanceof RequestStack) {
+        if ($requestStack) {
             $this->container->set('request_stack', $requestStack);
         }
 

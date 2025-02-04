@@ -16,7 +16,8 @@ export default class extends Controller {
             fs.setAttribute(`data-${identifier}-id-value`, id);
             fs.setAttribute(`data-${identifier}-table-value`, table);
             fs.setAttribute(`data-${identifier}-collapsed-class`, 'collapsed');
-            el.setAttribute('data-action', `click->${identifier}#toggle`);
+            el.setAttribute('tabindex', 0);
+            el.setAttribute('data-action', `click->${identifier}#toggle keydown.enter->${identifier}#toggle keydown.space->${identifier}#prevent:prevent keyup.space->${identifier}#toggle:prevent`);
         }
 
         const migrateLegacy = () => {
@@ -50,7 +51,7 @@ export default class extends Controller {
 
         // Called as soon as registered, so DOM may not have been loaded yet
         if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", migrateLegacy)
+            document.addEventListener("DOMContentLoaded", migrateLegacy);
         } else {
             migrateLegacy();
         }
@@ -66,13 +67,21 @@ export default class extends Controller {
 
             this.element.classList.add(this.collapsedClass);
         }
+
+        if (this.element.classList.contains(this.collapsedClass)) {
+            this.setAriaExpanded(false);
+        } else {
+            this.setAriaExpanded(true);
+        }
     }
 
     toggle () {
         if (this.element.classList.contains(this.collapsedClass)) {
             this.open();
+            this.setAriaExpanded(true);
         } else {
             this.close();
+            this.setAriaExpanded(false);
         }
     }
 
@@ -112,6 +121,10 @@ export default class extends Controller {
     }
 
     storeState (state) {
+        if (!this.hasIdValue || !this.hasTableValue) {
+            return;
+        }
+
         fetch(window.location.href, {
             method: 'POST',
             headers: {
@@ -124,5 +137,13 @@ export default class extends Controller {
                 state: state,
             })
         });
+    }
+
+    setAriaExpanded(state) {
+        const button = this.element.querySelector('button');
+
+        if (button) {
+            button.ariaExpanded = state;
+        }
     }
 }

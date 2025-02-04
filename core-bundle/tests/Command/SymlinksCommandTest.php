@@ -100,7 +100,6 @@ class SymlinksCommandTest extends TestCase
         return new SymlinksCommand(
             $this->getTempDir(),
             'files',
-            'assets',
             Path::join($this->getTempDir(), '/var/logs'),
             new ResourceFinder(Path::join($this->getTempDir(), 'vendor/contao/test-bundle/Resources/contao')),
             $this->createMock(EventDispatcherInterface::class),

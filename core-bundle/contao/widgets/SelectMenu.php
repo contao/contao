@@ -82,7 +82,7 @@ class SelectMenu extends Widget
 				break;
 
 			case 'options':
-				$this->arrOptions = StringUtil::deserialize($varValue);
+				$this->arrOptions = StringUtil::deserialize($varValue, true);
 				break;
 
 			default:
@@ -155,14 +155,14 @@ class SelectMenu extends Widget
 		// Add an unknown option, so it is not lost when saving the record (see #920)
 		if (isset($this->unknownOption[0]))
 		{
-			$arrAllOptions[] = array('value' => $this->unknownOption[0], 'label' => sprintf($GLOBALS['TL_LANG']['MSC']['unknownOption'], $this->unknownOption[0]));
+			$arrAllOptions[] = array('value' => $this->unknownOption[0], 'label' => \sprintf($GLOBALS['TL_LANG']['MSC']['unknownOption'], $this->unknownOption[0]));
 		}
 
 		foreach ($arrAllOptions as $strKey=>$arrOption)
 		{
 			if (isset($arrOption['value']))
 			{
-				$arrOptions[] = sprintf(
+				$arrOptions[] = \sprintf(
 					'<option value="%s"%s>%s</option>',
 					self::specialcharsValue($arrOption['value']),
 					$this->isSelected($arrOption),
@@ -175,7 +175,7 @@ class SelectMenu extends Widget
 
 				foreach ($arrOption as $arrOptgroup)
 				{
-					$arrOptgroups[] = sprintf(
+					$arrOptgroups[] = \sprintf(
 						'<option value="%s"%s>%s</option>',
 						self::specialcharsValue($arrOptgroup['value'] ?? ''),
 						$this->isSelected($arrOptgroup),
@@ -183,17 +183,17 @@ class SelectMenu extends Widget
 					);
 				}
 
-				$arrOptions[] = sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strKey), implode('', $arrOptgroups));
+				$arrOptions[] = \sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strKey), implode('', $arrOptgroups));
 			}
 		}
 
 		// Chosen
 		if ($this->chosen)
 		{
-			$strClass .= ' tl_chosen';
+			$this->arrAttributes['data-controller'] = trim(($this->arrAttributes['data-controller'] ?? '') . ' contao--choices');
 		}
 
-		return sprintf(
+		return \sprintf(
 			'%s<select name="%s" id="ctrl_%s" class="%s%s"%s data-action="focus->contao--scroll-offset#store">%s</select>%s',
 			$this->multiple ? '<input type="hidden" name="' . (str_ends_with($this->strName, '[]') ? substr($this->strName, 0, -2) : $this->strName) . '" value="">' : '',
 			$this->strName,

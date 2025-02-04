@@ -103,7 +103,7 @@ class ContaoPageSchema extends BaseType
      */
     public function setGroups(array $groups): self
     {
-        $this->properties['groups'] = array_map('intval', $groups);
+        $this->properties['groups'] = array_map(\intval(...), $groups);
 
         return $this;
     }

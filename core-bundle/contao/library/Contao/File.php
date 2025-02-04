@@ -140,7 +140,7 @@ class File extends System
 		// Make sure we are not pointing to a directory
 		if (is_dir($this->strRootDir . '/' . $strFile))
 		{
-			throw new \Exception(sprintf('Directory "%s" is not a file', $strFile));
+			throw new \Exception(\sprintf('Directory "%s" is not a file', $strFile));
 		}
 
 		$this->strFile = $strFile;
@@ -418,7 +418,7 @@ class File extends System
 		// Open the file
 		if (!$this->resFile = Files::getInstance()->fopen($this->strFile, 'wb'))
 		{
-			throw new \Exception(sprintf('Cannot create file "%s"', $this->strFile));
+			throw new \Exception(\sprintf('Cannot create file "%s"', $this->strFile));
 		}
 	}
 
@@ -776,7 +776,7 @@ class File extends System
 	 *
 	 * @throws ResponseException
 	 */
-	public function sendToBrowser($filename='', $inline=false)
+	public function sendToBrowser($filename='', $inline=false): never
 	{
 		$response = new BinaryFileResponse($this->strRootDir . '/' . $this->strFile);
 		$response->setPrivate(); // public by default
@@ -847,7 +847,7 @@ class File extends System
 	 */
 	protected function getMimeInfo()
 	{
-		return $GLOBALS['TL_MIME'][$this->extension] ?? array('application/octet-stream', 'iconPLAIN.svg');
+		return $GLOBALS['TL_MIME'][$this->extension] ?? array('application/octet-stream', 'plain.svg');
 	}
 
 	/**

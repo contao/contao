@@ -72,7 +72,7 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
             }
 
             if ($value) {
-                $attributes['value'] = array_map('\intval', explode(',', $value));
+                $attributes['value'] = array_map(\intval(...), explode(',', $value));
             }
 
             return $attributes;
@@ -95,7 +95,7 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
             return (int) $value;
         }
 
-        return sprintf($this->getInsertTag($config), $value);
+        return \sprintf($this->getInsertTag($config), $value);
     }
 
     protected function getRouteParameters(PickerConfig|null $config = null): array

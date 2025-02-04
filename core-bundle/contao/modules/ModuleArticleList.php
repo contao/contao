@@ -68,7 +68,7 @@ class ModuleArticleList extends Module
 		$this->Template->request = Environment::get('requestUri');
 
 		// Show the articles of a different page
-		if ($this->defineRoot && ($objTarget = PageModel::findByPk($this->objModel->rootPage)))
+		if ($this->defineRoot && ($objTarget = PageModel::findById($this->objModel->rootPage)))
 		{
 			$id = $objTarget->id;
 

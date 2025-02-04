@@ -16,13 +16,16 @@ use Contao\ArticleModel;
 use Contao\Config;
 use Contao\ContentModel;
 use Contao\Controller;
-use Contao\CoreBundle\Cache\EntityCacheTags;
-use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Cache\CacheTagManager;
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
+use Contao\CoreBundle\File\TextTrack;
+use Contao\CoreBundle\File\TextTrackType;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
@@ -31,6 +34,7 @@ use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -39,6 +43,7 @@ use Contao\CoreBundle\Tests\Image\Studio\ImageResultStub;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
@@ -76,7 +81,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
-class ContentElementTestCase extends TestCase
+abstract class ContentElementTestCase extends TestCase
 {
     final public const FILE_IMAGE1 = '0a2073bc-c966-4e7b-83b9-163a06aa87e7';
 
@@ -89,6 +94,12 @@ class ContentElementTestCase extends TestCase
     final public const FILE_VIDEO_MP4 = 'e802b519-8e08-4075-913c-7603ec6f2376';
 
     final public const FILE_VIDEO_OGV = 'd950e33a-dacc-42ad-ba97-6387d05348c4';
+
+    final public const FILE_SUBTITLES_INVALID_VTT = '5234dfa3-d98f-42c7-ae36-ed8440478de2';
+
+    final public const FILE_SUBTITLES_EN_VTT = 'a3c1e6d9-7d5b-4e3f-9e7d-6b9f2d3c841b';
+
+    final public const FILE_SUBTITLES_DE_VTT = '1e48cbce-6354-4ca0-b133-6272aba46828';
 
     final public const ARTICLE1 = 123;
 
@@ -114,7 +125,7 @@ class ContentElementTestCase extends TestCase
     /**
      * @param array<string, mixed> $modelData
      *
-     * @param-out array<string, array<int|string, string>> $responseContextData
+     * @param-out array $responseContextData
      */
     protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null, ContainerBuilder|null $adjustedContainer = null, array $nestedFragments = []): Response
     {
@@ -132,7 +143,7 @@ class ContentElementTestCase extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
+        $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
         $container->set('contao.routing.content_url_generator', $this->createMock(ContentUrlGenerator::class));
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
@@ -200,11 +211,12 @@ class ContentElementTestCase extends TestCase
         // Record response context data
         $responseContextData = array_filter([
             DocumentLocation::head->value => $GLOBALS['TL_HEAD'] ?? [],
+            DocumentLocation::stylesheets->value => $GLOBALS['TL_STYLE_SHEETS'] ?? [],
             DocumentLocation::endOfBody->value => $GLOBALS['TL_BODY'] ?? [],
         ]);
 
         // Reset state
-        unset($GLOBALS['TL_HEAD'], $GLOBALS['TL_BODY']);
+        unset($GLOBALS['TL_HEAD'], $GLOBALS['TL_STYLE_SHEETS'], $GLOBALS['TL_BODY']);
 
         $this->resetStaticProperties([Highlighter::class]);
 
@@ -251,26 +263,28 @@ class ContentElementTestCase extends TestCase
     {
         $resourceBasePath = Path::canonicalize(__DIR__.'/../../../');
 
+        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder
+            ->method('getExistingSubpaths')
+            ->with('templates')
+            ->willReturn(['ContaoCore' => $resourceBasePath.'/contao/templates'])
+        ;
+
         $templateLocator = new TemplateLocator(
             '',
-            ['ContaoCore' => ContaoCoreBundle::class],
-            ['ContaoCore' => ['path' => $resourceBasePath]],
+            $resourceFinder,
             $themeNamespace = new ThemeNamespace(),
             $this->createMock(Connection::class),
         );
 
-        $loader = new ContaoFilesystemLoader(new NullAdapter(), $templateLocator, $themeNamespace);
-
-        foreach ($templateLocator->findResourcesPaths() as $name => $resourcesPaths) {
-            foreach ($resourcesPaths as $path) {
-                $loader->addPath($path);
-                $loader->addPath($path, "Contao_$name", true);
-            }
-        }
-
-        $loader->buildInheritanceChains();
-
-        return $loader;
+        return new ContaoFilesystemLoader(
+            new NullAdapter(),
+            $templateLocator,
+            $themeNamespace,
+            $this->createMock(ContaoFramework::class),
+            $this->createMock(PageFinder::class),
+            $resourceBasePath,
+        );
     }
 
     protected function getEnvironment(ContaoFilesystemLoader $contaoFilesystemLoader, ContaoFramework $framework): Environment
@@ -279,7 +293,7 @@ class ContentElementTestCase extends TestCase
         $translator
             ->method('trans')
             ->willReturnCallback(
-                static fn (string $id, array $parameters = [], string|null $domain = null, string|null $locale = null): string => sprintf(
+                static fn (string $id, array $parameters = [], string|null $domain = null, string|null $locale = null): string => \sprintf(
                     'translated(%s%s%s)',
                     null !== $domain ? "$domain:" : '',
                     $id,
@@ -304,6 +318,7 @@ class ContentElementTestCase extends TestCase
                 $contaoFilesystemLoader,
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
+                new InspectorNodeVisitor(new NullAdapter(), $environment),
             ),
         );
 
@@ -347,18 +362,53 @@ class ContentElementTestCase extends TestCase
                             123456,
                             1024,
                             'image/jpg',
-                            [
-                                'metadata' => new MetadataBag(
+                            new ExtraMetadata([
+                                'localized' => new MetadataBag(
                                     ['en' => new Metadata([Metadata::VALUE_TITLE => 'image1 title'])],
                                     ['en'],
                                 ),
-                            ],
+                            ]),
                         ),
                         self::FILE_IMAGE2 => new FilesystemItem(true, 'image2.jpg', null, null, 'image/jpeg'),
                         self::FILE_IMAGE3 => new FilesystemItem(true, 'image3.jpg', null, null, 'image/jpeg'),
                         self::FILE_IMAGE_MISSING => new FilesystemItem(true, 'image_missing.jpg', null, null, 'image/jpeg'),
                         self::FILE_VIDEO_MP4 => new FilesystemItem(true, 'video.mp4', null, null, 'video/mp4'),
                         self::FILE_VIDEO_OGV => new FilesystemItem(true, 'video.ogv', null, null, 'video/ogg'),
+                        self::FILE_SUBTITLES_INVALID_VTT => new FilesystemItem(true, 'subtitles-incomplete.vtt', null, null, 'text/vtt'),
+                        self::FILE_SUBTITLES_EN_VTT => new FilesystemItem(
+                            true,
+                            'subtitles-en.vtt',
+                            null,
+                            null,
+                            'text/vtt',
+                            new ExtraMetadata([
+                                'localized' => new MetadataBag(
+                                    ['en' => new Metadata([Metadata::VALUE_TITLE => 'English'])],
+                                    ['en'],
+                                ),
+                                'textTrack' => new TextTrack(
+                                    'en',
+                                    null,
+                                ),
+                            ]),
+                        ),
+                        self::FILE_SUBTITLES_DE_VTT => new FilesystemItem(
+                            true,
+                            'subtitles-de.vtt',
+                            null,
+                            null,
+                            'text/vtt',
+                            new ExtraMetadata([
+                                'localized' => new MetadataBag(
+                                    ['en' => new Metadata([Metadata::VALUE_TITLE => 'Deutsch'])],
+                                    ['en'],
+                                ),
+                                'textTrack' => new TextTrack(
+                                    'de',
+                                    TextTrackType::captions,
+                                ),
+                            ]),
+                        ),
                     ];
 
                     return $storageMap[$uuid->toRfc4122()] ?? null;
@@ -376,6 +426,9 @@ class ContentElementTestCase extends TestCase
                         'image3.jpg' => new Uri('https://example.com/files/image3.jpg'),
                         'video.mp4' => new Uri('https://example.com/files/video.mp4'),
                         'video.ogv' => new Uri('https://example.com/files/video.ogv'),
+                        'subtitles-incomplete.vtt' => new Uri('https://example.com/files/subtitles-incomplete.vtt'),
+                        'subtitles-en.vtt' => new Uri('https://example.com/files/subtitles-en.vtt'),
+                        'subtitles-de.vtt' => new Uri('https://example.com/files/subtitles-de.vtt'),
                     ];
 
                     return $publicUriMap[$path] ?? null;

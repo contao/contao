@@ -15,25 +15,48 @@ namespace Contao\CoreBundle\Tests\Twig\Loader;
 use Contao\CoreBundle\Exception\InvalidThemePathException;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class ThemeTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     /**
      * @dataProvider providePaths
      */
     public function testGenerateSlug(string $path, string $expectedSlug): void
     {
-        $this->assertSame($expectedSlug, (new ThemeNamespace())->generateSlug($path));
+        $themeNamespace = new ThemeNamespace();
+
+        $this->assertSame($expectedSlug, $themeNamespace->generateSlug($path), 'create slug');
+        $this->assertSame($path, $themeNamespace->getPath($expectedSlug), 'get path from slug');
     }
 
-    public function providePaths(): \Generator
+    public static function providePaths(): iterable
     {
         yield 'simple' => ['foo', 'foo'];
 
         yield 'with dashes' => ['foo-bar', 'foo-bar'];
 
         yield 'nested' => ['foo/bar/baz', 'foo_bar_baz'];
+    }
 
+    /**
+     * @group legacy
+     *
+     * @dataProvider provideRelativePaths
+     */
+    public function testGenerateRelativeSlug(string $path, string $expectedSlug): void
+    {
+        $themeNamespace = new ThemeNamespace();
+
+        $this->expectDeprecation('%sUsing paths outside of the template directory are deprecated and will no longer work in Contao 6.%s');
+
+        $this->assertSame($expectedSlug, $themeNamespace->generateSlug($path));
+    }
+
+    public static function provideRelativePaths(): iterable
+    {
         yield 'relative (up one)' => ['../foo', '_foo'];
 
         yield 'relative (up multiple)' => ['../../../foo', '___foo'];
@@ -79,7 +102,7 @@ class ThemeTest extends TestCase
         $this->assertSame($expectedSlug, (new ThemeNamespace())->match($name));
     }
 
-    public function provideNamespaces(): \Generator
+    public static function provideNamespaces(): iterable
     {
         yield 'theme namespace' => [
             '@Contao_Theme_foo_bar-baz/a.html.twig',

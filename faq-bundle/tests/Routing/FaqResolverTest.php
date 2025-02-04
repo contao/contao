@@ -36,7 +36,7 @@ class FaqResolverTest extends ContaoTestCase
 
         $framework = $this->mockContaoFramework([
             PageModel::class => $pageAdapter,
-            FaqCategoryModel::class => $this->mockConfiguredAdapter(['findByPk' => $category]),
+            FaqCategoryModel::class => $this->mockConfiguredAdapter(['findById' => $category]),
         ]);
 
         $resolver = new FaqResolver($framework);
@@ -57,7 +57,7 @@ class FaqResolverTest extends ContaoTestCase
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));
     }
 
-    public function getParametersForContentProvider(): \Generator
+    public function getParametersForContentProvider(): iterable
     {
         yield 'Uses the FAQ alias' => [
             $this->mockClassWithProperties(FaqModel::class, ['id' => 42, 'alias' => 'foobar']),

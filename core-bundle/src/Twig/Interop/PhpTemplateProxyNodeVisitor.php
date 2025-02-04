@@ -17,12 +17,13 @@ use Twig\Environment;
 use Twig\Node\BlockNode;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
-use Twig\NodeVisitor\AbstractNodeVisitor;
+use Twig\Node\Nodes;
+use Twig\NodeVisitor\NodeVisitorInterface;
 
 /**
  * @experimental
  */
-final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
+final class PhpTemplateProxyNodeVisitor implements NodeVisitorInterface
 {
     public function __construct(private readonly string $extensionName)
     {
@@ -33,12 +34,12 @@ final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
         return 0;
     }
 
-    protected function doEnterNode(Node $node, Environment $env): Node
+    public function enterNode(Node $node, Environment $env): Node
     {
         return $node;
     }
 
-    protected function doLeaveNode(Node $node, Environment $env): Node
+    public function leaveNode(Node $node, Environment $env): Node
     {
         if ($node instanceof ModuleNode && ContaoTwigUtil::isLegacyTemplate($node->getTemplateName() ?? '')) {
             $this->configurePhpTemplateProxy($node);
@@ -48,10 +49,10 @@ final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
     }
 
     /**
-     * We are replacing the module body with a PhpTemplateProxyNode that will
-     * delegate rendering to the Contao framework on the fly. To support blocks
-     * we're also injecting a BlockNode for each block in the original source
-     * that will return the default Contao block placeholder when called.
+     * We are replacing the module body with a PhpTemplateProxyNode that will delegate
+     * rendering to the Contao framework on the fly. To support blocks we're also
+     * injecting a BlockNode for each block in the original source that will return
+     * the default Contao block placeholder when called.
      */
     private function configurePhpTemplateProxy(ModuleNode $node): void
     {
@@ -66,7 +67,7 @@ final class PhpTemplateProxyNodeVisitor extends AbstractNodeVisitor
             $blockNodes[$name] = new BlockNode($name, new PhpTemplateParentReferenceNode(), 0);
         }
 
-        $node->setNode('blocks', new Node($blockNodes));
+        $node->setNode('blocks', new Nodes($blockNodes));
         $node->setNode('body', new PhpTemplateProxyNode($this->extensionName));
     }
 }

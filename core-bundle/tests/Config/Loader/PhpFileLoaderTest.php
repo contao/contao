@@ -235,7 +235,7 @@ class PhpFileLoaderTest extends TestCase
         );
     }
 
-    public function loadWithDeclareStatementsStrictType(): \Generator
+    public static function loadWithDeclareStatementsStrictType(): iterable
     {
         yield ['tl_test_with_declare1'];
         yield ['tl_test_with_declare2'];
@@ -261,7 +261,7 @@ class PhpFileLoaderTest extends TestCase
         );
     }
 
-    public function loadWithDeclareStatementsMultipleDefined(): \Generator
+    public static function loadWithDeclareStatementsMultipleDefined(): iterable
     {
         yield ['tl_test_with_declare4'];
         yield ['tl_test_with_declare5'];

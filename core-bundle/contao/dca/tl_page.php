@@ -84,7 +84,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'showRootTrails'          => true,
 			'icon'                    => 'pagemounts.svg',
 			'panelLayout'             => 'filter;search',
-			'defaultSearchField'      => 'pageTitle'
+			'defaultSearchField'      => 'title'
 		),
 		'label' => array
 		(
@@ -145,8 +145,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 	(
 		'id' => array
 		(
-			'label'                   => array('ID'),
-			'search'                  => true,
 			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
 		),
 		'pid' => array
@@ -186,7 +184,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'requireItem' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'routePath' => array
@@ -263,7 +261,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'jumpTo' => array
@@ -295,7 +293,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['target'],
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'dns' => array
@@ -379,7 +377,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'inputType'               => 'checkbox',
 			'default'                 => true,
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'canonicalLink' => array
@@ -437,7 +435,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'exclude'                 => true,
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'urlPrefix' => array
@@ -524,7 +522,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		'alwaysLoadFromCache' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'clientCache' => array
@@ -693,7 +691,7 @@ class tl_page extends Backend
 
 		// Set the default page user and group
 		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = (int) Config::get('defaultUser') ?: $user->id;
-		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = (int) Config::get('defaultGroup') ?: (int) $user->groups[0];
+		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = (int) Config::get('defaultGroup') ?: (int) ($user->groups[0] ?? 0);
 
 		// Restrict the page tree
 		if (empty($user->pagemounts) || !is_array($user->pagemounts))
@@ -734,7 +732,7 @@ class tl_page extends Backend
 		{
 			$GLOBALS['TL_DCA']['tl_page']['fields']['type']['default'] = 'root';
 		}
-		elseif (Input::get('mode') == 1)
+		elseif (Input::get('mode') == DataContainer::PASTE_AFTER)
 		{
 			$objPage = Database::getInstance()
 				->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
@@ -759,7 +757,7 @@ class tl_page extends Backend
 	{
 		$page->loadDetails();
 
-		if (!$layout = LayoutModel::findByPk($page->layout))
+		if (!$layout = LayoutModel::findById($page->layout))
 		{
 			return '';
 		}
@@ -964,7 +962,7 @@ class tl_page extends Backend
 	 *
 	 * @return string
 	 */
-	public function addIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false, $isVisibleRootTrailPage=false)
+	public function addIcon($row, $label, DataContainer|null $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false, $isVisibleRootTrailPage=false)
 	{
 		return Backend::addPageIcon($row, $label, $dc, $imageAttribute, $blnReturnImage, $blnProtected, $isVisibleRootTrailPage);
 	}
@@ -989,6 +987,8 @@ class tl_page extends Backend
 		// Generate the aliases
 		if (Input::post('alias') !== null && Input::post('FORM_SUBMIT') == 'tl_select')
 		{
+			$router = System::getContainer()->get('router');
+
 			$objSession = System::getContainer()->get('request_stack')->getSession();
 			$session = $objSession->all();
 			$ids = $session['CURRENT']['IDS'] ?? array();
@@ -1036,6 +1036,7 @@ class tl_page extends Backend
 
 				// Initialize the version manager
 				$objVersions = new Versions('tl_page', $id);
+				$objVersions->setEditUrl($router->generate('contao_backend', array('do'=>'page', 'act'=>'edit', 'id'=>$id, 'rt'=>'1')));
 				$objVersions->initialize();
 
 				// Store the new alias
@@ -1047,7 +1048,7 @@ class tl_page extends Backend
 				$objVersions->create();
 
 				// Update the record stored in the page registry (see #6542)
-				PageModel::findByPk($id)->alias = $strAlias;
+				PageModel::findById($id)->alias = $strAlias;
 			}
 
 			$this->redirect($this->getReferer());

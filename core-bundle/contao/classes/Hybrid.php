@@ -106,7 +106,7 @@ abstract class Hybrid extends Frontend
 		// Load the model
 		if (class_exists($strModelClass))
 		{
-			$objHybrid = $strModelClass::findByPk($objElement->{$this->strKey});
+			$objHybrid = $strModelClass::findById($objElement->{$this->strKey});
 
 			if ($objHybrid === null)
 			{
@@ -253,7 +253,7 @@ abstract class Hybrid extends Frontend
 		// Tag the hybrid
 		if ($this->objModel !== null)
 		{
-			System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($this->objModel);
+			System::getContainer()->get('contao.cache.tag_manager')->tagWithModelInstance($this->objModel);
 		}
 
 		return $this->Template->parse();

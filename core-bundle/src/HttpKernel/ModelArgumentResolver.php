@@ -16,7 +16,6 @@ use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\Model;
-use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -71,20 +70,10 @@ class ModelArgumentResolver implements ValueResolverInterface
             return $value;
         }
 
-        // Special handling for pageModel that could be globally registered
-        if (
-            isset($GLOBALS['objPage'])
-            && $GLOBALS['objPage'] instanceof PageModel
-            && $GLOBALS['objPage']->id === (int) $value
-            && is_a($type, PageModel::class, true)
-        ) {
-            return $GLOBALS['objPage'];
-        }
-
         /** @var Adapter<Model> $model */
         $model = $this->framework->getAdapter($type);
 
-        return $model->findByPk((int) $value);
+        return $model->findById((int) $value);
     }
 
     /**

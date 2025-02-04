@@ -95,7 +95,7 @@ class ModuleChangePassword extends Module
 		$strFields = '';
 		$doNotSubmit = false;
 		$user = FrontendUser::getInstance();
-		$objMember = MemberModel::findByPk($user->id);
+		$objMember = MemberModel::findById($user->id);
 		$strFormId = 'tl_change_password_' . $this->id;
 		$strTable = $objMember->getTable();
 		$session = System::getContainer()->get('request_stack')->getSession();
@@ -168,6 +168,14 @@ class ModuleChangePassword extends Module
 			$objMember->password = $objNewPassword->value;
 			$objMember->save();
 
+			// Delete unconfirmed "change password" tokens
+			$models = OptInModel::findUnconfirmedByRelatedTableAndId('tl_member', $objMember->id);
+
+			foreach ($models ?? array() as $model)
+			{
+				$model->delete();
+			}
+
 			// Create a new version
 			if ($GLOBALS['TL_DCA'][$strTable]['config']['enableVersioning'] ?? null)
 			{
@@ -183,11 +191,14 @@ class ModuleChangePassword extends Module
 				}
 			}
 
+			// Generate a new session ID
+			$session->migrate();
+
 			// Update the current user, so they are not logged out automatically
 			$user->findBy('id', $objMember->id);
 
 			// Check whether there is a jumpTo page
-			if ($objJumpTo = PageModel::findByPk($this->objModel->jumpTo))
+			if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
 			{
 				$this->jumpToOrReload($objJumpTo->row());
 			}

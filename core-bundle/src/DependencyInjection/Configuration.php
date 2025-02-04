@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\ArrayUtil;
 use Contao\Config;
+use Contao\CoreBundle\Altcha\Config\Algorithm;
 use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\Util\LocaleUtil;
@@ -28,10 +30,6 @@ use Symfony\Component\Filesystem\Path;
 
 class Configuration implements ConfigurationInterface
 {
-    public function __construct(private readonly string $projectDir)
-    {
-    }
-
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('contao');
@@ -108,6 +106,7 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addImageNode())
                 ->append($this->addSecurityNode())
                 ->append($this->addSearchNode())
+                ->append($this->addBackendSearchNode())
                 ->append($this->addCrawlNode())
                 ->append($this->addMailerNode())
                 ->append($this->addBackendNode())
@@ -116,6 +115,8 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addSanitizerNode())
                 ->append($this->addCronNode())
                 ->append($this->addCspNode())
+                ->append($this->addAltchaNode())
+                ->append($this->addTemplateStudioNode())
             ->end()
         ;
 
@@ -129,6 +130,34 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->info('Allows to define Symfony Messenger workers (messenger:consume). Workers are started every minute using the Contao cron job framework.')
             ->children()
+                ->arrayNode('web_worker')
+                    ->addDefaultsIfNotSet()
+                    ->info('Contao provides a way to work on Messenger transports in the web process (kernel.terminate) if there is no real "messenger:consume" worker. You can configure its behavior here.')
+                    ->children()
+                        ->arrayNode('transports')
+                            ->info('The transports to apply the web worker logic to.')
+                            ->scalarPrototype()->end()
+                            ->defaultValue([])
+                        ->end()
+                        ->scalarNode('grace_period')
+                            ->defaultValue('PT10M')
+                            ->validate()
+                                ->ifTrue(
+                                    static function (string $period) {
+                                        try {
+                                            new \DateInterval($period);
+                                        } catch (\Exception) {
+                                            return true;
+                                        }
+
+                                        return false;
+                                    },
+                                )
+                                ->thenInvalid('Must be a valid string for \DateInterval(). %s given.')
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
                 ->arrayNode('workers')
                     ->performNoDeepMerging()
                     ->arrayPrototype()
@@ -219,15 +248,15 @@ class Configuration implements ConfigurationInterface
 
                                 foreach (array_keys($value) as $name) {
                                     if (preg_match('/^\d+$/', (string) $name)) {
-                                        throw new \InvalidArgumentException(sprintf('The image size name "%s" cannot contain only digits', $name));
+                                        throw new \InvalidArgumentException(\sprintf('The image size name "%s" cannot contain only digits', $name));
                                     }
 
                                     if (\in_array($name, $reservedImageSizeNames, true)) {
-                                        throw new \InvalidArgumentException(sprintf('"%s" is a reserved image size name (reserved names: %s)', $name, implode(', ', $reservedImageSizeNames)));
+                                        throw new \InvalidArgumentException(\sprintf('"%s" is a reserved image size name (reserved names: %s)', $name, implode(', ', $reservedImageSizeNames)));
                                     }
 
                                     if (preg_match('/[^a-z0-9_]/', (string) $name)) {
-                                        throw new \InvalidArgumentException(sprintf('The image size name "%s" must consist of lowercase letters, digits and underscores only', $name));
+                                        throw new \InvalidArgumentException(\sprintf('The image size name "%s" must consist of lowercase letters, digits and underscores only', $name));
                                     }
                                 }
 
@@ -341,7 +370,7 @@ class Configuration implements ConfigurationInterface
                     ->info('The target directory for the cached images processed by Contao.')
                     ->example('%kernel.project_dir%/assets/images')
                     ->cannotBeEmpty()
-                    ->defaultValue(Path::join($this->projectDir, 'assets/images'))
+                    ->defaultValue('%kernel.project_dir%/assets/images')
                     ->validate()
                         ->always(static fn (string $value): string => Path::canonicalize($value))
                     ->end()
@@ -351,8 +380,33 @@ class Configuration implements ConfigurationInterface
                     ->defaultNull()
                 ->end()
                 ->arrayNode('valid_extensions')
+                    ->info('Adds, removes or overwrites the list of enabled image extensions that can be used.')
                     ->prototype('scalar')->end()
                     ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'avif'])
+                    ->example(['+heic', '-svgz'])
+                    ->validate()
+                        ->ifTrue(
+                            static function (array $extensions): bool {
+                                foreach ($extensions as $extension) {
+                                    if (!preg_match('/^[+-]?[a-z0-9]+$/', $extension)) {
+                                        return true;
+                                    }
+                                }
+
+                                return false;
+                            },
+                        )
+                        ->thenInvalid('Make sure your provided image extensions are valid and optionally start with +/- to add/remove the extension to/from the default list.')
+                    ->end()
+                    ->validate()
+                        ->always(
+                            static function (array $extensions): array {
+                                $default = ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'avif'];
+
+                                return ArrayUtil::alterListByConfig($default, $extensions);
+                            },
+                        )
+                    ->end()
                 ->end()
                 ->arrayNode('preview')
                     ->addDefaultsIfNotSet()
@@ -361,7 +415,7 @@ class Configuration implements ConfigurationInterface
                             ->info('The target directory for the cached previews.')
                             ->example('%kernel.project_dir%/assets/previews')
                             ->cannotBeEmpty()
-                            ->defaultValue(Path::join($this->projectDir, 'assets/previews'))
+                            ->defaultValue('%kernel.project_dir%/assets/previews')
                             ->validate()
                                 ->always(static fn (string $value): string => Path::canonicalize($value))
                             ->end()
@@ -434,7 +488,23 @@ class Configuration implements ConfigurationInterface
                     ->info('Allows to disable the layer flattening of animated images. Set this option to false to support animations. It has no effect with Gd as Imagine service.')
                 ->end()
                 ->scalarNode('interlace')
+                    ->info('One of the Imagine\Image\ImageInterface::INTERLACE_* constants.')
                 ->end()
+                ->scalarNode('resampling_filter')
+                    ->info('Filter used when downsampling images. One of the Imagine\Image\ImageInterface::FILTER_* constants. It has no effect with Gd or SVG as Imagine service.')
+                ->end()
+            ->end()
+            ->validate()
+                ->always(
+                    static function (array $options): array {
+                        if (isset($options['resampling_filter'])) {
+                            $options['resampling-filter'] = $options['resampling_filter'];
+                            unset($options['resampling_filter']);
+                        }
+
+                        return $options;
+                    },
+                )
             ->end()
         ;
 
@@ -608,6 +678,24 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
+    private function addBackendSearchNode(): NodeDefinition
+    {
+        return (new TreeBuilder('backend_search'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->canBeEnabled()
+            ->children()
+                ->scalarNode('dsn')
+                    ->info('The DSN of the search adapter.')
+                ->end()
+                ->scalarNode('index_name')
+                    ->info('The name of the search index')
+                    ->defaultValue('contao_backend')
+                ->end()
+            ->end()
+        ;
+    }
+
     private function addCrawlNode(): NodeDefinition
     {
         return (new TreeBuilder('crawl'))
@@ -678,7 +766,7 @@ class Configuration implements ConfigurationInterface
                         static function (array $attributes): array {
                             foreach (array_keys($attributes) as $name) {
                                 if (preg_match('/[^a-z0-9\-.:_]/', (string) $name)) {
-                                    throw new \InvalidArgumentException(sprintf('The attribute name "%s" must be a valid HTML attribute name.', $name));
+                                    throw new \InvalidArgumentException(\sprintf('The attribute name "%s" must be a valid HTML attribute name.', $name));
                                 }
                             }
 
@@ -794,7 +882,7 @@ class Configuration implements ConfigurationInterface
                             static function (array $protocols): array {
                                 foreach ($protocols as $protocol) {
                                     if (!preg_match('/^[a-z][a-z0-9\-+.]*$/i', (string) $protocol)) {
-                                        throw new \InvalidArgumentException(sprintf('The protocol name "%s" must be a valid URI scheme.', $protocol));
+                                        throw new \InvalidArgumentException(\sprintf('The protocol name "%s" must be a valid URI scheme.', $protocol));
                                     }
                                 }
 
@@ -853,11 +941,11 @@ class Configuration implements ConfigurationInterface
                             static function (array $allowedProperties): array {
                                 foreach ($allowedProperties as $property => $regex) {
                                     if (false === @preg_match(WysiwygStyleProcessor::prepareRegex($regex), '')) {
-                                        throw new \InvalidArgumentException(sprintf('The regex "%s" for property "%s" is invalid.', $regex, $property));
+                                        throw new \InvalidArgumentException(\sprintf('The regex "%s" for property "%s" is invalid.', $regex, $property));
                                     }
 
                                     if (str_contains($regex, '.*')) {
-                                        throw new \InvalidArgumentException(sprintf('The regex "%s" for property "%s" contains ".*" which is not allowed due to security reasons.', $regex, $property));
+                                        throw new \InvalidArgumentException(\sprintf('The regex "%s" for property "%s" contains ".*" which is not allowed due to security reasons.', $regex, $property));
                                     }
                                 }
 
@@ -871,6 +959,40 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(3072)
                 ->end()
             ->end()
+        ;
+    }
+
+    private function addAltchaNode(): NodeDefinition
+    {
+        return (new TreeBuilder('altcha'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->enumNode('algorithm')
+                    ->info('The algorithm used to generate the challenges. Select between "SHA-256", "SHA-384" or "SHA-512".')
+                    ->values(Algorithm::values())
+                    ->defaultValue(Algorithm::sha256->value)
+                ->end()
+                ->integerNode('range_max')
+                    ->info('A higher value increases the complexity/security but may significantly increase the computational load on client devices, potentially impacting the user experience.')
+                    ->max(1_000_000)
+                    ->defaultValue(100_000)
+                ->end()
+                ->integerNode('challenge_expiry')
+                    ->info('The time period in seconds for which a challenge is valid.')
+                    ->min(3600)
+                    ->defaultValue(86400)
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addTemplateStudioNode(): NodeDefinition
+    {
+        return (new TreeBuilder('template_studio'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->canBeDisabled()
         ;
     }
 }

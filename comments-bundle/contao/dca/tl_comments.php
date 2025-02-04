@@ -19,6 +19,7 @@ use Contao\Controller;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
@@ -86,7 +87,10 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			'edit' => array
 			(
 				'href'                => 'act=edit',
+				'prefetch'            => true,
 				'icon'                => 'edit.svg',
+				'attributes'          => 'data-contao--deeplink-target="primary"',
+				'primary'             => true,
 				'button_callback'     => array('tl_comments', 'editComment')
 			),
 			'delete' => array
@@ -100,6 +104,7 @@ $GLOBALS['TL_DCA']['tl_comments'] = array
 			(
 				'href'                => 'act=toggle&amp;field=published',
 				'icon'                => 'visible.svg',
+				'primary'             => true,
 				'button_callback'     => array('tl_comments', 'toggleIcon')
 			),
 			'show'
@@ -327,10 +332,12 @@ class tl_comments extends Backend
 
 		if ($objNotify !== null)
 		{
+			$baseUrl = Idna::decode(Environment::get('base'));
+
 			while ($objNotify->next())
 			{
 				// Prepare the URL
-				$strUrl = Idna::decode(Environment::get('base')) . $objNotify->url;
+				$strUrl = UrlUtil::makeAbsolute($objNotify->url, $baseUrl);
 
 				$objEmail = new Email();
 				$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'] ?? null;
@@ -462,7 +469,7 @@ class tl_comments extends Backend
 	{
 		if ($varValue && ($id = Input::get('id')))
 		{
-			Comments::notifyCommentsSubscribers(CommentsModel::findByPk($id));
+			Comments::notifyCommentsSubscribers(CommentsModel::findById($id));
 		}
 
 		return $varValue;
@@ -576,7 +583,7 @@ class tl_comments extends Backend
 	 */
 	public function editComment($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->isAllowedToEditComment($row['parent'], $row['source']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return $this->isAllowedToEditComment($row['parent'], $row['source']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id'], addRequestToken: false) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -593,7 +600,7 @@ class tl_comments extends Backend
 	 */
 	public function deleteComment($row, $href, $label, $title, $icon, $attributes)
 	{
-		return $this->isAllowedToEditComment($row['parent'], $row['source']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return $this->isAllowedToEditComment($row['parent'], $row['source']) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -630,7 +637,7 @@ class tl_comments extends Backend
 
 		$titleDisabled = (is_array($GLOBALS['TL_DCA']['tl_comments']['list']['operations']['toggle']['label']) && isset($GLOBALS['TL_DCA']['tl_comments']['list']['operations']['toggle']['label'][2])) ? sprintf($GLOBALS['TL_DCA']['tl_comments']['list']['operations']['toggle']['label'][2], $row['id']) : $title;
 
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($row['published'] ? $title : $titleDisabled) . '" data-title="' . StringUtil::specialchars($title) . '" data-title-disabled="' . StringUtil::specialchars($titleDisabled) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
+		return '<a href="' . $this->addToUrl($href) . '" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $row['published'] ? $title : $titleDisabled, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['published'] ? 1 : 0) . '" data-alt="' . StringUtil::specialchars($title) . '" data-alt-disabled="' . StringUtil::specialchars($titleDisabled) . '"') . '</a> ';
 	}
 
 	/**
@@ -643,7 +650,7 @@ class tl_comments extends Backend
 	 */
 	public function invalidateSourceCacheTags(DataContainer $dc, array $tags)
 	{
-		$commentModel = CommentsModel::findByPk($dc->id);
+		$commentModel = CommentsModel::findById($dc->id);
 
 		if (null !== $commentModel)
 		{

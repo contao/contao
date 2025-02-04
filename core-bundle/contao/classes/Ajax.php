@@ -153,7 +153,7 @@ class Ajax extends Backend
 	 * @throws ResponseException
 	 * @throws BadRequestHttpException
 	 */
-	public function executePostActions(DataContainer $dc)
+	public function executePostActions(DataContainer $dc): never
 	{
 		// Bypass any core logic for non-core drivers (see #5957)
 		if (!$dc instanceof DC_File && !$dc instanceof DC_Folder && !$dc instanceof DC_Table)

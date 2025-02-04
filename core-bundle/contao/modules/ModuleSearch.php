@@ -86,7 +86,7 @@ class ModuleSearch extends Module
 		$this->Template->advanced = $this->searchType == 'advanced';
 
 		// Redirect page
-		if ($objTarget = PageModel::findByPk($this->objModel->jumpTo))
+		if ($objTarget = PageModel::findById($this->objModel->jumpTo))
 		{
 			$this->Template->action = System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget);
 		}
@@ -171,13 +171,13 @@ class ModuleSearch extends Module
 
 			if ($this->minKeywordLength > 0)
 			{
-				$this->Template->keywordHint = sprintf($GLOBALS['TL_LANG']['MSC']['sKeywordHint'], $this->minKeywordLength);
+				$this->Template->keywordHint = \sprintf($GLOBALS['TL_LANG']['MSC']['sKeywordHint'], $this->minKeywordLength);
 			}
 
 			// No results
 			if ($count < 1)
 			{
-				$this->Template->header = sprintf($GLOBALS['TL_LANG']['MSC']['sEmpty'], $strKeywords);
+				$this->Template->header = \sprintf($GLOBALS['TL_LANG']['MSC']['sEmpty'], $strKeywords);
 				$this->Template->duration = System::getFormattedNumber($query_endtime - $query_starttime, 3) . ' ' . $GLOBALS['TL_LANG']['MSC']['seconds'];
 
 				return;
@@ -238,7 +238,7 @@ class ModuleSearch extends Module
 				$objTemplate->link = $arrResult[$i]['title'];
 				$objTemplate->url = StringUtil::specialchars(urldecode($arrResult[$i]['url']), true, true);
 				$objTemplate->title = StringUtil::specialchars(StringUtil::stripInsertTags($arrResult[$i]['title']));
-				$objTemplate->relevance = sprintf($GLOBALS['TL_LANG']['MSC']['relevance'], number_format($arrResult[$i]['relevance'] / $arrResult[0]['relevance'] * 100, 2) . '%');
+				$objTemplate->relevance = \sprintf($GLOBALS['TL_LANG']['MSC']['relevance'], number_format($arrResult[$i]['relevance'] / $arrResult[0]['relevance'] * 100, 2) . '%');
 				$objTemplate->unit = $GLOBALS['TL_LANG']['UNITS'][1];
 
 				$arrContext = array();

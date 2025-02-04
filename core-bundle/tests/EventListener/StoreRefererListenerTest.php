@@ -44,7 +44,7 @@ class StoreRefererListenerTest extends TestCase
         $this->assertSame($expectedReferer, $session->get('referer'));
     }
 
-    public function refererStoredOnKernelResponseProvider(): \Generator
+    public static function refererStoredOnKernelResponseProvider(): iterable
     {
         $request = new Request();
         $request->attributes->set('_route', 'contao_backend');
@@ -193,7 +193,7 @@ class StoreRefererListenerTest extends TestCase
         $listener($this->getResponseEvent($request));
     }
 
-    public function noContaoUserProvider(): \Generator
+    public function noContaoUserProvider(): iterable
     {
         yield [null];
         yield [$this->createMock(UserInterface::class)];
@@ -246,6 +246,7 @@ class StoreRefererListenerTest extends TestCase
         $request->setSession($session);
 
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_BACKEND);
+        $request->attributes->set('_store_referrer', false);
 
         $listener = $this->getListener($this->createMock(User::class));
         $listener($this->getResponseEvent($request));

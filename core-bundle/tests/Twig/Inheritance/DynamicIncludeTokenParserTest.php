@@ -12,11 +12,17 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 
+use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\Extension\ContaoExtension;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
 use Twig\Lexer;
+use Twig\Loader\ArrayLoader;
 use Twig\Loader\LoaderInterface;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
@@ -28,7 +34,7 @@ class DynamicIncludeTokenParserTest extends TestCase
 {
     public function testGetTag(): void
     {
-        $tokenParser = new DynamicIncludeTokenParser($this->createMock(TemplateHierarchyInterface::class));
+        $tokenParser = new DynamicIncludeTokenParser($this->createMock(ContaoFilesystemLoader::class));
 
         $this->assertSame('include', $tokenParser->getTag());
     }
@@ -38,9 +44,9 @@ class DynamicIncludeTokenParserTest extends TestCase
      */
     public function testHandlesContaoIncludes(string $code, string ...$expectedStrings): void
     {
-        $templateHierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        $templateHierarchy
-            ->method('getFirst')
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
+            ->method('getAllFirstByThemeSlug')
             ->willReturnCallback(
                 static function (string $name) {
                     $hierarchy = [
@@ -49,7 +55,7 @@ class DynamicIncludeTokenParserTest extends TestCase
                     ];
 
                     if (null !== ($resolved = $hierarchy[$name] ?? null)) {
-                        return $resolved;
+                        return ['' => $resolved];
                     }
 
                     throw new \LogicException('Template not found in hierarchy.');
@@ -58,7 +64,7 @@ class DynamicIncludeTokenParserTest extends TestCase
         ;
 
         $environment = new Environment($this->createMock(LoaderInterface::class));
-        $environment->addTokenParser(new DynamicIncludeTokenParser($templateHierarchy));
+        $environment->addTokenParser(new DynamicIncludeTokenParser($filesystemLoader));
 
         $source = new Source($code, 'template.html.twig');
         $tokenStream = (new Lexer($environment))->tokenize($source);
@@ -69,7 +75,7 @@ class DynamicIncludeTokenParserTest extends TestCase
         }
     }
 
-    public function provideSources(): \Generator
+    public static function provideSources(): iterable
     {
         yield 'regular include' => [
             "{% include '@Foo/bar.html.twig' %}",
@@ -103,17 +109,49 @@ class DynamicIncludeTokenParserTest extends TestCase
         ];
     }
 
+    public function testHandlesContaoIncludesWithThemeDifferentContexts(): void
+    {
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
+            ->method('getAllFirstByThemeSlug')
+            ->with('foo.html.twig')
+            ->willReturn(['theme' => '@Contao_Theme_theme/foo.html.twig', '' => '@Contao_ContaoCoreBundle/foo.html.twig'])
+        ;
+
+        $filesystemLoader
+            ->method('getCurrentThemeSlug')
+            ->willReturn('theme')
+        ;
+
+        $environment = new Environment(new ArrayLoader([
+            'template.twig' => '{% include "@Contao/foo.html.twig" %}',
+            '@Contao_ContaoCoreBundle/foo.html.twig' => '<foo-core>',
+            '@Contao_Theme_theme/foo.html.twig' => '<foo-theme>',
+        ]));
+
+        $environment->addTokenParser(new DynamicIncludeTokenParser($filesystemLoader));
+        $environment->addExtension(new ContaoExtension(
+            $environment,
+            $filesystemLoader,
+            $this->createMock(ContaoCsrfTokenManager::class),
+            $this->createMock(ContaoVariable::class),
+            new InspectorNodeVisitor(new NullAdapter(), $environment),
+        ));
+
+        $this->assertSame('<foo-theme>', $environment->render('template.twig'));
+    }
+
     public function testEnhancesErrorMessageWhenIncludingAnInvalidTemplate(): void
     {
-        $templateHierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        $templateHierarchy
-            ->method('getFirst')
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
+            ->method('getAllFirstByThemeSlug')
             ->with('foo')
             ->willThrowException(new \LogicException('<original message>'))
         ;
 
         $environment = new Environment($this->createMock(LoaderInterface::class));
-        $environment->addTokenParser(new DynamicIncludeTokenParser($templateHierarchy));
+        $environment->addTokenParser(new DynamicIncludeTokenParser($filesystemLoader));
 
         // Use a conditional expression here, so that we can test rethrowing exceptions
         // in case the parent node is not an ArrayExpression
@@ -133,7 +171,7 @@ class DynamicIncludeTokenParserTest extends TestCase
     public function testParsesArguments(string $source, AbstractExpression|null $variables, bool $only, bool $ignoreMissing): void
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));
-        $environment->addTokenParser(new DynamicIncludeTokenParser($this->createMock(TemplateHierarchyInterface::class)));
+        $environment->addTokenParser(new DynamicIncludeTokenParser($this->createMock(ContaoFilesystemLoader::class)));
 
         $tokenStream = (new Lexer($environment))->tokenize(new Source($source, 'foo.html.twig'));
         $parser = new Parser($environment);
@@ -149,7 +187,7 @@ class DynamicIncludeTokenParserTest extends TestCase
         $this->assertSame($ignoreMissing, $includeNode->getAttribute('ignore_missing'));
     }
 
-    public function provideTokens(): \Generator
+    public static function provideTokens(): iterable
     {
         yield 'with data' => [
             "{% include 'bar.html.twig' with {a: 1} %}",

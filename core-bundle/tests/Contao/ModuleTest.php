@@ -135,7 +135,7 @@ class ModuleTest extends TestCase
         $this->assertTrue($pages[2]['hasSubpages']);
 
         // Get from model registry
-        $page2 = PageModel::findByPk(2);
+        $page2 = PageModel::findById(2);
 
         $this->assertSame($databaseResultSecondQuery[1]['id'], $page2->id);
         $this->assertSame($databaseResultSecondQuery[1]['alias'], $page2->alias);

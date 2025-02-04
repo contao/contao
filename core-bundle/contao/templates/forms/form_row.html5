@@ -1,5 +1,14 @@
+<?php
 
-<div class="<?= $this->prefix ?><?php if ($this->class): ?> <?= $this->class ?><?php endif; ?>">
+$this->wrapperAttributes = $this
+    ->attr()
+    ->addClass([$this->prefix, $this->class])
+    ->mergeWith($this->wrapperAttributes)
+;
+
+?>
+
+<div<?= $this->wrapperAttributes ?>>
   <?php $this->block('label'); ?>
   <?php $this->endblock(); ?>
 
