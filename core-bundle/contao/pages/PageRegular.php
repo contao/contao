@@ -138,7 +138,7 @@ class PageRegular extends Frontend
 		$objModules = ModuleModel::findMultipleByIds($arrModuleIds);
 		$objElements = ContentModel::findMultipleByIds($arrContentElementIds);
 
-		if ($objModules !== null || \in_array(0, $arrModuleIds, true) || $objElements !== null)
+		if ($objModules !== null || $objElements !== null || \in_array(0, $arrModuleIds, true))
 		{
 			$arrMapper = array();
 			$arrContentElementsMapper = array();
