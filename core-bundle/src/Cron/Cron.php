@@ -22,6 +22,7 @@ use GuzzleHttp\Promise\PromiseInterface;
 use GuzzleHttp\Promise\Utils;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Lock\LockFactory;
 
 class Cron
 {
@@ -44,6 +45,7 @@ class Cron
         private readonly \Closure $repository,
         private readonly \Closure $entityManager,
         private readonly CacheItemPoolInterface $cachePool,
+        private readonly LockFactory $lockFactory,
         private readonly LoggerInterface|null $logger = null,
     ) {
     }
@@ -129,9 +131,12 @@ class Cron
 
         $now = new \DateTimeImmutable();
 
+        $lock = $this->lockFactory->createLock(__METHOD__);
+
         try {
-            // Lock cron table
-            $repository->lockTable();
+            if (!$lock->acquire()) {
+                return;
+            }
 
             // Go through each cron job
             foreach ($cronJobs as $cron) {
@@ -168,7 +173,7 @@ class Cron
 
             $entityManager->flush();
         } finally {
-            $repository->unlockTable();
+            $lock->release();
         }
 
         // Callback to restore previous run date in case cronjob skips itself
