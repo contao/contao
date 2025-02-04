@@ -691,6 +691,7 @@ class ContaoFilesystemLoaderTest extends TestCase
             $templateLocator,
             new ThemeNamespace(),
             $this->createMock(ContaoFramework::class),
+            $this->createMock(PageFinder::class),
             '/',
         );
 
