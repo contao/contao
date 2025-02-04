@@ -1053,7 +1053,7 @@
         <source>Delete the row</source>
       </trans-unit>
       <trans-unit id="MSC.mw_module">
-        <source>Module or content content</source>
+        <source>Module or content element</source>
       </trans-unit>
       <trans-unit id="MSC.mw_column">
         <source>Layout section</source>
@@ -1062,7 +1062,7 @@
         <source>Enable/disable the module or content element</source>
       </trans-unit>
       <trans-unit id="MSC.mw_modules">
-        <source>Frontend modules</source>
+        <source>Front end modules</source>
       </trans-unit>
       <trans-unit id="MSC.mw_elements">
         <source>Content elements</source>
