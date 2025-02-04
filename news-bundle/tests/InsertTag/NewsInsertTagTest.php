@@ -35,34 +35,85 @@ class NewsInsertTagTest extends ContaoTestCase
         ];
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $matcher = $this->exactly(10);
         $urlGenerator
-            ->expects($this->exactly(10))
+            ->expects($matcher)
             ->method('generate')
-            ->withConsecutive(
-                [$newsModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
-                [$newsModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
-                [$newsModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
-                [$newsModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
-                [$newsModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
-                [$newsModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
-                [$newsModel, [], UrlGeneratorInterface::ABSOLUTE_PATH],
-                [$newsModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
-                [$newsModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
-                [$newsModel, [], UrlGeneratorInterface::ABSOLUTE_URL],
-            )
-            ->willReturnOnConsecutiveCalls(
-                'news/foo-is-not-bar.html',
-                'news/foo-is-not-bar.html',
-                'news/foo-is-not-bar.html',
-                'news/foo-is-not-bar.html',
-                'http://domain.tld/news/foo-is-not-bar.html',
-                'http://domain.tld/news/foo-is-not-bar.html',
-                'news/foo-is-not-bar.html',
-                'http://domain.tld/news/foo-is-not-bar.html',
-                'http://domain.tld/news/foo-is-not-bar.html',
-                'http://domain.tld/news/foo-is-not-bar.html',
-            )
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher, $newsModel) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($newsModel, $parameters[0]);
+                            $this->assertSame([], $parameters[1]);
+                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
+
+                            return 'news/foo-is-not-bar.html';
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($newsModel, $parameters[0]);
+                            $this->assertSame([], $parameters[1]);
+                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
+
+                            return 'news/foo-is-not-bar.html';
+                        }
+                        if (3 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($newsModel, $parameters[0]);
+                            $this->assertSame([], $parameters[1]);
+                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
+
+                            return 'news/foo-is-not-bar.html';
+                        }
+                        if (4 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($newsModel, $parameters[0]);
+                            $this->assertSame([], $parameters[1]);
+                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
+
+                            return 'news/foo-is-not-bar.html';
+                        }
+                        if (5 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($newsModel, $parameters[0]);
+                            $this->assertSame([], $parameters[1]);
+                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
+
+                            return 'http://domain.tld/news/foo-is-not-bar.html';
+                        }
+                        if (6 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($newsModel, $parameters[0]);
+                            $this->assertSame([], $parameters[1]);
+                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
+
+                            return 'http://domain.tld/news/foo-is-not-bar.html';
+                        }
+                        if (7 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($newsModel, $parameters[0]);
+                            $this->assertSame([], $parameters[1]);
+                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
+
+                            return 'news/foo-is-not-bar.html';
+                        }
+                        if (8 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($newsModel, $parameters[0]);
+                            $this->assertSame([], $parameters[1]);
+                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
+
+                            return 'http://domain.tld/news/foo-is-not-bar.html';
+                        }
+                        if (9 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($newsModel, $parameters[0]);
+                            $this->assertSame([], $parameters[1]);
+                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
+
+                            return 'http://domain.tld/news/foo-is-not-bar.html';
+                        }
+                        if (10 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($newsModel, $parameters[0]);
+                            $this->assertSame([], $parameters[1]);
+                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
+
+                            return 'http://domain.tld/news/foo-is-not-bar.html';
+                        }
+                    }
+                )
+            ;
 
         $listener = new NewsInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
 

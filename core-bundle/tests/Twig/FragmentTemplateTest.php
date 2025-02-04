@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Twig;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\FragmentTemplate;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Response;
 
 class FragmentTemplateTest extends TestCase
@@ -63,9 +64,7 @@ class FragmentTemplateTest extends TestCase
         $this->assertSame($returnedResponse, $template->getResponse($preBuiltResponse));
     }
 
-    /**
-     * @dataProvider provideIllegalParentMethods
-     */
+    #[DataProvider('provideIllegalParentMethods')]
     public function testDisallowsAccessOfParentMethods(string $method, array $args): void
     {
         $template = $this->getFragmentTemplate();

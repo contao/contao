@@ -24,12 +24,23 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
     public function testDoesNothingIfThereIsService(): void
     {
         $container = $this->createMock(ContainerBuilder::class);
+        $matcher = $this->exactly(2);
         $container
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('has')
-            ->withConsecutive(['contao.intl.locales'], ['contao.intl.countries'])
-            ->willReturn(false)
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('contao.intl.locales', $parameters[0]);
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('contao.intl.countries', $parameters[0]);
+                        }
+
+                        return false;
+                    }
+                )
+            ;
 
         $pass = new IntlInstalledLocalesAndCountriesPass();
         $pass->process($container);

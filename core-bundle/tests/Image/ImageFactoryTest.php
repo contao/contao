@@ -34,6 +34,8 @@ use Contao\System;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface as ImagineImageInterface;
 use Imagine\Image\ImagineInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -488,11 +490,8 @@ class ImageFactoryTest extends TestCase
         $this->assertSame($imageMock, $image);
     }
 
-    /**
-     * @dataProvider getCreateWithLegacyMode
-     *
-     * @group legacy
-     */
+    #[DataProvider('getCreateWithLegacyMode')]
+    #[Group('legacy')]
     public function testCreatesAnImageObjectFromAnImagePathInLegacyMode(string $mode, array $expected): void
     {
         $path = Path::join($this->getTempDir(), 'images/none.jpg');
@@ -561,9 +560,7 @@ class ImageFactoryTest extends TestCase
         $this->assertSame($imageMock, $imageFromSerializedConfig);
     }
 
-    /**
-     * @dataProvider getCreateWithLegacyMode
-     */
+    #[DataProvider('getCreateWithLegacyMode')]
     public function testReturnsTheImportantPartFromALegacyMode(string $mode, array $expected): void
     {
         $dimensionsMock = $this->createMock(ImageDimensions::class);

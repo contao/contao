@@ -28,6 +28,7 @@ use Contao\Image\ResizerInterface;
 use Contao\System;
 use Imagine\Image\BoxInterface;
 use Imagine\Image\ImagineInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -140,9 +141,7 @@ class FigureTest extends TestCase
         $this->assertNull($figure->getMetadata());
     }
 
-    /**
-     * @dataProvider provideLinkAttributesAndPreconditions
-     */
+    #[DataProvider('provideLinkAttributesAndPreconditions')]
     public function testGetLinkAttributes(array $argumentsAndPreconditions, array $expectedAttributes, string|null $expectedHref): void
     {
         $image = $this->createMock(ImageResult::class);
@@ -315,9 +314,7 @@ class FigureTest extends TestCase
         $this->assertSame([], $figure->getOptions());
     }
 
-    /**
-     * @dataProvider provideLegacyTemplateDataScenarios
-     */
+    #[DataProvider('provideLegacyTemplateDataScenarios')]
     public function testGetLegacyTemplateData(array $preconditions, array $buildAttributes, \Closure $assert): void
     {
         [$metadata, $linkAttributes, $lightbox, $options] = $preconditions;

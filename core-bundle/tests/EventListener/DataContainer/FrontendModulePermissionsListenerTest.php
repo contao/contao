@@ -98,16 +98,26 @@ class FrontendModulePermissionsListenerTest extends TestCase
             ->method('getUser')
             ->willReturn($user)
         ;
+        $matcher = $this->exactly(2);
 
         $security
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('isGranted')
-            ->withConsecutive(
-                [ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE, 'navigation'],
-                [ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE, 'html'],
-            )
-            ->willReturn(true, false)
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame(ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE, $parameters[0]);
+                            $this->assertSame('navigation', $parameters[1]);
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame(ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE, $parameters[0]);
+                            $this->assertSame('html', $parameters[1]);
+                        }
+
+                        return true;
+                    }
+                )
+            ;
 
         $connection = $this->createMock(Connection::class);
         $connection

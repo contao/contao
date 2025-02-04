@@ -16,6 +16,8 @@ use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\ResolvedParameters;
 use Contao\CoreBundle\InsertTag\Resolver\TranslationInsertTag;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Translation\Translator;
 
@@ -23,11 +25,8 @@ class TranslationInsertTagTest extends TestCase
 {
     use ExpectDeprecationTrait;
 
-    /**
-     * @dataProvider insertTagsProvider
-     *
-     * @group legacy
-     */
+    #[DataProvider('insertTagsProvider')]
+    #[Group('legacy')]
     public function testReplacesInsertTagsWithTranslation(string $id, string $result, string|null $domain = null, array $parameters = []): void
     {
         $translator = $this->createMock(Translator::class);

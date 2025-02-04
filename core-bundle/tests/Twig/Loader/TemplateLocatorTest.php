@@ -24,6 +24,8 @@ use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Filesystem\Path;
 
 class TemplateLocatorTest extends TestCase
@@ -44,9 +46,7 @@ class TemplateLocatorTest extends TestCase
         $this->assertSame($expectedThemeDirectories, $locator->findThemeDirectories());
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testFindsThemeDirectoriesOutsideTemplatesDirectory(): void
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
@@ -73,9 +73,7 @@ class TemplateLocatorTest extends TestCase
         $this->assertEmpty($locator->findThemeDirectories());
     }
 
-    /**
-     * @dataProvider provideDatabaseExceptions
-     */
+    #[DataProvider('provideDatabaseExceptions')]
     public function testIgnoresDbalExceptions(Exception $exception): void
     {
         $connection = $this->createMock(Connection::class);

@@ -17,13 +17,12 @@ use Contao\CoreBundle\Cron\PurgeExpiredDataCron;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bridge\PhpUnit\ClockMock;
 
 class PurgeExpiredDataCronTest extends ContaoTestCase
 {
-    /**
-     * @dataProvider cleanupLogsAndUndoProvider
-     */
+    #[DataProvider('cleanupLogsAndUndoProvider')]
     public function testCleanupLogsAndUndo(int $undoPeriod, int $logPeriod, int $versionPeriod): void
     {
         $mockedTime = 1142164800;
@@ -56,18 +55,37 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
         }
 
         $config = $this->mockAdapter(['get']);
+        $matcher = $this->exactly(3);
         $config
-            ->expects($this->exactly(3))
+            ->expects($matcher)
             ->method('get')
-            ->withConsecutive(['undoPeriod'], ['logPeriod'], ['versionPeriod'])
-            ->willReturn($undoPeriod, $logPeriod, $versionPeriod)
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher, $undoPeriod) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('undoPeriod', $parameters[0]);
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('logPeriod', $parameters[0]);
+                        }
+                        if (3 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('versionPeriod', $parameters[0]);
+                        }
+
+                        return $undoPeriod;
+                    }
+                )
+            ;
 
         $connection = $this->createMock(Connection::class);
+        $matcher = $this->exactly(\count($expectedStatements));
         $connection
-            ->expects($this->exactly(\count($expectedStatements)))
+            ->expects($matcher)
             ->method('executeStatement')
-            ->withConsecutive(...$expectedStatements)
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $expectedStatements): void {
+                    $this->assertSame($expectedStatements[$matcher->numberOfInvocations() - 1], $parameters);
+                }
+            )
         ;
 
         $framework = $this->mockContaoFramework([Config::class => $config]);

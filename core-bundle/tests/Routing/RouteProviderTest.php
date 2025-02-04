@@ -21,6 +21,7 @@ use Contao\CoreBundle\Routing\RouteProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model\Collection;
 use Contao\PageModel;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Cmf\Component\Routing\Candidates\CandidatesInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -132,19 +133,43 @@ class RouteProviderTest extends TestCase
         ;
 
         $pageRegistry = $this->createMock(PageRegistry::class);
+        $matcher = $this->exactly(2);
         $pageRegistry
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('getRoute')
-            ->withConsecutive([$page1], [$page2])
-            ->willReturnOnConsecutiveCalls(new PageRoute($page1), new PageRoute($page2))
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher, $page1, $page2) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($page1, $parameters[0]);
+
+                            return new PageRoute($page1);
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($page2, $parameters[0]);
+
+                            return new PageRoute($page2);
+                        }
+                    }
+                )
+            ;
+        $matcher = $this->exactly(2);
 
         $pageRegistry
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('isRoutable')
-            ->withConsecutive([$page1], [$page2])
-            ->willReturn(true)
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher, $page1, $page2) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($page1, $parameters[0]);
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($page2, $parameters[0]);
+                        }
+
+                        return true;
+                    }
+                )
+            ;
 
         $provider = $this->getRouteProvider($this->mockFramework($pageAdapter), $pageRegistry);
         $routes = $provider->getRoutesByNames(['tl_page.17', 'tl_page.21']);
@@ -284,9 +309,7 @@ class RouteProviderTest extends TestCase
         $this->assertEmpty($provider->getRouteCollectionForRequest($request));
     }
 
-    /**
-     * @dataProvider getRoutes
-     */
+    #[DataProvider('getRoutes')]
     public function testSortsTheRoutes(array $pages, array $languages): void
     {
         $pageAdapter = $this->mockAdapter(['findBy']);
@@ -308,18 +331,28 @@ class RouteProviderTest extends TestCase
         }
 
         $pageRegistry = $this->createMock(PageRegistry::class);
+        $matcher = $this->exactly(\count($pages));
         $pageRegistry
-            ->expects($this->exactly(\count($pages)))
+            ->expects($matcher)
             ->method('getRoute')
-            ->withConsecutive(...$args)
-            ->willReturnOnConsecutiveCalls(...$routes)
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $args): void {
+                    $this->assertSame($args[$matcher->numberOfInvocations() - 1], $parameters);
+                }
+            )
         ;
+        $matcher = $this->exactly(\count($pages));
 
         $pageRegistry
-            ->expects($this->exactly(\count($pages)))
+            ->expects($matcher)
             ->method('isRoutable')
-            ->withConsecutive(...$args)
-            ->willReturn(true)
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $args) {
+                    $this->assertSame($args[$matcher->numberOfInvocations() - 1], $parameters);
+
+                    return true;
+                }
+            )
         ;
 
         $provider = $this->getRouteProvider($framework, $pageRegistry);
@@ -496,9 +529,7 @@ class RouteProviderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getRootRoutes
-     */
+    #[DataProvider('getRootRoutes')]
     public function testSortsTheRootRoutes(array $pages, array $languages, array $expectedNames): void
     {
         $pageAdapter = $this->mockAdapter(['findBy']);
@@ -520,11 +551,15 @@ class RouteProviderTest extends TestCase
         }
 
         $pageRegistry = $this->createMock(PageRegistry::class);
+        $matcher = $this->exactly(\count($pages));
         $pageRegistry
-            ->expects($this->exactly(\count($pages)))
+            ->expects($matcher)
             ->method('getRoute')
-            ->withConsecutive(...$args)
-            ->willReturnOnConsecutiveCalls(...$routes)
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $args): void {
+                    $this->assertSame($args[$matcher->numberOfInvocations() - 1], $parameters);
+                }
+            )
         ;
 
         $provider = $this->getRouteProvider($framework, $pageRegistry);
@@ -613,9 +648,7 @@ class RouteProviderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getPageRoutes
-     */
+    #[DataProvider('getPageRoutes')]
     public function testAddsRoutesForAPage(string $alias, string $language, string $domain, string $urlSuffix, bool $prependLocale, string|null $scheme): void
     {
         $pageModel = $this->mockPage($language, $alias, true, $domain, $scheme, $urlSuffix);
@@ -687,12 +720,25 @@ class RouteProviderTest extends TestCase
         $route = new PageRoute($routablePage);
 
         $pageAdapter = $this->mockAdapter(['findById']);
+        $matcher = $this->exactly(2);
         $pageAdapter
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('findById')
-            ->withConsecutive([17], [18])
-            ->willReturnOnConsecutiveCalls($routablePage, $unroutablePage)
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame(17, $parameters[0]);
+
+                            return $routablePage;
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame(18, $parameters[0]);
+
+                            return $unroutablePage;
+                        }
+                    }
+                )
+            ;
 
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
@@ -701,13 +747,26 @@ class RouteProviderTest extends TestCase
             ->with($routablePage)
             ->willReturn($route)
         ;
+        $matcher = $this->exactly(2);
 
         $pageRegistry
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('isRoutable')
-            ->withConsecutive([$routablePage], [$unroutablePage])
-            ->willReturnOnConsecutiveCalls(true, false)
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher, $routablePage, $unroutablePage) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($routablePage, $parameters[0]);
+
+                            return true;
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($unroutablePage, $parameters[0]);
+
+                            return false;
+                        }
+                    }
+                )
+            ;
 
         $framework = $this->mockFramework($pageAdapter);
 

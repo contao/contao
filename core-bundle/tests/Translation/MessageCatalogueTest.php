@@ -17,6 +17,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\MessageCatalogue;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Resource\ResourceInterface;
 use Symfony\Component\Finder\Finder;
@@ -92,13 +93,28 @@ class MessageCatalogueTest extends TestCase
             ->method('getLocale')
             ->willReturn('en')
         ;
+        $matcher = $this->exactly(2);
 
         $parentCatalogue
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('has')
-            ->withConsecutive(['foo', 'foobar'], ['bar', 'foobar'])
-            ->willReturnOnConsecutiveCalls(true, false)
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('foo', $parameters[0]);
+                            $this->assertSame('foobar', $parameters[1]);
+
+                            return true;
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('bar', $parameters[0]);
+                            $this->assertSame('foobar', $parameters[1]);
+
+                            return false;
+                        }
+                    }
+                )
+            ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
 
@@ -123,13 +139,28 @@ class MessageCatalogueTest extends TestCase
             ->method('getLocale')
             ->willReturn('en')
         ;
+        $matcher = $this->exactly(2);
 
         $parentCatalogue
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('defines')
-            ->withConsecutive(['foo', 'foobar'], ['bar', 'foobar'])
-            ->willReturnOnConsecutiveCalls(true, false)
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('foo', $parameters[0]);
+                            $this->assertSame('foobar', $parameters[1]);
+
+                            return true;
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('bar', $parameters[0]);
+                            $this->assertSame('foobar', $parameters[1]);
+
+                            return false;
+                        }
+                    }
+                )
+            ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
 
@@ -154,13 +185,28 @@ class MessageCatalogueTest extends TestCase
             ->method('getLocale')
             ->willReturn('en')
         ;
+        $matcher = $this->exactly(2);
 
         $parentCatalogue
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('get')
-            ->withConsecutive(['foo', 'foobar'], ['bar', 'foobar'])
-            ->willReturnOnConsecutiveCalls('Foo', 'bar')
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('foo', $parameters[0]);
+                            $this->assertSame('foobar', $parameters[1]);
+
+                            return 'Foo';
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('bar', $parameters[0]);
+                            $this->assertSame('foobar', $parameters[1]);
+
+                            return 'bar';
+                        }
+                    }
+                )
+            ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
 
@@ -178,9 +224,7 @@ class MessageCatalogueTest extends TestCase
         $this->assertSame('MSC.foobar', $catalogue->get('MSC.foobar', 'contao_default'));
     }
 
-    /**
-     * @dataProvider getForwardedDomainMethods
-     */
+    #[DataProvider('getForwardedDomainMethods')]
     public function testForwardsIfDomainIsNotContao(string $method, array $params, array $paramsContaoDomain, mixed $return = null): void
     {
         $parentCatalogue = $this->createMock(MessageCatalogueInterface::class);
@@ -228,9 +272,7 @@ class MessageCatalogueTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getCompletelyForwardedMethods
-     */
+    #[DataProvider('getCompletelyForwardedMethods')]
     public function testForwardsCompletelyToParent(string $method, array $params, mixed $return = null): void
     {
         $parentCatalogue = $this->createMock(MessageCatalogueInterface::class);

@@ -29,6 +29,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -120,10 +121,29 @@ class CoreResponseContextFactoryTest extends TestCase
         ;
 
         $insertTagsParser = $this->createMock(InsertTagParser::class);
+        $matcher = $this->exactly(3);
         $insertTagsParser
+            ->expects($matcher)
             ->method('replaceInline')
-            ->withConsecutive(['My title'], ['My description'], ['{{link_url::42}}'])
-            ->willReturnOnConsecutiveCalls('My title', 'My description', 'de/foobar.html')
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('My title', $parameters[0]);
+
+                        return 'My title';
+                    }
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('My description', $parameters[0]);
+
+                        return 'My description';
+                    }
+                    if (3 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('{{link_url::42}}', $parameters[0]);
+
+                        return 'de/foobar.html';
+                    }
+                }
+            )
         ;
 
         $requestStack = new RequestStack();
@@ -200,9 +220,7 @@ class CoreResponseContextFactoryTest extends TestCase
         $this->assertSame('https://example.com/csp/report', $directives->getDirective('report-uri'));
     }
 
-    /**
-     * @dataProvider getContaoWebpageResponseContextCanonicalUrls
-     */
+    #[DataProvider('getContaoWebpageResponseContextCanonicalUrls')]
     public function testContaoWebpageResponseContextCanonicalUrls(string $url, string $expected): void
     {
         $responseAccessor = $this->createMock(ResponseContextAccessor::class);
@@ -212,10 +230,29 @@ class CoreResponseContextFactoryTest extends TestCase
         ;
 
         $insertTagsParser = $this->createMock(InsertTagParser::class);
+        $matcher = $this->exactly(3);
         $insertTagsParser
+            ->expects($matcher)
             ->method('replaceInline')
-            ->withConsecutive([''], [''], ['{{link_url::42}}'])
-            ->willReturnOnConsecutiveCalls('My title', 'My description', $url)
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('', $parameters[0]);
+
+                        return 'My title';
+                    }
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('', $parameters[0]);
+
+                        return 'My description';
+                    }
+                    if (3 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('{{link_url::42}}', $parameters[0]);
+
+                        return $url;
+                    }
+                }
+            )
         ;
 
         $requestStack = new RequestStack();

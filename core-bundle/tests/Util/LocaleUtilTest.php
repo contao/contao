@@ -14,12 +14,11 @@ namespace Contao\CoreBundle\Tests\Util;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\LocaleUtil;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class LocaleUtilTest extends TestCase
 {
-    /**
-     * @dataProvider getFallbacks
-     */
+    #[DataProvider('getFallbacks')]
     public function testGetFallbacks(string $locale, array $expected): void
     {
         $this->assertSame($expected, LocaleUtil::getFallbacks($locale));

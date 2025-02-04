@@ -17,6 +17,7 @@ use Contao\CoreBundle\Search\Backend\BackendSearch;
 use Contao\CoreBundle\Search\Backend\Query;
 use Contao\CoreBundle\Search\Backend\Result;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,9 +39,7 @@ class BackendSearchControllerTest extends TestCase
         $controller(new Request());
     }
 
-    /**
-     * @dataProvider delegatesRequestCorrectlyProvider
-     */
+    #[DataProvider('delegatesRequestCorrectlyProvider')]
     public function testDelegatesRequestCorrectly(Request $request, Query $expectedQuery): void
     {
         $backendSearch = $this->createMock(BackendSearch::class);

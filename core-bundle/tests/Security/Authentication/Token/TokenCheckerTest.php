@@ -19,6 +19,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\User;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
@@ -34,9 +35,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
 
 class TokenCheckerTest extends TestCase
 {
-    /**
-     * @dataProvider getUserInTokenStorageData
-     */
+    #[DataProvider('getUserInTokenStorageData')]
     public function testChecksForUserInTokenStorageIfFirewallContextMatches(string $class, string $firewallContext, array $roles): void
     {
         $user = $this->mockUser($class);
@@ -89,9 +88,7 @@ class TokenCheckerTest extends TestCase
         yield [BackendUser::class, 'contao_backend', ['ROLE_USER']];
     }
 
-    /**
-     * @dataProvider getUserInSessionData
-     */
+    #[DataProvider('getUserInSessionData')]
     public function testChecksForUserInSessionIfFirewallContextDoesNotMatch(string $class, string $firewallContext, array $roles): void
     {
         $user = $this->mockUser($class);
@@ -176,9 +173,7 @@ class TokenCheckerTest extends TestCase
         $this->assertSame('foobar', $tokenChecker->getBackendUsername());
     }
 
-    /**
-     * @dataProvider getPreviewAllowedData
-     */
+    #[DataProvider('getPreviewAllowedData')]
     public function testChecksIfAccessingThePreviewIsAllowed(array $token, array|null $previewLinkRow, string|null $url, bool $expect): void
     {
         $request = new Request();
@@ -300,9 +295,7 @@ class TokenCheckerTest extends TestCase
         $this->assertTrue($tokenChecker->canAccessPreview());
     }
 
-    /**
-     * @dataProvider getPreviewModeData
-     */
+    #[DataProvider('getPreviewModeData')]
     public function testChecksIfThePreviewModeIsActive(bool $isPreview, bool $expect): void
     {
         $request = new Request();
@@ -490,9 +483,7 @@ class TokenCheckerTest extends TestCase
         $this->assertNull($tokenChecker->getFrontendUsername());
     }
 
-    /**
-     * @dataProvider getFrontendGuestData
-     */
+    #[DataProvider('getFrontendGuestData')]
     public function testIfAFrontendGuestIsAvailable(bool $expected, bool $hasFrontendGuest, bool $hasPreviousSession): void
     {
         $session = $this->createMock(SessionInterface::class);

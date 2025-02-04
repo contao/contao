@@ -170,16 +170,38 @@ class MarkdownControllerTest extends ContentElementTestCase
             ->method('getResponse')
             ->willReturn(new Response())
         ;
+        $matcher = $this->exactly(6);
 
         $template
+            ->expects($matcher)
             ->method('__set')
-            ->withConsecutive(
-                [$this->equalTo('headline'), $this->isNull()],
-                [$this->equalTo('hl'), $this->equalTo('h1')],
-                [$this->equalTo('class'), $this->equalTo('ce_markdown')],
-                [$this->equalTo('cssID'), $this->equalTo('')],
-                [$this->equalTo('inColumn'), $this->equalTo('main')],
-                [$this->equalTo('content'), $this->equalTo($expectedMarkdown)],
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $expectedMarkdown): void {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('headline', $parameters[0]);
+                        $this->assertSame($this->isNull(), $parameters[1]);
+                    }
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('hl', $parameters[0]);
+                        $this->assertSame('h1', $parameters[1]);
+                    }
+                    if (3 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('class', $parameters[0]);
+                        $this->assertSame('ce_markdown', $parameters[1]);
+                    }
+                    if (4 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('cssID', $parameters[0]);
+                        $this->assertSame('', $parameters[1]);
+                    }
+                    if (5 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('inColumn', $parameters[0]);
+                        $this->assertSame('main', $parameters[1]);
+                    }
+                    if (6 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('content', $parameters[0]);
+                        $this->assertSame($expectedMarkdown, $parameters[1]);
+                    }
+                }
             )
         ;
 

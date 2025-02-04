@@ -19,15 +19,14 @@ use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\PageModel;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\CompiledRoute;
 use Twig\Environment;
 
 class PageRoutingListenerTest extends TestCase
 {
-    /**
-     * @dataProvider routePathProvider
-     */
+    #[DataProvider('routePathProvider')]
     public function testGetsPathFromPageRoute(string $path, array $requirements, string $expected): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class);
@@ -189,16 +188,26 @@ class PageRoutingListenerTest extends TestCase
         ;
 
         $backendAdapter = $this->mockAdapter(['addToUrl']);
+        $matcher = $this->exactly(3);
         $backendAdapter
-            ->expects($this->exactly(3))
+            ->expects($matcher)
             ->method('addToUrl')
-            ->withConsecutive(
-                ['act=edit&id=2&popup=1&nb=1'],
-                ['act=edit&id=3&popup=1&nb=1'],
-                ['act=edit&id=4&popup=1&nb=1'],
-            )
-            ->willReturn('editUrl')
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('act=edit&id=2&popup=1&nb=1', $parameters[0]);
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('act=edit&id=3&popup=1&nb=1', $parameters[0]);
+                        }
+                        if (3 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('act=edit&id=4&popup=1&nb=1', $parameters[0]);
+                        }
+
+                        return 'editUrl';
+                    }
+                )
+            ;
 
         $framework = $this->mockContaoFramework([
             PageModel::class => $pageAdapter,

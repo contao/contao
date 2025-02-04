@@ -18,6 +18,7 @@ use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Result;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\Container;
 
@@ -32,9 +33,7 @@ class StatementTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider getDeprecatedSetQueries
-     */
+    #[DataProvider('getDeprecatedSetQueries')]
     public function testSetThrowsException(string $query): void
     {
         $statement = new Statement($this->createMock(Connection::class));
@@ -60,9 +59,7 @@ class StatementTest extends TestCase
         yield ['UPDATE two_placeholders %s %s'];
     }
 
-    /**
-     * @dataProvider getQueriesWithParametersAndSets
-     */
+    #[DataProvider('getQueriesWithParametersAndSets')]
     public function testReplacesParametersAndSets(string $query, string $expected, array|null $params = null, array|null $set = null): void
     {
         $doctrineResult = $this->createMock(Result::class);

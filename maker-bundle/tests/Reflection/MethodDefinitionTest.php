@@ -13,13 +13,12 @@ declare(strict_types=1);
 namespace Contao\MakerBundle\Tests\Reflection;
 
 use Contao\MakerBundle\Reflection\MethodDefinition;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class MethodDefinitionTest extends TestCase
 {
-    /**
-     * @dataProvider getReturnValues
-     */
+    #[DataProvider('getReturnValues')]
     public function testSetsTheCorrectMethodBody(string|null $returnType, string $body): void
     {
         $hookDefinition = new MethodDefinition($returnType, []);

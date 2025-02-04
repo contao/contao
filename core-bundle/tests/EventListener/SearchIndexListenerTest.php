@@ -16,6 +16,7 @@ use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Messenger\Message\SearchIndexMessage;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,9 +27,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 class SearchIndexListenerTest extends TestCase
 {
-    /**
-     * @dataProvider getRequestResponse
-     */
+    #[DataProvider('getRequestResponse')]
     public function testIndexesOrDeletesTheDocument(Request $request, Response $response, int $features, bool $index, bool $delete): void
     {
         $dispatchCount = (int) $index + (int) $delete;

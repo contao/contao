@@ -20,6 +20,7 @@ use Contao\DcaLoader;
 use Contao\Environment;
 use Contao\PageModel;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -128,9 +129,7 @@ class ControllerTest extends TestCase
         $this->assertSame('/?do=page&amp;key=foo&amp;ref=cri', Controller::addToUrl('key=foo', true, ['id']));
     }
 
-    /**
-     * @dataProvider pageStatusIconProvider
-     */
+    #[DataProvider('pageStatusIconProvider')]
     public function testPageStatusIcon(PageModel $pageModel, string $expected): void
     {
         $this->assertSame($expected, Controller::getPageStatusIcon($pageModel));

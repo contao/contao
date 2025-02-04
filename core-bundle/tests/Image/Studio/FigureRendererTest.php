@@ -27,6 +27,7 @@ use Contao\File;
 use Contao\Files;
 use Contao\Image\ImageInterface;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -83,9 +84,7 @@ class FigureRendererTest extends TestCase
         $this->assertSame('<result>', $figureRenderer->render('resource', '_size', $configuration));
     }
 
-    /**
-     * @dataProvider provideMetadataKeys
-     */
+    #[DataProvider('provideMetadataKeys')]
     public function testAllowsDefiningMetadataAsArray(string $key): void
     {
         $metadata = [Metadata::VALUE_ALT => 'foo'];
@@ -172,9 +171,7 @@ class FigureRendererTest extends TestCase
         $figureRenderer->render(1, null, ['invalid' => 'foobar']);
     }
 
-    /**
-     * @dataProvider provideInvalidTemplates
-     */
+    #[DataProvider('provideInvalidTemplates')]
     public function testFailsWithInvalidTemplate(string $invalidTemplate): void
     {
         $figureRenderer = $this->getFigureRenderer();

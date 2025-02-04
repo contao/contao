@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Environment;
 use Contao\System;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\IpUtils;
@@ -63,9 +64,7 @@ class EnvironmentTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testHandlesModPhp(): void
     {
         $this->setSapi('apache');
@@ -102,9 +101,7 @@ class EnvironmentTest extends TestCase
         $this->runTests();
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testHandlesCgiFcgi(): void
     {
         $this->setSapi('cgi_fcgi');
@@ -145,9 +142,7 @@ class EnvironmentTest extends TestCase
         $this->runTests();
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testHandlesFpmFcgi(): void
     {
         $this->setSapi('fpm_fcgi');

@@ -17,6 +17,7 @@ use Contao\CoreBundle\EventListener\RequestTokenListener;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\InputBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -85,9 +86,7 @@ class RequestTokenListenerTest extends TestCase
         $this->validateRequestTokenForRequest($request, false);
     }
 
-    /**
-     * @dataProvider getAttributeAndRequest
-     */
+    #[DataProvider('getAttributeAndRequest')]
     public function testValidatesTheRequestTokenDependingOnTheRequest(bool $setAttribute, bool|null $tokenCheck, bool $isContaoRequest, bool $isValidToken): void
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);

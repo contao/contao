@@ -26,6 +26,7 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\InsertTags;
 use Contao\System;
+use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Cache\Adapter\NullAdapter;
@@ -136,9 +137,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $this->assertSame('&QUOT;A&QUOT; &AMP; &LT;B&GT;', $output);
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testHtmlAttrFilter(): void
     {
         $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');

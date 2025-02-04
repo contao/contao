@@ -16,6 +16,7 @@ use Contao\CoreBundle\Command\FilesyncCommand;
 use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
@@ -41,9 +42,7 @@ class FilesyncCommandTest extends TestCase
         $this->assertFalse($command->getDefinition()->getArgument('paths')->isRequired());
     }
 
-    /**
-     * @dataProvider provideInputs
-     */
+    #[DataProvider('provideInputs')]
     public function testDelegatesArgumentsToDbafsManager(array $input): void
     {
         $manager = $this->createMock(DbafsManager::class);

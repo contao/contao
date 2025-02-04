@@ -31,6 +31,8 @@ use Doctrine\DBAL\Driver\PDO\MySQL\Driver as PdoDriver;
 use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\Schema;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Console\Terminal;
@@ -47,9 +49,7 @@ class MigrateCommandTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testAbortsEarlyIfThereAreNoMigrations(): void
     {
         $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
@@ -66,9 +66,7 @@ class MigrateCommandTest extends TestCase
         $this->assertMatchesRegularExpression('/All migrations completed/', $display);
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testAbortsEarlyIfNonInteractiveAndThereAreOnlyDropMigrations(): void
     {
         $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
@@ -94,9 +92,7 @@ class MigrateCommandTest extends TestCase
         $this->assertMatchesRegularExpression('/All migrations completed/', $display);
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testExecutesBackupIfPendingSchemaDiff(): void
     {
         $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
@@ -144,11 +140,8 @@ class MigrateCommandTest extends TestCase
         $this->assertDoesNotMatchRegularExpression('/All migrations completed/', $display);
     }
 
-    /**
-     * @group legacy
-     *
-     * @dataProvider getOutputFormats
-     */
+    #[DataProvider('getOutputFormats')]
+    #[Group('legacy')]
     public function testExecutesWithoutPendingMigrations(string $format): void
     {
         $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
@@ -174,11 +167,8 @@ class MigrateCommandTest extends TestCase
         }
     }
 
-    /**
-     * @group legacy
-     *
-     * @dataProvider getOutputFormatsAndBackup
-     */
+    #[DataProvider('getOutputFormatsAndBackup')]
+    #[Group('legacy')]
     public function testExecutesPendingMigrations(string $format, bool $backupsEnabled): void
     {
         $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
@@ -230,11 +220,8 @@ class MigrateCommandTest extends TestCase
         }
     }
 
-    /**
-     * @group legacy
-     *
-     * @dataProvider getOutputFormats
-     */
+    #[DataProvider('getOutputFormats')]
+    #[Group('legacy')]
     public function testExecutesSchemaDiff(string $format): void
     {
         $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
@@ -315,11 +302,8 @@ class MigrateCommandTest extends TestCase
         }
     }
 
-    /**
-     * @group legacy
-     *
-     * @dataProvider getOutputFormats
-     */
+    #[DataProvider('getOutputFormats')]
+    #[Group('legacy')]
     public function testDoesNotExecuteWithDryRun(string $format): void
     {
         $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
@@ -388,9 +372,7 @@ class MigrateCommandTest extends TestCase
         }
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testAbortsIfAnswerIsNo(): void
     {
         $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
@@ -414,11 +396,8 @@ class MigrateCommandTest extends TestCase
         $this->assertDoesNotMatchRegularExpression('/All migrations completed/', $display);
     }
 
-    /**
-     * @group legacy
-     *
-     * @dataProvider getOutputFormats
-     */
+    #[DataProvider('getOutputFormats')]
+    #[Group('legacy')]
     public function testDoesNotAbortIfMigrationFails(string $format): void
     {
         $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
@@ -458,11 +437,8 @@ class MigrateCommandTest extends TestCase
         }
     }
 
-    /**
-     * @group legacy
-     *
-     * @dataProvider getOutputFormats
-     */
+    #[DataProvider('getOutputFormats')]
+    #[Group('legacy')]
     public function testAbortsOnFatalError(string $format): void
     {
         $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
@@ -492,11 +468,8 @@ class MigrateCommandTest extends TestCase
         $this->assertSame('Fatal', $json['message']);
     }
 
-    /**
-     * @group legacy
-     *
-     * @dataProvider getOutputFormats
-     */
+    #[DataProvider('getOutputFormats')]
+    #[Group('legacy')]
     public function testAbortsOnWrongServerVersion(string $format): void
     {
         $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
@@ -547,11 +520,8 @@ class MigrateCommandTest extends TestCase
         }
     }
 
-    /**
-     * @group legacy
-     *
-     * @dataProvider provideInvalidSqlModes
-     */
+    #[DataProvider('provideInvalidSqlModes')]
+    #[Group('legacy')]
     public function testOutputsWarningIfNotRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
     {
         $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
@@ -568,9 +538,7 @@ class MigrateCommandTest extends TestCase
         $this->assertStringContainsString(\sprintf('%s: "SET SESSION sql_mode=', $expectedOptionKey), $display);
     }
 
-    /**
-     * @dataProvider provideBadConfigurations
-     */
+    #[DataProvider('provideBadConfigurations')]
     public function testOutputsConfigurationErrors(array $configuration, array|string $expectedMessages): void
     {
         $connection = $this->createMock(Connection::class);
@@ -750,11 +718,8 @@ class MigrateCommandTest extends TestCase
         ];
     }
 
-    /**
-     * @group legacy
-     *
-     * @dataProvider provideInvalidSqlModes
-     */
+    #[DataProvider('provideInvalidSqlModes')]
+    #[Group('legacy')]
     public function testEmitsWarningMessageIfNotRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
     {
         $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');

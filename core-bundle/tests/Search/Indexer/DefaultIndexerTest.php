@@ -19,12 +19,11 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Search;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DefaultIndexerTest extends TestCase
 {
-    /**
-     * @dataProvider indexProvider
-     */
+    #[DataProvider('indexProvider')]
     public function testIndexesADocument(Document $document, array|null $expectedIndexParams, string|null $expectedMessage = null, bool $indexProtected = false): void
     {
         $searchAdapter = $this->mockAdapter(['indexPage']);
@@ -235,15 +234,24 @@ class DefaultIndexerTest extends TestCase
         $framework = $this->mockContaoFramework();
 
         $connection = $this->createMock(Connection::class);
+        $matcher = $this->exactly(3);
         $connection
-            ->expects($this->exactly(3))
+            ->expects($matcher)
             ->method('executeStatement')
-            ->withConsecutive(
-                ['TRUNCATE TABLE tl_search'],
-                ['TRUNCATE TABLE tl_search_index'],
-                ['TRUNCATE TABLE tl_search_term'],
-            )
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher): void {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('TRUNCATE TABLE tl_search', $parameters[0]);
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('TRUNCATE TABLE tl_search_index', $parameters[0]);
+                        }
+                        if (3 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('TRUNCATE TABLE tl_search_term', $parameters[0]);
+                        }
+                    }
+                )
+            ;
 
         $indexer = new DefaultIndexer($framework, $connection);
         $indexer->clear();

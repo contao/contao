@@ -17,6 +17,7 @@ use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FaqResolverTest extends ContaoTestCase
 {
@@ -46,9 +47,7 @@ class FaqResolverTest extends ContaoTestCase
         $this->assertSame($target, $result->content);
     }
 
-    /**
-     * @dataProvider getParametersForContentProvider
-     */
+    #[DataProvider('getParametersForContentProvider')]
     public function testGetParametersForContent(object $content, array $expected): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class);

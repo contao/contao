@@ -20,6 +20,7 @@ use Contao\DataContainer;
 use Contao\Input;
 use Contao\Message;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -106,9 +107,7 @@ class PreviewLinkListenerTest extends TestCase
         $this->assertSame(['tl_preview_link' => 'foo', 'tl_member' => 'bar'], $GLOBALS['TL_DCA']);
     }
 
-    /**
-     * @dataProvider defaultDcaValueProvider
-     */
+    #[DataProvider('defaultDcaValueProvider')]
     public function testSetsTheDefaultValueForDcaFields(string $url, bool $showUnpublished, int $userId): void
     {
         ClockMock::withClockMock(true);

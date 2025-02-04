@@ -329,11 +329,15 @@ class ContentUrlGeneratorTest extends TestCase
     private function mockResolver(array ...$cases): ContentUrlResolverInterface&MockObject
     {
         $resolver = $this->createMock(ContentUrlResolverInterface::class);
+        $matcher = $this->exactly(\count($cases));
         $resolver
-            ->expects($this->exactly(\count($cases)))
+            ->expects($matcher)
             ->method('resolve')
-            ->withConsecutive(...array_map(static fn (array $case) => [$case[0]], $cases))
-            ->willReturnOnConsecutiveCalls(...array_column($cases, 1))
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $cases): void {
+                    $this->assertSame(array_map(static fn (array $case) => [$case[0]], $cases)[$matcher->numberOfInvocations() - 1], $parameters);
+                }
+            )
         ;
 
         return $resolver;

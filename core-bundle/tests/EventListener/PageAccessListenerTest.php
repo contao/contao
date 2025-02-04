@@ -198,12 +198,24 @@ class PageAccessListenerTest extends TestCase
     public function testDeniesAccessToProtectedPageIfMemberIsNotInGroup(): void
     {
         $security = $this->createMock(Security::class);
+        $matcher = $this->exactly(2);
         $security
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('isGranted')
-            ->withConsecutive(['ROLE_MEMBER'], [ContaoCorePermissions::MEMBER_IN_GROUPS, [1, 2, 3]])
-            ->willReturn(true, false)
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('ROLE_MEMBER', $parameters[0]);
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame(ContaoCorePermissions::MEMBER_IN_GROUPS, $parameters[0]);
+                            $this->assertSame([1, 2, 3], $parameters[1]);
+                        }
+
+                        return true;
+                    }
+                )
+            ;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'id' => 42,
@@ -233,12 +245,24 @@ class PageAccessListenerTest extends TestCase
     public function testDeniesAccessToProtectedPageIfMemberIsNotGuest(): void
     {
         $security = $this->createMock(Security::class);
+        $matcher = $this->exactly(2);
         $security
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('isGranted')
-            ->withConsecutive(['ROLE_MEMBER'], [ContaoCorePermissions::MEMBER_IN_GROUPS, [-1, 1]])
-            ->willReturn(false, false)
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('ROLE_MEMBER', $parameters[0]);
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame(ContaoCorePermissions::MEMBER_IN_GROUPS, $parameters[0]);
+                            $this->assertSame([-1, 1], $parameters[1]);
+                        }
+
+                        return false;
+                    }
+                )
+            ;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'id' => 42,
@@ -268,12 +292,24 @@ class PageAccessListenerTest extends TestCase
     public function testGrantsAccessToProtectedPageIfMemberIsInGroup(): void
     {
         $security = $this->createMock(Security::class);
+        $matcher = $this->exactly(2);
         $security
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('isGranted')
-            ->withConsecutive(['ROLE_MEMBER'], [ContaoCorePermissions::MEMBER_IN_GROUPS, [1, 2, 3]])
-            ->willReturn(true, true)
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('ROLE_MEMBER', $parameters[0]);
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame(ContaoCorePermissions::MEMBER_IN_GROUPS, $parameters[0]);
+                            $this->assertSame([1, 2, 3], $parameters[1]);
+                        }
+
+                        return true;
+                    }
+                )
+            ;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'id' => 42,
@@ -300,12 +336,24 @@ class PageAccessListenerTest extends TestCase
     public function testGrantsAccessToProtectedPageIfIsGuest(): void
     {
         $security = $this->createMock(Security::class);
+        $matcher = $this->exactly(2);
         $security
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('isGranted')
-            ->withConsecutive(['ROLE_MEMBER'], [ContaoCorePermissions::MEMBER_IN_GROUPS, [-1, 1]])
-            ->willReturn(false, true)
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('ROLE_MEMBER', $parameters[0]);
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame(ContaoCorePermissions::MEMBER_IN_GROUPS, $parameters[0]);
+                            $this->assertSame([-1, 1], $parameters[1]);
+                        }
+
+                        return false;
+                    }
+                )
+            ;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'id' => 42,

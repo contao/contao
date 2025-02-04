@@ -15,14 +15,13 @@ namespace Contao\CoreBundle\Tests\Routing;
 use Contao\CoreBundle\Routing\AbstractPageRouteProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\Route;
 
 class AbstractPageRouteProviderTest extends TestCase
 {
-    /**
-     * @dataProvider compareRoutesProvider
-     */
+    #[DataProvider('compareRoutesProvider')]
     public function testCompareRoutes(Route $a, Route $b, array|null $languages, int $expected): void
     {
         $instance = $this->getMockForAbstractClass(AbstractPageRouteProvider::class, [], '', false);
@@ -266,9 +265,7 @@ class AbstractPageRouteProviderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider ordersRoutesByPreferredLanguages
-     */
+    #[DataProvider('ordersRoutesByPreferredLanguages')]
     public function testOrdersRoutesByPreferredLanguages(array $pageLanguages, array $preferredLanguages, array $expected): void
     {
         $instance = $this->getMockForAbstractClass(AbstractPageRouteProvider::class, [], '', false);
@@ -379,9 +376,7 @@ class AbstractPageRouteProviderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider convertLanguageForSortingProvider
-     */
+    #[DataProvider('convertLanguageForSortingProvider')]
     public function testConvertLanguagesForSorting(array $languages, array $expected): void
     {
         $instance = $this->getMockForAbstractClass(AbstractPageRouteProvider::class, [], '', false);

@@ -14,6 +14,7 @@ namespace Contao\ManagerBundle\Tests\Command;
 
 use Contao\ManagerBundle\Command\ContaoSetupCommand;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -39,9 +40,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $this->assertTrue($command->isHidden());
     }
 
-    /**
-     * @dataProvider provideCommands
-     */
+    #[DataProvider('provideCommands')]
     public function testExecutesCommands(array $options, array $flags, array $phpFlags = []): void
     {
         $processes = $this->getProcessMocks();
@@ -159,9 +158,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $this->assertStringContainsString('[INFO] Done! Please run the contao:migrate command', $output);
     }
 
-    /**
-     * @dataProvider provideKernelSecretValues
-     */
+    #[DataProvider('provideKernelSecretValues')]
     public function testWritesAppSecretToDotEnv(string $kernelSecret, bool $existingDotEnvFile): void
     {
         $projectDir = $this->getTempDir();

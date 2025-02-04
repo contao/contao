@@ -19,6 +19,7 @@ use Contao\CoreBundle\Twig\Extension\DeprecationsNodeVisitor;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
@@ -33,9 +34,7 @@ class DeprecationsNodeVisitorTest extends TestCase
         $this->assertSame(10, (new DeprecationsNodeVisitor())->getPriority());
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testTriggersInsertTagDeprecation(): void
     {
         $templateContent = '<a href="{{ \'{{link_url::9}}\' }}">Test</a>';

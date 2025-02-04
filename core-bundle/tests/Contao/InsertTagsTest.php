@@ -27,6 +27,8 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InsertTags;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\FileLocatorInterface;
@@ -104,11 +106,8 @@ class InsertTagsTest extends TestCase
         return str_replace(['[', ']'], ['{', '}'], $tagParts[1] ?? '');
     }
 
-    /**
-     * @dataProvider insertTagsProvider
-     *
-     * @group legacy
-     */
+    #[DataProvider('insertTagsProvider')]
+    #[Group('legacy')]
     public function testInsertTags(string $source, string $expected, bool $expectDeprecation = true): void
     {
         if ($expectDeprecation) {
@@ -312,11 +311,8 @@ class InsertTagsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideFigureInsertTags
-     *
-     * @group legacy
-     */
+    #[DataProvider('provideFigureInsertTags')]
+    #[Group('legacy')]
     public function testFigureInsertTag(string $input, array $expectedArguments): void
     {
         $usedArguments = [];
@@ -428,11 +424,8 @@ class InsertTagsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideInvalidFigureInsertTags
-     *
-     * @group legacy
-     */
+    #[DataProvider('provideInvalidFigureInsertTags')]
+    #[Group('legacy')]
     public function testFigureInsertTagReturnsEmptyStringIfInvalid(string $input, bool $invalidConfiguration): void
     {
         $figureRenderer = $this->createMock(FigureRenderer::class);
@@ -467,11 +460,8 @@ class InsertTagsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider allowedInsertTagsProvider
-     *
-     * @group legacy
-     */
+    #[DataProvider('allowedInsertTagsProvider')]
+    #[Group('legacy')]
     public function testAllowedInsertTags(string $source, string $expected, array $allowedTags): void
     {
         System::getContainer()->setParameter('contao.insert_tags.allowed_tags', $allowedTags);
@@ -552,11 +542,8 @@ class InsertTagsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider encodeHtmlAttributesProvider
-     *
-     * @group legacy
-     */
+    #[DataProvider('encodeHtmlAttributesProvider')]
+    #[Group('legacy')]
     public function testEncodeHtmlAttributes(string $source, string $expected): void
     {
         $reflectionClass = new \ReflectionClass(InsertTags::class);
@@ -774,11 +761,8 @@ class InsertTagsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider languageInsertTagsProvider
-     *
-     * @group legacy
-     */
+    #[DataProvider('languageInsertTagsProvider')]
+    #[Group('legacy')]
     public function testRemovesLanguageInsertTags(string $source, string $expected, string $translatorLocale = 'en'): void
     {
         $translator = $this->createMock(TranslatorInterface::class);
@@ -1059,9 +1043,7 @@ class InsertTagsTest extends TestCase
         ];
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testInfiniteNestedInsertTag(): void
     {
         $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
@@ -1078,9 +1060,7 @@ class InsertTagsTest extends TestCase
         $insertTagParser->replaceInline('{{infinite-nested::1}}');
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testInfiniteRecursionInsertTag(): void
     {
         $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
@@ -1095,9 +1075,7 @@ class InsertTagsTest extends TestCase
         $insertTagParser->replaceInline('{{infinite-recursion::1}}');
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testInfiniteRecursionWithCatchInsertTag(): void
     {
         $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
@@ -1110,9 +1088,7 @@ class InsertTagsTest extends TestCase
         $this->assertSame('[{]infinite-try-catch::66[}]', $output);
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testInfiniteRecursionWithCatchAndRetryInsertTag(): void
     {
         $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
@@ -1127,9 +1103,7 @@ class InsertTagsTest extends TestCase
         $insertTagParser->replaceInline('{{infinite-retry::1}}');
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testPcreBacktrackLimit(): void
     {
         $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');

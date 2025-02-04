@@ -9,14 +9,13 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Studio\Operation\AbstractCreateVariantOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
 class CreateVariantOperationTest extends AbstractOperationTest
 {
-    /**
-     * @dataProvider provideContextsAndIfAllowedToExecute
-     */
+    #[DataProvider('provideContextsAndIfAllowedToExecute')]
     public function testCanExecute(OperationContext $context, bool $canExecute): void
     {
         $this->assertSame(

@@ -18,6 +18,8 @@ use Contao\DC_Table;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -34,11 +36,8 @@ class DcTableTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @group legacy
-     *
-     * @dataProvider getPalette
-     */
+    #[DataProvider('getPalette')]
+    #[Group('legacy')]
     public function testGetPalette(array $dca, array $row, string $expected): void
     {
         $this->expectDeprecation('Since contao/core-bundle 5.0: Getting data from $_POST with the "Contao\Input" class has been deprecated %s.');

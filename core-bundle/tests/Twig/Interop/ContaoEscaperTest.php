@@ -18,6 +18,7 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -32,9 +33,7 @@ class ContaoEscaperTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider provideHtmlInput
-     */
+    #[DataProvider('provideHtmlInput')]
     public function testEscapesHtml(int|string $input, string $expectedOutput): void
     {
         $this->assertSame($expectedOutput, $this->invokeEscapeHtml($input, null), 'no charset specified');
@@ -80,9 +79,7 @@ class ContaoEscaperTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideHtmlAttributeInput
-     */
+    #[DataProvider('provideHtmlAttributeInput')]
     public function testEscapesHtmlAttributes(string $input, string $expectedOutput): void
     {
         $GLOBALS['TL_HOOKS'] = ['replaceInsertTags' => [[static::class, 'executeReplaceInsertTagsCallback']]];

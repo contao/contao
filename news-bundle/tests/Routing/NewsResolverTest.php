@@ -19,6 +19,7 @@ use Contao\NewsBundle\Routing\NewsResolver;
 use Contao\NewsModel;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class NewsResolverTest extends ContaoTestCase
 {
@@ -105,9 +106,7 @@ class NewsResolverTest extends ContaoTestCase
         $this->assertSame($target, $result->content);
     }
 
-    /**
-     * @dataProvider getParametersForContentProvider
-     */
+    #[DataProvider('getParametersForContentProvider')]
     public function testGetParametersForContent(object $content, array $expected): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class);

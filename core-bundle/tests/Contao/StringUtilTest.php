@@ -30,6 +30,7 @@ use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
@@ -93,9 +94,7 @@ class StringUtilTest extends TestCase
         $this->assertSame('foo123', StringUtil::generateAlias('foo123'));
     }
 
-    /**
-     * @dataProvider getBase32
-     */
+    #[DataProvider('getBase32')]
     public function testEncodeDecodeBase32(string $binary, string $base32): void
     {
         $this->assertSame($base32, StringUtil::encodeBase32($binary));
@@ -158,9 +157,7 @@ class StringUtilTest extends TestCase
         $this->assertSame('00011111', StringUtil::encodeBase32(StringUtil::decodeBase32('oO0iLIl1')));
     }
 
-    /**
-     * @dataProvider getBase32Invalid
-     */
+    #[DataProvider('getBase32Invalid')]
     public function testThrowsForInvalidBase32(string $invalid): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -240,9 +237,7 @@ class StringUtilTest extends TestCase
         $this->assertSame('', StringUtil::decodeEntities(null));
     }
 
-    /**
-     * @dataProvider trimsplitProvider
-     */
+    #[DataProvider('trimsplitProvider')]
     public function testSplitsAndTrimsStrings(string $pattern, string $string, array $expected): void
     {
         $this->assertSame($expected, StringUtil::trimsplit($pattern, $string));
@@ -287,9 +282,7 @@ class StringUtilTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getRevertInputEncoding
-     */
+    #[DataProvider('getRevertInputEncoding')]
     public function testRevertInputEncoding(string $source, string|null $expected = null): void
     {
         System::getContainer()->set('request_stack', $stack = new RequestStack());
@@ -314,9 +307,7 @@ class StringUtilTest extends TestCase
         yield ["Cont\xE4o invalid UTF-8", "Cont\u{FFFD}o invalid UTF-8"];
     }
 
-    /**
-     * @dataProvider validEncodingsProvider
-     */
+    #[DataProvider('validEncodingsProvider')]
     public function testConvertsEncodingOfAString(mixed $string, string $toEncoding, string $expected, string|null $fromEncoding = null): void
     {
         $prevSubstituteCharacter = mb_substitute_character();
@@ -424,9 +415,7 @@ class StringUtilTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getAddBasePathData
-     */
+    #[DataProvider('getAddBasePathData')]
     public function testAddsTheBasePath(string $expected, string $data): void
     {
         $this->assertSame($expected, StringUtil::addBasePath($data));
@@ -450,9 +439,7 @@ class StringUtilTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getRemoveBasePathData
-     */
+    #[DataProvider('getRemoveBasePathData')]
     public function testRemovesTheBasePath(string $expected, string $data): void
     {
         $this->assertSame($expected, StringUtil::removeBasePath($data));
@@ -476,9 +463,7 @@ class StringUtilTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider numberToStringProvider
-     */
+    #[DataProvider('numberToStringProvider')]
     public function testNumberToString(float|int $source, string $expected, int|null $precision = null): void
     {
         $this->assertSame($expected, StringUtil::numberToString($source, $precision));
@@ -507,9 +492,7 @@ class StringUtilTest extends TestCase
         yield [1.23456, '1.2', 2];
     }
 
-    /**
-     * @dataProvider numberToStringFailsProvider
-     */
+    #[DataProvider('numberToStringFailsProvider')]
     public function testNumberToStringFails(float|int $source, string $exception, int|null $precision = null): void
     {
         $this->expectException($exception);

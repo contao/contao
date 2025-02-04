@@ -23,6 +23,7 @@ use Contao\CoreBundle\Security\Voter\DataContainer\FormFieldAccessVoter;
 use Contao\CoreBundle\Security\Voter\DataContainer\PagePermissionVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -65,9 +66,7 @@ class PagePermissionVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $result);
     }
 
-    /**
-     * @dataProvider voterProvider
-     */
+    #[DataProvider('voterProvider')]
     public function testVoter(CreateAction|DeleteAction|ReadAction|UpdateAction $subject, array $decisions, bool $accessGranted, array|null $pagemounts = null): void
     {
         $token = $this->mockToken($pagemounts);
@@ -892,12 +891,16 @@ class PagePermissionVoterTest extends TestCase
 
         $with = array_map(static fn ($decision) => isset($decision[2]) ? [$token, [$decision[1]], $decision[2]] : [$token, [$decision[1]]], $decisions);
         $return = array_column($decisions, 0);
+        $matcher = $this->exactly(\count($decisions));
 
         $decisionManager
-            ->expects($this->exactly(\count($decisions)))
+            ->expects($matcher)
             ->method('decide')
-            ->withConsecutive(...$with)
-            ->willReturnOnConsecutiveCalls(...$return)
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $with): void {
+                    $this->assertSame($with[$matcher->numberOfInvocations() - 1], $parameters);
+                }
+            )
         ;
 
         return $decisionManager;

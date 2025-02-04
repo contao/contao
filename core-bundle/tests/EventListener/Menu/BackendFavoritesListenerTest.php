@@ -19,6 +19,7 @@ use Contao\CoreBundle\EventListener\Menu\BackendFavoritesListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Knp\Menu\MenuFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -56,9 +57,7 @@ class BackendFavoritesListenerTest extends TestCase
         $listener($event);
     }
 
-    /**
-     * @dataProvider getCollapsedStatus
-     */
+    #[DataProvider('getCollapsedStatus')]
     public function testAddsTheMainMenu(bool $collapsed): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 2]);

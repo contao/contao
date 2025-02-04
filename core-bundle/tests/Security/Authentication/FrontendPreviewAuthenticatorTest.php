@@ -16,6 +16,7 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,9 +30,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class FrontendPreviewAuthenticatorTest extends TestCase
 {
-    /**
-     * @dataProvider getShowUnpublishedData
-     */
+    #[DataProvider('getShowUnpublishedData')]
     public function testAuthenticatesAFrontendUser(bool $showUnpublished): void
     {
         $security = $this->createMock(Security::class);
@@ -70,9 +69,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $this->assertSame($showUnpublished, $session->get(FrontendPreviewAuthenticator::SESSION_NAME)['showUnpublished']);
     }
 
-    /**
-     * @dataProvider getShowUnpublishedData
-     */
+    #[DataProvider('getShowUnpublishedData')]
     public function testAuthenticatesAFrontendUserViaFirewall(bool $showUnpublished): void
     {
         $security = $this->createMock(Security::class);
@@ -182,9 +179,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $this->assertFalse($authenticator->authenticateFrontendUser('foobar', false));
     }
 
-    /**
-     * @dataProvider getShowUnpublishedPreviewLinkIdData
-     */
+    #[DataProvider('getShowUnpublishedPreviewLinkIdData')]
     public function testAuthenticatesAFrontendGuest(bool $showUnpublished, int|null $previewLinkId): void
     {
         $security = $this->createMock(Security::class);
@@ -220,19 +215,40 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->method('isStarted')
             ->willReturn(true)
         ;
+        $matcher = $this->atMost(2);
 
         $session
-            ->expects($this->atMost(2))
+            ->expects($matcher)
             ->method('has')
-            ->withConsecutive(['_security_contao_frontend'], [FrontendPreviewAuthenticator::SESSION_NAME])
-            ->willReturn(true)
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('_security_contao_frontend', $parameters[0]);
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame(FrontendPreviewAuthenticator::SESSION_NAME, $parameters[0]);
+                        }
+
+                        return true;
+                    }
+                )
+            ;
+        $matcher = $this->exactly(2);
 
         $session
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('remove')
-            ->withConsecutive(['_security_contao_frontend'], [FrontendPreviewAuthenticator::SESSION_NAME])
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher): void {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('_security_contao_frontend', $parameters[0]);
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame(FrontendPreviewAuthenticator::SESSION_NAME, $parameters[0]);
+                        }
+                    }
+                )
+            ;
 
         $authenticator = $this->getAuthenticator(null, null, null, $session);
 
@@ -261,13 +277,24 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->method('isStarted')
             ->willReturn(true)
         ;
+        $matcher = $this->exactly(2);
 
         $session
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('has')
-            ->withConsecutive(['_security_contao_frontend'], [FrontendPreviewAuthenticator::SESSION_NAME])
-            ->willReturn(false)
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('_security_contao_frontend', $parameters[0]);
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame(FrontendPreviewAuthenticator::SESSION_NAME, $parameters[0]);
+                        }
+
+                        return false;
+                    }
+                )
+            ;
 
         $authenticator = $this->getAuthenticator(null, null, null, $session);
 

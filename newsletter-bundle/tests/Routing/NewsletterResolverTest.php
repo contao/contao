@@ -17,6 +17,7 @@ use Contao\NewsletterChannelModel;
 use Contao\NewsletterModel;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class NewsletterResolverTest extends ContaoTestCase
 {
@@ -46,9 +47,7 @@ class NewsletterResolverTest extends ContaoTestCase
         $this->assertSame($target, $result->content);
     }
 
-    /**
-     * @dataProvider getParametersForContentProvider
-     */
+    #[DataProvider('getParametersForContentProvider')]
     public function testGetParametersForContent(object $content, array $expected): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class);

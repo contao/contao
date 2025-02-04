@@ -25,6 +25,7 @@ use Contao\FrontendUser;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -763,9 +764,7 @@ class ContentCompositionListenerTest extends TestCase
         ClockMock::withClockMock(false);
     }
 
-    /**
-     * @dataProvider moduleConfigProvider
-     */
+    #[DataProvider('moduleConfigProvider')]
     public function testUsesTheLayoutColumnForNewArticle(array $modules, string $expectedColumn): void
     {
         ClockMock::withClockMock(true);

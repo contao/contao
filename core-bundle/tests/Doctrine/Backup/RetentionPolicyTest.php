@@ -15,12 +15,11 @@ namespace Contao\CoreBundle\Tests\Doctrine\Backup;
 use Contao\CoreBundle\Doctrine\Backup\Backup;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RetentionPolicyTest extends ContaoTestCase
 {
-    /**
-     * @dataProvider invalidIntervalFormatProvider
-     */
+    #[DataProvider('invalidIntervalFormatProvider')]
     public function testThrowsOnInvalidIntervalFormat(array $intervals): void
     {
         $this->expectException(\Exception::class);
@@ -36,12 +35,11 @@ class RetentionPolicyTest extends ContaoTestCase
     }
 
     /**
-     * @dataProvider policyProvider
-     *
      * @param array<int>    $keepIntervals
      * @param array<Backup> $allBackups
      * @param array<string> $expectedBackupFilePathsToKeep
      */
+    #[DataProvider('policyProvider')]
     public function testPolicy(int $keepMax, array $keepIntervals, Backup $latestBackup, array $allBackups, array $expectedBackupFilePathsToKeep): void
     {
         $retentionPolicy = new RetentionPolicy($keepMax, $keepIntervals);

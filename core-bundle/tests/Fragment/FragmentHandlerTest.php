@@ -23,6 +23,7 @@ use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,9 +57,7 @@ class FragmentHandlerTest extends TestCase
         $fragmentHandler->render(new FragmentReference('foo.bar'));
     }
 
-    /**
-     * @dataProvider getRenderingStrategies
-     */
+    #[DataProvider('getRenderingStrategies')]
     public function testPassesTheRenderingStrategyToTheRenderer(string $renderingStrategy): void
     {
         $uri = new FragmentReference('foo.bar');
@@ -83,9 +82,7 @@ class FragmentHandlerTest extends TestCase
         yield ['esi'];
     }
 
-    /**
-     * @dataProvider getOptions
-     */
+    #[DataProvider('getOptions')]
     public function testPassesTheOptionsToTheRenderer(array $options): void
     {
         $uri = new FragmentReference('foo.bar');
@@ -110,9 +107,7 @@ class FragmentHandlerTest extends TestCase
         yield [['bar' => 'baz']];
     }
 
-    /**
-     * @dataProvider getNonScalarAttributes
-     */
+    #[DataProvider('getNonScalarAttributes')]
     public function testOverridesRenderingOnNonScalarAttributes(string $renderingStrategy, string $expectedRenderer): void
     {
         $uri = new FragmentReference('foo.bar');

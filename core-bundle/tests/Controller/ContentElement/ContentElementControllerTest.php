@@ -21,6 +21,7 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
@@ -170,9 +171,7 @@ class ContentElementControllerTest extends TestCase
         $this->assertSame('ce_test foo bar', $template['class']);
     }
 
-    /**
-     * @dataProvider provideScope
-     */
+    #[DataProvider('provideScope')]
     public function testSetsTemplateContextForModernFragments(bool $backendScope): void
     {
         $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);

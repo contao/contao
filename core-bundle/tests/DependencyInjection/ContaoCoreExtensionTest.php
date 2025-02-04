@@ -32,6 +32,7 @@ use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Tests\Fixtures\ClassWithMethod;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -513,9 +514,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($container->has('contao.listener.search_index'));
     }
 
-    /**
-     * @dataProvider provideComposerJsonContent
-     */
+    #[DataProvider('provideComposerJsonContent')]
     public function testSetsTheWebDirFromTheRootComposerJson(array $composerJson, string $expectedWebDir): void
     {
         $container = new ContainerBuilder(
@@ -612,16 +611,31 @@ class ContaoCoreExtensionTest extends TestCase
             ->method('getContainer')
             ->willReturn($container)
         ;
+        $matcher = $this->exactly(3);
 
         $config
-            ->expects($this->exactly(3))
+            ->expects($matcher)
             ->method('mountLocalAdapter')
-            ->withConsecutive(
-                ['upload/path', 'upload/path', 'files'],
-                ['var/backups', 'backups', 'backups'],
-                ['templates', 'user_templates', 'user_templates'],
-            )
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher): void {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('upload/path', $parameters[0]);
+                            $this->assertSame('upload/path', $parameters[1]);
+                            $this->assertSame('files', $parameters[2]);
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('var/backups', $parameters[0]);
+                            $this->assertSame('backups', $parameters[1]);
+                            $this->assertSame('backups', $parameters[2]);
+                        }
+                        if (3 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('templates', $parameters[0]);
+                            $this->assertSame('user_templates', $parameters[1]);
+                            $this->assertSame('user_templates', $parameters[2]);
+                        }
+                    }
+                )
+            ;
 
         $dbafsDefinition = $this->createMock(Definition::class);
         $dbafsDefinition
@@ -1035,9 +1049,7 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideAttributesForMethods
-     */
+    #[DataProvider('provideAttributesForMethods')]
     public function testThrowsExceptionWhenTryingToDeclareTheMethodPropertyOnAMethodAttribute(string $attributeClass): void
     {
         $container = $this->getContainerBuilder();

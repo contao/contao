@@ -10,14 +10,13 @@ use Contao\CoreBundle\Twig\Studio\Operation\AbstractRenameVariantOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\TemplateSkeletonFactory;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
 class RenameVariantOperationTest extends AbstractOperationTest
 {
-    /**
-     * @dataProvider provideContextsAndIfAllowedToExecute
-     */
+    #[DataProvider('provideContextsAndIfAllowedToExecute')]
     public function testCanExecute(OperationContext $context, bool $canExecute): void
     {
         $this->assertSame(

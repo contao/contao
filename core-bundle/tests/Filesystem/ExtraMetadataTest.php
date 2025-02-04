@@ -17,6 +17,7 @@ use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ImportantPart;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class ExtraMetadataTest extends TestCase
@@ -60,9 +61,7 @@ class ExtraMetadataTest extends TestCase
         $this->assertSame('baz', $extraMetadata->getLocalized()->get('en')->get('bar'));
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testTriggersDeprecationWhenInitializingWithMetadataKey(): void
     {
         $localizedMetadata = new MetadataBag([]);
@@ -76,9 +75,7 @@ class ExtraMetadataTest extends TestCase
         $this->assertSame($localizedMetadata, $extraMetadata->getLocalized());
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testTriggersDeprecationWhenAccessingMetadataKey(): void
     {
         $localizedMetadata = new MetadataBag([]);

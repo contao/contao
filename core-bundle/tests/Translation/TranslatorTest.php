@@ -18,6 +18,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\MessageCatalogue;
 use Contao\CoreBundle\Translation\Translator;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\Translator as BaseTranslator;
@@ -34,9 +35,7 @@ class TranslatorTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider decoratedTranslatorDomainProvider
-     */
+    #[DataProvider('decoratedTranslatorDomainProvider')]
     public function testForwardsTheMethodCallsToTheDecoratedTranslator(string $domain): void
     {
         $originalTranslator = $this->createMock(BaseTranslator::class);
@@ -250,11 +249,23 @@ class TranslatorTest extends TestCase
         ;
 
         $adapter = $this->mockAdapter(['loadLanguageFile']);
+        $matcher = $this->exactly(2);
         $adapter
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('loadLanguageFile')
-            ->withConsecutive(['default', 'de'], ['default', 'en'])
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher): void {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('default', $parameters[0]);
+                            $this->assertSame('de', $parameters[1]);
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('default', $parameters[0]);
+                            $this->assertSame('en', $parameters[1]);
+                        }
+                    }
+                )
+            ;
 
         $framework = $this->mockContaoFramework([System::class => $adapter]);
         $framework

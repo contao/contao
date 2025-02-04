@@ -42,6 +42,7 @@ use Contao\Validator;
 use League\Flysystem\Config as FlysystemConfig;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
@@ -413,9 +414,7 @@ class FigureBuilderTest extends TestCase
         $this->getFigureBuilder($studio, $framework)->fromFilesystemItem($item)->build();
     }
 
-    /**
-     * @dataProvider provideMixedIdentifiers
-     */
+    #[DataProvider('provideMixedIdentifiers')]
     public function testFromMixed(mixed $identifier): void
     {
         [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
@@ -755,9 +754,7 @@ class FigureBuilderTest extends TestCase
         $this->assertFalse($figure->hasMetadata());
     }
 
-    /**
-     * @dataProvider provideMetadataAutoFetchCases
-     */
+    #[DataProvider('provideMetadataAutoFetchCases')]
     public function testAutoFetchMetadataFromFilesModel(string $serializedMetadata, string|null $locale, array $expectedMetadata, Metadata|null $overwriteMetadata = null): void
     {
         $container = $this->getContainerWithContaoConfiguration();
@@ -947,9 +944,7 @@ class FigureBuilderTest extends TestCase
         $this->assertSame($emptyMetadata, $figure->getMetadata()->all());
     }
 
-    /**
-     * @dataProvider provideUuidMetadataAutoFetchCases
-     */
+    #[DataProvider('provideUuidMetadataAutoFetchCases')]
     public function testAutoSetUuidFromFilesModelWhenDefiningMetadata(FilesModel|ImageInterface|string|null $resource, Metadata|null $metadataToSet, string|null $locale, array $expectedMetadata): void
     {
         $container = $this->getContainerWithContaoConfiguration();
@@ -1110,9 +1105,7 @@ class FigureBuilderTest extends TestCase
         $this->assertSame(['foo' => 'bar', 'foobar' => 'test'], iterator_to_array($figure->getLinkAttributes()));
     }
 
-    /**
-     * @dataProvider provideInvalidLinkAttributes
-     */
+    #[DataProvider('provideInvalidLinkAttributes')]
     public function testSetLinkAttributesFailsWithInvalidArray(array $attributes): void
     {
         $figureBuilder = $this->getFigureBuilder();
@@ -1172,9 +1165,7 @@ class FigureBuilderTest extends TestCase
         $this->assertFalse($figure->hasLightbox());
     }
 
-    /**
-     * @dataProvider provideLightboxResourcesOrUrls
-     */
+    #[DataProvider('provideLightboxResourcesOrUrls')]
     public function testSetLightboxResourceOrUrl(ImageInterface|string|null $resource, array $expectedArguments, bool $hasLightbox = true): void
     {
         if ($hasLightbox) {
@@ -1262,9 +1253,7 @@ class FigureBuilderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideLightboxFallbackResources
-     */
+    #[DataProvider('provideLightboxFallbackResources')]
     public function testLightboxResourceFallback(Metadata|null $metadata, string|null $expectedFilePath, string|null $expectedUrl): void
     {
         $studio = $this->mockStudioForLightbox($expectedFilePath, $expectedUrl);

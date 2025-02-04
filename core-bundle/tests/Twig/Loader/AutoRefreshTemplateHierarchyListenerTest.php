@@ -15,13 +15,12 @@ namespace Contao\CoreBundle\Tests\Twig\Loader;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\AutoRefreshTemplateHierarchyListener;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 class AutoRefreshTemplateHierarchyListenerTest extends TestCase
 {
-    /**
-     * @dataProvider provideRequestScenarios
-     */
+    #[DataProvider('provideRequestScenarios')]
     public function testRefreshesHierarchyOnKernelRequest(RequestEvent $event, string $environment, bool $shouldRefresh): void
     {
         $loader = $this->createMock(ContaoFilesystemLoader::class);

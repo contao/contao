@@ -67,24 +67,59 @@ class ImaginePreviewProviderTest extends TestCase
             ->with(new Box(512, 512))
             ->willReturnSelf()
         ;
+        $matcher = $this->exactly(2);
 
         $image
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('save')
-            ->withConsecutive(["{$targetPath}1.png"], ["{$targetPath}2.png"])
-            ->willReturnSelf()
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher, $targetPath, $image) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame("{$targetPath}1.png", $parameters[0]);
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame("{$targetPath}2.png", $parameters[0]);
+                        }
+
+                        return $image;
+                    }
+                )
+            ;
+        $matcher = $this->exactly(2);
 
         $layers
+            ->expects($matcher)
             ->method('has')
-            ->withConsecutive([0], [1])
-            ->willReturn(true)
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame(0, $parameters[0]);
+                    }
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame(1, $parameters[0]);
+                    }
+
+                    return true;
+                }
+            )
         ;
+        $matcher = $this->exactly(2);
 
         $layers
+            ->expects($matcher)
             ->method('get')
-            ->withConsecutive([0], [1])
-            ->willReturn($image)
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $image) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame(0, $parameters[0]);
+                    }
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame(1, $parameters[0]);
+                    }
+
+                    return $image;
+                }
+            )
         ;
 
         $imagine = $this->createMock(ImagineInterface::class);

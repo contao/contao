@@ -22,6 +22,9 @@ use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Path;
@@ -190,12 +193,9 @@ class ContaoFilesystemLoaderTest extends TestCase
         $this->assertFalse($loader->exists('@Contao_Theme_my_theme/foo.html.twig'));
     }
 
-    /**
-     * @dataProvider provideTemplateFilemtimeSamples
-     *
-     * @preserveGlobalState disabled
-     * @runInSeparateProcess because filemtime gets mocked
-     */
+    #[DataProvider('provideTemplateFilemtimeSamples')]
+    #[PreserveGlobalState(false)]
+    #[RunInSeparateProcess]
     public function testIsFresh(array $mtimeMappings, bool $isFresh, bool $isThemeContext = false): void
     {
         $pageFinder = null;
@@ -280,9 +280,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideInvalidDynamicParentQueries
-     */
+    #[DataProvider('provideInvalidDynamicParentQueries')]
     public function testGetDynamicParentThrowsIfTemplateCannotBeFound(string $identifier, string $sourcePath, string $expectedException): void
     {
         $loader = $this->getContaoFilesystemLoaderWithPaths(
@@ -322,9 +320,7 @@ class ContaoFilesystemLoaderTest extends TestCase
         $loader->getFirst('foo.html.twig');
     }
 
-    /**
-     * @dataProvider provideThemeSlugs
-     */
+    #[DataProvider('provideThemeSlugs')]
     public function testGetInheritanceChains(string|null $themeSlug, array $expectedChains): void
     {
         $loader = $this->getContaoFilesystemLoaderWithPaths(

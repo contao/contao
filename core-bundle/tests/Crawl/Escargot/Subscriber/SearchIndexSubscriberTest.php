@@ -17,6 +17,7 @@ use Contao\CoreBundle\Crawl\Escargot\Subscriber\SubscriberResult;
 use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Nyholm\Psr7\Uri;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -45,9 +46,7 @@ class SearchIndexSubscriberTest extends TestCase
         $this->assertSame('search-index', $subscriber->getName());
     }
 
-    /**
-     * @dataProvider shouldRequestProvider
-     */
+    #[DataProvider('shouldRequestProvider')]
     public function testShouldRequest(CrawlUri $crawlUri, string $expectedDecision, string $expectedLogLevel = '', string $expectedLogMessage = '', CrawlUri|null $foundOnUri = null): void
     {
         $logger = $this->createMock(LoggerInterface::class);
@@ -144,9 +143,7 @@ class SearchIndexSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider needsContentProvider
-     */
+    #[DataProvider('needsContentProvider')]
     public function testNeedsContent(ResponseInterface $response, string $expectedDecision, string $expectedLogLevel = '', string $expectedLogMessage = '', CrawlUri|null $crawlUri = null): void
     {
         $logger = $this->createMock(LoggerInterface::class);
@@ -228,9 +225,7 @@ class SearchIndexSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider onLastChunkProvider
-     */
+    #[DataProvider('onLastChunkProvider')]
     public function testOnLastChunk(IndexerException|null $indexerException, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = [], CrawlUri|null $crawlUri = null): void
     {
         $logger = $this->createMock(LoggerInterface::class);
@@ -347,9 +342,7 @@ class SearchIndexSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider onTransportExceptionProvider
-     */
+    #[DataProvider('onTransportExceptionProvider')]
     public function testOnTransportException(TransportException $exception, ResponseInterface $response, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
     {
         $logger = $this->createMock(LoggerInterface::class);
@@ -415,9 +408,7 @@ class SearchIndexSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider onHttpExceptionProvider
-     */
+    #[DataProvider('onHttpExceptionProvider')]
     public function testOnHttpException(HttpExceptionInterface $exception, ResponseInterface $response, ChunkInterface $chunk, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
     {
         $logger = $this->createMock(LoggerInterface::class);

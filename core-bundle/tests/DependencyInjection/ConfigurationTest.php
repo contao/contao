@@ -16,6 +16,7 @@ use Contao\CoreBundle\DependencyInjection\Configuration;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ResizeConfiguration;
 use Imagine\Image\ImageInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Definition\ArrayNode;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
@@ -121,9 +122,7 @@ class ConfigurationTest extends TestCase
         $this->assertSame($extensions, $configuration['image']['valid_extensions']);
     }
 
-    /**
-     * @dataProvider getPaths
-     */
+    #[DataProvider('getPaths')]
     public function testResolvesThePaths(string $unix, string $windows): void
     {
         $params = [
@@ -151,9 +150,7 @@ class ConfigurationTest extends TestCase
         yield ['/tmp/contao/foo/..', 'C:\Temp\contao\foo\..'];
     }
 
-    /**
-     * @dataProvider getInvalidUploadPaths
-     */
+    #[DataProvider('getInvalidUploadPaths')]
     public function testFailsIfTheUploadPathIsInvalid(string $uploadPath): void
     {
         $params = [
@@ -203,9 +200,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    /**
-     * @dataProvider getReservedImageSizeNames
-     */
+    #[DataProvider('getReservedImageSizeNames')]
     public function testFailsIfAPredefinedImageSizeNameIsReserved(string $name): void
     {
         $params = [
@@ -451,9 +446,7 @@ class ConfigurationTest extends TestCase
         (new Processor())->processConfiguration($this->configuration, $params);
     }
 
-    /**
-     * @dataProvider invalidAllowedInlineStylesRegexProvider
-     */
+    #[DataProvider('invalidAllowedInlineStylesRegexProvider')]
     public function testFailsOnInvalidAllowedInlineStylesRegex(string $regex, string $exceptionMessage): void
     {
         $params = [
@@ -485,9 +478,7 @@ class ConfigurationTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider cronConfigurationProvider
-     */
+    #[DataProvider('cronConfigurationProvider')]
     public function testValidCronConfiguration(array $params, bool|string $expected): void
     {
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);

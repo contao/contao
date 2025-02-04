@@ -22,6 +22,7 @@ use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\PageModel;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\Passport\Credentials\TwoFactorCodeCredentials;
@@ -225,9 +226,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $authenticator->authenticate($request);
     }
 
-    /**
-     * @dataProvider getUserData
-     */
+    #[DataProvider('getUserData')]
     public function testCreatesThePassportOnAuthentication(string|null $username, string|null $exception): void
     {
         $session = $this->createMock(SessionInterface::class);
@@ -386,9 +385,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $this->assertSame('<stream content>', $response->getContent());
     }
 
-    /**
-     * @dataProvider getAuthenticationData
-     */
+    #[DataProvider('getAuthenticationData')]
     public function testStartsTheAuthenticationProcessOnCurrentPage(TokenInterface|null $token, ResponseException|null $exception): void
     {
         $pageModel = $this->createMock(PageModel::class);

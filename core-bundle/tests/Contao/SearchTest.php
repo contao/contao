@@ -14,15 +14,13 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Search;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 
-/**
- * @group legacy
- */
+#[Group('legacy')]
 class SearchTest extends TestCase
 {
-    /**
-     * @dataProvider compareUrlsProvider
-     */
+    #[DataProvider('compareUrlsProvider')]
     public function testCompareUrls(string $moreCanonicalUrl, string $lessCanonicalUrl): void
     {
         $search = new \ReflectionClass(Search::class);
@@ -46,9 +44,7 @@ class SearchTest extends TestCase
         yield ['foo.html?query/with/many/slashes/', 'foo/bar.html?query-without-slashes'];
     }
 
-    /**
-     * @dataProvider splitIntoWordsProvider
-     */
+    #[DataProvider('splitIntoWordsProvider')]
     public function testSplitIntoWords(string $source, array $expectedWords): void
     {
         $search = new \ReflectionClass(Search::class);
@@ -64,9 +60,7 @@ class SearchTest extends TestCase
         yield ['Contrôl Fée bïr çæ BŒ', ['control', 'fee', 'bir', 'cae', 'boe']];
     }
 
-    /**
-     * @dataProvider getMatchVariantsProvider
-     */
+    #[DataProvider('getMatchVariantsProvider')]
     public function testGetMatchVariants(string $text, array $matches, array $expectedWords): void
     {
         $this->assertSame($expectedWords, Search::getMatchVariants($matches, $text, 'en'));

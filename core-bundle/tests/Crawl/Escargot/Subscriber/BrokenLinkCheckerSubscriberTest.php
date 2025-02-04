@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Crawl\Escargot\Subscriber;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\BrokenLinkCheckerSubscriber;
 use Contao\CoreBundle\Crawl\Escargot\Subscriber\SubscriberResult;
 use Nyholm\Psr7\Uri;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -42,9 +43,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         $this->assertSame('broken-link-checker', $subscriber->getName());
     }
 
-    /**
-     * @dataProvider shouldRequestProvider
-     */
+    #[DataProvider('shouldRequestProvider')]
     public function testShouldRequest(CrawlUri $crawlUri, string $expectedDecision, string $expectedLogLevel = '', string $expectedLogMessage = '', CrawlUri|null $foundOnUri = null): void
     {
         $logger = $this->createMock(LoggerInterface::class);
@@ -121,9 +120,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider needsContentProvider
-     */
+    #[DataProvider('needsContentProvider')]
     public function testNeedsContent(CrawlUri $crawlUri, ResponseInterface $response, string $expectedDecision, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
     {
         $logger = $this->createMock(LoggerInterface::class);
@@ -233,9 +230,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider onTransportExceptionProvider
-     */
+    #[DataProvider('onTransportExceptionProvider')]
     public function testOnTransportException(TransportException $exception, ResponseInterface $response, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
     {
         $logger = $this->createMock(LoggerInterface::class);
@@ -295,9 +290,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider onHttpExceptionProvider
-     */
+    #[DataProvider('onHttpExceptionProvider')]
     public function testOnHttpException(HttpExceptionInterface $exception, ResponseInterface $response, ChunkInterface $chunk, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
     {
         $logger = $this->createMock(LoggerInterface::class);

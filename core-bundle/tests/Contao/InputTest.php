@@ -20,6 +20,8 @@ use Contao\Input;
 use Contao\InputEncodingMode;
 use Contao\System;
 use Contao\Widget;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
@@ -66,11 +68,8 @@ class InputTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @group legacy
-     *
-     * @dataProvider encodeInputProvider
-     */
+    #[DataProvider('encodeInputProvider')]
+    #[Group('legacy')]
     public function testCleansTheGlobalArrays(string $source, string $expected): void
     {
         $_GET = $_POST = $_COOKIE = [$source => 1];
@@ -86,11 +85,8 @@ class InputTest extends TestCase
         $this->assertSame($expected, array_keys($_COOKIE)[0]);
     }
 
-    /**
-     * @group legacy
-     *
-     * @dataProvider encodeInputProvider
-     */
+    #[DataProvider('encodeInputProvider')]
+    #[Group('legacy')]
     public function testGetAndPostEncoded(string $source, string $expected, string|null $expectedEncoded = null): void
     {
         $expectedEncoded ??= $expected;
@@ -134,11 +130,8 @@ class InputTest extends TestCase
         $this->assertSame($expectedEncoded, Input::postHtml('key'));
     }
 
-    /**
-     * @group legacy
-     *
-     * @dataProvider encodeInputProvider
-     */
+    #[DataProvider('encodeInputProvider')]
+    #[Group('legacy')]
     public function testBackendRoundtrip(string $source, string $expected, string|null $expectedEncoded = null): void
     {
         $expectedEncoded ??= $expected;
@@ -163,9 +156,7 @@ class InputTest extends TestCase
         $this->assertSame($expectedEncoded, Input::postHtml('encoded'));
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testEncodesInsertTags(): void
     {
         $source = ' {{ foo }} { bar } ';
@@ -322,11 +313,8 @@ class InputTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider encodeNoneModeProvider
-     *
-     * @group legacy
-     */
+    #[DataProvider('encodeNoneModeProvider')]
+    #[Group('legacy')]
     public function testEncodeNoneMode(string $source, string $expected, string|null $expectedEncoded = null, string|null $expectedEncodedDouble = null): void
     {
         $expectedEncoded ??= $expected;
@@ -382,11 +370,8 @@ class InputTest extends TestCase
         yield ["\xF4\x8F\xBF\xC0", "\u{FFFD}\u{FFFD}"];
     }
 
-    /**
-     * @dataProvider stripTagsProvider
-     *
-     * @group legacy
-     */
+    #[DataProvider('stripTagsProvider')]
+    #[Group('legacy')]
     public function testStripTags(string $source, string $expected, string|null $expectedEncoded = null): void
     {
         $expectedEncoded ??= str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $expected);
@@ -692,11 +677,8 @@ class InputTest extends TestCase
         ];
     }
 
-    /**
-     * @group legacy
-     *
-     * @dataProvider stripTagsNoTagsAllowedProvider
-     */
+    #[DataProvider('stripTagsNoTagsAllowedProvider')]
+    #[Group('legacy')]
     public function testStripTagsNoTagsAllowed(string $source, string $expected): void
     {
         $this->expectDeprecation('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
@@ -732,9 +714,7 @@ class InputTest extends TestCase
         $this->assertSame($html, Input::stripTags($html, '<span>', serialize([['key' => '*', 'value' => '*']])));
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testStripTagsNoAttributesAllowed(): void
     {
         $html = "<dIv class=gets-normalized bar-foo-something = 'keep'><spAN class=gets-normalized bar-foo-something = 'keep'>foo</SPan></DiV><notallowed></notallowed>";
@@ -749,9 +729,7 @@ class InputTest extends TestCase
         $this->assertSame($expected, Input::stripTags($html, '<div><span>'));
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testStripTagsScriptAllowed(): void
     {
         $this->expectDeprecation('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
@@ -772,11 +750,8 @@ class InputTest extends TestCase
         );
     }
 
-    /**
-     * @group legacy
-     *
-     * @dataProvider simpleTokensWithHtmlProvider
-     */
+    #[DataProvider('simpleTokensWithHtmlProvider')]
+    #[Group('legacy')]
     public function testSimpleTokensWithHtml(string $source, array $tokens, string $expected): void
     {
         $simpleTokenParser = new SimpleTokenParser(new ExpressionLanguage());
@@ -854,9 +829,7 @@ class InputTest extends TestCase
         ];
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testPostAndGetKeys(): void
     {
         $data = ['key1' => 'string-key', '123' => 'integer-key'];
@@ -965,9 +938,7 @@ class InputTest extends TestCase
         $this->assertArrayNotHasKey('auto_item', $_GET);
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testArrayValuesFromGetAndPost(): void
     {
         $data = ['key' => ['value1', 'value2']];

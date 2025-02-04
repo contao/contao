@@ -25,6 +25,7 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Result;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -127,9 +128,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $this->assertSame(0, $provider->convertDcaValue($config, []));
     }
 
-    /**
-     * @dataProvider dcaAttributesProvider
-     */
+    #[DataProvider('dcaAttributesProvider')]
     public function testGetDcaAttributes(array $extra, string $value, array $expected): void
     {
         $provider = $this->createTableProvider();
@@ -183,9 +182,7 @@ class TablePickerProviderTest extends ContaoTestCase
         ];
     }
 
-    /**
-     * @dataProvider menuItemsProvider
-     */
+    #[DataProvider('menuItemsProvider')]
     public function testAddMenuItems(array $modules, string $current): void
     {
         $expectedCurrent = [];
@@ -207,9 +204,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $provider->addMenuItems($menu, $config);
     }
 
-    /**
-     * @dataProvider menuItemsProvider
-     */
+    #[DataProvider('menuItemsProvider')]
     public function testCreateMenuItem(array $modules, string $current): void
     {
         $expectedCurrent = [];
@@ -582,11 +577,17 @@ class TablePickerProviderTest extends ContaoTestCase
         }
 
         $menuFactory = $this->createMock(FactoryInterface::class);
+        $matcher = $this->exactly(\count($expectedItems));
         $menuFactory
-            ->expects($this->exactly(\count($expectedItems)))
+            ->expects($matcher)
             ->method('createItem')
-            ->withConsecutive(...$expectedItems)
-            ->willReturn($menu)
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $expectedItems, $menu) {
+                    $this->assertSame($expectedItems[$matcher->numberOfInvocations() - 1], $parameters);
+
+                    return $menu;
+                }
+            )
         ;
 
         return new TablePickerProvider(
@@ -625,7 +626,15 @@ class TablePickerProviderTest extends ContaoTestCase
         ;
 
         if ($expectedCurrent) {
-            $clone->withConsecutive(...$expectedCurrent);
+            $matcher = $this->exactly(1);
+            $clone
+                ->expects($matcher)
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher, $expectedCurrent): void {
+                        $this->assertSame($expectedCurrent[$matcher->numberOfInvocations() - 1], $parameters);
+                    }
+                )
+            ;
         }
 
         $clone->willReturnSelf();
@@ -669,11 +678,17 @@ class TablePickerProviderTest extends ContaoTestCase
         }
 
         $router = $this->createMock(RouterInterface::class);
+        $matcher = $this->exactly(\count($expected));
         $router
-            ->expects($this->exactly(\count($expected)))
+            ->expects($matcher)
             ->method('generate')
-            ->withConsecutive(...$expected)
-            ->willReturn('')
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $expected) {
+                    $this->assertSame($expected[$matcher->numberOfInvocations() - 1], $parameters);
+
+                    return '';
+                }
+            )
         ;
 
         return $router;
@@ -736,12 +751,23 @@ class TablePickerProviderTest extends ContaoTestCase
         ;
 
         if ($ptable && $dynamicPtable) {
+            $matcher = $this->exactly(2);
             $queryBuilder
-                ->expects($this->exactly(2))
+                ->expects($matcher)
                 ->method('addSelect')
-                ->withConsecutive(['pid'], ['ptable'])
-                ->willReturnSelf()
-            ;
+                    ->willReturnCallback(
+                        function (...$parameters) use ($matcher, $queryBuilder) {
+                            if (1 === $matcher->numberOfInvocations()) {
+                                $this->assertSame('pid', $parameters[0]);
+                            }
+                            if (2 === $matcher->numberOfInvocations()) {
+                                $this->assertSame('ptable', $parameters[0]);
+                            }
+
+                            return $queryBuilder;
+                        }
+                    )
+                ;
         } elseif ($ptable) {
             $queryBuilder
                 ->expects($this->once())
@@ -788,11 +814,17 @@ class TablePickerProviderTest extends ContaoTestCase
         }
 
         $translator = $this->createMock(TranslatorInterface::class);
+        $matcher = $this->exactly(\count($modules));
         $translator
-            ->expects($this->exactly(\count($modules)))
+            ->expects($matcher)
             ->method('trans')
-            ->withConsecutive(...$expected)
-            ->willReturnArgument(0)
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $expected) {
+                    $this->assertSame($expected[$matcher->numberOfInvocations() - 1], $parameters);
+
+                    return $parameters[0];
+                }
+            )
         ;
 
         return $translator;

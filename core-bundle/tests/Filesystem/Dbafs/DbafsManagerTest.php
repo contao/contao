@@ -20,6 +20,7 @@ use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Uid\Uuid;
@@ -55,9 +56,7 @@ class DbafsManagerTest extends TestCase
         $this->assertFalse($manager->match('baz/../foobar'));
     }
 
-    /**
-     * @dataProvider provideInvalidConfigurations
-     */
+    #[DataProvider('provideInvalidConfigurations')]
     public function testValidatesTransitiveProperties(array $paths, string $exception): void
     {
         $manager = $this->getDbafsManager();
@@ -387,9 +386,7 @@ class DbafsManagerTest extends TestCase
         $manager->setExtraMetadata('foo/bar/baz', $extraMetadata);
     }
 
-    /**
-     * @dataProvider provideListModes
-     */
+    #[DataProvider('provideListModes')]
     public function testListContents(bool $deep): void
     {
         $dbafs1 = $this->getDbafsListingRecords('bar', ['bar', 'baz', 'bar/file1'], $deep);

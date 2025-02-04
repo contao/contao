@@ -16,6 +16,7 @@ use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendLogoutListener;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\MenuFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
@@ -27,9 +28,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendLogoutListenerTest extends ContaoTestCase
 {
-    /**
-     * @dataProvider getLogoutData
-     */
+    #[DataProvider('getLogoutData')]
     public function testAddsTheLogoutButton(TokenInterface $token, string $label, string $url): void
     {
         $security = $this->createMock(Security::class);

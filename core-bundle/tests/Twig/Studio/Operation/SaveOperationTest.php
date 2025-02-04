@@ -10,15 +10,14 @@ use Contao\CoreBundle\Twig\Inspector\TemplateInformation;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\Operation\SaveOperation;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 use Twig\Source;
 
 class SaveOperationTest extends AbstractOperationTest
 {
-    /**
-     * @dataProvider provideCommonContextsForExistingAndNonExistingUserTemplates
-     */
+    #[DataProvider('provideCommonContextsForExistingAndNonExistingUserTemplates')]
     public function testCanExecute(OperationContext $context, bool $userTemplateExists): void
     {
         $this->assertSame(
@@ -27,9 +26,7 @@ class SaveOperationTest extends AbstractOperationTest
         );
     }
 
-    /**
-     * @dataProvider provideCommonThemeAndPathForNonExistingUserTemplate
-     */
+    #[DataProvider('provideCommonThemeAndPathForNonExistingUserTemplate')]
     public function testFailToSaveUserTemplateBecauseItDoesNotExists(string|null $themeSlug): void
     {
         $storage = $this->mockUserTemplatesStorage();
@@ -59,9 +56,7 @@ class SaveOperationTest extends AbstractOperationTest
         $this->assertSame('error.stream', $response->getContent());
     }
 
-    /**
-     * @dataProvider provideCommonThemeAndPathForExistingUserTemplate
-     */
+    #[DataProvider('provideCommonThemeAndPathForExistingUserTemplate')]
     public function testSaveUserTemplate(string|null $themeSlug, string $path): void
     {
         $storage = $this->mockUserTemplatesStorage();

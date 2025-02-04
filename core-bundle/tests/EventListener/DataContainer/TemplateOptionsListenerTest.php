@@ -28,6 +28,7 @@ use Contao\DC_Table;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -102,9 +103,7 @@ class TemplateOptionsListenerTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideOverrideAllScenarios
-     */
+    #[DataProvider('provideOverrideAllScenarios')]
     public function testReturnsCommonElementTemplatesInOverrideAllMode(string|null $commonType, array $expectedOptions): void
     {
         $session = $this->mockSession();

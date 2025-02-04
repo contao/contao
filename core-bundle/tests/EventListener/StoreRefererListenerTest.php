@@ -16,6 +16,7 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\EventListener\StoreRefererListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\User;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,9 +28,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class StoreRefererListenerTest extends TestCase
 {
-    /**
-     * @dataProvider refererStoredOnKernelResponseProvider
-     */
+    #[DataProvider('refererStoredOnKernelResponseProvider')]
     public function testStoresTheReferer(Request $request, array|null $currentReferer, array|null $expectedReferer): void
     {
         // Set the current referer URLs
@@ -173,9 +172,7 @@ class StoreRefererListenerTest extends TestCase
         $listener($responseEvent);
     }
 
-    /**
-     * @dataProvider noContaoUserProvider
-     */
+    #[DataProvider('noContaoUserProvider')]
     public function testDoesNotStoreTheRefererIfThereIsNoContaoUser(UserInterface|null $user = null): void
     {
         $session = $this->createMock(SessionInterface::class);

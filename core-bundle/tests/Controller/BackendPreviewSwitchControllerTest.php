@@ -24,6 +24,7 @@ use Contao\User;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Result;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\InputBag;
@@ -119,9 +120,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $controller($request);
     }
 
-    /**
-     * @dataProvider getAuthenticationScenarios
-     */
+    #[DataProvider('getAuthenticationScenarios')]
     public function testProcessesAuthentication(string|null $username, string $authenticateMethod): void
     {
         $frontendPreviewAuthenticator = $this->createMock(FrontendPreviewAuthenticator::class);
@@ -298,18 +297,24 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $router = $this->createMock(RouterInterface::class);
 
         if ($canShare) {
+            $matcher = $this->exactly(2);
             $router
-                ->expects($this->exactly(2))
+                ->expects($matcher)
                 ->method('generate')
-                ->withConsecutive(
-                    [
-                        'contao_backend',
-                        ['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => '1', 'rt' => 'csrf', 'nb' => '1'],
-                    ],
-                    ['contao_backend_switch'],
-                )
-                ->willReturn('/_contao/preview/1', '/contao/preview_switch')
-            ;
+                    ->willReturnCallback(
+                        function (...$parameters) use ($matcher) {
+                            if (1 === $matcher->numberOfInvocations()) {
+                                $this->assertSame('contao_backend', $parameters[0]);
+                                $this->assertSame(['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => '1', 'rt' => 'csrf', 'nb' => '1'], $parameters[1]);
+                            }
+                            if (2 === $matcher->numberOfInvocations()) {
+                                $this->assertSame('contao_backend_switch', $parameters[0]);
+                            }
+
+                            return '/_contao/preview/1';
+                        }
+                    )
+                ;
         } else {
             $router
                 ->method('generate')
@@ -355,15 +360,24 @@ class BackendPreviewSwitchControllerTest extends TestCase
         ;
 
         if ($canShare) {
+            $matcher = $this->exactly(2);
             $security
-                ->expects($this->exactly(2))
+                ->expects($matcher)
                 ->method('isGranted')
-                ->withConsecutive(
-                    ['ROLE_ALLOWED_TO_SWITCH_MEMBER'],
-                    [ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'preview_link'],
-                )
-                ->willReturn(true, $canShare)
-            ;
+                    ->willReturnCallback(
+                        function (...$parameters) use ($matcher) {
+                            if (1 === $matcher->numberOfInvocations()) {
+                                $this->assertSame('ROLE_ALLOWED_TO_SWITCH_MEMBER', $parameters[0]);
+                            }
+                            if (2 === $matcher->numberOfInvocations()) {
+                                $this->assertSame(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $parameters[0]);
+                                $this->assertSame('preview_link', $parameters[1]);
+                            }
+
+                            return true;
+                        }
+                    )
+                ;
         } else {
             $security
                 ->method('isGranted')

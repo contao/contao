@@ -29,6 +29,8 @@ use Contao\ImageSizeItemModel;
 use Contao\ImageSizeModel;
 use Contao\Model\Collection;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class PictureFactoryTest extends TestCase
@@ -434,9 +436,7 @@ class PictureFactoryTest extends TestCase
         $this->assertSame($imageMock, $picture->getRawImg()['src']);
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testCreatesAPictureObjectInLegacyMode(): void
     {
         $path = $this->getTempDir().'/images/dummy.jpg';
@@ -663,9 +663,7 @@ class PictureFactoryTest extends TestCase
         $this->assertSame($imageMock, $picture->getRawImg()['src']);
     }
 
-    /**
-     * @dataProvider getResizeOptionsScenarios
-     */
+    #[DataProvider('getResizeOptionsScenarios')]
     public function testCreatesAPictureWithResizeOptions(ResizeOptions|null $resizeOptions, PictureConfiguration|string|null $size, bool $expected): void
     {
         $path = $this->getTempDir().'/images/dummy.jpg';
@@ -759,9 +757,7 @@ class PictureFactoryTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getAspectRatios
-     */
+    #[DataProvider('getAspectRatios')]
     public function testSetHasSingleAspectRatioAttribute(bool $expected, int $imgWidth, int $imgHeight, int $sourceWidth, int $sourceHeight): void
     {
         $imageMock = $this->createMock(ImageInterface::class);

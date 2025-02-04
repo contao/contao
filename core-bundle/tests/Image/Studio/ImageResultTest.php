@@ -26,6 +26,7 @@ use Contao\Image\ImageInterface;
 use Contao\Image\PictureInterface;
 use Contao\Image\Resizer;
 use Imagine\Image\ImagineInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -225,9 +226,7 @@ class ImageResultTest extends TestCase
         $this->assertSame('project/dir/file/path', $imageResult->getFilePath(true));
     }
 
-    /**
-     * @dataProvider provideDeferredImages
-     */
+    #[DataProvider('provideDeferredImages')]
     public function testCreateIfDeferred(array $img, array $sources, array $expectedDeferredImages): void
     {
         $picture = $this->createMock(PictureInterface::class);

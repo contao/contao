@@ -26,6 +26,8 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InsertTags;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
@@ -80,9 +82,7 @@ class InsertTagParserTest extends TestCase
         $this->assertSame([[ChunkedText::TYPE_TEXT, '{{doesnotexist}}']], iterator_to_array($parser->replaceChunked('{{doesnotexist}}')));
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testRender(): void
     {
         $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
@@ -153,9 +153,7 @@ class InsertTagParserTest extends TestCase
         $this->assertSame('baz', $sequence->get(3)->getName());
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testRenderMixedCase(): void
     {
         $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
@@ -187,9 +185,7 @@ class InsertTagParserTest extends TestCase
         $this->assertSame([[ChunkedText::TYPE_RAW, '<br>']], iterator_to_array($parser->replaceInlineChunked('{{fragment::{{br}}}}')));
     }
 
-    /**
-     * @dataProvider getLegacyReplaceInsertTagsHooks
-     */
+    #[DataProvider('getLegacyReplaceInsertTagsHooks')]
     public function testLegacyReplaceInsertTagsHook(string $source, string $expected, \Closure $hook): void
     {
         $GLOBALS['TL_HOOKS']['replaceInsertTags'] = [
@@ -288,9 +284,7 @@ class InsertTagParserTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getLegacyInsertTagFlagsHooks
-     */
+    #[DataProvider('getLegacyInsertTagFlagsHooks')]
     public function testLegacyInsertTagFlagsHook(string $source, string $expected, \Closure $hook): void
     {
         $GLOBALS['TL_HOOKS']['insertTagFlags'] = [

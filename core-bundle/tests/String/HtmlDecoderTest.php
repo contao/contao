@@ -25,6 +25,7 @@ use Contao\Date;
 use Contao\Input;
 use Contao\InsertTags;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -58,9 +59,7 @@ class HtmlDecoderTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider getInputEncodedToPlainText
-     */
+    #[DataProvider('getInputEncodedToPlainText')]
     public function testInputEncodedToPlainText(string $source, string $expected, bool $removeInsertTags = false): void
     {
         $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
@@ -96,9 +95,7 @@ class HtmlDecoderTest extends TestCase
         yield ['&#123;&#123;date&#125;&#125;', '[{]date[}]'];
     }
 
-    /**
-     * @dataProvider getHtmlToPlainText
-     */
+    #[DataProvider('getHtmlToPlainText')]
     public function testHtmlToPlainText(string $source, string $expected, bool $removeInsertTags = false): void
     {
         $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));

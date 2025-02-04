@@ -16,6 +16,7 @@ use Contao\CoreBundle\Tests\Fixtures\Twig\ChildClassWithMembersStub;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\Template;
+use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
@@ -104,9 +105,7 @@ class ContextFactoryTest extends TestCase
         $this->assertSame('c', (string) $context['baz']['foobar']);
     }
 
-    /**
-     * @group legacy
-     */
+    #[Group('legacy')]
     public function testCreateContextFromClass(): void
     {
         $this->expectDeprecation('%sCreation of dynamic property %s is deprecated');

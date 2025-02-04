@@ -27,6 +27,7 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class BackupManagerTest extends ContaoTestCase
@@ -224,18 +225,21 @@ class BackupManagerTest extends ContaoTestCase
         }
     }
 
-    /**
-     * @dataProvider successfulRestoreProvider
-     */
+    #[DataProvider('successfulRestoreProvider')]
     public function testSuccessfulRestore(string $backupContent, RestoreConfig $config, array $expectedQueries): void
     {
         $this->vfs->write($config->getBackup()->getFilename(), $backupContent);
 
         $connection = $this->mockConnection();
+        $matcher = $this->exactly(3);
         $connection
-            ->expects($this->exactly(3))
+            ->expects($matcher)
             ->method('executeQuery')
-            ->withConsecutive(...$expectedQueries)
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $expectedQueries): void {
+                    $this->assertSame($expectedQueries[$matcher->numberOfInvocations() - 1], $parameters);
+                }
+            )
         ;
 
         $manager = $this->getBackupManager($connection);

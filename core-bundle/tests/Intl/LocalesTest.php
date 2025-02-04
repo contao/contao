@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Intl;
 
 use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -206,9 +207,7 @@ class LocalesTest extends TestCase
         $this->assertLessThan($positionEl, $positionDe);
     }
 
-    /**
-     * @dataProvider getLocalesConfig
-     */
+    #[DataProvider('getLocalesConfig')]
     public function testGetsLocaleIdsConfigured(array $configLocales, array $expected): void
     {
         $localeIds = $this->getLocalesService(null, null, null, $configLocales)->getLocaleIds();
@@ -223,9 +222,7 @@ class LocalesTest extends TestCase
         $this->assertSame($expected, $localeIds);
     }
 
-    /**
-     * @dataProvider getLocalesConfig
-     */
+    #[DataProvider('getLocalesConfig')]
     public function testGetsLocalesConfigured(array $configLocales, array $expected): void
     {
         $locales = $this->getLocalesService(null, null, null, $configLocales)->getLocales('de');
@@ -256,9 +253,7 @@ class LocalesTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider getLocalesConfig
-     */
+    #[DataProvider('getLocalesConfig')]
     public function testGetsLanguagesConfigured(array $configLocales, array $expected): void
     {
         $locales = $this->getLocalesService(null, null, null, $configLocales)->getLanguages('de');

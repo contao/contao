@@ -31,18 +31,47 @@ class CalendarAccessVoterTest extends TestCase
         $token = $this->createMock(TokenInterface::class);
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $matcher = $this->exactly(5);
         $accessDecisionManager
-            ->expects($this->exactly(5))
+            ->expects($matcher)
             ->method('decide')
-            ->withConsecutive(
-                [$token, [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE]],
-                [$token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], 42],
-                [$token, [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE]],
-                [$token, [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE]],
-                [$token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], 42],
-            )
-            ->willReturnOnConsecutiveCalls(true, true, false, true, false)
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher, $token) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($token, $parameters[0]);
+                            $this->assertSame([ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
+
+                            return true;
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($token, $parameters[0]);
+                            $this->assertSame([ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], $parameters[1]);
+                            $this->assertSame(42, $parameters[2]);
+
+                            return true;
+                        }
+                        if (3 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($token, $parameters[0]);
+                            $this->assertSame([ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
+
+                            return false;
+                        }
+                        if (4 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($token, $parameters[0]);
+                            $this->assertSame([ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
+
+                            return true;
+                        }
+                        if (5 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($token, $parameters[0]);
+                            $this->assertSame([ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], $parameters[1]);
+                            $this->assertSame(42, $parameters[2]);
+
+                            return false;
+                        }
+                    }
+                )
+            ;
 
         $voter = new CalendarAccessVoter($accessDecisionManager);
 

@@ -16,6 +16,7 @@ use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\EventListener\RobotsTxtListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\WebProfilerBundle\EventListener\WebDebugToolbarListener;
 use Symfony\Component\HttpFoundation\Request;
 use webignition\RobotsTxt\Directive\Directive;
@@ -26,9 +27,7 @@ use webignition\RobotsTxt\Record\Record;
 
 class RobotsTxtListenerTest extends TestCase
 {
-    /**
-     * @dataProvider disallowProvider
-     */
+    #[DataProvider('disallowProvider')]
     public function testRobotsTxt(string $providedRobotsTxt, bool|null $withWebProfiler, string $expectedRobotsTxt): void
     {
         $rootPage = $this->mockClassWithProperties(PageModel::class);
@@ -169,22 +168,28 @@ class RobotsTxtListenerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider routePrefixProvider
-     */
+    #[DataProvider('routePrefixProvider')]
     public function testHandlesDynamicRoutePrefixes(string $routePrefix): void
     {
         $rootPage = $this->mockClassWithProperties(PageModel::class);
 
         $directiveList = $this->createMock(DirectiveList::class);
+        $matcher = $this->exactly(2);
         $directiveList
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('add')
-            ->withConsecutive(
-                [$this->callback(static fn (Directive $directive) => (string) $directive === 'disallow:'.$routePrefix.'/')],
-                ['disallow:/_contao/'],
-            )
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher): void {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $callback = static fn (Directive $directive) => (string) $directive === 'disallow:'.$routePrefix.'/';
+                            $this->assertTrue($callback($parameters[0]));
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('disallow:/_contao/', $parameters[0]);
+                        }
+                    }
+                )
+            ;
 
         $record = $this->createMock(Record::class);
         $record

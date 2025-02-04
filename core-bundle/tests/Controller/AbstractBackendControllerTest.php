@@ -23,6 +23,7 @@ use Contao\Environment as ContaoEnvironment;
 use Contao\System;
 use Contao\TemplateLoader;
 use Doctrine\DBAL\Driver\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -110,9 +111,7 @@ class AbstractBackendControllerTest extends TestCase
         $this->assertSame('<custom_be_main>', $controller->fooAction()->getContent());
     }
 
-    /**
-     * @dataProvider provideRequests
-     */
+    #[DataProvider('provideRequests')]
     public function testHandlesTurboRequests(Request $request, bool|null $includeChromeContext, array $expectedContext, string $expectedRequestFormat = 'html'): void
     {
         $controller = new class() extends AbstractBackendController {

@@ -31,6 +31,7 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Column;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -401,12 +402,11 @@ class DbafsTest extends TestCase
     }
 
     /**
-     * @dataProvider provideSearchPaths
-     *
      * @param array<int, string> $paths
      * @param array<int, string> $expectedSearchPaths
      * @param array<int, string> $expectedParentPaths
      */
+    #[DataProvider('provideSearchPaths')]
     public function testNormalizesSearchPaths(array $paths, array $expectedSearchPaths, array $expectedParentPaths): void
     {
         $dbafs = $this->getDbafs();
@@ -474,10 +474,9 @@ class DbafsTest extends TestCase
     }
 
     /**
-     * @dataProvider provideInvalidSearchPaths
-     *
      * @param array<int, string> $paths
      */
+    #[DataProvider('provideInvalidSearchPaths')]
     public function testRejectsInvalidPaths(array $paths, string $expectedException): void
     {
         $dbafs = $this->getDbafs();
@@ -512,10 +511,9 @@ class DbafsTest extends TestCase
     }
 
     /**
-     * @dataProvider provideFilesystemsAndExpectedChangeSets
-     *
      * @param string|array<int, string> $paths
      */
+    #[DataProvider('provideFilesystemsAndExpectedChangeSets')]
     public function testComputeChangeSet(VirtualFilesystemInterface $filesystem, array|string $paths, ChangeSet $expected): void
     {
         /*

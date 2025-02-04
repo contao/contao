@@ -30,17 +30,41 @@ class ImageSizeAccessVoterTest extends TestCase
         $token = $this->createMock(TokenInterface::class);
 
         $decisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+        $matcher = $this->exactly(4);
         $decisionManager
-            ->expects($this->exactly(4))
+            ->expects($matcher)
             ->method('decide')
-            ->withConsecutive(
-                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'themes'],
-                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZES]],
-                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'themes'],
-                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZES]],
-            )
-            ->willReturnOnConsecutiveCalls(true, true, true, false)
-        ;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher, $token) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($token, $parameters[0]);
+                            $this->assertSame([ContaoCorePermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
+                            $this->assertSame('themes', $parameters[2]);
+
+                            return true;
+                        }
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($token, $parameters[0]);
+                            $this->assertSame([ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZES], $parameters[1]);
+
+                            return true;
+                        }
+                        if (3 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($token, $parameters[0]);
+                            $this->assertSame([ContaoCorePermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
+                            $this->assertSame('themes', $parameters[2]);
+
+                            return true;
+                        }
+                        if (4 === $matcher->numberOfInvocations()) {
+                            $this->assertSame($token, $parameters[0]);
+                            $this->assertSame([ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZES], $parameters[1]);
+
+                            return false;
+                        }
+                    }
+                )
+            ;
 
         $voter = new ImageSizeAccessVoter($decisionManager);
 
