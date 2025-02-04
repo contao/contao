@@ -329,6 +329,7 @@ class tl_image_size extends Backend
 		}
 
 		$imageExtensions = System::getContainer()->getParameter('contao.image.valid_extensions');
+
 		$supporedFormats = $this->getSupportedFormats();
 		$supporedFormats['jpg'] = true;
 		$supporedFormats['png'] = true;
@@ -353,13 +354,13 @@ class tl_image_size extends Backend
 				if (
 					!$subFormatSupported
 					|| $subFormat === $format
-					|| $subFormat === 'gif'
-					|| (in_array($format, ['jpg', 'png', 'gif']) && in_array($subFormat, ['jpg', 'png', 'gif']))
+					|| 'gif' === $subFormat
+					|| (in_array($format, array('jpg', 'png', 'gif')) && in_array($subFormat, array('jpg', 'png', 'gif')))
 				) {
 					continue;
 				}
 
-				if ($format === 'jpg')
+				if ('jpg' === $format)
 				{
 					$formats[] = "jpg:jpg,$subFormat;jpeg:jpeg,$subFormat";
 				}
