@@ -53,10 +53,12 @@ class DcaUrlAnalyzer
             throw new \LogicException('Unable to retrieve DCA information from empty request stack.');
         }
 
+        DcaLoader::switchRequest($this->request);
+
         try {
             return $this->findTableAndId();
         } finally {
-            DcaLoader::resetRequest();
+            DcaLoader::switchRequest(null);
         }
     }
 
@@ -81,12 +83,14 @@ class DcaUrlAnalyzer
             ];
         }
 
+        DcaLoader::switchRequest($this->request);
+
         $links = [];
         $trail = $this->findTrail($table, $id);
 
         foreach (array_reverse($trail, true) as $index => [$table, $row]) {
             $this->framework->getAdapter(System::class)->loadLanguageFile($table);
-            (new DcaLoader($table))->load($this->request);
+            (new DcaLoader($table))->load();
 
             $query = [
                 'do' => $do,
@@ -127,7 +131,7 @@ class DcaUrlAnalyzer
             'label' => $this->translator->trans("MOD.$do.0", [], 'contao_modules'),
         ];
 
-        DcaLoader::resetRequest();
+        DcaLoader::switchRequest(null);
 
         return array_reverse($links);
     }
@@ -158,6 +162,8 @@ class DcaUrlAnalyzer
             return null;
         }
 
+        DcaLoader::switchRequest(new Request());
+
         [$ptable, $pid] = $this->findParentFromRecord($table, $id) ?? [null, null];
 
         $query = [
@@ -167,7 +173,7 @@ class DcaUrlAnalyzer
             'id' => $pid,
         ];
 
-        (new DcaLoader($table))->load($this->request);
+        (new DcaLoader($table))->load();
         $currentRecord = $this->getCurrentRecord($id, $table);
 
         // Select the parent node
@@ -181,7 +187,7 @@ class DcaUrlAnalyzer
             $query['pn'] = (int) ($currentRecord['pid'] ?? null);
         }
 
-        DcaLoader::resetRequest();
+        DcaLoader::switchRequest(null);
 
         return $this->router->generate('contao_backend', $query);
     }
@@ -228,7 +234,7 @@ class DcaUrlAnalyzer
             return [null, null];
         }
 
-        (new DcaLoader($table))->load($this->request);
+        (new DcaLoader($table))->load();
 
         if (!is_a(DataContainer::getDriverForTable($table), DC_Table::class, true)) {
             return [null, null];
@@ -287,7 +293,7 @@ class DcaUrlAnalyzer
 
     private function findPtable(string $table, int|null $id): string|null
     {
-        (new DcaLoader($table))->load($this->request);
+        (new DcaLoader($table))->load();
 
         if (DataContainer::MODE_TREE_EXTENDED === $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode']) {
             return null;
@@ -325,7 +331,7 @@ class DcaUrlAnalyzer
      */
     private function findParentFromRecord(string $table, int $id): array|null
     {
-        (new DcaLoader($table))->load($this->request);
+        (new DcaLoader($table))->load();
 
         if (DataContainer::MODE_TREE_EXTENDED === $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode']) {
             return null;
@@ -361,7 +367,7 @@ class DcaUrlAnalyzer
 
         $pid = (int) ($currentRecord['pid'] ?? null);
 
-        (new DcaLoader($table))->load($this->request);
+        (new DcaLoader($table))->load();
 
         if ($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null) {
             $ptable = (string) ($currentRecord['ptable'] ?? null);

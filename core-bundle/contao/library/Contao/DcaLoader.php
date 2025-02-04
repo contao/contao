@@ -82,13 +82,18 @@ class DcaLoader extends Controller
 		unset($GLOBALS['TL_DCA']);
 	}
 
-	public static function resetRequest(): void
+	/**
+	 * DCA loading depends on the current request. Switching the request sets or
+	 * resets the global DCA array and makes it possible to (re)load a DCA once
+	 * again. To switch back to the current request you should call
+	 * switchRequest(null).
+	 *
+	 * @param Request|null $request Pass null to switch to the current request from the stack
+	 */
+	public static function switchRequest(Request|null $request): void
 	{
-		self::switchGlobals(System::getContainer()->get('request_stack')->getCurrentRequest());
-	}
+		$request ??= System::getContainer()->get('request_stack')->getCurrentRequest();
 
-	protected static function switchGlobals(Request|null $request): void
-	{
 		if (self::$lastRequest === $request)
 		{
 			return;
@@ -116,12 +121,8 @@ class DcaLoader extends Controller
 	/**
 	 * Load a set of DCA files
 	 */
-	public function load(Request|null $request = null)
+	public function load()
 	{
-		$request ??= System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		self::switchGlobals($request);
-
 		// Return if the data has been loaded already
 		if (isset(static::$arrLoaded['dcaFiles'][$this->strTable]))
 		{
