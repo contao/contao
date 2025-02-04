@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\Page\RegularPageController;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Symfony\Component\HttpFoundation\Response;
@@ -59,6 +60,14 @@ class FrontendIndex extends Frontend
 
 		try
 		{
+			if (LayoutModel::findByPk($objPage->layout)?->type === 'modern')
+			{
+				 return System::getContainer()
+					 ->get(RegularPageController::class)
+				     ->__invoke(System::getContainer()->get('request_stack')->getCurrentRequest())
+				;
+			}
+
 			$pageType = $GLOBALS['TL_PTY'][$objPage->type] ?? PageRegular::class;
 			$objHandler = new $pageType();
 
