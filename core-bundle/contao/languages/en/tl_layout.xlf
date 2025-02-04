@@ -6,13 +6,13 @@
         <source>Type</source>
       </trans-unit>
       <trans-unit id="tl_layout.type.1">
-        <source>Select which page layout type you want to create.</source>
+        <source>Here you can select the page layout type.</source>
       </trans-unit>
       <trans-unit id="tl_layout.modern">
-          <source>Twig layout with slots (modern)</source>
+        <source>Twig layout with slots</source>
       </trans-unit>
       <trans-unit id="tl_layout.default">
-        <source>HTML5 layout defined in the database (legacy)</source>
+        <source>Legacy HTML5 layout</source>
       </trans-unit>
       <trans-unit id="tl_layout.name.0">
         <source>Title</source>
