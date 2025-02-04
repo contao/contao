@@ -257,13 +257,9 @@ class ModuleWizard extends Widget
 						'do' => 'themes',
 						'table' => $isContentElement ? 'tl_content' : 'tl_module',
 						'id' => $id,
+						'act' => 'edit',
 						'popup' => 1,
 					);
-
-					if (!$isContentElement)
-					{
-						$params['act'] = 'edit';
-					}
 
 					$href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', $params));
 					$title = $isContentElement ? $GLOBALS['TL_LANG']['MSC']['editElement'] : $GLOBALS['TL_LANG']['tl_layout']['edit_module'];
