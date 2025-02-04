@@ -74,18 +74,21 @@ class ModuleWizard extends Widget
 		$elements = $db
 			->prepare("SELECT * FROM tl_content WHERE ptable=? AND pid=(SELECT pid FROM " . $this->strTable . " WHERE id=?)")
 			->execute('tl_theme', $this->currentRecord)
-			->fetchAllAssoc();
+			->fetchAllAssoc()
+		;
 
-		/** @var RecordLabeler $recordLabeler */
 		$recordLabeler = System::getContainer()->get('contao.data_container.record_labeler');
 
-		$elements = array_map(static function (array $element) use ($recordLabeler) {
-			return array(
-				'id' => 'content-' . $element['id'],
-				'title' => $recordLabeler->getLabel('contao.db.tl_content.' . $element['id'], $element),
-				'type' => $GLOBALS['TL_LANG']['CTE'][$element['type']][0] ?? $element['type'],
-			);
-		}, $elements);
+		$elements = array_map(
+			static function (array $element) use ($recordLabeler) {
+				return array(
+					'id' => 'content-' . $element['id'],
+					'title' => $recordLabeler->getLabel('contao.db.tl_content.' . $element['id'], $element),
+					'type' => $GLOBALS['TL_LANG']['CTE'][$element['type']][0] ?? $element['type'],
+				);
+			},
+			$elements
+		);
 
 		usort($elements, static function (array $a, array $b) {
 			return strcmp($a['title'], $b['title']);

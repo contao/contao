@@ -133,6 +133,7 @@ class PageRegular extends Frontend
 				}
 			}
 		}
+
 		// Get all modules and elements in a single DB query each
 		$objModules = ModuleModel::findMultipleByIds($arrModuleIds);
 		$objElements = ContentModel::findMultipleByIds($arrContentElementIds);
@@ -169,7 +170,7 @@ class PageRegular extends Frontend
 
 				$isContentElement = str_starts_with((string) $arrModule['mod'], 'content-');
 				$id = (int) str_replace('content-', '', (string) $arrModule['mod']);
-				dump($isContentElement);
+
 				// Replace the module ID with the models
 				if ($isContentElement && isset($arrContentElementsMapper[$id]))
 				{
