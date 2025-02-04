@@ -104,7 +104,6 @@ use Contao\TableWizard;
 use Contao\TextArea;
 use Contao\TextField;
 use Contao\Theme;
-use Contao\ThemeContentModel;
 use Contao\ThemeModel;
 use Contao\TimePeriod;
 use Contao\TrblField;
@@ -144,7 +143,7 @@ $GLOBALS['BE_MOD'] = array
 	(
 		'themes' => array
 		(
-			'tables'      => array('tl_theme', 'tl_module', 'tl_layout', 'tl_image_size', 'tl_image_size_item', 'tl_theme_content', 'tl_content'),
+			'tables'      => array('tl_theme', 'tl_module', 'tl_layout', 'tl_image_size', 'tl_image_size_item', 'tl_content'),
 			'importTheme' => array(Theme::class, 'importTheme'),
 			'exportTheme' => array(Theme::class, 'exportTheme'),
 		),
@@ -478,7 +477,6 @@ $GLOBALS['TL_MODELS'] = array(
 	'tl_opt_in' => OptInModel::class,
 	'tl_page' => PageModel::class,
 	'tl_theme' => ThemeModel::class,
-	'tl_theme_content' => ThemeContentModel::class,
 	'tl_user_group' => UserGroupModel::class,
 	'tl_user' => UserModel::class
 );

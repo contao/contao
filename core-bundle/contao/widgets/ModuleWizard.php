@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DataContainer\RecordLabeler;
+
 /**
  * Provide methods to handle modules of a page layout.
  */
@@ -70,15 +72,24 @@ class ModuleWizard extends Widget
 
 		// Get all content elements of the current theme
 		$elements = $db
-			->prepare("SELECT id, title FROM tl_theme_content WHERE pid=(SELECT pid FROM " . $this->strTable . " WHERE id=?) ORDER BY title")
-			->execute($this->currentRecord)
+			->prepare("SELECT * FROM tl_content WHERE ptable=? AND pid=(SELECT pid FROM " . $this->strTable . " WHERE id=?)")
+			->execute('tl_theme', $this->currentRecord)
 			->fetchAllAssoc();
 
-		$elements = array_map(static function (array $element) {
-			$element['id'] = 'content-' . $element['id'];
+		/** @var RecordLabeler $recordLabeler */
+		$recordLabeler = System::getContainer()->get('contao.data_container.record_labeler');
 
-			return $element;
+		$elements = array_map(static function (array $element) use ($recordLabeler) {
+			return array(
+				'id' => 'content-' . $element['id'],
+				'title' => $recordLabeler->getLabel('contao.db.tl_content.' . $element['id'], $element),
+				'type' => $GLOBALS['TL_LANG']['CTE'][$element['type']][0] ?? $element['type'],
+			);
 		}, $elements);
+
+		usort($elements, static function (array $a, array $b) {
+			return strcmp($a['title'], $b['title']);
+		});
 
 		$GLOBALS['TL_LANG']['FMD']['article'] = $GLOBALS['TL_LANG']['MOD']['article'];
 
@@ -200,7 +211,7 @@ class ModuleWizard extends Widget
 			// Add content elements
 			foreach ($elements as $v)
 			{
-				$options .= '<option value="' . self::specialcharsValue($v['id']) . '"' . static::optionSelected($v['id'], $this->varValue[$i]['mod'] ?? null) . '>' . $v['title'] . '</option>';
+				$options .= '<option value="' . self::specialcharsValue($v['id']) . '"' . static::optionSelected($v['id'], $this->varValue[$i]['mod'] ?? null) . '>' . $v['title'] . ' [' . $v['type'] . ']</option>';
 			}
 
 			$optionGroups[] = \sprintf('<optgroup label="%s">%s</optgroup>', $GLOBALS['TL_LANG']['MSC']['mw_theme_contents'], $options);
@@ -234,25 +245,25 @@ class ModuleWizard extends Widget
 			foreach ($arrButtons as $button)
 			{
 				$id = ($this->varValue[$i]['mod'] ?? null);
-				$isThemeContent = str_starts_with((string) $id, 'content-');
+				$isContentElement = str_starts_with((string) $id, 'content-');
 				$id = (int) str_replace('content-', '', $id);
 
 				if ($button == 'edit')
 				{
 					$params = array(
 						'do' => 'themes',
-						'table' => $isThemeContent ? 'tl_content' : 'tl_module',
+						'table' => $isContentElement ? 'tl_content' : 'tl_module',
 						'id' => $id,
 						'popup' => 1,
 					);
 
-					if (!$isThemeContent)
+					if (!$isContentElement)
 					{
 						$params['act'] = 'edit';
 					}
 
 					$href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', $params));
-					$title = $isThemeContent ? $GLOBALS['TL_LANG']['tl_layout']['edit_theme_content'] : $GLOBALS['TL_LANG']['tl_layout']['edit_module'];
+					$title = $isContentElement ? $GLOBALS['TL_LANG']['MSC']['editElement'] : $GLOBALS['TL_LANG']['tl_layout']['edit_module'];
 					$return .= ' <a href="' . $href . '" class="module_link' . ($id > 0 ? '' : ' hidden') . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg', $title) . '</a>' . Image::getHtml('edit--disabled.svg', '', 'class="module_image' . ($id > 0 ? ' hidden' : '') . '"');
 				}
 				elseif ($button == 'drag')

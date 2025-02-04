@@ -36,6 +36,12 @@ class ContentRecordLabelListener
             return;
         }
 
+        if ($event->getData()['internalName'] ?? null) {
+            $event->setLabel($event->getData()['internalName']);
+
+            return;
+        }
+
         $type = $event->getData()['type'];
         $labelKey = "CTE.$type.0";
 

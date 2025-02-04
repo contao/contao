@@ -116,7 +116,7 @@ class PageRegular extends Frontend
 		$arrSections = array('header', 'left', 'right', 'main', 'footer');
 		$arrModules = StringUtil::deserialize($objLayout->modules);
 		$arrModuleIds = array();
-		$arrThemeContentIds = array();
+		$arrContentElementIds = array();
 
 		// Filter the disabled modules
 		foreach ($arrModules as $module)
@@ -125,7 +125,7 @@ class PageRegular extends Frontend
 			{
 				if (str_starts_with((string) $module['mod'], 'content-'))
 				{
-					$arrThemeContentIds[] = (int) str_replace('content-', '', (string) $module['mod']);
+					$arrContentElementIds[] = (int) str_replace('content-', '', (string) $module['mod']);
 				}
 				else
 				{
@@ -135,12 +135,12 @@ class PageRegular extends Frontend
 		}
 		// Get all modules and elements in a single DB query each
 		$objModules = ModuleModel::findMultipleByIds($arrModuleIds);
-		$objThemeContents = ThemeContentModel::findMultipleByIds($arrThemeContentIds);
+		$objElements = ContentModel::findMultipleByIds($arrContentElementIds);
 
-		if ($objModules !== null || \in_array(0, $arrModuleIds, true) || $objThemeContents !== null)
+		if ($objModules !== null || \in_array(0, $arrModuleIds, true) || $objElements !== null)
 		{
 			$arrMapper = array();
-			$arrThemeContentsMapper = array();
+			$arrContentElementsMapper = array();
 
 			// Create a mapper array in case a module is included more than once (see #4849)
 			if ($objModules !== null)
@@ -151,11 +151,11 @@ class PageRegular extends Frontend
 				}
 			}
 
-			if ($objThemeContents !== null)
+			if ($objElements !== null)
 			{
-				while ($objThemeContents->next())
+				while ($objElements->next())
 				{
-					$arrThemeContentsMapper[$objThemeContents->id] = $objThemeContents->current();
+					$arrContentElementsMapper[$objElements->id] = $objElements->current();
 				}
 			}
 
@@ -167,13 +167,13 @@ class PageRegular extends Frontend
 					continue;
 				}
 
-				$isThemeContent = str_starts_with((string) $arrModule['mod'], 'content-');
+				$isContentElement = str_starts_with((string) $arrModule['mod'], 'content-');
 				$id = (int) str_replace('content-', '', (string) $arrModule['mod']);
-
+				dump($isContentElement);
 				// Replace the module ID with the models
-				if ($isThemeContent && isset($arrThemeContentsMapper[$id]))
+				if ($isContentElement && isset($arrContentElementsMapper[$id]))
 				{
-					$arrModule['mod'] = $arrThemeContentsMapper[$id];
+					$arrModule['mod'] = $arrContentElementsMapper[$id];
 				}
 				elseif ($id > 0 && isset($arrMapper[$id]))
 				{
@@ -204,7 +204,7 @@ class PageRegular extends Frontend
 						continue;
 					}
 
-					$this->Template->{$arrModule['col']} .= $this->renderFrontendModuleOrThemeContent($arrModule['mod'], $arrModule['col']);
+					$this->Template->{$arrModule['col']} .= $isContentElement ? Controller::getContentElement($arrModule['mod'], $arrModule['col']) : Controller::getFrontendModule($arrModule['mod'], $arrModule['col']);
 				}
 				else
 				{
@@ -213,7 +213,7 @@ class PageRegular extends Frontend
 						$arrCustomSections[$arrModule['col']] = '';
 					}
 
-					$arrCustomSections[$arrModule['col']] .= $this->renderFrontendModuleOrThemeContent($arrModule['mod'], $arrModule['col']);
+					$arrCustomSections[$arrModule['col']] .= $isContentElement ? Controller::getContentElement($arrModule['mod'], $arrModule['col']) : Controller::getFrontendModule($arrModule['mod'], $arrModule['col']);
 				}
 			}
 		}
@@ -683,23 +683,5 @@ class PageRegular extends Frontend
 
 			return $this->responseContext->get(JsonLdManager::class)->collectFinalScriptFromGraphs();
 		};
-	}
-
-	private function renderFrontendModuleOrThemeContent(ModuleModel|ThemeContentModel|string $model, string $column): string
-	{
-		if ($model instanceof ThemeContentModel)
-		{
-			$elements = '';
-			$contentElements = ContentModel::findPublishedByPidAndTable($model->id, 'tl_theme_content');
-
-			foreach ($contentElements as $contentElement)
-			{
-				$elements .= Controller::getContentElement($contentElement, $column);
-			}
-
-			return $elements;
-		}
-
-		return Controller::getFrontendModule($model, $column);
 	}
 }

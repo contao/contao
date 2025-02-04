@@ -8,6 +8,12 @@
       <trans-unit id="tl_content.type.1">
         <source>Please choose the type of content element.</source>
       </trans-unit>
+      <trans-unit id="tl_content.internalName.0">
+        <source>Internal name</source>
+      </trans-unit>
+      <trans-unit id="tl_content.internalName.1">
+        <source>Assign an optional internal name for this content element.</source>
+      </trans-unit>
       <trans-unit id="tl_content.headline.0">
         <source>Headline</source>
       </trans-unit>
