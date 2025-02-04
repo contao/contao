@@ -37,6 +37,7 @@
   <meta data-turbo-track="reload" content="<?= md5($this->stylesheets."\0".$this->javascripts); ?>">
 </head>
 <body id="top" class="be_main<?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->attributes ?> data-controller="contao--tooltips">
+  <a class="invisible show-on-focus" href="#main" data-turbo="false"><?= $this->trans('MSC.skipToContent') ?></a>
 
   <?php $this->block('header'); ?>
     <?php if (!$this->isPopup): ?>
