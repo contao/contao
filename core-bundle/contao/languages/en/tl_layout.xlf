@@ -171,10 +171,10 @@
         <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
       </trans-unit>
       <trans-unit id="tl_layout.modules.0">
-        <source>Included modules</source>
+        <source>Includes</source>
       </trans-unit>
       <trans-unit id="tl_layout.modules.1">
-        <source>If JavaScript is disabled, make sure to save your changes before modifying the order.</source>
+        <source>Here you can assign front end modules and content elements to the layout.</source>
       </trans-unit>
       <trans-unit id="tl_layout.template.0">
         <source>Page template</source>
@@ -306,7 +306,7 @@
         <source>Feeds</source>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
-        <source>Front end modules</source>
+        <source>Includes</source>
       </trans-unit>
       <trans-unit id="tl_layout.expert_legend">
         <source>Expert settings</source>
