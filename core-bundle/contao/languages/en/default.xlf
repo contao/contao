@@ -1340,7 +1340,7 @@
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
       </trans-unit>
-      <trans-unit id="MSC.confirm">
+      <trans-unit id="MSC.confirmTitle">
           <source>Are you sure?</source>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">

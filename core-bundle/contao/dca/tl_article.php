@@ -171,7 +171,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		(
 			'inputType'               => 'textarea',
 			'search'                  => true,
-			'eval'                    => array('rte'=>'tinyMCE', 'tl_class'=>'clr'),
+			'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
 		),
 		'printable' => array

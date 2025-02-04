@@ -32,6 +32,9 @@
       <trans-unit id="MOD.page.1">
         <source>Set up the pages of your website(s)</source>
       </trans-unit>
+      <trans-unit id="MOD.template_studio">
+        <source>Add or edit Twig templates</source>
+      </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
       </trans-unit>
