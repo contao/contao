@@ -25,6 +25,6 @@ class LayoutPageController extends AbstractLayoutPageController
 {
     protected function getResponse(LayoutTemplate $template, LayoutModel $model, Request $request): Response
     {
-        return new JsonResponse(array_merge($template->getData(), ['templateName' => $template->getName()]));
+        return new JsonResponse([...$template->getData(), 'templateName' => $template->getName()]);
     }
 }
