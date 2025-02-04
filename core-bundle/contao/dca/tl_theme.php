@@ -73,7 +73,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		(
 			'!edit',
 			'delete',
-			'themeContent' => array
+			'elements' => array
 			(
 				'href'                => 'table=tl_content',
 				'prefetch'            => true,
