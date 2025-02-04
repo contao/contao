@@ -31,13 +31,17 @@ class ArticleColumnListener
     #[AsCallback(table: 'tl_article', target: 'fields.inColumn.options')]
     public function getOptions(DataContainer $dc): array
     {
-        /** @var PageModel|null $page */
-        $page = $this->framework->getAdapter(ArticleModel::class)->findById($dc->id)?->getRelated('pid');
-        $page?->loadDetails();
+        if (!$article = $this->framework->getAdapter(ArticleModel::class)->findById($dc->id)) {
+            return [];
+        }
 
-        $layout = $this->framework->getAdapter(LayoutModel::class)->findById($page?->layout);
+        $page = $article->getRelated('pid');
 
-        if (null === $layout) {
+        if (!$page instanceof PageModel) {
+            return [];
+        }
+
+        if (!$layout = $this->framework->getAdapter(LayoutModel::class)->findById($page->loadDetails()->layout)) {
             return [];
         }
 

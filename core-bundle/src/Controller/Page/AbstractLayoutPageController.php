@@ -30,31 +30,24 @@ abstract class AbstractLayoutPageController extends AbstractController
 
     public function __invoke(Request $request): Response
     {
-        // Get page
-        $page = $this->container->get('contao.routing.page_finder')->getCurrentPage();
-
-        if (null === $page) {
+        if (!$page = $this->container->get('contao.routing.page_finder')->getCurrentPage()) {
             throw $this->createNotFoundException();
         }
 
         // Get associated layout
         $this->initializeContaoFramework();
 
-        $layoutAdapter = $this->getContaoAdapter(LayoutModel::class);
-        $layout = $layoutAdapter->findById($page->layout);
-
-        if (null === $layout) {
+        if (!$layout = $this->getContaoAdapter(LayoutModel::class)->findById($page->layout)) {
             throw $this->createNotFoundException();
         }
 
         // Set the context
-        $responseContext = $this->getResponseContext($page);
         $this->container->get('contao.image.picture_factory')->setDefaultDensities($layout->defaultImageDensities);
         $this->container->get('contao.image.preview_factory')->setDefaultDensities($layout->defaultImageDensities);
 
         // Create layout template and assign defaults
         $template = $this->createTemplate($layout->template);
-        $this->addDefaultDataToTemplate($template, $page, $layout, $responseContext);
+        $this->addDefaultDataToTemplate($template, $page, $layout, $this->getResponseContext($page));
 
         $response = $this->getResponse($template, $layout, $request);
         $this->container->get('contao.routing.response_context_accessor')->finalizeCurrentContext($response);
@@ -102,7 +95,7 @@ abstract class AbstractLayoutPageController extends AbstractController
         $template->set('preview_mode', $this->container->get('contao.security.token_checker')->isPreviewMode());
 
         $locale = LocaleUtil::formatAsLocale($page->language);
-        $isRtl = (\ResourceBundle::create($locale, 'ICUDATA')['layout']['characters'] ?? null) === 'right-to-left';
+        $isRtl = 'right-to-left' === (\ResourceBundle::create($locale, 'ICUDATA')['layout']['characters'] ?? null);
 
         $template->set('locale', $locale);
         $template->set('rtl', $isRtl);
@@ -165,8 +158,9 @@ abstract class AbstractLayoutPageController extends AbstractController
     {
         return [
             'head' => $responseContext->get(HtmlHeadBag::class),
-            'jsonLdScripts' => $responseContext->isInitialized(JsonLdManager::class) ?
-                $responseContext->get(JsonLdManager::class)->collectFinalScriptFromGraphs() : null,
+            'jsonLdScripts' => $responseContext->isInitialized(JsonLdManager::class)
+                ? $responseContext->get(JsonLdManager::class)->collectFinalScriptFromGraphs()
+                : null,
         ];
     }
 

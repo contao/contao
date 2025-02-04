@@ -37,7 +37,7 @@ final class SlotNode extends Node implements NodeOutputInterface
             ->addDebugInfo($this)
             ->write('$context[\'_slot_name\'] = ')
             ->string($name)
-            ->raw(';'."\n")
+            ->raw(";\n")
             ->write('if (\'\' !== (string)($context[\'_slots\'][\'')
             ->raw($name)
             ->raw("'] ?? '')) {\n")
@@ -48,7 +48,7 @@ final class SlotNode extends Node implements NodeOutputInterface
 
         if ($this->hasNode('fallback')) {
             $compiler
-                ->write('} else {'."\n")
+                ->write("} else {\n")
                 ->indent()
                 ->subcompile($this->getNode('fallback'))
                 ->outdent()
@@ -56,7 +56,7 @@ final class SlotNode extends Node implements NodeOutputInterface
         }
 
         $compiler
-            ->write('}'."\n")
+            ->write("}\n")
             ->write('unset($context[\'_slot_name\']);'."\n")
         ;
     }

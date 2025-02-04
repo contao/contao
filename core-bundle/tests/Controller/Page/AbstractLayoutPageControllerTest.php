@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Controller\Page;
 
-use Contao\Config;
 use Contao\CoreBundle\Fixtures\Controller\Page\LayoutPageController;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
@@ -23,9 +22,6 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\DcaExtractor;
-use Contao\DcaLoader;
-use Contao\InsertTags;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\System;
@@ -150,7 +146,6 @@ class AbstractLayoutPageControllerTest extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
-
         $container->set('twig', $twig);
         $container->set('contao.routing.page_finder', $pageFinder);
         $container->set('contao.routing.response_context_factory', $responseContextFactory);

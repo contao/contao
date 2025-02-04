@@ -60,7 +60,6 @@ class ThemeLayoutListener
     {
         if ($this->isLegacy($dc)) {
             $templateField = &$GLOBALS['TL_DCA']['tl_layout']['fields']['template'];
-
             $templateField['eval']['mandatory'] = false;
             $templateField['eval']['submitOnChange'] = false;
         }

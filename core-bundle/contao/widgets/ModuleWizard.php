@@ -120,7 +120,8 @@ class ModuleWizard extends Widget
 			$objRow = $db
 				->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
 				->limit(1)
-				->execute($this->currentRecord);
+				->execute($this->currentRecord)
+			;
 
 			$cols = array('main');
 
