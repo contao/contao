@@ -542,7 +542,6 @@ class FigureBuilderTest extends TestCase
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
         $this->assertSame('Only streams of type STDIO/plainfile pointing to an absolute path are currently supported when reading an image from a storage, got "TEMP/PHP" with URI "php://temp".', $exception->getMessage());
         $this->assertNull($figureBuilder->buildIfResourceExists());
-
         $this->expectExceptionObject($exception);
 
         $figureBuilder->build();
@@ -561,7 +560,6 @@ class FigureBuilderTest extends TestCase
         $this->assertInstanceOf(InvalidResourceException::class, $exception);
         $this->assertSame('Could not read resource from storage: Unable to read from "invalid/resource.jpg".', $exception->getMessage());
         $this->assertNull($figureBuilder->buildIfResourceExists());
-
         $this->expectExceptionObject($exception);
 
         $figureBuilder->build();
@@ -1005,6 +1003,7 @@ class FigureBuilderTest extends TestCase
         if (\is_array($resource)) {
             $getFilesModel = function (array $metaData, string|null $uuid) use ($resource) {
                 $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
+
                 $filesModel->setRow([
                     'type' => 'file',
                     'path' => $resource[0],
@@ -1229,7 +1228,6 @@ class FigureBuilderTest extends TestCase
     {
         if (null === $resource) {
             $image = $this->createMock(ImageInterface::class);
-
             $resource = $image;
             $expectedArguments = [$image, null];
         }

@@ -230,7 +230,6 @@ class CronTest extends TestCase
         );
 
         $this->assertEmpty($cron->getCronJobs());
-
         $this->assertFalse($initialized);
     }
 
@@ -360,15 +359,12 @@ class CronTest extends TestCase
         );
 
         $cron->addCronJob(new CronJob($cron, '* * * * *', 'updateMinutelyCliCron'));
-
         $this->assertFalse($cron->hasMinutelyCliCron());
 
         $cron->run(Cron::SCOPE_CLI);
-
         $this->assertTrue($cron->hasMinutelyCliCron());
 
         $cache->clear();
-
         $this->assertFalse($cron->hasMinutelyCliCron());
     }
 
@@ -416,9 +412,9 @@ class CronTest extends TestCase
     public function testResetsLastRunForSkippedCronJobs(): void
     {
         $previousRun = (new \DateTime())->modify('-1 hours');
+        $matcher = $this->exactly(2);
 
         $entity = $this->createMock(CronJobEntity::class);
-        $matcher = $this->exactly(2);
         $entity
             ->expects($matcher)
             ->method('setLastRun')
@@ -474,9 +470,9 @@ class CronTest extends TestCase
     public function testResetsLastRunForSkippedAsyncCronJobs(): void
     {
         $previousRun = (new \DateTime())->modify('-1 hours');
+        $matcher = $this->exactly(2);
 
         $entity = $this->createMock(CronJobEntity::class);
-        $matcher = $this->exactly(2);
         $entity
             ->expects($matcher)
             ->method('setLastRun')

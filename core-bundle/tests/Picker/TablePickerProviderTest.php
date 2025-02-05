@@ -94,7 +94,6 @@ class TablePickerProviderTest extends ContaoTestCase
     public function testIsCurrent(): void
     {
         $provider = $this->createTableProvider();
-
         $config = $this->mockPickerConfig('', '', 'tablePicker.article');
 
         $this->assertTrue($provider->isCurrent($config));
@@ -107,7 +106,6 @@ class TablePickerProviderTest extends ContaoTestCase
     public function testGetDcaTableFromContext(): void
     {
         $config = $this->mockPickerConfig('tl_content');
-
         $provider = $this->createTableProvider();
 
         $this->assertSame('tl_content', $provider->getDcaTable($config));
@@ -228,8 +226,8 @@ class TablePickerProviderTest extends ContaoTestCase
         ;
 
         $config = $this->mockPickerConfig('tl_foobar', '', 'tablePicker.'.$current, $expectedCurrent);
-        $provider = $this->createMenuTableProvider($modules, $current, $menu);
 
+        $provider = $this->createMenuTableProvider($modules, $current, $menu);
         $provider->createMenuItem($config);
     }
 
@@ -577,8 +575,9 @@ class TablePickerProviderTest extends ContaoTestCase
             ];
         }
 
-        $menuFactory = $this->createMock(FactoryInterface::class);
         $matcher = $this->exactly(\count($expectedItems));
+
+        $menuFactory = $this->createMock(FactoryInterface::class);
         $menuFactory
             ->expects($matcher)
             ->method('createItem')
@@ -619,9 +618,7 @@ class TablePickerProviderTest extends ContaoTestCase
             ->willReturn($current)
         ;
 
-        $clone = $config
-            ->method('cloneForCurrent')
-        ;
+        $clone = $config->method('cloneForCurrent');
 
         if ($expectedCurrent) {
             $clone->with($this->callback(
@@ -674,8 +671,9 @@ class TablePickerProviderTest extends ContaoTestCase
             $expected[] = ['contao_backend', $params, UrlGeneratorInterface::ABSOLUTE_PATH];
         }
 
-        $router = $this->createMock(RouterInterface::class);
         $matcher = $this->exactly(\count($expected));
+
+        $router = $this->createMock(RouterInterface::class);
         $router
             ->expects($matcher)
             ->method('generate')
@@ -746,6 +744,7 @@ class TablePickerProviderTest extends ContaoTestCase
 
         if ($ptable && $dynamicPtable) {
             $expected = ['pid', 'ptable'];
+
             $queryBuilder
                 ->expects($this->exactly(2))
                 ->method('addSelect')
@@ -804,8 +803,9 @@ class TablePickerProviderTest extends ContaoTestCase
             $expected[] = ['MOD.'.$module.'.0', [], 'contao_default', null];
         }
 
-        $translator = $this->createMock(TranslatorInterface::class);
         $matcher = $this->exactly(\count($modules));
+
+        $translator = $this->createMock(TranslatorInterface::class);
         $translator
             ->expects($matcher)
             ->method('trans')

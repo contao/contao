@@ -120,8 +120,9 @@ class CoreResponseContextFactoryTest extends TestCase
             ->method('setResponseContext')
         ;
 
-        $insertTagsParser = $this->createMock(InsertTagParser::class);
         $matcher = $this->exactly(3);
+
+        $insertTagsParser = $this->createMock(InsertTagParser::class);
         $insertTagsParser
             ->expects($matcher)
             ->method('replaceInline')
@@ -132,11 +133,13 @@ class CoreResponseContextFactoryTest extends TestCase
 
                         return 'My title';
                     }
+
                     if (2 === $matcher->numberOfInvocations()) {
                         $this->assertSame('My description', $parameters[0]);
 
                         return 'My description';
                     }
+
                     if (3 === $matcher->numberOfInvocations()) {
                         $this->assertSame('{{link_url::42}}', $parameters[0]);
 
@@ -229,8 +232,9 @@ class CoreResponseContextFactoryTest extends TestCase
             ->method('setResponseContext')
         ;
 
-        $insertTagsParser = $this->createMock(InsertTagParser::class);
         $matcher = $this->exactly(3);
+
+        $insertTagsParser = $this->createMock(InsertTagParser::class);
         $insertTagsParser
             ->expects($matcher)
             ->method('replaceInline')
@@ -241,11 +245,13 @@ class CoreResponseContextFactoryTest extends TestCase
 
                         return 'My title';
                     }
+
                     if (2 === $matcher->numberOfInvocations()) {
                         $this->assertSame('', $parameters[0]);
 
                         return 'My description';
                     }
+
                     if (3 === $matcher->numberOfInvocations()) {
                         $this->assertSame('{{link_url::42}}', $parameters[0]);
 

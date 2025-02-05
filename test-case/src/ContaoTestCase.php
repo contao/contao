@@ -163,6 +163,7 @@ abstract class ContaoTestCase extends TestCase
     protected function mockAdapter(array $methods): Adapter
     {
         sort($methods);
+
         $namespace = 'Contao\DynamicTestClass';
         $className = 'MockAdapter'.sha1(implode(':', $methods));
         $path = sys_get_temp_dir().\DIRECTORY_SEPARATOR.$className.'.php';

@@ -90,6 +90,7 @@ class MessageCatalogueTest extends TestCase
             ->method('getLocale')
             ->willReturn('en')
         ;
+
         $matcher = $this->exactly(2);
 
         $parentCatalogue
@@ -103,6 +104,7 @@ class MessageCatalogueTest extends TestCase
 
                         return true;
                     }
+
                     if (2 === $matcher->numberOfInvocations()) {
                         $this->assertSame('bar', $parameters[0]);
                         $this->assertSame('foobar', $parameters[1]);
@@ -136,6 +138,7 @@ class MessageCatalogueTest extends TestCase
             ->method('getLocale')
             ->willReturn('en')
         ;
+
         $matcher = $this->exactly(2);
 
         $parentCatalogue
@@ -149,6 +152,7 @@ class MessageCatalogueTest extends TestCase
 
                         return true;
                     }
+
                     if (2 === $matcher->numberOfInvocations()) {
                         $this->assertSame('bar', $parameters[0]);
                         $this->assertSame('foobar', $parameters[1]);
@@ -184,6 +188,7 @@ class MessageCatalogueTest extends TestCase
             ->method('getLocale')
             ->willReturn('en')
         ;
+
         $matcher = $this->exactly(2);
 
         $parentCatalogue
@@ -197,6 +202,7 @@ class MessageCatalogueTest extends TestCase
 
                         return 'Foo';
                     }
+
                     if (2 === $matcher->numberOfInvocations()) {
                         $this->assertSame('bar', $parameters[0]);
                         $this->assertSame('foobar', $parameters[1]);
@@ -281,7 +287,6 @@ class MessageCatalogueTest extends TestCase
     public function testForwardsCompletelyToParent(string $method, array $paramMockClasses, array|string|null $returnMockClassOrClasses = null): void
     {
         $params = array_map(fn (string $class) => $this->createMock($class), $paramMockClasses);
-
         $return = null;
 
         if (\is_string($returnMockClassOrClasses)) {

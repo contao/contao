@@ -65,6 +65,7 @@ abstract class AbstractAccessVoterTestCase extends TestCase
         foreach ($decisions as &$decision) {
             array_unshift($decision, $token);
         }
+
         unset($decision);
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);

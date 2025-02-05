@@ -232,9 +232,9 @@ class DefaultIndexerTest extends TestCase
     public function testClearsTheSearchIndex(): void
     {
         $framework = $this->mockContaoFramework();
+        $matcher = $this->exactly(3);
 
         $connection = $this->createMock(Connection::class);
-        $matcher = $this->exactly(3);
         $connection
             ->expects($matcher)
             ->method('executeStatement')
@@ -243,9 +243,11 @@ class DefaultIndexerTest extends TestCase
                     if (1 === $matcher->numberOfInvocations()) {
                         $this->assertSame('TRUNCATE TABLE tl_search', $parameters[0]);
                     }
+
                     if (2 === $matcher->numberOfInvocations()) {
                         $this->assertSame('TRUNCATE TABLE tl_search_index', $parameters[0]);
                     }
+
                     if (3 === $matcher->numberOfInvocations()) {
                         $this->assertSame('TRUNCATE TABLE tl_search_term', $parameters[0]);
                     }

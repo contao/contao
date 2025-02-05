@@ -50,8 +50,9 @@ class FaqInsertTagTest extends ContaoTestCase
             FaqModel::class => $this->mockConfiguredAdapter(['findByIdOrAlias' => $faqModel]),
         ];
 
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $matcher = $this->exactly(10);
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
             ->expects($matcher)
             ->method('generate')
@@ -64,6 +65,7 @@ class FaqInsertTagTest extends ContaoTestCase
 
                         return 'faq/what-does-foobar-mean.html';
                     }
+
                     if (2 === $matcher->numberOfInvocations()) {
                         $this->assertSame($faqModel, $parameters[0]);
                         $this->assertSame([], $parameters[1]);
@@ -71,6 +73,7 @@ class FaqInsertTagTest extends ContaoTestCase
 
                         return 'faq/what-does-foobar-mean.html';
                     }
+
                     if (3 === $matcher->numberOfInvocations()) {
                         $this->assertSame($faqModel, $parameters[0]);
                         $this->assertSame([], $parameters[1]);
@@ -78,6 +81,7 @@ class FaqInsertTagTest extends ContaoTestCase
 
                         return 'faq/what-does-foobar-mean.html';
                     }
+
                     if (4 === $matcher->numberOfInvocations()) {
                         $this->assertSame($faqModel, $parameters[0]);
                         $this->assertSame([], $parameters[1]);
@@ -85,6 +89,7 @@ class FaqInsertTagTest extends ContaoTestCase
 
                         return 'faq/what-does-foobar-mean.html';
                     }
+
                     if (5 === $matcher->numberOfInvocations()) {
                         $this->assertSame($faqModel, $parameters[0]);
                         $this->assertSame([], $parameters[1]);
@@ -92,6 +97,7 @@ class FaqInsertTagTest extends ContaoTestCase
 
                         return 'http://domain.tld/faq/what-does-foobar-mean.html';
                     }
+
                     if (6 === $matcher->numberOfInvocations()) {
                         $this->assertSame($faqModel, $parameters[0]);
                         $this->assertSame([], $parameters[1]);
@@ -99,6 +105,7 @@ class FaqInsertTagTest extends ContaoTestCase
 
                         return 'http://domain.tld/faq/what-does-foobar-mean.html';
                     }
+
                     if (7 === $matcher->numberOfInvocations()) {
                         $this->assertSame($faqModel, $parameters[0]);
                         $this->assertSame([], $parameters[1]);
@@ -106,6 +113,7 @@ class FaqInsertTagTest extends ContaoTestCase
 
                         return 'faq/what-does-foobar-mean.html';
                     }
+
                     if (8 === $matcher->numberOfInvocations()) {
                         $this->assertSame($faqModel, $parameters[0]);
                         $this->assertSame([], $parameters[1]);
@@ -113,6 +121,7 @@ class FaqInsertTagTest extends ContaoTestCase
 
                         return 'http://domain.tld/faq/what-does-foobar-mean.html';
                     }
+
                     if (9 === $matcher->numberOfInvocations()) {
                         $this->assertSame($faqModel, $parameters[0]);
                         $this->assertSame([], $parameters[1]);
@@ -120,6 +129,7 @@ class FaqInsertTagTest extends ContaoTestCase
 
                         return 'http://domain.tld/faq/what-does-foobar-mean.html';
                     }
+
                     if (10 === $matcher->numberOfInvocations()) {
                         $this->assertSame($faqModel, $parameters[0]);
                         $this->assertSame([], $parameters[1]);

@@ -41,7 +41,6 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         ;
 
         $session = $this->mockSession();
-
         $user = (new \ReflectionClass(FrontendUser::class))->newInstanceWithoutConstructor();
 
         $userProvider = $this->createMock(UserProviderInterface::class);
@@ -110,7 +109,6 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
         $this->assertTrue($authenticator->authenticateFrontendUser('foobar', $showUnpublished));
         $this->assertTrue($session->has(FrontendPreviewAuthenticator::SESSION_NAME));
-
         $this->assertSame($showUnpublished, $session->get(FrontendPreviewAuthenticator::SESSION_NAME)['showUnpublished']);
     }
 
@@ -210,6 +208,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->method('isStarted')
             ->willReturn(true)
         ;
+
         $matcher = $this->atMost(2);
 
         $session
@@ -228,6 +227,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
                 },
             )
         ;
+
         $matcher = $this->exactly(2);
 
         $session
@@ -272,6 +272,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
             ->method('isStarted')
             ->willReturn(true)
         ;
+
         $matcher = $this->exactly(2);
 
         $session

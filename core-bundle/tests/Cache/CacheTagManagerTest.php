@@ -218,6 +218,7 @@ class CacheTagManagerTest extends DoctrineTestCase
     {
         $responseTagger = $this->createMock(ResponseTagger::class);
         $matcher = $this->exactly(5);
+
         $expected = [
             [['contao.db.tl_blog_post']],
             [['contao.db.tl_blog_post.1']],
@@ -251,6 +252,7 @@ class CacheTagManagerTest extends DoctrineTestCase
     {
         $cacheTagInvalidator = $this->createMock(CacheInvalidator::class);
         $matcher = $this->exactly(5);
+
         $expected = [
             [['contao.db.tl_blog_post']],
             [['contao.db.tl_blog_post.1']],

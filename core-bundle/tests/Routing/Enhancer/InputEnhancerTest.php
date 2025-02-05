@@ -74,8 +74,9 @@ class InputEnhancerTest extends TestCase
     #[DataProvider('getParameters')]
     public function testAddsParameters(string $parameters, array ...$setters): void
     {
-        $input = $this->mockAdapter(['setGet', 'setUnusedRouteParameters']);
         $matcher = $this->exactly(\count($setters));
+
+        $input = $this->mockAdapter(['setGet', 'setUnusedRouteParameters']);
         $input
             ->expects($matcher)
             ->method('setGet')

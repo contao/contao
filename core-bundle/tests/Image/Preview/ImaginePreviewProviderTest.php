@@ -69,6 +69,7 @@ class ImaginePreviewProviderTest extends TestCase
         ;
 
         $matcher = $this->exactly(2);
+
         $image
             ->expects($matcher)
             ->method('save')

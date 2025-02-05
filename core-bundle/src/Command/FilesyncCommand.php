@@ -33,8 +33,7 @@ class FilesyncCommand extends Command
 {
     public function __construct(
         private readonly DbafsManager $dbafsManager,
-        private readonly ClockInterface $clock = new NativeClock(
-        ),
+        private readonly ClockInterface $clock = new NativeClock(),
     ) {
         parent::__construct();
     }

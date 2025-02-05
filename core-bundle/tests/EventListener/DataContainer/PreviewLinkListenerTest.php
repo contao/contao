@@ -31,11 +31,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PreviewLinkListenerTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
-
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA']);
@@ -125,6 +120,7 @@ class PreviewLinkListenerTest extends TestCase
 
         $input = $this->mockInputAdapter(['url' => $url, 'showUnpublished' => $showUnpublished]);
         $clock = new MockClock();
+
         $listener = new PreviewLinkListener(
             $this->mockContaoFramework([Input::class => $input, Message::class => $this->mockAdapter(['addInfo'])]),
             $this->createMock(Connection::class),

@@ -245,8 +245,9 @@ class TranslatorTest extends TestCase
             )
         ;
 
-        $adapter = $this->mockAdapter(['loadLanguageFile']);
         $matcher = $this->exactly(2);
+
+        $adapter = $this->mockAdapter(['loadLanguageFile']);
         $adapter
             ->expects($matcher)
             ->method('loadLanguageFile')

@@ -71,9 +71,9 @@ class PageTypeAccessVoterTest extends TestCase
     public function testDecidesAccessOnPageTypeInAction(CreateAction|DeleteAction|ReadAction|UpdateAction $subject, array $types, int $expected): void
     {
         $token = $this->createMock(TokenInterface::class);
+        $matcher = $this->exactly(\count($types));
 
         $decisionManager = $this->createMock(AccessDecisionManagerInterface::class);
-        $matcher = $this->exactly(\count($types));
         $decisionManager
             ->expects($matcher)
             ->method('decide')
