@@ -35,21 +35,19 @@ class DomainFilterTest extends TestCase
             ->method('all')
             ->willReturn($routes)
         ;
-        $matcher = $this->exactly(2);
 
+        $expected = ['nohost', 'barfoo'];
         $collection
-            ->expects($matcher)
+            ->expects($this->exactly(2))
             ->method('remove')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher): void {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('nohost', $parameters[0]);
-                    }
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('barfoo', $parameters[0]);
-                    }
+            ->with($this->callback(
+                static function (string $name) use (&$expected) {
+                    $pos = array_search($name, $expected, true);
+                    unset($expected[$pos]);
+
+                    return false !== $pos;
                 },
-            )
+            ))
         ;
 
         $request = Request::create('/');
