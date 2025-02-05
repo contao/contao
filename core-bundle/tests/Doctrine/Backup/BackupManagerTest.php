@@ -25,7 +25,9 @@ use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\TestCase\ContaoTestCase;
+use Doctrine\DBAL\Cache\ArrayResult;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Result;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -236,8 +238,10 @@ class BackupManagerTest extends ContaoTestCase
             ->expects($matcher)
             ->method('executeQuery')
             ->willReturnCallback(
-                function (...$parameters) use ($matcher, $expectedQueries): void {
-                    $this->assertSame($expectedQueries[$matcher->numberOfInvocations() - 1], $parameters);
+                function (string $query) use ($matcher, $expectedQueries, $connection): Result {
+                    $this->assertSame($expectedQueries[$matcher->numberOfInvocations() - 1], $query);
+
+                    return new Result(new ArrayResult([]), $connection);
                 },
             )
         ;
@@ -324,9 +328,9 @@ class BackupManagerTest extends ContaoTestCase
                 BACKUP,
             new RestoreConfig($backup),
             [
-                ['SET NAMES utf8;'],
-                ['SET FOREIGN_KEY_CHECKS = 0;'],
-                ['DROP TABLE IF EXISTS `tl_article`;'],
+                'SET NAMES utf8;',
+                'SET FOREIGN_KEY_CHECKS = 0;',
+                'DROP TABLE IF EXISTS `tl_article`;',
             ],
         ];
 
@@ -334,9 +338,9 @@ class BackupManagerTest extends ContaoTestCase
             hex2bin('1f8b08000000000000034d8ccd8ac2301845f77d8abb5486485310a56516b67ed6a26da549615cd5d8c9ccc8482a31157c7b7f367a76f770398c21d5465be5f437f657b83f8da4334e75284fda4074bd6def2a178855fbdf9f902ba37eb5c5e0a2edf9d09910173e1c79ec3da41c023fe08c73e607924f423e0ec7c1877fc7132451cc7212e8ddcf347aee4559519616cd8ab64db2a46425f0093ff21ed598d2ac8090559dc8ba22b863a3ac3bb447edcdab7203398bd7846c01faca8414d8bd0ebbe806943e485bdf000000'),
             new RestoreConfig($backup),
             [
-                ['SET NAMES utf8;'],
-                ['SET FOREIGN_KEY_CHECKS = 0;'],
-                ['DROP TABLE IF EXISTS `tl_article`;'],
+                'SET NAMES utf8;',
+                'SET FOREIGN_KEY_CHECKS = 0;',
+                'DROP TABLE IF EXISTS `tl_article`;',
             ],
         ];
 
@@ -351,9 +355,9 @@ class BackupManagerTest extends ContaoTestCase
                 BACKUP,
             (new RestoreConfig($backup))->withIgnoreOriginCheck(true),
             [
-                ['SET NAMES utf8;'],
-                ['SET FOREIGN_KEY_CHECKS = 0;'],
-                ['DROP TABLE IF EXISTS `tl_article`;'],
+                'SET NAMES utf8;',
+                'SET FOREIGN_KEY_CHECKS = 0;',
+                'DROP TABLE IF EXISTS `tl_article`;',
             ],
         ];
     }
@@ -378,15 +382,15 @@ class BackupManagerTest extends ContaoTestCase
 
     private function mockConnection(): Connection&MockObject
     {
-        return $this
-            ->getMockBuilder(Connection::class)
-            ->disableOriginalConstructor()
-            ->disableOriginalClone()
-            ->disableArgumentCloning()
-            ->disallowMockingUnknownTypes()
-            ->setMethodsExcept(['transactional'])
-            ->getMock()
-        ;
+        $connection = $this->createMock(Connection::class);
+
+        $connection
+            ->method('transactional')
+            ->willReturnCallback(function (\Closure $closure) {
+                return $closure();
+            });
+
+        return $connection;
     }
 
     private function getBackupManager(Connection|null $connection = null, DumperInterface|null $dumper = null, RetentionPolicyInterface|null $retentionPolicy = null): BackupManager
