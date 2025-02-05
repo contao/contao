@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd" colors="true" defaultTestSuite="unit" bootstrap="vendor/autoload.php" beStrictAboutChangesToGlobalState="true">
+<phpunit
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
+        colors="true"
+        defaultTestSuite="unit"
+        bootstrap="vendor/autoload.php"
+        beStrictAboutChangesToGlobalState="true"
+        displayDetailsOnTestsThatTriggerDeprecations="true"
+        displayDetailsOnTestsThatTriggerErrors="true"
+        displayDetailsOnTestsThatTriggerNotices="true"
+        displayDetailsOnTestsThatTriggerWarnings="true"
+        displayDetailsOnPhpunitDeprecations="true"
+>
   <coverage>
     <include>
       <directory>./calendar-bundle/src</directory>
