@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Framework;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Contao\DcaLoader;
 use Contao\Environment;
 use Contao\Input;
 use Contao\InsertTags;
@@ -62,6 +63,7 @@ class ContaoFramework implements ResetInterface
         }
 
         Controller::resetControllerCache();
+        DcaLoader::reset();
         Environment::reset();
         Input::setUnusedRouteParameters([]);
         InsertTags::reset();
