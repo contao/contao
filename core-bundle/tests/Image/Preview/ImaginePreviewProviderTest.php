@@ -67,59 +67,27 @@ class ImaginePreviewProviderTest extends TestCase
             ->with(new Box(512, 512))
             ->willReturnSelf()
         ;
-        $matcher = $this->exactly(2);
 
+        $matcher = $this->exactly(2);
         $image
             ->expects($matcher)
             ->method('save')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher, $targetPath, $image) {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame("{$targetPath}1.png", $parameters[0]);
-                    }
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame("{$targetPath}2.png", $parameters[0]);
-                    }
-
-                    return $image;
-                },
-            )
+            ->with($this->callback(
+                static fn (string $name) => $name === $targetPath.$matcher->numberOfInvocations().'.png',
+            ))
+            ->willReturnSelf()
         ;
-        $matcher = $this->exactly(2);
 
         $layers
-            ->expects($matcher)
+            ->expects($this->exactly(2))
             ->method('has')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher) {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame(0, $parameters[0]);
-                    }
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame(1, $parameters[0]);
-                    }
-
-                    return true;
-                },
-            )
+            ->willReturnMap([[0, true], [1, true]])
         ;
-        $matcher = $this->exactly(2);
 
         $layers
-            ->expects($matcher)
+            ->expects($this->exactly(2))
             ->method('get')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher, $image) {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame(0, $parameters[0]);
-                    }
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame(1, $parameters[0]);
-                    }
-
-                    return $image;
-                },
-            )
+            ->willReturnMap([[0, $image], [1, $image]])
         ;
 
         $imagine = $this->createMock(ImagineInterface::class);
@@ -136,6 +104,11 @@ class ImaginePreviewProviderTest extends TestCase
             ["{$targetPath}1.png", "{$targetPath}2.png"],
             $provider->generatePreviews($sourcePath, 512, $targetPathCallback, 2),
         );
+    }
+
+    public function testThrowsExceptionWithoutImages(): void
+    {
+        $sourcePath = Path::join($this->getTempDir(), 'foo/bar.txt');
 
         $imagine = $this->createMock(ImagineInterface::class);
         $imagine
@@ -149,7 +122,7 @@ class ImaginePreviewProviderTest extends TestCase
 
         $this->expectException(UnableToGeneratePreviewException::class);
 
-        $provider->generatePreviews($sourcePath, 512, $targetPathCallback);
+        $provider->generatePreviews($sourcePath, 512, static fn () => null);
     }
 
     private function createProvider(ImagineInterface|null $imagine = null): ImaginePreviewProvider
