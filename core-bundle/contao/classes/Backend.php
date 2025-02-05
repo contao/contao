@@ -282,7 +282,6 @@ abstract class Backend extends Controller
 
 			// Load the language and DCA file
 			System::loadLanguageFile($strTable);
-			DcaLoader::switchRequest(null);
 			$this->loadDataContainer($strTable);
 
 			// Fabricate a new data container object

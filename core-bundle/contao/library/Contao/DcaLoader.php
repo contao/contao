@@ -122,6 +122,8 @@ class DcaLoader extends Controller
 	 */
 	public function load()
 	{
+		self::switchToCurrentRequest();
+
 		// Return if the data has been loaded already
 		if (isset(static::$arrLoaded['dcaFiles'][$this->strTable]))
 		{
