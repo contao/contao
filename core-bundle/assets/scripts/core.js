@@ -833,20 +833,25 @@ window.Backend =
 
 		list.addEvent('complete', function(el) {
 			if (!list.active) return;
-			var id, pid, req, href;
+			var id, pid, url = new URL(window.location.href);
+
+			url.searchParams.set('rt', Contao.request_token);
+			url.searchParams.set('act', 'cut');
 
 			if (el.getPrevious('li')) {
 				id = el.get('id').replace(/li_/, '');
 				pid = el.getPrevious('li').get('id').replace(/li_/, '');
-				req = window.location.search.replace(/id=[0-9]*/, 'id=' + id) + '&act=cut&mode=1&pid=' + pid;
-				href = window.location.href.replace(/\?.*$/, '');
-				new Request.Contao({'url':href + req, 'followRedirects':false}).get();
+				url.searchParams.set('id', id);
+				url.searchParams.set('pid', pid);
+				url.searchParams.set('mode', 1);
+				new Request.Contao({'url':url.toString(), 'followRedirects':false}).get();
 			} else if (el.getParent('ul')) {
 				id = el.get('id').replace(/li_/, '');
 				pid = el.getParent('ul').get('id').replace(/ul_/, '');
-				req = window.location.search.replace(/id=[0-9]*/, 'id=' + id) + '&act=cut&mode=2&pid=' + pid;
-				href = window.location.href.replace(/\?.*$/, '');
-				new Request.Contao({'url':href + req, 'followRedirects':false}).get();
+				url.searchParams.set('id', id);
+				url.searchParams.set('pid', pid);
+				url.searchParams.set('mode', 2);
+				new Request.Contao({'url':url.toString(), 'followRedirects':false}).get();
 			}
 		});
 	},
