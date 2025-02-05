@@ -383,12 +383,10 @@ class BackupManagerTest extends ContaoTestCase
     private function mockConnection(): Connection&MockObject
     {
         $connection = $this->createMock(Connection::class);
-
         $connection
             ->method('transactional')
-            ->willReturnCallback(function (\Closure $closure) {
-                return $closure();
-            });
+            ->willReturnCallback(static fn (\Closure $closure) => $closure())
+        ;
 
         return $connection;
     }
