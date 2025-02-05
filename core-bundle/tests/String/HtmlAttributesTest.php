@@ -732,11 +732,10 @@ class HtmlAttributesTest extends TestCase
 
     public function testIteratorStringKeys(): void
     {
-        $attributes = new HtmlAttributes('0=foo 1=bar');
+        $attributes = new HtmlAttributes('0=foo');
 
         foreach ($attributes as $key => $value) {
-            $this->assertIsString($key);
-            $this->assertIsString($value);
+            $this->assertSame('0', $key);
         }
     }
 

@@ -81,7 +81,10 @@ class FragmentTemplateTest extends TestCase
                     return null;
                 }
 
-                return match ($name = $type->getName()) {
+                /** @var 'bool'|'string'|'array'|class-string<object> $name */
+                $name = $type->getName();
+
+                return match ($name) {
                     'bool' => false,
                     'string' => '',
                     'array' => [],
