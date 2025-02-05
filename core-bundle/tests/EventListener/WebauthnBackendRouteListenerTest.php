@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
-use Contao\CoreBundle\EventListener\WebauthnBackendRouteListener;
+use Contao\CoreBundle\EventListener\WebauthnRouteListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -39,7 +39,7 @@ class WebauthnBackendRouteListenerTest extends TestCase
             'webauthn.controller.security.contao_backend.request.result',
         ];
 
-        (new WebauthnBackendRouteListener($routes))($event);
+        (new WebauthnRouteListener($routes))($event);
 
         $this->assertSame($resultingScope, $request->attributes->get('_scope'));
     }

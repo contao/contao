@@ -744,6 +744,9 @@ services:
         class: Contao\CoreBundle\Repository\WebauthnUserEntityRepository
         arguments:
             - '@contao.security.backend_user_provider'
+            - '@contao.security.frontend_user_provider'
+            - '@contao.routing.scope_matcher'
+            - '@request_stack'
 
     contao.resource_finder:
         class: Contao\CoreBundle\Config\ResourceFinder
@@ -1378,6 +1381,12 @@ services:
         class: Contao\CoreBundle\Twig\Runtime\UrlRuntime
         arguments:
             - '@request_stack'
+
+    contao.webauthn.user_entity_guesser:
+        class: Webauthn\Bundle\Security\Guesser\CurrentUserEntityGuesser
+        arguments:
+            - '@security.token_storage'
+            - '@contao.repository.webauthn_user_entity'
 
     # Autowiring aliases
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'

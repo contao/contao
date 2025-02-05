@@ -46,9 +46,7 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
             ->select('c')
             ->from($this->class, 'c')
             ->where('c.userHandle = :user_handle')
-            ->andWhere('c.userType = :user_type')
-            ->setParameter(':user_handle', $user->id)
-            ->setParameter(':user_type', $this->getUserType($user))
+            ->setParameter(':user_handle', $this->getUserHandle($user))
             ->getQuery()
             ->execute()
         ;
@@ -67,7 +65,6 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
                 $publicKeyCredentialSource->credentialPublicKey,
                 $publicKeyCredentialSource->userHandle,
                 $publicKeyCredentialSource->counter,
-                $this->getUserType($this->tokenStorage->getToken()->getUser()),
             );
         }
 
@@ -115,9 +112,7 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
             ->select('c')
             ->from($this->class, 'c')
             ->where('c.userHandle = :user_handle')
-            ->andWhere('c.userType = :user_type')
-            ->setParameter(':user_handle', $user->id)
-            ->setParameter(':user_type', $this->getUserType($user))
+            ->setParameter(':user_handle', $this->getUserHandle($user))
             ->orderBy('c.createdAt', 'desc')
             ->setMaxResults(1)
             ->getQuery()
@@ -125,11 +120,11 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
         ;
     }
 
-    private function getUserType(UserInterface $user): string
+    private function getUserHandle(UserInterface $user): string
     {
         return match ($user::class) {
-            FrontendUser::class => 'frontend',
-            BackendUser::class => 'backend',
+            FrontendUser::class => 'tl_member.'.$user->id,
+            BackendUser::class => 'tl_user.'.$user->id,
             default => throw new \RuntimeException('User instance not supported.'),
         };
     }

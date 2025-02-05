@@ -87,6 +87,7 @@ class ModuleTwoFactor extends BackendModule
 
 		/** @var WebauthnCredentialRepository $credentialRepo */
 		$credentialRepo = $container->get('contao.repository.webauthn_credential');
+		$userHandle = 'tl_user.' . $user->id;
 
 		if (Input::post('FORM_SUBMIT') === 'tl_passkeys_credentials_actions')
 		{
@@ -94,7 +95,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($deleteCredentialId))
 				{
-					if ((int) $credential->userHandle !== $user->id)
+					if ($credential->userHandle !== $userHandle)
 					{
 						throw new AccessDeniedHttpException('Cannot delete credential ID ' . $deleteCredentialId);
 					}
@@ -106,7 +107,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($editCredentialId))
 				{
-					if ((int) $credential->userHandle !== $user->id)
+					if ($credential->userHandle !== $userHandle)
 					{
 						throw new AccessDeniedHttpException('Cannot edit credential ID ' . $editCredentialId);
 					}
@@ -123,7 +124,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($saveCredentialId))
 				{
-					if ((int) $credential->userHandle !== $user->id)
+					if ($credential->userHandle !== $userHandle)
 					{
 						throw new AccessDeniedHttpException('Cannot save credential ID ' . $saveCredentialId);
 					}

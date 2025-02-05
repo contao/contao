@@ -1,0 +1,125 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+{% trans_default_domain "contao_default" %}
+
+{% block content %}
+    {% block passkey_list %}
+        {% if credentials|default %}
+            <table>
+                <thead>
+                    <tr>
+                        <th class="name">{{ 'MSC.passkeysName'|trans }}</th>
+                        <th class="created">{{ 'MSC.passkeysCreatedAt'|trans }}</th>
+                        <th class="actions"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for credential in credentials %}
+                        <tr>
+                            <td class="name">
+                                {% if edit_passkey_id|default == credential.id %}
+                                    <form method="post" data-contao--passkeys-target="form" id="form-edit-passkey-{{ data.id }}-{{ credential.id }}">
+                                        <input type="hidden" name="FORM_SUBMIT" value="passkeys_credentials_edit_{{ data.id }}">
+                                        <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+                                        <input type="hidden" name="credential_id" value="{{ credential.id }}">
+                                        <input type="text" name="passkey_name" value="{{ credential.name }}" placeholder="{{ 'MSC.passkeyNameInput'|trans }}">
+                                    </form>
+                                {% else %}
+                                    {{ credential.name|default(credential.id) }}
+                                {% endif %}
+                            </td>
+                            <td class="created">{{ credential.createdAt|date('j. F Y, H:i') }}</td>
+                            <td class="actions">
+                                <form method="post">
+                                    <input type="hidden" name="FORM_SUBMIT" value="passkeys_credentials_actions_{{ data.id }}">
+                                    <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+                                    {% if edit_passkey_id|default == credential.id -%}
+                                        <button type="submit" name="save_passkey" form="form-edit-passkey-{{ data.id }}-{{ credential.id }}" value="{{ credential.id }}">{{ 'MSC.save'|trans }}</button>
+                                    {%- else -%}
+                                        <button type="submit" name="edit_passkey" value="{{ credential.id }}">{{ 'MSC.edit'|trans }}</button>
+                                    {%- endif %}
+                                    <button type="submit" name="delete_passkey" value="{{ credential.id }}" onclick="if(!confirm('{{ 'MSC.deleteConfirm'|trans([credential.name|default(credential.id)]) }}'))return false">{{ 'MSC.delete'|trans }}</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    {% endblock %}
+
+    <button type="button" class="create">{{ 'MSC.addPasskey'|trans }}</button>
+    <p class="error"></p>
+{% endblock %}
+
+{% block script %}
+    {% if not as_editor_view %}
+        {% add "@simplewebauthn/browser" to body %}
+            <script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.umd.min.js"></script>
+        {% endadd %}
+
+        {%  add "passkey_js" to body %}
+            {% set script_attributes = attrs()
+                .setIfExists('nonce', csp_nonce('script-src'))
+                .mergeWith(script_attributes|default)
+            %}
+            <script{{ script_attributes }}>
+                (function () {
+                    const { startRegistration } = SimpleWebAuthnBrowser;
+
+                    document.querySelectorAll('.content-{{ type|replace({'_': '-'}) }}').forEach((element) => {
+                        const button = element.querySelector('.create')
+                        const elemError = document.querySelector('.error');
+
+                        button.addEventListener('click', async () => {
+                            elemError.innerHTML = '';
+
+                            const resp = await fetch('{{ path('webauthn.controller.creation.request.contao_frontend_add_authenticator') }}', {
+                                method: 'POST',
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify({}),
+                            });
+
+                            const optionsJSON = await resp.json();
+
+                            if ('error' === optionsJSON.status) {
+                                elemError.innerText = optionsJSON.errorMessage;
+
+                                return;
+                            }
+
+                            let attResp;
+
+                            try {
+                                attResp = await startRegistration({ optionsJSON });
+                            } catch (error) {
+                                if (error.name === 'InvalidStateError') {
+                                    elemError.innerText = 'Error: Authenticator was probably already registered by user';
+                                } else {
+                                    elemError.innerText = error;
+                                }
+
+                                throw error;
+                            }
+
+                            const verificationResp = await fetch('{{ path('webauthn.controller.creation.response.contao_frontend_add_authenticator') }}', {
+                                method: 'POST',
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify(attResp),
+                            });
+
+                            const verificationJSON = await verificationResp.json();
+
+                            if ('error' === optionsJSON.status) {
+                                elemError.innerText = optionsJSON.errorMessage;
+
+                                return;
+                            }
+
+                            window.location = '{{ success_redirect }}';
+                        });
+                    });
+                })();
+            </script>
+        {% endadd %}
+    {% endif %}
+{% endblock %}

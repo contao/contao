@@ -106,7 +106,23 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\ListController: ~
 
+    Contao\CoreBundle\Controller\ContentElement\ManagePasskeysController:
+        arguments:
+            - '@contao.routing.scope_matcher'
+            - '@security.helper'
+            - '@contao.repository.webauthn_credential'
+            - '@uri_signer'
+            - '@contao.routing.content_url_generator'
+        tags:
+            - controller.service_arguments
+
     Contao\CoreBundle\Controller\ContentElement\MarkdownController: ~
+
+    Contao\CoreBundle\Controller\ContentElement\PasskeyLoginController:
+        arguments:
+            - '@contao.routing.content_url_generator'
+        tags:
+            - controller.service_arguments
 
     Contao\CoreBundle\Controller\ContentElement\PlayerController:
         arguments:

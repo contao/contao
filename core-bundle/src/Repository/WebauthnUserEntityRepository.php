@@ -12,25 +12,51 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Repository;
 
+use Contao\BackendUser;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
+use Contao\FrontendUser;
 use Contao\User;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Webauthn\Bundle\Repository\PublicKeyCredentialUserEntityRepositoryInterface;
 use Webauthn\PublicKeyCredentialUserEntity;
 
 final class WebauthnUserEntityRepository implements PublicKeyCredentialUserEntityRepositoryInterface
 {
-    public function __construct(private readonly ContaoUserProvider $userProvider)
-    {
+    public function __construct(
+        private readonly ContaoUserProvider $backendUserProvider,
+        private readonly ContaoUserProvider $frontendUserProvider,
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly RequestStack $requestStack,
+    ) {
     }
 
     public function findOneByUsername(string $username): PublicKeyCredentialUserEntity|null
     {
-        return $this->getUserEntity($this->userProvider->loadUserByIdentifier($username));
+        $request = $this->requestStack->getCurrentRequest();
+
+        if ($this->scopeMatcher->isBackendRequest($request)) {
+            return $this->getUserEntity($this->backendUserProvider->loadUserByIdentifier($username));
+        }
+
+        if ($this->scopeMatcher->isFrontendRequest($request)) {
+            return $this->getUserEntity($this->frontendUserProvider->loadUserByIdentifier($username));
+        }
+
+        return null;
     }
 
     public function findOneByUserHandle(string $userHandle): PublicKeyCredentialUserEntity|null
     {
-        return $this->getUserEntity($this->userProvider->loadUserById((int) $userHandle));
+        if (str_starts_with($userHandle, 'tl_user.')) {
+            return $this->getUserEntity($this->backendUserProvider->loadUserById((int) str_replace('tl_user.', '', $userHandle)));
+        }
+
+        if (str_starts_with($userHandle, 'tl_member.')) {
+            return $this->getUserEntity($this->frontendUserProvider->loadUserById((int) str_replace('tl_member.', '', $userHandle)));
+        }
+
+        return null;
     }
 
     private function getUserEntity(User|null $user): PublicKeyCredentialUserEntity|null
@@ -39,6 +65,16 @@ final class WebauthnUserEntityRepository implements PublicKeyCredentialUserEntit
             return null;
         }
 
-        return new PublicKeyCredentialUserEntity($user->username, (string) $user->id, $user->name);
+        if ($user instanceof FrontendUser) {
+            $displayName = implode(' ', array_filter([$user->firstname, $user->lastname]));
+            $userHandle = 'tl_member.'.$user->id;
+        } elseif ($user instanceof BackendUser) {
+            $displayName = $user->name;
+            $userHandle = 'tl_user.'.$user->id;
+        } else {
+            throw new \RuntimeException('User instance not supported.');
+        }
+
+        return new PublicKeyCredentialUserEntity($user->username, $userHandle, $displayName);
     }
 }

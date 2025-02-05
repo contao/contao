@@ -1,0 +1,76 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+{% trans_default_domain "contao_default" %}
+
+{% block content %}
+    <button type="button" class="login">{{ 'MSC.passkeyLogin'|trans }}</button>
+    <p class="error"></p>
+{% endblock %}
+
+{% block script %}
+    {% if not as_editor_view %}
+        {% add "@simplewebauthn/browser" to body %}
+            <script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.umd.min.js"></script>
+        {% endadd %}
+
+        {%  add "passkey_js" to body %}
+            {% set script_attributes = attrs()
+                .setIfExists('nonce', csp_nonce('script-src'))
+                .mergeWith(script_attributes|default)
+            %}
+            <script{{ script_attributes }}>
+                (function () {
+                    const { startAuthentication } = SimpleWebAuthnBrowser;
+
+                    document.querySelectorAll('.content-{{ type|replace({'_': '-'}) }}').forEach((element) => {
+                        const button = element.querySelector('.login')
+                        const elemError = document.querySelector('.error');
+
+                        button.addEventListener('click', async () => {
+                            elemError.innerHTML = '';
+
+                            const resp = await fetch('{{ path('webauthn.controller.security.contao_frontend.request.options') }}', {
+                                method: 'POST',
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify({}),
+                            });
+
+                            const optionsJSON = await resp.json();
+
+                            if ('error' === optionsJSON.status) {
+                                elemError.innerText = optionsJSON.errorMessage;
+
+                                return;
+                            }
+
+                            let attResp;
+
+                            try {
+                                attResp = await startAuthentication({ optionsJSON });
+                            } catch (error) {
+                                elemError.innerText = error;
+
+                                throw error;
+                            }
+
+                            const verificationResp = await fetch('{{ path('webauthn.controller.security.contao_frontend.request.result') }}', {
+                                method: 'POST',
+                                headers: {'Content-Type': 'application/json'},
+                                body: JSON.stringify(attResp),
+                            });
+
+                            const verificationJSON = await verificationResp.json();
+
+                            if ('error' === optionsJSON.status) {
+                                elemError.innerText = optionsJSON.errorMessage;
+
+                                return;
+                            }
+
+                            window.location = '{{ success_redirect }}';
+                        });
+                    });
+                })();
+            </script>
+        {% endadd %}
+    {% endif %}
+{% endblock %}

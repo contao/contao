@@ -16,16 +16,18 @@ use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
- * Adds the "backend" scope to the back end routes of the WebauthnBundle.
+ * Adds the given scope to the given routes of the WebauthnBundle.
  */
 #[AsEventListener(priority: 10)]
-class WebauthnBackendRouteListener
+class WebauthnRouteListener
 {
     /**
      * @param list<string> $routes
      */
-    public function __construct(private readonly array $routes)
-    {
+    public function __construct(
+        private readonly array $routes,
+        private readonly string $scope,
+    ) {
     }
 
     public function __invoke(RequestEvent $event): void
@@ -34,7 +36,7 @@ class WebauthnBackendRouteListener
         $route = $request->attributes->get('_route');
 
         if (\in_array($route, $this->routes, true)) {
-            $request->attributes->set('_scope', 'backend');
+            $request->attributes->set('_scope', $this->scope);
         }
     }
 }
