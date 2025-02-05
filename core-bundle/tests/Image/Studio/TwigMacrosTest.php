@@ -359,13 +359,13 @@ class TwigMacrosTest extends TestCase
     }
 
     #[DataProvider('provideFigureData')]
-    public function testFigureMacro(Metadata|null $metadata, array $linkAttributes, LightboxResult|null $lightbox, string $expected): void
+    public function testFigureMacro(Metadata|null $metadata, array $linkAttributes, \Closure|null $lightboxDelegate, string $expected): void
     {
         $figure = new Figure(
             $this->createMock(ImageResult::class),
             $metadata,
             $linkAttributes,
-            $lightbox,
+            null !== $lightboxDelegate ? $lightboxDelegate($this) : null,
         );
 
         $html = $this->renderMacro('figure(figure)', ['figure' => $figure]);
@@ -380,7 +380,7 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($expected, trim($html));
     }
 
-    public function provideFigureData(): iterable
+    public static function provideFigureData(): iterable
     {
         yield 'minimal' => [
             null,
@@ -399,28 +399,32 @@ class TwigMacrosTest extends TestCase
             '<figure><a href="foo.html" data-link="bar"><picture></a></figure>',
         ];
 
-        $lightbox = $this->createMock(LightboxResult::class);
-        $lightbox
-            ->method('getLinkHref')
-            ->willReturn('lightbox/resource')
-        ;
+        $lightboxDelegate = static function (TestCase $testCase) {
+            $lightbox = $testCase->createMock(LightboxResult::class);
+            $lightbox
+                ->method('getLinkHref')
+                ->willReturn('lightbox/resource')
+            ;
 
-        $lightbox
-            ->method('getGroupIdentifier')
-            ->willReturn('gal1')
-        ;
+            $lightbox
+                ->method('getGroupIdentifier')
+                ->willReturn('gal1')
+            ;
+
+            return $lightbox;
+        };
 
         yield 'with lightbox link' => [
             null,
             [],
-            $lightbox,
+            $lightboxDelegate,
             '<figure><a href="lightbox/resource" data-lightbox="gal1"><picture></a></figure>',
         ];
 
         yield 'with lightbox link and title' => [
             new Metadata([Metadata::VALUE_TITLE => 'foo title']),
             [],
-            $lightbox,
+            $lightboxDelegate,
             '<figure><a href="lightbox/resource" title="foo title" data-lightbox="gal1"><picture></a></figure>',
         ];
 
