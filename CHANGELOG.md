@@ -2,6 +2,30 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.5.0-RC3] (2025-02-05)
+
+**Fixed issues:**
+
+- [#8028] Allow the button element within the operation menu links ([zoglo])
+- [#8021] Use a prefix for the passkey user handle ([fritzmg])
+- [#8018] Remove `<turbo-frame>` in the DC drivers ([fritzmg])
+- [#8019] Close the search bar on the input `blur` event ([zoglo])
+- [#8015] Backport the `MSC.edit` translation ([fritzmg])
+- [#8003] Optimize the operations menu ([aschempp])
+- [#7967] Show the "select all" button even if the picker is hidden ([leofeyer])
+- [#7996] Make the scroll offset controller fully compatible with Turbo ([fritzmg])
+- [#7979] Fix some context menu quirks ([m-vo])
+- [#7966] Fix adding new articles after an existing article ([aschempp])
+- [#7974] Hide the context menu when empty ([aschempp])
+- [#7980] Fix a Template Studio CSS Safari bug ([ausi])
+- [#7970] Correctly add the Template Studio menu item ([leofeyer])
+- [#7976] Remove the MooTools events before dispatching the `domready` event ([m-vo])
+- [#7953] Fix splitting grouped document IDs ([Toflar])
+- [#7950] Update the language key for the confirm action ([zoglo])
+- [#7937] Correctly toggle the icons ([aschempp])
+- [#7936] Prevent operation titles from being added multiple times ([aschempp])
+- [#7935] Insert the context menu icons at the correct position ([aschempp])
+
 ## [5.5.0-RC2] (2025-01-22)
 
 **Fixed issues:**
@@ -115,6 +139,7 @@ This project adheres to [Semantic Versioning].
 - [#7582] Add PostCSS as described in Symfony Encore ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.5.0-RC3]: https://github.com/contao/contao/releases/tag/5.5.0-RC3
 [5.5.0-RC2]: https://github.com/contao/contao/releases/tag/5.5.0-RC2
 [5.5.0-RC1]: https://github.com/contao/contao/releases/tag/5.5.0-RC1
 [aschempp]: https://github.com/aschempp
@@ -223,3 +248,22 @@ This project adheres to [Semantic Versioning].
 [#7914]: https://github.com/contao/contao/pull/7914
 [#7916]: https://github.com/contao/contao/pull/7916
 [#7925]: https://github.com/contao/contao/pull/7925
+[#7935]: https://github.com/contao/contao/pull/7935
+[#7936]: https://github.com/contao/contao/pull/7936
+[#7937]: https://github.com/contao/contao/pull/7937
+[#7950]: https://github.com/contao/contao/pull/7950
+[#7953]: https://github.com/contao/contao/pull/7953
+[#7966]: https://github.com/contao/contao/pull/7966
+[#7967]: https://github.com/contao/contao/pull/7967
+[#7970]: https://github.com/contao/contao/pull/7970
+[#7974]: https://github.com/contao/contao/pull/7974
+[#7976]: https://github.com/contao/contao/pull/7976
+[#7979]: https://github.com/contao/contao/pull/7979
+[#7980]: https://github.com/contao/contao/pull/7980
+[#7996]: https://github.com/contao/contao/pull/7996
+[#8003]: https://github.com/contao/contao/pull/8003
+[#8015]: https://github.com/contao/contao/pull/8015
+[#8018]: https://github.com/contao/contao/pull/8018
+[#8019]: https://github.com/contao/contao/pull/8019
+[#8021]: https://github.com/contao/contao/pull/8021
+[#8028]: https://github.com/contao/contao/pull/8028

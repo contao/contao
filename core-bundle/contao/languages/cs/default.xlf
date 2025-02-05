@@ -405,6 +405,10 @@
         <source>Passkey could not be created.</source>
         <target>Nešlo vytvořit passkey.</target>
       </trans-unit>
+      <trans-unit id="ERR.copyUnique">
+        <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>Element s ID %d nelze sem vložit, jelikož došlo k potížím s již existujícím elementem.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Prosím sečtěte %d a %d.</target>
@@ -1780,7 +1784,7 @@
         <source>Cancel</source>
         <target>Zrušit</target>
       </trans-unit>
-      <trans-unit id="MSC.confirm">
+      <trans-unit id="MSC.confirmTitle">
           <source>Are you sure?</source>
           <target>Jste si jistá/ý? </target>
       </trans-unit>
@@ -2582,6 +2586,7 @@
       </trans-unit>
       <trans-unit id="MSC.or">
         <source>or</source>
+        <target>nebo</target>
       </trans-unit>
       <trans-unit id="MSC.published">
         <source>Published</source>
@@ -2816,6 +2821,10 @@
         <source>Disable</source>
         <target>Neaktivní</target>
       </trans-unit>
+      <trans-unit id="MSC.edit">
+        <source>Edit</source>
+        <target>Upravit</target>
+      </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
         <target>Náhled výsledků hledání Googlu</target>
@@ -2974,27 +2983,35 @@
       </trans-unit>
       <trans-unit id="MSC.searchResultsPlaceholder">
         <source>Type to start searching</source>
+        <target>Začnete hledání psaním</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsMin">
         <source>Please enter at least %s characters</source>
+        <target>Zadejte prosím alespoň %s znaků</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
         <source>Loading results...</source>
+        <target>Načítám výsledky...</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
+        <target>Náhled %s</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitEdit">
         <source>Edit %s</source>
+        <target>Upravit %s</target>
       </trans-unit>
       <trans-unit id="MSC.noResults">
         <source>No results found.</source>
+        <target>Nenalezeny žádné výsledky.</target>
       </trans-unit>
       <trans-unit id="MSC.noOptions">
         <source>No options to choose from.</source>
+        <target>Nelze vybrat žádné možnosti</target>
       </trans-unit>
       <trans-unit id="MSC.removeItem">
         <source>Remove item</source>
+        <target>Smazat element</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -3182,6 +3199,7 @@
       </trans-unit>
       <trans-unit id="DCA.operations">
         <source>Show operations for element ID %s</source>
+        <target>Zobrazit operace pro ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.children">
         <source>Edit the child elements of element ID %s</source>

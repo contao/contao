@@ -41,6 +41,10 @@
         <source>Set up the pages of your website(s)</source>
         <target>Sitelerinizin sayfalarını kurun</target>
       </trans-unit>
+      <trans-unit id="MOD.template_studio">
+        <source>Add or edit Twig templates</source>
+        <target>Twig kalıpları ekleyin ya da düzenleyin</target>
+      </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
         <target>Kalıplar</target>

@@ -405,6 +405,10 @@
         <source>Passkey could not be created.</source>
         <target>Geçiş anahtarı oluşturulamadı.</target>
       </trans-unit>
+      <trans-unit id="ERR.copyUnique">
+        <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>%d kimlikli bileşen var olan bir bileşen ile çakıştığından buraya eklenemez.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Lütfen %d ile %d sayılarını toplayın.</target>
@@ -1781,7 +1785,7 @@
         <source>Cancel</source>
         <target>İptal</target>
       </trans-unit>
-      <trans-unit id="MSC.confirm">
+      <trans-unit id="MSC.confirmTitle">
           <source>Are you sure?</source>
           <target>Emin misiniz?</target>
       </trans-unit>
@@ -2816,6 +2820,10 @@
       <trans-unit id="MSC.disable">
         <source>Disable</source>
         <target>Etkisizleştir</target>
+      </trans-unit>
+      <trans-unit id="MSC.edit">
+        <source>Edit</source>
+        <target>Düzenle</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>

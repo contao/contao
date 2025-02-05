@@ -400,6 +400,9 @@
       <trans-unit id="ERR.passkeyAttestationFailure">
         <source>Passkey could not be created.</source>
       </trans-unit>
+      <trans-unit id="ERR.copyUnique">
+        <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>لطفا %d و %d را با هم جمع نمایید.</target>
@@ -1776,7 +1779,7 @@
         <source>Cancel</source>
         <target>لغو</target>
       </trans-unit>
-      <trans-unit id="MSC.confirm">
+      <trans-unit id="MSC.confirmTitle">
           <source>Are you sure?</source>
           <target>آیا مطمئن هستید؟</target>
       </trans-unit>
@@ -2809,6 +2812,10 @@
       <trans-unit id="MSC.disable">
         <source>Disable</source>
         <target>غیرفعال</target>
+      </trans-unit>
+      <trans-unit id="MSC.edit">
+        <source>Edit</source>
+        <target>ویرایش</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
