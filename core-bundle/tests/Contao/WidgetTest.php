@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\CoreBundle\Fixtures\Contao\FoobarWidget;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
@@ -142,10 +143,10 @@ class WidgetTest extends TestCase
         $stack->push(new Request());
 
         $widget = $this
-            ->getMockBuilder(Widget::class)
+            ->getMockBuilder(FoobarWidget::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['validator'])
-            ->getMockForAbstractClass()
+            ->getMock()
         ;
 
         $widget
