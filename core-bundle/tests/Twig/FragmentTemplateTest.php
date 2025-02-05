@@ -65,17 +65,19 @@ class FragmentTemplateTest extends TestCase
     }
 
     #[DataProvider('provideIllegalParentMethods')]
-    public function testDisallowsAccessOfParentMethods(string $method, array $args): void
+    public function testDisallowsAccessOfParentMethods(string $method, \Closure $argsDelegate): void
     {
         $template = $this->getFragmentTemplate();
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage(\sprintf('Calling the "%s()" function on a FragmentTemplate is not allowed. Set template data instead and optionally output it with getResponse().', $method));
 
+        $args = $argsDelegate->bindTo($this)();
+
         $template->$method(...$args);
     }
 
-    public function provideIllegalParentMethods(): iterable
+    public static function provideIllegalParentMethods(): iterable
     {
         $excluded = [
             '__construct',
@@ -103,7 +105,7 @@ class FragmentTemplateTest extends TestCase
                 continue;
             }
 
-            $args = array_map(
+            $args = fn () => array_map(
                 function (\ReflectionParameter $parameter) {
                     $type = $parameter->getType();
 
