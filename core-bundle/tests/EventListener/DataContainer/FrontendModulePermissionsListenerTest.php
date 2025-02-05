@@ -108,11 +108,13 @@ class FrontendModulePermissionsListenerTest extends TestCase
                     if (1 === $matcher->numberOfInvocations()) {
                         $this->assertSame(ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE, $parameters[0]);
                         $this->assertSame('navigation', $parameters[1]);
+
                         return true;
                     }
                     if (2 === $matcher->numberOfInvocations()) {
                         $this->assertSame(ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE, $parameters[0]);
                         $this->assertSame('html', $parameters[1]);
+
                         return false;
                     }
 

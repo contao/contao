@@ -415,15 +415,15 @@ class FigureBuilderTest extends TestCase
     }
 
     #[DataProvider('provideMixedIdentifiers')]
-    public function testFromMixed(string|int $identifier, string $type = 'default'): void
+    public function testFromMixed(int|string $identifier, string $type = 'default'): void
     {
-        if($type === 'filesModel') {
+        if ('filesModel' === $type) {
             $filesModel = $this->mockClassWithProperties(FilesModel::class);
             $filesModel->type = 'file';
             $filesModel->path = $identifier;
 
             $mixedIdentifier = $filesModel;
-        } else if($type === 'image') {
+        } elseif ('image' === $type) {
             $image = $this->createMock(ImageInterface::class);
             $image
                 ->expects($this->atLeastOnce())
@@ -953,9 +953,9 @@ class FigureBuilderTest extends TestCase
     }
 
     #[DataProvider('provideUuidMetadataAutoFetchCases')]
-    public function testAutoSetUuidFromFilesModelWhenDefiningMetadata(FilesModel|ImageInterface|string|array|null $resource, Metadata|null $metadataToSet, string|null $locale, array $expectedMetadata): void
+    public function testAutoSetUuidFromFilesModelWhenDefiningMetadata(FilesModel|ImageInterface|array|string|null $resource, Metadata|null $metadataToSet, string|null $locale, array $expectedMetadata): void
     {
-        if(is_array($resource)) {
+        if (\is_array($resource)) {
             $getFilesModel = function (array $metaData, string|null $uuid) use ($resource) {
                 $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
                 $filesModel->setRow([
@@ -1180,7 +1180,7 @@ class FigureBuilderTest extends TestCase
     #[DataProvider('provideLightboxResourcesOrUrls')]
     public function testSetLightboxResourceOrUrl(ImageInterface|string|null $resource, array|null $expectedArguments = null, bool $hasLightbox = true): void
     {
-        if($resource === null) {
+        if (null === $resource) {
             $image = $this->createMock(ImageInterface::class);
 
             $resource = $image;

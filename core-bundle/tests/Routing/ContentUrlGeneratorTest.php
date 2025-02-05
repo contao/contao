@@ -345,11 +345,12 @@ class ContentUrlGeneratorTest extends TestCase
                         $this->assertSame($content, $expectation);
                     }
 
-                        /*
+                    /*
                     $argument = array_column($cases, 0)[$matcher->numberOfInvocations() - 1];
                     dump(get_debug_type($argument));*/
-                   // dump($content, array_column($cases, 0)[$matcher->numberOfInvocations() - 1]);
-                    //$this->assertSame(array_column($cases, 0)[$matcher->numberOfInvocations() - 1], $content);
+                    // dump($content, array_column($cases, 0)[$matcher->numberOfInvocations() -
+                    // 1]); this->assertSame(array_column($cases,
+                    // 0)[$matcher->numberOfInvocations() - 1], $content);
 
                     return array_column($cases, 1)[$matcher->numberOfInvocations() - 1];
                 },
