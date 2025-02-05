@@ -365,7 +365,7 @@ class TwigMacrosTest extends TestCase
             $this->createMock(ImageResult::class),
             $metadata,
             $linkAttributes,
-            null !== $lightboxDelegate ? $lightboxDelegate($this) : null,
+            $lightboxDelegate ? $lightboxDelegate($this) : null,
         );
 
         $html = $this->renderMacro('figure(figure)', ['figure' => $figure]);
