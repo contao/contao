@@ -833,8 +833,8 @@ window.Backend =
 
 		list.addEvent('complete', function(el) {
 			if (!list.active) return;
-			var id, pid;
-			var url = new URL(window.location.href);
+			var id, pid, url = new URL(window.location.href);
+
 			url.searchParams.set('rt', Contao.request_token);
 			url.searchParams.set('act', 'cut');
 
