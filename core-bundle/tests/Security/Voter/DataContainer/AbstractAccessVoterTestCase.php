@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-abstract class AbstractAccessVoterTest extends TestCase
+abstract class AbstractAccessVoterTestCase extends TestCase
 {
     public function testSupportsAttributesAndTypes(): void
     {

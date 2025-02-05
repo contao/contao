@@ -14,7 +14,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
-class RenameVariantOperationTest extends AbstractOperationTest
+class RenameVariantOperationTest extends AbstractOperationTestCase
 {
     #[DataProvider('provideContextsAndIfAllowedToExecute')]
     public function testCanExecute(OperationContext $context, bool $canExecute): void

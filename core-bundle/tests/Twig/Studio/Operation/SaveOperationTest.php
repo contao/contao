@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 use Twig\Source;
 
-class SaveOperationTest extends AbstractOperationTest
+class SaveOperationTest extends AbstractOperationTestCase
 {
     #[DataProvider('provideCommonContextsForExistingAndNonExistingUserTemplates')]
     public function testCanExecute(OperationContext $context, bool $userTemplateExists): void

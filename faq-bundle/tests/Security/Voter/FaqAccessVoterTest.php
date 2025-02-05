@@ -14,14 +14,14 @@ namespace Contao\FaqBundle\Tests\Security\Voter;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Contao\CoreBundle\Tests\Security\Voter\DataContainer\AbstractAccessVoterTest;
+use Contao\CoreBundle\Tests\Security\Voter\DataContainer\AbstractAccessVoterTestCase;
 use Contao\FaqBundle\Security\ContaoFaqPermissions;
 use Contao\FaqBundle\Security\Voter\FaqAccessVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class FaqAccessVoterTest extends AbstractAccessVoterTest
+class FaqAccessVoterTest extends AbstractAccessVoterTestCase
 {
     public static function votesProvider(): \Generator
     {

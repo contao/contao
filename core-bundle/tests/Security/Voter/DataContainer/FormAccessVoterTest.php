@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\Security\Voter\DataContainer;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\Voter\DataContainer\FormAccessVoter;
 
-class FormAccessVoterTest extends AbstractAccessVoterTest
+class FormAccessVoterTest extends AbstractAccessVoterTestCase
 {
     public static function votesProvider(): \Generator
     {

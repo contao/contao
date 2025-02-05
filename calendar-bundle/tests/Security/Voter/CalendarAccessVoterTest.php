@@ -14,9 +14,9 @@ namespace Contao\CalendarBundle\Tests\Security\Voter;
 
 use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\CalendarBundle\Security\Voter\CalendarAccessVoter;
-use Contao\CoreBundle\Tests\Security\Voter\DataContainer\AbstractAccessVoterTest;
+use Contao\CoreBundle\Tests\Security\Voter\DataContainer\AbstractAccessVoterTestCase;
 
-class CalendarAccessVoterTest extends AbstractAccessVoterTest
+class CalendarAccessVoterTest extends AbstractAccessVoterTestCase
 {
     public static function votesProvider(): \Generator
     {

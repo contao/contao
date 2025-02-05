@@ -19,7 +19,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class FormFieldAccessVoterTest extends AbstractAccessVoterTest
+class FormFieldAccessVoterTest extends AbstractAccessVoterTestCase
 {
     public static function votesProvider(): \Generator
     {

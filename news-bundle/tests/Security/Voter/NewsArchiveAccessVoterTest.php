@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\Tests\Security\Voter;
 
-use Contao\CoreBundle\Tests\Security\Voter\DataContainer\AbstractAccessVoterTest;
+use Contao\CoreBundle\Tests\Security\Voter\DataContainer\AbstractAccessVoterTestCase;
 use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Contao\NewsBundle\Security\Voter\NewsArchiveAccessVoter;
 
-class NewsArchiveAccessVoterTest extends AbstractAccessVoterTest
+class NewsArchiveAccessVoterTest extends AbstractAccessVoterTestCase
 {
     public static function votesProvider(): \Generator
     {

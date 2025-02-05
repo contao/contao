@@ -12,11 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\FaqBundle\Tests\Security\Voter;
 
-use Contao\CoreBundle\Tests\Security\Voter\DataContainer\AbstractAccessVoterTest;
+use Contao\CoreBundle\Tests\Security\Voter\DataContainer\AbstractAccessVoterTestCase;
 use Contao\FaqBundle\Security\ContaoFaqPermissions;
 use Contao\FaqBundle\Security\Voter\FaqCategoryAccessVoter;
 
-class FaqCategoryAccessVoterTest extends AbstractAccessVoterTest
+class FaqCategoryAccessVoterTest extends AbstractAccessVoterTestCase
 {
     public static function votesProvider(): \Generator
     {

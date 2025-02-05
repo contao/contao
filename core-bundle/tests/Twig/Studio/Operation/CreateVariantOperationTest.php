@@ -13,7 +13,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
-class CreateVariantOperationTest extends AbstractOperationTest
+class CreateVariantOperationTest extends AbstractOperationTestCase
 {
     #[DataProvider('provideContextsAndIfAllowedToExecute')]
     public function testCanExecute(OperationContext $context, bool $canExecute): void

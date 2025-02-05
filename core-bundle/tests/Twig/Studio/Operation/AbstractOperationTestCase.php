@@ -18,7 +18,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
-abstract class AbstractOperationTest extends TestCase
+abstract class AbstractOperationTestCase extends TestCase
 {
     public static function provideCommonContextsForExistingAndNonExistingUserTemplates(): \Generator
     {
