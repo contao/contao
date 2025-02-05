@@ -107,28 +107,29 @@ class NewsResolverTest extends ContaoTestCase
     }
 
     #[DataProvider('getParametersForContentProvider')]
-    public function testGetParametersForContent(object $content, array $expected): void
+    public function testGetParametersForContent(\Closure $content, array $expected): void
     {
+        $content = \Closure::bind($content, $this)();
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $resolver = new NewsResolver($this->mockContaoFramework());
 
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));
     }
 
-    public function getParametersForContentProvider(): iterable
+    public static function getParametersForContentProvider(): iterable
     {
         yield 'Uses the news alias' => [
-            $this->mockClassWithProperties(NewsModel::class, ['id' => 42, 'alias' => 'foobar']),
+            fn() => $this->mockClassWithProperties(NewsModel::class, ['id' => 42, 'alias' => 'foobar']),
             ['parameters' => '/foobar'],
         ];
 
         yield 'Uses news ID if alias is empty' => [
-            $this->mockClassWithProperties(NewsModel::class, ['id' => 42, 'alias' => '']),
+            fn() =>$this->mockClassWithProperties(NewsModel::class, ['id' => 42, 'alias' => '']),
             ['parameters' => '/42'],
         ];
 
         yield 'Only supports NewsModel' => [
-            $this->mockClassWithProperties(PageModel::class),
+            fn() =>$this->mockClassWithProperties(PageModel::class),
             [],
         ];
     }
