@@ -16,7 +16,7 @@ use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
- * Adds the given scope to the given routes of the WebauthnBundle.
+ * Adds the "backend" scope to the back end routes of the WebauthnBundle.
  */
 #[AsEventListener(priority: 10)]
 class WebauthnRouteListener
