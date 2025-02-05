@@ -29,6 +29,14 @@ abstract class FunctionalTestCase extends WebTestCase
 
     private static bool $supportsAlterCount;
 
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        // Remove the default exception handler
+        restore_exception_handler();
+    }
+
     protected static function loadFixtures(array $yamlFiles): void
     {
         if (!self::$booted) {
