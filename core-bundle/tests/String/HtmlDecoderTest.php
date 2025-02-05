@@ -115,9 +115,9 @@ class HtmlDecoderTest extends TestCase
         $this->assertSame($expected, $htmlDecoder->htmlToPlainText($inputXssStripped, $removeInsertTags));
     }
 
-    public function getHtmlToPlainText(): iterable
+    public static function getHtmlToPlainText(): iterable
     {
-        yield from $this->getInputEncodedToPlainText();
+        yield from static::getInputEncodedToPlainText();
 
         yield ['foo<br>bar{{br}}baz', "foo\nbar\nbaz"];
         yield [" \t\r\nfoo \t\r\n \r\n\t bar \t\r\n", 'foo bar'];
