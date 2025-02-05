@@ -913,6 +913,53 @@ class FigureBuilderTest extends TestCase
             ],
             new Metadata([Metadata::VALUE_TITLE => 'tt']),
         ];
+
+        yield 'overwrite metadata overwriting some with empty string' => [
+            serialize([
+                'en' => ['title' => 't', 'alt' => 'a', 'link' => 'l', 'caption' => 'c'],
+            ]),
+            'en',
+            [
+                Metadata::VALUE_TITLE => 't',
+                Metadata::VALUE_ALT => '',
+                Metadata::VALUE_URL => '',
+                Metadata::VALUE_CAPTION => 'c',
+            ],
+            new Metadata([Metadata::VALUE_ALT => '', Metadata::VALUE_URL => '']),
+        ];
+
+        yield 'overwrite metadata overwriting some with empty insert tag' => [
+            serialize([
+                'en' => ['title' => 't', 'alt' => 'a', 'link' => 'l', 'caption' => 'c'],
+            ]),
+            'en',
+            [
+                Metadata::VALUE_TITLE => 't',
+                Metadata::VALUE_ALT => '',
+                Metadata::VALUE_URL => '',
+                Metadata::VALUE_CAPTION => 'c',
+            ],
+            new Metadata([Metadata::VALUE_ALT => '{{empty}}', Metadata::VALUE_URL => '{{empty|urlattr}}']),
+        ];
+
+        yield 'overwrite metadata overwriting all with empty string and insert tag' => [
+            serialize([
+                'en' => ['title' => 't', 'alt' => 'a', 'link' => 'l', 'caption' => 'c'],
+            ]),
+            'en',
+            [
+                Metadata::VALUE_TITLE => '',
+                Metadata::VALUE_ALT => '',
+                Metadata::VALUE_URL => '',
+                Metadata::VALUE_CAPTION => '',
+            ],
+            new Metadata([
+                Metadata::VALUE_TITLE => '{{empty}}',
+                Metadata::VALUE_ALT => '',
+                Metadata::VALUE_URL => '',
+                Metadata::VALUE_CAPTION => '{{empty::foobar}}',
+            ]),
+        ];
     }
 
     public function testAutoFetchMetadataFromFilesModelFailsIfNoPage(): void
@@ -1523,6 +1570,8 @@ class FigureBuilderTest extends TestCase
             $requestStack,
         );
 
+        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
+
         $locator = $this->createMock(ContainerInterface::class);
         $locator
             ->method('get')
@@ -1530,6 +1579,7 @@ class FigureBuilderTest extends TestCase
                 ['contao.image.studio', $studio],
                 ['contao.routing.page_finder', $pageFinder],
                 ['contao.framework', $framework],
+                ['contao.insert_tag.parser', $insertTagParser],
                 ['event_dispatcher', $eventDispatcher ?? new EventDispatcher()],
             ])
         ;

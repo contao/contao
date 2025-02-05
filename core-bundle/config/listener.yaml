@@ -60,6 +60,12 @@ services:
     contao.listener.data_container.accordion:
         class: Contao\CoreBundle\EventListener\DataContainer\AccordionListener
 
+    contao.listener.data_container.article_column:
+        class: Contao\CoreBundle\EventListener\DataContainer\ArticleColumnListener
+        arguments:
+            - '@contao.twig.inspector'
+            - '@contao.framework'
+
     contao.listener.data_container.backend_favorites:
         class: Contao\CoreBundle\EventListener\DataContainer\BackendFavoritesListener
         arguments:
@@ -252,6 +258,13 @@ services:
             - '@contao.framework'
             - '@request_stack'
             - '@contao.twig.filesystem_loader'
+
+    contao.listener.data_container.theme_layout:
+        class: Contao\CoreBundle\EventListener\DataContainer\ThemeLayoutListener
+        arguments:
+            - '@contao.twig.finder_factory'
+            - '@contao.twig.inspector'
+            - '@contao.framework'
 
     contao.listener.data_container.theme_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\ThemeOperationsListener

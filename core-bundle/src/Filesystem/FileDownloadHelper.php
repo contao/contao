@@ -142,6 +142,9 @@ class FileDownloadHelper
         parse_str($uri->getQuery(), $existingParams);
         $params = [...$existingParams, ...array_filter($params)];
 
+        // Unset default uri_signer parameters (#7989)
+        unset($params['_hash'], $params['_expiration']);
+
         return $this->signer->sign((string) $uri->withQuery(http_build_query($params)));
     }
 
