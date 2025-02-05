@@ -326,6 +326,11 @@ class FigureTest extends TestCase
     public function testGetLegacyTemplateData(array $preconditions, array $buildAttributes, \Closure $assert): void
     {
         [$metadata, $linkAttributes, $lightbox, $options] = $preconditions;
+
+        if ($lightbox instanceof \Closure) {
+            $lightbox = $lightbox($this);
+        }
+
         [$includeFullMetadata, $floatingProperty, $marginProperty] = $buildAttributes;
 
         $imageFactory = new ImageFactory(
@@ -348,24 +353,24 @@ class FigureTest extends TestCase
         $figure = new Figure($this->mockImage(), $metadata, $linkAttributes, $lightbox, $options);
         $data = $figure->getLegacyTemplateData($marginProperty, $floatingProperty, $includeFullMetadata);
 
-        $assert($data);
+        $assert($this, $data);
     }
 
-    public function provideLegacyTemplateDataScenarios(): iterable
+    public static function provideLegacyTemplateDataScenarios(): iterable
     {
         yield 'basic image data' => [
             [null, null, null, null],
             [false, null, null],
-            function (array $data): void {
-                $this->assertSame(['img foo'], $data['picture']['img']);
-                $this->assertSame(['sources foo'], $data['picture']['sources']);
-                $this->assertSame('https://assets.url/files/public/foo.jpg', $data['src']);
-                $this->assertSame('path/to/resource.jpg', $data['singleSRC']);
-                $this->assertSame(100, $data['width']);
-                $this->assertSame(50, $data['height']);
+            static function (TestCase $testCase, $data): void {
+                $testCase->assertSame(['img foo'], $data['picture']['img']);
+                $testCase->assertSame(['sources foo'], $data['picture']['sources']);
+                $testCase->assertSame('https://assets.url/files/public/foo.jpg', $data['src']);
+                $testCase->assertSame('path/to/resource.jpg', $data['singleSRC']);
+                $testCase->assertSame(100, $data['width']);
+                $testCase->assertSame(50, $data['height']);
 
-                $this->assertTrue($data['addImage']);
-                $this->assertFalse($data['fullsize']);
+                $testCase->assertTrue($data['addImage']);
+                $testCase->assertFalse($data['fullsize']);
             },
         ];
 
@@ -388,51 +393,51 @@ class FigureTest extends TestCase
         yield 'with metadata' => [
             [$simpleMetadata, null, null, null],
             [false, null, null],
-            function (array $data): void {
-                $this->assertSame('a', $data['picture']['alt']);
-                $this->assertSame('t', $data['picture']['title']);
-                $this->assertArrayNotHasKey('foo', $data);
+            static function (TestCase $testCase, array $data): void {
+                $testCase->assertSame('a', $data['picture']['alt']);
+                $testCase->assertSame('t', $data['picture']['title']);
+                $testCase->assertArrayNotHasKey('foo', $data);
             },
         ];
 
         yield 'with full metadata' => [
             [$simpleMetadata, null, null, null],
             [true, null, null],
-            function (array $data): void {
-                $this->assertSame('a', $data['alt']);
-                $this->assertSame('t', $data['imageTitle']);
-                $this->assertSame('bar', $data['foo']);
+            static function (TestCase $testCase, array $data): void {
+                $testCase->assertSame('a', $data['alt']);
+                $testCase->assertSame('t', $data['imageTitle']);
+                $testCase->assertSame('bar', $data['foo']);
             },
         ];
 
         yield 'with metadata containing link' => [
             [$metadataWithLink, null, null, null],
             [true, null, null],
-            function (array $data): void {
-                $this->assertSame('t', $data['linkTitle']);
-                $this->assertSame('foo://meta', $data['imageUrl']);
-                $this->assertSame('foo://meta', $data['href']);
-                $this->assertSame('', $data['attributes']);
+            static function (TestCase $testCase, array $data): void {
+                $testCase->assertSame('t', $data['linkTitle']);
+                $testCase->assertSame('foo://meta', $data['imageUrl']);
+                $testCase->assertSame('foo://meta', $data['href']);
+                $testCase->assertSame('', $data['attributes']);
 
-                $this->assertArrayNotHasKey('title', $data['picture']);
+                $testCase->assertArrayNotHasKey('title', $data['picture']);
             },
         ];
 
         yield 'with link title attribute' => [
             [$metadataWithLink, ['title' => 'foo', 'bar' => 'baz'], null, null],
             [true, null, null],
-            function (array $data): void {
-                $this->assertSame('foo', $data['linkTitle']);
-                $this->assertSame(' bar="baz"', $data['attributes'], 'must not contain link attribute');
+            static function (TestCase $testCase, array $data): void {
+                $testCase->assertSame('foo', $data['linkTitle']);
+                $testCase->assertSame(' bar="baz"', $data['attributes'], 'must not contain link attribute');
             },
         ];
 
         yield 'with metadata containing HTML' => [
             [$metadataWithHtml, null, null, null],
             [true, null, null],
-            function (array $data): void {
-                $this->assertSame('Here <b>is</b> some <i>HTML</i>!', $data['caption']);
-                $this->assertSame('Here &lt;b&gt;is&lt;/b&gt; some &lt;i&gt;HTML&lt;/i&gt;!', $data['alt']);
+            static function (TestCase $testCase, array $data): void {
+                $testCase->assertSame('Here <b>is</b> some <i>HTML</i>!', $data['caption']);
+                $testCase->assertSame('Here &lt;b&gt;is&lt;/b&gt; some &lt;i&gt;HTML&lt;/i&gt;!', $data['alt']);
             },
         ];
 
@@ -449,113 +454,117 @@ class FigureTest extends TestCase
         yield 'with href link attribute' => [
             [null, $basicLinkAttributes, null, null],
             [false, null, null],
-            function (array $data): void {
-                $this->assertSame('', $data['linkTitle']);
-                $this->assertSame('foo://bar', $data['href']);
-                $this->assertSame('', $data['attributes']);
+            static function (TestCase $testCase, array $data): void {
+                $testCase->assertSame('', $data['linkTitle']);
+                $testCase->assertSame('foo://bar', $data['href']);
+                $testCase->assertSame('', $data['attributes']);
 
-                $this->assertArrayNotHasKey('title', $data['picture']);
+                $testCase->assertArrayNotHasKey('title', $data['picture']);
             },
         ];
 
         yield 'with full metadata and href link attribute' => [
             [$metadataWithLink, $basicLinkAttributes, null, null],
             [true, null, null],
-            function (array $data): void {
-                $this->assertSame('foo://meta', $data['imageUrl']);
-                $this->assertSame('foo://bar', $data['href']);
+            static function (TestCase $testCase, array $data): void {
+                $testCase->assertSame('foo://meta', $data['imageUrl']);
+                $testCase->assertSame('foo://bar', $data['href']);
             },
         ];
 
         yield 'with extended link attributes' => [
             [null, $extendedLinkAttributes, null, null],
             [false, null, null],
-            function (array $data): void {
-                $this->assertTrue($data['fullsize']);
-                $this->assertSame(' target="_blank" foo="bar"', $data['attributes']);
+            static function (TestCase $testCase, array $data): void {
+                $testCase->assertTrue($data['fullsize']);
+                $testCase->assertSame(' target="_blank" foo="bar"', $data['attributes']);
             },
         ];
 
-        $lightboxImage = $this->createMock(ImageResult::class);
-        $lightboxImage
-            ->method('getImg')
-            ->willReturn(['lightbox img'])
-        ;
+        $lightBoxDelegate = static function (TestCase $testCase) {
+            $lightboxImage = $testCase->createMock(ImageResult::class);
+            $lightboxImage
+                ->method('getImg')
+                ->willReturn(['lightbox img'])
+            ;
 
-        $lightboxImage
-            ->method('getSources')
-            ->willReturn(['lightbox sources'])
-        ;
+            $lightboxImage
+                ->method('getSources')
+                ->willReturn(['lightbox sources'])
+            ;
 
-        $lightbox = $this->createMock(LightboxResult::class);
-        $lightbox
-            ->method('hasImage')
-            ->willReturn(true)
-        ;
+            $lightbox = $testCase->createMock(LightboxResult::class);
+            $lightbox
+                ->method('hasImage')
+                ->willReturn(true)
+            ;
 
-        $lightbox
-            ->method('getImage')
-            ->willReturn($lightboxImage)
-        ;
+            $lightbox
+                ->method('getImage')
+                ->willReturn($lightboxImage)
+            ;
 
-        $lightbox
-            ->method('getGroupIdentifier')
-            ->willReturn('12345')
-        ;
+            $lightbox
+                ->method('getGroupIdentifier')
+                ->willReturn('12345')
+            ;
 
-        $lightbox
-            ->method('getLinkHref')
-            ->willReturn('foo://bar')
-        ;
+            $lightbox
+                ->method('getLinkHref')
+                ->willReturn('foo://bar')
+            ;
+
+            return $lightbox;
+        };
 
         yield 'with lightbox' => [
-            [null, null, $lightbox, null],
+            [null, null, $lightBoxDelegate, null],
             [false, null, null],
-            function (array $data): void {
-                $this->assertSame(['lightbox img'], $data['lightboxPicture']['img']);
-                $this->assertSame(['lightbox sources'], $data['lightboxPicture']['sources']);
+            static function (TestCase $testCase, array $data): void {
+                $testCase->assertSame(['lightbox img'], $data['lightboxPicture']['img']);
+                $testCase->assertSame(['lightbox sources'], $data['lightboxPicture']['sources']);
 
-                $this->assertSame('foo://bar', $data['href']);
-                $this->assertSame(' data-lightbox="12345"', $data['attributes']);
+                $testCase->assertSame('foo://bar', $data['href']);
+                $testCase->assertSame(' data-lightbox="12345"', $data['attributes']);
 
-                $this->assertTrue($data['fullsize']);
-                $this->assertSame('', $data['linkTitle']);
-                $this->assertArrayNotHasKey('title', $data['picture']);
+                $testCase->assertTrue($data['fullsize']);
+                $testCase->assertSame('', $data['linkTitle']);
+                $testCase->assertArrayNotHasKey('title', $data['picture']);
             },
         ];
 
         yield 'with legacy properties 1' => [
             [null, null, null, null],
             [false, 'above', ['top' => '1', 'right' => '2', 'bottom' => '3', 'left' => '4', 'unit' => 'em']],
-            function (array $data): void {
-                $this->assertTrue($data['addBefore']);
-                $this->assertArrayNotHasKey('margin', $data);
+            static function (TestCase $testCase, array $data): void {
+                $testCase->assertTrue($data['addBefore']);
+                $testCase->assertArrayNotHasKey('margin', $data);
             },
         ];
 
         yield 'with legacy properties 2' => [
             [null, null, null, null],
             [false, 'above', 'a:5:{s:3:"top";s:1:"1";s:5:"right";s:1:"2";s:6:"bottom";s:1:"3";s:4:"left";s:1:"4";s:4:"unit";s:2:"em";}'],
-            function (array $data): void {
-                $this->assertTrue($data['addBefore']);
-                $this->assertArrayNotHasKey('margin', $data);
+            static function (TestCase $testCase, array $data): void {
+                $testCase->assertTrue($data['addBefore']);
+                $testCase->assertArrayNotHasKey('margin', $data);
             },
         ];
 
         yield 'with legacy properties 3' => [
             [null, null, null, null],
             [false, 'below', null],
-            function (array $data): void {
-                $this->assertFalse($data['addBefore']);
+            static function (TestCase $testCase, array $data): void {
+                $testCase->assertFalse($data['addBefore']);
             },
         ];
 
         yield 'with template options' => [
             [null, null, null, ['foo' => 'bar', 'addImage' => false]],
             [false, null, null],
-            function (array $data): void {
-                $this->assertSame('bar', $data['foo']);
-                $this->assertFalse($data['addImage']);
+            static function (TestCase $testCase, array $data): void {
+                $testCase->assertSame('bar', $data['foo']);
+                $testCase->assertFalse($data['addImage']);
             },
         ];
     }
