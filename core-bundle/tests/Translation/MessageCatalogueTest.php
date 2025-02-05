@@ -91,28 +91,13 @@ class MessageCatalogueTest extends TestCase
             ->willReturn('en')
         ;
 
-        $matcher = $this->exactly(2);
-
         $parentCatalogue
-            ->expects($matcher)
+            ->expects($this->exactly(2))
             ->method('has')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher) {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('foo', $parameters[0]);
-                        $this->assertSame('foobar', $parameters[1]);
-
-                        return true;
-                    }
-
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('bar', $parameters[0]);
-                        $this->assertSame('foobar', $parameters[1]);
-
-                        return false;
-                    }
-                },
-            )
+            ->willReturnMap([
+                ['foo', 'foobar', true],
+                ['bar', 'foobar', false],
+            ])
         ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
@@ -139,30 +124,13 @@ class MessageCatalogueTest extends TestCase
             ->willReturn('en')
         ;
 
-        $matcher = $this->exactly(2);
-
         $parentCatalogue
-            ->expects($matcher)
+            ->expects($this->exactly(2))
             ->method('defines')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher) {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('foo', $parameters[0]);
-                        $this->assertSame('foobar', $parameters[1]);
-
-                        return true;
-                    }
-
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('bar', $parameters[0]);
-                        $this->assertSame('foobar', $parameters[1]);
-
-                        return false;
-                    }
-
-                    return false;
-                },
-            )
+            ->willReturnMap([
+                ['foo', 'foobar', true],
+                ['bar', 'foobar', false],
+            ])
         ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
@@ -189,30 +157,13 @@ class MessageCatalogueTest extends TestCase
             ->willReturn('en')
         ;
 
-        $matcher = $this->exactly(2);
-
         $parentCatalogue
-            ->expects($matcher)
+            ->expects($this->exactly(2))
             ->method('get')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher) {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('foo', $parameters[0]);
-                        $this->assertSame('foobar', $parameters[1]);
-
-                        return 'Foo';
-                    }
-
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('bar', $parameters[0]);
-                        $this->assertSame('foobar', $parameters[1]);
-
-                        return 'bar';
-                    }
-
-                    return false;
-                },
-            )
+            ->willReturnMap([
+                ['foo', 'foobar', 'Foo'],
+                ['bar', 'foobar', 'bar'],
+            ])
         ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);

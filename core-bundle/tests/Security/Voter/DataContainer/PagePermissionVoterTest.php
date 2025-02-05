@@ -80,7 +80,7 @@ class PagePermissionVoterTest extends TestCase
             $decisions,
             static function (array &$decision) use ($token): void {
                 array_unshift($decision, $token);
-            }
+            },
         );
 
         $decisionManager
