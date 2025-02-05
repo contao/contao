@@ -20,7 +20,6 @@ use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Exception as LegacyDriverException;
 use Doctrine\DBAL\Driver\PDO\Exception as PDOException;
-use Doctrine\DBAL\Exception;
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
@@ -72,8 +71,10 @@ class TemplateLocatorTest extends TestCase
     }
 
     #[DataProvider('provideDatabaseExceptions')]
-    public function testIgnoresDbalExceptions(Exception $exception): void
+    public function testIgnoresDbalExceptions(\Closure $exceptionDelegate): void
     {
+        $exception = $exceptionDelegate($this);
+
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('fetchFirstColumn')
@@ -90,18 +91,18 @@ class TemplateLocatorTest extends TestCase
         $this->assertEmpty($locator->findThemeDirectories());
     }
 
-    public function provideDatabaseExceptions(): iterable
+    public static function provideDatabaseExceptions(): iterable
     {
         yield 'table not found' => [
-            new TableNotFoundException($this->createMock(LegacyDriverException::class), null),
+            static fn (TestCase $testCase) => new TableNotFoundException($testCase->createMock(LegacyDriverException::class), null),
         ];
 
         yield 'failing connection' => [
-            new ConnectionException($this->createMock(LegacyDriverException::class), null),
+            static fn (TestCase $testCase) => new ConnectionException($testCase->createMock(LegacyDriverException::class), null),
         ];
 
         yield 'access denied' => [
-            new DriverException(PDOException::new(new \PDOException("Access denied for user 'root'@'localhost'")), null),
+            static fn () => new DriverException(PDOException::new(new \PDOException("Access denied for user 'root'@'localhost'")), null),
         ];
     }
 
