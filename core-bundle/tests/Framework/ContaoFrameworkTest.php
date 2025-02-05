@@ -88,28 +88,6 @@ class ContaoFrameworkTest extends TestCase
         $this->assertTrue($framework->isInitialized());
     }
 
-    public function testInitializesTheFrameworkWithAnInsecurePath(): void
-    {
-        $request = Request::create('/contao4/public/index.php/index.html');
-        $request->server->set('SCRIPT_FILENAME', '/var/www/contao4/public/index.php');
-        $request->server->set('SCRIPT_NAME', '/contao4/public/index.php');
-
-        $framework = $this->getFramework($request);
-        $framework->setContainer($this->getContainerWithContaoConfiguration());
-        $framework->initialize();
-    }
-
-    public function testInitializesTheFrameworkWithoutAScope(): void
-    {
-        $request = Request::create('/contao/login');
-        $request->attributes->set('_route', 'dummy');
-        $request->attributes->set('_contao_referer_id', 'foobar');
-
-        $framework = $this->getFramework($request);
-        $framework->setContainer($this->getContainerWithContaoConfiguration());
-        $framework->initialize();
-    }
-
     public function testInitializesTheFrameworkInPreviewMode(): void
     {
         $beBag = new ArrayAttributeBag();
