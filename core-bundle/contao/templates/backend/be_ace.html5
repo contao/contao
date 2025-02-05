@@ -37,11 +37,11 @@ if ($GLOBALS['TL_CONFIG']['useCE']):
         }
       });
 
-      // Enable code autocompletion
       editor.setOptions({
         enableSnippets: true,
         enableBasicAutocompletion: true,
-        enableLiveAutocompletion: true
+        enableLiveAutocompletion: true,
+        enableKeyboardAccessibility: true
       });
     }
 
