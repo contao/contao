@@ -614,7 +614,7 @@ class ContaoCoreExtensionTest extends TestCase
             ->expects($matcher)
             ->method('mountLocalAdapter')
             ->willReturnCallback(
-                function (...$parameters) use ($matcher): void {
+                function (...$parameters) use ($matcher, $config): FilesystemConfiguration {
                     if (1 === $matcher->numberOfInvocations()) {
                         $this->assertSame('upload/path', $parameters[0]);
                         $this->assertSame('upload/path', $parameters[1]);
@@ -630,6 +630,8 @@ class ContaoCoreExtensionTest extends TestCase
                         $this->assertSame('user_templates', $parameters[1]);
                         $this->assertSame('user_templates', $parameters[2]);
                     }
+
+                    return $config;
                 },
             )
         ;
