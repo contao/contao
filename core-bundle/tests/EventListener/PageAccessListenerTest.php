@@ -203,16 +203,20 @@ class PageAccessListenerTest extends TestCase
             ->expects($matcher)
             ->method('isGranted')
             ->willReturnCallback(
-                function (...$parameters) use ($matcher) {
+                function (...$parameters) use ($matcher): bool {
                     if (1 === $matcher->numberOfInvocations()) {
                         $this->assertSame('ROLE_MEMBER', $parameters[0]);
+
+                        return true;
                     }
                     if (2 === $matcher->numberOfInvocations()) {
                         $this->assertSame(ContaoCorePermissions::MEMBER_IN_GROUPS, $parameters[0]);
                         $this->assertSame([1, 2, 3], $parameters[1]);
+
+                        return false;
                     }
 
-                    return true;
+                    throw new \LogicException('Invalid invocation count.');
                 },
             )
         ;
@@ -297,7 +301,7 @@ class PageAccessListenerTest extends TestCase
             ->expects($matcher)
             ->method('isGranted')
             ->willReturnCallback(
-                function (...$parameters) use ($matcher) {
+                function (...$parameters) use ($matcher): bool {
                     if (1 === $matcher->numberOfInvocations()) {
                         $this->assertSame('ROLE_MEMBER', $parameters[0]);
                     }
@@ -341,16 +345,20 @@ class PageAccessListenerTest extends TestCase
             ->expects($matcher)
             ->method('isGranted')
             ->willReturnCallback(
-                function (...$parameters) use ($matcher) {
+                function (...$parameters) use ($matcher): bool {
                     if (1 === $matcher->numberOfInvocations()) {
                         $this->assertSame('ROLE_MEMBER', $parameters[0]);
+
+                        return false;
                     }
                     if (2 === $matcher->numberOfInvocations()) {
                         $this->assertSame(ContaoCorePermissions::MEMBER_IN_GROUPS, $parameters[0]);
                         $this->assertSame([-1, 1], $parameters[1]);
+
+                        return true;
                     }
 
-                    return false;
+                    throw new \LogicException('Invalid invocation count.');
                 },
             )
         ;
