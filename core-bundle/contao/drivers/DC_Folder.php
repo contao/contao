@@ -1365,12 +1365,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$return .= '
 </div>
   ' . $strButtons . '
-</form>
-</turbo-frame>';
+</form>';
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
-		$return = '
-<turbo-frame id="tl_edit_form_frame" target="_top" data-turbo-action="advance">' . $version . Message::generate() . ($this->noReload ? '
+		$return = $version . Message::generate() . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
 <div id="tl_buttons">
 ' . DataContainerOperationsBuilder::generateBackButton() . '
