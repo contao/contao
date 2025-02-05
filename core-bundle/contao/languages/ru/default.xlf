@@ -405,6 +405,10 @@
         <source>Passkey could not be created.</source>
         <target>Passkey не может быть создан.</target>
       </trans-unit>
+      <trans-unit id="ERR.copyUnique">
+        <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>Элемент ID %d не может быть вставлен сюда, так как он конфликтует с существующим элементом.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Пожалуйста, прибавьте %d к %d.</target>
@@ -1781,7 +1785,7 @@
         <source>Cancel</source>
         <target>Отмена</target>
       </trans-unit>
-      <trans-unit id="MSC.confirm">
+      <trans-unit id="MSC.confirmTitle">
           <source>Are you sure?</source>
           <target>Вы уверены?</target>
       </trans-unit>
@@ -2816,6 +2820,10 @@
       <trans-unit id="MSC.disable">
         <source>Disable</source>
         <target>Отключить</target>
+      </trans-unit>
+      <trans-unit id="MSC.edit">
+        <source>Edit</source>
+        <target>Редактировать</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>

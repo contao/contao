@@ -405,6 +405,10 @@
         <source>Passkey could not be created.</source>
         <target>Passkey kunde inte skapas.</target>
       </trans-unit>
+      <trans-unit id="ERR.copyUnique">
+        <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>Element ID %d kan inte infogas här eftersom det står i konflikt med ett befintligt element.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Addera %d och %d.</target>
@@ -1781,7 +1785,7 @@
         <source>Cancel</source>
         <target>Avbryt</target>
       </trans-unit>
-      <trans-unit id="MSC.confirm">
+      <trans-unit id="MSC.confirmTitle">
           <source>Are you sure?</source>
           <target>Är du säker?</target>
       </trans-unit>
@@ -2583,6 +2587,7 @@
       </trans-unit>
       <trans-unit id="MSC.or">
         <source>or</source>
+        <target>eller</target>
       </trans-unit>
       <trans-unit id="MSC.published">
         <source>Published</source>
@@ -2816,6 +2821,10 @@
         <source>Disable</source>
         <target>Inaktivera</target>
       </trans-unit>
+      <trans-unit id="MSC.edit">
+        <source>Edit</source>
+        <target>Redigera</target>
+      </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
         <target>Förhandsgranskning av Googles sökresultat</target>
@@ -2974,27 +2983,35 @@
       </trans-unit>
       <trans-unit id="MSC.searchResultsPlaceholder">
         <source>Type to start searching</source>
+        <target>Skriv för att starta sökningen</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsMin">
         <source>Please enter at least %s characters</source>
+        <target>Vänligen ange minst %s tecken</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
         <source>Loading results...</source>
+        <target>Laddar resultat...</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
+        <target>View %s</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitEdit">
         <source>Edit %s</source>
+        <target>Redigera %s</target>
       </trans-unit>
       <trans-unit id="MSC.noResults">
         <source>No results found.</source>
+        <target>Inga resultat hittades.</target>
       </trans-unit>
       <trans-unit id="MSC.noOptions">
         <source>No options to choose from.</source>
+        <target>Inga alternativ att välja mellan.</target>
       </trans-unit>
       <trans-unit id="MSC.removeItem">
         <source>Remove item</source>
+        <target>Ta bort objekt</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -3182,6 +3199,7 @@
       </trans-unit>
       <trans-unit id="DCA.operations">
         <source>Show operations for element ID %s</source>
+        <target>Visa operationer för element-ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.children">
         <source>Edit the child elements of element ID %s</source>

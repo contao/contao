@@ -397,6 +397,9 @@
       <trans-unit id="ERR.passkeyAttestationFailure">
         <source>Passkey could not be created.</source>
       </trans-unit>
+      <trans-unit id="ERR.copyUnique">
+        <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Veuillez additionner %d et %d.</target>
@@ -1758,7 +1761,7 @@
         <source>Cancel</source>
         <target>Annuler</target>
       </trans-unit>
-      <trans-unit id="MSC.confirm">
+      <trans-unit id="MSC.confirmTitle">
           <source>Are you sure?</source>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
@@ -2783,6 +2786,10 @@
       <trans-unit id="MSC.disable">
         <source>Disable</source>
         <target>Désactiver</target>
+      </trans-unit>
+      <trans-unit id="MSC.edit">
+        <source>Edit</source>
+        <target>Éditer</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>

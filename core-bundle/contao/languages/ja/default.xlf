@@ -405,6 +405,10 @@
         <source>Passkey could not be created.</source>
         <target>パスキーを作成できませんでした。</target>
       </trans-unit>
+      <trans-unit id="ERR.copyUnique">
+        <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>%dのIDの要素は既存の要素と競合するため、ここには挿入できません。</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>%dと%dを加算してください。</target>
@@ -1781,7 +1785,7 @@
         <source>Cancel</source>
         <target>取り止め</target>
       </trans-unit>
-      <trans-unit id="MSC.confirm">
+      <trans-unit id="MSC.confirmTitle">
           <source>Are you sure?</source>
           <target>本当に?</target>
       </trans-unit>
@@ -2816,6 +2820,10 @@
       <trans-unit id="MSC.disable">
         <source>Disable</source>
         <target>無効</target>
+      </trans-unit>
+      <trans-unit id="MSC.edit">
+        <source>Edit</source>
+        <target>編集</target>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>

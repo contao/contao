@@ -405,6 +405,10 @@
         <source>Passkey could not be created.</source>
         <target>Der Passkey konnte nicht erstellt werden.</target>
       </trans-unit>
+      <trans-unit id="ERR.copyUnique">
+        <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>Das Element ID %d kann hier nicht eingefügt werden, da es mit einem bestehenden Element kollidiert.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Bitte addieren Sie %d und %d.</target>
@@ -1781,7 +1785,7 @@
         <source>Cancel</source>
         <target>Abbruch</target>
       </trans-unit>
-      <trans-unit id="MSC.confirm">
+      <trans-unit id="MSC.confirmTitle">
           <source>Are you sure?</source>
           <target>Sind Sie sicher?</target>
       </trans-unit>
@@ -2817,6 +2821,10 @@
         <source>Disable</source>
         <target>Deaktivieren</target>
       </trans-unit>
+      <trans-unit id="MSC.edit">
+        <source>Edit</source>
+        <target>Bearbeiten</target>
+      </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
         <target>Google Suchergebnis-Vorschau</target>
@@ -2867,7 +2875,7 @@
       </trans-unit>
       <trans-unit id="MSC.noSerpPreview">
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
-        <target>Die Vorschau-URL kann nicht erstellt werden, weil die Route Parameter benötigt.</target>
+        <target>Die Vorschau-URL kann nicht erstellt werden, weil die Route ein Element erfordert.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
