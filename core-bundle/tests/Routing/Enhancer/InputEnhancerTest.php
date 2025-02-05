@@ -79,11 +79,9 @@ class InputEnhancerTest extends TestCase
         $input
             ->expects($matcher)
             ->method('setGet')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher, $setters): void {
-                    $this->assertSame($setters[$matcher->numberOfInvocations() - 1], $parameters);
-                },
-            )
+            ->with($this->callback(
+                static fn (...$parameters) => $setters[$matcher->numberOfInvocations() - 1] === $parameters,
+            ))
         ;
 
         $input
