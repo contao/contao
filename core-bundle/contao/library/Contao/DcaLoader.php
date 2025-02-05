@@ -85,14 +85,13 @@ class DcaLoader extends Controller
 	/**
 	 * DCA loading depends on the current request. Switching the request sets or
 	 * resets the global DCA array and makes it possible to (re)load a DCA once
-	 * again. To switch back to the current request you should call
-	 * switchRequest(null).
+	 * again.
 	 *
-	 * @param Request|null $request Pass null to switch to the current request from the stack
+	 * @internal
 	 */
-	public static function switchRequest(Request|null $request): void
+	public static function switchToCurrentRequest(): void
 	{
-		$request ??= System::getContainer()->get('request_stack')->getCurrentRequest();
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		if (self::$lastRequest === $request)
 		{
