@@ -17,7 +17,6 @@ use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
@@ -65,7 +64,7 @@ class FilesyncCommandTest extends TestCase
     public function testRenderStats(): void
     {
         ClockMock::register(__CLASS__);
-        ClockMock::withClockMock(true);
+        ClockMock::withClockMock(1142164800);
 
         $manager = $this->createMock(DbafsManager::class);
         $manager
