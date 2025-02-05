@@ -25,9 +25,7 @@ use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\TestCase\ContaoTestCase;
-use Doctrine\DBAL\Cache\ArrayResult;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Result;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -237,13 +235,9 @@ class BackupManagerTest extends ContaoTestCase
         $connection
             ->expects($matcher)
             ->method('executeQuery')
-            ->willReturnCallback(
-                function (string $query) use ($matcher, $expectedQueries, $connection): Result {
-                    $this->assertSame($expectedQueries[$matcher->numberOfInvocations() - 1], $query);
-
-                    return new Result(new ArrayResult([]), $connection);
-                },
-            )
+            ->with($this->callback(
+                static fn (string $query): bool => $expectedQueries[$matcher->numberOfInvocations() - 1] === $query,
+            ))
         ;
 
         $manager = $this->getBackupManager($connection);
