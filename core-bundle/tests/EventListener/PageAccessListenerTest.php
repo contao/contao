@@ -198,27 +198,13 @@ class PageAccessListenerTest extends TestCase
     public function testDeniesAccessToProtectedPageIfMemberIsNotInGroup(): void
     {
         $security = $this->createMock(Security::class);
-        $matcher = $this->exactly(2);
         $security
-            ->expects($matcher)
+            ->expects($this->exactly(2))
             ->method('isGranted')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher): bool {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('ROLE_MEMBER', $parameters[0]);
-
-                        return true;
-                    }
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame(ContaoCorePermissions::MEMBER_IN_GROUPS, $parameters[0]);
-                        $this->assertSame([1, 2, 3], $parameters[1]);
-
-                        return false;
-                    }
-
-                    throw new \LogicException('Invalid invocation count.');
-                },
-            )
+            ->willReturnMap([
+                ['ROLE_MEMBER', null, true],
+                [ContaoCorePermissions::MEMBER_IN_GROUPS, [1, 2, 3], false],
+            ])
         ;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
@@ -249,23 +235,13 @@ class PageAccessListenerTest extends TestCase
     public function testDeniesAccessToProtectedPageIfMemberIsNotGuest(): void
     {
         $security = $this->createMock(Security::class);
-        $matcher = $this->exactly(2);
         $security
-            ->expects($matcher)
+            ->expects($this->exactly(2))
             ->method('isGranted')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher) {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('ROLE_MEMBER', $parameters[0]);
-                    }
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame(ContaoCorePermissions::MEMBER_IN_GROUPS, $parameters[0]);
-                        $this->assertSame([-1, 1], $parameters[1]);
-                    }
-
-                    return false;
-                },
-            )
+            ->willReturnMap([
+                ['ROLE_MEMBER', null, false],
+                [ContaoCorePermissions::MEMBER_IN_GROUPS, [-1, 1], false],
+            ])
         ;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
@@ -296,23 +272,13 @@ class PageAccessListenerTest extends TestCase
     public function testGrantsAccessToProtectedPageIfMemberIsInGroup(): void
     {
         $security = $this->createMock(Security::class);
-        $matcher = $this->exactly(2);
         $security
-            ->expects($matcher)
+            ->expects($this->exactly(2))
             ->method('isGranted')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher): bool {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('ROLE_MEMBER', $parameters[0]);
-                    }
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame(ContaoCorePermissions::MEMBER_IN_GROUPS, $parameters[0]);
-                        $this->assertSame([1, 2, 3], $parameters[1]);
-                    }
-
-                    return true;
-                },
-            )
+            ->willReturnMap([
+                ['ROLE_MEMBER', null, true],
+                [ContaoCorePermissions::MEMBER_IN_GROUPS, [1, 2, 3], true],
+            ])
         ;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
@@ -340,27 +306,13 @@ class PageAccessListenerTest extends TestCase
     public function testGrantsAccessToProtectedPageIfIsGuest(): void
     {
         $security = $this->createMock(Security::class);
-        $matcher = $this->exactly(2);
         $security
-            ->expects($matcher)
+            ->expects($this->exactly(2))
             ->method('isGranted')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher): bool {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('ROLE_MEMBER', $parameters[0]);
-
-                        return false;
-                    }
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame(ContaoCorePermissions::MEMBER_IN_GROUPS, $parameters[0]);
-                        $this->assertSame([-1, 1], $parameters[1]);
-
-                        return true;
-                    }
-
-                    throw new \LogicException('Invalid invocation count.');
-                },
-            )
+            ->willReturnMap([
+                ['ROLE_MEMBER', null, false],
+                [ContaoCorePermissions::MEMBER_IN_GROUPS, [-1, 1], true],
+            ])
         ;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
