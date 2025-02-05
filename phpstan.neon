@@ -57,6 +57,9 @@ parameters:
             - %currentWorkingDirectory%/faq-bundle/tests
             - %currentWorkingDirectory%/core-bundle/tests
 
+        # Ignore missing generated class names
+        - message: '#setMockClassName\(\) expects class-string, string given#'
+
     treatPhpDocTypesAsCertain: false
     rememberPossiblyImpureFunctionValues: false
 

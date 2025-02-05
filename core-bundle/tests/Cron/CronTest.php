@@ -214,16 +214,22 @@ class CronTest extends TestCase
     {
         $initialized = false;
 
-        new Cron(
-            static function () use (&$initialized): void {
+        $cron = new Cron(
+            function () use (&$initialized): CronJobRepository {
                 $initialized = true;
+
+                return $this->createMock(CronJobRepository::class);
             },
-            static function () use (&$initialized): void {
+            function () use (&$initialized): EntityManagerInterface {
                 $initialized = true;
+
+                return $this->createMock(EntityManagerInterface::class);
             },
             $this->createMock(CacheItemPoolInterface::class),
             $this->createMock(LockFactory::class),
         );
+
+        $this->assertEmpty($cron->getCronJobs());
 
         $this->assertFalse($initialized);
     }
