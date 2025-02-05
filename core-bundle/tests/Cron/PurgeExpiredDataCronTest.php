@@ -54,44 +54,24 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
         }
 
         $config = $this->mockAdapter(['get']);
-        $matcher = $this->exactly(3);
         $config
-            ->expects($matcher)
+            ->expects($this->exactly(3))
             ->method('get')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher, $undoPeriod, $logPeriod, $versionPeriod): int {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('undoPeriod', $parameters[0]);
-
-                        return $undoPeriod;
-                    }
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('logPeriod', $parameters[0]);
-
-                        return $logPeriod;
-                    }
-                    if (3 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('versionPeriod', $parameters[0]);
-
-                        return $versionPeriod;
-                    }
-
-                    throw new \LogicException('Unexpected number of invocations');
-                },
-            )
+            ->willReturnMap([
+                ['undoPeriod', $undoPeriod],
+                ['logPeriod', $logPeriod],
+                ['versionPeriod', $versionPeriod],
+            ])
         ;
 
         $connection = $this->createMock(Connection::class);
         $matcher = $this->exactly(\count($expectedStatements));
-
         $connection
             ->expects($matcher)
             ->method('executeStatement')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher, $expectedStatements): void {
-                    $this->assertSame($expectedStatements[$matcher->numberOfInvocations() - 1], $parameters);
-                },
-            )
+            ->with($this->callback(
+                static fn (...$parameters): bool => $expectedStatements[$matcher->numberOfInvocations() - 1] === $parameters,
+            ))
         ;
 
         $framework = $this->mockContaoFramework([Config::class => $config]);
