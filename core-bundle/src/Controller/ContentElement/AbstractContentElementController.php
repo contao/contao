@@ -99,5 +99,18 @@ abstract class AbstractContentElementController extends AbstractFragmentControll
         ]);
     }
 
+    protected function getBackendWildcard(ContentModel $model): Response
+    {
+        $context = [
+            'id' => $model->id,
+            'name' => $this->container->get('translator')->trans('CTE.'.$model->type.'.0', [], 'contao_default'),
+            'type' => $model->type,
+            'title' => StringUtil::deserialize($model->headline, true)['value'] ?? null,
+            'request_token' => $this->container->get('contao.csrf.token_manager')->getDefaultTokenValue(),
+        ];
+
+        return $this->render('@Contao/backend/module_wildcard.html.twig', $context);
+    }
+
     abstract protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response;
 }
