@@ -1,0 +1,36 @@
+.nav-main {
+    .invisible {
+        visibility: hidden;
+    }
+}
+
+@media (min-width: 1024px) {
+    .nav-main {
+        .invisible {
+            visibility: visible;
+
+            opacity: 0;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            clip: revert;
+            top: -100px;
+            text-align: center;
+            overflow: hidden;
+            background: var(--skip-bg);
+            color: var(--skip-clr);
+            transition: top 0.15s ease-in-out;
+            z-index: 6;
+
+            &:focus {
+                width: auto;
+                height: auto;
+                outline-offset: 0;
+                outline: 2px solid var(--skip-focus-bdr);
+                padding: 6px 12px;
+                top: 0;
+                opacity: 1;
+            }
+        }
+    }
+}

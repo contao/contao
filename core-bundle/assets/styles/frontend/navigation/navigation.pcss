@@ -1,0 +1,202 @@
+body.navigation-open {
+    overflow: hidden;
+
+    .nav-toggle {
+        color: #fff;
+    }
+
+    header .logo {
+        position: relative;
+        z-index: 7;
+    }
+}
+
+@media (max-width: 1023.98px) {
+
+    .nav-main {
+        position: fixed;
+        inset: 0;
+        overflow: hidden auto;
+        z-index: 6;
+
+        background: var(--nav-mobile-bg);
+        color: var(--nav-mobile-clr);
+
+        line-height: 1.5;
+
+        &:not(.is-active) {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        :is(a, strong) {
+            display: inline-block;
+
+            color: var(--nav-mobile-clr) !important;
+            text-decoration: unset !important;
+
+            padding: 12px 10px;
+
+            &:is(.active) {
+                --nav-clr: var(--nav-mobile-active-clr);
+                box-shadow: inset 3px 0 0 0 var(--nav-mobile-active-bdr);
+            }
+        }
+
+        .level_1 {
+            padding: 100px 20px 20px;
+            font-size: 20px;
+
+            ul {
+                display: none;
+                flex-direction: column;
+            }
+        }
+
+        .level_2 {
+            font-size: 16px;
+
+            li {
+                padding: 0 0 0 10px;
+            }
+
+            .btn-toggle-submenu {
+                top: 0;
+            }
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+
+            display: flex;
+            flex-direction: column;
+        }
+
+        li {
+            position: relative;
+            padding: 0;
+
+            &:not(:last-child) {
+                border-bottom: 1px solid var(--nav-mobile-separator);
+            }
+
+            &.submenu {
+
+                li {
+
+                    &:first-child {
+                        border-top: 1px solid var(--nav-mobile-separator);
+                    }
+                }
+            }
+
+            &.active {
+                background: var(--nav-mobile-active-bg);
+                color: var(--nav-mobile-active-clr);
+            }
+
+            &.nav-expanded {
+
+                > ul {
+                    display: flex;
+                }
+
+                > .btn-toggle-submenu:after {
+                    transform: rotateZ(90deg);
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 1024px) {
+
+    .nav-main {
+
+        :is(a, strong) {
+            font-size: 20px;
+
+            position: relative;
+
+            display: block;
+
+            color: var(--nav-clr);
+            font-weight: 600;
+        }
+
+        :is(a:hover, a:focus, a.trail, strong) {
+            color: var(--nav-active-clr);
+        }
+
+        ul {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+
+            ul {
+                position: absolute;
+                padding: 15px 0;
+                min-width: 270px;
+                background: #fff;
+                box-shadow: 1px 2px 15px rgba(0, 0, 0, .1);
+                gap: 1rem;
+                z-index: 1;
+
+                li {
+                    padding: 0 15px;
+                }
+
+                .btn-toggle-submenu {
+                    right: 15px;
+                }
+            }
+
+            li {
+
+                &.submenu {
+                    position: relative;
+                    padding-right: 18px;
+                }
+            }
+        }
+
+        li {
+
+            &.nav-expanded {
+
+                > ul {
+                    display: flex;
+                }
+
+                > .btn-toggle-submenu:after {
+                    transform: rotateZ(90deg);
+                }
+
+                > .level_3 {
+                    top: -50%;
+                    left: 100%;
+                    min-width: 200px;
+                }
+            }
+        }
+
+        .level_1 {
+            gap: 0 1.5rem;
+            justify-content: flex-end;
+            align-items: center;
+
+            ul {
+                display: none;
+                flex-direction: column;
+
+                :is(a, strong) {
+                    font-size: 1rem;
+                    line-height: 1.5;
+                }
+            }
+        }
+    }
+}
