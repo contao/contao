@@ -51,7 +51,6 @@ class AppKernel extends Kernel
         ];
     }
 
-    #[\Override]
     public function getProjectDir(): string
     {
         return \dirname(__DIR__, 3).'/var';
