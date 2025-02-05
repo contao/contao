@@ -530,6 +530,12 @@
       <trans-unit id="CTE.teaser.1">
         <source>Displays the teaser text of an article.</source>
       </trans-unit>
+      <trans-unit id="CTE.two_factor.0">
+        <source>Two-factor authentication</source>
+      </trans-unit>
+      <trans-unit id="CTE.two_factor.1">
+        <source>Generates a form to set up or change two-factor authentication</source>
+      </trans-unit>
       <trans-unit id="CTE.legacy">
         <source>Legacy elements</source>
       </trans-unit>
