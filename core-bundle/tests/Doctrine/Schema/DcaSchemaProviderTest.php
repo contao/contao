@@ -206,10 +206,10 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->getDcaSchemaProvider($dca)->appendToSchema($schema);
         $table = $schema->getTable('tl_member');
 
-        $assertions($table);
+        $assertions->bindTo($this)($table);
     }
 
-    public function provideTableOptions(): iterable
+    public static function provideTableOptions(): iterable
     {
         yield [
             'ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
