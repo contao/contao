@@ -16,16 +16,13 @@ use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\ServiceAnnotation\ContentElement;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class ContentElementTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     #[Group('legacy')]
     public function testReturnsTheTagName(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.4: %s Use the #[AsContentElement] attribute instead.');
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.4: %s Use the #[AsContentElement] attribute instead.');
 
         $annotation = new ContentElement(['category' => 'foobar']);
 

@@ -29,7 +29,6 @@ use Contao\InsertTags;
 use Contao\System;
 use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -40,8 +39,6 @@ use Twig\TwigFunction;
 
 class ContaoEscaperNodeVisitorTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_MIME'], $GLOBALS['objPage']);
@@ -141,7 +138,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
     #[Group('legacy')]
     public function testHtmlAttrFilter(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
 
         HookHelper::registerHook('replaceInsertTags', fn (...$args) => $this->executeReplaceInsertTagsCallback(...$args));
 

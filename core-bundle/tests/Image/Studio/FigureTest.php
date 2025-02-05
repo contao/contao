@@ -145,7 +145,7 @@ class FigureTest extends TestCase
     public function testGetLinkAttributes(array $argumentsAndPreconditions, array $expectedAttributes, string|null $expectedHref): void
     {
         foreach ($argumentsAndPreconditions as &$element) {
-            if($element === '__lightbox__') {
+            if ('__lightbox__' === $element) {
                 $lightbox = $this->createMock(LightboxResult::class);
                 $lightbox
                     ->method('getLinkHref')

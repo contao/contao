@@ -20,13 +20,10 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class DcTableTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_DCA']);
@@ -40,7 +37,7 @@ class DcTableTest extends TestCase
     #[Group('legacy')]
     public function testGetPalette(array $dca, array $row, string $expected): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.0: Getting data from $_POST with the "Contao\Input" class has been deprecated %s.');
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.0: Getting data from $_POST with the "Contao\Input" class has been deprecated %s.');
 
         $result = $this->createMock(Result::class);
         $result

@@ -36,14 +36,11 @@ use Imagine\Image\ImageInterface as ImagineImageInterface;
 use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 class ImageFactoryTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -551,7 +548,7 @@ class ImageFactoryTest extends TestCase
         $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, $filesystem, $framework);
 
-        $this->expectDeprecation("%slegacy resize mode \"$mode\" has been deprecated%s");
+        $this->expectUserDeprecationMessage("%slegacy resize mode \"$mode\" has been deprecated%s");
 
         $image = $imageFactory->create($path, [50, 50, $mode]);
         $imageFromSerializedConfig = $imageFactory->create($path, serialize([50, 50, $mode]));

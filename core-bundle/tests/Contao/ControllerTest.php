@@ -21,13 +21,10 @@ use Contao\Environment;
 use Contao\PageModel;
 use Contao\System;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 class ControllerTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();

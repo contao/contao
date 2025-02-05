@@ -18,12 +18,9 @@ use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ImportantPart;
 use PHPUnit\Framework\Attributes\Group;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class ExtraMetadataTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testGetValues(): void
     {
         $data = [
@@ -66,7 +63,7 @@ class ExtraMetadataTest extends TestCase
     {
         $localizedMetadata = new MetadataBag([]);
 
-        $this->expectDeprecation('%sUsing the key "metadata" to set localized metadata has been deprecated%s');
+        $this->expectUserDeprecationMessage('%sUsing the key "metadata" to set localized metadata has been deprecated%s');
 
         $extraMetadata = new ExtraMetadata([
             'metadata' => $localizedMetadata,
@@ -84,7 +81,7 @@ class ExtraMetadataTest extends TestCase
             'localized' => $localizedMetadata,
         ]);
 
-        $this->expectDeprecation('%sUsing the key "metadata" to get localized metadata has been deprecated%s');
+        $this->expectUserDeprecationMessage('%sUsing the key "metadata" to get localized metadata has been deprecated%s');
 
         $this->assertSame($localizedMetadata, $extraMetadata->get('metadata'));
     }

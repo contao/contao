@@ -18,12 +18,9 @@ use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Runtime\FigureRuntime;
 use PHPUnit\Framework\Attributes\Group;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class FigureRendererRuntimeTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testDelegatesCallsWhenBuildingFigure(): void
     {
         $figure = new Figure($this->createMock(ImageResult::class));
@@ -55,7 +52,7 @@ class FigureRendererRuntimeTest extends TestCase
 
         $figureRendererRuntime = new FigureRuntime($figureRenderer);
 
-        $this->expectDeprecation('%sUsing the "contao_figure" Twig function has been deprecated%s');
+        $this->expectUserDeprecationMessage('%sUsing the "contao_figure" Twig function has been deprecated%s');
 
         $result = $figureRendererRuntime->renderFigure('123', '_my_size', ['foo' => 'bar'], 'my_template.html.twig');
 
@@ -73,7 +70,7 @@ class FigureRendererRuntimeTest extends TestCase
             ->willReturn('<result>')
         ;
 
-        $this->expectDeprecation('%sUsing the "contao_figure" Twig function has been deprecated%s');
+        $this->expectUserDeprecationMessage('%sUsing the "contao_figure" Twig function has been deprecated%s');
 
         (new FigureRuntime($figureRenderer))->renderFigure(1, null);
     }

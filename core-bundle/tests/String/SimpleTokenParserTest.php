@@ -19,14 +19,11 @@ use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\ExpressionLanguage\ExpressionFunction;
 use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 
 class SimpleTokenParserTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     #[DataProvider('parseSimpleTokensProvider')]
     public function testParsesSimpleTokens(string $string, array $tokens, string $expected): void
     {

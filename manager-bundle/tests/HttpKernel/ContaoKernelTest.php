@@ -27,7 +27,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\ClassExistenceResource;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -39,8 +38,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ContaoKernelTest extends ContaoTestCase
 {
-    use ExpectDeprecationTrait;
-
     private array|string|false $shellVerbosityBackup;
 
     protected function setUp(): void

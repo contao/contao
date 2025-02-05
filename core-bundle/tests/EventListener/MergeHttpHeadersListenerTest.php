@@ -17,7 +17,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\HttpKernel\Header\MemoryHeaderStorage;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\Group;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -29,8 +28,6 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class MergeHttpHeadersListenerTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testIgnoresSubrequests(): void
     {
         $responseEvent = $this->getResponseEvent(null, HttpKernelInterface::SUB_REQUEST);
@@ -48,7 +45,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     #[Group('legacy')]
     public function testMergesTheHeadersSent(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
 
         $responseEvent = $this->getResponseEvent();
 
@@ -88,7 +85,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     #[Group('legacy')]
     public function testDoesNotOverrideMultiValueHeaders(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
 
         $response = new Response();
         $response->headers->set('Set-Cookie', 'content=foobar');
@@ -174,7 +171,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     #[Group('legacy')]
     public function testInheritsHeadersFromSubrequest(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
 
         $responseEvent = $this->getResponseEvent();
 
@@ -209,7 +206,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     #[Group('legacy')]
     public function testInheritsMultiHeadersFromSubrequest(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
 
         $responseEvent = $this->getResponseEvent();
 
@@ -250,7 +247,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     #[Group('legacy')]
     public function testDoesNotMergeCacheControlHeaders(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
 
         $responseEvent = $this->getResponseEvent();
 
@@ -275,7 +272,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     #[Group('legacy')]
     public function testSetsTheStatusCodeFromHttpHeader(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
 
         $responseEvent = $this->getResponseEvent();
 
@@ -299,7 +296,7 @@ class MergeHttpHeadersListenerTest extends TestCase
     #[Group('legacy')]
     public function testServiceIsResetable(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.3: Using the PHP header() function to set HTTP headers %s');
 
         $response = new Response();
 

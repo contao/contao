@@ -120,7 +120,7 @@ class CalendarEventsResolverTest extends ContaoTestCase
     public static function getParametersForContentProvider(): iterable
     {
         yield 'Uses the event alias' => [
-            [CalendarEventsModel::class,  ['id' => 42, 'alias' => 'foobar']],
+            [CalendarEventsModel::class, ['id' => 42, 'alias' => 'foobar']],
             ['parameters' => '/foobar'],
         ];
 

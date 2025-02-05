@@ -17,12 +17,9 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class ThemeTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     #[DataProvider('providePaths')]
     public function testGenerateSlug(string $path, string $expectedSlug): void
     {
@@ -47,7 +44,7 @@ class ThemeTest extends TestCase
     {
         $themeNamespace = new ThemeNamespace();
 
-        $this->expectDeprecation('%sUsing paths outside of the template directory are deprecated and will no longer work in Contao 6.%s');
+        $this->expectUserDeprecationMessage('%sUsing paths outside of the template directory are deprecated and will no longer work in Contao 6.%s');
 
         $this->assertSame($expectedSlug, $themeNamespace->generateSlug($path));
     }

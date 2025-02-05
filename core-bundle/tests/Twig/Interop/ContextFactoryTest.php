@@ -17,15 +17,12 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\Template;
 use PHPUnit\Framework\Attributes\Group;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Loader\ArrayLoader;
 
 class ContextFactoryTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testCreateContextFromTemplate(): void
     {
         $object = new \stdClass();
@@ -108,7 +105,7 @@ class ContextFactoryTest extends TestCase
     #[Group('legacy')]
     public function testCreateContextFromClass(): void
     {
-        $this->expectDeprecation('%sCreation of dynamic property %s is deprecated');
+        $this->expectUserDeprecationMessage('%sCreation of dynamic property %s is deprecated');
 
         $object = new ChildClassWithMembersStub();
         $context = (new ContextFactory())->fromClass($object);

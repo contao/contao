@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Intl;
 use Contao\CoreBundle\Intl\Countries;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Intl\Countries as SymfonyCountries;
 use Symfony\Component\Translation\MessageCatalogueInterface;
@@ -23,8 +22,6 @@ use Symfony\Component\Translation\Translator;
 
 class CountriesTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         parent::tearDown();

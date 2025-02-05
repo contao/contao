@@ -31,7 +31,6 @@ use Contao\System;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -39,8 +38,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class InsertTagsTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -109,10 +106,10 @@ class InsertTagsTest extends TestCase
 
     #[DataProvider('insertTagsProvider')]
     #[Group('legacy')]
-    public function testInsertTags(string $source, string $expected, bool $expectDeprecation = true): void
+    public function testInsertTags(string $source, string $expected, bool $expectUserDeprecationMessage = true): void
     {
-        if ($expectDeprecation) {
-            $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        if ($expectUserDeprecationMessage) {
+            $this->expectUserDeprecationMessage('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
         }
 
         InsertTags::reset();
@@ -807,7 +804,7 @@ class InsertTagsTest extends TestCase
         $source = str_replace('lng', 'LnG', $source);
 
         if (str_contains($source, 'LnG')) {
-            $this->expectDeprecation('%sInsert tags with uppercase letters%s');
+            $this->expectUserDeprecationMessage('%sInsert tags with uppercase letters%s');
         }
 
         $this->assertSame($expected, $insertTagParser->replaceInline($source));
@@ -1047,7 +1044,7 @@ class InsertTagsTest extends TestCase
     #[Group('legacy')]
     public function testInfiniteNestedInsertTag(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
 
         InsertTags::reset();
 
@@ -1064,7 +1061,7 @@ class InsertTagsTest extends TestCase
     #[Group('legacy')]
     public function testInfiniteRecursionInsertTag(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
 
         InsertTags::reset();
 
@@ -1079,7 +1076,7 @@ class InsertTagsTest extends TestCase
     #[Group('legacy')]
     public function testInfiniteRecursionWithCatchInsertTag(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
 
         InsertTags::reset();
 
@@ -1092,7 +1089,7 @@ class InsertTagsTest extends TestCase
     #[Group('legacy')]
     public function testInfiniteRecursionWithCatchAndRetryInsertTag(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
 
         InsertTags::reset();
 
@@ -1107,7 +1104,7 @@ class InsertTagsTest extends TestCase
     #[Group('legacy')]
     public function testPcreBacktrackLimit(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
 
         InsertTags::reset();
 

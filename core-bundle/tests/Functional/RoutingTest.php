@@ -15,12 +15,9 @@ namespace Contao\CoreBundle\Tests\Functional;
 use Contao\System;
 use Contao\TestCase\FunctionalTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class RoutingTest extends FunctionalTestCase
 {
-    use ExpectDeprecationTrait;
-
     private static array|null $lastImport = null;
 
     protected function setUp(): void

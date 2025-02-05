@@ -15,16 +15,13 @@ namespace Contao\CoreBundle\Tests\ServiceAnnotation;
 use Contao\CoreBundle\ServiceAnnotation\Hook;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class HookTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     #[Group('legacy')]
     public function testReturnsTheTagName(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.4: %s Use the #[AsHook] attribute instead.');
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.4: %s Use the #[AsHook] attribute instead.');
 
         $annotation = new Hook();
 

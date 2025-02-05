@@ -31,12 +31,9 @@ use Contao\Model\Collection;
 use Contao\System;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class PictureFactoryTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -496,7 +493,7 @@ class PictureFactoryTest extends TestCase
             )
         ;
 
-        $this->expectDeprecation('%slegacy resize mode "left_top" has been deprecated%s');
+        $this->expectUserDeprecationMessage('%slegacy resize mode "left_top" has been deprecated%s');
 
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, [100, 200, 'left_top']);

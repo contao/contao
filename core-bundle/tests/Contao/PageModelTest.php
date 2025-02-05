@@ -34,14 +34,11 @@ use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PageModelTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -442,7 +439,7 @@ class PageModelTest extends TestCase
     #[Group('legacy')]
     public function testUsesAbsolutePathReferenceForFrontendUrl(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using "Contao\PageModel::getFrontendUrl()" has been deprecated%s');
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.3: Using "Contao\PageModel::getFrontendUrl()" has been deprecated%s');
 
         $page = new PageModel();
         $page->pid = 42;
@@ -464,7 +461,7 @@ class PageModelTest extends TestCase
     #[Group('legacy')]
     public function testUsesAbsoluteUrlReferenceForFrontendUrlOnOtherDomain(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using "Contao\PageModel::getFrontendUrl()" has been deprecated%s');
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.3: Using "Contao\PageModel::getFrontendUrl()" has been deprecated%s');
 
         $page = new PageModel();
         $page->pid = 42;
@@ -488,7 +485,7 @@ class PageModelTest extends TestCase
     #[Group('legacy')]
     public function testUsesAbsoluteUrlReferenceForAbsoluteUrl(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.3: Using "Contao\PageModel::getAbsoluteUrl()" has been deprecated%s');
+        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.3: Using "Contao\PageModel::getAbsoluteUrl()" has been deprecated%s');
 
         $page = new PageModel();
         $page->pid = 42;

@@ -29,7 +29,6 @@ use Contao\System;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
@@ -38,8 +37,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class InsertTagParserTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -95,7 +92,7 @@ class InsertTagParserTest extends TestCase
         $this->assertSame('{{does_not_exist}}', $parser->renderTag('does_not_exist')->getValue());
 
         $this->expectExceptionMessage('Rendering a single insert tag has to return a single chunk');
-        $this->expectDeprecation('%sInvalid insert tag name%s');
+        $this->expectUserDeprecationMessage('%sInvalid insert tag name%s');
 
         $parser->renderTag('br}}foo{{br');
     }
@@ -159,7 +156,7 @@ class InsertTagParserTest extends TestCase
         $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
 
-        $this->expectDeprecation('%sInsert tags with uppercase letters%s');
+        $this->expectUserDeprecationMessage('%sInsert tags with uppercase letters%s');
 
         $this->assertSame('<br>', $parser->renderTag('bR')->getValue());
     }

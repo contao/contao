@@ -18,13 +18,10 @@ use Contao\CoreBundle\InsertTag\Resolver\TranslationInsertTag;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Translation\Translator;
 
 class TranslationInsertTagTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     #[DataProvider('insertTagsProvider')]
     #[Group('legacy')]
     public function testReplacesInsertTagsWithTranslation(string $id, string $result, string|null $domain = null, array $parameters = []): void
@@ -52,7 +49,7 @@ class TranslationInsertTagTest extends TestCase
         if ($parameters) {
             $params = [$id, $domain, implode(':', $parameters)];
 
-            $this->expectDeprecation('%sPassing parameters to the trans insert tag separated by a single colon has has been deprecated%s');
+            $this->expectUserDeprecationMessage('%sPassing parameters to the trans insert tag separated by a single colon has has been deprecated%s');
             $this->assertSame($result, $listener(new ResolvedInsertTag('trans', new ResolvedParameters($params), []))->getValue());
         }
     }

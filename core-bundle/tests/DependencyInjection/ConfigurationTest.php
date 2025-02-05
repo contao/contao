@@ -17,7 +17,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ResizeConfiguration;
 use Imagine\Image\ImageInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Definition\ArrayNode;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
@@ -25,8 +24,6 @@ use Symfony\Component\Config\Definition\PrototypedArrayNode;
 
 class ConfigurationTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     private Configuration $configuration;
 
     protected function setUp(): void
