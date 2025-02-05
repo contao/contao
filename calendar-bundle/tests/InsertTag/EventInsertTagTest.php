@@ -46,7 +46,7 @@ class EventInsertTagTest extends ContaoTestCase
     }
 
     #[DataProvider('replacesTheEventTagsProvider')]
-    public function testReplacesTheEventTags(string $insertTag, array $parameters, int|null $referenceType, string|null $url, string $expectedResult): void
+    public function testReplacesTheEventTags(string $insertTag, array $parameters, int|null $referenceType, string|null $url, string $expectedValue, OutputType $expectedOutputType): void
     {
         $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class);
         $eventModel->title = 'The "foobar" event';
@@ -65,11 +65,10 @@ class EventInsertTagTest extends ContaoTestCase
         ;
 
         $listener = new EventInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
+        $result = $listener(new ResolvedInsertTag($insertTag, new ResolvedParameters($parameters), []));
 
-        $this->assertSame(
-            $expectedResult,
-            $listener(new ResolvedInsertTag($insertTag, new ResolvedParameters($parameters), []))->getValue(),
-        );
+        $this->assertSame($expectedValue, $result->getValue());
+        $this->assertSame($expectedOutputType, $result->getOutputType());
     }
 
     public static function replacesTheEventTagsProvider(): \Generator
@@ -80,6 +79,7 @@ class EventInsertTagTest extends ContaoTestCase
             UrlGeneratorInterface::ABSOLUTE_PATH,
             'events/the-foobar-event.html',
             '<a href="events/the-foobar-event.html">The "foobar" event</a>',
+            OutputType::html,
         ];
 
         yield [
@@ -88,6 +88,7 @@ class EventInsertTagTest extends ContaoTestCase
             UrlGeneratorInterface::ABSOLUTE_PATH,
             'events/the-foobar-event.html',
             '<a href="events/the-foobar-event.html" target="_blank" rel="noreferrer noopener">The "foobar" event</a>',
+            OutputType::html,
         ];
 
         yield [
@@ -96,6 +97,7 @@ class EventInsertTagTest extends ContaoTestCase
             UrlGeneratorInterface::ABSOLUTE_PATH,
             'events/the-foobar-event.html',
             '<a href="events/the-foobar-event.html">',
+            OutputType::html,
         ];
 
         yield [
@@ -104,6 +106,7 @@ class EventInsertTagTest extends ContaoTestCase
             UrlGeneratorInterface::ABSOLUTE_PATH,
             'events/the-foobar-event.html',
             '<a href="events/the-foobar-event.html" target="_blank" rel="noreferrer noopener">',
+            OutputType::html,
         ];
 
         yield [
@@ -112,6 +115,7 @@ class EventInsertTagTest extends ContaoTestCase
             UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/events/the-foobar-event.html',
             '<a href="http://domain.tld/events/the-foobar-event.html" target="_blank" rel="noreferrer noopener">',
+            OutputType::html,
         ];
 
         yield [
@@ -120,6 +124,7 @@ class EventInsertTagTest extends ContaoTestCase
             UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/events/the-foobar-event.html',
             '<a href="http://domain.tld/events/the-foobar-event.html" target="_blank" rel="noreferrer noopener">',
+            OutputType::html,
         ];
 
         yield [
@@ -128,6 +133,7 @@ class EventInsertTagTest extends ContaoTestCase
             UrlGeneratorInterface::ABSOLUTE_PATH,
             'events/the-foobar-event.html',
             'events/the-foobar-event.html',
+            OutputType::url,
         ];
 
         yield [
@@ -136,6 +142,7 @@ class EventInsertTagTest extends ContaoTestCase
             UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/events/the-foobar-event.html',
             'http://domain.tld/events/the-foobar-event.html',
+            OutputType::url,
         ];
 
         yield [
@@ -144,6 +151,7 @@ class EventInsertTagTest extends ContaoTestCase
             UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/events/the-foobar-event.html',
             'http://domain.tld/events/the-foobar-event.html',
+            OutputType::url,
         ];
 
         yield [
@@ -152,6 +160,7 @@ class EventInsertTagTest extends ContaoTestCase
             UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/events/the-foobar-event.html',
             'http://domain.tld/events/the-foobar-event.html',
+            OutputType::url,
         ];
 
         yield [
@@ -160,6 +169,7 @@ class EventInsertTagTest extends ContaoTestCase
             null,
             null,
             'The "foobar" event',
+            OutputType::text,
         ];
 
         yield [
@@ -168,6 +178,7 @@ class EventInsertTagTest extends ContaoTestCase
             null,
             null,
             '<p>The annual foobar event.</p>',
+            OutputType::html,
         ];
     }
 

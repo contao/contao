@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\Tests\InsertTag;
 
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
+use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\ResolvedParameters;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
@@ -25,7 +26,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class NewsInsertTagTest extends ContaoTestCase
 {
     #[DataProvider('replacesNewsTagsProvider')]
-    public function testReplacesTheNewsTags(string $insertTag, array $parameters, int|null $referenceType, string|null $url, string $expectedResult): void
+    public function testReplacesTheNewsTags(string $insertTag, array $parameters, int|null $referenceType, string|null $url, string $expectedValue, OutputType $expectedOutputType): void
     {
         $newsModel = $this->mockClassWithProperties(NewsModel::class);
         $newsModel->headline = '"Foo" is not "bar"';
@@ -44,11 +45,10 @@ class NewsInsertTagTest extends ContaoTestCase
         ;
 
         $listener = new NewsInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
+        $result = $listener(new ResolvedInsertTag($insertTag, new ResolvedParameters($parameters), []));
 
-        $this->assertSame(
-            $expectedResult,
-            $listener(new ResolvedInsertTag($insertTag, new ResolvedParameters($parameters), []))->getValue(),
-        );
+        $this->assertSame($expectedValue, $result->getValue());
+        $this->assertSame($expectedOutputType, $result->getOutputType());
     }
 
     public static function replacesNewsTagsProvider(): \Generator
@@ -59,6 +59,7 @@ class NewsInsertTagTest extends ContaoTestCase
             UrlGeneratorInterface::ABSOLUTE_PATH,
             'news/foo-is-not-bar.html',
             '<a href="news/foo-is-not-bar.html">"Foo" is not "bar"</a>',
+            OutputType::html,
         ];
 
         yield [
@@ -67,6 +68,7 @@ class NewsInsertTagTest extends ContaoTestCase
             UrlGeneratorInterface::ABSOLUTE_PATH,
             'news/foo-is-not-bar.html',
             '<a href="news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">"Foo" is not "bar"</a>',
+            OutputType::html,
         ];
 
         yield [
@@ -75,6 +77,7 @@ class NewsInsertTagTest extends ContaoTestCase
             UrlGeneratorInterface::ABSOLUTE_PATH,
             'news/foo-is-not-bar.html',
             '<a href="news/foo-is-not-bar.html">',
+            OutputType::html,
         ];
 
         yield [
@@ -83,6 +86,7 @@ class NewsInsertTagTest extends ContaoTestCase
             UrlGeneratorInterface::ABSOLUTE_PATH,
             'news/foo-is-not-bar.html',
             '<a href="news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">',
+            OutputType::html,
         ];
 
         yield [
@@ -91,6 +95,7 @@ class NewsInsertTagTest extends ContaoTestCase
             UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/news/foo-is-not-bar.html',
             '<a href="http://domain.tld/news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">',
+            OutputType::html,
         ];
 
         yield [
@@ -99,6 +104,7 @@ class NewsInsertTagTest extends ContaoTestCase
             UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/news/foo-is-not-bar.html',
             '<a href="http://domain.tld/news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">',
+            OutputType::html,
         ];
 
         yield [
@@ -107,6 +113,7 @@ class NewsInsertTagTest extends ContaoTestCase
             UrlGeneratorInterface::ABSOLUTE_PATH,
             'news/foo-is-not-bar.html',
             'news/foo-is-not-bar.html',
+            OutputType::url,
         ];
 
         yield [
@@ -115,6 +122,7 @@ class NewsInsertTagTest extends ContaoTestCase
             UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/news/foo-is-not-bar.html',
             'http://domain.tld/news/foo-is-not-bar.html',
+            OutputType::url,
         ];
 
         yield [
@@ -123,6 +131,7 @@ class NewsInsertTagTest extends ContaoTestCase
             UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/news/foo-is-not-bar.html',
             'http://domain.tld/news/foo-is-not-bar.html',
+            OutputType::url,
         ];
 
         yield [
@@ -131,6 +140,7 @@ class NewsInsertTagTest extends ContaoTestCase
             UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/news/foo-is-not-bar.html',
             'http://domain.tld/news/foo-is-not-bar.html',
+            OutputType::url,
         ];
 
         yield [
@@ -139,6 +149,7 @@ class NewsInsertTagTest extends ContaoTestCase
             null,
             null,
             '"Foo" is not "bar"',
+            OutputType::text,
         ];
 
         yield [
@@ -147,6 +158,7 @@ class NewsInsertTagTest extends ContaoTestCase
             null,
             null,
             '<p>Foo does not equal bar.</p>',
+            OutputType::html,
         ];
     }
 
