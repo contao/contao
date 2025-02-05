@@ -59,24 +59,31 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
             ->expects($matcher)
             ->method('get')
             ->willReturnCallback(
-                function (...$parameters) use ($matcher, $undoPeriod) {
+                function (...$parameters) use ($matcher, $undoPeriod, $logPeriod, $versionPeriod): int {
                     if (1 === $matcher->numberOfInvocations()) {
                         $this->assertSame('undoPeriod', $parameters[0]);
+
+                        return $undoPeriod;
                     }
                     if (2 === $matcher->numberOfInvocations()) {
                         $this->assertSame('logPeriod', $parameters[0]);
+
+                        return $logPeriod;
                     }
                     if (3 === $matcher->numberOfInvocations()) {
                         $this->assertSame('versionPeriod', $parameters[0]);
+
+                        return $versionPeriod;
                     }
 
-                    return $undoPeriod;
+                    throw new \LogicException('Unexpected number of invocations');
                 },
             )
         ;
 
         $connection = $this->createMock(Connection::class);
         $matcher = $this->exactly(\count($expectedStatements));
+
         $connection
             ->expects($matcher)
             ->method('executeStatement')
