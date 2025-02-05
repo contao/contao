@@ -48,9 +48,10 @@ class NewsletterResolverTest extends ContaoTestCase
     }
 
     #[DataProvider('getParametersForContentProvider')]
-    public function testGetParametersForContent(\Closure $content, array $expected): void
+    public function testGetParametersForContent(string $class, array $properties, array $expected): void
     {
-        $content = \Closure::bind($content, $this)();
+        $content = $this->mockClassWithProperties($class, $properties);
+
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $resolver = new NewsletterResolver($this->mockContaoFramework());
 
@@ -60,17 +61,20 @@ class NewsletterResolverTest extends ContaoTestCase
     public static function getParametersForContentProvider(): iterable
     {
         yield 'Uses the newsletter alias' => [
-            fn () => $this->mockClassWithProperties(NewsletterModel::class, ['id' => 42, 'alias' => 'foobar']),
+            NewsletterModel::class,
+            ['id' => 42, 'alias' => 'foobar'],
             ['parameters' => '/foobar'],
         ];
 
         yield 'Uses newsletter ID if alias is empty' => [
-            fn () => $this->mockClassWithProperties(NewsletterModel::class, ['id' => 42, 'alias' => '']),
+            NewsletterModel::class,
+            ['id' => 42, 'alias' => ''],
             ['parameters' => '/42'],
         ];
 
         yield 'Only supports NewsletterModel' => [
-            fn () => $this->mockClassWithProperties(PageModel::class),
+            PageModel::class,
+            [],
             [],
         ];
     }
