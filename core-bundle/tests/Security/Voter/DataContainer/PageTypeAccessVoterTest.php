@@ -71,20 +71,18 @@ class PageTypeAccessVoterTest extends TestCase
     public function testDecidesAccessOnPageTypeInAction(CreateAction|DeleteAction|ReadAction|UpdateAction $subject, array $types, int $expected): void
     {
         $token = $this->createMock(TokenInterface::class);
-        $matcher = $this->exactly(\count($types));
+
+        $decisions = [];
+
+        foreach ($types as $type => $decision) {
+            $decisions[] = [$token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], $type, $decision];
+        }
 
         $decisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $decisionManager
-            ->expects($matcher)
+            ->expects($this->exactly(\count($types)))
             ->method('decide')
-            ->willReturnCallback(
-                function (...$parameters) use ($token, $matcher, $types): bool {
-                    $this->assertSame(array_map(static fn ($type) => [$token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], $type], array_keys($types))[$matcher->numberOfInvocations() - 1], $parameters);
-                    $types = array_values($types);
-
-                    return $types[$matcher->numberOfInvocations() - 1];
-                },
-            )
+            ->willReturnMap($decisions)
         ;
 
         $connection = $this->createMock(Connection::class);
