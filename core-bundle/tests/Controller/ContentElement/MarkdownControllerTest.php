@@ -17,6 +17,7 @@ use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Controller\ContentElement\MarkdownController;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FilesModel;
 use Contao\FrontendTemplate;
 use Contao\Input;
@@ -164,50 +165,18 @@ class MarkdownControllerTest extends ContentElementTestCase
 
     private function mockContainer(string $expectedMarkdown, array $frameworkAdapters = []): Container
     {
-        $template = $this->createMock(FrontendTemplate::class);
-        $template
-            ->expects($this->once())
-            ->method('getResponse')
-            ->willReturn(new Response())
-        ;
-        $matcher = $this->exactly(6);
-
-        $template
-            ->expects($matcher)
-            ->method('__set')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher, $expectedMarkdown): void {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('headline', $parameters[0]);
-                        $this->assertSame($this->isNull(), $parameters[1]);
-                    }
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('hl', $parameters[0]);
-                        $this->assertSame('h1', $parameters[1]);
-                    }
-                    if (3 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('class', $parameters[0]);
-                        $this->assertSame('ce_markdown', $parameters[1]);
-                    }
-                    if (4 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('cssID', $parameters[0]);
-                        $this->assertSame('', $parameters[1]);
-                    }
-                    if (5 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('inColumn', $parameters[0]);
-                        $this->assertSame('main', $parameters[1]);
-                    }
-                    if (6 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('content', $parameters[0]);
-                        $this->assertSame($expectedMarkdown, $parameters[1]);
-                    }
-                },
-            )
-        ;
-
         if (!isset($frameworkAdapters[Input::class])) {
             $frameworkAdapters[Input::class] = new Adapter(Input::class);
         }
+
+        $template = new FragmentTemplate(
+            'foo',
+            static function (FragmentTemplate $template) use ($expectedMarkdown) {
+                self::assertSame($expectedMarkdown, $template->get('content'));
+
+                return new Response('result');
+            }
+        );
 
         $framework = $this->mockContaoFramework($frameworkAdapters);
         $framework
