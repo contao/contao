@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Repository;
 use Contao\CoreBundle\Entity\WebauthnCredential;
 use Contao\User;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Webauthn\Bundle\Repository\DoctrineCredentialSourceRepository;
 use Webauthn\PublicKeyCredentialSource;
 
@@ -26,10 +25,8 @@ use Webauthn\PublicKeyCredentialSource;
  */
 final class WebauthnCredentialRepository extends DoctrineCredentialSourceRepository
 {
-    public function __construct(
-        ManagerRegistry $registry,
-        private readonly TokenStorageInterface $tokenStorage,
-    ) {
+    public function __construct(ManagerRegistry $registry)
+    {
         parent::__construct($registry, WebauthnCredential::class);
     }
 
