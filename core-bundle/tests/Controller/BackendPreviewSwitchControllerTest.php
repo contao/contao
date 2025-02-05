@@ -305,7 +305,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
                     function (...$parameters) use ($matcher) {
                         if (1 === $matcher->numberOfInvocations()) {
                             $this->assertSame('contao_backend', $parameters[0]);
-                            $this->assertSame(['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => '1', 'rt' => 'csrf', 'nb' => '1'], $parameters[1]);
+                            $this->assertSame(['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => true, 'rt' => 'csrf', 'nb' => '1'], $parameters[1]);
                         }
                         if (2 === $matcher->numberOfInvocations()) {
                             $this->assertSame('contao_backend_switch', $parameters[0]);
