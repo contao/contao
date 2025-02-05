@@ -122,7 +122,7 @@ class ImaginePreviewProviderTest extends TestCase
 
         $this->expectException(UnableToGeneratePreviewException::class);
 
-        $provider->generatePreviews($sourcePath, 512, static fn () => null);
+        $provider->generatePreviews($sourcePath, 512, static fn (int $_) => '');
     }
 
     private function createProvider(ImagineInterface|null $imagine = null): ImaginePreviewProvider
