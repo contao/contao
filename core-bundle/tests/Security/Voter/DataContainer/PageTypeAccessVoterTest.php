@@ -71,7 +71,6 @@ class PageTypeAccessVoterTest extends TestCase
     public function testDecidesAccessOnPageTypeInAction(CreateAction|DeleteAction|ReadAction|UpdateAction $subject, array $types, int $expected): void
     {
         $token = $this->createMock(TokenInterface::class);
-
         $decisions = [];
 
         foreach ($types as $type => $decision) {
