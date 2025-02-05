@@ -15,14 +15,12 @@ namespace Contao\CoreBundle\Tests\Routing;
 use Contao\ArticleModel;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
 use Contao\CoreBundle\Routing\Content\ContentUrlResult;
-use Contao\CoreBundle\Routing\Content\StringUrl;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -154,10 +152,11 @@ class ContentUrlGeneratorTest extends TestCase
         $urlGenerator = $this->mockUrlGenerator(null);
         $pageRegistry = $this->mockPageRegistry(null);
         $entityManager = $this->createMock(EntityManagerInterface::class);
+        $result = ContentUrlResult::url('https://example.net');
 
         $resolver = $this->mockResolver(
-            [$content, ContentUrlResult::url('https://example.net')],
-            [$this->isInstanceOf(StringUrl::class), new ContentUrlResult('https://example.net')],
+            [$content, $result],
+            [$result->content, new ContentUrlResult('https://example.net')],
         );
 
         $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, [$resolver]);
@@ -173,14 +172,15 @@ class ContentUrlGeneratorTest extends TestCase
         $urlGenerator = $this->mockUrlGenerator(null);
         $pageRegistry = $this->mockPageRegistry(null);
         $entityManager = $this->createMock(EntityManagerInterface::class);
+        $result = ContentUrlResult::url('https://example.net');
 
         $pageResolver = $this->mockResolver(
-            [$content, ContentUrlResult::url('https://example.net')],
-            [$this->isInstanceOf(StringUrl::class), null],
+            [$content, $result],
+            [$result->content, null],
         );
 
         $stringResolver = $this->mockResolver(
-            [$this->isInstanceOf(StringUrl::class), new ContentUrlResult('https://example.net')],
+            [$result->content, new ContentUrlResult('https://example.net')],
         );
 
         $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, [$pageResolver, $stringResolver]);
@@ -330,31 +330,10 @@ class ContentUrlGeneratorTest extends TestCase
     private function mockResolver(array ...$cases): ContentUrlResolverInterface&MockObject
     {
         $resolver = $this->createMock(ContentUrlResolverInterface::class);
-        $matcher = $this->exactly(\count($cases));
         $resolver
-            ->expects($matcher)
+            ->expects($this->exactly(\count($cases)))
             ->method('resolve')
-            ->willReturnCallback(
-                function (object $content) use ($matcher, $cases): ContentUrlResult|null {
-                    $expectation = array_column($cases, 0)[$matcher->numberOfInvocations() - 1];
-
-                    if ($expectation instanceof Constraint) {
-                        $this->assertTrue($expectation->evaluate($content, '', true));
-                    } else {
-                        dump($expectation, $content);
-                        $this->assertSame($content, $expectation);
-                    }
-
-                    /*
-                    $argument = array_column($cases, 0)[$matcher->numberOfInvocations() - 1];
-                    dump(get_debug_type($argument));*/
-                    // dump($content, array_column($cases, 0)[$matcher->numberOfInvocations() -
-                    // 1]); this->assertSame(array_column($cases,
-                    // 0)[$matcher->numberOfInvocations() - 1], $content);
-
-                    return array_column($cases, 1)[$matcher->numberOfInvocations() - 1];
-                },
-            )
+            ->willReturnMap($cases)
         ;
 
         return $resolver;
