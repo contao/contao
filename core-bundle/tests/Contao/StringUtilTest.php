@@ -319,7 +319,7 @@ class StringUtilTest extends TestCase
         mb_substitute_character($prevSubstituteCharacter);
     }
 
-    public function validEncodingsProvider(): iterable
+    public static function validEncodingsProvider(): iterable
     {
         yield 'From UTF-8 to ISO-8859-1' => [
             '𝚏ōȏճăᴦ',
