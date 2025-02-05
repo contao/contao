@@ -258,8 +258,10 @@ class ImageResultTest extends TestCase
             ->method('resizeDeferredImage')
             ->with($this->callback(
                 static function ($deferredImage) use (&$expectedDeferredImages) {
-                    if (false !== ($key = array_search($deferredImage, $expectedDeferredImages, true))) {
-                        unset($expectedDeferredImages[$key]);
+                    foreach ($expectedDeferredImages as $key => $expectedDeferredImage) {
+                        if ($expectedDeferredImage->getPath() === $deferredImage->getPath()) {
+                            unset($expectedDeferredImages[$key]);
+                        }
                     }
 
                     return true;
