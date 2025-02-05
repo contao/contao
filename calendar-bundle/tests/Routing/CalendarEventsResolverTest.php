@@ -17,7 +17,6 @@ use Contao\CalendarBundle\Routing\CalendarEventsResolver;
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\CoreBundle\Routing\Content\StringUrl;
-use Contao\Model;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -106,14 +105,10 @@ class CalendarEventsResolverTest extends ContaoTestCase
         $this->assertSame($target, $result->content);
     }
 
-    /**
-     * @param array{class-string<Model>, array} $contentData
-     */
     #[DataProvider('getParametersForContentProvider')]
-    public function testGetParametersForContent(array $contentData, array $expected): void
+    public function testGetParametersForContent(string $class, array $properties, array $expected): void
     {
-        [$class, $data] = $contentData;
-        $content = $this->mockClassWithProperties($class, $data);
+        $content = $this->mockClassWithProperties($class, $properties);
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $resolver = new CalendarEventsResolver($this->mockContaoFramework());
@@ -124,17 +119,20 @@ class CalendarEventsResolverTest extends ContaoTestCase
     public static function getParametersForContentProvider(): iterable
     {
         yield 'Uses the event alias' => [
-            [CalendarEventsModel::class, ['id' => 42, 'alias' => 'foobar']],
+            CalendarEventsModel::class,
+            ['id' => 42, 'alias' => 'foobar'],
             ['parameters' => '/foobar'],
         ];
 
         yield 'Uses event ID if alias is empty' => [
-            [CalendarEventsModel::class, ['id' => 42, 'alias' => '']],
+            CalendarEventsModel::class,
+            ['id' => 42, 'alias' => ''],
             ['parameters' => '/42'],
         ];
 
         yield 'Only supports CalendarEventsModel' => [
-            [PageModel::class, []],
+            PageModel::class,
+            [],
             [],
         ];
     }
