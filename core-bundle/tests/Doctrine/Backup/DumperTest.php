@@ -308,7 +308,7 @@ class DumperTest extends ContaoTestCase
         $returns = [];
 
         foreach ($queries as $query => $results) {
-            $calls[] = [$query];
+            $calls[] = $query;
             $returns[] = new Result(new ArrayResult($results), $connection);
         }
         $matcher = $this->exactly(\count($queries));
@@ -317,8 +317,10 @@ class DumperTest extends ContaoTestCase
             ->expects($matcher)
             ->method('executeQuery')
             ->willReturnCallback(
-                function (...$parameters) use ($matcher, $calls): void {
-                    $this->assertSame($calls[$matcher->numberOfInvocations() - 1], $parameters);
+                function (string $query) use ($matcher, $calls, $returns): Result {
+                    $this->assertSame($calls[$matcher->numberOfInvocations() - 1], $query);
+
+                    return $returns[$matcher->numberOfInvocations() - 1];
                 },
             )
         ;
