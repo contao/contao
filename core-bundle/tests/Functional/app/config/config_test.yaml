@@ -80,8 +80,17 @@ webauthn:
                 require_resident_key: true
                 user_verification: !php/const Webauthn\AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED
                 resident_key: !php/const Webauthn\AuthenticatorSelectionCriteria::RESIDENT_KEY_REQUIREMENT_REQUIRED
+        contao_frontend:
+            rp:
+                name: Contao Open Source CMS
+            authenticator_selection_criteria:
+                require_resident_key: true
+                user_verification: !php/const Webauthn\AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED
+                resident_key: !php/const Webauthn\AuthenticatorSelectionCriteria::RESIDENT_KEY_REQUIREMENT_REQUIRED
     request_profiles:
         contao_backend:
+            user_verification: !php/const Webauthn\AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED
+        contao_frontend:
             user_verification: !php/const Webauthn\AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED
     controllers:
         enabled: true
@@ -89,8 +98,13 @@ webauthn:
             contao_backend_add_authenticator:
                 options_path: '%contao.backend.route_prefix%/webauthn/add/options'
                 result_path: '%contao.backend.route_prefix%/webauthn/add/result'
-                user_entity_guesser: Webauthn\Bundle\Security\Guesser\CurrentUserEntityGuesser
+                user_entity_guesser: contao.webauthn.user_entity_guesser
                 profile: contao_backend
+            contao_frontend_add_authenticator:
+                options_path: /_contao/webauthn/frontend/add/options
+                result_path: /_contao/webauthn/frontend/add/result
+                user_entity_guesser: contao.webauthn.user_entity_guesser
+                profile: contao_frontend
 
 services:
     doctrine.orm.default_entity_manager.validator_loader:

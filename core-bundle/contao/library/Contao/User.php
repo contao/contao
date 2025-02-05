@@ -458,7 +458,13 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		return true;
 	}
 
-	abstract public function getDisplayName(): string;
+	public function getDisplayName(): string
+	{
+		throw new \BadMethodCallException(\sprintf('%s not implemented in %s.', __FUNCTION__, self::class));
+	}
 
-	abstract public function getPasskeyUserHandle(): string;
+	public function getPasskeyUserHandle(): string
+	{
+		throw new \BadMethodCallException(\sprintf('%s not implemented in %s.', __FUNCTION__, self::class));
+	}
 }

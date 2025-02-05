@@ -214,7 +214,8 @@ class ModuleTwoFactor extends BackendModule
 
 	private function checkCredentialAccess(BackendUser $user, WebauthnCredential $credential): void
     {
-        if ($credential->userHandle !== $user->getPasskeyUserHandle()) {
+        if ($credential->userHandle !== $user->getPasskeyUserHandle())
+		{
             throw new AccessDeniedHttpException('Cannot access credential ID '.$credential->getId());
         }
     }

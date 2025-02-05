@@ -25,19 +25,16 @@ final class WebauthnUserEntityRepository implements PublicKeyCredentialUserEntit
         private readonly ContaoUserProvider $backendUserProvider,
         private readonly ContaoUserProvider $frontendUserProvider,
         private readonly ScopeMatcher $scopeMatcher,
-        private readonly RequestStack $requestStack,
     ) {
     }
 
     public function findOneByUsername(string $username): PublicKeyCredentialUserEntity|null
     {
-        $request = $this->requestStack->getCurrentRequest();
-
-        if ($this->scopeMatcher->isBackendRequest($request)) {
+        if ($this->scopeMatcher->isBackendRequest()) {
             return $this->getUserEntity($this->backendUserProvider->loadUserByIdentifier($username));
         }
 
-        if ($this->scopeMatcher->isFrontendRequest($request)) {
+        if ($this->scopeMatcher->isFrontendRequest()) {
             return $this->getUserEntity($this->frontendUserProvider->loadUserByIdentifier($username));
         }
 

@@ -750,7 +750,6 @@ services:
             - '@contao.security.backend_user_provider'
             - '@contao.security.frontend_user_provider'
             - '@contao.routing.scope_matcher'
-            - '@request_stack'
 
     contao.resource_finder:
         class: Contao\CoreBundle\Config\ResourceFinder
