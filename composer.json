@@ -186,6 +186,7 @@
         "composer/composer": "^2.0",
         "doctrine/annotations": "^2.0",
         "league/flysystem-memory": "^3.0",
+        "sebastian/diff": "^6.0",
         "shipmonk/composer-dependency-analyser": "^1.4",
         "symfony/browser-kit": "^6.4 || ^7.0"
     },
