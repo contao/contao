@@ -31,15 +31,12 @@
   </coverage>
   <php>
     <ini name="error_reporting" value="-1"/>
-    <env name="SYMFONY_PATCH_TYPE_DECLARATIONS" value="deprecations=0"/>
     <env name="KERNEL_CLASS" value="Contao\CoreBundle\Tests\Functional\app\AppKernel"/>
     <env name="DISABLE_HTTP_CACHE" value="1"/>
     <env name="APP_SECRET" value="foobar"/>
     <env name="APP_ENV" value="test"/>
     <env name="APP_DEBUG" value=""/>
     <env name="DATABASE_URL" value="mysql://root@localhost:3306/contao_test"/>
-    <env name="SYMFONY_PHPUNIT_VERSION" value="11.5"/>
-    <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0"/>$
   </php>
   <testsuites>
     <testsuite name="unit">
@@ -57,9 +54,6 @@
       <exclude>./core-bundle/tests/Functional</exclude>
     </testsuite>
   </testsuites>
-  <listeners>
-    <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
-  </listeners>
   <extensions>
     <extension class="Contao\TestCase\ClearCachePhpunitExtension"/>
     <extension class="Contao\TestCase\WarnXdebugPhpunitExtension"/>

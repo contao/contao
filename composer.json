@@ -111,6 +111,7 @@
         "symfony/asset": "^6.4 || ^7.0",
         "symfony/cache": "^6.4 || ^7.0",
         "symfony/cache-contracts": "^3.0",
+        "symfony/clock": "^6.4 || ^7.0",
         "symfony/config": "^6.4 || ^7.0",
         "symfony/console": "^6.4 || ^7.0",
         "symfony/debug-bundle": "^6.4 || ^7.0",
@@ -185,8 +186,7 @@
         "doctrine/annotations": "^2.0",
         "league/flysystem-memory": "^3.0",
         "shipmonk/composer-dependency-analyser": "^1.4",
-        "symfony/browser-kit": "^6.4 || ^7.0",
-        "symfony/phpunit-bridge": "^6.4 || ^7.0"
+        "symfony/browser-kit": "^6.4 || ^7.0"
     },
     "replace": {
         "contao/calendar-bundle": "self.version",
