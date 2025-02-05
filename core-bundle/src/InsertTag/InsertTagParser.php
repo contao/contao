@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\InsertTag;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Environment;
@@ -97,6 +98,10 @@ class InsertTagParser implements ResetInterface
 
     public function addSubscription(InsertTagSubscription $subscription): void
     {
+        if ($subscription->asFragment) {
+            trigger_deprecation('contao/core-bundle', '5.3', 'Using $asFragment = true in the attribute "%s" does not have an effect anymore and will fail in Contao 6. Directly render the desired ESI tag instead or use the fragment insert tag.', AsInsertTag::class);
+        }
+
         if (1 !== preg_match($this->allowedTagsRegex, $subscription->name)) {
             return;
         }
@@ -421,10 +426,6 @@ class InsertTagParser implements ResetInterface
             return null;
         }
 
-        if ($allowEsiTags && $subscription->asFragment) {
-            return $this->getFragmentForTag($tag);
-        }
-
         if ($subscription->resolveNestedTags) {
             $tag = $this->resolveNestedTags($tag);
         } else {
@@ -432,6 +433,10 @@ class InsertTagParser implements ResetInterface
         }
 
         $result = $subscription->service->{$subscription->method}($tag);
+
+        if (!$allowEsiTags) {
+            $result = $this->replaceEsiTags($result);
+        }
 
         foreach ($tag->getFlags() as $flag) {
             if ($callback = $this->flagCallbacks[strtolower($flag->getName())] ?? null) {
@@ -441,7 +446,55 @@ class InsertTagParser implements ResetInterface
             }
         }
 
+        if (!$allowEsiTags) {
+            $result = $this->replaceEsiTags($result);
+        }
+
         return $result;
+    }
+
+    /**
+     * @see \Symfony\Component\HttpKernel\HttpCache\Esi::process()
+     */
+    private function replaceEsiTags(InsertTagResult $result): InsertTagResult
+    {
+        if (OutputType::html !== $result->getOutputType()) {
+            return $result;
+        }
+
+        $chunks = preg_split('#<esi\:include\s+(.*?)\s*(?:/|</esi\:include)>#', $result->getValue(), -1, PREG_SPLIT_DELIM_CAPTURE);
+
+        if (\count($chunks) < 2) {
+            return $result;
+        }
+
+        $i = 1;
+
+        while (isset($chunks[$i])) {
+            $options = [];
+            preg_match_all('/(src|onerror|alt)="([^"]*?)"/', $chunks[$i], $matches, PREG_SET_ORDER);
+
+            foreach ($matches as $set) {
+                $options[$set[1]] = $set[2];
+            }
+
+            if (!isset($options['src'])) {
+                throw new \RuntimeException('Unable to process an ESI tag without a "src" attribute.');
+            }
+
+            $chunks[$i] = $this->fragmentHandler->render(
+                $options['src'],
+                'inline',
+                [
+                    'alt' => $options['alt'] ?? '',
+                    'ignore_errors' => 'continue' === ($options['onerror'] ?? ''),
+                ],
+            );
+
+            $i += 2;
+        }
+
+        return $result->withValue(implode('', $chunks));
     }
 
     private function renderBlockSubscription(InsertTag $tag, ParsedSequence|null $content = null): ParsedSequence|null

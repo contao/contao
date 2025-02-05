@@ -484,6 +484,9 @@ services:
 
     contao.insert_tag.resolver.fragment:
         class: Contao\CoreBundle\InsertTag\Resolver\FragmentInsertTag
+        arguments:
+            - '@request_stack'
+            - '@fragment.handler'
 
     contao.insert_tag.resolver.if_language:
         class: Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag

@@ -26,7 +26,7 @@ class FormInsertTag
     {
     }
 
-    #[AsInsertTag('form_session_data', asFragment: true)]
+    #[AsInsertTag('form_session_data')]
     public function replaceSessionData(ResolvedInsertTag $insertTag): InsertTagResult
     {
         return new InsertTagResult(
@@ -35,7 +35,7 @@ class FormInsertTag
         );
     }
 
-    #[AsInsertTag('form_confirmation', asFragment: true)]
+    #[AsInsertTag('form_confirmation')]
     public function replaceConfirmation(ResolvedInsertTag $insertTag): InsertTagResult
     {
         $message = '';
