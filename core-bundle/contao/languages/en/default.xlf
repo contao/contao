@@ -2117,6 +2117,9 @@
       <trans-unit id="MSC.disable">
         <source>Disable</source>
       </trans-unit>
+      <trans-unit id="MSC.edit">
+        <source>Edit</source>
+      </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
       </trans-unit>
