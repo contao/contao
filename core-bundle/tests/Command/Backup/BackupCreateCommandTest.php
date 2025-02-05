@@ -45,7 +45,7 @@ class BackupCreateCommandTest extends TestCase
         $this->assertSame(0, $code);
     }
 
-    public function successfulCommandRunProvider(): iterable
+    public static function successfulCommandRunProvider(): iterable
     {
         yield 'Default arguments' => [
             [],
@@ -151,7 +151,7 @@ class BackupCreateCommandTest extends TestCase
         $backupManager
             ->expects($this->once())
             ->method('create')
-            ->with($this->callback($expectedCreateConfig))
+            ->with($this->callback(\Closure::bind($expectedCreateConfig, $this)))
         ;
 
         return $backupManager;
