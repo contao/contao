@@ -334,8 +334,10 @@ class ContentUrlGeneratorTest extends TestCase
             ->expects($matcher)
             ->method('resolve')
             ->willReturnCallback(
-                function (...$parameters) use ($matcher, $cases): void {
+                function (...$parameters) use ($matcher, $cases): ContentUrlResult|null {
                     $this->assertSame(array_map(static fn (array $case) => [$case[0]], $cases)[$matcher->numberOfInvocations() - 1], $parameters);
+
+                    return array_column($cases, 1)[$matcher->numberOfInvocations() - 1];
                 },
             )
         ;
