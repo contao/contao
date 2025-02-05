@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Repository;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\User;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Webauthn\Bundle\Repository\PublicKeyCredentialUserEntityRepositoryInterface;
 use Webauthn\PublicKeyCredentialUserEntity;
 

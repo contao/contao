@@ -115,6 +115,16 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\ListController: ~
 
+    Contao\CoreBundle\Controller\ContentElement\LoginController:
+        arguments:
+            - '@security.helper'
+            - '@uri_signer'
+            - '@security.logout_url_generator'
+            - '@security.authentication_utils'
+            - '@translator'
+            - '@contao.routing.content_url_generator'
+            - '@event_dispatcher'
+
     Contao\CoreBundle\Controller\ContentElement\ManagePasskeysController:
         arguments:
             - '@security.helper'

@@ -764,6 +764,36 @@
       <trans-unit id="tl_content.dl_value">
         <source>Details</source>
       </trans-unit>
+      <trans-unit id="tl_content.redirect_legend">
+        <source>Redirect settings</source>
+      </trans-unit>
+      <trans-unit id="tl_content.jumpTo.0">
+        <source>Redirect page</source>
+      </trans-unit>
+      <trans-unit id="tl_content.jumpTo.1">
+        <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.redirectBack.0">
+        <source>Redirect to last page visited</source>
+      </trans-unit>
+      <trans-unit id="tl_content.redirectBack.1">
+        <source>Redirect the member back to the last page visited instead of the redirect page.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.config_legend">
+        <source>Element configuration</source>
+      </trans-unit>
+      <trans-unit id="tl_content.autologin.0">
+        <source>Allow auto login</source>
+      </trans-unit>
+      <trans-unit id="tl_content.autologin.1">
+        <source>Allow members to log into the front end automatically.</source>
+      </trans-unit>
+      <trans-unit id="tl_content.pwResetPage.0">
+        <source>Reset password page</source>
+      </trans-unit>
+      <trans-unit id="tl_content.pwResetPage.1">
+        <source>Here you can choose a page to which visitors will be redirected when clicking the &lt;em&gt;Forgot your password?&lt;/em&gt; link.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

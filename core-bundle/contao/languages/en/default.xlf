@@ -533,6 +533,18 @@
       <trans-unit id="CTE.legacy">
         <source>Legacy elements</source>
       </trans-unit>
+      <trans-unit id="CTE.manage_passkeys.0">
+        <source>Manage Passkeys</source>
+      </trans-unit>
+      <trans-unit id="CTE.manage_passkeys.1">
+        <source>Manages Passkeys for the front end member.</source>
+      </trans-unit>
+      <trans-unit id="CTE.login.0">
+        <source>Login form</source>
+      </trans-unit>
+      <trans-unit id="CTE.login.1">
+        <source>Generates a login form</source>
+      </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
       </trans-unit>
