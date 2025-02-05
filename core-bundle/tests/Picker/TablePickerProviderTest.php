@@ -27,6 +27,7 @@ use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -621,23 +622,26 @@ class TablePickerProviderTest extends ContaoTestCase
             ->willReturn($current)
         ;
 
-        $clone = $config
-            ->method('cloneForCurrent')
-        ;
 
         if ($expectedCurrent) {
-            $matcher = $this->exactly(1);
-            $clone
+            $matcher = $this->exactly(count($expectedCurrent));
+
+            $config
                 ->expects($matcher)
+                ->method('cloneForCurrent')
                 ->willReturnCallback(
-                    function (...$parameters) use ($matcher, $expectedCurrent): void {
+                    function (...$parameters) use ($matcher, $expectedCurrent, $config): PickerConfig {
                         $this->assertSame($expectedCurrent[$matcher->numberOfInvocations() - 1], $parameters);
+                        return $config;
                     }
                 )
             ;
+        } else {
+            $config
+                ->method('cloneForCurrent')
+                ->willReturnSelf();
         }
 
-        $clone->willReturnSelf();
 
         $config
             ->method('urlEncode')
@@ -674,7 +678,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $expected = [];
 
         foreach ($consecutive as $params) {
-            $expected[] = ['contao_backend', $params];
+            $expected[] = ['contao_backend', $params, UrlGeneratorInterface::ABSOLUTE_PATH];
         }
 
         $router = $this->createMock(RouterInterface::class);
@@ -810,7 +814,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $expected = [];
 
         foreach ($modules as $module) {
-            $expected[] = ['MOD.'.$module.'.0', [], 'contao_default'];
+            $expected[] = ['MOD.'.$module.'.0', [], 'contao_default', null];
         }
 
         $translator = $this->createMock(TranslatorInterface::class);
