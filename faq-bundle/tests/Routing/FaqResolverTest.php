@@ -48,28 +48,29 @@ class FaqResolverTest extends ContaoTestCase
     }
 
     #[DataProvider('getParametersForContentProvider')]
-    public function testGetParametersForContent(object $content, array $expected): void
+    public function testGetParametersForContent(\Closure $content, array $expected): void
     {
+        $content = \Closure::bind($content, $this)();
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $resolver = new FaqResolver($this->mockContaoFramework());
 
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));
     }
 
-    public function getParametersForContentProvider(): iterable
+    public static function getParametersForContentProvider(): iterable
     {
         yield 'Uses the FAQ alias' => [
-            $this->mockClassWithProperties(FaqModel::class, ['id' => 42, 'alias' => 'foobar']),
+            fn() => $this->mockClassWithProperties(FaqModel::class, ['id' => 42, 'alias' => 'foobar']),
             ['parameters' => '/foobar'],
         ];
 
         yield 'Uses FAQ ID if alias is empty' => [
-            $this->mockClassWithProperties(FaqModel::class, ['id' => 42, 'alias' => '']),
+            fn() => $this->mockClassWithProperties(FaqModel::class, ['id' => 42, 'alias' => '']),
             ['parameters' => '/42'],
         ];
 
         yield 'Only supports FaqModel' => [
-            $this->mockClassWithProperties(PageModel::class),
+            fn() => $this->mockClassWithProperties(PageModel::class),
             [],
         ];
     }
