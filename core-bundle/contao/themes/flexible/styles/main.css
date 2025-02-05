@@ -1413,7 +1413,7 @@ table.tl_listing {
 	min-height: 16px;
 }
 
-.tl_content.draft > *, .tl_folder.draft > *, .tl_file.draft > *, .hover-row.draft > td {
+.tl_content.draft .inside > :not(.tl_content_right, .cte_type) {
 	opacity: 0.5;
 }
 
