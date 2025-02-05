@@ -343,7 +343,6 @@ class CronTest extends TestCase
             ->willReturn($entity)
         ;
 
-
         $logger = $this->createMock(LoggerInterface::class);
         $logger
             ->expects($this->exactly(2))
@@ -355,7 +354,6 @@ class CronTest extends TestCase
                 // No completion log, as we're skipping
             )
         ;
-
 
         $cache = new ArrayAdapter();
 
