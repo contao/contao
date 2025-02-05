@@ -173,23 +173,23 @@ class RobotsTxtListenerTest extends TestCase
     {
         $rootPage = $this->mockClassWithProperties(PageModel::class);
 
-        $directiveList = $this->createMock(DirectiveList::class);
-        $matcher = $this->exactly(2);
-        $directiveList
-            ->expects($matcher)
-            ->method('add')
-            ->willReturnCallback(
-                function (DirectiveInterface $directive) use ($matcher, $routePrefix): void {
-                    $directive = (string) $directive;
+        $expected = [
+            'disallow:'.$routePrefix.'/',
+            'disallow:/_contao/',
+        ];
 
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertTrue($directive === 'disallow:'.$routePrefix.'/');
-                    }
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('disallow:/_contao/', $directive);
-                    }
+        $directiveList = $this->createMock(DirectiveList::class);
+        $directiveList
+            ->expects($this->exactly(2))
+            ->method('add')
+            ->with($this->callback(
+                static function (DirectiveInterface $directive) use (&$expected) {
+                    $pos = array_search((string) $directive, $expected, true);
+                    unset($expected[$pos]);
+
+                    return false !== $pos;
                 },
-            )
+            ))
         ;
 
         $record = $this->createMock(Record::class);
