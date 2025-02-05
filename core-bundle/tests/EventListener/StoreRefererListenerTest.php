@@ -173,8 +173,9 @@ class StoreRefererListenerTest extends TestCase
     }
 
     #[DataProvider('noContaoUserProvider')]
-    public function testDoesNotStoreTheRefererIfThereIsNoContaoUser(UserInterface|null $user = null): void
+    public function testDoesNotStoreTheRefererIfThereIsNoContaoUser(bool $withUser): void
     {
+        $user = $withUser ? null : $this->createMock(UserInterface::class);
         $session = $this->createMock(SessionInterface::class);
         $session
             ->expects($this->never())
@@ -190,10 +191,10 @@ class StoreRefererListenerTest extends TestCase
         $listener($this->getResponseEvent($request));
     }
 
-    public function noContaoUserProvider(): iterable
+    public static function noContaoUserProvider(): iterable
     {
-        yield [null];
-        yield [$this->createMock(UserInterface::class)];
+        yield [false];
+        yield [true];
     }
 
     public function testDoesNotStoreTheRefererIfNotAContaoRequest(): void
