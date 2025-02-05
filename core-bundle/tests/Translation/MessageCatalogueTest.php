@@ -155,6 +155,8 @@ class MessageCatalogueTest extends TestCase
 
                         return false;
                     }
+
+                    return false;
                 },
             )
         ;
@@ -201,6 +203,8 @@ class MessageCatalogueTest extends TestCase
 
                         return 'bar';
                     }
+
+                    return false;
                 },
             )
         ;
@@ -269,8 +273,12 @@ class MessageCatalogueTest extends TestCase
         ];
     }
 
+    /**
+     * @param list<class-string>                   $paramMockClasses
+     * @param class-string|list<class-string>|null $returnMockClassOrClasses
+     */
     #[DataProvider('getCompletelyForwardedMethods')]
-    public function testForwardsCompletelyToParent(string $method, array $paramMockClasses, mixed $returnMockClassOrClasses = null): void
+    public function testForwardsCompletelyToParent(string $method, array $paramMockClasses, array|string|null $returnMockClassOrClasses = null): void
     {
         $params = array_map(fn (string $class) => $this->createMock($class), $paramMockClasses);
 
