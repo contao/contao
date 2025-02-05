@@ -1,0 +1,24 @@
+.tl_info:has(a.clipboard--written) {
+    animation: success-flash 2 alternate 350ms;
+}
+
+a.clipboard--expired {
+    opacity: .5;
+}
+
+a.clipboard--written {
+    animation: success-flash 2 alternate 350ms;
+}
+
+@keyframes success-flash {
+    0% {
+    }
+
+    80% {
+        filter: brightness(0) saturate(100%) invert(50%) sepia(45%) saturate(858%) hue-rotate(46deg) brightness(93%) contrast(89%);
+    }
+
+    100% {
+        filter: brightness(0) saturate(100%) invert(50%) sepia(45%) saturate(858%) hue-rotate(46deg) brightness(93%) contrast(89%);
+    }
+}

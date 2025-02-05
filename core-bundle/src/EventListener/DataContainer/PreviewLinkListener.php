@@ -19,6 +19,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\DataContainer;
+use Contao\Image;
 use Contao\Input;
 use Contao\Message;
 use Doctrine\DBAL\Connection;
@@ -169,16 +170,16 @@ class PreviewLinkListener
     }
 
     #[AsCallback(table: 'tl_preview_link', target: 'list.operations.share.button')]
-    public function shareOperation(array $row, string|null $href, string|null $label, string|null $title): string
+        public function shareOperation(array $row, string|null $href, string|null $label, string|null $title, string $icon): string
     {
         if ($row['expiresAt'] < time()) {
             return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon), $label);
         }
 
-        return $this->generateClipboardLink((int) $row['id'], $title);
+        return $this->generateClipboardLink((int) $row['id'], Image::getHtml($icon, $label), $title);
     }
 
-    private function generateClipboardLink(int $id, string|null $title = null): string
+    private function generateClipboardLink(int $id, $label = null, string|null $title = null): string
     {
         $url = $this->urlGenerator->generate('contao_preview_link', ['id' => $id], UrlGeneratorInterface::ABSOLUTE_URL);
         $url = $this->uriSigner->sign($url);
@@ -186,7 +187,7 @@ class PreviewLinkListener
         $title ??= $this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link');
 
         return \sprintf(
-            '<button%s><span class="url">%s</span></button>',
+            '<a%s><span class="url">%s</span></a>',
             (new HtmlAttributes())
                 ->set('href', $url)
                 ->set('target', '_blank')

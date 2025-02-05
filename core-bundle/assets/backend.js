@@ -10,7 +10,6 @@ import './scripts/modulewizard.js';
 import './scripts/sectionwizard.js';
 
 import './styles/backend.pcss';
-import './styles/clipboard.pcss';
 
 // Start the Stimulus application
 const application = Application.start();
