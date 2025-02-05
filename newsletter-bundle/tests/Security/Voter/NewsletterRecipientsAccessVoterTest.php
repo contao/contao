@@ -23,16 +23,6 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class NewsletterRecipientsAccessVoterTest extends AbstractAccessVoterTest
 {
-    protected function getVoterClass(): string
-    {
-        return NewsletterRecipientsAccessVoter::class;
-    }
-
-    protected function getTable(): string
-    {
-        return 'tl_newsletter_recipients';
-    }
-
     public static function votesProvider(): \Generator
     {
         yield [
@@ -87,5 +77,15 @@ class NewsletterRecipientsAccessVoterTest extends AbstractAccessVoterTest
                 [ContaoCorePermissions::DC_PREFIX.'tl_newsletter_recipients'],
             ),
         );
+    }
+
+    protected function getVoterClass(): string
+    {
+        return NewsletterRecipientsAccessVoter::class;
+    }
+
+    protected function getTable(): string
+    {
+        return 'tl_newsletter_recipients';
     }
 }

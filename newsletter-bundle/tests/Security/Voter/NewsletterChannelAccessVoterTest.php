@@ -18,16 +18,6 @@ use Contao\NewsletterBundle\Security\Voter\NewsletterChannelAccessVoter;
 
 class NewsletterChannelAccessVoterTest extends AbstractAccessVoterTest
 {
-    protected function getVoterClass(): string
-    {
-        return NewsletterChannelAccessVoter::class;
-    }
-
-    protected function getTable(): string
-    {
-        return 'tl_newsletter_channel';
-    }
-
     public static function votesProvider(): \Generator
     {
         // Permission granted, so abstain! Our voters either deny or abstain, they must
@@ -59,5 +49,15 @@ class NewsletterChannelAccessVoterTest extends AbstractAccessVoterTest
             ],
             false,
         ];
+    }
+
+    protected function getVoterClass(): string
+    {
+        return NewsletterChannelAccessVoter::class;
+    }
+
+    protected function getTable(): string
+    {
+        return 'tl_newsletter_channel';
     }
 }

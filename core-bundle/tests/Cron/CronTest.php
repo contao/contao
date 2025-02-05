@@ -246,12 +246,11 @@ class CronTest extends TestCase
             ->method('onHourly')
         ;
 
-
         $repository = $this->createMock(CronJobRepository::class);
         $repository
             ->expects($this->once())
             ->method('__call')
-            ->with($this->equalTo('findOneByName'), $this->equalTo([get_class($cronjob) . '::onHourly']))
+            ->with($this->equalTo('findOneByName'), $this->equalTo([$cronjob::class.'::onHourly']))
             ->willReturn($entity)
         ;
 
@@ -297,7 +296,7 @@ class CronTest extends TestCase
         $repository
             ->expects($this->once())
             ->method('__call')
-            ->with($this->equalTo('findOneByName'), $this->equalTo([get_class($cronjob). '::onHourly']))
+            ->with($this->equalTo('findOneByName'), $this->equalTo([$cronjob::class.'::onHourly']))
             ->willReturn($entity)
         ;
 

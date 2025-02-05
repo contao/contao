@@ -17,16 +17,6 @@ use Contao\CoreBundle\Security\Voter\DataContainer\ImageSizeItemAccessVoter;
 
 class ImageSizeItemAccessVoterTest extends AbstractAccessVoterTest
 {
-    protected function getVoterClass(): string
-    {
-        return ImageSizeItemAccessVoter::class;
-    }
-
-    protected function getTable(): string
-    {
-        return 'tl_image_size_item';
-    }
-
     public static function votesProvider(): \Generator
     {
         // Permission granted, so abstain! Our voters either deny or abstain, they must
@@ -37,7 +27,7 @@ class ImageSizeItemAccessVoterTest extends AbstractAccessVoterTest
                 [[ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'themes', true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZES], null, true],
             ],
-            true
+            true,
         ];
 
         // Permission denied
@@ -47,7 +37,17 @@ class ImageSizeItemAccessVoterTest extends AbstractAccessVoterTest
                 [[ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'themes', true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZES], null, false],
             ],
-            false
+            false,
         ];
+    }
+
+    protected function getVoterClass(): string
+    {
+        return ImageSizeItemAccessVoter::class;
+    }
+
+    protected function getTable(): string
+    {
+        return 'tl_image_size_item';
     }
 }

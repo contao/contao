@@ -23,16 +23,6 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class NewsAccessVoterTest extends AbstractAccessVoterTest
 {
-    protected function getVoterClass(): string
-    {
-        return NewsAccessVoter::class;
-    }
-
-    protected function getTable(): string
-    {
-        return 'tl_news';
-    }
-
     public static function votesProvider(): \Generator
     {
         // Permission granted, so abstain! Our voters either deny or abstain, they must
@@ -91,5 +81,15 @@ class NewsAccessVoterTest extends AbstractAccessVoterTest
                 [ContaoCorePermissions::DC_PREFIX.'tl_news'],
             ),
         );
+    }
+
+    protected function getVoterClass(): string
+    {
+        return NewsAccessVoter::class;
+    }
+
+    protected function getTable(): string
+    {
+        return 'tl_news';
     }
 }

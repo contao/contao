@@ -18,16 +18,6 @@ use Contao\NewsBundle\Security\Voter\NewsArchiveAccessVoter;
 
 class NewsArchiveAccessVoterTest extends AbstractAccessVoterTest
 {
-    protected function getVoterClass(): string
-    {
-        return NewsArchiveAccessVoter::class;
-    }
-
-    protected function getTable(): string
-    {
-        return 'tl_news_archive';
-    }
-
     public static function votesProvider(): \Generator
     {
         // Permission granted, so abstain! Our voters either deny or abstain, they must
@@ -59,5 +49,15 @@ class NewsArchiveAccessVoterTest extends AbstractAccessVoterTest
             ],
             false,
         ];
+    }
+
+    protected function getVoterClass(): string
+    {
+        return NewsArchiveAccessVoter::class;
+    }
+
+    protected function getTable(): string
+    {
+        return 'tl_news_archive';
     }
 }

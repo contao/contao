@@ -13,28 +13,14 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Security\Voter\DataContainer;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\CreateAction;
-use Contao\CoreBundle\Security\DataContainer\DeleteAction;
-use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\FormFieldAccessVoter;
-use PHPUnit\Framework\TestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class FormFieldAccessVoterTest extends AbstractAccessVoterTest
 {
-    protected function getVoterClass(): string
-    {
-        return FormFieldAccessVoter::class;
-    }
-
-    protected function getTable(): string
-    {
-        return 'tl_form_field';
-    }
-
     public static function votesProvider(): \Generator
     {
         // Permission granted, so abstain! Our voters either deny or abstain, they must
@@ -45,7 +31,7 @@ class FormFieldAccessVoterTest extends AbstractAccessVoterTest
                 [[ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_FORM], 42, true],
             ],
-            true
+            true,
         ];
 
         // Permission denied on back end module
@@ -54,7 +40,7 @@ class FormFieldAccessVoterTest extends AbstractAccessVoterTest
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form', false],
             ],
-            false
+            false,
         ];
 
         // Permission denied on form
@@ -64,7 +50,7 @@ class FormFieldAccessVoterTest extends AbstractAccessVoterTest
                 [[ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_FORM], 42, false],
             ],
-            false
+            false,
         ];
     }
 
@@ -93,5 +79,15 @@ class FormFieldAccessVoterTest extends AbstractAccessVoterTest
                 [ContaoCorePermissions::DC_PREFIX.'tl_form_field'],
             ),
         );
+    }
+
+    protected function getVoterClass(): string
+    {
+        return FormFieldAccessVoter::class;
+    }
+
+    protected function getTable(): string
+    {
+        return 'tl_form_field';
     }
 }

@@ -15,7 +15,6 @@ namespace Contao\CalendarBundle\Tests\Security\Voter;
 use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\CalendarBundle\Security\Voter\CalendarEventsAccessVoter;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Tests\Security\Voter\DataContainer\AbstractAccessVoterTest;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -24,16 +23,6 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class CalendarEventsAccessVoterTest extends AbstractAccessVoterTest
 {
-    protected function getVoterClass(): string
-    {
-        return CalendarEventsAccessVoter::class;
-    }
-
-    protected function getTable(): string
-    {
-        return 'tl_calendar_events';
-    }
-
     public static function votesProvider(): \Generator
     {
         // Permission granted, so abstain! Our voters either deny or abstain, they must
@@ -53,7 +42,7 @@ class CalendarEventsAccessVoterTest extends AbstractAccessVoterTest
             [
                 [[ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], null, false],
             ],
-            false
+            false,
         ];
 
         // Permission denied on calendar
@@ -63,7 +52,7 @@ class CalendarEventsAccessVoterTest extends AbstractAccessVoterTest
                 [[ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], null, true],
                 [[ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], 42, false],
             ],
-            false
+            false,
         ];
     }
 
@@ -92,5 +81,15 @@ class CalendarEventsAccessVoterTest extends AbstractAccessVoterTest
                 [ContaoCorePermissions::DC_PREFIX.'tl_calendar_events'],
             ),
         );
+    }
+
+    protected function getVoterClass(): string
+    {
+        return CalendarEventsAccessVoter::class;
+    }
+
+    protected function getTable(): string
+    {
+        return 'tl_calendar_events';
     }
 }

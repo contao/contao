@@ -18,16 +18,6 @@ use Contao\FaqBundle\Security\Voter\FaqCategoryAccessVoter;
 
 class FaqCategoryAccessVoterTest extends AbstractAccessVoterTest
 {
-    protected function getVoterClass(): string
-    {
-        return FaqCategoryAccessVoter::class;
-    }
-
-    protected function getTable(): string
-    {
-        return 'tl_faq_category';
-    }
-
     public static function votesProvider(): \Generator
     {
         // Permission granted, so abstain! Our voters either deny or abstain, they must
@@ -47,7 +37,7 @@ class FaqCategoryAccessVoterTest extends AbstractAccessVoterTest
             [
                 [[ContaoFaqPermissions::USER_CAN_ACCESS_MODULE], null, false],
             ],
-            false
+            false,
         ];
 
         // Permission denied on faq category
@@ -59,5 +49,15 @@ class FaqCategoryAccessVoterTest extends AbstractAccessVoterTest
             ],
             false,
         ];
+    }
+
+    protected function getVoterClass(): string
+    {
+        return FaqCategoryAccessVoter::class;
+    }
+
+    protected function getTable(): string
+    {
+        return 'tl_faq_category';
     }
 }

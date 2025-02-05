@@ -14,22 +14,10 @@ namespace Contao\CalendarBundle\Tests\Security\Voter;
 
 use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\CalendarBundle\Security\Voter\CalendarAccessVoter;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Tests\Security\Voter\DataContainer\AbstractAccessVoterTest;
 
 class CalendarAccessVoterTest extends AbstractAccessVoterTest
 {
-    protected function getVoterClass(): string
-    {
-        return CalendarAccessVoter::class;
-    }
-
-    protected function getTable(): string
-    {
-        return 'tl_calendar';
-    }
-
     public static function votesProvider(): \Generator
     {
         // Permission granted, so abstain! Our voters either deny or abstain, they must
@@ -49,7 +37,7 @@ class CalendarAccessVoterTest extends AbstractAccessVoterTest
             [
                 [[ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], null, false],
             ],
-            false
+            false,
         ];
 
         // Permission denied on calendar
@@ -59,7 +47,17 @@ class CalendarAccessVoterTest extends AbstractAccessVoterTest
                 [[ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], null, true],
                 [[ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], 42, false],
             ],
-            false
+            false,
         ];
+    }
+
+    protected function getVoterClass(): string
+    {
+        return CalendarAccessVoter::class;
+    }
+
+    protected function getTable(): string
+    {
+        return 'tl_calendar';
     }
 }

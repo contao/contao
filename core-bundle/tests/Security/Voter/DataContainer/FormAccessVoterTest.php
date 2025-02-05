@@ -13,21 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Security\Voter\DataContainer;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\FormAccessVoter;
 
 class FormAccessVoterTest extends AbstractAccessVoterTest
 {
-    protected function getVoterClass(): string
-    {
-        return FormAccessVoter::class;
-    }
-
-    protected function getTable(): string
-    {
-        return 'tl_form';
-    }
-
     public static function votesProvider(): \Generator
     {
         // Permission granted, so abstain! Our voters either deny or abstain, they must
@@ -38,7 +27,7 @@ class FormAccessVoterTest extends AbstractAccessVoterTest
                 [[ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_FORM], 42, true],
             ],
-            true
+            true,
         ];
 
         // Permission denied on back end module
@@ -57,7 +46,17 @@ class FormAccessVoterTest extends AbstractAccessVoterTest
                 [[ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_FORM], 42, false],
             ],
-            false
+            false,
         ];
+    }
+
+    protected function getVoterClass(): string
+    {
+        return FormAccessVoter::class;
+    }
+
+    protected function getTable(): string
+    {
+        return 'tl_form';
     }
 }

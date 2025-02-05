@@ -17,16 +17,6 @@ use Contao\CoreBundle\Security\Voter\DataContainer\LayoutAccessVoter;
 
 class LayoutAccessVoterTest extends AbstractAccessVoterTest
 {
-    protected function getVoterClass(): string
-    {
-        return LayoutAccessVoter::class;
-    }
-
-    protected function getTable(): string
-    {
-        return 'tl_layout';
-    }
-
     public static function votesProvider(): \Generator
     {
         // Permission granted, so abstain! Our voters either deny or abstain, they must
@@ -47,7 +37,17 @@ class LayoutAccessVoterTest extends AbstractAccessVoterTest
                 [[ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'themes', true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_LAYOUTS], null, false],
             ],
-            false
+            false,
         ];
+    }
+
+    protected function getVoterClass(): string
+    {
+        return LayoutAccessVoter::class;
+    }
+
+    protected function getTable(): string
+    {
+        return 'tl_layout';
     }
 }

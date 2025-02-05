@@ -69,7 +69,7 @@ abstract class AbstractAccessVoterTest extends TestCase
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $accessDecisionManager
-            ->expects($this->exactly(count($decisions)))
+            ->expects($this->exactly(\count($decisions)))
             ->method('decide')
             ->willReturnMap($decisions)
         ;
@@ -82,7 +82,7 @@ abstract class AbstractAccessVoterTest extends TestCase
             $voter->vote(
                 $token,
                 new ReadAction($this->getTable(), $current),
-                [ContaoCorePermissions::DC_PREFIX.$this->getTable()]
+                [ContaoCorePermissions::DC_PREFIX.$this->getTable()],
             ),
         );
     }
