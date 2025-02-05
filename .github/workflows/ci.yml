@@ -259,7 +259,7 @@ jobs:
               uses: ramsey/composer-install@v3
 
             - name: Run the unit tests in reverse order
-              run: vendor/bin/phpunit --order-by=reverse --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher
+              run: vendor/bin/phpunit --order-by=reverse --extension Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher
 
     nightly:
         name: PHP 8.4
