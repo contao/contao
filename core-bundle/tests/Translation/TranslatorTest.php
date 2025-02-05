@@ -245,24 +245,16 @@ class TranslatorTest extends TestCase
             )
         ;
 
+        $expected = [['default', 'de'], ['default', 'en']];
         $matcher = $this->exactly(2);
 
         $adapter = $this->mockAdapter(['loadLanguageFile']);
         $adapter
             ->expects($matcher)
             ->method('loadLanguageFile')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher): void {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('default', $parameters[0]);
-                        $this->assertSame('de', $parameters[1]);
-                    }
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('default', $parameters[0]);
-                        $this->assertSame('en', $parameters[1]);
-                    }
-                },
-            )
+            ->with($this->callback(
+                static fn (...$args) => $args === $expected[$matcher->numberOfInvocations() - 1],
+            ))
         ;
 
         $framework = $this->mockContaoFramework([System::class => $adapter]);
