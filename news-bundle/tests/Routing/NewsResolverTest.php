@@ -14,6 +14,7 @@ namespace Contao\NewsBundle\Tests\Routing;
 
 use Contao\ArticleModel;
 use Contao\CoreBundle\Routing\Content\StringUrl;
+use Contao\Model;
 use Contao\NewsArchiveModel;
 use Contao\NewsBundle\Routing\NewsResolver;
 use Contao\NewsModel;
@@ -106,6 +107,9 @@ class NewsResolverTest extends ContaoTestCase
         $this->assertSame($target, $result->content);
     }
 
+    /**
+     * @param class-string<Model> $class
+     */
     #[DataProvider('getParametersForContentProvider')]
     public function testGetParametersForContent(string $class, array $properties, array $expected): void
     {

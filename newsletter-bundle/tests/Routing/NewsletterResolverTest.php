@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\NewsletterBundle\Tests\Routing;
 
+use Contao\Model;
 use Contao\NewsletterBundle\Routing\NewsletterResolver;
 use Contao\NewsletterChannelModel;
 use Contao\NewsletterModel;
@@ -47,6 +48,9 @@ class NewsletterResolverTest extends ContaoTestCase
         $this->assertSame($target, $result->content);
     }
 
+    /**
+     * @param class-string<Model> $class
+     */
     #[DataProvider('getParametersForContentProvider')]
     public function testGetParametersForContent(string $class, array $properties, array $expected): void
     {
