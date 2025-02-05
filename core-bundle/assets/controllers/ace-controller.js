@@ -17,7 +17,7 @@ export default class extends Controller {
         this.element.style['display'] = 'none';
 
         // Instantiate the editor
-        this.editor = ace.edit(this.container);
+        this.editor = ace.edit(this.container, {enableKeyboardAccessibility: true});
         this.editor.getSession().setValue(this.element.value);
 
         this.editor.on('focus', () => {
