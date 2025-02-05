@@ -182,6 +182,7 @@ class InsertTagParserTest extends TestCase
     #[DataProvider('getLegacyReplaceInsertTagsHooks')]
     public function testLegacyReplaceInsertTagsHook(string $source, string $expected, \Closure $hook): void
     {
+        $hook = \Closure::bind($hook, $this);
         $GLOBALS['TL_HOOKS']['replaceInsertTags'] = [
             [
                 new class($hook) {
@@ -211,7 +212,7 @@ class InsertTagParserTest extends TestCase
         $this->assertSame($expected, $parser->replaceInline($source));
     }
 
-    public function getLegacyReplaceInsertTagsHooks(): iterable
+    public static function getLegacyReplaceInsertTagsHooks(): iterable
     {
         yield [
             'foo {{tag}} bar',
@@ -281,6 +282,7 @@ class InsertTagParserTest extends TestCase
     #[DataProvider('getLegacyInsertTagFlagsHooks')]
     public function testLegacyInsertTagFlagsHook(string $source, string $expected, \Closure $hook): void
     {
+        $hook = \Closure::bind($hook, $this);
         $GLOBALS['TL_HOOKS']['insertTagFlags'] = [
             [
                 new class($hook) {
@@ -308,7 +310,7 @@ class InsertTagParserTest extends TestCase
         $this->assertSame($expected, $parser->replaceInline($source));
     }
 
-    public function getLegacyInsertTagFlagsHooks(): iterable
+    public static function getLegacyInsertTagFlagsHooks(): iterable
     {
         yield [
             'foo{{br|flag}}bar',
