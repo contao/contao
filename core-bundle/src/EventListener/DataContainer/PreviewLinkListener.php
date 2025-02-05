@@ -170,7 +170,7 @@ class PreviewLinkListener
     }
 
     #[AsCallback(table: 'tl_preview_link', target: 'list.operations.share.button')]
-        public function shareOperation(array $row, string|null $href, string|null $label, string|null $title, string $icon): string
+    public function shareOperation(array $row, string|null $href, string|null $label, string|null $title, string $icon): string
     {
         if ($row['expiresAt'] < time()) {
             return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon), $label);
@@ -179,7 +179,7 @@ class PreviewLinkListener
         return $this->generateClipboardLink((int) $row['id'], Image::getHtml($icon, $label), $title);
     }
 
-    private function generateClipboardLink(int $id, $label = null, string|null $title = null): string
+    private function generateClipboardLink(int $id, string|null $label = null, string|null $title = null): string
     {
         $url = $this->urlGenerator->generate('contao_preview_link', ['id' => $id], UrlGeneratorInterface::ABSOLUTE_URL);
         $url = $this->uriSigner->sign($url);
