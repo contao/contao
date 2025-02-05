@@ -66,7 +66,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromFilesModel(): void
     {
-        [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
+        [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
         $model = $this->mockClassWithProperties(FilesModel::class);
         $model->type = 'file';
@@ -115,7 +115,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromUuid(): void
     {
-        [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
+        [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
         $uuid = 'foo-uuid';
 
         $model = $this->mockClassWithProperties(FilesModel::class);
@@ -154,7 +154,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromId(): void
     {
-        [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
+        [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
         $model = $this->mockClassWithProperties(FilesModel::class);
         $model->type = 'file';
@@ -192,7 +192,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromAbsolutePath(): void
     {
-        [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
+        [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
         $model = $this->mockClassWithProperties(FilesModel::class);
         $model->type = 'file';
@@ -214,7 +214,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromRelativePath(): void
     {
-        [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
+        [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
         $model = $this->mockClassWithProperties(FilesModel::class);
         $model->type = 'file';
@@ -236,7 +236,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromPathFailsWithNonExistingResource(): void
     {
-        [, , $projectDir] = $this->getTestFilePaths();
+        [, , $projectDir] = self::getTestFilePaths();
 
         $filePath = Path::join($projectDir, 'this/does/not/exist.png');
         $figureBuilder = $this->getFigureBuilder()->fromPath($filePath, false);
@@ -253,7 +253,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromUrl(): void
     {
-        [, , , , $webDir] = $this->getTestFilePaths();
+        [, , , , $webDir] = self::getTestFilePaths();
 
         $studio = $this->mockStudioForImage(Path::join($webDir, 'images/dummy_public.jpg'));
 
@@ -262,7 +262,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromPathAbsoluteUrl(): void
     {
-        [, , , , $webDir] = $this->getTestFilePaths();
+        [, , , , $webDir] = self::getTestFilePaths();
 
         $studio = $this->mockStudioForImage(Path::join($webDir, 'images/dummy_public.jpg'));
 
@@ -271,7 +271,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromUrlRelativeToBaseUrl(): void
     {
-        [, , , , $webDir] = $this->getTestFilePaths();
+        [, , , , $webDir] = self::getTestFilePaths();
 
         $studio = $this->mockStudioForImage(Path::join($webDir, 'images/dummy_public.jpg'));
 
@@ -286,7 +286,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromUrlRelativeToRelativeBaseUrl(): void
     {
-        [, , , , $webDir] = $this->getTestFilePaths();
+        [, , , , $webDir] = self::getTestFilePaths();
 
         $studio = $this->mockStudioForImage(Path::join($webDir, 'images/dummy_public.jpg'));
 
@@ -348,7 +348,7 @@ class FigureBuilderTest extends TestCase
 
     public function testFromImage(): void
     {
-        [, , $projectDir] = $this->getTestFilePaths();
+        [, , $projectDir] = self::getTestFilePaths();
         $filePathOutsideUploadDir = Path::join($projectDir, 'images/dummy.jpg');
 
         $image = $this->createMock(ImageInterface::class);
@@ -415,9 +415,28 @@ class FigureBuilderTest extends TestCase
     }
 
     #[DataProvider('provideMixedIdentifiers')]
-    public function testFromMixed(mixed $identifier): void
+    public function testFromMixed(string|int $identifier, string $type = 'default'): void
     {
-        [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
+        if($type === 'filesModel') {
+            $filesModel = $this->mockClassWithProperties(FilesModel::class);
+            $filesModel->type = 'file';
+            $filesModel->path = $identifier;
+
+            $mixedIdentifier = $filesModel;
+        } else if($type === 'image') {
+            $image = $this->createMock(ImageInterface::class);
+            $image
+                ->expects($this->atLeastOnce())
+                ->method('getPath')
+                ->willReturn($identifier)
+            ;
+
+            $mixedIdentifier = $image;
+        } else {
+            $mixedIdentifier = $identifier;
+        }
+
+        [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
         $filesModel->type = 'file';
@@ -461,7 +480,7 @@ class FigureBuilderTest extends TestCase
 
         $studio = $this->mockStudioForImage($absoluteFilePath);
 
-        $this->getFigureBuilder($studio, $framework)->from($identifier)->build();
+        $this->getFigureBuilder($studio, $framework)->from($mixedIdentifier)->build();
     }
 
     public function testFromNullFails(): void
@@ -548,24 +567,13 @@ class FigureBuilderTest extends TestCase
         $figureBuilder->build();
     }
 
-    public function provideMixedIdentifiers(): iterable
+    public static function provideMixedIdentifiers(): iterable
     {
-        [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
+        [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
-        $filesModel = $this->mockClassWithProperties(FilesModel::class);
-        $filesModel->type = 'file';
-        $filesModel->path = $relativeFilePath;
+        yield 'files model' => [$relativeFilePath, 'filesModel'];
 
-        $image = $this->createMock(ImageInterface::class);
-        $image
-            ->expects($this->atLeastOnce())
-            ->method('getPath')
-            ->willReturn($absoluteFilePath)
-        ;
-
-        yield 'files model' => [$filesModel];
-
-        yield 'image interface' => [$image];
+        yield 'image interface' => [$absoluteFilePath, 'image'];
 
         yield 'uuid' => ['1d902bf1-2683-406e-b004-f0b59095e5a1'];
 
@@ -586,7 +594,7 @@ class FigureBuilderTest extends TestCase
             ->willThrowException($innerException = new \Exception('Broken image'))
         ;
 
-        [$brokenImagePath] = $this->getTestFilePaths();
+        [$brokenImagePath] = self::getTestFilePaths();
 
         $studio = $this->createMock(Studio::class);
         $studio
@@ -612,7 +620,7 @@ class FigureBuilderTest extends TestCase
 
     public function testLastExceptionIsResetWhenCallingFrom(): void
     {
-        [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
+        [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
         $model = $this->mockClassWithProperties(FilesModel::class);
         $model->type = 'file';
@@ -701,7 +709,7 @@ class FigureBuilderTest extends TestCase
 
     public function testSetSize(): void
     {
-        [$absoluteFilePath] = $this->getTestFilePaths();
+        [$absoluteFilePath] = self::getTestFilePaths();
 
         $size = '_any_size_configuration';
         $studio = $this->mockStudioForImage($absoluteFilePath, $size);
@@ -715,7 +723,7 @@ class FigureBuilderTest extends TestCase
 
     public function testSetResizeOptions(): void
     {
-        [$absoluteFilePath] = $this->getTestFilePaths();
+        [$absoluteFilePath] = self::getTestFilePaths();
 
         $resizeOptions = new ResizeOptions();
         $studio = $this->mockStudioForImage($absoluteFilePath, null, $resizeOptions);
@@ -770,7 +778,7 @@ class FigureBuilderTest extends TestCase
         $currentPage->language = 'es';
         $currentPage->rootFallbackLanguage = 'de';
 
-        [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
+        [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
         $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
         $filesModel->setRow([
@@ -915,7 +923,7 @@ class FigureBuilderTest extends TestCase
             'title' => '', 'alt' => '', 'link' => '', 'caption' => '',
         ];
 
-        [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
+        [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
         $filesModel = $this->mockClassWithProperties(FilesModel::class);
         $filesModel->setRow([
@@ -945,8 +953,24 @@ class FigureBuilderTest extends TestCase
     }
 
     #[DataProvider('provideUuidMetadataAutoFetchCases')]
-    public function testAutoSetUuidFromFilesModelWhenDefiningMetadata(FilesModel|ImageInterface|string|null $resource, Metadata|null $metadataToSet, string|null $locale, array $expectedMetadata): void
+    public function testAutoSetUuidFromFilesModelWhenDefiningMetadata(FilesModel|ImageInterface|string|array|null $resource, Metadata|null $metadataToSet, string|null $locale, array $expectedMetadata): void
     {
+        if(is_array($resource)) {
+            $getFilesModel = function (array $metaData, string|null $uuid) use ($resource) {
+                $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
+                $filesModel->setRow([
+                    'type' => 'file',
+                    'path' => $resource[0],
+                    'meta' => serialize($metaData),
+                    'uuid' => $uuid,
+                ]);
+
+                return $filesModel;
+            };
+
+            $resource = $getFilesModel($resource[1], $resource[2] ?? null);
+        }
+
         $container = $this->getContainerWithContaoConfiguration();
         System::setContainer($container);
 
@@ -961,7 +985,7 @@ class FigureBuilderTest extends TestCase
 
         $container->get('request_stack')->push($request);
 
-        [$absoluteFilePath] = $this->getTestFilePaths();
+        [$absoluteFilePath] = self::getTestFilePaths();
 
         $filesModelAdapter = $this->mockAdapter(['getMetaFields', 'findByPath']);
         $filesModelAdapter
@@ -993,21 +1017,9 @@ class FigureBuilderTest extends TestCase
         unset($GLOBALS['TL_DCA']);
     }
 
-    public function provideUuidMetadataAutoFetchCases(): iterable
+    public static function provideUuidMetadataAutoFetchCases(): iterable
     {
-        [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
-
-        $getFilesModel = function (array $metaData, string|null $uuid) use ($relativeFilePath) {
-            $filesModel = $this->mockClassWithProperties(FilesModel::class, except: ['getMetadata']);
-            $filesModel->setRow([
-                'type' => 'file',
-                'path' => $relativeFilePath,
-                'meta' => serialize($metaData),
-                'uuid' => $uuid,
-            ]);
-
-            return $filesModel;
-        };
+        [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
         yield 'explicitly set metadata without files model' => [
             $absoluteFilePath,
@@ -1017,28 +1029,28 @@ class FigureBuilderTest extends TestCase
         ];
 
         yield 'explicitly set metadata with files model (no uuid)' => [
-            $getFilesModel(['foobar' => 'baz'], null),
+            [$relativeFilePath, ['foobar' => 'baz'], null],
             new Metadata(['foo' => 'bar']),
             'de',
             ['foo' => 'bar'],
         ];
 
         yield 'explicitly set metadata with files model (ASCII uuid)' => [
-            $getFilesModel(['foobar' => 'baz'], 'beefaff3-434a-106e-8ff0-f0b59095e5a1'),
+            [$relativeFilePath, ['foobar' => 'baz'], 'beefaff3-434a-106e-8ff0-f0b59095e5a1'],
             new Metadata(['foo' => 'bar']),
             'de',
             ['foo' => 'bar', Metadata::VALUE_UUID => 'beefaff3-434a-106e-8ff0-f0b59095e5a1'],
         ];
 
         yield 'explicitly set metadata with files model (binary uuid)' => [
-            $getFilesModel(['foobar' => 'baz'], StringUtil::uuidToBin('beefaff3-434a-106e-8ff0-f0b59095e5a1')),
+            [$relativeFilePath, ['foobar' => 'baz'], StringUtil::uuidToBin('beefaff3-434a-106e-8ff0-f0b59095e5a1')],
             new Metadata(['foo' => 'bar']),
             'de',
             ['foo' => 'bar', Metadata::VALUE_UUID => 'beefaff3-434a-106e-8ff0-f0b59095e5a1'],
         ];
 
         yield 'metadata from files model in a matching locale' => [
-            $getFilesModel(['en' => ['foo' => 'bar']], 'beefaff3-434a-106e-8ff0-f0b59095e5a1'),
+            [$relativeFilePath, ['en' => ['foo' => 'bar']], 'beefaff3-434a-106e-8ff0-f0b59095e5a1'],
             null,
             'en',
             [
@@ -1049,7 +1061,7 @@ class FigureBuilderTest extends TestCase
         ];
 
         yield 'default metadata from meta fields' => [
-            $getFilesModel(['en' => ['foo' => 'bar']], 'beefaff3-434a-106e-8ff0-f0b59095e5a1'),
+            [$relativeFilePath, ['en' => ['foo' => 'bar']], 'beefaff3-434a-106e-8ff0-f0b59095e5a1'],
             null,
             'es',
             [
@@ -1166,8 +1178,15 @@ class FigureBuilderTest extends TestCase
     }
 
     #[DataProvider('provideLightboxResourcesOrUrls')]
-    public function testSetLightboxResourceOrUrl(ImageInterface|string|null $resource, array $expectedArguments, bool $hasLightbox = true): void
+    public function testSetLightboxResourceOrUrl(ImageInterface|string|null $resource, array|null $expectedArguments = null, bool $hasLightbox = true): void
     {
+        if($resource === null) {
+            $image = $this->createMock(ImageInterface::class);
+
+            $resource = $image;
+            $expectedArguments = [$image, null];
+        }
+
         if ($hasLightbox) {
             $studio = $this->mockStudioForLightbox(...$expectedArguments);
         } else {
@@ -1187,17 +1206,15 @@ class FigureBuilderTest extends TestCase
         $this->assertSame($hasLightbox, $figure->hasLightbox());
     }
 
-    public function provideLightboxResourcesOrUrls(): iterable
+    public static function provideLightboxResourcesOrUrls(): iterable
     {
-        [$absoluteFilePath, $relativeFilePath] = $this->getTestFilePaths();
+        [$absoluteFilePath, $relativeFilePath] = self::getTestFilePaths();
 
         $absoluteFilePathWithInvalidExtension = str_replace('jpg', 'xml', $absoluteFilePath);
         $relativeFilePathWithInvalidExtension = str_replace('jpg', 'xml', $relativeFilePath);
 
-        $image = $this->createMock(ImageInterface::class);
-
         yield 'image interface' => [
-            $image, [$image, null],
+            null,
         ];
 
         yield 'absolute file path with valid extension' => [
@@ -1273,7 +1290,7 @@ class FigureBuilderTest extends TestCase
 
     public function provideLightboxFallbackResources(): iterable
     {
-        [$absoluteFilePath] = $this->getTestFilePaths();
+        [$absoluteFilePath] = self::getTestFilePaths();
 
         $url = 'https://example.com/valid_image.png';
 
@@ -1363,7 +1380,7 @@ class FigureBuilderTest extends TestCase
 
     public function testBuildMultipleTimes(): void
     {
-        [$filePath1] = $this->getTestFilePaths();
+        [$filePath1] = self::getTestFilePaths();
 
         $filePath2 = str_replace('foo.jpg', 'bar.jpg', $filePath1);
         $metadata = new Metadata([Metadata::VALUE_ALT => 'foo']);
@@ -1421,7 +1438,7 @@ class FigureBuilderTest extends TestCase
 
     public function testDispatchesDefineMetadataEvent(): void
     {
-        [$absoluteFilePath] = $this->getTestFilePaths();
+        [$absoluteFilePath] = self::getTestFilePaths();
 
         $studio = $this->mockStudioForImage($absoluteFilePath);
 
@@ -1447,7 +1464,7 @@ class FigureBuilderTest extends TestCase
 
     private function getFigure(\Closure|null $configureBuilderCallback = null, Studio|null $studio = null): Figure
     {
-        [$absoluteFilePath] = $this->getTestFilePaths();
+        [$absoluteFilePath] = self::getTestFilePaths();
 
         $studio ??= $this->mockStudioForImage($absoluteFilePath);
         $builder = $this->getFigureBuilder($studio)->fromPath($absoluteFilePath, false);
@@ -1491,8 +1508,8 @@ class FigureBuilderTest extends TestCase
 
     private function getFigureBuilder(Studio|null $studio = null, ContaoFramework|null $framework = null, EventDispatcher|null $eventDispatcher = null, PageModel|null $pageModel = null): FigureBuilder
     {
-        [, , $projectDir, $uploadPath, $webDir] = $this->getTestFilePaths();
-        $validExtensions = $this->getTestFileExtensions();
+        [, , $projectDir, $uploadPath, $webDir] = self::getTestFilePaths();
+        $validExtensions = self::getTestFileExtensions();
 
         $request = Request::create('https://localhost');
         $request->attributes->set('pageModel', $pageModel);
@@ -1520,7 +1537,7 @@ class FigureBuilderTest extends TestCase
         return new FigureBuilder($locator, $projectDir, $uploadPath, $webDir, $validExtensions);
     }
 
-    private function getTestFilePaths(): array
+    private static function getTestFilePaths(): array
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures');
         $uploadPath = 'files';
@@ -1531,7 +1548,7 @@ class FigureBuilderTest extends TestCase
         return [$absoluteFilePath, $relativeFilePath, $projectDir, $uploadPath, $webDir];
     }
 
-    private function getTestFileExtensions(): array
+    private static function getTestFileExtensions(): array
     {
         return ['jpg', 'png'];
     }
