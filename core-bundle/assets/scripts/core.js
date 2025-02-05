@@ -55,8 +55,6 @@ window.AjaxRequest =
 			console.warn('AjaxRequest.toggleStructure() is deprecated. Please use the stimulus controller instead.');
 		}
 
-		el.blur();
-
 		var item = $(id);
 
 		if (item) {
@@ -154,8 +152,6 @@ window.AjaxRequest =
 			console.warn('AjaxRequest.toggleFileManager() is deprecated. Please use the stimulus controller instead.');
 		}
 
-		el.blur();
-
 		var item = $(id);
 
 		if (item) {
@@ -225,7 +221,6 @@ window.AjaxRequest =
 	 * @param {string} field The field name
 	 */
 	toggleSubpalette: function(el, id, field) {
-		el.blur();
 		var item = $(id);
 
 		if (item) {
@@ -317,8 +312,6 @@ window.AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleField: function(el, rowIcon) {
-		el.blur();
-
 		var img = null,
 			images = $(el).getElements('img'),
 			published = (images[0].get('data-state') == 1),
@@ -414,8 +407,6 @@ window.AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleCheckboxGroup: function(el, id) {
-		el.blur();
-
 		var item = $(id);
 
 		if (item) {
