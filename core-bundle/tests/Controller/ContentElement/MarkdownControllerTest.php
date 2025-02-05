@@ -175,7 +175,7 @@ class MarkdownControllerTest extends ContentElementTestCase
                 self::assertSame($expectedMarkdown, $template->get('content'));
 
                 return new Response('result');
-            }
+            },
         );
 
         $framework = $this->mockContaoFramework($frameworkAdapters);
