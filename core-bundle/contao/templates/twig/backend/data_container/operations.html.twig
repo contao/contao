@@ -2,7 +2,7 @@
 {% set has_submenu = false %}
 
 <div class="operations">
-    <ul>
+    <ul id="operations{{ id }}" data-contao--operations-menu-target="menu">
         {% for operation in operations %}
             {% set isLink = operation.href|default or (operation.html is defined and '<a ' in operation.html) %}
             {% if has_primary and not operation.primary|default(false) %}
@@ -12,11 +12,11 @@
             {% endif %}
         {% endfor %}
         {% if has_submenu or not has_primary %}
-            <li class="operations-menu-container" data-contao--operations-menu-target="container">
-                <button type="button" data-contao--operations-menu-target="controller" data-action="pointerdown->contao--operations-menu#setFixedPosition"{% if not has_primary %} style="display:none"{% endif %}>
+            <li class="operations-menu-container">
+                <button type="button" data-contao--operations-menu-target="controller"{% if not has_primary %} style="display:none"{% endif %}>
                     {{ backend_icon('more.svg', 'DCA.operations'|trans([id])) }}
                 </button>
-                <ul class="operations-menu" data-contao--operations-menu-target="menu">
+                <ul class="operations-menu" data-contao--operations-menu-target="submenu">
                     {% for operation in operations %}
                         {{ _self.operation(operation, true) }}
                     {% endfor %}
