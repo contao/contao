@@ -297,23 +297,17 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $router = $this->createMock(RouterInterface::class);
 
         if ($canShare) {
-            $matcher = $this->exactly(2);
             $router
-                ->expects($matcher)
+                ->expects($this->exactly(2))
                 ->method('generate')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher) {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('contao_backend', $parameters[0]);
-                            $this->assertSame(['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => true, 'rt' => 'csrf', 'nb' => '1'], $parameters[1]);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('contao_backend_switch', $parameters[0]);
-                        }
-
-                        return '/_contao/preview/1';
-                    },
-                )
+                ->willReturnMap([
+                    [
+                        'contao_backend',
+                        ['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => true, 'rt' => 'csrf', 'nb' => '1'],
+                        '/_contao/preview/1',
+                    ],
+                    ['contao_backend_switch', '/contao/preview_switch'],
+                ])
             ;
         } else {
             $router
@@ -360,23 +354,13 @@ class BackendPreviewSwitchControllerTest extends TestCase
         ;
 
         if ($canShare) {
-            $matcher = $this->exactly(2);
             $security
-                ->expects($matcher)
+                ->expects($this->exactly(2))
                 ->method('isGranted')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher) {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('ROLE_ALLOWED_TO_SWITCH_MEMBER', $parameters[0]);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $parameters[0]);
-                            $this->assertSame('preview_link', $parameters[1]);
-                        }
-
-                        return true;
-                    },
-                )
+                ->willReturnMap([
+                    ['ROLE_ALLOWED_TO_SWITCH_MEMBER', null, true],
+                    [ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'preview_link', $canShare],
+                ])
             ;
         } else {
             $security
