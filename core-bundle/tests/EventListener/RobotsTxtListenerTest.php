@@ -19,7 +19,7 @@ use Contao\PageModel;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\WebProfilerBundle\EventListener\WebDebugToolbarListener;
 use Symfony\Component\HttpFoundation\Request;
-use webignition\RobotsTxt\Directive\Directive;
+use webignition\RobotsTxt\Directive\DirectiveInterface;
 use webignition\RobotsTxt\DirectiveList\DirectiveList;
 use webignition\RobotsTxt\File\File;
 use webignition\RobotsTxt\File\Parser;
@@ -179,13 +179,14 @@ class RobotsTxtListenerTest extends TestCase
             ->expects($matcher)
             ->method('add')
             ->willReturnCallback(
-                function (...$parameters) use ($matcher): void {
+                function (DirectiveInterface $directive) use ($matcher, $routePrefix): void {
+                    $directive = (string) $directive;
+
                     if (1 === $matcher->numberOfInvocations()) {
-                        $callback = static fn (Directive $directive) => (string) $directive === 'disallow:'.$routePrefix.'/';
-                        $this->assertTrue($callback($parameters[0]));
+                        $this->assertTrue($directive === 'disallow:'.$routePrefix.'/');
                     }
                     if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('disallow:/_contao/', $parameters[0]);
+                        $this->assertSame('disallow:/_contao/', $directive);
                     }
                 },
             )

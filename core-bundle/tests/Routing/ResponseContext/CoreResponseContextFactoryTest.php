@@ -235,7 +235,7 @@ class CoreResponseContextFactoryTest extends TestCase
             ->expects($matcher)
             ->method('replaceInline')
             ->willReturnCallback(
-                function (...$parameters) use ($matcher) {
+                function (...$parameters) use ($matcher, $url) {
                     if (1 === $matcher->numberOfInvocations()) {
                         $this->assertSame('', $parameters[0]);
 

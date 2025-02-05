@@ -725,7 +725,7 @@ class RouteProviderTest extends TestCase
             ->expects($matcher)
             ->method('findById')
             ->willReturnCallback(
-                function (...$parameters) use ($matcher) {
+                function (...$parameters) use ($matcher, $routablePage, $unroutablePage) {
                     if (1 === $matcher->numberOfInvocations()) {
                         $this->assertSame(17, $parameters[0]);
 
