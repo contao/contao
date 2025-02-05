@@ -13,13 +13,18 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\PhpunitExtension;
 
 use PhpParser\Lexer;
-use PHPUnit\Framework\ExpectationFailedException;
-use PHPUnit\Runner\AfterTestHook;
-use PHPUnit\Runner\BeforeTestHook;
+use PHPUnit\Event\Test\Finished;
+use PHPUnit\Event\Test\FinishedSubscriber;
+use PHPUnit\Event\Test\PreparationStarted;
+use PHPUnit\Event\Test\PreparationStartedSubscriber;
+use PHPUnit\Runner\Extension\Extension;
+use PHPUnit\Runner\Extension\Facade;
+use PHPUnit\Runner\Extension\ParameterCollection;
+use PHPUnit\TextUI\Configuration\Configuration;
 use SebastianBergmann\Diff\Differ;
 use SebastianBergmann\Diff\Output\StrictUnifiedDiffOutputBuilder;
 
-final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
+final class GlobalStateWatcher implements Extension
 {
     private string $globalKeys;
 
@@ -37,7 +42,36 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
 
     private string $env;
 
-    public function executeBeforeTest(string $test): void
+    public function bootstrap(Configuration $configuration, Facade $facade, ParameterCollection $parameters): void
+    {
+        $facade->registerSubscriber(
+            new class($this) implements PreparationStartedSubscriber {
+                public function __construct(private readonly GlobalStateWatcher $watcher)
+                {
+                }
+
+                public function notify(PreparationStarted $event): void
+                {
+                    $this->watcher->executeBeforeTest();
+                }
+            },
+        );
+
+        $facade->registerSubscriber(
+            new class($this) implements FinishedSubscriber {
+                public function __construct(private readonly GlobalStateWatcher $watcher)
+                {
+                }
+
+                public function notify(Finished $event): void
+                {
+                    $this->watcher->executeAfterTest($event->test()->id());
+                }
+            },
+        );
+    }
+
+    public function executeBeforeTest(): void
     {
         $this->globalKeys = $this->buildGlobalKeys();
         $this->globals = $this->buildGlobals();
@@ -49,11 +83,12 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
         $this->env = $this->buildEnv();
     }
 
-    public function executeAfterTest(string $test, float $time): void
+    public function executeAfterTest(string $test): void
     {
         foreach (['globalKeys', 'globals', 'staticMembers', 'phpIni', 'setFunctions', 'fileSystem', 'constants', 'env'] as $member) {
             if ($this->$member !== ($after = $this->{'build'.$member}())) {
-                throw new ExpectationFailedException(\sprintf("\nUnexpected change to global state (%s) in %s\n%s", $member, $test, $this->diff($this->$member, $after)));
+                echo \sprintf("\nUnexpected change to global state (%s) in %s\n%s", $member, $test, $this->diff($this->$member, $after));
+                exit(255);
             }
         }
     }

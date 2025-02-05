@@ -193,7 +193,7 @@ class FileDownloadHelperTest extends TestCase
     {
         ob_start();
 
-        $response->send();
+        $response->sendContent();
 
         return ob_get_clean();
     }
