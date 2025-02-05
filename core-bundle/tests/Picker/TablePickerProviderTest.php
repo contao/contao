@@ -318,7 +318,7 @@ class TablePickerProviderTest extends ContaoTestCase
             'popup' => '1',
             'picker' => 'foobar',
             'table' => 'tl_article',
-            'id' => '1',
+            'id' => 1,
         ];
 
         $config = $this->mockPickerConfig('tl_article', '42');
@@ -554,7 +554,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $expectedParams = [];
 
         if ($menu) {
-            $expectedItems[] = ['picker'];
+            $expectedItems[] = ['picker', []];
         } else {
             $menu = $this->createMock(ItemInterface::class);
         }
@@ -602,10 +602,6 @@ class TablePickerProviderTest extends ContaoTestCase
 
     private function mockPickerConfig(string $table = '', string $value = '', string $current = '', array|null $expectedCurrent = null): PickerConfig&MockObject
     {
-        if (!$expectedCurrent && '' !== $current) {
-            $expectedCurrent = [[$current]];
-        }
-
         $config = $this->createMock(PickerConfig::class);
         $config
             ->method('getContext')
