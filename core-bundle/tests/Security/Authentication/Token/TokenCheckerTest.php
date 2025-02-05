@@ -440,15 +440,15 @@ class TokenCheckerTest extends TestCase
 
     public function testDoesNotReturnATokenIfTheTokenIsNotAuthenticated(): void
     {
-        $token = new UsernamePasswordToken($this->createMock(UserInterface::class), 'foobar');
+        $user = $this->createMock(UserInterface::class);
+        $token = new UsernamePasswordToken($user, 'foobar');
+        $session = $this->mockSessionWithToken($token);
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
         $tokenStorage
             ->method('getToken')
             ->willReturn(null)
         ;
-
-        $session = $this->mockSessionWithToken($token);
 
         $request = new Request();
         $request->setSession($session);
