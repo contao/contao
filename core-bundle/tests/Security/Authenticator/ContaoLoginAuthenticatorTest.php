@@ -385,8 +385,24 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $this->assertSame('<stream content>', $response->getContent());
     }
 
-    #[DataProvider('getAuthenticationData')]
-    public function testStartsTheAuthenticationProcessOnCurrentPage(TokenInterface|null $token, ResponseException|null $exception): void
+    public function testStartsTheAuthenticationProcessOnCurrentPageWithoutException(): void
+    {
+        $this->assertStartsTheAuthenticationProcessOnCurrentPage(null);
+    }
+
+    public function testStartsTheAuthenticationProcessOnCurrentPageWithException(): void
+    {
+        $responseException = $this->createMock(ResponseException::class);
+        $responseException
+            ->expects($this->once())
+            ->method('getResponse')
+            ->willReturn($this->createMock(RedirectResponse::class))
+        ;
+
+        $this->assertStartsTheAuthenticationProcessOnCurrentPage($responseException);
+    }
+
+    public function assertStartsTheAuthenticationProcessOnCurrentPage(ResponseException|null $exception): void
     {
         $pageModel = $this->createMock(PageModel::class);
 
@@ -432,21 +448,6 @@ class ContaoLoginAuthenticatorTest extends TestCase
         );
 
         $authenticator->start($request);
-    }
-
-    public function getAuthenticationData(): iterable
-    {
-        $token = $this->createMock(UsernamePasswordToken::class);
-
-        $responseException = $this->createMock(ResponseException::class);
-        $responseException
-            ->expects($this->once())
-            ->method('getResponse')
-            ->willReturn($this->createMock(RedirectResponse::class))
-        ;
-
-        yield [$token, null];
-        yield [$token, $responseException];
     }
 
     public function testThrowsExceptionIfThereIsNoErrorPage(): void
