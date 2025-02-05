@@ -26,6 +26,7 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
     public function testCleanupLogsAndUndo(int $undoPeriod, int $logPeriod, int $versionPeriod): void
     {
         $mockedTime = 1142164800;
+        ClockMock::register(__CLASS__);
         ClockMock::withClockMock($mockedTime);
 
         $expectedStatements = [];

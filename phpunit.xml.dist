@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+        xsi:noNamespaceSchemaLocation="http://schema.phpunit.de/9.3/phpunit.xsd"
         colors="true"
         defaultTestSuite="unit"
         bootstrap="vendor/autoload.php"
@@ -38,9 +38,8 @@
     <env name="APP_ENV" value="test"/>
     <env name="APP_DEBUG" value=""/>
     <env name="DATABASE_URL" value="mysql://root@localhost:3306/contao_test"/>
-    <server name="SYMFONY_PHPUNIT_VERSION" value="11.5"/>
-    <server name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/>
-    <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
+    <env name="SYMFONY_PHPUNIT_VERSION" value="11.5"/>
+    <env name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0"/>$
   </php>
   <testsuites>
     <testsuite name="unit">
@@ -59,28 +58,7 @@
     </testsuite>
   </testsuites>
   <listeners>
-    <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener">
-      <arguments>
-        <array>
-          <element key="time-sensitive">
-            <array>
-              <element key="0"><string>Contao\CoreBundle\Command</string></element>
-              <element key="1"><string>Contao\CoreBundle\Controller\ContentElement</string></element>
-              <element key="2"><string>Contao\CoreBundle\Cron\Command</string></element>
-              <element key="3"><string>Contao\CoreBundle\EventListener\DataContainer</string></element>
-              <element key="4"><string>Contao\CoreBundle\Security\Authentication\Provider</string></element>
-              <element key="5"><string>Contao\CoreBundle\Security\Authentication\RememberMe</string></element>
-              <element key="6"><string>Contao\CoreBundle\Tests\Command</string></element>
-              <element key="7"><string>Contao\CoreBundle\Tests\Controller\ContentElement</string></element>
-              <element key="8"><string>Contao\CoreBundle\Tests\Cron</string></element>
-              <element key="9"><string>Contao\CoreBundle\Tests\EventListener\DataContainer</string></element>
-              <element key="10"><string>Contao\CoreBundle\Tests\Security\Authentication\Provider</string></element>
-              <element key="11"><string>Contao\CoreBundle\Tests\Security\Authentication\RememberMe</string></element>
-            </array>
-          </element>
-        </array>
-      </arguments>
-    </listener>
+    <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
   </listeners>
   <extensions>
     <extension class="Contao\TestCase\ClearCachePhpunitExtension"/>

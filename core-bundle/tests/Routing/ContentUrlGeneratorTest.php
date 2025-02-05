@@ -22,6 +22,7 @@ use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Constraint\Constraint;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -334,8 +335,21 @@ class ContentUrlGeneratorTest extends TestCase
             ->expects($matcher)
             ->method('resolve')
             ->willReturnCallback(
-                function (...$parameters) use ($matcher, $cases): ContentUrlResult|null {
-                    $this->assertSame(array_map(static fn (array $case) => [$case[0]], $cases)[$matcher->numberOfInvocations() - 1], $parameters);
+                function (object $content) use ($matcher, $cases): ContentUrlResult|null {
+                    $expectation = array_column($cases, 0)[$matcher->numberOfInvocations() - 1];
+
+                    if ($expectation instanceof Constraint) {
+                        $this->assertTrue($expectation->evaluate($content, '', true));
+                    } else {
+                        dump($expectation, $content);
+                        $this->assertSame($content, $expectation);
+                    }
+
+                        /*
+                    $argument = array_column($cases, 0)[$matcher->numberOfInvocations() - 1];
+                    dump(get_debug_type($argument));*/
+                   // dump($content, array_column($cases, 0)[$matcher->numberOfInvocations() - 1]);
+                    //$this->assertSame(array_column($cases, 0)[$matcher->numberOfInvocations() - 1], $content);
 
                     return array_column($cases, 1)[$matcher->numberOfInvocations() - 1];
                 },
