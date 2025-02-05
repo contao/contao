@@ -19,7 +19,7 @@
                                 {% if edit_passkey_id|default == credential.id %}
                                     <form method="post" data-contao--passkeys-target="form" id="form-edit-passkey-{{ data.id }}-{{ credential.id }}">
                                         <input type="hidden" name="FORM_SUBMIT" value="passkeys_credentials_edit_{{ data.id }}">
-                                        <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+                                        <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
                                         <input type="hidden" name="credential_id" value="{{ credential.id }}">
                                         <input type="text" name="passkey_name" value="{{ credential.name }}" placeholder="{{ 'MSC.passkeyNameInput'|trans }}">
                                     </form>
@@ -31,7 +31,7 @@
                             <td class="actions">
                                 <form method="post">
                                     <input type="hidden" name="FORM_SUBMIT" value="passkeys_credentials_actions_{{ data.id }}">
-                                    <input type="hidden" name="REQUEST_TOKEN" value="{{ request_token }}">
+                                    <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
                                     {% if edit_passkey_id|default == credential.id -%}
                                         <button type="submit" name="save_passkey" form="form-edit-passkey-{{ data.id }}-{{ credential.id }}" value="{{ credential.id }}">{{ 'MSC.save'|trans }}</button>
                                     {%- else -%}

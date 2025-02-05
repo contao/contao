@@ -6,6 +6,7 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 
 use Contao\ContentModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
@@ -38,6 +39,7 @@ class LoginController extends AbstractContentElementController
         private readonly TranslatorInterface $translator,
         private readonly ContentUrlGenerator $contentUrlGenerator,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly ContaoFramework $framework,
     ) {
     }
 
@@ -108,6 +110,7 @@ class LoginController extends AbstractContentElementController
         }
 
         $redirectBack = false;
+        $pageAdapter = $this->framework->getAdapter(PageModel::class);
 
         // Redirect to the last page visited
         if ($model->redirectBack && $targetPath) {
@@ -116,7 +119,7 @@ class LoginController extends AbstractContentElementController
         }
 
         // Redirect to the jumpTo page
-        elseif ($targetPage = PageModel::findById($model->jumpTo)) {
+        elseif ($targetPage = $pageAdapter->findById($model->jumpTo)) {
             $redirect = $this->contentUrlGenerator->generate($targetPage, [], UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
@@ -136,7 +139,7 @@ class LoginController extends AbstractContentElementController
             return $template->getResponse();
         }
 
-        if ($pwResetPage = PageModel::findById($model->pwResetPage)) {
+        if ($pwResetPage = $pageAdapter->findById($model->pwResetPage)) {
             $template->pwResetUrl = $this->contentUrlGenerator->generate($pwResetPage);
         }
 
@@ -162,11 +165,12 @@ class LoginController extends AbstractContentElementController
         if ($request->isMethod('POST')) {
             return base64_decode($request->request->get('_target_path'), true);
         }
-        if ($request?->query->has('redirect')) {
+
+        if ($request->query->has('redirect')) {
             if ($this->uriSigner->checkRequest($request)) {
                 return $request->query->get('redirect');
             }
-        } elseif ($referer = $request?->headers->get('referer')) {
+        } elseif ($referer = $request->headers->get('referer')) {
             $refererUri = new Uri($referer);
             $requestUri = new Uri($request->getUri());
 

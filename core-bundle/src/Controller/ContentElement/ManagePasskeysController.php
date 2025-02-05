@@ -43,7 +43,7 @@ class ManagePasskeysController extends AbstractContentElementController
             return $template->getResponse();
         }
 
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY', message: 'Full authentication is required to manage the passkeys.');
 
         if ($request->query->get('edit_new_passkey') && $this->uriSigner->checkRequest($request)) {
             if ($credential = $this->credentialRepo->getLastForUser($user)) {
