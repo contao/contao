@@ -46,7 +46,7 @@ class FormFieldAccessVoterTest extends TestCase
                         if (2 === $matcher->numberOfInvocations()) {
                             $this->assertSame($token, $parameters[0]);
                             $this->assertSame([ContaoCorePermissions::USER_CAN_EDIT_FORM], $parameters[1]);
-                            $this->assertSame(42, $parameters[2]);
+                            $this->assertSame('42', $parameters[2]);
 
                             return true;
                         }
@@ -67,7 +67,7 @@ class FormFieldAccessVoterTest extends TestCase
                         if (5 === $matcher->numberOfInvocations()) {
                             $this->assertSame($token, $parameters[0]);
                             $this->assertSame([ContaoCorePermissions::USER_CAN_EDIT_FORM], $parameters[1]);
-                            $this->assertSame(42, $parameters[2]);
+                            $this->assertSame('42', $parameters[2]);
 
                             return false;
                         }
@@ -147,7 +147,7 @@ class FormFieldAccessVoterTest extends TestCase
                         if (2 === $matcher->numberOfInvocations()) {
                             $this->assertSame($token, $parameters[0]);
                             $this->assertSame([ContaoCorePermissions::USER_CAN_EDIT_FORM], $parameters[1]);
-                            $this->assertSame(42, $parameters[2]);
+                            $this->assertSame('42', $parameters[2]);
 
                             return true;
                         }

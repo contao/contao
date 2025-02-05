@@ -46,7 +46,7 @@ class FaqCategoryAccessVoterTest extends TestCase
                         if (2 === $matcher->numberOfInvocations()) {
                             $this->assertSame($token, $parameters[0]);
                             $this->assertSame([ContaoFaqPermissions::USER_CAN_EDIT_CATEGORY], $parameters[1]);
-                            $this->assertSame(42, $parameters[2]);
+                            $this->assertSame('42', $parameters[2]);
 
                             return true;
                         }
@@ -65,7 +65,7 @@ class FaqCategoryAccessVoterTest extends TestCase
                         if (5 === $matcher->numberOfInvocations()) {
                             $this->assertSame($token, $parameters[0]);
                             $this->assertSame([ContaoFaqPermissions::USER_CAN_EDIT_CATEGORY], $parameters[1]);
-                            $this->assertSame(42, $parameters[2]);
+                            $this->assertSame('42', $parameters[2]);
 
                             return false;
                         }
