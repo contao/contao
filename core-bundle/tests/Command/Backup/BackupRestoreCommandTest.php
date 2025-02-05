@@ -77,7 +77,7 @@ class BackupRestoreCommandTest extends TestCase
         ];
     }
 
-    public function successfulCommandRunProvider(): iterable
+    public static function successfulCommandRunProvider(): iterable
     {
         yield 'Default arguments' => [
             [],
@@ -155,7 +155,7 @@ class BackupRestoreCommandTest extends TestCase
         $backupManager
             ->expects($this->once())
             ->method('restore')
-            ->with($this->callback($expectedCreateConfig))
+            ->with($this->callback(\Closure::bind($expectedCreateConfig, $this)))
         ;
 
         return $backupManager;
