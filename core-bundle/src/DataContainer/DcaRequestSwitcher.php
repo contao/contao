@@ -34,7 +34,7 @@ class DcaRequestSwitcher
      */
     public function runWithRequest(Request|string $request, \Closure $callback): mixed
     {
-        if ($request !== $this->requestStack->getCurrentRequest()) {
+        if ($request === $this->requestStack->getCurrentRequest()) {
             return $callback();
         }
 
