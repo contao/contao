@@ -23,108 +23,49 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class FormFieldAccessVoterTest extends TestCase
+class FormFieldAccessVoterTest extends AbstractAccessVoterTest
 {
-    public function testVoter(): void
+    protected function getVoterClass(): string
     {
-        $token = $this->createMock(TokenInterface::class);
+        return FormFieldAccessVoter::class;
+    }
 
-        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
-        $matcher = $this->exactly(5);
-        $accessDecisionManager
-            ->expects($matcher)
-            ->method('decide')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher, $token) {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame($token, $parameters[0]);
-                        $this->assertSame([ContaoCorePermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
-                        $this->assertSame('form', $parameters[2]);
+    protected function getTable(): string
+    {
+        return 'tl_form_field';
+    }
 
-                        return true;
-                    }
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame($token, $parameters[0]);
-                        $this->assertSame([ContaoCorePermissions::USER_CAN_EDIT_FORM], $parameters[1]);
-                        $this->assertSame('42', $parameters[2]);
-
-                        return true;
-                    }
-                    if (3 === $matcher->numberOfInvocations()) {
-                        $this->assertSame($token, $parameters[0]);
-                        $this->assertSame([ContaoCorePermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
-                        $this->assertSame('form', $parameters[2]);
-
-                        return false;
-                    }
-                    if (4 === $matcher->numberOfInvocations()) {
-                        $this->assertSame($token, $parameters[0]);
-                        $this->assertSame([ContaoCorePermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
-                        $this->assertSame('form', $parameters[2]);
-
-                        return true;
-                    }
-                    if (5 === $matcher->numberOfInvocations()) {
-                        $this->assertSame($token, $parameters[0]);
-                        $this->assertSame([ContaoCorePermissions::USER_CAN_EDIT_FORM], $parameters[1]);
-                        $this->assertSame('42', $parameters[2]);
-
-                        return false;
-                    }
-                },
-            )
-        ;
-
-        $voter = new FormFieldAccessVoter($accessDecisionManager);
-
-        $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_form_field'));
-        $this->assertFalse($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_form'));
-        $this->assertTrue($voter->supportsType(CreateAction::class));
-        $this->assertTrue($voter->supportsType(ReadAction::class));
-        $this->assertTrue($voter->supportsType(UpdateAction::class));
-        $this->assertTrue($voter->supportsType(DeleteAction::class));
-        $this->assertFalse($voter->supportsType(FormFieldAccessVoter::class));
-
-        // Unsupported attribute
-        $this->assertSame(
-            VoterInterface::ACCESS_ABSTAIN,
-            $voter->vote(
-                $token,
-                new ReadAction('tl_form_field', ['pid' => 42]),
-                ['whatever'],
-            ),
-        );
-
+    public static function votesProvider(): \Generator
+    {
         // Permission granted, so abstain! Our voters either deny or abstain, they must
         // never grant access (see #6201).
-        $this->assertSame(
-            VoterInterface::ACCESS_ABSTAIN,
-            $voter->vote(
-                $token,
-                new ReadAction('tl_form_field', ['pid' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_form_field'],
-            ),
-        );
+        yield [
+            ['pid' => 42],
+            [
+                [[ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form', true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_FORM], 42, true],
+            ],
+            true
+        ];
 
         // Permission denied on back end module
-        $this->assertSame(
-            VoterInterface::ACCESS_DENIED,
-            $voter->vote(
-                $token,
-                new ReadAction('tl_form_field', ['pid' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_form_field'],
-            ),
-        );
+        yield [
+            ['pid' => 42],
+            [
+                [[ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form', false],
+            ],
+            false
+        ];
 
         // Permission denied on form
-        $this->assertSame(
-            VoterInterface::ACCESS_DENIED,
-            $voter->vote(
-                $token,
-                new ReadAction('tl_form_field', ['pid' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_form_field'],
-            ),
-        );
+        yield [
+            ['pid' => 42],
+            [
+                [[ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form', true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_FORM], 42, false],
+            ],
+            false
+        ];
     }
 
     public function testDeniesUpdateActionToNewParent(): void
@@ -132,34 +73,14 @@ class FormFieldAccessVoterTest extends TestCase
         $token = $this->createMock(TokenInterface::class);
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
-        $matcher = $this->exactly(3);
         $accessDecisionManager
-            ->expects($matcher)
+            ->expects($this->exactly(3))
             ->method('decide')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher, $token) {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame($token, $parameters[0]);
-                        $this->assertSame([ContaoCorePermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
-
-                        return true;
-                    }
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame($token, $parameters[0]);
-                        $this->assertSame([ContaoCorePermissions::USER_CAN_EDIT_FORM], $parameters[1]);
-                        $this->assertSame('42', $parameters[2]);
-
-                        return true;
-                    }
-                    if (3 === $matcher->numberOfInvocations()) {
-                        $this->assertSame($token, $parameters[0]);
-                        $this->assertSame([ContaoCorePermissions::USER_CAN_EDIT_FORM], $parameters[1]);
-                        $this->assertSame(43, $parameters[2]);
-
-                        return false;
-                    }
-                },
-            )
+            ->willReturnMap([
+                [$token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'form', true],
+                [$token, [ContaoCorePermissions::USER_CAN_EDIT_FORM], 42, true],
+                [$token, [ContaoCorePermissions::USER_CAN_EDIT_FORM], 43, false],
+            ])
         ;
 
         $voter = new FormFieldAccessVoter($accessDecisionManager);
