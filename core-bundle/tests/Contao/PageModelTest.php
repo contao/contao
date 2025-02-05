@@ -133,7 +133,7 @@ class PageModelTest extends TestCase
     }
 
     #[DataProvider('similarAliasProvider')]
-    #[Group('legacy')]
+
     public function testFindSimilarByAlias(array $page, string $alias, array $rootData): void
     {
         PageModel::reset();
@@ -370,7 +370,7 @@ class PageModelTest extends TestCase
     }
 
     #[DataProvider('folderUrlProvider')]
-    #[Group('legacy')]
+
     #[RunInSeparateProcess]
     public function testFolderUrlInheritsTheParentAlias(array $databaseResultData, string $expectedFolderUrl): void
     {
@@ -436,10 +436,10 @@ class PageModelTest extends TestCase
         ];
     }
 
-    #[Group('legacy')]
+
     public function testUsesAbsolutePathReferenceForFrontendUrl(): void
     {
-        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.3: Using "Contao\PageModel::getFrontendUrl()" has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getFrontendUrl\(\)" has been deprecated/');
 
         $page = new PageModel();
         $page->pid = 42;
@@ -458,10 +458,10 @@ class PageModelTest extends TestCase
         $this->assertSame('/page', $page->getFrontendUrl());
     }
 
-    #[Group('legacy')]
+
     public function testUsesAbsoluteUrlReferenceForFrontendUrlOnOtherDomain(): void
     {
-        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.3: Using "Contao\PageModel::getFrontendUrl()" has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getFrontendUrl\(\)" has been deprecated/');
 
         $page = new PageModel();
         $page->pid = 42;
@@ -482,10 +482,10 @@ class PageModelTest extends TestCase
         $this->assertSame('https://foobar.com/page', $page->getFrontendUrl());
     }
 
-    #[Group('legacy')]
+
     public function testUsesAbsoluteUrlReferenceForAbsoluteUrl(): void
     {
-        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.3: Using "Contao\PageModel::getAbsoluteUrl()" has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getAbsoluteUrl\(\)" has been deprecated/');
 
         $page = new PageModel();
         $page->pid = 42;

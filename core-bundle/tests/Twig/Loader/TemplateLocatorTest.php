@@ -46,7 +46,7 @@ class TemplateLocatorTest extends TestCase
         $this->assertSame($expectedThemeDirectories, $locator->findThemeDirectories());
     }
 
-    #[Group('legacy')]
+
     public function testFindsThemeDirectoriesOutsideTemplatesDirectory(): void
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');

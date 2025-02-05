@@ -31,13 +31,13 @@ class DeprecationsNodeVisitorTest extends TestCase
         $this->assertSame(10, (new DeprecationsNodeVisitor())->getPriority());
     }
 
-    #[Group('legacy')]
+
     public function testTriggersInsertTagDeprecation(): void
     {
         $templateContent = '<a href="{{ \'{{link_url::9}}\' }}">Test</a>';
         $environment = $this->getEnvironment($templateContent);
 
-        $this->expectUserDeprecationMessage('%sYou should not rely on insert tags being replaced in the rendered HTML.%s');
+        $this->expectUserDeprecationMessageMatches('/You should not rely on insert tags being replaced in the rendered HTML\./');
 
         $environment->render('template.html.twig');
     }

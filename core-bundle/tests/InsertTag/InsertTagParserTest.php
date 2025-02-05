@@ -79,7 +79,7 @@ class InsertTagParserTest extends TestCase
         $this->assertSame([[ChunkedText::TYPE_TEXT, '{{doesnotexist}}']], iterator_to_array($parser->replaceChunked('{{doesnotexist}}')));
     }
 
-    #[Group('legacy')]
+
     public function testRender(): void
     {
         $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
@@ -92,7 +92,7 @@ class InsertTagParserTest extends TestCase
         $this->assertSame('{{does_not_exist}}', $parser->renderTag('does_not_exist')->getValue());
 
         $this->expectExceptionMessage('Rendering a single insert tag has to return a single chunk');
-        $this->expectUserDeprecationMessage('%sInvalid insert tag name%s');
+        $this->expectUserDeprecationMessageMatches('/Invalid insert tag name/');
 
         $parser->renderTag('br}}foo{{br');
     }
@@ -150,13 +150,13 @@ class InsertTagParserTest extends TestCase
         $this->assertSame('baz', $sequence->get(3)->getName());
     }
 
-    #[Group('legacy')]
+
     public function testRenderMixedCase(): void
     {
         $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
 
-        $this->expectUserDeprecationMessage('%sInsert tags with uppercase letters%s');
+        $this->expectUserDeprecationMessageMatches('/Insert tags with uppercase letters/');
 
         $this->assertSame('<br>', $parser->renderTag('bR')->getValue());
     }

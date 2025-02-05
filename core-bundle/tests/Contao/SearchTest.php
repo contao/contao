@@ -17,7 +17,7 @@ use Contao\Search;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 
-#[Group('legacy')]
+
 class SearchTest extends TestCase
 {
     #[DataProvider('compareUrlsProvider')]

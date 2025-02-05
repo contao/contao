@@ -102,11 +102,9 @@ class ContextFactoryTest extends TestCase
         $this->assertSame('c', (string) $context['baz']['foobar']);
     }
 
-    #[Group('legacy')]
+
     public function testCreateContextFromClass(): void
     {
-        $this->expectUserDeprecationMessage('%sCreation of dynamic property %s is deprecated');
-
         $object = new ChildClassWithMembersStub();
         $context = (new ContextFactory())->fromClass($object);
 

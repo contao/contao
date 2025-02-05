@@ -66,13 +66,13 @@ class InputTest extends TestCase
     }
 
     #[DataProvider('encodeInputProvider')]
-    #[Group('legacy')]
+
     public function testCleansTheGlobalArrays(string $source, string $expected): void
     {
         $_GET = $_POST = $_COOKIE = [$source => 1];
 
         if ($source !== $expected) {
-            $this->expectUserDeprecationMessage('%scleanKey()" has been deprecated%s');
+            $this->expectUserDeprecationMessageMatches('/cleanKey\(\)" has been deprecated/');
         }
 
         Input::initialize();
@@ -83,7 +83,7 @@ class InputTest extends TestCase
     }
 
     #[DataProvider('encodeInputProvider')]
-    #[Group('legacy')]
+
     public function testGetAndPostEncoded(string $source, string $expected, string|null $expectedEncoded = null): void
     {
         $expectedEncoded ??= $expected;
@@ -110,7 +110,7 @@ class InputTest extends TestCase
         $stack->pop();
         $_GET = $_POST = $_COOKIE = ['key' => $source];
 
-        $this->expectUserDeprecationMessage('%sGetting data from $_%s has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/Getting data from \$_.+ has been deprecated/');
 
         $this->assertSame($expected, Input::get('key', true));
         $this->assertSame($expected, Input::post('key', true));
@@ -122,13 +122,13 @@ class InputTest extends TestCase
 
         $this->assertSame($source, Input::postUnsafeRaw('key'));
 
-        $this->expectUserDeprecationMessage('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/stripTags\(\) without setting allowed tags and allowed attributes has been deprecated/');
         $this->assertSame($expected, Input::postHtml('key', true));
         $this->assertSame($expectedEncoded, Input::postHtml('key'));
     }
 
     #[DataProvider('encodeInputProvider')]
-    #[Group('legacy')]
+
     public function testBackendRoundtrip(string $source, string $expected, string|null $expectedEncoded = null): void
     {
         $expectedEncoded ??= $expected;
@@ -147,13 +147,13 @@ class InputTest extends TestCase
         $this->assertSame($expected, Input::post('decoded', true));
         $this->assertSame($expectedEncoded, Input::post('encoded'));
 
-        $this->expectUserDeprecationMessage('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/stripTags\(\) without setting allowed tags and allowed attributes has been deprecated/');
 
         $this->assertSame($expected, Input::postHtml('decoded', true));
         $this->assertSame($expectedEncoded, Input::postHtml('encoded'));
     }
 
-    #[Group('legacy')]
+
     public function testEncodesInsertTags(): void
     {
         $source = ' {{ foo }} { bar } ';
@@ -183,7 +183,7 @@ class InputTest extends TestCase
         $this->assertSame($encoded, Input::postRaw('key'));
         $this->assertSame($source, Input::postUnsafeRaw('key'));
 
-        $this->expectUserDeprecationMessage('%spostHtml() with $blnDecodeEntities set to false has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/postHtml\(\) with \$blnDecodeEntities set to false has been deprecated/');
         $this->assertSame($encoded, Input::postHtml('key'));
     }
 
@@ -311,7 +311,7 @@ class InputTest extends TestCase
     }
 
     #[DataProvider('encodeNoneModeProvider')]
-    #[Group('legacy')]
+
     public function testEncodeNoneMode(string $source, string $expected, string|null $expectedEncoded = null, string|null $expectedEncodedDouble = null): void
     {
         $expectedEncoded ??= $expected;
@@ -329,7 +329,7 @@ class InputTest extends TestCase
         $stack->pop();
         $_POST = ['key' => $source];
 
-        $this->expectUserDeprecationMessage('%sGetting data from $_POST%shas been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/Getting data from \$_POST.+has been deprecated/');
 
         $this->assertSame($expectedEncoded, Input::postRaw('key'));
     }
@@ -368,7 +368,7 @@ class InputTest extends TestCase
     }
 
     #[DataProvider('stripTagsProvider')]
-    #[Group('legacy')]
+
     public function testStripTags(string $source, string $expected, string|null $expectedEncoded = null): void
     {
         $expectedEncoded ??= str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $expected);
@@ -386,7 +386,7 @@ class InputTest extends TestCase
         $stack->pop();
         $_POST = ['key' => $source];
 
-        $this->expectUserDeprecationMessage('%sGetting data from $_POST%shas been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/Getting data from \$_POST.+has been deprecated/');
 
         $this->assertSame($expectedEncoded, Input::postHtml('key', true));
     }
@@ -675,10 +675,10 @@ class InputTest extends TestCase
     }
 
     #[DataProvider('stripTagsNoTagsAllowedProvider')]
-    #[Group('legacy')]
+
     public function testStripTagsNoTagsAllowed(string $source, string $expected): void
     {
-        $this->expectUserDeprecationMessage('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/stripTags\(\) without setting allowed tags and allowed attributes has been deprecated/');
 
         $this->assertSame($expected, Input::stripTags($source));
     }
@@ -711,7 +711,7 @@ class InputTest extends TestCase
         $this->assertSame($html, Input::stripTags($html, '<span>', serialize([['key' => '*', 'value' => '*']])));
     }
 
-    #[Group('legacy')]
+
     public function testStripTagsNoAttributesAllowed(): void
     {
         $html = "<dIv class=gets-normalized bar-foo-something = 'keep'><spAN class=gets-normalized bar-foo-something = 'keep'>foo</SPan></DiV><notallowed></notallowed>";
@@ -722,14 +722,14 @@ class InputTest extends TestCase
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize([])));
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize(null)));
 
-        $this->expectUserDeprecationMessage('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/stripTags\(\) without setting allowed tags and allowed attributes has been deprecated/');
         $this->assertSame($expected, Input::stripTags($html, '<div><span>'));
     }
 
-    #[Group('legacy')]
+
     public function testStripTagsScriptAllowed(): void
     {
-        $this->expectUserDeprecationMessage('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/stripTags\(\) without setting allowed tags and allowed attributes has been deprecated/');
 
         $this->assertSame(
             '<script>alert(foo > bar);</script>foo &#62; bar',
@@ -748,7 +748,7 @@ class InputTest extends TestCase
     }
 
     #[DataProvider('simpleTokensWithHtmlProvider')]
-    #[Group('legacy')]
+
     public function testSimpleTokensWithHtml(string $source, array $tokens, string $expected): void
     {
         $simpleTokenParser = new SimpleTokenParser(new ExpressionLanguage());
@@ -826,7 +826,7 @@ class InputTest extends TestCase
         ];
     }
 
-    #[Group('legacy')]
+
     public function testPostAndGetKeys(): void
     {
         $data = ['key1' => 'string-key', '123' => 'integer-key'];
@@ -876,7 +876,7 @@ class InputTest extends TestCase
         $stack->pop();
         $_POST = $_GET = [];
 
-        $this->expectUserDeprecationMessage('%sGetting data from $_%shas been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/Getting data from \$_.+has been deprecated/');
 
         $this->assertSame([], Input::getKeys());
         $this->assertFalse(Input::isPost());
@@ -935,7 +935,7 @@ class InputTest extends TestCase
         $this->assertArrayNotHasKey('auto_item', $_GET);
     }
 
-    #[Group('legacy')]
+
     public function testArrayValuesFromGetAndPost(): void
     {
         $data = ['key' => ['value1', 'value2']];

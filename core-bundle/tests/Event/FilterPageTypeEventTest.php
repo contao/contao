@@ -19,7 +19,7 @@ use PHPUnit\Framework\TestCase;
 
 class FilterPageTypeEventTest extends TestCase
 {
-    #[Group('legacy')]
+
     public function testReturnsDataContainer(): void
     {
         $dc = $this->createMock(DataContainer::class);
@@ -28,7 +28,7 @@ class FilterPageTypeEventTest extends TestCase
         $this->assertSame($dc, $event->getDataContainer());
     }
 
-    #[Group('legacy')]
+
     public function testReturnsOptionsWithNumericKeys(): void
     {
         $dc = $this->createMock(DataContainer::class);
@@ -37,7 +37,7 @@ class FilterPageTypeEventTest extends TestCase
         $this->assertSame(['bar'], $event->getOptions());
     }
 
-    #[Group('legacy')]
+
     public function testCanAddOption(): void
     {
         $dc = $this->createMock(DataContainer::class);
@@ -50,7 +50,7 @@ class FilterPageTypeEventTest extends TestCase
         $this->assertSame(['foo'], $event->getOptions());
     }
 
-    #[Group('legacy')]
+
     public function testDoesNotAddDuplicateOptions(): void
     {
         $dc = $this->createMock(DataContainer::class);
@@ -63,7 +63,7 @@ class FilterPageTypeEventTest extends TestCase
         $this->assertSame(['foo'], $event->getOptions());
     }
 
-    #[Group('legacy')]
+
     public function testCanSetOptions(): void
     {
         $dc = $this->createMock(DataContainer::class);
@@ -76,7 +76,7 @@ class FilterPageTypeEventTest extends TestCase
         $this->assertSame(['bar'], $event->getOptions());
     }
 
-    #[Group('legacy')]
+
     public function testCanRemoveOption(): void
     {
         $dc = $this->createMock(DataContainer::class);
@@ -89,7 +89,7 @@ class FilterPageTypeEventTest extends TestCase
         $this->assertSame([], $event->getOptions());
     }
 
-    #[Group('legacy')]
+
     public function testIgnoresMissingWhenRemovingOptions(): void
     {
         $dc = $this->createMock(DataContainer::class);

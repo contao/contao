@@ -240,7 +240,7 @@ class TemplateLoaderTest extends TestCase
         unset($GLOBALS['CTLG']);
     }
 
-    #[Group('legacy')]
+
     public function testReturnsACustomTwigTemplate(): void
     {
         $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);

@@ -39,12 +39,11 @@ class ThemeTest extends TestCase
     }
 
     #[DataProvider('provideRelativePaths')]
-    #[Group('legacy')]
     public function testGenerateRelativeSlug(string $path, string $expectedSlug): void
     {
         $themeNamespace = new ThemeNamespace();
 
-        $this->expectUserDeprecationMessage('%sUsing paths outside of the template directory are deprecated and will no longer work in Contao 6.%s');
+        $this->expectUserDeprecationMessageMatches('/Using paths outside of the template directory are deprecated and will no longer work in Contao 6\./');
 
         $this->assertSame($expectedSlug, $themeNamespace->generateSlug($path));
     }

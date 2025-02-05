@@ -19,10 +19,10 @@ use PHPUnit\Framework\TestCase;
 
 class FrontendModuleTest extends TestCase
 {
-    #[Group('legacy')]
+
     public function testReturnsTheTagName(): void
     {
-        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.4: %s Use the #[AsFrontendModule] attribute instead.');
+        $this->expectUserDeprecationMessageMatches('/Use the #\[AsFrontendModule] attribute instead\./');
 
         $annotation = new FrontendModule(['category' => 'foobar']);
 

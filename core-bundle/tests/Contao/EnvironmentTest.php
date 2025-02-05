@@ -61,7 +61,7 @@ class EnvironmentTest extends TestCase
         parent::tearDown();
     }
 
-    #[Group('legacy')]
+
     public function testHandlesModPhp(): void
     {
         $this->setSapi('apache');
@@ -98,7 +98,7 @@ class EnvironmentTest extends TestCase
         $this->runTests();
     }
 
-    #[Group('legacy')]
+
     public function testHandlesCgiFcgi(): void
     {
         $this->setSapi('cgi_fcgi');
@@ -139,7 +139,7 @@ class EnvironmentTest extends TestCase
         $this->runTests();
     }
 
-    #[Group('legacy')]
+
     public function testHandlesFpmFcgi(): void
     {
         $this->setSapi('fpm_fcgi');

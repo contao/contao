@@ -18,10 +18,10 @@ use PHPUnit\Framework\TestCase;
 
 class CallbackTest extends TestCase
 {
-    #[Group('legacy')]
+
     public function testReturnsTheTagName(): void
     {
-        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.4: %s Use the #[AsCallback] attribute instead.');
+        $this->expectUserDeprecationMessageMatches('/Use the #\[AsCallback] attribute instead\./');
 
         $annotation = new Callback();
         $annotation->table = 'tl_foobar';

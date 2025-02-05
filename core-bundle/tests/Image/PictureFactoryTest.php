@@ -433,7 +433,7 @@ class PictureFactoryTest extends TestCase
         $this->assertSame($imageMock, $picture->getRawImg()['src']);
     }
 
-    #[Group('legacy')]
+
     public function testCreatesAPictureObjectInLegacyMode(): void
     {
         $path = $this->getTempDir().'/images/dummy.jpg';
@@ -493,7 +493,7 @@ class PictureFactoryTest extends TestCase
             )
         ;
 
-        $this->expectUserDeprecationMessage('%slegacy resize mode "left_top" has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/legacy resize mode "left_top" has been deprecated/');
 
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, [100, 200, 'left_top']);

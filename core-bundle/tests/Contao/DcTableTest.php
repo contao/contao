@@ -34,10 +34,10 @@ class DcTableTest extends TestCase
     }
 
     #[DataProvider('getPalette')]
-    #[Group('legacy')]
+
     public function testGetPalette(array $dca, array $row, string $expected): void
     {
-        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.0: Getting data from $_POST with the "Contao\Input" class has been deprecated %s.');
+        $this->expectUserDeprecationMessageMatches('/Getting data from \$_POST with the "Contao\\\\Input" class has been deprecated/');
 
         $result = $this->createMock(Result::class);
         $result

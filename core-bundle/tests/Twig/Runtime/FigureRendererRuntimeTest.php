@@ -39,7 +39,7 @@ class FigureRendererRuntimeTest extends TestCase
         );
     }
 
-    #[Group('legacy')]
+
     public function testDelegatesCallsWhenRenderingFigure(): void
     {
         $figureRenderer = $this->createMock(FigureRenderer::class);
@@ -52,14 +52,14 @@ class FigureRendererRuntimeTest extends TestCase
 
         $figureRendererRuntime = new FigureRuntime($figureRenderer);
 
-        $this->expectUserDeprecationMessage('%sUsing the "contao_figure" Twig function has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/Using the "contao_figure" Twig function has been deprecated/');
 
         $result = $figureRendererRuntime->renderFigure('123', '_my_size', ['foo' => 'bar'], 'my_template.html.twig');
 
         $this->assertSame('<result>', $result);
     }
 
-    #[Group('legacy')]
+
     public function testUsesFigureTemplateByDefaultWhenRenderingFigure(): void
     {
         $figureRenderer = $this->createMock(FigureRenderer::class);
@@ -70,7 +70,7 @@ class FigureRendererRuntimeTest extends TestCase
             ->willReturn('<result>')
         ;
 
-        $this->expectUserDeprecationMessage('%sUsing the "contao_figure" Twig function has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/Using the "contao_figure" Twig function has been deprecated/');
 
         (new FigureRuntime($figureRenderer))->renderFigure(1, null);
     }

@@ -18,10 +18,10 @@ use PHPUnit\Framework\TestCase;
 
 class HookTest extends TestCase
 {
-    #[Group('legacy')]
+
     public function testReturnsTheTagName(): void
     {
-        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.4: %s Use the #[AsHook] attribute instead.');
+        $this->expectUserDeprecationMessageMatches('/Use the #\[AsHook] attribute instead\./');
 
         $annotation = new Hook();
 

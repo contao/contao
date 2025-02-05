@@ -340,10 +340,10 @@ class PreviewFactoryTest extends TestCase
         $factory->createPreviewPictures($sourcePath, [200, 200, 'box']);
     }
 
-    #[Group('legacy')]
+
     public function testCreatePreviewFigureBuilder(): void
     {
-        $this->expectUserDeprecationMessage('Since contao/image 1.2: Passing NULL as $rootDir is deprecated and will no longer work in version 2.0.%s');
+        $this->expectUserDeprecationMessageMatches('/Passing NULL as \$rootDir is deprecated and will no longer work in version 2.0\./');
 
         $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
         $factory = $this->createFactoryWithExampleProvider();

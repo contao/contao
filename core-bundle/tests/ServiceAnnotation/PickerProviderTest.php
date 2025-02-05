@@ -18,10 +18,9 @@ use PHPUnit\Framework\TestCase;
 
 class PickerProviderTest extends TestCase
 {
-    #[Group('legacy')]
     public function testReturnsTheTagName(): void
     {
-        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.4: %s Use the #[AsPickerProvider] attribute instead.');
+        $this->expectUserDeprecationMessageMatches('/Use the #\[AsPickerProvider] attribute instead\./');
 
         $annotation = new PickerProvider();
 

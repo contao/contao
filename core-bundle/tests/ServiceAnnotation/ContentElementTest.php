@@ -19,10 +19,10 @@ use PHPUnit\Framework\TestCase;
 
 class ContentElementTest extends TestCase
 {
-    #[Group('legacy')]
+
     public function testReturnsTheTagName(): void
     {
-        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.4: %s Use the #[AsContentElement] attribute instead.');
+        $this->expectUserDeprecationMessageMatches('/Use the #\[AsContentElement] attribute instead\./');
 
         $annotation = new ContentElement(['category' => 'foobar']);
 

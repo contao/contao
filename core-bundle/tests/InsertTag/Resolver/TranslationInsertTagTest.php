@@ -23,7 +23,7 @@ use Symfony\Component\Translation\Translator;
 class TranslationInsertTagTest extends TestCase
 {
     #[DataProvider('insertTagsProvider')]
-    #[Group('legacy')]
+
     public function testReplacesInsertTagsWithTranslation(string $id, string $result, string|null $domain = null, array $parameters = []): void
     {
         $translator = $this->createMock(Translator::class);
@@ -49,7 +49,7 @@ class TranslationInsertTagTest extends TestCase
         if ($parameters) {
             $params = [$id, $domain, implode(':', $parameters)];
 
-            $this->expectUserDeprecationMessage('%sPassing parameters to the trans insert tag separated by a single colon has has been deprecated%s');
+            $this->expectUserDeprecationMessageMatches('/Passing parameters to the trans insert tag separated by a single colon has has been deprecated/');
             $this->assertSame($result, $listener(new ResolvedInsertTag('trans', new ResolvedParameters($params), []))->getValue());
         }
     }

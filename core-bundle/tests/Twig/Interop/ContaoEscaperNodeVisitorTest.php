@@ -135,10 +135,9 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $this->assertSame('&QUOT;A&QUOT; &AMP; &LT;B&GT;', $output);
     }
 
-    #[Group('legacy')]
     public function testHtmlAttrFilter(): void
     {
-        $this->expectUserDeprecationMessage('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook has been deprecated/');
 
         HookHelper::registerHook('replaceInsertTags', fn (...$args) => $this->executeReplaceInsertTagsCallback(...$args));
 
