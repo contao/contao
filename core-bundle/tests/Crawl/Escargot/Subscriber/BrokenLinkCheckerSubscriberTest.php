@@ -121,8 +121,9 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
     }
 
     #[DataProvider('needsContentProvider')]
-    public function testNeedsContent(CrawlUri $crawlUri, ResponseInterface $response, string $expectedDecision, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
+    public function testNeedsContent(CrawlUri $crawlUri, \Closure $response, string $expectedDecision, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
     {
+        $response = \Closure::bind($response, $this)();
         $logger = $this->createMock(LoggerInterface::class);
 
         if ('' !== $expectedLogLevel) {
@@ -171,11 +172,11 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         $this->assertSame($expectedStats, $result->getInfo('stats'));
     }
 
-    public function needsContentProvider(): iterable
+    public static function needsContentProvider(): iterable
     {
         yield 'Test reports responses that were not successful' => [
             new CrawlUri(new Uri('https://contao.org'), 0),
-            $this->mockResponse(404),
+            fn() => $this->mockResponse(404),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::ERROR,
             'Broken link! HTTP Status Code: 404.',
@@ -184,7 +185,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
 
         yield 'Test reports responses that were not successful (with previous stats)' => [
             new CrawlUri(new Uri('https://contao.org'), 0),
-            $this->mockResponse(404),
+            fn() => $this->mockResponse(404),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::ERROR,
             'Broken link! HTTP Status Code: 404.',
@@ -194,7 +195,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
 
         yield 'Test does report successful responses' => [
             new CrawlUri(new Uri('https://contao.org'), 0),
-            $this->mockResponse(),
+            fn() => $this->mockResponse(),
             SubscriberInterface::DECISION_POSITIVE,
             '',
             '',
@@ -203,7 +204,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
 
         yield 'Test does not report successful responses if url not in base collection' => [
             new CrawlUri(new Uri('https://github.com'), 0),
-            $this->mockResponse(200, 'https://github.com'),
+            fn() => $this->mockResponse(200, 'https://github.com'),
             SubscriberInterface::DECISION_NEGATIVE,
             '',
             '',
@@ -212,7 +213,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
 
         yield 'Test does not report successful responses (with previous stats)' => [
             new CrawlUri(new Uri('https://contao.org'), 0),
-            $this->mockResponse(),
+            fn() => $this->mockResponse(),
             SubscriberInterface::DECISION_POSITIVE,
             '',
             '',
@@ -222,7 +223,7 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
 
         yield 'Test does not report redirected responses outside the target domain' => [
             new CrawlUri(new Uri('https://contao.org'), 0),
-            $this->mockResponse(200, 'https://example.com'),
+            fn() => $this->mockResponse(200, 'https://example.com'),
             SubscriberInterface::DECISION_NEGATIVE,
             '',
             '',
@@ -231,8 +232,9 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
     }
 
     #[DataProvider('onTransportExceptionProvider')]
-    public function testOnTransportException(TransportException $exception, ResponseInterface $response, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
+    public function testOnTransportException(TransportException $exception, \Closure $response, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
     {
+        $response = \Closure::bind($response, $this)();
         $logger = $this->createMock(LoggerInterface::class);
 
         if ('' !== $expectedLogLevel) {
@@ -278,11 +280,11 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         $this->assertSame($expectedStats, $result->getInfo('stats'));
     }
 
-    public function onTransportExceptionProvider(): iterable
+    public static function onTransportExceptionProvider(): iterable
     {
         yield 'Test reports transport exception responses' => [
             new TransportException('Could not resolve host or timeout'),
-            $this->mockResponse(404),
+            fn() => $this->mockResponse(404),
             LogLevel::ERROR,
             'Broken link! Could not request properly: Could not resolve host or timeout.',
             ['ok' => 0, 'error' => 2],
@@ -291,8 +293,11 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
     }
 
     #[DataProvider('onHttpExceptionProvider')]
-    public function testOnHttpException(HttpExceptionInterface $exception, ResponseInterface $response, ChunkInterface $chunk, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
+    public function testOnHttpException(\Closure $exception, \Closure $response, ChunkInterface $chunk, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
     {
+        $exception = \Closure::bind($exception, $this)();
+        $response = \Closure::bind($response, $this)();
+
         $logger = $this->createMock(LoggerInterface::class);
 
         if ('' !== $expectedLogLevel) {
@@ -338,11 +343,11 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         $this->assertSame($expectedStats, $result->getInfo('stats'));
     }
 
-    public function onHttpExceptionProvider(): iterable
+    public static function onHttpExceptionProvider(): iterable
     {
         yield 'Test reports responses that were not successful' => [
-            new ClientException($this->mockResponse(404)),
-            $this->mockResponse(404),
+            fn() => new ClientException($this->mockResponse(404)),
+            fn() => $this->mockResponse(404),
             new LastChunk(),
             LogLevel::ERROR,
             'Broken link! HTTP Status Code: 404.',
@@ -350,8 +355,8 @@ class BrokenLinkCheckerSubscriberTest extends TestCase
         ];
 
         yield 'Test reports responses that were not successful (with previous result)' => [
-            new ClientException($this->mockResponse(404)),
-            $this->mockResponse(404),
+            fn() => new ClientException($this->mockResponse(404)),
+            fn() => $this->mockResponse(404),
             new LastChunk(),
             LogLevel::ERROR,
             'Broken link! HTTP Status Code: 404.',
