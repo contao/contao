@@ -55,6 +55,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
+            new MockClock(),
             '',
         );
 
@@ -77,6 +78,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
+            new MockClock(),
             '',
         );
 
@@ -97,6 +99,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
+            new MockClock(),
             '',
         );
 
@@ -177,6 +180,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
+            new MockClock(),
             '/preview.php',
         );
 
@@ -204,6 +208,7 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
+            new MockClock(),
             '/preview.php',
         );
 
