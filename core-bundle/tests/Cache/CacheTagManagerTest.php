@@ -218,30 +218,20 @@ class CacheTagManagerTest extends DoctrineTestCase
     {
         $responseTagger = $this->createMock(ResponseTagger::class);
         $matcher = $this->exactly(5);
+        $expected = [
+            [['contao.db.tl_blog_post']],
+            [['contao.db.tl_blog_post.1']],
+            [['contao.db.tl_page']],
+            [['contao.db.tl_page.2']],
+            [['contao.db.tl_blog_post.1', 'contao.db.tl_page.2', 'foo']],
+        ];
+
         $responseTagger
             ->expects($matcher)
             ->method('addTags')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher, $responseTagger): ResponseTagger {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame(['contao.db.tl_blog_post'], $parameters[0]);
-                    }
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame(['contao.db.tl_blog_post.1'], $parameters[0]);
-                    }
-                    if (3 === $matcher->numberOfInvocations()) {
-                        $this->assertSame(['contao.db.tl_page'], $parameters[0]);
-                    }
-                    if (4 === $matcher->numberOfInvocations()) {
-                        $this->assertSame(['contao.db.tl_page.2'], $parameters[0]);
-                    }
-                    if (5 === $matcher->numberOfInvocations()) {
-                        $this->assertSame(['contao.db.tl_blog_post.1', 'contao.db.tl_page.2', 'foo'], $parameters[0]);
-                    }
-
-                    return $responseTagger;
-                },
-            )
+            ->with($this->callback(
+                static fn (...$args) => $args === $expected[$matcher->numberOfInvocations() - 1],
+            ))
         ;
 
         $post = (new BlogPost())->setId(1);
@@ -261,30 +251,20 @@ class CacheTagManagerTest extends DoctrineTestCase
     {
         $cacheTagInvalidator = $this->createMock(CacheInvalidator::class);
         $matcher = $this->exactly(5);
+        $expected = [
+            [['contao.db.tl_blog_post']],
+            [['contao.db.tl_blog_post.1']],
+            [['contao.db.tl_page']],
+            [['contao.db.tl_page.2']],
+            [['contao.db.tl_blog_post.1', 'contao.db.tl_page.2', 'foo']],
+        ];
+
         $cacheTagInvalidator
             ->expects($matcher)
             ->method('invalidateTags')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher, $cacheTagInvalidator): CacheInvalidator {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame(['contao.db.tl_blog_post'], $parameters[0]);
-                    }
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame(['contao.db.tl_blog_post.1'], $parameters[0]);
-                    }
-                    if (3 === $matcher->numberOfInvocations()) {
-                        $this->assertSame(['contao.db.tl_page'], $parameters[0]);
-                    }
-                    if (4 === $matcher->numberOfInvocations()) {
-                        $this->assertSame(['contao.db.tl_page.2'], $parameters[0]);
-                    }
-                    if (5 === $matcher->numberOfInvocations()) {
-                        $this->assertSame(['contao.db.tl_blog_post.1', 'contao.db.tl_page.2', 'foo'], $parameters[0]);
-                    }
-
-                    return $cacheTagInvalidator;
-                },
-            )
+            ->with($this->callback(
+                static fn (...$args) => $args === $expected[$matcher->numberOfInvocations() - 1],
+            ))
         ;
 
         $post = (new BlogPost())->setId(1);
