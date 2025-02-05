@@ -117,6 +117,11 @@ final class GlobalStateWatcher implements Extension
     private function buildPhpIni(): string
     {
         $ini = ini_get_all(null, false);
+
+        if (!\is_array($ini)) {
+            return '';
+        }
+
         unset($ini['error_reporting']);
 
         return print_r($ini, true);
