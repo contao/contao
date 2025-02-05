@@ -838,13 +838,13 @@ window.Backend =
 			if (el.getPrevious('li')) {
 				id = el.get('id').replace(/li_/, '');
 				pid = el.getPrevious('li').get('id').replace(/li_/, '');
-				req = window.location.search.replace(/id=[0-9]*/, 'id=' + id) + '&act=cut&mode=1&pid=' + pid;
+				req = window.location.search.replace(/rt=[^&]*/, '').replace(/id=[0-9]*/, 'id=' + id) + '&act=cut&mode=1&pid=' + pid;
 				href = window.location.href.replace(/\?.*$/, '');
 				new Request.Contao({'url':href + req + '&rt=' + Contao.request_token, 'followRedirects':false}).get();
 			} else if (el.getParent('ul')) {
 				id = el.get('id').replace(/li_/, '');
 				pid = el.getParent('ul').get('id').replace(/ul_/, '');
-				req = window.location.search.replace(/id=[0-9]*/, 'id=' + id) + '&act=cut&mode=2&pid=' + pid;
+				req = window.location.search.replace(/rt=[^&]*/, '').replace(/id=[0-9]*/, 'id=' + id) + '&act=cut&mode=2&pid=' + pid;
 				href = window.location.href.replace(/\?.*$/, '');
 				new Request.Contao({'url':href + req + '&rt=' + Contao.request_token, 'followRedirects':false}).get();
 			}
