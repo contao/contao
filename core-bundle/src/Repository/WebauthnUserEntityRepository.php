@@ -12,10 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Repository;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
-use Contao\FrontendUser;
 use Contao\User;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Webauthn\Bundle\Repository\PublicKeyCredentialUserEntityRepositoryInterface;
@@ -48,12 +46,12 @@ final class WebauthnUserEntityRepository implements PublicKeyCredentialUserEntit
 
     public function findOneByUserHandle(string $userHandle): PublicKeyCredentialUserEntity|null
     {
-        if (str_starts_with($userHandle, 'tl_user.')) {
+        if (str_starts_with($userHandle, 'backend.')) {
             return $this->getUserEntity($this->backendUserProvider->loadUserById((int) substr($userHandle, 8)));
         }
 
-        if (str_starts_with($userHandle, 'tl_member.')) {
-            return $this->getUserEntity($this->frontendUserProvider->loadUserById((int) substr($userHandle, 10)));
+        if (str_starts_with($userHandle, 'frontend.')) {
+            return $this->getUserEntity($this->frontendUserProvider->loadUserById((int) substr($userHandle, 9)));
         }
 
         return null;
@@ -65,16 +63,6 @@ final class WebauthnUserEntityRepository implements PublicKeyCredentialUserEntit
             return null;
         }
 
-        if ($user instanceof FrontendUser) {
-            $displayName = implode(' ', array_filter([$user->firstname, $user->lastname]));
-            $userHandle = 'tl_member.'.$user->id;
-        } elseif ($user instanceof BackendUser) {
-            $displayName = $user->name;
-            $userHandle = 'tl_user.'.$user->id;
-        } else {
-            throw new \RuntimeException('User instance not supported.');
-        }
-
-        return new PublicKeyCredentialUserEntity($user->username, $userHandle, $displayName);
+        return new PublicKeyCredentialUserEntity($user->username, $user->getPasskeyUserHandle(), $user->getDisplayName());
     }
 }

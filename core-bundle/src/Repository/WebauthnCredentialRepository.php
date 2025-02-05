@@ -12,13 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Repository;
 
-use Contao\BackendUser;
 use Contao\CoreBundle\Entity\WebauthnCredential;
-use Contao\FrontendUser;
 use Contao\User;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Webauthn\Bundle\Repository\DoctrineCredentialSourceRepository;
 use Webauthn\PublicKeyCredentialSource;
 
@@ -46,7 +43,7 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
             ->select('c')
             ->from($this->class, 'c')
             ->where('c.userHandle = :user_handle')
-            ->setParameter(':user_handle', $this->getUserHandle($user))
+            ->setParameter(':user_handle', $user->getPasskeyUserHandle())
             ->getQuery()
             ->execute()
         ;
@@ -112,20 +109,11 @@ final class WebauthnCredentialRepository extends DoctrineCredentialSourceReposit
             ->select('c')
             ->from($this->class, 'c')
             ->where('c.userHandle = :user_handle')
-            ->setParameter(':user_handle', $this->getUserHandle($user))
+            ->setParameter(':user_handle', $user->getPasskeyUserHandle())
             ->orderBy('c.createdAt', 'desc')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult()
         ;
-    }
-
-    private function getUserHandle(UserInterface $user): string
-    {
-        return match ($user::class) {
-            FrontendUser::class => 'tl_member.'.$user->id,
-            BackendUser::class => 'tl_user.'.$user->id,
-            default => throw new \RuntimeException('User instance not supported.'),
-        };
     }
 }

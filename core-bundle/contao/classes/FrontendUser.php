@@ -217,4 +217,14 @@ class FrontendUser extends User
 	{
 		return $this->roles;
 	}
+
+	public function getDisplayName(): string
+	{
+		return implode(' ', array_filter(array($this->firstname, $this->lastname)));
+	}
+
+	public function getPasskeyUserHandle(): string
+	{
+		return 'frontend.' . $this->id;
+	}
 }

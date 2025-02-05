@@ -117,7 +117,6 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\ManagePasskeysController:
         arguments:
-            - '@contao.routing.scope_matcher'
             - '@security.helper'
             - '@contao.repository.webauthn_credential'
             - '@uri_signer'

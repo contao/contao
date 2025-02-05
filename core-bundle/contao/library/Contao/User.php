@@ -457,4 +457,8 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 		return true;
 	}
+
+	abstract public function getDisplayName(): string;
+
+	abstract public function getPasskeyUserHandle(): string;
 }

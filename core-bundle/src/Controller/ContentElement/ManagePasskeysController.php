@@ -17,7 +17,6 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Entity\WebauthnCredential;
 use Contao\CoreBundle\Repository\WebauthnCredentialRepository;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -31,7 +30,6 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 class ManagePasskeysController extends AbstractContentElementController
 {
     public function __construct(
-        private readonly ScopeMatcher $scopeMatcher,
         private readonly Security $security,
         private readonly WebauthnCredentialRepository $credentialRepo,
         private readonly UriSigner $uriSigner,
@@ -41,16 +39,11 @@ class ManagePasskeysController extends AbstractContentElementController
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        if ($this->scopeMatcher->isFrontendRequest()) {
-            $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-        }
-
         if (!($user = $this->security->getUser()) instanceof FrontendUser || !$page = $this->getPageModel()) {
             return $template->getResponse();
         }
 
-        $template->credentials = $this->credentialRepo->getAllForUser($user);
-        $template->edit_passkey_id = $request->query->get('edit_passkey');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
         if ($request->query->get('edit_new_passkey') && $this->uriSigner->checkRequest($request)) {
             if ($credential = $this->credentialRepo->getLastForUser($user)) {
@@ -89,6 +82,8 @@ class ManagePasskeysController extends AbstractContentElementController
             return new RedirectResponse($this->contentUrlGenerator->generate($page));
         }
 
+        $template->credentials = $this->credentialRepo->getAllForUser($user);
+        $template->edit_passkey_id = $request->query->get('edit_passkey');
         $template->success_redirect = $this->uriSigner->sign(
             $this->contentUrlGenerator->generate($page, ['edit_new_passkey' => 1]),
         );
@@ -98,9 +93,7 @@ class ManagePasskeysController extends AbstractContentElementController
 
     private function checkCredentialAccess(FrontendUser $user, WebauthnCredential $credential): void
     {
-        $userHandle = 'tl_member.'.$user->id;
-
-        if ($credential->userHandle !== $userHandle) {
+        if ($credential->userHandle !== $user->getPasskeyUserHandle()) {
             throw new AccessDeniedHttpException('Cannot access credential ID '.$credential->getId());
         }
     }

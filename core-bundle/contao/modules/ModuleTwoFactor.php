@@ -87,7 +87,6 @@ class ModuleTwoFactor extends BackendModule
 
 		/** @var WebauthnCredentialRepository $credentialRepo */
 		$credentialRepo = $container->get('contao.repository.webauthn_credential');
-		$userHandle = 'tl_user.' . $user->id;
 
 		if (Input::post('FORM_SUBMIT') === 'tl_passkeys_credentials_actions')
 		{
@@ -95,10 +94,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($deleteCredentialId))
 				{
-					if ($credential->userHandle !== $userHandle)
-					{
-						throw new AccessDeniedHttpException('Cannot delete credential ID ' . $deleteCredentialId);
-					}
+					$this->checkCredentialAccess($user, $credential);
 
 					$credentialRepo->remove($credential);
 				}
@@ -107,10 +103,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($editCredentialId))
 				{
-					if ($credential->userHandle !== $userHandle)
-					{
-						throw new AccessDeniedHttpException('Cannot edit credential ID ' . $editCredentialId);
-					}
+					$this->checkCredentialAccess($user, $credential);
 
 					$this->redirect($this->addToUrl('edit_passkey=' . $editCredentialId));
 				}
@@ -124,10 +117,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($saveCredentialId))
 				{
-					if ($credential->userHandle !== $userHandle)
-					{
-						throw new AccessDeniedHttpException('Cannot save credential ID ' . $saveCredentialId);
-					}
+					$this->checkCredentialAccess($user, $credential);
 
 					$credential->name = Input::post('passkey_name') ?? '';
 					$credentialRepo->saveCredentialSource($credential);
@@ -221,4 +211,11 @@ class ModuleTwoFactor extends BackendModule
 
 		throw new RedirectResponseException($return);
 	}
+
+	private function checkCredentialAccess(BackendUser $user, WebauthnCredential $credential): void
+    {
+        if ($credential->userHandle !== $user->getPasskeyUserHandle()) {
+            throw new AccessDeniedHttpException('Cannot access credential ID '.$credential->getId());
+        }
+    }
 }
