@@ -26,7 +26,6 @@ use Symfony\Component\HttpClient\Chunk\LastChunk;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\Exception\TransportException;
 use Symfony\Contracts\HttpClient\ChunkInterface;
-use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Terminal42\Escargot\BaseUriCollection;
@@ -192,33 +191,33 @@ class SearchIndexSubscriberTest extends TestCase
     public static function needsContentProvider(): iterable
     {
         yield 'Test skips responses that were not successful' => [
-            fn() => $this->mockResponse(true, 404),
+            fn () => $this->mockResponse(true, 404),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Did not index because according to the HTTP status code the response was not successful (404).',
         ];
 
         yield 'Test skips responses that were not HTML responses' => [
-            fn() => $this->mockResponse(false),
+            fn () => $this->mockResponse(false),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Did not index because the response did not contain a "text/html" Content-Type header.',
         ];
 
         yield 'Test requests successful HTML responses' => [
-            fn() => $this->mockResponse(true),
+            fn () => $this->mockResponse(true),
             SubscriberInterface::DECISION_POSITIVE,
         ];
 
         yield 'Test skips redirected responses outside the target domain' => [
-            fn() => $this->mockResponse(false, 200, 'https://example.com'),
+            fn () => $this->mockResponse(false, 200, 'https://example.com'),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Did not index because it was not part of the base URI collection.',
         ];
 
         yield 'Test skips URIs where the "X-Robots-Tag" header contains "noindex"' => [
-            fn() => $this->mockResponse(true),
+            fn () => $this->mockResponse(true),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Do not request because it was marked "noindex" in the "X-Robots-Tag" header.',
@@ -402,7 +401,7 @@ class SearchIndexSubscriberTest extends TestCase
     {
         yield 'Test reports transport exception responses' => [
             new TransportException('Could not resolve host or timeout'),
-            fn() => $this->mockResponse(true, 404),
+            fn () => $this->mockResponse(true, 404),
             LogLevel::DEBUG,
             'Broken link! Could not request properly: Could not resolve host or timeout.',
             ['ok' => 0, 'warning' => 2, 'error' => 0],
@@ -469,8 +468,8 @@ class SearchIndexSubscriberTest extends TestCase
     public static function onHttpExceptionProvider(): iterable
     {
         yield 'Test reports responses that were not successful' => [
-            fn() => new ClientException($this->mockResponse(true, 404)),
-            fn() => $this->mockResponse(true, 404),
+            fn () => new ClientException($this->mockResponse(true, 404)),
+            fn () => $this->mockResponse(true, 404),
             new LastChunk(),
             LogLevel::DEBUG,
             'Broken link! HTTP Status Code: 404.',
@@ -478,8 +477,8 @@ class SearchIndexSubscriberTest extends TestCase
         ];
 
         yield 'Test reports responses that were not successful (with previous result)' => [
-            fn() => new ClientException($this->mockResponse(true, 404)),
-            fn() => $this->mockResponse(true, 404),
+            fn () => new ClientException($this->mockResponse(true, 404)),
+            fn () => $this->mockResponse(true, 404),
             new LastChunk(),
             LogLevel::DEBUG,
             'Broken link! HTTP Status Code: 404.',
