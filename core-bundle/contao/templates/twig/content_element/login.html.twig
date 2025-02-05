@@ -106,6 +106,12 @@
                                 body: JSON.stringify({}),
                             });
 
+                            // Make sure to always have the correct request token and cookie
+                            const script = document.createElement('script');
+                            script.src = '{{ path('contao_frontend_request_token_script') }}';
+                            script.async = true;
+                            document.body.append(script);
+
                             const optionsJSON = await resp.json();
 
                             if ('error' === optionsJSON.status) {
