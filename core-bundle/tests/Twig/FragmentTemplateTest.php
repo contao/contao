@@ -65,14 +65,31 @@ class FragmentTemplateTest extends TestCase
     }
 
     #[DataProvider('provideIllegalParentMethods')]
-    public function testDisallowsAccessOfParentMethods(string $method, \Closure $argsDelegate): void
+    public function testDisallowsAccessOfParentMethods(string $method): void
     {
         $template = $this->getFragmentTemplate();
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage(\sprintf('Calling the "%s()" function on a FragmentTemplate is not allowed. Set template data instead and optionally output it with getResponse().', $method));
 
-        $args = $argsDelegate->bindTo($this)();
+        $parent = (new \ReflectionClass(FragmentTemplate::class))->getParentClass();
+        $args = array_map(
+            function (\ReflectionParameter $parameter) {
+                $type = $parameter->getType();
+
+                if (!$type instanceof \ReflectionNamedType) {
+                    return null;
+                }
+
+                return match ($name = $type->getName()) {
+                    'bool' => false,
+                    'string' => '',
+                    'array' => [],
+                    default => $this->createMock($name),
+                };
+            },
+            $parent->getMethod($method)->getParameters(),
+        );
 
         $template->$method(...$args);
     }
@@ -105,25 +122,7 @@ class FragmentTemplateTest extends TestCase
                 continue;
             }
 
-            $args = fn () => array_map(
-                function (\ReflectionParameter $parameter) {
-                    $type = $parameter->getType();
-
-                    if (!$type instanceof \ReflectionNamedType) {
-                        return null;
-                    }
-
-                    return match ($name = $type->getName()) {
-                        'bool' => false,
-                        'string' => '',
-                        'array' => [],
-                        default => $this->createMock($name),
-                    };
-                },
-                $method->getParameters(),
-            );
-
-            yield "accessing $name()" => [$name, $args];
+            yield "accessing $name()" => [$name];
         }
     }
 
