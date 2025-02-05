@@ -42,12 +42,7 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
         $session = $this->mockSession();
 
-        $user = $this->createMock(FrontendUser::class);
-        $user
-            ->expects($this->once())
-            ->method('getRoles')
-            ->willReturn(['ROLE_MEMBER'])
-        ;
+        $user = (new \ReflectionClass(FrontendUser::class))->newInstanceWithoutConstructor();
 
         $userProvider = $this->createMock(UserProviderInterface::class);
         $userProvider
