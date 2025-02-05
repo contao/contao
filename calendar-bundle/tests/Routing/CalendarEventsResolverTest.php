@@ -17,6 +17,7 @@ use Contao\CalendarBundle\Routing\CalendarEventsResolver;
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\CoreBundle\Routing\Content\StringUrl;
+use Contao\Model;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -105,6 +106,9 @@ class CalendarEventsResolverTest extends ContaoTestCase
         $this->assertSame($target, $result->content);
     }
 
+    /**
+     * @param class-string<Model> $class
+     */
     #[DataProvider('getParametersForContentProvider')]
     public function testGetParametersForContent(string $class, array $properties, array $expected): void
     {
