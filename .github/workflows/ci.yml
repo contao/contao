@@ -190,6 +190,8 @@ jobs:
                       $data = json_decode(file_get_contents(__DIR__."/composer.json"), true);
                       $data["repositories"][1]["type"] = "path";
                       $data["repositories"][1]["url"] = "../news-bundle";
+                      $data["repositories"][2]["type"] = "path";
+                      $data["repositories"][2]["url"] = "../test-case";
                       file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                   '
                   composer install --no-interaction --no-progress
