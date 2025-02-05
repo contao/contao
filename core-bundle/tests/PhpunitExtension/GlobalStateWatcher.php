@@ -116,7 +116,10 @@ final class GlobalStateWatcher implements Extension
 
     private function buildPhpIni(): string
     {
-        return print_r(ini_get_all(null, false), true);
+        $ini = ini_get_all(null, false);
+        unset($ini['error_reporting']);
+
+        return print_r($ini, true);
     }
 
     private function buildSetFunctions(): string
@@ -124,7 +127,6 @@ final class GlobalStateWatcher implements Extension
         return print_r(
             [
                 'setlocale' => setlocale(LC_ALL, '0'),
-                'error_reporting' => error_reporting(),
                 'date_default_timezone_get' => date_default_timezone_get(),
                 'mb_internal_encoding' => mb_internal_encoding(),
                 'mb_substitute_character' => mb_substitute_character(),

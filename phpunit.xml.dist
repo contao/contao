@@ -30,7 +30,6 @@
     </exclude>
   </source>
   <php>
-    <ini name="error_reporting" value="-1"/>
     <env name="KERNEL_CLASS" value="Contao\CoreBundle\Tests\Functional\app\AppKernel"/>
     <env name="DISABLE_HTTP_CACHE" value="1"/>
     <env name="APP_SECRET" value="foobar"/>
