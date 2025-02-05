@@ -23,7 +23,6 @@ use Doctrine\DBAL\Driver\PDO\Exception as PDOException;
 use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
-use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Filesystem\Path;
 
 class TemplateLocatorTest extends TestCase
@@ -70,13 +69,13 @@ class TemplateLocatorTest extends TestCase
         $this->assertEmpty($locator->findThemeDirectories());
     }
 
-    #[DataProvider('provideDatabaseExceptions')]
-    public function testIgnoresDbalExceptions(\Closure $exceptionDelegate): void
+    public function testIgnoresTableNotFoundExceptions(): void
     {
-        $exception = $exceptionDelegate($this);
+        $exception = new TableNotFoundException($this->createMock(LegacyDriverException::class), null);
 
         $connection = $this->createMock(Connection::class);
         $connection
+            ->expects($this->once())
             ->method('fetchFirstColumn')
             ->willThrowException($exception)
         ;
@@ -91,19 +90,46 @@ class TemplateLocatorTest extends TestCase
         $this->assertEmpty($locator->findThemeDirectories());
     }
 
-    public static function provideDatabaseExceptions(): iterable
+    public function testIgnoresConnectionExceptions(): void
     {
-        yield 'table not found' => [
-            static fn (TestCase $testCase) => new TableNotFoundException($testCase->createMock(LegacyDriverException::class), null),
-        ];
+        $exception = new ConnectionException($this->createMock(LegacyDriverException::class), null);
 
-        yield 'failing connection' => [
-            static fn (TestCase $testCase) => new ConnectionException($testCase->createMock(LegacyDriverException::class), null),
-        ];
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchFirstColumn')
+            ->willThrowException($exception)
+        ;
 
-        yield 'access denied' => [
-            static fn () => new DriverException(PDOException::new(new \PDOException("Access denied for user 'root'@'localhost'")), null),
-        ];
+        $locator = new TemplateLocator(
+            '',
+            $this->createMock(ResourceFinder::class),
+            $this->createMock(ThemeNamespace::class),
+            $connection,
+        );
+
+        $this->assertEmpty($locator->findThemeDirectories());
+    }
+
+    public function testIgnoresDriverExceptions(): void
+    {
+        $exception = new DriverException(PDOException::new(new \PDOException("Access denied for user 'root'@'localhost'")), null);
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchFirstColumn')
+            ->willThrowException($exception)
+        ;
+
+        $locator = new TemplateLocator(
+            '',
+            $this->createMock(ResourceFinder::class),
+            $this->createMock(ThemeNamespace::class),
+            $connection,
+        );
+
+        $this->assertEmpty($locator->findThemeDirectories());
     }
 
     public function testFindsResourcesPaths(): void
