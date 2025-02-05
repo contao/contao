@@ -32,6 +32,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\Voter\RoleVoter;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class TokenCheckerTest extends TestCase
 {
@@ -439,7 +440,7 @@ class TokenCheckerTest extends TestCase
 
     public function testDoesNotReturnATokenIfTheTokenIsNotAuthenticated(): void
     {
-        $token = $this->createMock(TokenInterface::class);
+        $token = new UsernamePasswordToken($this->createMock(UserInterface::class), 'foobar');
 
         $tokenStorage = $this->createMock(TokenStorageInterface::class);
         $tokenStorage
