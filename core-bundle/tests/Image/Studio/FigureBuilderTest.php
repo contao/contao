@@ -1288,7 +1288,7 @@ class FigureBuilderTest extends TestCase
         $this->assertTrue($figure->hasLightbox());
     }
 
-    public function provideLightboxFallbackResources(): iterable
+    public static function provideLightboxFallbackResources(): iterable
     {
         [$absoluteFilePath] = self::getTestFilePaths();
 

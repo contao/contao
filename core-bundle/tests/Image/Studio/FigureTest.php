@@ -144,6 +144,23 @@ class FigureTest extends TestCase
     #[DataProvider('provideLinkAttributesAndPreconditions')]
     public function testGetLinkAttributes(array $argumentsAndPreconditions, array $expectedAttributes, string|null $expectedHref): void
     {
+        foreach ($argumentsAndPreconditions as &$element) {
+            if($element === '__lightbox__') {
+                $lightbox = $this->createMock(LightboxResult::class);
+                $lightbox
+                    ->method('getLinkHref')
+                    ->willReturn('path/from/lightbox')
+                ;
+
+                $lightbox
+                    ->method('getGroupIdentifier')
+                    ->willReturn('12345')
+                ;
+
+                $element = $lightbox;
+            }
+        }
+
         $image = $this->createMock(ImageResult::class);
 
         [$attributes, $metadata, $lightbox] = $argumentsAndPreconditions;
@@ -155,18 +172,9 @@ class FigureTest extends TestCase
         $this->assertSame($expectedHref, $figure->getLinkAttributes(true)['href'] ?? null);
     }
 
-    public function provideLinkAttributesAndPreconditions(): iterable
+    public static function provideLinkAttributesAndPreconditions(): iterable
     {
-        $lightbox = $this->createMock(LightboxResult::class);
-        $lightbox
-            ->method('getLinkHref')
-            ->willReturn('path/from/lightbox')
-        ;
-
-        $lightbox
-            ->method('getGroupIdentifier')
-            ->willReturn('12345')
-        ;
+        $lightBoxPlaceholder = '__lightbox__';
 
         yield 'empty set of attributes' => [
             [[], null, null], [], '',
@@ -235,7 +243,7 @@ class FigureTest extends TestCase
 
         yield 'custom attributes and lightbox' => [
             [
-                ['foo' => 'a'], null, $lightbox,
+                ['foo' => 'a'], null, $lightBoxPlaceholder,
             ],
             [
                 'foo' => 'a',
@@ -246,7 +254,7 @@ class FigureTest extends TestCase
 
         yield 'custom attributes, metadata containing link and lightbox' => [
             [
-                ['foo' => 'a'], new Metadata([Metadata::VALUE_URL => 'will-be-ignored']), $lightbox,
+                ['foo' => 'a'], new Metadata([Metadata::VALUE_URL => 'will-be-ignored']), $lightBoxPlaceholder,
             ],
             [
                 'foo' => 'a',
@@ -265,7 +273,7 @@ class FigureTest extends TestCase
 
         yield 'custom attributes, force-set data-lightbox attribute and light-box' => [
             [
-                ['foo' => 'a', 'data-lightbox' => 'abcde'], new Metadata([Metadata::VALUE_URL => 'https://example.com']), $lightbox,
+                ['foo' => 'a', 'data-lightbox' => 'abcde'], new Metadata([Metadata::VALUE_URL => 'https://example.com']), $lightBoxPlaceholder,
             ],
             [
                 'foo' => 'a',
