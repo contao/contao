@@ -459,4 +459,14 @@ class BackendUser extends User
 
 		return parent::isEqualTo($user);
 	}
+
+	public function getDisplayName(): string
+	{
+		return $this->name;
+	}
+
+	public function getPasskeyUserHandle(): string
+	{
+		return 'backend.' . $this->id;
+	}
 }
