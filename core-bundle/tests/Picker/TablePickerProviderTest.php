@@ -582,13 +582,10 @@ class TablePickerProviderTest extends ContaoTestCase
         $menuFactory
             ->expects($matcher)
             ->method('createItem')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher, $expectedItems, $menu) {
-                    $this->assertSame($expectedItems[$matcher->numberOfInvocations() - 1], $parameters);
-
-                    return $menu;
-                },
-            )
+            ->with($this->callback(
+                static fn (...$parameters) => $expectedItems[$matcher->numberOfInvocations() - 1] === $parameters,
+            ))
+            ->willReturn($menu)
         ;
 
         return new TablePickerProvider(
@@ -602,6 +599,10 @@ class TablePickerProviderTest extends ContaoTestCase
 
     private function mockPickerConfig(string $table = '', string $value = '', string $current = '', array|null $expectedCurrent = null): PickerConfig&MockObject
     {
+        if (!$expectedCurrent && '' !== $current) {
+            $expectedCurrent = [[$current]];
+        }
+
         $config = $this->createMock(PickerConfig::class);
         $config
             ->method('getContext')
@@ -618,26 +619,22 @@ class TablePickerProviderTest extends ContaoTestCase
             ->willReturn($current)
         ;
 
+        $clone = $config
+            ->method('cloneForCurrent')
+        ;
+
         if ($expectedCurrent) {
-            $matcher = $this->exactly(\count($expectedCurrent));
+            $clone->with($this->callback(
+                static function (...$parameters) use (&$expectedCurrent) {
+                    $pos = array_search($parameters, $expectedCurrent, true);
+                    unset($expectedCurrent[$pos]);
 
-            $config
-                ->expects($matcher)
-                ->method('cloneForCurrent')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher, $expectedCurrent, $config): PickerConfig {
-                        $this->assertSame($expectedCurrent[$matcher->numberOfInvocations() - 1], $parameters);
-
-                        return $config;
-                    },
-                )
-            ;
-        } else {
-            $config
-                ->method('cloneForCurrent')
-                ->willReturnSelf()
-            ;
+                    return false !== $pos;
+                },
+            ));
         }
+
+        $clone->willReturnSelf();
 
         $config
             ->method('urlEncode')
@@ -682,13 +679,10 @@ class TablePickerProviderTest extends ContaoTestCase
         $router
             ->expects($matcher)
             ->method('generate')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher, $expected) {
-                    $this->assertSame($expected[$matcher->numberOfInvocations() - 1], $parameters);
-
-                    return '';
-                },
-            )
+            ->with($this->callback(
+                static fn (...$parameters) => $expected[$matcher->numberOfInvocations() - 1] === $parameters,
+            ))
+            ->willReturn('')
         ;
 
         return $router;
@@ -751,22 +745,19 @@ class TablePickerProviderTest extends ContaoTestCase
         ;
 
         if ($ptable && $dynamicPtable) {
-            $matcher = $this->exactly(2);
+            $expected = ['pid', 'ptable'];
             $queryBuilder
-                ->expects($matcher)
+                ->expects($this->exactly(2))
                 ->method('addSelect')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher, $queryBuilder) {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('pid', $parameters[0]);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('ptable', $parameters[0]);
-                        }
+                ->with($this->callback(
+                    static function (string $select) use (&$expected) {
+                        $pos = array_search($select, $expected, true);
+                        unset($expected[$pos]);
 
-                        return $queryBuilder;
+                        return false !== $pos;
                     },
-                )
+                ))
+                ->willReturnSelf()
             ;
         } elseif ($ptable) {
             $queryBuilder
@@ -818,13 +809,10 @@ class TablePickerProviderTest extends ContaoTestCase
         $translator
             ->expects($matcher)
             ->method('trans')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher, $expected) {
-                    $this->assertSame($expected[$matcher->numberOfInvocations() - 1], $parameters);
-
-                    return $parameters[0];
-                },
-            )
+            ->with($this->callback(
+                static fn (...$parameters) => $expected[$matcher->numberOfInvocations() - 1] === $parameters,
+            ))
+            ->willReturnArgument(0)
         ;
 
         return $translator;
