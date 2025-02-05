@@ -25,10 +25,17 @@ class DcaRequestSwitcher
     ) {
     }
 
-    public function executeForRequest(\Closure $callback, Request|string $request): mixed
+    /**
+     * @template T of mixed
+     *
+     * @param \Closure():T $callback
+     *
+     * @return T
+     */
+    public function runWithRequest(Request|string $request, \Closure $callback): mixed
     {
         if ($request !== $this->requestStack->getCurrentRequest()) {
-            return $callback;
+            return $callback();
         }
 
         $this->pushRequest($request);

@@ -46,7 +46,7 @@ class DcaUrlAnalyzer
     {
         $request = $this->resolveRequest($request);
 
-        return $this->dcaRequestSwitcher->executeForRequest(fn () => $this->findTableAndId(), $request);
+        return $this->dcaRequestSwitcher->runWithRequest($request, fn (): array => $this->findTableAndId());
     }
 
     /**
@@ -54,9 +54,9 @@ class DcaUrlAnalyzer
      */
     public function getTrail(Request|string|null $request = null): array
     {
-        return $this->dcaRequestSwitcher->executeForRequest(
-            fn () => $this->doGetTrail(...$this->findTableAndId()),
+        return $this->dcaRequestSwitcher->runWithRequest(
             $this->resolveRequest($request),
+            fn () => $this->doGetTrail(...$this->findTableAndId()),
         );
     }
 
@@ -86,8 +86,9 @@ class DcaUrlAnalyzer
             return null;
         }
 
-        $query = $this->dcaRequestSwitcher->executeForRequest(
-            function () use ($table, $id, $do) {
+        $query = $this->dcaRequestSwitcher->runWithRequest(
+            new Request(['do' => $do]),
+            function () use ($table, $id, $do): array {
                 [$ptable, $pid] = $this->findParentFromRecord($table, $id) ?? [null, null];
 
                 $query = [
@@ -113,7 +114,6 @@ class DcaUrlAnalyzer
 
                 return $query;
             },
-            new Request(['do' => $do]),
         );
 
         return $this->router->generate('contao_backend', $query);
