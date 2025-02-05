@@ -220,7 +220,7 @@ class FrontendUser extends User
 
 	public function getDisplayName(): string
 	{
-		return implode(' ', array_filter(array($this->firstname, $this->lastname)));
+		return trim("$this->firstname $this->lastname");
 	}
 
 	public function getPasskeyUserHandle(): string
