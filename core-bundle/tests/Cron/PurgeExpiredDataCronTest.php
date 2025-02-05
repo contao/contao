@@ -18,7 +18,7 @@ use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Symfony\Bridge\PhpUnit\ClockMock;
+use Symfony\Component\Clock\MockClock;
 
 class PurgeExpiredDataCronTest extends ContaoTestCase
 {
@@ -26,8 +26,6 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
     public function testCleanupLogsAndUndo(int $undoPeriod, int $logPeriod, int $versionPeriod): void
     {
         $mockedTime = 1142164800;
-        ClockMock::register(__CLASS__);
-        ClockMock::withClockMock($mockedTime);
 
         $expectedStatements = [];
 
@@ -91,10 +89,8 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
 
         $framework = $this->mockContaoFramework([Config::class => $config]);
 
-        $cron = new PurgeExpiredDataCron($framework, $connection);
+        $cron = new PurgeExpiredDataCron($framework, $connection, new MockClock('@'.$mockedTime));
         $cron->onHourly();
-
-        ClockMock::withClockMock(false);
     }
 
     public static function cleanupLogsAndUndoProvider(): iterable

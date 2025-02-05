@@ -22,8 +22,8 @@ use Contao\Message;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Clock\MockClock;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -34,8 +34,6 @@ class PreviewLinkListenerTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-
-        ClockMock::register(PreviewLinkListener::class);
     }
 
     protected function tearDown(): void
@@ -110,8 +108,6 @@ class PreviewLinkListenerTest extends TestCase
     #[DataProvider('defaultDcaValueProvider')]
     public function testSetsTheDefaultValueForDcaFields(string $url, bool $showUnpublished, int $userId): void
     {
-        ClockMock::withClockMock(true);
-
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA']['tl_preview_link'] = [
             'config' => ['notCreatable' => true],
@@ -125,7 +121,7 @@ class PreviewLinkListenerTest extends TestCase
         ];
 
         $input = $this->mockInputAdapter(['url' => $url, 'showUnpublished' => $showUnpublished]);
-
+        $clock = new MockClock();
         $listener = new PreviewLinkListener(
             $this->mockContaoFramework([Input::class => $input, Message::class => $this->mockAdapter(['addInfo'])]),
             $this->createMock(Connection::class),
@@ -134,22 +130,19 @@ class PreviewLinkListenerTest extends TestCase
             $this->createMock(TranslatorInterface::class),
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(UriSigner::class),
+            $clock,
             '/preview.php',
         );
 
         $dc = $this->mockClassWithProperties(DataContainer::class);
-        $now = ClockMock::time();
-
         $listener->createFromUrl($dc);
 
         $this->assertTrue($GLOBALS['TL_DCA']['tl_preview_link']['config']['notCreatable']);
         $this->assertSame($url, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['url']['default']);
         $this->assertSame($showUnpublished, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['showUnpublished']['default']);
-        $this->assertSame($now, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdAt']['default']);
-        $this->assertSame(strtotime('+1 day', $now), $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default']);
+        $this->assertSame($clock->now()->getTimestamp(), $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdAt']['default']);
+        $this->assertSame(strtotime($clock->now()->getTimestamp().' +1 day'), $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default']);
         $this->assertSame($userId, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdBy']['default']);
-
-        ClockMock::withClockMock(false);
     }
 
     public static function defaultDcaValueProvider(): iterable

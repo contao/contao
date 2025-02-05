@@ -225,6 +225,7 @@ services:
             - '@translator'
             - '@router'
             - '@uri_signer'
+            - '@clock'
             - '%contao.preview_script%'
 
     contao.listener.data_container.record_preview:

@@ -17,7 +17,9 @@ use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Symfony\Bridge\PhpUnit\ClockMock;
+use Symfony\Component\Clock\ClockInterface;
+use Symfony\Component\Clock\MockClock;
+use Symfony\Component\Clock\NativeClock;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -63,16 +65,14 @@ class FilesyncCommandTest extends TestCase
 
     public function testRenderStats(): void
     {
-        ClockMock::register(__CLASS__);
-        ClockMock::withClockMock(1142164800);
-
+        $clock = new MockClock();
         $manager = $this->createMock(DbafsManager::class);
         $manager
             ->expects($this->once())
             ->method('sync')
             ->willReturnCallback(
-                static function () {
-                    ClockMock::sleep(3);
+                static function () use (&$clock) {
+                    $clock->sleep(3);
 
                     return new ChangeSet(
                         [
@@ -105,7 +105,7 @@ class FilesyncCommandTest extends TestCase
             )
         ;
 
-        $command = $this->getCommand($manager);
+        $command = $this->getCommand($manager, $clock);
 
         $expectedOutput = <<<'OUTPUT'
             Synchronizing…
@@ -149,8 +149,8 @@ class FilesyncCommandTest extends TestCase
         ];
     }
 
-    private function getCommand(DbafsManager|null $manager = null): FilesyncCommand
+    private function getCommand(DbafsManager|null $manager = null, ClockInterface $clock = new NativeClock()): FilesyncCommand
     {
-        return new FilesyncCommand($manager ?? $this->createMock(DbafsManager::class));
+        return new FilesyncCommand($manager ?? $this->createMock(DbafsManager::class), $clock);
     }
 }

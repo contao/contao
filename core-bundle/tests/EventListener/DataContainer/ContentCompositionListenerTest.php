@@ -27,7 +27,6 @@ use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -644,8 +643,6 @@ class ContentCompositionListenerTest extends TestCase
 
     public function testDoesNotGenerateArticleIfPermissionIsDenied(): void
     {
-        ClockMock::withClockMock(true);
-
         $this->security
             ->expects($this->once())
             ->method('isGranted')
@@ -693,14 +690,10 @@ class ContentCompositionListenerTest extends TestCase
 
         $listener = $this->getListener($framework);
         $listener->generateArticleForPage($dc);
-
-        ClockMock::withClockMock(false);
     }
 
     public function testGenerateArticleForNewPage(): void
     {
-        ClockMock::withClockMock(true);
-
         $this->security
             ->expects($this->once())
             ->method('isGranted')
@@ -760,15 +753,11 @@ class ContentCompositionListenerTest extends TestCase
 
         $listener = $this->getListener($framework);
         $listener->generateArticleForPage($dc);
-
-        ClockMock::withClockMock(false);
     }
 
     #[DataProvider('moduleConfigProvider')]
     public function testUsesTheLayoutColumnForNewArticle(array $modules, string $expectedColumn): void
     {
-        ClockMock::withClockMock(true);
-
         $this->security
             ->expects($this->once())
             ->method('isGranted')
@@ -826,8 +815,6 @@ class ContentCompositionListenerTest extends TestCase
 
         $listener = $this->getListener($framework);
         $listener->generateArticleForPage($dc);
-
-        ClockMock::withClockMock(false);
     }
 
     public static function moduleConfigProvider(): iterable
