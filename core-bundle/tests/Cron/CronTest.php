@@ -96,7 +96,7 @@ class CronTest extends TestCase
                     unset($expectedMessages[$pos]);
 
                     return false !== $pos;
-                }
+                },
             ))
         ;
 
