@@ -5,7 +5,7 @@ $GLOBALS['TL_HEAD'][] = sprintf('<script src="%s" type="module"></script>', $thi
 
 $this->wrapperAttributes = $this
     ->attr($this->cssID)
-    ->addClass([$this->class, 'nav-wrapper block'])
+    ->addClass([$this->class, 'nav-wrapper'])
     ->addStyle($this->style ?? '')
     ->setIfExists('aria-label', $this->ariaLabel)
     ->mergeWith($this->wrapperAttributes)
@@ -13,7 +13,7 @@ $this->wrapperAttributes = $this
 
 $this->navAttributes = $this
     ->attr()
-    ->addClass(['nav-main block'])
+    ->addClass(['nav-main'])
     ->setIfExists('aria-label', $this->ariaLabel)
     ->mergeWith($this->navAttributes)
 ;
