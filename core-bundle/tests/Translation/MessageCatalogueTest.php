@@ -270,8 +270,20 @@ class MessageCatalogueTest extends TestCase
     }
 
     #[DataProvider('getCompletelyForwardedMethods')]
-    public function testForwardsCompletelyToParent(string $method, array $params, mixed $return = null): void
+    public function testForwardsCompletelyToParent(string $method, array $paramMockClasses, mixed $returnMockClassOrClasses = null): void
     {
+        $params = array_map(fn (string $class) => $this->createMock($class), $paramMockClasses);
+
+        $return = null;
+
+        if (\is_string($returnMockClassOrClasses)) {
+            $return = $this->createMock($returnMockClassOrClasses);
+        }
+
+        if (\is_array($returnMockClassOrClasses)) {
+            $return = array_map(fn (string $class) => $this->createMock($class), $returnMockClassOrClasses);
+        }
+
         $parentCatalogue = $this->createMock(MessageCatalogueInterface::class);
         $parentCatalogue
             ->expects($this->once())
@@ -284,33 +296,33 @@ class MessageCatalogueTest extends TestCase
         $this->assertSame($return, $catalogue->$method(...$params));
     }
 
-    public function getCompletelyForwardedMethods(): iterable
+    public static function getCompletelyForwardedMethods(): iterable
     {
         yield [
             'addCatalogue',
-            [$this->createMock(MessageCatalogueInterface::class)],
+            [MessageCatalogueInterface::class],
         ];
 
         yield [
             'addFallbackCatalogue',
-            [$this->createMock(MessageCatalogueInterface::class)],
+            [MessageCatalogueInterface::class],
         ];
 
         yield [
             'getFallbackCatalogue',
             [],
-            $this->createMock(MessageCatalogueInterface::class),
+            MessageCatalogueInterface::class,
         ];
 
         yield [
             'getResources',
             [],
-            [$this->createMock(ResourceInterface::class)],
+            [ResourceInterface::class],
         ];
 
         yield [
             'addResource',
-            [$this->createMock(ResourceInterface::class)],
+            [ResourceInterface::class],
         ];
     }
 
