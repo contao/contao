@@ -117,7 +117,6 @@ class FragmentTemplateTest extends TestCase
                         'bool' => false,
                         'string' => '',
                         'array' => [],
-                        /** @phpstan-ignore argument.templateType */
                         default => $this->createMock($name),
                     };
                 },
