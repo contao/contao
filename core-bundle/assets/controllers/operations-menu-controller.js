@@ -1,20 +1,18 @@
 import { Controller } from '@hotwired/stimulus';
 import AccessibleMenu from 'accessible-menu';
 
-export default class extends Controller {
+export default class OperationsMenuController extends Controller {
+    static instances = [];
     static targets = ['menu', 'controller', 'title'];
 
     initialize () {
-        this.close = this.close.bind(this);
+        OperationsMenuController.instances.push(this);
     }
 
     connect () {
         if (!this.hasMenuTarget) {
             return;
         }
-
-        document.addEventListener('pointerdown', this.close);
-        this.controllerTarget?.addEventListener('pointerdown', () => { this.setFixedPosition() });
 
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,
@@ -23,16 +21,14 @@ export default class extends Controller {
         });
 
         this.$menu.dom.controller.addEventListener('accessibleMenuExpand', () => {
+            this._others('close');
+            this.setFixedPosition();
             this.element.classList.add('hover');
         });
 
         this.$menu.dom.controller.addEventListener('accessibleMenuCollapse', () => {
             this.element.classList.remove('hover');
         });
-    }
-
-    disconnect () {
-        document.removeEventListener('pointerdown', this.close);
     }
 
     titleTargetConnected (el) {
@@ -62,8 +58,8 @@ export default class extends Controller {
         this.setFixedPosition(event);
     }
 
-    close (event) {
-        if (this.$menu && !this.menuTarget.contains(event.target) && !this.controllerTarget?.contains(event.target)) {
+    close () {
+        if (this.$menu) {
             this.$menu.elements.controller.close();
         }
     }
@@ -109,5 +105,13 @@ export default class extends Controller {
         node = el.parentElement.nodeName.toLowerCase();
 
         return 'a' === node || 'button' === node || 'input' === node;
+    }
+
+    _others(fn, args = []) {
+        OperationsMenuController.instances.forEach(instance => {
+            if(instance !== this) {
+                instance[fn](...args);
+            }
+        })
     }
 }

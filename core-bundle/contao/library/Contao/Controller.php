@@ -289,7 +289,7 @@ abstract class Controller extends System
 			return '';
 		}
 
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Articles
 		if (!\is_object($intId) && $intId == 0)

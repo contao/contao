@@ -1053,13 +1053,19 @@
         <source>Delete the row</source>
       </trans-unit>
       <trans-unit id="MSC.mw_module">
-        <source>Module</source>
+        <source>Module or content element</source>
       </trans-unit>
       <trans-unit id="MSC.mw_column">
         <source>Layout section</source>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
-        <source>Enable/disable the module</source>
+        <source>Enable/disable the module or content element</source>
+      </trans-unit>
+      <trans-unit id="MSC.mw_modules">
+        <source>Front end modules</source>
+      </trans-unit>
+      <trans-unit id="MSC.mw_elements">
+        <source>Content elements</source>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
         <source>Title</source>
@@ -1340,7 +1346,7 @@
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
       </trans-unit>
-      <trans-unit id="MSC.confirm">
+      <trans-unit id="MSC.confirmTitle">
           <source>Are you sure?</source>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
@@ -2116,6 +2122,9 @@
       </trans-unit>
       <trans-unit id="MSC.disable">
         <source>Disable</source>
+      </trans-unit>
+      <trans-unit id="MSC.edit">
+        <source>Edit</source>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>

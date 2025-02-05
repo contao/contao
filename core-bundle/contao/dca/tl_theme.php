@@ -24,7 +24,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 	'config' => array
 	(
 		'dataContainer'               => DC_Table::class,
-		'ctable'                      => array('tl_module', 'tl_layout', 'tl_image_size'),
+		'ctable'                      => array('tl_module', 'tl_layout', 'tl_image_size', 'tl_content'),
 		'notCopyable'                 => true,
 		'enableVersioning'            => true,
 		'sql' => array
@@ -73,6 +73,13 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		(
 			'!edit',
 			'delete',
+			'elements' => array
+			(
+				'href'                => 'table=tl_content',
+				'prefetch'            => true,
+				'icon'                => 'children.svg',
+				'primary'             => true,
+			),
 			'modules' => array
 			(
 				'href'                => 'table=tl_module',

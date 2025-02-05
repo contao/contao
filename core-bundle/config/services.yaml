@@ -489,6 +489,7 @@ services:
               contao.routing.page_finder: '@contao.routing.page_finder'
               contao.framework: '@contao.framework'
               contao.filesystem.virtual.files: '@contao.filesystem.virtual.files'
+              contao.insert_tag.parser: '@contao.insert_tag.parser'
               event_dispatcher: '@event_dispatcher'
             - '%kernel.project_dir%'
             - '%contao.upload_path%'
@@ -528,6 +529,9 @@ services:
         class: Contao\CoreBundle\InsertTag\Resolver\DateInsertTag
         arguments:
             - '@contao.framework'
+
+    contao.insert_tag.resolver.empty:
+        class: Contao\CoreBundle\InsertTag\Resolver\EmptyInsertTag
 
     contao.insert_tag.resolver.form:
         class: Contao\CoreBundle\InsertTag\Resolver\FormInsertTag
