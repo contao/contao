@@ -587,7 +587,7 @@ class TablePickerProviderTest extends ContaoTestCase
                     $this->assertSame($expectedItems[$matcher->numberOfInvocations() - 1], $parameters);
 
                     return $menu;
-                }
+                },
             )
         ;
 
@@ -618,9 +618,8 @@ class TablePickerProviderTest extends ContaoTestCase
             ->willReturn($current)
         ;
 
-
         if ($expectedCurrent) {
-            $matcher = $this->exactly(count($expectedCurrent));
+            $matcher = $this->exactly(\count($expectedCurrent));
 
             $config
                 ->expects($matcher)
@@ -628,16 +627,17 @@ class TablePickerProviderTest extends ContaoTestCase
                 ->willReturnCallback(
                     function (...$parameters) use ($matcher, $expectedCurrent, $config): PickerConfig {
                         $this->assertSame($expectedCurrent[$matcher->numberOfInvocations() - 1], $parameters);
+
                         return $config;
-                    }
+                    },
                 )
             ;
         } else {
             $config
                 ->method('cloneForCurrent')
-                ->willReturnSelf();
+                ->willReturnSelf()
+            ;
         }
-
 
         $config
             ->method('urlEncode')
@@ -687,7 +687,7 @@ class TablePickerProviderTest extends ContaoTestCase
                     $this->assertSame($expected[$matcher->numberOfInvocations() - 1], $parameters);
 
                     return '';
-                }
+                },
             )
         ;
 
@@ -755,19 +755,19 @@ class TablePickerProviderTest extends ContaoTestCase
             $queryBuilder
                 ->expects($matcher)
                 ->method('addSelect')
-                    ->willReturnCallback(
-                        function (...$parameters) use ($matcher, $queryBuilder) {
-                            if (1 === $matcher->numberOfInvocations()) {
-                                $this->assertSame('pid', $parameters[0]);
-                            }
-                            if (2 === $matcher->numberOfInvocations()) {
-                                $this->assertSame('ptable', $parameters[0]);
-                            }
-
-                            return $queryBuilder;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher, $queryBuilder) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('pid', $parameters[0]);
                         }
-                    )
-                ;
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('ptable', $parameters[0]);
+                        }
+
+                        return $queryBuilder;
+                    },
+                )
+            ;
         } elseif ($ptable) {
             $queryBuilder
                 ->expects($this->once())
@@ -823,7 +823,7 @@ class TablePickerProviderTest extends ContaoTestCase
                     $this->assertSame($expected[$matcher->numberOfInvocations() - 1], $parameters);
 
                     return $parameters[0];
-                }
+                },
             )
         ;
 

@@ -164,16 +164,14 @@ abstract class ContaoTestCase extends TestCase
     {
         sort($methods);
         $namespace = 'Contao\DynamicTestClass';
-        $className = 'MockAdapter' . sha1(implode(':', $methods));
-        $path = sys_get_temp_dir().\DIRECTORY_SEPARATOR.$className . '.php';
-        $fqcn = $namespace . '\\' . $className;
+        $className = 'MockAdapter'.sha1(implode(':', $methods));
+        $path = sys_get_temp_dir().\DIRECTORY_SEPARATOR.$className.'.php';
+        $fqcn = $namespace.'\\'.$className;
 
         if (!file_exists($path)) {
-            $methods = array_map(static function (string $method): string {
-                return sprintf('public function %s() {}', $method);
-            }, $methods);
+            $methods = array_map(static fn (string $method): string => \sprintf('public function %s() {}', $method), $methods);
 
-            $classContent = sprintf('<?php
+            $classContent = \sprintf('<?php
 
             namespace %s;
 

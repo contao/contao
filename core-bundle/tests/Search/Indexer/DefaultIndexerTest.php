@@ -238,20 +238,20 @@ class DefaultIndexerTest extends TestCase
         $connection
             ->expects($matcher)
             ->method('executeStatement')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher): void {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('TRUNCATE TABLE tl_search', $parameters[0]);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('TRUNCATE TABLE tl_search_index', $parameters[0]);
-                        }
-                        if (3 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('TRUNCATE TABLE tl_search_term', $parameters[0]);
-                        }
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher): void {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('TRUNCATE TABLE tl_search', $parameters[0]);
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('TRUNCATE TABLE tl_search_index', $parameters[0]);
+                    }
+                    if (3 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('TRUNCATE TABLE tl_search_term', $parameters[0]);
+                    }
+                },
+            )
+        ;
 
         $indexer = new DefaultIndexer($framework, $connection);
         $indexer->clear();

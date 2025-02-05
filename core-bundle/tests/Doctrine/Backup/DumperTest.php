@@ -319,7 +319,7 @@ class DumperTest extends ContaoTestCase
             ->willReturnCallback(
                 function (...$parameters) use ($matcher, $calls): void {
                     $this->assertSame($calls[$matcher->numberOfInvocations() - 1], $parameters);
-                }
+                },
             )
         ;
 

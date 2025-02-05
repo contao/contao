@@ -72,19 +72,19 @@ class ImaginePreviewProviderTest extends TestCase
         $image
             ->expects($matcher)
             ->method('save')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher, $targetPath, $image) {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame("{$targetPath}1.png", $parameters[0]);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame("{$targetPath}2.png", $parameters[0]);
-                        }
-
-                        return $image;
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $targetPath, $image) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame("{$targetPath}1.png", $parameters[0]);
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame("{$targetPath}2.png", $parameters[0]);
+                    }
+
+                    return $image;
+                },
+            )
+        ;
         $matcher = $this->exactly(2);
 
         $layers
@@ -100,7 +100,7 @@ class ImaginePreviewProviderTest extends TestCase
                     }
 
                     return true;
-                }
+                },
             )
         ;
         $matcher = $this->exactly(2);
@@ -118,7 +118,7 @@ class ImaginePreviewProviderTest extends TestCase
                     }
 
                     return $image;
-                }
+                },
             )
         ;
 

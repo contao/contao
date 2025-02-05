@@ -221,28 +221,28 @@ class CacheTagManagerTest extends DoctrineTestCase
         $responseTagger
             ->expects($matcher)
             ->method('addTags')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher, $responseTagger): ResponseTagger {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame(['contao.db.tl_blog_post'], $parameters[0]);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame(['contao.db.tl_blog_post.1'], $parameters[0]);
-                        }
-                        if (3 === $matcher->numberOfInvocations()) {
-                            $this->assertSame(['contao.db.tl_page'], $parameters[0]);
-                        }
-                        if (4 === $matcher->numberOfInvocations()) {
-                            $this->assertSame(['contao.db.tl_page.2'], $parameters[0]);
-                        }
-                        if (5 === $matcher->numberOfInvocations()) {
-                            $this->assertSame(['contao.db.tl_blog_post.1', 'contao.db.tl_page.2', 'foo'], $parameters[0]);
-                        }
-
-                        return $responseTagger;
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $responseTagger): ResponseTagger {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame(['contao.db.tl_blog_post'], $parameters[0]);
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame(['contao.db.tl_blog_post.1'], $parameters[0]);
+                    }
+                    if (3 === $matcher->numberOfInvocations()) {
+                        $this->assertSame(['contao.db.tl_page'], $parameters[0]);
+                    }
+                    if (4 === $matcher->numberOfInvocations()) {
+                        $this->assertSame(['contao.db.tl_page.2'], $parameters[0]);
+                    }
+                    if (5 === $matcher->numberOfInvocations()) {
+                        $this->assertSame(['contao.db.tl_blog_post.1', 'contao.db.tl_page.2', 'foo'], $parameters[0]);
+                    }
+
+                    return $responseTagger;
+                },
+            )
+        ;
 
         $post = (new BlogPost())->setId(1);
 
@@ -264,28 +264,28 @@ class CacheTagManagerTest extends DoctrineTestCase
         $cacheTagInvalidator
             ->expects($matcher)
             ->method('invalidateTags')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher, $cacheTagInvalidator): CacheInvalidator {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame(['contao.db.tl_blog_post'], $parameters[0]);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame(['contao.db.tl_blog_post.1'], $parameters[0]);
-                        }
-                        if (3 === $matcher->numberOfInvocations()) {
-                            $this->assertSame(['contao.db.tl_page'], $parameters[0]);
-                        }
-                        if (4 === $matcher->numberOfInvocations()) {
-                            $this->assertSame(['contao.db.tl_page.2'], $parameters[0]);
-                        }
-                        if (5 === $matcher->numberOfInvocations()) {
-                            $this->assertSame(['contao.db.tl_blog_post.1', 'contao.db.tl_page.2', 'foo'], $parameters[0]);
-                        }
-
-                        return $cacheTagInvalidator;
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $cacheTagInvalidator): CacheInvalidator {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame(['contao.db.tl_blog_post'], $parameters[0]);
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame(['contao.db.tl_blog_post.1'], $parameters[0]);
+                    }
+                    if (3 === $matcher->numberOfInvocations()) {
+                        $this->assertSame(['contao.db.tl_page'], $parameters[0]);
+                    }
+                    if (4 === $matcher->numberOfInvocations()) {
+                        $this->assertSame(['contao.db.tl_page.2'], $parameters[0]);
+                    }
+                    if (5 === $matcher->numberOfInvocations()) {
+                        $this->assertSame(['contao.db.tl_blog_post.1', 'contao.db.tl_page.2', 'foo'], $parameters[0]);
+                    }
+
+                    return $cacheTagInvalidator;
+                },
+            )
+        ;
 
         $post = (new BlogPost())->setId(1);
 

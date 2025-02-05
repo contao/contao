@@ -35,43 +35,43 @@ class CalendarEventsAccessVoterTest extends TestCase
         $accessDecisionManager
             ->expects($matcher)
             ->method('decide')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher, $token) {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($token, $parameters[0]);
-                            $this->assertSame([ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $token) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($token, $parameters[0]);
+                        $this->assertSame([ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
 
-                            return true;
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($token, $parameters[0]);
-                            $this->assertSame([ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], $parameters[1]);
-                            $this->assertSame('42', $parameters[2]);
-
-                            return true;
-                        }
-                        if (3 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($token, $parameters[0]);
-                            $this->assertSame([ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
-
-                            return false;
-                        }
-                        if (4 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($token, $parameters[0]);
-                            $this->assertSame([ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
-
-                            return true;
-                        }
-                        if (5 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($token, $parameters[0]);
-                            $this->assertSame([ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], $parameters[1]);
-                            $this->assertSame('42', $parameters[2]);
-
-                            return false;
-                        }
+                        return true;
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($token, $parameters[0]);
+                        $this->assertSame([ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], $parameters[1]);
+                        $this->assertSame('42', $parameters[2]);
+
+                        return true;
+                    }
+                    if (3 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($token, $parameters[0]);
+                        $this->assertSame([ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
+
+                        return false;
+                    }
+                    if (4 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($token, $parameters[0]);
+                        $this->assertSame([ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
+
+                        return true;
+                    }
+                    if (5 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($token, $parameters[0]);
+                        $this->assertSame([ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], $parameters[1]);
+                        $this->assertSame('42', $parameters[2]);
+
+                        return false;
+                    }
+                },
+            )
+        ;
 
         $voter = new CalendarEventsAccessVoter($accessDecisionManager);
 
@@ -134,31 +134,31 @@ class CalendarEventsAccessVoterTest extends TestCase
         $accessDecisionManager
             ->expects($matcher)
             ->method('decide')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher, $token) {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($token, $parameters[0]);
-                            $this->assertSame([ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $token) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($token, $parameters[0]);
+                        $this->assertSame([ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
 
-                            return true;
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($token, $parameters[0]);
-                            $this->assertSame([ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], $parameters[1]);
-                            $this->assertSame('42', $parameters[2]);
-
-                            return true;
-                        }
-                        if (3 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($token, $parameters[0]);
-                            $this->assertSame([ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], $parameters[1]);
-                            $this->assertSame(43, $parameters[2]);
-
-                            return false;
-                        }
+                        return true;
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($token, $parameters[0]);
+                        $this->assertSame([ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], $parameters[1]);
+                        $this->assertSame('42', $parameters[2]);
+
+                        return true;
+                    }
+                    if (3 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($token, $parameters[0]);
+                        $this->assertSame([ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], $parameters[1]);
+                        $this->assertSame(43, $parameters[2]);
+
+                        return false;
+                    }
+                },
+            )
+        ;
 
         $voter = new CalendarEventsAccessVoter($accessDecisionManager);
 

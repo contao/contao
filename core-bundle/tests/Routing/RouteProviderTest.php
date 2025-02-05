@@ -137,39 +137,39 @@ class RouteProviderTest extends TestCase
         $pageRegistry
             ->expects($matcher)
             ->method('getRoute')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher, $page1, $page2) {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($page1, $parameters[0]);
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $page1, $page2) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($page1, $parameters[0]);
 
-                            return new PageRoute($page1);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($page2, $parameters[0]);
-
-                            return new PageRoute($page2);
-                        }
+                        return new PageRoute($page1);
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($page2, $parameters[0]);
+
+                        return new PageRoute($page2);
+                    }
+                },
+            )
+        ;
         $matcher = $this->exactly(2);
 
         $pageRegistry
             ->expects($matcher)
             ->method('isRoutable')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher, $page1, $page2) {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($page1, $parameters[0]);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($page2, $parameters[0]);
-                        }
-
-                        return true;
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $page1, $page2) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($page1, $parameters[0]);
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($page2, $parameters[0]);
+                    }
+
+                    return true;
+                },
+            )
+        ;
 
         $provider = $this->getRouteProvider($this->mockFramework($pageAdapter), $pageRegistry);
         $routes = $provider->getRoutesByNames(['tl_page.17', 'tl_page.21']);
@@ -338,7 +338,7 @@ class RouteProviderTest extends TestCase
             ->willReturnCallback(
                 function (...$parameters) use ($matcher, $args): void {
                     $this->assertSame($args[$matcher->numberOfInvocations() - 1], $parameters);
-                }
+                },
             )
         ;
         $matcher = $this->exactly(\count($pages));
@@ -351,7 +351,7 @@ class RouteProviderTest extends TestCase
                     $this->assertSame($args[$matcher->numberOfInvocations() - 1], $parameters);
 
                     return true;
-                }
+                },
             )
         ;
 
@@ -558,7 +558,7 @@ class RouteProviderTest extends TestCase
             ->willReturnCallback(
                 function (...$parameters) use ($matcher, $args): void {
                     $this->assertSame($args[$matcher->numberOfInvocations() - 1], $parameters);
-                }
+                },
             )
         ;
 
@@ -724,21 +724,21 @@ class RouteProviderTest extends TestCase
         $pageAdapter
             ->expects($matcher)
             ->method('findById')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher) {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame(17, $parameters[0]);
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame(17, $parameters[0]);
 
-                            return $routablePage;
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame(18, $parameters[0]);
-
-                            return $unroutablePage;
-                        }
+                        return $routablePage;
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame(18, $parameters[0]);
+
+                        return $unroutablePage;
+                    }
+                },
+            )
+        ;
 
         $pageRegistry = $this->createMock(PageRegistry::class);
         $pageRegistry
@@ -752,21 +752,21 @@ class RouteProviderTest extends TestCase
         $pageRegistry
             ->expects($matcher)
             ->method('isRoutable')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher, $routablePage, $unroutablePage) {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($routablePage, $parameters[0]);
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $routablePage, $unroutablePage) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($routablePage, $parameters[0]);
 
-                            return true;
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($unroutablePage, $parameters[0]);
-
-                            return false;
-                        }
+                        return true;
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($unroutablePage, $parameters[0]);
+
+                        return false;
+                    }
+                },
+            )
+        ;
 
         $framework = $this->mockFramework($pageAdapter);
 

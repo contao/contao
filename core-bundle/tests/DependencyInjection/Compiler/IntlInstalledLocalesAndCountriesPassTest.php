@@ -28,19 +28,19 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
         $container
             ->expects($matcher)
             ->method('has')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher) {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('contao.intl.locales', $parameters[0]);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('contao.intl.countries', $parameters[0]);
-                        }
-
-                        return false;
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('contao.intl.locales', $parameters[0]);
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('contao.intl.countries', $parameters[0]);
+                    }
+
+                    return false;
+                },
+            )
+        ;
 
         $pass = new IntlInstalledLocalesAndCountriesPass();
         $pass->process($container);

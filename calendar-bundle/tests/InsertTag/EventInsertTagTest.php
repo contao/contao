@@ -59,81 +59,81 @@ class EventInsertTagTest extends ContaoTestCase
         $urlGenerator
             ->expects($matcher)
             ->method('generate')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher, $eventModel) {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($eventModel, $parameters[0]);
-                            $this->assertSame([], $parameters[1]);
-                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $eventModel) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($eventModel, $parameters[0]);
+                        $this->assertSame([], $parameters[1]);
+                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
 
-                            return 'events/the-foobar-event.html';
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($eventModel, $parameters[0]);
-                            $this->assertSame([], $parameters[1]);
-                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
-
-                            return 'events/the-foobar-event.html';
-                        }
-                        if (3 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($eventModel, $parameters[0]);
-                            $this->assertSame([], $parameters[1]);
-                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
-
-                            return 'events/the-foobar-event.html';
-                        }
-                        if (4 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($eventModel, $parameters[0]);
-                            $this->assertSame([], $parameters[1]);
-                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
-
-                            return 'events/the-foobar-event.html';
-                        }
-                        if (5 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($eventModel, $parameters[0]);
-                            $this->assertSame([], $parameters[1]);
-                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
-
-                            return 'http://domain.tld/events/the-foobar-event.html';
-                        }
-                        if (6 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($eventModel, $parameters[0]);
-                            $this->assertSame([], $parameters[1]);
-                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
-
-                            return 'http://domain.tld/events/the-foobar-event.html';
-                        }
-                        if (7 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($eventModel, $parameters[0]);
-                            $this->assertSame([], $parameters[1]);
-                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
-
-                            return 'events/the-foobar-event.html';
-                        }
-                        if (8 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($eventModel, $parameters[0]);
-                            $this->assertSame([], $parameters[1]);
-                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
-
-                            return 'http://domain.tld/events/the-foobar-event.html';
-                        }
-                        if (9 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($eventModel, $parameters[0]);
-                            $this->assertSame([], $parameters[1]);
-                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
-
-                            return 'http://domain.tld/events/the-foobar-event.html';
-                        }
-                        if (10 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($eventModel, $parameters[0]);
-                            $this->assertSame([], $parameters[1]);
-                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
-
-                            return 'http://domain.tld/events/the-foobar-event.html';
-                        }
+                        return 'events/the-foobar-event.html';
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($eventModel, $parameters[0]);
+                        $this->assertSame([], $parameters[1]);
+                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
+
+                        return 'events/the-foobar-event.html';
+                    }
+                    if (3 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($eventModel, $parameters[0]);
+                        $this->assertSame([], $parameters[1]);
+                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
+
+                        return 'events/the-foobar-event.html';
+                    }
+                    if (4 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($eventModel, $parameters[0]);
+                        $this->assertSame([], $parameters[1]);
+                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
+
+                        return 'events/the-foobar-event.html';
+                    }
+                    if (5 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($eventModel, $parameters[0]);
+                        $this->assertSame([], $parameters[1]);
+                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
+
+                        return 'http://domain.tld/events/the-foobar-event.html';
+                    }
+                    if (6 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($eventModel, $parameters[0]);
+                        $this->assertSame([], $parameters[1]);
+                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
+
+                        return 'http://domain.tld/events/the-foobar-event.html';
+                    }
+                    if (7 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($eventModel, $parameters[0]);
+                        $this->assertSame([], $parameters[1]);
+                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
+
+                        return 'events/the-foobar-event.html';
+                    }
+                    if (8 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($eventModel, $parameters[0]);
+                        $this->assertSame([], $parameters[1]);
+                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
+
+                        return 'http://domain.tld/events/the-foobar-event.html';
+                    }
+                    if (9 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($eventModel, $parameters[0]);
+                        $this->assertSame([], $parameters[1]);
+                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
+
+                        return 'http://domain.tld/events/the-foobar-event.html';
+                    }
+                    if (10 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($eventModel, $parameters[0]);
+                        $this->assertSame([], $parameters[1]);
+                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
+
+                        return 'http://domain.tld/events/the-foobar-event.html';
+                    }
+                },
+            )
+        ;
 
         $listener = new EventInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
 

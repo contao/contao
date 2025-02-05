@@ -142,7 +142,7 @@ class CoreResponseContextFactoryTest extends TestCase
 
                         return 'de/foobar.html';
                     }
-                }
+                },
             )
         ;
 
@@ -251,7 +251,7 @@ class CoreResponseContextFactoryTest extends TestCase
 
                         return $url;
                     }
-                }
+                },
             )
         ;
 

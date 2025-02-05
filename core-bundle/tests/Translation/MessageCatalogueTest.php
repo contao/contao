@@ -98,23 +98,23 @@ class MessageCatalogueTest extends TestCase
         $parentCatalogue
             ->expects($matcher)
             ->method('has')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher) {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('foo', $parameters[0]);
-                            $this->assertSame('foobar', $parameters[1]);
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('foo', $parameters[0]);
+                        $this->assertSame('foobar', $parameters[1]);
 
-                            return true;
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('bar', $parameters[0]);
-                            $this->assertSame('foobar', $parameters[1]);
-
-                            return false;
-                        }
+                        return true;
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('bar', $parameters[0]);
+                        $this->assertSame('foobar', $parameters[1]);
+
+                        return false;
+                    }
+                },
+            )
+        ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
 
@@ -144,23 +144,23 @@ class MessageCatalogueTest extends TestCase
         $parentCatalogue
             ->expects($matcher)
             ->method('defines')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher) {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('foo', $parameters[0]);
-                            $this->assertSame('foobar', $parameters[1]);
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('foo', $parameters[0]);
+                        $this->assertSame('foobar', $parameters[1]);
 
-                            return true;
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('bar', $parameters[0]);
-                            $this->assertSame('foobar', $parameters[1]);
-
-                            return false;
-                        }
+                        return true;
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('bar', $parameters[0]);
+                        $this->assertSame('foobar', $parameters[1]);
+
+                        return false;
+                    }
+                },
+            )
+        ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
 
@@ -190,23 +190,23 @@ class MessageCatalogueTest extends TestCase
         $parentCatalogue
             ->expects($matcher)
             ->method('get')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher) {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('foo', $parameters[0]);
-                            $this->assertSame('foobar', $parameters[1]);
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('foo', $parameters[0]);
+                        $this->assertSame('foobar', $parameters[1]);
 
-                            return 'Foo';
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('bar', $parameters[0]);
-                            $this->assertSame('foobar', $parameters[1]);
-
-                            return 'bar';
-                        }
+                        return 'Foo';
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('bar', $parameters[0]);
+                        $this->assertSame('foobar', $parameters[1]);
+
+                        return 'bar';
+                    }
+                },
+            )
+        ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
 

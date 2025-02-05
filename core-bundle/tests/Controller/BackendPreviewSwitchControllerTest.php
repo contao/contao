@@ -301,20 +301,20 @@ class BackendPreviewSwitchControllerTest extends TestCase
             $router
                 ->expects($matcher)
                 ->method('generate')
-                    ->willReturnCallback(
-                        function (...$parameters) use ($matcher) {
-                            if (1 === $matcher->numberOfInvocations()) {
-                                $this->assertSame('contao_backend', $parameters[0]);
-                                $this->assertSame(['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => '1', 'rt' => 'csrf', 'nb' => '1'], $parameters[1]);
-                            }
-                            if (2 === $matcher->numberOfInvocations()) {
-                                $this->assertSame('contao_backend_switch', $parameters[0]);
-                            }
-
-                            return '/_contao/preview/1';
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('contao_backend', $parameters[0]);
+                            $this->assertSame(['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => '1', 'rt' => 'csrf', 'nb' => '1'], $parameters[1]);
                         }
-                    )
-                ;
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('contao_backend_switch', $parameters[0]);
+                        }
+
+                        return '/_contao/preview/1';
+                    },
+                )
+            ;
         } else {
             $router
                 ->method('generate')
@@ -364,20 +364,20 @@ class BackendPreviewSwitchControllerTest extends TestCase
             $security
                 ->expects($matcher)
                 ->method('isGranted')
-                    ->willReturnCallback(
-                        function (...$parameters) use ($matcher) {
-                            if (1 === $matcher->numberOfInvocations()) {
-                                $this->assertSame('ROLE_ALLOWED_TO_SWITCH_MEMBER', $parameters[0]);
-                            }
-                            if (2 === $matcher->numberOfInvocations()) {
-                                $this->assertSame(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $parameters[0]);
-                                $this->assertSame('preview_link', $parameters[1]);
-                            }
-
-                            return true;
+                ->willReturnCallback(
+                    function (...$parameters) use ($matcher) {
+                        if (1 === $matcher->numberOfInvocations()) {
+                            $this->assertSame('ROLE_ALLOWED_TO_SWITCH_MEMBER', $parameters[0]);
                         }
-                    )
-                ;
+                        if (2 === $matcher->numberOfInvocations()) {
+                            $this->assertSame(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $parameters[0]);
+                            $this->assertSame('preview_link', $parameters[1]);
+                        }
+
+                        return true;
+                    },
+                )
+            ;
         } else {
             $security
                 ->method('isGranted')

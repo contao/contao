@@ -59,22 +59,22 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
         $config
             ->expects($matcher)
             ->method('get')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher, $undoPeriod) {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('undoPeriod', $parameters[0]);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('logPeriod', $parameters[0]);
-                        }
-                        if (3 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('versionPeriod', $parameters[0]);
-                        }
-
-                        return $undoPeriod;
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $undoPeriod) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('undoPeriod', $parameters[0]);
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('logPeriod', $parameters[0]);
+                    }
+                    if (3 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('versionPeriod', $parameters[0]);
+                    }
+
+                    return $undoPeriod;
+                },
+            )
+        ;
 
         $connection = $this->createMock(Connection::class);
         $matcher = $this->exactly(\count($expectedStatements));
@@ -84,7 +84,7 @@ class PurgeExpiredDataCronTest extends ContaoTestCase
             ->willReturnCallback(
                 function (...$parameters) use ($matcher, $expectedStatements): void {
                     $this->assertSame($expectedStatements[$matcher->numberOfInvocations() - 1], $parameters);
-                }
+                },
             )
         ;
 

@@ -253,19 +253,19 @@ class TranslatorTest extends TestCase
         $adapter
             ->expects($matcher)
             ->method('loadLanguageFile')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher): void {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('default', $parameters[0]);
-                            $this->assertSame('de', $parameters[1]);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('default', $parameters[0]);
-                            $this->assertSame('en', $parameters[1]);
-                        }
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher): void {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('default', $parameters[0]);
+                        $this->assertSame('de', $parameters[1]);
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('default', $parameters[0]);
+                        $this->assertSame('en', $parameters[1]);
+                    }
+                },
+            )
+        ;
 
         $framework = $this->mockContaoFramework([System::class => $adapter]);
         $framework

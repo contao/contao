@@ -34,37 +34,37 @@ class LayoutAccessVoterTest extends TestCase
         $decisionManager
             ->expects($matcher)
             ->method('decide')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher, $token) {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($token, $parameters[0]);
-                            $this->assertSame([ContaoCorePermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
-                            $this->assertSame('themes', $parameters[2]);
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $token) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($token, $parameters[0]);
+                        $this->assertSame([ContaoCorePermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
+                        $this->assertSame('themes', $parameters[2]);
 
-                            return true;
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($token, $parameters[0]);
-                            $this->assertSame([ContaoCorePermissions::USER_CAN_ACCESS_LAYOUTS], $parameters[1]);
-
-                            return true;
-                        }
-                        if (3 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($token, $parameters[0]);
-                            $this->assertSame([ContaoCorePermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
-                            $this->assertSame('themes', $parameters[2]);
-
-                            return true;
-                        }
-                        if (4 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($token, $parameters[0]);
-                            $this->assertSame([ContaoCorePermissions::USER_CAN_ACCESS_LAYOUTS], $parameters[1]);
-
-                            return false;
-                        }
+                        return true;
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($token, $parameters[0]);
+                        $this->assertSame([ContaoCorePermissions::USER_CAN_ACCESS_LAYOUTS], $parameters[1]);
+
+                        return true;
+                    }
+                    if (3 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($token, $parameters[0]);
+                        $this->assertSame([ContaoCorePermissions::USER_CAN_ACCESS_MODULE], $parameters[1]);
+                        $this->assertSame('themes', $parameters[2]);
+
+                        return true;
+                    }
+                    if (4 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($token, $parameters[0]);
+                        $this->assertSame([ContaoCorePermissions::USER_CAN_ACCESS_LAYOUTS], $parameters[1]);
+
+                        return false;
+                    }
+                },
+            )
+        ;
 
         $voter = new LayoutAccessVoter($decisionManager);
 

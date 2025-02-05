@@ -86,17 +86,17 @@ class CronTest extends TestCase
         $logger
             ->expects($matcher)
             ->method('debug')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher): void {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('Executing cron job "TestCronJob::onMinutely"', $parameters[0]);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('Executing cron job "TestCronJob::onHourly"', $parameters[0]);
-                        }
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher): void {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('Executing cron job "TestCronJob::onMinutely"', $parameters[0]);
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('Executing cron job "TestCronJob::onHourly"', $parameters[0]);
+                    }
+                },
+            )
+        ;
 
         $cron = new Cron(
             fn () => $this->createMock(CronJobRepository::class),
@@ -321,20 +321,20 @@ class CronTest extends TestCase
         $entity
             ->expects($matcher)
             ->method('setLastRun')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher, $lastRun): void {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($this->anything(), $parameters[0]);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($this->anything(), $parameters[0]);
-                        }
-                        if (3 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($lastRun, $parameters[0]);
-                        }
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $lastRun): void {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($this->anything(), $parameters[0]);
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($this->anything(), $parameters[0]);
+                    }
+                    if (3 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($lastRun, $parameters[0]);
+                    }
+                },
+            )
+        ;
 
         $entity
             ->method('getName')
@@ -359,20 +359,20 @@ class CronTest extends TestCase
         $logger
             ->expects($matcher)
             ->method('debug')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher): void {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('Executing cron job "Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron"', $parameters[0]);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('Asynchronous cron job "Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron" finished successfully', $parameters[0]);
-                        }
-                        if (3 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('Executing cron job "Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron"', $parameters[0]);
-                        }
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher): void {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('Executing cron job "Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron"', $parameters[0]);
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('Asynchronous cron job "Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron" finished successfully', $parameters[0]);
+                    }
+                    if (3 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('Executing cron job "Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron"', $parameters[0]);
+                    }
+                },
+            )
+        ;
 
         $cache = new ArrayAdapter();
 
@@ -412,17 +412,17 @@ class CronTest extends TestCase
         $entity
             ->expects($matcher)
             ->method('setLastRun')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher, $lastRun): void {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($this->anything(), $parameters[0]);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($lastRun, $parameters[0]);
-                        }
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $lastRun): void {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($this->anything(), $parameters[0]);
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($lastRun, $parameters[0]);
+                    }
+                },
+            )
+        ;
 
         $entity
             ->method('getName')
@@ -472,17 +472,17 @@ class CronTest extends TestCase
         $entity
             ->expects($matcher)
             ->method('setLastRun')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher, $lastRun): void {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($this->anything(), $parameters[0]);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($lastRun, $parameters[0]);
-                        }
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $lastRun): void {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($this->anything(), $parameters[0]);
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($lastRun, $parameters[0]);
+                    }
+                },
+            )
+        ;
 
         $entity
             ->method('getName')

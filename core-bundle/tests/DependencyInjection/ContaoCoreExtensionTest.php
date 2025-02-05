@@ -616,26 +616,26 @@ class ContaoCoreExtensionTest extends TestCase
         $config
             ->expects($matcher)
             ->method('mountLocalAdapter')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher): void {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('upload/path', $parameters[0]);
-                            $this->assertSame('upload/path', $parameters[1]);
-                            $this->assertSame('files', $parameters[2]);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('var/backups', $parameters[0]);
-                            $this->assertSame('backups', $parameters[1]);
-                            $this->assertSame('backups', $parameters[2]);
-                        }
-                        if (3 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('templates', $parameters[0]);
-                            $this->assertSame('user_templates', $parameters[1]);
-                            $this->assertSame('user_templates', $parameters[2]);
-                        }
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher): void {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('upload/path', $parameters[0]);
+                        $this->assertSame('upload/path', $parameters[1]);
+                        $this->assertSame('files', $parameters[2]);
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('var/backups', $parameters[0]);
+                        $this->assertSame('backups', $parameters[1]);
+                        $this->assertSame('backups', $parameters[2]);
+                    }
+                    if (3 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('templates', $parameters[0]);
+                        $this->assertSame('user_templates', $parameters[1]);
+                        $this->assertSame('user_templates', $parameters[2]);
+                    }
+                },
+            )
+        ;
 
         $dbafsDefinition = $this->createMock(Definition::class);
         $dbafsDefinition

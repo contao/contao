@@ -178,18 +178,18 @@ class RobotsTxtListenerTest extends TestCase
         $directiveList
             ->expects($matcher)
             ->method('add')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher): void {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $callback = static fn (Directive $directive) => (string) $directive === 'disallow:'.$routePrefix.'/';
-                            $this->assertTrue($callback($parameters[0]));
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('disallow:/_contao/', $parameters[0]);
-                        }
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher): void {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $callback = static fn (Directive $directive) => (string) $directive === 'disallow:'.$routePrefix.'/';
+                        $this->assertTrue($callback($parameters[0]));
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('disallow:/_contao/', $parameters[0]);
+                    }
+                },
+            )
+        ;
 
         $record = $this->createMock(Record::class);
         $record

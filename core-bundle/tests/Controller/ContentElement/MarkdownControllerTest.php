@@ -201,7 +201,7 @@ class MarkdownControllerTest extends ContentElementTestCase
                         $this->assertSame('content', $parameters[0]);
                         $this->assertSame($expectedMarkdown, $parameters[1]);
                     }
-                }
+                },
             )
         ;
 

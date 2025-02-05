@@ -55,81 +55,81 @@ class FaqInsertTagTest extends ContaoTestCase
         $urlGenerator
             ->expects($matcher)
             ->method('generate')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher, $faqModel) {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($faqModel, $parameters[0]);
-                            $this->assertSame([], $parameters[1]);
-                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $faqModel) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($faqModel, $parameters[0]);
+                        $this->assertSame([], $parameters[1]);
+                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
 
-                            return 'faq/what-does-foobar-mean.html';
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($faqModel, $parameters[0]);
-                            $this->assertSame([], $parameters[1]);
-                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
-
-                            return 'faq/what-does-foobar-mean.html';
-                        }
-                        if (3 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($faqModel, $parameters[0]);
-                            $this->assertSame([], $parameters[1]);
-                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
-
-                            return 'faq/what-does-foobar-mean.html';
-                        }
-                        if (4 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($faqModel, $parameters[0]);
-                            $this->assertSame([], $parameters[1]);
-                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
-
-                            return 'faq/what-does-foobar-mean.html';
-                        }
-                        if (5 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($faqModel, $parameters[0]);
-                            $this->assertSame([], $parameters[1]);
-                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
-
-                            return 'http://domain.tld/faq/what-does-foobar-mean.html';
-                        }
-                        if (6 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($faqModel, $parameters[0]);
-                            $this->assertSame([], $parameters[1]);
-                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
-
-                            return 'http://domain.tld/faq/what-does-foobar-mean.html';
-                        }
-                        if (7 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($faqModel, $parameters[0]);
-                            $this->assertSame([], $parameters[1]);
-                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
-
-                            return 'faq/what-does-foobar-mean.html';
-                        }
-                        if (8 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($faqModel, $parameters[0]);
-                            $this->assertSame([], $parameters[1]);
-                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
-
-                            return 'http://domain.tld/faq/what-does-foobar-mean.html';
-                        }
-                        if (9 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($faqModel, $parameters[0]);
-                            $this->assertSame([], $parameters[1]);
-                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
-
-                            return 'http://domain.tld/faq/what-does-foobar-mean.html';
-                        }
-                        if (10 === $matcher->numberOfInvocations()) {
-                            $this->assertSame($faqModel, $parameters[0]);
-                            $this->assertSame([], $parameters[1]);
-                            $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
-
-                            return 'http://domain.tld/faq/what-does-foobar-mean.html';
-                        }
+                        return 'faq/what-does-foobar-mean.html';
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($faqModel, $parameters[0]);
+                        $this->assertSame([], $parameters[1]);
+                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
+
+                        return 'faq/what-does-foobar-mean.html';
+                    }
+                    if (3 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($faqModel, $parameters[0]);
+                        $this->assertSame([], $parameters[1]);
+                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
+
+                        return 'faq/what-does-foobar-mean.html';
+                    }
+                    if (4 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($faqModel, $parameters[0]);
+                        $this->assertSame([], $parameters[1]);
+                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
+
+                        return 'faq/what-does-foobar-mean.html';
+                    }
+                    if (5 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($faqModel, $parameters[0]);
+                        $this->assertSame([], $parameters[1]);
+                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
+
+                        return 'http://domain.tld/faq/what-does-foobar-mean.html';
+                    }
+                    if (6 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($faqModel, $parameters[0]);
+                        $this->assertSame([], $parameters[1]);
+                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
+
+                        return 'http://domain.tld/faq/what-does-foobar-mean.html';
+                    }
+                    if (7 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($faqModel, $parameters[0]);
+                        $this->assertSame([], $parameters[1]);
+                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
+
+                        return 'faq/what-does-foobar-mean.html';
+                    }
+                    if (8 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($faqModel, $parameters[0]);
+                        $this->assertSame([], $parameters[1]);
+                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
+
+                        return 'http://domain.tld/faq/what-does-foobar-mean.html';
+                    }
+                    if (9 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($faqModel, $parameters[0]);
+                        $this->assertSame([], $parameters[1]);
+                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
+
+                        return 'http://domain.tld/faq/what-does-foobar-mean.html';
+                    }
+                    if (10 === $matcher->numberOfInvocations()) {
+                        $this->assertSame($faqModel, $parameters[0]);
+                        $this->assertSame([], $parameters[1]);
+                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
+
+                        return 'http://domain.tld/faq/what-does-foobar-mean.html';
+                    }
+                },
+            )
+        ;
 
         $listener = new FaqInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
 

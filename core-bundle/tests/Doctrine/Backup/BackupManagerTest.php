@@ -238,7 +238,7 @@ class BackupManagerTest extends ContaoTestCase
             ->willReturnCallback(
                 function (...$parameters) use ($matcher, $expectedQueries): void {
                     $this->assertSame($expectedQueries[$matcher->numberOfInvocations() - 1], $parameters);
-                }
+                },
             )
         ;
 

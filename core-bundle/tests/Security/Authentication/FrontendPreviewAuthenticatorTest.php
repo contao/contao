@@ -220,35 +220,35 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $session
             ->expects($matcher)
             ->method('has')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher) {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('_security_contao_frontend', $parameters[0]);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame(FrontendPreviewAuthenticator::SESSION_NAME, $parameters[0]);
-                        }
-
-                        return true;
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('_security_contao_frontend', $parameters[0]);
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame(FrontendPreviewAuthenticator::SESSION_NAME, $parameters[0]);
+                    }
+
+                    return true;
+                },
+            )
+        ;
         $matcher = $this->exactly(2);
 
         $session
             ->expects($matcher)
             ->method('remove')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher): void {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('_security_contao_frontend', $parameters[0]);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame(FrontendPreviewAuthenticator::SESSION_NAME, $parameters[0]);
-                        }
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher): void {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('_security_contao_frontend', $parameters[0]);
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame(FrontendPreviewAuthenticator::SESSION_NAME, $parameters[0]);
+                    }
+                },
+            )
+        ;
 
         $authenticator = $this->getAuthenticator(null, null, null, $session);
 
@@ -282,19 +282,19 @@ class FrontendPreviewAuthenticatorTest extends TestCase
         $session
             ->expects($matcher)
             ->method('has')
-                ->willReturnCallback(
-                    function (...$parameters) use ($matcher) {
-                        if (1 === $matcher->numberOfInvocations()) {
-                            $this->assertSame('_security_contao_frontend', $parameters[0]);
-                        }
-                        if (2 === $matcher->numberOfInvocations()) {
-                            $this->assertSame(FrontendPreviewAuthenticator::SESSION_NAME, $parameters[0]);
-                        }
-
-                        return false;
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher) {
+                    if (1 === $matcher->numberOfInvocations()) {
+                        $this->assertSame('_security_contao_frontend', $parameters[0]);
                     }
-                )
-            ;
+                    if (2 === $matcher->numberOfInvocations()) {
+                        $this->assertSame(FrontendPreviewAuthenticator::SESSION_NAME, $parameters[0]);
+                    }
+
+                    return false;
+                },
+            )
+        ;
 
         $authenticator = $this->getAuthenticator(null, null, null, $session);
 

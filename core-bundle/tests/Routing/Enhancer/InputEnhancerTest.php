@@ -82,7 +82,7 @@ class InputEnhancerTest extends TestCase
             ->willReturnCallback(
                 function (...$parameters) use ($matcher, $setters): void {
                     $this->assertSame($setters[$matcher->numberOfInvocations() - 1], $parameters);
-                }
+                },
             )
         ;
 
