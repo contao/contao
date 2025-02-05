@@ -12,7 +12,7 @@
         displayDetailsOnTestsThatTriggerWarnings="true"
         displayDetailsOnPhpunitDeprecations="true"
 >
-  <coverage>
+  <source>
     <include>
       <directory>./calendar-bundle/src</directory>
       <directory>./comments-bundle/src</directory>
@@ -28,7 +28,7 @@
       <directory>./*-bundle/src/Entity</directory>
       <directory>./*-bundle/src/Migration/Version*</directory>
     </exclude>
-  </coverage>
+  </source>
   <php>
     <ini name="error_reporting" value="-1"/>
     <env name="KERNEL_CLASS" value="Contao\CoreBundle\Tests\Functional\app\AppKernel"/>
@@ -55,7 +55,7 @@
     </testsuite>
   </testsuites>
   <extensions>
-    <extension class="Contao\TestCase\ClearCachePhpunitExtension"/>
-    <extension class="Contao\TestCase\WarnXdebugPhpunitExtension"/>
+    <bootstrap class="Contao\TestCase\ClearCachePhpunitExtension"/>
+    <bootstrap class="Contao\TestCase\WarnXdebugPhpunitExtension"/>
   </extensions>
 </phpunit>
