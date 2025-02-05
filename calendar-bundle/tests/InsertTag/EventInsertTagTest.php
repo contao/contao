@@ -140,7 +140,7 @@ class EventInsertTagTest extends ContaoTestCase
 
         yield [
             'event_url',
-            ['2', 'absolute'],
+            ['2', 'absolute', 'blank'],
             UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/events/the-foobar-event.html',
             'http://domain.tld/events/the-foobar-event.html',

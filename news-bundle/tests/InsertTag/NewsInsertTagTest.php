@@ -13,18 +13,19 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\Tests\InsertTag;
 
 use Contao\CoreBundle\Exception\ForwardPageNotFoundException;
-use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\ResolvedParameters;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\NewsBundle\InsertTag\NewsInsertTag;
 use Contao\NewsModel;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class NewsInsertTagTest extends ContaoTestCase
 {
-    public function testReplacesTheNewsTags(): void
+    #[DataProvider('replacesNewsTagsProvider')]
+    public function testReplacesTheNewsTags(string $insertTag, array $parameters, int|null $referenceType, string|null $url, string $expectedResult): void
     {
         $newsModel = $this->mockClassWithProperties(NewsModel::class);
         $newsModel->headline = '"Foo" is not "bar"';
@@ -35,147 +36,118 @@ class NewsInsertTagTest extends ContaoTestCase
         ];
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $matcher = $this->exactly(10);
         $urlGenerator
-            ->expects($matcher)
+            ->expects(null === $url ? $this->never() : $this->once())
             ->method('generate')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher, $newsModel) {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame($newsModel, $parameters[0]);
-                        $this->assertSame([], $parameters[1]);
-                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
-
-                        return 'news/foo-is-not-bar.html';
-                    }
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame($newsModel, $parameters[0]);
-                        $this->assertSame([], $parameters[1]);
-                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
-
-                        return 'news/foo-is-not-bar.html';
-                    }
-                    if (3 === $matcher->numberOfInvocations()) {
-                        $this->assertSame($newsModel, $parameters[0]);
-                        $this->assertSame([], $parameters[1]);
-                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
-
-                        return 'news/foo-is-not-bar.html';
-                    }
-                    if (4 === $matcher->numberOfInvocations()) {
-                        $this->assertSame($newsModel, $parameters[0]);
-                        $this->assertSame([], $parameters[1]);
-                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
-
-                        return 'news/foo-is-not-bar.html';
-                    }
-                    if (5 === $matcher->numberOfInvocations()) {
-                        $this->assertSame($newsModel, $parameters[0]);
-                        $this->assertSame([], $parameters[1]);
-                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
-
-                        return 'http://domain.tld/news/foo-is-not-bar.html';
-                    }
-                    if (6 === $matcher->numberOfInvocations()) {
-                        $this->assertSame($newsModel, $parameters[0]);
-                        $this->assertSame([], $parameters[1]);
-                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
-
-                        return 'http://domain.tld/news/foo-is-not-bar.html';
-                    }
-                    if (7 === $matcher->numberOfInvocations()) {
-                        $this->assertSame($newsModel, $parameters[0]);
-                        $this->assertSame([], $parameters[1]);
-                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_PATH, $parameters[2]);
-
-                        return 'news/foo-is-not-bar.html';
-                    }
-                    if (8 === $matcher->numberOfInvocations()) {
-                        $this->assertSame($newsModel, $parameters[0]);
-                        $this->assertSame([], $parameters[1]);
-                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
-
-                        return 'http://domain.tld/news/foo-is-not-bar.html';
-                    }
-                    if (9 === $matcher->numberOfInvocations()) {
-                        $this->assertSame($newsModel, $parameters[0]);
-                        $this->assertSame([], $parameters[1]);
-                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
-
-                        return 'http://domain.tld/news/foo-is-not-bar.html';
-                    }
-                    if (10 === $matcher->numberOfInvocations()) {
-                        $this->assertSame($newsModel, $parameters[0]);
-                        $this->assertSame([], $parameters[1]);
-                        $this->assertSame(UrlGeneratorInterface::ABSOLUTE_URL, $parameters[2]);
-
-                        return 'http://domain.tld/news/foo-is-not-bar.html';
-                    }
-                },
-            )
+            ->with($newsModel, [], $referenceType)
+            ->willReturn($url ?? '')
         ;
 
         $listener = new NewsInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
 
         $this->assertSame(
-            '<a href="news/foo-is-not-bar.html">"Foo" is not "bar"</a>',
-            $listener(new ResolvedInsertTag('news', new ResolvedParameters(['2']), []))->getValue(),
+            $expectedResult,
+            $listener(new ResolvedInsertTag($insertTag, new ResolvedParameters($parameters), []))->getValue(),
         );
+    }
 
-        $this->assertSame(
-            '<a href="news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">"Foo" is not "bar"</a>',
-            $listener(new ResolvedInsertTag('news', new ResolvedParameters(['2', 'blank']), []))->getValue(),
-        );
-
-        $this->assertSame(
-            '<a href="news/foo-is-not-bar.html">',
-            $listener(new ResolvedInsertTag('news_open', new ResolvedParameters(['2']), []))->getValue(),
-        );
-
-        $this->assertSame(
-            '<a href="news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">',
-            $listener(new ResolvedInsertTag('news_open', new ResolvedParameters(['2', 'blank']), []))->getValue(),
-        );
-
-        $this->assertSame(
-            '<a href="http://domain.tld/news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">',
-            $listener(new ResolvedInsertTag('news_open', new ResolvedParameters(['2', 'absolute', 'blank']), []))->getValue(),
-        );
-
-        $this->assertSame(
-            '<a href="http://domain.tld/news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">',
-            $listener(new ResolvedInsertTag('news_open', new ResolvedParameters(['2', 'blank', 'absolute']), []))->getValue(),
-        );
-
-        $this->assertSame(
+    public static function replacesNewsTagsProvider(): \Generator
+    {
+        yield [
+            'news',
+            ['2'],
+            UrlGeneratorInterface::ABSOLUTE_PATH,
             'news/foo-is-not-bar.html',
-            $listener(new ResolvedInsertTag('news_url', new ResolvedParameters(['2']), []))->getValue(),
-        );
+            '<a href="news/foo-is-not-bar.html">"Foo" is not "bar"</a>',
+        ];
 
-        $this->assertSame(
+        yield [
+            'news',
+            ['2', 'blank'],
+            UrlGeneratorInterface::ABSOLUTE_PATH,
+            'news/foo-is-not-bar.html',
+            '<a href="news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">"Foo" is not "bar"</a>',
+        ];
+
+        yield [
+            'news_open',
+            ['2'],
+            UrlGeneratorInterface::ABSOLUTE_PATH,
+            'news/foo-is-not-bar.html',
+            '<a href="news/foo-is-not-bar.html">',
+        ];
+
+        yield [
+            'news_open',
+            ['2', 'blank'],
+            UrlGeneratorInterface::ABSOLUTE_PATH,
+            'news/foo-is-not-bar.html',
+            '<a href="news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">',
+        ];
+
+        yield [
+            'news_open',
+            ['2', 'absolute', 'blank'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/news/foo-is-not-bar.html',
-            $listener(new ResolvedInsertTag('news_url', new ResolvedParameters(['2', 'absolute']), []))->getValue(),
-        );
+            '<a href="http://domain.tld/news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">',
+        ];
 
-        $this->assertSame(
+        yield [
+            'news_open',
+            ['2', 'blank', 'absolute'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/news/foo-is-not-bar.html',
-            $listener(new ResolvedInsertTag('news_url', new ResolvedParameters(['2', 'absolute']), []))->getValue(),
-        );
+            '<a href="http://domain.tld/news/foo-is-not-bar.html" target="_blank" rel="noreferrer noopener">',
+        ];
 
-        $this->assertSame(
+        yield [
+            'news_url',
+            ['2'],
+            UrlGeneratorInterface::ABSOLUTE_PATH,
+            'news/foo-is-not-bar.html',
+            'news/foo-is-not-bar.html',
+        ];
+
+        yield [
+            'news_url',
+            ['2', 'absolute'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
             'http://domain.tld/news/foo-is-not-bar.html',
-            $listener(new ResolvedInsertTag('news_url', new ResolvedParameters(['2', 'blank', 'absolute']), []))->getValue(),
-        );
+            'http://domain.tld/news/foo-is-not-bar.html',
+        ];
 
-        $this->assertEquals(
-            new InsertTagResult('"Foo" is not "bar"'),
-            $listener(new ResolvedInsertTag('news_title', new ResolvedParameters(['2']), [])),
-        );
+        yield [
+            'news_url',
+            ['2', 'absolute', 'blank'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
+            'http://domain.tld/news/foo-is-not-bar.html',
+            'http://domain.tld/news/foo-is-not-bar.html',
+        ];
 
-        $this->assertSame(
+        yield [
+            'news_url',
+            ['2', 'blank', 'absolute'],
+            UrlGeneratorInterface::ABSOLUTE_URL,
+            'http://domain.tld/news/foo-is-not-bar.html',
+            'http://domain.tld/news/foo-is-not-bar.html',
+        ];
+
+        yield [
+            'news_title',
+            ['2'],
+            null,
+            null,
+            '"Foo" is not "bar"',
+        ];
+
+        yield [
+            'news_teaser',
+            ['2'],
+            null,
+            null,
             '<p>Foo does not equal bar.</p>',
-            $listener(new ResolvedInsertTag('news_teaser', new ResolvedParameters(['2']), []))->getValue(),
-        );
+        ];
     }
 
     public function testReturnsAnEmptyStringIfThereIsNoModel(): void
