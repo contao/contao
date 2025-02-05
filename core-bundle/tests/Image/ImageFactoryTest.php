@@ -52,7 +52,7 @@ class ImageFactoryTest extends TestCase
 
         foreach (['assets', 'images'] as $directory) {
             $filesystem->mirror(
-                Path::join((new self())->getFixturesDir(), $directory),
+                Path::join($this->getFixturesDir(), $directory),
                 Path::join(self::getTempDir(), $directory),
             );
         }
