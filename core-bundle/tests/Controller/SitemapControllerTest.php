@@ -182,12 +182,27 @@ class SitemapControllerTest extends TestCase
         $registry = new PageRegistry($this->createMock(Connection::class));
         $request = Request::create('https://www.foobar.com/sitemap.xml');
 
+        $matcher = $this->exactly(2);
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('generate')
-            ->withConsecutive([$page1, [], UrlGeneratorInterface::ABSOLUTE_URL], [$page2, [], UrlGeneratorInterface::ABSOLUTE_URL])
-            ->willReturnOnConsecutiveCalls('https://www.foobar.com/en/page1.html', 'https://www.foobar.com/en/page2.html')
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $page1, $page2): string {
+                    switch ($matcher->numberOfInvocations()) {
+                        case 1:
+                            $this->assertSame([$page1, [], UrlGeneratorInterface::ABSOLUTE_URL], $parameters);
+
+                            return 'https://www.foobar.com/en/page1.html';
+                        case 2:
+                            $this->assertSame([$page2, [], UrlGeneratorInterface::ABSOLUTE_URL], $parameters);
+
+                            return 'https://www.foobar.com/en/page2.html';
+                    }
+
+                    throw new \LogicException('Unexpected number of invocations');
+                },
+            )
         ;
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request), $urlGenerator);
@@ -365,18 +380,32 @@ class SitemapControllerTest extends TestCase
         $container = $this->getContainer($framework);
         $request = Request::create('https://www.foobar.com/sitemap.xml');
 
+        $matcher = $this->exactly(2);
         $registry = $this->createPartialMock(PageRegistry::class, ['isRoutable', 'supportsContentComposition']);
         $registry
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('supportsContentComposition')
-            ->withConsecutive([$page1], [$page2])
-            ->willReturn(false, true)
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $page1, $page2): bool {
+                    switch ($matcher->numberOfInvocations()) {
+                        case 1:
+                            $this->assertSame([$page1], $parameters);
+
+                            return false;
+                        case 2:
+                            $this->assertSame([$page2], $parameters);
+
+                            return true;
+                    }
+
+                    throw new \LogicException('Unexpected number of invocations');
+                })
         ;
 
         $registry
             ->expects($this->once())
             ->method('isRoutable')
-            ->withConsecutive([$page1])
+            ->with($page1)
             ->willReturn(true)
         ;
 
@@ -435,19 +464,49 @@ class SitemapControllerTest extends TestCase
         $container = $this->getContainer($framework);
         $request = Request::create('https://www.foobar.com/sitemap.xml');
 
+        $matcher = $this->exactly(2);
         $registry = $this->createPartialMock(PageRegistry::class, ['isRoutable', 'supportsContentComposition']);
         $registry
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('supportsContentComposition')
-            ->withConsecutive([$page1], [$page2])
-            ->willReturn(true, true)
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $page1, $page2): bool {
+                    switch ($matcher->numberOfInvocations()) {
+                        case 1:
+                            $this->assertSame([$page1], $parameters);
+
+                            return true;
+                        case 2:
+                            $this->assertSame([$page2], $parameters);
+
+                            return true;
+                    }
+
+                    throw new \LogicException('Unexpected number of invocations');
+                },
+            )
         ;
 
+        $matcher = $this->exactly(2);
         $registry
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('isRoutable')
-            ->withConsecutive([$page1], [$page2])
-            ->willReturn(false, true)
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $page1, $page2): bool {
+                    switch ($matcher->numberOfInvocations()) {
+                        case 1:
+                            $this->assertSame([$page1], $parameters);
+
+                            return false;
+                        case 2:
+                            $this->assertSame([$page2], $parameters);
+
+                            return true;
+                    }
+
+                    throw new \LogicException('Unexpected number of invocations');
+                },
+            )
         ;
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
@@ -505,31 +564,72 @@ class SitemapControllerTest extends TestCase
         $container = $this->getContainer($framework);
         $request = Request::create('https://www.foobar.com/sitemap.xml');
 
+        $matcher = $this->exactly(2);
         $registry = $this->createPartialMock(PageRegistry::class, ['isRoutable', 'supportsContentComposition']);
         $registry
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('supportsContentComposition')
-            ->withConsecutive([$page1], [$page2])
-            ->willReturn(true, true)
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $page1, $page2): bool {
+                    switch ($matcher->numberOfInvocations()) {
+                        case 1:
+                            $this->assertSame([$page1], $parameters);
+
+                            return true;
+                        case 2:
+                            $this->assertSame([$page2], $parameters);
+
+                            return true;
+                    }
+
+                    throw new \LogicException('Unexpected number of invocations');
+                },
+            )
         ;
 
+        $matcher = $this->exactly(2);
         $registry
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('isRoutable')
-            ->withConsecutive([$page1], [$page2])
-            ->willReturn(true, true)
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $page1, $page2): bool {
+                    switch ($matcher->numberOfInvocations()) {
+                        case 1:
+                            $this->assertSame([$page1], $parameters);
+
+                            return true;
+                        case 2:
+                            $this->assertSame([$page2], $parameters);
+
+                            return true;
+                    }
+
+                    throw new \LogicException('Unexpected number of invocations');
+                },
+            )
         ;
 
+        $matcher = $this->exactly(2);
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('generate')
-            ->withConsecutive([$page1, [], UrlGeneratorInterface::ABSOLUTE_URL], [$page2, [], UrlGeneratorInterface::ABSOLUTE_URL])
-            ->willReturnCallback(static fn ($page) => match (true) {
-                $page === $page1 => throw new RuntimeException(),
-                $page === $page2 => 'https://www.foobar.com/en/page2.html',
-                default => throw new \InvalidArgumentException(),
-            })
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $page1, $page2): string {
+                    switch ($matcher->numberOfInvocations()) {
+                        case 1:
+                            $this->assertSame([$page1, [], UrlGeneratorInterface::ABSOLUTE_URL], $parameters);
+
+                            throw new RuntimeException();
+                        case 2:
+                            $this->assertSame([$page2, [], UrlGeneratorInterface::ABSOLUTE_URL], $parameters);
+
+                            return 'https://www.foobar.com/en/page2.html';
+                    }
+
+                    throw new \LogicException('Unexpected number of invocations');
+                },
+            )
         ;
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request), $urlGenerator);
@@ -828,26 +928,42 @@ class SitemapControllerTest extends TestCase
 
     private function mockFrameworkWithPages(array $pages, array $articles): ContaoFramework&MockObject
     {
+        $matcher = $this->exactly(\count($pages));
+        $expectations = array_map(
+            static fn ($parentId) => [$parentId, ['order' => 'sorting']],
+            array_keys($pages),
+        );
+
         $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages', 'findByPid']);
         $pageModelAdapter
-            ->expects($this->exactly(\count($pages)))
+            ->expects($matcher)
             ->method('findByPid')
-            ->withConsecutive(...array_map(
-                static fn ($parentId) => [$parentId, ['order' => 'sorting']],
-                array_keys($pages),
-            ))
-            ->willReturnOnConsecutiveCalls(...$pages)
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $expectations, $pages): array|null {
+                    $this->assertSame($expectations[$matcher->numberOfInvocations() - 1], $parameters);
+
+                    return array_values($pages)[$matcher->numberOfInvocations() - 1];
+                },
+            )
         ;
+
+        $matcher = $this->exactly(\count($articles));
+        $expectations = array_map(
+            static fn ($pageId) => [$pageId, ['ignoreFePreview' => true]],
+            array_keys($articles),
+        );
 
         $articleModelAdapter = $this->mockAdapter(['findPublishedWithTeaserByPid']);
         $articleModelAdapter
-            ->expects($this->exactly(\count($articles)))
+            ->expects($matcher)
             ->method('findPublishedWithTeaserByPid')
-            ->withConsecutive(...array_map(
-                static fn ($pageId) => [$pageId, ['ignoreFePreview' => true]],
-                array_keys($articles),
-            ))
-            ->willReturnOnConsecutiveCalls(...$articles)
+            ->willReturnCallback(
+                function (...$parameters) use ($matcher, $expectations, $articles): ArticleModel|null {
+                    $this->assertSame($expectations[$matcher->numberOfInvocations() - 1], $parameters);
+
+                    return array_values($articles)[$matcher->numberOfInvocations() - 1];
+                },
+            )
         ;
 
         return $this->mockContaoFramework([
