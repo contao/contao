@@ -221,9 +221,10 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     #[DataProvider('requestWithPageIdProvider')]
-    public function testAddsThePageId(\Closure|null $request = null, int|null $pageId = null): void
+    public function testAddsThePageId(\Closure|Request|null $request = null, int|null $pageId = null): void
     {
-        $request = null === $request ? null : \Closure::bind($request, $this)();
+        $request = $request instanceof \Closure ? \Closure::bind($request, $this)() : $request;
+
         $requestStack = new RequestStack();
 
         if ($request) {
@@ -242,9 +243,9 @@ class ContaoTableProcessorTest extends TestCase
 
     public static function requestWithPageIdProvider(): iterable
     {
-        yield 'request with page model ID' => [static fn () => new Request([], [], ['pageModel' => '42']), 42];
+        yield 'request with page model ID' => [new Request([], [], ['pageModel' => '42']), 42];
         yield 'request with page model' => [fn () => new Request([], [], ['pageModel' => $this->mockClassWithProperties(PageModel::class, ['id' => 13])]), 13];
-        yield 'request without page model' => [static fn () => new Request(), null];
+        yield 'request without page model' => [new Request(), null];
         yield 'no request' => [null, null];
     }
 
