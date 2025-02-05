@@ -119,17 +119,17 @@ class NewsResolverTest extends ContaoTestCase
     public static function getParametersForContentProvider(): iterable
     {
         yield 'Uses the news alias' => [
-            fn() => $this->mockClassWithProperties(NewsModel::class, ['id' => 42, 'alias' => 'foobar']),
+            fn () => $this->mockClassWithProperties(NewsModel::class, ['id' => 42, 'alias' => 'foobar']),
             ['parameters' => '/foobar'],
         ];
 
         yield 'Uses news ID if alias is empty' => [
-            fn() =>$this->mockClassWithProperties(NewsModel::class, ['id' => 42, 'alias' => '']),
+            fn () => $this->mockClassWithProperties(NewsModel::class, ['id' => 42, 'alias' => '']),
             ['parameters' => '/42'],
         ];
 
         yield 'Only supports NewsModel' => [
-            fn() =>$this->mockClassWithProperties(PageModel::class),
+            fn () => $this->mockClassWithProperties(PageModel::class),
             [],
         ];
     }

@@ -60,17 +60,17 @@ class FaqResolverTest extends ContaoTestCase
     public static function getParametersForContentProvider(): iterable
     {
         yield 'Uses the FAQ alias' => [
-            fn() => $this->mockClassWithProperties(FaqModel::class, ['id' => 42, 'alias' => 'foobar']),
+            fn () => $this->mockClassWithProperties(FaqModel::class, ['id' => 42, 'alias' => 'foobar']),
             ['parameters' => '/foobar'],
         ];
 
         yield 'Uses FAQ ID if alias is empty' => [
-            fn() => $this->mockClassWithProperties(FaqModel::class, ['id' => 42, 'alias' => '']),
+            fn () => $this->mockClassWithProperties(FaqModel::class, ['id' => 42, 'alias' => '']),
             ['parameters' => '/42'],
         ];
 
         yield 'Only supports FaqModel' => [
-            fn() => $this->mockClassWithProperties(PageModel::class),
+            fn () => $this->mockClassWithProperties(PageModel::class),
             [],
         ];
     }
