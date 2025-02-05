@@ -52,19 +52,19 @@ class RetentionPolicyTest extends ContaoTestCase
         $this->assertSame($expectedBackupFilePathsToKeep, $toKeep);
     }
 
-    public function policyProvider(): iterable
+    public static function policyProvider(): iterable
     {
         yield 'Test should delete oldest when only keepMax is configured' => [
             5,
             [],
-            $this->createBackup('2021-11-16T13:36:00+00:00'),
+            static::createBackup('2021-11-16T13:36:00+00:00'),
             [
-                $this->createBackup('2021-11-16T13:36:00+00:00'),
-                $this->createBackup('2021-11-15T13:36:00+00:00'),
-                $this->createBackup('2021-11-14T13:36:00+00:00'),
-                $this->createBackup('2021-11-13T13:36:00+00:00'),
-                $this->createBackup('2021-11-12T13:36:00+00:00'),
-                $this->createBackup('2021-11-11T13:36:00+00:00'),
+                static::createBackup('2021-11-16T13:36:00+00:00'),
+                static::createBackup('2021-11-15T13:36:00+00:00'),
+                static::createBackup('2021-11-14T13:36:00+00:00'),
+                static::createBackup('2021-11-13T13:36:00+00:00'),
+                static::createBackup('2021-11-12T13:36:00+00:00'),
+                static::createBackup('2021-11-11T13:36:00+00:00'),
             ],
             [
                 'backup__20211116133600.sql.gz',
@@ -78,13 +78,13 @@ class RetentionPolicyTest extends ContaoTestCase
         yield 'Test keepMax configured to 0 does not clean up at all' => [
             0,
             [],
-            $this->createBackup('2021-11-16T13:36:00+00:00'),
+            static::createBackup('2021-11-16T13:36:00+00:00'),
             [
-                $this->createBackup('2021-11-16T13:36:00+00:00'),
-                $this->createBackup('2021-11-15T13:36:00+00:00'),
-                $this->createBackup('2021-11-14T13:36:00+00:00'),
-                $this->createBackup('2021-11-13T13:36:00+00:00'),
-                $this->createBackup('2021-11-12T13:36:00+00:00'),
+                static::createBackup('2021-11-16T13:36:00+00:00'),
+                static::createBackup('2021-11-15T13:36:00+00:00'),
+                static::createBackup('2021-11-14T13:36:00+00:00'),
+                static::createBackup('2021-11-13T13:36:00+00:00'),
+                static::createBackup('2021-11-12T13:36:00+00:00'),
             ],
             [
                 'backup__20211116133600.sql.gz',
@@ -98,17 +98,17 @@ class RetentionPolicyTest extends ContaoTestCase
         yield 'Test keepMax configured to 0 and keepIntervals correctly keeps the correct backups' => [
             0,
             ['1D', '7D', '1M'], // Should keep the latest plus the oldest of the periods 1 day ago, 7 days ago, a month ago
-            $this->createBackup('2021-11-16T13:36:00+00:00'),
+            static::createBackup('2021-11-16T13:36:00+00:00'),
             [
-                $this->createBackup('2021-11-16T13:36:00+00:00'),
-                $this->createBackup('2021-11-16T08:36:00+00:00'),
-                $this->createBackup('2021-11-16T06:36:00+00:00'),
-                $this->createBackup('2021-11-07T13:36:00+00:00'),
-                $this->createBackup('2021-09-07T13:36:00+00:00'),
-                $this->createBackup('2021-11-07T18:36:00+00:00'),
-                $this->createBackup('2021-11-12T13:36:00+00:00'),
-                $this->createBackup('2021-11-11T13:36:00+00:00'),
-                $this->createBackup('2021-11-13T13:36:00+00:00'),
+                static::createBackup('2021-11-16T13:36:00+00:00'),
+                static::createBackup('2021-11-16T08:36:00+00:00'),
+                static::createBackup('2021-11-16T06:36:00+00:00'),
+                static::createBackup('2021-11-07T13:36:00+00:00'),
+                static::createBackup('2021-09-07T13:36:00+00:00'),
+                static::createBackup('2021-11-07T18:36:00+00:00'),
+                static::createBackup('2021-11-12T13:36:00+00:00'),
+                static::createBackup('2021-11-11T13:36:00+00:00'),
+                static::createBackup('2021-11-13T13:36:00+00:00'),
             ],
             [
                 'backup__20211116133600.sql.gz', // This is the latest
@@ -121,17 +121,17 @@ class RetentionPolicyTest extends ContaoTestCase
         yield 'Test keepMax configured to 2 and keepIntervals correctly keeps the correct backups' => [
             2,
             ['1D', '7D', '1M'], // Should keep the latest plus the oldest of the periods 1 day ago, 7 days ago, a month ago
-            $this->createBackup('2021-11-16T13:36:00+00:00'),
+            static::createBackup('2021-11-16T13:36:00+00:00'),
             [
-                $this->createBackup('2021-11-16T13:36:00+00:00'),
-                $this->createBackup('2021-11-16T08:36:00+00:00'),
-                $this->createBackup('2021-11-16T06:36:00+00:00'),
-                $this->createBackup('2021-11-07T13:36:00+00:00'),
-                $this->createBackup('2021-09-07T13:36:00+00:00'),
-                $this->createBackup('2021-11-07T18:36:00+00:00'),
-                $this->createBackup('2021-11-12T13:36:00+00:00'),
-                $this->createBackup('2021-11-11T13:36:00+00:00'),
-                $this->createBackup('2021-11-13T13:36:00+00:00'),
+                static::createBackup('2021-11-16T13:36:00+00:00'),
+                static::createBackup('2021-11-16T08:36:00+00:00'),
+                static::createBackup('2021-11-16T06:36:00+00:00'),
+                static::createBackup('2021-11-07T13:36:00+00:00'),
+                static::createBackup('2021-09-07T13:36:00+00:00'),
+                static::createBackup('2021-11-07T18:36:00+00:00'),
+                static::createBackup('2021-11-12T13:36:00+00:00'),
+                static::createBackup('2021-11-11T13:36:00+00:00'),
+                static::createBackup('2021-11-13T13:36:00+00:00'),
             ],
             [
                 'backup__20211116133600.sql.gz', // This is the latest
@@ -141,7 +141,7 @@ class RetentionPolicyTest extends ContaoTestCase
         ];
     }
 
-    private function createBackup(string $atomDateTime): Backup
+    private static function createBackup(string $atomDateTime): Backup
     {
         $dt = \DateTime::createFromFormat(\DateTimeInterface::ATOM, $atomDateTime);
 
