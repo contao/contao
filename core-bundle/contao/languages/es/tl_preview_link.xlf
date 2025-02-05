@@ -17,6 +17,12 @@
         <source>Show unpublished pages and elements when sharing this link.</source>
         <target>Mostrar páginas y elementos no publicados al compartir este enlace.</target>
       </trans-unit>
+      <trans-unit id="tl_preview_link.restrictToUrl.0">
+        <source>Restrict access to specified URL</source>
+      </trans-unit>
+      <trans-unit id="tl_preview_link.restrictToUrl.1">
+        <source>Allow access only to the specified URL instead of the entire website.</source>
+      </trans-unit>
       <trans-unit id="tl_preview_link.createdAt.0">
         <source>Created at</source>
         <target>Creado en</target>
@@ -32,14 +38,6 @@
       <trans-unit id="tl_preview_link.createdBy.1">
         <source>The user who created the preview link.</source>
         <target>El usuario que creó el enlace de vista previa.</target>
-      </trans-unit>
-      <trans-unit id="tl_preview_link.expiresInDays.0">
-        <source>Expires after</source>
-        <target>Expira después de</target>
-      </trans-unit>
-      <trans-unit id="tl_preview_link.expiresInDays.1">
-        <source>Select how long the preview link should be available.</source>
-        <target>Seleccione cuánto tiempo debe estar disponible el enlace de vista previa.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.expiresAt.0">
         <source>Valid until</source>
@@ -91,15 +89,18 @@
       </trans-unit>
       <trans-unit id="tl_preview_link.hintNew">
         <source>To add a preview link, use the &quot;Share URL&quot; button in the front end preview toolbar.</source>
+        <target>Para agregar un enlace de vista previa, use el botón &quot;Compartir URL&quot; en la barra de herramientas de vista previa del front-end.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintSave">
         <source>Please save this record to generate the preview link.</source>
+        <target>Guarde este registro para generar el enlace de vista previa.</target>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintEdit">
-        <source>Preview link: &lt;a href=&quot;%s&quot; data-to-clipboard=&quot;%s&quot;&gt;%s&lt;/a&gt;</source>
+        <source>Preview link</source>
       </trans-unit>
       <trans-unit id="tl_preview_link.hintExpired">
         <source>This preview link has expired and can no longer be shared.</source>
+        <target>Este enlace de vista previa ha caducado y ya no se puede compartir.</target>
       </trans-unit>
     </body>
   </file>

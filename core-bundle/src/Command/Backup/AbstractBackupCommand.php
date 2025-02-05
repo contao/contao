@@ -41,14 +41,17 @@ abstract class AbstractBackupCommand extends Command
     /**
      * @template T of AbstractConfig
      *
-     * @phpstan-param T $config
+     * @param T $config
      *
-     * @phpstan-return T
+     * @return T
      */
     protected function handleCommonConfig(InputInterface $input, AbstractConfig $config): AbstractConfig
     {
         if ($name = $input->getArgument('name')) {
-            $config = $config->withFileName($name);
+            $config = $config
+                ->withFileName($name)
+                ->withGzCompression(0 === strcasecmp(substr($name, -3), '.gz'))
+            ;
         }
 
         if ($tablesToIgnore = $input->getOption('ignore-tables')) {

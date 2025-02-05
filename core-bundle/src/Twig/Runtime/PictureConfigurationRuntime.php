@@ -21,7 +21,7 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 final class PictureConfigurationRuntime implements RuntimeExtensionInterface
 {
-    private PropertyAccessor $propertyAccessor;
+    private readonly PropertyAccessor $propertyAccessor;
 
     public function __construct()
     {
@@ -31,8 +31,8 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
     /**
      * Creates a picture configuration from an array.
      *
-     * This is intended to be used from within templates where programmatic
-     * building is not available.
+     * This is intended to be used from within templates where programmatic building
+     * is not available.
      */
     public function fromArray(array $config): PictureConfiguration
     {
@@ -52,7 +52,7 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
 
                 return $sizeItem;
             },
-            $config['items'] ?? []
+            $config['items'] ?? [],
         );
 
         unset($config['items']);
@@ -103,7 +103,7 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
         }
     }
 
-    private function throwInvalidArgumentException(array $unmappedConfig, string $prefix = null): void
+    private function throwInvalidArgumentException(array $unmappedConfig, string|null $prefix = null): void
     {
         $keys = array_keys($unmappedConfig);
 
@@ -112,6 +112,6 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
             $keys = array_map(static fn (string $v): string => "$prefix.$v", $keys);
         }
 
-        throw new \InvalidArgumentException(sprintf('Could not map picture configuration key(s) "%s".', implode('", "', $keys)));
+        throw new \InvalidArgumentException(\sprintf('Could not map picture configuration key(s) "%s".', implode('", "', $keys)));
     }
 }

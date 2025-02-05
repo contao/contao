@@ -37,13 +37,13 @@ use Symfony\Component\Filesystem\Path;
 
 #[AsCommand(
     name: 'debug:plugins',
-    description: 'Displays the Contao Manager plugin configurations.'
+    description: 'Displays the Contao Manager plugin configurations.',
 )]
 class DebugPluginsCommand extends Command
 {
     private SymfonyStyle|null $io = null;
 
-    public function __construct(private ContaoKernel $kernel)
+    public function __construct(private readonly ContaoKernel $kernel)
     {
         parent::__construct();
     }
@@ -170,17 +170,17 @@ class DebugPluginsCommand extends Command
 
         if (!$plugin instanceof BundlePluginInterface) {
             $this->io->error(
-                sprintf(
+                \sprintf(
                     'The "%s" plugin does not implement the "%s" interface.',
                     $plugin::class,
-                    BundlePluginInterface::class
-                )
+                    BundlePluginInterface::class,
+                ),
             );
 
             return -1;
         }
 
-        $title = sprintf('Bundles Registered by Plugin "%s"', $plugin::class);
+        $title = \sprintf('Bundles Registered by Plugin "%s"', $plugin::class);
         $headers = ['Bundle', 'Replaces', 'Load After', 'Environment'];
         $rows = [];
         $configs = $plugin->getBundles($this->getBundleParser());
@@ -190,10 +190,13 @@ class DebugPluginsCommand extends Command
                 $config->getName(),
                 implode("\n", $config->getReplace()),
                 implode("\n", $config->getLoadAfter()),
-                $config->loadInProduction() && $config->loadInDevelopment()
-                    ? 'All'
-                    : ($config->loadInProduction() ? 'Production' : 'Development'),
+                match (true) {
+                    $config->loadInProduction() && $config->loadInDevelopment() => 'All',
+                    $config->loadInProduction() => 'Production',
+                    $config->loadInDevelopment() => 'Development',
+                },
             ];
+
             $rows[] = new TableSeparator();
         }
 
@@ -220,7 +223,7 @@ class DebugPluginsCommand extends Command
             }
         }
 
-        $this->io->error(sprintf('No plugin with the class or package name "%s" found.', $name));
+        $this->io->error(\sprintf('No plugin with the class or package name "%s" found.', $name));
 
         return null;
     }

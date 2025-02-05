@@ -28,17 +28,6 @@ class Picker extends Widget
 	protected $strTemplate = 'be_widget';
 
 	/**
-	 * Load the database object
-	 *
-	 * @param array $arrAttributes
-	 */
-	public function __construct($arrAttributes=null)
-	{
-		$this->import(Database::class, 'Database');
-		parent::__construct($arrAttributes);
-	}
-
-	/**
 	 * Return an array if the "multiple" attribute is set
 	 *
 	 * @param mixed $varInput
@@ -57,13 +46,13 @@ class Picker extends Widget
 		{
 			if ($this->mandatory)
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
 			}
 
 			return '';
 		}
 
-		if (strpos($varInput, ',') === false)
+		if (!str_contains($varInput, ','))
 		{
 			return $this->multiple ? array((int) $varInput) : (int) $varInput;
 		}
@@ -102,13 +91,13 @@ class Picker extends Widget
 
 			foreach ($showFields as $f)
 			{
-				if (strpos($f, ':') !== false)
+				if (str_contains($f, ':'))
 				{
 					list($f) = explode(':', $f, 2);
 				}
 
 				$return .= '
-    <th class="tl_folder_tlist col_' . $f . '">' . (\is_array($GLOBALS['TL_DCA'][$strRelatedTable]['fields'][$f]['label']) ? $GLOBALS['TL_DCA'][$strRelatedTable]['fields'][$f]['label'][0] : $GLOBALS['TL_DCA'][$strRelatedTable]['fields'][$f]['label']) . '</th>';
+    <th class="tl_folder_tlist col_' . $f . '">' . (\is_array($GLOBALS['TL_DCA'][$strRelatedTable]['fields'][$f]['label'] ?? null) ? $GLOBALS['TL_DCA'][$strRelatedTable]['fields'][$f]['label'][0] : $GLOBALS['TL_DCA'][$strRelatedTable]['fields'][$f]['label'] ?? '') . '</th>';
 			}
 
 			$return .= '
@@ -207,7 +196,7 @@ class Picker extends Widget
 		if (!empty($this->varValue))
 		{
 			$strIdList = implode(',', array_map('intval', (array) $this->varValue));
-			$objRows = $this->Database->execute("SELECT * FROM $strRelatedTable WHERE id IN ($strIdList) ORDER BY FIND_IN_SET(id, '$strIdList')");
+			$objRows = Database::getInstance()->execute("SELECT * FROM $strRelatedTable WHERE id IN ($strIdList) ORDER BY FIND_IN_SET(id, '$strIdList')");
 
 			if ($objRows->numRows)
 			{
@@ -239,9 +228,7 @@ class Picker extends Widget
 
 			if (\is_array($callback))
 			{
-				$this->import($callback[0]);
-
-				return $this->{$callback[0]}->{$callback[1]}($arrRow);
+				return System::importStatic($callback[0])->{$callback[1]}($arrRow);
 			}
 
 			if (\is_callable($callback))
@@ -257,7 +244,7 @@ class Picker extends Widget
 
 	protected function getRelatedTable(): string
 	{
-		if (0 === strpos($this->context ?? '', 'dc.'))
+		if (str_starts_with($this->context ?? '', 'dc.'))
 		{
 			return substr($this->context, 3);
 		}
@@ -279,6 +266,11 @@ class Picker extends Widget
 		$extras = array();
 		$extras['fieldType'] = $this->multiple ? 'checkbox' : 'radio';
 		$extras['source'] = $this->strTable . '.' . $this->currentRecord;
+
+		if (\is_array($this->rootNodes))
+		{
+			$extras['rootNodes'] = array_values($this->rootNodes);
+		}
 
 		return $extras;
 	}

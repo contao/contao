@@ -83,13 +83,12 @@ class ModuleSearch extends Module
 		$this->Template->search = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchLabel']);
 		$this->Template->matchAll = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['matchAll']);
 		$this->Template->matchAny = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['matchAny']);
-		$this->Template->advanced = ($this->searchType == 'advanced');
+		$this->Template->advanced = $this->searchType == 'advanced';
 
 		// Redirect page
-		if (($objTarget = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if ($objTarget = PageModel::findById($this->objModel->jumpTo))
 		{
-			/** @var PageModel $objTarget */
-			$this->Template->action = $objTarget->getFrontendUrl();
+			$this->Template->action = System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget);
 		}
 
 		$this->Template->pagination = '';
@@ -98,6 +97,8 @@ class ModuleSearch extends Module
 		// Execute the search if there are keywords
 		if ($strKeywords !== '' && $strKeywords != '*' && !$this->jumpTo)
 		{
+			$db = Database::getInstance();
+
 			// Search pages
 			if (!empty($this->pages) && \is_array($this->pages))
 			{
@@ -106,7 +107,7 @@ class ModuleSearch extends Module
 				foreach ($this->pages as $intPageId)
 				{
 					$arrPages[] = array($intPageId);
-					$arrPages[] = $this->Database->getChildRecords($intPageId, 'tl_page');
+					$arrPages[] = $db->getChildRecords($intPageId, 'tl_page');
 				}
 
 				if (!empty($arrPages))
@@ -119,10 +120,9 @@ class ModuleSearch extends Module
 			// Website root
 			else
 			{
-				/** @var PageModel $objPage */
 				global $objPage;
 
-				$arrPages = $this->Database->getChildRecords($objPage->rootId, 'tl_page');
+				$arrPages = $db->getChildRecords($objPage->rootId, 'tl_page');
 			}
 
 			// HOOK: add custom logic (see #5223)
@@ -130,8 +130,7 @@ class ModuleSearch extends Module
 			{
 				foreach ($GLOBALS['TL_HOOKS']['customizeSearch'] as $callback)
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($arrPages, $strKeywords, $strQueryType, $blnFuzzy, $this);
+					System::importStatic($callback[0])->{$callback[1]}($arrPages, $strKeywords, $strQueryType, $blnFuzzy, $this);
 				}
 			}
 
@@ -145,7 +144,7 @@ class ModuleSearch extends Module
 
 			try
 			{
-				$objResult = Search::query($strKeywords, ($strQueryType == 'or'), $arrPages, $blnFuzzy, $this->minKeywordLength);
+				$objResult = Search::query($strKeywords, $strQueryType == 'or', $arrPages, $blnFuzzy, $this->minKeywordLength);
 			}
 			catch (\Exception $e)
 			{
@@ -159,8 +158,7 @@ class ModuleSearch extends Module
 			// Sort out protected pages
 			if (System::getContainer()->getParameter('contao.search.index_protected'))
 			{
-				$objResult->applyFilter(static function ($v)
-				{
+				$objResult->applyFilter(static function ($v) {
 					return empty($v['protected']) || System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, StringUtil::deserialize($v['groups'] ?? null, true));
 				});
 			}
@@ -173,13 +171,13 @@ class ModuleSearch extends Module
 
 			if ($this->minKeywordLength > 0)
 			{
-				$this->Template->keywordHint = sprintf($GLOBALS['TL_LANG']['MSC']['sKeywordHint'], $this->minKeywordLength);
+				$this->Template->keywordHint = \sprintf($GLOBALS['TL_LANG']['MSC']['sKeywordHint'], $this->minKeywordLength);
 			}
 
 			// No results
 			if ($count < 1)
 			{
-				$this->Template->header = sprintf($GLOBALS['TL_LANG']['MSC']['sEmpty'], $strKeywords);
+				$this->Template->header = \sprintf($GLOBALS['TL_LANG']['MSC']['sEmpty'], $strKeywords);
 				$this->Template->duration = System::getFormattedNumber($query_endtime - $query_starttime, 3) . ' ' . $GLOBALS['TL_LANG']['MSC']['seconds'];
 
 				return;
@@ -240,7 +238,7 @@ class ModuleSearch extends Module
 				$objTemplate->link = $arrResult[$i]['title'];
 				$objTemplate->url = StringUtil::specialchars(urldecode($arrResult[$i]['url']), true, true);
 				$objTemplate->title = StringUtil::specialchars(StringUtil::stripInsertTags($arrResult[$i]['title']));
-				$objTemplate->relevance = sprintf($GLOBALS['TL_LANG']['MSC']['relevance'], number_format($arrResult[$i]['relevance'] / $arrResult[0]['relevance'] * 100, 2) . '%');
+				$objTemplate->relevance = \sprintf($GLOBALS['TL_LANG']['MSC']['relevance'], number_format($arrResult[$i]['relevance'] / $arrResult[0]['relevance'] * 100, 2) . '%');
 				$objTemplate->unit = $GLOBALS['TL_LANG']['UNITS'][1];
 
 				$arrContext = array();
@@ -251,7 +249,7 @@ class ModuleSearch extends Module
 				foreach ($arrMatches as $strWord)
 				{
 					$arrChunks = array();
-					preg_match_all('/(^|\b.{0,' . $contextLength . '}(?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}))' . preg_quote($strWord, '/') . '((?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}).{0,' . $contextLength . '}\b|$)/ui', $strText, $arrChunks);
+					preg_match_all('/(^|(?:\b|^).{0,' . $contextLength . '}(?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}))' . preg_quote($strWord, '/') . '((?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}).{0,' . $contextLength . '}(?:\b|$)|$)/ui', $strText, $arrChunks);
 
 					foreach ($arrChunks[0] as $strContext)
 					{
@@ -302,8 +300,10 @@ class ModuleSearch extends Module
 				continue;
 			}
 
+			$baseUrls = array_filter(array(Environment::get('base'), System::getContainer()->get('contao.assets.files_context')->getStaticUrl()));
+
 			$figureBuilder = System::getContainer()->get('contao.image.studio')->createFigureBuilder();
-			$figureBuilder->fromPath($v['https://schema.org/primaryImageOfPage']['contentUrl']);
+			$figureBuilder->fromUrl($v['https://schema.org/primaryImageOfPage']['contentUrl'], $baseUrls);
 
 			$figureMeta = new Metadata(array_filter(array(
 				Metadata::VALUE_CAPTION => $v['https://schema.org/primaryImageOfPage']['caption'] ?? null,

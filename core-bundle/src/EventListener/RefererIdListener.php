@@ -13,18 +13,25 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Csrf\TokenGenerator\TokenGeneratorInterface;
 
 /**
+ * The priority must be lower than the one of the Symfony route listener (defaults
+ * to 32).
+ *
  * @internal
  */
+#[AsEventListener(priority: 20)]
 class RefererIdListener
 {
     private string|null $token = null;
 
-    public function __construct(private TokenGeneratorInterface $tokenGenerator, private ScopeMatcher $scopeMatcher)
-    {
+    public function __construct(
+        private readonly TokenGeneratorInterface $tokenGenerator,
+        private readonly ScopeMatcher $scopeMatcher,
+    ) {
     }
 
     /**
@@ -39,7 +46,11 @@ class RefererIdListener
         $request = $event->getRequest();
 
         if (null === $this->token) {
-            $this->token = $this->tokenGenerator->generateToken();
+            if ($request->isXmlHttpRequest() && $request->query->has('ref')) {
+                $this->token = $request->query->get('ref');
+            } else {
+                $this->token = $this->tokenGenerator->generateToken();
+            }
         }
 
         $request->attributes->set('_contao_referer_id', $this->token);

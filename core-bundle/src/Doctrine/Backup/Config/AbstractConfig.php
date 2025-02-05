@@ -12,11 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Doctrine\Backup\Config;
 
+use Contao\ArrayUtil;
 use Contao\CoreBundle\Doctrine\Backup\Backup;
 
 abstract class AbstractConfig
 {
     private array $tablesToIgnore = [];
+
     private bool $gzCompression;
 
     public function __construct(private Backup $backup)
@@ -51,7 +53,7 @@ abstract class AbstractConfig
     public function withTablesToIgnore(array $tablesToIgnore): static
     {
         $new = clone $this;
-        $new->tablesToIgnore = $this->filterTablesToIgnore($new->tablesToIgnore, $tablesToIgnore);
+        $new->tablesToIgnore = ArrayUtil::alterListByConfig($new->tablesToIgnore, $tablesToIgnore);
 
         return $new;
     }
@@ -62,29 +64,5 @@ abstract class AbstractConfig
         $new->backup = new Backup($filename);
 
         return $new;
-    }
-
-    private function filterTablesToIgnore(array $currentTables, array $newTables): array
-    {
-        $newList = array_filter($newTables, static fn ($table) => !\in_array($table[0], ['-', '+'], true));
-
-        if ($newList) {
-            $currentTables = $newList;
-        }
-
-        foreach ($newTables as $newTable) {
-            $prefix = $newTable[0];
-            $table = substr($newTable, 1);
-
-            if ('-' === $prefix && \in_array($table, $currentTables, true)) {
-                unset($currentTables[array_search($table, $currentTables, true)]);
-            } elseif ('+' === $prefix && !\in_array($table, $currentTables, true)) {
-                $currentTables[] = $table;
-            }
-        }
-
-        sort($currentTables);
-
-        return $currentTables;
     }
 }

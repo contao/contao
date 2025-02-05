@@ -55,6 +55,7 @@
       </trans-unit>
       <trans-unit id="tl_content.overwriteMeta.1">
         <source>Overwrite the metadata of the file.</source>
+        <target>Overschrijf de metadata van het bestand.</target>
       </trans-unit>
       <trans-unit id="tl_content.singleSRC.0">
         <source>Source file</source>
@@ -165,16 +166,16 @@
         <target>Titel aan tabel toevoegen</target>
       </trans-unit>
       <trans-unit id="tl_content.thead.1">
-        <source>Make the first row of the table the table header.</source>
-        <target>De eerste rij van de tabel wordt gebruikt voor titels van de kolommen.</target>
+        <source>Make the first row the table header.</source>
+        <target>Maak de eerste rij de tabel header.</target>
       </trans-unit>
       <trans-unit id="tl_content.tfoot.0">
         <source>Add table footer</source>
         <target>Tabel footer toevoegen</target>
       </trans-unit>
       <trans-unit id="tl_content.tfoot.1">
-        <source>Make the last row of the table the table footer.</source>
-        <target>De laatste rij van de tabel wordt gebruikt als footer van de tabel.</target>
+        <source>Make the last row the table footer.</source>
+        <target>Maak de eerste rij de tabel footer.</target>
       </trans-unit>
       <trans-unit id="tl_content.tleft.0">
         <source>Use row headers</source>
@@ -319,6 +320,12 @@
       <trans-unit id="tl_content.linkTitle.1">
         <source>The link text will be displayed instead of the target URL.</source>
         <target>De titel van een link wordt getoond aan de bezoekers van uw website in plaats van de URL.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.0">
+        <source>Overwrite link</source>
+      </trans-unit>
+      <trans-unit id="tl_content.overwriteLink.1">
+        <source>Set a custom link text and link title.</source>
       </trans-unit>
       <trans-unit id="tl_content.titleText.0">
         <source>Link title</source>
@@ -629,16 +636,16 @@
         <target>Weergeven vanaf</target>
       </trans-unit>
       <trans-unit id="tl_content.start.1">
-        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Als u wilt voorkomen dat het element vóór een bepaalde datum / tijd op de website wordt weergegeven, kunt u dit hier invoeren. Laat het veld anders leeg.</target>
+        <source>If you want to prevent the element from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Als u wilt voorkomen dat het element voor een bepaalde datum/tijd op de website wordt weergegeven, kunt u dit hier invullen. Laat anders het veld leeg.</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.0">
         <source>Show until</source>
         <target>Weergeven tot</target>
       </trans-unit>
       <trans-unit id="tl_content.stop.1">
-        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Als u wilt voorkomen dat het element na een bepaalde datum / tijd op de website wordt weergegeven, kunt u dit hier invoeren. Laat het veld anders leeg.</target>
+        <source>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>If you want to prevent the element from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</target>
       </trans-unit>
       <trans-unit id="tl_content.type_legend">
         <source>Element type</source>
@@ -892,9 +899,17 @@
         <source>Edit content element ID %s</source>
         <target>Bewerk inhoudselement ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_content.toggle">
-        <source>Hide/unhide content element ID %s</source>
-        <target>Verbergen / zichtbaar maken van inhoudselement ID %s</target>
+      <trans-unit id="tl_content.toggle.0">
+        <source>Hide/unhide content element</source>
+        <target>Verberg/toon content element</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.1">
+        <source>Hide content element ID %s</source>
+        <target>Verberg content element ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.2">
+        <source>Unhide content element ID %s</source>
+        <target>Toon content element ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>

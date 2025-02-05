@@ -85,7 +85,6 @@ class ModuleNewsArchive extends ModuleNews
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$limit = null;
@@ -146,7 +145,6 @@ class ModuleNewsArchive extends ModuleNews
 			}
 			elseif ($this->news_jumpToCurrent == 'all_items')
 			{
-				$intBegin = 0; // 1970-01-01 00:00:00
 				$intEnd = min(4294967295, PHP_INT_MAX); // 2106-02-07 07:28:15
 			}
 		}

@@ -29,7 +29,6 @@ class BackendConfirm extends Backend
 	 */
 	public function __construct()
 	{
-		$this->import(BackendUser::class, 'User');
 		parent::__construct();
 
 		if (!System::getContainer()->get('security.authorization_checker')->isGranted('ROLE_USER'))
@@ -50,6 +49,11 @@ class BackendConfirm extends Backend
 	{
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 
+		if (!$objSession->has('INVALID_TOKEN_URL'))
+		{
+			$this->redirect(System::getContainer()->get('router')->generate('contao_backend'));
+		}
+
 		// Redirect to the back end home page
 		if (Input::post('FORM_SUBMIT') == 'invalid_token_url')
 		{
@@ -61,7 +65,7 @@ class BackendConfirm extends Backend
 
 		// Prepare the URL
 		$url = preg_replace('/[?&]rt=[^&]*/', '', $objSession->get('INVALID_TOKEN_URL'));
-		$objTemplate->href = StringUtil::ampersand($url . ((strpos($url, '?') !== false) ? '&rt=' : '?rt=') . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()));
+		$objTemplate->href = StringUtil::ampersand($url . (str_contains($url, '?') ? '&rt=' : '?rt=') . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5));
 
 		$vars = array();
 		list(, $request) = explode('?', $url, 2);
@@ -71,6 +75,12 @@ class BackendConfirm extends Backend
 		{
 			list($key, $value) = explode('=', $arg, 2);
 			$vars[$key] = $value;
+		}
+
+		// A valid back end request must point to a back end module
+		if (empty($vars['do']))
+		{
+			$this->redirect(System::getContainer()->get('router')->generate('contao_backend'));
 		}
 
 		$arrInfo = array();
@@ -85,7 +95,7 @@ class BackendConfirm extends Backend
 					break;
 
 				case 'do':
-					$arrInfo['do'] = $GLOBALS['TL_LANG']['MOD'][$v][0];
+					$arrInfo['do'] = $GLOBALS['TL_LANG']['MOD'][$v][0] ?? $v;
 					break;
 
 				case 'id':
@@ -107,7 +117,10 @@ class BackendConfirm extends Backend
 			}
 		}
 
-		System::loadLanguageFile($arrInfo['table']);
+		if (!empty($arrInfo['table']))
+		{
+			System::loadLanguageFile($arrInfo['table']);
+		}
 
 		// Override the action label
 		if (isset($arrInfo['clipboard']))
@@ -131,13 +144,13 @@ class BackendConfirm extends Backend
 		}
 		elseif (!empty($GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']]))
 		{
-			$arrInfo['act'] = \is_array($GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']] ?? null) ? $GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']][0] : ($GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']] ?? null);
+			$arrInfo['act'] = \is_array($GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']]) ? $GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']][0] : $GLOBALS['TL_LANG'][$arrInfo['table']][$arrInfo['act']];
 		}
 
 		// Replace the ID wildcard
-		if (strpos($arrInfo['act'], '%s') !== false)
+		if (str_contains($arrInfo['act'], '%s'))
 		{
-			$arrInfo['act'] = sprintf($arrInfo['act'], $vars['id']);
+			$arrInfo['act'] = \sprintf($arrInfo['act'], $vars['id']);
 		}
 
 		unset($arrInfo['pid'], $arrInfo['clipboard'], $arrInfo['ref'], $arrInfo['mode']);

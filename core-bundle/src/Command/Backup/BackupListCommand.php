@@ -21,14 +21,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'contao:backup:list',
-    description: 'Lists the existing database backups.'
+    description: 'Lists the existing database backups.',
 )]
 class BackupListCommand extends AbstractBackupCommand
 {
     public static function getFormattedTimeZoneOffset(\DateTimeZone $timeZone): string
     {
         $offset = $timeZone->getOffset(new \DateTime('now', new \DateTimeZone('UTC'))) / 3600;
-        $formatted = str_pad(str_replace(['.', '-', '+'], [':', '', ''], sprintf('%05.2F', $offset)), 5, '0', STR_PAD_LEFT);
+        $formatted = str_pad(str_replace(['.', '-', '+'], [':', '', ''], \sprintf('%05.2F', $offset)), 5, '0', STR_PAD_LEFT);
 
         return ($offset >= 0 ? '+' : '-').$formatted;
     }
@@ -46,8 +46,8 @@ class BackupListCommand extends AbstractBackupCommand
         $timeZone = new \DateTimeZone(date_default_timezone_get());
 
         $io->table(
-            [sprintf('Created (%s)', self::getFormattedTimeZoneOffset($timeZone)), 'Size', 'Name'],
-            $this->formatForTable($this->backupManager->listBackups(), $timeZone)
+            [\sprintf('Created (%s)', self::getFormattedTimeZoneOffset($timeZone)), 'Size', 'Name'],
+            $this->formatForTable($this->backupManager->listBackups(), $timeZone),
         );
 
         return Command::SUCCESS;
@@ -85,7 +85,7 @@ class BackupListCommand extends AbstractBackupCommand
             $json[] = $backup->toArray();
         }
 
-        return json_encode($json);
+        return json_encode($json, JSON_THROW_ON_ERROR);
     }
 
     /**

@@ -17,13 +17,14 @@ class SubscriberResult
     private string|null $warning = null;
 
     /**
-     * Mixed custom info. Must be serializable, so
-     * it can be transported between requests.
+     * Mixed custom info. Must be serializable, so it can be transported between requests.
      */
     private array $info = [];
 
-    public function __construct(private bool $wasSuccessful, private string $summary)
-    {
+    public function __construct(
+        private readonly bool $wasSuccessful,
+        private readonly string $summary,
+    ) {
     }
 
     public function wasSuccessful(): bool

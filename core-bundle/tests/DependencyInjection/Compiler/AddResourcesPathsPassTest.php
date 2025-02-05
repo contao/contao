@@ -54,12 +54,12 @@ class AddResourcesPathsPassTest extends TestCase
 
         $this->assertSame(
             [
-                $testPath.'/Resources/contao',
-                $newPath.'/contao',
-                $fixturesDir.'/system/modules/foobar',
-                $fixturesDir.'/contao',
+                'ContaoTestBundle' => $testPath.'/Resources/contao',
+                'ContaoNewBundle' => $newPath.'/contao',
+                'foobar' => $fixturesDir.'/system/modules/foobar',
+                'App' => $fixturesDir.'/contao',
             ],
-            $container->getParameter('contao.resources_paths')
+            $container->getParameter('contao.resources_paths'),
         );
     }
 }

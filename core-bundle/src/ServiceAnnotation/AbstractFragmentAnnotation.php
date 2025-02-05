@@ -16,7 +16,7 @@ use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
 
 abstract class AbstractFragmentAnnotation implements ServiceTagInterface
 {
-    private array $attributes;
+    private readonly array $attributes;
 
     public function __construct(array $attributes)
     {

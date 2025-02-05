@@ -17,22 +17,6 @@
         <source>Here you can define the news archive permissions.</source>
         <target>Вы можете задать разрешения архива новостей.</target>
       </trans-unit>
-      <trans-unit id="tl_user.newsfeeds.0">
-        <source>Allowed news feeds</source>
-        <target>Разрешенные каналы новостей</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeeds.1">
-        <source>Here you can grant access to one or more news feeds.</source>
-        <target>Вы можете предоставить доступ к одному или нескольким каналам новостей.</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeedp.0">
-        <source>News feed permissions</source>
-        <target>Разрешения каналов новостей</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeedp.1">
-        <source>Here you can define the news feed permissions.</source>
-        <target>Вы можете задать разрешения канала новостей.</target>
-      </trans-unit>
       <trans-unit id="tl_user.news_legend">
         <source>News permissions</source>
         <target>Разрешения новостей</target>

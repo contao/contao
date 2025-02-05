@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Filesystem;
 
+use Contao\CoreBundle\File\Metadata;
 use League\Flysystem\FileAttributes;
 use League\Flysystem\StorageAttributes;
 use Symfony\Component\Filesystem\Path;
@@ -23,18 +24,19 @@ use Symfony\Component\Uid\Uuid;
 class FilesystemItem implements \Stringable
 {
     /**
-     * @param int|(\Closure(self):int|null)|null                       $lastModified
-     * @param int|\Closure(self):int|null                              $fileSize
-     * @param string|\Closure(self):string|null                        $mimeType
-     * @param array<string, mixed>|\Closure(self):array<string, mixed> $extraMetadata
+     * @param int|(\Closure(self):int|null)|null              $lastModified
+     * @param int|\Closure(self):int|null                     $fileSize
+     * @param string|\Closure(self):string|null               $mimeType
+     * @param ExtraMetadata|\Closure(self):ExtraMetadata|null $extraMetadata
      */
     public function __construct(
-        private bool $isFile,
-        private string $path,
+        private readonly bool $isFile,
+        private readonly string $path,
         private \Closure|int|null $lastModified = null,
         private \Closure|int|null $fileSize = null,
         private \Closure|string|null $mimeType = null,
-        private \Closure|array $extraMetadata = [],
+        private \Closure|ExtraMetadata|null $extraMetadata = null,
+        private readonly VirtualFilesystemInterface|null $storage = null,
     ) {
     }
 
@@ -57,7 +59,7 @@ class FilesystemItem implements \Stringable
                 $attributes->lastModified(),
                 $attributes->fileSize(),
                 $attributes->mimeType(),
-                $attributes->extraMetadata()
+                new ExtraMetadata($attributes->extraMetadata()),
             );
         }
 
@@ -65,9 +67,9 @@ class FilesystemItem implements \Stringable
     }
 
     /**
-     * @param array<string, mixed>|\Closure(self):array<string, mixed> $extraMetadata
+     * @param ExtraMetadata|\Closure(self):ExtraMetadata $extraMetadata
      */
-    public function withExtraMetadata(array|callable $extraMetadata): self
+    public function withExtraMetadata(ExtraMetadata|callable $extraMetadata): self
     {
         return new self(
             $this->isFile,
@@ -81,8 +83,8 @@ class FilesystemItem implements \Stringable
 
     /**
      * @param int|(\Closure(self):int|null)|null $lastModified
-     * @param int|\Closure(self):int|null $fileSize
-     * @param string|\Closure(self):string|null $mimeType
+     * @param int|\Closure(self):int|null        $fileSize
+     * @param string|\Closure(self):string|null  $mimeType
      */
     public function withMetadataIfNotDefined(\Closure|int|null $lastModified, \Closure|int|null $fileSize, \Closure|string|null $mimeType): self
     {
@@ -93,6 +95,7 @@ class FilesystemItem implements \Stringable
             $this->fileSize ?? $fileSize,
             $this->mimeType ?? $mimeType,
             $this->extraMetadata,
+            $this->storage,
         );
     }
 
@@ -105,7 +108,29 @@ class FilesystemItem implements \Stringable
             $this->fileSize,
             $this->mimeType,
             $this->extraMetadata,
+            $this->storage,
         );
+    }
+
+    public function withStorage(VirtualFilesystemInterface $storage): self
+    {
+        return new self(
+            $this->isFile,
+            $this->path,
+            $this->lastModified,
+            $this->fileSize,
+            $this->mimeType,
+            $this->extraMetadata,
+            $storage,
+        );
+    }
+
+    /**
+     * @internal
+     */
+    public function getStorage(): VirtualFilesystemInterface
+    {
+        return $this->storage ?? throw new \RuntimeException('No storage was set for this filesystem item.');
     }
 
     public function isFile(): bool
@@ -116,6 +141,60 @@ class FilesystemItem implements \Stringable
     public function getPath(): string
     {
         return $this->path;
+    }
+
+    public function isVideo(): bool
+    {
+        if (!$this->isFile()) {
+            return false;
+        }
+
+        return str_starts_with($this->getMimeType(''), 'video/');
+    }
+
+    public function isAudio(): bool
+    {
+        if (!$this->isFile()) {
+            return false;
+        }
+
+        return str_starts_with($this->getMimeType(''), 'audio/');
+    }
+
+    public function isImage(): bool
+    {
+        if (!$this->isFile()) {
+            return false;
+        }
+
+        return str_starts_with($this->getMimeType(''), 'image/');
+    }
+
+    public function isPdf(): bool
+    {
+        if (!$this->isFile()) {
+            return false;
+        }
+
+        return 'application/pdf' === $this->getMimeType('');
+    }
+
+    public function isSpreadsheet(): bool
+    {
+        if (!$this->isFile()) {
+            return false;
+        }
+
+        return \in_array(
+            $this->getMimeType(''),
+            [
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'application/vnd.ms-excel',
+                'application/msexcel',
+                'application/x-msexcel',
+            ],
+            true,
+        );
     }
 
     public function getExtension(bool $forceLowerCase = false): string
@@ -143,7 +222,7 @@ class FilesystemItem implements \Stringable
         return $this->fileSize ?? 0;
     }
 
-    public function getMimeType(string $default = null): string
+    public function getMimeType(string|null $default = null): string
     {
         $this->assertIsFile(__FUNCTION__);
         $exception = null;
@@ -162,11 +241,11 @@ class FilesystemItem implements \Stringable
         return $this->mimeType ?? $default;
     }
 
-    public function getExtraMetadata(): array
+    public function getExtraMetadata(): ExtraMetadata
     {
         $this->resolveIfClosure($this->extraMetadata);
 
-        return $this->extraMetadata;
+        return $this->extraMetadata ?? new ExtraMetadata();
     }
 
     public function getUuid(): Uuid|null
@@ -174,10 +253,48 @@ class FilesystemItem implements \Stringable
         return $this->getExtraMetadata()['uuid'] ?? null;
     }
 
+    public function getSchemaOrgData(): array
+    {
+        $fileIdentifier = $this->getPath();
+
+        if ($this->getUuid()) {
+            $fileIdentifier = '#/schema/file/'.$this->getUuid();
+        }
+
+        $type = match (true) {
+            $this->isVideo() => 'VideoObject',
+            $this->isAudio() => 'AudioObject',
+            $this->isImage() => 'ImageObject',
+            $this->isPdf() => 'DigitalDocument',
+            $this->isSpreadsheet() => 'SpreadsheetDigitalDocument',
+            default => 'MediaObject',
+        };
+
+        $jsonLd = array_filter([
+            '@type' => $type,
+            'identifier' => $fileIdentifier,
+            'contentUrl' => $this->getPath(),
+            'encodingFormat' => $this->getMimeType(''),
+        ]);
+
+        if ($this->getMetaData()) {
+            $jsonLd = [...$this->getMetaData()->getSchemaOrgData($type), ...$jsonLd];
+        }
+
+        ksort($jsonLd);
+
+        return $jsonLd;
+    }
+
+    private function getMetaData(): Metadata|null
+    {
+        return $this->getExtraMetadata()->getLocalized()?->getDefault();
+    }
+
     private function assertIsFile(string $method): void
     {
         if (!$this->isFile) {
-            throw new \LogicException(sprintf('Cannot call %s() on a non-file filesystem item.', $method));
+            throw new \LogicException(\sprintf('Cannot call %s() on a non-file filesystem item.', $method));
         }
     }
 

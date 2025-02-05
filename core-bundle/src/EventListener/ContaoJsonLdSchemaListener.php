@@ -16,11 +16,13 @@ use Contao\CoreBundle\Event\JsonLdEvent;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
 /**
- * Updates the schema.contao.org schema before rendering it
- * with the current data from the HtmlHeadBag.
+ * Updates the schema.contao.org schema before rendering it with the current data
+ * from the HtmlHeadBag.
  */
+#[AsEventListener]
 class ContaoJsonLdSchemaListener
 {
     public function __invoke(JsonLdEvent $event): void
@@ -31,17 +33,14 @@ class ContaoJsonLdSchemaListener
             return;
         }
 
-        /** @var JsonLdManager $jsonLdManager */
         $jsonLdManager = $responseContext->get(JsonLdManager::class);
 
         if (!$jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->has(ContaoPageSchema::class)) {
             return;
         }
 
-        /** @var HtmlHeadBag $htmlHeadBag */
         $htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 
-        /** @var ContaoPageSchema $schema */
         $schema = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
         $schema->updateFromHtmlHeadBag($htmlHeadBag);
     }

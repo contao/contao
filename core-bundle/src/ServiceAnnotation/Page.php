@@ -17,22 +17,33 @@ use Symfony\Component\Routing\Annotation\Route;
 use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
 
 /**
- * Annotation class for @Page().
+ * Annotation to register a page.
  *
  * @Annotation
+ *
  * @Target({"CLASS", "METHOD"})
  *
  * @see Route
+ *
+ * @deprecated Deprecated since Contao 5.4, to be removed in Contao 6;
+ *             use the #[AsPage] attribute instead
  */
 final class Page implements ServiceTagInterface
 {
     private string|null $type = null;
+
     private bool $contentComposition = true;
+
     private string|null $urlSuffix = null;
+
     private array $requirements = [];
+
     private array $options = [];
+
     private array $defaults = [];
+
     private array $methods = [];
+
     private bool|string|null $path = null;
 
     public function __construct(array $data)
@@ -61,7 +72,7 @@ final class Page implements ServiceTagInterface
             $method = 'set'.str_replace('_', '', $key);
 
             if (!method_exists($this, $method)) {
-                throw new \BadMethodCallException(sprintf('Unknown property "%s" on annotation "%s".', $key, self::class));
+                throw new \BadMethodCallException(\sprintf('Unknown property "%s" on annotation "%s".', $key, self::class));
             }
 
             $this->$method($value);
@@ -70,6 +81,8 @@ final class Page implements ServiceTagInterface
 
     public function getName(): string
     {
+        trigger_deprecation('contao/core-bundle', '5.4', 'Using the @Page annotation has been deprecated and will no longer work in Contao 6. Use the #[AsPage] attribute instead.');
+
         return 'contao.page';
     }
 

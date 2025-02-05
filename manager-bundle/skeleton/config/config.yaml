@@ -1,5 +1,4 @@
 imports:
-    - { resource: parameters.yaml }
     - { resource: security.yaml }
 
 # Put parameters here that don't need to change on each machine where the app is deployed
@@ -24,7 +23,14 @@ framework:
     session:
         handler_id: ~
         cookie_secure: auto
+        cookie_samesite: lax
     fragments: { path: /_fragment }
+    php_errors:
+        log: true
+    uid:
+        default_uuid_version: 7
+        time_based_uuid_version: 7
+    handle_all_throwables: true
     cache:
         pools:
             doctrine.result_cache_pool:
@@ -41,14 +47,11 @@ framework:
         transports:
             sync: sync://
             contao_failure: doctrine://default?table_name=tl_message_queue&queue_name=failure&auto_setup=false
-            contao_prio_high: contao-auto-fallback://contao_prio_high?target=contao_prio_high_doctrine&fallback=sync
-            contao_prio_normal: contao-auto-fallback://contao_prio_normal?target=contao_prio_normal_doctrine&fallback=sync
-            contao_prio_low: contao-auto-fallback://contao_prio_low?target=contao_prio_low_doctrine&fallback=sync
-            contao_prio_high_doctrine: doctrine://default?table_name=tl_message_queue&queue_name=prio_high&auto_setup=false
-            contao_prio_normal_doctrine: doctrine://default?table_name=tl_message_queue&queue_name=prio_normal&auto_setup=false
-            contao_prio_low_doctrine: doctrine://default?table_name=tl_message_queue&queue_name=prio_low&auto_setup=false
+            contao_prio_high: doctrine://default?table_name=tl_message_queue&queue_name=prio_high&auto_setup=false
+            contao_prio_normal: doctrine://default?table_name=tl_message_queue&queue_name=prio_normal&auto_setup=false
+            contao_prio_low: doctrine://default?table_name=tl_message_queue&queue_name=prio_low&auto_setup=false
         routing:
-            'Symfony\Component\Mailer\Messenger\SendEmailMessage': contao_prio_low
+            'Symfony\Component\Mailer\Messenger\SendEmailMessage': contao_prio_high
             'Contao\CoreBundle\Messenger\Message\HighPriorityMessageInterface': contao_prio_high
             'Contao\CoreBundle\Messenger\Message\NormalPriorityMessageInterface': contao_prio_normal
             'Contao\CoreBundle\Messenger\Message\LowPriorityMessageInterface': contao_prio_low
@@ -57,7 +60,11 @@ framework:
 contao:
     preview_script: /preview.php
     messenger:
-        console_path: '%kernel.project_dir%/vendor/bin/contao-console'
+        web_worker:
+            transports:
+                - contao_prio_high
+                - contao_prio_normal
+                - contao_prio_low
         workers:
             -
                 transports:
@@ -112,6 +119,7 @@ doctrine:
     orm:
         auto_mapping: true
         auto_generate_proxy_classes: false
+        enable_lazy_ghost_objects: true
         naming_strategy: doctrine.orm.naming_strategy.default
         metadata_cache_driver:
             type: pool
@@ -145,8 +153,6 @@ fos_http_cache:
         enabled: true
     tags:
         enabled: true
-        annotations:
-            enabled: false
         max_header_value_length: 4096
 
 # Scheb 2FA configuration
@@ -157,3 +163,28 @@ scheb_two_factor:
     backup_codes:
         enabled: true
         manager: contao.security.two_factor.backup_code_manager
+
+# Webauthn configuration
+webauthn:
+    logger: logger
+    credential_repository: contao.repository.webauthn_credential
+    user_repository: contao.repository.webauthn_user_entity
+    creation_profiles:
+        contao_backend:
+            rp:
+                name: Contao Open Source CMS
+            authenticator_selection_criteria:
+                require_resident_key: true
+                user_verification: !php/const Webauthn\AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED
+                resident_key: !php/const Webauthn\AuthenticatorSelectionCriteria::RESIDENT_KEY_REQUIREMENT_REQUIRED
+    request_profiles:
+        contao_backend:
+            user_verification: !php/const Webauthn\AuthenticatorSelectionCriteria::USER_VERIFICATION_REQUIREMENT_REQUIRED
+    controllers:
+        enabled: true
+        creation:
+            contao_backend_add_authenticator:
+                options_path: '%contao.backend.route_prefix%/webauthn/add/options'
+                result_path: '%contao.backend.route_prefix%/webauthn/add/result'
+                user_entity_guesser: Webauthn\Bundle\Security\Guesser\CurrentUserEntityGuesser
+                profile: contao_backend

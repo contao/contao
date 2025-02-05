@@ -26,10 +26,13 @@ use Symfony\Contracts\Translation\LocaleAwareInterface;
  */
 class LocaleSubscriber implements EventSubscriberInterface
 {
-    private array $availableLocales;
+    private readonly array $availableLocales;
 
-    public function __construct(private LocaleAwareInterface $translator, private ScopeMatcher $scopeMatcher, Locales $locales)
-    {
+    public function __construct(
+        private readonly LocaleAwareInterface $translator,
+        private readonly ScopeMatcher $scopeMatcher,
+        Locales $locales,
+    ) {
         $this->availableLocales = $locales->getEnabledLocaleIds();
     }
 
@@ -58,8 +61,8 @@ class LocaleSubscriber implements EventSubscriberInterface
     {
         return [
             KernelEvents::REQUEST => [
-                // The priority must be lower than the one of the Symfony route listener (defaults to 32)
-                // and higher than the Symfony locale listener (defaults to 16)
+                // The priority must be lower than the one of the Symfony route listener
+                // (defaults to 32) and higher than the Symfony locale listener (defaults to 16)
                 ['onKernelRequest', 20],
                 ['setTranslatorLocale', 100],
             ],

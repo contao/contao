@@ -27,16 +27,16 @@ class ContentAlias extends ContentElement
 			return '';
 		}
 
-		if (!$objElement = ContentModel::findByPk($this->cteAlias))
+		if (!$objElement = ContentModel::findById($this->cteAlias))
 		{
 			return '';
 		}
 
 		// Tag the included element (see #5248)
-		System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($objElement);
+		System::getContainer()->get('contao.cache.tag_manager')->tagWithModelInstance($objElement);
 
 		// Clone the model, so we do not modify the shared model in the registry
-		$objModel = $objElement->cloneOriginal();
+		$objModel = $objElement->cloneDetached();
 		$objModel->origId = $objModel->origId ?: $objModel->id;
 		$objModel->id = $this->id;
 

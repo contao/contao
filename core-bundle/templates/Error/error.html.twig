@@ -1,14 +1,8 @@
-{% trans_default_domain 'contao_exception' %}
-{% extends "@ContaoCore/Error/layout.html.twig" %}
-{% block title %}
-    {{ 'XPT.error'|trans }}
-{% endblock %}
-{% block matter %}
-    <p>{{ 'XPT.errorOccurred'|trans }}</p>
-{% endblock %}
-{% block howToFix %}
-    <p>{{ 'XPT.errorFixOne'|trans|raw }}</p>
-{% endblock %}
-{% block explain %}
-    <p>{{ 'XPT.errorExplain'|trans|raw }}</p>
-{% endblock %}
+{% extends "@Contao/error/general.html.twig" %}
+
+{#
+    ! DEPRECATED !
+
+    The "@ContaoCore/error/error.html.twig" template will be removed in Contao 6.
+    Use the "@Contao/error/general.html.twig" template from the @Contao namespace instead.
+#}

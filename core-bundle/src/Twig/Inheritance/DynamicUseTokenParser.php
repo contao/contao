@@ -13,16 +13,20 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Inheritance;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Twig\Error\SyntaxError;
+use Twig\Node\EmptyNode;
+use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 use Twig\TokenParser\UseTokenParser;
 
 /**
- * This parser is a drop in replacement for the UseTokenParser
- * that adds support for the Contao template hierarchy.
+ * This parser is a drop in replacement for the UseTokenParser that adds support
+ * for the Contao template hierarchy.
  *
  * @see UseTokenParser
  *
@@ -30,20 +34,18 @@ use Twig\TokenParser\UseTokenParser;
  */
 final class DynamicUseTokenParser extends AbstractTokenParser
 {
-    public function __construct(private TemplateHierarchyInterface $hierarchy)
+    public function __construct(private readonly ContaoFilesystemLoader $filesystemLoader)
     {
     }
 
     public function parse(Token $token): Node
     {
-        $template = $this->parser->getExpressionParser()->parseExpression();
+        $templateExpression = $this->parser->getExpressionParser()->parseExpression();
         $stream = $this->parser->getStream();
 
-        if (!$template instanceof ConstantExpression) {
+        if (!$templateExpression instanceof ConstantExpression) {
             throw new SyntaxError('The template references in a "use" statement must be a string.', $stream->getCurrent()->getLine(), $stream->getSourceContext());
         }
-
-        $this->adjustTemplateName($stream->getSourceContext()->getPath(), $template);
 
         $targets = [];
 
@@ -66,9 +68,13 @@ final class DynamicUseTokenParser extends AbstractTokenParser
 
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        $this->parser->addTrait(new Node(['template' => $template, 'targets' => new Node($targets)]));
+        if ($contaoTemplateExpression = $this->getContaoTemplateExpression($stream->getSourceContext()->getPath(), $templateExpression)) {
+            $templateExpression = $contaoTemplateExpression;
+        }
 
-        return new Node();
+        $this->parser->addTrait(new Nodes(['template' => $templateExpression, 'targets' => new Nodes($targets)]));
+
+        return new EmptyNode($token->getLine());
     }
 
     public function getTag(): string
@@ -76,17 +82,16 @@ final class DynamicUseTokenParser extends AbstractTokenParser
         return 'use';
     }
 
-    private function adjustTemplateName(string $sourcePath, ConstantExpression $node): void
+    private function getContaoTemplateExpression(string $sourcePath, ConstantExpression $name): AbstractExpression|null
     {
-        $parts = ContaoTwigUtil::parseContaoName((string) $node->getAttribute('value'));
+        $parts = ContaoTwigUtil::parseContaoName((string) $name->getAttribute('value'));
 
         if ('Contao' !== ($parts[0] ?? null)) {
-            return;
+            return null;
         }
 
-        $nextOrFirst = $this->hierarchy->getDynamicParent($parts[1] ?? '', $sourcePath);
-
-        // Adjust parent template according to the template hierarchy
-        $node->setAttribute('value', $nextOrFirst);
+        return new RuntimeThemeDependentExpression(
+            $this->filesystemLoader->getAllDynamicParentsByThemeSlug($parts[1] ?? '', $sourcePath),
+        );
     }
 }

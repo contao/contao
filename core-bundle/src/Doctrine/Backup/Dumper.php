@@ -22,6 +22,8 @@ use Doctrine\DBAL\Schema\Table;
 
 class Dumper implements DumperInterface
 {
+    private array $quoteCache = [];
+
     public function dump(Connection $connection, CreateConfig $config): \Generator
     {
         try {
@@ -32,10 +34,12 @@ class Dumper implements DumperInterface
             }
 
             throw new BackupManagerException($exception->getMessage(), 0, $exception);
+        } finally {
+            $this->quoteCache = [];
         }
     }
 
-    public function doDump(Connection $connection, CreateConfig $config): \Generator
+    private function doDump(Connection $connection, CreateConfig $config): \Generator
     {
         yield 'SET FOREIGN_KEY_CHECKS = 0;';
 
@@ -76,20 +80,20 @@ class Dumper implements DumperInterface
     }
 
     /**
-     * @phpstan-param AbstractSchemaManager<AbstractPlatform> $schemaManager
+     * @param AbstractSchemaManager<AbstractPlatform> $schemaManager
      */
     private function dumpViews(AbstractSchemaManager $schemaManager, AbstractPlatform $platform): \Generator
     {
         foreach ($schemaManager->listViews() as $view) {
-            yield sprintf('-- BEGIN VIEW %s', $view->getName());
-            yield sprintf('CREATE OR REPLACE VIEW %s AS %s;', $view->getQuotedName($platform), $view->getSql());
+            yield \sprintf('-- BEGIN VIEW %s', $view->getName());
+            yield \sprintf('CREATE OR REPLACE VIEW %s AS %s;', $view->getQuotedName($platform), $view->getSql());
         }
     }
 
     private function dumpSchema(AbstractPlatform $platform, Table $table): \Generator
     {
-        yield sprintf('-- BEGIN STRUCTURE %s', $table->getName());
-        yield sprintf('DROP TABLE IF EXISTS `%s`;', $table->getName());
+        yield \sprintf('-- BEGIN STRUCTURE %s', $table->getName());
+        yield \sprintf('DROP TABLE IF EXISTS `%s`;', $table->getName());
 
         foreach ($platform->getCreateTableSQL($table) as $statement) {
             yield $statement.';';
@@ -98,7 +102,7 @@ class Dumper implements DumperInterface
 
     private function dumpData(Connection $connection, Table $table): \Generator
     {
-        yield sprintf('-- BEGIN DATA %s', $table->getName());
+        yield \sprintf('-- BEGIN DATA %s', $table->getName());
 
         $values = [];
         $columnBindingTypes = [];
@@ -127,7 +131,7 @@ class Dumper implements DumperInterface
                     $value,
                     $columnBindingTypes[$columnName],
                     $columnUtf8Charsets[$columnName],
-                    $connection
+                    $connection,
                 );
             }
 
@@ -160,7 +164,16 @@ class Dumper implements DumperInterface
             return '0x'.bin2hex($value);
         }
 
-        return $connection->quote($value);
+        if (isset($this->quoteCache[$value])) {
+            return $this->quoteCache[$value];
+        }
+
+        // Prevent the in-memory cache from growing forever on big databases
+        if (\count($this->quoteCache) >= 100000) {
+            $this->quoteCache = [];
+        }
+
+        return $this->quoteCache[$value] = $connection->quote($value);
     }
 
     /**
@@ -180,6 +193,8 @@ class Dumper implements DumperInterface
 
             $filteredTables[] = $table;
         }
+
+        sort($filteredTables);
 
         return $filteredTables;
     }

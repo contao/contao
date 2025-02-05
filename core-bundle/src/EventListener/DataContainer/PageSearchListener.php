@@ -23,8 +23,10 @@ use Doctrine\DBAL\Connection;
  */
 class PageSearchListener
 {
-    public function __construct(private ContaoFramework $framework, private Connection $connection)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly Connection $connection,
+    ) {
     }
 
     #[AsCallback(table: 'tl_page', target: 'fields.alias.save')]
@@ -77,7 +79,7 @@ class PageSearchListener
     {
         $urls = $this->connection->fetchFirstColumn(
             'SELECT url FROM tl_search WHERE pid=:pageId',
-            ['pageId' => $pageId]
+            ['pageId' => $pageId],
         );
 
         $search = $this->framework->getAdapter(Search::class);

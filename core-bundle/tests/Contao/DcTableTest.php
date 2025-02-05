@@ -19,7 +19,7 @@ use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 class DcTableTest extends TestCase
 {
@@ -36,6 +36,7 @@ class DcTableTest extends TestCase
 
     /**
      * @group legacy
+     *
      * @dataProvider getPalette
      */
     public function testGetPalette(array $dca, array $row, string $expected): void
@@ -84,7 +85,7 @@ class DcTableTest extends TestCase
         $this->assertSame($expected, $dataContainer->getPalette());
     }
 
-    public function getPalette(): \Generator
+    public static function getPalette(): iterable
     {
         yield [
             [

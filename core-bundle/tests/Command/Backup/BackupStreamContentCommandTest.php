@@ -37,7 +37,7 @@ class BackupStreamContentCommandTest extends TestCase
 
         $this->vfs = new VirtualFilesystem(
             (new MountManager())->mount(new InMemoryFilesystemAdapter()),
-            $this->createMock(DbafsManager::class)
+            $this->createMock(DbafsManager::class),
         );
     }
 
@@ -73,7 +73,7 @@ class BackupStreamContentCommandTest extends TestCase
             $this->createMock(DumperInterface::class),
             $this->vfs,
             [],
-            $this->createMock(RetentionPolicyInterface::class)
+            $this->createMock(RetentionPolicyInterface::class),
         );
 
         $command = new BackupStreamContentCommand($backupManager);

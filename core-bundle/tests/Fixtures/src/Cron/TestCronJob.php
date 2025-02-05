@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Fixtures\Cron;
 
+use Contao\CoreBundle\Exception\CronExecutionSkippedException;
 use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
 
@@ -44,5 +45,15 @@ class TestCronJob
     public function asyncMethod(): PromiseInterface|null
     {
         return $promise = new Promise(static function () use (&$promise): void { $promise->resolve('promise'); });
+    }
+
+    public function skippingMethod(): never
+    {
+        throw new CronExecutionSkippedException();
+    }
+
+    public function skippingAsyncMethod(): PromiseInterface
+    {
+        return new Promise(static function (): never { throw new CronExecutionSkippedException(); });
     }
 }

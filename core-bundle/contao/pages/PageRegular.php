@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Exception\NoLayoutSpecifiedException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
@@ -47,6 +48,9 @@ class PageRegular extends Frontend
 
 		$response = $this->Template->getResponse($blnCheckRequest);
 
+		// Allow subrequests on this controller (fragments) to dynamically influence the Cache-Control header
+		$response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, true);
+
 		// Finalize the response context so it cannot be used anymore
 		System::getContainer()->get('contao.routing.response_context_accessor')->finalizeCurrentContext($response);
 
@@ -71,16 +75,19 @@ class PageRegular extends Frontend
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$request->setLocale($locale);
 
-		$this->responseContext = $container->get('contao.routing.response_context_factory')->createContaoWebpageResponseContext($objPage);
+		$responseContextAccessor = System::getContainer()->get('contao.routing.response_context_accessor');
+
+		if (!$this->responseContext = $responseContextAccessor->getResponseContext())
+		{
+			$this->responseContext = $container->get('contao.routing.response_context_factory')->createContaoWebpageResponseContext($objPage);
+		}
+
 		$blnShowUnpublished = $container->get('contao.security.token_checker')->isPreviewMode();
 
 		System::loadLanguageFile('default');
 
 		// Get the page layout
 		$objLayout = $this->getPageLayout($objPage);
-
-		/** @var ThemeModel $objTheme */
-		$objTheme = $objLayout->getRelated('pid');
 
 		// Set the default image densities
 		$container->get('contao.image.picture_factory')->setDefaultDensities($objLayout->defaultImageDensities);
@@ -91,7 +98,12 @@ class PageRegular extends Frontend
 
 		// Set the layout template and template group
 		$objPage->template = $objLayout->template ?: 'fe_page';
-		$objPage->templateGroup = $objTheme->templates ?? null;
+		$objPage->templateGroup = null;
+
+		if ($objTheme = ThemeModel::findById($objLayout->pid))
+		{
+			$objPage->templateGroup = $objTheme->templates;
+		}
 
 		// Minify the markup
 		$objPage->minifyMarkup = $objLayout->minifyMarkup;
@@ -104,29 +116,47 @@ class PageRegular extends Frontend
 		$arrSections = array('header', 'left', 'right', 'main', 'footer');
 		$arrModules = StringUtil::deserialize($objLayout->modules);
 		$arrModuleIds = array();
+		$arrElementIds = array();
 
 		// Filter the disabled modules
 		foreach ($arrModules as $module)
 		{
 			if ($module['enable'] ?? null)
 			{
-				$arrModuleIds[] = (int) $module['mod'];
+				if (str_starts_with((string) $module['mod'], 'content-'))
+				{
+					$arrElementIds[] = (int) str_replace('content-', '', (string) $module['mod']);
+				}
+				else
+				{
+					$arrModuleIds[] = (int) $module['mod'];
+				}
 			}
 		}
 
-		// Get all modules in a single DB query
+		// Get all modules and elements in a single DB query each
 		$objModules = ModuleModel::findMultipleByIds($arrModuleIds);
+		$objElements = ContentModel::findMultipleByIds($arrElementIds);
 
-		if ($objModules !== null || \in_array(0, $arrModuleIds, true))
+		if ($objModules !== null || $objElements !== null || \in_array(0, $arrModuleIds, true))
 		{
-			$arrMapper = array();
+			$arrModuleMapper = array();
+			$arrElementsMapper = array();
 
 			// Create a mapper array in case a module is included more than once (see #4849)
 			if ($objModules !== null)
 			{
 				while ($objModules->next())
 				{
-					$arrMapper[$objModules->id] = $objModules->current();
+					$arrModuleMapper[$objModules->id] = $objModules->current();
+				}
+			}
+
+			if ($objElements !== null)
+			{
+				while ($objElements->next())
+				{
+					$arrElementsMapper[$objElements->id] = $objElements->current();
 				}
 			}
 
@@ -138,10 +168,17 @@ class PageRegular extends Frontend
 					continue;
 				}
 
-				// Replace the module ID with the module model
-				if ($arrModule['mod'] > 0 && isset($arrMapper[$arrModule['mod']]))
+				$isContentElement = str_starts_with((string) $arrModule['mod'], 'content-');
+				$id = (int) str_replace('content-', '', (string) $arrModule['mod']);
+
+				// Replace the module ID with the models
+				if ($isContentElement && isset($arrElementsMapper[$id]))
 				{
-					$arrModule['mod'] = $arrMapper[$arrModule['mod']];
+					$arrModule['mod'] = $arrElementsMapper[$id];
+				}
+				elseif ($id > 0 && isset($arrModuleMapper[$id]))
+				{
+					$arrModule['mod'] = $arrModuleMapper[$id];
 				}
 
 				// Generate the modules
@@ -168,7 +205,7 @@ class PageRegular extends Frontend
 						continue;
 					}
 
-					$this->Template->{$arrModule['col']} .= $this->getFrontendModule($arrModule['mod'], $arrModule['col']);
+					$this->Template->{$arrModule['col']} .= $isContentElement ? Controller::getContentElement($arrModule['mod'], $arrModule['col']) : Controller::getFrontendModule($arrModule['mod'], $arrModule['col']);
 				}
 				else
 				{
@@ -177,7 +214,7 @@ class PageRegular extends Frontend
 						$arrCustomSections[$arrModule['col']] = '';
 					}
 
-					$arrCustomSections[$arrModule['col']] .= $this->getFrontendModule($arrModule['mod'], $arrModule['col']);
+					$arrCustomSections[$arrModule['col']] .= $isContentElement ? Controller::getContentElement($arrModule['mod'], $arrModule['col']) : Controller::getFrontendModule($arrModule['mod'], $arrModule['col']);
 				}
 			}
 		}
@@ -195,8 +232,7 @@ class PageRegular extends Frontend
 		{
 			foreach ($GLOBALS['TL_HOOKS']['generatePage'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objPage, $objLayout, $this);
+				System::importStatic($callback[0])->{$callback[1]}($objPage, $objLayout, $this);
 			}
 		}
 
@@ -204,19 +240,22 @@ class PageRegular extends Frontend
 
 		// Set the page title and description AFTER the modules have been generated
 		$this->Template->mainTitle = $objPage->rootPageTitle;
-		$this->Template->pageTitle = htmlspecialchars($headBag->getTitle());
+		$this->Template->pageTitle = htmlspecialchars($headBag->getTitle() ?? '', ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 
 		// Remove shy-entities (see #2709)
 		$this->Template->mainTitle = str_replace('[-]', '', $this->Template->mainTitle);
 		$this->Template->pageTitle = str_replace('[-]', '', $this->Template->pageTitle);
 
 		// Meta robots tag
-		$this->Template->robots = htmlspecialchars($headBag->getMetaRobots());
+		$this->Template->robots = htmlspecialchars($headBag->getMetaRobots() ?? '', ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 
 		// Canonical
 		if ($objPage->enableCanonical)
 		{
-			$this->Template->canonical = htmlspecialchars($headBag->getCanonicalUriForRequest($request));
+			$this->Template->canonical = htmlspecialchars(
+				str_replace(array('{', '}'), array('%7B', '%7D'), $headBag->getCanonicalUriForRequest($request) ?? ''),
+				ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5
+			);
 		}
 
 		// Fall back to the default title tag
@@ -227,7 +266,7 @@ class PageRegular extends Frontend
 
 		// Assign the title and description
 		$this->Template->title = strip_tags(System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objLayout->titleTag));
-		$this->Template->description = htmlspecialchars($headBag->getMetaDescription());
+		$this->Template->description = htmlspecialchars($headBag->getMetaDescription() ?? '', ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
 
 		// Body onload and body classes
 		$this->Template->onload = trim($objLayout->onload);
@@ -247,7 +286,7 @@ class PageRegular extends Frontend
 	 */
 	protected function getPageLayout($objPage)
 	{
-		$objLayout = LayoutModel::findByPk($objPage->layout);
+		$objLayout = LayoutModel::findById($objPage->layout);
 
 		// Die if there is no layout
 		if (null === $objLayout)
@@ -265,8 +304,7 @@ class PageRegular extends Frontend
 		{
 			foreach ($GLOBALS['TL_HOOKS']['getPageLayout'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objPage, $objLayout, $this);
+				System::importStatic($callback[0])->{$callback[1]}($objPage, $objLayout, $this);
 			}
 		}
 
@@ -305,7 +343,7 @@ class PageRegular extends Frontend
 				if (isset($arrSize['value']) && $arrSize['value'] && $arrSize['value'] >= 0)
 				{
 					$arrMargin = array('left'=>'0 auto 0 0', 'center'=>'0 auto', 'right'=>'0 0 0 auto');
-					$strFramework .= sprintf('#wrapper{width:%s;margin:%s}', $arrSize['value'] . $arrSize['unit'], $arrMargin[$objLayout->align]);
+					$strFramework .= \sprintf('#wrapper{width:%s;margin:%s}', $arrSize['value'] . $arrSize['unit'], $arrMargin[$objLayout->align]);
 				}
 			}
 
@@ -316,7 +354,7 @@ class PageRegular extends Frontend
 
 				if (isset($arrSize['value']) && $arrSize['value'] && $arrSize['value'] >= 0)
 				{
-					$strFramework .= sprintf('#header{height:%s}', $arrSize['value'] . $arrSize['unit']);
+					$strFramework .= \sprintf('#header{height:%s}', $arrSize['value'] . $arrSize['unit']);
 				}
 			}
 
@@ -329,8 +367,8 @@ class PageRegular extends Frontend
 
 				if (isset($arrSize['value']) && $arrSize['value'] && $arrSize['value'] >= 0)
 				{
-					$strFramework .= sprintf('#left{width:%s;right:%s}', $arrSize['value'] . $arrSize['unit'], $arrSize['value'] . $arrSize['unit']);
-					$strContainer .= sprintf('padding-left:%s;', $arrSize['value'] . $arrSize['unit']);
+					$strFramework .= \sprintf('#left{width:%s;right:%s}', $arrSize['value'] . $arrSize['unit'], $arrSize['value'] . $arrSize['unit']);
+					$strContainer .= \sprintf('padding-left:%s;', $arrSize['value'] . $arrSize['unit']);
 				}
 			}
 
@@ -341,15 +379,15 @@ class PageRegular extends Frontend
 
 				if (isset($arrSize['value']) && $arrSize['value'] && $arrSize['value'] >= 0)
 				{
-					$strFramework .= sprintf('#right{width:%s}', $arrSize['value'] . $arrSize['unit']);
-					$strContainer .= sprintf('padding-right:%s;', $arrSize['value'] . $arrSize['unit']);
+					$strFramework .= \sprintf('#right{width:%s}', $arrSize['value'] . $arrSize['unit']);
+					$strContainer .= \sprintf('padding-right:%s;', $arrSize['value'] . $arrSize['unit']);
 				}
 			}
 
 			// Main column
 			if ($strContainer)
 			{
-				$strFramework .= sprintf('#container{%s}', substr($strContainer, 0, -1));
+				$strFramework .= \sprintf('#container{%s}', substr($strContainer, 0, -1));
 			}
 
 			// Footer
@@ -359,7 +397,7 @@ class PageRegular extends Frontend
 
 				if (isset($arrSize['value']) && $arrSize['value'] && $arrSize['value'] >= 0)
 				{
-					$strFramework .= sprintf('#footer{height:%s}', $arrSize['value'] . $arrSize['unit']);
+					$strFramework .= \sprintf('#footer{height:%s}', $arrSize['value'] . $arrSize['unit']);
 				}
 			}
 
@@ -438,8 +476,8 @@ class PageRegular extends Frontend
 		// Add the check_cookies image and the request token script if needed
 		if ($objPage->alwaysLoadFromCache)
 		{
-			$GLOBALS['TL_BODY'][] = sprintf('<img src="%s" width="1" height="1" class="invisible" alt aria-hidden="true" onload="this.parentNode.removeChild(this)">', System::getContainer()->get('router')->generate('contao_frontend_check_cookies'));
-			$GLOBALS['TL_BODY'][] = sprintf('<script src="%s" async></script>', System::getContainer()->get('router')->generate('contao_frontend_request_token_script'));
+			$GLOBALS['TL_BODY'][] = \sprintf('<img src="%s" width="1" height="1" class="invisible" alt aria-hidden="true" onload="this.parentNode.removeChild(this)">', System::getContainer()->get('router')->generate('contao_frontend_check_cookies'));
+			$GLOBALS['TL_BODY'][] = \sprintf('<script src="%s" async></script>', System::getContainer()->get('router')->generate('contao_frontend_request_token_script'));
 		}
 
 		// Default settings
@@ -615,7 +653,7 @@ class PageRegular extends Frontend
 			{
 				if (file_exists($projectDir . '/' . $objFiles->path))
 				{
-					$strScripts .= Template::generateScriptTag($objFiles->path, false, null);
+					$strScripts .= Template::generateScriptTag(static::addAssetsUrlTo($objFiles->path), false, null);
 				}
 			}
 		}
@@ -623,22 +661,28 @@ class PageRegular extends Frontend
 		// Add the custom JavaScript
 		if ($objLayout->script)
 		{
-			$strScripts .= "\n" . trim($objLayout->script) . "\n";
+			$customScript = trim($objLayout->script);
+
+			// Add a nonce to the <script> tags since we consider this safe user input.
+			// Do NOT copy the str_replace() into your own code unless you know what you are doing!
+			// It will defeat the purpose of CSP.
+			if ($nonce = $this->Template->nonce('script-src'))
+			{
+				$customScript = str_replace('<script', '<script nonce="' . $nonce . '"', $customScript);
+			}
+
+			$strScripts .= "\n" . $customScript . "\n";
 		}
 
 		$this->Template->mootools = $strScripts;
 
-		$this->Template->jsonLdScripts = function ()
-		{
+		$this->Template->jsonLdScripts = function () {
 			if (!$this->responseContext->isInitialized(JsonLdManager::class))
 			{
 				return '';
 			}
 
-			/** @var JsonLdManager $jsonLdManager */
-			$jsonLdManager = $this->responseContext->get(JsonLdManager::class);
-
-			return $jsonLdManager->collectFinalScriptFromGraphs();
+			return $this->responseContext->get(JsonLdManager::class)->collectFinalScriptFromGraphs();
 		};
 	}
 }

@@ -14,18 +14,28 @@ namespace Contao\NewsBundle\EventListener;
 
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Database;
 use Contao\NewsArchiveModel;
 use Contao\NewsModel;
 use Contao\PageModel;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal
  */
+#[AsEventListener]
 class SitemapListener
 {
-    public function __construct(private ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly Security $security,
+        private readonly ContentUrlGenerator $urlGenerator,
+    ) {
     }
 
     public function __invoke(SitemapEvent $event): void
@@ -40,8 +50,13 @@ class SitemapListener
         $arrPages = [];
         $time = time();
 
-        // Get all news archives
-        $objArchives = $this->framework->getAdapter(NewsArchiveModel::class)->findByProtected('');
+        if ($isMember = $this->security->isGranted('ROLE_MEMBER')) {
+            // Get all news archives
+            $objArchives = $this->framework->getAdapter(NewsArchiveModel::class)->findAll();
+        } else {
+            // Get all unprotected news archives
+            $objArchives = $this->framework->getAdapter(NewsArchiveModel::class)->findByProtected('');
+        }
 
         if (null === $objArchives) {
             return;
@@ -59,10 +74,14 @@ class SitemapListener
                 continue;
             }
 
+            if ($isMember && $objArchive->protected && !$this->security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objArchive->groups)) {
+                continue;
+            }
+
             $objParent = $this->framework->getAdapter(PageModel::class)->findWithDetails($objArchive->jumpTo);
 
             // The target page does not exist
-            if (null === $objParent) {
+            if (!$objParent) {
                 continue;
             }
 
@@ -72,7 +91,7 @@ class SitemapListener
             }
 
             // The target page is protected (see #8416)
-            if ($objParent->protected) {
+            if ($objParent->protected && !$this->security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objParent->groups)) {
                 continue;
             }
 
@@ -93,7 +112,10 @@ class SitemapListener
                     continue;
                 }
 
-                $arrPages[] = $objParent->getAbsoluteUrl('/'.($objNews->alias ?: $objNews->id));
+                try {
+                    $arrPages[] = $this->urlGenerator->generate($objNews, [], UrlGeneratorInterface::ABSOLUTE_URL);
+                } catch (ExceptionInterface) {
+                }
             }
         }
 

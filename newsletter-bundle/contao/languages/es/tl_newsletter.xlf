@@ -162,8 +162,7 @@
         <target>Enviado</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sentOn">
-        <source>Sent on %s</source>
-        <target>Enviado el %s</target>
+        <source>Sent at %s</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.notSent">
         <source>Not sent yet</source>

@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig\Loader;
 
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Exception\InvalidThemePathException;
-use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
@@ -32,17 +32,30 @@ class TemplateLocatorTest extends TestCase
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
-        $locator = $this->getTemplateLocator(
-            $projectDir,
-            [
-                'templates/my/theme',
-                'themes/foo',
-                'templates/non-existing',
-            ]
-        );
+        $locator = $this->getTemplateLocator($projectDir, [
+            'templates/my/theme',
+            'templates/non-existing',
+        ]);
 
         $expectedThemeDirectories = [
             'my_theme' => Path::join($projectDir, 'templates/my/theme'),
+        ];
+
+        $this->assertSame($expectedThemeDirectories, $locator->findThemeDirectories());
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testFindsThemeDirectoriesOutsideTemplatesDirectory(): void
+    {
+        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
+
+        $locator = $this->getTemplateLocator($projectDir, [
+            'themes/foo',
+        ]);
+
+        $expectedThemeDirectories = [
             '_themes_foo' => Path::join($projectDir, 'themes/foo'),
         ];
 
@@ -51,11 +64,11 @@ class TemplateLocatorTest extends TestCase
 
     public function testTriggersDeprecationIfThemeDirectoryContainsInvalidCharacters(): void
     {
-        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
-        $locator = $this->getTemplateLocator($projectDir, ['themes/invalid.theme']);
+        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance/themes');
+        $locator = $this->getTemplateLocator($projectDir, ['templates/invalid.theme']);
 
         $this->expectException(InvalidThemePathException::class);
-        $this->expectExceptionMessage('The theme path "../themes/invalid.theme" contains one or more invalid characters: "."');
+        $this->expectExceptionMessage('The theme path "invalid.theme" contains one or more invalid characters: "."');
 
         $this->assertEmpty($locator->findThemeDirectories());
     }
@@ -73,16 +86,15 @@ class TemplateLocatorTest extends TestCase
 
         $locator = new TemplateLocator(
             '',
-            [],
-            [],
+            $this->createMock(ResourceFinder::class),
             $this->createMock(ThemeNamespace::class),
-            $connection
+            $connection,
         );
 
         $this->assertEmpty($locator->findThemeDirectories());
     }
 
-    public function provideDatabaseExceptions(): \Generator
+    public function provideDatabaseExceptions(): iterable
     {
         yield 'table not found' => [
             new TableNotFoundException($this->createMock(LegacyDriverException::class), null),
@@ -101,19 +113,14 @@ class TemplateLocatorTest extends TestCase
     {
         $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/inheritance');
 
-        $bundles = [
-            'FooBundle' => ContaoModuleBundle::class,
-            'BarBundle' => 'class',
-            'CoreBundle' => 'class',
+        $paths = [
+            'foo' => Path::join($projectDir, 'system/modules/foo/templates'),
+            'BarBundle' => Path::join($projectDir, 'vendor-bundles/BarBundle/contao/templates'),
+            'CoreBundle' => Path::join($projectDir, 'vendor-bundles/CoreBundle/Resources/contao/templates'),
+            'App' => Path::join($projectDir, 'contao/templates'),
         ];
 
-        $bundleMetadata = [
-            'FooBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/FooBundle')],
-            'BarBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/BarBundle')],
-            'CoreBundle' => ['path' => Path::join($projectDir, 'vendor-bundles/CoreBundle')],
-        ];
-
-        $locator = $this->getTemplateLocator($projectDir, [], $bundles, $bundleMetadata);
+        $locator = $this->getTemplateLocator($projectDir, [], $paths);
 
         $expectedResourcePaths = [
             'App' => [
@@ -121,7 +128,6 @@ class TemplateLocatorTest extends TestCase
                 Path::join($projectDir, 'contao/templates/other'),
                 Path::join($projectDir, 'contao/templates/some'),
                 Path::join($projectDir, 'contao/templates/some/random'),
-                Path::join($projectDir, 'src/Resources/contao/templates'),
             ],
             'CoreBundle' => [
                 Path::join($projectDir, 'vendor-bundles/CoreBundle/Resources/contao/templates'),
@@ -129,9 +135,9 @@ class TemplateLocatorTest extends TestCase
             'BarBundle' => [
                 Path::join($projectDir, 'vendor-bundles/BarBundle/contao/templates'),
             ],
-            'FooBundle' => [
-                Path::join($projectDir, 'vendor-bundles/FooBundle/templates'),
-                Path::join($projectDir, 'vendor-bundles/FooBundle/templates/any'),
+            'foo' => [
+                Path::join($projectDir, 'system/modules/foo/templates'),
+                Path::join($projectDir, 'system/modules/foo/templates/any'),
             ],
         ];
 
@@ -140,6 +146,18 @@ class TemplateLocatorTest extends TestCase
         // Make sure the order is like specified
         $this->assertSame(array_keys($expectedResourcePaths), array_keys($paths));
         $this->assertSame(array_values($expectedResourcePaths), array_values($paths));
+    }
+
+    public function testFindsResourcesPathsIgnoresSubdirectoriesInNamespaceRoots(): void
+    {
+        $projectDir = Path::canonicalize(__DIR__.'/../../Fixtures/Twig/explicit-roots');
+        $locator = $this->getTemplateLocator($projectDir, [], ['App' => Path::join($projectDir, 'contao/templates')]);
+
+        $this->assertSame(
+            ['App' => [Path::join($projectDir, 'contao/templates')]],
+            $locator->findResourcesPaths(),
+            'should not contain the "content_element" sub-directory',
+        );
     }
 
     public function testFindsTemplates(): void
@@ -174,6 +192,7 @@ class TemplateLocatorTest extends TestCase
 
         $expectedTemplates = [
             'content_element/foo.html.twig' => Path::join($projectDir, 'templates/content_element/foo.html.twig'),
+            'my/theme/content_element/bar.html.twig' => Path::join($projectDir, 'templates/my/theme/content_element/bar.html.twig'),
         ];
 
         $expectedThemeTemplates = [
@@ -182,19 +201,19 @@ class TemplateLocatorTest extends TestCase
 
         $this->assertEmpty(
             $locator->findTemplates(Path::join($projectDir, 'contao/templates')),
-            'expect single depth without implicit root'
+            'expect single depth without implicit root',
         );
 
         $this->assertSame(
             $expectedTemplates,
             $locator->findTemplates(Path::join($projectDir, 'templates')),
-            'expect templates with directory structure but no theme templates'
+            'expect templates with directory structure but no theme templates',
         );
 
         $this->assertSame(
             $expectedThemeTemplates,
             $locator->findTemplates(Path::join($projectDir, 'templates/my/theme')),
-            'expect theme templates with directory structure'
+            'expect theme templates with directory structure',
         );
     }
 
@@ -205,7 +224,7 @@ class TemplateLocatorTest extends TestCase
         $this->assertEmpty($locator->findTemplates('/invalid/path'));
     }
 
-    private function getTemplateLocator(string $projectDir = '/', array $themePaths = [], array $bundles = [], array $bundlesMetadata = []): TemplateLocator
+    private function getTemplateLocator(string $projectDir = '/', array $themePaths = [], array $paths = []): TemplateLocator
     {
         $connection = $this->createMock(Connection::class);
         $connection
@@ -213,12 +232,13 @@ class TemplateLocatorTest extends TestCase
             ->willReturn($themePaths)
         ;
 
-        return new TemplateLocator(
-            $projectDir,
-            $bundles,
-            $bundlesMetadata,
-            new ThemeNamespace(),
-            $connection
-        );
+        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder
+            ->method('getExistingSubpaths')
+            ->with('templates')
+            ->willReturn($paths)
+        ;
+
+        return new TemplateLocator($projectDir, $resourceFinder, new ThemeNamespace(), $connection);
     }
 }

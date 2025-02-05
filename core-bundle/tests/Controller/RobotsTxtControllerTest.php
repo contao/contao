@@ -13,27 +13,26 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\Controller\RobotsTxtController;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class RobotsTxtControllerTest extends TestCase
 {
-    public function testRobotsTxtIfNoRootPageFound(): void
+    public function testThrowsNotFoundHttpExceptionIfNoRootPageFound(): void
     {
-        $pageModelAdapter = $this->mockAdapter(['findPublishedFallbackByHostname']);
-        $pageModelAdapter
-            ->expects($this->once())
-            ->method('findPublishedFallbackByHostname')
-            ->willReturn(null)
-        ;
+        $request = Request::create('https://www.example.org/robots.txt');
 
-        $framework = $this->mockContaoFramework([PageModel::class => $pageModelAdapter]);
-        $framework
+        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder
             ->expects($this->once())
-            ->method('initialize')
+            ->method('findRootPageForHostAndLanguage')
+            ->with('www.example.org')
+            ->willReturn(null)
         ;
 
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
@@ -42,28 +41,23 @@ class RobotsTxtControllerTest extends TestCase
             ->method('dispatch')
         ;
 
-        $request = Request::create('/robots.txt');
-        $controller = new RobotsTxtController($framework, $eventDispatcher);
-        $response = $controller($request);
+        $this->expectException(NotFoundHttpException::class);
 
-        $this->assertSame(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+        $controller = new RobotsTxtController($pageFinder, $eventDispatcher);
+        $controller($request);
     }
 
     public function testRobotsTxt(): void
     {
+        $request = Request::create('https://www.example.org/robots.txt');
         $pageModel = $this->mockClassWithProperties(PageModel::class);
 
-        $pageModelAdapter = $this->mockAdapter(['findPublishedFallbackByHostname']);
-        $pageModelAdapter
+        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder
             ->expects($this->once())
-            ->method('findPublishedFallbackByHostname')
+            ->method('findRootPageForHostAndLanguage')
+            ->with('www.example.org')
             ->willReturn($pageModel)
-        ;
-
-        $framework = $this->mockContaoFramework([PageModel::class => $pageModelAdapter]);
-        $framework
-            ->expects($this->once())
-            ->method('initialize')
         ;
 
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
@@ -72,8 +66,7 @@ class RobotsTxtControllerTest extends TestCase
             ->method('dispatch')
         ;
 
-        $request = Request::create('/robots.txt');
-        $controller = new RobotsTxtController($framework, $eventDispatcher);
+        $controller = new RobotsTxtController($pageFinder, $eventDispatcher);
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
@@ -81,20 +74,15 @@ class RobotsTxtControllerTest extends TestCase
 
     public function testRobotsTxtIgnoresRequestPort(): void
     {
+        $request = Request::create('https://localhost:8000/robots.txt');
         $pageModel = $this->mockClassWithProperties(PageModel::class);
 
-        $pageModelAdapter = $this->mockAdapter(['findPublishedFallbackByHostname']);
-        $pageModelAdapter
+        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder
             ->expects($this->once())
-            ->method('findPublishedFallbackByHostname')
+            ->method('findRootPageForHostAndLanguage')
             ->with('localhost')
             ->willReturn($pageModel)
-        ;
-
-        $framework = $this->mockContaoFramework([PageModel::class => $pageModelAdapter]);
-        $framework
-            ->expects($this->once())
-            ->method('initialize')
         ;
 
         $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
@@ -103,8 +91,7 @@ class RobotsTxtControllerTest extends TestCase
             ->method('dispatch')
         ;
 
-        $request = Request::create('https://localhost:8000/robots.txt');
-        $controller = new RobotsTxtController($framework, $eventDispatcher);
+        $controller = new RobotsTxtController($pageFinder, $eventDispatcher);
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());

@@ -15,25 +15,26 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\User;
 use Doctrine\DBAL\Connection;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\SessionBagInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\Security\Core\Security;
 
 /**
  * @internal
  */
+#[AsEventListener]
 class UserSessionListener
 {
     public function __construct(
-        private Connection $connection,
-        private Security $security,
-        private ScopeMatcher $scopeMatcher,
-        private EventDispatcherInterface $eventDispatcher,
+        private readonly Connection $connection,
+        private readonly Security $security,
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly EventDispatcherInterface $eventDispatcher,
     ) {
     }
 
@@ -42,7 +43,7 @@ class UserSessionListener
      */
     public function __invoke(RequestEvent $event): void
     {
-        if (!$this->scopeMatcher->isContaoMainRequest($event)) {
+        if (!$this->scopeMatcher->isContaoMainRequest($event) || $event->getRequest()->query->has('popup')) {
             return;
         }
 
@@ -55,13 +56,12 @@ class UserSessionListener
         $session = $user->session;
 
         if (\is_array($session)) {
-            /** @var AttributeBagInterface $sessionBag */
             $sessionBag = $this->getSessionBag($event->getRequest());
             $sessionBag->replace($session);
         }
 
         // Dynamically register the kernel.response listener (see #1293)
-        $this->eventDispatcher->addListener(KernelEvents::RESPONSE, [$this, 'write']);
+        $this->eventDispatcher->addListener(KernelEvents::RESPONSE, $this->write(...));
     }
 
     /**
@@ -79,7 +79,6 @@ class UserSessionListener
             return;
         }
 
-        /** @var AttributeBagInterface $sessionBag */
         $sessionBag = $this->getSessionBag($event->getRequest());
         $data = $sessionBag->all();
 
@@ -89,7 +88,7 @@ class UserSessionListener
     /**
      * Returns the session bag.
      */
-    private function getSessionBag(Request $request): SessionBagInterface
+    private function getSessionBag(Request $request): AttributeBagInterface
     {
         if (!$request->hasSession()) {
             throw new \RuntimeException('The request did not contain a session.');
@@ -101,6 +100,12 @@ class UserSessionListener
             $name = 'contao_backend';
         }
 
-        return $request->getSession()->getBag($name);
+        $bag = $request->getSession()->getBag($name);
+
+        if ($bag instanceof AttributeBagInterface) {
+            return $bag;
+        }
+
+        throw new \RuntimeException(\sprintf('Expected an attribute bag, got %s.', get_debug_type($bag)));
     }
 }

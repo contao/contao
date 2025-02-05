@@ -17,8 +17,10 @@ class ItemToDelete
     /**
      * @internal
      */
-    public function __construct(private string $path, private bool $isFile)
-    {
+    public function __construct(
+        private readonly string $path,
+        private readonly bool $isFile,
+    ) {
     }
 
     public function getPath(): string

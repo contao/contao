@@ -29,8 +29,10 @@ class Application extends BaseApplication
 {
     final public const VERSION = '2';
 
-    private string $projectDir;
+    private readonly string $projectDir;
+
     private PluginLoader|null $pluginLoader = null;
+
     private ManagerConfig|null $managerConfig = null;
 
     public function __construct(string $projectDir)
@@ -47,7 +49,7 @@ class Application extends BaseApplication
 
     public function getPluginLoader(): PluginLoader
     {
-        if (null === $this->pluginLoader) {
+        if (!$this->pluginLoader) {
             $this->pluginLoader = new PluginLoader();
 
             $config = $this->getManagerConfig()->all();
@@ -96,11 +98,10 @@ class Application extends BaseApplication
         $commands = parent::getDefaultCommands();
         $commands[] = new VersionCommand($this);
 
-        /** @var ApiPluginInterface $plugin */
         foreach ($this->getPluginLoader()->getInstancesOf(ApiPluginInterface::class) as $plugin) {
             foreach ($plugin->getApiCommands() as $class) {
                 if (!is_a($class, Command::class, true)) {
-                    throw new \RuntimeException(sprintf('"%s" is not a console command.', $class));
+                    throw new \RuntimeException(\sprintf('"%s" is not a console command.', $class));
                 }
 
                 $commands[] = new $class($this);

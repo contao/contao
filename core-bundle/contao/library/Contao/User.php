@@ -146,15 +146,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	protected $roles = array();
 
 	/**
-	 * Import the database object
-	 */
-	protected function __construct()
-	{
-		parent::__construct();
-		$this->import(Database::class, 'Database');
-	}
-
-	/**
 	 * Prevent cloning of the object (Singleton)
 	 */
 	final public function __clone()
@@ -256,12 +247,14 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function findBy($strColumn, $varValue)
 	{
-		$objResult = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE " . Database::quoteIdentifier($strColumn) . "=?")
-									->limit(1)
-									->execute($varValue);
+		$objResult = Database::getInstance()
+			->prepare("SELECT * FROM " . $this->strTable . " WHERE " . Database::quoteIdentifier($strColumn) . "=?")
+			->limit(1)
+			->execute($varValue);
 
 		if ($objResult->numRows > 0)
 		{
+			/** @var class-string<Model> $strModelClass */
 			$strModelClass = Model::getClassFromTable($this->strTable);
 			$this->arrData = array();
 
@@ -281,12 +274,12 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function save()
 	{
-		$arrFields = $this->Database->getFieldNames($this->strTable);
+		$db = Database::getInstance();
+
+		$arrFields = $db->getFieldNames($this->strTable);
 		$arrSet = array_intersect_key($this->arrData, array_flip($arrFields));
 
-		$this->Database->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
-					   ->set($arrSet)
-					   ->execute($this->id);
+		$db->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")->set($arrSet)->execute($this->id);
 	}
 
 	/**
@@ -336,6 +329,16 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 	public static function loadUserByIdentifier(string $identifier): self|null
 	{
+		return self::loadUserBy('username', $identifier);
+	}
+
+	public static function loadUserById(int $id): self|null
+	{
+		return self::loadUserBy('id', $id);
+	}
+
+	public static function loadUserBy(string $column, mixed $value): self|null
+	{
 		if (!System::getContainer()->get('request_stack')->getCurrentRequest())
 		{
 			return null;
@@ -344,7 +347,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		$user = new static();
 
 		// Load the user object
-		if ($user->findBy('username', $identifier) === false)
+		if ($user->findBy($column, $value) === false)
 		{
 			return null;
 		}
@@ -366,7 +369,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 		if (!\is_string($this->username))
 		{
-			throw new \RuntimeException(sprintf('Invalid type "%s" for username', \gettype($this->username)));
+			throw new \RuntimeException(\sprintf('Invalid type "%s" for username', \gettype($this->username)));
 		}
 
 		return $this->username;
@@ -380,7 +383,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 		return $this->password;
 	}
 
-	public function setPassword(#[\SensitiveParameter] ?string $password): self
+	public function setPassword(#[\SensitiveParameter] string|null $password): self
 	{
 		$this->password = $password;
 
@@ -413,7 +416,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * {@inheritdoc}
 	 */
-	public function eraseCredentials()
+	public function eraseCredentials(): void
 	{
 	}
 

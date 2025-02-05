@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\OptIn;
 
 class OptInTokenAlreadyConfirmedException extends \RuntimeException
 {
-    public function __construct(\Exception $previous = null)
+    public function __construct(\Exception|null $previous = null)
     {
         parent::__construct('The token has already been confirmed', 0, $previous);
     }

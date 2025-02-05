@@ -17,9 +17,13 @@ use Symfony\Component\HttpFoundation\Request;
 final class HtmlHeadBag
 {
     private string $title = '';
+
     private string $metaDescription = '';
+
     private string $metaRobots = 'index,follow';
+
     private string $canonicalUri = '';
+
     private array $keepParamsForCanonical = [];
 
     public function getTitle(): string
@@ -100,7 +104,7 @@ final class HtmlHeadBag
 
         foreach ($request->query->all() as $originalParam => $value) {
             foreach ($this->getKeepParamsForCanonical() as $param) {
-                $regex = sprintf('/^%s$/', str_replace('\*', '.*', preg_quote($param, '/')));
+                $regex = \sprintf('/^%s$/', str_replace('\*', '.*', preg_quote($param, '/')));
 
                 if (preg_match($regex, (string) $originalParam)) {
                     $params[$originalParam] = $value;
@@ -111,7 +115,7 @@ final class HtmlHeadBag
         $request = Request::create(
             $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo(),
             $request->getMethod(),
-            $params
+            $params,
         );
 
         return $request->getUri();

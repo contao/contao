@@ -33,7 +33,7 @@ class LayoutFeedOptionsListenerTest extends ContaoTestCase
                             'id' => 1,
                             'title' => 'Example Feed',
                             'feedFormat' => 'rss',
-                        ]
+                        ],
                     ),
                     $this->mockClassWithProperties(
                         PageModel::class,
@@ -41,7 +41,7 @@ class LayoutFeedOptionsListenerTest extends ContaoTestCase
                             'id' => 2,
                             'title' => 'Example Feed',
                             'feedFormat' => 'atom',
-                        ]
+                        ],
                     ),
                     $this->mockClassWithProperties(
                         PageModel::class,
@@ -49,9 +49,9 @@ class LayoutFeedOptionsListenerTest extends ContaoTestCase
                             'id' => 3,
                             'title' => 'Example Feed',
                             'feedFormat' => 'json',
-                        ]
+                        ],
                     ),
-                ]
+                ],
             )
         ;
 
@@ -64,7 +64,7 @@ class LayoutFeedOptionsListenerTest extends ContaoTestCase
                 2 => 'Example Feed (Atom)',
                 3 => 'Example Feed (JSON)',
             ],
-            $listener()
+            $listener(),
         );
     }
 

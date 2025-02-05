@@ -21,22 +21,34 @@ final class InsertTagRuntime implements RuntimeExtensionInterface
     /**
      * @internal
      */
-    public function __construct(private InsertTagParser $insertTagParser)
+    public function __construct(private readonly InsertTagParser $insertTagParser)
     {
     }
 
     public function renderInsertTag(string $insertTag): string
     {
-        return $this->insertTagParser->render($insertTag);
+        return $this->insertTagParser->renderTag($insertTag)->getValue();
     }
 
-    public function replaceInsertTags(string $text): string
+    public function replaceInsertTags(array $context, string $text, bool|null $bypass = null): string
     {
+        $bypass ??= $context['as_editor_view'] ?? false;
+
+        if ($bypass) {
+            return $text;
+        }
+
         return $this->insertTagParser->replaceInline($text);
     }
 
-    public function replaceInsertTagsChunkedRaw(string $text): ChunkedText
+    public function replaceInsertTagsChunkedRaw(array $context, string $text, bool|null $bypass = null): ChunkedText
     {
+        $bypass ??= $context['as_editor_view'] ?? false;
+
+        if ($bypass) {
+            return new ChunkedText([$text, '']);
+        }
+
         return $this->insertTagParser->replaceChunked($text);
     }
 }

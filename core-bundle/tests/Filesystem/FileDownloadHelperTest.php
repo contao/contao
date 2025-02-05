@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\HttpKernel\UriSigner;
+use Symfony\Component\HttpFoundation\UriSigner;
 
 class FileDownloadHelperTest extends TestCase
 {
@@ -73,7 +73,7 @@ class FileDownloadHelperTest extends TestCase
         $this->assertSame('foo', $this->getResponseContent($response));
     }
 
-    public function provideInlineContext(): \Generator
+    public static function provideInlineContext(): iterable
     {
         yield 'without context' => [
             null,
@@ -131,7 +131,29 @@ class FileDownloadHelperTest extends TestCase
         $this->assertSame("foo,bar\n", $this->getResponseContent($response));
     }
 
-    public function provideDownloadContext(): \Generator
+    public function testGenerateAndHandleDownloadUrlUnknownMimeType(): void
+    {
+        $helper = $this->getFileDownloadHelper();
+        $url = $helper->generateDownloadUrl('https://example.com/', 'my_file.unknown');
+
+        $response = $helper->handle(Request::create($url), $this->getInMemoryStorage());
+
+        $this->assertInstanceOf(StreamedResponse::class, $response);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('application/octet-stream', $response->headers->get('Content-Type'));
+        $this->assertSame('attachment; filename=my_file.unknown', $response->headers->get('Content-Disposition'));
+        $this->assertSame('foo', $this->getResponseContent($response));
+    }
+
+    public function testPreservesQueryParameters(): void
+    {
+        $helper = $this->getFileDownloadHelper();
+        $url = $helper->generateDownloadUrl('https://example.com/path?foo=bar', 'my_file.txt');
+
+        $this->assertSame('https://example.com/path?_hash=TUK%2BRJDS6D7dOg8zPyttlPmt0mMRi3bx17OHbD8NIro%3D&d=attachment&foo=bar&p=my_file.txt', $url);
+    }
+
+    public static function provideDownloadContext(): iterable
     {
         yield 'without filename or context' => [
             null,
@@ -162,6 +184,7 @@ class FileDownloadHelperTest extends TestCase
     {
         $adapter = new InMemoryFilesystemAdapter();
         $adapter->write('my_file.txt', 'foo', new Config());
+        $adapter->write('my_file.unknown', 'foo', new Config());
 
         $mountManager = new MountManager();
         $mountManager->mount($adapter);

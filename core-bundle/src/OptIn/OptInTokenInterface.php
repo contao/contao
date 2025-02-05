@@ -48,7 +48,7 @@ interface OptInTokenInterface
      * @throws OptInTokenAlreadyConfirmedException
      * @throws OptInTokenNoLongerValidException
      */
-    public function send(string $subject = null, string $text = null): void;
+    public function send(string|null $subject = null, string|null $text = null): void;
 
     /**
      * Returns true if the token has been sent via e-mail.

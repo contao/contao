@@ -34,7 +34,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
-use Symfony\Contracts\Service\ResetInterface;
 
 class ContaoFrameworkTest extends TestCase
 {
@@ -67,10 +66,11 @@ class ContaoFrameworkTest extends TestCase
     public function testInitializesTheFrameworkWithABackEndRequest(): void
     {
         $request = Request::create('/contao/login');
+        $request->setLocale('de');
+
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_scope', 'backend');
         $request->attributes->set('_contao_referer_id', 'foobar');
-        $request->setLocale('de');
 
         $framework = $this->getFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
@@ -128,11 +128,13 @@ class ContaoFrameworkTest extends TestCase
         $session->registerBag($feBag);
 
         $request = Request::create('index.html');
+        $request->setSession($session);
+
         $request->server->set('SCRIPT_NAME', '/preview.php');
+        $request->cookies->set($session->getName(), 'foobar');
+
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_scope', 'frontend');
-        $request->cookies->set($session->getName(), 'foobar');
-        $request->setSession($session);
 
         $framework = $this->getFramework($request);
         $framework->setContainer($this->getContainerWithContaoConfiguration());
@@ -217,16 +219,17 @@ class ContaoFrameworkTest extends TestCase
     public function testRegistersTheHookServices(): void
     {
         $request = Request::create('/index.html');
+        $request->setLocale('de');
+
         $request->attributes->set('_route', 'dummy');
         $request->attributes->set('_scope', 'backend');
         $request->attributes->set('_contao_referer_id', 'foobar');
-        $request->setLocale('de');
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('test.listener', new \stdClass());
         $container->set('test.listener2', new \stdClass());
 
-        /** @var array $GLOBALS (signals PHPStan that the array shape may change) */
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_HOOKS'] = [
             'getPageLayout' => [
                 ['test.listener.c', 'onGetPageLayout'],
@@ -290,15 +293,15 @@ class ContaoFrameworkTest extends TestCase
         $parseTemplate = $GLOBALS['TL_HOOKS']['parseTemplate'];
         $isVisibleElement = $GLOBALS['TL_HOOKS']['isVisibleElement'];
 
-        // Test hooks with high priority are added before low and legacy hooks
-        // Test legacy hooks are added before hooks with priority 0
+        // Test hooks with high priority are added before low and legacy hooks. Test
+        // legacy hooks are added before hooks with priority 0.
         $this->assertSame(
             [
                 ['test.listener.a', 'onGetPageLayout'],
                 ['test.listener.c', 'onGetPageLayout'],
                 ['test.listener.b', 'onGetPageLayout'],
             ],
-            $getPageLayout
+            $getPageLayout,
         );
 
         // Test hooks with negative priority are added at the end
@@ -308,7 +311,7 @@ class ContaoFrameworkTest extends TestCase
                 ['test.listener.b', 'onGeneratePage'],
                 ['test.listener.a', 'onGeneratePage'],
             ],
-            $generatePage
+            $generatePage,
         );
 
         // Test legacy hooks are kept when adding only hook listeners with high priority.
@@ -317,7 +320,7 @@ class ContaoFrameworkTest extends TestCase
                 ['test.listener.a', 'onParseTemplate'],
                 ['test.listener.c', 'onParseTemplate'],
             ],
-            $parseTemplate
+            $parseTemplate,
         );
 
         // Test legacy hooks are kept when adding only hook listeners with low priority.
@@ -326,14 +329,12 @@ class ContaoFrameworkTest extends TestCase
                 ['test.listener.c', 'onIsVisibleElement'],
                 ['test.listener.a', 'onIsVisibleElement'],
             ],
-            $isVisibleElement
+            $isVisibleElement,
         );
     }
 
     public function testServiceIsResetable(): void
     {
-        $this->assertInstanceOf(ResetInterface::class, $this->getFramework());
-
         $framework = $this->getFramework();
         $adapter = $framework->getAdapter(Input::class);
 
@@ -348,7 +349,7 @@ class ContaoFrameworkTest extends TestCase
     {
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
-            ->method('createSchema')
+            ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 
@@ -399,18 +400,18 @@ class ContaoFrameworkTest extends TestCase
         $this->assertCount(0, $registry);
     }
 
-    private function getFramework(Request $request = null): ContaoFramework
+    private function getFramework(Request|null $request = null): ContaoFramework
     {
         $requestStack = new RequestStack();
 
-        if (null !== $request) {
+        if ($request) {
             $requestStack->push($request);
         }
 
         $framework = new ContaoFramework(
             $requestStack,
             $this->getTempDir(),
-            error_reporting()
+            error_reporting(),
         );
 
         $adapters = [
@@ -422,7 +423,7 @@ class ContaoFrameworkTest extends TestCase
         $adapterCache->setValue($framework, $adapters);
 
         $isInitialized = $ref->getProperty('initialized');
-        $isInitialized->setValue(false);
+        $isInitialized->setValue(null, false);
 
         return $framework;
     }
@@ -430,7 +431,7 @@ class ContaoFrameworkTest extends TestCase
     /**
      * @return Adapter<Config>&MockObject
      */
-    private function mockConfigAdapter(bool $complete = true): Adapter
+    private function mockConfigAdapter(bool $complete = true): Adapter&MockObject
     {
         $config = $this->mockAdapter(['preload', 'isComplete', 'getInstance', 'get']);
         $config

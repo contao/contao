@@ -12,6 +12,7 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\Controller;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\System;
 
@@ -21,7 +22,7 @@ $GLOBALS['TL_DCA']['tl_module']['palettes']['__selector__'][] = 'cal_format';
 // Add palettes to tl_module
 $GLOBALS['TL_DCA']['tl_module']['palettes']['calendar']         = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_noSpan,cal_startDay,cal_featured;{redirect_legend},jumpTo;{template_legend:hide},cal_ctemplate,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['eventlist']        = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_noSpan,cal_format,cal_featured,cal_order,cal_readerModule,cal_limit,perPage,cal_ignoreDynamic,cal_hideRunning;{template_legend:hide},cal_template,customTpl;{image_legend:hide},imgSize;{protected_legend:hide},protected;{expert_legend:hide},cssID';
-$GLOBALS['TL_DCA']['tl_module']['palettes']['eventreader']      = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_hideRunning,overviewPage,customLabel;{template_legend:hide},cal_template,customTpl;{image_legend},imgSize;{protected_legend:hide},protected;{expert_legend:hide},cssID';
+$GLOBALS['TL_DCA']['tl_module']['palettes']['eventreader']      = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_hideRunning,cal_keepCanonical;{cal_overview_legend},overviewPage,customLabel;{template_legend:hide},cal_template,customTpl;{image_legend},imgSize;{protected_legend:hide},protected;{expert_legend:hide},cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['eventmenu']        = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_noSpan,cal_format,cal_featured,cal_order,cal_showQuantity;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID';
 $GLOBALS['TL_DCA']['tl_module']['palettes']['eventmenucal_day'] = '{title_legend},name,headline,type;{config_legend},cal_calendar,cal_noSpan,cal_format,cal_featured,cal_startDay,cal_showQuantity;{redirect_legend},jumpTo;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID';
 
@@ -31,7 +32,8 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_calendar'] = array
 	'inputType'               => 'checkbox',
 	'options_callback'        => array('tl_module_calendar', 'getCalendars'),
 	'eval'                    => array('mandatory'=>true, 'multiple'=>true),
-	'sql'                     => "blob NULL"
+	'sql'                     => "blob NULL",
+	'relation'                => array('table'=>'tl_calendar', 'type'=>'hasMany', 'load'=>'lazy')
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_noSpan'] = array
@@ -88,7 +90,8 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_readerModule'] = array
 	'options_callback'        => array('tl_module_calendar', 'getReaderModules'),
 	'reference'               => &$GLOBALS['TL_LANG']['tl_module'],
 	'eval'                    => array('includeBlankOption'=>true, 'tl_class'=>'w50'),
-	'sql'                     => "int(10) unsigned NOT NULL default 0"
+	'sql'                     => "int(10) unsigned NOT NULL default 0",
+	'relation'                => array('table'=>'tl_module', 'type'=>'hasOne', 'load'=>'lazy')
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_limit'] = array
@@ -101,8 +104,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_limit'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_template'] = array
 (
 	'inputType'               => 'select',
-	'options_callback' => static function ()
-	{
+	'options_callback' => static function () {
 		return Controller::getTemplateGroup('event_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
@@ -112,8 +114,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_template'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_ctemplate'] = array
 (
 	'inputType'               => 'select',
-	'options_callback' => static function ()
-	{
+	'options_callback' => static function () {
 		return Controller::getTemplateGroup('cal_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
@@ -123,7 +124,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_ctemplate'] = array
 $GLOBALS['TL_DCA']['tl_module']['fields']['cal_showQuantity'] = array
 (
 	'inputType'               => 'checkbox',
-	'eval'                    => array('tl_class'=>'w50 m12'),
+	'eval'                    => array('tl_class'=>'w50'),
 	'sql'                     => array('type' => 'boolean', 'default' => false)
 );
 
@@ -136,13 +137,12 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['cal_featured'] = array
 	'sql'                     => "varchar(16) COLLATE ascii_bin NOT NULL default 'all_items'"
 );
 
-$bundles = System::getContainer()->getParameter('kernel.bundles');
-
-// Add the comments template drop-down menu
-if (isset($bundles['ContaoCommentsBundle']))
-{
-	$GLOBALS['TL_DCA']['tl_module']['palettes']['eventreader'] = str_replace('{protected_legend:hide}', '{comment_legend:hide},com_template;{protected_legend:hide}', $GLOBALS['TL_DCA']['tl_module']['palettes']['eventreader']);
-}
+$GLOBALS['TL_DCA']['tl_module']['fields']['cal_keepCanonical'] = array
+(
+	'inputType'               => 'checkbox',
+	'eval'                    => array('tl_class'=>'w50'),
+	'sql'                     => array('type' => 'boolean', 'default' => false)
+);
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
@@ -152,28 +152,21 @@ if (isset($bundles['ContaoCommentsBundle']))
 class tl_module_calendar extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Get all calendars and return them as array
 	 *
 	 * @return array
 	 */
 	public function getCalendars()
 	{
-		if (!$this->User->isAdmin && !is_array($this->User->calendars))
+		$user = BackendUser::getInstance();
+
+		if (!$user->isAdmin && !is_array($user->calendars))
 		{
 			return array();
 		}
 
 		$arrCalendars = array();
-		$objCalendars = $this->Database->execute("SELECT id, title FROM tl_calendar ORDER BY title");
+		$objCalendars = Database::getInstance()->execute("SELECT id, title FROM tl_calendar ORDER BY title");
 		$security = System::getContainer()->get('security.helper');
 
 		while ($objCalendars->next())
@@ -195,7 +188,7 @@ class tl_module_calendar extends Backend
 	public function getReaderModules()
 	{
 		$arrModules = array();
-		$objModules = $this->Database->execute("SELECT m.id, m.name, t.name AS theme FROM tl_module m LEFT JOIN tl_theme t ON m.pid=t.id WHERE m.type='eventreader' ORDER BY t.name, m.name");
+		$objModules = Database::getInstance()->execute("SELECT m.id, m.name, t.name AS theme FROM tl_module m LEFT JOIN tl_theme t ON m.pid=t.id WHERE m.type='eventreader' ORDER BY t.name, m.name");
 
 		while ($objModules->next())
 		{

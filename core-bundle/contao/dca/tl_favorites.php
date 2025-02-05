@@ -25,6 +25,7 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'tstamp' => 'index',
 				'pid,user' => 'index',
 				'url' => 'index'
 			)
@@ -45,28 +46,6 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 		(
 			'fields'                  => array('title'),
 			'format'                  => '%s'
-		),
-		'global_operations' => array
-		(
-			'toggleNodes' => array
-			(
-				'href'                => 'ptg=all',
-				'class'               => 'header_toggle',
-				'showOnSelect'        => true
-			),
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
-		),
-		'operations' => array
-		(
-			'edit',
-			'cut',
-			'delete',
-			'show'
 		)
 	),
 
@@ -81,8 +60,6 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 	(
 		'id' => array
 		(
-			'label'                   => array('ID'),
-			'search'                  => true,
 			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
 		),
 		'pid' => array
@@ -103,6 +80,7 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 		),
 		'title' => array
 		(
+			'exclude'                 => false,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
@@ -110,6 +88,7 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 		),
 		'url' => array
 		(
+			'exclude'                 => false,
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('mandatory'=>true, 'readonly'=>true, 'rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>1022, 'tl_class'=>'w50'),

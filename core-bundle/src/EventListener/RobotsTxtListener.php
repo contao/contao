@@ -14,7 +14,8 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\PageModel;
+use Symfony\Bundle\WebProfilerBundle\EventListener\WebDebugToolbarListener;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use webignition\RobotsTxt\Directive\Directive;
 use webignition\RobotsTxt\Directive\UserAgentDirective;
 use webignition\RobotsTxt\Inspector\Inspector;
@@ -23,10 +24,14 @@ use webignition\RobotsTxt\Record\Record;
 /**
  * @internal
  */
+#[AsEventListener]
 class RobotsTxtListener
 {
-    public function __construct(private ContaoFramework $contaoFramework, private string $routePrefix = '/contao')
-    {
+    public function __construct(
+        private readonly ContaoFramework $contaoFramework,
+        private readonly WebDebugToolbarListener|null $webDebugToolbarListener = null,
+        private readonly string $routePrefix = '/contao',
+    ) {
     }
 
     public function __invoke(RobotsTxtEvent $event): void
@@ -55,21 +60,19 @@ class RobotsTxtListener
             $directiveList = $record->getDirectiveList();
             $directiveList->add(new Directive('Disallow', $this->routePrefix.'/'));
             $directiveList->add(new Directive('Disallow', '/_contao/'));
+
+            if ($this->webDebugToolbarListener?->isEnabled()) {
+                $directiveList->add(new Directive('Disallow', '/_profiler/'));
+                $directiveList->add(new Directive('Disallow', '/_wdt/'));
+            }
         }
 
-        $pageModel = $this->contaoFramework->getAdapter(PageModel::class);
+        $rootPage = $event->getRootPage();
 
-        // Only fetch the fallback page because there can only be one sitemap per host
-        $rootPage = $pageModel->findPublishedFallbackByHostname($event->getRootPage()->dns);
-
-        if (null === $rootPage) {
-            return;
-        }
-
-        $sitemap = sprintf(
+        $sitemap = \sprintf(
             '%s%s/sitemap.xml',
             $rootPage->useSSL ? 'https://' : 'http://',
-            $rootPage->dns ?: $event->getRequest()->server->get('HTTP_HOST')
+            $rootPage->dns ?: $event->getRequest()->server->get('HTTP_HOST'),
         );
 
         $event->getFile()->getNonGroupDirectives()->add(new Directive('Sitemap', $sitemap));

@@ -17,22 +17,6 @@
         <source>Here you can define the news archive permissions.</source>
         <target>Buradan haber arşivi izinlerini tanımlayabilirsiniz.</target>
       </trans-unit>
-      <trans-unit id="tl_user.newsfeeds.0">
-        <source>Allowed news feeds</source>
-        <target>İzin verilen haber akışları</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeeds.1">
-        <source>Here you can grant access to one or more news feeds.</source>
-        <target>Buradan bir ya da birkaç haber akışına erişim izni verebilirsiniz.</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeedp.0">
-        <source>News feed permissions</source>
-        <target>Haber akışı izinleri</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeedp.1">
-        <source>Here you can define the news feed permissions.</source>
-        <target>Buradan haber akışı izinlerini tanımlayabilirsiniz.</target>
-      </trans-unit>
       <trans-unit id="tl_user.news_legend">
         <source>News permissions</source>
         <target>Haber izinleri</target>

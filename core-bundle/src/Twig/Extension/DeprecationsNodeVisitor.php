@@ -16,25 +16,26 @@ use Twig\Environment;
 use Twig\Node\DeprecatedNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\Node\PrintNode;
-use Twig\NodeVisitor\AbstractNodeVisitor;
+use Twig\NodeVisitor\NodeVisitorInterface;
 
 /**
  * @internal
  */
-class DeprecationsNodeVisitor extends AbstractNodeVisitor
+class DeprecationsNodeVisitor implements NodeVisitorInterface
 {
     public function getPriority(): int
     {
         return 10;
     }
 
-    protected function doEnterNode(Node $node, Environment $env): Node
+    public function enterNode(Node $node, Environment $env): Node
     {
         return $node;
     }
 
-    protected function doLeaveNode(Node $node, Environment $env): Node
+    public function leaveNode(Node $node, Environment $env): Node
     {
         return $this->handleDeprecatedInsertTagUsage($node);
     }
@@ -45,20 +46,24 @@ class DeprecationsNodeVisitor extends AbstractNodeVisitor
      */
     private function handleDeprecatedInsertTagUsage(Node $node): Node
     {
-        $insertTagMisusePattern = '/{{([^}]+)}}/';
-
-        if (
-            !$node instanceof PrintNode
-            || !($expression = $node->getNode('expr')) instanceof ConstantExpression
-            || 1 !== preg_match($insertTagMisusePattern, (string) $expression->getAttribute('value'), $matches)
-        ) {
+        if (!$node instanceof PrintNode) {
             return $node;
         }
 
-        $suggestedTransformation = sprintf('"{{ \'{{%1$s}}\' }}" -> "{{ insert_tag(\'%1$s\') }}".', $matches[1]);
+        $expression = $node->getNode('expr');
+
+        if (!$expression instanceof ConstantExpression) {
+            return $node;
+        }
+
+        if (1 !== preg_match('/{{([^}]+)}}/', (string) $expression->getAttribute('value'), $matches)) {
+            return $node;
+        }
+
+        $suggestedTransformation = \sprintf('"{{ \'{{%1$s}}\' }}" -> "{{ insert_tag(\'%1$s\') }}".', $matches[1]);
 
         $message = 'You should not rely on insert tags being replaced in the rendered HTML. '
-            .'This behavior will gradually be phased out in Contao 5 and will no longer work in Contao 6.0. '
+            .'This behavior will gradually be phased out in Contao 5 and will no longer work in Contao 6. '
             .'Explicitly replace insert tags with the "insert_tag" function instead: '.$suggestedTransformation;
 
         return $this->addDeprecation($node, $message);
@@ -71,13 +76,12 @@ class DeprecationsNodeVisitor extends AbstractNodeVisitor
         $deprecatedNode = new DeprecatedNode(
             new ConstantExpression("Since contao/core-bundle 4.13: $message", $line),
             $line,
-            $node->getNodeTag()
         );
 
-        // Set the source context, so that the template name can be inserted
-        // when compiling the DeprecatedNode.
+        // Set the source context, so that the template name can be inserted when
+        // compiling the DeprecatedNode.
         $deprecatedNode->setSourceContext($node->getSourceContext());
 
-        return new Node([$node, $deprecatedNode]);
+        return new Nodes([$node, $deprecatedNode]);
     }
 }

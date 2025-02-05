@@ -21,30 +21,37 @@ use Contao\StringUtil;
 class DataContainerOperation implements \ArrayAccess
 {
     private array $operation;
+
+    private string|null $url = null;
+
     private string|null $html = null;
 
     /**
      * @internal
      */
-    public function __construct(private readonly string $name, array $operation, private readonly array $record, private readonly DataContainer $dataContainer)
-    {
-        $id = StringUtil::specialchars(rawurldecode((string) $record['id']));
+    public function __construct(
+        private readonly string $name,
+        array $operation,
+        private readonly array $record,
+        private readonly DataContainer $dataContainer,
+    ) {
+        $id = StringUtil::specialchars(rawurldecode((string) ($record['id'] ?? '')));
 
         // Dereference pointer to $GLOBALS['TL_LANG']
         $operation = StringUtil::resolveReferences($operation);
 
         if (isset($operation['label'])) {
             if (\is_array($operation['label'])) {
-                $operation['title'] = sprintf($operation['label'][1] ?? '', $id);
+                $operation['title'] = \sprintf($operation['label'][1] ?? '', $id);
                 $operation['label'] = $operation['label'][0] ?? $name;
             } else {
-                $operation['label'] = $operation['title'] = sprintf($operation['label'], $id);
+                $operation['label'] = $operation['title'] = \sprintf($operation['label'], $id);
             }
         } else {
             $operation['label'] = $operation['title'] = $name;
         }
 
-        $attributes = !empty($operation['attributes']) ? ' '.ltrim(sprintf($operation['attributes'], $id, $id)) : '';
+        $attributes = !empty($operation['attributes']) ? ' '.ltrim(\sprintf($operation['attributes'], $id, $id)) : '';
 
         // Add the key as CSS class
         if (str_contains($attributes, 'class="')) {
@@ -103,5 +110,26 @@ class DataContainerOperation implements \ArrayAccess
         $this->html = $html;
 
         return $this;
+    }
+
+    public function getUrl(): string|null
+    {
+        return $this->url;
+    }
+
+    public function setUrl(string|null $url): self
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    public function disable(): void
+    {
+        unset($this['route'], $this['href']);
+
+        if (isset($this['icon'])) {
+            $this['icon'] = str_replace('.svg', '--disabled.svg', $this['icon']);
+        }
     }
 }

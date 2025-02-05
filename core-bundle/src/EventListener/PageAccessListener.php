@@ -17,17 +17,24 @@ use Contao\CoreBundle\Exception\InsufficientAuthenticationException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\PageModel;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\Security\Core\Security;
 
 /**
+ * The priority must be lower than the Symfony route listener (defaults to 32) and
+ * lower than the Symfony firewall listener (defaults to 8).
+ *
  * @internal
  */
+#[AsEventListener(priority: 7)]
 class PageAccessListener
 {
-    public function __construct(private ContaoFramework $framework, private Security $security)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly Security $security,
+    ) {
     }
 
     /**
@@ -36,9 +43,8 @@ class PageAccessListener
     public function __invoke(RequestEvent $event): void
     {
         $request = $event->getRequest();
-        $pageModel = $this->getPageModel($request);
 
-        if (null === $pageModel) {
+        if (!$pageModel = $this->getPageModel($request)) {
             return;
         }
 
@@ -52,7 +58,7 @@ class PageAccessListener
         // Do not check for logged in member if -1 (guest group) is allowed
         if (
             !$this->security->isGranted('ROLE_MEMBER')
-            && !\in_array(-1, array_map('intval', $pageModel->groups), true)
+            && !\in_array(-1, array_map(\intval(...), $pageModel->groups), true)
         ) {
             throw new InsufficientAuthenticationException('Not authenticated');
         }
@@ -87,6 +93,6 @@ class PageAccessListener
 
         $this->framework->initialize();
 
-        return $this->framework->getAdapter(PageModel::class)->findByPk((int) $pageModel);
+        return $this->framework->getAdapter(PageModel::class)->findById((int) $pageModel);
     }
 }

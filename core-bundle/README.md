@@ -66,6 +66,7 @@ sections:
 security:
     password_hashers:
         Contao\User: auto
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: auto
 
     providers:
         contao.security.backend_user_provider:
@@ -81,6 +82,18 @@ security:
             user_checker: contao.security.user_checker
             switch_user: true
             login_throttling: ~
+            webauthn:
+                authentication:
+                    enabled: true
+                    profile: contao_backend
+                    routes:
+                        options_path: /_contao/login/webauthn/options
+                        result_path: /_contao/login/webauthn/result
+
+            login_link:
+                check_route: contao_backend_login_link
+                signature_properties: [username, lastLogin]
+                success_handler: contao.security.authentication_success_handler
 
             contao_login:
                 remember_me: false
@@ -92,6 +105,7 @@ security:
             request_matcher: contao.routing.frontend_matcher
             provider: contao.security.frontend_user_provider
             user_checker: contao.security.user_checker
+            access_denied_handler: contao.security.access_denied_handler
             switch_user: false
             login_throttling: ~
 
@@ -101,7 +115,8 @@ security:
             remember_me:
                 secret: '%kernel.secret%'
                 remember_me_parameter: autologin
-                service: contao.security.persistent_remember_me_handler
+                token_provider:
+                    doctrine: true
 
             logout:
                 path: contao_frontend_logout
@@ -128,6 +143,6 @@ Visit the [support page][5] to learn about the available support options.
 [2]: https://symfony.com
 [3]: https://github.com/contao/managed-edition
 [4]: https://packagist.org/providers/php-http/client-implementation
-[5]: https://contao.org/en/support.html
+[5]: https://to.contao.org/support
 [6]: https://github.com/symfony/recipes-contrib
 [7]: http://symfony.com/doc/current/components/dotenv.html

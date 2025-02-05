@@ -24,11 +24,20 @@ class ThemeNamespace
      */
     public function generateSlug(string $relativePath): string
     {
+        if ('..' === $relativePath) {
+            return '';
+        }
+
         if (!Path::isRelative($relativePath)) {
-            throw new \InvalidArgumentException(sprintf('Path "%s" must be relative.', $relativePath));
+            throw new \InvalidArgumentException(\sprintf('Path "%s" must be relative.', $relativePath));
         }
 
         $path = Path::normalize($relativePath);
+
+        if (str_contains($path, '..')) {
+            trigger_deprecation('contao/core-bundle', '5.5', 'Using paths outside of the template directory are deprecated and will no longer work in Contao 6. Use the VFS to mount them in the user templates storage instead.');
+        }
+
         $invalidCharacters = [];
 
         $slug = implode('_', array_map(
@@ -40,15 +49,15 @@ class ThemeNamespace
 
                 // Check for invalid characters (see #3354)
                 if (0 !== preg_match_all('%[^a-zA-Z0-9-]%', $chunk, $matches)) {
-                    $invalidCharacters = array_merge($invalidCharacters, $matches[0]);
+                    $invalidCharacters = [...$invalidCharacters, ...$matches[0]];
                 }
 
                 return $chunk;
             },
-            explode('/', $path)
+            explode('/', $path),
         ));
 
-        if (!empty($invalidCharacters)) {
+        if ($invalidCharacters) {
             throw new InvalidThemePathException($path, $invalidCharacters);
         }
 
@@ -75,5 +84,15 @@ class ThemeNamespace
         }
 
         return null;
+    }
+
+    /**
+     * @internal as long as slugs can result in paths outside the template directory, which is not supported by this function.
+     *
+     * Builds the relative path to the theme templates directory from a given slug.
+     */
+    public function getPath(string $slug): string
+    {
+        return str_replace('_', '/', $slug);
     }
 }

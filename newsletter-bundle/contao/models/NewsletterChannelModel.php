@@ -36,16 +36,16 @@ use Contao\Model\Collection;
  * @method static NewsletterChannelModel|null findOneBySender($val, array $opt=array())
  * @method static NewsletterChannelModel|null findOneBySenderName($val, array $opt=array())
  *
- * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findByTstamp($val, array $opt=array())
- * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findByTitle($val, array $opt=array())
- * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findByJumpTo($val, array $opt=array())
- * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findByTemplate($val, array $opt=array())
- * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findByMailerTransport($val, array $opt=array())
- * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findBySender($val, array $opt=array())
- * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findBySenderName($val, array $opt=array())
- * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findMultipleByIds($val, array $opt=array())
- * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findBy($col, $val, array $opt=array())
- * @method static Collection|NewsletterChannelModel[]|NewsletterChannelModel|null findAll(array $opt=array())
+ * @method static Collection<NewsletterChannelModel>|NewsletterChannelModel[]|null findByTstamp($val, array $opt=array())
+ * @method static Collection<NewsletterChannelModel>|NewsletterChannelModel[]|null findByTitle($val, array $opt=array())
+ * @method static Collection<NewsletterChannelModel>|NewsletterChannelModel[]|null findByJumpTo($val, array $opt=array())
+ * @method static Collection<NewsletterChannelModel>|NewsletterChannelModel[]|null findByTemplate($val, array $opt=array())
+ * @method static Collection<NewsletterChannelModel>|NewsletterChannelModel[]|null findByMailerTransport($val, array $opt=array())
+ * @method static Collection<NewsletterChannelModel>|NewsletterChannelModel[]|null findBySender($val, array $opt=array())
+ * @method static Collection<NewsletterChannelModel>|NewsletterChannelModel[]|null findBySenderName($val, array $opt=array())
+ * @method static Collection<NewsletterChannelModel>|NewsletterChannelModel[]|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection<NewsletterChannelModel>|NewsletterChannelModel[]|null findBy($col, $val, array $opt=array())
+ * @method static Collection<NewsletterChannelModel>|NewsletterChannelModel[]|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
@@ -70,7 +70,7 @@ class NewsletterChannelModel extends Model
 	 * @param array $arrIds     An array of newsletter channel IDs
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection|NewsletterChannelModel[]|NewsletterChannelModel|null A collection of models or null if there are no newsletter channels
+	 * @return Collection<NewsletterChannelModel>|NewsletterChannelModel[]|null A collection of models or null if there are no newsletter channels
 	 */
 	public static function findByIds($arrIds, array $arrOptions=array())
 	{

@@ -2,6 +2,7 @@
     'use strict';
 
     const initializedRows = new WeakMap();
+    const saveScrollOffsetEvent = new Event('store-scroll-offset');
 
     const init = (row) => {
         // Check if this row has already been initialized
@@ -9,8 +10,9 @@
             return;
         }
 
-        // Check if this row has all necessary elements
-        if (8 !== row.querySelectorAll('select, button, a.module_link, img.module_image').length) {
+        // Check if the row has all necessary elements to prevent the mutation observer
+        // from initializing the incomplete widget.
+        if (!row.querySelector('button.drag-handle')) {
             return;
         }
 
@@ -43,16 +45,24 @@
                 switch (command) {
                     case 'copy':
                         bt.addEventListener('click', () => {
-                            Backend.getScrollOffset();
+                            window.dispatchEvent(saveScrollOffsetEvent);
+
                             const ntr = tr.cloneNode(true);
                             const selects = tr.querySelectorAll('select');
                             const nselects = ntr.querySelectorAll('select');
+
                             for (let j=0; j<selects.length; j++) {
                                 nselects[j].value = selects[j].value;
                             }
+
+                            ntr.querySelectorAll('[data-original-title]').forEach((el) => {
+                                el.setAttribute('title', el.getAttribute('data-original-title'));
+                                el.removeAttribute('data-original-title');
+                            });
+
+                            initializedRows.set(ntr, true);
                             tr.parentNode.insertBefore(ntr, tr.nextSibling);
-                            ntr.querySelector('.chzn-container').remove();
-                            new Chosen(ntr.querySelector('select.tl_select'));
+
                             addEventsTo(ntr);
                             makeSortable(tbody);
                         });
@@ -60,7 +70,8 @@
 
                     case 'delete':
                         bt.addEventListener('click', () => {
-                            Backend.getScrollOffset();
+                            window.dispatchEvent(saveScrollOffsetEvent);
+
                             if (tbody.children.length > 1) {
                                 tr.remove();
                             } else {
@@ -69,14 +80,17 @@
                                     select.value = select.children[0].value;
                                 });
                             }
+
                             makeSortable(tbody);
                         });
                         break;
 
                     case 'enable':
                         bt.addEventListener('click', function() {
-                            Backend.getScrollOffset();
+                            window.dispatchEvent(saveScrollOffsetEvent);
+
                             const cbx = bt.previousElementSibling;
+
                             if (cbx.checked) {
                                 cbx.checked = '';
                             } else {
@@ -90,20 +104,24 @@
                             bt.addEventListener('keydown', (event) => {
                                 if (event.code === 'ArrowUp' || event.keyCode === 38) {
                                     event.preventDefault();
+
                                     if (tr.previousElementSibling) {
                                         tr.previousElementSibling.insertAdjacentElement('beforebegin', tr);
                                     } else {
                                         tbody.insertAdjacentElement('beforeend', tr);
                                     }
+
                                     bt.focus();
                                     makeSortable(tbody);
                                 } else if (event.code === 'ArrowDown' || event.keyCode === 40) {
                                     event.preventDefault();
+
                                     if (tr.nextElementSibling) {
                                         tr.nextElementSibling.insertAdjacentElement('afterend', tr);
                                     } else {
                                         tbody.insertAdjacentElement('afterbegin', tr);
                                     }
+
                                     bt.focus();
                                     makeSortable(tbody);
                                 }
@@ -120,24 +138,27 @@
             }
 
             const link = tr.querySelector('a.module_link');
-            const image = tr.querySelector('img.module_image');
+            const images = tr.querySelectorAll('img.module_image');
 
             const updateLink = () => {
                 link.href = link.href.replace(/id=[0-9]+/, 'id=' + select.value);
 
                 if (select.value > 0) {
-                    link.style.display = null;
-                    image.style.display = 'none';
+                    link.classList.remove('hidden');
+
+                    images.forEach((image) => {
+                        image.classList.add('hidden');
+                    });
                 } else {
-                    link.style.display = 'none';
-                    image.style.display = null;
+                    link.classList.add('hidden');
+
+                    images.forEach((image) => {
+                        image.classList.remove('hidden');
+                    });
                 }
             };
 
             select.addEventListener('change', updateLink);
-
-            // Backwards compatibility with MooTools "Chosen" script that fires non-native change event
-            select.addEvent('change', updateLink);
         };
 
         makeSortable(tbody);
@@ -146,10 +167,10 @@
 
     document.querySelectorAll('.tl_modulewizard tr').forEach(init);
 
-    new MutationObserver(function (mutationsList) {
+    new MutationObserver(function(mutationsList) {
         for (const mutation of mutationsList) {
             if (mutation.type === 'childList') {
-                mutation.addedNodes.forEach(function (element) {
+                mutation.addedNodes.forEach(function(element) {
                     if (element.matches && element.matches('.tl_modulewizard tr, .tl_modulewizard tr *')) {
                         init(element.closest('tr'));
                     }

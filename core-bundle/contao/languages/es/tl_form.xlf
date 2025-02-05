@@ -25,6 +25,12 @@
         <source>Please choose the page to which visitors will be redirected after submitting the form.</source>
         <target>Normalmente un formulario se envía a otra página, que procesa los datos o muestra un mensaje. Puedes seleccionar esta página aquí.</target>
       </trans-unit>
+      <trans-unit id="tl_form.confirmation.0">
+        <source>Confirmation message</source>
+      </trans-unit>
+      <trans-unit id="tl_form.confirmation.1">
+        <source>Here you can enter the confirmation message that will be displayed after submitting the form. You can use the submitted form data as simple tokens, e.g. &lt;code&gt;##field_name##&lt;/code&gt;. The confirmation message is also available as &lt;code&gt;{{form_confirmation}}&lt;/code&gt; insert tag.</source>
+      </trans-unit>
       <trans-unit id="tl_form.sendViaEmail.0">
         <source>Send form data via e-mail</source>
         <target>Enviar formulario por e-mail</target>
@@ -185,6 +191,12 @@
         <source>Allow HTML tags in form fields.</source>
         <target>Si seleccionas esta opción, algunas etiquetas HTML no serán eliminadas (ver &lt;em&gt;allowedTags&lt;/em&gt;).</target>
       </trans-unit>
+      <trans-unit id="tl_form.ajax.0">
+        <source>Submit via Ajax</source>
+      </trans-unit>
+      <trans-unit id="tl_form.ajax.1">
+        <source>Submit the form via Ajax instead of reloading the page.</source>
+      </trans-unit>
       <trans-unit id="tl_form.tstamp.0">
         <source>Revision date</source>
         <target>Fecha revisión</target>
@@ -213,6 +225,10 @@
         <source>Form configuration</source>
         <target>Ajustes formulario</target>
       </trans-unit>
+      <trans-unit id="tl_form.confirm_legend">
+        <source>Confirmation</source>
+        <target>Confirma la contraseña</target>
+      </trans-unit>
       <trans-unit id="tl_form.template_legend">
         <source>Template settings</source>
         <target>Ajustes de plantilla</target>
@@ -235,6 +251,7 @@
       </trans-unit>
       <trans-unit id="tl_form.children">
         <source>Edit the form fields of form ID %s</source>
+        <target>Edite los campos de formulario con ID de formulario %s</target>
       </trans-unit>
       <trans-unit id="tl_form.copy">
         <source>Duplicate form ID %s</source>

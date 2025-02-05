@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\ContaoManager;
 
+use CmsIg\Seal\Integration\Symfony\SealBundle;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\GenerateJwtCookieCommand;
 use Contao\ManagerBundle\ContaoManager\ApiCommand\GetConfigCommand;
@@ -33,6 +34,7 @@ use Contao\ManagerPlugin\Routing\RoutingPluginInterface;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use League\FlysystemBundle\FlysystemBundle;
+use Loupe\Loupe\LoupeFactory;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
 use Symfony\Bundle\DebugBundle\DebugBundle;
@@ -46,7 +48,6 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Mailer\Transport\NativeTransportFactory;
 use Symfony\Component\Routing\RouteCollection;
@@ -84,6 +85,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             BundleConfig::create(NelmioCorsBundle::class),
             BundleConfig::create(NelmioSecurityBundle::class),
             BundleConfig::create(FOSHttpCacheBundle::class),
+            BundleConfig::create(SealBundle::class),
             BundleConfig::create(ContaoManagerBundle::class)->setLoadAfter([ContaoCoreBundle::class]),
             BundleConfig::create(DebugBundle::class)->setLoadInProduction(false),
             BundleConfig::create(WebProfilerBundle::class)->setLoadInProduction(false),
@@ -92,7 +94,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         // Autoload the legacy modules
         if (null !== static::$autoloadModules && file_exists(static::$autoloadModules)) {
-            /** @var array<SplFileInfo> $modules */
             $modules = Finder::create()
                 ->directories()
                 ->depth(0)
@@ -107,7 +108,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 }
             }
 
-            if (!empty($iniConfigs)) {
+            if ($iniConfigs) {
                 $configs = array_merge($configs, ...$iniConfigs);
             }
         }
@@ -126,29 +127,31 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 }
 
                 $container->setParameter('container.dumper.inline_class_loader', true);
-            }
+            },
         );
     }
 
     public function getRouteCollection(LoaderResolverInterface $resolver, KernelInterface $kernel): RouteCollection|null
     {
-        if ('dev' !== $kernel->getEnvironment()) {
-            return null;
-        }
-
-        $collections = [];
-
-        $files = [
-            '_wdt' => '@WebProfilerBundle/Resources/config/routing/wdt.xml',
-            '_profiler' => '@WebProfilerBundle/Resources/config/routing/profiler.xml',
+        $collections = [
+            $resolver
+                ->resolve('@WebauthnBundle/Resources/config/routing.php')
+                ->load('@WebauthnBundle/Resources/config/routing.php'),
         ];
 
-        foreach ($files as $prefix => $file) {
-            /** @var RouteCollection $collection */
-            $collection = $resolver->resolve($file)->load($file);
-            $collection->addPrefix($prefix);
+        if ('dev' === $kernel->getEnvironment()) {
+            $files = [
+                '_wdt' => '@WebProfilerBundle/Resources/config/routing/wdt.xml',
+                '_profiler' => '@WebProfilerBundle/Resources/config/routing/profiler.xml',
+            ];
 
-            $collections[] = $collection;
+            foreach ($files as $prefix => $file) {
+                /** @var RouteCollection $collection */
+                $collection = $resolver->resolve($file)->load($file);
+                $collection->addPrefix($prefix);
+
+                $collections[] = $collection;
+            }
         }
 
         return array_reduce(
@@ -158,7 +161,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
                 return $carry;
             },
-            new RouteCollection()
+            new RouteCollection(),
         );
     }
 
@@ -201,12 +204,24 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     public function getExtensionConfig($extensionName, array $extensionConfigs, PluginContainerBuilder $container): array
     {
         switch ($extensionName) {
+            case 'contao':
+                if (!$container->hasParameter('contao.dns_mapping')) {
+                    $container->setParameter('env(DNS_MAPPING)', '[]');
+                    $container->setParameter('contao.dns_mapping', '%env(json:DNS_MAPPING)%');
+                }
+
+                return $this->addDefaultBackendSearchProvider($extensionConfigs);
+
             case 'framework':
                 $extensionConfigs = $this->checkMailerTransport($extensionConfigs, $container);
                 $extensionConfigs = $this->addDefaultMailer($extensionConfigs);
 
                 if (!isset($_SERVER['APP_SECRET'])) {
-                    $container->setParameter('env(APP_SECRET)', $container->getParameter('secret'));
+                    if ($container->hasParameter('secret')) {
+                        $container->setParameter('env(APP_SECRET)', $container->getParameter('secret'));
+                    } else {
+                        $container->setParameter('env(APP_SECRET)', '');
+                    }
                 }
 
                 if (!isset($_SERVER['MAILER_DSN'])) {
@@ -223,9 +238,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                 $extensionConfigs = $this->addDefaultPdoDriverOptions($extensionConfigs, $container);
                 $extensionConfigs = $this->addDefaultDoctrineMapping($extensionConfigs, $container);
                 $extensionConfigs = $this->enableStrictMode($extensionConfigs, $container);
-                $extensionConfigs = $this->setDefaultCollation($extensionConfigs);
 
-                return $extensionConfigs;
+                return $this->setDefaultCollation($extensionConfigs);
 
             case 'nelmio_security':
                 return $this->checkClickjackingPaths($extensionConfigs);
@@ -237,7 +251,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Sets the PDO driver options if applicable (#2459).
      *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function addDefaultPdoDriverOptions(array $extensionConfigs, ContainerBuilder $container): array
     {
@@ -276,7 +290,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Adds a default ORM mapping for the App namespace if none is configured.
      *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function addDefaultDoctrineMapping(array $extensionConfigs, ContainerBuilder $container): array
     {
@@ -307,8 +321,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             return $extensionConfigs;
         }
 
-        // Skip if a mapping with the name or alias "App" already exists or any
-        // mapping already targets "%kernel.project_dir%/src/Entity".
+        // Skip if a mapping with the name or alias "App" already exists or any mapping
+        // already targets "%kernel.project_dir%/src/Entity".
         foreach (array_replace(...$mappings) as $name => $values) {
             if (
                 'App' === $name
@@ -330,7 +344,6 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
                     $defaultEntityManager => [
                         'mappings' => [
                             'App' => [
-                                'type' => 'annotation',
                                 'dir' => '%kernel.project_dir%/src/Entity',
                                 'is_bundle' => false,
                                 'prefix' => 'App\Entity',
@@ -348,7 +361,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Enables the SQL strict mode for PDO and MySQL drivers.
      *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function enableStrictMode(array $extensionConfigs, ContainerBuilder $container): array
     {
@@ -383,7 +396,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Sets the "collate" and "collation" options to the same value (see #4798).
      *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function setDefaultCollation(array $extensionConfigs): array
     {
@@ -418,11 +431,11 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Changes the mail transport from "mail" to "sendmail".
      *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function checkMailerTransport(array $extensionConfigs, ContainerBuilder $container): array
     {
-        if ('mail' === $container->getParameter('mailer_transport')) {
+        if ($container->hasParameter('mailer_transport') && 'mail' === $container->getParameter('mailer_transport')) {
             $container->setParameter('mailer_transport', 'sendmail');
         }
 
@@ -432,8 +445,8 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Dynamically adds a default mailer to the config, if no mailer is defined.
      *
-     * We cannot add a default mailer configuration to the skeleton config.yaml,
-     * since different types of configurations are not allowed.
+     * We cannot add a default mailer configuration to the skeleton config.yaml, since
+     * different types of configurations are not allowed.
      *
      * For example, if the Manager Bundle defined
      *
@@ -448,12 +461,12 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
      *             transports:
      *                 foobar: 'smtps://smtp.example.com'
      *
-     * to their config.yaml, the merged configuration will lead to an error, since
-     * you cannot use "framework.mailer.dsn" together with "framework.mailer.transports".
-     * Thus, the default mailer configuration needs to be added dynamically if
-     * not already present.
+     * to their config.yaml, the merged configuration will lead to an error, since you
+     * cannot use "framework.mailer.dsn" together with "framework.mailer.transports".
+     * Thus, the default mailer configuration needs to be added dynamically if not
+     * already present.
      *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function addDefaultMailer(array $extensionConfigs): array
     {
@@ -466,6 +479,38 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $extensionConfigs[] = [
             'mailer' => [
                 'dsn' => '%env(MAILER_DSN)%',
+            ],
+        ];
+
+        return $extensionConfigs;
+    }
+
+    /**
+     * Dynamically configures the back end search adapter if none was configured and
+     * the system supports it.
+     */
+    private function addDefaultBackendSearchProvider(array $extensionConfigs): array
+    {
+        foreach ($extensionConfigs as $config) {
+            // Configured a custom adapter (e.g. MeiliSearch or whatever)
+            if (isset($config['backend_search']['dsn'])) {
+                return $extensionConfigs;
+            }
+        }
+
+        if (!class_exists(LoupeFactory::class)) {
+            return $extensionConfigs;
+        }
+
+        $loupeFactory = new LoupeFactory();
+
+        if (!$loupeFactory->isSupported()) {
+            return $extensionConfigs;
+        }
+
+        $extensionConfigs[] = [
+            'backend_search' => [
+                'dsn' => 'loupe://%kernel.project_dir%/var/backend_search',
             ],
         ];
 
@@ -511,7 +556,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
     /**
      * Adds a clickjacking configuration for "^/.*" if not already defined.
      *
-     * @return array<string,array<string,array<string,array<string,mixed>>>>
+     * @return array<string, array<string, array<string, array<string, mixed>>>>
      */
     private function checkClickjackingPaths(array $extensionConfigs): array
     {
@@ -543,10 +588,10 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         $userPassword = '';
 
-        if ($user = $container->getParameter('database_user')) {
+        if ($container->hasParameter('database_user') && $user = $container->getParameter('database_user')) {
             $userPassword = $this->encodeUrlParameter((string) $user);
 
-            if ($password = $container->getParameter('database_password')) {
+            if ($container->hasParameter('database_password') && $password = $container->getParameter('database_password')) {
                 $userPassword .= ':'.$this->encodeUrlParameter((string) $password);
             }
 
@@ -555,7 +600,7 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
 
         $dbName = '';
 
-        if ($name = $container->getParameter('database_name')) {
+        if ($container->hasParameter('database_name') && $name = $container->getParameter('database_name')) {
             $dbName .= '/'.$this->encodeUrlParameter((string) $name);
         }
 
@@ -563,13 +608,13 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
             $dbName .= '?serverVersion='.$this->encodeUrlParameter((string) $version);
         }
 
-        return sprintf(
+        return \sprintf(
             '%s://%s%s:%s%s',
             str_replace('_', '-', $driver),
             $userPassword,
-            $container->getParameter('database_host'),
-            (int) $container->getParameter('database_port'),
-            $dbName
+            $container->hasParameter('database_host') ? $container->getParameter('database_host') : 'localhost',
+            $container->hasParameter('database_port') ? (int) $container->getParameter('database_port') : 3306,
+            $dbName,
         );
     }
 
@@ -583,30 +628,30 @@ class Plugin implements BundlePluginInterface, ConfigPluginInterface, RoutingPlu
         $credentials = '';
         $portSuffix = '';
 
-        if (($encryption = $container->getParameter('mailer_encryption')) && 'ssl' === $encryption) {
+        if ($container->hasParameter('mailer_encryption') && ($encryption = $container->getParameter('mailer_encryption')) && 'ssl' === $encryption) {
             $transport = 'smtps';
         }
 
-        if ($user = $container->getParameter('mailer_user')) {
+        if ($container->hasParameter('mailer_user') && $user = $container->getParameter('mailer_user')) {
             $credentials .= $this->encodeUrlParameter((string) $user);
 
-            if ($password = $container->getParameter('mailer_password')) {
+            if ($container->hasParameter('mailer_password') && $password = $container->getParameter('mailer_password')) {
                 $credentials .= ':'.$this->encodeUrlParameter((string) $password);
             }
 
             $credentials .= '@';
         }
 
-        if ($port = $container->getParameter('mailer_port')) {
+        if ($port = $container->hasParameter('mailer_port') ? $container->getParameter('mailer_port') : 25) {
             $portSuffix = ':'.$port;
         }
 
-        return sprintf(
+        return \sprintf(
             '%s://%s%s%s',
             $transport,
             $credentials,
-            $container->getParameter('mailer_host'),
-            $portSuffix
+            $container->hasParameter('mailer_host') ? $container->getParameter('mailer_host') : '127.0.0.1',
+            $portSuffix,
         );
     }
 

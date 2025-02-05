@@ -27,15 +27,19 @@ use Symfony\Component\Uid\Uuid;
 class FigureBuilderStub extends FigureBuilder
 {
     private string|null $path = null;
+
     private Metadata|null $metadata = null;
+
     private array $linkAttributes = [];
 
     /**
      * @param array<string, ImageResult> $imageMap
      */
-    public function __construct(private readonly array $imageMap, private readonly array $uuidMap = [])
-    {
-        // do not call parent constructor
+    public function __construct(
+        private readonly array $imageMap,
+        private readonly array $uuidMap = [],
+    ) {
+        // Do not call parent constructor
     }
 
     public function fromPath(string $path, bool $autoDetectDbafsPaths = true): FigureBuilder
@@ -100,12 +104,16 @@ class FigureBuilderStub extends FigureBuilder
             throw new InvalidResourceException('No path set.');
         }
 
+        if (!isset($this->imageMap[$this->path])) {
+            throw new InvalidResourceException('Resource does not exist.');
+        }
+
         return new Figure($this->imageMap[$this->path], $this->metadata, $this->linkAttributes);
     }
 
     public function buildIfResourceExists(): Figure|null
     {
-        if (null === $this->path) {
+        if (null === $this->path || !isset($this->imageMap[$this->path])) {
             return null;
         }
 

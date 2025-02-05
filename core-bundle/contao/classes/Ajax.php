@@ -15,7 +15,6 @@ use Contao\CoreBundle\Exception\NoContentResponseException;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 /**
@@ -70,7 +69,6 @@ class Ajax extends Backend
 	 */
 	public function executePreActions()
 	{
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		switch ($this->strAction)
@@ -139,8 +137,7 @@ class Ajax extends Backend
 				{
 					foreach ($GLOBALS['TL_HOOKS']['executePreActions'] as $callback)
 					{
-						$this->import($callback[0]);
-						$this->{$callback[0]}->{$callback[1]}($this->strAction);
+						System::importStatic($callback[0])->{$callback[1]}($this->strAction);
 					}
 				}
 				break;
@@ -156,7 +153,7 @@ class Ajax extends Backend
 	 * @throws ResponseException
 	 * @throws BadRequestHttpException
 	 */
-	public function executePostActions(DataContainer $dc)
+	public function executePostActions(DataContainer $dc): never
 	{
 		// Bypass any core logic for non-core drivers (see #5957)
 		if (!$dc instanceof DC_File && !$dc instanceof DC_Folder && !$dc instanceof DC_Table)
@@ -203,11 +200,13 @@ class Ajax extends Backend
 				// Load the value
 				if (Input::get('act') != 'overrideAll')
 				{
+					$db = Database::getInstance();
+
 					if (is_a($GLOBALS['TL_DCA'][$dc->table]['config']['dataContainer'] ?? null, DC_File::class, true))
 					{
 						$varValue = Config::get($strField);
 					}
-					elseif ($intId && $this->Database->tableExists($dc->table))
+					elseif ($intId && $db->tableExists($dc->table))
 					{
 						$idField = 'id';
 
@@ -217,8 +216,9 @@ class Ajax extends Backend
 							$idField = 'path';
 						}
 
-						$objRow = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE " . $idField . "=?")
-												 ->execute($intId);
+						$objRow = $db
+							->prepare("SELECT * FROM " . $dc->table . " WHERE " . $idField . "=?")
+							->execute($intId);
 
 						// The record does not exist
 						if ($objRow->numRows < 1)
@@ -243,8 +243,7 @@ class Ajax extends Backend
 					{
 						if (\is_array($callback))
 						{
-							$this->import($callback[0]);
-							$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $dc);
+							$varValue = System::importStatic($callback[0])->{$callback[1]}($varValue, $dc);
 						}
 						elseif (\is_callable($callback))
 						{
@@ -305,18 +304,14 @@ class Ajax extends Backend
 					$varValue = serialize($varValue);
 				}
 
-				/** @var FileTree|PageTree|Picker $strClass */
+				/** @var class-string<FileTree|PageTree|Picker> $strClass */
 				$strClass = $GLOBALS['BE_FFL'][$strKey] ?? null;
-
-				/** @var FileTree|PageTree|Picker $objWidget */
 				$objWidget = new $strClass($strClass::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField], $dc->inputName, $varValue, $strField, $dc->table, $dc));
 
 				throw new ResponseException($this->convertToResponse($objWidget->generate()));
 
-			// Toggle subpalettes
+			// Toggle sub-palettes
 			case 'toggleSubpalette':
-				$this->import(BackendUser::class, 'User');
-
 				// Check whether the field is a selector field and allowed for regular users (thanks to Fabian Mihailowitsch) (see #4427)
 				if (!\is_array($GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__'] ?? null) || !\in_array(Input::post('field'), $GLOBALS['TL_DCA'][$dc->table]['palettes']['__selector__']) || (DataContainer::isFieldExcluded($dc->table, Input::post('field')) && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $dc->table . '::' . Input::post('field'))))
 				{
@@ -327,52 +322,32 @@ class Ajax extends Backend
 
 				if ($dc instanceof DC_Table)
 				{
+					$id = $dc->id;
+					$this->strAjaxId = null;
+
 					if (Input::get('act') == 'editAll')
 					{
-						$this->strAjaxId = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', Input::post('id'));
-
-						$objVersions = new Versions($dc->table, $this->strAjaxId);
-						$objVersions->initialize();
-
-						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : 0) . "' WHERE id=?")->execute($this->strAjaxId);
-						DataContainer::clearCurrentRecordCache($this->strAjaxId, $dc->table);
-
-						$objVersions->create();
-
-						if (Input::post('load'))
-						{
-							throw new ResponseException($this->convertToResponse($dc->editAll($this->strAjaxId, Input::post('id'))));
-						}
-
-						if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
-						{
-							throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
-						}
+						$id = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', Input::post('id'));
+						$this->strAjaxId = $id;
 					}
-					else
+
+					$dc->toggle($id, Input::post('field'), true);
+
+					if (Input::post('load'))
 					{
-						$objVersions = new Versions($dc->table, $dc->id);
-						$objVersions->initialize();
+						$action = Input::get('act') == 'editAll' ? 'editAll' : 'edit';
 
-						$this->Database->prepare("UPDATE " . $dc->table . " SET " . Input::post('field') . "='" . ((Input::post('state') == 1) ? 1 : 0) . "' WHERE id=?")->execute($dc->id);
-						DataContainer::clearCurrentRecordCache($dc->id, $dc->table);
+						throw new ResponseException($this->convertToResponse($dc->$action($this->strAjaxId, Input::post('id'))));
+					}
 
-						$objVersions->create();
-
-						if (Input::post('load'))
-						{
-							throw new ResponseException($this->convertToResponse($dc->edit(false, Input::post('id'))));
-						}
-
-						if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
-						{
-							throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
-						}
+					if (($intLatestVersion = (new Versions($dc->table, $id))->getLatestVersion()) !== null)
+					{
+						throw new ResponseException($this->convertToResponse('<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">'));
 					}
 				}
 				elseif ($dc instanceof DC_File)
 				{
-					$val = (Input::post('state') == 1);
+					$val = Input::post('state') == 1;
 					Config::persist(Input::post('field'), $val);
 
 					if (Input::post('load'))
@@ -410,8 +385,7 @@ class Ajax extends Backend
 		{
 			foreach ($GLOBALS['TL_HOOKS']['executePostActions'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($this->strAction, $dc);
+				System::importStatic($callback[0])->{$callback[1]}($this->strAction, $dc);
 			}
 		}
 	}

@@ -14,40 +14,35 @@ namespace Contao\CoreBundle\Monolog;
 
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Statement;
 use Monolog\Formatter\FormatterInterface;
 use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\AbstractProcessingHandler;
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Monolog\Level;
+use Monolog\LogRecord;
 
-class ContaoTableHandler extends AbstractProcessingHandler implements ContainerAwareInterface
+class ContaoTableHandler extends AbstractProcessingHandler
 {
-    use ContainerAwareTrait;
-
-    private string $dbalServiceName = 'doctrine.dbal.default_connection';
-    private Statement|null $statement = null;
-
-    public function getDbalServiceName(): string
-    {
-        return $this->dbalServiceName;
+    /**
+     * @param \Closure(): Connection $connection
+     */
+    public function __construct(
+        private readonly \Closure $connection,
+        $level = Level::Debug,
+        bool $bubble = true,
+    ) {
+        parent::__construct($level, $bubble);
     }
 
-    public function setDbalServiceName(string $name): void
-    {
-        $this->dbalServiceName = $name;
-    }
-
-    public function handle(array $record): bool
+    public function handle(LogRecord $record): bool
     {
         if (!$this->isHandling($record)) {
             return false;
         }
 
         $record = $this->processRecord($record);
-        $record['formatted'] = $this->getFormatter()->format($record);
+        $record->formatted = $this->getFormatter()->format($record);
 
-        if (!isset($record['extra']['contao']) || !$record['extra']['contao'] instanceof ContaoContext) {
+        if (!isset($record->extra['contao']) || !$record->extra['contao'] instanceof ContaoContext) {
             return false;
         }
 
@@ -57,57 +52,29 @@ class ContaoTableHandler extends AbstractProcessingHandler implements ContainerA
             return false;
         }
 
-        return false === $this->bubble;
+        return !$this->bubble;
     }
 
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
-        $this->createStatement();
-
-        /** @var \DateTime $date */
-        $date = $record['datetime'];
-
         /** @var ContaoContext $context */
-        $context = $record['extra']['contao'];
+        $context = $record->extra['contao'];
 
-        $this->statement->executeStatement([
-            'tstamp' => $date->format('U'),
-            'text' => StringUtil::specialchars((string) $record['formatted']),
+        ($this->connection)()->insert('tl_log', [
+            'tstamp' => $record->datetime->format('U'),
+            'text' => StringUtil::specialchars((string) $record->formatted),
             'source' => (string) $context->getSource(),
             'action' => (string) $context->getAction(),
             'username' => (string) $context->getUsername(),
             'func' => $context->getFunc(),
             'browser' => StringUtil::specialchars((string) $context->getBrowser()),
+            'uri' => StringUtil::specialchars($context->getUri() ?? ''),
+            'page' => $context->getPageId() ?? 0,
         ]);
     }
 
     protected function getDefaultFormatter(): FormatterInterface
     {
         return new LineFormatter('%message%');
-    }
-
-    /**
-     * Verifies the database connection and prepares the statement.
-     */
-    private function createStatement(): void
-    {
-        if (null !== $this->statement) {
-            return;
-        }
-
-        if (null === $this->container || !$this->container->has($this->dbalServiceName)) {
-            throw new \RuntimeException('The container has not been injected or the database service is missing');
-        }
-
-        /** @var Connection $connection */
-        $connection = $this->container->get($this->dbalServiceName);
-
-        $this->statement = $connection->prepare('
-            INSERT INTO
-                tl_log
-                    (tstamp, source, action, username, text, func, browser)
-                VALUES
-                    (:tstamp, :source, :action, :username, :text, :func, :browser)
-        ');
     }
 }

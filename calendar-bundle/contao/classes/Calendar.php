@@ -11,9 +11,10 @@
 namespace Contao;
 
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Provide methods regarding calendars.
@@ -39,7 +40,7 @@ class Calendar extends Frontend
 	 */
 	public function generateFeed($intId)
 	{
-		$objCalendar = CalendarFeedModel::findByPk($intId);
+		$objCalendar = CalendarFeedModel::findById($intId);
 
 		if ($objCalendar === null)
 		{
@@ -53,8 +54,7 @@ class Calendar extends Frontend
 		{
 			$webDir = StringUtil::stripRootDir(System::getContainer()->getParameter('contao.web_dir'));
 
-			$this->import(Files::class, 'Files');
-			$this->Files->delete($webDir . '/share/' . $objCalendar->feedName . '.xml');
+			Files::getInstance()->delete($webDir . '/share/' . $objCalendar->feedName . '.xml');
 		}
 
 		// Update XML file
@@ -71,8 +71,7 @@ class Calendar extends Frontend
 	 */
 	public function generateFeeds()
 	{
-		$this->import(Automator::class, 'Automator');
-		$this->Automator->purgeXmlFiles();
+		(new Automator())->purgeXmlFiles();
 
 		$objCalendar = CalendarFeedModel::findAll();
 
@@ -125,6 +124,9 @@ class Calendar extends Frontend
 			return;
 		}
 
+		// Load the default language file in the feed language (see #5946)
+		System::loadLanguageFile('default', $arrFeed['language'] ?? null);
+
 		$strType = ($arrFeed['format'] == 'atom') ? 'generateAtom' : 'generateRss';
 		$strLink = $arrFeed['feedBase'] ?: Environment::get('base');
 		$strFile = $arrFeed['feedName'];
@@ -140,23 +142,23 @@ class Calendar extends Frontend
 		$time = time();
 
 		// Get the upcoming events
-		$objArticle = CalendarEventsModel::findUpcomingByPids($arrCalendars, $arrFeed['maxItems']);
+		$objArticles = CalendarEventsModel::findUpcomingByPids($arrCalendars, $arrFeed['maxItems']);
 
 		// Parse the items
-		if ($objArticle !== null)
+		if ($objArticles !== null)
 		{
-			while ($objArticle->next())
+			while ($objArticles->next())
 			{
+				$objArticle = $objArticles->current();
+
 				// Never add unpublished elements to the RSS feeds
 				if (!$objArticle->published || ($objArticle->start && $objArticle->start > $time) || ($objArticle->stop && $objArticle->stop <= $time))
 				{
 					continue;
 				}
 
-				$jumpTo = $objArticle->getRelated('pid')->jumpTo;
-
 				// No jumpTo page set (see #4784)
-				if (!$jumpTo)
+				if (!$jumpTo = CalendarModel::findById($objArticle->pid)?->jumpTo)
 				{
 					continue;
 				}
@@ -211,8 +213,7 @@ class Calendar extends Frontend
 
 		$container = System::getContainer();
 
-		/** @var RequestStack $requestStack */
-		$requestStack = System::getContainer()->get('request_stack');
+		$requestStack = $container->get('request_stack');
 		$currentRequest = $requestStack->getCurrentRequest();
 
 		$origObjPage = $GLOBALS['objPage'] ?? null;
@@ -230,7 +231,11 @@ class Calendar extends Frontend
 					}
 
 					// Override the global page object (#2946)
-					$GLOBALS['objPage'] = $this->getPageWithDetails(CalendarModel::findByPk($event['pid'])->jumpTo);
+					$GLOBALS['objPage'] = $this->getPageWithDetails(CalendarModel::findById($event['pid'])->jumpTo);
+
+					// Override the assets and files context (#6563)
+					$GLOBALS['objPage']->staticFiles = rtrim($GLOBALS['objPage']->staticFiles ?: $strLink, '/');
+					$GLOBALS['objPage']->staticPlugins = rtrim($GLOBALS['objPage']->staticPlugins ?: $strLink, '/');
 
 					// Push a new request to the request stack (#3856)
 					$request = $this->createSubRequest($event['link'], $currentRequest);
@@ -249,7 +254,7 @@ class Calendar extends Frontend
 						$objItem->guid = $event['link'] . '#' . date('Y-m-d', $event['startTime']);
 					}
 
-					if (($objAuthor = UserModel::findById($event['author'])) !== null)
+					if ($objAuthor = UserModel::findById($event['author']))
 					{
 						$objItem->author = $objAuthor->name;
 					}
@@ -279,7 +284,7 @@ class Calendar extends Frontend
 						$strDescription = $event['teaser'] ?? '';
 					}
 
-					$strDescription = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($strDescription);
+					$strDescription = $container->get('contao.insert_tag.parser')->replaceInline($strDescription);
 					$objItem->description = $this->convertRelativeUrls($strDescription, $strLink);
 
 					if (\is_array($event['media:content']))
@@ -310,7 +315,10 @@ class Calendar extends Frontend
 		$webDir = StringUtil::stripRootDir($container->getParameter('contao.web_dir'));
 
 		// Create the file
-		File::putContent($webDir . '/share/' . $strFile . '.xml', System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objFeed->$strType()));
+		File::putContent($webDir . '/share/' . $strFile . '.xml', $container->get('contao.insert_tag.parser')->replaceInline($objFeed->$strType()));
+
+		// Reset the default language file
+		System::loadLanguageFile('default');
 	}
 
 	/**
@@ -333,7 +341,6 @@ class Calendar extends Frontend
 		$span = self::calculateSpan($intStart, $intEnd);
 		$format = $objEvent->addTime ? 'datimFormat' : 'dateFormat';
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		if ($objPage instanceof PageModel)
@@ -362,40 +369,14 @@ class Calendar extends Frontend
 
 		// Add title and link
 		$title .= ' ' . $objEvent->title;
-		$link = '';
 
-		switch ($objEvent->source)
+		try
 		{
-			case 'external':
-				$url = $objEvent->url;
-
-				if (Validator::isRelativeUrl($url))
-				{
-					$url = Environment::get('path') . '/' . $url;
-				}
-
-				$link = $url;
-				break;
-
-			case 'internal':
-				if (($objTarget = $objEvent->getRelated('jumpTo')) instanceof PageModel)
-				{
-					/** @var PageModel $objTarget */
-					$link = $objTarget->getAbsoluteUrl();
-				}
-				break;
-
-			case 'article':
-				if (($objArticle = ArticleModel::findByPk($objEvent->articleId)) instanceof ArticleModel && ($objPid = $objArticle->getRelated('pid')) instanceof PageModel)
-				{
-					/** @var PageModel $objPid */
-					$link = StringUtil::ampersand($objPid->getAbsoluteUrl('/articles/' . ($objArticle->alias ?: $objArticle->id)));
-				}
-				break;
-
-			default:
-				$link = $objParent->getAbsoluteUrl('/' . ($objEvent->alias ?: $objEvent->id));
-				break;
+			$link = System::getContainer()->get('contao.routing.content_url_generator')->generate($objEvent, array(), UrlGeneratorInterface::ABSOLUTE_URL);
+		}
+		catch (ExceptionInterface)
+		{
+			$link = '';
 		}
 
 		// Store the whole row (see #5085)
@@ -494,7 +475,7 @@ class Calendar extends Frontend
 	}
 
 	/**
-	 * Return the names of the existing feeds so they are not removed
+	 * Return the names of the existing feeds, so they are not removed
 	 *
 	 * @return array
 	 */
@@ -524,7 +505,24 @@ class Calendar extends Frontend
 	{
 		if (!\array_key_exists($intPageId, self::$arrPageCache))
 		{
-			self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId);
+			$objPage = self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId);
+
+			if (null === $objPage)
+			{
+				return null;
+			}
+
+			if (!$objLayout = LayoutModel::findById($objPage->layout))
+			{
+				return $objPage;
+			}
+
+			if (!$objTheme = ThemeModel::findById($objLayout->pid))
+			{
+				return $objPage;
+			}
+
+			$objPage->templateGroup = $objTheme->templates ?? null;
 		}
 
 		return self::$arrPageCache[$intPageId];
@@ -533,7 +531,7 @@ class Calendar extends Frontend
 	/**
 	 * Creates a sub request for the given URI.
 	 */
-	private function createSubRequest(string $uri, Request $request = null): Request
+	private function createSubRequest(string $uri, Request|null $request = null): Request
 	{
 		$cookies = null !== $request ? $request->cookies->all() : array();
 		$server = null !== $request ? $request->server->all() : array();

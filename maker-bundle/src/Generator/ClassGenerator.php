@@ -18,7 +18,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ClassGenerator implements GeneratorInterface
 {
-    public function __construct(private Generator $generator)
+    public function __construct(private readonly Generator $generator)
     {
     }
 
@@ -29,7 +29,7 @@ class ClassGenerator implements GeneratorInterface
         return $this->generator->generateClass(
             $options['fqcn'],
             $this->getSourcePath($options['source']),
-            $options['variables']
+            $options['variables'],
         );
     }
 

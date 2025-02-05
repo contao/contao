@@ -1,0 +1,10 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+{% use "@Contao/component/_headline.html.twig" %}
+
+{% block wrapper %}
+    {# The "headline" content element does not have a wrapper element, so the
+       wrapper attributes must be applied to the "_headline" component. #}
+    {% with {headline: headline|default(_context)|merge({attributes})} %}
+        {{ block('headline_component') }}
+    {% endwith %}
+{% endblock %}

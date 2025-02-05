@@ -117,7 +117,7 @@ class ImaginePreviewProviderTest extends TestCase
         $provider->generatePreviews($sourcePath, 512, $targetPathCallback);
     }
 
-    private function createProvider(ImagineInterface $imagine = null): ImaginePreviewProvider
+    private function createProvider(ImagineInterface|null $imagine = null): ImaginePreviewProvider
     {
         return new ImaginePreviewProvider($imagine ?? new Imagine());
     }

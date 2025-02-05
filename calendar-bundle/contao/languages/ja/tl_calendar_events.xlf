@@ -255,11 +255,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
-        <target>将来のイベント</target>
+        <target>特別なイベント</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.featured.1">
         <source>Show the event in a featured event list.</source>
-        <target>イベントを将来のイベントリストに表示</target>
+        <target>イベントを特別なイベントリストに表示</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.published.0">
         <source>Publish event</source>
@@ -274,16 +274,16 @@
         <target>公開の開始日</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.start.1">
-        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>ある特定の日時より前はイベントをウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにしてください。</target>
+        <source>If you want to prevent the event from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>特定の日時より前はイベントをウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにします。</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.0">
         <source>Show until</source>
         <target>公開の終了日</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.stop.1">
-        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>ある特定の日時より後はイベントをウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにしてください。</target>
+        <source>If you want to prevent the event from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>特定の日時より後はイベントをウェブサイトに表示したくない場合は、その日時を入力します。それ以外の場合は空のままにします。</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.tstamp.0">
         <source>Revision date</source>
@@ -385,13 +385,29 @@
         <source>Delete event ID %s</source>
         <target>ID %sのイベントを削除</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.toggle">
-        <source>Publish/unpublish event ID %s</source>
-        <target>ID %sのイベントの公開と非公開を切り替え</target>
+      <trans-unit id="tl_calendar_events.toggle.0">
+        <source>Publish/unpublish event</source>
+        <target>イベントを公開または非公開</target>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.feature">
+      <trans-unit id="tl_calendar_events.toggle.1">
+        <source>Unpublish event ID %s</source>
+        <target>ID %sのイベントを非公開</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.toggle.2">
+        <source>Publish event ID %s</source>
+        <target>ID %sのイベントを公開</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.0">
         <source>Feature/unfeature event ID %s</source>
         <target>%sのイベントを特別かどうかを切り替え</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.1">
+        <source>Unfeature event ID %s</source>
+        <target>ID %sのイベントを通常に設定</target>
+      </trans-unit>
+      <trans-unit id="tl_calendar_events.feature.2">
+        <source>Feature event ID %s</source>
+        <target>ID %sのイベントを特別に設定</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.pasteafter.0">
         <source>Paste into this calendar</source>

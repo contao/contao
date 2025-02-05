@@ -15,7 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_form.alias.1">
         <source>The form alias is a unique reference to the form which can be called instead of its numeric ID.</source>
-        <target>Form kısaltması form sayısal kodu olarak kullanılacak eşsiz bir belirteçtir.</target>
+        <target>Form kısaltması formun sayısal kimliği olarak kullanılacak eşsiz bir belirteçtir.</target>
       </trans-unit>
       <trans-unit id="tl_form.jumpTo.0">
         <source>Redirect page</source>
@@ -24,6 +24,14 @@
       <trans-unit id="tl_form.jumpTo.1">
         <source>Please choose the page to which visitors will be redirected after submitting the form.</source>
         <target>Lütfen ziyaretçilerin formu gönderdikten yönlendirilecekleri sayfayı seçin.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.confirmation.0">
+        <source>Confirmation message</source>
+        <target>Doğrulama iletisi</target>
+      </trans-unit>
+      <trans-unit id="tl_form.confirmation.1">
+        <source>Here you can enter the confirmation message that will be displayed after submitting the form. You can use the submitted form data as simple tokens, e.g. &lt;code&gt;##field_name##&lt;/code&gt;. The confirmation message is also available as &lt;code&gt;{{form_confirmation}}&lt;/code&gt; insert tag.</source>
+        <target>Formu gönderdikten sonra görüntülenecek doğrulama iletisini buraya yazabilirsiniz. Gönderilen form verilerini basit kodlar ile kullanabilirsiniz. Örneğin: &lt;code&gt;##field_name##&lt;/code&gt;. Ayrıca doğrulama iletisi ayrıca &lt;code&gt;{{form_confirmation}}&lt;/code&gt; kodu ile kullanılabilir.</target>
       </trans-unit>
       <trans-unit id="tl_form.sendViaEmail.0">
         <source>Send form data via e-mail</source>
@@ -127,7 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_form.storeValues.1">
         <source>Store the submitted data in the database.</source>
-        <target>Gönderilen verileri veritabanına kaydeder.</target>
+        <target>Gönderilen verileri veri tabanına kaydeder.</target>
       </trans-unit>
       <trans-unit id="tl_form.customTpl.0">
         <source>Form template</source>
@@ -163,19 +171,19 @@
       </trans-unit>
       <trans-unit id="tl_form.attributes.0">
         <source>CSS ID/class</source>
-        <target>CSS kodu/sınıfı</target>
+        <target>CSS kimliği/sınıfı</target>
       </trans-unit>
       <trans-unit id="tl_form.attributes.1">
         <source>Here you can set an ID and one or more classes.</source>
-        <target>Buradan bir kod ve bir ya da birkaç sınıf ayarlayabilirsiniz.</target>
+        <target>Buradan bir kimlik ve bir ya da birkaç sınıf ayarlayabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_form.formID.0">
         <source>Form ID</source>
-        <target>Form kodu</target>
+        <target>Form kimliği</target>
       </trans-unit>
       <trans-unit id="tl_form.formID.1">
         <source>The form ID is required to trigger a Contao module.</source>
-        <target>Form kodu bir Contao modülünü tetiklemek için gereklidir.</target>
+        <target>Form kimliği bir Contao modülünü tetiklemek için gereklidir.</target>
       </trans-unit>
       <trans-unit id="tl_form.allowTags.0">
         <source>Allow HTML tags</source>
@@ -184,6 +192,14 @@
       <trans-unit id="tl_form.allowTags.1">
         <source>Allow HTML tags in form fields.</source>
         <target>Bu seçenek etkinleştirildiğinde, form alanlarında HTML kod imleri kullanılabilir.</target>
+      </trans-unit>
+      <trans-unit id="tl_form.ajax.0">
+        <source>Submit via Ajax</source>
+        <target>AJAX ile gönderilsin</target>
+      </trans-unit>
+      <trans-unit id="tl_form.ajax.1">
+        <source>Submit the form via Ajax instead of reloading the page.</source>
+        <target>Bu seçenek etkinleştirildiğinde, form gönderilirken sayfanın yeniden yüklenmesi yerine AJAX kullanılır. </target>
       </trans-unit>
       <trans-unit id="tl_form.tstamp.0">
         <source>Revision date</source>
@@ -213,6 +229,10 @@
         <source>Form configuration</source>
         <target>Form yapılandırması</target>
       </trans-unit>
+      <trans-unit id="tl_form.confirm_legend">
+        <source>Confirmation</source>
+        <target>Doğrulama</target>
+      </trans-unit>
       <trans-unit id="tl_form.template_legend">
         <source>Template settings</source>
         <target>Kalıp ayarları</target>
@@ -227,23 +247,23 @@
       </trans-unit>
       <trans-unit id="tl_form.show">
         <source>Show the details of form ID %s</source>
-        <target>%s kodlu formun ayrıntılarını görüntüle</target>
+        <target>%s kimlikli formun ayrıntılarını görüntüle</target>
       </trans-unit>
       <trans-unit id="tl_form.edit">
         <source>Edit form ID %s</source>
-        <target>%s kodlu formu düzenle</target>
+        <target>%s kimlikli formu düzenle</target>
       </trans-unit>
       <trans-unit id="tl_form.children">
         <source>Edit the form fields of form ID %s</source>
-        <target>%s kodlu formun alanlarını düzenle</target>
+        <target>%s kimlikli formun ayarlarını düzenle</target>
       </trans-unit>
       <trans-unit id="tl_form.copy">
         <source>Duplicate form ID %s</source>
-        <target>%s kodlu formu kopyala</target>
+        <target>%s kimlikli formu kopyala</target>
       </trans-unit>
       <trans-unit id="tl_form.delete">
         <source>Delete form ID %s</source>
-        <target>%s kodlu formu sil</target>
+        <target>%s kimlikli formu sil</target>
       </trans-unit>
       <trans-unit id="tl_form.targetTableMissingAllowlist">
         <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>

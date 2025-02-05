@@ -55,7 +55,7 @@ class HashGeneratorTest extends TestCase
         $this->assertSame($hash, $context->getResult());
     }
 
-    public function provideExpectedHashes(): \Generator
+    public static function provideExpectedHashes(): iterable
     {
         yield 'md5' => [
             'md5', 'f6f5f8cd0cb63668898ba29025ae824e',
@@ -119,7 +119,7 @@ class HashGeneratorTest extends TestCase
     {
         $filesystem = new VirtualFilesystem(
             (new MountManager())->mount(new InMemoryFilesystemAdapter()),
-            $this->createMock(DbafsManager::class)
+            $this->createMock(DbafsManager::class),
         );
 
         $filesystem->write('foo.txt', "foo\0bar");

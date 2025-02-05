@@ -2,6 +2,14 @@
 
 ## Version 4.* to 5.0
 
+### postDownload hook
+
+The `postDownload` hook is only triggered in the legacy download content elements.
+
+To apply business logic to all file responses, use an event listener instead that listens for the `ResponseEvent` event
+and checks whether the response is a `BinaryFileResponse`. The event listener works for both the legacy elements and the
+new Twig-based download elements.
+
 ### Contao 3 theme icons
 
 The old `.gif` images that were used for the back end theme in Contao 3 have been removed. Use the `.svg` icons instead.
@@ -189,20 +197,15 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class Test {
-    private $requestStack;
-    private $scopeMatcher;
-
-    public function __construct(RequestStack $requestStack, ScopeMatcher $scopeMatcher) {
-        $this->requestStack = $requestStack;
-        $this->scopeMatcher = $scopeMatcher;
+    public function __construct(private ScopeMatcher $scopeMatcher) {
     }
 
     public function isBackend() {
-        return $this->scopeMatcher->isBackendRequest($this->requestStack->getCurrentRequest());
+        return $this->scopeMatcher->isBackendRequest();
     }
 
     public function isFrontend() {
-        return $this->scopeMatcher->isFrontendRequest($this->requestStack->getCurrentRequest());
+        return $this->scopeMatcher->isFrontendRequest();
     }
 }
 ```
@@ -260,11 +263,11 @@ $GLOBALS['TL_CTE']['links']['hyperlink'] = \Contao\ContentHyperlink::class;
 $GLOBALS['TL_CTE']['links']['toplink'] = \Contao\ContentToplink::class;
 $GLOBALS['TL_CTE']['media']['image'] = \Contao\ContentImage::class;
 $GLOBALS['TL_CTE']['media']['gallery'] = \Contao\ContentGallery::class;
+$GLOBALS['TL_CTE']['media']['player'] = \Contao\ContentPlayer::class;
 $GLOBALS['TL_CTE']['media']['youtube'] = \Contao\ContentYouTube::class;
 $GLOBALS['TL_CTE']['media']['vimeo'] = \Contao\ContentVimeo::class;
 $GLOBALS['TL_CTE']['files']['downloads'] = \Contao\ContentDownloads::class;
 $GLOBALS['TL_CTE']['files']['download'] = \Contao\ContentDownload::class;
-$GLOBALS['TL_CTE']['media']['player'] = \Contao\ContentPlayer::class;
 $GLOBALS['TL_CTE']['includes']['teaser'] = \Contao\ContentTeaser::class;
 ```
 
@@ -310,7 +313,7 @@ removed. Use the image handling services and the `FileMetadataEvent` instead.
 The value of the `FormTextarea` widget is no longer encoded with `specialchars()`. Encode the value in your custom
 `form_textarea` templates instead.
 
-### languages.php, getLanguages and $GLOBALS['TL_LANG']['LNG']
+### languages.php, getLanguages and `$GLOBALS['TL_LANG']['LNG']`
 
 The `System::getLanguages()` method, the `getLanguages` hook and the `config/languages.php` file have been removed. Use
 or decorate the `contao.intl.locales` service instead.
@@ -318,7 +321,7 @@ or decorate the `contao.intl.locales` service instead.
 To add or remove countries, you can use the `contao.intl.locales` or `contao.intl.enabled_locales` configuration.
 `$GLOBALS['TL_LANG']['LNG']` can still be used for overwriting translations, but no longer to retrieve language names.
 
-### countries.php, getCountries and $GLOBALS['TL_LANG']['CNT']
+### countries.php, getCountries and `$GLOBALS['TL_LANG']['CNT']`
 
 The `System::getCountries()` method, the `getCountries` hook and the `config/countries.php` file have been removed. Use
 or decorate the `contao.intl.countries` service instead.
@@ -366,7 +369,7 @@ instead.
 
 ### Template changes
 
-The items in the `ce_list` and `ce_table` templates no longer consist of an associative array containing the item‘s CSS
+The items in the `ce_list` and `ce_table` templates no longer consist of an associative array containing the item's CSS
 class and content. Instead, it will only be the content.
 
 ```php

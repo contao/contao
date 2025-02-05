@@ -16,6 +16,7 @@ use Contao\CoreBundle\Entity\TrustedDevice;
 use Contao\User;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
+use Lcobucci\JWT\Signer\InvalidKeyProvided;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceTokenStorage;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,14 +25,14 @@ use UAParser\Parser;
 
 class TrustedDeviceManager implements TrustedDeviceManagerInterface
 {
-    public function __construct(private RequestStack $requestStack, private TrustedDeviceTokenStorage $trustedTokenStorage, private EntityManagerInterface $entityManager)
-    {
+    public function __construct(
+        private readonly RequestStack $requestStack,
+        private readonly TrustedDeviceTokenStorage $trustedTokenStorage,
+        private readonly EntityManagerInterface $entityManager,
+    ) {
     }
 
-    /**
-     * @param mixed $user
-     */
-    public function addTrustedDevice($user, string $firewallName): void
+    public function addTrustedDevice(object $user, string $firewallName): void
     {
         if (!$user instanceof User) {
             return;
@@ -42,7 +43,11 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         $parser = Parser::create();
         $parsedUserAgent = $parser->parse($userAgent);
 
-        $this->trustedTokenStorage->addTrustedToken((string) $user->id, $firewallName, $user->trustedTokenVersion);
+        try {
+            $this->trustedTokenStorage->addTrustedToken((string) $user->id, $firewallName, $user->trustedTokenVersion);
+        } catch (InvalidKeyProvided $exception) {
+            throw new InvalidKeyProvided('Failed to store trusted token. Make sure your APP_SECRET is at least 32 characters long. '.$exception->getMessage(), $exception->getCode(), $exception);
+        }
 
         $trustedDevice = new TrustedDevice($user);
         $trustedDevice
@@ -57,12 +62,9 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         $this->entityManager->flush();
     }
 
-    /**
-     * @param mixed $user
-     */
-    public function isTrustedDevice($user, string $firewallName): bool
+    public function isTrustedDevice(object $user, string $firewallName): bool
     {
-        if (!($user instanceof User)) {
+        if (!$user instanceof User) {
             return false;
         }
 
@@ -101,10 +103,7 @@ class TrustedDeviceManager implements TrustedDeviceManagerInterface
         ;
     }
 
-    /**
-     * @param mixed $user
-     */
-    public function canSetTrustedDevice($user, Request $request, string $firewallName): bool
+    public function canSetTrustedDevice(object $user, Request $request, string $firewallName): bool
     {
         return true;
     }

@@ -18,16 +18,32 @@ use Contao\BackendTemplate;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\Environment;
 use Contao\Input;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 abstract class AbstractBackendController extends AbstractController
 {
+    public static function getSubscribedServices(): array
+    {
+        $services = parent::getSubscribedServices();
+
+        $services['request_stack'] = RequestStack::class;
+
+        return $services;
+    }
+
     /**
      * Renders a Twig template with additional context for "@Contao/be_main".
+     *
+     * If the request was initiated by a Turbo frame or was set to accept a Turbo
+     * stream, no additional context will be created by default. To overwrite the
+     * behavior set $includeChromeContext to true/false.
      */
-    protected function render(string $view, array $parameters = [], Response $response = null): Response
+    protected function render(string $view, array $parameters = [], Response|null $response = null, bool|null $includeChromeContext = null): Response
     {
-        $backendContext = (new class() extends BackendMain {
+        $getBackendContext = static fn () => (new class() extends BackendMain {
             public function __invoke(): array
             {
                 $this->Template = new BackendTemplate('be_main');
@@ -48,6 +64,36 @@ abstract class AbstractBackendController extends AbstractController
             }
         })();
 
-        return parent::render($view, array_merge($backendContext, $parameters), $response);
+        $request = $this->getCurrentRequest();
+
+        if (\in_array('text/vnd.turbo-stream.html', $request->getAcceptableContentTypes(), true)) {
+            // Setting the request format will add the correct ContentType header and make
+            // sure Symfony renders error pages correctly.
+            $request->setRequestFormat('turbo_stream');
+
+            $includeChromeContext ??= false;
+        }
+
+        if ($request->headers->has('turbo-frame')) {
+            $includeChromeContext ??= false;
+        }
+
+        if ($includeChromeContext ?? true) {
+            $parameters = [...$getBackendContext(), ...$parameters];
+        }
+
+        return parent::render($view, $parameters, $response);
+    }
+
+    protected function getBackendSessionBag(): AttributeBagInterface|null
+    {
+        $sessionBag = $this->getCurrentRequest()->getSession()->getBag('contao_backend');
+
+        return $sessionBag instanceof AttributeBagInterface ? $sessionBag : null;
+    }
+
+    private function getCurrentRequest(): Request
+    {
+        return $this->container->get('request_stack')->getCurrentRequest();
     }
 }

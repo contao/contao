@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\PhpunitExtension;
 
+use PhpParser\Lexer;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Runner\AfterTestHook;
 use PHPUnit\Runner\BeforeTestHook;
@@ -21,12 +22,19 @@ use SebastianBergmann\Diff\Output\StrictUnifiedDiffOutputBuilder;
 final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
 {
     private string $globalKeys;
+
     private string $globals;
+
     private string $staticMembers;
+
     private string $phpIni;
+
     private string $setFunctions;
+
     private string $fileSystem;
+
     private string $constants;
+
     private string $env;
 
     public function executeBeforeTest(string $test): void
@@ -45,7 +53,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
     {
         foreach (['globalKeys', 'globals', 'staticMembers', 'phpIni', 'setFunctions', 'fileSystem', 'constants', 'env'] as $member) {
             if ($this->$member !== ($after = $this->{'build'.$member}())) {
-                throw new ExpectationFailedException(sprintf("\nUnexpected change to global state (%s) in %s\n%s", $member, $test, $this->diff($this->$member, $after)));
+                throw new ExpectationFailedException(\sprintf("\nUnexpected change to global state (%s) in %s\n%s", $member, $test, $this->diff($this->$member, $after)));
             }
         }
     }
@@ -96,7 +104,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 'http_response_code' => http_response_code(),
                 'headers_list' => headers_list(),
             ],
-            true
+            true,
         );
     }
 
@@ -116,6 +124,9 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
 
     private function buildConstants(): string
     {
+        // Preload forward compatible PHP constants
+        class_exists(Lexer::class);
+
         return print_r(get_defined_constants(), true);
     }
 
@@ -127,7 +138,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 static fn ($key) => !\in_array($key, ['SYMFONY_DEPRECATIONS_SERIALIZE', 'SYMFONY_EXPECTED_DEPRECATIONS_SERIALIZE'], true),
                 ARRAY_FILTER_USE_KEY,
             ),
-            true
+            true,
         );
     }
 
@@ -136,10 +147,13 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
         $data = [];
 
         foreach (get_declared_classes() as $class) {
+            /** @noinspection ClassnameLiteralInspection */
             foreach ([
                 'Composer\InstalledVersions',
                 'Contao\CoreBundle\Util\LocaleUtil',
                 'Contao\TestCase\\',
+                'DASPRiD\Enum\AbstractEnum',
+                'Doctrine\Deprecations\\Deprecation',
                 'Doctrine\Instantiator\\',
                 'Imagine\\',
                 'Mock_',
@@ -148,20 +162,23 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 'SebastianBergmann\\',
                 'Symfony\Bridge\PhpUnit\\',
                 'Symfony\Component\Cache\Adapter\\',
+                'Symfony\Component\Clock\Clock',
                 'Symfony\Component\Config\Resource\ComposerResource',
                 'Symfony\Component\Console\Helper\\',
+                'Symfony\Component\Console\Terminal',
+                'Symfony\Component\DependencyInjection\Container',
                 'Symfony\Component\DependencyInjection\ParameterBag\EnvPlaceholderParameterBag',
                 'Symfony\Component\ErrorHandler\\',
                 'Symfony\Component\Filesystem\\',
-                'Symfony\Component\HttpClient\Internal\CurlClientState',
+                'Symfony\Component\HttpClient\Response\MockResponse',
                 'Symfony\Component\Mime\Address',
-                'Symfony\Component\Mime\MimeTypes',
+                'Symfony\Component\Mime\MimeTypes\\',
                 'Symfony\Component\String\\',
                 'Symfony\Component\VarDumper\\',
                 'Symfony\Component\Yaml\\',
                 'Webmozart\PathUtil\\',
             ] as $ignorePrefix) {
-                if (0 === strncmp("$ignorePrefix\\", $class, \strlen($ignorePrefix))) {
+                if (0 === strncmp($ignorePrefix, $class, \strlen($ignorePrefix))) {
                     continue 2;
                 }
             }

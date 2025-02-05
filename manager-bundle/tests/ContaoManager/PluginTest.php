@@ -12,10 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\ManagerBundle\Tests\ContaoManager;
 
+use CmsIg\Seal\Integration\Symfony\SealBundle;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\ManagerBundle\ContaoManager\Plugin;
 use Contao\ManagerBundle\ContaoManagerBundle;
-use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
@@ -39,7 +39,6 @@ use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Mailer\Transport\NativeTransportFactory;
 use Symfony\Component\Routing\Route;
@@ -59,7 +58,7 @@ class PluginTest extends ContaoTestCase
 
         $this->backupServerEnvGetPost();
 
-        unset($_SERVER['DATABASE_URL'], $_SERVER['APP_SECRET'], $_ENV['DATABASE_URL']);
+        unset($_SERVER['DATABASE_URL'], $_SERVER['APP_SECRET'], $_ENV['DATABASE_URL'], $_SERVER['MAILER_DSN'], $_ENV['MAILER_DSN']);
     }
 
     protected function tearDown(): void
@@ -83,11 +82,9 @@ class PluginTest extends ContaoTestCase
     public function testReturnsTheBundles(): void
     {
         $plugin = new Plugin();
-
-        /** @var array<BundleConfig> $bundles */
         $bundles = $plugin->getBundles(new DelegatingParser());
 
-        $this->assertCount(13, $bundles);
+        $this->assertCount(14, $bundles);
 
         $this->assertSame(FrameworkBundle::class, $bundles[0]->getName());
         $this->assertSame([], $bundles[0]->getReplace());
@@ -125,24 +122,28 @@ class PluginTest extends ContaoTestCase
         $this->assertSame([], $bundles[8]->getReplace());
         $this->assertSame([], $bundles[8]->getLoadAfter());
 
-        $this->assertSame(ContaoManagerBundle::class, $bundles[9]->getName());
+        $this->assertSame(SealBundle::class, $bundles[9]->getName());
         $this->assertSame([], $bundles[9]->getReplace());
-        $this->assertSame([ContaoCoreBundle::class], $bundles[9]->getLoadAfter());
+        $this->assertSame([], $bundles[9]->getLoadAfter());
 
-        $this->assertSame(DebugBundle::class, $bundles[10]->getName());
+        $this->assertSame(ContaoManagerBundle::class, $bundles[10]->getName());
         $this->assertSame([], $bundles[10]->getReplace());
-        $this->assertSame([], $bundles[10]->getLoadAfter());
-        $this->assertFalse($bundles[10]->loadInProduction());
+        $this->assertSame([ContaoCoreBundle::class], $bundles[10]->getLoadAfter());
 
-        $this->assertSame(WebProfilerBundle::class, $bundles[11]->getName());
+        $this->assertSame(DebugBundle::class, $bundles[11]->getName());
         $this->assertSame([], $bundles[11]->getReplace());
         $this->assertSame([], $bundles[11]->getLoadAfter());
         $this->assertFalse($bundles[11]->loadInProduction());
 
-        $this->assertSame(FlysystemBundle::class, $bundles[12]->getName());
+        $this->assertSame(WebProfilerBundle::class, $bundles[12]->getName());
         $this->assertSame([], $bundles[12]->getReplace());
-        $this->assertSame([ContaoCoreBundle::class], $bundles[12]->getLoadAfter());
-        $this->assertTrue($bundles[12]->loadInProduction());
+        $this->assertSame([], $bundles[12]->getLoadAfter());
+        $this->assertFalse($bundles[12]->loadInProduction());
+
+        $this->assertSame(FlysystemBundle::class, $bundles[13]->getName());
+        $this->assertSame([], $bundles[13]->getReplace());
+        $this->assertSame([ContaoCoreBundle::class], $bundles[13]->getLoadAfter());
+        $this->assertTrue($bundles[13]->loadInProduction());
     }
 
     public function testRegistersModuleBundles(): void
@@ -163,7 +164,7 @@ class PluginTest extends ContaoTestCase
         $plugin = new Plugin();
         $configs = $plugin->getBundles($parser);
 
-        $this->assertCount(15, $configs);
+        $this->assertCount(16, $configs);
         $this->assertContains('foo1', $configs);
         $this->assertContains('foo2', $configs);
         $this->assertNotContains('foo3', $configs);
@@ -187,7 +188,7 @@ class PluginTest extends ContaoTestCase
 
                         $resource($container);
                     }
-                }
+                },
             )
         ;
 
@@ -215,7 +216,7 @@ class PluginTest extends ContaoTestCase
 
                         $resource($container);
                     }
-                }
+                },
             )
         ;
 
@@ -227,6 +228,27 @@ class PluginTest extends ContaoTestCase
 
     public function testGetRouteCollectionInProd(): void
     {
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->expects($this->atLeastOnce())
+            ->method('load')
+            ->willReturnCallback(
+                static function (string $file): RouteCollection {
+                    $collection = new RouteCollection();
+                    $collection->add(basename($file).'_foobar', new Route('/foobar'));
+
+                    return $collection;
+                },
+            )
+        ;
+
+        $resolver = $this->createMock(LoaderResolverInterface::class);
+        $resolver
+            ->expects($this->atLeastOnce())
+            ->method('resolve')
+            ->willReturn($loader)
+        ;
+
         $kernel = $this->createMock(KernelInterface::class);
         $kernel
             ->expects($this->once())
@@ -235,9 +257,11 @@ class PluginTest extends ContaoTestCase
         ;
 
         $plugin = new Plugin();
-        $resolver = $this->createMock(LoaderResolverInterface::class);
+        $collection = $plugin->getRouteCollection($resolver, $kernel);
+        $routes = array_values($collection->all());
 
-        $this->assertNull($plugin->getRouteCollection($resolver, $kernel));
+        $this->assertCount(1, $routes);
+        $this->assertSame('/foobar', $routes[0]->getPath());
     }
 
     public function testGetRouteCollectionInDev(): void
@@ -252,7 +276,7 @@ class PluginTest extends ContaoTestCase
                     $collection->add(basename($file).'_foobar', new Route('/foobar'));
 
                     return $collection;
-                }
+                },
             )
         ;
 
@@ -274,9 +298,10 @@ class PluginTest extends ContaoTestCase
         $collection = $plugin->getRouteCollection($resolver, $kernel);
         $routes = array_values($collection->all());
 
-        $this->assertCount(2, $routes);
-        $this->assertSame('/_wdt/foobar', $routes[0]->getPath());
-        $this->assertSame('/_profiler/foobar', $routes[1]->getPath());
+        $this->assertCount(3, $routes);
+        $this->assertSame('/foobar', $routes[0]->getPath());
+        $this->assertSame('/_wdt/foobar', $routes[1]->getPath());
+        $this->assertSame('/_profiler/foobar', $routes[2]->getPath());
     }
 
     public function testReturnsApiCommands(): void
@@ -286,11 +311,10 @@ class PluginTest extends ContaoTestCase
             ->in(__DIR__.'/../../src/ContaoManager/ApiCommand')
         ;
 
-        /** @var SplFileInfo $file */
         foreach ($files as $file) {
             $this->assertContains(
                 'Contao\ManagerBundle\ContaoManager\ApiCommand\\'.$file->getBasename('.php'),
-                (new Plugin())->getApiCommands()
+                (new Plugin())->getApiCommands(),
             );
         }
     }
@@ -317,7 +341,7 @@ class PluginTest extends ContaoTestCase
                     'debug',
                 ],
             ],
-            (new Plugin())->getApiFeatures()
+            (new Plugin())->getApiFeatures(),
         );
     }
 
@@ -330,6 +354,31 @@ class PluginTest extends ContaoTestCase
         $bag = $container->getParameterBag()->all();
 
         $this->assertSame('ThisTokenIsNotSoSecretChangeIt', $bag['env(APP_SECRET)']);
+    }
+
+    public function testSetsDnsMappingParameterAndFallback(): void
+    {
+        $container = $this->getContainer();
+
+        (new Plugin())->getExtensionConfig('contao', [], $container);
+
+        $bag = $container->getParameterBag()->all();
+
+        $this->assertSame('[]', $bag['env(DNS_MAPPING)']);
+        $this->assertSame('%env(json:DNS_MAPPING)%', $bag['contao.dns_mapping']);
+    }
+
+    public function testDoesNotSetDnsParameterIfAlreadyDefined(): void
+    {
+        $container = $this->getContainer();
+        $container->setParameter('contao.dns_mapping', ['example.com' => 'example.local']);
+
+        (new Plugin())->getExtensionConfig('framework', [], $container);
+
+        $bag = $container->getParameterBag()->all();
+
+        $this->assertFalse(isset($bag['env(DNS_MAPPING)']));
+        $this->assertSame(['example.com' => 'example.local'], $bag['contao.dns_mapping']);
     }
 
     /**
@@ -361,7 +410,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame($expected, $bag['env(DATABASE_URL)']);
     }
 
-    public function getDatabaseParameters(): \Generator
+    public static function getDatabaseParameters(): iterable
     {
         yield [
             null,
@@ -585,7 +634,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame($expect, $extensionConfig);
     }
 
-    public function provideDatabaseDrivers(): \Generator
+    public static function provideDatabaseDrivers(): iterable
     {
         yield 'pdo with driver' => [
             [
@@ -673,23 +722,21 @@ class PluginTest extends ContaoTestCase
             $userExtensionConfig,
         ];
 
-        $expect = array_merge(
-            $extensionConfigs,
+        $expect = [
+            ...$extensionConfigs,
             [
-                [
-                    'dbal' => [
-                        'connections' => [
-                            'default' => [
-                                'default_table_options' => [
-                                    'collate' => 'utf8_unicode_ci',
-                                    'collation' => 'utf8_unicode_ci',
-                                ],
+                'dbal' => [
+                    'connections' => [
+                        'default' => [
+                            'default_table_options' => [
+                                'collate' => 'utf8_unicode_ci',
+                                'collation' => 'utf8_unicode_ci',
                             ],
                         ],
                     ],
                 ],
-            ]
-        );
+            ],
+        ];
 
         $container = $this->getContainer();
         $extensionConfig = (new Plugin())->getExtensionConfig('doctrine', $extensionConfigs, $container);
@@ -697,7 +744,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame($expect, $extensionConfig);
     }
 
-    public function provideUserExtensionConfigs(): \Generator
+    public static function provideUserExtensionConfigs(): iterable
     {
         yield 'collate' => [
             [
@@ -811,7 +858,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame($expected, $bag['env(MAILER_DSN)']);
     }
 
-    public function getMailerParameters(): \Generator
+    public static function getMailerParameters(): iterable
     {
         $default = 'sendmail://default';
 
@@ -1020,15 +1067,14 @@ class PluginTest extends ContaoTestCase
         $expect = $extensionConfigs;
 
         if ($shouldAdd) {
-            $expect = array_merge(
-                $extensionConfigs,
-                [[
+            $expect = [
+                ...$extensionConfigs,
+                [
                     'orm' => [
                         'entity_managers' => [
                             $defaultEntityManager => [
                                 'mappings' => [
                                     'App' => [
-                                        'type' => 'annotation',
                                         'dir' => '%kernel.project_dir%/src/Entity',
                                         'is_bundle' => false,
                                         'prefix' => 'App\Entity',
@@ -1038,8 +1084,8 @@ class PluginTest extends ContaoTestCase
                             ],
                         ],
                     ],
-                ]]
-            );
+                ],
+            ];
         }
 
         $plugin = new Plugin();
@@ -1050,7 +1096,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame($expect, $plugin->getExtensionConfig('doctrine', $extensionConfigs, $container));
     }
 
-    public function getOrmMappingConfigurations(): \Generator
+    public static function getOrmMappingConfigurations(): iterable
     {
         // Positive configurations
         yield 'with global auto_mapping enabled' => [

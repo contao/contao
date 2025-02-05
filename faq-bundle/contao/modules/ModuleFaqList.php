@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+
 /**
  * Class ModuleFaqList
  *
@@ -23,12 +25,6 @@ class ModuleFaqList extends Module
 	 * @var string
 	 */
 	protected $strTemplate = 'mod_faqlist';
-
-	/**
-	 * Page cache array
-	 * @var array
-	 */
-	private static $arrPageCache = array();
 
 	/**
 	 * Display a wildcard in the back end
@@ -80,9 +76,9 @@ class ModuleFaqList extends Module
 	 */
 	protected function compile()
 	{
-		$objFaq = FaqModel::findPublishedByPids($this->faq_categories);
+		$objFaqs = FaqModel::findPublishedByPids($this->faq_categories);
 
-		if ($objFaq === null)
+		if ($objFaqs === null)
 		{
 			$this->Template->faq = array();
 
@@ -93,18 +89,20 @@ class ModuleFaqList extends Module
 		$arrFaq = array_fill_keys($this->faq_categories, array());
 
 		// Add FAQs
-		while ($objFaq->next())
+		while ($objFaqs->next())
 		{
+			$objFaq = $objFaqs->current();
+
 			$arrTemp = $objFaq->row();
 			$arrTemp['title'] = StringUtil::specialchars($objFaq->question, true);
 			$arrTemp['href'] = $this->generateFaqLink($objFaq);
 
-			/** @var FaqCategoryModel $objPid */
-			$objPid = $objFaq->getRelated('pid');
+			if (($objPid = FaqCategoryModel::findById($objFaq->pid)) && empty($arrFaq[$objFaq->pid]))
+			{
+				$arrFaq[$objFaq->pid] = $objPid->row();
+			}
 
 			$arrFaq[$objFaq->pid]['items'][] = $arrTemp;
-			$arrFaq[$objFaq->pid]['headline'] = $objPid->headline;
-			$arrFaq[$objFaq->pid]['title'] = $objPid->title;
 
 			$tags[] = 'contao.db.tl_faq.' . $objFaq->id;
 		}
@@ -130,38 +128,21 @@ class ModuleFaqList extends Module
 	 */
 	protected function generateFaqLink($objFaq)
 	{
-		/** @var FaqCategoryModel $objCategory */
-		$objCategory = $objFaq->getRelated('pid');
-		$jumpTo = $objCategory->jumpTo;
-
 		// A jumpTo page is not mandatory for FAQ categories (see #6226) but required for the FAQ list module
-		if ($jumpTo < 1)
+		if (($objCategory = FaqCategoryModel::findById($objFaq->pid)) && $objCategory->jumpTo < 1)
 		{
-			throw new \Exception("FAQ categories without redirect page cannot be used in an FAQ list");
+			throw new \Exception('FAQ categories without redirect page cannot be used in an FAQ list');
 		}
 
-		if ($jumpTo && ($objTarget = $this->getPageWithDetails($jumpTo)) !== null)
+		try
 		{
-			/** @var PageModel $objTarget */
-			return StringUtil::ampersand($objTarget->getFrontendUrl('/' . ($objFaq->alias ?: $objFaq->id)));
+			$url = System::getContainer()->get('contao.routing.content_url_generator')->generate($objFaq);
+		}
+		catch (ExceptionInterface)
+		{
+			$url = Environment::get('requestUri');
 		}
 
-		return StringUtil::ampersand(Environment::get('requestUri'));
-	}
-
-	/**
-	 * Return the page object with loaded details for the given page ID
-	 *
-	 * @param  integer        $intPageId
-	 * @return PageModel|null
-	 */
-	private function getPageWithDetails($intPageId)
-	{
-		if (!\array_key_exists($intPageId, self::$arrPageCache))
-		{
-			self::$arrPageCache[$intPageId] = PageModel::findWithDetails($intPageId);
-		}
-
-		return self::$arrPageCache[$intPageId];
+		return StringUtil::ampersand($url);
 	}
 }

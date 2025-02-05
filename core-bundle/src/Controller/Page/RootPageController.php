@@ -18,6 +18,7 @@ use Contao\CoreBundle\Exception\NoActivePageFoundException;
 use Contao\PageModel;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal
@@ -25,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsPage(contentComposition: false)]
 class RootPageController extends AbstractController
 {
-    public function __construct(private LoggerInterface|null $logger = null)
+    public function __construct(private readonly LoggerInterface|null $logger = null)
     {
     }
 
@@ -33,18 +34,16 @@ class RootPageController extends AbstractController
     {
         $nextPage = $this->getNextPage($pageModel->id);
 
-        return $this->redirect($nextPage->getAbsoluteUrl());
+        return $this->redirect($this->generateContentUrl($nextPage, [], UrlGeneratorInterface::ABSOLUTE_URL));
     }
 
     private function getNextPage(int $rootPageId): PageModel
     {
-        $nextPage = $this->getContaoAdapter(PageModel::class)->findFirstPublishedByPid($rootPageId);
-
-        if ($nextPage instanceof PageModel) {
+        if ($nextPage = $this->getContaoAdapter(PageModel::class)->findFirstPublishedByPid($rootPageId)) {
             return $nextPage;
         }
 
-        $this->logger?->error(sprintf('No active page found under root page "%s"', $rootPageId));
+        $this->logger?->error(\sprintf('No active page found under root page "%s"', $rootPageId));
 
         throw new NoActivePageFoundException('No active page found under root page.');
     }

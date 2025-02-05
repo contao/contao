@@ -43,10 +43,7 @@ class ContaoJsonLdSchemaListenerTest extends TestCase
         $listener = new ContaoJsonLdSchemaListener();
         $listener($event);
 
-        /** @var JsonLdManager $jsonLdManager */
         $jsonLdManager = $context->get(JsonLdManager::class);
-
-        /** @var ContaoPageSchema $schema */
         $schema = $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
 
         $this->assertSame('Title different', $schema->getTitle());

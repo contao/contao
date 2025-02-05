@@ -36,7 +36,7 @@ class CronJob
     #[Column(type: 'datetime', nullable: false)]
     protected \DateTimeInterface $lastRun;
 
-    public function __construct(string $name, \DateTimeInterface $lastRun = null)
+    public function __construct(string $name, \DateTimeInterface|null $lastRun = null)
     {
         $this->name = $name;
         $this->lastRun = $lastRun ?? new \DateTime();

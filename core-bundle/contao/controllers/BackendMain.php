@@ -14,8 +14,6 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Knp\Bundle\TimeBundle\DateTimeFormatter;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Main back end controller.
@@ -44,41 +42,39 @@ class BackendMain extends Backend
 	 */
 	public function __construct()
 	{
-		$container = System::getContainer();
-
-		/** @var AuthorizationCheckerInterface $authorizationChecker */
-		$authorizationChecker = $container->get('security.authorization_checker');
-
-		$this->import(BackendUser::class, 'User');
 		parent::__construct();
+
+		$container = System::getContainer();
+		$authorizationChecker = $container->get('security.authorization_checker');
 
 		if (!$authorizationChecker->isGranted('ROLE_USER'))
 		{
 			throw new AccessDeniedException('Access denied');
 		}
 
+		$user = BackendUser::getInstance();
+
 		// Password change required
-		if ($this->User->pwChange && !$authorizationChecker->isGranted('ROLE_PREVIOUS_ADMIN'))
+		if ($user->pwChange && !$authorizationChecker->isGranted('ROLE_PREVIOUS_ADMIN'))
 		{
 			$this->redirect($container->get('router')->generate('contao_backend_password'));
 		}
 
 		// Two-factor setup required
-		if (!$this->User->useTwoFactor && $container->getParameter('contao.security.two_factor.enforce_backend') && Input::get('do') != 'security')
+		if (!$user->useTwoFactor && $container->getParameter('contao.security.two_factor.enforce_backend') && Input::get('do') != 'security')
 		{
 			$this->redirect($container->get('router')->generate('contao_backend', array('do'=>'security')));
 		}
 
 		// Backend user profile redirect
-		if (Input::get('do') == 'login' && (Input::get('act') != 'edit' && Input::get('id') != $this->User->id))
+		if (Input::get('do') == 'login' && (Input::get('act') != 'edit' && Input::get('id') != $user->id))
 		{
 			$strUrl = $container->get('router')->generate('contao_backend', array
 			(
 				'do' => 'login',
 				'act' => 'edit',
-				'id' => $this->User->id,
-				'ref' => $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'),
-				'rt' => System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(),
+				'id' => $user->id,
+				'ref' => Input::get('ref') ?: $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'),
 			));
 
 			$this->redirect($strUrl);
@@ -117,7 +113,6 @@ class BackendMain extends Backend
 		// Toggle nodes
 		if (Input::get('mtg'))
 		{
-			/** @var AttributeBagInterface $objSessionBag */
 			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 			$session = $objSessionBag->all();
 			$session['backend_modules'][Input::get('mtg')] = (isset($session['backend_modules'][Input::get('mtg')]) && $session['backend_modules'][Input::get('mtg')] == 0) ? 1 : 0;
@@ -150,7 +145,16 @@ class BackendMain extends Backend
 			$this->Template->title = $this->Template->headline;
 		}
 
-		return $this->output();
+		// Set the status code to 422 if a widget did not validate, so that
+		// Turbo can handle form errors.
+		$response = $this->output();
+
+		if (System::getContainer()->get('request_stack')?->getMainRequest()->attributes->has('_contao_widget_error'))
+		{
+			$response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+		}
+
+		return $response;
 	}
 
 	/**
@@ -166,15 +170,17 @@ class BackendMain extends Backend
 		$objTemplate->messages = Message::generateUnwrapped() . Backend::getSystemMessages();
 		$objTemplate->loginMsg = $GLOBALS['TL_LANG']['MSC']['firstLogin'];
 
+		$user = BackendUser::getInstance();
+
 		// Add the login message
-		if ($this->User->lastLogin > 0)
+		if ($user->lastLogin > 0)
 		{
 			$formatter = new DateTimeFormatter(System::getContainer()->get('translator'));
-			$diff = $formatter->formatDiff(new \DateTime(date('Y-m-d H:i:s', $this->User->lastLogin)), new \DateTime());
+			$diff = $formatter->formatDiff(new \DateTime(date('Y-m-d H:i:s', $user->lastLogin)), new \DateTime());
 
-			$objTemplate->loginMsg = sprintf(
+			$objTemplate->loginMsg = \sprintf(
 				$GLOBALS['TL_LANG']['MSC']['lastLogin'][1],
-				'<time title="' . Date::parse(Config::get('datimFormat'), $this->User->lastLogin) . '">' . $diff . '</time>'
+				'<time title="' . Date::parse(Config::get('datimFormat'), $user->lastLogin) . '">' . $diff . '</time>'
 			);
 		}
 
@@ -185,7 +191,7 @@ class BackendMain extends Backend
 		$objTemplate->recordOfTable = StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['MSC']['recordOfTable']));
 		$objTemplate->systemMessages = $GLOBALS['TL_LANG']['MSC']['systemMessages'];
 		$objTemplate->shortcuts = $GLOBALS['TL_LANG']['MSC']['shortcuts'][0];
-		$objTemplate->shortcutsLink = $GLOBALS['TL_LANG']['MSC']['shortcuts'][1];
+		$objTemplate->shortcutsLink = \sprintf($GLOBALS['TL_LANG']['MSC']['shortcuts'][1], 'https://to.contao.org/docs/shortcuts');
 		$objTemplate->editElement = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['editElement']);
 
 		return $objTemplate->parse();
@@ -200,7 +206,14 @@ class BackendMain extends Backend
 	{
 		$this->Template->setData($this->compileTemplateData($this->Template->getData()));
 
-		return $this->Template->getResponse();
+		$response = $this->Template->getResponse();
+
+		if (Input::get('popup') !== null)
+		{
+			$response->headers->set('Content-Security-Policy', "frame-ancestors 'self'", false);
+		}
+
+		return $response;
 	}
 
 	/**
@@ -224,17 +237,18 @@ class BackendMain extends Backend
 
 		$data['theme'] = Backend::getTheme();
 		$data['language'] = $GLOBALS['TL_LANGUAGE'];
-		$data['title'] = StringUtil::specialchars(strip_tags($data['title'] ?? ''));
+		$data['title'] = StringUtil::specialchars(preg_replace('/^\s*›\s*|\s*›\s*$/u', '', strip_tags(preg_replace('/<span.*?>/', ' › ', $data['title'] ?? ''))));
 		$data['host'] = Backend::getDecodedHostname();
 		$data['charset'] = System::getContainer()->getParameter('kernel.charset');
 		$data['home'] = $GLOBALS['TL_LANG']['MSC']['home'];
 		$data['isPopup'] = Input::get('popup');
-		$data['learnMore'] = sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');
+		$data['learnMore'] = \sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');
 
 		$twig = $container->get('twig');
+		$searchEnabled = $container->has('contao.search.backend') && $container->get('contao.search.backend')->isAvailable();
 
-		$data['menu'] = $twig->render('@ContaoCore/Backend/be_menu.html.twig');
-		$data['headerMenu'] = $twig->render('@ContaoCore/Backend/be_header_menu.html.twig');
+		$data['menu'] = $twig->render('@Contao/backend/chrome/main_menu.html.twig');
+		$data['headerMenu'] = $twig->render('@Contao/backend/chrome/header_menu.html.twig', array('searchEnabled' => $searchEnabled));
 
 		return $data;
 	}

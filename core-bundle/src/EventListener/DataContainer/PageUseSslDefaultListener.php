@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 #[AsCallback(table: 'tl_page', target: 'config.onload')]
 class PageUseSslDefaultListener
 {
-    public function __construct(private RequestStack $requestStack)
+    public function __construct(private readonly RequestStack $requestStack)
     {
     }
 

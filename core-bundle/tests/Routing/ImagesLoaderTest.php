@@ -22,7 +22,7 @@ class ImagesLoaderTest extends TestCase
     {
         $loader = new ImagesLoader(
             $this->getFixturesDir(),
-            $this->getFixturesDir().'/path/to/images'
+            $this->getFixturesDir().'/path/to/images',
         );
 
         $this->assertTrue($loader->supports('.', 'contao_images'));
@@ -32,7 +32,7 @@ class ImagesLoaderTest extends TestCase
     {
         $loader = new ImagesLoader(
             $this->getFixturesDir(),
-            $this->getFixturesDir().'/path/to/images'
+            $this->getFixturesDir().'/path/to/images',
         );
 
         $route = $loader->load('.', 'contao_images')->get('contao_images');

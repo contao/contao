@@ -143,7 +143,7 @@ trait TemplateInheritance
 		}
 
 		// Replace insert tags
-		if ($this instanceof FrontendTemplate)
+		if ($this instanceof FrontendTemplate || $this instanceof Widget)
 		{
 			$container = System::getContainer();
 			$request = $container->get('request_stack')->getCurrentRequest();
@@ -164,7 +164,7 @@ trait TemplateInheritance
 		return $strBuffer;
 	}
 
-	public function setDebug(bool $debug = null): self
+	public function setDebug(bool|null $debug = null): self
 	{
 		$this->blnDebug = $debug;
 
@@ -215,8 +215,7 @@ trait TemplateInheritance
 			// Combine the contents of the child blocks
 			elseif (\is_array($this->arrBlocks[$name]))
 			{
-				$callback = static function ($current, $parent) use ($nonce)
-				{
+				$callback = static function ($current, $parent) use ($nonce) {
 					return str_replace("[[TL_PARENT_$nonce]]", $parent, $current);
 				};
 
@@ -227,7 +226,7 @@ trait TemplateInheritance
 			if ($this->arrBlocks[$name] != "[[TL_PARENT_$nonce]]")
 			{
 				// Output everything before the first TL_PARENT tag
-				if (strpos($this->arrBlocks[$name], "[[TL_PARENT_$nonce]]") !== false)
+				if (str_contains($this->arrBlocks[$name], "[[TL_PARENT_$nonce]]"))
 				{
 					list($content) = explode("[[TL_PARENT_$nonce]]", $this->arrBlocks[$name], 2);
 					echo $content;
@@ -282,7 +281,7 @@ trait TemplateInheritance
 			if ($this->arrBlocks[$name] != "[[TL_PARENT_$nonce]]")
 			{
 				// Output everything after the first TL_PARENT tag
-				if (strpos($this->arrBlocks[$name], "[[TL_PARENT_$nonce]]") !== false)
+				if (str_contains($this->arrBlocks[$name], "[[TL_PARENT_$nonce]]"))
 				{
 					list(, $content) = explode("[[TL_PARENT_$nonce]]", $this->arrBlocks[$name], 2);
 					echo $content;
@@ -314,11 +313,11 @@ trait TemplateInheritance
 	 * @param string $name The template name
 	 * @param array  $data An optional data array
 	 */
-	public function insert($name, array $data=null)
+	public function insert($name, array|null $data=null)
 	{
-		/** @var Template $tpl */
 		if ($this instanceof Template)
 		{
+			/** @var Template $tpl */
 			$tpl = new static($name);
 		}
 		elseif (System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest(System::getContainer()->get('request_stack')->getCurrentRequest() ?? Request::create('')))
@@ -364,7 +363,7 @@ trait TemplateInheritance
 	{
 		$container = System::getContainer();
 
-		if (null === ($twig = $container->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE)))
+		if (!$twig = $container->get('twig', ContainerInterface::NULL_ON_INVALID_REFERENCE))
 		{
 			return null;
 		}

@@ -62,7 +62,9 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 		$factory = System::getContainer()->get('contao.crawl.escargot.factory');
 		$subscriberNames = $factory->getSubscriberNames();
+
 		$subscribersWidget = $this->generateSubscribersWidget($subscriberNames);
+		$maxDepthWidget = $this->generateMaxDepthWidget();
 		$memberWidget = null;
 
 		if (System::getContainer()->getParameter('contao.search.index_protected'))
@@ -73,6 +75,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		$template = new BackendTemplate('be_crawl');
 		$template->isActive = $this->isActive();
 		$template->subscribersWidget = $subscribersWidget;
+		$template->maxDepthWidget = $maxDepthWidget;
 		$template->memberWidget = $memberWidget;
 
 		if (!$this->isActive())
@@ -113,7 +116,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 		$objAuthenticator = System::getContainer()->get('contao.security.frontend_preview_authenticator');
 
-		if ($memberWidget && $memberWidget->value)
+		if ($memberWidget?->value)
 		{
 			$objMember = Database::getInstance()->prepare('SELECT username FROM tl_member WHERE id=?')
 												->execute((int) $memberWidget->value);
@@ -125,12 +128,9 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			}
 			else
 			{
-				$session = System::getContainer()->get('request_stack')->getSession();
-				$clientOptions = array('headers' => array('Cookie' => sprintf('%s=%s', $session->getName(), $session->getId())));
-
-				// Closing the session is necessary here as otherwise we run into our own session lock
 				// TODO: we need a way to authenticate with a token instead of our own cookie
-				$session->save();
+				$session = System::getContainer()->get('request_stack')->getSession();
+				$clientOptions = array('headers' => array('Cookie' => \sprintf('%s=%s', $session->getName(), $session->getId())));
 			}
 		}
 		else
@@ -188,12 +188,16 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			Controller::redirect(str_replace('&jobId=' . $jobId, '', Environment::get('requestUri')));
 		}
 
+		$concurrency = System::getContainer()->getParameter('contao.backend.crawl_concurrency');
+
 		// Configure with sane defaults for the back end (maybe we should make this configurable one day)
 		$escargot = $escargot
-			->withConcurrency(5)
-			->withMaxDepth(10)
-			->withMaxRequests(20)
+			->withConcurrency($concurrency)
+			->withMaxDepth($maxDepthWidget->value)
+			->withMaxDurationInSeconds(20)
 			->withLogger($this->createLogger($factory, $activeSubscribers, $jobId, $debugLogPath));
+
+		$template->hint = \sprintf($GLOBALS['TL_LANG']['tl_maintenance']['crawlHint'], $concurrency, 'contao.backend.crawl_concurrency', 'https://to.contao.org/docs/crawler');
 
 		if (Environment::get('isAjaxRequest'))
 		{
@@ -303,7 +307,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 			return $this->logDir;
 		}
 
-		$this->logDir = sprintf('%s/%s/contao-crawl', sys_get_temp_dir(), md5(System::getContainer()->getParameter('kernel.project_dir')));
+		$this->logDir = \sprintf('%s/%s/contao-crawl', sys_get_temp_dir(), md5(System::getContainer()->getParameter('kernel.project_dir')));
 
 		if (!is_dir($this->logDir))
 		{
@@ -360,6 +364,41 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		return $widget;
 	}
 
+	private function generateMaxDepthWidget(): Widget
+	{
+		$name = 'crawl_depth';
+
+		$widget = new SelectMenu();
+		$widget->id = $name;
+		$widget->name = $name;
+		$widget->label = $GLOBALS['TL_LANG']['tl_maintenance']['crawlDepth'][0];
+		$widget->setInputCallback($this->getInputCallback($name));
+
+		$options = array();
+
+		for ($i = 3; $i <= 10; ++$i)
+		{
+			$options[$i] = array(
+				'value' => $i,
+				'label' => $i,
+			);
+		}
+
+		$widget->options = $options;
+
+		if ($this->isActive())
+		{
+			$widget->validate();
+
+			if ($widget->hasErrors())
+			{
+				$this->valid = false;
+			}
+		}
+
+		return $widget;
+	}
+
 	private function generateMemberWidget(): Widget
 	{
 		$name = 'crawl_member';
@@ -377,7 +416,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 		// Get the active front end users
 		if (BackendUser::getInstance()->isAdmin)
 		{
-			$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE login=1 AND disable=0 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time') ORDER BY username");
+			$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE login=1 AND disable=0 AND (start='' OR start<=$time) AND (stop='' OR stop>$time) ORDER BY username");
 		}
 		else
 		{
@@ -385,7 +424,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 			if (!empty($amg) && \is_array($amg))
 			{
-				$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE (`groups` LIKE '%\"" . implode('"%\' OR \'%"', array_map('\intval', $amg)) . "\"%') AND login=1 AND disable=0 AND (start='' OR start<='$time') AND (stop='' OR stop>'$time') ORDER BY username");
+				$objMembers = Database::getInstance()->execute("SELECT id, username FROM tl_member WHERE (`groups` LIKE '%\"" . implode('"%\' OR \'%"', array_map('\intval', $amg)) . "\"%') AND login=1 AND disable=0 AND (start='' OR start<=$time) AND (stop='' OR stop>$time) ORDER BY username");
 			}
 		}
 
@@ -417,8 +456,7 @@ class Crawl extends Backend implements MaintenanceModuleInterface
 
 	private function getInputCallback(string $name): \Closure
 	{
-		return static function () use ($name)
-		{
+		return static function () use ($name) {
 			return Input::get($name);
 		};
 	}

@@ -19,8 +19,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractPickerProvider implements PickerProviderInterface
 {
-    public function __construct(private FactoryInterface $menuFactory, private RouterInterface $router, private TranslatorInterface $translator)
-    {
+    public function __construct(
+        private readonly FactoryInterface $menuFactory,
+        private readonly RouterInterface $router,
+        private readonly TranslatorInterface $translator,
+    ) {
     }
 
     public function getUrl(PickerConfig $config): string|null
@@ -33,15 +36,12 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
         $name = $this->getName();
         $label = $this->translator->trans('MSC.'.$name, [], 'contao_default');
 
-        return $this->menuFactory->createItem(
-            $name,
-            [
-                'label' => $label ?: $name,
-                'linkAttributes' => ['class' => $name],
-                'current' => $this->isCurrent($config),
-                'uri' => $this->generateUrl($config, true),
-            ]
-        );
+        return $this->menuFactory->createItem($name, [
+            'label' => $label ?: $name,
+            'linkAttributes' => ['class' => $name],
+            'current' => $this->isCurrent($config),
+            'uri' => $this->generateUrl($config, true),
+        ]);
     }
 
     public function isCurrent(PickerConfig $config): bool
@@ -52,22 +52,20 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     /**
      * Returns the routing parameters for the back end picker.
      *
-     * @return array<string,string|int>
+     * @return array<string, string|int>
      */
-    abstract protected function getRouteParameters(PickerConfig $config = null): array;
+    abstract protected function getRouteParameters(PickerConfig|null $config = null): array;
 
     /**
      * Generates the URL for the picker.
      */
     private function generateUrl(PickerConfig $config, bool $ignoreValue): string|null
     {
-        $params = array_merge(
-            $this->getRouteParameters($ignoreValue ? null : $config),
-            [
-                'popup' => '1',
-                'picker' => $config->cloneForCurrent($this->getName())->urlEncode(),
-            ]
-        );
+        $params = [
+            ...$this->getRouteParameters($ignoreValue ? null : $config),
+            'popup' => '1',
+            'picker' => $config->cloneForCurrent($this->getName())->urlEncode(),
+        ];
 
         return $this->router->generate('contao_backend', $params);
     }

@@ -81,6 +81,12 @@
         <source>Use the code editor to modify code elements.</source>
         <target>Utilizar el editor de código para modificar elementos de código.</target>
       </trans-unit>
+      <trans-unit id="tl_user.doNotCollapse.0">
+        <source>Do not collapse content elements</source>
+      </trans-unit>
+      <trans-unit id="tl_user.doNotCollapse.1">
+        <source>Do not collapse content elements in the back end preview.</source>
+      </trans-unit>
       <trans-unit id="tl_user.pwChange.0">
         <source>Password change required</source>
         <target>Se requiere cambiar la contraseña</target>
@@ -238,16 +244,14 @@
         <target>Activar el</target>
       </trans-unit>
       <trans-unit id="tl_user.start.1">
-        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Si desea evitar que la cuenta esté activa antes de una determinada fecha/hora, puede ingresarla aquí. De lo contrario, deje el campo en blanco.</target>
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_user.stop.0">
         <source>Deactivate on</source>
         <target>Deactivate on</target>
       </trans-unit>
       <trans-unit id="tl_user.stop.1">
-        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Si desea evitar que la cuenta esté activa después de una determinada fecha/hora, puede ingresarla aquí. De lo contrario, deje el campo en blanco.</target>
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_user.session.0">
         <source>Purge data</source>
@@ -327,6 +331,7 @@
       </trans-unit>
       <trans-unit id="tl_user.previewLabel">
         <source>Preview cache</source>
+        <target>Caché de vista previa</target>
       </trans-unit>
       <trans-unit id="tl_user.tempLabel">
         <source>Shared cache</source>
@@ -342,6 +347,7 @@
       </trans-unit>
       <trans-unit id="tl_user.previewPurged">
         <source>The preview cache has been purged</source>
+        <target>La memoria caché de vista previa se ha purgado</target>
       </trans-unit>
       <trans-unit id="tl_user.tempPurged">
         <source>The shared cache has been purged</source>
@@ -379,9 +385,15 @@
         <source>Delete user ID %s</source>
         <target>Eliminar usuario con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user.toggle">
-        <source>Activate/deactivate user ID %s</source>
-        <target>Activar/deshabilitar usuario con ID%s</target>
+      <trans-unit id="tl_user.toggle.0">
+        <source>Activate/deactivate user</source>
+        <target>Activar/deshabilitar usuario</target>
+      </trans-unit>
+      <trans-unit id="tl_user.toggle.1">
+        <source>Deactivate user ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_user.toggle.2">
+        <source>Activate user ID %s</source>
       </trans-unit>
       <trans-unit id="tl_user.su">
         <source>Switch to user ID %s</source>

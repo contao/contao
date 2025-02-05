@@ -86,7 +86,7 @@ class FormSelect extends Widget
 				break;
 
 			case 'options':
-				$this->arrOptions = StringUtil::deserialize($varValue);
+				$this->arrOptions = StringUtil::deserialize($varValue, true);
 				break;
 
 			case 'rgxp':
@@ -220,7 +220,7 @@ class FormSelect extends Widget
 		$blnHasGroups = false;
 
 		// Add empty option if there are none
-		if (empty($this->arrOptions) || !\is_array($this->arrOptions))
+		if (empty($this->arrOptions))
 		{
 			$this->arrOptions = array(array('value' => '', 'label' => '-'));
 		}
@@ -290,7 +290,7 @@ class FormSelect extends Widget
 		}
 
 		// Add empty option if there are none
-		if (empty($this->arrOptions) || !\is_array($this->arrOptions))
+		if (empty($this->arrOptions))
 		{
 			$this->arrOptions = array(array('value'=>'', 'label'=>'-'));
 		}
@@ -304,12 +304,12 @@ class FormSelect extends Widget
 					$strOptions .= '</optgroup>';
 				}
 
-				$strOptions .= sprintf('<optgroup label="%s">', StringUtil::specialchars($arrOption['label'] ?? ''));
+				$strOptions .= \sprintf('<optgroup label="%s">', StringUtil::specialchars($arrOption['label'] ?? ''));
 				$blnHasGroups = true;
 				continue;
 			}
 
-			$strOptions .= sprintf(
+			$strOptions .= \sprintf(
 				'<option value="%s"%s>%s</option>',
 				$arrOption['value'] ?? null,
 				$this->isSelected($arrOption),
@@ -322,7 +322,7 @@ class FormSelect extends Widget
 			$strOptions .= '</optgroup>';
 		}
 
-		return sprintf(
+		return \sprintf(
 			'<select name="%s" id="ctrl_%s" class="%s"%s>%s</select>',
 			$this->name,
 			$this->strId,

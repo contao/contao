@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Framework\Adapter;
+
 /**
  * Provide methods to render a pagination menu.
  */
@@ -127,7 +129,7 @@ class Pagination
 	 * @param Template $objTemplate      The template object
 	 * @param boolean  $blnForceParam    Force the URL parameter
 	 */
-	public function __construct($intRows, $intPerPage, $intNumberOfLinks=7, $strParameter='page', Template $objTemplate=null, $blnForceParam=false)
+	public function __construct($intRows, $intPerPage, $intNumberOfLinks=7, $strParameter='page', Template|null $objTemplate=null, $blnForceParam=false)
 	{
 		$this->intPage = 1;
 		$this->intRows = (int) $intRows;
@@ -147,9 +149,12 @@ class Pagination
 		$this->lblLast = $GLOBALS['TL_LANG']['MSC']['last'];
 		$this->lblTotal = $GLOBALS['TL_LANG']['MSC']['totalPages'];
 
-		if (Input::get($strParameter) > 0)
+		/** @var Adapter<Input> $input */
+		$input = System::getContainer()->get('contao.framework')->getAdapter(Input::class);
+
+		if ($input->get($strParameter) > 0)
 		{
-			$this->intPage = (int) Input::get($strParameter);
+			$this->intPage = (int) $input->get($strParameter);
 		}
 
 		$this->strParameter = $strParameter;
@@ -217,13 +222,16 @@ class Pagination
 			return '';
 		}
 
+		/** @var Adapter<Environment> $environment */
+		$environment = System::getContainer()->get('contao.framework')->getAdapter(Environment::class);
+
 		$blnQuery = false;
-		list($this->strUrl) = explode('?', Environment::get('requestUri'), 2);
+		list($this->strUrl) = explode('?', $environment->get('requestUri'), 2);
 
 		// Prepare the URL
-		foreach (preg_split('/&(amp;)?/', Environment::get('queryString'), -1, PREG_SPLIT_NO_EMPTY) as $fragment)
+		foreach (preg_split('/&(amp;)?/', $environment->get('queryString'), -1, PREG_SPLIT_NO_EMPTY) as $fragment)
 		{
-			if (strpos($fragment, $this->strParameter . '=') === false)
+			if (!str_contains($fragment, $this->strParameter . '='))
 			{
 				$this->strUrl .= (!$blnQuery ? '?' : '&amp;') . $fragment;
 				$blnQuery = true;
@@ -251,37 +259,39 @@ class Pagination
 		$objTemplate->hasLast = $this->hasLast();
 
 		$objTemplate->pages = $this->getItemsAsArray();
-		$objTemplate->total = sprintf($this->lblTotal, $this->intPage, $this->intTotalPages);
+		$objTemplate->total = \sprintf($this->lblTotal, $this->intPage, $this->intTotalPages);
 
 		$objTemplate->first = array
 		(
 			'link' => $this->lblFirst,
 			'href' => $this->linkToPage(1),
-			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), 1)
+			'title' => \sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), 1)
 		);
 
 		$objTemplate->previous = array
 		(
 			'link' => $this->lblPrevious,
 			'href' => $this->linkToPage($this->intPage - 1),
-			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), ($this->intPage - 1))
+			'title' => \sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intPage - 1)
 		);
 
 		$objTemplate->next = array
 		(
 			'link' => $this->lblNext,
 			'href' => $this->linkToPage($this->intPage + 1),
-			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), ($this->intPage + 1))
+			'title' => \sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intPage + 1)
 		);
 
 		$objTemplate->last = array
 		(
 			'link' => $this->lblLast,
 			'href' => $this->linkToPage($this->intTotalPages),
-			'title' => sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intTotalPages)
+			'title' => \sprintf(StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['goToPage']), $this->intTotalPages)
 		);
 
 		$objTemplate->class = 'pagination-' . $this->strParameter;
+
+		// Backwards compatibility
 		$objTemplate->pagination = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagination']);
 
 		// Adding rel="prev" and rel="next" links is not possible
@@ -305,11 +315,11 @@ class Pagination
 		{
 			if ($arrItem['href'] === null)
 			{
-				$arrLinks[] = sprintf('<li><strong class="active">%s</strong></li>', $arrItem['page']);
+				$arrLinks[] = \sprintf('<li><strong class="active">%s</strong></li>', $arrItem['page']);
 			}
 			else
 			{
-				$arrLinks[] = sprintf('<li><a href="%s" class="link" title="%s">%s</a></li>', $arrItem['href'], $arrItem['title'], $arrItem['page']);
+				$arrLinks[] = \sprintf('<li><a href="%s" class="link" title="%s">%s</a></li>', $arrItem['href'], $arrItem['title'], $arrItem['page']);
 			}
 		}
 
@@ -378,7 +388,7 @@ class Pagination
 				(
 					'page'  => $i,
 					'href'  => $this->linkToPage($i),
-					'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $i))
+					'title' => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['goToPage'], $i))
 				);
 			}
 		}

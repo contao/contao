@@ -16,11 +16,11 @@ use Contao\CoreBundle\Event\MenuEvent;
 use Contao\CoreBundle\EventListener\Menu\BackendLogoutListener;
 use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\MenuFactory;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Http\Firewall\SwitchUserListener;
 use Symfony\Component\Security\Http\Logout\LogoutUrlGenerator as BaseLogoutUrlGenerator;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -88,7 +88,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
             $security,
             $router,
             $urlGenerator,
-            $this->getTranslator()
+            $this->getTranslator(),
         );
 
         $listener($event);
@@ -106,12 +106,13 @@ class BackendLogoutListenerTest extends ContaoTestCase
             [
                 'class' => 'icon-logout',
                 'accesskey' => 'q',
+                'data-turbo-prefetch' => 'false',
             ],
-            $children['logout']->getLinkAttributes()
+            $children['logout']->getLinkAttributes(),
         );
     }
 
-    public function getLogoutData(): \Generator
+    public function getLogoutData(): iterable
     {
         $switchUserToken = $this->createMock(SwitchUserToken::class);
         $switchUserToken
@@ -144,7 +145,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
             $security,
             $this->createMock(RouterInterface::class),
             $this->createMock(BaseLogoutUrlGenerator::class),
-            $this->getTranslator()
+            $this->getTranslator(),
         );
 
         $listener($event);
@@ -175,7 +176,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
             $security,
             $this->createMock(RouterInterface::class),
             $this->createMock(BaseLogoutUrlGenerator::class),
-            $this->getTranslator()
+            $this->getTranslator(),
         );
 
         $listener($event);
@@ -203,7 +204,7 @@ class BackendLogoutListenerTest extends ContaoTestCase
             $security,
             $this->createMock(RouterInterface::class),
             $this->createMock(BaseLogoutUrlGenerator::class),
-            $this->getTranslator()
+            $this->getTranslator(),
         );
 
         $listener($event);

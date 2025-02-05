@@ -22,14 +22,18 @@ class PageRoute extends Route implements RouteObjectInterface
 {
     final public const PAGE_BASED_ROUTE_NAME = 'page_routing_object';
 
-    private PageModel $pageModel;
-    private string|null $urlPrefix;
-    private string|null $urlSuffix;
+    private readonly PageModel $pageModel;
+
+    private string $routeKey;
+
+    private string $urlPrefix;
+
+    private string $urlSuffix;
 
     /**
      * The referenced content object (can be anything).
      */
-    private mixed $content = null;
+    private object|null $content = null;
 
     /**
      * @param string|array<string> $methods
@@ -38,17 +42,14 @@ class PageRoute extends Route implements RouteObjectInterface
     {
         $pageModel->loadDetails();
 
-        $defaults = array_merge(
-            [
-                '_token_check' => true,
-                '_controller' => 'Contao\FrontendIndex::renderPage',
-                '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
-                '_locale' => LocaleUtil::formatAsLocale($pageModel->rootLanguage ?? ''),
-                '_format' => 'html',
-                '_canonical_route' => 'tl_page.'.$pageModel->id,
-            ],
-            $defaults
-        );
+        $defaults = [
+            '_controller' => 'Contao\FrontendIndex::renderPage',
+            '_scope' => ContaoCoreBundle::SCOPE_FRONTEND,
+            '_locale' => LocaleUtil::formatAsLocale($pageModel->rootLanguage ?? ''),
+            '_format' => 'html',
+            '_canonical_route' => 'tl_page.'.$pageModel->id,
+            ...$defaults,
+        ];
 
         // Always use the given page model in the defaults
         $defaults['pageModel'] = $pageModel;
@@ -74,10 +75,11 @@ class PageRoute extends Route implements RouteObjectInterface
             $options,
             $pageModel->domain,
             $pageModel->rootUseSSL ? 'https' : 'http',
-            $methods
+            $methods,
         );
 
         $this->pageModel = $pageModel;
+        $this->routeKey = 'tl_page.'.$pageModel->id;
         $this->urlPrefix = $pageModel->urlPrefix;
         $this->urlSuffix = $pageModel->urlSuffix;
     }
@@ -96,6 +98,11 @@ class PageRoute extends Route implements RouteObjectInterface
         }
 
         return $path.$this->getUrlSuffix();
+    }
+
+    public function getOriginalPath(): string
+    {
+        return parent::getPath();
     }
 
     public function getUrlPrefix(): string
@@ -125,7 +132,7 @@ class PageRoute extends Route implements RouteObjectInterface
     /**
      * Sets the object this URL points to.
      */
-    public function setContent(mixed $content): self
+    public function setContent(object|null $content): self
     {
         $this->content = $content;
 
@@ -137,8 +144,15 @@ class PageRoute extends Route implements RouteObjectInterface
         return $this->content;
     }
 
+    public function setRouteKey(string $routeKey): self
+    {
+        $this->routeKey = $routeKey;
+
+        return $this;
+    }
+
     public function getRouteKey(): string
     {
-        return 'tl_page.'.$this->pageModel->id;
+        return $this->routeKey;
     }
 }

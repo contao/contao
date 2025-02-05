@@ -31,14 +31,14 @@ class PageTrailCacheTagsListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $this->createRequestWithPageModel([42, 18]),
             HttpKernelInterface::MAIN_REQUEST,
-            new Response()
+            new Response(),
         );
 
         $listener = new PageTrailCacheTagsListener($this->createScopeMatcher(true), null);
         $listener($event);
 
-        // Increase the assertion count. If the test would fail, we'd get a
-        // "Call to a member function addTags() on null" PHP error.
+        // Increase the assertion count. If the test would fail, we'd get a "Call to a
+        // member function addTags() on null" PHP error.
         $this->addToAssertionCount(1);
     }
 
@@ -54,7 +54,7 @@ class PageTrailCacheTagsListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $this->createRequestWithPageModel([14, 7]),
             HttpKernelInterface::SUB_REQUEST,
-            new Response()
+            new Response(),
         );
 
         $listener = new PageTrailCacheTagsListener($this->createScopeMatcher(false), $responseTagger);
@@ -74,7 +74,7 @@ class PageTrailCacheTagsListenerTest extends TestCase
             $this->createMock(KernelInterface::class),
             $this->createRequestWithPageModel([42, 18]),
             HttpKernelInterface::SUB_REQUEST,
-            new Response()
+            new Response(),
         );
 
         $listener = new PageTrailCacheTagsListener($this->createScopeMatcher(true), $responseTagger);

@@ -67,7 +67,7 @@ class BackupRestoreCommandTest extends TestCase
         $this->assertSame(1, $code);
     }
 
-    public function unsuccessfulCommandRunProvider(): \Generator
+    public static function unsuccessfulCommandRunProvider(): iterable
     {
         yield 'Text format' => [
             [],
@@ -80,7 +80,7 @@ class BackupRestoreCommandTest extends TestCase
         ];
     }
 
-    public function successfulCommandRunProvider(): \Generator
+    public function successfulCommandRunProvider(): iterable
     {
         yield 'Default arguments' => [
             [],
@@ -143,10 +143,7 @@ class BackupRestoreCommandTest extends TestCase
         ];
     }
 
-    /**
-     * @return BackupManager&MockObject
-     */
-    private function mockBackupManager(\Closure $expectedCreateConfig): BackupManager
+    private function mockBackupManager(\Closure $expectedCreateConfig): BackupManager&MockObject
     {
         $backup = new Backup('test__20211101141254.sql.gz');
         $backup->setSize(100);

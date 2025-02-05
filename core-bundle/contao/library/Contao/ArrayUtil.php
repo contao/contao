@@ -43,7 +43,7 @@ class ArrayUtil
 	}
 
 	/**
-	 * Recursively sort an array by key
+	 * Recursively sort an array by key.
 	 */
 	public static function recursiveKeySort(array &$array): void
 	{
@@ -110,9 +110,8 @@ class ArrayUtil
 			}
 		}
 
-		// Remove empty (unreplaced) entries
-		$arrOrder = array_filter($arrOrder, static function ($item)
-		{
+		// Remove empty (not replaced) entries
+		$arrOrder = array_filter($arrOrder, static function ($item) {
 			return $item !== null;
 		});
 
@@ -123,6 +122,63 @@ class ArrayUtil
 		}
 
 		// Append the left-over images at the end
-		return array_merge(array_values($arrOrder), array_values($arrItems));
+		return array(...array_values($arrOrder), ...array_values($arrItems));
+	}
+
+	public static function flattenToString(array $arrArray): string
+	{
+		$iterator = new \RecursiveIteratorIterator(new \RecursiveArrayIterator($arrArray));
+		$result = array();
+
+		foreach ($iterator as $leafValue)
+		{
+			$keys = array();
+
+			foreach (range(0, $iterator->getDepth()) as $depth)
+			{
+				$keys[] = $iterator->getSubIterator($depth)->key();
+			}
+
+			$result[] = implode('.', $keys) . ': ' . $leafValue;
+		}
+
+		return implode(', ', $result);
+	}
+
+	public static function mapRecursive(callable $fn, array $arr): array
+	{
+		return array_map(static fn ($item) => \is_array($item) ? self::mapRecursive($fn, $item) : $fn($item), $arr);
+	}
+
+	/**
+	 * Add, remove or replace values from the current array based on your configuration.
+	 */
+	public static function alterListByConfig(array $list, array $config): array
+	{
+		$newList = array_filter($config, static fn ($newValue) => !\in_array($newValue[0], array('-', '+'), true));
+
+		if ($newList)
+		{
+			$list = $newList;
+		}
+
+		foreach ($config as $newValue)
+		{
+			$prefix = $newValue[0];
+			$value = substr($newValue, 1);
+
+			if ('-' === $prefix && \in_array($value, $list, true))
+			{
+				unset($list[array_search($value, $list, true)]);
+			}
+			elseif ('+' === $prefix && !\in_array($value, $list, true))
+			{
+				$list[] = $value;
+			}
+		}
+
+		sort($list);
+
+		return $list;
 	}
 }

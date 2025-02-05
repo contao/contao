@@ -30,9 +30,6 @@ class PageRegistryTest extends TestCase
             'alias' => 'bar',
             'urlPrefix' => 'foo',
             'urlSuffix' => '.baz',
-            'requireItem' => false,
-            'language' => 'en',
-            'rootLanguage' => 'en',
         ]);
 
         $registry = new PageRegistry($this->createMock(Connection::class));
@@ -51,8 +48,6 @@ class PageRegistryTest extends TestCase
             'urlPrefix' => 'foo',
             'urlSuffix' => '.baz',
             'requireItem' => true,
-            'language' => 'en',
-            'rootLanguage' => 'en',
         ]);
 
         $registry = new PageRegistry($this->createMock(Connection::class));
@@ -61,6 +56,40 @@ class PageRegistryTest extends TestCase
         $this->assertSame('/foo/bar{!parameters}.baz', $route->getPath());
         $this->assertSame('', $route->getDefault('parameters'));
         $this->assertSame('/.+?', $route->getRequirement('parameters'));
+    }
+
+    public function testReturnsUnparameteredPageRouteForForwardPages(): void
+    {
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'forward',
+            'alias' => 'bar',
+            'urlPrefix' => 'foo',
+            'urlSuffix' => '.baz',
+        ]);
+
+        $registry = new PageRegistry($this->createMock(Connection::class));
+        $route = $registry->getRoute($pageModel);
+
+        $this->assertSame('/foo/bar.baz', $route->getPath());
+        $this->assertNull($route->getDefault('parameters'));
+    }
+
+    public function testReturnsParameteredPageRouteIfTheAlwaysForwardOptionIsSet(): void
+    {
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'forward',
+            'alias' => 'bar',
+            'urlPrefix' => 'foo',
+            'urlSuffix' => '.baz',
+            'alwaysForward' => true,
+        ]);
+
+        $registry = new PageRegistry($this->createMock(Connection::class));
+        $route = $registry->getRoute($pageModel);
+
+        $this->assertSame('/foo/bar{!parameters}.baz', $route->getPath());
+        $this->assertSame('', $route->getDefault('parameters'));
+        $this->assertSame('(/.+?)?', $route->getRequirement('parameters'));
     }
 
     /**
@@ -73,8 +102,6 @@ class PageRegistryTest extends TestCase
             'alias' => $alias,
             'urlPrefix' => $urlPrefix,
             'urlSuffix' => $urlSuffix,
-            'language' => 'en',
-            'rootLanguage' => 'en',
         ]);
 
         $registry = new PageRegistry($this->createMock(Connection::class));
@@ -85,7 +112,7 @@ class PageRegistryTest extends TestCase
         $this->assertSame($expectedPath, $route->getPath());
     }
 
-    public function pageRouteWithPathProvider(): \Generator
+    public static function pageRouteWithPathProvider(): iterable
     {
         yield 'Does not add parameters for empty path' => [
             new RouteConfig(''),
@@ -156,8 +183,8 @@ class PageRegistryTest extends TestCase
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'type' => 'foo',
-            'language' => 'en',
-            'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $enhancer1 = $this->createMock(DynamicRouteInterface::class);
@@ -165,7 +192,7 @@ class PageRegistryTest extends TestCase
             ->expects($this->once())
             ->method('configurePageRoute')
             ->with($this->callback(
-                static fn ($route) => $route instanceof PageRoute && $route->getPageModel() === $pageModel
+                static fn ($route) => $route instanceof PageRoute && $route->getPageModel() === $pageModel,
             ))
         ;
 
@@ -282,8 +309,8 @@ class PageRegistryTest extends TestCase
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
             'type' => 'foo',
-            'language' => 'en',
-            'rootLanguage' => 'en',
+            'urlPrefix' => '',
+            'urlSuffix' => '',
         ]);
 
         $config1 = new RouteConfig();
@@ -326,17 +353,12 @@ class PageRegistryTest extends TestCase
 
     public function testRemovesType(): void
     {
-        $pageModel = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'type' => 'foo',
-                'alias' => 'baz',
-                'urlPrefix' => 'bar',
-                'urlSuffix' => '.html',
-                'language' => 'en',
-                'rootLanguage' => 'en',
-            ]
-        );
+        $pageModel = $this->mockClassWithProperties(PageModel::class, [
+            'type' => 'foo',
+            'alias' => 'baz',
+            'urlPrefix' => 'bar',
+            'urlSuffix' => '.html',
+        ]);
 
         $enhancer = $this->createMock(DynamicRouteInterface::class);
         $enhancer
@@ -364,18 +386,32 @@ class PageRegistryTest extends TestCase
 
     public function testDoesNotGenerateRoutableRoutesForNonRoutablePages(): void
     {
-        $pageModel = $this->mockClassWithProperties(
-            PageModel::class,
-            [
-                'type' => 'foobar',
-                'rootLanguage' => 'en',
-            ]
-        );
+        $pageModel = $this->mockClassWithProperties(PageModel::class, ['type' => 'foobar']);
 
         $registry = new PageRegistry($this->createMock(Connection::class));
         $registry->add('foobar', new RouteConfig(false, null, null, []));
 
         $this->assertFalse($registry->isRoutable($pageModel));
+    }
+
+    public function testServiceIsResetable(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->exactly(2))
+            ->method('fetchAllAssociative')
+            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
+            ->willReturn(['', '.html'])
+        ;
+
+        $registry = new PageRegistry($connection);
+
+        $this->assertEmpty($registry->getUrlPrefixes());
+        $this->assertEmpty($registry->getUrlPrefixes());
+
+        $registry->reset();
+
+        $this->assertEmpty($registry->getUrlPrefixes());
     }
 
     private function mockConnectionWithPrefixAndSuffix(string $urlPrefix = '', string $urlSuffix = '.html'): Connection

@@ -22,8 +22,8 @@
         <target>Aangepaste tekst</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_text.1">
-        <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR compliant.</source>
-        <target>Hier kunt u b.v. een privacynotitie invoeren om het nieuwsbriefabonnement GDPR-compatibel te maken.</target>
+        <source>Here you can e.g. enter a privacy note to make the newsletter subscription GDPR-compliant.</source>
+        <target>Hier kunt u b.v. een privacy notitie invoeren om het nieuwsbrief abonnement GDPR-conform te maken.</target>
       </trans-unit>
       <trans-unit id="tl_module.nl_hideChannels.0">
         <source>Hide channel menu</source>

@@ -149,7 +149,7 @@ class ModuleNewsList extends ModuleNews
 			$this->Template->pagination = $objPagination->generate("\n  ");
 		}
 
-		$objArticles = $this->fetchItems($this->news_archives, $blnFeatured, ($limit ?: 0), $offset);
+		$objArticles = $this->fetchItems($this->news_archives, $blnFeatured, $limit ?: 0, $offset);
 
 		// Add the articles
 		if ($objArticles !== null)

@@ -20,6 +20,7 @@ class DataContainerOperationTest extends TestCase
 {
     public function testDoesNotModifyLabelReferences(): void
     {
+        /** @phpstan-var array $translations (signals PHPStan that the array shape may change) */
         $translations = ['some_label' => ['first', 'second']];
         $config = ['label' => &$translations['some_label']];
 
@@ -28,5 +29,22 @@ class DataContainerOperationTest extends TestCase
         $this->assertSame('first', $translations['some_label'][0]);
         $this->assertSame('second', $translations['some_label'][1]);
         $this->assertSame(['first', 'second'], $translations['some_label']);
+    }
+
+    public function testDisablesOperation(): void
+    {
+        $config = ['href' => '#foo', 'route' => 'bar', 'icon' => 'edit.svg'];
+
+        $operation = new DataContainerOperation('test', $config, ['id' => 1], $this->createMock(DataContainer::class));
+
+        $this->assertSame('#foo', $operation['href']);
+        $this->assertSame('bar', $operation['route']);
+        $this->assertSame('edit.svg', $operation['icon']);
+
+        $operation->disable();
+
+        $this->assertArrayNotHasKey('href', $operation);
+        $this->assertArrayNotHasKey('route', $operation);
+        $this->assertSame('edit--disabled.svg', $operation['icon']);
     }
 }

@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Exception\InvalidThemePathException;
-use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoaderWarmer;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -22,9 +22,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ThemeTemplatesListener
 {
     public function __construct(
-        private ContaoFilesystemLoaderWarmer $filesystemLoaderWarmer,
-        private ThemeNamespace $themeNamespace,
-        private TranslatorInterface $translator,
+        private readonly ContaoFilesystemLoader $filesystemLoader,
+        private readonly ThemeNamespace $themeNamespace,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -37,7 +37,7 @@ class ThemeTemplatesListener
             throw new \RuntimeException($this->translator->trans('ERR.invalidThemeTemplatePath', [$e->getPath(), implode('', $e->getInvalidCharacters())], 'contao_default'), 0, $e);
         }
 
-        $this->filesystemLoaderWarmer->refresh();
+        $this->filesystemLoader->warmUp(true);
 
         return $value;
     }

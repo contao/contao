@@ -20,11 +20,11 @@ use Symfony\Component\Filesystem\Path;
 final class ContaoTwigUtil
 {
     /**
-     * Splits a Contao name into [namespace, short name]. The short name part
-     * will be null if $name is only a namespace.
+     * Splits a Contao name into [namespace, short name]. The short name part will be
+     * null if $name is only a namespace.
      *
-     * If parsing fails - i.e. if the given name does not describe a "Contao"
-     * or "Contao_*" namespace - null is returned instead.
+     * If parsing fails - i.e. if the given name does not describe a "Contao" or
+     * "Contao_*" namespace - null is returned instead.
      */
     public static function parseContaoName(string $logicalNameOrNamespace): array|null
     {

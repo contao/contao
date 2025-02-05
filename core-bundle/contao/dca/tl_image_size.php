@@ -10,17 +10,15 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
-use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
-use Contao\Image;
+use Contao\Image\ResizeOptions;
 use Contao\StringUtil;
 use Contao\System;
 use Imagine\Gd\Imagine as GdImagine;
 use Imagine\Gmagick\Imagine as GmagickImagine;
 use Imagine\Imagick\Imagine as ImagickImagine;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 $GLOBALS['TL_DCA']['tl_image_size'] = array
 (
@@ -33,10 +31,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'name',
-		'onload_callback' => array
-		(
-			array('tl_image_size', 'checkPermission')
-		),
 		'oncreate_callback' => array
 		(
 			array('tl_image_size', 'adjustPermissions')
@@ -50,7 +44,8 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid' => 'index'
+				'pid' => 'index',
+				'tstamp' => 'index'
 			)
 		)
 	),
@@ -66,36 +61,15 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'defaultSearchField'      => 'name',
 			'headerFields'            => array('name', 'author', 'tstamp'),
 			'child_record_callback'   => array('tl_image_size', 'listImageSize')
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
-		),
-		'operations' => array
-		(
-			'edit' => array
-			(
-				'href'                => 'table=tl_image_size&amp;act=edit',
-				'icon'                => 'edit.svg',
-				'button_callback'     => array('tl_image_size', 'editHeader')
-			),
-			'children',
-			'copy',
-			'cut',
-			'delete',
-			'show'
 		)
 	),
 
 	// Palettes
 	'palettes' => array
 	(
-		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{expert_legend:hide},formats,cssClass,skipIfDimensionsMatch'
+		'__selector__'                => array('preserveMetadata'),
+		'default'                     => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{metadata_legend},preserveMetadata;{expert_legend:hide},formats,skipIfDimensionsMatch,imageQuality,cssClass',
+		'overwrite'                   => '{title_legend},name,width,height,resizeMode,zoom;{source_legend},densities,sizes;{loading_legend},lazyLoading;{metadata_legend},preserveMetadata,preserveMetadataFields;{expert_legend:hide},formats,skipIfDimensionsMatch,imageQuality,cssClass'
 	),
 
 	// Fields
@@ -122,6 +96,12 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'eval'                    => array('mandatory'=>true, 'maxlength'=>64, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(64) NULL"
+		),
+		'imageQuality' => array
+		(
+			'inputType'               => 'text',
+			'eval'                    => array('rgxp'=>'prcnt', 'nospace'=>true, 'tl_class'=>'w50'),
+			'sql'                     => "int(10) NULL"
 		),
 		'cssClass' => array
 		(
@@ -172,15 +152,29 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		),
 		'formats' => array
 		(
-			'inputType'               => 'checkboxWizard',
+			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_image_size', 'getFormats'),
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "varchar(1024) NOT NULL default ''"
 		),
+		'preserveMetadata' => array
+		(
+			'inputType'               => 'radio',
+			'options'                 => array('default', 'overwrite', 'delete'),
+			'reference'               => &$GLOBALS['TL_LANG']['tl_image_size']['preserveMetadataOptions'],
+			'eval'                    => array('submitOnChange'=>true),
+			'sql'                     => "varchar(12) NOT NULL default 'default'"
+		),
+		'preserveMetadataFields' => array
+		(
+			'inputType'               => 'checkboxWizard',
+			'options_callback'        => array('tl_image_size', 'getMetadataFields'),
+			'eval'                    => array('multiple'=>true, 'mandatory'=>true),
+			'sql'                     => "blob NULL"
+		),
 		'skipIfDimensionsMatch' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'lazyLoading' => array
@@ -200,33 +194,6 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 class tl_image_size extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
-	 * Check permissions to edit the table
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission()
-	{
-		if ($this->User->isAdmin)
-		{
-			return;
-		}
-
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZES))
-		{
-			throw new AccessDeniedException('Not enough permissions to access the image sizes module.');
-		}
-	}
-
-	/**
 	 * Add the new image size to the permissions
 	 *
 	 * @param string|int $insertId
@@ -239,19 +206,21 @@ class tl_image_size extends Backend
 			$insertId = func_get_arg(1);
 		}
 
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
 		// Set the image sizes
-		if (empty($this->User->imageSizes) || !is_array($this->User->imageSizes))
+		if (empty($user->imageSizes) || !is_array($user->imageSizes))
 		{
 			$imageSizes = array();
 		}
 		else
 		{
-			$imageSizes = $this->User->imageSizes;
+			$imageSizes = $user->imageSizes;
 		}
 
 		// The image size is enabled already
@@ -260,16 +229,17 @@ class tl_image_size extends Backend
 			return;
 		}
 
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$arrNew = $objSessionBag->get('new_records');
 
 		if (is_array($arrNew['tl_image_size']) && in_array($insertId, $arrNew['tl_image_size']))
 		{
+			$db = Database::getInstance();
+
 			// Add the permissions on group level
-			if ($this->User->inherit != 'custom')
+			if ($user->inherit != 'custom')
 			{
-				$objGroup = $this->Database->execute("SELECT id, themes, imageSizes FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $this->User->groups)) . ")");
+				$objGroup = $db->execute("SELECT id, themes, imageSizes FROM tl_user_group WHERE id IN(" . implode(',', array_map('\intval', $user->groups)) . ")");
 
 				while ($objGroup->next())
 				{
@@ -280,18 +250,20 @@ class tl_image_size extends Backend
 						$arrImageSizes = StringUtil::deserialize($objGroup->imageSizes, true);
 						$arrImageSizes[] = $insertId;
 
-						$this->Database->prepare("UPDATE tl_user_group SET imageSizes=? WHERE id=?")
-									   ->execute(serialize($arrImageSizes), $objGroup->id);
+						$db
+							->prepare("UPDATE tl_user_group SET imageSizes=? WHERE id=?")
+							->execute(serialize($arrImageSizes), $objGroup->id);
 					}
 				}
 			}
 
 			// Add the permissions on user level
-			if ($this->User->inherit != 'group')
+			if ($user->inherit != 'group')
 			{
-				$objUser = $this->Database->prepare("SELECT themes, imageSizes FROM tl_user WHERE id=?")
-										   ->limit(1)
-										   ->execute($this->User->id);
+				$objUser = $db
+					->prepare("SELECT themes, imageSizes FROM tl_user WHERE id=?")
+					->limit(1)
+					->execute($user->id);
 
 				$arrThemes = StringUtil::deserialize($objUser->themes);
 
@@ -300,14 +272,15 @@ class tl_image_size extends Backend
 					$arrImageSizes = StringUtil::deserialize($objUser->imageSizes, true);
 					$arrImageSizes[] = $insertId;
 
-					$this->Database->prepare("UPDATE tl_user SET imageSizes=? WHERE id=?")
-								   ->execute(serialize($arrImageSizes), $this->User->id);
+					$db
+						->prepare("UPDATE tl_user SET imageSizes=? WHERE id=?")
+						->execute(serialize($arrImageSizes), $user->id);
 				}
 			}
 
 			// Add the new element to the user object
 			$imageSizes[] = $insertId;
-			$this->User->imageSizes = $imageSizes;
+			$user->imageSizes = $imageSizes;
 		}
 	}
 
@@ -339,30 +312,13 @@ class tl_image_size extends Backend
 	}
 
 	/**
-	 * Return the edit header button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function editHeader($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_image_size') ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-	}
-
-	/**
 	 * Return the image format options
 	 *
 	 * @param DataContainer $dc
 	 *
 	 * @return array
 	 */
-	public function getFormats(DataContainer $dc=null)
+	public function getFormats(DataContainer|null $dc=null)
 	{
 		$formats = array();
 		$missingSupport = array();
@@ -372,9 +328,16 @@ class tl_image_size extends Backend
 			$formats = StringUtil::deserialize($dc->value, true);
 		}
 
-		foreach ($this->getSupportedFormats() as $format => $isSupported)
+		$imageExtensions = System::getContainer()->getParameter('contao.image.valid_extensions');
+
+		$supporedFormats = $this->getSupportedFormats();
+		$supporedFormats['jpg'] = true;
+		$supporedFormats['png'] = true;
+		$supporedFormats['gif'] = true;
+
+		foreach ($supporedFormats as $format => $isSupported)
 		{
-			if (!in_array($format, System::getContainer()->getParameter('contao.image.valid_extensions')))
+			if (!in_array($format, $imageExtensions))
 			{
 				continue;
 			}
@@ -386,11 +349,26 @@ class tl_image_size extends Backend
 				continue;
 			}
 
-			$formats[] = "png:$format,png";
-			$formats[] = "jpg:$format,jpg;jpeg:$format,jpeg";
-			$formats[] = "gif:$format,gif";
-			$formats[] = "$format:$format,png";
-			$formats[] = "$format:$format,jpg";
+			foreach ($supporedFormats as $subFormat => $subFormatSupported)
+			{
+				if (
+					!$subFormatSupported
+					|| $subFormat === $format
+					|| 'gif' === $subFormat
+					|| (in_array($format, array('jpg', 'png', 'gif')) && in_array($subFormat, array('jpg', 'png', 'gif')))
+				) {
+					continue;
+				}
+
+				if ('jpg' === $format)
+				{
+					$formats[] = "jpg:jpg,$subFormat;jpeg:jpeg,$subFormat";
+				}
+				else
+				{
+					$formats[] = "$format:$format,$subFormat";
+				}
+			}
 		}
 
 		if ($missingSupport)
@@ -412,6 +390,27 @@ class tl_image_size extends Backend
 			$chunks = array_values(array_diff(explode(',', $to), array($from)));
 
 			$options[$format] = strtoupper($from) . ' → ' . strtoupper($chunks[0]);
+		}
+
+		asort($options);
+
+		return $options;
+	}
+
+	/**
+	 * Return the image metadata fields
+	 *
+	 * @param DataContainer $dc
+	 *
+	 * @return array
+	 */
+	public function getMetadataFields(DataContainer|null $dc=null)
+	{
+		$options = array();
+
+		foreach ((new ResizeOptions())->getPreserveCopyrightMetadata() as $key => $value)
+		{
+			$options[serialize(array($key => $value))] = strtoupper($key) . ' (' . implode(', ', iterator_to_array(new RecursiveIteratorIterator(new RecursiveArrayIterator($value)))) . ')';
 		}
 
 		return $options;

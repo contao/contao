@@ -24,9 +24,9 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class UserChecker implements UserCheckerInterface
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao.security.user_checker" service instead
+     * @internal
      */
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
     }
 
@@ -66,7 +66,7 @@ class UserChecker implements UserCheckerInterface
             return;
         }
 
-        $ex = new DisabledException(sprintf('User "%s" is not allowed to log in', $user->username));
+        $ex = new DisabledException(\sprintf('User "%s" is not allowed to log in', $user->username));
         $ex->setUser($user);
 
         throw $ex;
@@ -86,16 +86,16 @@ class UserChecker implements UserCheckerInterface
         $logMessage = '';
 
         if ($notActiveYet) {
-            $logMessage = sprintf(
+            $logMessage = \sprintf(
                 'The account is not active yet (activation date: %s)',
-                Date::parse($config->get('dateFormat'), $start)
+                Date::parse($config->get('dateFormat'), $start),
             );
         }
 
         if ($notActiveAnymore) {
-            $logMessage = sprintf(
+            $logMessage = \sprintf(
                 'The account is not active anymore (deactivation date: %s)',
-                Date::parse($config->get('dateFormat'), $stop)
+                Date::parse($config->get('dateFormat'), $stop),
             );
         }
 

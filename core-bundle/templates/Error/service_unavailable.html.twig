@@ -1,8 +1,8 @@
-{% trans_default_domain 'contao_exception' %}
-{% extends "@ContaoCore/Error/layout.html.twig" %}
-{% block title %}
-    {{ 'XPT.unavailable'|trans }}
-{% endblock %}
-{% block matter %}
-    <p>{{ 'XPT.maintenance'|trans }}</p>
-{% endblock %}
+{% extends "@Contao/error/service_unavailable.html.twig" %}
+
+{#
+    ! DEPRECATED !
+
+    The "@ContaoCore/error/service_unavailable.html.twig" template will be removed in Contao 6.
+    Use the "@Contao/error/service_unavailable.html.twig" template from the @Contao namespace instead.
+#}

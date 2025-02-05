@@ -12,10 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Authenticator;
 
-use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\PageModel;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
@@ -25,17 +24,18 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\HttpKernel\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\BadCredentialsException;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationFailureHandlerInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
@@ -49,50 +49,63 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Component\Security\Http\ParameterBagUtils;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Twig\Environment;
 
 class ContaoLoginAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface, InteractiveAuthenticatorInterface
 {
-    private array $options;
+    use TargetPathTrait;
 
+    private readonly array $options;
+
+    /**
+     * @param UserProviderInterface<UserInterface> $userProvider
+     */
     public function __construct(
-        private UserProviderInterface $userProvider,
-        private AuthenticationSuccessHandlerInterface $successHandler,
-        private AuthenticationFailureHandlerInterface $failureHandler,
-        private ScopeMatcher $scopeMatcher,
-        private RouterInterface $router,
-        private UriSigner $uriSigner,
-        private ContaoFramework $framework,
-        private TokenStorageInterface $tokenStorage,
-        private PageRegistry $pageRegistry,
-        private HttpKernelInterface $httpKernel,
-        private RequestStack $requestStack,
-        private TwoFactorAuthenticator $twoFactorAuthenticator,
+        private readonly UserProviderInterface $userProvider,
+        private readonly AuthenticationSuccessHandlerInterface $successHandler,
+        private readonly AuthenticationFailureHandlerInterface $failureHandler,
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly RouterInterface $router,
+        private readonly UriSigner $uriSigner,
+        private readonly PageFinder $pageFinder,
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly PageRegistry $pageRegistry,
+        private readonly HttpKernelInterface $httpKernel,
+        private readonly RequestStack $requestStack,
+        private readonly TwoFactorAuthenticator $twoFactorAuthenticator,
         array $options,
+        private readonly Environment $twig,
     ) {
-        $this->options = array_merge(
-            [
-                'username_parameter' => 'username',
-                'password_parameter' => 'password',
-                'check_path' => '/login_check',
-                'post_only' => true,
-                'enable_csrf' => false,
-                'csrf_parameter' => '_csrf_token',
-                'csrf_token_id' => 'authenticate',
-            ],
-            $options
-        );
+        $this->options = [
+            'username_parameter' => 'username',
+            'password_parameter' => 'password',
+            'check_path' => '/login_check',
+            'post_only' => true,
+            'enable_csrf' => false,
+            'csrf_parameter' => '_csrf_token',
+            'csrf_token_id' => 'authenticate',
+            ...$options,
+        ];
     }
 
-    public function start(Request $request, AuthenticationException $authException = null): RedirectResponse|Response
+    public function start(Request $request, AuthenticationException|null $authException = null): RedirectResponse|Response
     {
         if ($this->scopeMatcher->isBackendRequest($request)) {
             return $this->redirectToBackend($request);
         }
 
-        $this->framework->initialize();
+        $errorPage = $this->pageFinder->findFirstPageOfTypeForRequest($request, 'error_401');
 
-        $page = $this->getPageForRequest($request);
-        $route = $this->pageRegistry->getRoute($page);
+        if (!$errorPage) {
+            throw new UnauthorizedHttpException('', 'No error_401 page found.', $authException);
+        }
+
+        $errorPage->loadDetails();
+        $errorPage->protected = false;
+
+        $route = $this->pageRegistry->getRoute($errorPage);
         $subRequest = $request->duplicate(null, null, $route->getDefaults());
 
         try {
@@ -106,13 +119,14 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
     {
         return $request->isMethod('POST')
             && $request->request->has('FORM_SUBMIT')
-            && preg_match('/^tl_login(_\d+)?$/', (string) $request->request->get('FORM_SUBMIT'));
+            && \is_string($request->request->get('FORM_SUBMIT'))
+            && preg_match('/^tl_login(_\d+)?$/', $request->request->get('FORM_SUBMIT'));
     }
 
     public function authenticate(Request $request): Passport
     {
-        // When the firewall is lazy, the token is not initialized in the "supports" stage, so this check does only work
-        // within the "authenticate" stage.
+        // When the firewall is lazy, the token is not initialized in the "supports"
+        // stage, so this check does only work within the "authenticate" stage.
         $currentToken = $this->tokenStorage->getToken();
 
         if ($currentToken instanceof TwoFactorTokenInterface) {
@@ -122,9 +136,9 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         $credentials = $this->getCredentials($request);
 
         $passport = new Passport(
-            new UserBadge($credentials['username'], [$this->userProvider, 'loadUserByIdentifier']),
+            new UserBadge($credentials['username'], $this->userProvider->loadUserByIdentifier(...)),
             new PasswordCredentials($credentials['password']),
-            [new RememberMeBadge()]
+            [new RememberMeBadge()],
         );
 
         if ($this->options['enable_csrf']) {
@@ -170,19 +184,13 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
 
     public function isInteractive(): bool
     {
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (null === $request) {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
             return false;
         }
 
         $page = $request->attributes->get('pageModel');
 
-        if (!$page instanceof PageModel) {
-            return false;
-        }
-
-        return true;
+        return $page instanceof PageModel;
     }
 
     private function getCredentials(Request $request): array
@@ -194,51 +202,55 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         ];
 
         if (!\is_string($credentials['username']) && (!\is_object($credentials['username']) || !method_exists($credentials['username'], '__toString'))) {
-            throw new BadRequestHttpException(sprintf('The key "%s" must be a string, "%s" given.', $this->options['username_parameter'], \gettype($credentials['username'])));
+            throw new BadRequestHttpException(\sprintf('The key "%s" must be a string, "%s" given.', $this->options['username_parameter'], \gettype($credentials['username'])));
         }
 
         $credentials['username'] = trim($credentials['username']);
 
-        if (\strlen($credentials['username']) > Security::MAX_USERNAME_LENGTH) {
+        if (\strlen($credentials['username']) > UserBadge::MAX_USERNAME_LENGTH) {
             throw new BadCredentialsException('Invalid username.');
         }
 
-        $request->getSession()->set(Security::LAST_USERNAME, $credentials['username']);
+        $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $credentials['username']);
 
         return $credentials;
     }
 
-    private function redirectToBackend(Request $request): RedirectResponse
+    private function redirectToBackend(Request $request): Response
     {
-        $url = $this->router->generate(
-            'contao_backend_login',
-            ['redirect' => $request->getUri()],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-
-        return new RedirectResponse($this->uriSigner->sign($url));
-    }
-
-    private function getPageForRequest(Request $request): PageModel
-    {
-        $page = $request->attributes->get('pageModel');
-        $page->loadDetails();
-        $page->protected = false;
-
-        if (null === $this->tokenStorage->getToken()) {
-            $pageAdapter = $this->framework->getAdapter(PageModel::class);
-            $errorPage = $pageAdapter->findFirstPublishedByTypeAndPid('error_401', $page->rootId);
-
-            if (null === $errorPage) {
-                throw new PageNotFoundException('No error page found.');
-            }
-
-            $errorPage->loadDetails();
-            $errorPage->protected = false;
-
-            return $errorPage;
+        // If the current request was for a Turbo stream, make the page reload itself
+        // with the current browser URL. This way the redirect URL for the login page
+        // will be an endpoint, that a user can actually visit.
+        if (\in_array('text/vnd.turbo-stream.html', $request->getAcceptableContentTypes(), true)) {
+            return new Response($this->twig->render('@Contao/backend/reload.stream.html.twig'));
         }
 
-        return $page;
+        // No redirect parameter required if the 'contao_backend' route was requested
+        // without any parameters.
+        if ('contao_backend' === $request->attributes->get('_route') && [] === $request->query->all()) {
+            $loginParams = [];
+        } else {
+            $loginParams = ['redirect' => $request->getUri()];
+        }
+
+        $url = $this->router->generate(
+            'contao_backend_login',
+            $loginParams,
+            UrlGeneratorInterface::ABSOLUTE_URL,
+        );
+
+        // No URL signing required if we do not have any parameters.
+        if ([] !== $loginParams) {
+            $url = $this->uriSigner->sign($url);
+        }
+
+        // Our back end login controller will redirect based on the 'redirect' parameter,
+        // ignoring Symfony's target path session value. Thus, we remove the session
+        // variable here in order to not send an unnecessary session cookie.
+        if ($request->hasSession()) {
+            $this->removeTargetPath($request->getSession(), 'contao_backend');
+        }
+
+        return new RedirectResponse($url);
     }
 }

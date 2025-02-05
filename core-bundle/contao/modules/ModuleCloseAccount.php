@@ -57,10 +57,10 @@ class ModuleCloseAccount extends Module
 	 */
 	protected function compile()
 	{
-		$this->import(FrontendUser::class, 'User');
 		$this->loadDataContainer('tl_member');
 
-		$container = System::getContainer();
+		$user = FrontendUser::getInstance();
+		$objMember = MemberModel::findById($user->id);
 
 		// Initialize the password widget
 		$arrField = $GLOBALS['TL_DCA']['tl_member']['fields']['password'];
@@ -68,6 +68,8 @@ class ModuleCloseAccount extends Module
 		$arrField['eval']['hideInput'] = true;
 
 		$objWidget = new FormText(FormText::getAttributesFromDca($arrField, $arrField['name']));
+		$objWidget->currentRecord = $objMember->id;
+
 		$strFormId = 'tl_close_account_' . $this->id;
 
 		// Validate widget
@@ -75,10 +77,11 @@ class ModuleCloseAccount extends Module
 		{
 			$objWidget->validate();
 
+			$container = System::getContainer();
 			$passwordHasher = $container->get('security.password_hasher_factory')->getPasswordHasher(FrontendUser::class);
 
 			// Validate the password
-			if (!$objWidget->hasErrors() && !$passwordHasher->verify($this->User->password, $objWidget->value))
+			if (!$objWidget->hasErrors() && !$passwordHasher->verify($user->password, $objWidget->value))
 			{
 				$objWidget->value = '';
 				$objWidget->addError($GLOBALS['TL_LANG']['ERR']['invalidPass']);
@@ -92,12 +95,9 @@ class ModuleCloseAccount extends Module
 				{
 					foreach ($GLOBALS['TL_HOOKS']['closeAccount'] as $callback)
 					{
-						$this->import($callback[0]);
-						$this->{$callback[0]}->{$callback[1]}($this->User->id, $this->reg_close, $this);
+						System::importStatic($callback[0])->{$callback[1]}($user->id, $this->reg_close, $this);
 					}
 				}
-
-				$objMember = MemberModel::findByPk($this->User->id);
 
 				// Remove the account
 				if ($this->reg_close == 'close_delete')
@@ -110,7 +110,7 @@ class ModuleCloseAccount extends Module
 
 					$objMember->delete();
 
-					System::getContainer()->get('monolog.logger.contao.access')->info('User account ID ' . $this->User->id . ' (' . Idna::decodeEmail($this->User->email) . ') has been deleted');
+					$container->get('monolog.logger.contao.access')->info('User account ID ' . $user->id . ' (' . Idna::decodeEmail($user->email) . ') has been deleted');
 				}
 				// Deactivate the account
 				else
@@ -119,7 +119,7 @@ class ModuleCloseAccount extends Module
 					$objMember->tstamp = time();
 					$objMember->save();
 
-					System::getContainer()->get('monolog.logger.contao.access')->info('User account ID ' . $this->User->id . ' (' . Idna::decodeEmail($this->User->email) . ') has been deactivated');
+					$container->get('monolog.logger.contao.access')->info('User account ID ' . $user->id . ' (' . Idna::decodeEmail($user->email) . ') has been deactivated');
 				}
 
 				// Log out the user (see #93)
@@ -127,7 +127,7 @@ class ModuleCloseAccount extends Module
 				$container->get('request_stack')->getSession()->invalidate();
 
 				// Check whether there is a jumpTo page
-				if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+				if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
 				{
 					$this->jumpToOrReload($objJumpTo->row());
 				}

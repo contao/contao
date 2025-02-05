@@ -41,7 +41,6 @@
     <testsuite name="coverage">
       <directory>./*-bundle/tests</directory>
       <exclude>./*-bundle/tests/Fixtures</exclude>
-      <exclude>./core-bundle/tests/Contao</exclude>
       <exclude>./core-bundle/tests/Functional</exclude>
     </testsuite>
   </testsuites>

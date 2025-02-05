@@ -1,0 +1,31 @@
+{#
+    This component adds a generic "read more" link.
+
+      <a href="target.html" title="Read the article: Foo">Read more…</a>
+
+    Mandatory variables:
+        @var string href
+
+    Optional variables:
+        @var string title
+        @var string text
+
+    Note:
+        You can either group all variables in an object named "read_more" or
+        all directly in the context. Grouping under an object has precedence.
+#}
+
+{% trans_default_domain "contao_default" %}
+
+{% block read_more_component %}
+    {% set read_more = read_more|default(_context) %}
+
+    {% set read_more_link_attributes = attrs()
+        .set('href', read_more.href)
+        .setIfExists('title', read_more.title|default)
+        .mergeWith(read_more_link_attributes|default)
+    %}
+    <a{% block read_more_link_attributes %}{{ read_more_link_attributes }}{% endblock %}>
+        {%- block read_more_content %}{{ read_more.text|default('MSC.more'|trans) }}{% endblock -%}
+    </a>
+{% endblock %}

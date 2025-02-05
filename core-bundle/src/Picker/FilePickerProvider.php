@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\Framework\FrameworkAwareInterface;
 use Contao\CoreBundle\Framework\FrameworkAwareTrait;
 use Contao\FilesModel;
@@ -19,24 +20,25 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\Validator;
 use Knp\Menu\FactoryInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+#[AsPickerProvider(priority: 160)]
 class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface, FrameworkAwareInterface
 {
     use FrameworkAwareTrait;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.picker.file_provider" service instead
+     * @internal
      */
     public function __construct(
         FactoryInterface $menuFactory,
         RouterInterface $router,
         TranslatorInterface $translator,
-        private Security $security,
-        private string $uploadPath,
+        private readonly Security $security,
+        private readonly string $uploadPath,
     ) {
         parent::__construct($menuFactory, $router, $translator);
     }
@@ -60,7 +62,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $this->isMatchingInsertTag($config) || Path::isBasePath($this->uploadPath, $config->getValue());
     }
 
-    public function getDcaTable(PickerConfig $config = null): string
+    public function getDcaTable(PickerConfig|null $config = null): string
     {
         return 'tl_files';
     }
@@ -81,16 +83,15 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         }
 
         $filesAdapter = $this->framework->getAdapter(FilesModel::class);
-        $filesModel = $filesAdapter->findByPath(rawurldecode($value));
 
-        if ($filesModel instanceof FilesModel) {
-            return sprintf($this->getInsertTag($config), StringUtil::binToUuid($filesModel->uuid));
+        if ($filesModel = $filesAdapter->findByPath(rawurldecode($value))) {
+            return \sprintf($this->getInsertTag($config), StringUtil::binToUuid($filesModel->uuid));
         }
 
         return $value;
     }
 
-    protected function getRouteParameters(PickerConfig $config = null): array
+    protected function getRouteParameters(PickerConfig|null $config = null): array
     {
         return ['do' => 'files'];
     }
@@ -105,9 +106,13 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
      */
     private function convertValueToPath(string $value): string
     {
+        if (!Validator::isUuid($value)) {
+            return $value;
+        }
+
         $filesAdapter = $this->framework->getAdapter(FilesModel::class);
 
-        if (Validator::isUuid($value) && ($filesModel = $filesAdapter->findByUuid($value)) instanceof FilesModel) {
+        if ($filesModel = $filesAdapter->findByUuid($value)) {
             return $filesModel->path;
         }
 
@@ -125,13 +130,13 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     }
 
     /**
-     * @return array<string,string|bool>
+     * @return array<string, string|bool>
      */
     private function getFileDcaAttributes(PickerConfig $config): array
     {
         $attributes = array_intersect_key(
             $config->getExtras(),
-            array_flip(['fieldType', 'files', 'filesOnly', 'path', 'extensions'])
+            array_flip(['fieldType', 'files', 'filesOnly', 'path', 'extensions']),
         );
 
         if (!isset($attributes['fieldType'])) {
@@ -152,7 +157,7 @@ class FilePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
     }
 
     /**
-     * @return array<string,array|string|bool>
+     * @return array<string, array|string|bool>
      */
     private function getLinkDcaAttributes(PickerConfig $config): array
     {

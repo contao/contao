@@ -10,14 +10,10 @@
 
 use Contao\ArrayUtil;
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Controller;
-use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\StringUtil;
-use Contao\System;
 
 $GLOBALS['TL_DCA']['tl_layout'] = array
 (
@@ -30,14 +26,14 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'markAsCopy'                  => 'name',
 		'onload_callback' => array
 		(
-			array('tl_layout', 'checkPermission'),
 			array('tl_layout', 'addCustomLayoutSectionReferences')
 		),
 		'sql' => array
 		(
 			'keys' => array
 			(
-				'id' => 'primary'
+				'id' => 'primary',
+				'tstamp' => 'index'
 			)
 		)
 	),
@@ -53,26 +49,18 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'defaultSearchField'      => 'name',
 			'headerFields'            => array('name', 'author', 'tstamp'),
 			'child_record_callback'   => array('tl_layout', 'listLayout')
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
 		)
 	),
 
 	// Palettes
 	'palettes' => array
 	(
-		'__selector__'                => array('rows', 'cols', 'addJQuery', 'addMooTools', 'static'),
-		'default'                     => '{title_legend},name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections;{image_legend:hide},lightboxSize,defaultImageDensities;{style_legend},framework,external,combineScripts;{modules_legend},modules;{script_legend},scripts,analytics,externalJs,script;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{static_legend:hide},static;{expert_legend:hide},template,minifyMarkup,viewport,titleTag,cssClass,onload,head'
+		'__selector__'                => array('type', 'rows', 'cols', 'addJQuery', 'addMooTools', 'static'),
+		'default'                     => '{title_legend},type,name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections;{image_legend:hide},lightboxSize,defaultImageDensities;{style_legend},framework,external,combineScripts;{modules_legend},modules;{script_legend},scripts,analytics,externalJs,script;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{static_legend:hide},static;{expert_legend:hide},template,minifyMarkup,viewport,titleTag,cssClass,onload,head',
+		'modern'                      => '{title_legend},type,name;{image_legend:hide},lightboxSize,defaultImageDensities;{modules_legend},template,modules'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'rows_2rwh'                   => 'headerHeight',
@@ -103,13 +91,22 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
+		'type' => array
+		(
+			'inputType'               => 'select',
+			'options'                 => array('modern', 'default'),
+			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
+			'eval'                    => array('tl_class'=>'w50', 'submitOnChange'=>true),
+			'default'                 => 'modern',
+			'sql'                     => array('type'=>'string', 'length'=>7, 'default'=>'default')
+		),
 		'name' => array
 		(
 			'inputType'               => 'text',
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
 			'search'                  => true,
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'rows' => array
@@ -199,17 +196,13 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'sorting'                 => true,
 			'flag'                    => DataContainer::SORT_ASC,
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
-				return Controller::getTemplateGroup('fe_');
-			},
-			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
+			'eval'                    => array('includeBlankOption'=>true, 'mandatory' => true, 'chosen'=>true, 'tl_class'=>'w50', 'submitOnChange'=>true),
 			'sql'                     => "varchar(64) NOT NULL default ''"
 		),
 		'minifyMarkup' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => true)
 		),
 		'lightboxSize' => array
@@ -272,8 +265,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'filter'                  => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('j_');
 			},
 			'eval'                    => array('multiple'=>true),
@@ -290,8 +282,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'filter'                  => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('moo_');
 			},
 			'eval'                    => array('multiple'=>true),
@@ -301,8 +292,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('analytics_');
 			},
 			'eval'                    => array('multiple'=>true),
@@ -318,8 +308,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('js_');
 			},
 			'eval'                    => array('multiple'=>true),
@@ -363,33 +352,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
  */
 class tl_layout extends Backend
 {
-	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
-	 * Check permissions to edit the table
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission()
-	{
-		if ($this->User->isAdmin)
-		{
-			return;
-		}
-
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_LAYOUTS))
-		{
-			throw new AccessDeniedException('Not enough permissions to access the page layout module.');
-		}
-	}
-
 	/**
 	 * List a page layout
 	 *

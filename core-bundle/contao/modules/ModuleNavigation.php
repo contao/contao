@@ -52,7 +52,6 @@ class ModuleNavigation extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Set the trail and level
@@ -71,17 +70,16 @@ class ModuleNavigation extends Module
 		$host = null;
 
 		// Overwrite the domain and language if the reference page belongs to a different root page (see #3765)
-		if ($this->defineRoot && $this->rootPage > 0)
+		if ($this->defineRoot && $this->rootPage > 0 && ($objRootPage = PageModel::findWithDetails($this->rootPage)))
 		{
-			$objRootPage = PageModel::findWithDetails($this->rootPage);
-
 			$lang = $objRootPage->rootLanguage;
 			$host = $objRootPage->domain;
 		}
 
+		$this->Template->ariaLabel = StringUtil::specialchars($this->ariaLabel);
 		$this->Template->request = StringUtil::ampersand(Environment::get('requestUri'));
 		$this->Template->skipId = 'skipNavigation' . $this->id;
 		$this->Template->skipNavigation = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['skipNavigation']);
-		$this->Template->items = $this->renderNavigation($trail[$level], 1, $host, $lang);
+		$this->Template->items = isset($trail[$level]) ? $this->renderNavigation($trail[$level], 1, $host, $lang) : '';
 	}
 }

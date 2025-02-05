@@ -27,7 +27,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_search.0">
         <source>Searchable fields</source>
-        <target>Aranabilir alanlar</target>
+        <target>Aranabilecek alanlar</target>
       </trans-unit>
       <trans-unit id="tl_module.list_search.1">
         <source>Here you can enter a comma seperated list of fields that you want to be searchable.</source>
@@ -47,7 +47,7 @@
       </trans-unit>
       <trans-unit id="tl_module.list_info.1">
         <source>Enter a comma separated list of the fields you want to show on the details page. Leave blank to disable the feature.</source>
-        <target>Ayrıntılar sayfasında görüntülenmesini istediğiniz alanların listesini virgül ile ayırarak yazın. Bu özelliği devre dışı bırakmak için boş bırakın.</target>
+        <target>Ayrıntılar sayfasında görüntülenmesini istediğiniz alanların listesini virgül ile ayırarak yazın. Bu özelliği etkisizleştirmek için boş bırakın.</target>
       </trans-unit>
       <trans-unit id="tl_module.list_info_where.0">
         <source>Details page condition</source>

@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\HttpKernel;
 
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\HttpKernel\ModelArgumentResolver;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
@@ -37,13 +36,10 @@ class ModelArgumentResolverTest extends TestCase
      */
     public function testResolvesTheModel(string $name, string $class): void
     {
-        unset($GLOBALS['objPage']);
-
         System::setContainer($this->getContainerWithContaoConfiguration());
 
         $pageModel = $this->createMock(PageModel::class);
-
-        $adapter = $this->mockConfiguredAdapter(['findByPk' => $pageModel]);
+        $adapter = $this->mockConfiguredAdapter(['findById' => $pageModel]);
         $framework = $this->mockContaoFramework([$class => $adapter]);
 
         $request = Request::create('/foobar');
@@ -60,11 +56,10 @@ class ModelArgumentResolverTest extends TestCase
         }
     }
 
-    public function getArguments(): \Generator
+    public static function getArguments(): iterable
     {
         yield ['pageModel', PageModel::class];
         yield ['foobar', PageModel::class];
-        yield ['foobar', 'PageModel'];
     }
 
     public function testResolvesAttributeInstances(): void
@@ -97,10 +92,10 @@ class ModelArgumentResolverTest extends TestCase
         ;
 
         $request = Request::create('/foobar');
-        $argument = new ArgumentMetadata('foobar', 'string', false, false, '');
+        $metadata = new ArgumentMetadata('foobar', 'string', false, false, '');
         $resolver = new ModelArgumentResolver($framework, $this->mockScopeMatcher());
 
-        $this->assertFalse($resolver->supports($request, $argument));
+        $this->assertSame([], $resolver->resolve($request, $metadata));
     }
 
     public function testDoesNothingIfTheArgumentTypeDoesNotMatch(): void
@@ -115,10 +110,10 @@ class ModelArgumentResolverTest extends TestCase
         $request->attributes->set('foobar', 'test');
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
-        $argument = new ArgumentMetadata('foobar', 'string', false, false, '');
+        $metadata = new ArgumentMetadata('foobar', 'string', false, false, '');
         $resolver = new ModelArgumentResolver($framework, $this->mockScopeMatcher());
 
-        $this->assertFalse($resolver->supports($request, $argument));
+        $this->assertSame([], $resolver->resolve($request, $metadata));
     }
 
     public function testDoesNothingIfTheArgumentNameIsNotFound(): void
@@ -133,72 +128,40 @@ class ModelArgumentResolverTest extends TestCase
         $request->attributes->set('notAPage', 42);
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
-        $argument = new ArgumentMetadata('foobar', PageModel::class, false, false, '');
+        $metadata = new ArgumentMetadata('foobar', PageModel::class, false, false, '');
         $resolver = new ModelArgumentResolver($framework, $this->mockScopeMatcher());
 
-        $this->assertFalse($resolver->supports($request, $argument));
+        $this->assertSame([], $resolver->resolve($request, $metadata));
     }
 
     public function testSupportsNullableArguments(): void
     {
-        $framework = $this->mockContaoFramework();
-        $framework
-            ->expects($this->once())
-            ->method('initialize')
-        ;
-
-        $request = Request::create('/foobar');
-        $request->attributes->set('pageModel', 42);
-        $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
-
-        $argument = new ArgumentMetadata('pageModel', PageModel::class, false, false, '', true);
-        $resolver = new ModelArgumentResolver($framework, $this->mockScopeMatcher());
-
-        $this->assertTrue($resolver->supports($request, $argument));
-    }
-
-    public function testChecksIfTheModelExistsIfTheArgumentIsNotNullable(): void
-    {
-        $adapter = $this->mockConfiguredAdapter(['findByPk' => null]);
+        $pageModel = $this->createMock(PageModel::class);
+        $adapter = $this->mockConfiguredAdapter(['findById' => $pageModel]);
         $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
 
         $request = Request::create('/foobar');
         $request->attributes->set('pageModel', 42);
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
-        $argument = new ArgumentMetadata('pageModel', PageModel::class, false, false, '');
+        $metadata = new ArgumentMetadata('pageModel', PageModel::class, false, false, '', true);
         $resolver = new ModelArgumentResolver($framework, $this->mockScopeMatcher());
 
-        $this->assertFalse($resolver->supports($request, $argument));
+        $this->assertSame([$pageModel], $resolver->resolve($request, $metadata));
     }
 
-    public function testReturnsTheGlobalPageModel(): void
+    public function testChecksIfTheModelExistsIfTheArgumentIsNotNullable(): void
     {
-        $framework = $this->createMock(ContaoFramework::class);
-        $framework
-            ->expects($this->once())
-            ->method('initialize')
-        ;
-
-        $framework
-            ->expects($this->never())
-            ->method('getAdapter')
-        ;
-
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['id' => 42]);
-        $GLOBALS['objPage'] = $pageModel;
+        $adapter = $this->mockConfiguredAdapter(['findById' => null]);
+        $framework = $this->mockContaoFramework([PageModel::class => $adapter]);
 
         $request = Request::create('/foobar');
         $request->attributes->set('pageModel', 42);
         $request->attributes->set('_scope', ContaoCoreBundle::SCOPE_FRONTEND);
 
-        $argument = new ArgumentMetadata('pageModel', PageModel::class, false, false, '', true);
+        $metadata = new ArgumentMetadata('pageModel', PageModel::class, false, false, '');
         $resolver = new ModelArgumentResolver($framework, $this->mockScopeMatcher());
 
-        $this->assertTrue($resolver->supports($request, $argument));
-
-        foreach ($resolver->resolve($request, $argument) as $model) {
-            $this->assertSame($pageModel, $model);
-        }
+        $this->assertSame([], $resolver->resolve($request, $metadata));
     }
 }

@@ -37,13 +37,13 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PageUrlListener
 {
     public function __construct(
-        private ContaoFramework $framework,
-        private Slug $slug,
-        private TranslatorInterface $translator,
-        private Connection $connection,
-        private PageRegistry $pageRegistry,
-        private UrlGeneratorInterface $urlGenerator,
-        private FinalMatcherInterface $routeMatcher,
+        private readonly ContaoFramework $framework,
+        private readonly Slug $slug,
+        private readonly TranslatorInterface $translator,
+        private readonly Connection $connection,
+        private readonly PageRegistry $pageRegistry,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly FinalMatcherInterface $routeMatcher,
     ) {
     }
 
@@ -51,9 +51,8 @@ class PageUrlListener
     public function generateAlias(string $value, DataContainer $dc): string
     {
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $pageModel = $pageAdapter->findWithDetails($dc->id);
 
-        if (null === $pageModel) {
+        if (!$pageModel = $pageAdapter->findWithDetails($dc->id)) {
             return $value;
         }
 
@@ -80,13 +79,11 @@ class PageUrlListener
             return $value;
         }
 
-        $currentRecord = $dc->getCurrentRecord();
-
         // Generate an alias if there is none
         $value = $this->slug->generate(
-            $currentRecord['title'] ?? '',
-            (int) ($currentRecord['id'] ?? null),
-            fn ($alias) => $isRoutable && $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, $pageModel)
+            $pageModel->title ?? '',
+            (int) $dc->id,
+            fn ($alias) => $isRoutable && $this->aliasExists(($pageModel->useFolderUrl ? $pageModel->folderUrl : '').$alias, $pageModel),
         );
 
         // Generate folder URL aliases (see #4933)
@@ -113,7 +110,7 @@ class PageUrlListener
                 'urlPrefix' => $value,
                 'dns' => $currentRecord['dns'] ?? null,
                 'rootId' => $dc->id,
-            ]
+            ],
         );
 
         if ($count > 0) {
@@ -121,9 +118,8 @@ class PageUrlListener
         }
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $rootPage = $pageAdapter->findWithDetails($dc->id);
 
-        if (null === $rootPage) {
+        if (!$rootPage = $pageAdapter->findWithDetails($dc->id)) {
             return $value;
         }
 
@@ -148,9 +144,8 @@ class PageUrlListener
         }
 
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $rootPage = $pageAdapter->findWithDetails($dc->id);
 
-        if (null === $rootPage) {
+        if (!$rootPage = $pageAdapter->findWithDetails($dc->id)) {
             return $value;
         }
 
@@ -168,16 +163,15 @@ class PageUrlListener
     private function recursiveValidatePages(int $pid, PageModel $rootPage): void
     {
         $pageAdapter = $this->framework->getAdapter(PageModel::class);
-        $pages = $pageAdapter->findByPid($pid);
 
-        if (null === $pages) {
+        if (!$pages = $pageAdapter->findByPid($pid)) {
             return;
         }
 
-        /** @var PageModel $page */
         foreach ($pages as $page) {
             if ($page->alias && $this->pageRegistry->isRoutable($page)) {
                 // Inherit root page settings from post data
+                $page->loadDetails();
                 $page->domain = $rootPage->domain;
                 $page->urlPrefix = $rootPage->urlPrefix;
                 $page->urlSuffix = $rootPage->urlSuffix;
@@ -194,8 +188,8 @@ class PageUrlListener
      */
     private function aliasExists(string $currentAlias, PageModel $currentPage, bool $throw = false): bool
     {
-        // We can safely modify the page model since loadDetails() detaches it
-        // from the registry and calls preventSaving()
+        // We can safely modify the page model since loadDetails() detaches it from the
+        // registry and calls preventSaving()
         $currentPage->loadDetails();
         $currentPage->alias = $currentAlias;
 
@@ -206,16 +200,14 @@ class PageUrlListener
             $currentUrl = $this->urlGenerator->generate(
                 PageRoute::PAGE_BASED_ROUTE_NAME,
                 [RouteObjectInterface::ROUTE_OBJECT => $currentRoute],
-                UrlGeneratorInterface::ABSOLUTE_URL
+                UrlGeneratorInterface::ABSOLUTE_URL,
             );
         } catch (RouteParametersException) {
             // This route has mandatory parameters, only match exact path with placeholders
             $currentUrl = null;
         }
 
-        $aliasPages = $this->framework->getAdapter(PageModel::class)->findSimilarByAlias($currentPage);
-
-        if (null === $aliasPages) {
+        if (!$aliasPages = $this->framework->getAdapter(PageModel::class)->findSimilarByAlias($currentPage)) {
             return false;
         }
 
@@ -228,6 +220,7 @@ class PageUrlListener
 
             // If page has the same root, inherit root page settings from post data
             if ($currentPage->rootId === $aliasPage->rootId) {
+                $aliasPage->loadDetails();
                 $aliasPage->domain = $currentPage->domain;
                 $aliasPage->urlPrefix = $currentPage->urlPrefix;
                 $aliasPage->urlSuffix = $currentPage->urlSuffix;
@@ -235,9 +228,9 @@ class PageUrlListener
 
             $aliasRoute = $this->pageRegistry->getRoute($aliasPage);
 
-            // Even if we cannot generate the path because of parameter requirements,
-            // two pages can never have the same path AND the same requirements. This
-            // could be two regular pages with same alias and "requireItem" enabled.
+            // Even if we cannot generate the path because of parameter requirements, two
+            // pages can never have the same path AND the same requirements. This could be
+            // two regular pages with same alias and "requireItem" enabled.
             if (
                 null === $currentUrl
                 && $currentRoute->getPath() === $aliasRoute->getPath()
@@ -288,6 +281,10 @@ class PageUrlListener
 
         if (null !== ($type = $input->post('type'))) {
             $pageModel->type = $type;
+        }
+
+        if (null !== ($title = $input->post('title'))) {
+            $pageModel->title = $title;
         }
 
         if (null !== ($requireItem = $input->post('requireItem'))) {

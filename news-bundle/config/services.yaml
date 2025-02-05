@@ -12,11 +12,18 @@ services:
         arguments:
             - '@contao.assets.files_context'
             - '@contao_news.feed_specification'
+            - '%kernel.charset%'
 
     contao_news.feed_specification:
         class: FeedIo\Specification
         arguments:
             - '@logger'
+
+    contao_news.insert_tag.news:
+        class: Contao\NewsBundle\InsertTag\NewsInsertTag
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.content_url_generator'
 
     contao_news.listener.data_container.layout_feed_options:
         class: Contao\NewsBundle\EventListener\DataContainer\LayoutFeedOptionsListener
@@ -41,55 +48,42 @@ services:
         class: Contao\NewsBundle\EventListener\GeneratePageListener
         arguments:
             - '@contao.framework'
-        tags:
-            - { name: contao.hook, hook: generatePage }
-
-    contao_news.listener.insert_tags:
-        class: Contao\NewsBundle\EventListener\InsertTagsListener
-        arguments:
-            - '@contao.framework'
-            - '@logger'
-        tags:
-            - { name: contao.hook, hook: replaceInsertTags }
+            - '@contao.routing.content_url_generator'
 
     contao_news.listener.news_feed:
         class: Contao\NewsBundle\EventListener\NewsFeedListener
         arguments:
             - '@contao.framework'
             - '@contao.image.factory'
+            - '@contao.routing.content_url_generator'
             - '@contao.insert_tag.parser'
             - '%kernel.project_dir%'
-            - '@contao.cache.entity_tags'
+            - '@contao.cache.tag_manager'
+            - '%kernel.charset%'
 
     contao_news.listener.preview_url_convert:
         class: Contao\NewsBundle\EventListener\PreviewUrlConvertListener
         arguments:
             - '@contao.framework'
-        tags:
-            - kernel.event_listener
+            - '@contao.routing.content_url_generator'
 
     contao_news.listener.preview_url_create:
         class: Contao\NewsBundle\EventListener\PreviewUrlCreateListener
         arguments:
             - '@request_stack'
             - '@contao.framework'
-        tags:
-            - kernel.event_listener
 
     contao_news.listener.sitemap:
         class: Contao\NewsBundle\EventListener\SitemapListener
         arguments:
             - '@contao.framework'
-        tags:
-            - kernel.event_listener
+            - '@security.helper'
+            - '@contao.routing.content_url_generator'
 
     contao_news.migration.feed:
         class: Contao\NewsBundle\Migration\FeedMigration
         arguments:
             - '@database_connection'
-            - '@logger'
-        tags:
-            - { name: contao.migration }
 
     contao_news.picker.news_provider:
         class: Contao\NewsBundle\Picker\NewsPickerProvider
@@ -98,10 +92,24 @@ services:
             - '@router'
             - '@?translator'
             - '@security.helper'
-        tags:
-            - { name: contao.picker_provider, priority: 128 }
+
+    contao_news.routing.news_resolver:
+        class: Contao\NewsBundle\Routing\NewsResolver
+        arguments:
+            - '@contao.framework'
+
+    contao_news.security.news_access_voter:
+        class: Contao\NewsBundle\Security\Voter\NewsAccessVoter
+        arguments:
+            - '@security.access.decision_manager'
 
     contao_news.security.news_archive_access_voter:
         class: Contao\NewsBundle\Security\Voter\NewsArchiveAccessVoter
         arguments:
-            - '@security.helper'
+            - '@security.access.decision_manager'
+
+    contao_news.security.news_content_voter:
+        class: Contao\NewsBundle\Security\Voter\NewsContentVoter
+        arguments:
+            - '@security.access.decision_manager'
+            - '@database_connection'

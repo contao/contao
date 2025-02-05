@@ -8,13 +8,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0,shrink-to-fit=no">
   <meta name="referrer" content="origin">
 
-  <link rel="stylesheet" href="<?php
-    $objCombiner = new Contao\Combiner();
-    $objCombiner->add('system/themes/'.$this->theme.'/fonts.min.css');
-    $objCombiner->add('system/themes/'.$this->theme.'/basic.min.css');
-    $objCombiner->add('system/themes/'.$this->theme.'/help.min.css');
-    echo $objCombiner->getCombinedFile();
-  ?>">
+  <link rel="stylesheet" href="<?= $this->asset('help.css', 'system/themes/'.$this->theme) ?>">
   <?= $this->stylesheets ?>
 
   <script><?= $this->getLocaleString() ?></script>
@@ -34,12 +28,12 @@
           <?php foreach ($this->rows as $row): ?>
             <tr>
               <?php if ('colspan' == $row[0]): ?>
-                <td colspan="2"><?= $row[1] ?></td>
+                <td colspan="2"><?= $row[1] ?? '' ?></td>
               <?php elseif ('headspan' == $row[0]): ?>
-                <td colspan="2" class="headline"><?= $row[1] ?></td>
+                <td colspan="2" class="headline"><?= $row[1] ?? '' ?></td>
               <?php else: ?>
                 <td class="tl_label"><?= $row[0] ?></td>
-                <td><?= $row[1] ?></td>
+                <td><?= $row[1] ?? '' ?></td>
               <?php endif; ?>
             </tr>
           <?php endforeach; ?>

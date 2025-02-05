@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DataContainer\ClipboardManager;
+use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\NotFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
@@ -19,9 +21,10 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
+use Contao\Database\Statement;
 use Doctrine\DBAL\Exception\DriverException;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\String\UnicodeString;
@@ -123,11 +126,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$this->intId = Input::get('id');
+		$this->strTable = $strTable;
 
 		// Clear the clipboard
 		if (Input::get('clipboard') !== null)
 		{
-			$objSession->set('CLIPBOARD', array());
+			System::getContainer()->get('contao.data_container.clipboard_manager')->clearAll();
 			$this->redirect($this->getReferer());
 		}
 
@@ -138,19 +142,29 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			trigger_error('Could not load the data container configuration', E_USER_ERROR);
 		}
 
-		// Set IDs and redirect
-		if (Input::post('FORM_SUBMIT') == 'tl_select')
+		$ids = null;
+		$arrClipboard = $objSession->get('CLIPBOARD');
+
+		// Set IDs
+		if (Input::post('FORM_SUBMIT') == 'tl_select' || (\in_array(Input::post('FORM_SUBMIT'), array($strTable, $strTable . '_all')) && \in_array(Input::get('act'), array('editAll', 'overrideAll'))))
 		{
 			$ids = Input::post('IDS');
 
+			if (!empty($ids) && \is_array($ids))
+			{
+				$session = $objSession->all();
+				$session['CURRENT']['IDS'] = $ids;
+				$objSession->replace($session);
+			}
+		}
+
+		// Redirect
+		if (Input::post('FORM_SUBMIT') == 'tl_select')
+		{
 			if (empty($ids) || !\is_array($ids))
 			{
 				$this->reload();
 			}
-
-			$session = $objSession->all();
-			$session['CURRENT']['IDS'] = $ids;
-			$objSession->replace($session);
 
 			if (Input::post('edit') !== null)
 			{
@@ -166,29 +180,31 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 			elseif (Input::post('cut') !== null || Input::post('copy') !== null || Input::post('copyMultiple') !== null)
 			{
-				$arrClipboard = $objSession->get('CLIPBOARD');
+				$security = $container->get('security.helper');
 
-				$arrClipboard[$strTable] = array
-				(
-					'id' => $ids,
-					'mode' => (Input::post('cut') !== null ? 'cutAll' : 'copyAll'),
-					'keep' => Input::post('copyMultiple') !== null
-				);
+				$mode = Input::post('cut') !== null ? 'cutAll' : 'copyAll';
+				$ids = array_filter($ids, fn ($id) => $security->isGranted(...$this->getClipboardPermission($mode, (int) $id)));
 
-				$objSession->set('CLIPBOARD', $arrClipboard);
-
-				// Support copyAll in the list view (see #7499)
-				if ((Input::post('copy') !== null || Input::post('copyMultiple') !== null) && ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? 0) < self::MODE_PARENT)
+				if (empty($ids))
 				{
-					$this->redirect(str_replace('act=select', 'act=copyAll', Environment::get('requestUri')));
+					System::getContainer()->get('contao.data_container.clipboard_manager')->clear($this->strTable);
+				}
+				else
+				{
+					System::getContainer()->get('contao.data_container.clipboard_manager')->setIds($strTable, $ids, $mode, Input::post('copyMultiple') !== null);
+
+					// Support copyAll in the list view (see #7499)
+					if ((Input::post('copy') !== null || Input::post('copyMultiple') !== null) && ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? 0) < self::MODE_PARENT)
+					{
+						$this->redirect(str_replace('act=select', 'act=copyAll', Environment::get('requestUri')));
+					}
 				}
 
 				$this->redirect($this->getReferer());
 			}
 		}
 
-		$this->strTable = $strTable;
-		$this->ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
+		$this->ptable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] = $this->findPtable();
 		$this->ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? null;
 		$this->treeView = \in_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null, array(self::MODE_TREE, self::MODE_TREE_EXTENDED));
 		$this->arrModule = $arrModule;
@@ -201,8 +217,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this);
+					System::importStatic($callback[0])->{$callback[1]}($this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -217,15 +232,70 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$route = $request->attributes->get('_route');
 
 		// Store the current referer
-		if (!empty($this->ctable) && $route == 'contao_backend' && !Input::get('act') && !Input::get('key') && !Input::get('token') && !Environment::get('isAjaxRequest'))
+		if (!empty($this->ctable) && !Input::get('ptable') && $route == 'contao_backend' && !Input::get('act') && !Input::get('key') && !Input::get('token') && !Environment::get('isAjaxRequest'))
 		{
 			$strKey = Input::get('popup') ? 'popupReferer' : 'referer';
-			$strRefererId = $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
+			$strRefererId = $request->attributes->get('_contao_referer_id');
 
 			$session = $objSession->get($strKey);
 			$session[$strRefererId][$this->strTable] = Environment::get('requestUri');
 			$objSession->set($strKey, $session);
 		}
+
+		if (!empty($arrClipboard[$this->strTable]) && $arrClipboard[$this->strTable]['mode'] != 'create')
+		{
+			if (\is_array($arrClipboard[$this->strTable]['id']))
+			{
+				$arrIds = $arrClipboard[$this->strTable]['id'];
+				$arrFilteredIds = array_filter($arrIds, fn ($id) => $this->getCurrentRecord($id) !== null);
+
+				if ($arrFilteredIds !== $arrIds)
+				{
+					$arrClipboard[$this->strTable]['id'] = $arrFilteredIds;
+
+					if (empty($arrFilteredIds))
+					{
+						unset($arrClipboard[$this->strTable]);
+					}
+
+					$objSession->set('CLIPBOARD', $arrClipboard);
+				}
+			}
+			elseif ($this->getCurrentRecord($arrClipboard[$this->strTable]['id']) === null)
+			{
+				unset($arrClipboard[$this->strTable]);
+				$objSession->set('CLIPBOARD', $arrClipboard);
+			}
+		}
+	}
+
+	/**
+	 * Returns the database record merged with the submitted changes.
+	 *
+	 * @return array<string, mixed>|null
+	 * @throws AccessDeniedException     If the user has no read permission on the current record
+	 */
+	public function getActiveRecord(): array|null
+	{
+		$currentRecord = $this->getCurrentRecord();
+
+		if (null === $currentRecord)
+		{
+			return null;
+		}
+
+		return array_merge($currentRecord, array_map(
+			static function ($value) {
+				/** @see Statement::query() */
+				if (\is_string($value) || \is_bool($value) || \is_float($value) || \is_int($value) || $value === null)
+				{
+					return $value;
+				}
+
+				return serialize($value);
+			},
+			$this->arrSubmit
+		));
 	}
 
 	/**
@@ -237,7 +307,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * requests. This was unreliable and caused several issues, like for
 	 * example if the user used multiple browser tabs at the same time.
 	 */
-	private function findCurrentPid(): ?int
+	private function findCurrentPid(): int|null
 	{
 		if (!$this->ptable)
 		{
@@ -259,7 +329,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if (\in_array($act, array('create', 'cut', 'copy', 'cutAll', 'copyAll'), true))
 		{
 			// Mode “paste into”
-			if ($mode === '2')
+			if ($mode == self::PASTE_INTO)
 			{
 				return $pid;
 			}
@@ -281,6 +351,34 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		return null;
+	}
+
+	private function findPtable(): string|null
+	{
+		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
+		{
+			$act = Input::get('act');
+			$mode = Input::get('mode');
+
+			// For these actions the id parameter refers to the parent record (or the old record for copy and cut), so they need to be excluded
+			if ($this->intId && ($act !== 'paste' || $mode !== 'create') && !\in_array($act, array(null, 'copy', 'cut', 'create', 'select', 'copyAll', 'cutAll', 'editAll', 'overrideAll', 'deleteAll'), true))
+			{
+				$currentRecord = $this->getCurrentRecord($this->intId);
+
+				if (!empty($currentRecord['ptable']))
+				{
+					return $currentRecord['ptable'];
+				}
+			}
+
+			// Use the ptable query parameter if it points to itself (nested elements case)
+			if (Input::get('ptable') === $this->strTable && \in_array($this->strTable, $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'] ?? array(), true))
+			{
+				return $this->strTable;
+			}
+		}
+
+		return $GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] ?? null;
 	}
 
 	/**
@@ -317,24 +415,32 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$return = '';
 		$this->limit = '';
 
-		/** @var Session $objSession */
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
 		$this->reviseTable();
 
 		// Add to clipboard
 		if (Input::get('act') == 'paste')
 		{
-			$arrClipboard = $objSession->get('CLIPBOARD');
+			$this->denyAccessUnlessGranted(...$this->getClipboardPermission(Input::get('mode'), (int) Input::get('id')));
 
-			$arrClipboard[$this->strTable] = array
-			(
-				'id' => Input::get('id'),
-				'childs' => Input::get('childs'),
-				'mode' => Input::get('mode')
-			);
+			$children = Input::get('children');
 
-			$objSession->set('CLIPBOARD', $arrClipboard);
+			// Backwards compatibility
+			if (Input::get('childs') !== null)
+			{
+				trigger_deprecation('contao/core-bundle', '5.3', 'Using the "childs" query parameter has been deprecated and will no longer work in Contao 6. Use the "children" parameter instead.');
+				$children = Input::get('childs');
+			}
+
+			System::getContainer()->get('contao.data_container.clipboard_manager')->set($this->strTable, Input::get('id'), $children, Input::get('mode'));
+
+			if ($this->currentPid)
+			{
+				$this->redirect(Backend::addToUrl('id=' . $this->currentPid, false, array('act', 'mode')));
+			}
+			else
+			{
+				$this->redirect(Backend::addToUrl('', false, array('act', 'mode', 'id')));
+			}
 		}
 
 		// Custom filter
@@ -362,7 +468,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 		else
 		{
-			if ($this->ptable && Input::get('table') && $this->Database->fieldExists('pid', $this->strTable))
+			if ($this->ptable && Input::get('table') && Database::getInstance()->fieldExists('pid', $this->strTable))
 			{
 				$this->procedure[] = 'pid=?';
 				$this->values[] = $this->currentPid;
@@ -398,11 +504,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? null))
 		{
-			$allowedFields = array_unique(array_merge($allowedFields, array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields'])));
+			$allowedFields = array_unique(array(...$allowedFields, ...array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields'])));
 		}
 
 		// Use the field order of the DCA file
 		$fields = array_intersect($allowedFields, $fields);
+		$db = Database::getInstance();
 
 		// Show all allowed fields
 		foreach ($fields as $i)
@@ -422,9 +529,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				foreach ((array) $value as $v)
 				{
-					$objKey = $this->Database->prepare("SELECT " . Database::quoteIdentifier($chunks[1]) . " AS value FROM " . $chunks[0] . " WHERE id=?")
-											 ->limit(1)
-											 ->execute($v);
+					$objKey = $db
+						->prepare("SELECT " . Database::quoteIdentifier($chunks[1]) . " AS value FROM " . $chunks[0] . " WHERE id=?")
+						->limit(1)
+						->execute($v);
 
 					if ($objKey->numRows)
 					{
@@ -440,7 +548,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					foreach ($value as $kk=>$vv)
 					{
-						if (($objFile = FilesModel::findByUuid($vv)) instanceof FilesModel)
+						if ($objFile = FilesModel::findByUuid($vv))
 						{
 							$value[$kk] = $objFile->path . ' (' . StringUtil::binToUuid($vv) . ')';
 						}
@@ -452,7 +560,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					$row[$i] = implode(', ', $value);
 				}
-				elseif (($objFile = FilesModel::findByUuid($value)) instanceof FilesModel)
+				elseif ($objFile = FilesModel::findByUuid($value))
 				{
 					$row[$i] = $objFile->path . ' (' . StringUtil::binToUuid($value) . ')';
 				}
@@ -555,8 +663,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$data = $this->{$callback[0]}->{$callback[1]}($data, $currentRecord, $this);
+					$data = System::importStatic($callback[0])->{$callback[1]}($data, $currentRecord, $this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -566,31 +673,29 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$separate = false;
-		$return = '<table class="tl_show zebra-table zebra-table--with-header zebra-table--no-border">';
+		$return = '';
 
 		// Generate table
 		foreach ($data as $table=>$rows)
 		{
 			foreach ($rows as $entries)
 			{
-				// Separate multiple rows
 				if ($separate)
 				{
-					$return .= '
-  <tr>
-    <td colspan="2" style="height:1em"></td>
-   </tr>';
+					$return .= '</tbody></table>';
 				}
 
 				$separate = true;
 
-				// Add the table name
 				$return .= '
-  <tr>
-    <th class="tl_label">' . $GLOBALS['TL_LANG']['MSC']['table'] . '</th>
-    <th>' . $table . '</th>
-  </tr>
-';
+<table class="tl_show with-padding with-zebra">
+  <thead>
+    <tr>
+      <th class="tl_label">' . $GLOBALS['TL_LANG']['MSC']['table'] . '</th>
+      <th>' . $table . '</th>
+    </tr>
+  </thead>
+  <tbody>';
 
 				foreach ($entries as $lbl=>$val)
 				{
@@ -604,8 +709,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		// Return table
-		return $return . '</table>';
+		return $return . '</tbody></table>';
 	}
 
 	/**
@@ -622,7 +726,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not creatable.');
 		}
 
-		$databaseFields = $this->Database->getFieldNames($this->strTable);
+		$db = Database::getInstance();
+		$databaseFields = $db->getFieldNames($this->strTable);
 
 		// Get all default values for the new entry
 		foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>$v)
@@ -648,7 +753,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Get the new position
-		$this->getNewPosition('new', Input::get('pid'), Input::get('mode') == '2');
+		$this->getNewPosition('new', Input::get('pid'), Input::get('mode') == self::PASTE_INTO);
 
 		// Dynamically set the parent table
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
@@ -656,13 +761,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->set['ptable'] = $this->ptable;
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Empty the clipboard
-		$arrClipboard = $objSession->get('CLIPBOARD');
-		$arrClipboard[$this->strTable] = array();
-		$objSession->set('CLIPBOARD', $arrClipboard);
+		System::getContainer()->get('contao.data_container.clipboard_manager')->clear($this->strTable);
 
 		$this->set['tstamp'] = 0;
 
@@ -671,16 +773,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Insert the record if the table is not closed and switch to edit mode
 		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null))
 		{
-			$objInsertStmt = $this->Database->prepare("INSERT INTO " . $this->strTable . " %s")
-											->set($this->set)
-											->execute();
+			$objInsertStmt = $db
+				->prepare("INSERT INTO " . $this->strTable . " %s")
+				->set($this->set)
+				->execute();
 
 			if ($objInsertStmt->affectedRows)
 			{
 				$s2e = ($GLOBALS['TL_DCA'][$this->strTable]['config']['switchToEdit'] ?? null) ? '&s2e=1' : '';
 				$insertID = $objInsertStmt->insertId;
 
-				/** @var AttributeBagInterface $objSessionBag */
 				$objSessionBag = $objSession->getBag('contao_backend');
 
 				// Save new record in the session
@@ -695,8 +797,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						if (\is_array($callback))
 						{
-							$this->import($callback[0]);
-							$this->{$callback[0]}->{$callback[1]}($this->strTable, $insertID, $this->set, $this);
+							System::importStatic($callback[0])->{$callback[1]}($this->strTable, $insertID, $this->set, $this);
 						}
 						elseif (\is_callable($callback))
 						{
@@ -757,31 +858,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return;
 		}
 
+		$db = Database::getInstance();
+
 		// Get the new position
-		$this->getNewPosition('cut', Input::get('pid'), Input::get('mode') == '2');
+		$this->getNewPosition('cut', Input::get('pid'), Input::get('mode') == self::PASTE_INTO);
 
 		// Avoid circular references when there is no parent table
-		if (!$this->ptable && $this->Database->fieldExists('pid', $this->strTable))
+		if (!$this->ptable && $db->fieldExists('pid', $this->strTable))
 		{
-			$cr = $this->Database->getChildRecords($this->intId, $this->strTable);
+			$cr = $db->getChildRecords($this->intId, $this->strTable);
 			$cr[] = $this->intId;
 		}
 
-		/** @var Session $objSession */
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
 		// Empty clipboard
-		$arrClipboard = $objSession->get('CLIPBOARD');
-		$arrClipboard[$this->strTable] = array();
-		$objSession->set('CLIPBOARD', $arrClipboard);
+		System::getContainer()->get('contao.data_container.clipboard_manager')->clear($this->strTable);
 
 		// Check for circular references
 		if (\in_array($this->set['pid'], $cr))
 		{
 			throw new UnprocessableEntityHttpException('Attempt to relate record ' . $this->intId . ' of table "' . $this->strTable . '" to its child record ' . Input::get('pid') . ' (circular reference).');
 		}
-
-		$this->set['tstamp'] = time();
 
 		// Dynamically set the parent table of tl_content
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
@@ -791,9 +887,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord, $this->set));
 
-		$this->Database->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
-					   ->set($this->set)
-					   ->execute($this->intId);
+		$db
+			->prepare("UPDATE " . $this->strTable . " %s WHERE id=?")
+			->set($this->set)
+			->execute($this->intId);
 
 		// Call the oncut_callback
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncut_callback'] ?? null))
@@ -802,8 +899,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this);
+					System::importStatic($callback[0])->{$callback[1]}($this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -830,29 +926,21 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not sortable.');
 		}
 
-		/** @var Session $objSession */
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		$arrClipboard = $objSession->get('CLIPBOARD');
-
-		if (isset($arrClipboard[$this->strTable]) && \is_array($arrClipboard[$this->strTable]['id']))
+		foreach (System::getContainer()->get('contao.data_container.clipboard_manager')->getIds($this->strTable) as $id)
 		{
-			foreach ($arrClipboard[$this->strTable]['id'] as $id)
+			$this->intId = $id;
+
+			try
 			{
-				$this->intId = $id;
-
-				try
-				{
-					$this->cut(true);
-				}
-				catch (AccessDeniedException)
-				{
-					continue;
-				}
-
-				Input::setGet('pid', $id);
-				Input::setGet('mode', 1);
+				$this->cut(true);
 			}
+			catch (AccessDeniedException)
+			{
+				continue;
+			}
+
+			Input::setGet('pid', $id);
+			Input::setGet('mode', DataContainer::PASTE_AFTER);
 		}
 
 		$this->redirect($this->getReferer());
@@ -879,10 +967,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = $objSession->getBag('contao_backend');
 
 		$currentRecord = $this->getCurrentRecord();
@@ -923,6 +1008,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 							$v = \is_array($default) ? serialize($default) : $default;
 						}
+
+						// Cast boolean to integers (see #6473)
+						if (\is_bool($v))
+						{
+							$v = (int) $v;
+						}
 					}
 
 					$this->set[$k] = $v;
@@ -931,7 +1022,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Get the new position
-		$this->getNewPosition('copy', Input::get('pid'), Input::get('mode') == '2');
+		$this->getNewPosition('copy', Input::get('pid'), Input::get('mode') == self::PASTE_INTO);
 
 		// Dynamically set the parent table of tl_content
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
@@ -940,18 +1031,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Empty clipboard
-		$arrClipboard = $objSession->get('CLIPBOARD');
-
-		if (!($arrClipboard[$this->strTable]['keep'] ?? false))
-		{
-			$arrClipboard[$this->strTable] = array();
-			$objSession->set('CLIPBOARD', $arrClipboard);
-		}
+		System::getContainer()->get('contao.data_container.clipboard_manager')->clearIfNotKeep($this->strTable);
 
 		// Insert the record if the table is not closed and switch to edit mode
 		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null))
 		{
-			$this->set['tstamp'] = ($blnDoNotRedirect ? time() : 0);
+			$this->set['tstamp'] = $blnDoNotRedirect ? time() : 0;
 
 			// Mark the new record with "copy of" (see #586)
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['markAsCopy']))
@@ -964,13 +1049,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					if (!empty($value['value']))
 					{
-						$value['value'] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $value['value']);
+						$value['value'] = $this->markAsCopy($GLOBALS['TL_LANG']['MSC']['copyOf'], $value['value']);
 						$this->set[$strKey] = serialize($value);
 					}
 				}
 				elseif (!empty($this->set[$strKey]))
 				{
-					$this->set[$strKey] = sprintf($GLOBALS['TL_LANG']['MSC']['copyOf'], $this->set[$strKey]);
+					$this->set[$strKey] = $this->markAsCopy($GLOBALS['TL_LANG']['MSC']['copyOf'], $this->set[$strKey]);
 				}
 			}
 
@@ -979,48 +1064,55 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->set));
 
-			$objInsertStmt = $this->Database->prepare("INSERT INTO " . $this->strTable . " %s")
-											->set($this->set)
-											->execute();
-
-			if ($objInsertStmt->affectedRows)
+			try
 			{
-				$insertID = $objInsertStmt->insertId;
+				$objInsertStmt = Database::getInstance()
+					->prepare("INSERT INTO " . $this->strTable . " %s")
+					->set($this->set)
+					->execute();
 
-				// Save the new record in the session
-				$new_records = $objSessionBag->get('new_records');
-				$new_records[$this->strTable][] = $insertID;
-				$objSessionBag->set('new_records', $new_records);
-
-				// Duplicate the records of the child table
-				$this->copyChilds($this->strTable, $insertID, $this->intId, $insertID);
-
-				// Call the oncopy_callback after all new records have been created
-				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncopy_callback'] ?? null))
+				if ($objInsertStmt->affectedRows)
 				{
-					foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['oncopy_callback'] as $callback)
+					$insertID = $objInsertStmt->insertId;
+
+					// Save the new record in the session
+					$new_records = $objSessionBag->get('new_records');
+					$new_records[$this->strTable][] = $insertID;
+					$objSessionBag->set('new_records', $new_records);
+
+					// Duplicate the records of the child table
+					$this->copyChildren($this->strTable, $insertID, $this->intId, $insertID);
+
+					// Call the oncopy_callback after all new records have been created
+					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['oncopy_callback'] ?? null))
 					{
-						if (\is_array($callback))
+						foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['oncopy_callback'] as $callback)
 						{
-							$this->import($callback[0]);
-							$this->{$callback[0]}->{$callback[1]}($insertID, $this);
-						}
-						elseif (\is_callable($callback))
-						{
-							$callback($insertID, $this);
+							if (\is_array($callback))
+							{
+								System::importStatic($callback[0])->{$callback[1]}($insertID, $this);
+							}
+							elseif (\is_callable($callback))
+							{
+								$callback($insertID, $this);
+							}
 						}
 					}
+
+					System::getContainer()->get('monolog.logger.contao.general')->info('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created by duplicating record "' . $this->strTable . '.id=' . $this->intId . '"' . $this->getParentEntries($this->strTable, $insertID));
+
+					// Switch to edit mode
+					if (!$blnDoNotRedirect)
+					{
+						$this->redirect($this->switchToEdit($insertID));
+					}
+
+					return $insertID;
 				}
-
-				System::getContainer()->get('monolog.logger.contao.general')->info('A new entry "' . $this->strTable . '.id=' . $insertID . '" has been created by duplicating record "' . $this->strTable . '.id=' . $this->intId . '"' . $this->getParentEntries($this->strTable, $insertID));
-
-				// Switch to edit mode
-				if (!$blnDoNotRedirect)
-				{
-					$this->redirect($this->switchToEdit($insertID));
-				}
-
-				return $insertID;
+			}
+			catch (UniqueConstraintViolationException $e)
+			{
+				Message::addError(\sprintf(System::getContainer()->get('translator')->trans('ERR.copyUnique', array(), 'contao_default'), (int) $currentRecord['id']));
 			}
 		}
 
@@ -1033,6 +1125,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 
 	/**
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use copyChildren() instead.
+	 */
+	protected function copyChilds($table, $insertID, $id, $parentId)
+	{
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "copyChildren()" instead.', __METHOD__);
+		$this->copyChildren($table, $insertID, $id, $parentId);
+	}
+
+	/**
 	 * Duplicate all child records of a duplicated record
 	 *
 	 * @param string  $table
@@ -1040,14 +1142,23 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * @param integer $id
 	 * @param integer $parentId
 	 */
-	protected function copyChilds($table, $insertID, $id, $parentId)
+	protected function copyChildren($table, $insertID, $id, $parentId)
 	{
 		$time = time();
 		$copy = array();
 		$cctable = array();
 		$ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? array();
+		$db = Database::getInstance();
+		$children = Input::get('children');
 
-		if (!($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null) && Input::get('childs') && $this->Database->fieldExists('pid', $table) && $this->Database->fieldExists('sorting', $table))
+		// Backwards compatibility
+		if (Input::get('childs') !== null)
+		{
+			trigger_deprecation('contao/core-bundle', '5.3', 'Using the "childs" query parameter has been deprecated and will no longer work in Contao 6. Use the "children" parameter instead.');
+			$children = Input::get('childs');
+		}
+
+		if (!($GLOBALS['TL_DCA'][$table]['config']['ptable'] ?? null) && $children && $db->fieldExists('pid', $table) && $db->fieldExists('sorting', $table))
 		{
 			$ctable[] = $table;
 		}
@@ -1063,33 +1174,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->loadDataContainer($v);
 			$cctable[$v] = $GLOBALS['TL_DCA'][$v]['config']['ctable'] ?? null;
 
-			if (!($GLOBALS['TL_DCA'][$v]['config']['doNotCopyRecords'] ?? null) && \strlen($v))
+			if (!($GLOBALS['TL_DCA'][$v]['config']['doNotCopyRecords'] ?? null))
 			{
 				// Consider the dynamic parent table (see #4867)
 				if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'] ?? null)
 				{
-					$objCTable = $this->Database->prepare("SELECT * FROM $v WHERE pid=? AND ptable=?" . ($this->Database->fieldExists('sorting', $v) ? " ORDER BY sorting, id" : ""))
-												->execute($id, $table);
+					$objCTable = $db
+						->prepare("SELECT * FROM $v WHERE pid=? AND ptable=?" . ($db->fieldExists('sorting', $v) ? " ORDER BY sorting, id" : ""))
+						->execute($id, $table);
 				}
 				else
 				{
-					$objCTable = $this->Database->prepare("SELECT * FROM $v WHERE pid=?" . ($this->Database->fieldExists('sorting', $v) ? " ORDER BY sorting, id" : ""))
-												->execute($id);
+					$objCTable = $db
+						->prepare("SELECT * FROM $v WHERE pid=?" . ($db->fieldExists('sorting', $v) ? " ORDER BY sorting, id" : ""))
+						->execute($id);
 				}
 
 				while ($objCTable->next())
 				{
 					// Exclude the duplicated record itself
 					if ($v == $table && $objCTable->id == $parentId)
-					{
-						continue;
-					}
-
-					try
-					{
-						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $v, new ReadAction($v, $objCTable->row()));
-					}
-					catch (AccessDeniedException)
 					{
 						continue;
 					}
@@ -1137,16 +1241,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					$copy[$v][$objCTable->id]['pid'] = $insertID;
 					$copy[$v][$objCTable->id]['tstamp'] = $time;
-
-					try
-					{
-						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $v, new CreateAction($v, $copy[$v][$objCTable->id]));
-					}
-					catch (AccessDeniedException)
-					{
-						unset($copy[$v][$objCTable->id]);
-						continue;
-					}
 				}
 			}
 		}
@@ -1158,9 +1252,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				foreach ($v as $kk=>$vv)
 				{
-					$objInsertStmt = $this->Database->prepare("INSERT INTO " . $k . " %s")
-													->set($vv)
-													->execute();
+					$objInsertStmt = $db->prepare("INSERT INTO " . $k . " %s")->set($vv)->execute();
 
 					if ($objInsertStmt->affectedRows)
 					{
@@ -1168,7 +1260,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 						if ($kk != $parentId && (!empty($cctable[$k]) || ($GLOBALS['TL_DCA'][$k]['list']['sorting']['mode'] ?? null) == self::MODE_TREE))
 						{
-							$this->copyChilds($k, $insertID, $kk, $parentId);
+							$this->copyChildren($k, $insertID, $kk, $parentId);
 						}
 
 						if (\is_array($GLOBALS['TL_DCA'][$k]['config']['oncopy_callback'] ?? null))
@@ -1181,8 +1273,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 								if (\is_array($callback))
 								{
-									$this->import($callback[0]);
-									$this->{$callback[0]}->{$callback[1]}($insertID, $dc);
+									System::importStatic($callback[0])->{$callback[1]}($insertID, $dc);
 								}
 								elseif (\is_callable($callback))
 								{
@@ -1208,26 +1299,21 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not copyable.');
 		}
 
-		/** @var Session $objSession */
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		$arrClipboard = $objSession->get('CLIPBOARD');
-
-		if (isset($arrClipboard[$this->strTable]) && \is_array($arrClipboard[$this->strTable]['id']))
+		foreach (System::getContainer()->get('contao.data_container.clipboard_manager')->getIds($this->strTable) as $id)
 		{
-			foreach ($arrClipboard[$this->strTable]['id'] as $id)
+			$this->intId = $id;
+
+			try
 			{
-				$this->intId = $id;
+				$id = $this->copy(true);
+			}
+			catch (AccessDeniedException)
+			{
+				continue;
+			}
 
-				try
-				{
-					$id = $this->copy(true);
-				}
-				catch (AccessDeniedException)
-				{
-					continue;
-				}
-
+			if ($id)
+			{
 				Input::setGet('pid', $id);
 				Input::setGet('mode', 1);
 			}
@@ -1245,8 +1331,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function getNewPosition($mode, $pid=null, $insertInto=false)
 	{
+		$db = Database::getInstance();
+
 		// If there is pid and sorting
-		if ($this->Database->fieldExists('pid', $this->strTable) && $this->Database->fieldExists('sorting', $this->strTable))
+		if ($db->fieldExists('pid', $this->strTable) && $db->fieldExists('sorting', $this->strTable))
 		{
 			// PID is not set - only valid for duplicated records, as they get the same parent ID as the original record!
 			if ($pid === null && $this->intId && $mode == 'copy')
@@ -1261,7 +1349,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$newSorting = null;
 				$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
 
-				/** @var Session $objSession */
 				$objSession = System::getContainer()->get('request_stack')->getSession();
 				$session = $objSession->all();
 
@@ -1272,9 +1359,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					if ($limit > 0)
 					{
-						$objInsertAfter = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . " ORDER BY sorting, id")
-														 ->limit(1, $limit - 1)
-														 ->execute($pid);
+						$objInsertAfter = $db
+							->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . " ORDER BY sorting, id")
+							->limit(1, $limit - 1)
+							->execute($pid);
 
 						if ($objInsertAfter->numRows)
 						{
@@ -1289,8 +1377,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$newPID = $pid;
 
-					$objSorting = $this->Database->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)'))
-												 ->execute($pid);
+					$objSorting = $db
+						->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)'))
+						->execute($pid);
 
 					// Select sorting value of the first record
 					if ($objSorting->numRows)
@@ -1300,24 +1389,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Resort if the new sorting value is not an integer or smaller than 1
 						if (($curSorting % 2) != 0 || $curSorting < 1)
 						{
-							$objNewSorting = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . " ORDER BY sorting, id")
-															->execute($pid);
+							$objNewSorting = $db
+								->prepare("SELECT id FROM " . $this->strTable . " WHERE " . ($pid ? 'pid=?' : '(pid=? OR pid IS NULL)') . " ORDER BY sorting, id")
+								->execute($pid);
 
 							$count = 2;
 							$newSorting = 128;
 
 							while ($objNewSorting->next())
 							{
-								$this->Database->prepare("UPDATE " . $this->strTable . " SET sorting=? WHERE id=?")
-											   ->limit(1)
-											   ->execute(($count++ * 128), $objNewSorting->id);
+								$db
+									->prepare("UPDATE " . $this->strTable . " SET sorting=? WHERE id=?")
+									->limit(1)
+									->execute($count++ * 128, $objNewSorting->id);
 							}
 						}
 
 						// Else new sorting = (current sorting / 2)
 						else
 						{
-							$newSorting = ($curSorting / 2);
+							$newSorting = $curSorting / 2;
 						}
 					}
 
@@ -1331,9 +1422,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Else insert the current record after the parent record
 				elseif ($pid > 0)
 				{
-					$objSorting = $this->Database->prepare("SELECT pid, sorting FROM " . $this->strTable . " WHERE id=?")
-												 ->limit(1)
-												 ->execute($pid);
+					$objSorting = $db
+						->prepare("SELECT pid, sorting FROM " . $this->strTable . " WHERE id=?")
+						->limit(1)
+						->execute($pid);
 
 					// Set parent ID of the current record as new parent ID
 					if ($objSorting->numRows)
@@ -1344,8 +1436,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Do not proceed without a parent ID
 						if (is_numeric($newPID) || $newPID === null)
 						{
-							$objNextSorting = $this->Database->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($newPID ? 'pid=?' : '(pid=? OR pid IS NULL)') . " AND sorting>?")
-															 ->execute($newPID, $curSorting);
+							$objNextSorting = $db
+								->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE " . ($newPID ? 'pid=?' : '(pid=? OR pid IS NULL)') . " AND sorting>?")
+								->execute($newPID, $curSorting);
 
 							// Select sorting value of the next record
 							if ($objNextSorting->sorting !== null)
@@ -1357,17 +1450,19 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 								{
 									$count = 1;
 
-									$objNewSorting = $this->Database->prepare("SELECT id, sorting FROM " . $this->strTable . " WHERE pid=? ORDER BY sorting, id")
-																	->execute($newPID);
+									$objNewSorting = $db
+										->prepare("SELECT id, sorting FROM " . $this->strTable . " WHERE " . ($newPID ? 'pid=?' : '(pid=? OR pid IS NULL)') . " ORDER BY sorting, id")
+										->execute($newPID);
 
 									while ($objNewSorting->next())
 									{
-										$this->Database->prepare("UPDATE " . $this->strTable . " SET sorting=? WHERE id=?")
-													   ->execute(($count++ * 128), $objNewSorting->id);
+										$db
+											->prepare("UPDATE " . $this->strTable . " SET sorting=? WHERE id=?")
+											->execute($count++ * 128, $objNewSorting->id);
 
 										if ($objNewSorting->sorting == $curSorting)
 										{
-											$newSorting = ($count++ * 128);
+											$newSorting = $count++ * 128;
 										}
 									}
 								}
@@ -1375,14 +1470,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 								// Else new sorting = (current sorting + next sorting) / 2
 								else
 								{
-									$newSorting = (($curSorting + $nxtSorting) / 2);
+									$newSorting = ($curSorting + $nxtSorting) / 2;
 								}
 							}
 
 							// Else new sorting = (current sorting + 128)
 							else
 							{
-								$newSorting = ($curSorting + 128);
+								$newSorting = $curSorting + 128;
 							}
 						}
 					}
@@ -1407,7 +1502,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// If there is only pid
-		elseif ($this->Database->fieldExists('pid', $this->strTable))
+		elseif ($db->fieldExists('pid', $this->strTable))
 		{
 			// PID is not set - only valid for duplicated records, as they get the same parent ID as the original record!
 			if ($pid === null && $this->intId && $mode == 'copy')
@@ -1427,9 +1522,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Else insert the current record after the parent record
 				elseif ($pid > 0)
 				{
-					$objParentRecord = $this->Database->prepare("SELECT pid FROM " . $this->strTable . " WHERE id=?")
-													  ->limit(1)
-													  ->execute($pid);
+					$objParentRecord = $db
+						->prepare("SELECT pid FROM " . $this->strTable . " WHERE id=?")
+						->limit(1)
+						->execute($pid);
 
 					if ($objParentRecord->numRows)
 					{
@@ -1440,7 +1536,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// If there is only sorting
-		elseif ($this->Database->fieldExists('sorting', $this->strTable))
+		elseif ($db->fieldExists('sorting', $this->strTable))
 		{
 			// ID is set (insert after the current record)
 			if ($this->intId)
@@ -1460,8 +1556,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$newSorting = null;
 					$curSorting = $currentRecord['sorting'] ?? null;
 
-					$objNextSorting = $this->Database->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE sorting>?")
-													 ->execute($curSorting);
+					$objNextSorting = $db
+						->prepare("SELECT MIN(sorting) AS sorting FROM " . $this->strTable . " WHERE sorting>?")
+						->execute($curSorting);
 
 					// Select sorting value of the next record
 					if ($objNextSorting->numRows)
@@ -1473,16 +1570,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							$count = 1;
 
-							$objNewSorting = $this->Database->execute("SELECT id, sorting FROM " . $this->strTable . " ORDER BY sorting, id");
+							$objNewSorting = $db->execute("SELECT id, sorting FROM " . $this->strTable . " ORDER BY sorting, id");
 
 							while ($objNewSorting->next())
 							{
-								$this->Database->prepare("UPDATE " . $this->strTable . " SET sorting=? WHERE id=?")
-											   ->execute(($count++ * 128), $objNewSorting->id);
+								$db
+									->prepare("UPDATE " . $this->strTable . " SET sorting=? WHERE id=?")
+									->execute($count++ * 128, $objNewSorting->id);
 
 								if ($objNewSorting->sorting == $curSorting)
 								{
-									$newSorting = ($count++ * 128);
+									$newSorting = $count++ * 128;
 								}
 							}
 						}
@@ -1490,14 +1588,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Else new sorting = (current sorting + next sorting) / 2
 						else
 						{
-							$newSorting = (($curSorting + $nxtSorting) / 2);
+							$newSorting = ($curSorting + $nxtSorting) / 2;
 						}
 					}
 
 					// Else new sorting = (current sorting + 128)
 					else
 					{
-						$newSorting = ($curSorting + 128);
+						$newSorting = $curSorting + 128;
 					}
 
 					// Set new sorting
@@ -1508,8 +1606,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			// ID is not set or not found (insert at the end)
-			$objNextSorting = $this->Database->execute("SELECT MAX(sorting) AS sorting FROM " . $this->strTable);
-			$this->set['sorting'] = ((int) $objNextSorting->sorting + 128);
+			$objNextSorting = $db->execute("SELECT MAX(sorting) AS sorting FROM " . $this->strTable);
+			$this->set['sorting'] = (int) $objNextSorting->sorting + 128;
 		}
 	}
 
@@ -1531,27 +1629,34 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (null === $currentRecord)
 		{
+			if ($blnDoNotRedirect)
+			{
+				return;
+			}
+
 			throw new NotFoundException('Cannot load record "' . $this->strTable . '.id=' . $this->intId . '".');
 		}
 
 		$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new DeleteAction($this->strTable, $currentRecord));
 
+		$db = Database::getInstance();
 		$delete = array();
 
 		// Do not save records from tl_undo itself
 		if ($this->strTable == 'tl_undo')
 		{
-			$this->Database->prepare("DELETE FROM " . $this->strTable . " WHERE id=?")
-						   ->limit(1)
-						   ->execute($this->intId);
+			$db
+				->prepare("DELETE FROM " . $this->strTable . " WHERE id=?")
+				->limit(1)
+				->execute($this->intId);
 
 			$this->redirect($this->getReferer());
 		}
 
 		// If there is a PID field but no parent table
-		if (!$this->ptable && $this->Database->fieldExists('pid', $this->strTable))
+		if (!$this->ptable && $db->fieldExists('pid', $this->strTable))
 		{
-			$delete[$this->strTable] = $this->Database->getChildRecords($this->intId, $this->strTable);
+			$delete[$this->strTable] = $db->getChildRecords($this->intId, $this->strTable);
 			array_unshift($delete[$this->strTable], $this->intId);
 		}
 		else
@@ -1564,7 +1669,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			foreach ($delete[$this->strTable] as $id)
 			{
-				$this->deleteChilds($this->strTable, $id, $delete);
+				$this->deleteChildren($this->strTable, $id, $delete);
 			}
 		}
 
@@ -1576,9 +1681,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			foreach ($fields as $k=>$v)
 			{
-				$objSave = $this->Database->prepare("SELECT * FROM " . $table . " WHERE id=?")
-										  ->limit(1)
-										  ->execute($v);
+				$objSave = $db
+					->prepare("SELECT * FROM " . $table . " WHERE id=?")
+					->limit(1)
+					->execute($v);
 
 				if ($objSave->numRows)
 				{
@@ -1606,10 +1712,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return;
 		}
 
-		$this->import(BackendUser::class, 'User');
-
-		$objUndoStmt = $this->Database->prepare("INSERT INTO tl_undo (pid, tstamp, fromTable, query, affectedRows, data) VALUES (?, ?, ?, ?, ?, ?)")
-									  ->execute($this->User->id, time(), $this->strTable, 'DELETE FROM ' . $this->strTable . ' WHERE id=' . $this->intId, $affected, serialize($data));
+		$objUndoStmt = $db
+			->prepare("INSERT INTO tl_undo (pid, tstamp, fromTable, query, affectedRows, data) VALUES (?, ?, ?, ?, ?, ?)")
+			->execute(BackendUser::getInstance()->id, time(), $this->strTable, 'DELETE FROM ' . $this->strTable . ' WHERE id=' . $this->intId, $affected, serialize($data));
 
 		// Delete the records
 		if ($objUndoStmt->affectedRows)
@@ -1623,8 +1728,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					if (\is_array($callback))
 					{
-						$this->import($callback[0]);
-						$this->{$callback[0]}->{$callback[1]}($this, $undoId);
+						System::importStatic($callback[0])->{$callback[1]}($this, $undoId);
 					}
 					elseif (\is_callable($callback))
 					{
@@ -1636,14 +1740,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Invalidate cache tags (no need to invalidate the parent)
 			$this->invalidateCacheTags();
 
-			// Delete the records
-			foreach ($delete as $table=>$fields)
+			// Delete the records in the reverse order to start from child records and avoid foreign key errors
+			foreach (array_reverse($delete) as $table=>$fields)
 			{
 				foreach ($fields as $v)
 				{
-					$this->Database->prepare("DELETE FROM " . $table . " WHERE id=?")
-								   ->limit(1)
-								   ->execute($v);
+					$db
+						->prepare("DELETE FROM " . $table . " WHERE id=?")
+						->limit(1)
+						->execute($v);
 				}
 			}
 
@@ -1672,13 +1777,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			throw new AccessDeniedException('Table "' . $this->strTable . '" is not deletable.');
 		}
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getSession();
-
 		$session = $objSession->all();
+
 		$ids = $session['CURRENT']['IDS'] ?? array();
 
-		if (\is_array($ids) && \strlen($ids[0]))
+		if (\is_array($ids) && array_filter($ids))
 		{
 			foreach ($ids as $id)
 			{
@@ -1699,15 +1803,24 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 
 	/**
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use deleteChildren() instead.
+	 */
+	protected function deleteChilds($table, $id, &$delete)
+	{
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "deleteChildren()" instead.', __METHOD__);
+		$this->deleteChildren($table, $id, $delete);
+	}
+
+	/**
 	 * Recursively get all related table names and records
 	 *
 	 * @param string  $table
 	 * @param integer $id
 	 * @param array   $delete
 	 */
-	public function deleteChilds($table, $id, &$delete)
+	public function deleteChildren($table, $id, &$delete)
 	{
-		$cctable = array();
 		$ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? array();
 
 		if (empty($ctable) || !\is_array($ctable))
@@ -1715,54 +1828,33 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return;
 		}
 
+		$db = Database::getInstance();
+
 		// Walk through each child table
 		foreach ($ctable as $v)
 		{
 			$this->loadDataContainer($v);
-			$cctable[$v] = $GLOBALS['TL_DCA'][$v]['config']['ctable'] ?? null;
 
 			// Consider the dynamic parent table (see #4867)
 			if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'] ?? null)
 			{
-				$objDelete = $this->Database->prepare("SELECT id FROM $v WHERE pid=? AND ptable=?")
-											->execute($id, $table);
+				$objDelete = $db
+					->prepare("SELECT id FROM $v WHERE pid=? AND ptable=?")
+					->execute($id, $table);
 			}
 			else
 			{
-				$objDelete = $this->Database->prepare("SELECT id FROM $v WHERE pid=?")
-											->execute($id);
+				$objDelete = $db
+					->prepare("SELECT id FROM $v WHERE pid=?")
+					->execute($id);
 			}
 
-			if ($objDelete->numRows && !($GLOBALS['TL_DCA'][$v]['config']['doNotDeleteRecords'] ?? null) && \strlen($v))
+			if ($objDelete->numRows && !($GLOBALS['TL_DCA'][$v]['config']['doNotDeleteRecords'] ?? null))
 			{
-				$rows = $objDelete->fetchAllAssoc();
-
-				static::preloadCurrentRecords(array_column($rows, 'id'), $v);
-
-				foreach ($rows as $row)
+				foreach ($objDelete->fetchEach('id') as $childId)
 				{
-					try
-					{
-						$currentRecord = $this->getCurrentRecord($row['id'], $v);
-
-						if ($currentRecord === null)
-						{
-							continue;
-						}
-
-						$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $v, new DeleteAction($v, $currentRecord));
-					}
-					catch (AccessDeniedException)
-					{
-						continue;
-					}
-
-					$delete[$v][] = $row['id'];
-
-					if (!empty($cctable[$v]))
-					{
-						$this->deleteChilds($v, $row['id'], $delete);
-					}
+					$delete[$v][] = $childId;
+					$this->deleteChildren($v, $childId, $delete);
 				}
 			}
 		}
@@ -1790,6 +1882,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->redirect($this->getReferer());
 		}
 
+		$db = Database::getInstance();
 		$arrFields = array();
 
 		// Restore the data
@@ -1800,7 +1893,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Get the currently available fields
 			if (!isset($arrFields[$table]))
 			{
-				$arrFields[$table] = array_flip($this->Database->getFieldNames($table));
+				$arrFields[$table] = array_flip($db->getFieldNames($table));
 			}
 
 			foreach ($fields as $row)
@@ -1808,12 +1901,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Unset fields that no longer exist in the database
 				$row = array_intersect_key($row, $arrFields[$table]);
 
-				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $table, new CreateAction($table, $row));
-
 				// Re-insert the data
-				$objInsertStmt = $this->Database->prepare("INSERT INTO " . $table . " %s")
-												->set($row)
-												->execute();
+				$objInsertStmt = $db
+					->prepare("INSERT INTO " . $table . " %s")
+					->set($row)
+					->execute();
 
 				// Do not delete record from tl_undo if there is an error
 				if ($objInsertStmt->affectedRows < 1)
@@ -1828,8 +1920,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						if (\is_array($callback))
 						{
-							$this->import($callback[0]);
-							$this->{$callback[0]}->{$callback[1]}($table, $row, $this);
+							System::importStatic($callback[0])->{$callback[1]}($table, $row, $this);
 						}
 						elseif (\is_callable($callback))
 						{
@@ -1845,9 +1936,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			System::getContainer()->get('monolog.logger.contao.general')->info('Undone ' . $query);
 
-			$this->Database->prepare("DELETE FROM " . $this->strTable . " WHERE id=?")
-						   ->limit(1)
-						   ->execute($this->intId);
+			$db
+				->prepare("DELETE FROM " . $this->strTable . " WHERE id=?")
+				->limit(1)
+				->execute($this->intId);
 		}
 
 		$this->invalidateCacheTags();
@@ -1960,7 +2052,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			/** @var Session $objSessionBag */
 			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 			$class = 'tl_tbox';
@@ -1979,19 +2070,28 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					list($key, $cls) = explode(':', $legends[$k]) + array(null, null);
 
-					$legend = "\n" . '<legend data-toggle-fieldset="' . StringUtil::specialcharsAttribute(json_encode(array('id' => $key, 'table' => $this->strTable))) . '">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</legend>';
+					$legend = "\n" . '<legend><button type="button" data-action="contao--toggle-fieldset#toggle">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</button></legend>';
 				}
 
-				if (isset($fs[$this->strTable][$key]))
+				if ($legend)
 				{
-					$class .= ($fs[$this->strTable][$key] ? '' : ' collapsed');
-				}
-				else
-				{
-					$class .= (($cls && $legend) ? ' ' . $cls : '');
+					if (isset($fs[$this->strTable][$key]))
+					{
+						$class .= ($fs[$this->strTable][$key] ? '' : ' collapsed');
+					}
+					elseif ($cls)
+					{
+						// Convert the ":hide" suffix from the DCA
+						if ($cls == 'hide')
+						{
+							$cls = 'collapsed';
+						}
+
+						$class .= ' ' . $cls;
+					}
 				}
 
-				$return .= "\n\n" . '<fieldset' . ($key ? ' id="pal_' . $key . '"' : '') . ' class="' . $class . ($legend ? '' : ' nolegend') . '">' . $legend;
+				$return .= "\n\n" . '<fieldset class="' . $class . ($legend ? '' : ' nolegend') . '" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="' . $key . '" data-contao--toggle-fieldset-table-value="' . $this->strTable . '" data-contao--toggle-fieldset-collapsed-class="collapsed" data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open">' . $legend . "\n" . '<div class="widget-group">';
 				$thisId = '';
 
 				// Build rows of the current box
@@ -2013,7 +2113,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 							if (\count($arrAjax) > 1)
 							{
-								$current = "\n" . '<div id="' . $thisId . '" class="subpal cf">' . $arrAjax[$thisId] . '</div>';
+								$current = "\n" . '<div id="' . $thisId . '" class="subpal widget-group">' . $arrAjax[$thisId] . '</div>';
 								unset($arrAjax[$thisId]);
 								end($arrAjax);
 								$thisId = key($arrAjax);
@@ -2031,7 +2131,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$thisId = 'sub_' . substr($vv, 1, -1);
 						$arrAjax[$thisId] = '';
 						$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest')) ? true : $blnAjax;
-						$return .= "\n" . '<div id="' . $thisId . '" class="subpal cf">';
+						$return .= "\n" . '<div id="' . $thisId . '" class="subpal widget-group">';
 
 						continue;
 					}
@@ -2053,8 +2153,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							if (\is_array($callback))
 							{
-								$this->import($callback[0]);
-								$this->varValue = $this->{$callback[0]}->{$callback[1]}($this->varValue, $this);
+								$this->varValue = System::importStatic($callback[0])->{$callback[1]}($this->varValue, $this);
 							}
 							elseif (\is_callable($callback))
 							{
@@ -2067,11 +2166,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->objActiveRecord->{$this->strField} = $this->varValue;
 
 					// Build the row and pass the current palette string (thanks to Tristan Lins)
-					$blnAjax ? $arrAjax[$thisId] .= $this->row($this->strPalette) : $return .= $this->row($this->strPalette);
+					$blnAjax ? $arrAjax[$thisId] .= $this->row() : $return .= $this->row();
 				}
 
 				$class = 'tl_box';
-				$return .= "\n" . '</fieldset>';
+				$return .= "\n</div>\n</fieldset>";
 			}
 
 			$this->submit();
@@ -2089,13 +2188,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$objTemplate->theme = Backend::getTheme();
 				$objTemplate->charset = System::getContainer()->getParameter('kernel.charset');
 				$objTemplate->h1 = $GLOBALS['TL_LANG']['MSC']['versionConflict'];
-				$objTemplate->explain1 = sprintf($GLOBALS['TL_LANG']['MSC']['versionConflict1'], $intLatestVersion, Input::post('VERSION_NUMBER'));
-				$objTemplate->explain2 = sprintf($GLOBALS['TL_LANG']['MSC']['versionConflict2'], $intLatestVersion + 1, $intLatestVersion);
+				$objTemplate->explain1 = \sprintf($GLOBALS['TL_LANG']['MSC']['versionConflict1'], $intLatestVersion, Input::post('VERSION_NUMBER'));
+				$objTemplate->explain2 = \sprintf($GLOBALS['TL_LANG']['MSC']['versionConflict2'], $intLatestVersion + 1, $intLatestVersion);
 				$objTemplate->diff = $objVersions->compare(true);
 				$objTemplate->href = Environment::get('requestUri');
 				$objTemplate->button = $GLOBALS['TL_LANG']['MSC']['continue'];
 
-				throw new ResponseException($objTemplate->getResponse());
+				// We need to set the status code to either 4xx or 5xx in order for Turbo to render this response.
+				$response = $objTemplate->getResponse();
+				$response->setStatusCode(Response::HTTP_CONFLICT);
+
+				throw new ResponseException($response);
 			}
 
 			// Redirect
@@ -2149,7 +2252,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Parent view
 				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
-					$strUrl .= $this->Database->fieldExists('sorting', $this->strTable) ? '&amp;act=create&amp;mode=1&amp;pid=' . $this->intId : '&amp;act=create&amp;mode=2&amp;pid=' . ($currentRecord['pid'] ?? null);
+					$strUrl .= Database::getInstance()->fieldExists('sorting', $this->strTable) ? '&amp;act=create&amp;mode=1&amp;pid=' . $this->intId : '&amp;act=create&amp;mode=2&amp;pid=' . ($currentRecord['pid'] ?? null);
+
+					if (($currentRecord['ptable'] ?? null) === $this->strTable)
+					{
+						$strUrl .= '&amp;ptable=' . $currentRecord['ptable'];
+					}
 				}
 
 				// List view
@@ -2180,13 +2288,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Parent view
 				elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 				{
-					$strUrl .= $this->Database->fieldExists('sorting', $this->strTable) ? '&amp;act=copy&amp;mode=1&amp;pid=' . $this->intId . '&amp;id=' . $this->intId : '&amp;act=copy&amp;mode=2&amp;pid=' . $this->intCurrentPid . '&amp;id=' . $this->intId;
+					$strUrl .= Database::getInstance()->fieldExists('sorting', $this->strTable) ? '&amp;act=copy&amp;mode=1&amp;pid=' . $this->intId . '&amp;id=' . $this->intId : '&amp;act=copy&amp;mode=2&amp;pid=' . $this->intCurrentPid . '&amp;id=' . $this->intId;
+
+					if (($currentRecord['ptable'] ?? null) === $this->strTable)
+					{
+						$strUrl .= '&amp;ptable=' . $currentRecord['ptable'];
+					}
 				}
 
 				// List view
 				else
 				{
-					$strUrl .= $this->ptable ? '&amp;act=copy&amp;mode=2&amp;pid=' . $this->intCurrentPid . '&amp;id=' . $this->intCurrentPid : '&amp;act=copy&amp;id=' . $this->intCurrentPid;
+					$strUrl .= $this->ptable ? '&amp;act=copy&amp;mode=2&amp;pid=' . $this->intCurrentPid . '&amp;id=' . $this->intId : '&amp;act=copy&amp;id=' . $this->intId;
 				}
 
 				$this->redirect($strUrl . '&amp;rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue());
@@ -2205,81 +2318,20 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$version = '';
 		}
 
-		// Submit buttons
-		$arrButtons = array();
-		$arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['save'] . '</button>';
-
-		if (!Input::get('nb'))
-		{
-			$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG']['MSC']['saveNclose'] . '</button>';
-
-			if (!Input::get('nc'))
-			{
-				if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null))
-				{
-					$arrButtons['saveNcreate'] = '<button type="submit" name="saveNcreate" id="saveNcreate" class="tl_submit" accesskey="n">' . $GLOBALS['TL_LANG']['MSC']['saveNcreate'] . '</button>';
-
-					if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null))
-					{
-						$arrButtons['saveNduplicate'] = '<button type="submit" name="saveNduplicate" id="saveNduplicate" class="tl_submit" accesskey="d">' . $GLOBALS['TL_LANG']['MSC']['saveNduplicate'] . '</button>';
-					}
-				}
-
-				if ($GLOBALS['TL_DCA'][$this->strTable]['config']['switchToEdit'] ?? null)
-				{
-					$arrButtons['saveNedit'] = '<button type="submit" name="saveNedit" id="saveNedit" class="tl_submit" accesskey="e">' . $GLOBALS['TL_LANG']['MSC']['saveNedit'] . '</button>';
-				}
-
-				if ($this->ptable || ($GLOBALS['TL_DCA'][$this->strTable]['config']['switchToEdit'] ?? null) || ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
-				{
-					$arrButtons['saveNback'] = '<button type="submit" name="saveNback" id="saveNback" class="tl_submit" accesskey="g">' . $GLOBALS['TL_LANG']['MSC']['saveNback'] . '</button>';
-				}
-			}
-		}
-
-		// Call the buttons_callback (see #4691)
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] as $callback)
-			{
-				if (\is_array($callback))
-				{
-					$this->import($callback[0]);
-					$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
-				}
-				elseif (\is_callable($callback))
-				{
-					$arrButtons = $callback($arrButtons, $this);
-				}
-			}
-		}
-
-		if (\count($arrButtons) < 3)
-		{
-			$strButtons = implode(' ', $arrButtons);
-		}
-		else
-		{
-			$strButtons = array_shift($arrButtons) . ' ';
-			$strButtons .= '<div class="split-button">';
-			$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
-
-			foreach ($arrButtons as $strButton)
-			{
-				$strButtons .= '<li>' . $strButton . '</li>';
-			}
-
-			$strButtons .= '</ul></div>';
-		}
+		$strButtons = System::getContainer()
+			->get('contao.data_container.buttons_builder')
+			->generateEditButtons(
+				$this->strTable,
+				(bool) $this->ptable,
+				$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))),
+				$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array_replace($currentRecord, array('id' => null, 'sorting' => null)))),
+				$this
+			);
 
 		// Add the buttons and end the form
 		$return .= '
 </div>
-<div class="tl_formbody_submit">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>';
 
 		$strVersionField = '';
@@ -2305,27 +2357,21 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
-		$return = $version . ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . Message::generate() . (Input::get('nb') ? '' : '
+		$return = $version . Message::generate() . ($this->noReload ? '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . (Input::get('nb') ? '' : '
 <div id="tl_buttons">
-<a href="' . $strBackUrl . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+' . DataContainerOperationsBuilder::generateBackButton($strBackUrl) . '
 </div>') . '
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . $strVersionField . $return;
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">' . $strVersionField . $return;
 
-		// Set the focus if there is an error
-		if ($this->noReload)
-		{
-			$return .= '
-<script>
-  window.addEvent(\'domready\', function() {
-    var error = $(\'' . $this->strTable . '\').getElement(\'label.error\');
-    if (error) Backend.vScrollTo((error.getPosition().y - 20));
-  });
-</script>';
-		}
+		$return = '
+<turbo-frame id="tl_edit_form_frame" target="_top" data-turbo-action="advance" data-controller="contao--jump-targets">
+	<div class="jump-targets"><div class="inner" data-contao--jump-targets-target="navigation"></div></div>
+	' . $return . '
+</turbo-frame>';
 
 		return $return;
 	}
@@ -2348,9 +2394,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$return = '';
-		$this->import(BackendUser::class, 'User');
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Get current IDs from session
@@ -2369,7 +2413,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$objSession->replace($session);
 		}
 
+		$db = Database::getInstance();
 		$security = System::getContainer()->get('security.helper');
+		$user = BackendUser::getInstance();
 
 		// Add fields
 		$fields = $session['CURRENT'][$this->strTable] ?? array();
@@ -2380,7 +2426,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if (Input::post('FORM_SUBMIT') == $this->strTable)
 			{
-				$this->Database->beginTransaction();
+				$db->beginTransaction();
 			}
 
 			try
@@ -2423,14 +2469,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$objVersions->initialize();
 
 					// Add meta fields if the current user is an administrator
-					if ($this->User->isAdmin)
+					if ($user->isAdmin)
 					{
-						if ($this->Database->fieldExists('sorting', $this->strTable))
+						if ($db->fieldExists('sorting', $this->strTable))
 						{
 							array_unshift($this->strPalette, 'sorting');
 						}
 
-						if ($this->Database->fieldExists('pid', $this->strTable))
+						if ($db->fieldExists('pid', $this->strTable))
 						{
 							array_unshift($this->strPalette, 'pid');
 						}
@@ -2461,8 +2507,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 
 					// Begin current row
-					$strAjax = '';
+					$arrAjax = array();
 					$blnAjax = false;
+					$thisId = '';
 					$box = '';
 
 					$excludedFields = array();
@@ -2484,10 +2531,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							if ($blnAjax && Environment::get('isAjaxRequest'))
 							{
-								return $strAjax;
+								if ($ajaxId == $thisId)
+								{
+									if (($intLatestVersion = $objVersions->getLatestVersion()) !== null)
+									{
+										$arrAjax[$thisId] .= '<input type="hidden" name="VERSION_NUMBER" value="' . $intLatestVersion . '">';
+									}
+
+									return $arrAjax[$thisId];
+								}
+
+								if (\count($arrAjax) > 1)
+								{
+									$current = "\n" . '<div id="' . $thisId . '" class="subpal widget-group">' . $arrAjax[$thisId] . '</div>';
+									unset($arrAjax[$thisId]);
+									end($arrAjax);
+									$thisId = key($arrAjax);
+									$arrAjax[$thisId] .= $current;
+								}
 							}
 
-							$blnAjax = false;
 							$box .= "\n  " . '</div>';
 
 							continue;
@@ -2496,8 +2559,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						if (preg_match('/^\[.*]$/', $v))
 						{
 							$thisId = 'sub_' . substr($v, 1, -1) . '_' . $id;
-							$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest'));
-							$box .= "\n  " . '<div id="' . $thisId . '" class="subpal cf">';
+							$arrAjax[$thisId] = '';
+							$blnAjax = ($ajaxId == $thisId && Environment::get('isAjaxRequest')) ? true : $blnAjax;
+							$box .= "\n  " . '<div id="' . $thisId . '" class="subpal widget-group">';
 
 							continue;
 						}
@@ -2541,8 +2605,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							{
 								if (\is_array($callback))
 								{
-									$this->import($callback[0]);
-									$this->varValue = $this->{$callback[0]}->{$callback[1]}($this->varValue, $this);
+									$this->varValue = System::importStatic($callback[0])->{$callback[1]}($this->varValue, $this);
 								}
 								elseif (\is_callable($callback))
 								{
@@ -2555,7 +2618,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$this->objActiveRecord->{$this->strField} = $this->varValue;
 
 						// Build the row and pass the current palette string (thanks to Tristan Lins)
-						$blnAjax ? $strAjax .= $this->row($this->strPalette) : $box .= $this->row($this->strPalette);
+						$blnAjax ? $arrAjax[$thisId] .= $this->row() : $box .= $this->row();
 					}
 
 					// Save record
@@ -2568,9 +2631,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						continue;
 					}
 
-					$return .= Message::generateUnwrapped() . '
-<div class="' . $class . ' cf">' . $box . '
-</div>';
+					$return .= Message::generateUnwrapped() . \sprintf(
+						'<fieldset data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-collapsed-class="collapsed" class="%s cf"><legend><button type="button" data-action="contao--toggle-fieldset#toggle">%s</button></legend>%s</fieldset>',
+						$class,
+						StringUtil::specialchars(System::getContainer()->get('contao.data_container.record_labeler')->getLabel('contao.db.' . $this->strTable . '.' . $currentRecord['id'], $currentRecord)),
+						$box
+					);
 
 					$class = 'tl_box';
 				}
@@ -2581,7 +2647,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				if (Input::post('FORM_SUBMIT') == $this->strTable)
 				{
-					$this->Database->rollbackTransaction();
+					$db->rollbackTransaction();
 				}
 
 				throw $e;
@@ -2592,11 +2658,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				if ($this->noReload)
 				{
-					$this->Database->rollbackTransaction();
+					$db->rollbackTransaction();
 				}
 				else
 				{
-					$this->Database->commitTransaction();
+					$db->commitTransaction();
 
 					if (Input::post('saveNclose') !== null)
 					{
@@ -2607,45 +2673,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			// Submit buttons
-			$arrButtons = array();
-			$arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['save'] . '</button>';
-			$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG']['MSC']['saveNclose'] . '</button>';
-
-			// Call the buttons_callback (see #4691)
-			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] ?? null))
-			{
-				foreach ($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] as $callback)
-				{
-					if (\is_array($callback))
-					{
-						$this->import($callback[0]);
-						$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
-					}
-					elseif (\is_callable($callback))
-					{
-						$arrButtons = $callback($arrButtons, $this);
-					}
-				}
-			}
-
-			if (\count($arrButtons) < 3)
-			{
-				$strButtons = implode(' ', $arrButtons);
-			}
-			else
-			{
-				$strButtons = array_shift($arrButtons) . ' ';
-				$strButtons .= '<div class="split-button">';
-				$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
-
-				foreach ($arrButtons as $strButton)
-				{
-					$strButtons .= '<li>' . $strButton . '</li>';
-				}
-
-				$strButtons .= '</ul></div>';
-			}
+			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditAllButtons($this->strTable, $this);
 
 			// Add the form
 			$return = '
@@ -2653,26 +2681,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '">
 <div class="tl_formbody_edit nogrid">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . $return . '
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
+<input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($this->noReload ? '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . $return . '
 </div>
-<div class="tl_formbody_submit">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>';
-
-			// Set the focus if there is an error
-			if ($this->noReload)
-			{
-				$return .= '
-<script>
-  window.addEvent(\'domready\', function() {
-    var error = $(\'' . $this->strTable . '\').getElement(\'label.error\');
-    if (error) Backend.vScrollTo((error.getPosition().y - 20));
-  });
-</script>';
-			}
 		}
 
 		// Else show a form to select the fields
@@ -2685,14 +2699,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$fields = array_merge($fields, array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array()));
 
 			// Add meta fields if the current user is an administrator
-			if ($this->User->isAdmin)
+			if ($user->isAdmin)
 			{
-				if ($this->Database->fieldExists('sorting', $this->strTable) && !\in_array('sorting', $fields))
+				if ($db->fieldExists('sorting', $this->strTable) && !\in_array('sorting', $fields))
 				{
 					array_unshift($fields, 'sorting');
 				}
 
-				if ($this->Database->fieldExists('pid', $this->strTable) && !\in_array('pid', $fields))
+				if ($db->fieldExists('pid', $this->strTable) && !\in_array('pid', $fields))
 				{
 					array_unshift($fields, 'pid');
 				}
@@ -2708,16 +2722,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			$blnIsError = (Input::isPost() && !Input::post('all_fields'));
+			$blnIsError = Input::isPost() && !Input::post('all_fields');
 
 			// Return the select menu
 			$return .= '
 
-<form action="' . StringUtil::ampersand(Environment::get('requestUri')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
+<form action="' . StringUtil::ampersand(Environment::get('requestUri')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post" data-turbo="false">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '_all">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . ($blnIsError ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . '
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
+<input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($blnIsError ? '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
 <div class="tl_tbox">
 <div class="widget">
 <fieldset class="tl_checkbox_container">
@@ -2741,7 +2756,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
 <div id="tl_buttons">
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+' . DataContainerOperationsBuilder::generateBackButton() . '
 </div>' . $return;
 	}
 
@@ -2749,10 +2764,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 * Toggle a field (e.g. "published" or "disable")
 	 *
 	 * @param integer $intId
+	 * @param string  $strSelectorField
+	 * @param boolean $blnDoNotRedirect
 	 *
 	 * @throws AccessDeniedException
 	 */
-	public function toggle($intId=null)
+	public function toggle($intId=null, $strSelectorField=null, $blnDoNotRedirect=false)
 	{
 		if ($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null)
 		{
@@ -2764,21 +2781,22 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->intId = $intId;
 		}
 
-		$this->strField = Input::get('field');
+		$this->strField = $strSelectorField ?? Input::get('field');
 
-		if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['toggle'] ?? false) !== true && ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['reverseToggle'] ?? false) !== true)
+		// If the selector field is read from the query string, check that toggling it is allowed
+		if (null === $strSelectorField && ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['toggle'] ?? false) !== true && ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['reverseToggle'] ?? false) !== true)
 		{
 			throw new AccessDeniedException('Field "' . $this->strTable . '.' . $this->strField . '" cannot be toggled.');
 		}
 
 		// Security check before using field in DB query!
-		if (!$this->Database->fieldExists($this->strField, $this->strTable))
+		if (!Database::getInstance()->fieldExists($this->strField, $this->strTable))
 		{
 			throw new AccessDeniedException('Database field ' . $this->strTable . '.' . $this->strField . ' does not exist.');
 		}
 
 		// Check the field access
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $this->strField))
+		if (DataContainer::isFieldExcluded($this->strTable, $this->strField) && !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $this->strField))
 		{
 			throw new AccessDeniedException('Not enough permissions to toggle field ' . $this->strTable . '.' . $this->strField . ' of record ID ' . $intId . '.');
 		}
@@ -2802,13 +2820,20 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$objVersions = new Versions($this->strTable, $this->intId);
 		$objVersions->initialize();
 
+		$prevSubmit = Input::post('FORM_SUBMIT', true);
 		Input::setPost('FORM_SUBMIT', $this->strTable);
-		$this->varValue = $currentRecord[$this->strField] ?? null;
 
+		$this->varValue = $currentRecord[$this->strField] ?? null;
 		$this->save(!$this->varValue);
+
 		$this->submit();
 
-		$this->redirect($this->getReferer());
+		Input::setPost('FORM_SUBMIT', $prevSubmit);
+
+		if (!$blnDoNotRedirect)
+		{
+			$this->redirect($this->getReferer());
+		}
 	}
 
 	/**
@@ -2826,9 +2851,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$return = '';
-		$this->import(BackendUser::class, 'User');
 
-		/** @var Session $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getSession();
 
 		// Get current IDs from session
@@ -2842,7 +2865,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$objSession->replace($session);
 		}
 
+		$db = Database::getInstance();
 		$security = System::getContainer()->get('security.helper');
+		$user = BackendUser::getInstance();
 
 		// Add fields
 		$fields = $session['CURRENT'][$this->strTable] ?? array();
@@ -2855,7 +2880,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Save record
 			if (Input::post('FORM_SUBMIT') == $this->strTable)
 			{
-				$this->Database->beginTransaction();
+				$db->beginTransaction();
 
 				try
 				{
@@ -2865,7 +2890,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						try
 						{
-							$currentRecord = $this->getCurrentRecord();
+							$currentRecord = $this->getCurrentRecord($id);
 
 							if ($currentRecord === null)
 							{
@@ -2923,7 +2948,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 				catch (\Throwable $e)
 				{
-					$this->Database->rollbackTransaction();
+					$db->rollbackTransaction();
 
 					throw $e;
 				}
@@ -2931,11 +2956,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Reload the page to prevent _POST variables from being sent twice
 				if ($this->noReload)
 				{
-					$this->Database->rollbackTransaction();
+					$db->rollbackTransaction();
 				}
 				else
 				{
-					$this->Database->commitTransaction();
+					$db->commitTransaction();
 
 					if (Input::post('saveNclose') !== null)
 					{
@@ -2974,71 +2999,19 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$return .= '
 </div>';
 
-			// Submit buttons
-			$arrButtons = array();
-			$arrButtons['save'] = '<button type="submit" name="save" id="save" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['save'] . '</button>';
-			$arrButtons['saveNclose'] = '<button type="submit" name="saveNclose" id="saveNclose" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG']['MSC']['saveNclose'] . '</button>';
-
-			// Call the buttons_callback (see #4691)
-			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] ?? null))
-			{
-				foreach ($GLOBALS['TL_DCA'][$this->strTable]['edit']['buttons_callback'] as $callback)
-				{
-					if (\is_array($callback))
-					{
-						$this->import($callback[0]);
-						$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
-					}
-					elseif (\is_callable($callback))
-					{
-						$arrButtons = $callback($arrButtons, $this);
-					}
-				}
-			}
-
-			if (\count($arrButtons) < 3)
-			{
-				$strButtons = implode(' ', $arrButtons);
-			}
-			else
-			{
-				$strButtons = array_shift($arrButtons) . ' ';
-				$strButtons .= '<div class="split-button">';
-				$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
-
-				foreach ($arrButtons as $strButton)
-				{
-					$strButtons .= '<li>' . $strButton . '</li>';
-				}
-
-				$strButtons .= '</ul></div>';
-			}
+			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditAllButtons($this->strTable, $this);
 
 			// Add the form
 			$return = '
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '">
 <div class="tl_formbody_edit nogrid">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . $return . '
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
+<input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($this->noReload ? '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . $return . '
 </div>
-<div class="tl_formbody_submit">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>';
-
-			// Set the focus if there is an error
-			if ($this->noReload)
-			{
-				$return .= '
-<script>
-  window.addEvent(\'domready\', function() {
-    var error = $(\'' . $this->strTable . '\').getElement(\'label.error\');
-    if (error) Backend.vScrollTo((error.getPosition().y - 20));
-  });
-</script>';
-			}
 		}
 
 		// Else show a form to select the fields
@@ -3051,14 +3024,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$fields = array_merge($fields, array_keys($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array()));
 
 			// Add meta fields if the current user is an administrator
-			if ($this->User->isAdmin)
+			if ($user->isAdmin)
 			{
-				if ($this->Database->fieldExists('sorting', $this->strTable) && !\in_array('sorting', $fields))
+				if ($db->fieldExists('sorting', $this->strTable) && !\in_array('sorting', $fields))
 				{
 					array_unshift($fields, 'sorting');
 				}
 
-				if ($this->Database->fieldExists('pid', $this->strTable) && !\in_array('pid', $fields))
+				if ($db->fieldExists('pid', $this->strTable) && !\in_array('pid', $fields))
 				{
 					array_unshift($fields, 'pid');
 				}
@@ -3074,15 +3047,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			$blnIsError = (Input::isPost() && !Input::post('all_fields'));
+			$blnIsError = Input::isPost() && !Input::post('all_fields');
 
 			// Return the select menu
 			$return .= '
-<form action="' . StringUtil::ampersand(Environment::get('requestUri')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post">
+<form action="' . StringUtil::ampersand(Environment::get('requestUri')) . '&amp;fields=1" id="' . $this->strTable . '_all" class="tl_form tl_edit_form" method="post" data-turbo="false">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '_all">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' . ($blnIsError ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['general'] . '</p>' : '') . '
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
+<input type="hidden" name="IDS[]" value="' . implode('"><input type="hidden" name="IDS[]" value="', $ids) . '">' . ($blnIsError ? '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
 <div class="tl_tbox">
 <div class="widget">
 <fieldset class="tl_checkbox_container">
@@ -3103,10 +3077,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Return
-		return ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . Message::generate() . '
+		return Message::generate() . ($this->noReload ? '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
 <div id="tl_buttons">
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>
+' . DataContainerOperationsBuilder::generateBackButton() . '
 </div>' . $return;
 	}
 
@@ -3148,8 +3122,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					if (\is_array($callback))
 					{
-						$this->import($callback[0]);
-						$old = $this->{$callback[0]}->{$callback[1]}($old, $this);
+						$old = System::importStatic($callback[0])->{$callback[1]}($old, $this);
 					}
 					elseif (\is_callable($callback))
 					{
@@ -3196,8 +3169,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $this);
+					$varValue = System::importStatic($callback[0])->{$callback[1]}($varValue, $this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -3207,9 +3179,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Make sure unique fields are unique
-		if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$this->Database->isUniqueValue($this->strTable, $this->strField, $varValue, $currentRecord['id'] ?? null))
+		if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !Database::getInstance()->isUniqueValue($this->strTable, $this->strField, $varValue, $currentRecord['id'] ?? null))
 		{
-			throw new \Exception(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $this->strField));
+			throw new \Exception(\sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?? $this->strField));
 		}
 
 		// Save the value if there was no error
@@ -3259,8 +3231,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						if (\is_array($callback))
 						{
-							$this->import($callback[0]);
-							$arrValues = $this->{$callback[0]}->{$callback[1]}($arrValues, $this);
+							$arrValues = System::importStatic($callback[0])->{$callback[1]}($arrValues, $this);
 						}
 						elseif (\is_callable($callback))
 						{
@@ -3294,6 +3265,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$arrTypes = array();
 			$blnVersionize = false;
 
+			$db = Database::getInstance();
+
 			foreach ($arrValues as $strField => $varValue)
 			{
 				$arrData = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$strField] ?? array();
@@ -3306,13 +3279,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 					{
-						$this->Database
+						$db
 							->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($strField) . "=? WHERE pid=?")
 							->query('', array($varEmpty, $currentRecord['pid'] ?? null), $arrType);
 					}
 					else
 					{
-						$this->Database
+						$db
 							->prepare("UPDATE " . $this->strTable . " SET " . Database::quoteIdentifier($strField) . "=?")
 							->query('', array($varEmpty), $arrType);
 					}
@@ -3332,7 +3305,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			$objUpdateStmt = $this->Database
+			$objUpdateStmt = $db
 				->prepare("UPDATE " . $this->strTable . " %s WHERE " . implode(' AND ', $this->procedure))
 				->set($arrValues)
 				->query('', array_merge(array_values($arrValues), $this->values), $arrTypes);
@@ -3357,8 +3330,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this);
+					System::importStatic($callback[0])->{$callback[1]}($this);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -3383,7 +3355,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	public function getPalette()
 	{
 		$palette = 'default';
-		$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes'][$palette];
+		$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes'][$palette] ?? '';
 
 		// Check whether there are selector fields
 		if (!empty($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']))
@@ -3459,7 +3431,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				foreach ($sValues as $k=>$v)
 				{
-					// Unset selectors that just trigger subpalettes (see #3738)
+					// Unset selectors that just trigger sub-palettes (see #3738)
 					if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$v]))
 					{
 						unset($sValues[$k]);
@@ -3483,10 +3455,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			// Include subpalettes
+			// Include sub-palettes
 			foreach ($subpalettes as $k=>$v)
 			{
 				$strPalette = preg_replace('/\b' . preg_quote($k, '/') . '\b/i', $k . ',[' . $k . '],' . $v . ',[EOF]', $strPalette);
+			}
+		}
+
+		// Call onpalette_callback
+		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] ?? null))
+		{
+			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] as $callback)
+			{
+				if (\is_array($callback))
+				{
+					$strPalette = System::importStatic($callback[0])->{$callback[1]}($strPalette, $this);
+				}
+				elseif (\is_callable($callback))
+				{
+					$strPalette = $callback($strPalette, $this);
+				}
 			}
 		}
 
@@ -3507,7 +3495,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$ptable = $this->strTable;
 		}
 
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$new_records = $objSessionBag->get('new_records');
@@ -3521,8 +3508,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$status = $this->{$callback[0]}->{$callback[1]}($this->strTable, $new_records[$this->strTable] ?? null, $ptable, $ctable);
+					$status = System::importStatic($callback[0])->{$callback[1]}($this->strTable, $new_records[$this->strTable] ?? null, $ptable, $ctable);
 				}
 				elseif (\is_callable($callback))
 				{
@@ -3535,6 +3521,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 		}
+
+		if (isset($new_records[$this->strTable]))
+		{
+			unset($new_records[$this->strTable]);
+			$objSessionBag->set('new_records', $new_records);
+		}
+
+		$db = Database::getInstance();
 
 		// Delete all new but incomplete records (tstamp=0)
 		if ($strReviseTable = Input::get('revise'))
@@ -3567,8 +3561,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->id = $origId;
 					$this->activeRecord = $origActiveRecord;
 
-					$objStmt = $this->Database->prepare("DELETE FROM " . $this->strTable . " WHERE id=? AND tstamp=0")
-											  ->execute((int) $intId);
+					$objStmt = $db
+						->prepare("DELETE FROM " . $this->strTable . " WHERE id=? AND tstamp=0")
+						->execute((int) $intId);
 
 					if ($objStmt->affectedRows > 0)
 					{
@@ -3579,24 +3574,24 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Delete all records of the current table that are not related to the parent table
-		if ($ptable)
+		if ($ptable && !($GLOBALS['TL_DCA'][$this->strTable]['config']['doNotDeleteRecords'] ?? null))
 		{
 			if ($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null)
 			{
-				$objIds = $this->Database->execute("SELECT c.id FROM " . $this->strTable . " c LEFT JOIN " . $ptable . " p ON c.pid=p.id WHERE c.ptable='" . $ptable . "' AND p.id IS NULL");
+				$objIds = $db->execute("SELECT c.id FROM " . $this->strTable . " c LEFT JOIN " . $ptable . " p ON c.pid=p.id WHERE c.ptable='" . $ptable . "' AND p.id IS NULL");
 			}
 			elseif ($ptable == $this->strTable)
 			{
-				$objIds = $this->Database->execute('SELECT c.id FROM ' . $this->strTable . ' c LEFT JOIN ' . $ptable . ' p ON c.pid=p.id WHERE p.id IS NULL AND c.pid > 0');
+				$objIds = $db->execute('SELECT c.id FROM ' . $this->strTable . ' c LEFT JOIN ' . $ptable . ' p ON c.pid=p.id WHERE p.id IS NULL AND c.pid > 0');
 			}
 			else
 			{
-				$objIds = $this->Database->execute("SELECT c.id FROM " . $this->strTable . " c LEFT JOIN " . $ptable . " p ON c.pid=p.id WHERE p.id IS NULL");
+				$objIds = $db->execute("SELECT c.id FROM " . $this->strTable . " c LEFT JOIN " . $ptable . " p ON c.pid=p.id WHERE p.id IS NULL");
 			}
 
 			if ($objIds->numRows)
 			{
-				$objStmt = $this->Database->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', array_map('\intval', $objIds->fetchEach('id'))) . ")");
+				$objStmt = $db->execute("DELETE FROM " . $this->strTable . " WHERE id IN(" . implode(',', array_map('\intval', $objIds->fetchEach('id'))) . ")");
 
 				if ($objStmt->affectedRows > 0)
 				{
@@ -3612,21 +3607,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				if ($v)
 				{
-					// Load the DCA configuration, so we can check for "dynamicPtable"
+					// Load the DCA configuration, so we can check for "dynamicPtable" and "doNotDeleteRecords"
 					$this->loadDataContainer($v);
+
+					if ($GLOBALS['TL_DCA'][$v]['config']['doNotDeleteRecords'] ?? null)
+					{
+						continue;
+					}
 
 					if ($GLOBALS['TL_DCA'][$v]['config']['dynamicPtable'] ?? null)
 					{
-						$objIds = $this->Database->execute("SELECT c.id FROM " . $v . " c LEFT JOIN " . $this->strTable . " p ON c.pid=p.id WHERE c.ptable='" . $this->strTable . "' AND p.id IS NULL");
+						$objIds = $db->execute("SELECT c.id FROM " . $v . " c LEFT JOIN " . $this->strTable . " p ON c.pid=p.id WHERE c.ptable='" . $this->strTable . "' AND p.id IS NULL");
 					}
 					else
 					{
-						$objIds = $this->Database->execute("SELECT c.id FROM " . $v . " c LEFT JOIN " . $this->strTable . " p ON c.pid=p.id WHERE p.id IS NULL");
+						$objIds = $db->execute("SELECT c.id FROM " . $v . " c LEFT JOIN " . $this->strTable . " p ON c.pid=p.id WHERE p.id IS NULL");
 					}
 
 					if ($objIds->numRows)
 					{
-						$objStmt = $this->Database->execute("DELETE FROM " . $v . " WHERE id IN(" . implode(',', array_map('\intval', $objIds->fetchEach('id'))) . ")");
+						$objStmt = $db->execute("DELETE FROM " . $v . " WHERE id IN(" . implode(',', array_map('\intval', $objIds->fetchEach('id'))) . ")");
 
 						if ($objStmt->affectedRows > 0)
 						{
@@ -3654,7 +3654,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$table = $this->strTable;
 		$treeClass = 'tl_tree';
 
-		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
+		$blnModeTreeExtended = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED;
+
+		if ($blnModeTreeExtended)
 		{
 			$table = $this->ptable;
 			$treeClass = 'tl_tree_xtnd';
@@ -3663,24 +3665,23 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->loadDataContainer($table);
 		}
 
-		/** @var Session $objSession */
+		$db = Database::getInstance();
+
 		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = $objSession->getBag('contao_backend');
-
 		$session = $objSessionBag->all();
 
 		// Toggle the nodes
 		if (Input::get('ptg') == 'all')
 		{
-			$node = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->strTable . '_' . $table . '_tree' : $this->strTable . '_tree';
+			$node = $blnModeTreeExtended ? $this->strTable . '_' . $table . '_tree' : $this->strTable . '_tree';
+			$state = Input::get('state');
 
 			// Expand tree
-			if (empty($session[$node]) || !\is_array($session[$node]) || current($session[$node]) != 1)
+			if ($state || (null === $state && (empty($session[$node]) || !\is_array($session[$node]) || current($session[$node]) != 1)))
 			{
 				$session[$node] = array();
-				$objNodes = $this->Database->execute("SELECT DISTINCT pid FROM " . $table . " WHERE pid>0");
+				$objNodes = $db->execute("SELECT DISTINCT pid FROM " . $table . " WHERE pid>0");
 
 				while ($objNodes->next())
 				{
@@ -3699,110 +3700,98 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Return if a mandatory field (id, pid, sorting) is missing
-		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && (!$this->Database->fieldExists('id', $table) || !$this->Database->fieldExists('pid', $table) || !$this->Database->fieldExists('sorting', $table)))
+		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && (!$db->fieldExists('id', $table) || !$db->fieldExists('pid', $table) || !$db->fieldExists('sorting', $table)))
 		{
 			return '
 <p class="tl_empty">Table "' . $table . '" can not be shown as tree, because the "id", "pid" or "sorting" field is missing!</p>';
 		}
 
 		// Return if there is no parent table
-		if (!$this->ptable && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
+		if (!$this->ptable && $blnModeTreeExtended)
 		{
 			return '
 <p class="tl_empty">Table "' . $table . '" can not be shown as extended tree, because there is no parent table!</p>';
 		}
 
-		$blnClipboard = false;
-		$arrClipboard = $objSession->get('CLIPBOARD');
+		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
+		$blnClipboard = null !== $arrClipboard;
 
-		// Check the clipboard
-		if (!empty($arrClipboard[$this->strTable]))
-		{
-			$blnClipboard = true;
-			$arrClipboard = $arrClipboard[$this->strTable];
-		}
-		else
-		{
-			$arrClipboard = null;
-		}
-
-		if (isset($GLOBALS['TL_DCA'][$table]['config']['label']))
-		{
-			$label = $GLOBALS['TL_DCA'][$table]['config']['label'];
-		}
-		elseif (($do = Input::get('do')) && isset($GLOBALS['TL_LANG']['MOD'][$do]))
-		{
-			$label = $GLOBALS['TL_LANG']['MOD'][$do][0];
-		}
-		else
-		{
-			$label = $GLOBALS['TL_LANG']['MOD']['page'][0];
-		}
-
-		$icon = !empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['icon']) ? $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['icon'] : 'pagemounts.svg';
-		$label = Image::getHtml($icon) . ' <label>' . $label . '</label>';
-
-		// Check the default labels (see #509)
-		$labelNew = $GLOBALS['TL_LANG'][$this->strTable]['new'] ?? $GLOBALS['TL_LANG']['DCA']['new'];
 		$security = System::getContainer()->get('security.helper');
 
 		// Begin buttons container
-		$buttons = ((Input::get('act') == 'select') ? '
-<a href="' . $this->getReferer(true) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']) ? '
-<a href="' . System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'] . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : '')) . ((Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable))) ? '
-<a href="' . $this->addToUrl('act=paste&amp;mode=create') . '" class="header_new" title="' . StringUtil::specialchars($labelNew[1]) . '" accesskey="n" onclick="Backend.getScrollOffset()">' . $labelNew[0] . '</a> ' : '') . ($blnClipboard ? '
-<a href="' . $this->addToUrl('clipboard=1') . '" class="header_clipboard" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']) . '" accesskey="x">' . $GLOBALS['TL_LANG']['MSC']['clearClipboard'] . '</a> ' : $this->generateGlobalButtons());
+		$buttons = '';
+
+		if (Input::get('act') == 'select')
+		{
+			$buttons .= DataContainerOperationsBuilder::generateBackButton();
+		}
+		elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
+		{
+			$buttons .= DataContainerOperationsBuilder::generateBackButton(System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+		}
+
+		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $this->intCurrentPid, 'sorting' => 0))))
+		{
+			$buttons .= DataContainerOperationsBuilder::generateNewButton($this->strTable, $this->addToUrl('act=paste&amp;mode=create'));
+		}
+
+		if ($blnClipboard)
+		{
+			$buttons .= DataContainerOperationsBuilder::generateClearClipboardButton();
+		}
+		else
+		{
+			$buttons .= $this->generateGlobalButtons();
+		}
 
 		$return = Message::generate() . ($buttons ? '<div id="tl_buttons">' . $buttons . '</div>' : '');
 
 		$tree = '';
-		$blnHasSorting = $this->Database->fieldExists('sorting', $table);
+		$blnHasSorting = $db->fieldExists('sorting', $table);
 		$arrFound = array();
 
 		if (!empty($this->procedure))
 		{
-			$fld = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? 'pid' : 'id';
-
-			if ($fld == 'id')
+			if (!$blnModeTreeExtended)
 			{
-				$objRoot = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . ($blnHasSorting ? " ORDER BY sorting, id" : ""))
-										  ->execute(...$this->values);
+				$objFound = $db
+					->prepare("SELECT id FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " ORDER BY sorting, id")
+					->execute(...$this->values);
 			}
 			elseif ($blnHasSorting)
 			{
-				$objRoot = $this->Database->prepare("SELECT pid, (SELECT sorting FROM " . $table . " WHERE " . $this->strTable . ".pid=" . $table . ".id) AS psort FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid ORDER BY psort, pid")
-										  ->execute(...$this->values);
+				$objFound = $db
+					->prepare("SELECT pid AS id, (SELECT sorting FROM " . $table . " WHERE " . $this->strTable . ".pid=" . $table . ".id) AS psort FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid ORDER BY psort, pid")
+					->execute(...$this->values);
 			}
 			else
 			{
-				$objRoot = $this->Database->prepare("SELECT pid FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid")
-										  ->execute(...$this->values);
+				$objFound = $db
+					->prepare("SELECT pid AS id FROM " . $this->strTable . " WHERE " . implode(' AND ', $this->procedure) . " GROUP BY pid")
+					->execute(...$this->values);
 			}
 
-			if ($objRoot->numRows < 1)
+			if ($objFound->numRows < 1)
 			{
 				$this->updateRoot(array());
 			}
 			// Respect existing limitations (root IDs)
 			elseif (!empty($this->root))
 			{
-				$arrRoot = array();
-
-				while ($objRoot->next())
+				while ($objFound->next())
 				{
-					if (\count(array_intersect($this->root, $this->Database->getParentRecords($objRoot->$fld, $table))) > 0)
+					if (\count(array_intersect($this->root, $db->getParentRecords($objFound->id, $table))) > 0)
 					{
-						$arrRoot[] = $objRoot->$fld;
+						$arrFound[] = $objFound->id;
 					}
 				}
 
-				$arrFound = $arrRoot;
-				$this->updateRoot($this->eliminateNestedPages($arrFound, $table, $blnHasSorting));
+				$this->updateRoot($arrFound, true);
 			}
 			else
 			{
-				$arrFound = $objRoot->fetchEach($fld);
-				$this->updateRoot($this->eliminateNestedPages($arrFound, $table, $blnHasSorting));
+				$arrFound = $objFound->fetchEach('id');
+				$this->updateRoot($arrFound, true);
 			}
 		}
 
@@ -3810,10 +3799,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		if (!empty($this->visibleRootTrails))
 		{
-			// Make sure we use the topmost root IDs only from all the visible root trail ids and also ensure correct sorting
-			$topMostRootIds = $this->Database->prepare("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL) AND id IN (" . implode(',', array_merge($this->visibleRootTrails, $this->root)) . ")" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''))
-											 ->execute()
-											 ->fetchEach('id');
+			if (isset($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['visibleRoot']))
+			{
+				$topMostRootIds = array($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['visibleRoot']);
+			}
+			else
+			{
+				// Make sure we use the topmost root IDs only from all the visible root trail ids and also ensure correct sorting
+				$topMostRootIds = $db
+					->prepare("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL) AND id IN (" . implode(',', array_merge($this->visibleRootTrails, $this->root)) . ")" . ($db->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''))
+					->execute()
+					->fetchEach('id');
+			}
 		}
 
 		// Call a recursive function that builds the tree
@@ -3823,14 +3820,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			for ($i=0, $c=\count($topMostRootIds); $i<$c; $i++)
 			{
-				$tree .= $this->generateTree($table, $topMostRootIds[$i], array('p'=>($topMostRootIds[($i-1)] ?? null), 'n'=>($topMostRootIds[($i+1)] ?? null)), $blnHasSorting, -20, ($blnClipboard ? $arrClipboard : false), (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $blnClipboard && $topMostRootIds[$i] == $arrClipboard['id']), false, false, $arrFound);
+				$tree .= $this->generateTree($table, $topMostRootIds[$i], array('p'=>($topMostRootIds[$i - 1] ?? null), 'n'=>($topMostRootIds[$i + 1] ?? null)), $blnHasSorting, -16, $blnClipboard ? $arrClipboard : false, ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $blnClipboard && $topMostRootIds[$i] == $arrClipboard['id'], false, false, $arrFound);
 			}
 		}
 
 		$breadcrumb = $GLOBALS['TL_DCA'][$table]['list']['sorting']['breadcrumb'] ?? '';
 
 		// Return if there are no records
-		if (!$tree && Input::get('act') != 'paste')
+		if (!$tree && !$blnClipboard)
 		{
 			if ($breadcrumb)
 			{
@@ -3841,49 +3838,62 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <p class="tl_empty">' . $GLOBALS['TL_LANG']['MSC']['noResult'] . '</p>';
 		}
 
+		$requestToken = htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+		$strRefererId = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
+
 		$return .= ((Input::get('act') == 'select') ? '
 <form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' : '') . ($blnClipboard ? '
-<div id="paste_hint" data-add-to-scroll-offset="20">
+<input type="hidden" name="REQUEST_TOKEN" value="' . $requestToken . '">' : '') . ($blnClipboard ? '
+<div id="paste_hint">
   <p>' . $GLOBALS['TL_LANG']['MSC']['selectNewPosition'] . '</p>
 </div>' : '') . '
-<div class="tl_listing_container tree_view" id="tl_listing"' . $this->getPickerValueAttribute() . '>' . $breadcrumb . ((Input::get('act') == 'select' || ($this->strPickerFieldType == 'checkbox')) ? '
+<div class="tl_listing_container tree_view" id="tl_listing"' . $this->getPickerValueAttribute() . '>' . $breadcrumb . ((Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
 <div class="tl_select_trigger">
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
 </div>' : '') . '
 <ul class="tl_listing ' . $treeClass . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">
-  <li class="tl_folder_top cf"><div class="tl_left">' . $label . '</div> <div class="tl_right">';
+  <li class="tl_folder_top cf"><div class="tl_left"></div> <div class="tl_right">';
 
 		$_buttons = '&nbsp;';
 
 		// Show paste button only if there are no root records specified
 		if ($blnClipboard && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $this->rootPaste && Input::get('act') != 'select')
 		{
-			// Call paste_button_callback (&$dc, $row, $table, $cr, $childs, $previous, $next)
+			$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize();
+
+			// Call paste_button_callback (&$dc, $row, $table, $cr, $children, $previous, $next)
 			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
 			{
 				$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][0];
 				$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][1];
 
-				$this->import($strClass);
-				$_buttons = $this->$strClass->$strMethod($this, array('id'=>0), $table, false, $arrClipboard);
+				$operations->append(array('primary' => true, 'html'=>System::importStatic($strClass)->$strMethod($this, array('id'=>0), $table, false, $arrClipboard)));
 			}
 			elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
 			{
-				$_buttons = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, array('id'=>0), $table, false, $arrClipboard);
+				$operations->append(array('primary' => true, 'html'=>$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, array('id'=>0), $table, false, $arrClipboard)));
 			}
-			elseif (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid'=>0))))
+			elseif (!$this->canPasteClipboard($arrClipboard, array('pid'=>0, 'sorting'=>0)))
 			{
-				$_buttons = Image::getHtml('pasteinto_.svg') . ' ';
+				$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteinto--disabled.svg')));
 			}
 			else
 			{
 				$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
 				$imagePasteInto = Image::getHtml('pasteinto.svg', $labelPasteInto[0]);
-				$_buttons = '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=0' . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars($labelPasteInto[0]) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ';
+
+				$operations->append(array(
+					'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=0' . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')),
+					'title' => $labelPasteInto[0],
+					'attributes' => 'data-action="contao--scroll-offset#store"',
+					'icon' => $imagePasteInto,
+					'primary' => true,
+				));
 			}
+
+			$_buttons .= $operations;
 		}
 
 		// End table
@@ -3897,81 +3907,28 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Close the form
 		if (Input::get('act') == 'select')
 		{
-			// Submit buttons
-			$arrButtons = array();
-
-			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null))
-			{
-				$arrButtons['edit'] = '<button type="submit" name="edit" id="edit" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['editSelected'] . '</button>';
-			}
-
-			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'] ?? null))
-			{
-				$arrButtons['delete'] = '<button type="submit" name="delete" id="delete" class="tl_submit" accesskey="d" onclick="return confirm(\'' . $GLOBALS['TL_LANG']['MSC']['delAllConfirm'] . '\')">' . $GLOBALS['TL_LANG']['MSC']['deleteSelected'] . '</button>';
-			}
-
-			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null))
-			{
-				$arrButtons['copy'] = '<button type="submit" name="copy" id="copy" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG']['MSC']['copySelected'] . '</button>';
-				$arrButtons['copyMultiple'] = '<button type="submit" name="copyMultiple" id="copyMultiple" class="tl_submit" accesskey="m">' . $GLOBALS['TL_LANG']['MSC']['copyMultiple'] . '</button>';
-			}
-
-			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null))
-			{
-				$arrButtons['cut'] = '<button type="submit" name="cut" id="cut" class="tl_submit" accesskey="x">' . $GLOBALS['TL_LANG']['MSC']['moveSelected'] . '</button>';
-			}
-
-			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null))
-			{
-				$arrButtons['override'] = '<button type="submit" name="override" id="override" class="tl_submit" accesskey="v">' . $GLOBALS['TL_LANG']['MSC']['overrideSelected'] . '</button>';
-			}
-
-			// Call the buttons_callback (see #4691)
-			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['select']['buttons_callback'] ?? null))
-			{
-				foreach ($GLOBALS['TL_DCA'][$this->strTable]['select']['buttons_callback'] as $callback)
-				{
-					if (\is_array($callback))
-					{
-						$this->import($callback[0]);
-						$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
-					}
-					elseif (\is_callable($callback))
-					{
-						$arrButtons = $callback($arrButtons, $this);
-					}
-				}
-			}
-
-			if (\count($arrButtons) < 3)
-			{
-				$strButtons = implode(' ', $arrButtons);
-			}
-			else
-			{
-				$strButtons = array_shift($arrButtons) . ' ';
-				$strButtons .= '<div class="split-button">';
-				$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
-
-				foreach ($arrButtons as $strButton)
-				{
-					$strButtons .= '<li>' . $strButton . '</li>';
-				}
-
-				$strButtons .= '</ul></div>';
-			}
+			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($this->strTable, $blnHasSorting, $this);
 
 			$return .= '
 </div>
-<div class="tl_formbody_submit" style="text-align:right">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>';
 		}
 
-		return $return;
+		return '<div
+				data-controller="contao--toggle-nodes"
+				data-contao--toggle-nodes-mode-value="' . (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? 0) . '"
+				data-contao--toggle-nodes-toggle-action-value="toggleStructure"
+				data-contao--toggle-nodes-load-action-value="loadStructure"
+				data-contao--toggle-nodes-request-token-value="' . $requestToken . '"
+				data-contao--toggle-nodes-referer-id-value="' . $strRefererId . '"
+				data-contao--toggle-nodes-expand-value="' . $GLOBALS['TL_LANG']['MSC']['expandNode'] . '"
+				data-contao--toggle-nodes-collapse-value="' . $GLOBALS['TL_LANG']['MSC']['collapseNode'] . '"
+				data-contao--toggle-nodes-expand-all-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][0] . '"
+				data-contao--toggle-nodes-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
+				data-contao--toggle-nodes-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
+				data-contao--toggle-nodes-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
+			>' . $return . '</div>';
 	}
 
 	/**
@@ -4013,13 +3970,16 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$blnProtected = $objParent->protected ? true : false;
 		}
 
-		$margin = ($level * 20);
-		$hasSorting = $this->Database->fieldExists('sorting', $table);
+		$margin = $level * 16;
 		$arrIds = array();
 
+		$db = Database::getInstance();
+		$hasSorting = $db->fieldExists('sorting', $table);
+
 		// Get records
-		$objRows = $this->Database->prepare("SELECT * FROM " . $table . " WHERE pid=?" . ($hasSorting ? " ORDER BY sorting, id" : ""))
-								  ->execute($id);
+		$objRows = $db
+			->prepare("SELECT * FROM " . $table . " WHERE pid=?" . ($hasSorting ? " ORDER BY sorting, id" : ""))
+			->execute($id);
 
 		while ($objRows->next())
 		{
@@ -4029,26 +3989,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$arrIds[] = $objRows->id;
 		}
 
-		/** @var Session $objSession */
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		$blnClipboard = false;
-		$arrClipboard = $objSession->get('CLIPBOARD');
-
-		// Check clipboard
-		if (!empty($arrClipboard[$this->strTable]))
-		{
-			$blnClipboard = true;
-			$arrClipboard = $arrClipboard[$this->strTable];
-		}
-		else
-		{
-			$arrClipboard = null;
-		}
+		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
+		$blnClipboard = null !== $arrClipboard;
 
 		for ($i=0, $c=\count($arrIds); $i<$c; $i++)
 		{
-			$return .= ' ' . trim($this->generateTree($table, $arrIds[$i], array('p'=>($arrIds[$i-1] ?? null), 'n'=>($arrIds[$i+1] ?? null)), $hasSorting, $margin, ($blnClipboard ? $arrClipboard : false), $arrClipboard !== null && ($id == $arrClipboard['id'] || (\is_array($arrClipboard['id']) && \in_array($id, $arrClipboard['id'])) || (!$blnPtable && !\is_array($arrClipboard['id']) && \in_array($id, $this->Database->getChildRecords($arrClipboard['id'], $table)))), $blnProtected));
+			$return .= ' ' . trim($this->generateTree($table, $arrIds[$i], array('p'=>($arrIds[$i - 1] ?? null), 'n'=>($arrIds[$i + 1] ?? null)), $hasSorting, $margin, $blnClipboard ? $arrClipboard : false, $arrClipboard !== null && ($id == $arrClipboard['id'] || (\is_array($arrClipboard['id']) && \in_array($id, $arrClipboard['id'])) || (!$blnPtable && !\is_array($arrClipboard['id']) && \in_array($id, $db->getChildRecords($arrClipboard['id'], $table)))), $blnProtected));
 		}
 
 		return $return;
@@ -4082,7 +4028,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return '';
 		}
 
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
@@ -4091,7 +4036,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Toggle nodes
 		if (Input::get('ptg'))
 		{
-			$session[$node][Input::get('ptg')] = (isset($session[$node][Input::get('ptg')]) && $session[$node][Input::get('ptg')] == 1) ? 0 : 1;
+			if (isset($session[$node][Input::get('ptg')]) && $session[$node][Input::get('ptg')] == 1)
+			{
+				unset($session[$node][Input::get('ptg')]);
+			}
+			else
+			{
+				$session[$node][Input::get('ptg')] = 1;
+			}
+
 			$objSessionBag->replace($session);
 			$this->redirect(preg_replace('/(&(amp;)?|\?)ptg=[^& ]*/i', '', Environment::get('requestUri')));
 		}
@@ -4105,23 +4058,39 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$currentRecord = null;
 		}
 
+		// Special handling for visible root trails, which are tree nodes the user does not have access to.
+		// $this->getCurrentRecord() can deny access, but we still need the record to render a label.
+		if (null === $currentRecord && !empty($this->visibleRootTrails))
+		{
+			$currentRecord = Database::getInstance()
+				->prepare("SELECT * FROM " . $table . " WHERE id=?")
+				->execute($id)
+				->fetchAssoc()
+			;
+
+			if (!$currentRecord || $checkIdAllowed ? !\in_array($id, $this->visibleRootTrails) : !\in_array($currentRecord['pid'] ?? null, $this->visibleRootTrails))
+			{
+				return '';
+			}
+		}
+
 		// Return if there is no result
 		if (null === $currentRecord)
 		{
-			$objSessionBag->replace($session);
-
 			return '';
 		}
 
 		$return = '';
-		$intSpacing = 20;
-		$childs = array();
+		$intSpacing = 16;
+		$children = array();
 
 		// Add the ID to the list of current IDs
 		if ($this->strTable == $table)
 		{
 			$this->current[] = $currentRecord['id'] ?? null;
 		}
+
+		$db = Database::getInstance();
 
 		// Check whether there are child records
 		if (!$blnNoRecursion)
@@ -4130,17 +4099,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$allowedChildIds = array();
 
-				if (!empty($arrFound))
-				{
-					$allowedChildIds = array_merge($arrFound, $this->visibleRootTrails);
-				}
+				$objChildren = $db
+					->prepare("SELECT id FROM " . $table . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
+					->execute($id);
 
-				$objChilds = $this->Database->prepare("SELECT id FROM " . $table . " WHERE pid=?" . (!empty($allowedChildIds) ? " AND id IN(" . implode(',', array_map('\intval', $allowedChildIds)) . ")" : '') . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
-											->execute($id);
-
-				if ($objChilds->numRows)
+				if ($objChildren->numRows)
 				{
-					$childs = $objChilds->fetchEach('id');
+					$children = array_values(array_intersect($objChildren->fetchEach('id'), array_merge($this->visibleRootTrails, $this->root, $this->rootChildren)));
 				}
 			}
 		}
@@ -4150,7 +4115,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Check whether the page is protected
 		if ($table == 'tl_page')
 		{
-			$blnProtected = (($currentRecord['protected'] ?? null) || $protectedPage);
+			$blnProtected = ($currentRecord['protected'] ?? null) || $protectedPage;
 		}
 
 		$session[$node][$id] = (\is_int($session[$node][$id] ?? null)) ? $session[$node][$id] : 0;
@@ -4161,15 +4126,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$mouseover = ' toggle_select hover-div';
 		}
-		elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED && Input::get('act') == 'paste')
+		elseif (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED && $arrClipboard !== false)
 		{
 			$mouseover = ' hover-div';
 		}
 
-		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && ($currentRecord['type'] ?? null) == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ((string) ($currentRecord['tstamp'] ?? null) === '0' ? ' draft' : '') . ' click2edit' . $mouseover . ' cf"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($childs) ? 20 : 0)) . 'px">';
+		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && ($currentRecord['type'] ?? null) == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ((string) ($currentRecord['tstamp'] ?? null) === '0' ? ' draft' : '') . $mouseover . ' cf" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($children) ? 16 : 0)) . 'px">';
 
 		// Calculate label and add a toggle button
-		$level = ($intMargin / $intSpacing + 1);
+		$level = $intMargin / $intSpacing + 1;
 		$blnIsOpen = isset($session[$node][$id]) && $session[$node][$id] == 1;
 
 		// Always show selected nodes
@@ -4179,21 +4144,22 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
 			{
-				$selected = $this->Database->execute("SELECT pid FROM $this->strTable WHERE id IN (" . implode(',', array_map('\intval', $this->arrPickerValue)) . ')')
-										   ->fetchEach('pid');
+				$selected = $db
+					->execute("SELECT pid FROM $this->strTable WHERE id IN (" . implode(',', array_map('\intval', $this->arrPickerValue)) . ')')
+					->fetchEach('pid');
 			}
 
-			if (!empty(array_intersect($this->Database->getChildRecords(array($id), $table), $selected)))
+			if (!empty(array_intersect($db->getChildRecords(array($id), $table), $selected)))
 			{
 				$blnIsOpen = true;
 			}
 		}
 
-		if (!empty($childs))
+		if (!empty($children))
 		{
-			$img = $blnIsOpen ? 'folMinus.svg' : 'folPlus.svg';
+			$class = $blnIsOpen ? 'foldable foldable--open' : 'foldable';
 			$alt = $blnIsOpen ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
-			$return .= '<a href="' . $this->addToUrl('ptg=' . $id) . '" title="' . StringUtil::specialchars($alt) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleStructure(this,\'' . $node . '_' . $id . '\',' . $level . ',' . ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? '') . ')">' . Image::getHtml($img, '', 'style="margin-right:2px"') . '</a>';
+			$return .= '<a href="' . $this->addToUrl('ptg=' . $id) . '" class="' . $class . '" data-contao--toggle-nodes-target="toggle" data-action="contao--toggle-nodes#toggle" data-contao--toggle-nodes-id-param="' . $node . '_' . $id . '" data-contao--toggle-nodes-level-param="' . $level . '">' . Image::getHtml('chevron-right.svg', $alt) . '</a>';
 		}
 
 		// Check either the ID (tree mode or parent table) or the parent ID (child table)
@@ -4205,104 +4171,137 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$next = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? ($arrPrevNext['nn'] ?? null) : ($arrPrevNext['n'] ?? null);
 		$_buttons = '';
 
-		// Regular buttons ($row, $table, $root, $blnCircularReference, $childs, $previous, $next)
-		if ($this->strTable == $table && !$isVisibleRootTrailPage)
+		if (!$isVisibleRootTrailPage)
 		{
-			$_buttons .= (Input::get('act') == 'select') ? '<input type="checkbox" name="IDS[]" id="ids_' . $id . '" class="tl_tree_checkbox" value="' . $id . '">' : $this->generateButtons($currentRecord, $table, $this->root, $blnCircularReference, $childs, $previous, $next);
-
-			if ($this->strPickerFieldType)
+			if (Input::get('act') == 'select')
 			{
-				$_buttons .= $this->getPickerInputField($id);
+				$operations = $this->strTable == $table ? '<input type="checkbox" name="IDS[]" id="ids_' . $id . '" class="tl_tree_checkbox" value="' . $id . '">' : '';
 			}
-		}
-
-		// Paste buttons (not for root trails)
-		if ($arrClipboard !== false && Input::get('act') != 'select' && !$isVisibleRootTrailPage)
-		{
-			$_buttons .= ' ';
-
-			// Call paste_button_callback(&$dc, $row, $table, $blnCircularReference, $arrClipboard, $childs, $previous, $next)
-			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
+			// Regular buttons ($row, $table, $root, $blnCircularReference, $children, $previous, $next)
+			elseif ($this->strTable == $table)
 			{
-				$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][0];
-				$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][1];
-
-				$this->import($strClass);
-				$_buttons .= $this->$strClass->$strMethod($this, $currentRecord, $table, $blnCircularReference, $arrClipboard, $childs, $previous, $next);
-			}
-			elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
-			{
-				$_buttons .= $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, $currentRecord, $table, $blnCircularReference, $arrClipboard, $childs, $previous, $next);
+				$operations = $this->generateButtons($currentRecord, $table, $this->root, $blnCircularReference, $children, $previous, $next);
 			}
 			else
 			{
-				$labelPasteAfter = $GLOBALS['TL_LANG'][$this->strTable]['pasteafter'] ?? $GLOBALS['TL_LANG']['DCA']['pasteafter'];
-				$imagePasteAfter = Image::getHtml('pasteafter.svg', sprintf($labelPasteAfter[1], $id));
+				$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize();
+			}
 
-				$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
-				$imagePasteInto = Image::getHtml('pasteinto.svg', sprintf($labelPasteInto[1], $id));
-
-				// Regular tree
-				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
+			// Paste buttons (not for root trails)
+			if ($arrClipboard !== false && $operations instanceof DataContainerOperationsBuilder)
+			{
+				// Call paste_button_callback(&$dc, $row, $table, $blnCircularReference, $arrClipboard, $children, $previous, $next)
+				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
 				{
-					// Disable buttons of the page and all its children on cut to avoid circular references
-					if (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))))
-					{
-						$_buttons .= Image::getHtml('pasteafter_.svg') . ' ' . Image::getHtml('pasteinto_.svg') . ' ';
-					}
-					else
-					{
-						$security = System::getContainer()->get('security.helper');
+					$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][0];
+					$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'][1];
 
-						if ((!$this->rootPaste && \in_array($id, $this->root)) || !$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
-						{
-							$_buttons .= Image::getHtml('pasteafter_.svg') . ' ';
-						}
-						else
-						{
-							$_buttons .= '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
-						}
-
-						if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $id))))
-						{
-							$_buttons .= Image::getHtml('pasteinto_.svg') . ' ';
-						}
-						else
-						{
-							$_buttons .= '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteInto[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ';
-						}
-					}
+					$operations->append(array('primary' => true, 'html'=>System::importStatic($strClass)->$strMethod($this, $currentRecord, $table, $blnCircularReference, $arrClipboard, $children, $previous, $next)));
 				}
-
-				// Extended tree
+				elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
+				{
+					$operations->append(array('primary' => true, 'html'=>$GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback']($this, $currentRecord, $table, $blnCircularReference, $arrClipboard, $children, $previous, $next)));
+				}
 				else
 				{
-					// Paste after the selected record (e.g. paste article after article X)
-					if ($this->strTable == $table)
+					$labelPasteAfter = $GLOBALS['TL_LANG'][$this->strTable]['pasteafter'] ?? $GLOBALS['TL_LANG']['DCA']['pasteafter'];
+					$imagePasteAfter = Image::getHtml('pasteafter.svg', \sprintf($labelPasteAfter[1], $id));
+
+					$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
+					$imagePasteInto = Image::getHtml('pasteinto.svg', \sprintf($labelPasteInto[1], $id));
+
+					// Regular tree
+					if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 					{
-						if (($arrClipboard['mode'] == 'cut' && ($blnCircularReference || $arrClipboard['id'] == $id)) || ($arrClipboard['mode'] == 'cutAll' && ($blnCircularReference || \in_array($id, $arrClipboard['id']))) || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
+						// Disable buttons of the page and all its children on cut to avoid circular references
+						if ($blnCircularReference || !System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $id))
 						{
-							$_buttons .= Image::getHtml('pasteafter_.svg') . ' ';
+							$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
+							$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteinto--disabled.svg')));
 						}
 						else
 						{
-							$_buttons .= '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a> ';
+							if ((!$this->rootPaste && \in_array($id, $this->root)) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1)))
+							{
+								$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
+							}
+							else
+							{
+								$operations->append(array(
+									'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')),
+									'title' => \sprintf($labelPasteAfter[1], $id),
+									'attributes' => 'data-action="contao--scroll-offset#store"',
+									'icon' => $imagePasteAfter,
+									'primary' => true,
+								));
+							}
+
+							if (!$this->canPasteClipboard($arrClipboard, array('pid' => $id, 'sorting' => 0)))
+							{
+								$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteinto--disabled.svg')));
+							}
+							else
+							{
+								$operations->append(array(
+									'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')),
+									'title' => \sprintf($labelPasteInto[1], $id),
+									'attributes' => 'data-action="contao--scroll-offset#store"',
+									'icon' => $imagePasteInto,
+									'primary' => true,
+								));
+							}
 						}
 					}
 
-					// Paste into the selected record (e.g. paste article into page X)
+					// Extended tree
 					else
 					{
-						if (System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid'=>$id))))
+						// Paste after the selected record (e.g. paste article after article X)
+						if ($this->strTable == $table)
 						{
-							$_buttons .= Image::getHtml('pasteinto_.svg') . ' ';
+							if ($blnCircularReference || !System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $id) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1)))
+							{
+								$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
+							}
+							else
+							{
+								$operations->append(array(
+									'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')),
+									'title' => \sprintf($labelPasteAfter[1], $id),
+									'attributes' => 'data-action="contao--scroll-offset#store"',
+									'icon' => $imagePasteAfter,
+									'primary' => true,
+								));
+							}
 						}
+
+						// Paste into the selected record (e.g. paste article into page X)
 						else
 						{
-							$_buttons .= '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteInto[1], $id)) . '" onclick="Backend.getScrollOffset()">' . $imagePasteInto . '</a> ';
+							if (!$this->canPasteClipboard($arrClipboard, array('pid' => $id, 'sorting' => 0)))
+							{
+								$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteinto--disabled.svg')));
+							}
+							else
+							{
+								$operations->append(array(
+									'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')),
+									'title' => \sprintf($labelPasteInto[1], $id),
+									'attributes' => 'data-action="contao--scroll-offset#store"',
+									'icon' => $imagePasteInto,
+									'primary' => true,
+								));
+							}
 						}
 					}
 				}
+			}
+
+			$_buttons .= $operations;
+
+			if ($this->strTable == $table && $this->strPickerFieldType)
+			{
+				$_buttons .= $this->getPickerInputField($id);
 			}
 		}
 
@@ -4317,40 +4316,42 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$arrValues = $this->values;
 				array_unshift($arrValues, $id);
 
-				$objChilds = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? AND " . (implode(' AND ', $this->procedure)) . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
-											->execute(...$arrValues);
+				$objChildren = $db
+					->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=? AND " . implode(' AND ', $this->procedure) . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
+					->execute(...$arrValues);
 			}
 			else
 			{
-				$objChilds = $this->Database->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
-											->execute($id);
+				$objChildren = $db
+					->prepare("SELECT id FROM " . $this->strTable . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
+					->execute($id);
 			}
 
-			if ($objChilds->numRows)
+			if ($objChildren->numRows)
 			{
-				$ids = $objChilds->fetchEach('id');
+				$ids = $objChildren->fetchEach('id');
 
 				static::preloadCurrentRecords($ids, $this->strTable);
 
 				for ($j=0, $c=\count($ids); $j<$c; $j++)
 				{
-					$return .= $this->generateTree($this->strTable, $ids[$j], array('pp'=>($ids[($j-1)] ?? null), 'nn'=>($ids[($j+1)] ?? null)), $blnHasSorting, ($intMargin + $intSpacing), $arrClipboard, false, ($j<(\count($ids)-1) || !empty($childs)), $blnNoRecursion, $arrFound);
+					$return .= $this->generateTree($this->strTable, $ids[$j], array('pp'=>($ids[$j - 1] ?? null), 'nn'=>($ids[$j + 1] ?? null)), $blnHasSorting, $intMargin + $intSpacing, $arrClipboard, false, $j<(\count($ids)-1) || !empty($children), $blnNoRecursion, $arrFound);
 				}
 			}
 		}
 
 		// Begin a new submenu if the node is open or $arrFound is not empty (which means that there
 		// is an active filter and all matching nodes have to be loaded to avoid Ajax requests).
-		if (!$blnNoRecursion && !empty($childs) && ($blnIsOpen || !empty($arrFound)))
+		if (!$blnNoRecursion && !empty($children) && ($blnIsOpen || !empty($arrFound)))
 		{
-			$return .= '<li class="parent" id="' . $node . '_' . $id . '"' . (!$blnIsOpen ? ' style="display:none"' : '') . '><ul class="level_' . $level . '">';
+			$return .= '<li class="parent" id="' . $node . '_' . $id . '"' . (!$blnIsOpen ? ' style="display:none"' : '') . ' data-contao--toggle-nodes-target="child' . ($level === 0 ? ' rootChild"' : '') . '"><ul class="level_' . $level . '">';
 
-			static::preloadCurrentRecords($childs, $table);
+			static::preloadCurrentRecords($children, $table);
 
 			// Add the records of the parent table
-			for ($k=0, $c=\count($childs); $k<$c; $k++)
+			for ($k=0, $c=\count($children); $k<$c; $k++)
 			{
-				$return .= $this->generateTree($table, $childs[$k], array('p'=>($childs[($k-1)] ?? null), 'n'=>($childs[($k+1)] ?? null)), $blnHasSorting, ($intMargin + $intSpacing), $arrClipboard, ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && \is_array($arrClipboard) && $childs[$k] == $arrClipboard['id']) || $blnCircularReference), ($blnProtected || $protectedPage), $blnNoRecursion, $arrFound);
+				$return .= $this->generateTree($table, $children[$k], array('p'=>($children[$k - 1] ?? null), 'n'=>($children[$k + 1] ?? null)), $blnHasSorting, $intMargin + $intSpacing, $arrClipboard, (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && \is_array($arrClipboard) && $children[$k] == $arrClipboard['id']) || $blnCircularReference, $blnProtected || $protectedPage, $blnNoRecursion, $arrFound);
 			}
 
 			$return .= '</ul></li>';
@@ -4368,56 +4369,59 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function parentView()
 	{
-		/** @var Session $objSession */
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		$blnClipboard = false;
-		$arrClipboard = $objSession->get('CLIPBOARD');
 		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
 		$blnHasSorting = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'][0] ?? null) == 'sorting';
-		$blnMultiboard = false;
 
-		// Check clipboard
-		if (!empty($arrClipboard[$table]))
-		{
-			$blnClipboard = true;
-			$arrClipboard = $arrClipboard[$table];
-
-			if (\is_array($arrClipboard['id'] ?? null))
-			{
-				$blnMultiboard = true;
-			}
-		}
-		else
-		{
-			$arrClipboard = null;
-		}
+		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
+		$blnClipboard = null !== $arrClipboard;
+		$blnMultiboard = null !== $arrClipboard && \is_array($arrClipboard['id'] ?? null);
 
 		// Load the language file and data container array of the parent table
 		System::loadLanguageFile($this->ptable);
 		$this->loadDataContainer($this->ptable);
 
-		// Check the default labels (see #509)
-		$labelNew = $GLOBALS['TL_LANG'][$this->strTable]['new'] ?? $GLOBALS['TL_LANG']['DCA']['new'];
 		$labelCut = $GLOBALS['TL_LANG'][$this->strTable]['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
 		$labelPasteNew = $GLOBALS['TL_LANG'][$this->strTable]['pastenew'] ?? $GLOBALS['TL_LANG']['DCA']['pastenew'];
 		$labelPasteAfter = $GLOBALS['TL_LANG'][$this->strTable]['pasteafter'] ?? $GLOBALS['TL_LANG']['DCA']['pasteafter'];
-		$labelEditHeader = $GLOBALS['TL_LANG'][$this->ptable]['edit'] ?? $GLOBALS['TL_LANG']['DCA']['edit'];
+		$limitHeight = BackendUser::getInstance()->doNotCollapse ? false : (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['limitHeight'] ?? 0);
 
+		$db = Database::getInstance();
 		$security = System::getContainer()->get('security.helper');
+		$buttons = '';
 
-		$buttons = (Input::get('nb') ? '' : ($this->ptable ? '
-<a href="' . $this->getReferer(true, $this->ptable) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>' : (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']) ? '
-<a href="' . System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'] . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a>' : ''))) . ' ' . ((Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable))) ? '
-<a href="' . $this->addToUrl(($blnHasSorting ? 'act=paste&amp;mode=create' : 'act=create&amp;mode=2&amp;pid=' . $this->intId)) . '" class="header_new" title="' . StringUtil::specialchars($labelNew[1]) . '" accesskey="n" onclick="Backend.getScrollOffset()">' . $labelNew[0] . '</a> ' : '') . ($blnClipboard ? '
-<a href="' . $this->addToUrl('clipboard=1') . '" class="header_clipboard" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']) . '" accesskey="x">' . $GLOBALS['TL_LANG']['MSC']['clearClipboard'] . '</a> ' : $this->generateGlobalButtons());
+		if (!Input::get('nb'))
+		{
+			if ($this->ptable)
+			{
+				$buttons .= DataContainerOperationsBuilder::generateBackButton($this->getReferer(true, $this->ptable));
+			}
+			elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
+			{
+				$buttons .= DataContainerOperationsBuilder::generateBackButton(System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+			}
+		}
+
+		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))))
+		{
+			$buttons .= DataContainerOperationsBuilder::generateNewButton($this->strTable, $this->addToUrl($blnHasSorting ? 'act=paste&amp;mode=create' : 'act=create&amp;mode=2&amp;pid=' . $this->intId));
+		}
+
+		if ($blnClipboard)
+		{
+			$buttons .= DataContainerOperationsBuilder::generateClearClipboardButton();
+		}
+		else
+		{
+			$buttons .= $this->generateGlobalButtons();
+		}
 
 		$return = Message::generate() . ($buttons ? '<div id="tl_buttons">' . $buttons . '</div>' : '');
 
 		// Get all details of the parent record
-		$objParent = $this->Database->prepare("SELECT * FROM " . $this->ptable . " WHERE id=?")
-									->limit(1)
-									->execute($this->intCurrentPid);
+		$objParent = $db
+			->prepare("SELECT * FROM " . $this->ptable . " WHERE id=?")
+			->limit(1)
+			->execute($this->intCurrentPid);
 
 		if ($objParent->numRows < 1)
 		{
@@ -4429,31 +4433,54 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' : '') . ($blnClipboard ? '
-<div id="paste_hint" data-add-to-scroll-offset="20">
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">' : '') . ($blnClipboard ? '
+<div id="paste_hint">
   <p>' . $GLOBALS['TL_LANG']['MSC']['selectNewPosition'] . '</p>
 </div>' : '') . '
 <div class="tl_listing_container parent_view' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['renderAsGrid'] ?? false) ? ' as-grid' : '') . ($this->strPickerFieldType ? ' picker unselectable' : '') . '" id="tl_listing"' . $this->getPickerValueAttribute() . '>
-<div class="tl_header click2edit toggle_select hover-div">';
+<div class="tl_header toggle_select hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">';
 
 		// List all records of the child table
-		if (\in_array(Input::get('act'), array('paste', 'select', null)))
+		if (\in_array(Input::get('act'), array('select', null)))
 		{
-			$this->import(BackendUser::class, 'User');
-
 			// Header
 			$imagePasteNew = Image::getHtml('new.svg', $labelPasteNew[0]);
 			$imagePasteAfter = Image::getHtml('pasteafter.svg', $labelPasteAfter[0]);
-			$imageEditHeader = Image::getHtml('edit.svg', sprintf(\is_array($labelEditHeader) ? $labelEditHeader[0] : $labelEditHeader, $objParent->id));
-
 			$security = System::getContainer()->get('security.helper');
 
 			$return .= '
-<div class="tl_content_right">' . ((Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
-<label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">' : ($blnClipboard ? '
-<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $objParent->id . (!$blnMultiboard ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars($labelPasteAfter[0]) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a>' : ((!($GLOBALS['TL_DCA'][$this->ptable]['config']['notEditable'] ?? null) && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, $this->ptable)) ? '
-<a href="' . preg_replace('/&(amp;)?table=[^& ]*/i', ($this->ptable ? '&amp;table=' . $this->ptable : ''), $this->addToUrl('act=edit' . (Input::get('nb') ? '&amp;nc=1' : ''))) . '" class="edit" title="' . StringUtil::specialchars(sprintf(\is_array($labelEditHeader) ? $labelEditHeader[1] : $labelEditHeader, $objParent->id)) . '">' . $imageEditHeader . '</a> ' . $this->generateHeaderButtons($objParent->row(), $this->ptable) : '') . (($blnHasSorting && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $objParent->id)))) ? '
-<a href="' . $this->addToUrl('act=create&amp;mode=2&amp;pid=' . $objParent->id . '&amp;id=' . $this->intId) . '" title="' . StringUtil::specialchars($labelPasteNew[0]) . '">' . $imagePasteNew . '</a>' : ''))) . '
+<div class="tl_content_right">';
+
+			if (Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox')
+			{
+				$return .= '
+<label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">';
+			}
+			else
+			{
+				if ($blnClipboard)
+				{
+					$return .= '
+<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $objParent->id . (!$blnMultiboard ? '&amp;id=' . $arrClipboard['id'] : '')) . '" data-action="contao--scroll-offset#store">' . $imagePasteAfter . '</a>';
+				}
+				else
+				{
+					$operations = $this->generateHeaderButtons($objParent->row(), $this->ptable);
+
+					if ($blnHasSorting && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $objParent->id, 'sorting' => 0)))))
+					{
+						$operations->append(array(
+							'href' => $this->addToUrl('act=create&amp;mode=2&amp;pid=' . $objParent->id . '&amp;id=' . $this->intId),
+							'title' => $labelPasteNew[0],
+							'icon' => $imagePasteNew,
+						));
+					}
+
+					$return .= $operations;
+				}
+			}
+
+			$return .= '
 </div>';
 
 			// Format header fields
@@ -4503,9 +4530,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				{
 					$arrForeignKey = explode('.', $GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['foreignKey'], 2);
 
-					$objLabel = $this->Database->prepare("SELECT " . Database::quoteIdentifier($arrForeignKey[1]) . " AS value FROM " . $arrForeignKey[0] . " WHERE id=?")
-											   ->limit(1)
-											   ->execute($_v);
+					$objLabel = $db
+						->prepare("SELECT " . Database::quoteIdentifier($arrForeignKey[1]) . " AS value FROM " . $arrForeignKey[0] . " WHERE id=?")
+						->limit(1)
+						->execute($_v);
 
 					$_v = $objLabel->numRows ? $objLabel->value : '-';
 				}
@@ -4526,8 +4554,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$strClass = $GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['options_callback'][0];
 					$strMethod = $GLOBALS['TL_DCA'][$this->ptable]['fields'][$v]['options_callback'][1];
 
-					$this->import($strClass);
-					$options_callback = $this->$strClass->$strMethod($this);
+					$options_callback = System::importStatic($strClass)->$strMethod($this);
 
 					$_v = $options_callback[$_v] ?? '-';
 				}
@@ -4557,11 +4584,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Trigger the header_callback (see #3417)
 			if (\is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback'] ?? null))
 			{
-				$strClass = $GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback'][0];
-				$strMethod = $GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback'][1];
-
-				$this->import($strClass);
-				$add = $this->$strClass->$strMethod($add, $this);
+				$add = System::importStatic($GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback'][0])->{$GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback'][1]}($add, $this);
 			}
 			elseif (\is_callable($GLOBALS['TL_DCA'][$table]['list']['sorting']['header_callback'] ?? null))
 			{
@@ -4649,7 +4672,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$query .= " ORDER BY " . implode(', ', $orderBy) . ', id';
 			}
 
-			$objOrderByStmt = $this->Database->prepare($query);
+			$objOrderByStmt = $db->prepare($query);
 
 			// LIMIT
 			if ($this->limit)
@@ -4689,8 +4712,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $row[$i]));
 
 				$this->current[] = $row[$i]['id'];
-				$imagePasteAfter = Image::getHtml('pasteafter.svg', sprintf($labelPasteAfter[1] ?? $labelPasteAfter[0], $row[$i]['id']));
-				$imagePasteNew = Image::getHtml('new.svg', sprintf($labelPasteNew[1] ?? $labelPasteNew[0], $row[$i]['id']));
+				$imagePasteAfter = Image::getHtml('pasteafter.svg', \sprintf($labelPasteAfter[1] ?? $labelPasteAfter[0], $row[$i]['id']));
+				$imagePasteNew = Image::getHtml('new.svg', \sprintf($labelPasteNew[1] ?? $labelPasteNew[0], $row[$i]['id']));
 
 				// Make items sortable
 				if ($blnHasSorting)
@@ -4726,9 +4749,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 
 				$return .= '
-<div class="tl_content' . ($blnWrapperStart ? ' wrapper_start' : '') . ($blnWrapperSeparator ? ' wrapper_separator' : '') . ($blnWrapperStop ? ' wrapper_stop' : '') . ($blnIndent ? ' indent indent_' . $intWrapLevel : '') . ($blnIndentFirst ? ' indent_first' : '') . ($blnIndentLast ? ' indent_last' : '') . ((string) $row[$i]['tstamp'] === '0' ? ' draft' : '') . (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class']) ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '') . ' click2edit toggle_select">
-<div class="inside hover-div">
-<div class="tl_content_right">';
+<div class="tl_content' . ($blnWrapperStart ? ' wrapper_start' : '') . ($blnWrapperSeparator ? ' wrapper_separator' : '') . ($blnWrapperStop ? ' wrapper_stop' : '') . ($blnIndent ? ' indent indent_' . $intWrapLevel : '') . ($blnIndentFirst ? ' indent_first' : '') . ($blnIndentLast ? ' indent_last' : '') . ((string) $row[$i]['tstamp'] === '0' ? ' draft' : '') . (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class']) ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '') . ' toggle_select" data-turbo="false">
+<div class="inside hover-div"' . ($limitHeight && !$blnWrapperStart && !$blnWrapperStop && !$blnWrapperSeparator ? ' data-contao--limit-height-target="node"' : '') . ' data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
+<div class="tl_content_right" data-turbo="true">';
 
 				// Opening wrappers
 				if ($blnWrapperStart && ++$intWrapLevel > 0)
@@ -4745,43 +4768,59 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Regular buttons
 				else
 				{
-					$return .= $this->generateButtons($row[$i], $this->strTable, $this->root, false, null, ($row[($i-1)]['id'] ?? null), ($row[($i+1)]['id'] ?? null));
+					$operations = $this->generateButtons($row[$i], $this->strTable, $this->root, false, null, $row[$i - 1]['id'] ?? null, $row[$i + 1]['id'] ?? null);
 
 					// Sortable table
 					if ($blnHasSorting)
 					{
-						$security = System::getContainer()->get('security.helper');
-
 						// Create new button
-						if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $row[$i]['id']))))
+						if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $row[$i]['pid'], 'sorting' => $row[$i]['sorting'] + 1)))))
 						{
-							$return .= ' <a href="' . $this->addToUrl('act=create&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $objParent->id . (Input::get('nb') ? '&amp;nc=1' : '')) . '" title="' . StringUtil::specialchars(sprintf($labelPasteNew[1], $row[$i]['id'])) . '">' . $imagePasteNew . '</a>';
+							$operations->append(array(
+								'href' => $this->addToUrl('act=create&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $objParent->id . (Input::get('nb') ? '&amp;nc=1' : '')),
+								'title' => \sprintf($labelPasteNew[1], $row[$i]['id']),
+								'icon' => $imagePasteNew,
+							));
 						}
 
 						// Prevent circular references
-						if (($blnClipboard && $arrClipboard['mode'] == 'cut' && $row[$i]['id'] == $arrClipboard['id']) || ($blnMultiboard && $arrClipboard['mode'] == 'cutAll' && \in_array($row[$i]['id'], $arrClipboard['id'])))
+						if ($blnClipboard && !System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $row[$i]['id']))
 						{
-							$return .= ' ' . Image::getHtml('pasteafter_.svg');
+							$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
 						}
 
 						// Copy/move multiple
 						elseif ($blnMultiboard)
 						{
-							$return .= ' <a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id']) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $row[$i]['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a>';
+							$operations->append(array(
+								'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id']),
+								'title' => \sprintf($labelPasteAfter[1], $row[$i]['id']),
+								'attributes' => 'data-action="contao--scroll-offset#store"',
+								'icon' => $imagePasteAfter,
+								'primary' => true,
+							));
 						}
 
 						// Paste buttons
 						elseif ($blnClipboard)
 						{
-							$return .= ' <a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $arrClipboard['id']) . '" title="' . StringUtil::specialchars(sprintf($labelPasteAfter[1], $row[$i]['id'])) . '" onclick="Backend.getScrollOffset()">' . $imagePasteAfter . '</a>';
+							$operations->append(array(
+								'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $arrClipboard['id']),
+								'title' => \sprintf($labelPasteAfter[1], $row[$i]['id']),
+								'attributes' => 'data-action="contao--scroll-offset#store"',
+								'icon' => $imagePasteAfter,
+								'primary' => true,
+							));
 						}
 
 						// Drag handle
-						if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null))
+						if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $row[$i])))
 						{
-							$return .= ' <button type="button" class="drag-handle" title="' . StringUtil::specialchars(sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button>';
+							$operations->append(array('primary' => true, 'html'=>'<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', \sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '</button>'));
 						}
 					}
+
+					$return .= $operations;
 
 					// Picker
 					if ($this->strPickerFieldType)
@@ -4795,8 +4834,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][0];
 					$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'][1];
 
-					$this->import($strClass);
-					$return .= '</div>' . $this->$strClass->$strMethod($row[$i]) . '</div>';
+					$return .= '</div>' . System::importStatic($strClass)->$strMethod($row[$i]) . '</div>';
 				}
 				elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_callback'] ?? null))
 				{
@@ -4818,13 +4856,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Make items sortable
-		if ($blnHasSorting && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null) && Input::get('act') != 'select')
+		if ($blnHasSorting)
 		{
 			$return .= '
-</ul>
+</ul>';
+
+			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null) && Input::get('act') != 'select')
+			{
+				$return .= '
 <script>
   Backend.makeParentViewSortable("ul_' . $this->intCurrentPid . '");
 </script>';
+			}
 		}
 
 		$return .= ($this->strPickerFieldType == 'radio' ? '
@@ -4834,7 +4877,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>';
 
 		// Add another panel at the end of the page
-		if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit') !== false)
+		if (str_contains($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit'))
 		{
 			$return .= $this->paginationMenu();
 		}
@@ -4842,78 +4885,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Close the form
 		if (Input::get('act') == 'select')
 		{
-			// Submit buttons
-			$arrButtons = array();
-
-			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null))
-			{
-				$arrButtons['edit'] = '<button type="submit" name="edit" id="edit" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['editSelected'] . '</button>';
-			}
-
-			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'] ?? null))
-			{
-				$arrButtons['delete'] = '<button type="submit" name="delete" id="delete" class="tl_submit" accesskey="d" onclick="return confirm(\'' . $GLOBALS['TL_LANG']['MSC']['delAllConfirm'] . '\')">' . $GLOBALS['TL_LANG']['MSC']['deleteSelected'] . '</button>';
-			}
-
-			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null))
-			{
-				$arrButtons['copy'] = '<button type="submit" name="copy" id="copy" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG']['MSC']['copySelected'] . '</button>';
-				$arrButtons['copyMultiple'] = '<button type="submit" name="copyMultiple" id="copyMultiple" class="tl_submit" accesskey="m">' . $GLOBALS['TL_LANG']['MSC']['copyMultiple'] . '</button>';
-			}
-
-			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null))
-			{
-				$arrButtons['cut'] = '<button type="submit" name="cut" id="cut" class="tl_submit" accesskey="x">' . $GLOBALS['TL_LANG']['MSC']['moveSelected'] . '</button>';
-			}
-
-			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null))
-			{
-				$arrButtons['override'] = '<button type="submit" name="override" id="override" class="tl_submit" accesskey="v">' . $GLOBALS['TL_LANG']['MSC']['overrideSelected'] . '</button>';
-			}
-
-			// Call the buttons_callback (see #4691)
-			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['select']['buttons_callback'] ?? null))
-			{
-				foreach ($GLOBALS['TL_DCA'][$this->strTable]['select']['buttons_callback'] as $callback)
-				{
-					if (\is_array($callback))
-					{
-						$this->import($callback[0]);
-						$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
-					}
-					elseif (\is_callable($callback))
-					{
-						$arrButtons = $callback($arrButtons, $this);
-					}
-				}
-			}
-
-			if (\count($arrButtons) < 3)
-			{
-				$strButtons = implode(' ', $arrButtons);
-			}
-			else
-			{
-				$strButtons = array_shift($arrButtons) . ' ';
-				$strButtons .= '<div class="split-button">';
-				$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
-
-				foreach ($arrButtons as $strButton)
-				{
-					$strButtons .= '<li>' . $strButton . '</li>';
-				}
-
-				$strButtons .= '</ul></div>';
-			}
+			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($this->strTable, $blnHasSorting, $this);
 
 			$return .= '
 </div>
-<div class="tl_formbody_submit" style="text-align:right">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>';
+		}
+
+		if ($limitHeight)
+		{
+			$return = '<div
+				data-controller="contao--limit-height"
+				data-contao--limit-height-max-value="' . $limitHeight . '"
+				data-contao--limit-height-expand-value="' . $GLOBALS['TL_LANG']['MSC']['expandNode'] . '"
+				data-contao--limit-height-collapse-value="' . $GLOBALS['TL_LANG']['MSC']['collapseNode'] . '"
+				data-contao--limit-height-expand-all-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][0] . '"
+				data-contao--limit-height-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
+				data-contao--limit-height-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
+				data-contao--limit-height-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
+			>' . $return . '</div>';
 		}
 
 		return $return;
@@ -4936,8 +4927,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$firstOrderBy = $this->firstOrderBy;
 		}
 
-		// Check the default labels (see #509)
-		$labelNew = $GLOBALS['TL_LANG'][$this->strTable]['new'] ?? $GLOBALS['TL_LANG']['DCA']['new'];
+		$limitHeight = BackendUser::getInstance()->doNotCollapse ? false : (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['limitHeight'] ?? 0);
 
 		$query = "SELECT * FROM " . $this->strTable;
 
@@ -4951,11 +4941,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$query .= (!empty($this->procedure) ? " AND " : " WHERE ") . "id IN(" . implode(',', array_map('\intval', $this->root)) . ")";
 		}
 
+		$db = Database::getInstance();
+
 		if (\is_array($orderBy) && $orderBy[0])
 		{
 			foreach ($orderBy as $k=>$v)
 			{
 				list($key, $direction) = explode(' ', $v, 2) + array(null, null);
+
+				$orderBy[$k] = $key;
 
 				// If there is no direction, check the global flag in sorting mode 1 or the field flag in all other sorting modes
 				if (!$direction)
@@ -4970,17 +4964,30 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
+				if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['foreignKey']))
+				{
+					$chunks = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['foreignKey'], 2);
+					$orderBy[$k] = "(SELECT " . Database::quoteIdentifier($chunks[1]) . " FROM " . $chunks[0] . " WHERE " . $chunks[0] . ".id=" . $this->strTable . "." . $key . ")";
+				}
+
+				if (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_DAY_BOTH, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_MONTH_BOTH, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC, self::SORT_YEAR_BOTH)))
+				{
+					$orderBy[$k] = "CAST(" . $orderBy[$k] . " AS SIGNED)"; // see #5503
+				}
+
+				if ($direction)
+				{
+					$orderBy[$k] .= ' ' . $direction;
+				}
+
 				if ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['eval']['findInSet'] ?? null)
 				{
-					$direction = null;
-
 					if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['options_callback'] ?? null))
 					{
 						$strClass = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['options_callback'][0];
 						$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['options_callback'][1];
 
-						$this->import($strClass);
-						$keys = $this->$strClass->$strMethod($this);
+						$keys = System::importStatic($strClass)->$strMethod($this);
 					}
 					elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['options_callback'] ?? null))
 					{
@@ -4996,16 +5003,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$keys = array_keys($keys);
 					}
 
-					$orderBy[$k] = $this->Database->findInSet($v, $keys);
-				}
-				elseif (\in_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$key]['flag'] ?? null, array(self::SORT_DAY_ASC, self::SORT_DAY_DESC, self::SORT_DAY_BOTH, self::SORT_MONTH_ASC, self::SORT_MONTH_DESC, self::SORT_MONTH_BOTH, self::SORT_YEAR_ASC, self::SORT_YEAR_DESC, self::SORT_YEAR_BOTH)))
-				{
-					$orderBy[$k] = "CAST($key AS SIGNED)"; // see #5503
-				}
-
-				if ($direction)
-				{
-					$orderBy[$k] = $key . ' ' . $direction;
+					$orderBy[$k] = $db->findInSet($v, $keys);
 				}
 			}
 
@@ -5032,7 +5030,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		$objRowStmt = $this->Database->prepare($query);
+		$objRowStmt = $db->prepare($query);
 
 		if ($this->limit)
 		{
@@ -5041,15 +5039,26 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$objRow = $objRowStmt->execute(...$this->values);
-
 		$security = System::getContainer()->get('security.helper');
 
 		// Display buttons
-		$buttons = ((Input::get('act') == 'select' || $this->ptable) ? '
-<a href="' . $this->getReferer(true, $this->ptable) . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']) ? '
-<a href="' . System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'] . '" class="header_back" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']) . '" accesskey="b" onclick="Backend.getScrollOffset()">' . $GLOBALS['TL_LANG']['MSC']['backBT'] . '</a> ' : '')) . ((Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable))) ? '
-<a href="' . ($this->ptable ? $this->addToUrl('act=create' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) < self::MODE_PARENT) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create')) . '" class="header_new" title="' . StringUtil::specialchars($labelNew[1] ?? '') . '" accesskey="n" onclick="Backend.getScrollOffset()">' . $labelNew[0] . '</a> ' : '') . $this->generateGlobalButtons();
+		$buttons = '';
 
+		if (Input::get('act') == 'select' || $this->ptable)
+		{
+			$buttons .= DataContainerOperationsBuilder::generateBackButton($this->getReferer(true, $this->ptable));
+		}
+		elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
+		{
+			$buttons .= DataContainerOperationsBuilder::generateBackButton(System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+		}
+
+		if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable)))
+		{
+			$buttons .= DataContainerOperationsBuilder::generateNewButton($this->strTable, $this->ptable ? $this->addToUrl('act=create' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) < self::MODE_PARENT) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create'));
+		}
+
+		$buttons .= $this->generateGlobalButtons();
 		$return = Message::generate() . ($buttons ? '<div id="tl_buttons">' . $buttons . '</div>' : '');
 
 		// Return "no records found" message
@@ -5068,7 +5077,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
-<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue()) . '">' : '') . '
+<input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">' : '') . '
 <div class="tl_listing_container list_view" id="tl_listing"' . $this->getPickerValueAttribute() . '>' . ((Input::get('act') == 'select' || $this->strPickerFieldType == 'checkbox') ? '
 <div class="tl_select_trigger">
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
@@ -5076,14 +5085,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <table class="tl_listing' . (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) ? ' showColumns' : '') . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">';
 
 			// Automatically add the "order by" field as last column if we do not have group headers
-			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
+			if (($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null) && false !== ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showFirstOrderBy'] ?? null))
 			{
 				$blnFound = false;
 
 				// Extract the real key and compare it to $firstOrderBy
 				foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] as $f)
 				{
-					if (strpos($f, ':') !== false)
+					if (str_contains($f, ':'))
 					{
 						list($f) = explode(':', $f, 2);
 					}
@@ -5105,11 +5114,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
 			{
 				$return .= '
+<thead>
   <tr>';
 
 				foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'] as $f)
 				{
-					if (strpos($f, ':') !== false)
+					if (str_contains($f, ':'))
 					{
 						list($f) = explode(':', $f, 2);
 					}
@@ -5120,7 +5130,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$return .= '
     <th class="tl_folder_tlist tl_right_nowrap"></th>
-  </tr>';
+  </tr>
+</thead>
+<tbody>';
 			}
 
 			// Process result and add label and buttons
@@ -5153,14 +5165,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 						$return .= '
   <tr>
-    <td colspan="2" class="' . $groupclass . '">' . $group . '</td>
+    <th colspan="2" class="' . $groupclass . '">' . $group . '</th>
   </tr>';
 						$groupclass = 'tl_folder_list';
 					}
 				}
 
 				$return .= '
-  <tr class="' . ((string) ($row['tstamp'] ?? null) === '0' ? 'draft ' : '') . 'click2edit toggle_select hover-row">
+  <tr class="' . ((string) ($row['tstamp'] ?? null) === '0' ? 'draft ' : '') . 'toggle_select hover-row" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
     ';
 
 				$colspan = 1;
@@ -5182,29 +5194,27 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					foreach ($label as $j=>$arg)
 					{
 						$field = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['fields'][$j] ?? null;
-
-						if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['foreignKey']))
-						{
-							$value = $arg ?: '-';
-						}
-						else
-						{
-							$value = (string) $arg !== '' ? $arg : '-';
-						}
+						$value = (string) $arg !== '' ? $arg : '-';
 
 						$return .= '<td colspan="' . $colspan . '" class="tl_file_list col_' . explode(':', $field, 2)[0] . ($field == $firstOrderBy ? ' ordered_by' : '') . '">' . $value . '</td>';
 					}
 				}
 				else
 				{
-					$return .= '<td class="tl_file_list">' . $label . '</td>';
+					$return .= '<td class="tl_file_list">' . ($limitHeight ? '<div data-contao--limit-height-target="node">' : '') . $label . ($limitHeight ? '</div>' : '') . '</td>';
 				}
 
-				// Buttons ($row, $table, $root, $blnCircularReference, $childs, $previous, $next)
+				// Buttons ($row, $table, $root, $blnCircularReference, $children, $previous, $next)
 				$return .= ((Input::get('act') == 'select') ? '
     <td class="tl_file_list tl_right_nowrap"><input type="checkbox" name="IDS[]" id="ids_' . $row['id'] . '" class="tl_tree_checkbox" value="' . $row['id'] . '"></td>' : '
     <td class="tl_file_list tl_right_nowrap">' . $this->generateButtons($row, $this->strTable, $this->root) . ($this->strPickerFieldType ? $this->getPickerInputField($row['id']) : '') . '</td>') . '
   </tr>';
+			}
+
+			// Close the table body if the "show columns" option is active
+			if ($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['showColumns'] ?? null)
+			{
+				$return .= '</tbody>';
 			}
 
 			// Close the table
@@ -5216,7 +5226,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 </div>';
 
 			// Add another panel at the end of the page
-			if (strpos($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit') !== false)
+			if (str_contains($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['panelLayout'] ?? '', 'limit'))
 			{
 				$return .= $this->paginationMenu();
 			}
@@ -5224,73 +5234,27 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Close the form
 			if (Input::get('act') == 'select')
 			{
-				// Submit buttons
-				$arrButtons = array();
-
-				if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null))
-				{
-					$arrButtons['edit'] = '<button type="submit" name="edit" id="edit" class="tl_submit" accesskey="s">' . $GLOBALS['TL_LANG']['MSC']['editSelected'] . '</button>';
-				}
-
-				if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notDeletable'] ?? null))
-				{
-					$arrButtons['delete'] = '<button type="submit" name="delete" id="delete" class="tl_submit" accesskey="d" onclick="return confirm(\'' . $GLOBALS['TL_LANG']['MSC']['delAllConfirm'] . '\')">' . $GLOBALS['TL_LANG']['MSC']['deleteSelected'] . '</button>';
-				}
-
-				if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notCopyable'] ?? null))
-				{
-					$arrButtons['copy'] = '<button type="submit" name="copy" id="copy" class="tl_submit" accesskey="c">' . $GLOBALS['TL_LANG']['MSC']['copySelected'] . '</button>';
-				}
-
-				if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null))
-				{
-					$arrButtons['override'] = '<button type="submit" name="override" id="override" class="tl_submit" accesskey="v">' . $GLOBALS['TL_LANG']['MSC']['overrideSelected'] . '</button>';
-				}
-
-				// Call the buttons_callback (see #4691)
-				if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['select']['buttons_callback'] ?? null))
-				{
-					foreach ($GLOBALS['TL_DCA'][$this->strTable]['select']['buttons_callback'] as $callback)
-					{
-						if (\is_array($callback))
-						{
-							$this->import($callback[0]);
-							$arrButtons = $this->{$callback[0]}->{$callback[1]}($arrButtons, $this);
-						}
-						elseif (\is_callable($callback))
-						{
-							$arrButtons = $callback($arrButtons, $this);
-						}
-					}
-				}
-
-				if (\count($arrButtons) < 3)
-				{
-					$strButtons = implode(' ', $arrButtons);
-				}
-				else
-				{
-					$strButtons = array_shift($arrButtons) . ' ';
-					$strButtons .= '<div class="split-button">';
-					$strButtons .= array_shift($arrButtons) . '<button type="button" id="sbtog">' . Image::getHtml('navcol.svg') . '</button> <ul class="invisible">';
-
-					foreach ($arrButtons as $strButton)
-					{
-						$strButtons .= '<li>' . $strButton . '</li>';
-					}
-
-					$strButtons .= '</ul></div>';
-				}
+				$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($this->strTable, false, $this);
 
 				$return .= '
 </div>
-<div class="tl_formbody_submit" style="text-align:right">
-<div class="tl_submit_container">
   ' . $strButtons . '
-</div>
-</div>
 </form>';
 			}
+		}
+
+		if ($limitHeight)
+		{
+			$return = '<div
+				data-controller="contao--limit-height"
+				data-contao--limit-height-max-value="' . $limitHeight . '"
+				data-contao--limit-height-expand-value="' . $GLOBALS['TL_LANG']['MSC']['expandNode'] . '"
+				data-contao--limit-height-collapse-value="' . $GLOBALS['TL_LANG']['MSC']['collapseNode'] . '"
+				data-contao--limit-height-expand-all-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][0] . '"
+				data-contao--limit-height-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
+				data-contao--limit-height-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
+				data-contao--limit-height-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
+			>' . $return . '</div>';
 		}
 
 		return $return;
@@ -5303,11 +5267,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function searchMenu()
 	{
-		$searchFields = array();
+		$searchFields = array('id');
 
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-
 		$session = $objSessionBag->all();
 
 		// Get search fields
@@ -5351,7 +5313,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			try
 			{
-				$this->Database->prepare("SELECT '' REGEXP ?")->execute($searchValue);
+				Database::getInstance()->prepare("SELECT '' REGEXP ?")->execute($searchValue);
 			}
 			catch (DriverException $exception)
 			{
@@ -5391,12 +5353,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey']))
 			{
 				list($t, $f) = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$fld]['foreignKey'], 2);
-				$this->procedure[] = "(" . sprintf($strPattern, Database::quoteIdentifier($fld)) . " OR " . sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . "." . Database::quoteIdentifier($fld) . ")") . ")";
+				$this->procedure[] = "(" . \sprintf($strPattern, Database::quoteIdentifier($fld)) . " OR " . \sprintf($strPattern, "(SELECT " . Database::quoteIdentifier($f) . " FROM $t WHERE $t.id=" . $this->strTable . "." . Database::quoteIdentifier($fld) . ")") . ")";
 				$this->values[] = $searchValue;
 			}
 			else
 			{
-				$this->procedure[] = sprintf($strPattern, Database::quoteIdentifier($fld));
+				$this->procedure[] = \sprintf($strPattern, Database::quoteIdentifier($fld));
 			}
 
 			$this->values[] = $searchValue;
@@ -5421,8 +5383,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Sort by option values
-		uksort($options_sorter, static function ($a, $b)
-		{
+		uksort($options_sorter, static function ($a, $b) {
 			$a = (new UnicodeString($a))->folded();
 			$b = (new UnicodeString($b))->folded();
 
@@ -5436,10 +5397,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$active = isset($session['search'][$this->strTable]['value']) && (string) $session['search'][$this->strTable]['value'] !== '';
 
+		$this->setPanelState($active);
+
 		return '
 <div class="tl_search tl_subpanel">
 <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
-<select name="tl_field" class="tl_select tl_chosen' . ($active ? ' active' : '') . '">
+<select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '" data-controller="contao--choices">
 ' . implode("\n", $options_sorter) . '
 </select>
 <span>=</span>
@@ -5484,15 +5447,14 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			return '';
 		}
 
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-
 		$session = $objSessionBag->all();
+
 		$orderBy = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'] ?? array('id');
 		$firstOrderBy = preg_replace('/\s+.*$/', '', $orderBy[0]);
 
 		// Add PID to order fields
-		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_SORTED_PARENT && $this->Database->fieldExists('pid', $this->strTable))
+		if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_SORTED_PARENT && Database::getInstance()->fieldExists('pid', $this->strTable))
 		{
 			array_unshift($orderBy, 'pid');
 		}
@@ -5539,29 +5501,28 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$sortKey = $options_label . '|ASC';
 				$sessionValue = $session['sorting'][$this->strTable] ?? '';
-				$aria_label = sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $options_label . ' ' . $GLOBALS['TL_LANG']['MSC']['ascending']);
+				$aria_label = \sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $options_label . ' ' . $GLOBALS['TL_LANG']['MSC']['ascending']);
 				$options_label .= ' ↑';
 			}
 			elseif (str_ends_with($value, ' DESC'))
 			{
 				$sortKey = $options_label . '|DESC';
 				$sessionValue = $session['sorting'][$this->strTable] ?? '';
-				$aria_label = sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $options_label . ' ' . $GLOBALS['TL_LANG']['MSC']['descending']);
+				$aria_label = \sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $options_label . ' ' . $GLOBALS['TL_LANG']['MSC']['descending']);
 				$options_label .= ' ↓';
 			}
 			else
 			{
 				$sortKey = $options_label;
 				$sessionValue = str_replace(' DESC', '', $session['sorting'][$this->strTable] ?? '');
-				$aria_label = sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $options_label);
+				$aria_label = \sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $options_label);
 			}
 
 			$options_sorter[$sortKey] = '  <option value="' . StringUtil::specialchars($value) . '"' . (((!isset($session['sorting'][$this->strTable]) && $field == $firstOrderBy) || $value == $sessionValue) ? ' selected="selected"' : '') . ' aria-label="' . $aria_label . '">' . $options_label . '</option>';
 		}
 
 		// Sort by option values
-		uksort($options_sorter, static function ($a, $b)
-		{
+		uksort($options_sorter, static function ($a, $b) {
 			$a = (new UnicodeString($a))->folded();
 			$b = (new UnicodeString($b))->folded();
 
@@ -5576,7 +5537,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return '
 <div class="tl_sorting tl_subpanel">
 <strong>' . $GLOBALS['TL_LANG']['MSC']['sortBy'] . ':</strong>
-<select name="tl_sort" id="tl_sort" class="tl_select tl_chosen">
+<select name="tl_sort" id="tl_sort" class="tl_select" data-controller="contao--choices">
 ' . implode("\n", $options_sorter) . '
 </select>
 </div>';
@@ -5591,10 +5552,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function limitMenu($blnOptional=false)
 	{
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-
 		$session = $objSessionBag->all();
+
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
 		$fields = '';
 
@@ -5646,7 +5606,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$query .= " WHERE " . implode(' AND ', $arrProcedure);
 			}
 
-			$objTotal = $this->Database->prepare($query)->execute(...$arrValues);
+			$objTotal = Database::getInstance()->prepare($query)->execute(...$arrValues);
 			$this->total = $objTotal->count;
 			$options_total = 0;
 			$maxResultsPerPage = Config::get('maxResultsPerPage');
@@ -5670,7 +5630,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Build options
 			if ($this->total > 0)
 			{
-				$options = '';
 				$options_total = ceil($this->total / Config::get('resultsPerPage'));
 
 				// Reset limit if other parameters have decreased the number of results
@@ -5683,7 +5642,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				for ($i=0; $i<$options_total; $i++)
 				{
 					$this_limit = ($i*Config::get('resultsPerPage')) . ',' . Config::get('resultsPerPage');
-					$upper_limit = ($i*Config::get('resultsPerPage')+Config::get('resultsPerPage'));
+					$upper_limit = $i*Config::get('resultsPerPage')+Config::get('resultsPerPage');
 
 					if ($upper_limit > $this->total)
 					{
@@ -5707,9 +5666,20 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				return '';
 			}
 
+			$resultsPerPage = Config::get('resultsPerPage');
+
+			$limit = $session['filter'][$filter]['limit'] ?? null;
+			$active = $limit != 'all' && $this->total > $resultsPerPage ? ' active' : '';
+
+			// Only disable reset button if it is not on the first page
+			if ($limit !== ('0,' . $resultsPerPage) && $limit !== null)
+			{
+				$this->setPanelState($active);
+			}
+
 			$fields = '
-<select name="tl_limit" class="tl_select tl_chosen' . (($session['filter'][$filter]['limit'] ?? null) != 'all' && $this->total > Config::get('resultsPerPage') ? ' active' : '') . '" onchange="this.form.submit()">
-  <option value="tl_limit">' . $GLOBALS['TL_LANG']['MSC']['filterRecords'] . '</option>' . $options . '
+<select name="tl_limit" class="tl_select' . ($active ? ' active' : '') . '" onchange="this.form.submit()" data-controller="contao--choices">
+  ' . $options . '
 </select> ';
 		}
 
@@ -5728,7 +5698,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function filterMenu($intFilterPanel)
 	{
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$fields = '';
@@ -5750,6 +5719,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			return '';
 		}
+
+		$db = Database::getInstance();
 
 		// Set filter from user input
 		if (Input::post('FORM_SUBMIT') == 'tl_filters')
@@ -5832,8 +5803,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// CSV lists (see #2890)
 						if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['csv']))
 						{
-							$this->procedure[] = $this->Database->findInSet('?', $field, true);
-							$this->values[] = $session['filter'][$filter][$field] ?? null;
+							$this->procedure[] = $db->findInSet('?', $field, true);
+							$this->values[] = $session['filter'][$filter][$field];
 						}
 						else
 						{
@@ -5846,7 +5817,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					else
 					{
 						$this->procedure[] = $what . '=?';
-						$this->values[] = $session['filter'][$filter][$field] ?? null;
+						$this->values[] = $session['filter'][$filter][$field];
 					}
 				}
 			}
@@ -5926,7 +5897,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				// Also add the child records of the table (see #1811)
 				if (($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 				{
-					$rootIds = array_merge($rootIds, $this->Database->getChildRecords($rootIds, $table));
+					$rootIds = array_merge($rootIds, $db->getChildRecords($rootIds, $table));
 				}
 
 				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED)
@@ -5939,13 +5910,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			$objFields = $this->Database->prepare("SELECT DISTINCT " . $what . " FROM " . $this->strTable . ((\is_array($arrProcedure) && isset($arrProcedure[0])) ? ' WHERE ' . implode(' AND ', $arrProcedure) : ''))
-										->execute(...$arrValues);
+			$objFields = $db
+				->prepare("SELECT DISTINCT " . $what . " FROM " . $this->strTable . ((\is_array($arrProcedure) && isset($arrProcedure[0])) ? ' WHERE ' . implode(' AND ', $arrProcedure) : ''))
+				->execute(...$arrValues);
+
+			$active = isset($session['filter'][$filter][$field]);
+
+			$this->setPanelState($active);
 
 			// Begin select menu
 			$fields .= '
-<select name="' . $field . '" id="' . $field . '" class="tl_select tl_chosen' . (isset($session['filter'][$filter][$field]) ? ' active' : '') . '">
-  <option value="tl_' . $field . '">' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) . '</option>
+<select name="' . $field . '" id="' . $field . '" class="tl_select' . ($active ? ' active' : '') . '" data-placeholder="' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) . '" data-controller="contao--choices">
   <option value="tl_' . $field . '">---</option>';
 
 			if ($objFields->numRows)
@@ -5986,7 +5961,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						else
 						{
 							$options[$v] = date('Y-m', $v);
-							$intMonth = (date('m', $v) - 1);
+							$intMonth = date('m', $v) - 1;
 
 							if (isset($GLOBALS['TL_LANG']['MONTHS'][$intMonth]))
 							{
@@ -6056,8 +6031,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						$strClass = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options_callback'][0];
 						$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options_callback'][1];
 
-						$this->import($strClass);
-						$options_callback = $this->$strClass->$strMethod($this);
+						$options_callback = System::importStatic($strClass)->$strMethod($this);
 					}
 					elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options_callback'] ?? null))
 					{
@@ -6084,9 +6058,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					{
 						$key = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['foreignKey'], 2);
 
-						$objParent = $this->Database->prepare("SELECT " . Database::quoteIdentifier($key[1]) . " AS value FROM " . $key[0] . " WHERE id=?")
-													->limit(1)
-													->execute($vv);
+						$objParent = $db
+							->prepare("SELECT " . Database::quoteIdentifier($key[1]) . " AS value FROM " . $key[0] . " WHERE id=?")
+							->limit(1)
+							->execute($vv);
 
 						if ($objParent->numRows)
 						{
@@ -6111,9 +6086,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							$showFields[0] = 'id';
 						}
 
-						$objShowFields = $this->Database->prepare("SELECT " . Database::quoteIdentifier($showFields[0]) . " FROM " . $this->ptable . " WHERE id=?")
-														->limit(1)
-														->execute($vv);
+						$objShowFields = $db
+							->prepare("SELECT " . Database::quoteIdentifier($showFields[0]) . " FROM " . $this->ptable . " WHERE id=?")
+							->limit(1)
+							->execute($vv);
 
 						if ($objShowFields->numRows)
 						{
@@ -6148,14 +6124,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						}
 					}
 
-					$options_sorter[$option_label . '_' . $field] = '  <option value="' . StringUtil::specialchars($value) . '"' . ((isset($session['filter'][$filter][$field]) && $value == $session['filter'][$filter][$field]) ? ' selected="selected"' : '') . '>' . StringUtil::specialchars($option_label) . '</option>';
+					$options_sorter[$option_label . '_' . $field . '_' . $kk] = '  <option value="' . StringUtil::specialchars($value) . '"' . ((isset($session['filter'][$filter][$field]) && $value == $session['filter'][$filter][$field]) ? ' selected="selected"' : '') . '>' . StringUtil::specialchars($option_label) . '</option>';
 				}
 
 				// Sort by option values
 				if (!$blnDate)
 				{
-					uksort($options_sorter, static function ($a, $b)
-					{
+					uksort($options_sorter, static function ($a, $b) {
 						$a = (new UnicodeString($a))->folded();
 						$b = (new UnicodeString($b))->folded();
 
@@ -6179,12 +6154,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// End select menu
 			$fields .= '
 </select> ';
-
-			// Force a line-break after six elements (see #3777)
-			if ((($cnt + 1) % 6) == 0)
-			{
-				$fields .= '<br>';
-			}
 		}
 
 		return '
@@ -6200,10 +6169,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function paginationMenu()
 	{
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-
 		$session = $objSessionBag->all();
+
 		$filter = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT ? $this->strTable . '_' . $this->intCurrentPid : $this->strTable;
 
 		list($offset, $limit) = explode(',', $this->limit ?? '') + array(null, null);
@@ -6253,9 +6221,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$key = explode('.', $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['foreignKey'], 2);
 
-			$objParent = $this->Database->prepare("SELECT " . Database::quoteIdentifier($key[1]) . " AS value FROM " . $key[0] . " WHERE id=?")
-										->limit(1)
-										->execute($value);
+			$objParent = Database::getInstance()
+				->prepare("SELECT " . Database::quoteIdentifier($key[1]) . " AS value FROM " . $key[0] . " WHERE id=?")
+				->limit(1)
+				->execute($value);
 
 			if ($objParent->numRows)
 			{
@@ -6307,10 +6276,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$remoteNew = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options'][$value] ?? null;
 			}
-			else
-			{
-				$remoteNew = $value;
-			}
 
 			if (\is_array($remoteNew))
 			{
@@ -6351,8 +6316,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$strClass = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options_callback'][0];
 				$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options_callback'][1];
 
-				$this->import($strClass);
-				$lookup[$field] = $this->$strClass->$strMethod($this);
+				$lookup[$field] = System::importStatic($strClass)->$strMethod($this);
 			}
 
 			$group = $lookup[$field][$value] ?? null;
@@ -6377,7 +6341,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				if ($label)
 				{
-					$group = $value == ucfirst($GLOBALS['TL_LANG']['MSC']['yes']) ? $label : sprintf($GLOBALS['TL_LANG']['MSC']['booleanNot'], lcfirst($label));
+					$group = $value == ucfirst($GLOBALS['TL_LANG']['MSC']['yes']) ? $label : \sprintf($GLOBALS['TL_LANG']['MSC']['booleanNot'], lcfirst($label));
 				}
 			}
 		}
@@ -6385,11 +6349,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Call the group callback ($group, $sortingMode, $firstOrderBy, $row, $this)
 		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'] ?? null))
 		{
-			$strClass = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'][0];
-			$strMethod = $GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'][1];
-
-			$this->import($strClass);
-			$group = $this->$strClass->$strMethod($group, $mode, $field, $row, $this);
+			$group = System::importStatic($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'][0])->{$GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'][1]}($group, $mode, $field, $row, $this);
 		}
 		elseif (\is_callable($GLOBALS['TL_DCA'][$this->strTable]['list']['label']['group_callback'] ?? null))
 		{
@@ -6400,12 +6360,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	}
 
 	/**
-	 * Initialize the root pages
+	 * Initialize the root nodes
 	 */
 	protected function initRoots()
 	{
-		$table = $this->strTable;
-		$this->rootPaste = $GLOBALS['TL_DCA'][$table]['list']['sorting']['rootPaste'] ?? false;
+		$this->rootPaste = $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['rootPaste'] ?? false;
 
 		// Get the IDs of all root records (tree view)
 		if ($this->treeView)
@@ -6415,7 +6374,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Unless there are any root records specified, use all records with parent ID 0
 			if (!isset($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']) || $GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] === false)
 			{
-				$objIds = $this->Database->execute("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL)" . ($this->Database->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''));
+				$db = Database::getInstance();
+				$objIds = $db->execute("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL)" . ($db->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''));
 
 				if ($objIds->numRows > 0)
 				{
@@ -6423,8 +6383,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 			}
 
-			// Get root records from global configuration file
-			elseif (\is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] ?? null))
+			// Get root records from DCA
+			elseif (\is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']))
 			{
 				if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] == array(0))
 				{
@@ -6438,31 +6398,58 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Get the IDs of all root records (list view or parent view)
-		elseif (\is_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['root'] ?? null))
+		elseif (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null))
 		{
-			$this->updateRoot(array_unique($GLOBALS['TL_DCA'][$table]['list']['sorting']['root']));
+			$this->updateRoot(array_unique($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root']));
 		}
 	}
 
-	protected function updateRoot(array $root)
+	protected function updateRoot(array $root, bool $isSearch = false)
 	{
-		$this->root = $root;
-
+		$db = Database::getInstance();
 		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
 
-		// Fetch visible root trails if enabled
-		if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['showRootTrails'] ?? null)
-		{
-			foreach ($this->root as $id)
-			{
-				$this->visibleRootTrails = array_unique(array_merge($this->visibleRootTrails, $this->Database->getParentRecords($id, $table, true)));
-			}
-		}
-
-		// Fetch all children of the root
 		if ($this->treeView)
 		{
-			$this->rootChildren = $this->Database->getChildRecords($this->root, $table, $this->Database->fieldExists('sorting', $table));
+			$this->root = $this->eliminateNestedPages($root, $table);
+			$this->visibleRootTrails = array();
+
+			// Fetch visible root trails if enabled
+			if ($GLOBALS['TL_DCA'][$table]['list']['sorting']['showRootTrails'] ?? null)
+			{
+				foreach ($this->root as $id)
+				{
+					$this->visibleRootTrails[] = $db->getParentRecords($id, $table, true);
+				}
+
+				$this->visibleRootTrails = array_unique(array_merge(...$this->visibleRootTrails));
+			}
+
+			// Fetch all children of the root
+			$this->rootChildren = $db->getChildRecords($this->root, $table);
+
+			if ($isSearch)
+			{
+				$parents = array();
+
+				foreach ($root as $id)
+				{
+					$parents[] = $db->getParentRecords($id, $table);
+				}
+
+				$this->rootChildren = array_intersect($this->rootChildren, array_merge(...$parents));
+				$this->visibleRootTrails = array_merge($this->visibleRootTrails, array_diff($this->rootChildren, $root));
+			}
+
+			return;
+		}
+
+		$this->root = $root;
+
+		// $this->root might not have a correct order here, let's make sure it's ordered by sorting
+		if ($this->root && $db->fieldExists('sorting', $table))
+		{
+			$this->root = $db->execute("SELECT id FROM $table WHERE id IN (" . implode(',', $this->root) . ") ORDER BY sorting, id")->fetchEach('id');
 		}
 	}
 
@@ -6481,7 +6468,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Predefined node set (see #3563)
 		if (isset($attributes['rootNodes']))
 		{
-			$blnHasSorting = $this->Database->fieldExists('sorting', $this->strTable);
+			$db = Database::getInstance();
+			$blnHasSorting = $db->fieldExists('sorting', $this->strTable);
 			$arrRoot = $this->eliminateNestedPages((array) $attributes['rootNodes'], $this->strTable, $blnHasSorting);
 
 			// Calculate the intersection of the root nodes with the mounted nodes (see #1001)
@@ -6489,8 +6477,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				$arrRoot = $this->eliminateNestedPages(
 					array_intersect(
-						array_merge($arrRoot, $this->Database->getChildRecords($arrRoot, $this->strTable)),
-						array_merge($this->root, $this->Database->getChildRecords($this->root, $this->strTable))
+						array_merge($arrRoot, $db->getChildRecords($arrRoot, $this->strTable)),
+						array_merge($this->root, $db->getChildRecords($this->root, $this->strTable))
 					),
 					$this->strTable,
 					$blnHasSorting
@@ -6501,5 +6489,49 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		return $attributes;
+	}
+
+	private function addDynamicPtable(array $data): array
+	{
+		if (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? false) && !isset($data['ptable']))
+		{
+			$data['ptable'] = $this->ptable;
+		}
+
+		return $data;
+	}
+
+	protected function canPasteClipboard(array $arrClipboard, array $new): bool
+	{
+		$security = System::getContainer()->get('security.helper');
+
+		if ($arrClipboard['mode'] === 'create')
+		{
+			return $security->isGranted(...$this->getClipboardPermission($arrClipboard['mode'], 0, $new));
+		}
+
+		foreach ((array) $arrClipboard['id'] as $id)
+		{
+			if (!$security->isGranted(...$this->getClipboardPermission($arrClipboard['mode'], (int) $id, $new)))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	protected function getClipboardPermission(string $mode, int $id, array|null $new = null): array
+	{
+		$action = match ($mode)
+		{
+			ClipboardManager::MODE_CREATE => new CreateAction($this->strTable, $new),
+			ClipboardManager::MODE_CUT,
+			ClipboardManager::MODE_CUT_ALL => new UpdateAction($this->strTable, $this->getCurrentRecord($id, $this->strTable), array_replace(array('sorting' => null), (array) $new)),
+			ClipboardManager::MODE_COPY,
+			ClipboardManager::MODE_COPY_ALL => new CreateAction($this->strTable, array_replace($this->getCurrentRecord($id, $this->strTable) ?? array(), array('tstamp' => null, 'sorting' => null), (array) $new))
+		};
+
+		return array(ContaoCorePermissions::DC_PREFIX . $this->strTable, $action);
 	}
 }

@@ -30,16 +30,14 @@
         <target>Attiva dal</target>
       </trans-unit>
       <trans-unit id="tl_user_group.start.1">
-        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Se vuoi impedire al gruppo di essere attivo prima di una determinata data / ora, puoi inserirlo qui. Altrimenti lascia il campo vuoto.</target>
+        <source>If you want to prevent the group from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.0">
         <source>Deactivate on</source>
         <target>Disattiva dal</target>
       </trans-unit>
       <trans-unit id="tl_user_group.stop.1">
-        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
-        <target>Se vuoi impedire al gruppo di essere attivo dopo una certa data / ora, puoi inserirlo qui. Altrimenti lascia il campo vuoto.</target>
+        <source>If you want to prevent the group from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_user_group.title_legend">
         <source>Title</source>
@@ -105,9 +103,14 @@
         <source>Delete user group ID %s</source>
         <target>Elimina l'utente del gruppo con ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_user_group.toggle">
-        <source>Activate/deactivate user group ID %s</source>
-        <target>Attiva/disattiva utente del gruppo ID %s</target>
+      <trans-unit id="tl_user_group.toggle.0">
+        <source>Activate/deactivate user group</source>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.1">
+        <source>Deactivate user group ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_user_group.toggle.2">
+        <source>Activate user group ID %s</source>
       </trans-unit>
     </body>
   </file>

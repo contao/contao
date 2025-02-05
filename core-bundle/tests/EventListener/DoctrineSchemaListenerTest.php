@@ -31,7 +31,7 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
                         'path' => "`path` varchar(1022) NOT NULL default ''",
                     ],
                 ],
-            ]
+            ],
         );
 
         $schema = new Schema();
@@ -41,7 +41,7 @@ class DoctrineSchemaListenerTest extends DoctrineTestCase
 
         $dcaSchemaProvider = new DcaSchemaProvider(
             $framework,
-            $this->mockDoctrineRegistry()
+            $this->mockDoctrineRegistry(),
         );
 
         $listener = new DoctrineSchemaListener($dcaSchemaProvider, $this->createMock(ContainerInterface::class));

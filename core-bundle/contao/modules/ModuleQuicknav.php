@@ -58,7 +58,6 @@ class ModuleQuicknav extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$host = null;
@@ -75,7 +74,7 @@ class ModuleQuicknav extends Module
 			$objRootPage = PageModel::findWithDetails($this->rootPage);
 
 			// Set the domain
-			if ($objRootPage->rootId != $objPage->rootId && $objRootPage->domain && $objRootPage->domain != $objPage->domain)
+			if ($objRootPage && $objRootPage->rootId != $objPage->rootId && $objRootPage->domain && $objRootPage->domain != $objPage->domain)
 			{
 				$host = $objRootPage->domain;
 			}
@@ -99,7 +98,6 @@ class ModuleQuicknav extends Module
 	 */
 	protected function getQuicknavPages($pid, $level=1, $host=null)
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$arrPages = array();
@@ -113,8 +111,11 @@ class ModuleQuicknav extends Module
 		}
 
 		++$level;
+
 		$container = System::getContainer();
 		$security = $container->get('security.helper');
+		$urlGenerator = $container->get('contao.routing.content_url_generator');
+		$db = Database::getInstance();
 
 		foreach ($objSubpages as $objSubpage)
 		{
@@ -136,7 +137,7 @@ class ModuleQuicknav extends Module
 				{
 					try
 					{
-						$href = $objSubpage->getFrontendUrl();
+						$href = $urlGenerator->generate($objSubpage);
 					}
 					catch (ExceptionInterface $exception)
 					{
@@ -153,7 +154,7 @@ class ModuleQuicknav extends Module
 					);
 
 					// Subpages
-					if (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $this->Database->getChildRecords($objSubpage->id, 'tl_page')))))
+					if (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $db->getChildRecords($objSubpage->id, 'tl_page')))))
 					{
 						$subpages = $this->getQuicknavPages($objSubpage->id, $level);
 

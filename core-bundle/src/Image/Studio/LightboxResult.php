@@ -29,12 +29,12 @@ class LightboxResult
      * @internal Use the Contao\CoreBundle\Image\Studio\Studio factory to get an instance of this class
      */
     public function __construct(
-        private ContainerInterface $locator,
+        private readonly ContainerInterface $locator,
         ImageInterface|string|null $filePathOrImage,
-        private string|null $url,
+        private readonly string|null $url,
         PictureConfiguration|array|int|string|null $sizeConfiguration = null,
-        private string|null $groupIdentifier = null,
-        ResizeOptions $resizeOptions = null,
+        private readonly string|null $groupIdentifier = null,
+        ResizeOptions|null $resizeOptions = null,
     ) {
         if (1 !== \count(array_filter([$filePathOrImage, $url]))) {
             throw new \InvalidArgumentException('A lightbox must be either constructed with a resource or an URL.');
@@ -46,7 +46,7 @@ class LightboxResult
                 ->createImage(
                     $filePathOrImage,
                     $sizeConfiguration ?? $this->getDefaultLightboxSizeConfiguration(),
-                    $resizeOptions
+                    $resizeOptions,
                 )
             ;
         }
@@ -91,12 +91,12 @@ class LightboxResult
     /**
      * Returns the lightbox size configuration from the associated page layout.
      *
-     * Will return null if there is no lightbox size configuration or if not
-     * in a request context.
+     * Will return null if there is no lightbox size configuration or if not in a
+     * request context.
      */
     private function getDefaultLightboxSizeConfiguration(): array|null
     {
-        $page = $GLOBALS['objPage'] ?? null;
+        $page = $this->locator->get('contao.routing.page_finder')->getCurrentPage();
 
         if (!$page instanceof PageModel || null === $page->layout) {
             return null;
@@ -104,9 +104,9 @@ class LightboxResult
 
         /** @var ContaoFramework $framework */
         $framework = $this->locator->get('contao.framework');
-        $layoutModel = $framework->getAdapter(LayoutModel::class)->findByPk($page->layout);
+        $layoutModel = $framework->getAdapter(LayoutModel::class)->findById($page->layout);
 
-        if (null === $layoutModel || empty($layoutModel->lightboxSize)) {
+        if (!$layoutModel || empty($layoutModel->lightboxSize)) {
             return null;
         }
 

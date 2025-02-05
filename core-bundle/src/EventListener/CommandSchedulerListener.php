@@ -15,19 +15,21 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Cron\Cron;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Exception;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 
 /**
  * @internal
  */
+#[AsEventListener]
 class CommandSchedulerListener
 {
     public function __construct(
-        private Cron $cron,
-        private Connection $connection,
-        private string $fragmentPath = '_fragment',
-        private bool $autoMode = false,
+        private readonly Cron $cron,
+        private readonly Connection $connection,
+        private readonly string $fragmentPath = '_fragment',
+        private readonly bool $autoMode = false,
     ) {
     }
 
@@ -50,12 +52,12 @@ class CommandSchedulerListener
             return false;
         }
 
-        // Without the DB table, the cron framework cannot work
-        if (!$this->canRunDbQuery()) {
+        if ($this->autoMode && $this->cron->hasMinutelyCliCron()) {
             return false;
         }
 
-        if ($this->autoMode && $this->cron->hasMinutelyCliCron()) {
+        // Without the DB table, the cron framework cannot work
+        if (!$this->canRunDbQuery()) {
             return false;
         }
 

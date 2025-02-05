@@ -34,7 +34,7 @@ class SearchTest extends TestCase
         $this->assertSame(0, $compareUrls->invokeArgs(null, [$lessCanonicalUrl, $lessCanonicalUrl]));
     }
 
-    public function compareUrlsProvider(): \Generator
+    public static function compareUrlsProvider(): iterable
     {
         yield ['foo/bar.html', 'foo/bar.html?query'];
         yield ['foo/bar.html', 'foo/bar/baz.html'];
@@ -57,7 +57,7 @@ class SearchTest extends TestCase
         $this->assertSame($expectedWords, $method->invokeArgs(null, [$source, '']));
     }
 
-    public function splitIntoWordsProvider(): \Generator
+    public static function splitIntoWordsProvider(): iterable
     {
         yield ['Lorem-Ipsum dolor,sit`amet/consectetur.', ['lorem', 'ipsum', 'dolor', 'sit', 'amet', 'consectetur']];
         yield ['FÖO Bär bäß', ['foo', 'bar', 'bass']];
@@ -72,7 +72,7 @@ class SearchTest extends TestCase
         $this->assertSame($expectedWords, Search::getMatchVariants($matches, $text, 'en'));
     }
 
-    public function getMatchVariantsProvider(): \Generator
+    public static function getMatchVariantsProvider(): iterable
     {
         yield [
             'FÖO Bär bäß',
@@ -86,8 +86,13 @@ class SearchTest extends TestCase
         ];
         yield [
             'foo Foo fOO FOO föö',
-            ['foo', 'doesNotExist'],
+            ['foo', 'doesNotExist', 'f', 'fo'],
             ['foo', 'Foo', 'fOO', 'FOO', 'föö'],
+        ];
+        yield [
+            'Text (with) phrase-content',
+            ['text with phrase', 'Phrase Content', '(WITH', 'does not exist'],
+            ['Text (with) phrase', 'phrase-content', '(with'],
         ];
     }
 }

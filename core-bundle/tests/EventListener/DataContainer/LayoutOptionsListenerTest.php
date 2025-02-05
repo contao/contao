@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 use Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
-use Symfony\Contracts\Service\ResetInterface;
 
 class LayoutOptionsListenerTest extends TestCase
 {
@@ -45,7 +44,7 @@ class LayoutOptionsListenerTest extends TestCase
                     3 => 'Layout 3',
                 ],
             ],
-            $listener()
+            $listener(),
         );
     }
 
@@ -80,13 +79,11 @@ class LayoutOptionsListenerTest extends TestCase
                 ],
                 [
                     ['id' => 2, 'name' => 'Layout 2', 'theme' => 'Theme A'],
-                ]
+                ],
             )
         ;
 
         $listener = new LayoutOptionsListener($connection);
-
-        $this->assertInstanceOf(ResetInterface::class, $listener);
 
         $this->assertSame(['Theme A' => [1 => 'Layout 1']], $listener());
         $this->assertSame(['Theme A' => [1 => 'Layout 1']], $listener());

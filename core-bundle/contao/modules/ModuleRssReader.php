@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\CoreBundle\Exception\PageNotFoundException;
 
+trigger_deprecation('contao/core-bundle', '5.1', 'Using "%s" has been deprecated and will no longer work in Contao 6. Use the feed reader module instead.', __CLASS__);
+
 /**
  * Front end module "rss reader".
  */
@@ -89,7 +91,6 @@ class ModuleRssReader extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		if ($this->rss_template != 'rss_default')
@@ -137,7 +138,7 @@ class ModuleRssReader extends Module
 			}
 
 			// Set limit and offset
-			$offset = (($page - 1) * $this->perPage);
+			$offset = ($page - 1) * $this->perPage;
 			$limit = $this->perPage + $offset;
 
 			$objPagination = new Pagination(\count($arrItems), $this->perPage, Config::get('maxPaginationLinks'), $id);

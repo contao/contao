@@ -19,7 +19,7 @@ class LocaleCandidates extends AbstractCandidates
 {
     private bool $initialized = false;
 
-    public function __construct(private PageRegistry $pageRegistry)
+    public function __construct(private readonly PageRegistry $pageRegistry)
     {
         parent::__construct([''], []);
     }
@@ -32,7 +32,8 @@ class LocaleCandidates extends AbstractCandidates
     }
 
     /**
-     * Lazy-initialize because we do not want to query the database when creating the service.
+     * Lazy-initialize because we do not want to query the database when
+     * creating the service.
      */
     private function initialize(): void
     {

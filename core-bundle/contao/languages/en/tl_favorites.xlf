@@ -17,12 +17,6 @@
       <trans-unit id="tl_favorites.url_legend">
         <source>Title and URL</source>
       </trans-unit>
-      <trans-unit id="tl_favorites.new.0">
-        <source>New</source>
-      </trans-unit>
-      <trans-unit id="tl_favorites.new.1">
-        <source>Add a new favorite</source>
-      </trans-unit>
       <trans-unit id="tl_favorites.show">
         <source>Show the details of favorite ID %s</source>
       </trans-unit>

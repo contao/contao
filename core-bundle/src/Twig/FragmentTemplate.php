@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig;
 
 use Contao\CoreBundle\Asset\ContaoContext;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\Model;
 use Contao\Template;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -26,23 +27,24 @@ use Symfony\Component\HttpFoundation\Response;
 final class FragmentTemplate extends Template
 {
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     private array $context = [];
 
     /**
-     * @param \Closure(self, Response|null):Response $onGetResponse
+     * @param \Closure(self, Response|null): Response $onGetResponse
      *
      * @internal
      */
-    public function __construct(private string $templateName, private \Closure $onGetResponse)
-    {
+    public function __construct(
+        private string $templateName,
+        private readonly \Closure $onGetResponse,
+    ) {
         // Do not call parent constructor
     }
 
     /**
      * @param string $key
-     * @param mixed  $value
      */
     public function __set($key, $value): void
     {
@@ -51,8 +53,6 @@ final class FragmentTemplate extends Template
 
     /**
      * @param string $key
-     *
-     * @return mixed
      */
     public function __get($key)
     {
@@ -77,12 +77,9 @@ final class FragmentTemplate extends Template
         $this->context[$key] = $value;
     }
 
-    /**
-     * @return mixed
-     */
-    public function get(string $key)
+    public function get(string $key): mixed
     {
-        return $this->context[$key] ?? throw new \RuntimeException(sprintf('Key "%s" does not exist.', $key));
+        return $this->context[$key] ?? throw new \RuntimeException(\sprintf('Key "%s" does not exist.', $key));
     }
 
     public function has(string $key): bool
@@ -120,24 +117,23 @@ final class FragmentTemplate extends Template
     }
 
     /**
-     * Renders the template and returns a new Response, that has the rendered
-     * output set as content, as well as the appropriate headers that allows
-     * our SubrequestCacheSubscriber to merge it with others of the same page.
+     * Renders the template and returns a new Response, that has the rendered output
+     * set as content, as well as the appropriate headers that allows our
+     * SubrequestCacheSubscriber to merge it with others of the same page.
      *
-     * For modern fragments, the behavior is identical to calling render() on
-     * the AbstractFragmentController. Like with render(), you can pass a
-     * prebuilt Response if you want to have full control - no headers will be
-     * set then.
+     * For modern fragments, the behavior is identical to calling render() on the
+     * AbstractFragmentController. Like with render(), you can pass a prebuilt
+     * Response if you want to have full control - no headers will be set then.
      */
     public function getResponse(Response|null $preBuiltResponse = null): Response
     {
         return ($this->onGetResponse)($this, $preBuiltResponse);
     }
 
-    // We need to extend from the legacy Template class to keep existing type
-    // hints working. In the future, when people migrated their usages, we will
-    // drop the base class and the following overrides, that are only there to
-    // prevent usage of the base class functionalities.
+    // We need to extend from the legacy Template class to keep existing type hints
+    // working. In the future, when people migrated their usages, we will drop the
+    // base class and the following overrides, that are only there to prevent usage
+    // of the base class functionalities.
 
     /**
      * @internal
@@ -294,7 +290,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public static function addStaticUrlTo($script, ContaoContext $context = null): never
+    public static function addStaticUrlTo($script, ContaoContext|null $context = null): never
     {
         self::throwOnAccess();
     }
@@ -478,6 +474,62 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
+    public function attr(HtmlAttributes|iterable|string|null $attributes = null): never
+    {
+        self::throwOnAccess();
+    }
+
+    /**
+     * @internal
+     */
+    public function nonce(string $directive): never
+    {
+        self::throwOnAccess();
+    }
+
+    /**
+     * @internal
+     */
+    public function addCspSource(array|string $directives, string $source): never
+    {
+        self::throwOnAccess();
+    }
+
+    /**
+     * @internal
+     */
+    public function addCspHash(string $directive, string $script, string $algorithm = 'sha384'): never
+    {
+        self::throwOnAccess();
+    }
+
+    /**
+     * @internal
+     */
+    public function cspInlineStyle(string $style, string $algorithm = 'sha384'): never
+    {
+        self::throwOnAccess();
+    }
+
+    /**
+     * @internal
+     */
+    public function cspUnsafeInlineStyle(string $style, string $algorithm = 'sha384'): never
+    {
+        self::throwOnAccess();
+    }
+
+    /**
+     * @internal
+     */
+    public function cspInlineStyles(string|null $html): never
+    {
+        self::throwOnAccess();
+    }
+
+    /**
+     * @internal
+     */
     public function figure($from, $size, $configuration = [], $template = 'image'): never
     {
         self::throwOnAccess();
@@ -566,7 +618,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public function setDebug(bool $debug = null): never
+    public function setDebug(bool|null $debug = null): never
     {
         self::throwOnAccess();
     }
@@ -606,7 +658,7 @@ final class FragmentTemplate extends Template
     /**
      * @internal
      */
-    public function insert($name, array $data = null): never
+    public function insert($name, array|null $data = null): never
     {
         self::throwOnAccess();
     }
@@ -615,6 +667,6 @@ final class FragmentTemplate extends Template
     {
         $function = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2)[1]['function'];
 
-        throw new \LogicException(sprintf('Calling the "%s()" function on a FragmentTemplate is not allowed. Set template data instead and optionally output it with getResponse().', $function));
+        throw new \LogicException(\sprintf('Calling the "%s()" function on a FragmentTemplate is not allowed. Set template data instead and optionally output it with getResponse().', $function));
     }
 }

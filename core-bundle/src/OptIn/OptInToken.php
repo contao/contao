@@ -18,8 +18,10 @@ use Contao\OptInModel;
 
 class OptInToken implements OptInTokenInterface
 {
-    public function __construct(private OptInModel $model, private ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly OptInModel $model,
+        private readonly ContaoFramework $framework,
+    ) {
     }
 
     public function getIdentifier(): string
@@ -95,7 +97,7 @@ class OptInToken implements OptInTokenInterface
         return $this->model->confirmedOn > 0;
     }
 
-    public function send(string $subject = null, string $text = null): void
+    public function send(string|null $subject = null, string|null $text = null): void
     {
         if ($this->isConfirmed()) {
             throw new OptInTokenAlreadyConfirmedException();

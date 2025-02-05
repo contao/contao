@@ -19,7 +19,7 @@ final class ContentDispositionOption implements OptionsInterface, ContentDisposi
     /**
      * @phpstan-var HeaderUtils::DISPOSITION_INLINE|HeaderUtils::DISPOSITION_ATTACHMENT
      */
-    private string $contentDispositionType;
+    private readonly string $contentDispositionType;
 
     public function __construct(bool $inline)
     {

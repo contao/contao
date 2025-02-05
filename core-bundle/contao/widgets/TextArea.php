@@ -99,6 +99,15 @@ class TextArea extends Widget
 	}
 
 	/**
+	 * Unify newline characters to UNIX style.
+	 * This will also prevent our maxlength from counting newlines as two characters.
+	 */
+	protected function getPost($strKey)
+	{
+		return str_replace("\r\n", "\n", parent::getPost($strKey));
+	}
+
+	/**
 	 * Generate the widget and return it as string
 	 *
 	 * @return string
@@ -110,11 +119,11 @@ class TextArea extends Widget
 			$this->strClass = trim($this->strClass . ' noresize');
 		}
 
-		return sprintf(
-			'<textarea name="%s" id="ctrl_%s" class="tl_textarea%s" rows="%s" cols="%s"%s onfocus="Backend.getScrollOffset()">%s</textarea>%s',
+		return \sprintf(
+			'<textarea name="%s" id="ctrl_%s" class="tl_textarea%s" rows="%s" cols="%s"%s data-action="focus->contao--scroll-offset#store" data-contao--scroll-offset-target="autoFocus">%s</textarea>%s',
 			$this->strName,
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			$this->intRows,
 			$this->intCols,
 			$this->getAttributes(),

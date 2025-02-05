@@ -12,17 +12,19 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\PageModel;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController as SymfonyAbstractController;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 abstract class AbstractController extends SymfonyAbstractController
 {
@@ -31,11 +33,12 @@ abstract class AbstractController extends SymfonyAbstractController
         $services = parent::getSubscribedServices();
 
         $services['contao.framework'] = ContaoFramework::class;
+        $services['contao.routing.content_url_generator'] = ContentUrlGenerator::class;
         $services['event_dispatcher'] = EventDispatcherInterface::class;
         $services['logger'] = '?'.LoggerInterface::class;
         $services['fos_http_cache.http.symfony_response_tagger'] = '?'.SymfonyResponseTagger::class;
         $services['contao.csrf.token_manager'] = ContaoCsrfTokenManager::class;
-        $services['contao.cache.entity_tags'] = EntityCacheTags::class;
+        $services['contao.cache.tag_manager'] = CacheTagManager::class;
 
         return $services;
     }
@@ -50,18 +53,18 @@ abstract class AbstractController extends SymfonyAbstractController
      *
      * @param class-string<T> $class
      *
-     * @return T
+     * @return Adapter&T
      *
      * @phpstan-return Adapter<T>
      */
-    protected function getContaoAdapter(string $class)
+    protected function getContaoAdapter(string $class): Adapter
     {
         return $this->container->get('contao.framework')->getAdapter($class);
     }
 
     protected function tagResponse(array|object|string|null $tags): void
     {
-        $this->container->get('contao.cache.entity_tags')->tagWith($tags);
+        $this->container->get('contao.cache.tag_manager')->tagWith($tags);
     }
 
     /**
@@ -81,7 +84,8 @@ abstract class AbstractController extends SymfonyAbstractController
      */
     protected function setCacheHeaders(Response $response, PageModel $pageModel): Response
     {
-        // Do not cache the response if caching was not configured at all or disabled explicitly
+        // Do not cache the response if caching was not configured at all or
+        // disabled explicitly
         if ($pageModel->cache < 1 && $pageModel->clientCache < 1) {
             $response->headers->set('Cache-Control', 'no-cache, no-store');
 
@@ -99,29 +103,41 @@ abstract class AbstractController extends SymfonyAbstractController
             $response->setSharedMaxAge($pageModel->cache); // Automatically sets the response to public
 
             /**
-             * We vary on cookies if a response is cacheable by the shared
-             * cache, so a reverse proxy does not load a response from cache if
-             * the _request_ contains a cookie.
+             * We vary on cookies if a response is cacheable by the shared cache, so a reverse
+             * proxy does not load a response from cache if the _request_ contains a cookie.
              *
-             * This DOES NOT mean that we generate a cache entry for every
-             * response containing a cookie! Responses with cookies will always
-             * be private.
+             * This DOES NOT mean that we generate a cache entry for every response containing
+             * a cookie! Responses with cookies will always be private.
              *
              * @see MakeResponsePrivateListener
              *
-             * However, we want to be able to force the reverse proxy to load a
-             * response from cache, even if the request contains a cookie – in
-             * case the admin has configured to do so. A typical use case would
-             * be serving public pages from cache to logged in members.
+             * However, we want to be able to force the reverse proxy to load a response from
+             * cache, even if the request contains a cookie – in case the admin has
+             * configured to do so. A typical use case would be serving public pages from
+             * cache to logged in members.
              */
             if (!$pageModel->alwaysLoadFromCache) {
                 $response->setVary(['Cookie']);
             }
 
             // Tag the page (see #2137)
-            $this->container->get('contao.cache.entity_tags')->tagWithModelInstance($pageModel);
+            $this->container->get('contao.cache.tag_manager')->tagWithModelInstance($pageModel);
         }
 
         return $response;
+    }
+
+    protected function generateContentUrl(object $content, array $parameters = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string
+    {
+        return $this->container->get('contao.routing.content_url_generator')->generate($content, $parameters, $referenceType);
+    }
+
+    protected function hasParameter(string $name): bool
+    {
+        if (!$this->container->has('parameter_bag')) {
+            return false;
+        }
+
+        return $this->container->get('parameter_bag')->has($name);
     }
 }

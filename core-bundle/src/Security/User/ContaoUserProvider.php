@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Security\User;
 
 use Contao\BackendUser;
+use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\FrontendUser;
 use Contao\User;
@@ -23,17 +24,21 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 
+/**
+ * @implements UserProviderInterface<User>
+ * @implements PasswordUpgraderInterface<User>
+ */
 class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
     /**
      * @param class-string<User> $userClass
      */
     public function __construct(
-        private ContaoFramework $framework,
-        private string $userClass,
+        private readonly ContaoFramework $framework,
+        private readonly string $userClass,
     ) {
         if (BackendUser::class !== $userClass && FrontendUser::class !== $userClass) {
-            throw new \RuntimeException(sprintf('Unsupported class "%s".', $userClass));
+            throw new \RuntimeException(\sprintf('Unsupported class "%s".', $userClass));
         }
     }
 
@@ -41,7 +46,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
     {
         $this->framework->initialize();
 
-        /** @var User $adapter */
+        /** @var Adapter<User> $adapter */
         $adapter = $this->framework->getAdapter($this->userClass);
         $user = $adapter->loadUserByIdentifier($identifier);
 
@@ -49,13 +54,28 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
             return $user;
         }
 
-        throw new UserNotFoundException(sprintf('Could not find user "%s"', $identifier));
+        throw new UserNotFoundException(\sprintf('Could not find user "%s"', $identifier));
+    }
+
+    public function loadUserById(int $id): User
+    {
+        $this->framework->initialize();
+
+        /** @var Adapter<User> $adapter */
+        $adapter = $this->framework->getAdapter($this->userClass);
+        $user = $adapter->loadUserById($id);
+
+        if (is_a($user, $this->userClass)) {
+            return $user;
+        }
+
+        throw new UserNotFoundException(\sprintf('Could not find user "%s"', $id));
     }
 
     public function refreshUser(UserInterface $user): User
     {
         if (!is_a($user, $this->userClass)) {
-            throw new UnsupportedUserException(sprintf('Unsupported class "%s".', $user::class));
+            throw new UnsupportedUserException(\sprintf('Unsupported class "%s".', $user::class));
         }
 
         return $this->loadUserByIdentifier($user->getUserIdentifier());
@@ -75,7 +95,7 @@ class ContaoUserProvider implements UserProviderInterface, PasswordUpgraderInter
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
         if (!is_a($user, $this->userClass)) {
-            throw new UnsupportedUserException(sprintf('Unsupported class "%s".', $user::class));
+            throw new UnsupportedUserException(\sprintf('Unsupported class "%s".', $user::class));
         }
 
         $user->password = $newHashedPassword;

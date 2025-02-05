@@ -36,8 +36,6 @@ class ArrayAttributeBagTest extends TestCase
         $bag['foo'] = 'bar';
         $bag['bar']['baz'] = 'foo';
 
-        $this->assertTrue(isset($bag['foo']));
-        $this->assertTrue(isset($bag['bar']['baz']));
         $this->assertFalse(isset($bag['baz']));
     }
 
@@ -49,7 +47,6 @@ class ArrayAttributeBagTest extends TestCase
 
         $this->assertSame('bar', $bag['foo']);
         $this->assertSame(['baz' => 'foo'], $bag['bar']);
-        $this->assertSame('foo', $bag['bar']['baz']);
     }
 
     public function testCanModifyTheOffset(): void
@@ -85,8 +82,10 @@ class ArrayAttributeBagTest extends TestCase
 
         $foo = $bag['foo'];
         $foo = '';
+
         $baz = $bag['bar']['baz'];
         $baz = '';
+
         $bar = $bag['bar'];
         $bar = [];
 

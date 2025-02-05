@@ -25,7 +25,7 @@ use Doctrine\DBAL\Connection;
  */
 abstract class AbstractBasicEntitiesMigration extends AbstractMigration
 {
-    public function __construct(private Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
     }
 
@@ -33,8 +33,8 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
     {
         $schemaManager = $this->connection->createSchemaManager();
 
-        // This migration is very intrusive thus we try to run it only if the
-        // database schema was not yet updated to Contao 5
+        // This migration is very intrusive thus we try to run it only if the database
+        // schema was not yet updated to Contao 5
         if (
             !$schemaManager->tablesExist(['tl_article'])
             || !isset($schemaManager->listTableColumns('tl_article')['keywords'])
@@ -52,9 +52,12 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
                 continue;
             }
 
-            $test = $this->connection->fetchOne(
-                "SELECT TRUE FROM $table WHERE `$column` REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' LIMIT 1;"
-            );
+            $test = $this->connection->fetchOne("
+                SELECT TRUE
+                FROM $table
+                WHERE CAST(`$column` AS BINARY) REGEXP CAST('\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' AS BINARY)
+                LIMIT 1
+            ");
 
             if (false !== $test) {
                 return true;
@@ -76,15 +79,22 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
                 continue;
             }
 
-            $values = $this->connection->fetchAllKeyValue(
-                "SELECT id, `$column` FROM $table WHERE `$column` REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]'"
-            );
+            $values = $this->connection->fetchAllKeyValue("
+                SELECT
+                    id,
+                    `$column`
+                FROM $table
+                WHERE CAST(`$column` AS BINARY) REGEXP CAST('\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' AS BINARY)
+            ");
 
             foreach ($values as $id => $value) {
-                $value = StringUtil::restoreBasicEntities(StringUtil::deserialize($value));
+                $value = StringUtil::deserialize($value);
 
                 if (\is_array($value)) {
+                    array_walk_recursive($value, static fn (&$v) => $v = StringUtil::restoreBasicEntities($v));
                     $value = serialize($value);
+                } else {
+                    $value = StringUtil::restoreBasicEntities($value);
                 }
 
                 $this->connection->update($table, [$column => $value], ['id' => (int) $id]);
@@ -95,19 +105,17 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
     }
 
     /**
-     * Returns an array of arrays with the first element being the database
-     * table name and the second being the column name.
+     * Returns an array of arrays with the first element being the database table name
+     * and the second being the column name.
      *
      * For example:
      *
-     * ```php
-     * return [
-     *     ['tl_news', 'title'],
-     *     ['tl_news', 'description'],
-     * ];
-     * ```
+     *     return [
+     *         ['tl_news', 'title'],
+     *         ['tl_news', 'description'],
+     *     ];
      *
-     * @return list<array{0:string,1:string}>
+     * @return list<array{0:string, 1:string}>
      */
     abstract protected function getDatabaseColumns(): array;
 }

@@ -42,12 +42,17 @@ class TestListener
     {
     }
 
-    public function onLabelCallback(): void
+    public function onChildRecordCallback(): void
     {
     }
 
     public function onLoadFirst(): void
     {
+    }
+
+    public function onOptions(): array
+    {
+        return [];
     }
 
     public function onLoadSecond(): void

@@ -14,17 +14,21 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\User;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
-use Symfony\Component\Security\Core\Security;
 
 /**
  * @internal
  */
+#[AsEventListener]
 class StoreRefererListener
 {
-    public function __construct(private Security $security, private ScopeMatcher $scopeMatcher)
-    {
+    public function __construct(
+        private readonly Security $security,
+        private readonly ScopeMatcher $scopeMatcher,
+    ) {
     }
 
     /**
@@ -87,14 +91,15 @@ class StoreRefererListener
             && !$request->query->has('token')
             && !$request->query->has('state')
             && 'feRedirect' !== $request->query->get('do')
-            && 'contao_backend' === $request->attributes->get('_route')
+            && 'backend' === $request->attributes->get('_scope')
+            && false !== $request->attributes->get('_store_referrer')
             && !$request->isXmlHttpRequest();
     }
 
     /**
-     * @return array<string,array<string,string>>
+     * @return array<string, array<string, string>>
      */
-    private function prepareBackendReferer(string $refererId, array $referers = null): array
+    private function prepareBackendReferer(string $refererId, array|null $referers = null): array
     {
         if (!\is_array($referers)) {
             $referers = [];

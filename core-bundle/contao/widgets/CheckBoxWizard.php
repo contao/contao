@@ -52,7 +52,7 @@ class CheckBoxWizard extends Widget
 	{
 		if ($strKey == 'options')
 		{
-			$this->arrOptions = StringUtil::deserialize($varValue);
+			$this->arrOptions = StringUtil::deserialize($varValue, true);
 		}
 		else
 		{
@@ -141,14 +141,14 @@ class CheckBoxWizard extends Widget
 		{
 			foreach ($this->unknownOption as $val)
 			{
-				$arrAllOptions[] = array('value' => $val, 'label' => sprintf($GLOBALS['TL_LANG']['MSC']['unknownOption'], $val));
+				$arrAllOptions[] = array('value' => $val, 'label' => \sprintf($GLOBALS['TL_LANG']['MSC']['unknownOption'], $val));
 			}
 		}
 
 		// Generate options and add buttons
 		foreach ($arrAllOptions as $i=>$arrOption)
 		{
-			$arrOptions[] = $this->generateCheckbox($arrOption, $i, '<button type="button" class="drag-handle" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button> ');
+			$arrOptions[] = $this->generateCheckbox($arrOption, $i, '<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', $GLOBALS['TL_LANG']['MSC']['move']) . '</button> ');
 		}
 
 		// Add a "no entries found" message if there are no options
@@ -158,16 +158,16 @@ class CheckBoxWizard extends Widget
 			$blnCheckAll = false;
 		}
 
-		return sprintf(
+		return \sprintf(
 			'<fieldset id="ctrl_%s" class="tl_checkbox_container tl_checkbox_wizard%s"><legend>%s%s%s%s</legend><input type="hidden" name="%s" value="">%s<div class="sortable">%s</div></fieldset>%s<script>Backend.checkboxWizard("ctrl_%s")</script>',
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
-			($this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
+			$this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : '',
 			$this->strLabel,
-			($this->mandatory ? '<span class="mandatory">*</span>' : ''),
+			$this->mandatory ? '<span class="mandatory">*</span>' : '',
 			$this->xlabel,
 			$this->strName,
-			($blnCheckAll ? '<span class="fixed"><input type="checkbox" id="check_all_' . $this->strId . '" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this,\'ctrl_' . $this->strId . '\')"> <label for="check_all_' . $this->strId . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label></span>' : ''),
+			$blnCheckAll ? '<span class="fixed"><input type="checkbox" id="check_all_' . $this->strId . '" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this,\'ctrl_' . $this->strId . '\')"> <label for="check_all_' . $this->strId . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label></span>' : '',
 			implode('', $arrOptions),
 			$this->wizard,
 			$this->strId
@@ -185,12 +185,12 @@ class CheckBoxWizard extends Widget
 	 */
 	protected function generateCheckbox($arrOption, $i, $strButtons)
 	{
-		return sprintf(
-			'<span><input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s onfocus="Backend.getScrollOffset()"> %s<label for="opt_%s">%s</label></span>',
+		return \sprintf(
+			'<span><input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s data-action="focus->contao--scroll-offset#store"> %s<label for="opt_%s">%s</label></span>',
 			$this->strName . ($this->multiple ? '[]' : ''),
 			$this->strId . '_' . $i,
-			($this->multiple ? self::specialcharsValue($arrOption['value'] ?? '') : 1),
-			(((\is_array($this->varValue) && \in_array($arrOption['value'] ?? null, $this->varValue)) || $this->varValue == ($arrOption['value'] ?? null)) ? ' checked="checked"' : ''),
+			$this->multiple ? self::specialcharsValue($arrOption['value'] ?? '') : 1,
+			((\is_array($this->varValue) && \in_array($arrOption['value'] ?? null, $this->varValue)) || $this->varValue == ($arrOption['value'] ?? null)) ? ' checked="checked"' : '',
 			$this->getAttributes(),
 			$strButtons,
 			$this->strId . '_' . $i,

@@ -110,12 +110,12 @@ class StringUtil
 			$buffer = $arrChunks[$i];
 
 			// Get the substring of the current text
-			if (!$arrChunks[$i] = static::substr($arrChunks[$i], ($intNumberOfChars - $intCharCount), false))
+			if (!$arrChunks[$i] = static::substr($arrChunks[$i], $intNumberOfChars - $intCharCount, false))
 			{
 				break;
 			}
 
-			$blnModified = ($buffer !== $arrChunks[$i]);
+			$blnModified = $buffer !== $arrChunks[$i];
 			$intCharCount += mb_strlen(static::decodeEntities($arrChunks[$i]));
 
 			if ($intCharCount <= $intNumberOfChars)
@@ -141,7 +141,7 @@ class StringUtil
 					}
 
 					// Store opening tags in the open_tags array
-					if (strncmp($strTagName, '/', 1) !== 0)
+					if (!str_starts_with($strTagName, '/'))
 					{
 						if ($i<$c || !empty($arrChunks[$i]))
 						{
@@ -216,7 +216,7 @@ class StringUtil
 		$strString = preg_replace('/(&#*\w+)[\x00-\x20]+;/i', '$1;', $strString);
 		$strString = preg_replace('/(&#x*)([0-9a-f]+);/i', '$1$2;', $strString);
 
-		return html_entity_decode($strString, $strQuoteStyle, 'UTF-8');
+		return html_entity_decode($strString, $strQuoteStyle | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
 	}
 
 	/**
@@ -228,7 +228,7 @@ class StringUtil
 	 */
 	public static function convertBasicEntities($strBuffer)
 	{
-		return str_replace(array('&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;'), array('[&]', '[lt]', '[gt]', '[nbsp]', '[-]'), $strBuffer);
+		return str_replace(array('&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;'), array('[&]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]'), $strBuffer);
 	}
 
 	/**
@@ -240,7 +240,7 @@ class StringUtil
 	 */
 	public static function restoreBasicEntities($strBuffer)
 	{
-		return str_replace(array('[&]', '[&amp;]', '[lt]', '[gt]', '[nbsp]', '[-]'), array('&amp;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;'), $strBuffer);
+		return str_replace(array('[&]', '[&amp;]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]'), array('&amp;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;'), $strBuffer);
 	}
 
 	/**
@@ -256,7 +256,7 @@ class StringUtil
 		$strString = static::standardize(strip_tags($strString));
 
 		// Remove the prefix if the alias is not numeric (see #707)
-		if (strncmp($strString, 'id-', 3) === 0 && !is_numeric($strSubstr = substr($strString, 3)))
+		if (str_starts_with($strString, 'id-') && !is_numeric($strSubstr = substr($strString, 3)))
 		{
 			$strString = $strSubstr;
 		}
@@ -307,7 +307,7 @@ class StringUtil
 	 */
 	public static function encodeEmail($strString)
 	{
-		if (strpos($strString, '@') === false)
+		if (!str_contains($strString, '@'))
 		{
 			return $strString;
 		}
@@ -321,7 +321,7 @@ class StringUtil
 
 			foreach ($arrCharacters as $index => $strCharacter)
 			{
-				$strEncoded .= sprintf(($index % 2) ? '&#x%X;' : '&#%s;', mb_ord($strCharacter));
+				$strEncoded .= \sprintf(($index % 2) ? '&#x%X;' : '&#%s;', mb_ord($strCharacter));
 			}
 
 			$strString = str_replace($strEmail, $strEncoded, $strString);
@@ -342,7 +342,7 @@ class StringUtil
 	{
 		$arrEmails = array();
 
-		if (strpos($strString, '@') === false)
+		if (!str_contains($strString, '@'))
 		{
 			return $arrEmails;
 		}
@@ -363,8 +363,7 @@ class StringUtil
 		unset($strEmail);
 
 		// Encode opening arrow brackets (see #3998)
-		$strString = preg_replace_callback('@</?([^\s<>/]*)@', static function ($matches) use ($strAllowedTags)
-		{
+		$strString = preg_replace_callback('@</?([^\s<>/]*)@', static function ($matches) use ($strAllowedTags) {
 			if (!$matches[1] || stripos($strAllowedTags, '<' . strtolower($matches[1]) . '>') === false)
 			{
 				$matches[0] = str_replace('<', '&lt;', $matches[0]);
@@ -398,12 +397,12 @@ class StringUtil
 	 */
 	public static function splitFriendlyEmail($strEmail)
 	{
-		if (strpos($strEmail, '<') !== false)
+		if (str_contains($strEmail, '<'))
 		{
 			return array_map('trim', explode(' <', str_replace('>', '', $strEmail)));
 		}
 
-		if (strpos($strEmail, '[') !== false)
+		if (str_contains($strEmail, '['))
 		{
 			return array_map('trim', explode(' [', str_replace(']', '', $strEmail)));
 		}
@@ -608,8 +607,14 @@ class StringUtil
 	 */
 	public static function insertTagToSrc($data)
 	{
-		$return = '';
 		$paths = preg_split('/((src|href)="([^"]*){{file::([^"}|]+)[^"}]*}}")/i', $data, -1, PREG_SPLIT_DELIM_CAPTURE);
+
+		if (!$paths)
+		{
+			return $data;
+		}
+
+		$return = '';
 
 		for ($i=0, $c=\count($paths); $i<$c; $i+=5)
 		{
@@ -628,7 +633,7 @@ class StringUtil
 			}
 			else
 			{
-				$return .= $paths[$i+2] . '="' . $paths[$i+3] . $paths[$i+4] . '"';
+				$return .= $paths[$i+1];
 			}
 		}
 
@@ -821,7 +826,7 @@ class StringUtil
 			$strString = static::stripInsertTags($strString);
 		}
 
-		return htmlspecialchars((string) $strString, ENT_QUOTES, 'UTF-8', $blnDoubleEncode);
+		return htmlspecialchars((string) $strString, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8', $blnDoubleEncode);
 	}
 
 	/**
@@ -891,7 +896,13 @@ class StringUtil
 			!preg_match('(^(?:' . implode('|', array_map('preg_quote', $arrAllowedUrlProtocols)) . '):)i', self::decodeEntities($strString))
 			&& preg_match($colonRegEx, self::stripInsertTags($strString))
 		) {
-			$strString = preg_replace($colonRegEx, '%3A', $strString);
+			$arrChunks = preg_split('/({{[^{}]*}})/', $strString, -1, PREG_SPLIT_DELIM_CAPTURE);
+			$strString = '';
+
+			foreach ($arrChunks as $index => $strChunk)
+			{
+				$strString .= ($index % 2) ? $strChunk : preg_replace($colonRegEx, '%3A', $strChunk);
+			}
 		}
 
 		return $strString;
@@ -930,7 +941,7 @@ class StringUtil
 		$arrSearch = array('/[^\pN\pL \.\&\/_-]+/u', '/[ \.\&\/-]+/');
 		$arrReplace = array('', '-');
 
-		$strString = html_entity_decode($strString, ENT_QUOTES, 'UTF-8');
+		$strString = html_entity_decode($strString, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
 		$strString = static::stripInsertTags($strString);
 		$strString = preg_replace($arrSearch, $arrReplace, $strString);
 
@@ -982,7 +993,7 @@ class StringUtil
 		}
 
 		// Not a serialized array (see #1486)
-		if (strncmp($varValue, 'a:', 2) !== 0)
+		if (!str_starts_with($varValue, 'a:'))
 		{
 			return $blnForceArray ? array($varValue) : $varValue;
 		}
@@ -1056,7 +1067,7 @@ class StringUtil
 
 		if (strncmp($normalizedPath, $projectDir, $length) !== 0 || \strlen($normalizedPath) <= $length || $normalizedPath[$length] !== '/')
 		{
-			throw new \InvalidArgumentException(sprintf('Path "%s" is not inside the Contao root dir "%s"', $path, $projectDir));
+			throw new \InvalidArgumentException(\sprintf('Path "%s" is not inside the Contao root dir "%s"', $path, $projectDir));
 		}
 
 		return substr($path, $length + 1);
@@ -1072,7 +1083,7 @@ class StringUtil
 	 */
 	public static function ampersand($strString, $blnEncode=true): string
 	{
-		return preg_replace('/&(amp;)?/i', ($blnEncode ? '&amp;' : '&'), $strString);
+		return preg_replace('/&(amp;)?/i', $blnEncode ? '&amp;' : '&', $strString);
 	}
 
 	/**
@@ -1115,9 +1126,20 @@ class StringUtil
 			$precision = (int) \ini_get('precision');
 		}
 
-		if (!preg_match('/^(-?)(\d)\.(\d+)e([+-]\d+)$/', sprintf('%.' . ($precision - 1) . 'e', $number), $match))
+		// Special value from PHP ini
+		if ($precision === -1)
 		{
-			throw new \InvalidArgumentException(sprintf('Unable to convert "%s" into a string representation.', $number));
+			$precision = 14;
+		}
+
+		if ($precision <= 1)
+		{
+			throw new \InvalidArgumentException(\sprintf('Precision must be greater than 1, "%s" given.', $precision));
+		}
+
+		if (!preg_match('/^(-?)(\d)\.(\d+)e([+-]\d+)$/', \sprintf('%.' . ($precision - 1) . 'e', $number), $match))
+		{
+			throw new \InvalidArgumentException(\sprintf('Unable to convert "%s" into a string representation.', $number));
 		}
 
 		$significantDigits = rtrim($match[2] . $match[3], '0');

@@ -1,33 +1,25 @@
 {
     "devDependencies": {
-        "@babel/core": "^7.20.12",
-        "@babel/preset-env": "^7.20.2",
-        "@hotwired/stimulus": "^3.2.1",
+        "@hotwired/stimulus": "^3.2.2",
         "@hotwired/stimulus-webpack-helpers": "^1.0.1",
-        "@symfony/webpack-encore": "^4.2.0",
-        "autoprefixer": "^10.4.13",
-        "gulp": "^4.0.2",
-        "gulp-csso": "^4.0.1",
-        "gulp-ignore": "^3.0",
-        "gulp-rename": "^2.0",
-        "gulp-svgo": "^2.2.1",
-        "gulp-uglify-es": "^3.0",
-        "postcss": "^8.4",
-        "postcss-loader": "^7.0.2",
-        "postcss-nested": "^6.0.0",
-        "postcss-preset-env": "^7.8.3",
-        "pump": "^3.0",
-        "webpack": "^5.75.0",
-        "webpack-cli": "^5.0.1"
+        "@hotwired/turbo": "^8.0.12",
+        "@stimulus-components/color-picker": "^2.0.0",
+        "@symfony/webpack-encore": "^5.0.1",
+        "@web-auth/webauthn-stimulus": "file:vendor/web-auth/webauthn-stimulus/assets",
+        "accessible-menu": "^4.2",
+        "postcss": "^8.4.47",
+        "postcss-loader": "^8.1.1",
+        "postcss-preset-env": "^10.0.7"
     },
-    "private": true,
+    "browserslist": [
+        "defaults"
+    ],
     "scripts": {
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress"
     },
-    "browserslist": [
-        "defaults"
-    ]
+    "private": true,
+    "packageManager": "npm@10.8.2"
 }

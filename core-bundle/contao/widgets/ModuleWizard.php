@@ -52,13 +52,13 @@ class ModuleWizard extends Widget
 	 */
 	public function generate()
 	{
-		$this->import(Database::class, 'Database');
-
+		$db = Database::getInstance();
 		$arrButtons = array('edit', 'copy', 'delete', 'enable', 'drag');
 
 		// Get all modules of the current theme
-		$objModules = $this->Database->prepare("SELECT id, name, type FROM tl_module WHERE pid=(SELECT pid FROM " . $this->strTable . " WHERE id=?) ORDER BY name")
-									 ->execute($this->currentRecord);
+		$objModules = $db
+			->prepare("SELECT id, name, type FROM tl_module WHERE pid=(SELECT pid FROM " . $this->strTable . " WHERE id=?) ORDER BY name")
+			->execute($this->currentRecord);
 
 		// Add the articles module
 		$modules[] = array('id'=>0, 'name'=>$GLOBALS['TL_LANG']['MOD']['article'][0], 'type'=>'article');
@@ -67,6 +67,30 @@ class ModuleWizard extends Widget
 		{
 			$modules = array_merge($modules, $objModules->fetchAllAssoc());
 		}
+
+		// Get all content elements of the current theme
+		$elements = $db
+			->prepare("SELECT * FROM tl_content WHERE ptable=? AND pid=(SELECT pid FROM " . $this->strTable . " WHERE id=?)")
+			->execute('tl_theme', $this->currentRecord)
+			->fetchAllAssoc()
+		;
+
+		$recordLabeler = System::getContainer()->get('contao.data_container.record_labeler');
+
+		$elements = array_map(
+			static function (array $element) use ($recordLabeler) {
+				return array(
+					'id' => 'content-' . $element['id'],
+					'title' => $recordLabeler->getLabel('contao.db.tl_content.' . $element['id'], $element),
+					'type' => $GLOBALS['TL_LANG']['CTE'][$element['type']][0] ?? $element['type'],
+				);
+			},
+			$elements
+		);
+
+		usort($elements, static function (array $a, array $b) {
+			return strcmp($a['title'], $b['title']);
+		});
 
 		$GLOBALS['TL_LANG']['FMD']['article'] = $GLOBALS['TL_LANG']['MOD']['article'];
 
@@ -81,53 +105,68 @@ class ModuleWizard extends Widget
 			$modules[$k] = $v;
 		}
 
-		$objRow = $this->Database->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
-								 ->limit(1)
-								 ->execute($this->currentRecord);
-
-		$cols = array('main');
-
-		if (\in_array($objRow->rows, array('2rwh', '3rw')))
+		// Show slots if they are explicitly defined, otherwise fall back to the legacy logic
+		if (null !== ($slots = $this->arrConfiguration['slots'] ?? null))
 		{
-			$cols[] = 'header';
-		}
+			$cols = array();
 
-		if (\in_array($objRow->cols, array('2cll', '3cl')))
-		{
-			$cols[] = 'left';
-		}
-
-		if (\in_array($objRow->cols, array('2clr', '3cl')))
-		{
-			$cols[] = 'right';
-		}
-
-		if (\in_array($objRow->rows, array('2rwf', '3rw')))
-		{
-			$cols[] = 'footer';
-		}
-
-		$positions = array();
-
-		// Add custom layout sections
-		if ($objRow->sections)
-		{
-			$arrSections = StringUtil::deserialize($objRow->sections);
-
-			if (!empty($arrSections) && \is_array($arrSections))
+			foreach ($slots as $slot)
 			{
-				foreach ($arrSections as $v)
+				$cols[$slot] = "{% slot $slot %}";
+			}
+		}
+		else
+		{
+			$objRow = $db
+				->prepare("SELECT * FROM " . $this->strTable . " WHERE id=?")
+				->limit(1)
+				->execute($this->currentRecord)
+			;
+
+			$cols = array('main');
+
+			if (\in_array($objRow->rows, array('2rwh', '3rw')))
+			{
+				$cols[] = 'header';
+			}
+
+			if (\in_array($objRow->cols, array('2cll', '3cl')))
+			{
+				$cols[] = 'left';
+			}
+
+			if (\in_array($objRow->cols, array('2clr', '3cl')))
+			{
+				$cols[] = 'right';
+			}
+
+			if (\in_array($objRow->rows, array('2rwf', '3rw')))
+			{
+				$cols[] = 'footer';
+			}
+
+			$positions = array();
+
+			// Add custom layout sections
+			if ($objRow->sections)
+			{
+				$arrSections = StringUtil::deserialize($objRow->sections);
+
+				if (!empty($arrSections) && \is_array($arrSections))
 				{
-					if (!empty($v['id']))
+					foreach ($arrSections as $v)
 					{
-						$cols[] = $v['id'];
-						$positions[$v['id']] = $v['position'];
+						if (!empty($v['id']))
+						{
+							$cols[] = $v['id'];
+							$positions[$v['id']] = $v['position'];
+						}
 					}
 				}
 			}
-		}
 
-		$cols = Backend::convertLayoutSectionIdsToAssociativeArray($cols);
+			$cols = Backend::convertLayoutSectionIdsToAssociativeArray($cols);
+		}
 
 		// Get the new value
 		if (Input::post('FORM_SUBMIT') == $this->strTable)
@@ -181,6 +220,16 @@ class ModuleWizard extends Widget
 		// Add the input fields
 		for ($i=0, $c=\count($this->varValue); $i<$c; $i++)
 		{
+			$optionGroups = array();
+			$options = '';
+
+			// Add content elements
+			foreach ($elements as $v)
+			{
+				$options .= '<option value="' . self::specialcharsValue($v['id']) . '"' . static::optionSelected($v['id'], $this->varValue[$i]['mod'] ?? null) . '>' . $v['title'] . ' [' . $v['type'] . ']</option>';
+			}
+
+			$optionGroups[] = \sprintf('<optgroup label="%s">%s</optgroup>', $GLOBALS['TL_LANG']['MSC']['mw_elements'], $options);
 			$options = '';
 
 			// Add modules
@@ -189,9 +238,11 @@ class ModuleWizard extends Widget
 				$options .= '<option value="' . self::specialcharsValue($v['id']) . '"' . static::optionSelected($v['id'], $this->varValue[$i]['mod'] ?? null) . '>' . $v['name'] . ' [' . $v['type'] . ']</option>';
 			}
 
+			$optionGroups[] = \sprintf('<optgroup label="%s">%s</optgroup>', $GLOBALS['TL_LANG']['MSC']['mw_modules'], $options);
+
 			$return .= '
   <tr>
-    <td><select name="' . $this->strId . '[' . $i . '][mod]" class="tl_select tl_chosen" onfocus="Backend.getScrollOffset()">' . $options . '</select></td>';
+    <td><select name="' . $this->strId . '[' . $i . '][mod]" class="tl_select" data-action="focus->contao--scroll-offset#store" data-controller="contao--choices">' . implode('', $optionGroups) . '</select></td>';
 
 			$options = '<option value="">-</option>';
 
@@ -202,35 +253,41 @@ class ModuleWizard extends Widget
 			}
 
 			$return .= '
-    <td><select name="' . $this->strId . '[' . $i . '][col]" class="tl_select_column" onfocus="Backend.getScrollOffset()">' . $options . '</select></td>
-    <td>';
+    <td><select name="' . $this->strId . '[' . $i . '][col]" class="tl_select_column" data-action="focus->contao--scroll-offset#store">' . $options . '</select></td>
+    <td class="tl_right">';
 
 			// Add buttons
 			foreach ($arrButtons as $button)
 			{
+				$id = ($this->varValue[$i]['mod'] ?? null);
+				$isContentElement = str_starts_with((string) $id, 'content-');
+				$id = (int) str_replace('content-', '', $id);
+
 				if ($button == 'edit')
 				{
-					if (($this->varValue[$i]['mod'] ?? null) > 0)
-					{
-						$href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>($this->varValue[$i]['mod'] ?? null), 'popup'=>'1', 'rt'=>System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue())));
-						$return .= ' <a href="' . $href . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_module']) . '" class="module_link" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_module'])) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg') . '</a>';
-					}
-					else
-					{
-						$return .= ' ' . Image::getHtml('edit_.svg');
-					}
+					$params = array(
+						'do' => 'themes',
+						'table' => $isContentElement ? 'tl_content' : 'tl_module',
+						'id' => $id,
+						'act' => 'edit',
+						'popup' => 1,
+					);
+
+					$href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', $params));
+					$title = $isContentElement ? $GLOBALS['TL_LANG']['MSC']['editElement'] : $GLOBALS['TL_LANG']['tl_layout']['edit_module'];
+					$return .= ' <a href="' . $href . '" class="module_link' . ($id > 0 ? '' : ' hidden') . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg', $title) . '</a>' . Image::getHtml('edit--disabled.svg', '', 'class="module_image' . ($id > 0 ? ' hidden' : '') . '"');
 				}
 				elseif ($button == 'drag')
 				{
-					$return .= ' <button type="button" class="drag-handle" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button>';
+					$return .= ' <button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', $GLOBALS['TL_LANG']['MSC']['move']) . '</button>';
 				}
 				elseif ($button == 'enable')
 				{
-					$return .= ' <input name="' . $this->strId . '[' . $i . '][enable]" type="checkbox" class="tl_checkbox mw_enable" value="1" onfocus="Backend.getScrollOffset()"' . (($this->varValue[$i]['enable'] ?? null) ? ' checked' : '') . '><button type="button" data-command="enable" class="mw_enable" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_enable']) . '"></button>';
+					$return .= ' <input name="' . $this->strId . '[' . $i . '][enable]" type="checkbox" class="tl_checkbox mw_enable" value="1" data-action="focus->contao--scroll-offset#store"' . (($this->varValue[$i]['enable'] ?? null) ? ' checked' : '') . '><button type="button" data-command="enable" class="mw_enable" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_enable']) . '"></button>';
 				}
 				else
 				{
-					$return .= ' <button type="button" data-command="' . $button . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_' . $button]) . '">' . Image::getHtml($button . '.svg') . '</button>';
+					$return .= ' <button type="button" data-command="' . $button . '">' . Image::getHtml($button . '.svg', $GLOBALS['TL_LANG']['MSC']['mw_' . $button]) . '</button>';
 				}
 			}
 

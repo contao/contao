@@ -21,10 +21,12 @@ use Doctrine\DBAL\Schema\Table;
 class CommandCompiler
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao.migration.command_compiler" service instead
+     * @internal
      */
-    public function __construct(private readonly Connection $connection, private readonly SchemaProvider $schemaProvider)
-    {
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly SchemaProvider $schemaProvider,
+    ) {
     }
 
     /**
@@ -34,17 +36,10 @@ class CommandCompiler
     {
         $schemaManager = $this->connection->createSchemaManager();
         $toSchema = $this->schemaProvider->createSchema();
+        $fromSchema = $schemaManager->introspectSchema();
 
-        // Backwards compatibility with doctrine/dbal < 3.5
-        if (method_exists($schemaManager, 'introspectSchema')) {
-            $fromSchema = $schemaManager->introspectSchema();
-        } else {
-            $fromSchema = $schemaManager->createSchema();
-        }
-
-        // If tables or columns should be preserved, we copy the missing
-        // definitions over to the $toSchema, so that no DROP commands
-        // will be issued in the diff.
+        // If tables or columns should be preserved, we copy the missing definitions over
+        // to the $toSchema, so that no DROP commands will be issued in the diff.
         if ($skipDropStatements) {
             foreach ($fromSchema->getTables() as $table) {
                 if (!$toSchema->hasTable($table->getName())) {
@@ -114,7 +109,7 @@ class CommandCompiler
 
             $tableOptions = $this->connection->fetchAssociative(
                 'SHOW TABLE STATUS WHERE Name = ? AND Engine IS NOT NULL AND Create_options IS NOT NULL AND Collation IS NOT NULL',
-                [$tableName]
+                [$tableName],
             );
 
             if (false === $tableOptions) {
@@ -137,16 +132,14 @@ class CommandCompiler
 
                 $deleteIndexes = true;
                 $commands[] = $command;
-            } elseif ($innodb && $dynamic) {
-                if (false === stripos($tableOptions['Create_options'], 'row_format=dynamic')) {
-                    $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
+            } elseif ($innodb && $dynamic && 'dynamic' !== strtolower($tableOptions['Row_format'])) {
+                $command = 'ALTER TABLE '.$tableName.' ENGINE = '.$engine.' ROW_FORMAT = DYNAMIC';
 
-                    if (false !== stripos($tableOptions['Create_options'], 'key_block_size=')) {
-                        $command .= ' KEY_BLOCK_SIZE = 0';
-                    }
-
-                    $commands[] = $command;
+                if (false !== stripos($tableOptions['Create_options'], 'key_block_size=')) {
+                    $command .= ' KEY_BLOCK_SIZE = 0';
                 }
+
+                $commands[] = $command;
             }
 
             $collate = '';
@@ -164,9 +157,9 @@ class CommandCompiler
                 $commands[] = $command;
             }
 
-            // Delete the indexes if the engine changes in case the existing
-            // indexes are too long. The migration then needs to be run multiple
-            // times to re-create the indexes with the correct length.
+            // Delete the indexes if the engine changes in case the existing indexes are too
+            // long. The migration then needs to be run multiple times to re-create the
+            // indexes with the correct length.
             if ($deleteIndexes) {
                 if (!$fromSchema->hasTable($tableName)) {
                     continue;

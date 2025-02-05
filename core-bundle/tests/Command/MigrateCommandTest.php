@@ -69,6 +69,34 @@ class MigrateCommandTest extends TestCase
     /**
      * @group legacy
      */
+    public function testAbortsEarlyIfNonInteractiveAndThereAreOnlyDropMigrations(): void
+    {
+        $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
+
+        $backupManager = $this->createBackupManager(false);
+
+        $commandCompiler = $this->createMock(CommandCompiler::class);
+        $commandCompiler
+            ->expects($this->atLeastOnce())
+            ->method('compileCommands')
+            ->willReturnCallback(
+                static fn (bool $skipDropStatements = false): array => $skipDropStatements ? [] : ['DROP QUERY'],
+            )
+        ;
+
+        $command = $this->getCommand([], [], $commandCompiler, $backupManager);
+        $tester = new CommandTester($command);
+        $code = $tester->execute([], ['interactive' => false]);
+        $display = $tester->getDisplay();
+
+        $this->assertSame(0, $code);
+        $this->assertMatchesRegularExpression('/Database dump skipped because there are no migrations to execute./', $display);
+        $this->assertMatchesRegularExpression('/All migrations completed/', $display);
+    }
+
+    /**
+     * @group legacy
+     */
     public function testExecutesBackupIfPendingSchemaDiff(): void
     {
         $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
@@ -105,7 +133,7 @@ class MigrateCommandTest extends TestCase
             [['Migration 1', 'Migration 2']],
             [],
             null,
-            $backupManager
+            $backupManager,
         );
 
         $tester = new CommandTester($command);
@@ -139,7 +167,7 @@ class MigrateCommandTest extends TestCase
                     ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
                     ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
                 ],
-                $this->jsonArrayFromNdjson($display)
+                $this->jsonArrayFromNdjson($display),
             );
         } else {
             $this->assertMatchesRegularExpression('/All migrations completed/', $display);
@@ -159,7 +187,7 @@ class MigrateCommandTest extends TestCase
             [['Migration 1', 'Migration 2']],
             [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]],
             null,
-            $this->createBackupManager($backupsEnabled)
+            $this->createBackupManager($backupsEnabled),
         );
 
         $tester = new CommandTester($command);
@@ -177,17 +205,15 @@ class MigrateCommandTest extends TestCase
                 $expected[] = ['type' => 'backup-result', 'createdAt' => '2021-11-01T14:12:54+00:00', 'size' => 0, 'name' => 'valid_backup_filename__20211101141254.sql'];
             }
 
-            $expected = array_merge(
-                $expected,
-                [
-                    ['type' => 'migration-pending', 'names' => ['Migration 1', 'Migration 2'], 'hash' => 'ba37bf15c565f47d20df024e3f18bd32e88985525920011c4669c574d71b69fd'],
-                    ['type' => 'migration-result', 'message' => 'Result 1', 'isSuccessful' => true],
-                    ['type' => 'migration-result', 'message' => 'Result 2', 'isSuccessful' => true],
-                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                    ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                    ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
-                ],
-            );
+            $expected = [
+                ...$expected,
+                ['type' => 'migration-pending', 'names' => ['Migration 1', 'Migration 2'], 'hash' => 'ba37bf15c565f47d20df024e3f18bd32e88985525920011c4669c574d71b69fd'],
+                ['type' => 'migration-result', 'message' => 'Result 1', 'isSuccessful' => true],
+                ['type' => 'migration-result', 'message' => 'Result 2', 'isSuccessful' => true],
+                ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+                ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
+            ];
 
             $this->assertSame($expected, $this->jsonArrayFromNdjson($display));
         } else {
@@ -245,7 +271,7 @@ class MigrateCommandTest extends TestCase
             ->willReturnCallback(
                 static function (bool $doNotDropColumns = false) use (&$returnedCommandsWithoutDrops, &$returnedCommands): array {
                     return $doNotDropColumns ? array_shift($returnedCommandsWithoutDrops) : array_shift($returnedCommands);
-                }
+                },
             )
         ;
 
@@ -276,7 +302,7 @@ class MigrateCommandTest extends TestCase
                     ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
                     ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
                 ],
-                $this->jsonArrayFromNdjson($display)
+                $this->jsonArrayFromNdjson($display),
             );
         } else {
             $this->assertMatchesRegularExpression('/First call QUERY 1/', $display);
@@ -306,7 +332,7 @@ class MigrateCommandTest extends TestCase
                 [
                     'First call QUERY 1',
                     'First call QUERY 2',
-                ]
+                ],
             )
         ;
 
@@ -321,7 +347,7 @@ class MigrateCommandTest extends TestCase
             [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]],
             $commandCompiler,
             null,
-            $connection
+            $connection,
         );
 
         $tester = new CommandTester($command);
@@ -346,7 +372,7 @@ class MigrateCommandTest extends TestCase
                         'hash' => '06b103d878d056ea88d30fba6a88782227a7c34160bca50a6e63320ee104af5f',
                     ],
                 ],
-                $this->jsonArrayFromNdjson($display)
+                $this->jsonArrayFromNdjson($display),
             );
         } else {
             $this->assertMatchesRegularExpression('/Migration 1/', $display);
@@ -371,7 +397,7 @@ class MigrateCommandTest extends TestCase
 
         $command = $this->getCommand(
             [['Migration 1', 'Migration 2']],
-            [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]]
+            [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]],
         );
 
         $tester = new CommandTester($command);
@@ -399,7 +425,7 @@ class MigrateCommandTest extends TestCase
 
         $command = $this->getCommand(
             [['Migration 1', 'Migration 2']],
-            [[new MigrationResult(false, 'Result 1'), new MigrationResult(true, 'Result 2')]]
+            [[new MigrationResult(false, 'Result 1'), new MigrationResult(true, 'Result 2')]],
         );
 
         $tester = new CommandTester($command);
@@ -420,7 +446,7 @@ class MigrateCommandTest extends TestCase
                     ['type' => 'schema-pending', 'commands' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
                     ['type' => 'migration-pending', 'names' => [], 'hash' => '4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945'],
                 ],
-                $this->jsonArrayFromNdjson($display)
+                $this->jsonArrayFromNdjson($display),
             );
         } else {
             $this->assertMatchesRegularExpression('/Migration 1/', $display);
@@ -539,7 +565,7 @@ class MigrateCommandTest extends TestCase
         $display = $tester->getDisplay();
 
         $this->assertStringContainsString('Running MySQL in non-strict mode can cause corrupt or truncated data.', $display);
-        $this->assertStringContainsString(sprintf('%s: "SET SESSION sql_mode=', $expectedOptionKey), $display);
+        $this->assertStringContainsString(\sprintf('%s: "SET SESSION sql_mode=', $expectedOptionKey), $display);
     }
 
     /**
@@ -563,12 +589,12 @@ class MigrateCommandTest extends TestCase
             ->method('fetchAssociative')
             ->willReturnCallback(
                 static fn (string $query): array|false => match ($query) {
-                    sprintf('SHOW COLLATION LIKE \'%s\'', $configuration['defaultTableOptions']['collate'] ?? '') => $configuration['collation'] ?? false,
-                    'SHOW VARIABLES LIKE \'innodb_large_prefix\'' => $configuration['innodb_large_prefix'] ?? false,
-                    'SHOW VARIABLES LIKE \'innodb_file_per_table\'' => $configuration['innodb_file_per_table'] ?? false,
-                    'SHOW VARIABLES LIKE \'innodb_file_format\'' => $configuration['innodb_file_format'] ?? false,
+                    \sprintf("SHOW COLLATION LIKE '%s'", $configuration['defaultTableOptions']['collate'] ?? '') => $configuration['collation'] ?? false,
+                    "SHOW VARIABLES LIKE 'innodb_large_prefix'" => $configuration['innodb_large_prefix'] ?? false,
+                    "SHOW VARIABLES LIKE 'innodb_file_per_table'" => $configuration['innodb_file_per_table'] ?? false,
+                    "SHOW VARIABLES LIKE 'innodb_file_format'" => $configuration['innodb_file_format'] ?? false,
                     default => false,
-                }
+                },
             )
         ;
 
@@ -590,7 +616,7 @@ class MigrateCommandTest extends TestCase
         }
     }
 
-    public function provideBadConfigurations(): \Generator
+    public static function provideBadConfigurations(): iterable
     {
         yield 'database version too old' => [
             [
@@ -745,16 +771,16 @@ class MigrateCommandTest extends TestCase
         $this->assertSame('warning', $json['type']);
 
         $this->assertStringContainsString('Running MySQL in non-strict mode can cause corrupt or truncated data.', $json['message']);
-        $this->assertStringContainsString(sprintf('%s: "SET SESSION sql_mode=', $expectedOptionKey), $json['message']);
+        $this->assertStringContainsString(\sprintf('%s: "SET SESSION sql_mode=', $expectedOptionKey), $json['message']);
     }
 
-    public function getOutputFormats(): \Generator
+    public static function getOutputFormats(): iterable
     {
         yield ['txt'];
         yield ['ndjson'];
     }
 
-    public function getOutputFormatsAndBackup(): \Generator
+    public static function getOutputFormatsAndBackup(): iterable
     {
         yield 'txt and backups enabled' => ['txt', true];
         yield 'txt and backups disabled' => ['txt', false];
@@ -762,7 +788,7 @@ class MigrateCommandTest extends TestCase
         yield 'ndjson and backups disabled' => ['ndjson', false];
     }
 
-    public function provideInvalidSqlModes(): \Generator
+    public static function provideInvalidSqlModes(): iterable
     {
         yield 'empty sql_mode, pdo driver' => [
             '', new PdoDriver(), 1002,
@@ -827,14 +853,11 @@ class MigrateCommandTest extends TestCase
             $migrations,
             $backupManager ?? $this->createBackupManager(false),
             $schemaProvider,
-            $this->createMock(MysqlInnodbRowSizeCalculator::class)
+            $this->createMock(MysqlInnodbRowSizeCalculator::class),
         );
     }
 
-    /**
-     * @return Connection&MockObject
-     */
-    private function createDefaultConnection(string $sqlMode = 'TRADITIONAL', AbstractMySQLDriver $driver = null): Connection
+    private function createDefaultConnection(string $sqlMode = 'TRADITIONAL', AbstractMySQLDriver|null $driver = null): Connection&MockObject
     {
         $connection = $this->createMock(Connection::class);
         $connection
@@ -844,7 +867,7 @@ class MigrateCommandTest extends TestCase
                     'SELECT @@sql_mode' => $sqlMode,
                     'SELECT @@version' => '8.0.0',
                     default => false,
-                }
+                },
             )
         ;
 
@@ -856,10 +879,7 @@ class MigrateCommandTest extends TestCase
         return $connection;
     }
 
-    /**
-     * @return BackupManager&MockObject
-     */
-    private function createBackupManager(bool $backupsEnabled): BackupManager
+    private function createBackupManager(bool $backupsEnabled): BackupManager&MockObject
     {
         $backupManager = $this->createMock(BackupManager::class);
         $backupManager
@@ -878,6 +898,6 @@ class MigrateCommandTest extends TestCase
 
     private function jsonArrayFromNdjson(string $ndjson): array
     {
-        return array_map(static fn (string $line) => json_decode($line, true), explode("\n", trim($ndjson)));
+        return array_map(static fn (string $line) => json_decode($line, true, 512, JSON_THROW_ON_ERROR), explode("\n", trim($ndjson)));
     }
 }

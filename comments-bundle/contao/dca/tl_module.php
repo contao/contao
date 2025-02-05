@@ -63,8 +63,7 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['com_template'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_content']['com_template'],
 	'inputType'               => 'select',
-	'options_callback' => static function ()
-	{
+	'options_callback' => static function () {
 		return Controller::getTemplateGroup('com_');
 	},
 	'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),

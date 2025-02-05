@@ -19,10 +19,11 @@ use Contao\CoreBundle\EventListener\Menu\BackendFavoritesListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Knp\Menu\MenuFactory;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -49,7 +50,7 @@ class BackendFavoritesListenerTest extends TestCase
             $this->createMock(RequestStack::class),
             $this->createMock(Connection::class),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(ContaoCsrfTokenManager::class),
         );
 
         $listener($event);
@@ -71,17 +72,17 @@ class BackendFavoritesListenerTest extends TestCase
 
         $router = $this->createMock(RouterInterface::class);
         $router
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('generate')
-            ->willReturnOnConsecutiveCalls(
-                '/contao',
-                '/contao?do=pages&mtg=favorites&ref=foobar'
-            )
+            ->willReturn('/contao?do=pages&mtg=favorites&ref=foobar')
         ;
 
         $session = $this->mockSession();
-        $sessionData['backend_modules']['favorites'] = $collapsed ? 0 : null;
-        $session->replace($sessionData);
+        $bag = $session->getBag('contao_backend');
+
+        $this->assertInstanceOf(AttributeBagInterface::class, $bag);
+
+        $bag->set('backend_modules', ['favorites' => $collapsed ? 0 : null]);
 
         $request = Request::create('https://localhost/contao?do=pages&act=edit&id=3');
         $request->attributes->set('_contao_referer_id', 'foobar');
@@ -107,7 +108,7 @@ class BackendFavoritesListenerTest extends TestCase
                         'id' => 8,
                         'pid' => 7,
                         'tstamp' => 1671538402,
-                        'title' => 'Edit fe_page',
+                        'title' => 'Edit &quot;fe_page&quot;',
                         'url' => '/contao?do=tpl_editor&act=source&id=templates%2Ffe_page.html5',
                     ],
                 ],
@@ -136,7 +137,7 @@ class BackendFavoritesListenerTest extends TestCase
             $requestStack,
             $connection,
             $translator,
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(ContaoCsrfTokenManager::class),
         );
 
         $listener($event);
@@ -152,7 +153,8 @@ class BackendFavoritesListenerTest extends TestCase
         $linkAttributes = [
             'class' => 'group-favorites',
             'title' => $collapsed ? 'Expand node' : 'Collapse node',
-            'onclick' => "return AjaxRequest.toggleNavigation(this, 'favorites', '/contao')",
+            'data-action' => 'contao--toggle-navigation#toggle:prevent',
+            'data-contao--toggle-navigation-category-param' => 'favorites',
             'aria-controls' => 'favorites',
         ];
 
@@ -174,25 +176,25 @@ class BackendFavoritesListenerTest extends TestCase
                 'class' => 'navigation',
                 'title' => 'Edit page 3',
             ],
-            $grandChildren[0]->getLinkAttributes()
+            $grandChildren[0]->getLinkAttributes(),
         );
 
         $this->assertSame('favorite_8', $grandChildren[1]->getName());
-        $this->assertSame('Edit fe_page', $grandChildren[1]->getLabel());
+        $this->assertSame('Edit "fe_page"', $grandChildren[1]->getLabel());
         $this->assertSame('/contao?do=tpl_editor&act=source&id=templates%2Ffe_page.html5&ref=foobar', $grandChildren[1]->getUri());
 
         $this->assertSame(
             [
                 'class' => 'navigation',
-                'title' => 'Edit fe_page',
+                'title' => 'Edit "fe_page"',
             ],
-            $grandChildren[1]->getLinkAttributes()
+            $grandChildren[1]->getLinkAttributes(),
         );
 
         $this->assertSame('content', $children[1]->getName());
     }
 
-    public function getCollapsedStatus(): \Generator
+    public static function getCollapsedStatus(): iterable
     {
         yield [false];
         yield [true];
@@ -229,7 +231,7 @@ class BackendFavoritesListenerTest extends TestCase
             $this->createMock(RequestStack::class),
             $this->createMock(Connection::class),
             $this->createMock(TranslatorInterface::class),
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(ContaoCsrfTokenManager::class),
         );
 
         $listener($event);
@@ -248,12 +250,9 @@ class BackendFavoritesListenerTest extends TestCase
 
         $router = $this->createMock(RouterInterface::class);
         $router
-            ->expects($this->exactly(2))
+            ->expects($this->once())
             ->method('generate')
-            ->willReturnOnConsecutiveCalls(
-                '/contao',
-                '/contao?do=pages&mtg=favorites&ref=foobar'
-            )
+            ->willReturn('/contao?do=pages&mtg=favorites&ref=foobar')
         ;
 
         $session = $this->mockSession();
@@ -292,7 +291,7 @@ class BackendFavoritesListenerTest extends TestCase
             $requestStack,
             $connection,
             $translator,
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(ContaoCsrfTokenManager::class),
         );
 
         $listener($event);
@@ -364,7 +363,7 @@ class BackendFavoritesListenerTest extends TestCase
             $requestStack,
             $connection,
             $translator,
-            $tokenManager
+            $tokenManager,
         );
 
         $listener($event);
@@ -429,7 +428,6 @@ class BackendFavoritesListenerTest extends TestCase
 
         $tree = $factory->createItem('headerMenu');
         $tree->addChild($factory->createItem('manual'));
-        $tree->addChild($factory->createItem('alerts'));
 
         $event = new MenuEvent($factory, $tree);
 
@@ -439,14 +437,14 @@ class BackendFavoritesListenerTest extends TestCase
             $requestStack,
             $connection,
             $translator,
-            $this->createMock(ContaoCsrfTokenManager::class)
+            $this->createMock(ContaoCsrfTokenManager::class),
         );
 
         $listener($event);
 
         $children = $tree->getChildren();
 
-        $this->assertSame(['manual', 'favorite', 'alerts'], array_keys($tree->getChildren()));
+        $this->assertSame(['manual', 'favorite'], array_keys($tree->getChildren()));
         $this->assertSame('favorite', $children['favorite']->getName());
         $this->assertSame('Edit favorites', $children['favorite']->getLabel());
         $this->assertTrue($children['favorite']->getExtra('safe_label'));

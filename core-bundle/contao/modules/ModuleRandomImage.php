@@ -134,7 +134,7 @@ class ModuleRandomImage extends Module
 		$this->Template->setData(array_merge(
 			$this->Template->getData(),
 			$imageData,
-			array('caption' => $this->useCaption ? $imageData['title'] ?? '' : null)
+			array('caption' => $this->useCaption ? $imageData['caption'] ?? '' : null)
 		));
 	}
 }

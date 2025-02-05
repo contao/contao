@@ -71,12 +71,11 @@ class ModuleFaqReader extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
-		if ($this->overviewPage)
+		if ($this->overviewPage && ($overviewPage = PageModel::findById($this->overviewPage)))
 		{
-			$this->Template->referer = PageModel::findById($this->overviewPage)->getFrontendUrl();
+			$this->Template->referer = System::getContainer()->get('contao.routing.content_url_generator')->generate($overviewPage);
 			$this->Template->back = $this->customLabel ?: $GLOBALS['TL_LANG']['MSC']['faqOverview'];
 		}
 
@@ -93,9 +92,8 @@ class ModuleFaqReader extends Module
 		// Overwrite the page metadata (see #2853, #4955 and #87)
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 
-		if ($responseContext && $responseContext->has(HtmlHeadBag::class))
+		if ($responseContext?->has(HtmlHeadBag::class))
 		{
-			/** @var HtmlHeadBag $htmlHeadBag */
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 			$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
 
@@ -136,7 +134,7 @@ class ModuleFaqReader extends Module
 				->createFigureBuilder()
 				->from($objFaq->singleSRC)
 				->setSize($objFaq->size)
-				->setMetadata($objFaq->getOverwriteMetadata())
+				->setOverwriteMetadata($objFaq->getOverwriteMetadata())
 				->enableLightbox($objFaq->fullsize)
 				->buildIfResourceExists();
 
@@ -153,13 +151,12 @@ class ModuleFaqReader extends Module
 
 		$strAuthor = '';
 
-		/** @var UserModel $objAuthor */
-		if (($objAuthor = $objFaq->getRelated('author')) instanceof UserModel)
+		if ($objAuthor = UserModel::findById($objFaq->author))
 		{
 			$strAuthor = $objAuthor->name;
 		}
 
-		$this->Template->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
+		$this->Template->info = \sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
 
 		// Tag the FAQ (see #2137)
 		if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
@@ -169,8 +166,7 @@ class ModuleFaqReader extends Module
 		}
 
 		// schema.org information
-		$this->Template->getSchemaOrgData = static function () use ($objFaq)
-		{
+		$this->Template->getSchemaOrgData = static function () use ($objFaq) {
 			return ModuleFaq::getSchemaOrgData(array($objFaq));
 		};
 
@@ -184,8 +180,11 @@ class ModuleFaqReader extends Module
 			return;
 		}
 
-		/** @var FaqCategoryModel $objCategory */
-		$objCategory = $objFaq->getRelated('pid');
+		if (!$objCategory = FaqCategoryModel::findById($objFaq->pid))
+		{
+			return;
+		}
+
 		$this->Template->allowComments = $objCategory->allowComments;
 
 		// Comments are not allowed
@@ -198,7 +197,6 @@ class ModuleFaqReader extends Module
 		$intHl = min((int) str_replace('h', '', $this->hl), 5);
 		$this->Template->hlc = 'h' . ($intHl + 1);
 
-		$this->import(Comments::class, 'Comments');
 		$arrNotifies = array();
 
 		// Notify the system administrator
@@ -207,14 +205,12 @@ class ModuleFaqReader extends Module
 			$arrNotifies[] = $GLOBALS['TL_ADMIN_EMAIL'];
 		}
 
-		/** @var UserModel $objAuthor */
-		if ($objCategory->notify != 'notify_admin' && ($objAuthor = $objFaq->getRelated('author')) instanceof UserModel && $objAuthor->email)
+		if ($objCategory->notify != 'notify_admin' && ($objAuthor = UserModel::findById($objFaq->author)) && $objAuthor->email)
 		{
 			$arrNotifies[] = $objAuthor->email;
 		}
 
 		$objConfig = new \stdClass();
-
 		$objConfig->perPage = $objCategory->perPage;
 		$objConfig->order = $objCategory->sortOrder;
 		$objConfig->template = $this->com_template;
@@ -223,6 +219,6 @@ class ModuleFaqReader extends Module
 		$objConfig->bbcode = $objCategory->bbcode;
 		$objConfig->moderate = $objCategory->moderate;
 
-		$this->Comments->addCommentsToTemplate($this->Template, $objConfig, 'tl_faq', $objFaq->id, $arrNotifies);
+		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_faq', $objFaq->id, $arrNotifies);
 	}
 }

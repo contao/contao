@@ -18,13 +18,14 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\BooleanType;
 
 /**
- * Removes '0' from tl_page.accesskey and tl_form_field.accesskey as this was accidentally introduced (see #5586).
+ * Removes '0' from tl_page.accesskey and tl_form_field.accesskey as this was
+ * accidentally introduced (see #5586).
  */
 class AccesskeyMigration extends AbstractMigration
 {
     private static array $affectedTables = ['tl_page', 'tl_form_field'];
 
-    public function __construct(private Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
     }
 

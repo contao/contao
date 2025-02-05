@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\Widget;
 
-use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\DataContainer;
 use Contao\Image;
@@ -27,10 +26,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class RootPageDependentSelectListener
 {
     public function __construct(
-        private Connection $connection,
-        private UrlGeneratorInterface $router,
-        private TranslatorInterface $translator,
-        private ContaoCsrfTokenManager $csrfTokenManager,
+        private readonly Connection $connection,
+        private readonly UrlGeneratorInterface $router,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -51,7 +49,7 @@ class RootPageDependentSelectListener
             FROM tl_module m
             WHERE m.type != 'root_page_dependent_modules' AND m.pid = ?
             ORDER BY m.name",
-            [$pid]
+            [$pid],
         );
 
         foreach ($rows->iterateAssociative() as $module) {
@@ -66,7 +64,7 @@ class RootPageDependentSelectListener
     }
 
     #[AsCallback(table: 'tl_module', target: 'fields.rootPageDependentModules.save')]
-    public function saveCallback(mixed $value, DataContainer $dataContainer): string
+    public function saveCallback(mixed $value): string
     {
         $values = StringUtil::deserialize($value);
 
@@ -100,14 +98,13 @@ class RootPageDependentSelectListener
             }
 
             $title = $this->translator->trans('tl_content.editalias', [$id], 'contao_content');
-            $href = $this->router->generate('contao_backend', ['do' => 'themes', 'table' => 'tl_module', 'act' => 'edit', 'id' => $id, 'popup' => '1', 'nb' => '1', 'rt' => $this->csrfTokenManager->getDefaultTokenValue()]);
+            $href = $this->router->generate('contao_backend', ['do' => 'themes', 'table' => 'tl_module', 'act' => 'edit', 'id' => $id, 'popup' => '1', 'nb' => '1']);
 
-            $wizards[$rootPage] = sprintf(
-                ' <a href="%s" title="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
+            $wizards[$rootPage] = \sprintf(
+                ' <a href="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
                 StringUtil::specialcharsUrl($href),
-                StringUtil::specialchars($title),
                 StringUtil::specialchars(str_replace("'", "\\'", $title)),
-                Image::getHtml('alias.svg', $title)
+                Image::getHtml('edit.svg', $title),
             );
         }
 
@@ -127,7 +124,7 @@ class RootPageDependentSelectListener
         $pages = [];
 
         foreach ($rows->iterateAssociative() as $rootPage) {
-            $pages[$rootPage['id']] = sprintf('%s (%s)', $rootPage['title'], $rootPage['language']);
+            $pages[$rootPage['id']] = \sprintf('%s (%s)', $rootPage['title'], $rootPage['language']);
         }
 
         return $pages;

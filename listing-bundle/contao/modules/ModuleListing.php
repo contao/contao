@@ -141,7 +141,9 @@ class ModuleListing extends Module
 		}
 
 		$strQuery .= $strWhere;
-		$objTotal = $this->Database->prepare($strQuery)->execute(...$varKeyword);
+
+		$db = Database::getInstance();
+		$objTotal = $db->prepare($strQuery)->execute(...$varKeyword);
 
 		// Validate the page count
 		$id = 'page_l' . $this->id;
@@ -172,8 +174,7 @@ class ModuleListing extends Module
 		$strQuery .= $strWhere;
 
 		// Cast date fields to int (see #5609)
-		$isInt = function ($field)
-		{
+		$isInt = function ($field) {
 			return ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] ?? null) == 'date' || ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] ?? null) == 'time' || ($GLOBALS['TL_DCA'][$this->list_table]['fields'][$field]['eval']['rgxp'] ?? null) == 'datim';
 		};
 
@@ -215,16 +216,16 @@ class ModuleListing extends Module
 			}
 		}
 
-		$objDataStmt = $this->Database->prepare($strQuery);
+		$objDataStmt = $db->prepare($strQuery);
 
 		// Limit
 		if ($per_page)
 		{
-			$objDataStmt->limit($per_page, (($page - 1) * $per_page));
+			$objDataStmt->limit($per_page, ($page - 1) * $per_page);
 		}
 		elseif ($this->perPage)
 		{
-			$objDataStmt->limit($this->perPage, (($page - 1) * $per_page));
+			$objDataStmt->limit($this->perPage, ($page - 1) * $per_page);
 		}
 
 		$objData = $objDataStmt->execute(...$varKeyword);
@@ -259,7 +260,6 @@ class ModuleListing extends Module
 			}
 
 			$class = '';
-			$sort = 'asc';
 			$strField = $arrFields[$i];
 
 			// Field label
@@ -271,7 +271,7 @@ class ModuleListing extends Module
 			// Add a CSS class to the order_by column
 			if ($order_by == $arrFields[$i])
 			{
-				$sort = ($sort == 'asc') ? 'desc' : 'asc';
+				$sort =  ($sort == 'asc') ? 'desc' : 'asc';
 				$class = ' sorted ' . $sort;
 			}
 
@@ -279,7 +279,7 @@ class ModuleListing extends Module
 			(
 				'link' => $strField,
 				'href' => (StringUtil::ampersand($strUrl) . $strVarConnector . 'order_by=' . $arrFields[$i]) . '&amp;sort=' . $sort,
-				'title' => StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $strField)),
+				'title' => StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['list_orderBy'], $strField)),
 				'class' => $class
 			);
 		}
@@ -341,7 +341,7 @@ class ModuleListing extends Module
 		$this->Template->for = $strFor;
 		$this->Template->order_by = $order_by;
 		$this->Template->sort = $sort;
-		$this->Template->no_results = sprintf($GLOBALS['TL_LANG']['MSC']['sNoResult'], $strFor);
+		$this->Template->no_results = \sprintf($GLOBALS['TL_LANG']['MSC']['sNoResult'], $strFor);
 	}
 
 	/**
@@ -359,9 +359,10 @@ class ModuleListing extends Module
 		$this->list_info = StringUtil::deserialize($this->list_info);
 		$this->list_info_where = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($this->list_info_where);
 
-		$objRecord = $this->Database->prepare("SELECT " . implode(', ', array_map(Database::quoteIdentifier(...), StringUtil::trimsplit(',', $this->list_info))) . " FROM " . $this->list_table . " WHERE " . ($this->list_info_where ? "(" . $this->list_info_where . ") AND " : "") . Database::quoteIdentifier($this->strPk) . "=?")
-									->limit(1)
-									->execute($id);
+		$objRecord = Database::getInstance()
+			->prepare("SELECT " . implode(', ', array_map(Database::quoteIdentifier(...), StringUtil::trimsplit(',', $this->list_info))) . " FROM " . $this->list_table . " WHERE " . ($this->list_info_where ? "(" . $this->list_info_where . ") AND " : "") . Database::quoteIdentifier($this->strPk) . "=?")
+			->limit(1)
+			->execute($id);
 
 		if ($objRecord->numRows < 1)
 		{
@@ -415,7 +416,6 @@ class ModuleListing extends Module
 			return '';
 		}
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Array

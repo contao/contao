@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -205,22 +206,23 @@ class Files
 
 		$this->validate($strOldName, $strNewName);
 
-		// Windows fix: delete the target file
-		if (\defined('PHP_WINDOWS_VERSION_BUILD') && file_exists($this->strRootDir . '/' . $strNewName) && strcasecmp($strOldName, $strNewName) !== 0)
-		{
-			$this->delete($strNewName);
-		}
-
 		$fs = new Filesystem();
 
-		// Unix fix: rename case sensitively
-		if (strcasecmp($strOldName, $strNewName) === 0 && strcmp($strOldName, $strNewName) !== 0)
+		try
 		{
-			$fs->rename($this->strRootDir . '/' . $strOldName, $this->strRootDir . '/' . $strOldName . '__', true);
-			$strOldName .= '__';
-		}
+			// Unix fix: rename case sensitively
+			if (strcasecmp($strOldName, $strNewName) === 0 && strcmp($strOldName, $strNewName) !== 0)
+			{
+				$fs->rename($this->strRootDir . '/' . $strOldName, $this->strRootDir . '/' . $strOldName . '__', true);
+				$strOldName .= '__';
+			}
 
-		$fs->rename($this->strRootDir . '/' . $strOldName, $this->strRootDir . '/' . $strNewName, true);
+			$fs->rename($this->strRootDir . '/' . $strOldName, $this->strRootDir . '/' . $strNewName, true);
+		}
+		catch (IOException)
+		{
+			return false;
+		}
 
 		return true;
 	}
@@ -277,7 +279,16 @@ class Files
 	{
 		$this->validate($strFile);
 
-		return unlink($this->strRootDir . '/' . $strFile);
+		try
+		{
+			(new Filesystem())->remove($this->strRootDir . '/' . $strFile);
+		}
+		catch (IOException)
+		{
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

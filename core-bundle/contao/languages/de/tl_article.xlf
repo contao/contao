@@ -110,7 +110,7 @@
         <target>Anzeigen ab</target>
       </trans-unit>
       <trans-unit id="tl_article.start.1">
-        <source>If you want to prevent the article from showing on the website before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the article from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Wenn Sie den Artikel erst ab einem bestimmten Zeitpunkt auf der Webseite anzeigen möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_article.stop.0">
@@ -118,7 +118,7 @@
         <target>Anzeigen bis</target>
       </trans-unit>
       <trans-unit id="tl_article.stop.1">
-        <source>If you want to prevent the article from showing on the website after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the article from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
         <target>Wenn Sie den Artikel nur bis zu einem bestimmten Zeitpunkt auf der Webseite anzeigen möchten, können Sie diesen hier eingeben. Andernfalls lassen Sie das Feld leer. </target>
       </trans-unit>
       <trans-unit id="tl_article.tstamp.0">
@@ -209,9 +209,17 @@
         <source>Delete article ID %s</source>
         <target>Artikel ID %s löschen</target>
       </trans-unit>
-      <trans-unit id="tl_article.toggle">
-        <source>Publish/unpublish article ID %s</source>
-        <target>Artikel ID %s veröffentlichen/unveröffentlichen</target>
+      <trans-unit id="tl_article.toggle.0">
+        <source>Publish/unpublish article</source>
+        <target>Artikel veröffentlichen/unveröffentlichen</target>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.1">
+        <source>Unpublish article ID %s</source>
+        <target>Artikel ID %s unveröffentlichen</target>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.2">
+        <source>Publish article ID %s</source>
+        <target>Artikel ID %s veröffentlichen</target>
       </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>

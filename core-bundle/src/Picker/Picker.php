@@ -22,8 +22,11 @@ class Picker implements PickerInterface
     /**
      * @param array<PickerProviderInterface> $providers
      */
-    public function __construct(private FactoryInterface $menuFactory, private array $providers, private PickerConfig $config)
-    {
+    public function __construct(
+        private readonly FactoryInterface $menuFactory,
+        private readonly array $providers,
+        private readonly PickerConfig $config,
+    ) {
     }
 
     public function getConfig(): PickerConfig
@@ -33,7 +36,7 @@ class Picker implements PickerInterface
 
     public function getMenu(): ItemInterface
     {
-        if (null !== $this->menu) {
+        if ($this->menu) {
             return $this->menu;
         }
 

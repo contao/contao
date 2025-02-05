@@ -23,16 +23,20 @@ use Symfony\Component\Filesystem\Path;
 
 #[AsCommand(
     name: 'contao:install',
-    description: 'Installs the required Contao directories.'
+    description: 'Installs the required Contao directories.',
 )]
 class InstallCommand extends Command
 {
     private Filesystem|null $fs = null;
+
     private array $rows = [];
+
     private string|null $webDir = null;
 
-    public function __construct(private string $projectDir, private string $uploadPath, private string $imageDir)
-    {
+    public function __construct(
+        private readonly string $projectDir,
+        private readonly string $uploadPath,
+    ) {
         parent::__construct();
     }
 
@@ -48,7 +52,7 @@ class InstallCommand extends Command
 
         $this->addEmptyDirs();
 
-        if (!empty($this->rows)) {
+        if ($this->rows) {
             $io = new SymfonyStyle($input, $output);
             $io->newLine();
             $io->listing($this->rows);
@@ -60,8 +64,6 @@ class InstallCommand extends Command
     private function addEmptyDirs(): void
     {
         static $emptyDirs = [
-            'assets/css',
-            'assets/js',
             'system',
             'system/cache',
             'system/config',
@@ -74,10 +76,9 @@ class InstallCommand extends Command
         ];
 
         foreach ($emptyDirs as $path) {
-            $this->addEmptyDir(Path::join($this->projectDir, sprintf($path, $this->webDir)));
+            $this->addEmptyDir(Path::join($this->projectDir, \sprintf($path, $this->webDir)));
         }
 
-        $this->addEmptyDir($this->imageDir);
         $this->addEmptyDir(Path::join($this->projectDir, $this->uploadPath));
     }
 

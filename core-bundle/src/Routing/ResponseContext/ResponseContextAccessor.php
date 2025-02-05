@@ -12,12 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext;
 
+use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 class ResponseContextAccessor
 {
-    public function __construct(private RequestStack $requestStack)
+    public function __construct(private readonly RequestStack $requestStack)
     {
     }
 
@@ -44,22 +45,25 @@ class ResponseContextAccessor
     }
 
     /**
-     * Every controller is free to call this method or not. After all, it's the
-     * controller that specifies the response context and which parts of it it
+     * Each controller is free to call this method or not. After all, it is the
+     * controller that specifies the response context and the parts of it that it
      * wants to apply.
      *
-     * This method applies the header bag and then ends the current context.
+     * This method applies the header bag and CSP and then ends the current context.
      */
     public function finalizeCurrentContext(Response $response): self
     {
-        $responseContext = $this->getResponseContext();
-
-        if (null === $responseContext) {
+        if (!$responseContext = $this->getResponseContext()) {
             return $this;
         }
 
         foreach ($responseContext->getHeaderBag()->all() as $name => $values) {
             $response->headers->set($name, $values, false); // Do not replace but add
+        }
+
+        if ($responseContext->has(CspHandler::class)) {
+            $csp = $responseContext->get(CspHandler::class);
+            $csp->applyHeaders($response, $this->requestStack->getCurrentRequest());
         }
 
         $this->endCurrentContext();

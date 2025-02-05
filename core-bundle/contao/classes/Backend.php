@@ -17,7 +17,6 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 
 /**
  * Provide methods to manage back end controllers.
@@ -29,10 +28,10 @@ abstract class Backend extends Controller
 	/**
 	 * Load the database object
 	 */
-	protected function __construct()
+	public function __construct()
 	{
 		parent::__construct();
-		$this->import(Database::class, 'Database');
+		$this->import(Database::class, 'Database'); // backwards compatibility
 	}
 
 	/**
@@ -66,7 +65,7 @@ abstract class Backend extends Controller
 
 		foreach ($arrThemes as $strTheme)
 		{
-			if (strncmp($strTheme, '.', 1) === 0 || !is_dir($projectDir . '/system/themes/' . $strTheme))
+			if (str_starts_with($strTheme, '.') || !is_dir($projectDir . '/system/themes/' . $strTheme))
 			{
 				continue;
 			}
@@ -193,12 +192,17 @@ abstract class Backend extends Controller
 	 *
 	 * @return string
 	 */
-	public static function addToUrl($strRequest, $blnAddRef=true, $arrUnset=array())
+	public static function addToUrl($strRequest, $blnAddRef=true, $arrUnset=array(), $addRequestToken=true)
 	{
 		// Unset the "no back button" flag
 		$arrUnset[] = 'nb';
 
-		return parent::addToUrl($strRequest . ($strRequest ? '&amp;' : '') . 'rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), $blnAddRef, $arrUnset);
+		if ($addRequestToken)
+		{
+			$strRequest .= ($strRequest ? '&amp;' : '') . 'rt=' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue();
+		}
+
+		return parent::addToUrl($strRequest, $blnAddRef, $arrUnset);
 	}
 
 	/**
@@ -211,7 +215,7 @@ abstract class Backend extends Controller
 	 *
 	 * @throws AccessDeniedException
 	 */
-	protected function getBackendModule($module, PickerInterface $picker = null)
+	protected function getBackendModule($module, PickerInterface|null $picker = null)
 	{
 		$arrModule = array();
 
@@ -226,13 +230,12 @@ abstract class Backend extends Controller
 
 		unset($arrGroup);
 
-		$this->import(BackendUser::class, 'User');
 		$blnAccess = (isset($arrModule['disablePermissionChecks']) && $arrModule['disablePermissionChecks'] === true) || System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, $module);
 
 		// Check whether the current user has access to the current module
 		if (!$blnAccess)
 		{
-			throw new AccessDeniedException('Back end module "' . $module . '" is not allowed for user "' . $this->User->username . '".');
+			throw new AccessDeniedException('Back end module "' . $module . '" is not allowed for user "' . BackendUser::getInstance()->username . '".');
 		}
 
 		// The module does not exist
@@ -288,9 +291,8 @@ abstract class Backend extends Controller
 				trigger_error('Could not create a data container object', E_USER_ERROR);
 			}
 
+			/** @var class-string<DataContainer> $dataContainer */
 			$dataContainer = DataContainer::getDriverForTable($strTable);
-
-			/** @var DataContainer $dc */
 			$dc = new $dataContainer($strTable, $arrModule);
 
 			if ($picker !== null && $dc instanceof DataContainer)
@@ -338,9 +340,10 @@ abstract class Backend extends Controller
 			// Add the name of the parent element
 			if (Input::get('table') !== null && !empty($GLOBALS['TL_DCA'][$strTable]['config']['ptable']) && \in_array(Input::get('table'), $arrTables) && Input::get('table') != ($arrTables[0] ?? null))
 			{
-				$objRow = $this->Database->prepare("SELECT * FROM " . $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] . " WHERE id=(SELECT pid FROM $strTable WHERE id=?)")
-										 ->limit(1)
-										 ->execute(Input::get('id'));
+				$objRow = Database::getInstance()
+					->prepare("SELECT * FROM " . $GLOBALS['TL_DCA'][$strTable]['config']['ptable'] . " WHERE id=(SELECT pid FROM $strTable WHERE id=?)")
+					->limit(1)
+					->execute(Input::get('id'));
 
 				if ($objRow->title)
 				{
@@ -355,7 +358,7 @@ abstract class Backend extends Controller
 			// Add the name of the submodule
 			if (isset($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1]))
 			{
-				$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1] ?? '%s', Input::get('id')) . '</span>';
+				$this->Template->headline .= ' <span>' . \sprintf($GLOBALS['TL_LANG'][$strTable][Input::get('key')][1] ?? '%s', Input::get('id')) . '</span>';
 			}
 			else
 			{
@@ -403,76 +406,15 @@ abstract class Backend extends Controller
 					break;
 			}
 
-			// Add the name of the parent elements
-			if ($strTable && \in_array($strTable, $arrTables) && $strTable != $arrTables[0])
+			$container = System::getContainer();
+			$request = $container->get('request_stack')->getCurrentRequest();
+			$trail = array();
+
+			$this->Template->headline = '';
+
+			foreach ($container->get('contao.data_container.dca_url_analyzer')->getTrail() as list('url' => $linkUrl, 'label' => $linkLabel))
 			{
-				$trail = array();
-
-				$pid = $dc->id;
-				$table = $strTable;
-				$ptable = $act != 'edit' ? ($GLOBALS['TL_DCA'][$strTable]['config']['ptable'] ?? null) : $strTable;
-				$container = System::getContainer();
-
-				if ($ptable)
-				{
-					$this->loadDataContainer($ptable);
-				}
-
-				$request = $container->get('request_stack')->getCurrentRequest();
-
-				while ($ptable && !\in_array($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null, array(DataContainer::MODE_TREE, DataContainer::MODE_TREE_EXTENDED)) && is_a(($GLOBALS['TL_DCA'][$ptable]['config']['dataContainer'] ?? null), DC_Table::class, true))
-				{
-					$objRow = $this->Database->prepare("SELECT * FROM " . $ptable . " WHERE id=?")
-											 ->limit(1)
-											 ->execute($pid);
-
-					// Add only parent tables to the trail
-					if ($table != $ptable)
-					{
-						// Add table name
-						if (isset($GLOBALS['TL_LANG']['MOD'][$table]))
-						{
-							$trail[] = ' <span>' . $GLOBALS['TL_LANG']['MOD'][$table] . '</span>';
-						}
-
-						// Add object title or name
-						if ($linkLabel = ($objRow->title ?: $objRow->name ?: $objRow->headline))
-						{
-							$strUrl = $container->get('router')->generate('contao_backend', array
-							(
-								'do' => $request->query->get('do'),
-								'table' => $table,
-								'id' => $objRow->id,
-								'ref' => $request->attributes->get('_contao_referer_id'),
-								'rt' => System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(),
-							));
-
-							$trail[] = sprintf(' <span><a href="%s">%s</a></span>', $strUrl, $linkLabel);
-						}
-					}
-
-					// Next parent table
-					$pid = $objRow->pid;
-					$table = $ptable;
-					$ptable = ($GLOBALS['TL_DCA'][$ptable]['config']['dynamicPtable'] ?? null) ? $objRow->ptable : ($GLOBALS['TL_DCA'][$ptable]['config']['ptable'] ?? null);
-
-					if ($ptable)
-					{
-						$this->loadDataContainer($ptable);
-					}
-				}
-
-				// Add the last parent table
-				if (isset($GLOBALS['TL_LANG']['MOD'][$table]))
-				{
-					$trail[] = ' <span>' . $GLOBALS['TL_LANG']['MOD'][$table] . '</span>';
-				}
-
-				// Add the breadcrumb trail in reverse order
-				foreach (array_reverse($trail) as $breadcrumb)
-				{
-					$this->Template->headline .= $breadcrumb;
-				}
+				$this->Template->headline .= \sprintf(' <span><a href="%s">%s</a></span>', StringUtil::specialchars($linkUrl), StringUtil::specialchars($linkLabel));
 			}
 
 			$do = Input::get('do');
@@ -497,24 +439,13 @@ abstract class Backend extends Controller
 				if ($do == 'files' || $do == 'tpl_editor')
 				{
 					// Handle new folders (see #7980)
-					if (strpos(Input::get('id'), '__new__') !== false)
+					if (str_contains(Input::get('id'), '__new__'))
 					{
 						$this->Template->headline .= ' <span>' . \dirname(Input::get('id')) . '</span> <span>' . $GLOBALS['TL_LANG'][$strTable]['new'][1] . '</span>';
 					}
 					else
 					{
 						$this->Template->headline .= ' <span>' . Input::get('id') . '</span>';
-					}
-				}
-				elseif (isset($GLOBALS['TL_LANG'][$strTable][$act]))
-				{
-					if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
-					{
-						$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('id')) . '</span>';
-					}
-					else
-					{
-						$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('id')) . '</span>';
 					}
 				}
 			}
@@ -529,17 +460,6 @@ abstract class Backend extends Controller
 					else
 					{
 						$this->Template->headline .= ' <span>' . Input::get('pid') . '</span>';
-					}
-				}
-				elseif (isset($GLOBALS['TL_LANG'][$strTable][$act]))
-				{
-					if (\is_array($GLOBALS['TL_LANG'][$strTable][$act]))
-					{
-						$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act][1], Input::get('pid')) . '</span>';
-					}
-					else
-					{
-						$this->Template->headline .= ' <span>' . sprintf($GLOBALS['TL_LANG'][$strTable][$act], Input::get('pid')) . '</span>';
 					}
 				}
 			}
@@ -560,7 +480,6 @@ abstract class Backend extends Controller
 	 */
 	public static function addPagesBreadcrumb($strKey='tl_page_node')
 	{
-		/** @var AttributeBagInterface $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		// Set a new node
@@ -627,7 +546,7 @@ abstract class Backend extends Controller
 				}
 				else
 				{
-					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . self::addToUrl('pn=' . $objPage->id) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $objPage->title . '</a>';
+					$arrLinks[] = self::addPageIcon($objPage->row(), '', null, '', true) . ' <a href="' . self::addToUrl('pn=' . $objPage->id) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $objPage->title . '</a>';
 				}
 
 				$intId = $objPage->pid;
@@ -645,14 +564,14 @@ abstract class Backend extends Controller
 
 		// Limit tree and disable root trails
 		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array($intNode);
-		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['showRootTrails'] = false;
+		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['visibleRoot'] = $intNode;
 
 		// Add root link
 		$arrLinks[] = Image::getHtml('pagemounts.svg') . ' <a href="' . self::addToUrl('pn=0') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectAllNodes']) . '">' . $GLOBALS['TL_LANG']['MSC']['filterAll'] . '</a>';
 		$arrLinks = array_reverse($arrLinks);
 
 		// Insert breadcrumb menu
-		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] = ($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] ?? '') . '
+		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['breadcrumb'] = '
 
 <nav aria-label="' . $GLOBALS['TL_LANG']['MSC']['breadcrumbMenu'] . '">
   <ul id="tl_breadcrumb">
@@ -674,7 +593,7 @@ abstract class Backend extends Controller
 	 *
 	 * @return string
 	 */
-	public static function addPageIcon($row, $label, DataContainer $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false, $isVisibleRootTrailPage=false)
+	public static function addPageIcon($row, $label, DataContainer|null $dc=null, $imageAttribute='', $blnReturnImage=false, $blnProtected=false, $isVisibleRootTrailPage=false)
 	{
 		if ($blnProtected)
 		{
@@ -683,6 +602,7 @@ abstract class Backend extends Controller
 
 		$image = Controller::getPageStatusIcon((object) $row);
 		$imageAttribute = trim($imageAttribute . ' data-icon="' . Controller::getPageStatusIcon((object) array_merge($row, array('published'=>1))) . '" data-icon-disabled="' . Controller::getPageStatusIcon((object) array_merge($row, array('published'=>0))) . '"');
+		$objUser = BackendUser::getInstance();
 
 		// Return the image only
 		if ($blnReturnImage)
@@ -697,17 +617,22 @@ abstract class Backend extends Controller
 		}
 
 		// Add the breadcrumb link if you have access to that page
-		if (!$isVisibleRootTrailPage)
+		if ($objUser->hasAccess($row['id'], 'pagemounts'))
 		{
-			$label = '<a href="' . self::addToUrl('pn=' . $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $label . '</a>';
+			$label = '<a href="' . self::addToUrl('pn=' . $row['id']) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $label . '</a>';
 		}
 		else
 		{
 			$label = '<span>' . $label . '</span>';
 		}
 
+		if ($row['requireItem'])
+		{
+			return Image::getHtml($image, '', $imageAttribute) . ' ' . $label;
+		}
+
 		// Return the image
-		return '<a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_preview', array('page'=>$row['id']))) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image, '', $imageAttribute) . '</a> ' . $label;
+		return '<a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_preview', array('page'=>$row['id']))) . '" target="_blank">' . Image::getHtml($image, $GLOBALS['TL_LANG']['MSC']['view'], $imageAttribute) . '</a> ' . $label;
 	}
 
 	/**
@@ -753,7 +678,6 @@ abstract class Backend extends Controller
 	 */
 	public static function addFilesBreadcrumb($strKey='tl_files_node')
 	{
-		/** @var AttributeBagInterface $objSession */
 		$objSession = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		// Set a new node
@@ -819,7 +743,7 @@ abstract class Backend extends Controller
 			}
 			else
 			{
-				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . self::addToUrl('fn=' . $strPath) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $strFolder . '</a>';
+				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . self::addToUrl('fn=' . $strPath) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $strFolder . '</a>';
 			}
 		}
 
@@ -835,7 +759,7 @@ abstract class Backend extends Controller
 		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['root'] = array($strNode);
 
 		// Insert breadcrumb menu
-		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'] = ($GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'] ?? '') . '
+		$GLOBALS['TL_DCA']['tl_files']['list']['sorting']['breadcrumb'] = '
 
 <nav aria-label="' . $GLOBALS['TL_LANG']['MSC']['breadcrumbMenu'] . '">
   <ul id="tl_breadcrumb">
@@ -894,7 +818,7 @@ abstract class Backend extends Controller
 			return '';
 		}
 
-		return ' <a href="' . StringUtil::ampersand($factory->getUrl($context, $extras)) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['pagepicker']) . '" id="pp_' . $inputName . '">' . Image::getHtml((\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg'), $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
+		return ' <a href="' . StringUtil::ampersand($factory->getUrl($context, $extras)) . '" id="pp_' . $inputName . '" class="picker-wizard">' . Image::getHtml(\is_array($extras) && isset($extras['icon']) ? $extras['icon'] : 'pickpage.svg', $GLOBALS['TL_LANG']['MSC']['pagepicker']) . '</a>
   <script>
     $("pp_' . $inputName . '").addEvent("click", function(e) {
       e.preventDefault();
@@ -920,7 +844,7 @@ abstract class Backend extends Controller
 	 */
 	public static function getTogglePasswordWizard($inputName)
 	{
-		return ' ' . Image::getHtml('visible.svg', '', 'title="' . $GLOBALS['TL_LANG']['MSC']['showPassword'] . '" id="pw_' . $inputName . '"') . '
+		return ' <button type="button" class="image-button" id="pw_' . $inputName . '">' . Image::getHtml('visible.svg', $GLOBALS['TL_LANG']['MSC']['showPassword']) . '</button>
   <script>
     $("pw_' . $inputName . '").addEvent("click", function(e) {
       e.preventDefault();
@@ -928,12 +852,16 @@ abstract class Backend extends Controller
       el.spellcheck = false;
       if (el.type == "password") {
         el.type = "text";
-        this.store("tip:title", "' . $GLOBALS['TL_LANG']['MSC']['hidePassword'] . '");
-        this.src = this.src.replace("visible.svg", "visible_.svg");
+        this.setAttribute("data-original-title", "' . $GLOBALS['TL_LANG']['MSC']['hidePassword'] . '");
+        this.getElements("img").forEach(function(image) {
+          image.src = image.src.replace("visible.svg", "visible--disabled.svg");
+        });
       } else {
         el.type = "password";
-        this.store("tip:title", "' . $GLOBALS['TL_LANG']['MSC']['showPassword'] . '");
-        this.src = this.src.replace("visible_.svg", "visible.svg");
+        this.setAttribute("data-original-title", "' . $GLOBALS['TL_LANG']['MSC']['showPassword'] . '");
+        this.getElements("img").forEach(function(image) {
+          image.src = image.src.replace("visible--disabled.svg", "visible.svg");
+        });
       }
     });
   </script>';
@@ -948,7 +876,7 @@ abstract class Backend extends Controller
 	{
 		$host = Environment::get('host');
 
-		if (strpos($host, 'xn--') !== false)
+		if (str_contains($host, 'xn--'))
 		{
 			$host = Idna::decode($host);
 		}
@@ -961,7 +889,7 @@ abstract class Backend extends Controller
 	 */
 	public function addCustomLayoutSectionReferences()
 	{
-		$objLayout = $this->Database->getInstance()->query("SELECT sections FROM tl_layout WHERE sections!=''");
+		$objLayout = Database::getInstance()->query("SELECT sections FROM tl_layout WHERE sections!=''");
 
 		while ($objLayout->next())
 		{
@@ -988,9 +916,9 @@ abstract class Backend extends Controller
 	 */
 	public function createPageList()
 	{
-		$this->import(BackendUser::class, 'User');
+		$user = BackendUser::getInstance();
 
-		if ($this->User->isAdmin)
+		if ($user->isAdmin)
 		{
 			return $this->doCreatePageList();
 		}
@@ -998,7 +926,7 @@ abstract class Backend extends Controller
 		$return = '';
 		$processed = array();
 
-		foreach ($this->eliminateNestedPages($this->User->pagemounts) as $page)
+		foreach ($this->eliminateNestedPages($user->pagemounts) as $page)
 		{
 			$objPage = PageModel::findWithDetails($page);
 
@@ -1045,8 +973,9 @@ abstract class Backend extends Controller
 	 */
 	protected function doCreatePageList($intId=0, $level=-1)
 	{
-		$objPages = $this->Database->prepare("SELECT id, title, type, dns FROM tl_page WHERE pid=? ORDER BY sorting")
-								   ->execute($intId);
+		$objPages = Database::getInstance()
+			->prepare("SELECT id, title, type, dns FROM tl_page WHERE pid=? ORDER BY sorting")
+			->execute($intId);
 
 		if ($objPages->numRows < 1)
 		{
@@ -1072,7 +1001,7 @@ abstract class Backend extends Controller
 			}
 			else
 			{
-				$strOptions .= sprintf('<option value="{{link_url::%s}}"%s>%s%s</option>', $objPages->id, (('{{link_url::' . $objPages->id . '}}' == Input::get('value')) ? ' selected="selected"' : ''), str_repeat(' &nbsp; &nbsp; ', $level), StringUtil::specialchars($objPages->title));
+				$strOptions .= \sprintf('<option value="{{link_url::%s}}"%s>%s%s</option>', $objPages->id, ('{{link_url::' . $objPages->id . '}}' == Input::get('value')) ? ' selected="selected"' : '', str_repeat(' &nbsp; &nbsp; ', $level), StringUtil::specialchars($objPages->title));
 				$strOptions .= $this->doCreatePageList($objPages->id, $level);
 			}
 		}
@@ -1090,9 +1019,9 @@ abstract class Backend extends Controller
 	 */
 	public function createFileList($strFilter='', $filemount=false)
 	{
-		$this->import(BackendUser::class, 'User');
+		$user = BackendUser::getInstance();
 
-		if ($this->User->isAdmin)
+		if ($user->isAdmin)
 		{
 			return $this->doCreateFileList(System::getContainer()->getParameter('contao.upload_path'), -1, $strFilter);
 		}
@@ -1100,14 +1029,14 @@ abstract class Backend extends Controller
 		$return = '';
 		$processed = array();
 
-		// Set custom filemount
+		// Set custom file mount
 		if ($filemount)
 		{
-			$this->User->filemounts = array($filemount);
+			$user->filemounts = array($filemount);
 		}
 
-		// Limit nodes to the filemounts of the user
-		foreach ($this->eliminateNestedPaths($this->User->filemounts) as $path)
+		// Limit nodes to the file mounts of the user
+		foreach ($this->eliminateNestedPaths($user->filemounts) as $path)
 		{
 			if (\in_array($path, $processed))
 			{
@@ -1154,7 +1083,7 @@ abstract class Backend extends Controller
 		// Recursively list all files and folders
 		foreach ($arrPages as $strFile)
 		{
-			if (strncmp($strFile, '.', 1) === 0)
+			if (str_starts_with($strFile, '.'))
 			{
 				continue;
 			}
@@ -1174,7 +1103,7 @@ abstract class Backend extends Controller
 					continue;
 				}
 
-				$strFiles .= sprintf('<option value="%s"%s>%s</option>', $strFolder . '/' . $strFile, (($strFolder . '/' . $strFile == Input::get('value')) ? ' selected="selected"' : ''), StringUtil::specialchars($strFile));
+				$strFiles .= \sprintf('<option value="%s"%s>%s</option>', $strFolder . '/' . $strFile, ($strFolder . '/' . $strFile == Input::get('value')) ? ' selected="selected"' : '', StringUtil::specialchars($strFile));
 			}
 		}
 

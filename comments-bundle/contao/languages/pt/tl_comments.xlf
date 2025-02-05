@@ -90,8 +90,8 @@
         <target>Aqui você pode digitar a resposta.</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.0">
-        <source>Publish comment</source>
-        <target>Publicar</target>
+        <source>Published</source>
+        <target>Publicado</target>
       </trans-unit>
       <trans-unit id="tl_comments.published.1">
         <source>Make the comment publicly visible on the website.</source>
@@ -177,9 +177,15 @@
         <source>Delete comment ID %s</source>
         <target>Remover comentário ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_comments.toggle">
-        <source>Publish/unpublish comment ID %s</source>
-        <target>Publicar/despublicar comentário ID %s</target>
+      <trans-unit id="tl_comments.toggle.0">
+        <source>Publish/unpublish comment</source>
+        <target>Publicar/despublicar comentário</target>
+      </trans-unit>
+      <trans-unit id="tl_comments.toggle.1">
+        <source>Unpublish comment ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_comments.toggle.2">
+        <source>Publish comment ID %s</source>
       </trans-unit>
     </body>
   </file>

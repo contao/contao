@@ -22,13 +22,14 @@ use Symfony\Component\HttpFoundation\Response;
 class Document
 {
     private Crawler|null $crawler = null;
+
     private array|null $jsonLds = null;
 
     /**
-     * The key is the header name in lowercase letters and the value is again
-     * an array of header values.
+     * The key is the header name in lowercase letters and the value is again an array
+     * of header values.
      *
-     * @param array<string,array> $headers
+     * @param array<string, array> $headers
      */
     public function __construct(
         private UriInterface $uri,
@@ -107,8 +108,9 @@ class Document
     }
 
     /**
-     * Extracts all <script type="application/ld+json"> script tags and returns their contents as a JSON decoded
-     * array. Optionally allows to restrict it to a given context and type.
+     * Extracts all <script type="application/ld+json"> script tags and returns their
+     * contents as a JSON decoded array. Optionally allows to restrict it to a given
+     * context and type.
      */
     public function extractJsonLdScripts(string $context = '', string $type = ''): array
     {
@@ -126,28 +128,27 @@ class Document
             ->filterXPath('descendant-or-self::script[@type = "application/ld+json"]')
             ->each(
                 static function (Crawler $node) {
-                    $data = json_decode($node->text(), true);
-
-                    if (JSON_ERROR_NONE !== json_last_error()) {
+                    try {
+                        return json_decode($node->text(), true, 512, JSON_THROW_ON_ERROR);
+                    } catch (\JsonException) {
                         return null;
                     }
-
-                    return $data;
-                }
+                },
             )
         ;
 
         // Filter invalid (null) and parse all values
         foreach (array_filter($jsonLds) as $jsonLd) {
-            // If array has numeric keys, it likely contains multiple data inside it which should be
-            // treated as if coming from separate sources, and thus moved to the root of an array.
+            // If array has numeric keys, it likely contains multiple data inside it which
+            // should be treated as if coming from separate sources, and thus moved to the
+            // root of an array.
             $jsonLdItems = ArrayUtil::isAssoc($jsonLd) ? [$jsonLd] : $jsonLd;
 
             // Parsed the grouped values under the @graph within the same context
             foreach ($jsonLdItems as $jsonLdItem) {
                 if (\is_array($graphs = $jsonLdItem['@graph'] ?? null)) {
                     foreach ($graphs as $graph) {
-                        $this->jsonLds[] = array_merge(array_diff_key($jsonLdItem, ['@graph' => null]), $graph);
+                        $this->jsonLds[] = [...array_diff_key($jsonLdItem, ['@graph' => null]), ...$graph];
                     }
                 } else {
                     $this->jsonLds[] = $jsonLdItem;
@@ -164,7 +165,7 @@ class Document
             new Uri($request->getUri()),
             $response->getStatusCode(),
             $response->headers->all(),
-            (string) $response->getContent()
+            (string) $response->getContent(),
         );
     }
 
@@ -183,7 +184,7 @@ class Document
                 continue;
             }
 
-            if (\count($filtered = $this->filterJsonLdContexts($data, [$context]))) {
+            if ($filtered = $this->filterJsonLdContexts($data, [$context])) {
                 $matching[] = $filtered;
             }
         }

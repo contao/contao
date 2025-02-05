@@ -24,11 +24,15 @@ use Symfony\Component\Filesystem\Path;
 class ChangeSet
 {
     final public const ATTR_HASH = 'hash';
+
     final public const ATTR_PATH = 'path';
+
     final public const ATTR_TYPE = 'type';
+
     final public const ATTR_LAST_MODIFIED = 'lastModified';
 
     final public const TYPE_FILE = 0;
+
     final public const TYPE_DIRECTORY = 1;
 
     /**
@@ -45,16 +49,16 @@ class ChangeSet
      * @internal
      */
     public function __construct(
-        private array $itemsToCreate,
-        private array $itemsToUpdate,
-        private array $itemsToDelete,
-        private array $lastModifiedUpdates = [],
+        private readonly array $itemsToCreate,
+        private readonly array $itemsToUpdate,
+        private readonly array $itemsToDelete,
+        private readonly array $lastModifiedUpdates = [],
     ) {
     }
 
     /**
-     * Returns a copy of this ChangeSet with another one appended. Optionally
-     * all paths of the appended ChangeSet will be prefixed with $pathPrefix.
+     * Returns a copy of this ChangeSet with another one appended. Optionally all
+     * paths of the appended ChangeSet will be prefixed with $pathPrefix.
      */
     public function withOther(self $changeSet, string $pathPrefix = ''): self
     {
@@ -65,17 +69,17 @@ class ChangeSet
 
         foreach ($changeSet->itemsToCreate as $item) {
             $prefixedPath = Path::join($pathPrefix, $item[self::ATTR_PATH]);
-            $itemsToCreate[$prefixedPath] = array_merge($item, [self::ATTR_PATH => $prefixedPath]);
+            $itemsToCreate[$prefixedPath] = [...$item, self::ATTR_PATH => $prefixedPath];
         }
 
         foreach ($changeSet->itemsToUpdate as $path => $item) {
             $prefixedPath = Path::join($pathPrefix, (string) $path);
 
             if (null !== ($newPath = $item[self::ATTR_PATH] ?? null)) {
-                $item = array_merge($item, [self::ATTR_PATH => Path::join($pathPrefix, $newPath)]);
+                $item = [...$item, self::ATTR_PATH => Path::join($pathPrefix, $newPath)];
             }
 
-            $itemsToUpdate[$prefixedPath] = array_merge($itemsToUpdate[$prefixedPath] ?? [], $item);
+            $itemsToUpdate[$prefixedPath] = [...$itemsToUpdate[$prefixedPath] ?? [], ...$item];
         }
 
         foreach ($changeSet->itemsToDelete as $path => $type) {
@@ -97,18 +101,18 @@ class ChangeSet
     /**
      * Returns true if there are no changes.
      *
-     * If $includeLastModified is set to true, changes to last modified
-     * timestamps will be considered as well.
+     * If $includeLastModified is set to true, changes to last modified timestamps
+     * will be considered as well.
      */
     public function isEmpty(bool $includeLastModified = false): bool
     {
-        $empty = empty($this->itemsToCreate) && empty($this->itemsToUpdate) && empty($this->itemsToDelete);
+        $empty = !$this->itemsToCreate && !$this->itemsToUpdate && !$this->itemsToDelete;
 
         if (!$includeLastModified) {
             return $empty;
         }
 
-        return $empty && empty($this->lastModifiedUpdates);
+        return $empty && !$this->lastModifiedUpdates;
     }
 
     /**
@@ -122,17 +126,17 @@ class ChangeSet
             static fn (array $item): ItemToCreate => new ItemToCreate(
                 $item['hash'],
                 $item['path'],
-                self::TYPE_FILE === $item['type']
+                self::TYPE_FILE === $item['type'],
             ),
-            $this->itemsToCreate
+            $this->itemsToCreate,
         );
     }
 
     /**
      * Returns a list of changes that should be applied to existing items.
      *
-     * If $includeLastModified is set to true, changes to last modified
-     * timestamps will be included in the definitions.
+     * If $includeLastModified is set to true, changes to last modified timestamps
+     * will be included in the definitions.
      *
      * @return list<ItemToUpdate>
      */
@@ -141,7 +145,7 @@ class ChangeSet
         $lastModifiedUpdates = $this->lastModifiedUpdates;
 
         $items = array_map(
-            static function (string|int $existingPath, array $item) use ($includeLastModified, &$lastModifiedUpdates) {
+            static function (int|string $existingPath, array $item) use ($includeLastModified, &$lastModifiedUpdates) {
                 $lastModified = $includeLastModified && \array_key_exists($existingPath, $lastModifiedUpdates)
                     ? $lastModifiedUpdates[$existingPath]
                     : false;
@@ -164,11 +168,11 @@ class ChangeSet
         }
 
         return [...array_map(
-            static fn (string|int $existingPath, int $lastModified) => new ItemToUpdate(
+            static fn (int|string $existingPath, int $lastModified) => new ItemToUpdate(
                 (string) $existingPath,
                 null,
                 null,
-                $lastModified
+                $lastModified,
             ),
             array_keys($lastModifiedUpdates),
             array_values($lastModifiedUpdates),
@@ -183,12 +187,12 @@ class ChangeSet
     public function getItemsToDelete(): array
     {
         return array_map(
-            static fn (string|int $path, int $type): ItemToDelete => new ItemToDelete(
+            static fn (int|string $path, int $type): ItemToDelete => new ItemToDelete(
                 (string) $path,
-                self::TYPE_FILE === $type
+                self::TYPE_FILE === $type,
             ),
             array_keys($this->itemsToDelete),
-            array_values($this->itemsToDelete)
+            array_values($this->itemsToDelete),
         );
     }
 }

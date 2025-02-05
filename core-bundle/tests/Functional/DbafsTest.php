@@ -22,11 +22,14 @@ use Contao\TestCase\FunctionalTestCase;
 use League\Flysystem\Config;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class DbafsTest extends FunctionalTestCase
 {
     private VirtualFilesystem $filesystem;
+
     private Dbafs $dbafs;
+
     private FilesystemAdapter $adapter;
 
     protected function setUp(): void
@@ -35,7 +38,7 @@ class DbafsTest extends FunctionalTestCase
 
         $this->filesystem = new VirtualFilesystem(
             (new MountManager())->mount($this->adapter = new InMemoryFilesystemAdapter()),
-            $dbafsManager = new DbafsManager()
+            $dbafsManager = new DbafsManager($this->createMock(EventDispatcherInterface::class)),
         );
 
         $container = $this->createClient()->getContainer();
@@ -45,7 +48,7 @@ class DbafsTest extends FunctionalTestCase
             $container->get('database_connection'),
             $container->get('event_dispatcher'),
             $this->filesystem,
-            'tl_files'
+            'tl_files',
         );
 
         $dbafsManager->register($this->dbafs, '');
@@ -59,33 +62,33 @@ class DbafsTest extends FunctionalTestCase
         // Expect no changes initially
         $this->assertTrue($this->dbafs->sync()->isEmpty());
 
-        // Write to the virtual filesystem; expect automatic syncing, thus no
-        // changes when syncing
+        // Write to the virtual filesystem; expect automatic syncing, thus no changes
+        // when syncing
         $this->filesystem->write('file1', '1');
-        $this->filesystem->createDirectory('foo');
-        $this->filesystem->write('foo/file2', '2');
+        $this->filesystem->createDirectory('123');
+        $this->filesystem->write('123/file2', '2');
 
         $this->assertTrue($this->dbafs->sync()->isEmpty());
 
         // Directly write to the adapter; expect changes when syncing
-        $this->adapter->move('file1', 'foo/file1', new Config());
+        $this->adapter->move('file1', '123/file1', new Config());
         $this->adapter->write('file3', '3', new Config());
 
         $this->assertFile1MovedAndFile3Created($this->dbafs->sync());
 
-        // Partial sync of foo directory, then full sync
-        $this->adapter->delete('foo/file1');
+        // Partial sync of 123 directory, then full sync
+        $this->adapter->delete('123/file1');
         $this->adapter->delete('file3');
 
-        $this->assertFile1Deleted($this->dbafs->sync('foo/**'));
+        $this->assertFile1Deleted($this->dbafs->sync('123/**'));
         $this->assertFile3Deleted($this->dbafs->sync());
     }
 
     public function testAutomaticallySyncsFiles(): void
     {
-        // Adding a file should automatically update the Dbafs; we're using
-        // paths with numeric strings here to also test their correct handling
-        // inside the Dbafs class (see #5618).
+        // Adding a file should automatically update the Dbafs; we're using paths with
+        // numeric strings here to also test their correct handling inside the Dbafs
+        // class (see #5618).
         $this->filesystem->write('1', '');
 
         $contents = $this->filesystem->listContents('')->toArray();
@@ -106,6 +109,23 @@ class DbafsTest extends FunctionalTestCase
         $this->assertCount(0, $contents);
     }
 
+    public function testCreateAndAccessFile(): void
+    {
+        // Ensure that "foo" is marked as non-existent resource in the DBFAS cache
+        $this->assertFalse($this->filesystem->fileExists('foo'));
+
+        // Creating a file should update the cache
+        $this->filesystem->write('foo', 'bar');
+
+        $this->assertTrue($this->filesystem->fileExists('foo'));
+        $this->assertTrue($this->filesystem->has('foo'));
+
+        $contents = $this->filesystem->listContents('')->toArray();
+
+        $this->assertCount(1, $contents);
+        $this->assertSame('foo', $contents[0]->getPath());
+    }
+
     private function assertFile1MovedAndFile3Created(ChangeSet $changeSet): void
     {
         // Items to create
@@ -120,15 +140,15 @@ class DbafsTest extends FunctionalTestCase
         $itemsToUpdate = $changeSet->getItemsToUpdate();
         $this->assertCount(2, $itemsToUpdate);
 
-        $this->assertSame('file1', $itemsToUpdate[0]->getExistingPath());
-        $this->assertTrue($itemsToUpdate[0]->updatesPath());
-        $this->assertFalse($itemsToUpdate[0]->updatesHash());
-        $this->assertSame('foo/file1', $itemsToUpdate[0]->getNewPath());
+        $this->assertSame('123', $itemsToUpdate[0]->getExistingPath());
+        $this->assertFalse($itemsToUpdate[0]->updatesPath());
+        $this->assertTrue($itemsToUpdate[0]->updatesHash());
+        $this->assertSame('56840dad0dd1d66fe8f3c3a0f41879b1', $itemsToUpdate[0]->getNewHash());
 
-        $this->assertSame('foo', $itemsToUpdate[1]->getExistingPath());
-        $this->assertFalse($itemsToUpdate[1]->updatesPath());
-        $this->assertTrue($itemsToUpdate[1]->updatesHash());
-        $this->assertSame('56840dad0dd1d66fe8f3c3a0f41879b1', $itemsToUpdate[1]->getNewHash());
+        $this->assertSame('file1', $itemsToUpdate[1]->getExistingPath());
+        $this->assertTrue($itemsToUpdate[1]->updatesPath());
+        $this->assertFalse($itemsToUpdate[1]->updatesHash());
+        $this->assertSame('123/file1', $itemsToUpdate[1]->getNewPath());
 
         // Items to delete
         $this->assertEmpty($changeSet->getItemsToDelete());
@@ -143,7 +163,7 @@ class DbafsTest extends FunctionalTestCase
         $itemsToUpdate = $changeSet->getItemsToUpdate();
         $this->assertCount(1, $itemsToUpdate);
 
-        $this->assertSame('foo', $itemsToUpdate[0]->getExistingPath());
+        $this->assertSame('123', $itemsToUpdate[0]->getExistingPath());
         $this->assertFalse($itemsToUpdate[0]->updatesPath());
         $this->assertTrue($itemsToUpdate[0]->updatesHash());
         $this->assertSame('4fdc634444e398f6d8aed051313817e6', $itemsToUpdate[0]->getNewHash());
@@ -152,7 +172,7 @@ class DbafsTest extends FunctionalTestCase
         $itemsToDelete = $changeSet->getItemsToDelete();
         $this->assertCount(1, $itemsToDelete);
 
-        $this->assertSame('foo/file1', $itemsToDelete[0]->getPath());
+        $this->assertSame('123/file1', $itemsToDelete[0]->getPath());
         $this->assertTrue($itemsToDelete[0]->isFile());
     }
 

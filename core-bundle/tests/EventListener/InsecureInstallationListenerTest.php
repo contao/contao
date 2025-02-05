@@ -22,22 +22,39 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class InsecureInstallationListenerTest extends TestCase
 {
+    private const DEFAULT_SECRET = 'ThisTokenIsNotSoSecretChangeIt';
+
+    private const PSEUDO_SECRET = '0123456789abcdefghijklmnopqrstuv';
+
     public function testThrowsAnExceptionIfTheDocumentRootIsInsecure(): void
     {
-        $listener = new InsecureInstallationListener();
+        $listener = new InsecureInstallationListener(self::PSEUDO_SECRET);
 
         $this->expectException(InsecureInstallationException::class);
 
         $listener($this->getResponseEvent($this->getRequest()));
     }
 
-    public function testDoesNotThrowAnExceptionIfTheDocumentRootIsSecure(): void
+    public function testThrowsAnExceptionIfTheSecretIsInsecure(): void
     {
         $request = $this->getRequest();
         $request->server->set('REQUEST_URI', '/index.php?do=test');
         $request->server->set('SCRIPT_FILENAME', $this->getTempDir().'/index.php');
 
-        $listener = new InsecureInstallationListener();
+        $listener = new InsecureInstallationListener(self::DEFAULT_SECRET);
+
+        $this->expectException(InsecureInstallationException::class);
+
+        $listener($this->getResponseEvent($this->getRequest()));
+    }
+
+    public function testDoesNotThrowAnExceptionIfTheDocumentRootAndSecretIsSecure(): void
+    {
+        $request = $this->getRequest();
+        $request->server->set('REQUEST_URI', '/index.php?do=test');
+        $request->server->set('SCRIPT_FILENAME', $this->getTempDir().'/index.php');
+
+        $listener = new InsecureInstallationListener(self::PSEUDO_SECRET);
         $listener($this->getResponseEvent($request));
 
         $this->addToAssertionCount(1); // does not throw an exception
@@ -48,7 +65,7 @@ class InsecureInstallationListenerTest extends TestCase
         $request = $this->getRequest();
         $request->server->set('REMOTE_ADDR', '127.0.0.1');
 
-        $listener = new InsecureInstallationListener();
+        $listener = new InsecureInstallationListener(self::DEFAULT_SECRET);
         $listener($this->getResponseEvent($request));
 
         $this->addToAssertionCount(1); // does not throw an exception
@@ -65,7 +82,7 @@ class InsecureInstallationListenerTest extends TestCase
         return $request;
     }
 
-    private function getResponseEvent(Request $request = null): RequestEvent
+    private function getResponseEvent(Request|null $request = null): RequestEvent
     {
         $kernel = $this->createMock(KernelInterface::class);
 

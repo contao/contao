@@ -54,7 +54,7 @@ class Search
 		// Get the file size from the raw content
 		if (!$arrSet['filesize'])
 		{
-			$arrSet['filesize'] = number_format((\strlen($arrData['content']) / 1024), 2, '.', '');
+			$arrSet['filesize'] = number_format(\strlen($arrData['content']) / 1024, 2, '.', '');
 		}
 
 		// Replace special characters
@@ -171,8 +171,8 @@ class Search
 		$arrSet['checksum'] = md5($arrSet['text'] . $arrSet['meta']);
 
 		$blnIndexExists = $objDatabase
-			->prepare("SELECT EXISTS(SELECT id FROM tl_search WHERE checksum=? AND pid=? AND url=?) as indexExists")
-			->execute($arrSet['checksum'], $arrSet['pid'], $arrSet['url'])
+			->prepare("SELECT EXISTS(SELECT id FROM tl_search WHERE pid=? AND checksum=? AND url=?) as indexExists")
+			->execute($arrSet['pid'], $arrSet['checksum'], $arrSet['url'])
 			->indexExists;
 
 		// The page has already been indexed and has not changed (see #2235)
@@ -187,9 +187,9 @@ class Search
 		try
 		{
 			$objIndex = $objDatabase
-				->prepare("SELECT id, url FROM tl_search WHERE checksum=? AND pid=?")
+				->prepare("SELECT id, url FROM tl_search WHERE pid=? AND checksum=?")
 				->limit(1)
-				->execute($arrSet['checksum'], $arrSet['pid']);
+				->execute($arrSet['pid'], $arrSet['checksum']);
 
 			if ($objIndex->numRows)
 			{
@@ -435,6 +435,26 @@ class Search
 			}
 		}
 
+		foreach ($arrMatches as $match)
+		{
+			$iterator->setText($match);
+
+			if (iterator_count($iterator->getPartsIterator()) < 2)
+			{
+				continue;
+			}
+
+			preg_match_all('/' . str_replace(' ', '[^[:alnum:]]+', preg_quote($match, '/')) . '/ui', $strText, $phrases);
+
+			foreach ($phrases[0] as $phrase)
+			{
+				if (!\in_array($phrase, $variants, true))
+				{
+					$variants[] = $phrase;
+				}
+			}
+		}
+
 		return $variants;
 	}
 
@@ -473,7 +493,7 @@ class Search
 
 		foreach (array_unique($arrChunks[0]) as $strKeyword)
 		{
-			if (($strKeyword[0] === '*' || substr($strKeyword, -1) === '*') && \strlen($strKeyword) > 1)
+			if (($strKeyword[0] === '*' || str_ends_with($strKeyword, '*')) && \strlen($strKeyword) > 1)
 			{
 				$arrWildcardWords = self::splitIntoWords(trim($strKeyword, '*'), $GLOBALS['TL_LANGUAGE']);
 
@@ -484,12 +504,12 @@ class Search
 						$strWord = '%' . $strWord;
 					}
 
-					if ($intIndex === \count($arrWildcardWords) - 1 && substr($strKeyword, -1) === '*')
+					if ($intIndex === \count($arrWildcardWords) - 1 && str_ends_with($strKeyword, '*'))
 					{
 						$strWord .= '%';
 					}
 
-					if ($strWord[0] === '%' || substr($strWord, -1) === '%')
+					if ($strWord[0] === '%' || str_ends_with($strWord, '%'))
 					{
 						$arrWildcards[] = $strWord;
 					}
@@ -697,7 +717,7 @@ class Search
 		$arrHaving = array();
 
 		// Check that all required keywords match
-		foreach ($blnOrSearch ? $arrRequiredMatches : array_merge($arrMatches, $arrRequiredMatches) as $intMatch)
+		foreach ($blnOrSearch ? $arrRequiredMatches : array(...$arrMatches, ...$arrRequiredMatches) as $intMatch)
 		{
 			$arrHaving[] = "COUNT(matchedTerm.match$intMatch) > 0";
 		}
@@ -718,8 +738,8 @@ class Search
 		// Get phrases
 		if (\count($arrPhrasesRegExp))
 		{
-			$strQuery .= " AND (" . implode(($blnOrSearch ? ' OR ' : ' AND '), array_fill(0, \count($arrPhrasesRegExp), 'tl_search.text REGEXP ?')) . ')';
-			$arrValues = array_merge($arrValues, $arrPhrasesRegExp);
+			$strQuery .= " AND (" . implode($blnOrSearch ? ' OR ' : ' AND ', array_fill(0, \count($arrPhrasesRegExp), 'tl_search.text REGEXP ?')) . ')';
+			$arrValues = array(...$arrValues, ...$arrPhrasesRegExp);
 		}
 
 		// Limit results to a particular set of pages
@@ -736,7 +756,7 @@ class Search
 		$objResult = $objResultStmt->execute(...$arrValues);
 		$arrResult = $objResult->fetchAllAssoc();
 
-		return new SearchResult($arrResult, array_merge($arrKeywords, $arrIncluded), $arrWildcards, $arrPhrases);
+		return new SearchResult($arrResult, array(...$arrKeywords, ...$arrIncluded), $arrWildcards, $arrPhrases);
 	}
 
 	/**
@@ -744,7 +764,7 @@ class Search
 	 *
 	 * @param string $strUrl The URL to be removed
 	 */
-	public static function removeEntry($strUrl, Connection $connection = null)
+	public static function removeEntry($strUrl, Connection|null $connection = null)
 	{
 		$connection = $connection ?? System::getContainer()->get('database_connection');
 		$result = $connection->executeQuery('SELECT id FROM tl_search WHERE url = :url', array('url' => $strUrl));
@@ -775,12 +795,12 @@ class Search
 	 */
 	private static function compareUrls($strUrlA, $strUrlB)
 	{
-		if (strpos($strUrlA, '?') === false && strpos($strUrlB, '?') !== false)
+		if (!str_contains($strUrlA, '?') && str_contains($strUrlB, '?'))
 		{
 			return -1;
 		}
 
-		if (strpos($strUrlA, '?') !== false && strpos($strUrlB, '?') === false)
+		if (str_contains($strUrlA, '?') && !str_contains($strUrlB, '?'))
 		{
 			return 1;
 		}

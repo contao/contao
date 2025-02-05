@@ -39,7 +39,7 @@ class AbstractPageRouteProviderTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function compareRoutesProvider(): \Generator
+    public function compareRoutesProvider(): iterable
     {
         yield 'Sorts route with host higher' => [
             new Route('', [], [], [], 'www.example.com'),
@@ -282,7 +282,7 @@ class AbstractPageRouteProviderTest extends TestCase
 
         $routes = array_map(
             fn ($language) => new Route('', ['pageModel' => $this->mockPageModel($language, false, false, ++$sorting)]),
-            $pageLanguages
+            $pageLanguages,
         );
 
         usort($routes, static fn ($a, $b) => $method->invoke($instance, $a, $b, $preferredLanguages));
@@ -292,7 +292,7 @@ class AbstractPageRouteProviderTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function ordersRoutesByPreferredLanguages(): \Generator
+    public static function ordersRoutesByPreferredLanguages(): iterable
     {
         yield [
             ['de', 'en'],
@@ -393,7 +393,7 @@ class AbstractPageRouteProviderTest extends TestCase
         $this->assertSame($expected, $result);
     }
 
-    public function convertLanguageForSortingProvider(): \Generator
+    public static function convertLanguageForSortingProvider(): iterable
     {
         yield 'Does nothing on empty array' => [
             [],
@@ -426,10 +426,7 @@ class AbstractPageRouteProviderTest extends TestCase
         ];
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function mockPageModel(string $language, bool $fallback = false, bool $root = false, int $rootSorting = 128, int $routePriority = 0): PageModel
+    private function mockPageModel(string $language, bool $fallback = false, bool $root = false, int $rootSorting = 128, int $routePriority = 0): PageModel&MockObject
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $pageModel->type = $root ? 'root' : 'regular';

@@ -15,28 +15,32 @@ namespace Contao\CoreBundle\EventListener\Menu;
 use Contao\BackendUser;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Event\MenuEvent;
+use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\Util\MenuManipulator;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
  */
+#[AsEventListener]
 class BackendFavoritesListener
 {
     public function __construct(
-        private Security $security,
-        private RouterInterface $router,
-        private RequestStack $requestStack,
-        private Connection $connection,
-        private TranslatorInterface $translator,
-        private ContaoCsrfTokenManager $tokenManager,
+        private readonly Security $security,
+        private readonly RouterInterface $router,
+        private readonly RequestStack $requestStack,
+        private readonly Connection $connection,
+        private readonly TranslatorInterface $translator,
+        private readonly ContaoCsrfTokenManager $tokenManager,
     ) {
     }
 
@@ -64,7 +68,6 @@ class BackendFavoritesListener
         }
 
         $factory = $event->getFactory();
-        $path = $this->router->generate('contao_backend');
 
         $params = [
             'do' => $request->query->get('do'),
@@ -72,8 +75,13 @@ class BackendFavoritesListener
             'ref' => $request->attributes->get('_contao_referer_id'),
         ];
 
-        $session = $this->requestStack->getSession()->all();
-        $collapsed = 0 === ($session['backend_modules']['favorites'] ?? null);
+        $bag = $this->requestStack->getSession()->getBag('contao_backend');
+
+        if (!$bag instanceof AttributeBagInterface) {
+            return;
+        }
+
+        $collapsed = 0 === ($bag->get('backend_modules')['favorites'] ?? null);
 
         $tree = $factory
             ->createItem('favorites')
@@ -81,7 +89,8 @@ class BackendFavoritesListener
             ->setUri($this->router->generate('contao_backend', $params))
             ->setLinkAttribute('class', 'group-favorites')
             ->setLinkAttribute('title', $this->translator->trans($collapsed ? 'MSC.expandNode' : 'MSC.collapseNode', [], 'contao_default'))
-            ->setLinkAttribute('onclick', "return AjaxRequest.toggleNavigation(this, 'favorites', '$path')")
+            ->setLinkAttribute('data-action', 'contao--toggle-navigation#toggle:prevent')
+            ->setLinkAttribute('data-contao--toggle-navigation-category-param', 'favorites')
             ->setLinkAttribute('aria-controls', 'favorites')
             ->setChildrenAttribute('id', 'favorites')
             ->setExtra('translation_domain', false)
@@ -127,7 +136,7 @@ class BackendFavoritesListener
             [
                 'url' => $url,
                 'user' => $user->id,
-            ]
+            ],
         );
 
         $factory = $event->getFactory();
@@ -151,7 +160,7 @@ class BackendFavoritesListener
             [
                 'pid' => $pid,
                 'user' => $user,
-            ]
+            ],
         );
 
         foreach ($nodes as $node) {
@@ -162,17 +171,17 @@ class BackendFavoritesListener
 
             $item = $factory
                 ->createItem('favorite_'.$node['id'])
-                ->setLabel($node['title'])
+                ->setLabel(StringUtil::decodeEntities($node['title']))
                 ->setUri($node['url'].(str_contains((string) $node['url'], '?') ? '&' : '?').'ref='.$ref)
                 ->setLinkAttribute('class', 'navigation')
-                ->setLinkAttribute('title', $node['title'])
+                ->setLinkAttribute('title', StringUtil::decodeEntities($node['title']))
                 ->setCurrent($node['url'] === $requestUri)
                 ->setExtra('translation_domain', false)
             ;
 
             $tree->addChild($item);
 
-            $this->buildTree($item, $factory, $requestUri, $ref, $user, $node['id']);
+            $this->buildTree($item, $factory, $requestUri, $ref, $user, (int) $node['id']);
         }
     }
 
@@ -228,7 +237,7 @@ class BackendFavoritesListener
 
             unset($pairs['rt'], $pairs['ref'], $pairs['revise']);
 
-            if (!empty($pairs)) {
+            if ([] !== $pairs) {
                 $qs = '?'.http_build_query($pairs, '', '&', PHP_QUERY_RFC3986);
             }
         }

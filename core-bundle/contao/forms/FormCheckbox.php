@@ -56,7 +56,7 @@ class FormCheckbox extends Widget
 		switch ($strKey)
 		{
 			case 'options':
-				$this->arrOptions = StringUtil::deserialize($varValue);
+				$this->arrOptions = StringUtil::deserialize($varValue, true);
 				break;
 
 			case 'rgxp':
@@ -239,7 +239,7 @@ class FormCheckbox extends Widget
 
 		foreach ($this->arrOptions as $i=>$arrOption)
 		{
-			$strOptions .= sprintf(
+			$strOptions .= \sprintf(
 				'<span><input type="checkbox" name="%s" id="opt_%s" class="checkbox" value="%s"%s%s%s <label id="lbl_%s" for="opt_%s">%s</label></span> ',
 				$this->strName . ((\count($this->arrOptions) > 1) ? '[]' : ''),
 				$this->strId . '_' . $i,
@@ -255,13 +255,13 @@ class FormCheckbox extends Widget
 
 		if ($this->strLabel)
 		{
-			return sprintf(
+			return \sprintf(
 				'<fieldset id="ctrl_%s" class="checkbox_container%s"><legend>%s%s%s</legend>%s<input type="hidden" name="%s" value=""%s%s</fieldset>',
 				$this->strId,
-				($this->strClass ? ' ' . $this->strClass : ''),
-				($this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : ''),
+				$this->strClass ? ' ' . $this->strClass : '',
+				$this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : '',
 				$this->strLabel,
-				($this->mandatory ? '<span class="mandatory">*</span>' : ''),
+				$this->mandatory ? '<span class="mandatory">*</span>' : '',
 				$this->strError,
 				$this->strName,
 				$this->strTagEnding,
@@ -269,10 +269,10 @@ class FormCheckbox extends Widget
 			);
 		}
 
-		return sprintf(
+		return \sprintf(
 			'<fieldset id="ctrl_%s" class="checkbox_container%s">%s<input type="hidden" name="%s" value=""%s%s</fieldset>',
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			$this->strError,
 			$this->strName,
 			$this->strTagEnding,

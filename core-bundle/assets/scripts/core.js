@@ -6,12 +6,6 @@
 window.AjaxRequest =
 {
 	/**
-	 * The theme path
-	 * @member {string}
-	 */
-	themePath: Contao.script_url + 'system/themes/' + Contao.theme + '/',
-
-	/**
 	 * Toggle the navigation menu
 	 *
 	 * @param {object} el  The DOM element
@@ -21,7 +15,9 @@ window.AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleNavigation: function(el, id, url) {
-		window.console && console.warn('AjaxRequest.toggleNavigation() is deprecated. Please use the stimulus controller instead.');
+		if (window.console) {
+			console.warn('AjaxRequest.toggleNavigation() is deprecated. Please use the stimulus controller instead.');
+		}
 
 		var item = $(id),
 			parent = $(el).getParent('li');
@@ -54,22 +50,27 @@ window.AjaxRequest =
 	 *
 	 * @returns {boolean}
 	 */
-	toggleStructure: function (el, id, level, mode) {
-		el.blur();
+	toggleStructure: function(el, id, level, mode) {
+		if (window.console) {
+			console.warn('AjaxRequest.toggleStructure() is deprecated. Please use the stimulus controller instead.');
+		}
 
-		var item = $(id),
-			image = $(el).getElement('img');
+		var item = $(id);
 
 		if (item) {
 			if (item.getStyle('display') == 'none') {
 				item.setStyle('display', null);
-				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
+
+				$(el).addClass('foldable--open');
 				$(el).setAttribute('title', Contao.lang.collapse);
+
 				new Request.Contao({field:el}).post({'action':'toggleStructure', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				item.setStyle('display', 'none');
-				image.src = AjaxRequest.themePath + 'icons/folPlus.svg';
+
+				$(el).removeClass('foldable--open');
 				$(el).setAttribute('title', Contao.lang.expand);
+
 				new Request.Contao({field:el}).post({'action':'toggleStructure', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
 			return false;
@@ -78,7 +79,9 @@ window.AjaxRequest =
 		new Request.Contao({
 			field: el,
 			evalScripts: true,
-			onRequest: AjaxRequest.displayBox(Contao.lang.loading + ' …'),
+			onRequest: function() {
+				AjaxRequest.displayBox(Contao.lang.loading + ' …');
+			},
 			onSuccess: function(txt) {
 				var li = new Element('li', {
 					'id': id,
@@ -120,8 +123,9 @@ window.AjaxRequest =
 					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
 				});
 
+				$(el).addClass('foldable--open');
 				$(el).setAttribute('title', Contao.lang.collapse);
-				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
+
 				window.fireEvent('structure');
 				AjaxRequest.hideBox();
 
@@ -143,22 +147,27 @@ window.AjaxRequest =
 	 *
 	 * @returns {boolean}
 	 */
-	toggleFileManager: function (el, id, folder, level) {
-		el.blur();
+	toggleFileManager: function(el, id, folder, level) {
+		if (window.console) {
+			console.warn('AjaxRequest.toggleFileManager() is deprecated. Please use the stimulus controller instead.');
+		}
 
-		var item = $(id),
-			image = $(el).getElement('img');
+		var item = $(id);
 
 		if (item) {
 			if (item.getStyle('display') == 'none') {
 				item.setStyle('display', null);
-				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
+
+				$(el).addClass('foldable--open');
 				$(el).setAttribute('title', Contao.lang.collapse);
+
 				new Request.Contao({field:el}).post({'action':'toggleFileManager', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				item.setStyle('display', 'none');
-				image.src = AjaxRequest.themePath + 'icons/folPlus.svg';
+
+				$(el).removeClass('foldable--open');
 				$(el).setAttribute('title', Contao.lang.expand);
+
 				new Request.Contao({field:el}).post({'action':'toggleFileManager', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
 			return false;
@@ -167,7 +176,9 @@ window.AjaxRequest =
 		new Request.Contao({
 			field: el,
 			evalScripts: true,
-			onRequest: AjaxRequest.displayBox(Contao.lang.loading + ' …'),
+			onRequest: function() {
+				AjaxRequest.displayBox(Contao.lang.loading + ' …');
+			},
 			onSuccess: function(txt) {
 				var li = new Element('li', {
 					'id': id,
@@ -189,8 +200,9 @@ window.AjaxRequest =
 					el.href = el.href.replace(/&ref=[a-f0-9]+/, '&ref=' + Contao.referer_id);
 				});
 
+				$(el).addClass('foldable--open');
 				$(el).setAttribute('title', Contao.lang.collapse);
-				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
+
 				AjaxRequest.hideBox();
 
 				// HOOK
@@ -202,14 +214,13 @@ window.AjaxRequest =
 	},
 
 	/**
-	 * Toggle subpalettes in edit mode
+	 * Toggle sub-palettes in edit mode
 	 *
 	 * @param {object} el    The DOM element
 	 * @param {string} id    The ID of the target element
 	 * @param {string} field The field name
 	 */
-	toggleSubpalette: function (el, id, field) {
-		el.blur();
+	toggleSubpalette: function(el, id, field) {
 		var item = $(id);
 
 		if (item) {
@@ -236,15 +247,14 @@ window.AjaxRequest =
 		new Request.Contao({
 			field: el,
 			evalScripts: false,
-			onRequest: AjaxRequest.displayBox(Contao.lang.loading + ' …'),
+			onRequest: function() {
+				AjaxRequest.displayBox(Contao.lang.loading + ' …');
+			},
 			onSuccess: function(txt, json) {
 				var div = new Element('div', {
 					'id': id,
-					'class': 'subpal cf',
-					'html': txt,
-					'styles': {
-						'display': 'block'
-					}
+					'class': 'subpal widget-group',
+					'html': txt
 				}).inject($(el).getParent('div').getParent('div'), 'after');
 
 				// Execute scripts after the DOM has been updated
@@ -296,38 +306,36 @@ window.AjaxRequest =
 	/**
 	 * Toggle the state of a checkbox field
 	 *
-	 * @param {object}  el      The DOM element
-	 * @param {boolean} rowIcon Whether the row icon should be toggled as well
+	 * @param {object}  el       The DOM element
+	 * @param {boolean} rowIcon  Whether the row icon should be toggled as well
+	 * @param {boolean} iconOnly If only the icon should be toggled (without sending a request)
 	 *
 	 * @returns {boolean}
 	 */
-	toggleField: function(el, rowIcon) {
-		el.blur();
-
+	toggleField: function(el, rowIcon, iconOnly = false) {
 		var img = null,
 			images = $(el).getElements('img'),
 			published = (images[0].get('data-state') == 1),
-			div = el.getParent('div'),
-			next, pa, src;
+			div, next, pa, title;
 
-		if (rowIcon) {
+		if (rowIcon && !iconOnly) {
 			// Find the icon depending on the view (tree view, list view, parent view)
-			if (div.hasClass('tl_right')) {
+			if ((div = el.closest('.tl_right'))) {
 				img = div.getPrevious('div').getElements('img');
-			} else if (div.hasClass('tl_listing_container')) {
+			} else if ((div = el.closest('.tl_content_right')) && (next = div.getNext('div'))) {
+				if (next.hasClass('cte_type')) {
+					img = next;
+				}
+				if (img === null) { // newsletter recipients
+					img = next.getFirst('div.list_icon');
+				}
+			} else if (el.closest('.tl_listing_container') && el.getParent('tr')) {
 				img = el.getParent('td').getPrevious('td').getFirst('div.list_icon');
 				if (img === null) { // comments
 					img = el.getParent('td').getPrevious('td').getElement('div.cte_type');
 				}
 				if (img === null) { // showColumns
 					img = el.getParent('tr').getFirst('td').getElement('div.list_icon_new');
-				}
-			} else if (next = div.getNext('div')) {
-				if (next.hasClass('cte_type')) {
-					img = next;
-				}
-				if (img === null) { // newsletter recipients
-					img = next.getFirst('div.list_icon');
 				}
 			}
 
@@ -372,13 +380,36 @@ window.AjaxRequest =
 		}
 
 		// Send request
-		images.forEach(function (image) {
+		images.forEach(function(image) {
 			const newSrc = !published ? image.get('data-icon') : image.get('data-icon-disabled');
 			image.src = (image.src.includes('/') && !newSrc.includes('/')) ? image.src.slice(0, image.src.lastIndexOf('/') + 1) + newSrc : newSrc;
+			image.alt = title = !published ? image.get('data-alt') : image.get('data-alt-disabled');
 			image.set('data-state', !published ? 1 : 0);
 		});
 
-		new Request.Contao({'url':el.href, 'followRedirects':false}).get();
+		if (!published && $(el).get('data-title')) {
+			el.title = title = $(el).get('data-title');
+		} else if (published && $(el).get('data-title-disabled')) {
+			el.title = title = $(el).get('data-title-disabled');
+		}
+
+		if (title) {
+			el.childNodes.forEach((child) => {
+				if (child instanceof Text && child.nodeValue.trim()) {
+					child.replaceWith(new Text(title));
+				}
+			});
+		}
+
+		if (!iconOnly) {
+			document.body.querySelectorAll(`a[href="${el.getAttribute('href')}"]`).forEach((clone) => {
+				if (el !== clone) {
+					AjaxRequest.toggleField(clone, rowIcon, true);
+				}
+			});
+
+			new Request.Contao({'url':el.href, 'followRedirects':false}).get();
+		}
 
 		// Return false to stop the click event on link
 		return false;
@@ -393,19 +424,18 @@ window.AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleCheckboxGroup: function(el, id) {
-		el.blur();
-
-		var item = $(id),
-			image = $(el).getElement('img');
+		var item = $(id);
 
 		if (item) {
 			if (item.getStyle('display') == 'none') {
 				item.setStyle('display', null);
-				image.src = AjaxRequest.themePath + 'icons/folMinus.svg';
+				$(el).addClass('foldable--open');
+
 				new Request.Contao().post({'action':'toggleCheckboxGroup', 'id':id, 'state':1, 'REQUEST_TOKEN':Contao.request_token});
 			} else {
 				item.setStyle('display', 'none');
-				image.src = AjaxRequest.themePath + 'icons/folPlus.svg';
+				$(el).removeClass('foldable--open');
+
 				new Request.Contao().post({'action':'toggleCheckboxGroup', 'id':id, 'state':0, 'REQUEST_TOKEN':Contao.request_token});
 			}
 			return true;
@@ -507,6 +537,7 @@ window.Backend =
 			'hideFooter': true,
 			'draggable': false,
 			'overlayOpacity': .7,
+			'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		}).show({
@@ -533,7 +564,7 @@ window.Backend =
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
 		M.show({
-			'title': opt.title,
+			'title': opt.title?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;'),
 			'contents': '<img src="' + opt.url + '" alt="">'
 		});
 	},
@@ -554,11 +585,12 @@ window.Backend =
 			'hideFooter': true,
 			'draggable': false,
 			'overlayOpacity': .7,
+			'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
 		M.show({
-			'title': opt.title,
+			'title': opt.title?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;'),
 			'contents': '<iframe src="' + opt.url + '" width="100%" height="' + opt.height + '" frameborder="0"></iframe>',
 			'model': 'modal'
 		});
@@ -580,6 +612,7 @@ window.Backend =
 			'width': opt.width,
 			'draggable': false,
 			'overlayOpacity': .7,
+			'overlayClick': false,
 			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
 			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
 		});
@@ -594,7 +627,7 @@ window.Backend =
 				return;
 			}
 			var frm = window.frames['simple-modal-iframe'],
-				val = [], ul, inp, field, act, it, i, pickerValue, sIndex;
+				val = [], ul, inp, i, pickerValue, sIndex;
 			if (frm === undefined) {
 				alert('Could not find the SimpleModal frame');
 				return;
@@ -623,7 +656,7 @@ window.Backend =
 			this.hide();
 		});
 		M.show({
-			'title': opt.title,
+			'title': opt.title?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;'),
 			'contents': '<iframe src="' + opt.url + '" name="simple-modal-iframe" width="100%" height="' + opt.height + '" frameborder="0"></iframe>',
 			'model': 'modal'
 		});
@@ -650,84 +683,12 @@ window.Backend =
 	},
 
 	/**
-	 * Store the current scroll offset in sessionStorage
-	 */
-	getScrollOffset: function() {
-		window.sessionStorage.setItem('contao_backend_offset', window.getScroll().y);
-	},
-
-	/**
-	 * Scroll to the current offset if
-	 * it was defined and add the "down" CSS class to the header.
-	 */
-	initScrollOffset: function() {
-		// Add events to the submit buttons, so they can reset the offset
-		// (except for "save", which always stays on the same page)
-		$$('.tl_submit_container button[name][name!="save"]').each(function(button) {
-			button.addEvent('click', function() {
-				window.sessionStorage.removeItem('contao_backend_offset');
-			});
-		});
-
-		var offset = window.sessionStorage.getItem('contao_backend_offset');
-		window.sessionStorage.removeItem('contao_backend_offset');
-
-		if (!offset) return;
-
-		var header = window.document.getElementById('header'),
-			additionalOffset = 0;
-
-		if (header) {
-			header.addClass('down');
-		}
-
-		$$('[data-add-to-scroll-offset]').each(function(el) {
-			var offset = el.get('data-add-to-scroll-offset'),
-				scrollSize = el.getScrollSize().y,
-				negative = false,
-				percent = false;
-
-			// No specific offset desired, take scrollSize
-			if (!offset) {
-				additionalOffset += scrollSize;
-				return;
-			}
-
-			// Negative
-			if (offset.charAt(0) === '-') {
-				negative = true;
-				offset = offset.substring(1);
-			}
-
-			// Percent
-			if (offset.charAt(offset.length - 1) === '%') {
-				percent = true;
-				offset = offset.substring(0, offset.length - 1);
-			}
-
-			offset = parseInt(offset, 10);
-
-			if (percent) {
-				offset = Math.round(scrollSize * offset / 100);
-			}
-
-			if (negative) {
-				offset = offset * -1;
-			}
-
-			additionalOffset += offset;
-		});
-
-		this.vScrollTo(parseInt(offset, 10) + additionalOffset);
-	},
-
-	/**
 	 * Automatically submit a form
 	 *
 	 * @param {object} el The DOM element
 	 */
 	autoSubmit: function(el) {
-		Backend.getScrollOffset();
+		window.dispatchEvent(new Event('store-scroll-offset'));
 
 		var hidden = new Element('input', {
 			'type': 'hidden',
@@ -746,6 +707,10 @@ window.Backend =
 	 * @param {int} offset The offset to scroll to
 	 */
 	vScrollTo: function(offset) {
+		if (window.console) {
+			console.warn('Backend.vScrollTo() is deprecated. Please use the Stimulus controller instead.');
+		}
+
 		window.addEvent('load', function() {
 			window.scrollTo(null, parseInt(offset));
 		});
@@ -793,7 +758,7 @@ window.Backend =
 			});
 		}
 
-		Backend.getScrollOffset();
+		window.dispatchEvent(new Event('store-scroll-offset'));
 	},
 
 	/**
@@ -811,7 +776,7 @@ window.Backend =
 			}
 		});
 
-		Backend.getScrollOffset();
+		window.dispatchEvent(new Event('store-scroll-offset'));
 	},
 
 	/**
@@ -983,7 +948,7 @@ window.Backend =
 				clone = cloneBase.clone(true)
 					.inject(ul)
 					.addClass('tl_left_dragging'),
-				currentHover, currentHoverTime;
+				currentHover, currentHoverTime, expandLink;
 
 			clone.setPosition({
 				x: event.page.x - cloneBase.getOffsetParent().getPosition().x - clone.getSize().x,
@@ -1007,11 +972,9 @@ window.Backend =
 					if (droppable.hasClass('tl_folder') && currentHover !== droppable) {
 						currentHover = droppable;
 						currentHoverTime = new Date().getTime();
+						expandLink = droppable.getElement('a.foldable');
 
-						var expandLink = droppable.getElement('img[src$="/icons/folPlus.svg"]');
-						expandLink = expandLink && expandLink.getParent('a');
-
-						if (expandLink) {
+						if (expandLink && !expandLink.hasClass('foldable--open')) {
 							// Expand the folder after one second hover time
 							setTimeout(function() {
 								if (currentHover === droppable && currentHoverTime + 900 < new Date().getTime()) {
@@ -1067,7 +1030,7 @@ window.Backend =
 						return;
 					}
 
-					Backend.getScrollOffset();
+					window.dispatchEvent(new Event('store-scroll-offset'));
 					document.location.href = options.url + '&id=' + encodeURIComponent(id) + '&pid=' + encodeURIComponent(pid);
 				},
 				onLeave: function(element, droppable) {
@@ -1122,17 +1085,18 @@ window.Backend =
 					switch (command) {
 						case 'copy':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								clone = li.clone(true).inject(li, 'before');
 								if (input = li.getFirst('input')) {
 									clone.getFirst('input').value = input.value;
 								}
 								addEventsTo(clone);
+								input.select();
 							});
 							break;
 						case 'delete':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								if (ul.getChildren().length > 1) {
 									li.destroy();
 								}
@@ -1181,12 +1145,12 @@ window.Backend =
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
 				var rows = tbody.getChildren(),
-					textarea, childs, i, j;
+					textarea, children, i, j;
 
 				for (i=0; i<rows.length; i++) {
-					childs = rows[i].getChildren();
-					for (j=0; j<childs.length; j++) {
-						if (textarea = childs[j].getFirst('textarea')) {
+					children = rows[i].getChildren();
+					for (j=0; j<children.length; j++) {
+						if (textarea = children[j].getFirst('textarea')) {
 							textarea.name = textarea.name.replace(/\[[0-9]+][[0-9]+]/g, '[' + i + '][' + j + ']')
 						}
 					}
@@ -1203,7 +1167,7 @@ window.Backend =
 			},
 			addEventsTo = function(tr) {
 				var head = thead.getFirst('tr'),
-					command, textarea, current, next, ntr, childs, index, i;
+					command, textarea, current, next, ntr, children, index, i;
 
 				tr.getElements('button').each(function(bt) {
 					if (bt.hasEvent('click')) return;
@@ -1212,23 +1176,24 @@ window.Backend =
 					switch (command) {
 						case 'rcopy':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								ntr = new Element('tr');
-								childs = tr.getChildren();
-								for (i=0; i<childs.length; i++) {
-									next = childs[i].clone(true).inject(ntr, 'bottom');
-									if (textarea = childs[i].getFirst('textarea')) {
+								children = tr.getChildren();
+								for (i=0; i<children.length; i++) {
+									next = children[i].clone(true).inject(ntr, 'bottom');
+									if (textarea = children[i].getFirst('textarea')) {
 										next.getFirst('textarea').value = textarea.value;
 									}
 								}
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
+								ntr.getFirst('td').getFirst('textarea').select();
 							});
 							break;
 						case 'rdelete':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								if (tbody.getChildren().length > 1) {
 									tr.destroy();
 								}
@@ -1237,11 +1202,11 @@ window.Backend =
 							break;
 						case 'ccopy':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								index = getIndex(bt);
-								childs = tbody.getChildren();
-								for (i=0; i<childs.length; i++) {
-									current = childs[i].getChildren()[index];
+								children = tbody.getChildren();
+								for (i=0; i<children.length; i++) {
+									current = children[i].getChildren()[index];
 									next = current.clone(true).inject(current, 'after');
 									if (textarea = current.getFirst('textarea')) {
 										next.getFirst('textarea').value = textarea.value;
@@ -1252,22 +1217,23 @@ window.Backend =
 								next = headFirst.clone(true).inject(head.getLast('td'), 'before');
 								addEventsTo(next);
 								makeSortable(tbody);
+								children[0].getChildren()[index + 1].getFirst('textarea').select();
 							});
 							break;
 						case 'cmovel':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								index = getIndex(bt);
-								childs = tbody.getChildren();
+								children = tbody.getChildren();
 								if (index > 0) {
-									for (i=0; i<childs.length; i++) {
-										current = childs[i].getChildren()[index];
+									for (i=0; i<children.length; i++) {
+										current = children[i].getChildren()[index];
 										current.inject(current.getPrevious(), 'before');
 									}
 								} else {
-									for (i=0; i<childs.length; i++) {
-										current = childs[i].getChildren()[index];
-										current.inject(childs[i].getLast(), 'before');
+									for (i=0; i<children.length; i++) {
+										current = children[i].getChildren()[index];
+										current.inject(children[i].getLast(), 'before');
 									}
 								}
 								makeSortable(tbody);
@@ -1275,18 +1241,18 @@ window.Backend =
 							break;
 						case 'cmover':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								index = getIndex(bt);
-								childs = tbody.getChildren();
+								children = tbody.getChildren();
 								if (index < (tr.getChildren().length - 2)) {
-									for (i=0; i<childs.length; i++) {
-										current = childs[i].getChildren()[index];
+									for (i=0; i<children.length; i++) {
+										current = children[i].getChildren()[index];
 										current.inject(current.getNext(), 'after');
 									}
 								} else {
-									for (i=0; i<childs.length; i++) {
-										current = childs[i].getChildren()[index];
-										current.inject(childs[i].getFirst(), 'before');
+									for (i=0; i<children.length; i++) {
+										current = children[i].getChildren()[index];
+										current.inject(children[i].getFirst(), 'before');
 									}
 								}
 								makeSortable(tbody);
@@ -1294,12 +1260,12 @@ window.Backend =
 							break;
 						case 'cdelete':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								index = getIndex(bt);
-								childs = tbody.getChildren();
+								children = tbody.getChildren();
 								if (tr.getChildren().length > 2) {
-									for (i=0; i<childs.length; i++) {
-										childs[i].getChildren()[index].destroy();
+									for (i=0; i<children.length; i++) {
+										children[i].getChildren()[index].destroy();
 									}
 									head.getFirst('td').destroy();
 								}
@@ -1407,12 +1373,12 @@ window.Backend =
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
 				var rows = tbody.getChildren(),
-					childs, i, j, input;
+					children, i, j, input;
 
 				for (i=0; i<rows.length; i++) {
-					childs = rows[i].getChildren();
-					for (j=0; j<childs.length; j++) {
-						if (input = childs[j].getFirst('input')) {
+					children = rows[i].getChildren();
+					for (j=0; j<children.length; j++) {
+						if (input = children[j].getFirst('input')) {
 							input.name = input.name.replace(/\[[0-9]+]/g, '[' + i + ']');
 							if (input.type == 'checkbox') {
 								input.id = input.name.replace(/\[[0-9]+]/g, '').replace(/\[/g, '_').replace(/]/g, '') + '_' + i;
@@ -1432,7 +1398,7 @@ window.Backend =
 				});
 			},
 			addEventsTo = function(tr) {
-				var command, input, next, ntr, childs, i;
+				var command, input, next, ntr, children, i;
 				tr.getElements('button').each(function(bt) {
 					if (bt.hasEvent('click')) return;
 					command = bt.getProperty('data-command');
@@ -1440,12 +1406,12 @@ window.Backend =
 					switch (command) {
 						case 'copy':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								ntr = new Element('tr');
-								childs = tr.getChildren();
-								for (i=0; i<childs.length; i++) {
-									next = childs[i].clone(true).inject(ntr, 'bottom');
-									if (input = childs[i].getFirst('input')) {
+								children = tr.getChildren();
+								for (i=0; i<children.length; i++) {
+									next = children[i].clone(true).inject(ntr, 'bottom');
+									if (input = children[i].getFirst('input')) {
 										next.getFirst('input').value = input.value;
 										if (input.type == 'checkbox') {
 											next.getFirst('input').checked = input.checked ? 'checked' : '';
@@ -1455,11 +1421,12 @@ window.Backend =
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
+								ntr.getFirst('td').getFirst('input').select();
 							});
 							break;
 						case 'delete':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								if (tbody.getChildren().length > 1) {
 									tr.destroy();
 								}
@@ -1510,12 +1477,12 @@ window.Backend =
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
 				var rows = tbody.getChildren(),
-					childs, i, j, input;
+					children, i, j, input;
 
 				for (i=0; i<rows.length; i++) {
-					childs = rows[i].getChildren();
-					for (j=0; j<childs.length; j++) {
-						if (input = childs[j].getFirst('input')) {
+					children = rows[i].getChildren();
+					for (j=0; j<children.length; j++) {
+						if (input = children[j].getFirst('input')) {
 							input.name = input.name.replace(/\[[0-9]+]/g, '[' + i + ']')
 						}
 					}
@@ -1531,7 +1498,7 @@ window.Backend =
 				});
 			},
 			addEventsTo = function(tr) {
-				var command, input, next, ntr, childs, i;
+				var command, input, next, ntr, children, i;
 				tr.getElements('button').each(function(bt) {
 					if (bt.hasEvent('click')) return;
 					command = bt.getProperty('data-command');
@@ -1539,23 +1506,24 @@ window.Backend =
 					switch (command) {
 						case 'copy':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								ntr = new Element('tr');
-								childs = tr.getChildren();
-								for (i=0; i<childs.length; i++) {
-									next = childs[i].clone(true).inject(ntr, 'bottom');
-									if (input = childs[i].getFirst('input')) {
+								children = tr.getChildren();
+								for (i=0; i<children.length; i++) {
+									next = children[i].clone(true).inject(ntr, 'bottom');
+									if (input = children[i].getFirst('input')) {
 										next.getFirst().value = input.value;
 									}
 								}
 								ntr.inject(tr, 'after');
 								addEventsTo(ntr);
 								makeSortable(tbody);
+								ntr.getFirst('td').getFirst('input').select();
 							});
 							break;
 						case 'delete':
 							bt.addEvent('click', function() {
-								Backend.getScrollOffset();
+								window.dispatchEvent(new Event('store-scroll-offset'));
 								if (tbody.getChildren().length > 1) {
 									tr.destroy();
 								}
@@ -1907,7 +1875,7 @@ window.Backend =
 				'class': 'dropzone dropzone-filetree',
 				html: '<span class="dropzone-previews"></span>'
 			}).inject(wrap, 'top'),
-			currentHover, currentHoverTime;
+			currentHover, currentHoverTime, expandLink;
 
 		options.previewsContainer = dzElement.getElement('.dropzone-previews');
 		options.clickable = false;
@@ -1947,11 +1915,9 @@ window.Backend =
 				if (currentHover !== folder) {
 					currentHover = folder;
 					currentHoverTime = new Date().getTime();
+					expandLink = folder.getElement('a.foldable');
 
-					var expandLink = folder.getElement('img[src$="/icons/folPlus.svg"]');
-					expandLink = expandLink && expandLink.getParent('a');
-
-					if (expandLink) {
+					if (expandLink && !expandLink.hasClass('foldable--open')) {
 						// Expand the folder after one second hover time
 						setTimeout(function() {
 							if (currentHover === folder && currentHoverTime + 900 < new Date().getTime()) {
@@ -1971,13 +1937,13 @@ window.Backend =
 			}
 		});
 
-		dz.on('drop', function (event) {
+		dz.on('drop', function(event) {
 			if (!event.dataTransfer || !event.dataTransfer.types || event.dataTransfer.types.indexOf('Files') === -1) {
 				return;
 			}
 
 			dzElement.addClass('dropzone-filetree-enabled');
-			Backend.getScrollOffset();
+			window.dispatchEvent(new Event('store-scroll-offset'));
 		});
 
 		dz.on('dragleave', function() {
@@ -1995,17 +1961,34 @@ window.Backend =
 			crawl = $('tl_crawl'),
 			progressBar = crawl.getElement('div.progress-bar'),
 			progressCount = crawl.getElement('p.progress-count'),
-			results = crawl.getElement('div.results');
+			results = crawl.getElement('div.results'),
+			debugLog = crawl.getElement('p.debug-log');
 
 		function updateData(response) {
-			var done = response.total - response.pending,
-				percentage = response.total > 0 ? parseInt(done / response.total * 100, 10) : 100,
+			var total = response.total,
+				done = total - response.pending,
+				percentage = total > 0 ? parseInt(done / total * 100, 10) : 100,
 				result;
+
+			// Initialize the status bar at 10%
+			if (done < 1 && percentage < 1) {
+				done = 1;
+				percentage = 10;
+				total = 10;
+			}
 
 			progressBar.setStyle('width', percentage + '%');
 			progressBar.set('html', percentage + '%');
 			progressBar.setAttribute('aria-valuenow', percentage);
-			progressCount.set('html', done + ' / ' + response.total);
+			progressCount.set('html', done + ' / ' + total);
+
+			if (response.hasDebugLog) {
+				debugLog.setStyle('display', 'block');
+			}
+
+			if (response.hasDebugLog) {
+				debugLog.setStyle('display', 'block');
+			}
 
 			if (!response.finished) {
 				return;
@@ -2036,9 +2019,7 @@ window.Backend =
 			}
 		}
 
-		function execRequest(onlyStatusUpdate) {
-			var onlyStatusUpdate = onlyStatusUpdate || false;
-
+		function execRequest(onlyStatusUpdate = false) {
 			new Request({
 				url: window.location.href,
 				headers: {
@@ -2060,6 +2041,207 @@ window.Backend =
 	}
 };
 
+window.Theme =
+{
+	/**
+	 * Check for WebKit
+	 * @member {boolean}
+ 	 */
+	isWebkit: (Browser.chrome || Browser.safari || navigator.userAgent.match(/(?:webkit|khtml)/i)),
+
+	/**
+	 * Stop the propagation of click events of certain elements
+	 */
+	stopClickPropagation: function() {
+		// Do not propagate the click events of the icons
+		$$('.picker_selector').each(function(ul) {
+			ul.getElements('a').each(function(el) {
+				el.addEvent('click', function(e) {
+					e.stopPropagation();
+				});
+			});
+		});
+
+		// Do not propagate the click events of the checkboxes
+		$$('.picker_selector,.click2edit').each(function(ul) {
+			ul.getElements('input[type="checkbox"]').each(function(el) {
+				el.addEvent('click', function(e) {
+					e.stopPropagation();
+				});
+			});
+		});
+	},
+
+	/**
+	 * Set up the textarea resizing
+	 */
+	setupTextareaResizing: function() {
+		$$('.tl_textarea').each(function(el) {
+			if (Browser.ie6 || Browser.ie7 || Browser.ie8) return;
+			if (el.hasClass('noresize') || el.retrieve('autogrow')) return;
+
+			// Set up the dummy element
+			var dummy = new Element('div', {
+				html: 'X',
+				styles: {
+					'position':'absolute',
+					'top':0,
+					'left':'-999em',
+					'overflow-x':'hidden'
+				}
+			}).setStyles(
+				el.getStyles('font-size', 'font-family', 'width', 'line-height')
+			).inject(document.body);
+
+			// Also consider the box-sizing
+			if (el.getStyle('-moz-box-sizing') == 'border-box' || el.getStyle('-webkit-box-sizing') == 'border-box' || el.getStyle('box-sizing') == 'border-box') {
+				dummy.setStyles({
+					'padding': el.getStyle('padding'),
+					'border': el.getStyle('border-left')
+				});
+			}
+
+			// Single line height
+			var line = Math.max(dummy.clientHeight, 30);
+
+			// Respond to the "input" event
+			el.addEvent('input', function() {
+				dummy.set('html', this.get('value')
+					.replace(/</g, '&lt;')
+					.replace(/>/g, '&gt;')
+					.replace(/\n|\r\n/g, '<br>X'));
+				var height = Math.max(line, dummy.getSize().y);
+				if (this.clientHeight != height) this.tween('height', height);
+			}).set('tween', { 'duration':100 }).setStyle('height', line + 'px');
+
+			// Fire the event
+			el.fireEvent('input');
+			el.store('autogrow', true);
+		});
+	},
+
+	/**
+	 * Set up the menu toggle
+	 */
+	setupMenuToggle: function() {
+		var burger = $('burger');
+		if (!burger) return;
+
+		burger
+			.addEvent('click', function() {
+				document.body.toggleClass('show-navigation');
+				burger.setAttribute('aria-expanded', document.body.hasClass('show-navigation') ? 'true' : 'false')
+			})
+			.addEvent('keydown', function(e) {
+				if (e.event.keyCode == 27) {
+					document.body.removeClass('show-navigation');
+				}
+			})
+		;
+
+		if (window.matchMedia) {
+			var matchMedia = window.matchMedia('(max-width:991px)');
+			var setAriaControls = function() {
+				if (matchMedia.matches) {
+					burger.setAttribute('aria-controls', 'left')
+					burger.setAttribute('aria-expanded', document.body.hasClass('show-navigation') ? 'true' : 'false')
+				} else {
+					burger.removeAttribute('aria-controls');
+					burger.removeAttribute('aria-expanded');
+				}
+			};
+			matchMedia.addEventListener('change', setAriaControls);
+			setAriaControls();
+		}
+	},
+
+	/**
+	 * Set up the profile toggle
+	 */
+	setupProfileToggle: function() {
+		if (window.console) {
+			console.warn('Theme.setupProfileToggle() is deprecated. Please use the stimulus controller instead.');
+		}
+
+		var tmenu = $('tmenu');
+		if (!tmenu) return;
+
+		var li = tmenu.getElement('.submenu'),
+			button = li.getFirst('span').getFirst('button'),
+			menu = li.getFirst('ul');
+		if (!li || !button || !menu) return;
+
+		button.setAttribute('aria-controls', 'tmenu__profile');
+		button.setAttribute('aria-expanded', 'false');
+
+		menu.id = 'tmenu__profile';
+
+		button.addEvent('click', function(e) {
+			if (li.hasClass('active')) {
+				li.removeClass('active');
+				button.setAttribute('aria-expanded', 'false');
+			} else {
+				li.addClass('active');
+				button.setAttribute('aria-expanded', 'true');
+			}
+			e.stopPropagation();
+		});
+
+		$(document.body).addEvent('click', function() {
+			if (li.hasClass('active')) {
+				li.removeClass('active');
+			}
+		});
+	},
+
+	/**
+	 * Set up the split button toggle
+	 */
+	setupSplitButtonToggle: function() {
+		var toggle = $('sbtog');
+		if (!toggle) return;
+
+		var ul = toggle.getParent('.split-button').getElement('ul'),
+			tab, timer;
+
+		toggle.addEvent('click', function(e) {
+			tab = false;
+			ul.toggleClass('invisible');
+			toggle.toggleClass('active');
+			e.stopPropagation();
+		});
+
+		$(document.body).addEvent('click', function() {
+			tab = false;
+			ul.addClass('invisible');
+			toggle.removeClass('active');
+		});
+
+		$(document.body).addEvent('keydown', function(e) {
+			tab = (e.event.keyCode == 9);
+		});
+
+		[toggle].append(ul.getElements('button')).each(function(el) {
+			el.addEvent('focus', function() {
+				if (!tab) return;
+				ul.removeClass('invisible');
+				toggle.addClass('active');
+				clearTimeout(timer);
+			});
+
+			el.addEvent('blur', function() {
+				if (!tab) return;
+				timer = setTimeout(function() {
+					ul.addClass('invisible');
+					toggle.removeClass('active');
+				}, 100);
+			});
+		});
+
+		toggle.set('tabindex', '-1');
+	}
+};
+
 // Initialize the back end script
 window.addEvent('domready', function() {
 	$(document.body).addClass('js');
@@ -2073,10 +2255,10 @@ window.addEvent('domready', function() {
 	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
 
-	// Chosen
-	if (Elements.chosen != undefined) {
-		$$('select.tl_chosen').chosen();
-	}
+	Theme.stopClickPropagation();
+	Theme.setupTextareaResizing();
+	Theme.setupMenuToggle();
+	Theme.setupSplitButtonToggle();
 });
 
 // Resize the table wizard
@@ -2089,10 +2271,6 @@ window.addEvent('ajax_change', function() {
 	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
 
-	// Chosen
-	if (Elements.chosen != undefined) {
-		$$('select.tl_chosen').filter(function(el) {
-			return el.getStyle('display') != 'none';
-		}).chosen();
-	}
+	Theme.stopClickPropagation();
+	Theme.setupTextareaResizing();
 });

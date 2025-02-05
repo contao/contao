@@ -21,17 +21,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
+ *
+ * @phpstan-ignore class.extendsFinalByPhpDoc
  */
 class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements ResetInterface
 {
     private array $messages = [];
-    private LocaleAwareInterface|TranslatorBagInterface|TranslatorInterface $translator;
 
-    public function __construct(TranslatorInterface $translator)
+    public function __construct(private readonly TranslatorInterface&TranslatorBagInterface&LocaleAwareInterface $translator)
     {
         parent::__construct($translator);
-
-        $this->translator = $translator;
     }
 
     /**
@@ -40,7 +39,7 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
      * Gets the translation from Contao’s $GLOBALS['TL_LANG'] array if the message
      * domain starts with "contao_". The locale parameter is ignored in this case.
      */
-    public function trans($id, array $parameters = [], $domain = null, $locale = null): string
+    public function trans(string|null $id, array $parameters = [], string|null $domain = null, string|null $locale = null): string
     {
         $translated = $this->translator->trans($id, $parameters, $domain, $locale);
 
@@ -49,12 +48,12 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
             return $translated;
         }
 
-        $this->collectMessage($this->getLocale(), (string) $domain, $id, $translated, $parameters);
+        $this->collectMessage($this->getLocale(), $domain, $id, $translated, $parameters);
 
         return $translated;
     }
 
-    public function setLocale($locale): void
+    public function setLocale(string $locale): void
     {
         $this->translator->setLocale($locale);
     }
@@ -64,7 +63,7 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
         return $this->translator->getLocale();
     }
 
-    public function getCatalogue($locale = null): MessageCatalogueInterface
+    public function getCatalogue(string|null $locale = null): MessageCatalogueInterface
     {
         return $this->translator->getCatalogue($locale);
     }
@@ -75,7 +74,7 @@ class DataCollectorTranslator extends SymfonyDataCollectorTranslator implements 
     public function getCollectedMessages(): array
     {
         if (method_exists($this->translator, 'getCollectedMessages')) {
-            return array_merge($this->translator->getCollectedMessages(), $this->messages);
+            return [...$this->translator->getCollectedMessages(), ...$this->messages];
         }
 
         return $this->messages;

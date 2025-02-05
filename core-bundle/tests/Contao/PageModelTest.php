@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\Config;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
@@ -20,6 +21,7 @@ use Contao\Database\Result;
 use Contao\Database\Statement;
 use Contao\DcaExtractor;
 use Contao\DcaLoader;
+use Contao\Environment;
 use Contao\Input;
 use Contao\Model;
 use Contao\Model\Collection;
@@ -31,6 +33,7 @@ use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class PageModelTest extends TestCase
 {
@@ -44,7 +47,7 @@ class PageModelTest extends TestCase
 
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
         $schemaManager
-            ->method('createSchema')
+            ->method('introspectSchema')
             ->willReturn(new Schema())
         ;
 
@@ -77,7 +80,7 @@ class PageModelTest extends TestCase
 
         PageModel::reset();
 
-        $this->resetStaticProperties([Registry::class, Model::class, DcaExtractor::class, DcaLoader::class, Database::class, Input::class, System::class, Config::class]);
+        $this->resetStaticProperties([Registry::class, Model::class, DcaExtractor::class, DcaLoader::class, Database::class, Input::class, System::class, Config::class, Environment::class]);
 
         parent::tearDown();
     }
@@ -123,7 +126,7 @@ class PageModelTest extends TestCase
 
         $this->mockDatabase($database);
 
-        $pageModel = PageModel::findByPk(1);
+        $pageModel = PageModel::findById(1);
 
         $this->assertSame(1, $pageModel->id);
         $this->assertSame('alias', $pageModel->alias);
@@ -131,6 +134,7 @@ class PageModelTest extends TestCase
 
     /**
      * @group legacy
+     *
      * @dataProvider similarAliasProvider
      */
     public function testFindSimilarByAlias(array $page, string $alias, array $rootData): void
@@ -167,13 +171,12 @@ class PageModelTest extends TestCase
 
         $this->assertInstanceOf(Collection::class, $result);
 
-        /** @var PageModel $pageModel */
-        $pageModel = $result->first();
+        $pageModel = $result->current();
 
         $this->assertSame(42, $pageModel->id);
     }
 
-    public function similarAliasProvider(): \Generator
+    public static function similarAliasProvider(): iterable
     {
         yield 'Use original alias without prefix and suffix' => [
             [
@@ -309,23 +312,19 @@ class PageModelTest extends TestCase
 
         $numberOfParents = \count($parents);
 
-        // The last page has to be a root page for this test method to prevent
-        // running into the check of TL_MODE in PageModel::loadDetails()
-        $parents[$numberOfParents - 1][0]['type'] = 'root';
-
         $statement = $this->createMock(Statement::class);
         $statement
             ->method('execute')
             ->willReturnCallback(
                 static function () use (&$parents) {
-                    return !empty($parents) ? new Result(array_shift($parents), '') : new Result([], '');
-                }
+                    return $parents ? new Result(array_shift($parents), '') : new Result([], '');
+                },
             )
         ;
 
         $database = $this->createMock(Database::class);
         $database
-            ->expects($this->exactly($numberOfParents + 1))
+            ->expects($this->exactly($numberOfParents))
             ->method('prepare')
             ->willReturn($statement)
         ;
@@ -336,7 +335,7 @@ class PageModelTest extends TestCase
         $this->assertSame($expectedLayout, $page->layout);
     }
 
-    public function layoutInheritanceParentPagesProvider(): \Generator
+    public static function layoutInheritanceParentPagesProvider(): iterable
     {
         yield 'no parent with an inheritable layout' => [
             [
@@ -377,6 +376,7 @@ class PageModelTest extends TestCase
 
     /**
      * @group legacy
+     *
      * @runInSeparateProcess
      *
      * @dataProvider folderUrlProvider
@@ -408,7 +408,7 @@ class PageModelTest extends TestCase
         $this->assertSame($expectedFolderUrl, $page->folderUrl);
     }
 
-    public function folderUrlProvider(): \Generator
+    public static function folderUrlProvider(): iterable
     {
         yield 'Inherits the alias from parent page' => [
             [
@@ -445,10 +445,83 @@ class PageModelTest extends TestCase
         ];
     }
 
+    /**
+     * @group legacy
+     */
+    public function testUsesAbsolutePathReferenceForFrontendUrl(): void
+    {
+        $this->expectDeprecation('Since contao/core-bundle 5.3: Using "Contao\PageModel::getFrontendUrl()" has been deprecated%s');
+
+        $page = new PageModel();
+        $page->pid = 42;
+        $page->domain = 'example.com';
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($page, ['parameters' => null])
+            ->willReturn('/page')
+        ;
+
+        System::getContainer()->set('contao.routing.content_url_generator', $urlGenerator);
+
+        $this->assertSame('/page', $page->getFrontendUrl());
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testUsesAbsoluteUrlReferenceForFrontendUrlOnOtherDomain(): void
+    {
+        $this->expectDeprecation('Since contao/core-bundle 5.3: Using "Contao\PageModel::getFrontendUrl()" has been deprecated%s');
+
+        $page = new PageModel();
+        $page->pid = 42;
+        $page->domain = 'foobar.com';
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($page, ['parameters' => null])
+            ->willReturn('https://foobar.com/page')
+        ;
+
+        Environment::set('base', 'https://example.com');
+
+        System::getContainer()->set('contao.routing.content_url_generator', $urlGenerator);
+
+        $this->assertSame('https://foobar.com/page', $page->getFrontendUrl());
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testUsesAbsoluteUrlReferenceForAbsoluteUrl(): void
+    {
+        $this->expectDeprecation('Since contao/core-bundle 5.3: Using "Contao\PageModel::getAbsoluteUrl()" has been deprecated%s');
+
+        $page = new PageModel();
+        $page->pid = 42;
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($page, ['parameters' => null], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('https://example.com/page')
+        ;
+
+        System::getContainer()->set('contao.routing.content_url_generator', $urlGenerator);
+
+        $this->assertSame('https://example.com/page', $page->getAbsoluteUrl());
+    }
+
     private function mockDatabase(Database $database): void
     {
         $property = (new \ReflectionClass($database))->getProperty('objInstance');
-        $property->setValue($database);
+        $property->setValue(null, $database);
 
         $this->assertSame($database, Database::getInstance());
     }

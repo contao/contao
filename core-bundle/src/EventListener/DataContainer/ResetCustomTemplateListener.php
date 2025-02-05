@@ -23,7 +23,7 @@ use Doctrine\DBAL\Connection;
 #[AsCallback(table: 'tl_module', target: 'fields.type.save')]
 class ResetCustomTemplateListener
 {
-    public function __construct(private Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
     }
 

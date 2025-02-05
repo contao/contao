@@ -13,8 +13,9 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\Controller;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\Image;
@@ -40,7 +41,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'markAsCopy'                  => 'title',
 		'onload_callback' => array
 		(
-			array('tl_article', 'checkPermission'),
+			array('tl_article', 'adjustDca'),
 			array('tl_article', 'addCustomLayoutSectionReferences'),
 			array('tl_page', 'addBreadcrumb')
 		),
@@ -49,6 +50,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'tstamp' => 'index',
 				'alias' => 'index',
 				'pid,published,inColumn,start,stop' => 'index'
 			)
@@ -69,65 +71,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 			'fields'                  => array('title', 'inColumn'),
 			'format'                  => '%s <span class="label-info">[%s]</span>',
 			'label_callback'          => array('tl_article', 'addIcon')
-		),
-		'global_operations' => array
-		(
-			'toggleNodes' => array
-			(
-				'href'                => '&amp;ptg=all',
-				'class'               => 'header_toggle',
-				'showOnSelect'        => true
-			),
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
-		),
-		'operations' => array
-		(
-			'edit' => array
-			(
-				'href'                => 'act=edit',
-				'icon'                => 'edit.svg',
-				'button_callback'     => array('tl_article', 'editHeader')
-			),
-			'children' => array
-			(
-				'href'                => 'table=tl_content',
-				'icon'                => 'children.svg',
-				'button_callback'     => array('tl_article', 'editArticle')
-			),
-			'copy' => array
-			(
-				'href'                => 'act=paste&amp;mode=copy',
-				'icon'                => 'copy.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"',
-				'button_callback'     => array('tl_article', 'copyArticle')
-			),
-			'cut' => array
-			(
-				'href'                => 'act=paste&amp;mode=cut',
-				'icon'                => 'cut.svg',
-				'attributes'          => 'onclick="Backend.getScrollOffset()"',
-				'button_callback'     => array('tl_article', 'cutArticle')
-			),
-			'delete' => array
-			(
-				'href'                => 'act=delete',
-				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"',
-				'button_callback'     => array('tl_article', 'deleteArticle')
-			),
-			'toggle' => array
-			(
-				'href'                => 'act=toggle&amp;field=published',
-				'icon'                => 'visible.svg',
-				'button_callback'     => array('tl_article', 'toggleIcon'),
-				'showInHeader'        => true
-			),
-			'show'
 		)
 	),
 
@@ -147,7 +90,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'default'                     => '{title_legend},title,alias,author;{layout_legend},inColumn;{teaser_legend:hide},teaserCssID,showTeaser,teaser;{syndication_legend},printable;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{publish_legend},published,start,stop'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'protected'                   => 'groups'
@@ -158,8 +101,6 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 	(
 		'id' => array
 		(
-			'label'                   => array('ID'),
-			'search'                  => true,
 			'sql'                     => "int(10) unsigned NOT NULL auto_increment"
 		),
 		'pid' => array
@@ -217,7 +158,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'showTeaser' => array
 		(
 			'inputType'               => 'checkbox',
-			'eval'                    => array('tl_class'=>'w50 m12'),
+			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
 		'teaserCssID' => array
@@ -230,7 +171,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		(
 			'inputType'               => 'textarea',
 			'search'                  => true,
-			'eval'                    => array('rte'=>'tinyMCE', 'tl_class'=>'clr'),
+			'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
 		),
 		'printable' => array
@@ -244,8 +185,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		'customTpl' => array
 		(
 			'inputType'               => 'select',
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('mod_article_', array(), 'mod_article');
 			},
 			'eval'                    => array('chosen'=>true, 'tl_class'=>'w50'),
@@ -304,202 +244,29 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 class tl_article extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
 	 * Check permissions to edit table tl_page
-	 *
-	 * @throws AccessDeniedException
 	 */
-	public function checkPermission()
+	public function adjustDca()
 	{
-		if ($this->User->isAdmin)
+		$user = BackendUser::getInstance();
+
+		if ($user->isAdmin)
 		{
 			return;
 		}
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-		$session = $objSession->all();
-
 		// Set the default page user and group
-		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = (int) Config::get('defaultUser') ?: $this->User->id;
-		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = (int) Config::get('defaultGroup') ?: (int) $this->User->groups[0];
+		$GLOBALS['TL_DCA']['tl_page']['fields']['cuser']['default'] = (int) Config::get('defaultUser') ?: $user->id;
+		$GLOBALS['TL_DCA']['tl_page']['fields']['cgroup']['default'] = (int) Config::get('defaultGroup') ?: (int) ($user->groups[0] ?? 0);
 
 		// Restrict the page tree
-		if (empty($this->User->pagemounts) || !is_array($this->User->pagemounts))
+		if (empty($user->pagemounts) || !is_array($user->pagemounts))
 		{
-			$root = array(0);
+			$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = array(0);
 		}
 		else
 		{
-			$root = $this->User->pagemounts;
-		}
-
-		$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = $root;
-		$security = System::getContainer()->get('security.helper');
-
-		// Set allowed page IDs (edit multiple)
-		if (is_array($session['CURRENT']['IDS'] ?? null))
-		{
-			$edit_all = array();
-			$delete_all = array();
-
-			foreach ($session['CURRENT']['IDS'] as $id)
-			{
-				$objArticle = $this->Database->prepare("SELECT p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup FROM tl_article a, tl_page p WHERE a.id=? AND a.pid=p.id")
-											 ->limit(1)
-											 ->execute($id);
-
-				if ($objArticle->numRows < 1)
-				{
-					continue;
-				}
-
-				$row = $objArticle->row();
-
-				if ($security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $row))
-				{
-					$edit_all[] = $id;
-				}
-
-				if ($security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_ARTICLES, $row))
-				{
-					$delete_all[] = $id;
-				}
-			}
-
-			$session['CURRENT']['IDS'] = (Input::get('act') == 'deleteAll') ? $delete_all : $edit_all;
-		}
-
-		// Set allowed clipboard IDs
-		if (!empty($session['CLIPBOARD']['tl_article']['id']) && is_array($session['CLIPBOARD']['tl_article']['id']))
-		{
-			$clipboard = array();
-
-			foreach ($session['CLIPBOARD']['tl_article']['id'] as $id)
-			{
-				$objArticle = $this->Database->prepare("SELECT p.pid, p.includeChmod, p.chmod, p.cuser, p.cgroup FROM tl_article a, tl_page p WHERE a.id=? AND a.pid=p.id")
-											 ->limit(1)
-											 ->execute($id);
-
-				if ($objArticle->numRows < 1)
-				{
-					continue;
-				}
-
-				if ($security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $objArticle->row()))
-				{
-					$clipboard[] = $id;
-				}
-			}
-
-			$session['CLIPBOARD']['tl_article']['id'] = $clipboard;
-		}
-
-		$permission = null;
-
-		// Overwrite the session
-		$objSession->replace($session);
-
-		// Check current action
-		if (Input::get('act') && Input::get('act') != 'paste')
-		{
-			// Set ID of the article's page
-			$objPage = $this->Database->prepare("SELECT pid FROM tl_article WHERE id=?")
-									  ->limit(1)
-									  ->execute(Input::get('id'));
-
-			$ids = $objPage->numRows ? array($objPage->pid) : array();
-
-			// Set permission
-			switch (Input::get('act'))
-			{
-				case 'edit':
-				case 'toggle':
-					$permission = ContaoCorePermissions::USER_CAN_EDIT_ARTICLES;
-					break;
-
-				// Do not insert articles into a website root page
-				case 'create':
-				case 'copy':
-				case 'copyAll':
-				case 'cut':
-				case 'cutAll':
-					$permission = ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY;
-
-					// Insert into a page
-					if (Input::get('mode') == 2)
-					{
-						$objParent = $this->Database->prepare("SELECT id, type FROM tl_page WHERE id=?")
-													->limit(1)
-													->execute(Input::get('pid'));
-
-						$ids[] = Input::get('pid');
-					}
-
-					// Insert after an article
-					else
-					{
-						$objParent = $this->Database->prepare("SELECT id, type FROM tl_page WHERE id=(SELECT pid FROM tl_article WHERE id=?)")
-													->limit(1)
-													->execute(Input::get('pid'));
-
-						$ids[] = $objParent->id;
-					}
-
-					if ($objParent->numRows && $objParent->type == 'root')
-					{
-						throw new AccessDeniedException('Attempt to insert an article into website root page ID ' . Input::get('pid') . '.');
-					}
-					break;
-
-				case 'delete':
-					$permission = ContaoCorePermissions::USER_CAN_DELETE_ARTICLES;
-					break;
-			}
-
-			// Check user permissions
-			$pagemounts = array();
-
-			// Get all allowed pages for the current user
-			foreach ($this->User->pagemounts as $root)
-			{
-				$pagemounts[] = array($root);
-				$pagemounts[] = $this->Database->getChildRecords($root, 'tl_page');
-			}
-
-			if (!empty($pagemounts))
-			{
-				$pagemounts = array_merge(...$pagemounts);
-			}
-
-			$pagemounts = array_unique($pagemounts);
-
-			// Check each page
-			foreach ($ids as $id)
-			{
-				if (!in_array($id, $pagemounts))
-				{
-					throw new AccessDeniedException('Page ID ' . $id . ' is not mounted.');
-				}
-
-				if (Input::get('act') == 'show')
-				{
-					continue;
-				}
-
-				// Check whether the current user has permission for the current page
-				if ($permission === null || !$security->isGranted($permission, $id))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' ' . (Input::get('id') ? 'article ID ' . Input::get('id') : ' articles') . ' on page ID ' . $id . ' or to paste it/them into page ID ' . $id . '.');
-				}
-			}
+			$GLOBALS['TL_DCA']['tl_page']['list']['sorting']['root'] = $user->pagemounts;
 		}
 	}
 
@@ -541,7 +308,7 @@ class tl_article extends Backend
 
 		$href = System::getContainer()->get('router')->generate('contao_backend_preview', array('page'=>$row['pid'], 'article'=>($row['alias'] ?: $row['id'])));
 
-		return '<a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image, '', $attributes) . '</a> ' . $label;
+		return '<a href="' . StringUtil::specialcharsUrl($href) . '" target="_blank">' . Image::getHtml($image, $GLOBALS['TL_LANG']['MSC']['view'], $attributes) . '</a> ' . $label;
 	}
 
 	/**
@@ -556,14 +323,13 @@ class tl_article extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function (string $alias) use ($dc): bool
-		{
+		$aliasExists = static function (string $alias) use ($dc): bool {
 			if (in_array($alias, array('top', 'wrapper', 'header', 'container', 'main', 'left', 'right', 'footer'), true))
 			{
 				return true;
 			}
 
-			return $this->Database->prepare("SELECT id FROM tl_article WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
+			return Database::getInstance()->prepare("SELECT id FROM tl_article WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
 		};
 
 		// Generate an alias if there is none
@@ -601,7 +367,7 @@ class tl_article extends Backend
 			// Get the layout sections
 			if ($objPage->layout)
 			{
-				$objLayout = LayoutModel::findByPk($objPage->layout);
+				$objLayout = LayoutModel::findById($objPage->layout);
 
 				if ($objLayout === null)
 				{
@@ -618,7 +384,7 @@ class tl_article extends Backend
 				// Find all sections with an article module (see #6094)
 				foreach ($arrModules as $arrModule)
 				{
-					if ($arrModule['mod'] == 0 && $arrModule['enable'])
+					if ($arrModule['mod'] == 0 && ($arrModule['enable'] ?? null))
 					{
 						$arrSections[] = $arrModule['col'];
 					}
@@ -630,7 +396,7 @@ class tl_article extends Backend
 		else
 		{
 			$arrSections = array('header', 'left', 'right', 'main', 'footer');
-			$objLayout = $this->Database->query("SELECT sections FROM tl_layout WHERE sections!=''");
+			$objLayout = Database::getInstance()->query("SELECT sections FROM tl_layout WHERE sections!=''");
 
 			while ($objLayout->next())
 			{
@@ -654,123 +420,18 @@ class tl_article extends Backend
 	}
 
 	/**
-	 * Return the edit article button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function editArticle($row, $href, $label, $title, $icon, $attributes)
-	{
-		$objPage = PageModel::findById($row['pid']);
-
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $objPage->row()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the edit header button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function editHeader($row, $href, $label, $title, $icon, $attributes)
-	{
-		$security = System::getContainer()->get('security.helper');
-
-		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE, 'tl_article'))
-		{
-			return Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-		}
-
-		$objPage = PageModel::findById($row['pid']);
-
-		return $security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $objPage->row()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the copy article button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 * @param string $table
-	 *
-	 * @return string
-	 */
-	public function copyArticle($row, $href, $label, $title, $icon, $attributes, $table)
-	{
-		if ($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? null)
-		{
-			return '';
-		}
-
-		$objPage = PageModel::findById($row['pid']);
-
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $objPage->row()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the cut article button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function cutArticle($row, $href, $label, $title, $icon, $attributes)
-	{
-		$objPage = PageModel::findById($row['pid']);
-
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $objPage->row()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the delete article button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function deleteArticle($row, $href, $label, $title, $icon, $attributes)
-	{
-		$objPage = PageModel::findById($row['pid']);
-
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_DELETE_ARTICLES, $objPage->row()) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-	}
-
-	/**
 	 * Automatically generate the folder URL aliases
 	 *
-	 * @param array $arrButtons
+	 * @param array         $arrButtons
+	 * @param DataContainer $dc
 	 *
 	 * @return array
 	 */
-	public function addAliasButton($arrButtons)
+	public function addAliasButton($arrButtons, DataContainer $dc)
 	{
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_article::alias'))
+		$security = System::getContainer()->get('security.helper');
+
+		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_article::alias'))
 		{
 			return $arrButtons;
 		}
@@ -778,20 +439,41 @@ class tl_article extends Backend
 		// Generate the aliases
 		if (Input::post('alias') !== null && Input::post('FORM_SUBMIT') == 'tl_select')
 		{
+			$router = System::getContainer()->get('router');
+
 			$objSession = System::getContainer()->get('request_stack')->getSession();
 			$session = $objSession->all();
 			$ids = $session['CURRENT']['IDS'] ?? array();
 
 			foreach ($ids as $id)
 			{
-				$objArticle = ArticleModel::findByPk($id);
+				$objArticle = ArticleModel::findById($id);
 
 				if ($objArticle === null)
 				{
 					continue;
 				}
 
-				$strAlias = System::getContainer()->get('contao.slug')->generate($objArticle->title, $objArticle->pid);
+				$dc->id = $id;
+				$dc->activeRecord = $objArticle;
+
+				$strAlias = '';
+
+				// Generate new alias through save callbacks
+				if (is_array($GLOBALS['TL_DCA'][$dc->table]['fields']['alias']['save_callback'] ?? null))
+				{
+					foreach ($GLOBALS['TL_DCA'][$dc->table]['fields']['alias']['save_callback'] as $callback)
+					{
+						if (is_array($callback))
+						{
+							$strAlias = System::importStatic($callback[0])->{$callback[1]}($strAlias, $dc);
+						}
+						elseif (is_callable($callback))
+						{
+							$strAlias = $callback($strAlias, $dc);
+						}
+					}
+				}
 
 				// The alias has not changed
 				if ($strAlias == $objArticle->alias)
@@ -799,13 +481,20 @@ class tl_article extends Backend
 					continue;
 				}
 
+				if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_article', new UpdateAction('tl_article', $objArticle->row(), array('alias' => $strAlias))))
+				{
+					continue;
+				}
+
 				// Initialize the version manager
 				$objVersions = new Versions('tl_article', $id);
+				$objVersions->setEditUrl($router->generate('contao_backend', array('do'=>'article', 'act'=>'edit', 'id'=>$id, 'rt'=>'1')));
 				$objVersions->initialize();
 
 				// Store the new alias
-				$this->Database->prepare("UPDATE tl_article SET alias=? WHERE id=?")
-							   ->execute($strAlias, $id);
+				Database::getInstance()
+					->prepare("UPDATE tl_article SET alias=? WHERE id=?")
+					->execute($strAlias, $id);
 
 				// Create a new version
 				$objVersions->create();
@@ -818,49 +507,5 @@ class tl_article extends Backend
 		$arrButtons['alias'] = '<button type="submit" name="alias" id="alias" class="tl_submit" accesskey="a">' . $GLOBALS['TL_LANG']['MSC']['aliasSelected'] . '</button> ';
 
 		return $arrButtons;
-	}
-
-	/**
-	 * Return the "toggle visibility" button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function toggleIcon($row, $href, $label, $title, $icon, $attributes)
-	{
-		$security = System::getContainer()->get('security.helper');
-
-		// Check permissions AFTER checking the tid, so hacking attempts are logged
-		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, 'tl_article::published'))
-		{
-			return '';
-		}
-
-		$href .= '&amp;id=' . $row['id'];
-
-		if (!$row['published'])
-		{
-			$icon = 'invisible.svg';
-		}
-
-		$objPage = PageModel::findById($row['pid']);
-
-		if (!$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, $objPage->row()))
-		{
-			if ($row['published'])
-			{
-				$icon = preg_replace('/\.svg$/i', '_.svg', $icon); // see #8126
-			}
-
-			return Image::getHtml($icon) . ' ';
-		}
-
-		return '<a href="' . $this->addToUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.getScrollOffset();return AjaxRequest.toggleField(this,true)">' . Image::getHtml($icon, $label, 'data-icon="visible.svg" data-icon-disabled="invisible.svg" data-state="' . ($row['published'] ? 1 : 0) . '"') . '</a> ';
 	}
 }

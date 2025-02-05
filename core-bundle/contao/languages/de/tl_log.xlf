@@ -57,6 +57,22 @@
         <source>Name of the user agent</source>
         <target>Name des Browsers</target>
       </trans-unit>
+      <trans-unit id="tl_log.uri.0">
+        <source>Request URI</source>
+        <target>Anfrage-URI</target>
+      </trans-unit>
+      <trans-unit id="tl_log.uri.1">
+        <source>The URI of the request</source>
+        <target>Die URI der Anfrage</target>
+      </trans-unit>
+      <trans-unit id="tl_log.page.0">
+        <source>Page ID</source>
+        <target>Seiten-ID</target>
+      </trans-unit>
+      <trans-unit id="tl_log.page.1">
+        <source>The ID of the page</source>
+        <target>Die ID der Seite</target>
+      </trans-unit>
       <trans-unit id="tl_log.BE">
         <source>Back end</source>
         <target>Backend</target>

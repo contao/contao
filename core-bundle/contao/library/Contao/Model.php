@@ -94,13 +94,19 @@ abstract class Model
 	protected $arrRelated = array();
 
 	/**
+	 * Enums
+	 * @var array
+	 */
+	protected $arrEnums = array();
+
+	/**
 	 * Prevent saving
 	 * @var boolean
 	 */
 	protected $blnPreventSaving = false;
 
 	/**
-	 * @var array<string,array<string,string>>
+	 * @var array<string, array<string, string>>
 	 */
 	private static $arrColumnCastTypes = array();
 
@@ -115,6 +121,7 @@ abstract class Model
 
 		$objDca = DcaExtractor::getInstance(static::$strTable);
 		$this->arrRelations = $objDca->getRelations();
+		$this->arrEnums = $objDca->getEnums();
 
 		if ($objResult !== null)
 		{
@@ -132,7 +139,7 @@ abstract class Model
 			// Look for joined fields
 			foreach ($arrData as $k=>$v)
 			{
-				if (strpos($k, '__') !== false)
+				if (static::isJoinedField($k))
 				{
 					list($key, $field) = explode('__', $k, 2);
 
@@ -154,9 +161,14 @@ abstract class Model
 			// Create the related models
 			foreach ($arrRelated as $key=>$row)
 			{
+				if (!isset($this->arrRelations[$key]['table']))
+				{
+					throw new \Exception('Incomplete relation defined for ' . static::$strTable . '.' . $key);
+				}
+
 				$table = $this->arrRelations[$key]['table'];
 
-				/** @var static $strClass */
+				/** @var class-string<Model> $strClass */
 				$strClass = static::getClassFromTable($table);
 				$intPk = $strClass::getPk();
 
@@ -212,6 +224,25 @@ abstract class Model
 	}
 
 	/**
+	 * Clone a model with all data and prevent saving
+	 *
+	 * @return static The model
+	 */
+	public function cloneDetached()
+	{
+		$clone = clone $this;
+
+		if (isset($this->arrData[static::$strPk]))
+		{
+			$clone->arrData[static::$strPk] = $this->arrData[static::$strPk];
+		}
+
+		$clone->preventSaving(false);
+
+		return $clone;
+	}
+
+	/**
 	 * Set an object property
 	 *
 	 * @param string $strKey   The property name
@@ -231,7 +262,7 @@ abstract class Model
 
 		if ($varValue !== ($varNewValue = static::convertToPhpValue($strKey, $varValue)))
 		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s has been deprecated and will no longer work in Contao 6.0. Use type %s instead.', static::class, $strKey, get_debug_type($varValue), get_debug_type($varNewValue));
+			trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s has been deprecated and will no longer work in Contao 6. Use type "%s" instead.', static::class, $strKey, get_debug_type($varValue), get_debug_type($varNewValue));
 		}
 	}
 
@@ -344,9 +375,9 @@ abstract class Model
 	 */
 	public function setRow(array $arrData)
 	{
-		foreach ($arrData as $k=>$v)
+		foreach ($arrData as $k => $v)
 		{
-			if (strpos($k, '__') !== false)
+			if (static::isJoinedField($k))
 			{
 				unset($arrData[$k]);
 			}
@@ -373,7 +404,7 @@ abstract class Model
 	{
 		foreach ($arrData as $k=>$v)
 		{
-			if (strpos($k, '__') !== false)
+			if (static::isJoinedField($k))
 			{
 				continue;
 			}
@@ -390,25 +421,24 @@ abstract class Model
 	/**
 	 * @internal
 	 *
-	 * @return array<string,array<string,string>>
+	 * @return array<string, array<string, string>>
 	 */
 	public static function getColumnCastTypesFromDatabase(): array
 	{
-		return static::getColumnCastTypesFromSchema(
-			System::getContainer()->get('database_connection')->createSchemaManager()->createSchema(),
-		);
+		$schemaManager = System::getContainer()->get('database_connection')->createSchemaManager();
+		$schema = $schemaManager->introspectSchema();
+
+		return static::getColumnCastTypesFromSchema($schema);
 	}
 
 	/**
 	 * @internal
 	 *
-	 * @return array<string,array<string,string>>
+	 * @return array<string, array<string, string>>
 	 */
 	public static function getColumnCastTypesFromDca(): array
 	{
-		return static::getColumnCastTypesFromSchema(
-			System::getContainer()->get('contao.doctrine.schema_provider')->createSchema(),
-		);
+		return static::getColumnCastTypesFromSchema(System::getContainer()->get('contao.doctrine.schema_provider')->createSchema());
 	}
 
 	private static function getColumnCastTypesFromSchema(Schema $schema): array
@@ -423,7 +453,7 @@ abstract class Model
 
 				if (\in_array($type, array(Types::INTEGER, Types::SMALLINT, Types::FLOAT, Types::BOOLEAN), true))
 				{
-					$types[strtolower($table->getName())][strtolower($column->getName())] = $type;
+					$types[$table->getName()][$column->getName()] = $type;
 				}
 			}
 		}
@@ -463,7 +493,7 @@ abstract class Model
 			}
 		}
 
-		return match (self::$arrColumnCastTypes[strtolower(static::$strTable)][strtolower($strKey)] ?? null)
+		return match (self::$arrColumnCastTypes[static::$strTable][$strKey] ?? null)
 		{
 			Types::INTEGER, Types::SMALLINT => (int) $varValue,
 			Types::FLOAT => (float) $varValue,
@@ -584,7 +614,7 @@ abstract class Model
 
 			if (static::$strPk == 'id')
 			{
-				$this->id = $stmt->insertId;
+				$this->id = (int) $stmt->insertId;
 			}
 
 			$this->postSave(self::INSERT);
@@ -654,7 +684,7 @@ abstract class Model
 	 * @param string $strKey     The property name
 	 * @param array  $arrOptions An optional options array
 	 *
-	 * @return static|Collection|null The model or a model collection if there are multiple rows
+	 * @return Collection<static>|static|null The model or a model collection if there are multiple rows
 	 *
 	 * @throws \Exception If $strKey is not a related field
 	 */
@@ -682,7 +712,7 @@ abstract class Model
 
 		$arrRelation = $this->arrRelations[$strKey];
 
-		/** @var static $strClass */
+		/** @var class-string<Model> $strClass */
 		$strClass = static::getClassFromTable($arrRelation['table']);
 
 		// Load the related record(s)
@@ -708,8 +738,7 @@ abstract class Model
 				// Handle UUIDs (see #6525 and #8850)
 				if ($arrRelation['table'] == 'tl_files' && $arrRelation['field'] == 'uuid')
 				{
-					/** @var FilesModel $strClass */
-					$objModel = $strClass::findMultipleByUuids($arrValues, $arrOptions);
+					$objModel = FilesModel::findMultipleByUuids($arrValues, $arrOptions);
 				}
 				else
 				{
@@ -732,6 +761,27 @@ abstract class Model
 		}
 
 		return $this->arrRelated[$strKey];
+	}
+
+	public function getEnum($strKey): \BackedEnum|null
+	{
+		$enum = $this->arrEnums[$strKey] ?? null;
+
+		// The enum does not exist
+		if (null === $enum)
+		{
+			throw new \Exception(\sprintf('Field %s.%s has no enum configured', static::getTable(), $strKey));
+		}
+
+		$varValue = $this->{$strKey};
+
+		// The value is invalid
+		if (!\is_string($varValue) && !\is_int($varValue))
+		{
+			throw new \Exception(\sprintf('Value of %s.%s must be a string or an integer to resolve a backed enumeration', static::getTable(), $strKey));
+		}
+
+		return $this->arrEnums[$strKey]::tryFrom($varValue);
 	}
 
 	/**
@@ -834,7 +884,7 @@ abstract class Model
 	 * @param int|string|null $varValue   The property value
 	 * @param array           $arrOptions An optional options array
 	 *
-	 * @return static The model or null if the result is empty
+	 * @return static|null The model or null if the result is empty
 	 */
 	public static function findByPk($varValue, array $arrOptions=array())
 	{
@@ -865,12 +915,48 @@ abstract class Model
 	}
 
 	/**
+	 * Find a single record by its ID
+	 *
+	 * @param int|string $intId      The ID
+	 * @param array      $arrOptions An optional options array
+	 *
+	 * @return static|null The model or null if the result is empty
+	 */
+	public static function findById($intId, array $arrOptions=array())
+	{
+		// Try to load from the registry
+		if (empty($arrOptions))
+		{
+			$objModel = Registry::getInstance()->fetch(static::$strTable, $intId);
+
+			if ($objModel !== null)
+			{
+				return $objModel;
+			}
+		}
+
+		$arrOptions = array_merge
+		(
+			array
+			(
+				'limit'  => 1,
+				'column' => 'id',
+				'value'  => $intId,
+				'return' => 'Model'
+			),
+			$arrOptions
+		);
+
+		return static::find($arrOptions);
+	}
+
+	/**
 	 * Find a single record by its ID or alias
 	 *
 	 * @param mixed $varId      The ID or alias
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return static The model or null if the result is empty
+	 * @return static|null The model or null if the result is empty
 	 */
 	public static function findByIdOrAlias($varId, array $arrOptions=array())
 	{
@@ -894,7 +980,7 @@ abstract class Model
 			array
 			(
 				'limit'  => 1,
-				'column' => $isAlias ? array("BINARY $t.alias=?") : array("$t.id=?"),
+				'column' => $isAlias ? array("CAST($t.alias AS BINARY)=?") : array("$t.id=?"),
 				'value'  => $varId,
 				'return' => 'Model'
 			),
@@ -910,7 +996,7 @@ abstract class Model
 	 * @param array $arrIds     An array of IDs
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection|null The model collection or null if there are no records
+	 * @return Collection<static>|null The model collection or null if there are no records
 	 */
 	public static function findMultipleByIds($arrIds, array $arrOptions=array())
 	{
@@ -978,10 +1064,10 @@ abstract class Model
 	 * Find a single record by various criteria
 	 *
 	 * @param mixed $strColumn  The property name
-	 * @param mixed $varValue   The property value
+	 * @param mixed $varValue   The property value, NULL is interpreted as "no value", use array(null) to query for NULL values
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return static The model or null if the result is empty
+	 * @return static|null The model or null if the result is empty
 	 */
 	public static function findOneBy($strColumn, $varValue, array $arrOptions=array())
 	{
@@ -1004,10 +1090,10 @@ abstract class Model
 	 * Find records by various criteria
 	 *
 	 * @param mixed $strColumn  The property name
-	 * @param mixed $varValue   The property value
+	 * @param mixed $varValue   The property value, NULL is interpreted as "no value", use array(null) to query for NULL values
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return static|Collection|null A model, model collection or null if the result is empty
+	 * @return Collection<static>|static|null A model, model collection or null if the result is empty
 	 */
 	public static function findBy($strColumn, $varValue, array $arrOptions=array())
 	{
@@ -1038,7 +1124,7 @@ abstract class Model
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection|null The model collection or null if the result is empty
+	 * @return Collection<static>|null The model collection or null if the result is empty
 	 */
 	public static function findAll(array $arrOptions=array())
 	{
@@ -1060,27 +1146,27 @@ abstract class Model
 	 * @param string $name The method name
 	 * @param array  $args The passed arguments
 	 *
-	 * @return static|Collection|integer|null A model or model collection
+	 * @return Collection<static>|integer|static|null A model, model collection or the number of matching rows
 	 *
 	 * @throws \Exception If the method name is invalid
 	 */
 	public static function __callStatic($name, $args)
 	{
-		if (strncmp($name, 'findBy', 6) === 0)
+		if (str_starts_with($name, 'findBy'))
 		{
 			array_unshift($args, lcfirst(substr($name, 6)));
 
 			return static::findBy(...$args);
 		}
 
-		if (strncmp($name, 'findOneBy', 9) === 0)
+		if (str_starts_with($name, 'findOneBy'))
 		{
 			array_unshift($args, lcfirst(substr($name, 9)));
 
 			return static::findOneBy(...$args);
 		}
 
-		if (strncmp($name, 'countBy', 7) === 0)
+		if (str_starts_with($name, 'countBy'))
 		{
 			array_unshift($args, lcfirst(substr($name, 7)));
 
@@ -1104,7 +1190,7 @@ abstract class Model
 	 *
 	 * @param array $arrOptions The options array
 	 *
-	 * @return Model|Model[]|Collection|null A model, model collection or null if the result is empty
+	 * @return Collection<static>|static[]|static|null A model, model collection or null if the result is empty
 	 */
 	protected static function find(array $arrOptions)
 	{
@@ -1167,15 +1253,22 @@ abstract class Model
 
 		if (!isset($arrOptions['value']))
 		{
-			$arrOptions['value'] = array();
+			$arrOptions['value'] = \is_string($arrOptions['column'] ?? null) ? array(null) : array();
 		}
 
 		$objStatement = static::preFind($objStatement);
-		$objResult = $objStatement->execute(...(array) ($arrOptions['value']));
+		$objResult = $objStatement->execute(...(array) $arrOptions['value']);
 
 		if ($objResult->numRows < 1)
 		{
-			return ($arrOptions['return'] ?? null) == 'Array' ? array() : null;
+			if (($arrOptions['return'] ?? null) == 'Array')
+			{
+				trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries has been deprecated and will no longer work in Contao 6. Use the "getModels()" method instead.');
+
+				return array();
+			}
+
+			return null;
 		}
 
 		$objResult = static::postFind($objResult);
@@ -1195,6 +1288,8 @@ abstract class Model
 
 		if (($arrOptions['return'] ?? null) == 'Array')
 		{
+			trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries has been deprecated and will no longer work in Contao 6. Use the "getModels()" method instead.');
+
 			return static::createCollectionFromDbResult($objResult, static::$strTable)->getModels();
 		}
 
@@ -1278,7 +1373,7 @@ abstract class Model
 	{
 		if (!isset($GLOBALS['TL_MODELS'][$strTable]))
 		{
-			throw new \RuntimeException(sprintf('There is no class for table "%s" registered in $GLOBALS[\'TL_MODELS\'].', $strTable));
+			throw new \RuntimeException(\sprintf('There is no class for table "%s" registered in $GLOBALS[\'TL_MODELS\'].', $strTable));
 		}
 
 		return $GLOBALS['TL_MODELS'][$strTable];
@@ -1317,10 +1412,7 @@ abstract class Model
 	 */
 	protected static function createModelFromDbResult(Result $objResult)
 	{
-		/**
-		 * @var static               $strClass
-		 * @var class-string<static> $strClass
-		 */
+		/** @var class-string<static> $strClass */
 		$strClass = static::getClassFromTable(static::$strTable);
 
 		return new $strClass($objResult);
@@ -1332,7 +1424,7 @@ abstract class Model
 	 * @param array  $arrModels An array of models
 	 * @param string $strTable  The table name
 	 *
-	 * @return Collection The Collection object
+	 * @return Collection<static> The Collection object
 	 */
 	protected static function createCollection(array $arrModels, $strTable)
 	{
@@ -1345,7 +1437,7 @@ abstract class Model
 	 * @param Result $objResult The database result object
 	 * @param string $strTable  The table name
 	 *
-	 * @return Collection The model collection
+	 * @return Collection<static> The model collection
 	 */
 	protected static function createCollectionFromDbResult(Result $objResult, $strTable)
 	{
@@ -1367,5 +1459,15 @@ abstract class Model
 		}
 
 		return System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
+	}
+
+	/**
+	 * This method is a hot path so caching the keys gets rid of thousands of str_contains() calls.
+	 */
+	protected static function isJoinedField(string $key): bool
+	{
+		static $cache = array();
+
+		return $cache[$key] ??= str_contains($key, '__');
 	}
 }

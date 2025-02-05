@@ -22,10 +22,11 @@ use Contao\DataContainer;
 use Contao\Input;
 use Contao\Message;
 use Doctrine\DBAL\Connection;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\UriSigner;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
+use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -34,21 +35,21 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class PreviewLinkListener
 {
     public function __construct(
-        private ContaoFramework $framework,
-        private Connection $connection,
-        private Security $security,
-        private RequestStack $requestStack,
-        private TranslatorInterface $translator,
-        private UrlGeneratorInterface $urlGenerator,
-        private UriSigner $uriSigner,
-        private string $previewScript = '',
+        private readonly ContaoFramework $framework,
+        private readonly Connection $connection,
+        private readonly Security $security,
+        private readonly RequestStack $requestStack,
+        private readonly TranslatorInterface $translator,
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly UriSigner $uriSigner,
+        private readonly string $previewScript = '',
     ) {
     }
 
     #[AsHook('initializeSystem')]
     public function unloadModuleWithoutPreviewScript(): void
     {
-        if (empty($this->previewScript)) {
+        if (!$this->previewScript) {
             unset($GLOBALS['BE_MOD']['system']['preview_link']);
         }
     }
@@ -56,7 +57,7 @@ class PreviewLinkListener
     #[AsHook('loadDataContainer')]
     public function unloadTableWithoutPreviewScript(string $table): void
     {
-        if ('tl_preview_link' === $table && empty($this->previewScript)) {
+        if ('tl_preview_link' === $table && !$this->previewScript) {
             unset($GLOBALS['TL_DCA'][$table]);
         }
     }
@@ -88,10 +89,11 @@ class PreviewLinkListener
                 case 'overrideAll':
                     $allowedIds = $this->connection->fetchFirstColumn(
                         'SELECT id FROM tl_preview_link WHERE createdBy=?',
-                        [$userId]
+                        [$userId],
                     );
 
-                    $session = $this->requestStack->getSession();
+                    /** @var AttributeBagInterface $session */
+                    $session = $this->requestStack->getSession()->getBag('contao_backend');
                     $sessionData = $session->all();
                     $sessionData['CURRENT']['IDS'] = array_intersect((array) $sessionData['CURRENT']['IDS'], $allowedIds);
                     $session->replace($sessionData);
@@ -104,7 +106,7 @@ class PreviewLinkListener
                     $createdBy = (int) $this->connection->fetchOne('SELECT createdBy FROM tl_preview_link WHERE id=?', [$dc->id]);
 
                     if ($createdBy !== $userId) {
-                        throw new AccessDeniedException(sprintf('Preview link ID %s was not created by user ID %s', $dc->id, $userId));
+                        throw new AccessDeniedException(\sprintf('Preview link ID %s was not created by user ID %s', $dc->id, $userId));
                     }
                     break;
             }
@@ -144,10 +146,10 @@ class PreviewLinkListener
         } elseif (0 === (int) $row['tstamp']) {
             $message->addNew($this->translator->trans('tl_preview_link.hintSave', [], 'contao_tl_preview_link'));
         } else {
-            $message->addInfo(sprintf(
+            $message->addInfo(\sprintf(
                 '%s: %s',
                 $this->translator->trans('tl_preview_link.hintEdit', [], 'contao_tl_preview_link'),
-                $this->generateClipboardLink((int) $row['id'])
+                $this->generateClipboardLink((int) $row['id']),
             ));
         }
     }
@@ -157,7 +159,7 @@ class PreviewLinkListener
     {
         if ($row['expiresAt'] < time()) {
             foreach ($args as &$arg) {
-                $arg = sprintf('<span class="tl_gray">%s</span>', $arg);
+                $arg = \sprintf('<span class="tl_gray">%s</span>', $arg);
             }
 
             unset($arg);
@@ -170,7 +172,7 @@ class PreviewLinkListener
     public function shareOperation(array $row, string|null $href, string|null $label, string|null $title): string
     {
         if ($row['expiresAt'] < time()) {
-            return '<span class="clipboard clipboard--expired"></span>';
+            return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon), $label);
         }
 
         return $this->generateClipboardLink((int) $row['id'], $title);
@@ -181,9 +183,9 @@ class PreviewLinkListener
         $url = $this->urlGenerator->generate('contao_preview_link', ['id' => $id], UrlGeneratorInterface::ABSOLUTE_URL);
         $url = $this->uriSigner->sign($url);
 
-        $title = $title ?? $this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link');
+        $title ??= $this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link');
 
-        return sprintf(
+        return \sprintf(
             '<button%s><span class="url">%s</span></button>',
             (new HtmlAttributes())
                 ->set('href', $url)
@@ -194,7 +196,7 @@ class PreviewLinkListener
                 ->set('data-action', 'contao--clipboard#write:prevent')
                 ->addClass('clipboard')
                 ->set('data-contao--clipboard-written-class', 'clipboard--written'),
-            $url
+            $label ?? $url,
         );
     }
 }

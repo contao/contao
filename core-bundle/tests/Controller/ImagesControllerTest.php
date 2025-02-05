@@ -47,7 +47,6 @@ class ImagesControllerTest extends TestCase
 
         $controller = new ImagesController($factory, $resizer, $this->getFixturesDir().'/images');
 
-        /** @var BinaryFileResponse $response */
         $response = $controller('image.jpg');
 
         $this->assertInstanceOf(BinaryFileResponse::class, $response);

@@ -162,7 +162,7 @@
         <target>Posláno</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sentOn">
-        <source>Sent on %s</source>
+        <source>Sent at %s</source>
         <target>Posláno %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.notSent">

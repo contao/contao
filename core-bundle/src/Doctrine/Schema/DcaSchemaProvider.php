@@ -24,10 +24,12 @@ class DcaSchemaProvider
     private int|null $defaultIndexLength = null;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.doctrine.dca_schema_provider" service instead
+     * @internal
      */
-    public function __construct(private ContaoFramework $framework, private Registry $doctrine)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly Registry $doctrine,
+    ) {
     }
 
     /**
@@ -61,16 +63,16 @@ class DcaSchemaProvider
             }
 
             if (isset($definitions['SCHEMA_FIELDS'])) {
-                foreach ($definitions['SCHEMA_FIELDS'] as $fieldName => $config) {
+                foreach ($definitions['SCHEMA_FIELDS'] as $fieldName => $conf) {
                     if ($table->hasColumn($fieldName)) {
                         continue;
                     }
 
-                    $options = $config;
+                    $options = $conf;
                     unset($options['name'], $options['type']);
 
                     // Use the binary collation if the "case_sensitive" option is set
-                    if ($this->isCaseSensitive($config)) {
+                    if ($this->isCaseSensitive($conf)) {
                         $options['platformOptions']['collation'] = $this->getBinaryCollation($table);
                     }
 
@@ -86,7 +88,7 @@ class DcaSchemaProvider
                         $options['platformOptions']['collation'] = $options['customSchemaOptions']['collation'];
                     }
 
-                    $table->addColumn($config['name'], $config['type'], $options);
+                    $table->addColumn($conf['name'], $conf['type'], $options);
                 }
             }
 
@@ -96,7 +98,7 @@ class DcaSchemaProvider
                         continue;
                     }
 
-                    $this->parseColumnSql($table, $fieldName, substr($sql, \strlen((string) $fieldName) + 3));
+                    $this->parseColumnSql($table, $fieldName, substr($sql, \strlen($fieldName) + 3));
                 }
             }
 
@@ -189,14 +191,14 @@ class DcaSchemaProvider
             $platformOptions['collation'] = $collation;
         }
 
-        if (!empty($platformOptions)) {
+        if ([] !== $platformOptions) {
             $options['platformOptions'] = $platformOptions;
         }
 
         $table->addColumn($columnName, $type, $options);
     }
 
-    private function setLengthAndPrecisionByType(string $type, string $dbType, ?int &$length, ?int &$scale, ?int &$precision, bool &$fixed): void
+    private function setLengthAndPrecisionByType(string $type, string $dbType, int|null &$length, int|null &$scale, int|null &$precision, bool &$fixed): void
     {
         switch ($type) {
             case 'char':
@@ -209,9 +211,10 @@ class DcaSchemaProvider
             case 'real':
             case 'numeric':
             case 'decimal':
-                if (preg_match('/[a-z]+\((\d+),(\d+)\)/i', $dbType, $match)) {
+                if (preg_match('/[a-z]+\((\d+),(\d+)\)/i', $dbType, $matches)) {
                     $length = null;
-                    [, $precision, $scale] = $match;
+                    $precision = (int) $matches[1];
+                    $scale = (int) $matches[2];
                 }
                 break;
 
@@ -255,7 +258,7 @@ class DcaSchemaProvider
     {
         if ('PRIMARY' === $keyName) {
             if (!preg_match_all('/`([^`]+)`/', $sql, $matches)) {
-                throw new \RuntimeException(sprintf('Primary key definition "%s" could not be parsed.', $sql));
+                throw new \RuntimeException(\sprintf('Primary key definition "%s" could not be parsed.', $sql));
             }
 
             $table->setPrimaryKey($matches[1]);
@@ -264,7 +267,7 @@ class DcaSchemaProvider
         }
 
         if (!preg_match('/(.*) `([^`]+)` \((.*)\)/', $sql, $matches)) {
-            throw new \RuntimeException(sprintf('Key definition "%s" could not be parsed.', $sql));
+            throw new \RuntimeException(\sprintf('Key definition "%s" could not be parsed.', $sql));
         }
 
         $columns = [];
@@ -292,7 +295,7 @@ class DcaSchemaProvider
     /**
      * Returns the SQL definitions from the Contao installer.
      *
-     * @return array<string, array<string, string|array<string>>>
+     * @return array<string, array<string, string|array<string, string|array<string>>>>
      */
     private function getSqlDefinitions(): array
     {
@@ -315,8 +318,8 @@ class DcaSchemaProvider
             return null;
         }
 
-        // Return if the field is shorter than the shortest possible index
-        // length (utf8mb4 on InnoDB without large prefixes)
+        // Return if the field is shorter than the shortest possible index length
+        // (utf8mb4 on InnoDB without large prefixes)
         if ($length <= 191) {
             return null;
         }
@@ -363,9 +366,9 @@ class DcaSchemaProvider
 
         [$ver] = explode('-', (string) $this->doctrine->getConnection()->fetchOne('SELECT @@version'));
 
-        // As there is no reliable way to get the vendor (see #84), we are
-        // guessing based on the version number. The check will not be run
-        // as of MySQL 8 and MariaDB 10.3, so this should be safe.
+        // As there is no reliable way to get the vendor (see #84), we are guessing based
+        // on the version number. The check will not be run as of MySQL 8 and MariaDB
+        // 10.3, so this should be safe.
         $vok = version_compare($ver, '10', '>=') ? '10.2.2' : '5.7.7';
 
         // Large prefixes are always enabled as of MySQL 5.7.7 and MariaDB 10.2.2

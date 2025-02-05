@@ -65,8 +65,8 @@ class SearchIndexSubscriberTest extends TestCase
                             $this->assertSame(SearchIndexSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -93,10 +93,10 @@ class SearchIndexSubscriberTest extends TestCase
         $this->assertSame($expectedDecision, $decision);
     }
 
-    public function shouldRequestProvider(): \Generator
+    public static function shouldRequestProvider(): iterable
     {
         yield 'Test skips URIs where the original URI contained a robots.txt no-follow tag' => [
-            (new CrawlUri(new Uri('https://contao.org'), 1, false, new Uri('https://original.contao.org'))),
+            new CrawlUri(new Uri('https://contao.org'), 1, false, new Uri('https://original.contao.org')),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Do not request because the URI was disallowed to be followed by nofollow or robots.txt hints.',
@@ -125,7 +125,7 @@ class SearchIndexSubscriberTest extends TestCase
         ];
 
         yield 'Test skips URIs that do not belong to our base URI collection' => [
-            (new CrawlUri(new Uri('https://github.com'), 0)),
+            new CrawlUri(new Uri('https://github.com'), 0),
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Did not index because it was not part of the base URI collection.',
@@ -139,7 +139,7 @@ class SearchIndexSubscriberTest extends TestCase
         ];
 
         yield 'Test requests if everything is okay' => [
-            (new CrawlUri(new Uri('https://contao.org/foobar'), 0)),
+            new CrawlUri(new Uri('https://contao.org/foobar'), 0),
             SubscriberInterface::DECISION_POSITIVE,
         ];
     }
@@ -164,8 +164,8 @@ class SearchIndexSubscriberTest extends TestCase
                             $this->assertSame(SearchIndexSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -185,13 +185,13 @@ class SearchIndexSubscriberTest extends TestCase
         $decision = $subscriber->needsContent(
             $crawlUri ?? new CrawlUri(new Uri('https://contao.org'), 0),
             $response,
-            $this->createMock(ChunkInterface::class)
+            $this->createMock(ChunkInterface::class),
         );
 
         $this->assertSame($expectedDecision, $decision);
     }
 
-    public function needsContentProvider(): \Generator
+    public function needsContentProvider(): iterable
     {
         yield 'Test skips responses that were not successful' => [
             $this->mockResponse(true, 404),
@@ -246,16 +246,16 @@ class SearchIndexSubscriberTest extends TestCase
                         $this->assertSame(SearchIndexSubscriber::class, $context['source']);
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
         ;
 
         $indexer = $this->createMock(IndexerInterface::class);
 
-        if (null === $indexerException) {
+        if (!$indexerException) {
             $indexer
-                ->expects($expectedStats === ['ok' => 0, 'warning' => 0, 'error' => 0] ? $this->never() : $this->once())
+                ->expects(['ok' => 0, 'warning' => 0, 'error' => 0] === $expectedStats ? $this->never() : $this->once())
                 ->method('index')
             ;
         } else {
@@ -276,12 +276,12 @@ class SearchIndexSubscriberTest extends TestCase
         $subscriber->onLastChunk(
             $crawlUri ?? new CrawlUri(new Uri('https://contao.org'), 0),
             $this->mockResponse(true),
-            $this->createMock(ChunkInterface::class)
+            $this->createMock(ChunkInterface::class),
         );
 
         $previousResult = null;
 
-        if (0 !== \count($previousStats)) {
+        if ($previousStats) {
             $previousResult = new SubscriberResult(true, 'foobar');
             $previousResult->addInfo('stats', $previousStats);
         }
@@ -290,7 +290,7 @@ class SearchIndexSubscriberTest extends TestCase
         $this->assertSame($expectedStats, $result->getInfo('stats'));
     }
 
-    public function onLastChunkProvider(): \Generator
+    public static function onLastChunkProvider(): iterable
     {
         yield 'Test skips URIs where the "X-Robots-Tag" header contains "noindex"' => [
             null,
@@ -367,8 +367,8 @@ class SearchIndexSubscriberTest extends TestCase
                             $this->assertSame(SearchIndexSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -394,7 +394,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $previousResult = null;
 
-        if (0 !== \count($previousStats)) {
+        if ($previousStats) {
             $previousResult = new SubscriberResult(true, 'foobar');
             $previousResult->addInfo('stats', $previousStats);
         }
@@ -403,7 +403,7 @@ class SearchIndexSubscriberTest extends TestCase
         $this->assertSame($expectedStats, $result->getInfo('stats'));
     }
 
-    public function onTransportExceptionProvider(): \Generator
+    public function onTransportExceptionProvider(): iterable
     {
         yield 'Test reports transport exception responses' => [
             new TransportException('Could not resolve host or timeout'),
@@ -435,8 +435,8 @@ class SearchIndexSubscriberTest extends TestCase
                             $this->assertSame(SearchIndexSubscriber::class, $context['source']);
 
                             return true;
-                        }
-                    )
+                        },
+                    ),
                 )
             ;
         } else {
@@ -462,7 +462,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $previousResult = null;
 
-        if (0 !== \count($previousStats)) {
+        if ($previousStats) {
             $previousResult = new SubscriberResult(true, 'foobar');
             $previousResult->addInfo('stats', $previousStats);
         }
@@ -471,7 +471,7 @@ class SearchIndexSubscriberTest extends TestCase
         $this->assertSame($expectedStats, $result->getInfo('stats'));
     }
 
-    public function onHttpExceptionProvider(): \Generator
+    public function onHttpExceptionProvider(): iterable
     {
         yield 'Test reports responses that were not successful' => [
             new ClientException($this->mockResponse(true, 404)),
@@ -511,31 +511,19 @@ class SearchIndexSubscriberTest extends TestCase
         $response
             ->method('getInfo')
             ->willReturnCallback(
-                static function (string $key) use ($statusCode, $url) {
-                    switch ($key) {
-                        case 'http_code':
-                            return $statusCode;
-
-                        case 'url':
-                            return $url;
-
-                        case 'response_headers':
-                            return [];
-
-                        default:
-                            return null;
-                    }
-                }
+                static fn (string $key) => match ($key) {
+                    'http_code' => $statusCode,
+                    'url' => $url,
+                    'response_headers' => [],
+                    default => null,
+                },
             )
         ;
 
         return $response;
     }
 
-    /**
-     * @return TranslatorInterface&MockObject
-     */
-    private function getTranslator(): TranslatorInterface
+    private function getTranslator(): TranslatorInterface&MockObject
     {
         $translator = $this->createMock(TranslatorInterface::class);
         $translator

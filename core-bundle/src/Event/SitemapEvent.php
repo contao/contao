@@ -17,8 +17,11 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class SitemapEvent extends Event
 {
-    public function __construct(private \DOMDocument $document, private Request $request, private array $rootPageIds)
-    {
+    public function __construct(
+        private readonly \DOMDocument $document,
+        private readonly Request $request,
+        private readonly array $rootPageIds,
+    ) {
     }
 
     public function getDocument(): \DOMDocument
@@ -31,15 +34,17 @@ class SitemapEvent extends Event
         $sitemap = $this->getDocument();
         $urlSet = $sitemap->getElementsByTagNameNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset')->item(0);
 
-        if (null === $urlSet) {
+        if (!$urlSet) {
             return $this;
         }
 
-        $loc = $sitemap->createElement('loc', $url);
-        $urlEl = $sitemap->createElement('url');
-        $urlEl->appendChild($loc);
-        $urlSet->appendChild($urlEl);
+        $loc = $sitemap->createElementNS($urlSet->namespaceURI, 'loc');
+        $loc->appendChild($sitemap->createTextNode($url));
 
+        $urlEl = $sitemap->createElementNS($urlSet->namespaceURI, 'url');
+        $urlEl->appendChild($loc);
+
+        $urlSet->appendChild($urlEl);
         $sitemap->appendChild($urlSet);
 
         return $this;

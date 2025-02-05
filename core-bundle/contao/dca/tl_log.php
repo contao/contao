@@ -11,6 +11,7 @@
 use Contao\Backend;
 use Contao\DataContainer;
 use Contao\DC_Table;
+use Contao\System;
 
 $GLOBALS['TL_DCA']['tl_log'] = array
 (
@@ -25,7 +26,8 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		(
 			'keys' => array
 			(
-				'id' => 'primary'
+				'id' => 'primary',
+				'tstamp' => 'index'
 			)
 		)
 	),
@@ -45,20 +47,6 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 			'fields'                  => array('tstamp', 'text'),
 			'format'                  => '<span class="label-date">[%s]</span> %s',
 			'label_callback'          => array('tl_log', 'colorize')
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
-		),
-		'operations' => array
-		(
-			'delete',
-			'show'
 		)
 	),
 
@@ -114,6 +102,18 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 			'sorting'                 => true,
 			'search'                  => true,
 			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
+		'uri' => array
+		(
+			'sorting'                 => true,
+			'search'                  => true,
+			'sql'                     => "varchar(2048) NOT NULL default ''"
+		),
+		'page' => array
+		(
+			'sorting'                 => true,
+			'search'                  => true,
+			'sql'                     => "int(10) unsigned NOT NULL default '0'"
 		)
 	)
 );
@@ -135,19 +135,21 @@ class tl_log extends Backend
 	 */
 	public function colorize($row, $label)
 	{
+		$class = 'ellipsis';
+
 		switch ($row['action'])
 		{
 			case 'CONFIGURATION':
 			case 'REPOSITORY':
-				$label = preg_replace('@^(.*</span> )(.*)$@U', '$1 <span class="tl_blue">$2</span>', $label);
+				$class .= ' tl_blue';
 				break;
 
 			case 'CRON':
-				$label = preg_replace('@^(.*</span> )(.*)$@U', '$1 <span class="tl_green">$2</span>', $label);
+				$class .= ' tl_green';
 				break;
 
 			case 'ERROR':
-				$label = preg_replace('@^(.*</span> )(.*)$@U', '$1 <span class="tl_red">$2</span>', $label);
+				$class .= ' tl_red';
 				break;
 
 			default:
@@ -155,13 +157,12 @@ class tl_log extends Backend
 				{
 					foreach ($GLOBALS['TL_HOOKS']['colorizeLogEntries'] as $callback)
 					{
-						$this->import($callback[0]);
-						$label = $this->{$callback[0]}->{$callback[1]}($row, $label);
+						$label = System::importStatic($callback[0])->{$callback[1]}($row, $label, $class);
 					}
 				}
 				break;
 		}
 
-		return '<div class="ellipsis">' . $label . '</div>';
+		return '<div class="' . $class . '">' . $label . '</div>';
 	}
 }

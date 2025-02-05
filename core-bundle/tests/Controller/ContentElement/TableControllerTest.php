@@ -24,7 +24,7 @@ class TableControllerTest extends ContentElementTestCase
             [
                 'type' => 'table',
                 'tableitems' => serialize([
-                    ['foo', 'bar'], ['foobar', 'baz'],
+                    ['foo', 'bar'], ['foobar', "baz\nbaz"],
                 ]),
                 'summary' => 'My caption',
                 'sortable' => true,
@@ -33,7 +33,7 @@ class TableControllerTest extends ContentElementTestCase
             ],
             null,
             false,
-            $responseContextData
+            $responseContextData,
         );
 
         $expectedOutput = <<<'HTML'
@@ -47,7 +47,7 @@ class TableControllerTest extends ContentElementTestCase
                         </tr>
                         <tr>
                             <td>foobar</td>
-                            <td>baz</td>
+                            <td>baz<br> baz</td>
                         </tr>
                     </tbody>
                 </table>
@@ -65,7 +65,7 @@ class TableControllerTest extends ContentElementTestCase
             [
                 'type' => 'table',
                 'tableitems' => serialize([
-                    ['header1', 'header2'], ['foo', 'bar'], ['footer1', 'footer2'],
+                    ['header1', 'header2'], ['foo', '<a href="foo">bar</a>'], ['footer1', 'footer2'],
                 ]),
                 'thead' => true,
                 'tfoot' => true,
@@ -76,7 +76,7 @@ class TableControllerTest extends ContentElementTestCase
             ],
             null,
             false,
-            $responseContextData
+            $responseContextData,
         );
 
         $expectedOutput = <<<'HTML'
@@ -97,7 +97,7 @@ class TableControllerTest extends ContentElementTestCase
                     <tbody>
                         <tr>
                             <th scope="row">foo</th>
-                            <td>bar</td>
+                            <td><a href="foo">bar</a></td>
                         </tr>
                     </tbody>
                 </table>
@@ -106,13 +106,14 @@ class TableControllerTest extends ContentElementTestCase
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
 
-        $additionalHeadCode = $responseContextData[DocumentLocation::head->value];
+        $additionalBodyCode = $responseContextData[DocumentLocation::endOfBody->value];
 
-        $this->assertCount(1, $additionalHeadCode);
+        $this->assertCount(1, $additionalBodyCode);
+        $this->assertArrayHasKey('tablesort_script', $additionalBodyCode);
 
         $this->assertMatchesRegularExpression(
             '/<script>[^<]+tablesort.min.js[^<]+<\/script>/',
-            $additionalHeadCode['tablesort_script']
+            $additionalBodyCode['tablesort_script'],
         );
     }
 }

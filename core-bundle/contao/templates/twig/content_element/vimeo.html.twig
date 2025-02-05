@@ -1,0 +1,6 @@
+{% trans_default_domain "contao_default" %}
+{% extends "@Contao/content_element/_video.html.twig" %}
+
+{% block splash_screen_text %}
+    <span>{{ ('MSC.splashScreen')|trans }} {{ ('MSC.dataTransmission')|trans(['Vimeo']) }}</span>
+{% endblock %}

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Twig\Runtime;
 
 use Contao\CoreBundle\InsertTag\ChunkedText;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 
@@ -24,9 +25,9 @@ class InsertTagRuntimeTest extends TestCase
         $insertTags = $this->createMock(InsertTagParser::class);
         $insertTags
             ->expects($this->once())
-            ->method('render')
+            ->method('renderTag')
             ->with('tag')
-            ->willReturn('replaced-tag')
+            ->willReturn(new InsertTagResult('replaced-tag'))
         ;
 
         $runtime = new InsertTagRuntime($insertTags);
@@ -46,7 +47,10 @@ class InsertTagRuntimeTest extends TestCase
 
         $runtime = new InsertTagRuntime($insertTags);
 
-        $this->assertSame('foo replaced-tag', $runtime->replaceInsertTags('foo {{tag}}'));
+        $this->assertSame(
+            'foo replaced-tag',
+            $runtime->replaceInsertTags(['as_editor_view' => false], 'foo {{tag}}'),
+        );
     }
 
     public function testReplaceInsertTagsChunkedRaw(): void
@@ -61,6 +65,59 @@ class InsertTagRuntimeTest extends TestCase
 
         $runtime = new InsertTagRuntime($insertTags);
 
-        $this->assertSame('<replaced-tag> foo', (string) $runtime->replaceInsertTagsChunkedRaw('{{tag}} foo'));
+        $this->assertSame(
+            '<replaced-tag> foo',
+            (string) $runtime->replaceInsertTagsChunkedRaw(['as_editor_view' => false], '{{tag}} foo'),
+        );
+    }
+
+    public function testDoesNotReplaceInsertTagsInEditorView(): void
+    {
+        $insertTags = $this->createMock(InsertTagParser::class);
+        $insertTags
+            ->expects($this->never())
+            ->method('replaceInline')
+        ;
+
+        $runtime = new InsertTagRuntime($insertTags);
+
+        $this->assertSame(
+            'foo {{tag}}',
+            $runtime->replaceInsertTags(['as_editor_view' => true], 'foo {{tag}}'),
+        );
+    }
+
+    public function testDoesNotReplaceInsertTagsChunkedRawInEditorView(): void
+    {
+        $insertTags = $this->createMock(InsertTagParser::class);
+        $insertTags
+            ->expects($this->never())
+            ->method('replaceChunked')
+        ;
+
+        $runtime = new InsertTagRuntime($insertTags);
+
+        $this->assertSame(
+            '{{tag}} foo',
+            (string) $runtime->replaceInsertTagsChunkedRaw(['as_editor_view' => true], '{{tag}} foo'),
+        );
+    }
+
+    public function testAllowsToOverrideTheEditorView(): void
+    {
+        $insertTags = $this->createMock(InsertTagParser::class);
+        $insertTags
+            ->expects($this->once())
+            ->method('replaceInline')
+            ->with('foo {{tag}}')
+            ->willReturn('foo replaced-tag')
+        ;
+
+        $runtime = new InsertTagRuntime($insertTags);
+
+        $this->assertSame(
+            'foo replaced-tag',
+            $runtime->replaceInsertTags(['as_editor_view' => true], 'foo {{tag}}', false),
+        );
     }
 }

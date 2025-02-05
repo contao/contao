@@ -18,26 +18,21 @@ use Contao\CoreBundle\EventListener\PreviewUrlCreateListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class PreviewUrlCreateListenerTest extends TestCase
 {
     public function testCreatesThePreviewUrlForPages(): void
     {
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
-
         $event = new PreviewUrlCreateEvent('page', 42);
         $pageModel = $this->mockClassWithProperties(PageModel::class);
 
         $adapters = [
-            PageModel::class => $this->mockConfiguredAdapter(['findByPk' => $pageModel]),
+            PageModel::class => $this->mockConfiguredAdapter(['findById' => $pageModel]),
         ];
 
         $framework = $this->mockContaoFramework($adapters);
 
-        $listener = new PreviewUrlCreateListener($requestStack, $framework);
+        $listener = new PreviewUrlCreateListener($framework);
         $listener($event);
 
         $this->assertSame('page=42', $event->getQuery());
@@ -45,21 +40,18 @@ class PreviewUrlCreateListenerTest extends TestCase
 
     public function testCreatesThePreviewUrlForArticles(): void
     {
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
-
         $event = new PreviewUrlCreateEvent('article', 3);
         $articleModel = $this->mockClassWithProperties(ArticleModel::class, ['pid' => 42]);
         $pageModel = $this->mockClassWithProperties(PageModel::class);
 
         $adapters = [
-            ArticleModel::class => $this->mockConfiguredAdapter(['findByPk' => $articleModel]),
-            PageModel::class => $this->mockConfiguredAdapter(['findByPk' => $pageModel]),
+            ArticleModel::class => $this->mockConfiguredAdapter(['findById' => $articleModel]),
+            PageModel::class => $this->mockConfiguredAdapter(['findById' => $pageModel]),
         ];
 
         $framework = $this->mockContaoFramework($adapters);
 
-        $listener = new PreviewUrlCreateListener($requestStack, $framework);
+        $listener = new PreviewUrlCreateListener($framework);
         $listener($event);
 
         $this->assertSame('page=42', $event->getQuery());
@@ -78,7 +70,7 @@ class PreviewUrlCreateListenerTest extends TestCase
 
         $event = new PreviewUrlCreateEvent($do, 42);
 
-        $listener = new PreviewUrlCreateListener(new RequestStack(), $framework);
+        $listener = new PreviewUrlCreateListener($framework);
         $listener($event);
 
         $this->assertNull($event->getQuery());
@@ -92,7 +84,7 @@ class PreviewUrlCreateListenerTest extends TestCase
         $framework = $this->mockContaoFramework();
         $event = new PreviewUrlCreateEvent($do, 1);
 
-        $listener = new PreviewUrlCreateListener(new RequestStack(), $framework);
+        $listener = new PreviewUrlCreateListener($framework);
         $listener($event);
 
         $this->assertNull($event->getQuery());
@@ -103,13 +95,10 @@ class PreviewUrlCreateListenerTest extends TestCase
      */
     public function testDoesNotCreateThePreviewUrlIfThereIsNoId(string $do): void
     {
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
-
         $framework = $this->mockContaoFramework();
         $event = new PreviewUrlCreateEvent($do, 0);
 
-        $listener = new PreviewUrlCreateListener($requestStack, $framework);
+        $listener = new PreviewUrlCreateListener($framework);
         $listener($event);
 
         $this->assertNull($event->getQuery());
@@ -120,32 +109,29 @@ class PreviewUrlCreateListenerTest extends TestCase
      */
     public function testDoesNotCreateThePreviewUrlIfThereIsNoPageItem(string $do): void
     {
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
-
         $articleModel = $this->mockClassWithProperties(ArticleModel::class, ['pid' => 42]);
 
         $adapters = [
-            PageModel::class => $this->mockConfiguredAdapter(['findByPk' => null]),
-            ArticleModel::class => $this->mockConfiguredAdapter(['findByPk' => $articleModel]),
+            PageModel::class => $this->mockConfiguredAdapter(['findById' => null]),
+            ArticleModel::class => $this->mockConfiguredAdapter(['findById' => $articleModel]),
         ];
 
         $framework = $this->mockContaoFramework($adapters);
         $event = new PreviewUrlCreateEvent($do, 1);
 
-        $listener = new PreviewUrlCreateListener($requestStack, $framework);
+        $listener = new PreviewUrlCreateListener($framework);
         $listener($event);
 
         $this->assertNull($event->getQuery());
     }
 
-    public function getValidDoParameters(): \Generator
+    public static function getValidDoParameters(): iterable
     {
         yield ['page'];
         yield ['article'];
     }
 
-    public function getInvalidDoParameters(): \Generator
+    public static function getInvalidDoParameters(): iterable
     {
         yield [''];
         yield ['news'];

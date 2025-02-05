@@ -30,6 +30,7 @@ use Contao\Model\Registry;
  * @method static OptInModel|null findById($id, array $opt=array())
  * @method static OptInModel|null findByPk($id, array $opt=array())
  * @method static OptInModel|null findByIdOrAlias($val, array $opt=array())
+ * @method static OptInModel|null findByToken($val, array $opt=array())
  * @method static OptInModel|null findOneBy($col, $val, array $opt=array())
  * @method static OptInModel|null findOneByTstamp($val, array $opt=array())
  * @method static OptInModel|null findOneByToken($val, array $opt=array())
@@ -41,18 +42,17 @@ use Contao\Model\Registry;
  * @method static OptInModel|null findOneByEmailSubject($val, array $opt=array())
  * @method static OptInModel|null findOneByEmailText($val, array $opt=array())
  *
- * @method static Collection|OptInModel[]|OptInModel|null findByTstamp($val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findByToken($val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findByCreatedOn($val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findByConfirmedOn($val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findByRemoveOn($val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findByInvalidatedThrough($val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findByEmail($val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findByEmailSubject($val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findByEmailText($val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findMultipleByIds($val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findBy($col, $val, array $opt=array())
- * @method static Collection|OptInModel[]|OptInModel|null findAll(array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findByTstamp($val, array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findByCreatedOn($val, array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findByConfirmedOn($val, array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findByRemoveOn($val, array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findByInvalidatedThrough($val, array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findByEmail($val, array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findByEmailSubject($val, array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findByEmailText($val, array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findBy($col, $val, array $opt=array())
+ * @method static Collection<OptInModel>|OptInModel[]|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
@@ -78,7 +78,7 @@ class OptInModel extends Model
 	 *
 	 * @param array $arrOptions
 	 *
-	 * @return Collection|OptInModel[]|OptInModel|null
+	 * @return Collection<OptInModel>|OptInModel[]|null
 	 */
 	public static function findExpiredTokens(array $arrOptions=array())
 	{
@@ -94,7 +94,7 @@ class OptInModel extends Model
 	 * @param array  $arrIds
 	 * @param array  $arrOptions
 	 *
-	 * @return Collection|OptInModel[]|OptInModel|null
+	 * @return Collection<OptInModel>|OptInModel[]|null
 	 */
 	public static function findByRelatedTableAndIds($strTable, array $arrIds, array $arrOptions=array())
 	{
@@ -103,6 +103,45 @@ class OptInModel extends Model
 
 		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE $t.id IN (SELECT pid FROM tl_opt_in_related WHERE relTable=? AND relId IN(" . implode(',', array_map('\intval', $arrIds)) . ")) ORDER BY $t.createdOn DESC")
 								 ->execute($strTable);
+
+		if ($objResult->numRows < 1)
+		{
+			return null;
+		}
+
+		$arrModels = array();
+		$objRegistry = Registry::getInstance();
+
+		while ($objResult->next())
+		{
+			if ($objOptIn = $objRegistry->fetch($t, $objResult->id))
+			{
+				$arrModels[] = $objOptIn;
+			}
+			else
+			{
+				$arrModels[] = new static($objResult->row());
+			}
+		}
+
+		return static::createCollection($arrModels, $t);
+	}
+
+	/**
+	 * Find unconfirmed opt-in tokens by their related table and ID
+	 *
+	 * @param string  $strTable
+	 * @param integer $intId
+	 *
+	 * @return Collection|OptInModel[]|OptInModel|null
+	 */
+	public static function findUnconfirmedByRelatedTableAndId($strTable, $intId, array $arrOptions=array())
+	{
+		$t = static::$strTable;
+		$objDatabase = Database::getInstance();
+
+		$objResult =  $objDatabase->prepare("SELECT * FROM $t WHERE $t.confirmedOn=0 AND $t.id IN (SELECT pid FROM tl_opt_in_related WHERE relTable=? AND relId=?)")
+								  ->execute($strTable, $intId);
 
 		if ($objResult->numRows < 1)
 		{
@@ -178,7 +217,7 @@ class OptInModel extends Model
 
 		if ($objCount->count > 0)
 		{
-			throw new \LogicException(sprintf('Token "%s" already contains related records', $this->token));
+			throw new \LogicException(\sprintf('Token "%s" already contains related records', $this->token));
 		}
 
 		foreach ($arrRelated as $strTable=>$arrIds)

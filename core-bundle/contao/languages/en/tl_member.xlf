@@ -138,13 +138,13 @@
         <source>Activate on</source>
       </trans-unit>
       <trans-unit id="tl_member.start.1">
-        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the account from being active before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_member.stop.0">
         <source>Deactivate on</source>
       </trans-unit>
       <trans-unit id="tl_member.stop.1">
-        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise leave the field blank.</source>
+        <source>If you want to prevent the account from being active after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
       </trans-unit>
       <trans-unit id="tl_member.useTwoFactor">
         <source>Use two-factor authentication</source>
@@ -182,6 +182,9 @@
       <trans-unit id="tl_member.loginDetails">
         <source>Login details</source>
       </trans-unit>
+      <trans-unit id="tl_member.captchaDetails">
+        <source>Verification</source>
+      </trans-unit>
       <trans-unit id="tl_member.new.0">
         <source>New</source>
       </trans-unit>
@@ -200,8 +203,14 @@
       <trans-unit id="tl_member.delete">
         <source>Delete member ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_member.toggle">
-        <source>Activate/deactivate member ID %s</source>
+      <trans-unit id="tl_member.toggle.0">
+        <source>Activate/deactivate member</source>
+      </trans-unit>
+      <trans-unit id="tl_member.toggle.1">
+        <source>Deactivate member ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_member.toggle.2">
+        <source>Activate member ID %s</source>
       </trans-unit>
       <trans-unit id="tl_member.su">
         <source>Preview the front end as member ID %s</source>

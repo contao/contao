@@ -20,15 +20,17 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\StringType;
 use Doctrine\DBAL\Types\Types;
-use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Converts empty string values of boolean fields to zeros.
  */
 class BooleanFieldsMigration extends AbstractMigration
 {
-    public function __construct(private Connection $connection, private ContaoFramework $framework, private ResourceFinder $resourceFinder)
-    {
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly ContaoFramework $framework,
+        private readonly ResourceFinder $resourceFinder,
+    ) {
     }
 
     public function shouldRun(): bool
@@ -61,7 +63,6 @@ class BooleanFieldsMigration extends AbstractMigration
         $targets = [];
         $processed = [];
 
-        /** @var array<SplFileInfo> $files */
         $files = $this->resourceFinder->findIn('dca')->depth(0)->files()->name('*.php');
 
         foreach ($files as $file) {
@@ -83,12 +84,11 @@ class BooleanFieldsMigration extends AbstractMigration
 
             foreach ($GLOBALS['TL_DCA'][$tableName]['fields'] ?? [] as $fieldName => $fieldConfig) {
                 $fieldName = strtolower($fieldName);
+                $field = $columns[$fieldName] ?? $columns["`$fieldName`"] ?? null;
 
-                if (!isset($columns[$fieldName]) || Types::BOOLEAN !== ($fieldConfig['sql']['type'] ?? null)) {
+                if (null === $field || Types::BOOLEAN !== ($fieldConfig['sql']['type'] ?? null)) {
                     continue;
                 }
-
-                $field = $columns[$fieldName];
 
                 if ($field->getType() instanceof StringType) {
                     $targets[] = [$tableName, $fieldName];

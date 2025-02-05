@@ -18,35 +18,39 @@ use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Exception\RouteParametersException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Util\LocaleUtil;
-use Contao\PageModel;
 use Contao\StringUtil;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\AcceptHeader;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
-use Symfony\Component\Security\Core\Security;
 use Twig\Environment;
 use Twig\Error\Error;
 
 /**
+ * The priority must be higher than the one of the Twig exception listener
+ * (defaults to -128).
+ *
  * @internal
  */
+#[AsEventListener(priority: -96)]
 class PrettyErrorScreenListener
 {
     public function __construct(
-        private bool $prettyErrorScreens,
-        private Environment $twig,
-        private ContaoFramework $framework,
-        private Security $security,
-        private PageRegistry $pageRegistry,
-        private HttpKernelInterface $httpKernel,
+        private readonly bool $prettyErrorScreens,
+        private readonly Environment $twig,
+        private readonly ContaoFramework $framework,
+        private readonly Security $security,
+        private readonly PageRegistry $pageRegistry,
+        private readonly HttpKernelInterface $httpKernel,
+        private readonly PageFinder $pageFinder,
     ) {
     }
 
@@ -85,14 +89,6 @@ class PrettyErrorScreenListener
         switch (true) {
             case $isBackendUser:
                 $this->renderBackendException($event);
-                break;
-
-            case $exception instanceof UnauthorizedHttpException:
-                $this->renderErrorScreenByType(401, $event);
-                break;
-
-            case $exception instanceof AccessDeniedHttpException:
-                $this->renderErrorScreenByType(403, $event);
                 break;
 
             case $exception instanceof NotFoundHttpException:
@@ -139,21 +135,11 @@ class PrettyErrorScreenListener
             $this->framework->initialize();
 
             $request = $event->getRequest();
-            $pageModel = $request->attributes->get('pageModel');
+            $errorPage = $this->pageFinder->findFirstPageOfTypeForRequest($request, 'error_'.$type);
 
-            if (!$pageModel instanceof PageModel) {
+            if (!$errorPage) {
                 return;
             }
-
-            $pageAdapter = $this->framework->getAdapter(PageModel::class);
-            $errorPage = $pageAdapter->findFirstPublishedByTypeAndPid('error_'.$type, $pageModel->loadDetails()->rootId);
-
-            if (null === $errorPage) {
-                return;
-            }
-
-            $errorPage->loadDetails();
-            $errorPage->protected = false;
 
             $route = $this->pageRegistry->getRoute($errorPage);
             $subRequest = $request->duplicate(null, null, $route->getDefaults());
@@ -185,7 +171,7 @@ class PrettyErrorScreenListener
             if ($exception instanceof InvalidRequestTokenException) {
                 $template = 'invalid_request_token';
             }
-        } while (null === $template && null !== ($exception = $exception->getPrevious()));
+        } while (null === $template && ($exception = $exception->getPrevious()));
 
         $this->renderTemplate($template ?: 'error', $statusCode, $event);
     }
@@ -207,7 +193,7 @@ class PrettyErrorScreenListener
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     private function getTemplateParameters(string $view, int $statusCode, ExceptionEvent $event): array
     {

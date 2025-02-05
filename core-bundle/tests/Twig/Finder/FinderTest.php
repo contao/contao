@@ -13,11 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Twig\Finder;
 
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Translation\Translator;
 use Contao\CoreBundle\Twig\Finder\Finder;
 use Contao\CoreBundle\Twig\Finder\FinderFactory;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
-use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\Component\Translation\MessageCatalogueInterface;
 
 class FinderTest extends TestCase
 {
@@ -28,8 +29,10 @@ class FinderTest extends TestCase
         $expected = [
             'ce_table' => 'html.twig',
             'content_element/text' => 'html.twig',
+            'content_element/text/_button' => 'html.twig',
             'content_element/text/foo' => 'html.twig',
             'content_element/text/bar' => 'html.twig',
+            'content_element/text/foo_bar' => 'html.twig',
             'json/thing' => 'json.twig',
         ];
 
@@ -78,8 +81,10 @@ class FinderTest extends TestCase
 
         $expected = [
             'content_element/text' => 'html.twig',
+            'content_element/text/_button' => 'html.twig',
             'content_element/text/foo' => 'html.twig',
             'content_element/text/bar' => 'html.twig',
+            'content_element/text/foo_bar' => 'html.twig',
         ];
 
         $this->assertSame($expected, iterator_to_array($finder));
@@ -93,8 +98,10 @@ class FinderTest extends TestCase
         ;
 
         $expected = [
+            'content_element/text/_button' => 'html.twig',
             'content_element/text/foo' => 'html.twig',
             'content_element/text/bar' => 'html.twig',
+            'content_element/text/foo_bar' => 'html.twig',
         ];
 
         $this->assertSame($expected, iterator_to_array($finder));
@@ -110,17 +117,80 @@ class FinderTest extends TestCase
 
         $expected = [
             'content_element/text' => 'html.twig',
+            'content_element/text/_button' => 'html.twig',
             'content_element/text/foo' => 'html.twig',
             'content_element/text/bar' => 'html.twig',
+            'content_element/text/foo_bar' => 'html.twig',
             'content_element/text/baz' => 'html.twig',
         ];
 
         $this->assertSame($expected, iterator_to_array($finder));
     }
 
+    public function testFindExcludingPartials(): void
+    {
+        $finder = $this->getFinder()
+            ->identifier('content_element/text')
+            ->withVariants()
+            ->withTheme('my_theme')
+            ->excludePartials()
+        ;
+
+        $expected = [
+            'content_element/text' => 'html.twig',
+            'content_element/text/foo' => 'html.twig',
+            'content_element/text/bar' => 'html.twig',
+            'content_element/text/foo_bar' => 'html.twig',
+            'content_element/text/baz' => 'html.twig',
+        ];
+
+        $this->assertSame($expected, iterator_to_array($finder));
+    }
+
+    /**
+     * @dataProvider provideRegexCases
+     */
+    public function testFindWithRegularExpression(string $regex, bool $include, array $expected): void
+    {
+        $finder = $this->getFinder()
+            ->identifierRegex($regex, $include)
+        ;
+
+        $this->assertSame($expected, iterator_to_array($finder));
+    }
+
+    public static function provideRegexCases(): iterable
+    {
+        yield 'containing "on" anywhere' => [
+            '%on%',
+            true,
+            [
+                'content_element/text' => 'html.twig',
+                'content_element/text/_button' => 'html.twig',
+                'content_element/text/foo' => 'html.twig',
+                'content_element/text/bar' => 'html.twig',
+                'content_element/text/foo_bar' => 'html.twig',
+                'json/thing' => 'json.twig',
+            ],
+        ];
+
+        yield 'without "json" directory' => [
+            '%^json/%',
+            false,
+            [
+                'ce_table' => 'html.twig',
+                'content_element/text' => 'html.twig',
+                'content_element/text/_button' => 'html.twig',
+                'content_element/text/foo' => 'html.twig',
+                'content_element/text/bar' => 'html.twig',
+                'content_element/text/foo_bar' => 'html.twig',
+            ],
+        ];
+    }
+
     public function testCount(): void
     {
-        $this->assertCount(5, $this->getFinder());
+        $this->assertCount(7, $this->getFinder());
     }
 
     public function testGetAsTemplateOptions(): void
@@ -129,23 +199,70 @@ class FinderTest extends TestCase
             ->identifier('content_element/text')
             ->withVariants()
             ->withTheme('my_theme')
+            ->excludePartials()
             ->asTemplateOptions()
         ;
 
         $expected = [
             '' => 'content_element/text [Theme my_theme, App, ContaoCore]',
-            'content_element/text/foo' => 'content_element/text/foo [App]',
             'content_element/text/bar' => 'content_element/text/bar [App]',
             'content_element/text/baz' => 'content_element/text/baz [Theme my_theme]',
+            'content_element/text/foo' => 'content_element/text/foo [App]',
+            'content_element/text/foo_bar' => 'content_element/text/foo_bar [App]',
         ];
 
         $this->assertSame($expected, $options);
     }
 
-    private function getFinder(): Finder
+    public function testGetAsIdentifierList(): void
     {
-        $hierarchy = $this->createMock(TemplateHierarchyInterface::class);
-        $hierarchy
+        $options = $this->getFinder()
+            ->identifier('content_element/text')
+            ->withVariants()
+            ->withTheme('my_theme')
+            ->excludePartials()
+            ->asIdentifierList()
+        ;
+
+        $expected = [
+            'content_element/text',
+            'content_element/text/bar',
+            'content_element/text/baz',
+            'content_element/text/foo',
+            'content_element/text/foo_bar',
+        ];
+
+        $this->assertSame($expected, $options);
+    }
+
+    public function testGetAsTemplateOptionsWithCustomTranslations(): void
+    {
+        $translations = [
+            'content_element/text' => 'Text default',
+            'content_element/text/foo' => 'Foo variant',
+        ];
+
+        $options = $this->getFinder($translations)
+            ->identifier('content_element/text')
+            ->withVariants()
+            ->excludePartials()
+            ->asTemplateOptions()
+        ;
+
+        $expected = [
+            '' => 'Text default [content_element/text • App, ContaoCore]',
+            'content_element/text/bar' => 'content_element/text/bar [App]',
+            'content_element/text/foo' => 'Foo variant [content_element/text/foo • App]',
+            'content_element/text/foo_bar' => 'content_element/text/foo_bar [App]',
+        ];
+
+        $this->assertSame($expected, $options);
+    }
+
+    private function getFinder(array $translations = []): Finder
+    {
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
             ->method('getInheritanceChains')
             ->willReturnCallback(
                 static function (string|null $themeSlug): array {
@@ -160,11 +277,17 @@ class FinderTest extends TestCase
                             '/app/templates/content_element/text.html.twig' => '@Contao_App/content_element/text.html.twig',
                             '/templates/content_element/text.html.twig' => '@Contao_ContaoCoreBundle/content_element/text.html.twig',
                         ],
+                        'content_element/text/_button' => [
+                            '/app/templates/content_element/text/_button.html.twig' => '@Contao_App/content_element/text/_button.html.twig',
+                        ],
                         'content_element/text/foo' => [
                             '/app/templates/content_element/text/foo.html.twig' => '@Contao_App/content_element/text/foo.html.twig',
                         ],
                         'content_element/text/bar' => [
                             '/app/templates/content_element/text/bar.html.twig' => '@Contao_App/content_element/text/bar.html.twig',
+                        ],
+                        'content_element/text/foo_bar' => [
+                            '/app/templates/content_element/text/foo_bar.html.twig' => '@Contao_App/content_element/text/foo_bar.html.twig',
                         ],
                         'json/thing' => [
                             '/app/templates/json/thing.json.twig' => '@Contao_SomeJsonBundle/app/templates/json/thing.json.twig',
@@ -183,26 +306,47 @@ class FinderTest extends TestCase
                     }
 
                     return $chains;
-                }
+                },
             )
         ;
 
-        $translator = $this->createMock(TranslatorInterface::class);
+        $translator = $this->createMock(Translator::class);
         $translator
             ->method('trans')
             ->willReturnCallback(
-                function (string $id, array $parameters, string $domain) {
+                function (string $id, array $parameters, string $domain) use ($translations) {
+                    if ('templates' === $domain) {
+                        return $translations[$id] ?? throw new \LogicException('Undefined templates translation id.');
+                    }
+
                     $this->assertSame('contao_default', $domain);
 
                     return match ($id) {
-                        'MSC.templatesTheme' => sprintf('Theme %s', $parameters[0]),
+                        'MSC.templatesTheme' => \sprintf('Theme %s', $parameters[0]),
                         'MSC.global' => 'Global',
-                        default => throw new \LogicException('Unsupported translation id.')
+                        default => throw new \LogicException('Unsupported translation id.'),
                     };
-                }
+                },
             )
         ;
 
-        return (new FinderFactory($hierarchy, new ThemeNamespace(), $translator))->create();
+        $catalogue = $this->createMock(MessageCatalogueInterface::class);
+        $catalogue
+            ->method('has')
+            ->willReturnCallback(
+                function (string $id, string $domain) use ($translations): bool {
+                    $this->assertSame('templates', $domain);
+
+                    return \array_key_exists($id, $translations);
+                },
+            )
+        ;
+
+        $translator
+            ->method('getCatalogue')
+            ->willReturn($catalogue)
+        ;
+
+        return (new FinderFactory($filesystemLoader, new ThemeNamespace(), $translator))->create();
     }
 }

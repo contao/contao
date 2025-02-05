@@ -29,9 +29,9 @@ interface PreviewProviderInterface
      *
      * @phpstan-param \Closure(int): string $targetPathCallback
      *
-     * @throws UnableToGeneratePreviewException
-     *
      * @return iterable<string> Target paths including the file extension
+     *
+     * @throws UnableToGeneratePreviewException
      */
     public function generatePreviews(string $sourcePath, int $size, \Closure $targetPathCallback, int $lastPage = PHP_INT_MAX, int $firstPage = 1, array $options = []): iterable;
 }

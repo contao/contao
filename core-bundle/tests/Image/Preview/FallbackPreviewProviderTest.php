@@ -64,6 +64,6 @@ class FallbackPreviewProviderTest extends TestCase
 
         $this->expectException(UnableToGeneratePreviewException::class);
 
-        (new FallbackPreviewProvider())->generatePreviews($sourcePath, 1024, $targetPathCallback, 2, 2, []);
+        (new FallbackPreviewProvider())->generatePreviews($sourcePath, 1024, $targetPathCallback, 2, 2);
     }
 }

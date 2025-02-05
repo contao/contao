@@ -159,12 +159,12 @@ class TextField extends Widget
 				$this->varValue = Idna::decodeEmail($this->varValue);
 			}
 
-			return sprintf(
-				'<input type="%s" name="%s" id="ctrl_%s" class="tl_text%s" value="%s"%s onfocus="Backend.getScrollOffset()">%s',
+			return \sprintf(
+				'<input type="%s" name="%s" id="ctrl_%s" class="tl_text%s" value="%s"%s data-action="focus->contao--scroll-offset#store" data-contao--scroll-offset-target="autoFocus">%s',
 				$strType,
 				$this->strName,
 				$this->strId,
-				($this->strClass ? ' ' . $this->strClass : ''),
+				$this->strClass ? ' ' . $this->strClass : '',
 				self::specialcharsValue($this->varValue),
 				$this->getAttributes(),
 				$this->wizard
@@ -187,8 +187,8 @@ class TextField extends Widget
 
 		for ($i=0; $i<$this->size; $i++)
 		{
-			$arrFields[] = sprintf(
-				'<input type="%s" name="%s[]" id="ctrl_%s" class="tl_text_%s" value="%s"%s%s onfocus="Backend.getScrollOffset()">',
+			$arrFields[] = \sprintf(
+				'<input type="%s" name="%s[]" id="ctrl_%s" class="tl_text_%s" value="%s"%s%s data-action="focus->contao--scroll-offset#store">',
 				$strType,
 				$this->strName,
 				$this->strId . '_' . $i,
@@ -199,10 +199,10 @@ class TextField extends Widget
 			);
 		}
 
-		return sprintf(
+		return \sprintf(
 			'<div id="ctrl_%s" class="tl_text_field%s">%s</div>%s',
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			implode(' ', $arrFields),
 			$this->wizard
 		);

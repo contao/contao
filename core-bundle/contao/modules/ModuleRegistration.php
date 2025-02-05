@@ -71,8 +71,7 @@ class ModuleRegistration extends Module
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}();
+					System::importStatic($callback[0])->{$callback[1]}();
 				}
 				elseif (\is_callable($callback))
 				{
@@ -90,7 +89,7 @@ class ModuleRegistration extends Module
 		}
 
 		// Activate account
-		if (strncmp(Input::get('token'), 'reg-', 4) === 0)
+		if (str_starts_with(Input::get('token'), 'reg-'))
 		{
 			$this->activateAcount();
 
@@ -130,6 +129,7 @@ class ModuleRegistration extends Module
 				'required' => true
 			);
 
+			/** @var class-string<FormCaptcha> $strClass */
 			$strClass = $GLOBALS['TL_FFL']['captcha'] ?? null;
 
 			// Fallback to default if the class is not defined
@@ -138,7 +138,6 @@ class ModuleRegistration extends Module
 				$strClass = 'FormCaptcha';
 			}
 
-			/** @var FormCaptcha $objCaptcha */
 			$objCaptcha = new $strClass($arrCaptcha);
 
 			if (Input::post('FORM_SUBMIT') == $strFormId)
@@ -166,6 +165,8 @@ class ModuleRegistration extends Module
 		$arrFields = array();
 		$hasUpload = false;
 
+		$db = Database::getInstance();
+
 		// Build the form
 		foreach ($this->editable as $field)
 		{
@@ -183,7 +184,8 @@ class ModuleRegistration extends Module
 				$arrData['inputType'] = 'upload';
 			}
 
-			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType']] ?? null;
+			/** @var class-string<DataContainer> $strClass */
+			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType'] ?? null] ?? null;
 
 			// Continue if the class is not defined
 			if (!class_exists($strClass))
@@ -231,20 +233,20 @@ class ModuleRegistration extends Module
 					}
 					catch (\OutOfBoundsException $e)
 					{
-						$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidDate'], $varValue));
+						$objWidget->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['invalidDate'], $varValue));
 					}
 				}
 
 				// Convert arrays (see #4980)
-				if (($arrData['eval']['multiple'] ?? null) && isset($arrData['eval']['csv']))
+				if (($arrData['eval']['multiple'] ?? null) && isset($arrData['eval']['csv']) && \is_array($varValue))
 				{
 					$varValue = implode($arrData['eval']['csv'], $varValue);
 				}
 
 				// Make sure that unique fields are unique (check the eval setting first -> #3063)
-				if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$this->Database->isUniqueValue('tl_member', $field, $varValue))
+				if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$db->isUniqueValue('tl_member', $field, $varValue))
 				{
-					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $field));
+					$objWidget->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?? $field));
 				}
 
 				// Save callback
@@ -256,8 +258,7 @@ class ModuleRegistration extends Module
 						{
 							if (\is_array($callback))
 							{
-								$this->import($callback[0]);
-								$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, null);
+								$varValue = System::importStatic($callback[0])->{$callback[1]}($varValue, null);
 							}
 							elseif (\is_callable($callback))
 							{
@@ -333,7 +334,7 @@ class ModuleRegistration extends Module
 		$this->Template->addressDetails = $GLOBALS['TL_LANG']['tl_member']['addressDetails'];
 		$this->Template->contactDetails = $GLOBALS['TL_LANG']['tl_member']['contactDetails'];
 		$this->Template->personalDetails = $GLOBALS['TL_LANG']['tl_member']['personalDetails'];
-		$this->Template->captchaDetails = $GLOBALS['TL_LANG']['MSC']['securityQuestion'];
+		$this->Template->captchaDetails = $GLOBALS['TL_LANG']['tl_member']['captchaDetails'];
 
 		// Add the groups
 		foreach ($arrFields as $k=>$v)
@@ -388,8 +389,7 @@ class ModuleRegistration extends Module
 
 			if ($objHomeDir !== null)
 			{
-				$this->import(Files::class, 'Files');
-				$strUserDir = StringUtil::standardize($arrData['username']) ?: 'user_' . $objNewUser->id;
+				$strUserDir = StringUtil::standardize($arrData['username'] ?? '') ?: 'user_' . $objNewUser->id;
 
 				// Add the user ID if the directory exists
 				while (is_dir(System::getContainer()->getParameter('kernel.project_dir') . '/' . $objHomeDir->path . '/' . $strUserDir))
@@ -414,16 +414,14 @@ class ModuleRegistration extends Module
 		{
 			foreach ($GLOBALS['TL_HOOKS']['createNewUser'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objNewUser->id, $arrData, $this);
+				System::importStatic($callback[0])->{$callback[1]}($objNewUser->id, $arrData, $this);
 			}
 		}
 
 		// Create the initial version (see #7816)
 		$objVersions = new Versions('tl_member', $objNewUser->id);
 		$objVersions->setUsername($objNewUser->username);
-		$objVersions->setUserId(0);
-		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>$objNewUser->id, 'rt'=>'1')));
+		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>$objNewUser->id)));
 		$objVersions->initialize();
 
 		// Inform admin if no activation link is sent
@@ -433,7 +431,7 @@ class ModuleRegistration extends Module
 		}
 
 		// Check whether there is a jumpTo page
-		if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+		if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
 		{
 			$this->jumpToOrReload($objJumpTo->row());
 		}
@@ -456,12 +454,12 @@ class ModuleRegistration extends Module
 		$arrTokenData = $arrData;
 		$arrTokenData['activation'] = $optInToken->getIdentifier();
 		$arrTokenData['domain'] = Idna::decode(Environment::get('host'));
-		$arrTokenData['link'] = Idna::decode(Environment::get('url')) . Environment::get('requestUri') . ((strpos(Environment::get('requestUri'), '?') !== false) ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
+		$arrTokenData['link'] = Idna::decode(Environment::get('url')) . Environment::get('requestUri') . (str_contains(Environment::get('requestUri'), '?') ? '&' : '?') . 'token=' . $optInToken->getIdentifier();
 
 		$event = new MemberActivationMailEvent(
-			MemberModel::findByPk($arrData['id']),
+			MemberModel::findById($arrData['id']),
 			$optInToken,
-			sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))),
+			\sprintf($GLOBALS['TL_LANG']['MSC']['emailSubject'], Idna::decode(Environment::get('host'))),
 			$this->reg_text,
 			$arrTokenData,
 		);
@@ -487,18 +485,10 @@ class ModuleRegistration extends Module
 		$optIn = System::getContainer()->get('contao.opt_in');
 
 		// Find an unconfirmed token with only one related record
-		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || \count($arrIds = current($arrRelated)) != 1 || (!$objMember = MemberModel::findByPk($arrIds[0])))
+		if ((!$optInToken = $optIn->find(Input::get('token'))) || !$optInToken->isValid() || \count($arrRelated = $optInToken->getRelatedRecords()) != 1 || key($arrRelated) != 'tl_member' || \count($arrIds = current($arrRelated)) != 1 || (!$objMember = MemberModel::findById($arrIds[0])))
 		{
 			$this->Template->type = 'error';
 			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['invalidToken'];
-
-			return;
-		}
-
-		if ($optInToken->isConfirmed())
-		{
-			$this->Template->type = 'error';
-			$this->Template->message = $GLOBALS['TL_LANG']['MSC']['tokenConfirmed'];
 
 			return;
 		}
@@ -511,28 +501,29 @@ class ModuleRegistration extends Module
 			return;
 		}
 
-		$objMember->disable = false;
-		$objMember->save();
-
-		$optInToken->confirm();
-
-		// HOOK: post activation callback
-		if (isset($GLOBALS['TL_HOOKS']['activateAccount']) && \is_array($GLOBALS['TL_HOOKS']['activateAccount']))
+		if (!$optInToken->isConfirmed())
 		{
-			foreach ($GLOBALS['TL_HOOKS']['activateAccount'] as $callback)
+			$objMember->disable = false;
+			$objMember->save();
+
+			$optInToken->confirm();
+
+			// HOOK: post activation callback
+			if (isset($GLOBALS['TL_HOOKS']['activateAccount']) && \is_array($GLOBALS['TL_HOOKS']['activateAccount']))
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objMember, $this);
+				foreach ($GLOBALS['TL_HOOKS']['activateAccount'] as $callback)
+				{
+					System::importStatic($callback[0])->{$callback[1]}($objMember, $this);
+				}
 			}
+
+			System::getContainer()->get('monolog.logger.contao.access')->info('User account ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ') has been activated');
 		}
 
-		System::getContainer()->get('monolog.logger.contao.access')->info('User account ID ' . $objMember->id . ' (' . Idna::decodeEmail($objMember->email) . ') has been activated');
-
 		// Redirect to the jumpTo page
-		if (($objTarget = $this->objModel->getRelated('reg_jumpTo')) instanceof PageModel)
+		if ($objTarget = PageModel::findById($this->objModel->reg_jumpTo))
 		{
-			/** @var PageModel $objTarget */
-			$this->redirect($objTarget->getFrontendUrl());
+			$this->redirect(System::getContainer()->get('contao.routing.content_url_generator')->generate($objTarget));
 		}
 
 		// Confirm activation
@@ -599,7 +590,7 @@ class ModuleRegistration extends Module
 		$objEmail = new Email();
 		$objEmail->from = $GLOBALS['TL_ADMIN_EMAIL'];
 		$objEmail->fromName = $GLOBALS['TL_ADMIN_NAME'] ?? null;
-		$objEmail->subject = sprintf($GLOBALS['TL_LANG']['MSC']['adminSubject'], Idna::decode(Environment::get('host')));
+		$objEmail->subject = \sprintf($GLOBALS['TL_LANG']['MSC']['adminSubject'], Idna::decode(Environment::get('host')));
 
 		$strData = "\n\n";
 
@@ -621,7 +612,7 @@ class ModuleRegistration extends Module
 			$strData .= ($GLOBALS['TL_LANG']['tl_member'][$k][0] ?? $k) . ': ' . (\is_array($v) ? implode(', ', $v) : $v) . "\n";
 		}
 
-		$objEmail->text = sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n";
+		$objEmail->text = \sprintf($GLOBALS['TL_LANG']['MSC']['adminText'], $intId, $strData . "\n") . "\n";
 		$objEmail->sendTo($GLOBALS['TL_ADMIN_EMAIL']);
 	}
 }

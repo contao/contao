@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Routing\ResponseContext\JsonLd;
 
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use PHPUnit\Framework\TestCase;
@@ -56,21 +57,65 @@ class JsonLdManagerTest extends TestCase
         $this->assertSame(
             <<<'JSONLD'
                 <script type="application/ld+json">
-                [
-                    {
-                        "@context": "https:\/\/schema.org",
-                        "@graph": [
-                            {
-                                "@type": "ImageObject",
-                                "caption": "Caption",
-                                "name": "Name"
-                            }
-                        ]
-                    }
-                ]
+                {
+                    "@context": "https:\/\/schema.org",
+                    "@graph": [
+                        {
+                            "@type": "ImageObject",
+                            "caption": "Caption",
+                            "name": "Name"
+                        }
+                    ]
+                }
                 </script>
                 JSONLD,
-            $schemaManager->collectFinalScriptFromGraphs()
+            $schemaManager->collectFinalScriptFromGraphs(),
+        );
+    }
+
+    public function testCreatesOneScriptBlockPerContext(): void
+    {
+        $schemaManager = new JsonLdManager(new ResponseContext());
+        $this->assertSame('', $schemaManager->collectFinalScriptFromGraphs());
+
+        $graph = $schemaManager->getGraphForSchema(JsonLdManager::SCHEMA_ORG);
+        $graph->add((new ImageObject())->name('Name')->caption('Caption'));
+
+        $graph = $schemaManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO);
+        $graph->set(new ContaoPageSchema('title', 42, false, false, [], false));
+
+        $this->assertSame(
+            <<<'JSONLD'
+                <script type="application/ld+json">
+                {
+                    "@context": "https:\/\/schema.org",
+                    "@graph": [
+                        {
+                            "@type": "ImageObject",
+                            "caption": "Caption",
+                            "name": "Name"
+                        }
+                    ]
+                }
+                </script>
+                <script type="application/ld+json">
+                {
+                    "@context": "https:\/\/schema.contao.org",
+                    "@graph": [
+                        {
+                            "@type": "Page",
+                            "fePreview": false,
+                            "groups": [],
+                            "noSearch": false,
+                            "pageId": 42,
+                            "protected": false,
+                            "title": "title"
+                        }
+                    ]
+                }
+                </script>
+                JSONLD,
+            $schemaManager->collectFinalScriptFromGraphs(),
         );
     }
 

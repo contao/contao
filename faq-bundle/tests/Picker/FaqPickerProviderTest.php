@@ -20,20 +20,23 @@ use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FaqPickerProviderTest extends ContaoTestCase
 {
     public function testCreatesTheMenuItem(): void
     {
-        $config = json_encode([
-            'context' => 'link',
-            'extras' => [],
-            'current' => 'faqPicker',
-            'value' => '',
-        ]);
+        $config = json_encode(
+            [
+                'context' => 'link',
+                'extras' => [],
+                'current' => 'faqPicker',
+                'value' => '',
+            ],
+            JSON_THROW_ON_ERROR,
+        );
 
         if (\function_exists('gzencode') && false !== ($encoded = @gzencode($config))) {
             $config = $encoded;
@@ -105,14 +108,14 @@ class FaqPickerProviderTest extends ContaoTestCase
                 'value' => '5',
                 'flags' => ['urlattr'],
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{faq_url::5|urlattr}}'))
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{faq_url::5|urlattr}}')),
         );
 
         $this->assertSame(
             [
                 'fieldType' => 'radio',
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}'))
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}')),
         );
     }
 
@@ -129,7 +132,7 @@ class FaqPickerProviderTest extends ContaoTestCase
 
         $this->assertSame(
             '{{faq_title::5}}',
-            $picker->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{faq_title::%s}}']), 5)
+            $picker->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{faq_title::%s}}']), 5),
         );
     }
 
@@ -139,17 +142,11 @@ class FaqPickerProviderTest extends ContaoTestCase
         $model->id = 1;
 
         $faq = $this->createMock(FaqModel::class);
-        $faq
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('pid')
-            ->willReturn($model)
-        ;
-
         $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
 
         $adapters = [
             FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faq]),
+            FaqCategoryModel::class => $this->mockConfiguredAdapter(['findById' => $model]),
         ];
 
         $picker = $this->getPicker();
@@ -182,20 +179,14 @@ class FaqPickerProviderTest extends ContaoTestCase
         $this->assertArrayNotHasKey('id', $params);
     }
 
-    public function testDoesNotAddTableAndIdIfThereIsNoCalendarModel(): void
+    public function testDoesNotAddTableAndIdIfThereIsNoCategoryModel(): void
     {
         $faq = $this->createMock(FaqModel::class);
-        $faq
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('pid')
-            ->willReturn(null)
-        ;
-
         $config = new PickerConfig('link', [], '{{faq_url::1}}', 'faqPicker');
 
         $adapters = [
             FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faq]),
+            FaqCategoryModel::class => $this->mockConfiguredAdapter(['findById' => null]),
         ];
 
         $picker = $this->getPicker();
@@ -209,7 +200,7 @@ class FaqPickerProviderTest extends ContaoTestCase
         $this->assertArrayNotHasKey('id', $params);
     }
 
-    private function getPicker(bool $accessGranted = null): FaqPickerProvider
+    private function getPicker(bool|null $accessGranted = null): FaqPickerProvider
     {
         $security = $this->createMock(Security::class);
         $security
@@ -230,7 +221,7 @@ class FaqPickerProviderTest extends ContaoTestCase
                     $item->setUri($data['uri']);
 
                     return $item;
-                }
+                },
             )
         ;
 

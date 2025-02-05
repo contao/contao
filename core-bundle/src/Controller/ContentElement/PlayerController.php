@@ -18,6 +18,7 @@ use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\FilesystemItemIterator;
 use Contao\CoreBundle\Filesystem\FilesystemUtil;
+use Contao\CoreBundle\Filesystem\SortMode;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\FragmentTemplate;
@@ -32,7 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
  *      media: array{
  *          type: 'video'|'audio',
  *          attributes: HtmlAttributes,
- *          sources: list<HtmlAttributes>,
+ *          sources: list<HtmlAttributes>
  *      },
  *      metadata: Metadata
  *  }
@@ -40,9 +41,6 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsContentElement(category: 'media')]
 class PlayerController extends AbstractContentElementController
 {
-    private const VIDEO_TYPES = ['webm', 'mp4', 'm4v', 'mov', 'wmv', 'ogv'];
-    private const AUDIO_TYPES = ['m4a', 'mp3', 'wma', 'mpeg', 'wav', 'ogg'];
-
     /**
      * @var array<string, UriInterface>
      */
@@ -56,17 +54,15 @@ class PlayerController extends AbstractContentElementController
     {
         // Find and order source files
         $filesystemItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->playerSRC ?: '');
-        $isVideo = \in_array($filesystemItems->first()?->getExtension(true), self::VIDEO_TYPES, true);
 
-        if (!$sourceFiles = $this->getSourceFiles($filesystemItems, $isVideo)) {
+        if (!$sourceFiles = $this->getSourceFiles($filesystemItems)) {
             return new Response();
         }
 
         // Compile data
-        $figureData = $isVideo
+        $figureData = $filesystemItems->first()?->isVideo() ?? false
             ? $this->buildVideoFigureData($model, $sourceFiles)
-            : $this->buildAudioFigureData($model, $sourceFiles)
-        ;
+            : $this->buildAudioFigureData($model, $sourceFiles);
 
         $template->set('figure', (object) $figureData);
         $template->set('source_files', $sourceFiles);
@@ -77,7 +73,7 @@ class PlayerController extends AbstractContentElementController
     /**
      * @param list<FilesystemItem> $sourceFiles
      *
-     * @return array<string, array<string,string|HtmlAttributes|list<HtmlAttributes>>|string>
+     * @return array<string, array<string, string|HtmlAttributes|list<HtmlAttributes>>|string>
      *
      * @phpstan-return FigureData
      */
@@ -100,29 +96,61 @@ class PlayerController extends AbstractContentElementController
         ;
 
         $range = $model->playerStart || $model->playerStop
-            ? sprintf('#t=%s', implode(',', [$model->playerStart ?: '', $model->playerStop ?: '']))
-            : ''
-        ;
+            ? '#t='.$model->playerStart.($model->playerStop ? ','.$model->playerStop : '')
+            : '';
 
         $captions = [$model->playerCaption];
 
         $sources = array_map(
-            function (FilesystemItem $item) use ($range, &$captions): HtmlAttributes {
-                $captions[] = ($item->getExtraMetadata()['metadata'] ?? null)?->getDefault()?->getCaption();
+            function (FilesystemItem $item) use (&$captions, $range): HtmlAttributes {
+                $captions[] = $item->getExtraMetadata()->getLocalized()?->getDefault()?->getCaption();
 
                 return (new HtmlAttributes())
                     ->setIfExists('type', $item->getMimeType(''))
-                    ->set('src', ((string) $this->publicUriByStoragePath[$item->getPath()]).$range)
+                    ->set('src', $this->publicUriByStoragePath[$item->getPath()].$range)
                 ;
             },
-            $sourceFiles
+            $sourceFiles,
         );
+
+        $tracks = [];
+
+        if (null !== $model->textTrackSRC) {
+            $trackItems = FilesystemUtil::listContentsFromSerialized($this->filesStorage, $model->textTrackSRC);
+
+            foreach ($trackItems as $trackItem) {
+                if (!$publicUri = $this->filesStorage->generatePublicUri($trackItem->getPath())) {
+                    continue;
+                }
+
+                $extraMetadata = $trackItem->getExtraMetadata();
+
+                if (!$textTrack = $extraMetadata->getTextTrack()) {
+                    continue;
+                }
+
+                if (!$label = $extraMetadata->getLocalized()?->getFirst()?->getTitle()) {
+                    continue;
+                }
+
+                $tracks[] = (new HtmlAttributes())
+                    ->setIfExists('kind', $textTrack->getType()?->value)
+                    ->set('label', $label)
+                    ->set('srclang', $textTrack->getSourceLanguage())
+                    ->set('src', $publicUri)
+                ;
+            }
+
+            // Set the first file as the default track
+            ($tracks[0] ?? null)?->set('default');
+        }
 
         return [
             'media' => [
                 'type' => 'video',
                 'attributes' => $attributes,
                 'sources' => $sources,
+                'tracks' => $tracks,
             ],
             'metadata' => new Metadata([
                 Metadata::VALUE_CAPTION => array_filter($captions)[0] ?? '',
@@ -133,7 +161,7 @@ class PlayerController extends AbstractContentElementController
     /**
      * @param list<FilesystemItem> $sourceFiles
      *
-     * @return array<string, array<string,string|HtmlAttributes|list<HtmlAttributes>>|string>
+     * @return array<string, array<string, string|HtmlAttributes|list<HtmlAttributes>>|string>
      *
      * @phpstan-return FigureData
      */
@@ -148,14 +176,14 @@ class PlayerController extends AbstractContentElementController
 
         $sources = array_map(
             function (FilesystemItem $item) use (&$captions): HtmlAttributes {
-                $captions[] = ($item->getExtraMetadata()['metadata'] ?? null)?->getDefault()?->getCaption();
+                $captions[] = $item->getExtraMetadata()->getLocalized()?->getDefault()?->getCaption();
 
                 return (new HtmlAttributes())
                     ->setIfExists('type', $item->getMimeType(''))
                     ->set('src', (string) $this->publicUriByStoragePath[$item->getPath()])
                 ;
             },
-            $sourceFiles
+            $sourceFiles,
         );
 
         return [
@@ -189,26 +217,20 @@ class PlayerController extends AbstractContentElementController
     /**
      * @return list<FilesystemItem>
      */
-    private function getSourceFiles(FilesystemItemIterator $filesystemItems, bool $isVideo): array
+    private function getSourceFiles(FilesystemItemIterator $filesystemItems): array
     {
-        $orderRelation = array_flip($isVideo ? self::VIDEO_TYPES : self::AUDIO_TYPES);
-        $itemsByTypeOrder = [];
+        $filesystemItems = $filesystemItems->sort(SortMode::mediaTypePriority);
+        $items = [];
 
         foreach ($filesystemItems as $item) {
-            if (null === ($order = $orderRelation[$item->getExtension(true)] ?? null)) {
+            if (!$publicUri = $this->filesStorage->generatePublicUri($item->getPath())) {
                 continue;
             }
 
-            if (null === ($publicUri = $this->filesStorage->generatePublicUri($item->getPath()))) {
-                continue;
-            }
-
-            $itemsByTypeOrder[$order] = $item;
+            $items[] = $item;
             $this->publicUriByStoragePath[$item->getPath()] = $publicUri;
         }
 
-        ksort($itemsByTypeOrder);
-
-        return array_values($itemsByTypeOrder);
+        return $items;
     }
 }

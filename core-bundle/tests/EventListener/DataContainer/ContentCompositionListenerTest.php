@@ -12,85 +12,41 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
-use Contao\Backend;
 use Contao\BackendUser;
+use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\EventListener\DataContainer\ContentCompositionListener;
-use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\FrontendUser;
-use Contao\Image;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\PhpUnit\ClockMock;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ContentCompositionListenerTest extends TestCase
 {
-    private ContentCompositionListener $listener;
+    private Security&MockObject $security;
 
-    /**
-     * @var Security&MockObject
-     */
-    private Security $security;
+    private PageRegistry&MockObject $pageRegistry;
 
-    /**
-     * @var Adapter<Image>&MockObject
-     */
-    private Adapter $imageAdapter;
+    private Connection&MockObject $connection;
 
-    /**
-     * @var Adapter<Backend>&MockObject
-     */
-    private Adapter $backendAdapter;
-
-    /**
-     * @var Adapter<PageModel>&MockObject
-     */
-    private Adapter $pageModelAdapter;
-
-    /**
-     * @var ContaoFramework&MockObject
-     */
-    private ContaoFramework $framework;
-
-    /**
-     * @var PageRegistry&MockObject
-     */
-    private PageRegistry $pageRegistry;
-
-    /**
-     * @var Connection&MockObject
-     */
-    private Connection $connection;
-
-    /**
-     * @var RequestStack&MockObject
-     */
-    private RequestStack $requestStack;
+    private RequestStack&MockObject $requestStack;
 
     private array $pageRecord = [
         'id' => 17,
         'alias' => 'foo/bar',
         'type' => 'foo',
-        'title' => 'foo',
-        'published' => 1,
-    ];
-
-    private array $articleRecord = [
-        'id' => 2,
-        'pid' => 17,
-        'alias' => 'foo-bar',
         'title' => 'foo',
         'published' => 1,
     ];
@@ -102,28 +58,9 @@ class ContentCompositionListenerTest extends TestCase
         $GLOBALS['TL_DCA']['tl_article']['config']['ptable'] = 'tl_page';
 
         $this->security = $this->createMock(Security::class);
-        $this->imageAdapter = $this->mockAdapter(['getHtml']);
-        $this->backendAdapter = $this->mockAdapter(['addToUrl']);
-        $this->pageModelAdapter = $this->mockAdapter(['findByPk']);
-
-        $this->framework = $this->mockContaoFramework([
-            Image::class => $this->imageAdapter,
-            Backend::class => $this->backendAdapter,
-            PageModel::class => $this->pageModelAdapter,
-        ]);
-
         $this->pageRegistry = $this->createMock(PageRegistry::class);
         $this->connection = $this->createMock(Connection::class);
         $this->requestStack = $this->createMock(RequestStack::class);
-
-        $this->listener = new ContentCompositionListener(
-            $this->framework,
-            $this->security,
-            $this->pageRegistry,
-            $this->createMock(TranslatorInterface::class),
-            $this->connection,
-            $this->requestStack
-        );
     }
 
     protected function tearDown(): void
@@ -142,10 +79,18 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $this->assertSame('', $this->listener->renderPageArticlesOperation([], '', '', '', ''));
+        $operation = $this->createMock(DataContainerOperation::class);
+        $operation
+            ->expects($this->once())
+            ->method('setHtml')
+            ->with('')
+        ;
+
+        $listener = $this->getListener();
+        $listener->renderPageArticlesOperation($operation);
     }
 
-    public function testRendersEmptyArticlesOperationIfPageTypeDoesNotSupportComposition(): void
+    public function testRendersDisabledArticlesOperationIfPageTypeDoesNotSupportComposition(): void
     {
         $this->security
             ->expects($this->once())
@@ -156,27 +101,33 @@ class ContentCompositionListenerTest extends TestCase
 
         $page = $this->mockPageWithRow();
 
+        $framework = $this->mockContaoFramework();
+        $framework
+            ->expects($this->once())
+            ->method('createInstance')
+            ->with(PageModel::class)
+            ->willReturn($page)
+        ;
+
         $this->expectSupportsContentComposition(false, $page);
 
-        $this->imageAdapter
+        $operation = $this->createMock(DataContainerOperation::class);
+        $operation
             ->expects($this->once())
-            ->method('getHtml')
-            ->with('foo_.svg')
-            ->willReturn('<img src="foo_.svg">')
+            ->method('disable')
         ;
 
-        $this->backendAdapter
-            ->expects($this->never())
-            ->method('addToUrl')
+        $operation
+            ->expects($this->once())
+            ->method('getRecord')
+            ->willReturn($this->pageRecord)
         ;
 
-        $this->assertSame(
-            '<img src="foo_.svg"> ',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', 'foo.svg')
-        );
+        $listener = $this->getListener($framework);
+        $listener->renderPageArticlesOperation($operation);
     }
 
-    public function testRendersEmptyArticlesOperationIfPageLayoutDoesNotHaveArticles(): void
+    public function testRendersDisabledArticlesOperationIfPageLayoutDoesNotHaveArticles(): void
     {
         $this->security
             ->expects($this->once())
@@ -185,77 +136,43 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $page = $this->mockPageWithRow(17);
+        $page = $this->mockPageWithRow();
 
-        $this->expectSupportsContentComposition(true, $page);
+        $layout = $this->mockClassWithProperties(LayoutModel::class, [
+            'modules' => serialize([['mod' => 17, 'col' => 'main']]),
+        ]);
 
-        $this->imageAdapter
+        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter
             ->expects($this->once())
-            ->method('getHtml')
-            ->with('foo_.svg')
-            ->willReturn('<img src="foo_.svg">')
+            ->method('findById')
+            ->willReturn($layout)
         ;
 
-        $this->backendAdapter
-            ->expects($this->never())
-            ->method('addToUrl')
-        ;
-
-        $this->assertSame(
-            '<img src="foo_.svg"> ',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', 'foo.svg')
-        );
-    }
-
-    public function testRendersNoArticlesIconIfPageSupportsContentCompositionAndIconIsNull(): void
-    {
-        $this->security
+        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutAdapter]);
+        $framework
             ->expects($this->once())
-            ->method('isGranted')
-            ->with('contao_user.modules', 'article')
-            ->willReturn(true)
-        ;
-
-        $page = $this->mockPageWithRow(17);
-
-        $this->expectSupportsContentComposition(true, $page);
-
-        $this->imageAdapter
-            ->expects($this->never())
-            ->method('getHtml')
-        ;
-
-        $this->backendAdapter
-            ->expects($this->never())
-            ->method('addToUrl')
-        ;
-
-        $this->assertSame('', $this->listener->renderPageArticlesOperation($this->pageRecord, '', '', '', null));
-    }
-
-    public function testRendersNoArticlesIconIfPageSupportsContentCompositionAndIconAndHrefAreNull(): void
-    {
-        $this->security
-            ->expects($this->never())
-            ->method('isGranted')
-        ;
-
-        $this->imageAdapter
-            ->expects($this->never())
-            ->method('getHtml')
-        ;
-
-        $this->backendAdapter
-            ->expects($this->never())
-            ->method('addToUrl')
-        ;
-
-        $this->framework
-            ->expects($this->never())
             ->method('createInstance')
+            ->with(PageModel::class)
+            ->willReturn($page)
         ;
 
-        $this->assertSame('', $this->listener->renderPageArticlesOperation($this->pageRecord, null, '', '', null));
+        $this->expectSupportsContentComposition(true, $page);
+
+        $operation = $this->createMock(DataContainerOperation::class);
+        $operation
+            ->expects($this->once())
+            ->method('disable')
+        ;
+
+        $operation
+            ->expects($this->once())
+            ->method('getRecord')
+            ->willReturn($this->pageRecord)
+        ;
+
+        $listener = $this->getListener($framework);
+        $listener->renderPageArticlesOperation($operation);
     }
 
     public function testRendersArticlesOperationIfProviderSupportsCompositionAndPageLayoutHasArticles(): void
@@ -267,28 +184,41 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $page = $this->mockPageWithRow(0);
+        $page = $this->mockPageWithRow();
+
+        $layout = $this->mockClassWithProperties(LayoutModel::class, [
+            'modules' => serialize([['mod' => 0, 'col' => 'main']]),
+        ]);
+
+        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter
+            ->expects($this->once())
+            ->method('findById')
+            ->willReturn($layout)
+        ;
+
+        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutAdapter]);
+        $framework
+            ->expects($this->once())
+            ->method('createInstance')
+            ->with(PageModel::class)
+            ->willReturn($page)
+        ;
 
         $this->expectSupportsContentComposition(true, $page);
 
-        $this->imageAdapter
-            ->expects($this->once())
-            ->method('getHtml')
-            ->with('foo.svg', 'label')
-            ->willReturn('<img src="foo.svg" alt="label">')
-        ;
-
-        $this->backendAdapter
-            ->expects($this->once())
-            ->method('addToUrl')
-            ->with('link&amp;pn=17')
-            ->willReturn('linkWithPn')
-        ;
-
-        $this->assertSame(
-            '<a href="linkWithPn" title="title"><img src="foo.svg" alt="label"></a> ',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, 'link', 'label', 'title', 'foo.svg')
+        $operation = new DataContainerOperation(
+            'articles',
+            ['href' => 'do=article'],
+            $this->pageRecord,
+            $this->createMock(DataContainer::class),
         );
+
+        $listener = $this->getListener($framework);
+        $listener->renderPageArticlesOperation($operation);
+
+        $this->assertSame('do=article&amp;pn=17', $operation['href']);
+        $this->assertNull($operation->getHtml());
     }
 
     public function testRendersArticlesOperationIfPageLayoutIsNotFound(): void
@@ -300,32 +230,46 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $page = $this->mockPageWithRow(null);
+        $page = $this->mockPageWithRow();
+
+        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter
+            ->expects($this->once())
+            ->method('findById')
+            ->willReturn(null)
+        ;
+
+        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutAdapter]);
+        $framework
+            ->expects($this->once())
+            ->method('createInstance')
+            ->with(PageModel::class)
+            ->willReturn($page)
+        ;
 
         $this->expectSupportsContentComposition(true, $page);
 
-        $this->imageAdapter
-            ->expects($this->once())
-            ->method('getHtml')
-            ->with('foo.svg', 'label')
-            ->willReturn('<img src="foo.svg" alt="label">')
-        ;
-
-        $this->backendAdapter
-            ->expects($this->once())
-            ->method('addToUrl')
-            ->with('link&amp;pn=17')
-            ->willReturn('linkWithPn')
-        ;
-
-        $this->assertSame(
-            '<a href="linkWithPn" title="title"><img src="foo.svg" alt="label"></a> ',
-            $this->listener->renderPageArticlesOperation($this->pageRecord, 'link', 'label', 'title', 'foo.svg')
+        $operation = new DataContainerOperation(
+            'articles',
+            ['href' => 'do=article'],
+            $this->pageRecord,
+            $this->createMock(DataContainer::class),
         );
+
+        $listener = $this->getListener($framework);
+        $listener->renderPageArticlesOperation($operation);
+
+        $this->assertSame('do=article&amp;pn=17', $operation['href']);
+        $this->assertNull($operation->getHtml());
     }
 
     public function testDoesNotGenerateArticleWithoutCurrentRecord(): void
     {
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
+
         $this->requestStack
             ->expects($this->once())
             ->method('getCurrentRequest')
@@ -334,7 +278,8 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->expectUser();
 
-        $this->framework
+        $framework = $this->mockContaoFramework();
+        $framework
             ->expects($this->never())
             ->method('createInstance')
         ;
@@ -345,11 +290,17 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn(null)
         ;
 
-        $this->listener->generateArticleForPage($dc);
+        $listener = $this->getListener($framework);
+        $listener->generateArticleForPage($dc);
     }
 
     public function testDoesNotGenerateArticleWithoutCurrentRequest(): void
     {
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
+
         $this->requestStack
             ->expects($this->once())
             ->method('getCurrentRequest')
@@ -358,7 +309,8 @@ class ContentCompositionListenerTest extends TestCase
 
         $this->expectUser();
 
-        $this->framework
+        $framework = $this->mockContaoFramework();
+        $framework
             ->expects($this->never())
             ->method('createInstance')
         ;
@@ -369,11 +321,17 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn(['id' => 17])
         ;
 
-        $this->listener->generateArticleForPage($dc);
+        $listener = $this->getListener($framework);
+        $listener->generateArticleForPage($dc);
     }
 
     public function testDoesNotGenerateArticleWithoutBackendUser(): void
     {
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
+
         $request = $this->createMock(Request::class);
         $request
             ->expects($this->never())
@@ -394,7 +352,8 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn($user)
         ;
 
-        $this->framework
+        $framework = $this->mockContaoFramework();
+        $framework
             ->expects($this->never())
             ->method('createInstance')
         ;
@@ -405,15 +364,22 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn(['id' => 17])
         ;
 
-        $this->listener->generateArticleForPage($dc);
+        $listener = $this->getListener($framework);
+        $listener->generateArticleForPage($dc);
     }
 
     public function testDoesNotGenerateArticleIfRequestDoesNotHaveASession(): void
     {
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
+
         $this->expectRequest(false);
         $this->expectUser();
 
-        $this->framework
+        $framework = $this->mockContaoFramework();
+        $framework
             ->expects($this->never())
             ->method('createInstance')
         ;
@@ -424,16 +390,31 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn(['id' => 17])
         ;
 
-        $this->listener->generateArticleForPage($dc);
+        $listener = $this->getListener($framework);
+        $listener->generateArticleForPage($dc);
     }
 
     public function testDoesNotGenerateArticleIfPageTitleIsEmpty(): void
     {
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
+
         $this->pageRecord['title'] = '';
 
         $this->expectRequest(true);
         $this->expectUser();
-        $this->mockPageWithRow();
+
+        $page = $this->mockPageWithRow();
+
+        $framework = $this->mockContaoFramework();
+        $framework
+            ->expects($this->once())
+            ->method('createInstance')
+            ->with(PageModel::class)
+            ->willReturn($page)
+        ;
 
         $this->pageRegistry
             ->expects($this->never())
@@ -446,15 +427,29 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn($this->pageRecord)
         ;
 
-        $this->listener->generateArticleForPage($dc);
+        $listener = $this->getListener($framework);
+        $listener->generateArticleForPage($dc);
     }
 
     public function testDoesNotGenerateArticleIfProviderDoesNotSupportContentComposition(): void
     {
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
+
         $this->expectRequest(true);
         $this->expectUser();
 
         $page = $this->mockPageWithRow();
+
+        $framework = $this->mockContaoFramework();
+        $framework
+            ->expects($this->once())
+            ->method('createInstance')
+            ->with(PageModel::class)
+            ->willReturn($page)
+        ;
 
         $this->expectSupportsContentComposition(false, $page);
 
@@ -464,15 +459,40 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn($this->pageRecord)
         ;
 
-        $this->listener->generateArticleForPage($dc);
+        $listener = $this->getListener($framework);
+        $listener->generateArticleForPage($dc);
     }
 
     public function testDoesNotGenerateArticleIfLayoutDoesNotHaveArticles(): void
     {
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
+
         $this->expectRequest(true);
         $this->expectUser();
 
-        $page = $this->mockPageWithRow(17);
+        $page = $this->mockPageWithRow();
+
+        $layout = $this->mockClassWithProperties(LayoutModel::class, [
+            'modules' => serialize([['mod' => 17, 'col' => 'main']]),
+        ]);
+
+        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter
+            ->expects($this->once())
+            ->method('findById')
+            ->willReturn($layout)
+        ;
+
+        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutAdapter]);
+        $framework
+            ->expects($this->once())
+            ->method('createInstance')
+            ->with(PageModel::class)
+            ->willReturn($page)
+        ;
 
         $this->expectSupportsContentComposition(true, $page);
 
@@ -482,15 +502,40 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn($this->pageRecord)
         ;
 
-        $this->listener->generateArticleForPage($dc);
+        $listener = $this->getListener($framework);
+        $listener->generateArticleForPage($dc);
     }
 
     public function testDoesNotGenerateArticleWithoutNewRecords(): void
     {
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
+
         $this->expectRequest(true, []);
         $this->expectUser();
 
-        $page = $this->mockPageWithRow(0);
+        $page = $this->mockPageWithRow();
+
+        $layout = $this->mockClassWithProperties(LayoutModel::class, [
+            'modules' => serialize([['mod' => 0, 'col' => 'main']]),
+        ]);
+
+        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter
+            ->expects($this->once())
+            ->method('findById')
+            ->willReturn($layout)
+        ;
+
+        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutAdapter]);
+        $framework
+            ->expects($this->once())
+            ->method('createInstance')
+            ->with(PageModel::class)
+            ->willReturn($page)
+        ;
 
         $this->expectSupportsContentComposition(true, $page);
 
@@ -500,15 +545,40 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn($this->pageRecord)
         ;
 
-        $this->listener->generateArticleForPage($dc);
+        $listener = $this->getListener($framework);
+        $listener->generateArticleForPage($dc);
     }
 
     public function testDoesNotGenerateArticleIfCurrentPageIsNotInNewRecords(): void
     {
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
+
         $this->expectRequest(true, [12]);
         $this->expectUser();
 
-        $page = $this->mockPageWithRow(0);
+        $page = $this->mockPageWithRow();
+
+        $layout = $this->mockClassWithProperties(LayoutModel::class, [
+            'modules' => serialize([['mod' => 0, 'col' => 'main']]),
+        ]);
+
+        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter
+            ->expects($this->once())
+            ->method('findById')
+            ->willReturn($layout)
+        ;
+
+        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutAdapter]);
+        $framework
+            ->expects($this->once())
+            ->method('createInstance')
+            ->with(PageModel::class)
+            ->willReturn($page)
+        ;
 
         $this->expectSupportsContentComposition(true, $page);
 
@@ -518,15 +588,40 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn($this->pageRecord)
         ;
 
-        $this->listener->generateArticleForPage($dc);
+        $listener = $this->getListener($framework);
+        $listener->generateArticleForPage($dc);
     }
 
     public function testDoesNotGenerateArticleIfPageAlreadyHasArticle(): void
     {
+        $this->security
+            ->expects($this->never())
+            ->method('isGranted')
+        ;
+
         $this->expectRequest(true, ['tl_foo' => [17]]);
         $this->expectUser();
 
-        $page = $this->mockPageWithRow(0);
+        $page = $this->mockPageWithRow();
+
+        $layout = $this->mockClassWithProperties(LayoutModel::class, [
+            'modules' => serialize([['mod' => 0, 'col' => 'main']]),
+        ]);
+
+        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter
+            ->expects($this->once())
+            ->method('findById')
+            ->willReturn($layout)
+        ;
+
+        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutAdapter]);
+        $framework
+            ->expects($this->once())
+            ->method('createInstance')
+            ->with(PageModel::class)
+            ->willReturn($page)
+        ;
 
         $this->expectSupportsContentComposition(true, $page);
         $this->expectArticleCount(1);
@@ -542,17 +637,99 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn($this->pageRecord)
         ;
 
-        $this->listener->generateArticleForPage($dc);
+        $listener = $this->getListener($framework);
+        $listener->generateArticleForPage($dc);
+    }
+
+    public function testDoesNotGenerateArticleIfPermissionIsDenied(): void
+    {
+        ClockMock::withClockMock(true);
+
+        $this->security
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with(ContaoCorePermissions::DC_PREFIX.'tl_article')
+            ->willReturn(false)
+        ;
+
+        $this->expectRequest(true, ['tl_foo' => [17]]);
+        $this->expectUser();
+
+        $page = $this->mockPageWithRow();
+
+        $layout = $this->mockClassWithProperties(LayoutModel::class, [
+            'modules' => serialize([['mod' => 0, 'col' => 'main']]),
+        ]);
+
+        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter
+            ->expects($this->once())
+            ->method('findById')
+            ->willReturn($layout)
+        ;
+
+        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutAdapter]);
+        $framework
+            ->expects($this->once())
+            ->method('createInstance')
+            ->with(PageModel::class)
+            ->willReturn($page)
+        ;
+
+        $this->expectSupportsContentComposition(true, $page);
+        $this->expectArticleCount(0);
+
+        $this->connection
+            ->expects($this->never())
+            ->method('insert')
+        ;
+
+        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_foo']);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn($this->pageRecord)
+        ;
+
+        $listener = $this->getListener($framework);
+        $listener->generateArticleForPage($dc);
+
+        ClockMock::withClockMock(false);
     }
 
     public function testGenerateArticleForNewPage(): void
     {
         ClockMock::withClockMock(true);
 
+        $this->security
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with(ContaoCorePermissions::DC_PREFIX.'tl_article')
+            ->willReturn(true)
+        ;
+
         $this->expectRequest(true, ['tl_foo' => [17]]);
         $this->expectUser();
 
-        $page = $this->mockPageWithRow(0);
+        $page = $this->mockPageWithRow();
+
+        $layout = $this->mockClassWithProperties(LayoutModel::class, [
+            'modules' => serialize([['mod' => 0, 'col' => 'main']]),
+        ]);
+
+        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter
+            ->expects($this->once())
+            ->method('findById')
+            ->willReturn($layout)
+        ;
+
+        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutAdapter]);
+        $framework
+            ->expects($this->once())
+            ->method('createInstance')
+            ->with(PageModel::class)
+            ->willReturn($page)
+        ;
 
         $this->expectSupportsContentComposition(true, $page);
         $this->expectArticleCount(0);
@@ -580,7 +757,8 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn($this->pageRecord)
         ;
 
-        $this->listener->generateArticleForPage($dc);
+        $listener = $this->getListener($framework);
+        $listener->generateArticleForPage($dc);
 
         ClockMock::withClockMock(false);
     }
@@ -592,6 +770,13 @@ class ContentCompositionListenerTest extends TestCase
     {
         ClockMock::withClockMock(true);
 
+        $this->security
+            ->expects($this->once())
+            ->method('isGranted')
+            ->with(ContaoCorePermissions::DC_PREFIX.'tl_article')
+            ->willReturn(true)
+        ;
+
         $this->expectRequest(true, ['tl_foo' => [17]]);
         $this->expectUser();
 
@@ -600,11 +785,21 @@ class ContentCompositionListenerTest extends TestCase
         $this->expectSupportsContentComposition(true, $page);
         $this->expectArticleCount(0);
 
-        $page
+        $layout = $this->mockClassWithProperties(LayoutModel::class, ['modules' => serialize($modules)]);
+
+        $layoutAdapter = $this->mockAdapter(['findById']);
+        $layoutAdapter
             ->expects($this->once())
-            ->method('getRelated')
-            ->with('layout')
-            ->willReturn($this->mockClassWithProperties(LayoutModel::class, ['modules' => serialize($modules)]))
+            ->method('findById')
+            ->willReturn($layout)
+        ;
+
+        $framework = $this->mockContaoFramework([LayoutModel::class => $layoutAdapter]);
+        $framework
+            ->expects($this->once())
+            ->method('createInstance')
+            ->with(PageModel::class)
+            ->willReturn($page)
         ;
 
         $article = [
@@ -630,12 +825,13 @@ class ContentCompositionListenerTest extends TestCase
             ->willReturn($this->pageRecord)
         ;
 
-        $this->listener->generateArticleForPage($dc);
+        $listener = $this->getListener($framework);
+        $listener->generateArticleForPage($dc);
 
         ClockMock::withClockMock(false);
     }
 
-    public function moduleConfigProvider(): \Generator
+    public static function moduleConfigProvider(): iterable
     {
         yield [
             [
@@ -671,407 +867,6 @@ class ContentCompositionListenerTest extends TestCase
         ];
     }
 
-    public function testCannotPasteIntoArticleIfProviderDoesNotSupportContentComposition(): void
-    {
-        $page = $this->mockPageWithRow();
-
-        $this->expectSupportsContentComposition(false, $page);
-
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn($this->pageRecord)
-        ;
-
-        $this->imageAdapter
-            ->expects($this->never())
-            ->method('getHtml')
-        ;
-
-        $this->security
-            ->expects($this->never())
-            ->method('isGranted')
-        ;
-
-        $this->assertSame('', $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false));
-    }
-
-    public function testCannotPasteIntoArticleIfPageLayoutDoesNotHaveArticles(): void
-    {
-        $page = $this->mockPageWithRow(1);
-
-        $this->expectSupportsContentComposition(true, $page);
-
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn($this->pageRecord)
-        ;
-
-        $this->imageAdapter
-            ->expects($this->never())
-            ->method('getHtml')
-        ;
-
-        $this->security
-            ->expects($this->never())
-            ->method('isGranted')
-        ;
-
-        $this->assertSame('', $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false));
-    }
-
-    public function testDisablesPasteIntoArticleOnCircularReference(): void
-    {
-        $page = $this->mockPageWithRow(0);
-
-        $this->expectSupportsContentComposition(true, $page);
-
-        $this->imageAdapter
-            ->expects($this->once())
-            ->method('getHtml')
-            ->with('pasteinto_.svg')
-            ->willReturn('<img src="pasteinto_.svg">')
-        ;
-
-        $this->security
-            ->expects($this->never())
-            ->method('isGranted')
-        ;
-
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn($this->pageRecord)
-        ;
-
-        $this->assertSame(
-            '<img src="pasteinto_.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', true)
-        );
-    }
-
-    public function testDisablesPasteIntoArticleIfUserDoesNotHavePermission(): void
-    {
-        $page = $this->mockPageWithRow(0);
-
-        $this->expectSupportsContentComposition(true, $page);
-
-        $this->security
-            ->expects($this->once())
-            ->method('isGranted')
-            ->with(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $this->pageRecord)
-            ->willReturn(false)
-        ;
-
-        $this->imageAdapter
-            ->expects($this->once())
-            ->method('getHtml')
-            ->with('pasteinto_.svg')
-            ->willReturn('<img src="pasteinto_.svg">')
-        ;
-
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn($this->pageRecord)
-        ;
-
-        $this->assertSame(
-            '<img src="pasteinto_.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false)
-        );
-    }
-
-    public function testCanPasteIntoArticle(): void
-    {
-        $page = $this->mockPageWithRow(0);
-
-        $this->expectSupportsContentComposition(true, $page);
-
-        $this->security
-            ->expects($this->once())
-            ->method('isGranted')
-            ->with(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $this->pageRecord)
-            ->willReturn(true)
-        ;
-
-        $this->imageAdapter
-            ->expects($this->once())
-            ->method('getHtml')
-            ->with('pasteinto.svg')
-            ->willReturn('<img src="pasteinto.svg">')
-        ;
-
-        $this->backendAdapter
-            ->expects($this->once())
-            ->method('addToUrl')
-            ->willReturn('link')
-        ;
-
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn($this->pageRecord)
-        ;
-
-        $this->assertSame(
-            '<a href="link" title="" onclick="Backend.getScrollOffset()"><img src="pasteinto.svg"></a> ',
-            $this->listener->renderArticlePasteButton($dc, $this->pageRecord, 'tl_page', false, ['mode' => 'paste', 'id' => 17])
-        );
-    }
-
-    public function testCannotPasteAfterArticleIfPageIsNotFound(): void
-    {
-        $this->pageModelAdapter
-            ->expects($this->once())
-            ->method('findByPk')
-            ->willReturn(null)
-        ;
-
-        $this->pageRegistry
-            ->expects($this->never())
-            ->method('supportsContentComposition')
-        ;
-
-        $this->security
-            ->expects($this->never())
-            ->method('isGranted')
-        ;
-
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn($this->articleRecord)
-        ;
-
-        $this->imageAdapter
-            ->expects($this->never())
-            ->method('getHtml')
-        ;
-
-        $this->assertSame(
-            '',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false)
-        );
-    }
-
-    public function testCannotPasteAfterArticleIfProviderDoesNotSupportContentComposition(): void
-    {
-        $page = $this->MockPageFindByPk();
-
-        $this->expectSupportsContentComposition(false, $page);
-
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn($this->articleRecord)
-        ;
-
-        $this->security
-            ->expects($this->never())
-            ->method('isGranted')
-        ;
-
-        $this->imageAdapter
-            ->expects($this->never())
-            ->method('getHtml')
-        ;
-
-        $this->assertSame(
-            '',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false)
-        );
-    }
-
-    public function testCannotPasteAfterArticleIfPageLayoutDoesNotHaveArticles(): void
-    {
-        $page = $this->MockPageFindByPk(17);
-
-        $this->expectSupportsContentComposition(true, $page);
-
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn($this->articleRecord)
-        ;
-
-        $this->security
-            ->expects($this->never())
-            ->method('isGranted')
-        ;
-
-        $this->imageAdapter
-            ->expects($this->never())
-            ->method('getHtml')
-        ;
-
-        $this->assertSame(
-            '',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false)
-        );
-    }
-
-    public function testDisablesPasteAfterArticleOnCutCurrentRecord(): void
-    {
-        $page = $this->MockPageFindByPk(0);
-
-        $this->expectSupportsContentComposition(true, $page);
-
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn($this->articleRecord)
-        ;
-
-        $this->security
-            ->expects($this->never())
-            ->method('isGranted')
-        ;
-
-        $this->imageAdapter
-            ->expects($this->once())
-            ->method('getHtml')
-            ->with('pasteafter_.svg')
-            ->willReturn('<img src="pasteafter_.svg">')
-        ;
-
-        $this->assertSame(
-            '<img src="pasteafter_.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'cut', 'id' => 2])
-        );
-    }
-
-    public function testDisablesPasteAfterArticleOnCutAllCurrentRecord(): void
-    {
-        $page = $this->MockPageFindByPk(0);
-
-        $this->expectSupportsContentComposition(true, $page);
-
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn($this->articleRecord)
-        ;
-
-        $this->security
-            ->expects($this->never())
-            ->method('isGranted')
-        ;
-
-        $this->imageAdapter
-            ->expects($this->once())
-            ->method('getHtml')
-            ->with('pasteafter_.svg')
-            ->willReturn('<img src="pasteafter_.svg">')
-        ;
-
-        $this->assertSame(
-            '<img src="pasteafter_.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'cutAll', 'id' => [2]])
-        );
-    }
-
-    public function testDisablesPasteAfterArticleOnCircularReference(): void
-    {
-        $page = $this->MockPageFindByPk(0);
-
-        $this->expectSupportsContentComposition(true, $page);
-
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn($this->articleRecord)
-        ;
-
-        $this->security
-            ->expects($this->never())
-            ->method('isGranted')
-        ;
-
-        $this->imageAdapter
-            ->expects($this->once())
-            ->method('getHtml')
-            ->with('pasteafter_.svg')
-            ->willReturn('<img src="pasteafter_.svg">')
-        ;
-
-        $this->assertSame(
-            '<img src="pasteafter_.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', true, ['mode' => 'paste', 'id' => 17])
-        );
-    }
-
-    public function testDisablesPasteAfterArticleIfUserDoesNotHavePermission(): void
-    {
-        $page = $this->MockPageFindByPk(0);
-
-        $this->expectSupportsContentComposition(true, $page);
-
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn($this->articleRecord)
-        ;
-
-        $this->security
-            ->expects($this->once())
-            ->method('isGranted')
-            ->with(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $page)
-            ->willReturn(false)
-        ;
-
-        $this->imageAdapter
-            ->expects($this->once())
-            ->method('getHtml')
-            ->with('pasteafter_.svg')
-            ->willReturn('<img src="pasteafter_.svg">')
-        ;
-
-        $this->assertSame(
-            '<img src="pasteafter_.svg"> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'paste', 'id' => 17])
-        );
-    }
-
-    public function testCanPasteAfterArticle(): void
-    {
-        $pageModel = $this->MockPageFindByPk(0);
-
-        $this->expectSupportsContentComposition(true, $pageModel);
-
-        $dc = $this->mockClassWithProperties(DC_Table::class, ['id' => 17, 'table' => 'tl_article']);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn($this->articleRecord)
-        ;
-
-        $this->security
-            ->expects($this->once())
-            ->method('isGranted')
-            ->with(ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, $pageModel)
-            ->willReturn(true)
-        ;
-
-        $this->imageAdapter
-            ->expects($this->once())
-            ->method('getHtml')
-            ->with('pasteafter.svg')
-            ->willReturn('<img src="pasteafter.svg">')
-        ;
-
-        $this->backendAdapter
-            ->expects($this->once())
-            ->method('addToUrl')
-            ->willReturn('link')
-        ;
-
-        $this->assertSame(
-            '<a href="link" title="" onclick="Backend.getScrollOffset()"><img src="pasteafter.svg"></a> ',
-            $this->listener->renderArticlePasteButton($dc, $this->articleRecord, 'tl_article', false, ['mode' => 'paste', 'id' => 17])
-        );
-    }
-
     private function expectUser(): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1]);
@@ -1083,7 +878,7 @@ class ContentCompositionListenerTest extends TestCase
         ;
     }
 
-    private function expectRequest(bool $hasSession, array $newRecords = null): void
+    private function expectRequest(bool $hasSession, array|null $newRecords = null): void
     {
         $request = $this->createMock(Request::class);
         $request
@@ -1124,10 +919,7 @@ class ContentCompositionListenerTest extends TestCase
         ;
     }
 
-    /**
-     * @return PageModel&MockObject
-     */
-    private function mockPageWithRow(int|false|null $moduleId = false): PageModel
+    private function mockPageWithRow(): PageModel&MockObject
     {
         $page = $this->mockClassWithProperties(PageModel::class, $this->pageRecord);
         $page
@@ -1140,70 +932,6 @@ class ContentCompositionListenerTest extends TestCase
             ->expects($this->once())
             ->method('setRow')
             ->with($this->pageRecord)
-        ;
-
-        if (false !== $moduleId) {
-            if (null !== $moduleId) {
-                $moduleId = $this->mockClassWithProperties(
-                    LayoutModel::class,
-                    [
-                        'modules' => serialize([['mod' => $moduleId, 'col' => 'main']]),
-                    ]
-                );
-            }
-
-            $page
-                ->expects($this->once())
-                ->method('getRelated')
-                ->with('layout')
-                ->willReturn($moduleId)
-            ;
-        }
-
-        $this->framework
-            ->expects($this->once())
-            ->method('createInstance')
-            ->with(PageModel::class)
-            ->willReturn($page)
-        ;
-
-        return $page;
-    }
-
-    /**
-     * @return PageModel&MockObject
-     */
-    private function MockPageFindByPk(int|false|null $moduleId = false): PageModel
-    {
-        $page = $this->mockClassWithProperties(PageModel::class, $this->pageRecord);
-        $page
-            ->method('row')
-            ->willReturn($this->pageRecord)
-        ;
-
-        if (false !== $moduleId) {
-            if (null !== $moduleId) {
-                $moduleId = $this->mockClassWithProperties(
-                    LayoutModel::class,
-                    [
-                        'modules' => serialize([['mod' => $moduleId, 'col' => 'main']]),
-                    ]
-                );
-            }
-
-            $page
-                ->expects($this->once())
-                ->method('getRelated')
-                ->with('layout')
-                ->willReturn($moduleId)
-            ;
-        }
-
-        $this->pageModelAdapter
-            ->expects($this->once())
-            ->method('findByPk')
-            ->with(17)
-            ->willReturn($page)
         ;
 
         return $page;
@@ -1227,5 +955,12 @@ class ContentCompositionListenerTest extends TestCase
             ->with('SELECT COUNT(*) FROM tl_article WHERE pid=:pid')
             ->willReturn($count)
         ;
+    }
+
+    private function getListener(ContaoFramework|null $framework = null): ContentCompositionListener
+    {
+        $framework ??= $this->mockContaoFramework([PageModel::class => $this->mockAdapter(['findById'])]);
+
+        return new ContentCompositionListener($framework, $this->security, $this->pageRegistry, $this->connection, $this->requestStack);
     }
 }

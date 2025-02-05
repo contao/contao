@@ -1,0 +1,82 @@
+{#
+    This component outputs a picture element including an <img> element and
+    multiple sources. The component is designed to be used together with a
+    \Contao\CoreBundle\Image\Studio\Figure object.
+
+        <picture>
+            <source srcset="…" sizes="…" width="200" height="100">
+            <source srcset="…" sizes="…" width="100" height="50">
+            <img alt="…" loading="lazy">
+        </picture>
+
+    If no sources are provided, only an <img> element will be output instead.
+    If the "figure" provides schema.org data, it will automatically be added to
+    the current document.
+
+    Mandatory variables:
+        @var \Contao\CoreBundle\Image\Studio\Figure figure
+
+    Optional variables:
+        @var \Contao\CoreBundle\String\HtmlAttributes picture_attributes
+        @var \Contao\CoreBundle\String\HtmlAttributes source_attributes
+        @var \Contao\CoreBundle\String\HtmlAttributes img_attributes
+#}
+
+{% block picture_component %}
+    {% if not figure.image.sources %}
+        {# Just an image (no sources) #}
+        {% block image %}
+            {% set img = figure.image.img %}
+            {% set define_proportions = img.width|default(false) and img.height|default(false) %}
+            {% set img_attributes = attrs()
+                .set('src', img.src)
+                .set('alt', figure.hasMetadata ? figure.metadata.alt|insert_tag : '')
+                .setIfExists('title', figure.hasMetadata ? figure.metadata.title|insert_tag : null)
+                .setIfExists('srcset', img.srcset is defined and img.srcset != img.src ? img.srcset : null)
+                .setIfExists('sizes', img.sizes|default)
+                .setIfExists('width', define_proportions ? img.width : null)
+                .setIfExists('height', define_proportions ? img.height : null)
+                .setIfExists('loading', img.loading|default)
+                .addClass(img.class|default)
+                .mergeWith(figure.options.img_attr|default)
+                .mergeWith(img_attributes|default)
+            %}
+            <img{{ img_attributes }}>
+        {% endblock %}
+    {% else %}
+        {# Picture with image and sources #}
+        {% set picture_attributes = attrs()
+            .mergeWith(figure.options.picture_attr|default)
+            .mergeWith(picture_attributes|default)
+        %}
+        <picture{{ picture_attributes }}>
+            {% block sources %}
+                {% for source in figure.image.sources %}
+                    {% block source %}
+                        {% set define_proportions = source.width|default(false) and source.height|default(false) %}
+                        {% set source_attributes = attrs()
+                            .set('srcset', source.srcset)
+                            .setIfExists('sizes', source.sizes|default)
+                            .setIfExists('media', source.media|default)
+                            .setIfExists('type', source.type|default)
+                            .setIfExists('width', define_proportions ? source.width : null)
+                            .setIfExists('height', define_proportions ? source.height : null)
+                            .mergeWith(figure.options.picture_attr|default)
+                            .mergeWith(source_attributes|default)
+                        %}
+                        <source{{ source_attributes }}>
+                    {% endblock %}
+                {% endfor %}
+            {% endblock %}
+
+            {{ block('image') }}
+        </picture>
+    {% endif %}
+
+    {# Add metadata #}
+    {% block schema_org %}
+        {% if figure.schemaOrgData|default(false) %}
+            {% do add_schema_org(figure.schemaOrgData) %}
+        {% endif %}
+    {% endblock %}
+{% endblock %}

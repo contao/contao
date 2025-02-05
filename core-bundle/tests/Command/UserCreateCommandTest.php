@@ -145,13 +145,13 @@ class UserCreateCommandTest extends TestCase
         (new CommandTester($command))->execute($input, ['interactive' => false]);
     }
 
-    public function usernamePasswordProvider(): \Generator
+    public static function usernamePasswordProvider(): iterable
     {
         yield ['foobar', 'Foo Bar', 'foobar@example.org', '12345678'];
         yield ['k.jones', 'Kevin Jones', 'k.jones@example.org', 'kevinjones'];
     }
 
-    private function getCommand(Connection $connection = null, string $password = null): UserCreateCommand
+    private function getCommand(Connection|null $connection = null, string|null $password = null): UserCreateCommand
     {
         $connection ??= $this->createMock(Connection::class);
         $password ??= '12345678';

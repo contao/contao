@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\ResponseException;
 
 /**
@@ -49,10 +50,26 @@ class ModulePersonalData extends Module
 
 		$this->editable = StringUtil::deserialize($this->editable);
 
-		// Return if there are no editable fields or if there is no logged-in user
-		if (empty($this->editable) || !\is_array($this->editable) || !$container->get('contao.security.token_checker')->hasFrontendUser())
+		// Return if there are no editable fields
+		if (empty($this->editable) || !\is_array($this->editable))
 		{
 			return '';
+		}
+
+		$security = $container->get('security.helper');
+
+		// Return if there is no logged-in user
+		if (!$security->getUser() instanceof FrontendUser)
+		{
+			return '';
+		}
+
+		// Always require full authentication if the module allows to set a new password
+		$reqFullAuth = $this->reqFullAuth || \in_array('password', $this->editable, true);
+
+		if ($reqFullAuth && !$security->isGranted('IS_AUTHENTICATED_FULLY'))
+		{
+			throw new AccessDeniedException('Full authentication is required to edit the personal data.');
 		}
 
 		if ($this->memberTpl)
@@ -68,8 +85,6 @@ class ModulePersonalData extends Module
 	 */
 	protected function compile()
 	{
-		$this->import(FrontendUser::class, 'User');
-
 		System::loadLanguageFile('tl_member');
 		$this->loadDataContainer('tl_member');
 
@@ -80,8 +95,7 @@ class ModulePersonalData extends Module
 			{
 				if (\is_array($callback))
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}();
+					System::importStatic($callback[0])->{$callback[1]}();
 				}
 				elseif (\is_callable($callback))
 				{
@@ -107,7 +121,8 @@ class ModulePersonalData extends Module
 		);
 
 		$blnModified = false;
-		$objMember = MemberModel::findByPk($this->User->id);
+		$user = FrontendUser::getInstance();
+		$objMember = MemberModel::findById($user->id);
 		$strTable = $objMember->getTable();
 		$strFormId = 'tl_member_' . $this->id;
 		$session = System::getContainer()->get('request_stack')->getSession();
@@ -116,12 +131,14 @@ class ModulePersonalData extends Module
 		// Initialize the versioning (see #7415)
 		$objVersions = new Versions($strTable, $objMember->id);
 		$objVersions->setUsername($objMember->username);
-		$objVersions->setUserId(0);
-		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>$objMember->id, 'rt'=>'1')));
+		$objVersions->setEditUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'member', 'act'=>'edit', 'id'=>$objMember->id)));
 		$objVersions->initialize();
 
 		$arrSubmitted = array();
 		$arrFiles = array();
+		$migrateSession = false;
+
+		$db = Database::getInstance();
 
 		// Build the form
 		foreach ($this->editable as $field)
@@ -140,6 +157,7 @@ class ModulePersonalData extends Module
 				$arrData['inputType'] = 'upload';
 			}
 
+			/** @var class-string<Widget> $strClass */
 			$strClass = $GLOBALS['TL_FFL'][$arrData['inputType'] ?? null] ?? null;
 
 			// Continue if the class does not exist
@@ -154,21 +172,21 @@ class ModulePersonalData extends Module
 
 			if ($arrData['eval']['mandatory'] ?? null)
 			{
-				if (\is_array($this->User->$field))
+				if (\is_array($user->$field))
 				{
-					if (empty($this->User->$field))
+					if (empty($user->$field))
 					{
 						$arrData['eval']['required'] = true;
 					}
 				}
 				// Use strlen() here (see #3277)
-				elseif (!\strlen($this->User->$field))
+				elseif (!\strlen($user->$field))
 				{
 					$arrData['eval']['required'] = true;
 				}
 			}
 
-			$varValue = $this->User->$field;
+			$varValue = $user->$field;
 
 			// Convert CSV fields (see #4980)
 			if (($arrData['eval']['multiple'] ?? null) && isset($arrData['eval']['csv']))
@@ -183,22 +201,21 @@ class ModulePersonalData extends Module
 				{
 					if (\is_array($callback))
 					{
-						$this->import($callback[0]);
-						$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $this->User, $this);
+						$varValue = System::importStatic($callback[0])->{$callback[1]}($varValue, $user, $this);
 					}
 					elseif (\is_callable($callback))
 					{
-						$varValue = $callback($varValue, $this->User, $this);
+						$varValue = $callback($varValue, $user, $this);
 					}
 				}
 			}
 
-			/** @var Widget $objWidget */
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrData, $field, $varValue, $field, $strTable, $this));
 
 			// Append the module ID to prevent duplicate IDs (see #1493)
 			$objWidget->id .= '_' . $this->id;
 			$objWidget->storeValues = true;
+			$objWidget->currentRecord = $objMember->id;
 
 			if ($objWidget instanceof FormPassword && $objMember->password)
 			{
@@ -223,20 +240,20 @@ class ModulePersonalData extends Module
 					}
 					catch (\OutOfBoundsException $e)
 					{
-						$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['invalidDate'], $varValue));
+						$objWidget->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['invalidDate'], $varValue));
 					}
 				}
 
 				// Convert arrays (see #4980)
-				if (($arrData['eval']['multiple'] ?? null) && isset($arrData['eval']['csv']))
+				if (($arrData['eval']['multiple'] ?? null) && isset($arrData['eval']['csv']) && \is_array($varValue))
 				{
 					$varValue = implode($arrData['eval']['csv'], $varValue);
 				}
 
 				// Make sure that unique fields are unique (check the eval setting first -> #3063)
-				if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$this->Database->isUniqueValue('tl_member', $field, $varValue, $this->User->id))
+				if (($arrData['eval']['unique'] ?? null) && (\is_array($varValue) || (string) $varValue !== '') && !$db->isUniqueValue('tl_member', $field, $varValue, $user->id))
 				{
-					$objWidget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?: $field));
+					$objWidget->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['unique'], $arrData['label'][0] ?? $field));
 				}
 
 				// Trigger the save_callback (see #5247)
@@ -248,12 +265,11 @@ class ModulePersonalData extends Module
 						{
 							if (\is_array($callback))
 							{
-								$this->import($callback[0]);
-								$varValue = $this->{$callback[0]}->{$callback[1]}($varValue, $this->User, $this);
+								$varValue = System::importStatic($callback[0])->{$callback[1]}($varValue, $user, $this);
 							}
 							elseif (\is_callable($callback))
 							{
-								$varValue = $callback($varValue, $this->User, $this);
+								$varValue = $callback($varValue, $user, $this);
 							}
 						}
 						catch (ResponseException $e)
@@ -285,13 +301,29 @@ class ModulePersonalData extends Module
 					}
 
 					// Set the new value
-					if ($varValue !== $this->User->$field)
+					if ($varValue !== $user->$field)
 					{
-						$this->User->$field = $varValue;
+						$user->$field = $varValue;
 
 						// Set the new field in the member model
 						$blnModified = true;
 						$objMember->$field = $varValue;
+
+						if (\in_array($field, array('username', 'password')))
+						{
+							$migrateSession = true;
+						}
+
+						if ($field == 'password')
+						{
+							// Delete unconfirmed "change password" tokens
+							$models = OptInModel::findUnconfirmedByRelatedTableAndId('tl_member', $objMember->id);
+
+							foreach ($models ?? array() as $model)
+							{
+								$model->delete();
+							}
+						}
 					}
 				}
 			}
@@ -319,6 +351,12 @@ class ModulePersonalData extends Module
 		{
 			$objMember->tstamp = time();
 			$objMember->save();
+
+			// Generate a new session ID
+			if ($migrateSession)
+			{
+				$session->migrate();
+			}
 		}
 
 		$this->Template->hasError = $doNotSubmit;
@@ -331,8 +369,7 @@ class ModulePersonalData extends Module
 			{
 				foreach ($GLOBALS['TL_HOOKS']['updatePersonalData'] as $callback)
 				{
-					$this->import($callback[0]);
-					$this->{$callback[0]}->{$callback[1]}($this->User, $arrSubmitted, $this, $arrFiles);
+					System::importStatic($callback[0])->{$callback[1]}($user, $arrSubmitted, $this, $arrFiles);
 				}
 			}
 
@@ -343,12 +380,11 @@ class ModulePersonalData extends Module
 				{
 					if (\is_array($callback))
 					{
-						$this->import($callback[0]);
-						$this->{$callback[0]}->{$callback[1]}($this->User, $this);
+						System::importStatic($callback[0])->{$callback[1]}($user, $this);
 					}
 					elseif (\is_callable($callback))
 					{
-						$callback($this->User, $this);
+						$callback($user, $this);
 					}
 				}
 			}
@@ -360,7 +396,7 @@ class ModulePersonalData extends Module
 			}
 
 			// Check whether there is a jumpTo page
-			if (($objJumpTo = $this->objModel->getRelated('jumpTo')) instanceof PageModel)
+			if ($objJumpTo = PageModel::findById($this->objModel->jumpTo))
 			{
 				$this->jumpToOrReload($objJumpTo->row());
 			}

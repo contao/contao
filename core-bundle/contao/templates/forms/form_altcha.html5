@@ -1,0 +1,29 @@
+<?php $this->extend('form_row'); ?>
+
+<?php
+
+$GLOBALS['TL_CSS'][] = $this->asset('css/altcha.min.css', 'contao-components/altcha');
+$GLOBALS['TL_BODY'][] = sprintf('<script src="%s" type="module"></script>', $this->asset('js/altcha.min.js', 'contao-components/altcha'));
+
+?>
+
+<?php $this->block('label'); ?>
+  <?php if ($this->label): ?>
+    <label for="ctrl_<?= $this->id ?>"<?php if ($this->class): ?> class="<?= $this->class ?>"<?php endif; ?>>
+      <span class="invisible"><?= $this->mandatoryField ?> </span><?= $this->label ?><span class="mandatory">*</span>
+    </label>
+  <?php endif; ?>
+<?php $this->endblock(); ?>
+
+<?php $this->block('field'); ?>
+  <noscript><p class="warning"><?= $this->trans('ERR.altchaJavaScriptRequired') ?></p></noscript>
+  <?php if ($this->hasErrors()): ?>
+    <p class="error"><?= $this->getErrorAsString() ?></p>
+  <?php endif; ?>
+
+  <?php if (!$this->canUseAltcha): ?>
+    <p class="error"><?= $this->trans('ERR.altchaInsecureConnection') ?></p>
+  <?php else: ?>
+    <altcha-widget<?= $this->altchaAttributes->set('workerurl', $this->asset('js/worker.js', 'contao-components/altcha')) ?>></altcha-widget>
+  <?php endif; ?>
+<?php $this->endblock(); ?>

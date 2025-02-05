@@ -13,15 +13,19 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Exception\InsecureInstallationException;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 
 /**
  * @internal
  */
+#[AsEventListener]
 class InsecureInstallationListener
 {
-    public function __construct(private string $webDir = '/public')
-    {
+    public function __construct(
+        #[\SensitiveParameter] private readonly string $secret,
+        private readonly string $webDir = '/public',
+    ) {
     }
 
     /**
@@ -37,10 +41,13 @@ class InsecureInstallationListener
         }
 
         // The document root is not in a subdirectory
-        if ('' === $request->getBasePath()) {
-            return;
+        if ('' !== $request->getBasePath()) {
+            throw new InsecureInstallationException('Your installation is not secure. Please set the document root to the '.$this->webDir.' subfolder.');
         }
 
-        throw new InsecureInstallationException('Your installation is not secure. Please set the document root to the '.$this->webDir.' subfolder.');
+        // The secret is still at its default value or empty
+        if (!$this->secret || 'ThisTokenIsNotSoSecretChangeIt' === $this->secret) {
+            throw new InsecureInstallationException('Your installation is not secure. Please set the "APP_SECRET" in your .env.local.');
+        }
     }
 }

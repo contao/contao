@@ -23,11 +23,11 @@ use Symfony\Component\Filesystem\Path;
 
 #[AsCommand(
     name: 'dot-env:get',
-    description: 'Reads a parameter from the .env file.'
+    description: 'Reads a parameter from the .env file.',
 )]
 class GetDotEnvCommand extends Command
 {
-    private string $projectDir;
+    private readonly string $projectDir;
 
     public function __construct(Application $application)
     {
@@ -56,14 +56,14 @@ class GetDotEnvCommand extends Command
 
         foreach ([$path, $path.'.local'] as $filePath) {
             if (file_exists($filePath)) {
-                $vars = array_merge($vars, $dotenv->parse(file_get_contents($filePath)));
+                $vars = [...$vars, ...$dotenv->parse(file_get_contents($filePath))];
             }
         }
 
         $key = $input->getArgument('key');
 
         if (!$key) {
-            $output->write(json_encode($vars));
+            $output->write(json_encode($vars, JSON_THROW_ON_ERROR));
         }
 
         if (isset($vars[$key])) {

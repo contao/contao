@@ -90,7 +90,6 @@ class ModuleEventlist extends Events
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$blnClearInput = false;
@@ -132,7 +131,7 @@ class ModuleEventlist extends Events
 			$blnClearInput = true;
 		}
 
-		$blnDynamicFormat = (!$this->cal_ignoreDynamic && \in_array($this->cal_format, array('cal_day', 'cal_month', 'cal_year')));
+		$blnDynamicFormat = !$this->cal_ignoreDynamic && \in_array($this->cal_format, array('cal_day', 'cal_month', 'cal_year'));
 
 		// Create the date object
 		try
@@ -167,6 +166,9 @@ class ModuleEventlist extends Events
 
 		list($intStart, $intEnd, $strEmpty) = $this->getDatesFromFormat($this->Date, $this->cal_format);
 
+		// Use the start of the day when filtering events in line 197 (see #4476)
+		$intStartFloored = strtotime(date('Y-m-d', $intStart) . ' 00:00:00');
+
 		// Get all events
 		$arrAllEvents = $this->getAllEvents($this->cal_calendar, $intStart, $intEnd, $blnFeatured);
 
@@ -191,7 +193,7 @@ class ModuleEventlist extends Events
 			{
 				// Skip events before the start day if the "shortened view" option is not set.
 				// Events after the end day are filtered in the Events::addEvent() method (see #8782).
-				if (!$this->cal_noSpan && $day < $intStart)
+				if (!$this->cal_noSpan && $day < $intStartFloored)
 				{
 					continue;
 				}
@@ -199,7 +201,7 @@ class ModuleEventlist extends Events
 				foreach ($events as $event)
 				{
 					// Use repeatEnd if > 0 (see #8447)
-					if ($event['startTime'] > $intEnd || ($event['repeatEnd'] ?: $event['endTime']) < $intStart)
+					if ($event['startTime'] > $intEnd || ($event['repeatEnd'] ?: $event['effectiveEndTime']) < $intStart)
 					{
 						continue;
 					}
@@ -217,7 +219,7 @@ class ModuleEventlist extends Events
 					}
 
 					// Hide running non-recurring events (see #30)
-					if ($this->cal_hideRunning && !$event['recurring'] && $event['startTime'] < time())
+					if ($this->cal_hideRunning && !$event['recurring'] && $event['startTime'] < time() && $event['effectiveEndTime'] > time())
 					{
 						continue;
 					}
@@ -339,7 +341,7 @@ class ModuleEventlist extends Events
 			// Add the template variables
 			$objTemplate->classList = $event['class'] . ' cal_' . $event['parent'];
 			$objTemplate->classUpcoming = $event['class'] . ' cal_' . $event['parent'];
-			$objTemplate->readMore = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $event['title']));
+			$objTemplate->readMore = StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $event['title']));
 			$objTemplate->more = $event['linkText'] ?: $GLOBALS['TL_LANG']['MSC']['more'];
 			$objTemplate->locationLabel = $GLOBALS['TL_LANG']['MSC']['location'];
 
@@ -361,8 +363,7 @@ class ModuleEventlist extends Events
 			// Add an image
 			if ($event['addImage'])
 			{
-				/** @var CalendarEventsModel $eventModel */
-				$eventModel = CalendarEventsModel::findByPk($event['id']);
+				$eventModel = CalendarEventsModel::findById($event['id']);
 				$imgSize = $eventModel->size ?: null;
 
 				// Override the default image size
@@ -381,7 +382,7 @@ class ModuleEventlist extends Events
 				$figure = $figureBuilder
 					->from($event['singleSRC'])
 					->setSize($imgSize)
-					->setMetadata($eventModel->getOverwriteMetadata())
+					->setOverwriteMetadata($eventModel->getOverwriteMetadata())
 					->enableLightbox($eventModel->fullsize)
 					->buildIfResourceExists();
 
@@ -409,8 +410,7 @@ class ModuleEventlist extends Events
 			}
 
 			// schema.org information
-			$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $event): array
-			{
+			$objTemplate->getSchemaOrgData = static function () use ($event, $objTemplate): array {
 				$jsonLd = Events::getSchemaOrgData((new CalendarEventsModel())->setRow($event));
 
 				if ($objTemplate->addImage && $objTemplate->figure)

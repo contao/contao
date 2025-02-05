@@ -23,13 +23,34 @@ class TeaserControllerTest extends ContentElementTestCase
             [
                 'type' => 'teaser',
                 'article' => self::ARTICLE1,
-            ]
+            ],
         );
 
         $expectedOutput = <<<'HTML'
             <div class="content-teaser">
+                <h1>A title</h1>
                 <p>This will tease you to read article 1.</p>
                 <a href title="translated(contao_default:MSC.readMore[A title])">translated(contao_default:MSC.more)</a>
+            </div>
+            HTML;
+
+        $this->assertSameHtml($expectedOutput, $response->getContent());
+    }
+
+    public function testHandlesArticleWithoutATeaserText(): void
+    {
+        $response = $this->renderWithModelData(
+            new TeaserController(),
+            [
+                'type' => 'teaser',
+                'article' => self::ARTICLE2,
+            ],
+        );
+
+        $expectedOutput = <<<'HTML'
+            <div class="content-teaser">
+                <h1>Just a title, no teaser</h1>
+                <a href title="translated(contao_default:MSC.readMore[Just a title, no teaser])">translated(contao_default:MSC.more)</a>
             </div>
             HTML;
 
@@ -43,7 +64,7 @@ class TeaserControllerTest extends ContentElementTestCase
             [
                 'type' => 'teaser',
                 'article' => 789,
-            ]
+            ],
         );
 
         $this->assertEmpty($response->getContent());

@@ -1,11 +1,15 @@
-window.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('div.limit_height').forEach(function (div) {
+window.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('div.limit_height').forEach(function(div) {
+        if (window.console) {
+            console.warn('Using "limit_height" class on child_record_callback is deprecated. Set a list.sorting.limitHeight in your DCA instead.');
+        }
+
         const parent = div.parentNode.closest('.tl_content');
 
         // Return if the element is a wrapper
         if (parent && (parent.classList.contains('wrapper_start') || parent.classList.contains('wrapper_stop'))) return;
 
-        const hgt = Number(div.className.replace(/[^0-9]*/, ''))
+        const hgt = Number(div.className.replace(/[^0-9]*/, ''));
 
         // Return if there is no height value
         if (!hgt) return;
@@ -22,14 +26,17 @@ window.addEventListener('DOMContentLoaded', function () {
 
         const button = document.createElement('button');
         button.setAttribute('type', 'button');
+        button.title = Contao.lang.expand;
         button.innerHTML = '<span>...</span>';
         button.classList.add('unselectable');
 
-        button.addEventListener('click', function () {
+        button.addEventListener('click', function() {
             if (div.style.height == 'auto') {
                 div.style.height = hgt+'px';
+                button.title = Contao.lang.expand;
             } else {
                 div.style.height = 'auto';
+                button.title = Contao.lang.collapse;
             }
         });
 

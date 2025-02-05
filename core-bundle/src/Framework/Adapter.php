@@ -13,8 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Framework;
 
 /**
- * Wraps legacy classes and delegates the method calls, which allows mocking
- * these classes in the unit tests.
+ * Wraps legacy classes and delegates the method calls, which allows mocking these
+ * classes in the unit tests.
  *
  * @template T
  * @mixin T
@@ -26,16 +26,14 @@ class Adapter
     /**
      * @param class-string<T> $class
      */
-    public function __construct(private string $class)
+    public function __construct(private readonly string $class)
     {
     }
 
     /**
      * Calls a method of the adapted class.
-     *
-     * @return mixed
      */
-    public function __call(string $name, array $arguments)
+    public function __call(string $name, array $arguments): mixed
     {
         return \call_user_func_array([$this->class, $name], $arguments);
     }

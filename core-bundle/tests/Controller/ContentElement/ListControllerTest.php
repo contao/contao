@@ -28,7 +28,7 @@ class ListControllerTest extends ContentElementTestCase
             ],
         );
 
-        $expectedOutput = <<<'HTML'
+        $expectedOutput = <<<'EOT'
             <div class="content-list">
                 <h2>Ordered list</h2>
                 <ol>
@@ -37,7 +37,7 @@ class ListControllerTest extends ContentElementTestCase
                     <li>third</li>
                 </ol>
             </div>
-            HTML;
+            EOT;
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }
@@ -48,20 +48,20 @@ class ListControllerTest extends ContentElementTestCase
             new ListController(),
             [
                 'type' => 'list',
-                'listitems' => serialize(['foo', 'bar{{br}}baz <i>plain</i>']),
+                'listitems' => serialize(['foo', 'bar{{br}}baz <i>HTML</i>']),
                 'listtype' => 'unordered',
                 'cssID' => serialize(['', 'my-class']),
             ],
         );
 
-        $expectedOutput = <<<'HTML'
+        $expectedOutput = <<<'EOT'
             <div class="my-class content-list">
                 <ul>
                     <li>foo</li>
-                    <li>bar<br>baz &lt;i&gt;plain&lt;/i&gt;</li>
+                    <li>bar<br>baz <i>HTML</i></li>
                 </ul>
             </div>
-            HTML;
+            EOT;
 
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }

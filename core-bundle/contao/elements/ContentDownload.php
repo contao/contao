@@ -37,6 +37,11 @@ class ContentDownload extends ContentElement
 	 */
 	public function generate()
 	{
+		if ($this->isHidden())
+		{
+			return '';
+		}
+
 		// Return if there is no file
 		if (!$this->singleSRC)
 		{
@@ -95,7 +100,6 @@ class ContentDownload extends ContentElement
 		}
 		else
 		{
-			/** @var PageModel $objPage */
 			global $objPage;
 
 			$arrMeta = Frontend::getMetaData($this->objFile->meta, $objPage->language);
@@ -114,7 +118,7 @@ class ContentDownload extends ContentElement
 
 		if (!$this->titleText || !$this->overwriteLink)
 		{
-			$this->titleText = sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename);
+			$this->titleText = \sprintf($GLOBALS['TL_LANG']['MSC']['download'], $objFile->basename);
 		}
 
 		$strHref = Environment::get('requestUri');
@@ -130,7 +134,7 @@ class ContentDownload extends ContentElement
 			$strHref = preg_replace('/(&(amp;)?|\?)cid=\d+/', '', $strHref);
 		}
 
-		$strHref .= (strpos($strHref, '?') !== false ? '&amp;' : '?') . 'file=' . System::urlEncode($objFile->value) . '&amp;cid=' . $this->id;
+		$strHref .= (str_contains($strHref, '?') ? '&amp;' : '?') . 'file=' . System::urlEncode($objFile->value) . '&amp;cid=' . $this->id;
 
 		$this->Template->link = $this->linkTitle ?: $objFile->basename;
 		$this->Template->title = StringUtil::specialchars($this->titleText);
@@ -160,7 +164,7 @@ class ContentDownload extends ContentElement
 
 		if ($this->fullsize)
 		{
-			if (!empty($GLOBALS['objPage']) && ($layoutId = $GLOBALS['objPage']->layout) && ($layout = LayoutModel::findByPk($layoutId)))
+			if (!empty($GLOBALS['objPage']) && ($layoutId = $GLOBALS['objPage']->layout) && ($layout = LayoutModel::findById($layoutId)))
 			{
 				$lightboxSize = StringUtil::deserialize($layout->lightboxSize, true);
 			}

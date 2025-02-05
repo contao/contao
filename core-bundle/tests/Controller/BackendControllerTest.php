@@ -49,7 +49,6 @@ class BackendControllerTest extends TestCase
         $controller = new BackendController();
         $controller->setContainer($container);
 
-        /** @var RedirectResponse $response */
         $response = $controller->loginAction(new Request());
 
         $this->assertInstanceOf(RedirectResponse::class, $response);

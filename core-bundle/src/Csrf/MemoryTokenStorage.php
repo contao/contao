@@ -19,6 +19,7 @@ use Symfony\Contracts\Service\ResetInterface;
 class MemoryTokenStorage implements TokenStorageInterface, ResetInterface
 {
     private array|null $tokens = null;
+
     private array $usedTokens = [];
 
     public function getToken(string $tokenId): string
@@ -26,7 +27,7 @@ class MemoryTokenStorage implements TokenStorageInterface, ResetInterface
         $this->assertInitialized();
 
         if (empty($this->tokens[$tokenId])) {
-            throw new TokenNotFoundException(sprintf('The CSRF token ID "%s" does not exist.', $tokenId));
+            throw new TokenNotFoundException(\sprintf('The CSRF token ID "%s" does not exist.', $tokenId));
         }
 
         $this->usedTokens[$tokenId] = true;

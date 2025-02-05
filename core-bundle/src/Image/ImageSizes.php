@@ -24,15 +24,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class ImageSizes implements ResetInterface
 {
     private array $predefinedSizes = [];
+
     private array|null $options = null;
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.image.sizes" service instead
+     * @internal
      */
     public function __construct(
-        private Connection $connection,
-        private EventDispatcherInterface $eventDispatcher,
-        private TranslatorInterface $translator,
+        private readonly Connection $connection,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -74,7 +75,7 @@ class ImageSizes implements ResetInterface
         } else {
             $options = array_map(
                 static fn ($val) => is_numeric($val) ? (int) $val : $val,
-                StringUtil::deserialize($user->imageSizes, true)
+                StringUtil::deserialize($user->imageSizes, true),
             );
 
             $event = new ImageSizesEvent($this->filterOptions($options), $user);
@@ -107,17 +108,17 @@ class ImageSizes implements ResetInterface
             LEFT JOIN
                 tl_theme t ON s.pid=t.id
             ORDER BY
-                s.pid, s.name'
+                s.pid, s.name',
         );
 
         $options = [];
 
         foreach ($this->predefinedSizes as $name => $imageSize) {
-            $options['image_sizes'][$name] = sprintf(
+            $options['image_sizes'][$name] = \sprintf(
                 '%s (%sx%s)',
                 $this->translator->trans(substr($name, 1), [], 'image_sizes') ?: substr($name, 1),
                 $imageSize['width'] ?? '',
-                $imageSize['height'] ?? ''
+                $imageSize['height'] ?? '',
             );
         }
 
@@ -131,21 +132,18 @@ class ImageSizes implements ResetInterface
                 $options[$imageSize['theme']] = [];
             }
 
-            $options[$imageSize['theme']][$imageSize['id']] = sprintf(
+            $options[$imageSize['theme']][$imageSize['id']] = \sprintf(
                 '%s (%sx%s)',
                 $imageSize['name'],
                 $imageSize['width'],
-                $imageSize['height']
+                $imageSize['height'],
             );
         }
 
-        $this->options = array_merge_recursive(
-            $options,
-            [
-                'image_sizes' => [],
-                'custom' => ['crop', 'proportional', 'box'],
-            ]
-        );
+        $this->options = array_merge_recursive($options, [
+            'image_sizes' => [],
+            'custom' => ['crop', 'proportional', 'box'],
+        ]);
     }
 
     /**
@@ -155,7 +153,7 @@ class ImageSizes implements ResetInterface
      */
     private function filterOptions(array $allowedSizes): array
     {
-        if (empty($allowedSizes)) {
+        if (!$allowedSizes) {
             return [];
         }
 

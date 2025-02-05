@@ -53,7 +53,7 @@ class RegisterPagesPassTest extends TestCase
             ->method('addMethodCall')
             ->with(
                 'add',
-                $this->callback(static fn ($arguments) => 'my_type' === $arguments[0])
+                $this->callback(static fn ($arguments) => 'my_type' === $arguments[0]),
             )
         ;
 
@@ -76,7 +76,7 @@ class RegisterPagesPassTest extends TestCase
             ->method('addMethodCall')
             ->with(
                 'add',
-                $this->callback(static fn ($arguments) => 'contao_core_bundle' === $arguments[0])
+                $this->callback(static fn ($arguments) => 'contao_core_bundle' === $arguments[0]),
             )
         ;
 
@@ -99,7 +99,7 @@ class RegisterPagesPassTest extends TestCase
             ->method('addMethodCall')
             ->with(
                 'add',
-                $this->callback(static fn ($arguments) => 'two_factor' === $arguments[0])
+                $this->callback(static fn ($arguments) => 'two_factor' === $arguments[0]),
             )
         ;
 
@@ -122,7 +122,7 @@ class RegisterPagesPassTest extends TestCase
             ->method('addMethodCall')
             ->with(
                 'add',
-                $this->callback(static fn ($arguments) => 'test' === $arguments[0])
+                $this->callback(static fn ($arguments) => 'test' === $arguments[0]),
             )
         ;
 
@@ -147,13 +147,12 @@ class RegisterPagesPassTest extends TestCase
                 'add',
                 $this->callback(
                     function ($arguments) {
-                        /** @var Definition $definition */
                         $definition = $arguments[1];
                         $this->assertInstanceOf(Definition::class, $definition);
 
                         return 'MyController::action' === $definition->getArgument(5)['_controller'];
-                    }
-                )
+                    },
+                ),
             )
         ;
 
@@ -178,13 +177,12 @@ class RegisterPagesPassTest extends TestCase
                 'add',
                 $this->callback(
                     function ($arguments) {
-                        /** @var Definition $definition */
                         $definition = $arguments[1];
                         $this->assertInstanceOf(Definition::class, $definition);
 
                         return 'test.controller:action' === $definition->getArgument(5)['_controller'];
-                    }
-                )
+                    },
+                ),
             )
         ;
 
@@ -212,13 +210,12 @@ class RegisterPagesPassTest extends TestCase
                 'add',
                 $this->callback(
                     function ($arguments) {
-                        /** @var Definition $definition */
                         $definition = $arguments[1];
                         $this->assertInstanceOf(Definition::class, $definition);
 
                         return 'test.controller' === $definition->getArgument(5)['_controller'];
-                    }
-                )
+                    },
+                ),
             )
         ;
 
@@ -253,8 +250,8 @@ class RegisterPagesPassTest extends TestCase
                 $this->callback(
                     static fn (array $arguments) => 1 === \count($arguments)
                         && $arguments[0] instanceof Reference
-                        && ContainerInterface::class === (string) $arguments[0]
-                )
+                        && ContainerInterface::class === (string) $arguments[0],
+                ),
             )
         ;
 
@@ -278,13 +275,12 @@ class RegisterPagesPassTest extends TestCase
                 'add',
                 $this->callback(
                     function ($arguments) {
-                        /** @var Definition $definition */
                         $definition = $arguments[1];
                         $this->assertInstanceOf(Definition::class, $definition);
 
                         return FrontendIndex::class.'::renderPage' === $definition->getArgument(5)['_controller'];
-                    }
-                )
+                    },
+                ),
             )
         ;
 
@@ -312,13 +308,12 @@ class RegisterPagesPassTest extends TestCase
                 'add',
                 $this->callback(
                     function ($arguments) {
-                        /** @var Reference $reference */
                         $reference = $arguments[2];
                         $this->assertInstanceOf(Reference::class, $reference);
 
                         return 'test.controller' === (string) $reference;
-                    }
-                )
+                    },
+                ),
             )
         ;
 
@@ -343,13 +338,12 @@ class RegisterPagesPassTest extends TestCase
                 'add',
                 $this->callback(
                     function ($arguments) {
-                        /** @var Reference $reference */
                         $reference = $arguments[3];
                         $this->assertInstanceOf(Reference::class, $reference);
 
                         return 'test.controller' === (string) $reference;
-                    }
-                )
+                    },
+                ),
             )
         ;
 

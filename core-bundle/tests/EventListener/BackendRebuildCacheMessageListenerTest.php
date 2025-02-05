@@ -53,19 +53,19 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
         $listener = new BackendRebuildCacheMessageListener(
             $scopeMatcher,
             $cacheItemPool,
-            $this->createMock(TranslatorInterface::class)
+            $this->createMock(TranslatorInterface::class),
         );
 
         $event = new RequestEvent(
             $this->createMock(KernelInterface::class),
             $request,
-            HttpKernelInterface::MAIN_REQUEST
+            HttpKernelInterface::MAIN_REQUEST,
         );
 
         $listener($event);
     }
 
-    public function provideRequestAndDirty(): \Generator
+    public static function provideRequestAndDirty(): iterable
     {
         yield [false, true];
         yield [true, false];
@@ -116,13 +116,13 @@ class BackendRebuildCacheMessageListenerTest extends TestCase
         $listener = new BackendRebuildCacheMessageListener(
             $scopeMatcher,
             $cacheItemPool,
-            $translator
+            $translator,
         );
 
         $event = new RequestEvent(
             $this->createMock(KernelInterface::class),
             $request,
-            HttpKernelInterface::MAIN_REQUEST
+            HttpKernelInterface::MAIN_REQUEST,
         );
 
         $listener($event);

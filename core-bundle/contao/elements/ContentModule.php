@@ -27,13 +27,13 @@ class ContentModule extends ContentElement
 			return '';
 		}
 
-		if (!$objModule = ModuleModel::findByPk($this->module))
+		if (!$objModule = ModuleModel::findById($this->module))
 		{
 			return '';
 		}
 
 		// Clone the model, so we do not modify the shared model in the registry
-		$objModel = $objModule->cloneOriginal();
+		$objModel = $objModule->cloneDetached();
 		$cssID = StringUtil::deserialize($objModel->cssID, true);
 
 		// Override the CSS ID (see #305)
@@ -53,7 +53,7 @@ class ContentModule extends ContentElement
 		// Tag the content element (see #2137)
 		if ($this->objModel !== null)
 		{
-			System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($this->objModel);
+			System::getContainer()->get('contao.cache.tag_manager')->tagWithModelInstance($this->objModel);
 		}
 
 		return Controller::getFrontendModule($objModel, $this->strColumn);

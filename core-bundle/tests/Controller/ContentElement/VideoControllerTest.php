@@ -39,7 +39,7 @@ class VideoControllerTest extends ContentElementTestCase
             ],
             null,
             false,
-            $responseContextData
+            $responseContextData,
         );
 
         $expectedOutput = <<<'HTML'
@@ -60,6 +60,50 @@ class VideoControllerTest extends ContentElementTestCase
         $this->assertEmpty($responseContextData);
     }
 
+    public function testOutputsYoutubeIFrameWithTitle(): void
+    {
+        $response = $this->renderWithModelData(
+            new VideoController($this->getDefaultStudio()),
+            [
+                'type' => 'youtube',
+                'playerSize' => '',
+                'playerAspect' => '4:3',
+                'youtube' => '12345678',
+                'youtubeOptions' => serialize([
+                    'youtube_nocookie',
+                    'youtube_fs',
+                    'youtube_iv_load_policy',
+                    'youtube_loop',
+                ]),
+                'playerStart' => 15,
+                'playerStop' => 60,
+                'playerCaption' => 'Some caption',
+                'playerTitle' => 'Some title',
+            ],
+            null,
+            false,
+            $responseContextData,
+        );
+
+        $expectedOutput = <<<'HTML'
+            <div class="content-youtube">
+                <figure class="aspect aspect--4:3">
+                    <iframe
+                        width="640"
+                        height="360"
+                        src="https://www.youtube-nocookie.com/embed/12345678?fs=0&amp;iv_load_policy=3&amp;loop=1&amp;start=15&amp;end=60"
+                        allowfullscreen
+                        title="Some title"
+                        allow="autoplay; encrypted-media; picture-in-picture; fullscreen"></iframe>
+                    <figcaption>Some caption</figcaption>
+                </figure>
+            </div>
+            HTML;
+
+        $this->assertSameHtml($expectedOutput, $response->getContent());
+        $this->assertEmpty($responseContextData);
+    }
+
     public function testOutputsVimeoVideoWithSplashScreen(): void
     {
         $response = $this->renderWithModelData(
@@ -68,7 +112,7 @@ class VideoControllerTest extends ContentElementTestCase
                 'type' => 'vimeo',
                 'playerSize' => serialize([1600, 900]),
                 'playerAspect' => '',
-                'vimeo' => '12345678',
+                'vimeo' => '12345678?h=123abc',
                 'vimeoOptions' => serialize([
                     'vimeo_autoplay',
                     'vimeo_portrait',
@@ -81,7 +125,7 @@ class VideoControllerTest extends ContentElementTestCase
             ],
             null,
             false,
-            $responseContextData
+            $responseContextData,
         );
 
         $expectedOutput = <<<'HTML'
@@ -89,12 +133,12 @@ class VideoControllerTest extends ContentElementTestCase
                 <figure>
                 <button data-splash-screen>
                     <img src="files/image1.jpg" alt>
-                    <p>translated(contao_default:MSC.splashScreen) translated(contao_default:MSC.dataTransmission[Vimeo])</p>
+                    <span>translated(contao_default:MSC.splashScreen) translated(contao_default:MSC.dataTransmission[Vimeo])</span>
                     <template>
                         <iframe
                             width="1600"
                             height="900"
-                            src="https://player.vimeo.com/video/12345678?autoplay=1&amp;portrait=0&amp;color=f47c00#t=30s"
+                            src="https://player.vimeo.com/video/12345678?h=123abc&amp;autoplay=1&amp;portrait=0&amp;color=f47c00#t=30s"
                             allowfullscreen></iframe>
                     </template>
                 </button>
@@ -107,9 +151,11 @@ class VideoControllerTest extends ContentElementTestCase
         $additionalBodyCode = $responseContextData[DocumentLocation::endOfBody->value];
 
         $this->assertCount(1, $additionalBodyCode);
+        $this->assertArrayHasKey('splash_screen_script', $additionalBodyCode);
+
         $this->assertMatchesRegularExpression(
             '/<script>[^<]+button\.insertAdjacentHTML[^<]+<\/script>/',
-            $additionalBodyCode['splash_screen_script']
+            $additionalBodyCode['splash_screen_script'],
         );
     }
 }

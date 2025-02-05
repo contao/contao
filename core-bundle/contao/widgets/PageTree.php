@@ -45,17 +45,6 @@ class PageTree extends Widget
 	protected $strOrderName;
 
 	/**
-	 * Load the database object
-	 *
-	 * @param array $arrAttributes
-	 */
-	public function __construct($arrAttributes=null)
-	{
-		$this->import(Database::class, 'Database');
-		parent::__construct($arrAttributes);
-	}
-
-	/**
 	 * Return an array if the "multiple" attribute is set
 	 *
 	 * @param mixed $varInput
@@ -76,13 +65,13 @@ class PageTree extends Widget
 		{
 			if ($this->mandatory)
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
 			}
 
 			return '';
 		}
 
-		if (strpos($varInput, ',') === false)
+		if (!str_contains($varInput, ','))
 		{
 			return $this->multiple ? array((int) $varInput) : (int) $varInput;
 		}
@@ -104,7 +93,7 @@ class PageTree extends Widget
 			return;
 		}
 
-		if (strpos($varInput, ',') === false)
+		if (!str_contains($varInput, ','))
 		{
 			$arrIds = array((int) $varInput);
 		}
@@ -113,7 +102,7 @@ class PageTree extends Widget
 			$arrIds = array_map('\intval', array_filter(explode(',', $varInput)));
 		}
 
-		if (\count(array_diff($arrIds, array_merge($this->rootNodes, $this->Database->getChildRecords($this->rootNodes, 'tl_page')))) > 0)
+		if (\count(array_diff($arrIds, array_merge($this->rootNodes, Database::getInstance()->getChildRecords($this->rootNodes, 'tl_page')))) > 0)
 		{
 			$this->addError($GLOBALS['TL_LANG']['ERR']['invalidPages']);
 		}

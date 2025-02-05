@@ -23,8 +23,8 @@ use Symfony\Component\Filesystem\Path;
 
 /**
  * This class allows accessing multiple Flysystem adapters as if there was only
- * one interface. Which adapter is chosen for each operation is determined by
- * the path (prefix) each adapter is registered with.
+ * one interface. Which adapter is chosen for each operation is determined by the
+ * path (prefix) each adapter is registered with.
  *
  * Note: In general, user code should not directly interface with the
  *       MountManager, but use the VirtualFilesystem instead.
@@ -36,14 +36,14 @@ use Symfony\Component\Filesystem\Path;
 class MountManager
 {
     /**
-     * @var array<string, FilesystemAdapter>
+     * @var array<string|int, FilesystemAdapter>
      */
     private array $mounts = [];
 
     /**
-     * @param iterable<int,PublicUriProviderInterface> $publicUriProviders
+     * @param iterable<int, PublicUriProviderInterface> $publicUriProviders
      */
-    public function __construct(private iterable $publicUriProviders = [])
+    public function __construct(private readonly iterable $publicUriProviders = [])
     {
     }
 
@@ -51,13 +51,13 @@ class MountManager
     {
         $this->mounts[$path] = $adapter;
 
-        krsort($this->mounts);
+        krsort($this->mounts, SORT_NATURAL);
 
         return $this;
     }
 
     /**
-     * @return array<string, FilesystemAdapter>
+     * @return array<string|int, FilesystemAdapter>
      */
     public function getMounts(): array
     {
@@ -74,7 +74,6 @@ class MountManager
         }
 
         try {
-            /** @var FilesystemAdapter $adapter */
             [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
         } catch (\RuntimeException) {
             // Tolerate non-existing mount-points
@@ -98,7 +97,6 @@ class MountManager
         }
 
         try {
-            /** @var FilesystemAdapter $adapter */
             [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
         } catch (\RuntimeException) {
             // Tolerate non-existing mount-points
@@ -117,7 +115,6 @@ class MountManager
      */
     public function read(string $path): string
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         try {
@@ -128,13 +125,12 @@ class MountManager
     }
 
     /**
-     * @throws VirtualFilesystemException
-     *
      * @return resource
+     *
+     * @throws VirtualFilesystemException
      */
     public function readStream(string $path)
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         try {
@@ -149,7 +145,6 @@ class MountManager
      */
     public function write(string $path, string $contents, array $options = []): void
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         try {
@@ -169,7 +164,6 @@ class MountManager
         FilesystemUtil::assertIsResource($contents);
         FilesystemUtil::rewindStream($contents);
 
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         try {
@@ -184,7 +178,6 @@ class MountManager
      */
     public function delete(string $path): void
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         try {
@@ -199,7 +192,6 @@ class MountManager
      */
     public function deleteDirectory(string $path): void
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         try {
@@ -214,7 +206,6 @@ class MountManager
      */
     public function createDirectory(string $path, array $options = []): void
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         try {
@@ -229,10 +220,7 @@ class MountManager
      */
     public function copy(string $pathFrom, string $pathTo, array $options = []): void
     {
-        /** @var FilesystemAdapter $adapterFrom */
         [$adapterFrom, $adapterPathFrom] = $this->getAdapterAndPath($pathFrom);
-
-        /** @var FilesystemAdapter $adapterTo */
         [$adapterTo, $adapterPathTo] = $this->getAdapterAndPath($pathTo);
 
         try {
@@ -256,10 +244,7 @@ class MountManager
      */
     public function move(string $pathFrom, string $pathTo, array $options = []): void
     {
-        /** @var FilesystemAdapter $adapterFrom */
         [$adapterFrom, $adapterPathFrom] = $this->getAdapterAndPath($pathFrom);
-
-        /** @var FilesystemAdapter $adapterTo */
         [$adapterTo, $adapterPathTo] = $this->getAdapterAndPath($pathTo);
 
         try {
@@ -281,9 +266,9 @@ class MountManager
     }
 
     /**
-     * @throws VirtualFilesystemException
-     *
      * @return \Generator<FilesystemItem>
+     *
+     * @throws VirtualFilesystemException
      */
     public function listContents(string $path, bool $deep = false): \Generator
     {
@@ -291,7 +276,7 @@ class MountManager
         $virtualPathsSet = [];
 
         foreach (array_keys($this->mounts) as $mountPath) {
-            $relativeSearchPath = Path::makeRelative($mountPath, $path);
+            $relativeSearchPath = Path::makeRelative((string) $mountPath, $path);
 
             if ('' === $relativeSearchPath || str_starts_with($relativeSearchPath, '..')) {
                 continue;
@@ -304,7 +289,7 @@ class MountManager
             $virtualPathsSet[$mountPath] = true;
         }
 
-        ksort($virtualPathsSet);
+        ksort($virtualPathsSet, SORT_NATURAL);
 
         // Yield items and track all traversed directories
         foreach ($this->doListContents($path, $deep) as $item) {
@@ -317,10 +302,10 @@ class MountManager
 
         // Yield remaining virtual paths
         foreach (array_keys($virtualPathsSet) as $virtualPath) {
-            yield new FilesystemItem(false, $virtualPath);
+            yield new FilesystemItem(false, (string) $virtualPath);
 
             if ($deep) {
-                yield from $this->doListContents($virtualPath, true);
+                yield from $this->doListContents((string) $virtualPath, true);
             }
         }
     }
@@ -330,7 +315,6 @@ class MountManager
      */
     public function getLastModified(string $path): int
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         try {
@@ -345,7 +329,6 @@ class MountManager
      */
     public function getFileSize(string $path): int
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         try {
@@ -360,7 +343,6 @@ class MountManager
      */
     public function getMimeType(string $path): string
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         try {
@@ -372,11 +354,10 @@ class MountManager
 
     public function generatePublicUri(string $path, OptionsInterface|null $options = null): UriInterface|null
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath] = $this->getAdapterAndPath($path);
 
         foreach ($this->publicUriProviders as $provider) {
-            if (null !== ($uri = $provider->getUri($adapter, $adapterPath, $options))) {
+            if ($uri = $provider->getUri($adapter, $adapterPath, $options)) {
                 return $uri;
             }
         }
@@ -384,6 +365,9 @@ class MountManager
         return null;
     }
 
+    /**
+     * @return array{0: FilesystemAdapter, 1: string, 2: string}
+     */
     private function getAdapterAndPath(string $path): array
     {
         if ('' !== $path) {
@@ -391,18 +375,18 @@ class MountManager
 
             // Find the adapter with the longest (= most specific) matching prefix
             do {
-                if (null !== ($adapter = $this->mounts[$prefix] ?? null)) {
+                if ($adapter = $this->mounts[$prefix] ?? null) {
                     return [$adapter, Path::makeRelative($path, $prefix), $prefix];
                 }
             } while ('.' !== ($prefix = \dirname($prefix)));
         }
 
         // Root adapter
-        if (null !== ($adapter = $this->mounts[''] ?? null)) {
+        if ($adapter = $this->mounts[''] ?? null) {
             return [$adapter, $path, ''];
         }
 
-        throw new \RuntimeException(sprintf('No adapter was mounted to serve path "%s".', $path));
+        throw new \RuntimeException(\sprintf('No adapter was mounted to serve path "%s".', $path));
     }
 
     /**
@@ -410,12 +394,11 @@ class MountManager
      */
     private function doListContents(string $path, bool $deep): \Generator
     {
-        /** @var FilesystemAdapter $adapter */
         [$adapter, $adapterPath, $prefix] = $this->getAdapterAndPath($path);
 
         try {
-            // If $deep is true we shallow-read directories recursively, because
-            // there could be another adapter mounted further down in the tree.
+            // If $deep is true we shallow-read directories recursively, because there could
+            // be another adapter mounted further down in the tree.
             foreach ($adapter->listContents($adapterPath, FilesystemReader::LIST_SHALLOW) as $flysystemItem) {
                 $item = FilesystemItem::fromStorageAttributes($flysystemItem, $prefix);
                 $itemPath = $item->getPath();

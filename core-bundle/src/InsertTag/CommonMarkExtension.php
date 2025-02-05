@@ -20,7 +20,7 @@ use League\CommonMark\Util\UrlEncoder;
 
 class CommonMarkExtension implements ExtensionInterface
 {
-    public function __construct(private InsertTagParser $insertTagParser)
+    public function __construct(private readonly InsertTagParser $insertTagParser)
     {
     }
 
@@ -34,14 +34,14 @@ class CommonMarkExtension implements ExtensionInterface
                         continue;
                     }
 
-                    // Parser already encodes link contents, so we have to
-                    // decode it first in order to replace insert tags
+                    // Parser already encodes link contents, so we have to decode it first in order
+                    // to replace insert tags
                     $url = rawurldecode($link->getUrl());
                     $url = $this->insertTagParser->replaceInline($url);
 
                     $link->setUrl(UrlEncoder::unescapeAndEncode($url));
                 }
-            }
+            },
         );
     }
 }

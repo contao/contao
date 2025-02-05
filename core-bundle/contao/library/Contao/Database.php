@@ -67,7 +67,7 @@ class Database
 
 		if (!\is_object($this->resConnection))
 		{
-			throw new \Exception(sprintf('Could not connect to database (%s)', $this->error));
+			throw new \Exception(\sprintf('Could not connect to database (%s)', $this->error));
 		}
 	}
 
@@ -87,14 +87,7 @@ class Database
 	 */
 	public function __get($strKey)
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s->%s" has been deprecated and will no longer work in Contao 6.0.', __CLASS__, $strKey);
-
-		if ($strKey == 'error')
-		{
-			$info = $this->resConnection->errorInfo();
-
-			return 'SQLSTATE ' . $info[0] . ': error ' . $info[1] . ': ' . $info[2];
-		}
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s->%s" has been deprecated and will no longer work in Contao 6.', __CLASS__, $strKey);
 
 		return null;
 	}
@@ -163,6 +156,11 @@ class Database
 
 	/**
 	 * Auto-generate a FIND_IN_SET() statement
+	 *
+	 * Do not pass user input as $strKey to this method as only identifiers get
+	 * quoted and SQL expressions get returned as is!
+	 *
+	 * @internal Do not use this class in your code
 	 *
 	 * @param string  $strKey     The field name
 	 * @param mixed   $varSet     The set to find the key in
@@ -335,7 +333,7 @@ class Database
 				$arrReturn[$objIndex->Key_name]['name'] = $objIndex->Key_name;
 				$arrReturn[$objIndex->Key_name]['type'] = 'index';
 				$arrReturn[$objIndex->Key_name]['index_fields'][] = $strColumnName;
-				$arrReturn[$objIndex->Key_name]['index'] = (($objIndex->Non_unique == 0) ? 'UNIQUE' : 'KEY');
+				$arrReturn[$objIndex->Key_name]['index'] = ($objIndex->Non_unique == 0) ? 'UNIQUE' : 'KEY';
 			}
 
 			$this->arrCache[$strTable] = $arrReturn;
@@ -468,25 +466,27 @@ class Database
 			$arrParentIds = array($arrParentIds);
 		}
 
+		// Remove zero IDs
+		$arrParentIds = array_filter(array_map('\intval', $arrParentIds));
+
 		if (empty($arrParentIds))
 		{
 			return $arrReturn;
 		}
 
-		$arrParentIds = array_map('\intval', $arrParentIds);
-		$objChilds = $this->query("SELECT id, pid FROM " . $strTable . " WHERE pid IN(" . implode(',', $arrParentIds) . ")" . ($strWhere ? " AND $strWhere" : "") . ($blnSorting ? " ORDER BY " . $this->findInSet('pid', $arrParentIds) . ", sorting" : ""));
+		$objChildren = $this->query("SELECT id, pid FROM " . $strTable . " WHERE pid IN(" . implode(',', $arrParentIds) . ")" . ($strWhere ? " AND $strWhere" : "") . ($blnSorting ? " ORDER BY " . $this->findInSet('pid', $arrParentIds) . ", sorting" : ""));
 
-		if ($objChilds->numRows > 0)
+		if ($objChildren->numRows > 0)
 		{
 			if ($blnSorting)
 			{
-				$arrChilds = array();
+				$arrChildren = array();
 				$arrOrdered = array();
 
-				while ($objChilds->next())
+				while ($objChildren->next())
 				{
-					$arrChilds[] = $objChilds->id;
-					$arrOrdered[$objChilds->pid][] = $objChilds->id;
+					$arrChildren[] = $objChildren->id;
+					$arrOrdered[$objChildren->pid][] = $objChildren->id;
 				}
 
 				foreach (array_reverse(array_keys($arrOrdered)) as $pid)
@@ -495,12 +495,12 @@ class Database
 					ArrayUtil::arrayInsert($arrReturn, $pos+1, $arrOrdered[$pid]);
 				}
 
-				$arrReturn = $this->getChildRecords($arrChilds, $strTable, $blnSorting, $arrReturn, $strWhere);
+				$arrReturn = $this->getChildRecords($arrChildren, $strTable, $blnSorting, $arrReturn, $strWhere);
 			}
 			else
 			{
-				$arrChilds = $objChilds->fetchEach('id');
-				$arrReturn = array_merge($arrChilds, $this->getChildRecords($arrChilds, $strTable, $blnSorting, $arrReturn, $strWhere));
+				$arrChildren = $objChildren->fetchEach('id');
+				$arrReturn = array_merge($arrChildren, $this->getChildRecords($arrChildren, $strTable, $blnSorting, $arrReturn, $strWhere));
 			}
 		}
 
@@ -661,6 +661,12 @@ class Database
 
 	/**
 	 * Quote the column name if it is a reserved word
+	 *
+	 * Do not pass user input to this method as only identifiers get quoted and
+	 * SQL expressions get returned as is!
+	 *
+	 * @internal Do not use this class in your code; use the "quoteIdentifier()"
+	 *           method of the "@database_connection" service instead
 	 *
 	 * @param string $strName
 	 *

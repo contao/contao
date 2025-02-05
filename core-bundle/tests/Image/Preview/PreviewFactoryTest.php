@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Image\Preview;
 
+use Contao\CoreBundle\Asset\ContaoContext;
+use Contao\CoreBundle\Exception\InvalidResourceException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
@@ -31,11 +33,15 @@ use Contao\ImageSizeModel;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImagineInterface;
+use Psr\Container\ContainerInterface;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 class PreviewFactoryTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -87,6 +93,16 @@ class PreviewFactoryTest extends TestCase
         $this->expectException(MissingPreviewProviderException::class);
 
         $factory->createPreview($sourcePath, 256);
+    }
+
+    public function testCreateMissingPreview(): void
+    {
+        $sourcePath = Path::join($this->getTempDir(), 'sources/does-not-exist.pdf');
+        $factory = $this->createFactoryWithExampleProvider();
+
+        $this->expectException(InvalidResourceException::class);
+
+        $factory->createPreview($sourcePath);
     }
 
     public function testCreatePreviews(): void
@@ -159,9 +175,9 @@ class PreviewFactoryTest extends TestCase
             'densities' => '0.5x',
         ]);
 
-        $imageSizeAdapter = $this->mockAdapter(['findByPk']);
+        $imageSizeAdapter = $this->mockAdapter(['findById']);
         $imageSizeAdapter
-            ->method('findByPk')
+            ->method('findById')
             ->willReturn($imageSizeModel)
         ;
 
@@ -199,7 +215,7 @@ class PreviewFactoryTest extends TestCase
         }
     }
 
-    public function getImageSizes(): \Generator
+    public static function getImageSizes(): iterable
     {
         yield [null, 0];
         yield [[], 0];
@@ -227,7 +243,7 @@ class PreviewFactoryTest extends TestCase
                 ->setSize(
                     (new PictureConfigurationItem())
                         ->setDensities('1.5x')
-                        ->setResizeConfig((new ResizeConfiguration())->setWidth(123)->setHeight(456))
+                        ->setResizeConfig((new ResizeConfiguration())->setWidth(123)->setHeight(456)),
                 ),
             684,
         ];
@@ -237,7 +253,7 @@ class PreviewFactoryTest extends TestCase
                 ->setSize(
                     (new PictureConfigurationItem())
                         ->setDensities('1.5x')
-                        ->setResizeConfig((new ResizeConfiguration())->setWidth(123)->setHeight(123))
+                        ->setResizeConfig((new ResizeConfiguration())->setWidth(123)->setHeight(123)),
                 )
                 ->setSizeItems([
                     (new PictureConfigurationItem())
@@ -298,7 +314,7 @@ class PreviewFactoryTest extends TestCase
         $factory = $this->createFactoryWithExampleProvider();
         $preview = $factory->createPreviewPicture($sourcePath);
 
-        $this->assertFileExists($preview->getImg()['src']->getPath());
+        $this->assertFileExists($preview->getRawImg()['src']->getPath());
 
         (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
 
@@ -317,7 +333,7 @@ class PreviewFactoryTest extends TestCase
         $previews = $factory->createPreviewPictures($sourcePath);
 
         foreach ($previews as $preview) {
-            $this->assertFileExists($preview->getImg()['src']->getPath());
+            $this->assertFileExists($preview->getRawImg()['src']->getPath());
         }
 
         (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
@@ -327,7 +343,42 @@ class PreviewFactoryTest extends TestCase
         $factory->createPreviewPictures($sourcePath, [200, 200, 'box']);
     }
 
-    private function createFactoryWithExampleProvider(ContaoFramework $framework = null): PreviewFactory
+    /**
+     * @group legacy
+     */
+    public function testCreatePreviewFigureBuilder(): void
+    {
+        $this->expectDeprecation('Since contao/image 1.2: Passing NULL as $rootDir is deprecated and will no longer work in version 2.0.%s');
+
+        $sourcePath = Path::join($this->getTempDir(), 'sources/foo.pdf');
+        $factory = $this->createFactoryWithExampleProvider();
+        $figureBuilder = $factory->createPreviewFigureBuilder($sourcePath);
+
+        $this->assertNull($figureBuilder->buildIfResourceExists());
+
+        (new Filesystem())->dumpFile($sourcePath, '%PDF-');
+
+        $figureBuilder = $factory->createPreviewFigureBuilder($sourcePath);
+        $preview = $figureBuilder->build()->getImage();
+
+        $this->assertFileExists(Path::join($this->getTempDir(), $preview->getImageSrc(true)));
+
+        (new Filesystem())->remove(Path::join($this->getTempDir(), 'assets/previews'));
+        (new Filesystem())->dumpFile($sourcePath, 'not a PDF');
+
+        $figureBuilder = $factory->createPreviewFigureBuilder($sourcePath);
+
+        $this->assertNull($figureBuilder->buildIfResourceExists());
+
+        try {
+            $figureBuilder->build();
+            $this->fail('FigureBuilder::build() should throw an exception');
+        } catch (InvalidResourceException $exception) {
+            $this->assertInstanceOf(MissingPreviewProviderException::class, $exception->getPrevious());
+        }
+    }
+
+    private function createFactoryWithExampleProvider(ContaoFramework|null $framework = null): PreviewFactory
     {
         $pdfProvider = new class() implements PreviewProviderInterface {
             public function getFileHeaderSize(): int
@@ -365,7 +416,7 @@ class PreviewFactoryTest extends TestCase
                     }
 
                     return new Image($path, $this->createMock(ImagineInterface::class));
-                }
+                },
             )
         ;
 
@@ -379,15 +430,40 @@ class PreviewFactoryTest extends TestCase
                     }
 
                     return new Picture(['src' => $path, 'srcset' => [[$path, '1x']]], []);
-                }
+                },
             )
+        ;
+
+        $locator = $this->createMock(ContainerInterface::class);
+
+        $studio = new Studio(
+            $locator,
+            $this->getTempDir(),
+            'files',
+            Path::join($this->getTempDir(), 'public'),
+            ['png'],
+        );
+
+        $filesContext = $this->createMock(ContaoContext::class);
+        $filesContext
+            ->method('getStaticUrl')
+            ->willReturn('')
+        ;
+
+        $locator
+            ->method('get')
+            ->willReturnMap([
+                ['contao.image.studio', $studio],
+                ['contao.image.picture_factory', $pictureFactory],
+                ['contao.assets.files_context', $filesContext],
+            ])
         ;
 
         return new PreviewFactory(
             [$pdfProvider],
             $imageFactory,
             $pictureFactory,
-            $this->createMock(Studio::class),
+            $studio,
             $framework ?? $this->createMock(ContaoFramework::class),
             'not so secret ;)',
             Path::join($this->getTempDir(), 'assets/previews'),

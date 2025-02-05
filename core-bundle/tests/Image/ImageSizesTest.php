@@ -20,22 +20,15 @@ use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Contracts\Service\ResetInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ImageSizesTest extends TestCase
 {
     private ImageSizes $imageSizes;
 
-    /**
-     * @var Connection&MockObject
-     */
-    private Connection $connection;
+    private Connection&MockObject $connection;
 
-    /**
-     * @var EventDispatcherInterface&MockObject
-     */
-    private EventDispatcherInterface $eventDispatcher;
+    private EventDispatcherInterface&MockObject $eventDispatcher;
 
     protected function setUp(): void
     {
@@ -47,7 +40,7 @@ class ImageSizesTest extends TestCase
         $this->imageSizes = new ImageSizes(
             $this->connection,
             $this->eventDispatcher,
-            $this->createMock(TranslatorInterface::class)
+            $this->createMock(TranslatorInterface::class),
         );
     }
 
@@ -88,8 +81,8 @@ class ImageSizesTest extends TestCase
 
         $options = $this->imageSizes->getOptionsForUser($user);
 
-        // Default options would not be returned without the admin check,
-        // because it is not within the allowed image sizes
+        // Default options would not be returned without the admin check, because it is
+        // not within the allowed image sizes
         $this->assertArrayHasKey('custom', $options);
     }
 
@@ -134,8 +127,6 @@ class ImageSizesTest extends TestCase
 
     public function testServiceIsResetable(): void
     {
-        $this->assertInstanceOf(ResetInterface::class, $this->imageSizes);
-
         $this->eventDispatcher
             ->expects($this->exactly(3))
             ->method('dispatch')

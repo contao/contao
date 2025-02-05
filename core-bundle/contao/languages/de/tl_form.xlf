@@ -25,6 +25,14 @@
         <source>Please choose the page to which visitors will be redirected after submitting the form.</source>
         <target>Bitte wählen Sie die Seite aus, zu der Besucher nach dem Abschicken des Formulars weitergeleitet werden.</target>
       </trans-unit>
+      <trans-unit id="tl_form.confirmation.0">
+        <source>Confirmation message</source>
+        <target>Bestätigungsmeldung</target>
+      </trans-unit>
+      <trans-unit id="tl_form.confirmation.1">
+        <source>Here you can enter the confirmation message that will be displayed after submitting the form. You can use the submitted form data as simple tokens, e.g. &lt;code&gt;##field_name##&lt;/code&gt;. The confirmation message is also available as &lt;code&gt;{{form_confirmation}}&lt;/code&gt; insert tag.</source>
+        <target>Hier können Sie die Bestätigungsmeldung eingeben, die nach dem Absenden des Formulars angezeigt wird. Sie können die übermittelten Formulardaten als Simple-Tokens verwenden, z. B. &lt;code&gt;##field_name##&lt;/code&gt;. Die Bestätigungsnachricht ist außerdem als Insert-Tag &lt;code&gt;{{form_confirmation}}&lt;/code&gt; verfügbar.</target>
+      </trans-unit>
       <trans-unit id="tl_form.sendViaEmail.0">
         <source>Send form data via e-mail</source>
         <target>Per E-Mail versenden</target>
@@ -185,6 +193,14 @@
         <source>Allow HTML tags in form fields.</source>
         <target>HTML-Eingaben in Formularfeldern erlauben.</target>
       </trans-unit>
+      <trans-unit id="tl_form.ajax.0">
+        <source>Submit via Ajax</source>
+        <target>Per Ajax senden</target>
+      </trans-unit>
+      <trans-unit id="tl_form.ajax.1">
+        <source>Submit the form via Ajax instead of reloading the page.</source>
+        <target>Das Formular per Ajax senden, anstatt die Seite neu zu laden.</target>
+      </trans-unit>
       <trans-unit id="tl_form.tstamp.0">
         <source>Revision date</source>
         <target>Änderungsdatum</target>
@@ -212,6 +228,10 @@
       <trans-unit id="tl_form.config_legend">
         <source>Form configuration</source>
         <target>Formular-Konfiguration</target>
+      </trans-unit>
+      <trans-unit id="tl_form.confirm_legend">
+        <source>Confirmation</source>
+        <target>Bestätigung</target>
       </trans-unit>
       <trans-unit id="tl_form.template_legend">
         <source>Template settings</source>

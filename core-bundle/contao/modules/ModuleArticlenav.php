@@ -48,7 +48,6 @@ class ModuleArticlenav extends Module
 			return $objTemplate->parse();
 		}
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$this->objArticles = ArticleModel::findPublishedWithTeaserByPidAndColumn($objPage->id, $this->strColumn);
@@ -67,11 +66,9 @@ class ModuleArticlenav extends Module
 				return '';
 			}
 
-			/** @var ArticleModel $objArticle */
-			$objArticle = $this->objArticles->current();
-			$strAlias = $objArticle->alias ?: $objArticle->id;
+			$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
-			$this->redirect($objPage->getFrontendUrl('/articles/' . $strAlias));
+			$this->redirect($urlGenerator->generate($this->objArticles->current()));
 		}
 
 		return parent::generate();
@@ -82,9 +79,9 @@ class ModuleArticlenav extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
+		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 		$intActive = null;
 		$articles = array();
 		$intCount = 1;
@@ -99,12 +96,12 @@ class ModuleArticlenav extends Module
 				$articles[] = array
 				(
 					'isActive' => true,
-					'href' => $objPage->getFrontendUrl('/articles/' . $strAlias),
+					'href' => $urlGenerator->generate($objArticle),
 					'title' => StringUtil::specialchars($objArticle->title, true),
 					'link' => $intCount
 				);
 
-				$intActive = ($intCount - 1);
+				$intActive = $intCount - 1;
 			}
 
 			// Inactive article
@@ -113,7 +110,7 @@ class ModuleArticlenav extends Module
 				$articles[] = array
 				(
 					'isActive' => false,
-					'href' => $objPage->getFrontendUrl('/articles/' . $strAlias),
+					'href' => $urlGenerator->generate($objArticle),
 					'title' => StringUtil::specialchars($objArticle->title, true),
 					'link' => $intCount
 				);

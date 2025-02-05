@@ -12,21 +12,23 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Picker;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Knp\Menu\FactoryInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+#[AsPickerProvider(priority: 192)]
 class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaPickerProviderInterface
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao.picker.page_provider" service instead
+     * @internal
      */
     public function __construct(
         FactoryInterface $menuFactory,
         RouterInterface $router,
         TranslatorInterface $translator,
-        private Security $security,
+        private readonly Security $security,
     ) {
         parent::__construct($menuFactory, $router, $translator);
     }
@@ -50,7 +52,7 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
         return $this->isMatchingInsertTag($config);
     }
 
-    public function getDcaTable(PickerConfig $config = null): string
+    public function getDcaTable(PickerConfig|null $config = null): string
     {
         return 'tl_page';
     }
@@ -70,7 +72,7 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
             }
 
             if ($value) {
-                $attributes['value'] = array_map('\intval', explode(',', $value));
+                $attributes['value'] = array_map(\intval(...), explode(',', $value));
             }
 
             return $attributes;
@@ -93,10 +95,10 @@ class PagePickerProvider extends AbstractInsertTagPickerProvider implements DcaP
             return (int) $value;
         }
 
-        return sprintf($this->getInsertTag($config), $value);
+        return \sprintf($this->getInsertTag($config), $value);
     }
 
-    protected function getRouteParameters(PickerConfig $config = null): array
+    protected function getRouteParameters(PickerConfig|null $config = null): array
     {
         return ['do' => 'page'];
     }

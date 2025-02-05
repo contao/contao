@@ -18,22 +18,28 @@ use Contao\Input;
 use Contao\PageModel;
 use Symfony\Cmf\Component\Routing\Enhancer\RouteEnhancerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class InputEnhancer implements RouteEnhancerInterface
 {
     /**
-     * @internal Do not inherit from this class; decorate the "contao.routing.input_enhancer" service instead
+     * @internal
      */
-    public function __construct(private ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly RequestStack $requestStack,
+    ) {
     }
 
     public function enhance(array $defaults, Request $request): array
     {
         $page = $defaults['pageModel'] ?? null;
 
-        if (!$page instanceof PageModel) {
+        // Route parameters are set in the legacy Input class only if the current route
+        // is a Contao page and only for the main request. This prevents additional
+        // routing lookups from modifying input parameters.
+        if (!$page instanceof PageModel || $request !== $this->requestStack->getMainRequest()) {
             return $defaults;
         }
 
@@ -65,7 +71,7 @@ class InputEnhancer implements RouteEnhancerInterface
 
             // Abort if there is a duplicate parameter (duplicate content) (see #4277)
             if ($request->query->has($fragments[$i]) || \in_array($fragments[$i], $inputKeys, true)) {
-                throw new ResourceNotFoundException(sprintf('Duplicate parameter "%s" in path', $fragments[$i]));
+                throw new ResourceNotFoundException(\sprintf('Duplicate parameter "%s" in path', $fragments[$i]));
             }
 
             $inputKeys[] = $fragments[$i];

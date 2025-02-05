@@ -21,6 +21,7 @@ use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGenerator;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGeneratorInterface;
 use Contao\CoreBundle\Filesystem\Dbafs\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Filesystem\Dbafs\StoreDbafsMetadataEvent;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItemIterator;
 use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
@@ -161,7 +162,7 @@ class DbafsTest extends TestCase
             ->with(
                 'SELECT * FROM tl_files WHERE path LIKE ? AND path NOT LIKE ? ORDER BY path',
                 ['foo/%', 'foo/%/%'],
-                []
+                [],
             )
             ->willReturn([
                 ['id' => 1, 'uuid' => $this->generateUuid(1)->toBinary(), 'path' => 'foo/first', 'type' => 'file'],
@@ -253,8 +254,8 @@ class DbafsTest extends TestCase
                         'hash', 'lastModified', 'type',
                         'extension', 'found', 'name', 'tstamp',
                         'foo', 'baz',
-                    ]
-                )
+                    ],
+                ),
             )
         ;
 
@@ -272,7 +273,7 @@ class DbafsTest extends TestCase
                     'foo' => 'normalized a',
                     'baz' => 'normalized c',
                 ],
-                ['uuid' => $uuid->toBinary()]
+                ['uuid' => $uuid->toBinary()],
             )
         ;
 
@@ -290,15 +291,16 @@ class DbafsTest extends TestCase
                             'uuid' => $uuid->toBinary(),
                             'path' => 'some/path',
                         ],
-                        $event->getRow()
+                        $event->getRow(),
                     );
 
                     $this->assertSame(
                         [
                             'foo' => 'complex a',
+                            'bar' => 'complex b',
                             'baz' => 'complex c',
                         ],
-                        $event->getExtraMetadata()
+                        $event->getExtraMetadata()->all(),
                     );
 
                     $event->set('foo', 'normalized a');
@@ -306,20 +308,23 @@ class DbafsTest extends TestCase
                     $event->set('invalid', 'something');
 
                     return $event;
-                }
+                },
             )
         ;
 
         $dbafs = $this->getDbafs($connection, null, $eventDispatcher);
 
-        $dbafs->setExtraMetadata(
-            'some/path',
-            [
-                'foo' => 'complex a',
-                'bar' => 'complex b',
-                'baz' => 'complex c',
-            ]
-        );
+        $dbafs->setExtraMetadata('some/path', new ExtraMetadata([
+            'foo' => 'complex a',
+            'bar' => 'complex b',
+            'baz' => 'complex c',
+        ]));
+
+        // Assert internal cache is cleared and file item correctly contains new metadata
+        $item = $dbafs->getRecord('some/path');
+
+        $this->assertSame('complex a', $item->getExtraMetadata()['foo']);
+        $this->assertSame('complex c', $item->getExtraMetadata()['baz']);
     }
 
     public function testSetExtraMetadataThrowsOnInvalidPath(): void
@@ -335,7 +340,7 @@ class DbafsTest extends TestCase
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Record for path "some/invalid/path" does not exist.');
 
-        $dbafs->setExtraMetadata('some/invalid/path', []);
+        $dbafs->setExtraMetadata('some/invalid/path', new ExtraMetadata());
     }
 
     public function testNormalizesPathsIfDatabasePrefixWasSet(): void
@@ -378,7 +383,7 @@ class DbafsTest extends TestCase
             ->with('SELECT * FROM tl_files WHERE id=?', [1], [])
             ->willReturnOnConsecutiveCalls(
                 ['id' => 1, 'uuid' => $uuid1->toBinary(), 'path' => 'foo/bar', 'type' => 'file'],
-                ['id' => 1, 'uuid' => $uuid2->toBinary(), 'path' => 'other/path', 'type' => 'file']
+                ['id' => 1, 'uuid' => $uuid2->toBinary(), 'path' => 'other/path', 'type' => 'file'],
             )
         ;
 
@@ -406,9 +411,9 @@ class DbafsTest extends TestCase
     {
         $dbafs = $this->getDbafs();
 
-        // Due to the complexity of the inner workings, we are testing a method
-        // that isn't part of the API. Normalizing paths is the first isolated
-        // step when synchronizing, but we do not want to expose this functionality.
+        // Due to the complexity of the inner workings, we are testing a method that
+        // isn't part of the API. Normalizing paths is the first isolated step when
+        // synchronizing, but we do not want to expose this functionality.
         $method = new \ReflectionMethod($dbafs, 'getNormalizedSearchPaths');
 
         [$searchPaths, $parentPaths] = $method->invoke($dbafs, ...$paths);
@@ -417,7 +422,7 @@ class DbafsTest extends TestCase
         $this->assertSame($expectedParentPaths, $parentPaths, 'parent paths');
     }
 
-    public function provideSearchPaths(): \Generator
+    public static function provideSearchPaths(): iterable
     {
         yield 'single file' => [
             ['foo/bar/baz/cat.jpg'],
@@ -483,7 +488,7 @@ class DbafsTest extends TestCase
         $dbafs->computeChangeSet(...$paths);
     }
 
-    public function provideInvalidSearchPaths(): \Generator
+    public static function provideInvalidSearchPaths(): iterable
     {
         yield 'absolute path to file' => [
             ['foo', '/path/to/foo'],
@@ -552,17 +557,17 @@ class DbafsTest extends TestCase
         ;
 
         $dbafs = $this->getDbafs($connection, $filesystem);
-        $changeSet = $dbafs->computeChangeSet(...((array) $paths));
+        $changeSet = $dbafs->computeChangeSet(...(array) $paths);
 
         $this->assertSameChangeSet($expected, $changeSet);
     }
 
-    public function provideFilesystemsAndExpectedChangeSets(): \Generator
+    public function provideFilesystemsAndExpectedChangeSets(): iterable
     {
         $getFilesystem = function (): VirtualFilesystemInterface {
             $filesystem = new VirtualFilesystem(
                 $this->getMountManagerWithRootAdapter(),
-                $this->createMock(DbafsManager::class)
+                $this->createMock(DbafsManager::class),
             );
 
             $filesystem->write('file1', 'fly');
@@ -597,7 +602,7 @@ class DbafsTest extends TestCase
             [
                 'bar' => ['hash' => 'c9baa6dc5b9218fb7bb83349ace1517b'],
             ],
-            []
+            [],
         );
 
         yield 'added file; full sync' => [$filesystem2, '', $changeSet2];
@@ -618,7 +623,7 @@ class DbafsTest extends TestCase
             [
                 'file1' => ChangeSet::TYPE_FILE,
                 'foo/baz/file4' => ChangeSet::TYPE_FILE,
-            ]
+            ],
         );
 
         yield 'removed files; full sync' => [$filesystem3, '', $changeSet3];
@@ -635,7 +640,7 @@ class DbafsTest extends TestCase
                 ],
                 [
                     'foo/baz/file4' => ChangeSet::TYPE_FILE,
-                ]
+                ],
             ),
         ];
 
@@ -647,7 +652,7 @@ class DbafsTest extends TestCase
                 [],
                 [
                     'file1' => ChangeSet::TYPE_FILE,
-                ]
+                ],
             ),
         ];
 
@@ -661,7 +666,7 @@ class DbafsTest extends TestCase
                 'foo' => ['hash' => '0a12dc23f78b213ee41428f3c1090724'],
                 'foo/file3' => ['path' => 'bar/file3'],
             ],
-            []
+            [],
         );
 
         yield 'moved file; full sync' => [$filesystem4, '', $changeSet4];
@@ -677,7 +682,7 @@ class DbafsTest extends TestCase
                 ],
                 [
                     'foo/file3' => ChangeSet::TYPE_FILE,
-                ]
+                ],
             ),
         ];
 
@@ -691,7 +696,7 @@ class DbafsTest extends TestCase
                 'foo/baz' => ['hash' => '241e718d4016fe98aca816485e513129'],
                 'foo/file3' => ['path' => 'foo/baz/track-me'],
             ],
-            []
+            [],
         );
 
         yield 'moved and renamed file (full sync)' => [$filesystem5, '', $changeSet5];
@@ -711,7 +716,7 @@ class DbafsTest extends TestCase
                     'foo/file3' => ['hash' => 'e92c4f27d783ac09065352d0e0f7cb8b'],
                     'file1' => ['hash' => 'e92c4f27d783ac09065352d0e0f7cb8b'],
                 ],
-                []
+                [],
             ),
         ];
 
@@ -724,7 +729,7 @@ class DbafsTest extends TestCase
                     'foo' => ['hash' => '9158456b71197cf99a5b59fba00f77f1'],
                     'foo/file3' => ['hash' => 'e92c4f27d783ac09065352d0e0f7cb8b'],
                 ],
-                []
+                [],
             ),
         ];
 
@@ -742,7 +747,7 @@ class DbafsTest extends TestCase
                     'bar' => ChangeSet::TYPE_DIRECTORY,
                     'bar/file5a' => ChangeSet::TYPE_FILE,
                     'bar/file5b' => ChangeSet::TYPE_FILE,
-                ]
+                ],
             ),
         ];
 
@@ -765,7 +770,7 @@ class DbafsTest extends TestCase
                     'foo/baz/file4' => ['path' => 'bar/foo/baz/file4'],
                     'foo/file3' => ['path' => 'bar/foo/file3'],
                 ],
-                []
+                [],
             ),
         ];
 
@@ -783,7 +788,7 @@ class DbafsTest extends TestCase
                     'bar/file5a' => ['path' => 'file5a'],
                     'bar/file5b' => ['path' => 'file5b'],
                 ],
-                []
+                [],
             ),
         ];
 
@@ -803,7 +808,7 @@ class DbafsTest extends TestCase
                 ],
                 [
                     'foo/file3' => ChangeSet::TYPE_FILE,
-                ]
+                ],
             ),
         ];
 
@@ -836,7 +841,7 @@ class DbafsTest extends TestCase
                 ],
                 [
                     'bar/file5a' => ChangeSet::TYPE_FILE,
-                ]
+                ],
             ),
         ];
 
@@ -849,7 +854,7 @@ class DbafsTest extends TestCase
                     'foo' => ['hash' => '9158456b71197cf99a5b59fba00f77f1'],
                     'foo/file3' => ['hash' => 'e92c4f27d783ac09065352d0e0f7cb8b'],
                 ],
-                []
+                [],
             ),
         ];
     }
@@ -858,12 +863,12 @@ class DbafsTest extends TestCase
     {
         $filesystem = new VirtualFilesystem(
             $this->getMountManagerWithRootAdapter(),
-            $this->createMock(DbafsManager::class)
+            $this->createMock(DbafsManager::class),
         );
 
         $filesystem->write('old', 'foo'); // untouched
-        $filesystem->write('file2', 'bar'); // moved
-        $filesystem->write('new', 'baz'); // new
+        $filesystem->write('file2.txt', 'bar'); // moved
+        $filesystem->write('new.txt', 'baz'); // new
 
         $hashGenerator = $this->createMock(HashGeneratorInterface::class);
         $hashGenerator
@@ -880,7 +885,7 @@ class DbafsTest extends TestCase
                         return;
                     }
 
-                    if ('file2' === $path) {
+                    if ('file2.txt' === $path) {
                         $this->assertNull($hashContext->getLastModified());
                         $this->assertFalse($hashContext->canSkipHashing());
                         $hashContext->updateLastModified(200);
@@ -889,13 +894,13 @@ class DbafsTest extends TestCase
                         return;
                     }
 
-                    if ('new' === $path) {
+                    if ('new.txt' === $path) {
                         $this->assertNull($hashContext->getLastModified());
                         $this->assertFalse($hashContext->canSkipHashing());
                         $hashContext->updateLastModified(201);
                         $hashContext->setHash('cbab7');
                     }
-                }
+                },
             )
         ;
 
@@ -923,18 +928,19 @@ class DbafsTest extends TestCase
                 'INSERT INTO tl_files (`uuid`, `pid`, `path`, `hash`, `type`, `name`, `extension`, `tstamp`, `lastModified`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
                 $this->callback(
                     function (array $params) {
-                        $this->assertSame('new', $params[2]); // path
+                        $this->assertSame('new.txt', $params[2]); // path
                         $this->assertSame('cbab7', $params[3]); // hash
+                        $this->assertSame('txt', $params[6]); // extension
                         $this->assertSame(201, $params[8]); // lastModified
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
         ;
 
         $connection
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('update')
             ->willReturnCallback(
                 function (string $table, array $update, array $criteria): void {
@@ -942,20 +948,28 @@ class DbafsTest extends TestCase
 
                     $file = $criteria['path'] ?? null;
 
-                    if ('file1' === $file) {
-                        $this->assertSame('file2', $update['path']);
+                    if (isset($criteria['type'])) {
+                        $this->assertSame('file', $criteria['type']);
+                        $this->assertSame('file1', $criteria['path']);
+                        $this->assertSame('txt', $update['extension']);
 
                         return;
                     }
 
-                    if ('new' === $file) {
+                    if ('file1' === $file) {
+                        $this->assertSame('file2.txt', $update['path']);
+
+                        return;
+                    }
+
+                    if ('new.txt' === $file) {
                         $this->assertSame(201, $update['lastModified']);
 
                         return;
                     }
 
                     $this->fail();
-                }
+                },
             )
         ;
 
@@ -964,7 +978,7 @@ class DbafsTest extends TestCase
             $connection,
             $this->createMock(EventDispatcherInterface::class),
             $filesystem,
-            'tl_files'
+            'tl_files',
         );
 
         $changeSet = $dbafs->sync();
@@ -974,14 +988,14 @@ class DbafsTest extends TestCase
         $this->assertCount(1, $itemsToCreate);
 
         $this->assertSame('cbab7', $itemsToCreate[0]->getHash());
-        $this->assertSame('new', $itemsToCreate[0]->getPath());
+        $this->assertSame('new.txt', $itemsToCreate[0]->getPath());
         $this->assertTrue($itemsToCreate[0]->isFile());
 
         // Items to update
         $itemsToUpdate = $changeSet->getItemsToUpdate(true);
         $this->assertCount(2, $itemsToUpdate);
 
-        $this->assertSame('new', $itemsToUpdate[0]->getExistingPath());
+        $this->assertSame('new.txt', $itemsToUpdate[0]->getExistingPath());
         $this->assertFalse($itemsToUpdate[0]->updatesPath());
         $this->assertFalse($itemsToUpdate[0]->updatesHash());
         $this->assertTrue($itemsToUpdate[0]->updatesLastModified());
@@ -991,7 +1005,7 @@ class DbafsTest extends TestCase
         $this->assertTrue($itemsToUpdate[1]->updatesPath());
         $this->assertFalse($itemsToUpdate[1]->updatesHash());
         $this->assertTrue($itemsToUpdate[1]->updatesLastModified());
-        $this->assertSame('file2', $itemsToUpdate[1]->getNewPath());
+        $this->assertSame('file2.txt', $itemsToUpdate[1]->getNewPath());
         $this->assertSame(200, $itemsToUpdate[1]->getLastModified());
 
         // Items to delete
@@ -1058,7 +1072,7 @@ class DbafsTest extends TestCase
                         $this->assertStringStartsWith('INSERT INTO tl_files (`uuid`, `pid`, `path`, `hash`, `type`, `name`, `extension`, `tstamp`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', $query);
 
                         return true;
-                    }
+                    },
                 ),
                 $this->callback(
                     function (array $parameters) use (&$invokedInsert): bool {
@@ -1098,18 +1112,26 @@ class DbafsTest extends TestCase
                         ++$invokedInsert;
 
                         return true;
-                    }
-                )
+                    },
+                ),
             )
         ;
 
         $invokedUpdate = 0;
 
         $connection
-            ->expects($this->exactly(2))
+            ->expects($this->exactly(3))
             ->method('update')
             ->willReturnCallback(
                 function (string $table, array $updates, array $criteria) use (&$invokedUpdate): void {
+                    if (isset($criteria['type'])) {
+                        $this->assertSame('file', $criteria['type']);
+                        $this->assertSame('files/baz', $criteria['path']);
+                        $this->assertSame('', $updates['extension']);
+
+                        return;
+                    }
+
                     $this->assertSame('tl_files', $table);
                     $this->assertArrayHasKey('tstamp', $updates);
 
@@ -1122,7 +1144,7 @@ class DbafsTest extends TestCase
                     }
 
                     ++$invokedUpdate;
-                }
+                },
             )
         ;
 
@@ -1134,7 +1156,7 @@ class DbafsTest extends TestCase
 
         $filesystem = new VirtualFilesystem(
             $this->getMountManagerWithRootAdapter(),
-            $this->createMock(DbafsManager::class)
+            $this->createMock(DbafsManager::class),
         );
 
         $filesystem->createDirectory('foo');
@@ -1147,12 +1169,11 @@ class DbafsTest extends TestCase
         $dbafs = $this->getDbafs($connection, $filesystem);
         $dbafs->setDatabasePathPrefix('files');
 
-        // Lower bulk insert size so that we do not need excessive amounts of
-        // operations when testing
+        // Lower bulk insert size so that we do not need excessive amounts of operations
+        // when testing
         $dbafs->setBulkInsertSize(2);
 
-        // Prime internal cache to test if it gets updated and still points to
-        // this resource
+        // Prime internal cache to test if it gets updated and still points to this resource
         $this->assertSame($uuid->toRfc4122(), $dbafs->getRecord('baz')->getUuid()->toRfc4122());
 
         $dbafs->sync();
@@ -1181,7 +1202,7 @@ class DbafsTest extends TestCase
             ],
             [
                 ['path' => 'a/file'],
-                ['path' => 'b/file', 'pid' => 'ab54'], // updated path and uuid of "files/b"
+                ['path' => 'b/file', 'pid' => 'ab54', 'name' => 'file'], // updated path and uuid of "files/b"
             ],
             [
                 ['path' => 'b'],
@@ -1190,10 +1211,18 @@ class DbafsTest extends TestCase
         ];
 
         $connection
-            ->expects($this->exactly(3))
+            ->expects($this->exactly(4))
             ->method('update')
             ->willReturnCallback(
                 function (string $table, array $updates, array $criteria) use (&$expected): void {
+                    if (isset($criteria['type'])) {
+                        $this->assertSame('file', $criteria['type']);
+                        $this->assertSame('a/file', $criteria['path']);
+                        $this->assertSame('', $updates['extension']);
+
+                        return;
+                    }
+
                     $this->assertSame('tl_files', $table);
                     $this->assertArrayHasKey('tstamp', $updates);
 
@@ -1203,13 +1232,13 @@ class DbafsTest extends TestCase
 
                     $this->assertSame($expectedCriteria, $criteria);
                     $this->assertSame($expectedUpdates, $updates);
-                }
+                },
             )
         ;
 
         $filesystem = new VirtualFilesystem(
             $this->getMountManagerWithRootAdapter(),
-            $this->createMock(DbafsManager::class)
+            $this->createMock(DbafsManager::class),
         );
 
         $filesystem->createDirectory('a');
@@ -1255,27 +1284,27 @@ class DbafsTest extends TestCase
         $this->assertCount(
             \count($a->getItemsToCreate()),
             $itemsToCreate = $b->getItemsToCreate(),
-            'same number of items to create'
+            'same number of items to create',
         );
 
         foreach ($a->getItemsToCreate() as $key => $item) {
             $this->assertSame(
                 $item->getHash(),
                 $itemsToCreate[$key]->getHash(),
-                'item to create has same hash'
+                'item to create has same hash',
             );
 
             $this->assertSame(
                 $item->getPath(),
                 $itemsToCreate[$key]->getPath(),
-                'item to create has same path'
+                'item to create has same path',
             );
         }
 
         $this->assertCount(
             \count($a->getItemsToUpdate()),
             $itemsToUpdate = $b->getItemsToUpdate(true),
-            'same number of items to update'
+            'same number of items to update',
         );
 
         // Compare items to update
@@ -1283,42 +1312,42 @@ class DbafsTest extends TestCase
             $this->assertSame(
                 $item->updatesPath(),
                 $itemsToUpdate[$key]->updatesPath(),
-                'item to update modifies/keeps path'
+                'item to update modifies/keeps path',
             );
 
             if ($item->updatesPath()) {
                 $this->assertSame(
                     $item->getNewPath(),
                     $itemsToUpdate[$key]->getNewPath(),
-                    'item to update has same path'
+                    'item to update has same path',
                 );
             }
 
             $this->assertSame(
                 $item->updatesHash(),
                 $itemsToUpdate[$key]->updatesHash(),
-                'item to update modifies/keeps hash'
+                'item to update modifies/keeps hash',
             );
 
             if ($item->updatesHash()) {
                 $this->assertSame(
                     $item->getNewHash(),
                     $itemsToUpdate[$key]->getNewHash(),
-                    'item to update has same hash'
+                    'item to update has same hash',
                 );
             }
 
             $this->assertSame(
                 $item->updatesLastModified(),
                 $itemsToUpdate[$key]->updatesLastModified(),
-                'item to update modifies/keeps last modified date'
+                'item to update modifies/keeps last modified date',
             );
 
             if ($item->updatesLastModified()) {
                 $this->assertSame(
                     $item->getLastModified(),
                     $itemsToUpdate[$key]->getLastModified(),
-                    'item to update has same last modified date'
+                    'item to update has same last modified date',
                 );
             }
         }
@@ -1327,20 +1356,20 @@ class DbafsTest extends TestCase
         $this->assertCount(
             \count($a->getItemsToDelete()),
             $itemsToDelete = $b->getItemsToDelete(),
-            'same number of items to delete'
+            'same number of items to delete',
         );
 
         foreach ($a->getItemsToDelete() as $key => $item) {
             $this->assertSame(
                 $item->getPath(),
                 $itemsToDelete[$key]->getPath(),
-                'item to delete has same path'
+                'item to delete has same path',
             );
 
             $this->assertSame(
                 $item->isFile(),
                 $itemsToDelete[$key]->isFile(),
-                'item to delete has same type'
+                'item to delete has same type',
             );
         }
     }
@@ -1350,7 +1379,7 @@ class DbafsTest extends TestCase
         return (new MountManager())->mount(new InMemoryFilesystemAdapter());
     }
 
-    private function getDbafs(Connection $connection = null, VirtualFilesystemInterface $filesystem = null, EventDispatcherInterface $eventDispatcher = null): Dbafs
+    private function getDbafs(Connection|null $connection = null, VirtualFilesystemInterface|null $filesystem = null, EventDispatcherInterface|null $eventDispatcher = null): Dbafs
     {
         $connection ??= $this->createMock(Connection::class);
 
@@ -1362,7 +1391,7 @@ class DbafsTest extends TestCase
             ;
         }
 
-        if (null === $eventDispatcher) {
+        if (!$eventDispatcher) {
             $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
             $eventDispatcher
                 ->method('dispatch')
@@ -1371,7 +1400,7 @@ class DbafsTest extends TestCase
                         $event->set('foo', 'bar');
 
                         return $event;
-                    }
+                    },
                 )
             ;
         }
@@ -1391,7 +1420,7 @@ class DbafsTest extends TestCase
     {
         $hash = md5((string) $index);
 
-        $uuid = sprintf(
+        $uuid = \sprintf(
             '%08s-%04s-1%03s-8000-000000000000',
             substr($hash, -8),
             substr($hash, -12, 4),

@@ -50,7 +50,6 @@ class ModuleBooknav extends Module
 			return $objTemplate->parse();
 		}
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		if (!$this->rootPage || !\in_array($this->rootPage, $objPage->trail))
@@ -67,7 +66,7 @@ class ModuleBooknav extends Module
 	protected function compile()
 	{
 		// Get the root page
-		if (!($objTarget = $this->objModel->getRelated('rootPage')) instanceof PageModel)
+		if (!$objTarget = PageModel::findById($this->objModel->rootPage))
 		{
 			return;
 		}
@@ -77,15 +76,13 @@ class ModuleBooknav extends Module
 		// Get all groups of the current front end user
 		if (System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 		{
-			$this->import(FrontendUser::class, 'User');
-			$groups = $this->User->groups;
+			$groups = FrontendUser::getInstance()->groups;
 		}
 
 		// Get all book pages
 		$this->arrPages[$objTarget->id] = $objTarget;
 		$this->getBookPages($objTarget->id, $groups, time());
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Upper page
@@ -126,12 +123,12 @@ class ModuleBooknav extends Module
 		if ($intCurrent > 0)
 		{
 			$current = $intCurrent;
-			$intKey = $arrLookup[($current - 1)];
+			$intKey = $arrLookup[$current - 1];
 
 			// Skip forward pages (see #5074)
-			while ($this->arrPages[$intKey]->type == 'forward' && isset($arrLookup[--$current]))
+			while (isset($this->arrPages[$intKey]) && $this->arrPages[$intKey]->type == 'forward' && isset($arrLookup[--$current]))
 			{
-				$intKey = $arrLookup[($current - 1)];
+				$intKey = $arrLookup[$current - 1] ?? null;
 			}
 
 			if ($intKey === null)
@@ -152,12 +149,12 @@ class ModuleBooknav extends Module
 		if ($intCurrent < (\count($arrLookup) - 1))
 		{
 			$current = $intCurrent;
-			$intKey = $arrLookup[($current + 1)];
+			$intKey = $arrLookup[$current + 1];
 
 			// Skip forward pages (see #5074)
 			while ($this->arrPages[$intKey]->type == 'forward' && isset($arrLookup[++$current]))
 			{
-				$intKey = $arrLookup[($current + 1)];
+				$intKey = $arrLookup[$current + 1];
 			}
 
 			if ($intKey === null)
@@ -193,7 +190,6 @@ class ModuleBooknav extends Module
 
 		$security = System::getContainer()->get('security.helper');
 
-		/** @var PageModel $objPage */
 		foreach ($arrPages as list('page' => $objPage, 'hasSubpages' => $blnHasSubpages))
 		{
 			$objPage->loadDetails();

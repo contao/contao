@@ -12,10 +12,16 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DependencyInjection;
 
+use Contao\ArrayUtil;
 use Contao\Config;
+use Contao\CoreBundle\Altcha\Config\Algorithm;
+use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Doctrine\Backup\RetentionPolicy;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Contao\Image\Metadata\ExifFormat;
+use Contao\Image\Metadata\IptcFormat;
 use Contao\Image\ResizeConfiguration;
+use Contao\Image\ResizeOptions;
 use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\Builder\NodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -24,10 +30,6 @@ use Symfony\Component\Filesystem\Path;
 
 class Configuration implements ConfigurationInterface
 {
-    public function __construct(private string $projectDir)
-    {
-    }
-
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('contao');
@@ -61,7 +63,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return $options;
-                            }
+                            },
                         )
                     ->end()
                 ->end()
@@ -95,19 +97,16 @@ class Configuration implements ConfigurationInterface
                 ->scalarNode('editable_files')
                     ->defaultValue('css,csv,html,ini,js,json,less,md,scss,svg,svgz,ts,txt,xliff,xml,yml,yaml')
                 ->end()
-                ->scalarNode('web_dir')
-                    ->info('Absolute path to the web directory. Defaults to %kernel.project_dir%/public.')
-                    ->setDeprecated('contao/core-bundle', '4.13', 'Setting the web directory in a config file is deprecated. Use the "extra.public-dir" config key in your root composer.json instead.')
+                ->scalarNode('console_path')
+                    ->info('The path to the Symfony console. Defaults to %kernel.project_dir%/bin/console.')
                     ->cannotBeEmpty()
-                    ->defaultValue('public')
-                    ->validate()
-                        ->always(static fn (string $value): string => Path::canonicalize($value))
-                    ->end()
+                    ->defaultValue('%kernel.project_dir%/bin/console')
                 ->end()
                 ->append($this->addMessengerNode())
                 ->append($this->addImageNode())
                 ->append($this->addSecurityNode())
                 ->append($this->addSearchNode())
+                ->append($this->addBackendSearchNode())
                 ->append($this->addCrawlNode())
                 ->append($this->addMailerNode())
                 ->append($this->addBackendNode())
@@ -115,6 +114,9 @@ class Configuration implements ConfigurationInterface
                 ->append($this->addBackupNode())
                 ->append($this->addSanitizerNode())
                 ->append($this->addCronNode())
+                ->append($this->addCspNode())
+                ->append($this->addAltchaNode())
+                ->append($this->addTemplateStudioNode())
             ->end()
         ;
 
@@ -128,11 +130,36 @@ class Configuration implements ConfigurationInterface
             ->addDefaultsIfNotSet()
             ->info('Allows to define Symfony Messenger workers (messenger:consume). Workers are started every minute using the Contao cron job framework.')
             ->children()
-                ->scalarNode('console_path')
-                    ->info('The path to the Symfony console.')
-                    ->defaultValue('%kernel.project_dir%/bin/console')
+                ->arrayNode('web_worker')
+                    ->addDefaultsIfNotSet()
+                    ->info('Contao provides a way to work on Messenger transports in the web process (kernel.terminate) if there is no real "messenger:consume" worker. You can configure its behavior here.')
+                    ->children()
+                        ->arrayNode('transports')
+                            ->info('The transports to apply the web worker logic to.')
+                            ->scalarPrototype()->end()
+                            ->defaultValue([])
+                        ->end()
+                        ->scalarNode('grace_period')
+                            ->defaultValue('PT10M')
+                            ->validate()
+                                ->ifTrue(
+                                    static function (string $period) {
+                                        try {
+                                            new \DateInterval($period);
+                                        } catch (\Exception) {
+                                            return true;
+                                        }
+
+                                        return false;
+                                    },
+                                )
+                                ->thenInvalid('Must be a valid string for \DateInterval(). %s given.')
+                            ->end()
+                        ->end()
+                    ->end()
                 ->end()
                 ->arrayNode('workers')
+                    ->performNoDeepMerging()
                     ->arrayPrototype()
                         ->children()
                             ->arrayNode('transports')
@@ -157,9 +184,16 @@ class Configuration implements ConfigurationInterface
                                 ->children()
                                     ->integerNode('desired_size')
                                         ->info('Contao will automatically autoscale the number of workers to meet this queue size. Logic: desiredWorkers = ceil(currentSize / desiredSize)')
+                                        ->isRequired()
                                         ->min(1)
                                     ->end()
+                                    ->integerNode('min')
+                                        ->min(1)
+                                        ->defaultValue(1)
+                                        ->info('Contao will never scale down to less than this configured number of workers.')
+                                    ->end()
                                     ->integerNode('max')
+                                        ->isRequired()
                                         ->min(1)
                                         ->info('Contao will never scale up to more than this configured number of workers.')
                                     ->end()
@@ -182,44 +216,7 @@ class Configuration implements ConfigurationInterface
                     ->info('Bypass the image cache and always regenerate images when requested. This also disables deferred image resizing.')
                     ->defaultValue(false)
                 ->end()
-                ->arrayNode('imagine_options')
-                    ->addDefaultsIfNotSet()
-                    ->children()
-                        ->integerNode('jpeg_quality')
-                            ->defaultValue(80)
-                        ->end()
-                        ->arrayNode('jpeg_sampling_factors')
-                            ->prototype('scalar')->end()
-                            ->defaultValue([2, 1, 1])
-                        ->end()
-                        ->integerNode('png_compression_level')
-                        ->end()
-                        ->integerNode('png_compression_filter')
-                        ->end()
-                        ->integerNode('webp_quality')
-                        ->end()
-                        ->booleanNode('webp_lossless')
-                        ->end()
-                        ->integerNode('avif_quality')
-                        ->end()
-                        ->booleanNode('avif_lossless')
-                        ->end()
-                        ->integerNode('heic_quality')
-                        ->end()
-                        ->booleanNode('heic_lossless')
-                        ->end()
-                        ->integerNode('jxl_quality')
-                        ->end()
-                        ->booleanNode('jxl_lossless')
-                        ->end()
-                        ->booleanNode('flatten')
-                            ->info('Allows to disable the layer flattening of animated images. Set this option to false to support animations. It has no effect with Gd as Imagine service.')
-                        ->end()
-                        ->scalarNode('interlace')
-                            ->defaultValue(ImageInterface::INTERLACE_PLANE)
-                        ->end()
-                    ->end()
-                ->end()
+                ->append($this->addImagineOptionsNode(true))
                 ->scalarNode('imagine_service')
                     ->info('Contao automatically uses an Imagine service out of Gmagick, Imagick and Gd (in this order). Set a service ID here to override.')
                     ->defaultNull()
@@ -251,20 +248,20 @@ class Configuration implements ConfigurationInterface
 
                                 foreach (array_keys($value) as $name) {
                                     if (preg_match('/^\d+$/', (string) $name)) {
-                                        throw new \InvalidArgumentException(sprintf('The image size name "%s" cannot contain only digits', $name));
+                                        throw new \InvalidArgumentException(\sprintf('The image size name "%s" cannot contain only digits', $name));
                                     }
 
                                     if (\in_array($name, $reservedImageSizeNames, true)) {
-                                        throw new \InvalidArgumentException(sprintf('"%s" is a reserved image size name (reserved names: %s)', $name, implode(', ', $reservedImageSizeNames)));
+                                        throw new \InvalidArgumentException(\sprintf('"%s" is a reserved image size name (reserved names: %s)', $name, implode(', ', $reservedImageSizeNames)));
                                     }
 
                                     if (preg_match('/[^a-z0-9_]/', (string) $name)) {
-                                        throw new \InvalidArgumentException(sprintf('The image size name "%s" must consist of lowercase letters, digits and underscores only', $name));
+                                        throw new \InvalidArgumentException(\sprintf('The image size name "%s" must consist of lowercase letters, digits and underscores only', $name));
                                     }
                                 }
 
                                 return $value;
-                            }
+                            },
                         )
                     ->end()
                     ->arrayPrototype()
@@ -304,6 +301,16 @@ class Configuration implements ConfigurationInterface
                                     ->scalarPrototype()->end()
                                 ->end()
                             ->end()
+                            ->arrayNode('preserve_metadata_fields')
+                                ->info('Which metadata fields to preserve when resizing images.')
+                                ->example([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS, IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS])
+                                ->useAttributeAsKey('format')
+                                ->arrayPrototype()
+                                    ->beforeNormalization()->castToArray()->end()
+                                    ->scalarPrototype()->end()
+                                ->end()
+                            ->end()
+                            ->append($this->addImagineOptionsNode(false))
                             ->arrayNode('items')
                                 ->arrayPrototype()
                                     ->children()
@@ -363,7 +370,7 @@ class Configuration implements ConfigurationInterface
                     ->info('The target directory for the cached images processed by Contao.')
                     ->example('%kernel.project_dir%/assets/images')
                     ->cannotBeEmpty()
-                    ->defaultValue(Path::join($this->projectDir, 'assets/images'))
+                    ->defaultValue('%kernel.project_dir%/assets/images')
                     ->validate()
                         ->always(static fn (string $value): string => Path::canonicalize($value))
                     ->end()
@@ -373,8 +380,33 @@ class Configuration implements ConfigurationInterface
                     ->defaultNull()
                 ->end()
                 ->arrayNode('valid_extensions')
+                    ->info('Adds, removes or overwrites the list of enabled image extensions that can be used.')
                     ->prototype('scalar')->end()
                     ->defaultValue(['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'avif'])
+                    ->example(['+heic', '-svgz'])
+                    ->validate()
+                        ->ifTrue(
+                            static function (array $extensions): bool {
+                                foreach ($extensions as $extension) {
+                                    if (!preg_match('/^[+-]?[a-z0-9]+$/', $extension)) {
+                                        return true;
+                                    }
+                                }
+
+                                return false;
+                            },
+                        )
+                        ->thenInvalid('Make sure your provided image extensions are valid and optionally start with +/- to add/remove the extension to/from the default list.')
+                    ->end()
+                    ->validate()
+                        ->always(
+                            static function (array $extensions): array {
+                                $default = ['jpg', 'jpeg', 'gif', 'png', 'tif', 'tiff', 'bmp', 'svg', 'svgz', 'webp', 'avif'];
+
+                                return ArrayUtil::alterListByConfig($default, $extensions);
+                            },
+                        )
+                    ->end()
                 ->end()
                 ->arrayNode('preview')
                     ->addDefaultsIfNotSet()
@@ -383,7 +415,7 @@ class Configuration implements ConfigurationInterface
                             ->info('The target directory for the cached previews.')
                             ->example('%kernel.project_dir%/assets/previews')
                             ->cannotBeEmpty()
-                            ->defaultValue(Path::join($this->projectDir, 'assets/previews'))
+                            ->defaultValue('%kernel.project_dir%/assets/previews')
                             ->validate()
                                 ->always(static fn (string $value): string => Path::canonicalize($value))
                             ->end()
@@ -408,8 +440,96 @@ class Configuration implements ConfigurationInterface
                         ->thenInvalid('The default_size must not be greater than the max_size: %s')
                     ->end()
                 ->end()
+                ->arrayNode('preserve_metadata_fields')
+                    ->info('Which metadata fields to preserve when resizing images.')
+                    ->example([ExifFormat::NAME => ExifFormat::DEFAULT_PRESERVE_KEYS, IptcFormat::NAME => IptcFormat::DEFAULT_PRESERVE_KEYS])
+                    ->defaultValue((new ResizeOptions())->getPreserveCopyrightMetadata())
+                    ->useAttributeAsKey('format')
+                    ->arrayPrototype()
+                        ->beforeNormalization()->castToArray()->end()
+                        ->scalarPrototype()->end()
+                    ->end()
+                ->end()
             ->end()
         ;
+    }
+
+    private function addImagineOptionsNode(bool $withDefaults): NodeDefinition
+    {
+        $node = (new TreeBuilder('imagine_options'))
+            ->getRootNode()
+            ->children()
+                ->integerNode('jpeg_quality')
+                ->end()
+                ->arrayNode('jpeg_sampling_factors')
+                    ->prototype('scalar')->end()
+                ->end()
+                ->integerNode('png_compression_level')
+                ->end()
+                ->integerNode('png_compression_filter')
+                ->end()
+                ->integerNode('webp_quality')
+                ->end()
+                ->booleanNode('webp_lossless')
+                ->end()
+                ->integerNode('avif_quality')
+                ->end()
+                ->booleanNode('avif_lossless')
+                ->end()
+                ->integerNode('heic_quality')
+                ->end()
+                ->booleanNode('heic_lossless')
+                ->end()
+                ->integerNode('jxl_quality')
+                ->end()
+                ->booleanNode('jxl_lossless')
+                ->end()
+                ->booleanNode('flatten')
+                    ->info('Allows to disable the layer flattening of animated images. Set this option to false to support animations. It has no effect with Gd as Imagine service.')
+                ->end()
+                ->scalarNode('interlace')
+                    ->info('One of the Imagine\Image\ImageInterface::INTERLACE_* constants.')
+                ->end()
+                ->scalarNode('resampling_filter')
+                    ->info('Filter used when downsampling images. One of the Imagine\Image\ImageInterface::FILTER_* constants. It has no effect with Gd or SVG as Imagine service.')
+                ->end()
+            ->end()
+            ->validate()
+                ->always(
+                    static function (array $options): array {
+                        if (isset($options['resampling_filter'])) {
+                            $options['resampling-filter'] = $options['resampling_filter'];
+                            unset($options['resampling_filter']);
+                        }
+
+                        return $options;
+                    },
+                )
+            ->end()
+        ;
+
+        if ($withDefaults) {
+            $node->addDefaultsIfNotSet();
+            $node->find('jpeg_quality')->defaultValue(80);
+            $node->find('jpeg_sampling_factors')->defaultValue([2, 1, 1]);
+            $node->find('interlace')->defaultValue(ImageInterface::INTERLACE_PLANE);
+        } else {
+            $node
+                ->validate()
+                    ->always(
+                        static function ($values) {
+                            if (empty($values['jpeg_sampling_factors'])) {
+                                unset($values['jpeg_sampling_factors']);
+                            }
+
+                            return $values;
+                        },
+                    )
+                ->end()
+            ;
+        }
+
+        return $node;
     }
 
     private function addIntlNode(): NodeDefinition
@@ -439,7 +559,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return false;
-                            }
+                            },
                         )
                         ->thenInvalid('All provided locales must be in the canonicalized ICU form and optionally start with +/- to add/remove the locale to/from the default list.')
                     ->end()
@@ -465,7 +585,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return false;
-                            }
+                            },
                         )
                         ->thenInvalid('All provided locales must be in the canonicalized ICU form and optionally start with +/- to add/remove the locale to/from the default list.')
                     ->end()
@@ -485,7 +605,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return false;
-                            }
+                            },
                         )
                         ->thenInvalid('All provided countries must be two uppercase letters and optionally start with +/- to add/remove the country to/from the default list.')
                     ->end()
@@ -505,6 +625,15 @@ class Configuration implements ConfigurationInterface
                     ->children()
                         ->booleanNode('enforce_backend')
                             ->defaultValue(false)
+                        ->end()
+                    ->end()
+                ->end()
+                ->arrayNode('hsts')
+                    ->info('Enables sending the HTTP Strict Transport Security (HSTS) header for secure requests.')
+                    ->canBeDisabled()
+                    ->children()
+                        ->scalarNode('ttl')
+                            ->defaultValue(31536000)
                         ->end()
                     ->end()
                 ->end()
@@ -549,6 +678,24 @@ class Configuration implements ConfigurationInterface
         ;
     }
 
+    private function addBackendSearchNode(): NodeDefinition
+    {
+        return (new TreeBuilder('backend_search'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->canBeEnabled()
+            ->children()
+                ->scalarNode('dsn')
+                    ->info('The DSN of the search adapter.')
+                ->end()
+                ->scalarNode('index_name')
+                    ->info('The name of the search index')
+                    ->defaultValue('contao_backend')
+                ->end()
+            ->end()
+        ;
+    }
+
     private function addCrawlNode(): NodeDefinition
     {
         return (new TreeBuilder('crawl'))
@@ -567,7 +714,7 @@ class Configuration implements ConfigurationInterface
                             }
 
                             return false;
-                        }
+                        },
                     )
                     ->thenInvalid('All provided additional URIs must start with either http:// or https://.')
                     ->end()
@@ -619,12 +766,12 @@ class Configuration implements ConfigurationInterface
                         static function (array $attributes): array {
                             foreach (array_keys($attributes) as $name) {
                                 if (preg_match('/[^a-z0-9\-.:_]/', (string) $name)) {
-                                    throw new \InvalidArgumentException(sprintf('The attribute name "%s" must be a valid HTML attribute name.', $name));
+                                    throw new \InvalidArgumentException(\sprintf('The attribute name "%s" must be a valid HTML attribute name.', $name));
                                 }
                             }
 
                             return $attributes;
-                        }
+                        },
                     )
                     ->end()
                     ->normalizeKeys(false)
@@ -657,6 +804,11 @@ class Configuration implements ConfigurationInterface
                     ->end()
                     ->example('/admin')
                     ->defaultValue('/contao')
+                ->end()
+                ->integerNode('crawl_concurrency')
+                    ->info('The number of concurrent requests that are executed. Defaults to 5.')
+                    ->min(1)
+                    ->defaultValue(5)
                 ->end()
             ->end()
         ;
@@ -706,7 +858,7 @@ class Configuration implements ConfigurationInterface
                                 }
 
                                 return false;
-                            }
+                            },
                         )
                     ->thenInvalid('%s')
                     ->end()
@@ -730,12 +882,12 @@ class Configuration implements ConfigurationInterface
                             static function (array $protocols): array {
                                 foreach ($protocols as $protocol) {
                                     if (!preg_match('/^[a-z][a-z0-9\-+.]*$/i', (string) $protocol)) {
-                                        throw new \InvalidArgumentException(sprintf('The protocol name "%s" must be a valid URI scheme.', $protocol));
+                                        throw new \InvalidArgumentException(\sprintf('The protocol name "%s" must be a valid URI scheme.', $protocol));
                                     }
                                 }
 
                                 return $protocols;
-                            }
+                            },
                         )
                     ->end()
                 ->end()
@@ -755,6 +907,92 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('auto')
                 ->end()
             ->end()
+        ;
+    }
+
+    private function addCspNode(): NodeDefinition
+    {
+        return (new TreeBuilder('csp'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->arrayNode('allowed_inline_styles')
+                    ->info('Contao provides an "csp_inline_styles" Twig filter which is able to automatically generate CSP hashes for inline style attributes of WYSIWYG editors. For security reasons, the supported properties and their regex value have to be specified here.')
+                    ->useAttributeAsKey('property')
+                    ->prototype('scalar')->end()
+                    ->normalizeKeys(false)
+                    ->defaultValue([
+                        'text-align' => 'left|center|right|justify',
+                        'text-decoration' => 'underline',
+                        'background-color' => 'rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)|#([0-9a-f]{3}){1,2}',
+                        'color' => 'rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)|#([0-9a-f]{3}){1,2}',
+                        'font-family' => '((\'[a-z0-9 _-]+\'|[a-z0-9 _-]+)(,\s*|$))+',
+                        'font-size' => '[0-3]?\dpt',
+                        'line-height' => '[0-3](\.\d+)?',
+                        'padding-left' => '\d{1,3}px',
+                        'border-collapse' => 'collapse',
+                        'margin-right' => '0px|auto',
+                        'margin-left' => '0px|auto',
+                        'border-color' => 'rgb\(\d{1,3},\s?\d{1,3},\s?\d{1,3}\)|#([0-9a-f]{3}){1,2}',
+                        'vertical-align' => 'top|middle|bottom',
+                    ])
+                    ->validate()
+                        ->always(
+                            static function (array $allowedProperties): array {
+                                foreach ($allowedProperties as $property => $regex) {
+                                    if (false === @preg_match(WysiwygStyleProcessor::prepareRegex($regex), '')) {
+                                        throw new \InvalidArgumentException(\sprintf('The regex "%s" for property "%s" is invalid.', $regex, $property));
+                                    }
+
+                                    if (str_contains($regex, '.*')) {
+                                        throw new \InvalidArgumentException(\sprintf('The regex "%s" for property "%s" contains ".*" which is not allowed due to security reasons.', $regex, $property));
+                                    }
+                                }
+
+                                return $allowedProperties;
+                            },
+                        )
+                    ->end()
+                ->end()
+                ->integerNode('max_header_size')
+                    ->info('Do not increase this value beyond the allowed response header size of your web server, as this will result in a 500 server error.')
+                    ->defaultValue(3072)
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addAltchaNode(): NodeDefinition
+    {
+        return (new TreeBuilder('altcha'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->children()
+                ->enumNode('algorithm')
+                    ->info('The algorithm used to generate the challenges. Select between "SHA-256", "SHA-384" or "SHA-512".')
+                    ->values(Algorithm::values())
+                    ->defaultValue(Algorithm::sha256->value)
+                ->end()
+                ->integerNode('range_max')
+                    ->info('A higher value increases the complexity/security but may significantly increase the computational load on client devices, potentially impacting the user experience.')
+                    ->max(1_000_000)
+                    ->defaultValue(100_000)
+                ->end()
+                ->integerNode('challenge_expiry')
+                    ->info('The time period in seconds for which a challenge is valid.')
+                    ->min(3600)
+                    ->defaultValue(86400)
+                ->end()
+            ->end()
+        ;
+    }
+
+    private function addTemplateStudioNode(): NodeDefinition
+    {
+        return (new TreeBuilder('template_studio'))
+            ->getRootNode()
+            ->addDefaultsIfNotSet()
+            ->canBeDisabled()
         ;
     }
 }

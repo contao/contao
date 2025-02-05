@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="tl_layout.newsfeeds.0">
         <source>News feeds</source>
-        <target>خوراک‌های اخبار</target>
+        <target>فید‌های اخبار</target>
       </trans-unit>
       <trans-unit id="tl_layout.newsfeeds.1">
         <source>Please select the news feeds you want to add to the layout.</source>

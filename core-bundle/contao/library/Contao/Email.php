@@ -223,7 +223,7 @@ class Email
 				break;
 
 			default:
-				throw new \Exception(sprintf('Invalid argument "%s"', $strKey));
+				throw new \Exception(\sprintf('Invalid argument "%s"', $strKey));
 		}
 	}
 
@@ -574,8 +574,7 @@ class Email
 
 		if ($this->objMessage instanceof EmailMessage)
 		{
-			$addresscb = static function (Address $address)
-			{
+			$addresscb = static function (Address $address) {
 				return $address->getAddress();
 			};
 

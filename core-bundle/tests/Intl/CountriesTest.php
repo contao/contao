@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Intl;
 
-use Contao\ArrayUtil;
 use Contao\CoreBundle\Intl\Countries;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
@@ -36,9 +35,10 @@ class CountriesTest extends TestCase
     {
         $countryCodes = $this->getCountriesService()->getCountryCodes();
 
-        $this->assertIsArray($countryCodes);
         $this->assertNotEmpty($countryCodes);
-        $this->assertFalse(ArrayUtil::isAssoc($countryCodes));
+
+        /** @phpstan-ignore function.alreadyNarrowedType */
+        $this->assertTrue(array_is_list($countryCodes));
 
         foreach ($countryCodes as $countryCode) {
             $this->assertMatchesRegularExpression('/^[A-Z]{2}$/', $countryCode);
@@ -49,9 +49,7 @@ class CountriesTest extends TestCase
     {
         $countryNames = $this->getCountriesService()->getCountries('en');
 
-        $this->assertIsArray($countryNames);
         $this->assertNotEmpty($countryNames);
-        $this->assertTrue(ArrayUtil::isAssoc($countryNames));
 
         foreach ($countryNames as $countryCode => $countryName) {
             $this->assertMatchesRegularExpression('/^[A-Z]{2}$/', $countryCode);
@@ -70,7 +68,7 @@ class CountriesTest extends TestCase
                     $this->assertSame('contao_countries', $domain);
 
                     return 'CNT.de' === $label;
-                }
+                },
             )
         ;
 
@@ -84,7 +82,7 @@ class CountriesTest extends TestCase
         $translator
             ->method('trans')
             ->willReturnCallback(
-                function (string $label, array $parameters, string $domain, string $locale = null) {
+                function (string $label, array $parameters, string $domain, string|null $locale = null) {
                     $this->assertSame('contao_countries', $domain);
                     $this->assertSame('de', $locale);
 
@@ -93,7 +91,7 @@ class CountriesTest extends TestCase
                     }
 
                     return $label;
-                }
+                },
             )
         ;
 
@@ -139,7 +137,7 @@ class CountriesTest extends TestCase
         }
     }
 
-    public function getCountriesConfig(): \Generator
+    public static function getCountriesConfig(): iterable
     {
         yield [
             ['DE', 'AT'],
@@ -158,7 +156,7 @@ class CountriesTest extends TestCase
 
         yield [
             ['+ZZ', '+ZY'],
-            array_merge(SymfonyCountries::getCountryCodes(), ['ZY', 'ZZ']),
+            [...SymfonyCountries::getCountryCodes(), 'ZY', 'ZZ'],
         ];
 
         yield [
@@ -172,9 +170,9 @@ class CountriesTest extends TestCase
         ];
     }
 
-    private function getCountriesService(Translator $translator = null, array $configCountries = []): Countries
+    private function getCountriesService(Translator|null $translator = null, array $configCountries = []): Countries
     {
-        if (null === $translator) {
+        if (!$translator) {
             $translator = $this->createMock(Translator::class);
             $translator
                 ->method('getCatalogue')

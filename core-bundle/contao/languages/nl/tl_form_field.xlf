@@ -449,9 +449,17 @@
         <source>Delete form field ID %s</source>
         <target>Verwijder formulierveld ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.toggle">
-        <source>Hide/unhide form field ID %s</source>
-        <target>Verbergen / zichtbaar maken van formulierveld ID%s</target>
+      <trans-unit id="tl_form_field.toggle.0">
+        <source>Hide/unhide form field</source>
+        <target>Verberg/toon formulierveld</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle.1">
+        <source>Hide form field ID %s</source>
+        <target>Verberg formulierveld ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle.2">
+        <source>Unhide form field ID %s</source>
+        <target>Toon formulierveld ID %s</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.0">
         <source>Paste at the top</source>

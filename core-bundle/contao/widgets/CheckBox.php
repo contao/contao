@@ -10,8 +10,6 @@
 
 namespace Contao;
 
-use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
-
 /**
  * Provide methods to handle check boxes.
  *
@@ -55,7 +53,7 @@ class CheckBox extends Widget
 	{
 		if ($strKey == 'options')
 		{
-			$this->arrOptions = StringUtil::deserialize($varValue);
+			$this->arrOptions = StringUtil::deserialize($varValue, true);
 		}
 		else
 		{
@@ -123,7 +121,6 @@ class CheckBox extends Widget
 			$this->arrAttributes['required'] = 'required';
 		}
 
-		/** @var AttributeBagInterface $objSessionBag */
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 		$state = $objSessionBag->get('checkbox_groups');
 
@@ -144,7 +141,7 @@ class CheckBox extends Widget
 		{
 			foreach ($this->unknownOption as $val)
 			{
-				$arrAllOptions[] = array('value' => $val, 'label' => sprintf($GLOBALS['TL_LANG']['MSC']['unknownOption'], $val));
+				$arrAllOptions[] = array('value' => $val, 'label' => \sprintf($GLOBALS['TL_LANG']['MSC']['unknownOption'], $val));
 			}
 		}
 
@@ -159,7 +156,7 @@ class CheckBox extends Widget
 
 			$id = 'cbc_' . $this->strId . '_' . StringUtil::standardize($i);
 
-			$img = 'folPlus.svg';
+			$class = 'foldable';
 			$display = 'none';
 
 			$blnIsOpen = ($state[$id] ?? null) || ($this->collapseUncheckedGroups && $blnFirst && empty($this->varValue));
@@ -178,11 +175,11 @@ class CheckBox extends Widget
 
 			if ($blnIsOpen)
 			{
-				$img = 'folMinus.svg';
+				$class = 'foldable foldable--open';
 				$display = 'block';
 			}
 
-			$arrOptions[] = '<div class="checkbox_toggler' . ($blnFirst ? '_first' : '') . '"><a href="' . Backend::addToUrl('cbc=' . $id) . '" onclick="AjaxRequest.toggleCheckboxGroup(this,\'' . $id . '\');Backend.getScrollOffset();return false">' . Image::getHtml($img) . '</a>' . $i . '</div><fieldset id="' . $id . '" class="tl_checkbox_container checkbox_options" style="display:' . $display . '"><input type="checkbox" id="check_all_' . $id . '" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this, \'' . $id . '\')"> <label for="check_all_' . $id . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label>';
+			$arrOptions[] = '<div class="checkbox_toggler' . ($blnFirst ? '_first' : '') . '"><a href="' . Backend::addToUrl('cbc=' . $id) . '" class="' . $class . '" data-action="contao--scroll-offset#store" onclick="AjaxRequest.toggleCheckboxGroup(this,\'' . $id . '\');return false">' . Image::getHtml('chevron-right.svg') . '</a>' . $i . '</div><fieldset id="' . $id . '" class="tl_checkbox_container checkbox_options" style="display:' . $display . '"><input type="checkbox" id="check_all_' . $id . '" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this, \'' . $id . '\')"> <label for="check_all_' . $id . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label>';
 
 			// Multidimensional array
 			foreach ($arrOption as $k=>$v)
@@ -204,27 +201,27 @@ class CheckBox extends Widget
 
 		if ($this->multiple)
 		{
-			return sprintf(
+			return \sprintf(
 				'<fieldset id="ctrl_%s" class="tl_checkbox_container%s"><legend>%s%s%s%s</legend><input type="hidden" name="%s" value="">%s%s</fieldset>%s',
 				$this->strId,
-				($this->strClass ? ' ' . $this->strClass : ''),
-				($this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : ''),
+				$this->strClass ? ' ' . $this->strClass : '',
+				$this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : '',
 				$this->strLabel,
-				($this->mandatory ? '<span class="mandatory">*</span>' : ''),
+				$this->mandatory ? '<span class="mandatory">*</span>' : '',
 				$this->xlabel,
 				$this->strName,
-				($blnCheckAll ? '<input type="checkbox" id="check_all_' . $this->strId . '" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this,\'ctrl_' . $this->strId . '\')' . ($this->onclick ? ';' . $this->onclick : '') . '"> <label for="check_all_' . $this->strId . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label><br>' : ''),
-				str_replace('<br></fieldset><br>', '</fieldset>', implode('<br>', $arrOptions)),
+				$blnCheckAll ? '<span><input type="checkbox" id="check_all_' . $this->strId . '" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this,\'ctrl_' . $this->strId . '\')' . ($this->onclick ? ';' . $this->onclick : '') . '"> <label for="check_all_' . $this->strId . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label></span>' : '',
+				implode(' ', $arrOptions),
 				$this->wizard
 			);
 		}
 
-		return sprintf(
+		return \sprintf(
 			'<div id="ctrl_%s" class="tl_checkbox_single_container%s"><input type="hidden" name="%s" value="">%s</div>%s',
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			$this->strName,
-			str_replace('<br></div><br>', '</div>', implode('<br>', $arrOptions)),
+			implode(' ', $arrOptions),
 			$this->wizard
 		);
 	}
@@ -239,17 +236,17 @@ class CheckBox extends Widget
 	 */
 	protected function generateCheckbox($arrOption, $i)
 	{
-		return sprintf(
-			'<input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s onfocus="Backend.getScrollOffset()"> <label for="opt_%s">%s%s%s</label>%s',
+		return \sprintf(
+			'<span><input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s data-action="focus->contao--scroll-offset#store"> <label for="opt_%s">%s%s%s</label>%s</span>',
 			$this->strName . ($this->multiple ? '[]' : ''),
 			$this->strId . '_' . $i,
-			($this->multiple ? self::specialcharsValue($arrOption['value']) : 1),
+			$this->multiple ? self::specialcharsValue($arrOption['value']) : 1,
 			$this->isChecked($arrOption),
 			$this->getAttributes(),
 			$this->strId . '_' . $i,
-			($this->mandatory && !$this->multiple ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : ''),
+			$this->mandatory && !$this->multiple ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : '',
 			$arrOption['label'] ?? null,
-			($this->mandatory && !$this->multiple ? '<span class="mandatory">*</span>' : ''),
+			$this->mandatory && !$this->multiple ? '<span class="mandatory">*</span>' : '',
 			!$this->multiple ? $this->xlabel : ''
 		);
 	}

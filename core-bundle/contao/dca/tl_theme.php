@@ -9,15 +9,12 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
-use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\FilesModel;
 use Contao\Folder;
 use Contao\Image;
-use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 
@@ -27,19 +24,16 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 	'config' => array
 	(
 		'dataContainer'               => DC_Table::class,
-		'ctable'                      => array('tl_module', 'tl_layout', 'tl_image_size'),
+		'ctable'                      => array('tl_module', 'tl_layout', 'tl_image_size', 'tl_content'),
 		'notCopyable'                 => true,
 		'enableVersioning'            => true,
 		'sql' => array
 		(
 			'keys' => array
 			(
-				'id' => 'primary'
+				'id' => 'primary',
+				'tstamp' => 'index'
 			)
-		),
-		'onload_callback' => array
-		(
-			array('tl_theme', 'checkPermission'),
 		)
 	),
 
@@ -74,36 +68,40 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 				'class'               => 'header_store',
 				'button_callback'     => array('tl_theme', 'themeStore')
 			),
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
 		),
 		'operations' => array
 		(
-			'edit',
+			'!edit',
 			'delete',
-			'show',
+			'elements' => array
+			(
+				'href'                => 'table=tl_content',
+				'prefetch'            => true,
+				'icon'                => 'children.svg',
+				'primary'             => true,
+			),
 			'modules' => array
 			(
 				'href'                => 'table=tl_module',
+				'prefetch'            => true,
 				'icon'                => 'modules.svg',
-				'button_callback'     => array('tl_theme', 'editModules')
+				'primary'             => true,
 			),
 			'layout' => array
 			(
 				'href'                => 'table=tl_layout',
+				'prefetch'            => true,
 				'icon'                => 'layout.svg',
-				'button_callback'     => array('tl_theme', 'editLayout')
+				'primary'             => true,
 			),
 			'imageSizes' => array
 			(
 				'href'                => 'table=tl_image_size',
+				'prefetch'            => true,
 				'icon'                => 'sizes.svg',
-				'button_callback'     => array('tl_theme', 'editImageSizes')
+				'primary'             => true,
 			),
+			'show',
 			'exportTheme' => array
 			(
 				'href'                => 'key=exportTheme',
@@ -177,46 +175,6 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
  */
 class tl_theme extends Backend
 {
-	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
-	 * Check permissions to edit the table
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission()
-	{
-		if ($this->User->isAdmin)
-		{
-			return;
-		}
-
-		// Check the theme import and export permissions (see #5835)
-		switch (Input::get('key'))
-		{
-			case 'importTheme':
-				if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_IMPORT_THEMES))
-				{
-					throw new AccessDeniedException('Not enough permissions to import themes.');
-				}
-				break;
-
-			case 'exportTheme':
-				if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_IMPORT_THEMES))
-				{
-					throw new AccessDeniedException('Not enough permissions to export themes.');
-				}
-				break;
-		}
-	}
-
 	/**
 	 * Add an image to each record
 	 *
@@ -303,57 +261,6 @@ class tl_theme extends Backend
 	}
 
 	/**
-	 * Return the "edit modules" button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function editModules($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the "edit page layouts" button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function editLayout($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_LAYOUTS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-	}
-
-	/**
-	 * Return the "edit image sizes" button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function editImageSizes($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_IMAGE_SIZES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
-	}
-
-	/**
 	 * Return the "export theme" button
 	 *
 	 * @param array  $row
@@ -367,6 +274,6 @@ class tl_theme extends Backend
 	 */
 	public function exportTheme($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EXPORT_THEMES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(preg_replace('/\.svg$/i', '_.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EXPORT_THEMES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 }

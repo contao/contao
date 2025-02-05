@@ -23,8 +23,13 @@ class TransformArticleForFeedEvent extends Event
 {
     private ItemInterface|null $item = null;
 
-    public function __construct(private readonly NewsModel $article, private readonly FeedInterface $feed, private readonly PageModel $pageModel, private readonly Request $request, private readonly string $baseUrl)
-    {
+    public function __construct(
+        private readonly NewsModel $article,
+        private readonly FeedInterface $feed,
+        private readonly PageModel $pageModel,
+        private readonly Request $request,
+        private readonly string $baseUrl,
+    ) {
     }
 
     public function getArticle(): NewsModel

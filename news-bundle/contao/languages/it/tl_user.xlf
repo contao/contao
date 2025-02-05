@@ -17,22 +17,6 @@
         <source>Here you can define the news archive permissions.</source>
         <target>Qui è possibile definire le autorizzazioni per i gli archivi news.</target>
       </trans-unit>
-      <trans-unit id="tl_user.newsfeeds.0">
-        <source>Allowed news feeds</source>
-        <target>Feed news consentiti</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeeds.1">
-        <source>Here you can grant access to one or more news feeds.</source>
-        <target>Qui puoi dare accesso ad uno o più feed News.</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeedp.0">
-        <source>News feed permissions</source>
-        <target>Permessi news feed </target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeedp.1">
-        <source>Here you can define the news feed permissions.</source>
-        <target>Qui è possibile definire le autorizzazioni per i feed News.</target>
-      </trans-unit>
       <trans-unit id="tl_user.news_legend">
         <source>News permissions</source>
         <target>Permessi News</target>

@@ -36,7 +36,7 @@
         <source>Source files</source>
       </trans-unit>
       <trans-unit id="tl_theme.source.1">
-        <source>Here you can upload one or more .cto or .sql files to be imported.</source>
+        <source>Here you can upload one or more .cto, .zip or .sql files to be imported.</source>
       </trans-unit>
       <trans-unit id="tl_theme.tstamp.0">
         <source>Revision date</source>
@@ -133,6 +133,9 @@
       </trans-unit>
       <trans-unit id="tl_theme.modules">
         <source>Edit the front end modules of theme ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_theme.elements">
+        <source>Edit the content elements of theme ID %s</source>
       </trans-unit>
       <trans-unit id="tl_theme.layout">
         <source>Edit the page layouts of theme ID %s</source>

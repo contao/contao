@@ -20,20 +20,19 @@ class AbstractCandidates implements CandidatesInterface
     /**
      * A limit to apply to the number of candidates generated.
      *
-     * This is to prevent abusive requests with a lot of "/". The limit is per
-     * batch, that is if a locale matches you could get as many as 2 * $limit
-     * candidates if the URL has that many slashes.
+     * This is to prevent abusive requests with a lot of "/". The limit is per batch,
+     * that is if a locale matches you could get as many as 2 * $limit candidates if
+     * the URL has that many slashes.
      */
     private const LIMIT = 20;
 
-    public function __construct(protected array $urlPrefixes, protected array $urlSuffixes)
-    {
+    public function __construct(
+        protected array $urlPrefixes,
+        protected array $urlSuffixes,
+    ) {
     }
 
-    /**
-     * @param string $name
-     */
-    public function isCandidate($name): bool
+    public function isCandidate(string $name): bool
     {
         return str_starts_with($name, 'tl_page.');
     }
@@ -43,8 +42,8 @@ class AbstractCandidates implements CandidatesInterface
     }
 
     /**
-     * Generates possible page aliases from the request path by removing
-     * prefixes, suffixes and parameters.
+     * Generates possible page aliases from the request path by removing prefixes,
+     * suffixes and parameters.
      *
      * Example 1:
      *   Path: /en/alias/foo/bar.html
@@ -81,8 +80,8 @@ class AbstractCandidates implements CandidatesInterface
         $candidates = [];
 
         foreach ($this->urlPrefixes as $prefix) {
-            // Language prefix only (e.g. URL = /en/)
-            // Includes "/en" to redirect to language prefix with slash
+            // Language prefix only, e.g. URL = /en or URL = /en/. If the trailing slash is
+            // missing, Contao will redirect to the URL with the slash.
             if ($url === $prefix.'/' || $url === $prefix) {
                 $candidates[] = 'index';
                 continue;

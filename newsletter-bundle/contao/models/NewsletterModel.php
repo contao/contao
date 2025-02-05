@@ -20,6 +20,7 @@ use Contao\Model\Collection;
  * @property integer     $tstamp
  * @property string      $subject
  * @property string      $alias
+ * @property string      $preheader
  * @property string|null $content
  * @property string|null $text
  * @property boolean     $addFile
@@ -36,11 +37,13 @@ use Contao\Model\Collection;
  * @method static NewsletterModel|null findById($id, array $opt=array())
  * @method static NewsletterModel|null findByPk($id, array $opt=array())
  * @method static NewsletterModel|null findByIdOrAlias($val, array $opt=array())
+ * @method static NewsletterModel|null findByAlias($val, array $opt=array())
  * @method static NewsletterModel|null findOneBy($col, $val, array $opt=array())
  * @method static NewsletterModel|null findOneByPid($val, array $opt=array())
  * @method static NewsletterModel|null findOneByTstamp($val, array $opt=array())
  * @method static NewsletterModel|null findOneBySubject($val, array $opt=array())
  * @method static NewsletterModel|null findOneByAlias($val, array $opt=array())
+ * @method static NewsletterModel|null findOneByPreheader($val, array $opt=array())
  * @method static NewsletterModel|null findOneByContent($val, array $opt=array())
  * @method static NewsletterModel|null findOneByText($val, array $opt=array())
  * @method static NewsletterModel|null findOneByAddFile($val, array $opt=array())
@@ -54,31 +57,32 @@ use Contao\Model\Collection;
  * @method static NewsletterModel|null findOneBySent($val, array $opt=array())
  * @method static NewsletterModel|null findOneByDate($val, array $opt=array())
  *
- * @method static Collection|NewsletterModel[]|NewsletterModel|null findByPid($val, array $opt=array())
- * @method static Collection|NewsletterModel[]|NewsletterModel|null findByTstamp($val, array $opt=array())
- * @method static Collection|NewsletterModel[]|NewsletterModel|null findBySubject($val, array $opt=array())
- * @method static Collection|NewsletterModel[]|NewsletterModel|null findByAlias($val, array $opt=array())
- * @method static Collection|NewsletterModel[]|NewsletterModel|null findByContent($val, array $opt=array())
- * @method static Collection|NewsletterModel[]|NewsletterModel|null findByText($val, array $opt=array())
- * @method static Collection|NewsletterModel[]|NewsletterModel|null findByAddFile($val, array $opt=array())
- * @method static Collection|NewsletterModel[]|NewsletterModel|null findByFiles($val, array $opt=array())
- * @method static Collection|NewsletterModel[]|NewsletterModel|null findByTemplate($val, array $opt=array())
- * @method static Collection|NewsletterModel[]|NewsletterModel|null findBySendText($val, array $opt=array())
- * @method static Collection|NewsletterModel[]|NewsletterModel|null findByExternalImages($val, array $opt=array())
- * @method static Collection|NewsletterModel[]|NewsletterModel|null findByMailerTransport($val, array $opt=array())
- * @method static Collection|NewsletterModel[]|NewsletterModel|null findBySender($val, array $opt=array())
- * @method static Collection|NewsletterModel[]|NewsletterModel|null findBySenderName($val, array $opt=array())
- * @method static Collection|NewsletterModel[]|NewsletterModel|null findBySent($val, array $opt=array())
- * @method static Collection|NewsletterModel[]|NewsletterModel|null findByDate($val, array $opt=array())
- * @method static Collection|NewsletterModel[]|NewsletterModel|null findMultipleByIds($val, array $opt=array())
- * @method static Collection|NewsletterModel[]|NewsletterModel|null findBy($col, $val, array $opt=array())
- * @method static Collection|NewsletterModel[]|NewsletterModel|null findAll(array $opt=array())
+ * @method static Collection<NewsletterModel>|NewsletterModel[]|null findByPid($val, array $opt=array())
+ * @method static Collection<NewsletterModel>|NewsletterModel[]|null findByTstamp($val, array $opt=array())
+ * @method static Collection<NewsletterModel>|NewsletterModel[]|null findBySubject($val, array $opt=array())
+ * @method static Collection<NewsletterModel>|NewsletterModel[]|null findByPreheader($val, array $opt=array())
+ * @method static Collection<NewsletterModel>|NewsletterModel[]|null findByContent($val, array $opt=array())
+ * @method static Collection<NewsletterModel>|NewsletterModel[]|null findByText($val, array $opt=array())
+ * @method static Collection<NewsletterModel>|NewsletterModel[]|null findByAddFile($val, array $opt=array())
+ * @method static Collection<NewsletterModel>|NewsletterModel[]|null findByFiles($val, array $opt=array())
+ * @method static Collection<NewsletterModel>|NewsletterModel[]|null findByTemplate($val, array $opt=array())
+ * @method static Collection<NewsletterModel>|NewsletterModel[]|null findBySendText($val, array $opt=array())
+ * @method static Collection<NewsletterModel>|NewsletterModel[]|null findByExternalImages($val, array $opt=array())
+ * @method static Collection<NewsletterModel>|NewsletterModel[]|null findByMailerTransport($val, array $opt=array())
+ * @method static Collection<NewsletterModel>|NewsletterModel[]|null findBySender($val, array $opt=array())
+ * @method static Collection<NewsletterModel>|NewsletterModel[]|null findBySenderName($val, array $opt=array())
+ * @method static Collection<NewsletterModel>|NewsletterModel[]|null findBySent($val, array $opt=array())
+ * @method static Collection<NewsletterModel>|NewsletterModel[]|null findByDate($val, array $opt=array())
+ * @method static Collection<NewsletterModel>|NewsletterModel[]|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection<NewsletterModel>|NewsletterModel[]|null findBy($col, $val, array $opt=array())
+ * @method static Collection<NewsletterModel>|NewsletterModel[]|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByPid($val, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
  * @method static integer countBySubject($val, array $opt=array())
  * @method static integer countByAlias($val, array $opt=array())
+ * @method static integer countByPreheader($val, array $opt=array())
  * @method static integer countByContent($val, array $opt=array())
  * @method static integer countByText($val, array $opt=array())
  * @method static integer countByAddFile($val, array $opt=array())
@@ -117,7 +121,7 @@ class NewsletterModel extends Model
 		}
 
 		$t = static::$strTable;
-		$arrColumns = !preg_match('/^[1-9]\d*$/', $varId) ? array("BINARY $t.alias=?") : array("$t.id=?");
+		$arrColumns = !preg_match('/^[1-9]\d*$/', $varId) ? array("CAST($t.alias AS BINARY)=?") : array("$t.id=?");
 		$arrColumns[] = "$t.pid IN(" . implode(',', array_map('\intval', $arrPids)) . ")";
 
 		if (!static::isPreviewMode($arrOptions))
@@ -125,7 +129,7 @@ class NewsletterModel extends Model
 			$arrColumns[] = "$t.sent=1";
 		}
 
-		return static::findOneBy($arrColumns, $varId, $arrOptions);
+		return static::findOneBy($arrColumns, array($varId), $arrOptions);
 	}
 
 	/**
@@ -134,7 +138,7 @@ class NewsletterModel extends Model
 	 * @param integer $intPid     The newsletter channel ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Collection|NewsletterModel[]|NewsletterModel|null A collection of models or null if there are no sent newsletters
+	 * @return Collection<NewsletterModel>|NewsletterModel[]|null A collection of models or null if there are no sent newsletters
 	 */
 	public static function findSentByPid($intPid, array $arrOptions=array())
 	{
@@ -151,7 +155,7 @@ class NewsletterModel extends Model
 			$arrOptions['order'] = "$t.date DESC";
 		}
 
-		return static::findBy($arrColumns, $intPid, $arrOptions);
+		return static::findBy($arrColumns, array($intPid), $arrOptions);
 	}
 
 	/**
@@ -160,7 +164,7 @@ class NewsletterModel extends Model
 	 * @param array $arrPids    An array of newsletter channel IDs
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection|NewsletterModel[]|NewsletterModel|null A collection of models or null if there are no sent newsletters
+	 * @return Collection<NewsletterModel>|NewsletterModel[]|null A collection of models or null if there are no sent newsletters
 	 */
 	public static function findSentByPids($arrPids, array $arrOptions=array())
 	{

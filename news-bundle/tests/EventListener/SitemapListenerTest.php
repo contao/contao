@@ -13,12 +13,14 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\CoreBundle\Event\SitemapEvent;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\Database;
 use Contao\NewsArchiveModel;
 use Contao\NewsBundle\EventListener\SitemapListener;
 use Contao\NewsModel;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 
 class SitemapListenerTest extends ContaoTestCase
@@ -43,46 +45,77 @@ class SitemapListenerTest extends ContaoTestCase
         $this->assertStringNotContainsString('<url><loc>', (string) $sitemapEvent->getDocument()->saveXML());
     }
 
-    public function testNewsArticleIsAdded(): void
+    /**
+     * @dataProvider getNewsArticles
+     */
+    public function testNewsArticleIsAdded(array $pageProperties, array $newsArchiveProperties, bool $hasAuthenticatedMember): void
     {
-        $jumpToPage = $this->mockClassWithProperties(PageModel::class, [
-            'published' => 1,
-            'protected' => 0,
-        ]);
-
-        $jumpToPage
-            ->method('getAbsoluteUrl')
-            ->willReturn('https://contao.org')
-        ;
-
         $adapters = [
             NewsArchiveModel::class => $this->mockConfiguredAdapter([
                 'findByProtected' => [
-                    $this->mockClassWithProperties(NewsArchiveModel::class, [
-                        'jumpTo' => 42,
-                    ]),
+                    $this->mockClassWithProperties(NewsArchiveModel::class, $newsArchiveProperties),
+                ],
+                'findAll' => [
+                    $this->mockClassWithProperties(NewsArchiveModel::class, $newsArchiveProperties),
                 ],
             ]),
             PageModel::class => $this->mockConfiguredAdapter([
-                'findWithDetails' => $jumpToPage,
+                'findWithDetails' => $this->mockClassWithProperties(PageModel::class, $pageProperties),
             ]),
             NewsModel::class => $this->mockConfiguredAdapter([
                 'findPublishedDefaultByPid' => [
-                    $this->mockClassWithProperties(NewsModel::class, [
-                        'jumpTo' => 42,
-                    ]),
+                    $this->mockClassWithProperties(NewsModel::class, ['jumpTo' => 42]),
                 ],
             ]),
         ];
 
         $sitemapEvent = $this->createSitemapEvent([1]);
-        $listener = $this->createListener([1, 42], $adapters);
+        $listener = $this->createListener([1, 42], $adapters, $hasAuthenticatedMember);
         $listener($sitemapEvent);
 
         $this->assertStringContainsString('<url><loc>https://contao.org</loc></url>', (string) $sitemapEvent->getDocument()->saveXML());
     }
 
-    private function createListener(array $allPages, array $adapters): SitemapListener
+    public static function getNewsArticles(): iterable
+    {
+        yield [
+            [
+                'published' => 1,
+                'protected' => 0,
+            ],
+            [
+                'jumpTo' => 42,
+            ],
+            false,
+        ];
+
+        yield [
+            [
+                'published' => 1,
+                'protected' => 1,
+                'groups' => [1],
+            ],
+            [
+                'jumpTo' => 42,
+            ],
+            true,
+        ];
+
+        yield [
+            [
+                'published' => 1,
+                'protected' => 0,
+            ],
+            [
+                'jumpTo' => 42,
+                'protected' => 1,
+                'groups' => [1],
+            ],
+            true,
+        ];
+    }
+
+    private function createListener(array $allPages, array $adapters, bool $hasAuthenticatedMember = false): SitemapListener
     {
         $database = $this->createMock(Database::class);
         $database
@@ -95,8 +128,23 @@ class SitemapListenerTest extends ContaoTestCase
         ];
 
         $framework = $this->mockContaoFramework($adapters, $instances);
+        $security = $this->createMock(Security::class);
 
-        return new SitemapListener($framework);
+        if ([] !== $allPages) {
+            $security
+                ->expects($this->atLeastOnce())
+                ->method('isGranted')
+                ->willReturn($hasAuthenticatedMember)
+            ;
+        }
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->method('generate')
+            ->willReturn('https://contao.org')
+        ;
+
+        return new SitemapListener($framework, $security, $urlGenerator);
     }
 
     private function createSitemapEvent(array $rootPages): SitemapEvent

@@ -22,7 +22,7 @@ class HttpUrlListener
 {
     final public const RGXP_NAME = 'httpurl';
 
-    public function __construct(private TranslatorInterface $translator)
+    public function __construct(private readonly TranslatorInterface $translator)
     {
     }
 

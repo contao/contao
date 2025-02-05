@@ -25,7 +25,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[AsCallback(table: 'tl_user_group', target: 'config.onbeforesubmit')]
 class StartStopValidationListener
 {
-    public function __construct(private TranslatorInterface $translator)
+    public function __construct(private readonly TranslatorInterface $translator)
     {
     }
 
@@ -34,7 +34,8 @@ class StartStopValidationListener
         $hasStart = \array_key_exists('start', $values);
         $hasStop = \array_key_exists('stop', $values);
 
-        // Both fields were not submitted, do not validate since the user cannot change it anyway
+        // Both fields were not submitted, do not validate since the user cannot change
+        // it anyway
         if (!$hasStart && !$hasStop) {
             return $values;
         }

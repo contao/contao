@@ -9,15 +9,13 @@
  */
 
 use Contao\Backend;
-use Contao\BackendUser;
 use Contao\Config;
 use Contao\Controller;
-use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
 use Contao\Environment;
-use Contao\Input;
 use Contao\NewsletterChannelModel;
 use Contao\StringUtil;
 use Contao\System;
@@ -31,16 +29,13 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		'ptable'                      => 'tl_newsletter_channel',
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'subject',
-		'onload_callback' => array
-		(
-			array('tl_newsletter', 'checkPermission')
-		),
 		'sql' => array
 		(
 			'keys' => array
 			(
 				'id' => 'primary',
-				'pid' => 'index'
+				'pid' => 'index',
+				'tstamp' => 'index'
 			)
 		)
 	),
@@ -56,49 +51,21 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'panelLayout'             => 'filter;sort,search,limit',
 			'defaultSearchField'      => 'subject',
 			'child_record_callback'   => array('tl_newsletter', 'listNewsletters'),
-			'renderAsGrid'            => true
-		),
-		'global_operations' => array
-		(
-			'all' => array
-			(
-				'href'                => 'act=select',
-				'class'               => 'header_edit_all',
-				'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="e"'
-			)
+			'renderAsGrid'            => true,
+			'limitHeight'             => 160
 		),
 		'operations' => array
 		(
-			'edit' => array
-			(
-				'href'                => 'act=edit',
-				'icon'                => 'edit.svg'
-			),
-			'copy' => array
-			(
-				'href'                => 'act=paste&amp;mode=copy',
-				'icon'                => 'copy.svg'
-			),
-			'cut' => array
-			(
-				'href'                => 'act=paste&amp;mode=cut',
-				'icon'                => 'cut.svg'
-			),
-			'delete' => array
-			(
-				'href'                => 'act=delete',
-				'icon'                => 'delete.svg',
-				'attributes'          => 'onclick="if(!confirm(\'' . ($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null) . '\'))return false;Backend.getScrollOffset()"'
-			),
-			'show' => array
-			(
-				'href'                => 'act=show',
-				'icon'                => 'show.svg'
-			),
+			'!edit',
+			'copy',
+			'cut',
+			'delete',
+			'show',
 			'send' => array
 			(
 				'href'                => 'key=send',
-				'icon'                => 'bundles/contaonewsletter/send.svg'
+				'icon'                => 'bundles/contaonewsletter/send.svg',
+				'primary'             => true,
 			)
 		)
 	),
@@ -107,10 +74,10 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addFile'),
-		'default'                     => '{title_legend},subject,alias;{html_legend},content;{text_legend:hide},text;{attachment_legend},addFile;{template_legend:hide},template;{sender_legend:hide},mailerTransport,sender,senderName;{expert_legend:hide},sendText,externalImages'
+		'default'                     => '{title_legend},subject,alias;{html_legend},preheader,content;{text_legend:hide},text;{attachment_legend},addFile;{template_legend:hide},template;{sender_legend:hide},sender,senderName,mailerTransport;{expert_legend:hide},sendText,externalImages'
 	),
 
-	// Subpalettes
+	// Sub-palettes
 	'subpalettes' => array
 	(
 		'addFile'                     => 'files'
@@ -153,11 +120,18 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			),
 			'sql'                     => "varchar(255) BINARY NOT NULL default ''"
 		),
+		'preheader' => array
+		(
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
 		'content' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'textarea',
-			'eval'                    => array('rte'=>'tinyNews', 'helpwizard'=>true),
+			'eval'                    => array('rte'=>'tinyNews', 'basicEntities'=>true, 'helpwizard'=>true),
 			'explanation'             => 'insertTags',
 			'load_callback' => array
 			(
@@ -193,8 +167,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		(
 			'inputType'               => 'select',
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'tl_class'=>'w50'),
-			'options_callback' => static function ()
-			{
+			'options_callback' => static function () {
 				return Controller::getTemplateGroup('mail_');
 			},
 			'sql'                     => "varchar(64) NOT NULL default ''"
@@ -215,7 +188,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		'mailerTransport' => array
 		(
 			'inputType'               => 'select',
-			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption'=>true),
+			'eval'                    => array('tl_class'=>'w33', 'includeBlankOption'=>true),
 			'options_callback'        => array('contao.mailer.available_transports', 'getTransportOptions'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -224,7 +197,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 			'search'                  => true,
 			'filter'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('rgxp'=>'email', 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50 clr'),
+			'eval'                    => array('rgxp'=>'email', 'maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w33'),
 			'load_callback' => array
 			(
 				array('tl_newsletter', 'addSenderPlaceholder')
@@ -235,7 +208,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w50'),
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>128, 'tl_class'=>'w33'),
 			'load_callback' => array
 			(
 				array('tl_newsletter', 'addSenderNamePlaceholder')
@@ -269,136 +242,6 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 class tl_newsletter extends Backend
 {
 	/**
-	 * Import the back end user object
-	 */
-	public function __construct()
-	{
-		parent::__construct();
-		$this->import(BackendUser::class, 'User');
-	}
-
-	/**
-	 * Check permissions to edit table tl_newsletter
-	 *
-	 * @param DataContainer $dc
-	 *
-	 * @throws AccessDeniedException
-	 */
-	public function checkPermission(DataContainer $dc)
-	{
-		if ($this->User->isAdmin)
-		{
-			return;
-		}
-
-		// Set root IDs
-		if (empty($this->User->newsletters) || !is_array($this->User->newsletters))
-		{
-			$root = array(0);
-		}
-		else
-		{
-			$root = $this->User->newsletters;
-		}
-
-		$id = strlen(Input::get('id')) ? Input::get('id') : $dc->currentPid;
-
-		// Check current action
-		switch (Input::get('act'))
-		{
-			case 'paste':
-			case 'select':
-				// Check currentPid here (see #247)
-				if (!in_array($dc->currentPid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
-				}
-				break;
-
-			case 'create':
-				if (!Input::get('pid') || !in_array(Input::get('pid'), $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to create newsletters in channel ID ' . Input::get('pid') . '.');
-				}
-				break;
-
-			case 'cut':
-			case 'copy':
-				if (!in_array(Input::get('pid'), $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter ID ' . $id . ' to channel ID ' . Input::get('pid') . '.');
-				}
-				// no break
-
-			case 'edit':
-			case 'show':
-			case 'delete':
-				$objChannel = $this->Database->prepare("SELECT pid FROM tl_newsletter WHERE id=?")
-											 ->limit(1)
-											 ->execute($id);
-
-				if ($objChannel->numRows < 1)
-				{
-					throw new AccessDeniedException('Invalid newsletter ID ' . $id . '.');
-				}
-
-				if (!in_array($objChannel->pid, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to ' . Input::get('act') . ' newsletter ID ' . $id . ' of newsletter channel ID ' . $objChannel->pid . '.');
-				}
-				break;
-
-			case 'editAll':
-			case 'deleteAll':
-			case 'overrideAll':
-			case 'cutAll':
-			case 'copyAll':
-				if (!in_array($id, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
-				}
-
-				$objChannel = $this->Database->prepare("SELECT id FROM tl_newsletter WHERE pid=?")
-											 ->execute($id);
-
-				$objSession = System::getContainer()->get('request_stack')->getSession();
-
-				$session = $objSession->all();
-				$session['CURRENT']['IDS'] = array_intersect((array) $session['CURRENT']['IDS'], $objChannel->fetchEach('id'));
-				$objSession->replace($session);
-				break;
-
-			default:
-				if (Input::get('act'))
-				{
-					throw new AccessDeniedException('Invalid command "' . Input::get('act') . '".');
-				}
-
-				if (Input::get('key') == 'send')
-				{
-					$objChannel = $this->Database->prepare("SELECT pid FROM tl_newsletter WHERE id=?")
-												 ->limit(1)
-												 ->execute($id);
-
-					if ($objChannel->numRows < 1)
-					{
-						throw new AccessDeniedException('Invalid newsletter ID ' . $id . '.');
-					}
-
-					if (!in_array($objChannel->pid, $root))
-					{
-						throw new AccessDeniedException('Not enough permissions to send newsletter ID ' . $id . ' of newsletter channel ID ' . $objChannel->pid . '.');
-					}
-				}
-				elseif (!in_array($id, $root))
-				{
-					throw new AccessDeniedException('Not enough permissions to access newsletter channel ID ' . $id . '.');
-				}
-				break;
-		}
-	}
-
-	/**
 	 * List records
 	 *
 	 * @param array $arrRow
@@ -409,7 +252,7 @@ class tl_newsletter extends Backend
 	{
 		return '
 <div class="cte_type ' . (($arrRow['sent'] && $arrRow['date']) ? 'published' : 'unpublished') . '"><strong>' . $arrRow['subject'] . '</strong> - ' . (($arrRow['sent'] && $arrRow['date']) ? sprintf($GLOBALS['TL_LANG']['tl_newsletter']['sentOn'], Date::parse(Config::get('datimFormat'), $arrRow['date'])) : $GLOBALS['TL_LANG']['tl_newsletter']['notSent']) . '</div>
-<div class="cte_preview limit_height' . (!Config::get('doNotCollapse') ? ' h112' : '') . '">' . (!$arrRow['sendText'] ? '
+<div class="cte_preview">' . (!$arrRow['sendText'] ? '
 ' . StringUtil::insertTagToSrc($arrRow['content']) . '<hr>' : '') . '
 <pre style="white-space:pre-wrap">' . $arrRow['text'] . '</pre>
 </div>' . "\n";
@@ -451,15 +294,18 @@ class tl_newsletter extends Backend
 	 */
 	public function generateAlias($varValue, DataContainer $dc)
 	{
-		$aliasExists = function (string $alias) use ($dc): bool
-		{
-			return $this->Database->prepare("SELECT id FROM tl_newsletter WHERE alias=? AND id!=?")->execute($alias, $dc->id)->numRows > 0;
+		$aliasExists = static function (string $alias) use ($dc): bool {
+			$result = Database::getInstance()
+				->prepare("SELECT id FROM tl_newsletter WHERE alias=? AND id!=?")
+				->execute($alias, $dc->id);
+
+			return $result->numRows > 0;
 		};
 
 		// Generate alias if there is none
 		if (!$varValue)
 		{
-			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->subject, NewsletterChannelModel::findByPk($dc->activeRecord->pid)->jumpTo, $aliasExists);
+			$varValue = System::getContainer()->get('contao.slug')->generate($dc->activeRecord->subject, NewsletterChannelModel::findById($dc->activeRecord->pid)->jumpTo, $aliasExists);
 		}
 		elseif (preg_match('/^[1-9]\d*$/', $varValue))
 		{
@@ -483,10 +329,11 @@ class tl_newsletter extends Backend
 	 */
 	public function addSenderPlaceholder($varValue, DataContainer $dc)
 	{
-		if ($dc->activeRecord && $dc->activeRecord->pid)
+		if ($dc->activeRecord?->pid)
 		{
-			$objChannel = $this->Database->prepare("SELECT sender FROM tl_newsletter_channel WHERE id=?")
-										 ->execute($dc->activeRecord->pid);
+			$objChannel = Database::getInstance()
+				->prepare("SELECT sender FROM tl_newsletter_channel WHERE id=?")
+				->execute($dc->activeRecord->pid);
 
 			$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['placeholder'] = $objChannel->sender;
 		}
@@ -504,10 +351,11 @@ class tl_newsletter extends Backend
 	 */
 	public function addSenderNamePlaceholder($varValue, DataContainer $dc)
 	{
-		if ($dc->activeRecord && $dc->activeRecord->pid)
+		if ($dc->activeRecord?->pid)
 		{
-			$objChannel = $this->Database->prepare("SELECT senderName FROM tl_newsletter_channel WHERE id=?")
-										 ->execute($dc->activeRecord->pid);
+			$objChannel = Database::getInstance()
+				->prepare("SELECT senderName FROM tl_newsletter_channel WHERE id=?")
+				->execute($dc->activeRecord->pid);
 
 			$GLOBALS['TL_DCA'][$dc->table]['fields'][$dc->field]['eval']['placeholder'] = $objChannel->senderName;
 		}

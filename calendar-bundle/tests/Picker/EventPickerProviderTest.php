@@ -20,20 +20,23 @@ use Contao\TestCase\ContaoTestCase;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
 use Knp\Menu\MenuItem;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EventPickerProviderTest extends ContaoTestCase
 {
     public function testCreatesTheMenuItem(): void
     {
-        $config = json_encode([
-            'context' => 'link',
-            'extras' => [],
-            'current' => 'eventPicker',
-            'value' => '',
-        ]);
+        $config = json_encode(
+            [
+                'context' => 'link',
+                'extras' => [],
+                'current' => 'eventPicker',
+                'value' => '',
+            ],
+            JSON_THROW_ON_ERROR,
+        );
 
         if (\function_exists('gzencode') && false !== ($encoded = @gzencode($config))) {
             $config = $encoded;
@@ -105,14 +108,14 @@ class EventPickerProviderTest extends ContaoTestCase
                 'value' => '5',
                 'flags' => ['urlattr'],
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{event_url::5|urlattr}}'))
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{event_url::5|urlattr}}')),
         );
 
         $this->assertSame(
             [
                 'fieldType' => 'radio',
             ],
-            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}'))
+            $picker->getDcaAttributes(new PickerConfig('link', $extra, '{{link_url::5}}')),
         );
     }
 
@@ -129,7 +132,7 @@ class EventPickerProviderTest extends ContaoTestCase
 
         $this->assertSame(
             '{{event_title::5}}',
-            $picker->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{event_title::%s}}']), 5)
+            $picker->convertDcaValue(new PickerConfig('link', ['insertTag' => '{{event_title::%s}}']), 5),
         );
     }
 
@@ -139,16 +142,10 @@ class EventPickerProviderTest extends ContaoTestCase
         $calendarModel->id = 1;
 
         $calendarEvents = $this->createMock(CalendarEventsModel::class);
-        $calendarEvents
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('pid')
-            ->willReturn($calendarModel)
-        ;
-
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
         $adapters = [
+            CalendarModel::class => $this->mockConfiguredAdapter(['findById' => $calendarModel]),
             CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $calendarEvents]),
         ];
 
@@ -185,16 +182,10 @@ class EventPickerProviderTest extends ContaoTestCase
     public function testDoesNotAddTableAndIdIfThereIsNoCalendarModel(): void
     {
         $calendarEvents = $this->createMock(CalendarEventsModel::class);
-        $calendarEvents
-            ->expects($this->once())
-            ->method('getRelated')
-            ->with('pid')
-            ->willReturn(null)
-        ;
-
         $config = new PickerConfig('link', [], '{{event_url::1}}', 'eventPicker');
 
         $adapters = [
+            CalendarModel::class => $this->mockConfiguredAdapter(['findById' => null]),
             CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $calendarEvents]),
         ];
 
@@ -209,7 +200,7 @@ class EventPickerProviderTest extends ContaoTestCase
         $this->assertArrayNotHasKey('id', $params);
     }
 
-    private function getPicker(bool $accessGranted = null): EventPickerProvider
+    private function getPicker(bool|null $accessGranted = null): EventPickerProvider
     {
         $security = $this->createMock(Security::class);
         $security
@@ -230,7 +221,7 @@ class EventPickerProviderTest extends ContaoTestCase
                     $item->setUri($data['uri']);
 
                     return $item;
-                }
+                },
             )
         ;
 

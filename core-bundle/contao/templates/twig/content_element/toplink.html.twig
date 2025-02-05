@@ -1,0 +1,35 @@
+{% trans_default_domain "contao_default" %}
+{% extends "@Contao/content_element/_base.html.twig" %}
+
+{% block content %}
+    {% block link %}
+        {% set link_attributes = attrs()
+            .set('href', '#top')
+            .set('data-toplink')
+            .setIfExists('title', link_text)
+            .mergeWith(link_attributes|default)
+        %}
+        <a{% block link_attributes %}{{ link_attributes }}{% endblock %}>
+            {%- block link_inner %}
+                {{- link_text|default('MSC.backToTop'|trans) -}}
+            {% endblock -%}
+        </a>
+    {% endblock %}
+
+    {% block script %}
+        {% if not as_editor_view %}
+            {% add "toplink_script" to body %}
+                {% set script_attributes = attrs()
+                    .setIfExists('nonce', csp_nonce('script-src'))
+                    .mergeWith(script_attributes|default)
+                %}
+                <script{{ script_attributes }}>
+                    document.querySelectorAll('*[data-toplink]').forEach(link => {
+                        link.href = location.href;
+                        link.hash = '#top';
+                    });
+                </script>
+            {% endadd %}
+        {% endif %}
+    {% endblock %}
+{% endblock %}

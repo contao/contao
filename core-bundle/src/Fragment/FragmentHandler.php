@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Fragment;
 
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Fragment\Reference\FragmentReference;
-use Contao\PageModel;
+use Contao\CoreBundle\Routing\PageFinder;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,32 +26,29 @@ class FragmentHandler extends BaseFragmentHandler
     private array $initialized = [];
 
     /**
-     * @internal Do not inherit from this class; decorate the "contao.fragment.handler" service instead
+     * @internal
      */
     public function __construct(
-        private ContainerInterface $renderers,
-        private BaseFragmentHandler $fragmentHandler,
+        /** @phpstan-ignore property.phpDocType */
+        private readonly ContainerInterface $renderers,
+        private readonly BaseFragmentHandler $fragmentHandler,
         RequestStack $requestStack,
-        private FragmentRegistryInterface $fragmentRegistry,
-        private ContainerInterface $preHandlers,
+        private readonly FragmentRegistryInterface $fragmentRegistry,
+        private readonly ContainerInterface $preHandlers,
+        private readonly PageFinder $pageFinder,
         bool $debug = false,
     ) {
         parent::__construct($requestStack, [], $debug);
     }
 
-    /**
-     * @param string|ControllerReference $uri
-     */
-    public function render($uri, string $renderer = 'inline', array $options = []): string|null
+    public function render(ControllerReference|string $uri, string $renderer = 'inline', array $options = []): string|null
     {
         if (!$uri instanceof FragmentReference) {
             return $this->fragmentHandler->render($uri, $renderer, $options);
         }
 
-        $config = $this->fragmentRegistry->get($uri->controller);
-
-        if (null === $config) {
-            throw new UnknownFragmentException(sprintf('Invalid fragment identifier "%s"', $uri->controller));
+        if (!$config = $this->fragmentRegistry->get($uri->controller)) {
+            throw new UnknownFragmentException(\sprintf('Invalid fragment identifier "%s"', $uri->controller));
         }
 
         $this->preHandleFragment($uri, $config);
@@ -84,8 +81,8 @@ class FragmentHandler extends BaseFragmentHandler
      */
     private function preHandleFragment(FragmentReference $uri, FragmentConfig $config): void
     {
-        if (!isset($uri->attributes['pageModel']) && $this->hasGlobalPageObject()) {
-            $uri->attributes['pageModel'] = $GLOBALS['objPage']->id;
+        if (!isset($uri->attributes['pageModel']) && ($pageModel = $this->pageFinder->getCurrentPage())) {
+            $uri->attributes['pageModel'] = $pageModel->id;
         }
 
         if ($this->preHandlers->has($uri->controller)) {
@@ -93,11 +90,6 @@ class FragmentHandler extends BaseFragmentHandler
             $preHandler = $this->preHandlers->get($uri->controller);
             $preHandler->preHandleFragment($uri, $config);
         }
-    }
-
-    private function hasGlobalPageObject(): bool
-    {
-        return isset($GLOBALS['objPage']) && $GLOBALS['objPage'] instanceof PageModel;
     }
 
     private function containsNonScalars(array $values): bool

@@ -33,7 +33,7 @@ class BackupTest extends ContaoTestCase
                 'size' => 6,
                 'name' => 'valid_backup_filename__20211101141254.sql',
             ],
-            $backup->toArray()
+            $backup->toArray(),
         );
     }
 
@@ -49,16 +49,16 @@ class BackupTest extends ContaoTestCase
     {
         $this->expectException(BackupManagerException::class);
 
-        $this->expectExceptionMessage(sprintf(
+        $this->expectExceptionMessage(\sprintf(
             'The filename "%s" does not match "%s"',
             $filename,
-            Backup::VALID_BACKUP_NAME_REGEX
+            Backup::VALID_BACKUP_NAME_REGEX,
         ));
 
         new Backup($filename);
     }
 
-    public function invalidFileNameProvider(): \Generator
+    public static function invalidFileNameProvider(): iterable
     {
         yield 'Invalid file extension' => ['foobar__20211101141254.gif'];
         yield 'Missing __' => ['foobar20211101141254.sql.gz'];

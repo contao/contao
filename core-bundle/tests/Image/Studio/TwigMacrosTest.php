@@ -22,8 +22,11 @@ use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Global\ContaoVariable;
+use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
+use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -39,7 +42,7 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($expected, $this->renderMacro("html_attributes($attributes)"));
     }
 
-    public function provideAttributes(): \Generator
+    public static function provideAttributes(): iterable
     {
         yield 'no attributes' => [
             '{}',
@@ -67,7 +70,7 @@ class TwigMacrosTest extends TestCase
             new Metadata([Metadata::VALUE_CAPTION => 'my <b>caption</b>']),
             null,
             null,
-            $figureOptions
+            $figureOptions,
         );
 
         $html = $this->renderMacro("caption(figure, $templateOptions)", ['figure' => $figure]);
@@ -75,7 +78,7 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($expected, trim($html));
     }
 
-    public function provideCaptionOptions(): \Generator
+    public static function provideCaptionOptions(): iterable
     {
         yield 'no options' => [
             '{}',
@@ -118,7 +121,7 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($expected, trim($html));
     }
 
-    public function provideImgData(): \Generator
+    public static function provideImgData(): iterable
     {
         yield 'minimal' => [
             ['src' => 'foo.png'],
@@ -197,7 +200,7 @@ class TwigMacrosTest extends TestCase
             new Metadata([Metadata::VALUE_ALT => 'my alt']),
             null,
             null,
-            $figureOptions
+            $figureOptions,
         );
 
         $html = $this->renderMacro("img(figure, $templateOptions)", ['figure' => $figure]);
@@ -205,7 +208,7 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($expected, trim($html));
     }
 
-    public function provideImgOptions(): \Generator
+    public static function provideImgOptions(): iterable
     {
         yield 'no options' => [
             '{}',
@@ -254,7 +257,7 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($expected, trim($html));
     }
 
-    public function providePictureSources(): \Generator
+    public static function providePictureSources(): iterable
     {
         yield 'no sources' => [
             [],
@@ -319,7 +322,7 @@ class TwigMacrosTest extends TestCase
             null,
             null,
             null,
-            $figureOptions
+            $figureOptions,
         );
 
         $html = $this->renderMacro("picture(figure, $templateOptions)", ['figure' => $figure]);
@@ -333,7 +336,7 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($expected, trim($html));
     }
 
-    public function providePictureOptions(): \Generator
+    public static function providePictureOptions(): iterable
     {
         yield 'no options' => [
             '{}',
@@ -375,7 +378,7 @@ class TwigMacrosTest extends TestCase
             $this->createMock(ImageResult::class),
             $metadata,
             $linkAttributes,
-            $lightbox
+            $lightbox,
         );
 
         $html = $this->renderMacro('figure(figure)', ['figure' => $figure]);
@@ -390,7 +393,7 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($expected, trim($html));
     }
 
-    public function provideFigureData(): \Generator
+    public function provideFigureData(): iterable
     {
         yield 'minimal' => [
             null,
@@ -466,7 +469,7 @@ class TwigMacrosTest extends TestCase
                 'data-link' => 'bar',
             ],
             $lightbox,
-            $figureOptions
+            $figureOptions,
         );
 
         $html = $this->renderMacro("figure(figure, $templateOptions)", ['figure' => $figure]);
@@ -481,7 +484,7 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($expected, trim($html));
     }
 
-    public function provideFigureOptions(): \Generator
+    public static function provideFigureOptions(): iterable
     {
         yield 'no options' => [
             '{}',
@@ -524,7 +527,7 @@ class TwigMacrosTest extends TestCase
             new Metadata([
                 Metadata::VALUE_TITLE => 'foo title',
                 Metadata::VALUE_UUID => '<uuid>',
-            ])
+            ]),
         );
 
         $responseContext = new ResponseContext();
@@ -544,7 +547,7 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($graph['@graph'], $schemaData);
     }
 
-    public function provideAddSchemaOrgOptions(): \Generator
+    public static function provideAddSchemaOrgOptions(): iterable
     {
         yield 'default (enabled)' => [
             'figure(figure)',
@@ -570,11 +573,11 @@ class TwigMacrosTest extends TestCase
         ];
     }
 
-    private function renderMacro(string $call, array $context = [], ResponseContextAccessor $responseContextAccessor = null): string
+    private function renderMacro(string $call, array $context = [], ResponseContextAccessor|null $responseContextAccessor = null): string
     {
         $templates = [
             '_macros.html.twig' => file_get_contents(
-                Path::canonicalize(__DIR__.'/../../../templates/Image/Studio/_macros.html.twig')
+                Path::canonicalize(__DIR__.'/../../../templates/Image/Studio/_macros.html.twig'),
             ),
             'test.html.twig' => "{% import \"_macros.html.twig\" as studio %}{{ studio.$call }}",
         ];
@@ -584,8 +587,10 @@ class TwigMacrosTest extends TestCase
         $environment->setExtensions([
             new ContaoExtension(
                 $environment,
-                $this->createMock(TemplateHierarchyInterface::class),
-                $this->createMock(ContaoCsrfTokenManager::class)
+                $this->createMock(ContaoFilesystemLoader::class),
+                $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
+                new InspectorNodeVisitor(new NullAdapter(), $environment),
             ),
         ]);
 
@@ -594,7 +599,7 @@ class TwigMacrosTest extends TestCase
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([
                 SchemaOrgRuntime::class => static fn () => new SchemaOrgRuntime($responseContextAccessor),
-            ])
+            ]),
         );
 
         return $environment->render('test.html.twig', $context);

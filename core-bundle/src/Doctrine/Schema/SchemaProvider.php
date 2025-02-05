@@ -18,7 +18,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 
 class SchemaProvider
 {
-    public function __construct(private EntityManagerInterface $entityManager)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
     }
 
@@ -30,7 +30,8 @@ class SchemaProvider
         $schemaTool = new SchemaTool($this->entityManager);
         $metadata = $this->entityManager->getMetadataFactory()->getAllMetadata();
 
-        // Triggers the contao.listener.doctrine_schema listener that appends the DCA definitions
+        // Triggers the contao.listener.doctrine_schema listener that appends the
+        // DCA definitions
         return $schemaTool->getSchemaFromMetadata($metadata);
     }
 }

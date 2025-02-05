@@ -22,15 +22,9 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class VersionCommandTest extends TestCase
 {
-    /**
-     * @var Application&MockObject
-     */
-    private Application $application;
+    private Application&MockObject $application;
 
-    /**
-     * @var PluginLoader&MockObject
-     */
-    private PluginLoader $pluginLoader;
+    private PluginLoader&MockObject $pluginLoader;
 
     private VersionCommand $command;
 
@@ -72,11 +66,14 @@ class VersionCommandTest extends TestCase
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
 
-        $expected = json_encode([
-            'version' => Application::VERSION,
-            'commands' => [],
-            'features' => [],
-        ]);
+        $expected = json_encode(
+            [
+                'version' => Application::VERSION,
+                'commands' => [],
+                'features' => [],
+            ],
+            JSON_THROW_ON_ERROR,
+        );
 
         $this->assertSame($expected, $commandTester->getDisplay());
         $this->assertSame(0, $commandTester->getStatusCode());
@@ -100,11 +97,14 @@ class VersionCommandTest extends TestCase
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
 
-        $expected = json_encode([
-            'version' => Application::VERSION,
-            'commands' => ['foo:bar'],
-            'features' => [],
-        ]);
+        $expected = json_encode(
+            [
+                'version' => Application::VERSION,
+                'commands' => ['foo:bar'],
+                'features' => [],
+            ],
+            JSON_THROW_ON_ERROR,
+        );
 
         $this->assertSame($expected, $commandTester->getDisplay());
         $this->assertSame(0, $commandTester->getStatusCode());
@@ -138,16 +138,19 @@ class VersionCommandTest extends TestCase
         $commandTester = new CommandTester($this->command);
         $commandTester->execute([]);
 
-        $expected = json_encode([
-            'version' => Application::VERSION,
-            'commands' => [],
-            'features' => [
-                'foo/bar-bundle' => [
-                    'foo' => 'bar',
-                    'bar' => 'baz',
+        $expected = json_encode(
+            [
+                'version' => Application::VERSION,
+                'commands' => [],
+                'features' => [
+                    'foo/bar-bundle' => [
+                        'foo' => 'bar',
+                        'bar' => 'baz',
+                    ],
                 ],
             ],
-        ]);
+            JSON_THROW_ON_ERROR,
+        );
 
         $this->assertSame($expected, $commandTester->getDisplay());
         $this->assertSame(0, $commandTester->getStatusCode());

@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Model\Collection;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
  * Parent class for news modules.
@@ -43,7 +44,7 @@ abstract class ModuleNews extends Module
 
 			while ($objArchive->next())
 			{
-				if ($objArchive->protected && !$security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, StringUtil::deserialize($objArchive->groups, true)))
+				if ($objArchive->protected && !$security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objArchive->groups))
 				{
 					continue;
 				}
@@ -80,18 +81,26 @@ abstract class ModuleNews extends Module
 			$strClass = ' featured' . $strClass;
 		}
 
+		$url = $this->generateContentUrl($objArticle, $blnAddArchive);
+
 		$objTemplate->class = $strClass;
 		$objTemplate->newsHeadline = $objArticle->headline;
 		$objTemplate->subHeadline = $objArticle->subheadline;
 		$objTemplate->hasSubHeadline = $objArticle->subheadline ? true : false;
-		$objTemplate->linkHeadline = $this->generateLink($objArticle->headline, $objArticle, $blnAddArchive);
-		$objTemplate->more = $this->generateLink($objArticle->linkText ?: $GLOBALS['TL_LANG']['MSC']['more'], $objArticle, $blnAddArchive, true);
-		$objTemplate->link = News::generateNewsUrl($objArticle, $blnAddArchive);
-		$objTemplate->archive = $objArticle->getRelated('pid');
+		$objTemplate->linkHeadline = $objArticle->headline;
+		$objTemplate->archive = NewsArchiveModel::findById($objArticle->pid);
 		$objTemplate->count = $intCount; // see #5708
 		$objTemplate->text = '';
 		$objTemplate->hasTeaser = false;
 		$objTemplate->hasReader = true;
+		$objTemplate->author = null; // see #6827
+
+		if (null !== $url)
+		{
+			$objTemplate->linkHeadline = $this->generateLink($objArticle->headline, $objArticle, $blnAddArchive);
+			$objTemplate->more = $this->generateLink($objArticle->linkText ?: $GLOBALS['TL_LANG']['MSC']['more'], $objArticle, $blnAddArchive, true);
+			$objTemplate->link = $url;
+		}
 
 		// Clean the RTE output
 		if ($objArticle->teaser)
@@ -105,7 +114,7 @@ abstract class ModuleNews extends Module
 		if ($objArticle->source != 'default')
 		{
 			$objTemplate->text = true;
-			$objTemplate->hasText = true;
+			$objTemplate->hasText = null !== $url;
 			$objTemplate->hasReader = false;
 		}
 
@@ -114,8 +123,7 @@ abstract class ModuleNews extends Module
 		{
 			$id = $objArticle->id;
 
-			$objTemplate->text = function () use ($id)
-			{
+			$objTemplate->text = Template::once(function () use ($id) {
 				$strText = '';
 				$objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_news');
 
@@ -128,23 +136,21 @@ abstract class ModuleNews extends Module
 				}
 
 				return $strText;
-			};
+			});
 
-			$objTemplate->hasText = static function () use ($objArticle)
-			{
+			$objTemplate->hasText = null === $url ? false : Template::once(static function () use ($objArticle) {
 				return ContentModel::countPublishedByPidAndTable($objArticle->id, 'tl_news') > 0;
-			};
+			});
 		}
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$objTemplate->date = Date::parse($objPage->datimFormat, $objArticle->date);
 
-		/** @var UserModel $objAuthor */
-		if (($objAuthor = $objArticle->getRelated('author')) instanceof UserModel)
+		if ($objAuthor = UserModel::findById($objArticle->author))
 		{
 			$objTemplate->author = $GLOBALS['TL_LANG']['MSC']['by'] . ' ' . $objAuthor->name;
+			$objTemplate->authorModel = $objAuthor;
 		}
 
 		if (!$objArticle->noComments && $objArticle->source == 'default' && isset(System::getContainer()->getParameter('kernel.bundles')['ContaoCommentsBundle']))
@@ -152,7 +158,7 @@ abstract class ModuleNews extends Module
 			$intTotal = CommentsModel::countPublishedBySourceAndParent('tl_news', $objArticle->id);
 
 			$objTemplate->numberOfComments = $intTotal;
-			$objTemplate->commentCount = sprintf($GLOBALS['TL_LANG']['MSC']['commentCount'], $intTotal);
+			$objTemplate->commentCount = \sprintf($GLOBALS['TL_LANG']['MSC']['commentCount'], $intTotal);
 		}
 
 		// Add the meta information
@@ -182,7 +188,7 @@ abstract class ModuleNews extends Module
 				->createFigureBuilder()
 				->from($objArticle->singleSRC)
 				->setSize($imgSize)
-				->setMetadata($objArticle->getOverwriteMetadata())
+				->setOverwriteMetadata($objArticle->getOverwriteMetadata())
 				->enableLightbox($objArticle->fullsize);
 
 			// If the external link is opened in a new window, open the image link in a new window as well (see #210)
@@ -193,10 +199,12 @@ abstract class ModuleNews extends Module
 
 			if (null !== ($figure = $figureBuilder->buildIfResourceExists()))
 			{
-				// Rebuild with link to news article if none is set
-				if (!$figure->getLinkHref())
+				// Rebuild with link to the news article if we are not in a
+				// newsreader and there is no link yet. $intCount will only be
+				// set by the news list and news archive modules (see #5851).
+				if ($intCount > 0 && !$figure->getLinkHref())
 				{
-					$linkTitle = StringUtil::specialchars(sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
+					$linkTitle = StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['MSC']['readMore'], $objArticle->headline), true);
 
 					$figure = $figureBuilder
 						->setLinkHref($objTemplate->link)
@@ -221,8 +229,7 @@ abstract class ModuleNews extends Module
 		{
 			foreach ($GLOBALS['TL_HOOKS']['parseArticles'] as $callback)
 			{
-				$this->import($callback[0]);
-				$this->{$callback[0]}->{$callback[1]}($objTemplate, $objArticle->row(), $this);
+				System::importStatic($callback[0])->{$callback[1]}($objTemplate, $objArticle->row(), $this);
 			}
 		}
 
@@ -234,8 +241,7 @@ abstract class ModuleNews extends Module
 		}
 
 		// schema.org information
-		$objTemplate->getSchemaOrgData = static function () use ($objTemplate, $objArticle): array
-		{
+		$objTemplate->getSchemaOrgData = static function () use ($objArticle, $objTemplate): array {
 			$jsonLd = News::getSchemaOrgData($objArticle);
 
 			if ($objTemplate->addImage && $objTemplate->figure)
@@ -303,15 +309,35 @@ abstract class ModuleNews extends Module
 	{
 		$blnIsInternal = $objArticle->source != 'external';
 		$strReadMore = $blnIsInternal ? $GLOBALS['TL_LANG']['MSC']['readMore'] : $GLOBALS['TL_LANG']['MSC']['open'];
-		$strArticleUrl = News::generateNewsUrl($objArticle, $blnAddArchive);
+		$strArticleUrl = $this->generateContentUrl($objArticle, $blnAddArchive);
 
-		return sprintf(
+		return \sprintf(
 			'<a href="%s" title="%s"%s>%s%s</a>',
 			$strArticleUrl,
-			StringUtil::specialchars(sprintf($strReadMore, $blnIsInternal ? $objArticle->headline : $strArticleUrl), true),
-			($objArticle->target && !$blnIsInternal ? ' target="_blank" rel="noreferrer noopener"' : ''),
+			StringUtil::specialchars(\sprintf($strReadMore, $blnIsInternal ? $objArticle->headline : $strArticleUrl), true),
+			$objArticle->target && !$blnIsInternal ? ' target="_blank" rel="noreferrer noopener"' : '',
 			$strLink,
-			($blnIsReadMore && $blnIsInternal ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : '')
+			$blnIsReadMore && $blnIsInternal ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : ''
 		);
+	}
+
+	private function generateContentUrl(NewsModel $content, bool $addArchive): string|null
+	{
+		$parameters = array();
+
+		// Add the current archive parameter (news archive)
+		if ($addArchive && Input::get('month'))
+		{
+			$parameters['month'] = Input::get('month');
+		}
+
+		try
+		{
+			return System::getContainer()->get('contao.routing.content_url_generator')->generate($content, $parameters);
+		}
+		catch (ExceptionInterface)
+		{
+			return null;
+		}
 	}
 }

@@ -27,6 +27,7 @@ use Contao\Crawl;
 use Contao\FilesModel;
 use Contao\FileTree;
 use Contao\Form;
+use Contao\FormAltcha;
 use Contao\FormCaptcha;
 use Contao\FormCheckbox;
 use Contao\FormExplanation;
@@ -94,12 +95,11 @@ use Contao\Picker;
 use Contao\PurgeData;
 use Contao\RadioButton;
 use Contao\RadioTable;
+use Contao\RebuildBackendSearchIndex;
 use Contao\RootPageDependentSelect;
 use Contao\SectionWizard;
 use Contao\SelectMenu;
 use Contao\SerpPreview;
-use Contao\StringUtil;
-use Contao\System;
 use Contao\TableWizard;
 use Contao\TextArea;
 use Contao\TextField;
@@ -143,7 +143,7 @@ $GLOBALS['BE_MOD'] = array
 	(
 		'themes' => array
 		(
-			'tables'      => array('tl_theme', 'tl_module', 'tl_layout', 'tl_image_size', 'tl_image_size_item'),
+			'tables'      => array('tl_theme', 'tl_module', 'tl_layout', 'tl_image_size', 'tl_image_size_item', 'tl_content'),
 			'importTheme' => array(Theme::class, 'importTheme'),
 			'exportTheme' => array(Theme::class, 'exportTheme'),
 		),
@@ -265,23 +265,25 @@ $GLOBALS['FE_MOD'] = array
 // Content elements
 $GLOBALS['TL_CTE'] = array
 (
-	'accordion' => array
-	(
-		'accordionSingle' => ContentAccordion::class,
-		'accordionStart'  => ContentAccordionStart::class,
-		'accordionStop'   => ContentAccordionStop::class
-	),
-	'slider' => array
-	(
-		'sliderStart'     => ContentSliderStart::class,
-		'sliderStop'      => ContentSliderStop::class
-	),
+	'texts' => array(),
+	'links' => array(),
+	'files' => array(),
+	'media' => array(),
+	'miscellaneous' => array(),
 	'includes' => array
 	(
 		'article'         => ContentArticle::class,
 		'alias'           => ContentAlias::class,
 		'form'            => Form::class,
 		'module'          => ContentModule::class,
+	),
+	'legacy' => array
+	(
+		'accordionSingle' => ContentAccordion::class,
+		'accordionStart'  => ContentAccordionStart::class,
+		'accordionStop'   => ContentAccordionStop::class,
+		'sliderStart'     => ContentSliderStart::class,
+		'sliderStop'      => ContentSliderStop::class
 	)
 );
 
@@ -333,6 +335,7 @@ $GLOBALS['TL_FFL'] = array
 	'range'         => FormRange::class,
 	'hidden'        => FormHidden::class,
 	'captcha'       => FormCaptcha::class,
+	'altcha'        => FormAltcha::class,
 	'submit'        => FormSubmit::class,
 );
 
@@ -352,7 +355,8 @@ $GLOBALS['TL_PTY'] = array
 $GLOBALS['TL_MAINTENANCE'] = array
 (
 	Crawl::class,
-	PurgeData::class
+	RebuildBackendSearchIndex::class,
+	PurgeData::class,
 );
 
 // Purge jobs
@@ -391,12 +395,12 @@ $GLOBALS['TL_PURGE'] = array
 		'images' => array
 		(
 			'callback' => array(Automator::class, 'purgeImageCache'),
-			'affected' => array(StringUtil::stripRootDir(System::getContainer()->getParameter('contao.image.target_dir')))
+			'affected' => array('%contao.image.target_dir%')
 		),
 		'previews' => array
 		(
 			'callback' => array(Automator::class, 'purgePreviewCache'),
-			'affected' => array(StringUtil::stripRootDir(System::getContainer()->getParameter('contao.image.preview.target_dir')))
+			'affected' => array('%contao.image.preview.target_dir%')
 		),
 		'scripts' => array
 		(

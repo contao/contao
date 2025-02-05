@@ -27,16 +27,17 @@
         }
     ],
     "require": {
-        "php": "^8.1",
+        "php": "^8.2",
         "contao/core-bundle": "self.version",
-        "symfony/filesystem": "^5.4 || ^6.0",
+        "symfony/filesystem": "^6.4 || ^7.0",
         "symfony/maker-bundle": "^1.1",
-        "symfony/options-resolver": "^5.4 || ^6.0"
+        "symfony/options-resolver": "^6.4 || ^7.0",
+        "symfony/yaml": "^6.4 || ^7.0"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.3.1",
         "phpunit/phpunit": "^9.5",
-        "symfony/phpunit-bridge": "^5.4 || ^6.0"
+        "symfony/phpunit-bridge": "^6.4 || ^7.0"
     },
     "conflict": {
         "contao/core": "*",
@@ -56,7 +57,8 @@
     "config": {
         "allow-plugins": {
             "contao-components/installer": true,
-            "contao/manager-plugin": true
+            "contao/manager-plugin": true,
+            "php-http/discovery": false
         }
     },
     "extra": {

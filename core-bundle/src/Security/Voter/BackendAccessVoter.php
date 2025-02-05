@@ -15,12 +15,16 @@ namespace Contao\CoreBundle\Security\Voter;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\Database;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Contracts\Service\ResetInterface;
 
+/**
+ * @extends Voter<string, mixed>
+ */
 class BackendAccessVoter extends Voter implements ResetInterface
 {
     private const PAGE_PERMISSIONS = [
@@ -34,13 +38,16 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
     private array $pagePermissionsCache = [];
 
-    public function __construct(private ContaoFramework $framework)
+    private array $pagemountsCache = [];
+
+    public function __construct(private readonly ContaoFramework $framework)
     {
     }
 
     public function reset(): void
     {
         $this->pagePermissionsCache = [];
+        $this->pagemountsCache = [];
     }
 
     protected function supports(string $attribute, mixed $subject): bool
@@ -88,11 +95,44 @@ class BackendAccessVoter extends Voter implements ResetInterface
      */
     private function hasAccess(mixed $subject, string $field, BackendUser $user): bool
     {
+        if (null === $subject) {
+            return \is_array($user->$field) && [] !== $user->$field;
+        }
+
         if (!\is_scalar($subject) && !\is_array($subject)) {
             return false;
         }
 
-        return $user->hasAccess($subject, $field);
+        if (!\is_array($subject)) {
+            $subject = [$subject];
+        }
+
+        if (\is_array($user->$field) && array_intersect($subject, $user->$field)) {
+            return true;
+        }
+
+        // Additionally check the subfolders of the mounted files
+        if ('filemounts' === $field) {
+            foreach ($user->filemounts as $folder) {
+                if (preg_match('/^'.preg_quote($folder, '/').'(\/|$)/i', $subject[0])) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // Additionally check the child pages of the mounted pages
+        if ('pagemounts' === $field) {
+            if (!isset($this->pagemountsCache[$user->id]) || (!empty($this->pagemountsCache[$user->id]) && !array_intersect($subject, $this->pagemountsCache[$user->id]))) {
+                $database = $this->framework->createInstance(Database::class);
+                $this->pagemountsCache[$user->id] = $database->getChildRecords($user->pagemounts, 'tl_page');
+            }
+
+            return !empty($this->pagemountsCache[$user->id]) && array_intersect($subject, $this->pagemountsCache[$user->id]);
+        }
+
+        return false;
     }
 
     /**
@@ -105,7 +145,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
         }
 
         if (!\is_array($subject)) {
-            $page = $this->framework->getAdapter(PageModel::class)->findByPk($subject);
+            $page = $this->framework->getAdapter(PageModel::class)->findById($subject);
 
             if (!$page instanceof PageModel) {
                 return false;
@@ -126,11 +166,12 @@ class BackendAccessVoter extends Voter implements ResetInterface
             $permission[] = 'u'.$flag;
         }
 
-        return \count(array_intersect($permission, $chmod)) > 0;
+        return [] !== array_intersect($permission, $chmod);
     }
 
     /**
-     * Checks if the user has access to any field of a table (against tl_user(_group).alexf).
+     * Checks if the user has access to any field of a table (against
+     * tl_user(_group).alexf).
      */
     private function canEditFieldsOf(mixed $table, BackendUser $user): bool
     {
@@ -162,7 +203,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
             $parentPage = $this->framework->getAdapter(PageModel::class)->findById($pid);
 
-            while (null !== $parentPage && false === $row['chmod'] && $pid > 0) {
+            while ($parentPage && false === $row['chmod'] && $pid > 0) {
                 $cacheIds[] = $parentPage->id;
                 $pid = $parentPage->pid;
 
@@ -183,7 +224,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
             }
         }
 
-        $result = [(int) ($row['cuser'] ?? null), (int) ($row['cgroup'] ?? null), StringUtil::deserialize(($row['chmod'] ?? null), true)];
+        $result = [(int) ($row['cuser'] ?? null), (int) ($row['cgroup'] ?? null), StringUtil::deserialize($row['chmod'] ?? null, true)];
 
         foreach ($cacheIds as $cacheId) {
             $this->pagePermissionsCache[$cacheId] = $result;

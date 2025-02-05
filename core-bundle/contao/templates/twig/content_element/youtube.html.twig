@@ -1,0 +1,11 @@
+{% trans_default_domain "contao_default" %}
+{% extends "@Contao/content_element/_video.html.twig" %}
+
+{% set iframe_attrs = attrs()
+    .set('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen')
+    .mergeWith(iframe_attrs|default)
+%}
+
+{% block splash_screen_text %}
+    <span>{{ ('MSC.splashScreen')|trans }} {{ ('MSC.dataTransmission')|trans(['YouTube']) }}</span>
+{% endblock %}

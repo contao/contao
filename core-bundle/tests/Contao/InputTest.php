@@ -40,12 +40,10 @@ class InputTest extends TestCase
 
         $GLOBALS['TL_CONFIG']['allowedTags'] = ($GLOBALS['TL_CONFIG']['allowedTags'] ?? '').'<use>';
 
-        $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize(
-            array_merge(
-                unserialize($GLOBALS['TL_CONFIG']['allowedAttributes'] ?? ''),
-                [['key' => 'use', 'value' => 'xlink:href']]
-            )
-        );
+        $GLOBALS['TL_CONFIG']['allowedAttributes'] = serialize([
+            ...unserialize($GLOBALS['TL_CONFIG']['allowedAttributes'] ?? ''),
+            ['key' => 'use', 'value' => 'xlink:href'],
+        ]);
 
         $container = new ContainerBuilder();
         $container->setParameter('kernel.charset', 'UTF-8');
@@ -110,9 +108,9 @@ class InputTest extends TestCase
         $this->assertSame($expected, Input::post('key', true));
         $this->assertSame($expected, Input::cookie('key', true));
 
-        $this->assertSame($expectedEncoded, Input::get('key', false));
-        $this->assertSame($expectedEncoded, Input::post('key', false));
-        $this->assertSame($expectedEncoded, Input::cookie('key', false));
+        $this->assertSame($expectedEncoded, Input::get('key'));
+        $this->assertSame($expectedEncoded, Input::post('key'));
+        $this->assertSame($expectedEncoded, Input::cookie('key'));
 
         $this->assertSame($source, Input::postUnsafeRaw('key'));
 
@@ -125,15 +123,15 @@ class InputTest extends TestCase
         $this->assertSame($expected, Input::post('key', true));
         $this->assertSame($expected, Input::cookie('key', true));
 
-        $this->assertSame($expectedEncoded, Input::get('key', false));
-        $this->assertSame($expectedEncoded, Input::post('key', false));
-        $this->assertSame($expectedEncoded, Input::cookie('key', false));
+        $this->assertSame($expectedEncoded, Input::get('key'));
+        $this->assertSame($expectedEncoded, Input::post('key'));
+        $this->assertSame($expectedEncoded, Input::cookie('key'));
 
         $this->assertSame($source, Input::postUnsafeRaw('key'));
 
         $this->expectDeprecation('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
         $this->assertSame($expected, Input::postHtml('key', true));
-        $this->assertSame($expectedEncoded, Input::postHtml('key', false));
+        $this->assertSame($expectedEncoded, Input::postHtml('key'));
     }
 
     /**
@@ -149,19 +147,20 @@ class InputTest extends TestCase
 
         // html_entity_decode simulates the browser here
         $_POST = [
-            'decoded' => html_entity_decode($specialchars(null, $expected)),
-            'encoded' => html_entity_decode($specialchars(null, $expectedEncoded)),
+            'decoded' => html_entity_decode($specialchars(null, $expected), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
+            'encoded' => html_entity_decode($specialchars(null, $expectedEncoded), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
         ];
 
         Config::set('allowedTags', '');
         Config::set('allowedAttributes', '');
 
         $this->assertSame($expected, Input::post('decoded', true));
-        $this->assertSame($expectedEncoded, Input::post('encoded', false));
+        $this->assertSame($expectedEncoded, Input::post('encoded'));
 
         $this->expectDeprecation('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
+
         $this->assertSame($expected, Input::postHtml('decoded', true));
-        $this->assertSame($expectedEncoded, Input::postHtml('encoded', false));
+        $this->assertSame($expectedEncoded, Input::postHtml('encoded'));
     }
 
     /**
@@ -169,8 +168,8 @@ class InputTest extends TestCase
      */
     public function testEncodesInsertTags(): void
     {
-        $source = '{{ foo }}';
-        $encoded = '&#123;&#123; foo &#125;&#125;';
+        $source = ' {{ foo }} { bar } ';
+        $encoded = ' &#123;&#123; foo &#125;&#125; { bar &#125; ';
 
         $_GET = $_POST = $_COOKIE = [
             'key' => $source,
@@ -189,18 +188,18 @@ class InputTest extends TestCase
         $this->assertSame($encoded, Input::postHtml('key', true));
         $this->assertSame($encoded, Input::cookie('key', true));
 
-        $this->assertSame($encoded, Input::get('key', false));
-        $this->assertSame($encoded, Input::post('key', false));
-        $this->assertSame($encoded, Input::cookie('key', false));
+        $this->assertSame($encoded, Input::get('key'));
+        $this->assertSame($encoded, Input::post('key'));
+        $this->assertSame($encoded, Input::cookie('key'));
 
         $this->assertSame($encoded, Input::postRaw('key'));
         $this->assertSame($source, Input::postUnsafeRaw('key'));
 
         $this->expectDeprecation('%spostHtml() with $blnDecodeEntities set to false has been deprecated%s');
-        $this->assertSame($encoded, Input::postHtml('key', false));
+        $this->assertSame($encoded, Input::postHtml('key'));
     }
 
-    public function encodeInputProvider(): \Generator
+    public static function encodeInputProvider(): iterable
     {
         yield [
             'foo',
@@ -328,14 +327,14 @@ class InputTest extends TestCase
      *
      * @group legacy
      */
-    public function testEncodeNoneMode(string $source, string $expected, string|null $expectedEncoded = null): void
+    public function testEncodeNoneMode(string $source, string $expected, string|null $expectedEncoded = null, string|null $expectedEncodedDouble = null): void
     {
         $expectedEncoded ??= $expected;
 
         $this->assertSame($expected, Input::encodeInput($source, InputEncodingMode::encodeNone, false));
-        $this->assertSame($expectedEncoded, Input::encodeInput($source, InputEncodingMode::encodeNone, true));
+        $this->assertSame($expectedEncoded, Input::encodeInput($source, InputEncodingMode::encodeNone));
         $this->assertSame($expected.$expected, Input::encodeInput($source.$source, InputEncodingMode::encodeNone, false));
-        $this->assertSame($expectedEncoded.$expectedEncoded, Input::encodeInput($source.$source, InputEncodingMode::encodeNone, true));
+        $this->assertSame($expectedEncodedDouble ?? $expectedEncoded.$expectedEncoded, Input::encodeInput($source.$source, InputEncodingMode::encodeNone));
 
         System::getContainer()->set('request_stack', $stack = new RequestStack());
         $stack->push(new Request([], ['key' => $source]));
@@ -350,16 +349,18 @@ class InputTest extends TestCase
         $this->assertSame($expectedEncoded, Input::postRaw('key'));
     }
 
-    public function encodeNoneModeProvider(): \Generator
+    public static function encodeNoneModeProvider(): iterable
     {
         yield ['', ''];
         yield ['foo', 'foo'];
         yield ['\X \0 \X', '\X &#92;0 \X'];
         yield ["a\rb\r\nc\n\rd\ne", "a\nb\nc\n\nd\ne"];
-        yield ['{}', '{}'];
+        yield ['{}', '{}', '&#123;&#125;', '&#123;}{&#125;'];
         yield ['{{}}', '{{}}', '&#123;&#123;&#125;&#125;'];
-        yield ['{{{}}}', '{{{}}}', '&#123;&#123;{&#125;&#125;}'];
+        yield ['{{{}}}', '{{{}}}', '&#123;&#123;{&#125;&#125;&#125;', '&#123;&#123;{&#125;&#125;}&#123;&#123;{&#125;&#125;&#125;'];
         yield ['{{{{}}}}', '{{{{}}}}', '&#123;&#123;&#123;&#123;&#125;&#125;&#125;&#125;'];
+        yield ['{ start {and} end }', '{ start {and} end }', '&#123; start {and} end &#125;', '&#123; start {and} end }{ start {and} end &#125;'];
+        yield ["\n\t { foo }\n\t ", "\n\t { foo }\n\t ", "\n\t &#123; foo &#125;\n\t ", "\n\t &#123; foo }\n\t \n\t { foo &#125;\n\t "];
         yield ["\0", "\u{FFFD}"];
         yield ["\x80", "\u{FFFD}"];
         yield ["\xFF", "\u{FFFD}"];
@@ -376,13 +377,9 @@ class InputTest extends TestCase
         yield ["\xFB\xBF\xBF\xBF\xBF", "\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}"];
         yield ["\xFD\x80\x80\x80\x80\x80", "\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}"];
         yield ["\xFD\xBF\xBF\xBF\xBF\xBF", "\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}\u{FFFD}"];
-
-        /** @see https://github.com/php/php-src/issues/8360 */
-        if (\PHP_VERSION_ID >= 80106) {
-            yield ["\xDF\xC0", "\u{FFFD}\u{FFFD}"];
-            yield ["\xEF\xBF\xC0", "\u{FFFD}\u{FFFD}"];
-            yield ["\xF4\x8F\xBF\xC0", "\u{FFFD}\u{FFFD}"];
-        }
+        yield ["\xDF\xC0", "\u{FFFD}\u{FFFD}"];
+        yield ["\xEF\xBF\xC0", "\u{FFFD}\u{FFFD}"];
+        yield ["\xF4\x8F\xBF\xC0", "\u{FFFD}\u{FFFD}"];
     }
 
     /**
@@ -412,7 +409,7 @@ class InputTest extends TestCase
         $this->assertSame($expectedEncoded, Input::postHtml('key', true));
     }
 
-    public function stripTagsProvider(): \Generator
+    public static function stripTagsProvider(): iterable
     {
         yield 'Encodes tags' => [
             'Text <with> tags',
@@ -440,8 +437,8 @@ class InputTest extends TestCase
         ];
 
         yield 'Reformats attributes' => [
-            "<span \n \t title = \nwith-spaces class\n=' with \" and &#039; quotes' lang \t =\"with &quot; and ' quotes \t \n \" data-boolean-flag data-int = 0>",
-            "<span title=\"with-spaces\" class=\" with &quot; and &#039; quotes\" lang=\"with &quot; and &#039; quotes \t \n \" data-boolean-flag=\"\" data-int=\"0\">",
+            "<span \n \t title = \nwith-spaces class\n=' with \" and &apos; quotes' lang \t =\"with &quot; and ' quotes \t \n \" data-boolean-flag data-int = 0>",
+            "<span title=\"with-spaces\" class=\" with &quot; and &apos; quotes\" lang=\"with &quot; and &apos; quotes \t \n \" data-boolean-flag=\"\" data-int=\"0\">",
         ];
 
         yield 'Encodes insert tags in attributes' => [
@@ -467,6 +464,11 @@ class InputTest extends TestCase
         yield 'Does not allow colon in URLs insert tags' => [
             '<a href="{{email_url::javascript:alert(1)|attr}}">',
             '<a href="{{email_url::javascript:alert(1)|urlattr}}">',
+        ];
+
+        yield 'Does allow colon in URL anchors after insert tags' => [
+            '<a href="{{link_url::1|urlattr}}#foo:bar">',
+            '<a href="{{link_url::1|urlattr}}#foo%3Abar">',
         ];
 
         yield 'Does not get tricked by stripping null escapes' => [
@@ -576,12 +578,12 @@ class InputTest extends TestCase
 
         yield [
             '<IMG SRC="javascript:alert(\'XSS\');">',
-            '<img src="javascript%3Aalert(&#039;XSS&#039;);">',
+            '<img src="javascript%3Aalert(&apos;XSS&apos;);">',
         ];
 
         yield [
-            '<IMG SRC=JaVaScRiPt:alert(\'XSS\')>',
-            '<img src="JaVaScRiPt%3Aalert(&#039;XSS&#039;)">',
+            "<IMG SRC=JaVaScRiPt:alert('XSS')>",
+            '<img src="JaVaScRiPt%3Aalert(&apos;XSS&apos;)">',
         ];
 
         yield [
@@ -626,12 +628,12 @@ class InputTest extends TestCase
 
         yield [
             '<IMG SRC="jav&#x0A;ascript:alert(\'XSS\');">',
-            '<img src="jav&#x0A;ascript%3Aalert(&#039;XSS&#039;);">',
+            '<img src="jav&#x0A;ascript%3Aalert(&apos;XSS&apos;);">',
         ];
 
         yield [
             '<IMG SRC=" &#14; javascript:alert(\'XSS\');">',
-            '<img src=" &#14; javascript%3Aalert(&#039;XSS&#039;);">',
+            '<img src=" &#14; javascript%3Aalert(&apos;XSS&apos;);">',
         ];
 
         yield [
@@ -680,7 +682,7 @@ class InputTest extends TestCase
         ];
 
         yield [
-            '<svg/onload=alert(\'XSS\')>',
+            "<svg/onload=alert('XSS')>",
             '&#60;svg/onload&#61;alert(&#39;XSS&#39;)&#62;',
         ];
 
@@ -702,7 +704,7 @@ class InputTest extends TestCase
         $this->assertSame($expected, Input::stripTags($source));
     }
 
-    public function stripTagsNoTagsAllowedProvider(): \Generator
+    public static function stripTagsNoTagsAllowedProvider(): iterable
     {
         yield 'Encodes tags' => [
             'Text <with> tags',
@@ -717,7 +719,7 @@ class InputTest extends TestCase
 
     public function testStripTagsAllAttributesAllowed(): void
     {
-        $html = '<dIv class=gets-normalized bar-foo-something = \'keep\'><spAN class=gets-normalized bar-foo-something = \'keep\'>foo</SPan></DiV>';
+        $html = "<dIv class=gets-normalized bar-foo-something = 'keep'><spAN class=gets-normalized bar-foo-something = 'keep'>foo</SPan></DiV>";
         $expected = '<div class="gets-normalized" bar-foo-something="keep"><span>foo</span></div>';
 
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize([['key' => 'div', 'value' => '*']])));
@@ -735,7 +737,7 @@ class InputTest extends TestCase
      */
     public function testStripTagsNoAttributesAllowed(): void
     {
-        $html = '<dIv class=gets-normalized bar-foo-something = \'keep\'><spAN class=gets-normalized bar-foo-something = \'keep\'>foo</SPan></DiV><notallowed></notallowed>';
+        $html = "<dIv class=gets-normalized bar-foo-something = 'keep'><spAN class=gets-normalized bar-foo-something = 'keep'>foo</SPan></DiV><notallowed></notallowed>";
         $expected = '<div><span>foo</span></div>&#60;notallowed&#62;&#60;/notallowed&#62;';
 
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize([['key' => '', 'value' => '']])));
@@ -744,7 +746,7 @@ class InputTest extends TestCase
         $this->assertSame($expected, Input::stripTags($html, '<div><span>', serialize(null)));
 
         $this->expectDeprecation('%sstripTags() without setting allowed tags and allowed attributes has been deprecated%s');
-        $this->assertSame($expected, Input::stripTags($html, '<div><span>', ''));
+        $this->assertSame($expected, Input::stripTags($html, '<div><span>'));
     }
 
     /**
@@ -756,17 +758,17 @@ class InputTest extends TestCase
 
         $this->assertSame(
             '<script>alert(foo > bar);</script>foo &#62; bar',
-            Input::stripTags('<script>alert(foo > bar);</script>foo > bar', '<div><span><script>', '')
+            Input::stripTags('<script>alert(foo > bar);</script>foo > bar', '<div><span><script>'),
         );
 
         $this->assertSame(
             '<script><!-- alert(foo > bar); --></script>foo &#62; bar',
-            Input::stripTags('<script><!-- alert(foo > bar); --></script>foo > bar', '<div><span><script>', '')
+            Input::stripTags('<script><!-- alert(foo > bar); --></script>foo > bar', '<div><span><script>'),
         );
 
         $this->assertSame(
             '<script><!-- alert(foo > bar); </script>foo &#62; bar',
-            Input::stripTags('<scrIpt type="VBScript"><!-- alert(foo > bar); </SCRiPT >foo > bar', '<div><span><script>', '')
+            Input::stripTags('<scrIpt type="VBScript"><!-- alert(foo > bar); </SCRiPT >foo > bar', '<div><span><script>'),
         );
     }
 
@@ -789,7 +791,7 @@ class InputTest extends TestCase
         $this->assertSame($expected, $simpleTokenParser->parse($html, $tokens));
     }
 
-    public function simpleTokensWithHtmlProvider(): \Generator
+    public static function simpleTokensWithHtmlProvider(): iterable
     {
         yield 'Token only' => [
             'foo##foo##baz',
@@ -840,13 +842,13 @@ class InputTest extends TestCase
         ];
 
         yield 'Condition encoded in attribute' => [
-            '<b title=\'a{if foo != &quot;&quot;}b{else}c{endif}d{if bar&lt;6}e{else}f{endif}g{if bar&gt;4}h{else}i{endif}j\'></b>',
+            "<b title='a{if foo != &quot;&quot;}b{else}c{endif}d{if bar&lt;6}e{else}f{endif}g{if bar&gt;4}h{else}i{endif}j'></b>",
             ['foo' => 'bar', 'bar' => 5],
             '<b title="abdeghj"></b>',
         ];
 
         yield 'Condition encoded in URL attribute' => [
-            '<a href=\'a{if foo != &quot;&quot;}b{else}c{endif}d{if bar&lt;6}e{else}f{endif}g{if bar&gt;4}h{else}i{endif}j\'></a>',
+            "<a href='a{if foo != &quot;&quot;}b{else}c{endif}d{if bar&lt;6}e{else}f{endif}g{if bar&gt;4}h{else}i{endif}j'></a>",
             ['foo' => 'bar', 'bar' => 5],
             '<a href="abdeghj"></a>',
         ];
@@ -866,6 +868,7 @@ class InputTest extends TestCase
 
         $stack->pop();
         $stack->push(new Request($data));
+
         $_POST = $_GET = $data;
 
         $this->assertSame(['key1', '123'], Input::getKeys());

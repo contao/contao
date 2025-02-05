@@ -17,9 +17,6 @@ use FOS\HttpCache\SymfonyCache\Events;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- * @internal
- */
 class StripCookiesSubscriber implements EventSubscriberInterface
 {
     private const DENY_LIST = [
@@ -29,17 +26,20 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         // Modals are always for JS only
         '(.*)?modal(.*)?',
 
-        // Google Analytics (https://developers.google.com/analytics/devguides/collection/analyticsjs/cookie-usage)
+        // Google Analytics
+        // https://developers.google.com/analytics/devguides/collection/analyticsjs/cookie-usage
         '_ga.*',
         '_gid',
         '_dc_gtm_.+',
         'AMP_TOKEN',
         '__utm.+',
 
-        // Google Conversion Linker (https://support.google.com/tagmanager/answer/7549390)
+        // Google Conversion Linker
+        // https://support.google.com/tagmanager/answer/7549390
         '_gcl.*',
 
-        // Matomo (https://matomo.org/faq/general/faq_146/)
+        // Matomo
+        // https://matomo.org/faq/general/faq_146/
         '_pk_id.*',
         '_pk_ref.*',
         '_pk_ses.*',
@@ -69,11 +69,14 @@ class StripCookiesSubscriber implements EventSubscriberInterface
 
         // Cookiebot Cookie Consent
         'CookieConsent',
+
+        // Cypress
+        '__cypress_initial',
     ];
 
     private array $removeFromDenyList = [];
 
-    public function __construct(private array $allowList = [])
+    public function __construct(private readonly array $allowList = [])
     {
     }
 
@@ -98,7 +101,7 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         }
 
         // Use a custom allow list if present, otherwise use the default deny list
-        if (0 !== \count($this->allowList)) {
+        if ($this->allowList) {
             $this->filterCookies($request, $this->allowList);
         } else {
             $this->filterCookies($request, $this->removeFromDenyList, self::DENY_LIST);
@@ -117,7 +120,7 @@ class StripCookiesSubscriber implements EventSubscriberInterface
         // Remove cookies that match the deny list or all if no deny list was set
         $removeCookies = preg_grep(
             '/^(?:'.implode(')$|^(?:', $denyList ?: ['.*']).')$/i',
-            array_keys($request->cookies->all())
+            array_keys($request->cookies->all()),
         );
 
         // Do not remove cookies that match the allow list

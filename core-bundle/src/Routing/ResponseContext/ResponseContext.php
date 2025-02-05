@@ -20,7 +20,9 @@ final class ResponseContext
     public const REQUEST_ATTRIBUTE_NAME = '_contao_response_context';
 
     private array $services = [];
+
     private array $current = [];
+
     private PartialResponseHeaderBag|null $headerBag = null;
 
     public function dispatchEvent(AbstractResponseContextEvent $event): void
@@ -31,7 +33,6 @@ final class ResponseContext
 
         $event->setResponseContext($this);
 
-        /** @var EventDispatcherInterface $eventDispatcher */
         $eventDispatcher = $this->get(EventDispatcherInterface::class);
         $eventDispatcher->dispatch($event);
     }
@@ -43,7 +44,7 @@ final class ResponseContext
         return $this;
     }
 
-    public function addLazy(string $classname, \Closure $factory = null): self
+    public function addLazy(string $classname, \Closure|null $factory = null): self
     {
         $factory ??= fn () => new $classname($this);
 
@@ -71,14 +72,12 @@ final class ResponseContext
      *
      * @param class-string<T> $serviceId
      *
-     * @return object
-     *
-     * @phpstan-return T
+     * @return T
      */
     public function get(string $serviceId)
     {
         if (!$this->has($serviceId)) {
-            throw new \InvalidArgumentException(sprintf('Service "%s" does not exist.', $serviceId));
+            throw new \InvalidArgumentException(\sprintf('Service "%s" does not exist.', $serviceId));
         }
 
         $serviceId = $this->current[$serviceId];
@@ -97,9 +96,6 @@ final class ResponseContext
         return $this->headerBag ??= new PartialResponseHeaderBag();
     }
 
-    /**
-     * @param \Closure|object $objectOrFactory
-     */
     private function registerService(string $serviceId, object $objectOrFactory): void
     {
         $this->services[$serviceId] = $objectOrFactory;
@@ -115,7 +111,8 @@ final class ResponseContext
         $aliases = [];
         $ref = new \ReflectionClass($classname);
 
-        // Automatically add aliases for all interfaces and parents (last one added automatically wins by overriding here)
+        // Automatically add aliases for all interfaces and parents (last one added
+        // automatically wins by overriding here)
         foreach ($ref->getInterfaceNames() as $interfaceName) {
             $aliases[] = $interfaceName;
         }

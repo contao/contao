@@ -14,7 +14,6 @@ namespace Contao\CoreBundle\Tests\ContaoManager;
 
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\ContaoManager\Plugin;
-use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Knp\Bundle\MenuBundle\KnpMenuBundle;
@@ -32,17 +31,16 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Loader\LoaderResolverInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 use Terminal42\ServiceAnnotationBundle\Terminal42ServiceAnnotationBundle;
+use Webauthn\Bundle\WebauthnBundle;
 
 class PluginTest extends TestCase
 {
     public function testReturnsTheBundles(): void
     {
         $plugin = new Plugin();
-
-        /** @var array<BundleConfig> $bundles */
         $bundles = $plugin->getBundles(new DelegatingParser());
 
-        $this->assertCount(6, $bundles);
+        $this->assertCount(7, $bundles);
 
         $this->assertSame(KnpMenuBundle::class, $bundles[0]->getName());
         $this->assertSame([], $bundles[0]->getReplace());
@@ -64,10 +62,10 @@ class PluginTest extends TestCase
         $this->assertSame([], $bundles[4]->getReplace());
         $this->assertSame([], $bundles[4]->getLoadAfter());
 
-        $this->assertSame(ContaoCoreBundle::class, $bundles[5]->getName());
-        $this->assertSame(['core'], $bundles[5]->getReplace());
+        $this->assertSame(ContaoCoreBundle::class, $bundles[6]->getName());
+        $this->assertSame(['core'], $bundles[6]->getReplace());
 
-        $loadAfter = $bundles[5]->getLoadAfter();
+        $loadAfter = $bundles[6]->getLoadAfter();
         sort($loadAfter);
 
         $this->assertSame(
@@ -83,8 +81,9 @@ class PluginTest extends TestCase
                 SecurityBundle::class,
                 TwigBundle::class,
                 CmfRoutingBundle::class,
+                WebauthnBundle::class,
             ],
-            $loadAfter
+            $loadAfter,
         );
     }
 

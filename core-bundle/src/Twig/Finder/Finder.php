@@ -13,9 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Finder;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
-use Contao\CoreBundle\Twig\Inheritance\TemplateHierarchyInterface;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\ThemeNamespace;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
@@ -26,10 +27,20 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class Finder implements \IteratorAggregate, \Countable
 {
     private string|null $identifier = null;
+
     private string|null $themeSlug = null;
+
     private string|null $extension = null;
+
     private bool $variantsExclusive = false;
+
     private bool $variants = false;
+
+    private string|null $identifierExpression = null;
+
+    private bool|null $identifierExpressionIsInclude = null;
+
+    private bool $excludePartials = false;
 
     /**
      * @var array<string, list<string>>
@@ -40,9 +51,9 @@ final class Finder implements \IteratorAggregate, \Countable
      * @internal
      */
     public function __construct(
-        private readonly TemplateHierarchyInterface $hierarchy,
+        private readonly ContaoFilesystemLoader $filesystem,
         private readonly ThemeNamespace $themeNamespace,
-        private readonly TranslatorInterface $translator,
+        private readonly TranslatorBagInterface|TranslatorInterface $translator,
     ) {
     }
 
@@ -79,9 +90,38 @@ final class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
+     * Includes only or excludes identifiers matching the given expression.
+     *
+     * E.g. use "%^backend/%" with $include set to false in order to suppress anything
+     * from the "backend" directories or "%/foo/%" with $include set to true to only
+     * consider identifiers containing a directory "foo" in their name.
+     *
+     * The given $regularExpression is passed to preg_match - it must include the
+     * delimiters and can include modifiers.
+     */
+    public function identifierRegex(string $regularExpression, bool $include = true): self
+    {
+        $this->identifierExpression = $regularExpression;
+        $this->identifierExpressionIsInclude = $include;
+
+        return $this;
+    }
+
+    /**
+     * Do not include partial templates. Partial templates are identified by their
+     * filename starting with an underscore, e.g. "@Contao/foo/_bar.html.twig".
+     */
+    public function excludePartials(): self
+    {
+        $this->excludePartials = true;
+
+        return $this;
+    }
+
+    /**
      * Also includes variant templates, e.g: "content_element/text/special" when
-     * filtering for "content_element/text". If $exclusive is set to true, only
-     * the variants will be output.
+     * filtering for "content_element/text". If $exclusive is set to true, only the
+     * variants will be output.
      */
     public function withVariants(bool $exclusive = false): self
     {
@@ -92,8 +132,7 @@ final class Finder implements \IteratorAggregate, \Countable
     }
 
     /**
-     * Also includes templates of a certain theme. Only one theme at a time can
-     * be queried.
+     * Also includes templates of a certain theme. Only one theme at a time can be queried.
      */
     public function withTheme(string $themeSlug): self
     {
@@ -109,8 +148,6 @@ final class Finder implements \IteratorAggregate, \Countable
      */
     public function asTemplateOptions(): array
     {
-        $options = [];
-
         $getSourceLabel = function (string $name): string {
             if (null !== ($themeSlug = $this->themeNamespace->match($name))) {
                 return $this->translator->trans('MSC.templatesTheme', [$themeSlug], 'contao_default');
@@ -123,27 +160,61 @@ final class Finder implements \IteratorAggregate, \Countable
             return $this->translator->trans('MSC.global', [], 'contao_default');
         };
 
-        foreach (array_keys(iterator_to_array($this->getIterator())) as $identifier) {
-            $label = sprintf(
-                '%s [%s]',
-                $identifier,
-                implode(', ', array_map($getSourceLabel, $this->sources[$identifier]))
-            );
+        $getCustomLabel = function (string $identifier, array $sourceLabels): string|null {
+            if (!$this->translator->getCatalogue()->has($identifier, 'templates')) {
+                return null;
+            }
 
-            $options[$identifier !== $this->identifier ? $identifier : ''] = $label;
+            return \sprintf(
+                '%s [%s • %s]',
+                $this->translator->trans($identifier, [], 'templates'),
+                $identifier,
+                implode(', ', $sourceLabels),
+            );
+        };
+
+        $getLabel = static fn (string $identifier, array $sourceLabels): string => \sprintf(
+            '%s [%s]',
+            $identifier,
+            implode(', ', $sourceLabels),
+        );
+
+        $options = [];
+
+        foreach ($this->asIdentifierList() as $identifier) {
+            $sourceLabels = array_map($getSourceLabel, $this->sources[$identifier]);
+            $key = $identifier !== $this->identifier ? $identifier : '';
+
+            $options[$key] = $getCustomLabel($identifier, $sourceLabels) ?? $getLabel($identifier, $sourceLabels);
         }
+
+        // Make sure the default option is the first one (see #5719)
+        ksort($options);
 
         return $options;
     }
 
     /**
+     * @return list<string>
+     */
+    public function asIdentifierList(): array
+    {
+        $identifiers = array_keys(iterator_to_array($this->getIterator()));
+        sort($identifiers);
+
+        return $identifiers;
+    }
+
+    /**
+     * Yields key-value pairs "identifier" => "extension".
+     *
      * @return \Generator<string, string>
      */
     public function getIterator(): \Generator
     {
         // Only include chains that contain at least one non-legacy template
         $chains = array_filter(
-            $this->hierarchy->getInheritanceChains($this->themeSlug),
+            $this->filesystem->getInheritanceChains($this->themeSlug),
             static function (array $chain) {
                 foreach (array_keys($chain) as $path) {
                     if ('html5' !== Path::getExtension($path, true)) {
@@ -152,7 +223,7 @@ final class Finder implements \IteratorAggregate, \Countable
                 }
 
                 return false;
-            }
+            },
         );
 
         $this->sources = [];
@@ -174,8 +245,16 @@ final class Finder implements \IteratorAggregate, \Countable
                 continue;
             }
 
-            // The loader makes sure that all files grouped under one
-            // identifier have the same extension
+            if (null !== $this->identifierExpression && (1 === preg_match($this->identifierExpression, $identifier)) !== $this->identifierExpressionIsInclude) {
+                continue;
+            }
+
+            if ($this->excludePartials && 1 === preg_match('%(?:/|^)_[^/]+$%', $identifier)) {
+                continue;
+            }
+
+            // The loader makes sure that all files grouped under one identifier have the
+            // same extension
             $extension = ContaoTwigUtil::getExtension(array_key_first($chain));
 
             if (null !== $this->extension && $this->extension !== $extension) {

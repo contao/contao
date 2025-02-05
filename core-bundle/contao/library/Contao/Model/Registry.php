@@ -107,7 +107,7 @@ class Registry implements \Countable
 	 */
 	public function fetch($strTable, $varKey, $strAlias=null)
 	{
-		/** @var Model $strClass */
+		/** @var class-string<Model> $strClass */
 		$strClass = Model::getClassFromTable($strTable);
 		$strPk = $strClass::getPk();
 

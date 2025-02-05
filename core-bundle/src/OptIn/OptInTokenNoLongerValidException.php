@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\OptIn;
 
 class OptInTokenNoLongerValidException extends \RuntimeException
 {
-    public function __construct(\Exception $previous = null)
+    public function __construct(\Exception|null $previous = null)
     {
         parent::__construct('The token is no longer valid', 0, $previous);
     }

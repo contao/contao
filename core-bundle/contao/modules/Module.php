@@ -23,6 +23,7 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  * @property string  $name
  * @property string  $headline
  * @property string  $type
+ * @property string  $ariaLabel
  * @property integer $levelOffset
  * @property integer $showLevel
  * @property boolean $hardLimit
@@ -40,6 +41,7 @@ use Symfony\Component\Routing\Exception\ExceptionInterface;
  * @property boolean $redirectBack
  * @property string  $cols
  * @property array   $editable
+ * @property boolean $reqFullAuth
  * @property string  $memberTpl
  * @property integer $form
  * @property string  $queryType
@@ -122,7 +124,6 @@ abstract class Module extends Frontend
 	{
 		if ($objModule instanceof Model || $objModule instanceof Collection)
 		{
-			/** @var ModuleModel $objModel */
 			$objModel = $objModule;
 
 			if ($objModel instanceof Collection)
@@ -259,7 +260,7 @@ abstract class Module extends Frontend
 			return array();
 		}
 
-		return array(System::getContainer()->get('contao.cache.entity_tags')->getTagForModelInstance($this->objModel));
+		return array(System::getContainer()->get('contao.cache.tag_manager')->getTagForModelInstance($this->objModel));
 	}
 
 	/**
@@ -293,7 +294,9 @@ abstract class Module extends Frontend
 		$objTemplate->level = 'level_' . $level++;
 		$objTemplate->module = $this; // see #155
 
-		/** @var PageModel $objPage */
+		$db = Database::getInstance();
+		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
+
 		global $objPage;
 
 		// Browse subpages
@@ -319,59 +322,41 @@ abstract class Module extends Frontend
 			if (!$objSubpage->protected || $this->showProtected || ($this instanceof ModuleSitemap && $objSubpage->sitemap == 'map_always') || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objSubpage->groups))
 			{
 				// Check whether there will be subpages
-				if ($blnHasSubpages && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $this->Database->getChildRecords($objSubpage->id, 'tl_page'))))))
+				if ($blnHasSubpages && (!$this->showLevel || $this->showLevel >= $level || (!$this->hardLimit && ($objPage->id == $objSubpage->id || \in_array($objPage->id, $db->getChildRecords($objSubpage->id, 'tl_page'))))))
 				{
 					$subitems = $this->renderNavigation($objSubpage->id, $level, $host, $language);
 				}
 
-				// Get href
-				switch ($objSubpage->type)
+				if ($objSubpage->type == 'forward')
 				{
-					case 'redirect':
-						$href = $objSubpage->url;
+					if ($objSubpage->jumpTo)
+					{
+						$objNext = PageModel::findPublishedById($objSubpage->jumpTo);
+					}
+					else
+					{
+						$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
+					}
 
-						if (strncasecmp($href, 'mailto:', 7) === 0)
-						{
-							$href = StringUtil::encodeEmail($href);
-						}
-						break;
+					// Hide the link if the target page is invisible
+					if (!$objNext instanceof PageModel || (!$objNext->loadDetails()->isPublic && !$blnShowUnpublished))
+					{
+						continue;
+					}
+				}
 
-					case 'forward':
-						if ($objSubpage->jumpTo)
-						{
-							$objNext = PageModel::findPublishedById($objSubpage->jumpTo);
-						}
-						else
-						{
-							$objNext = PageModel::findFirstPublishedRegularByPid($objSubpage->id);
-						}
+				try
+				{
+					$href = $urlGenerator->generate($objSubpage);
+				}
+				catch (ExceptionInterface)
+				{
+					continue;
+				}
 
-						// Hide the link if the target page is invisible
-						if (!$objNext instanceof PageModel || (!$objNext->loadDetails()->isPublic && !$blnShowUnpublished))
-						{
-							continue 2;
-						}
-
-						try
-						{
-							$href = $objNext->getFrontendUrl();
-						}
-						catch (ExceptionInterface $exception)
-						{
-							continue 2;
-						}
-						break;
-
-					default:
-						try
-						{
-							$href = $objSubpage->getFrontendUrl();
-						}
-						catch (ExceptionInterface $exception)
-						{
-							continue 2;
-						}
-						break;
+				if (str_starts_with($href, 'mailto:'))
+				{
+					$href = StringUtil::encodeEmail($href);
 				}
 
 				$items[] = $this->compileNavigationRow($objPage, $objSubpage, $subitems, $href);
@@ -470,7 +455,7 @@ abstract class Module extends Frontend
 	 * @param boolean $blnShowHidden If true, hidden pages will be included
 	 * @param boolean $blnIsSitemap  If true, the sitemap settings apply
 	 *
-	 * @return array<array{page:PageModel,hasSubpages:bool}>|null
+	 * @return array<array{page:PageModel, hasSubpages:bool}>|null
 	 */
 	protected static function getPublishedSubpagesByPid($intPid, $blnShowHidden=false, $blnIsSitemap=false): array|null
 	{
@@ -479,7 +464,7 @@ abstract class Module extends Frontend
 		$blnBeUserLoggedIn = $tokenChecker->isPreviewMode();
 		$unroutableTypes = System::getContainer()->get('contao.routing.page_registry')->getUnroutableTypes();
 
-		$arrPages = Database::getInstance()->prepare("SELECT p1.id, EXISTS(SELECT * FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide=0 OR sitemap='map_always')" : " AND p2.hide=0") : "") . (!$blnBeUserLoggedIn ? " AND p2.published=1 AND (p2.start='' OR p2.start<='$time') AND (p2.stop='' OR p2.stop>'$time')" : "") . ") AS hasSubpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide=0 OR sitemap='map_always')" : " AND p1.hide=0") : "") . (!$blnBeUserLoggedIn ? " AND p1.published=1 AND (p1.start='' OR p1.start<='$time') AND (p1.stop='' OR p1.stop>'$time')" : "") . " ORDER BY p1.sorting")
+		$arrPages = Database::getInstance()->prepare("SELECT p1.id, EXISTS(SELECT * FROM tl_page p2 WHERE p2.pid=p1.id AND p2.type!='root' AND p2.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p2.hide=0 OR sitemap='map_always')" : " AND p2.hide=0") : "") . (!$blnBeUserLoggedIn ? " AND p2.published=1 AND (p2.start='' OR p2.start<=$time) AND (p2.stop='' OR p2.stop>$time)" : "") . ") AS hasSubpages FROM tl_page p1 WHERE p1.pid=? AND p1.type!='root' AND p1.type NOT IN ('" . implode("', '", $unroutableTypes) . "')" . (!$blnShowHidden ? ($blnIsSitemap ? " AND (p1.hide=0 OR sitemap='map_always')" : " AND p1.hide=0") : "") . (!$blnBeUserLoggedIn ? " AND p1.published=1 AND (p1.start='' OR p1.start<=$time) AND (p1.stop='' OR p1.stop>$time)" : "") . " ORDER BY p1.sorting")
 										   ->execute($intPid)
 										   ->fetchAllAssoc();
 
@@ -489,13 +474,12 @@ abstract class Module extends Frontend
 		}
 
 		// Load models into the registry with a single query
-		PageModel::findMultipleByIds(array_map(static function ($row) { return $row['id']; }, $arrPages));
+		PageModel::findMultipleByIds(array_column($arrPages, 'id'));
 
 		return array_map(
-			static function (array $row): array
-			{
+			static function (array $row): array {
 				return array(
-					'page' => PageModel::findByPk($row['id']),
+					'page' => PageModel::findById($row['id']),
 					'hasSubpages' => (bool) $row['hasSubpages'],
 				);
 			},

@@ -19,13 +19,13 @@ use Contao\CoreBundle\Tests\TestCase;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
 use Symfony\Component\Security\Http\HttpUtils;
@@ -346,17 +346,17 @@ class LogoutListenerTest extends TestCase
         $listener($event);
     }
 
-    private function mockLogoutListener(HttpUtils $httpUtils = null, ScopeMatcher $scopeMatcher = null, Security $security = null, LoggerInterface $logger = null): LogoutListener
+    private function mockLogoutListener(HttpUtils|null $httpUtils = null, ScopeMatcher|null $scopeMatcher = null, Security|null $security = null, LoggerInterface|null $logger = null): LogoutListener
     {
-        if (null === $httpUtils) {
+        if (!$httpUtils) {
             $httpUtils = $this->createMock(HttpUtils::class);
         }
 
-        if (null === $scopeMatcher) {
+        if (!$scopeMatcher) {
             $scopeMatcher = $this->createMock(ScopeMatcher::class);
         }
 
-        if (null === $security) {
+        if (!$security) {
             $security = $this->createMock(Security::class);
             $security
                 ->expects($this->once())

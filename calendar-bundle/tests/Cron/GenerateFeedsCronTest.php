@@ -20,13 +20,13 @@ class GenerateFeedsCronTest extends ContaoTestCase
 {
     public function testExecutesGenerateFeeds(): void
     {
-        $calendarUtil = $this->createMock(Calendar::class);
-        $calendarUtil
+        $calendar = $this->createMock(Calendar::class);
+        $calendar
             ->expects($this->once())
             ->method('generateFeeds')
         ;
 
-        $framework = $this->mockContaoFramework([], [Calendar::class => $calendarUtil]);
+        $framework = $this->mockContaoFramework([], [Calendar::class => $calendar]);
 
         (new GenerateFeedsCron($framework))();
     }

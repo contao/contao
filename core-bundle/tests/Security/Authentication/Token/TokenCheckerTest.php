@@ -81,7 +81,7 @@ class TokenCheckerTest extends TestCase
         }
     }
 
-    public function getUserInTokenStorageData(): \Generator
+    public static function getUserInTokenStorageData(): iterable
     {
         yield [FrontendUser::class, 'contao_frontend', []];
         yield [FrontendUser::class, 'contao_frontend', ['ROLE_MEMBER']];
@@ -128,7 +128,7 @@ class TokenCheckerTest extends TestCase
         }
     }
 
-    public function getUserInSessionData(): \Generator
+    public static function getUserInSessionData(): iterable
     {
         yield [BackendUser::class, 'contao_backend', ['ROLE_USER']];
         yield [FrontendUser::class, 'contao_frontend', ['ROLE_MEMBER']];
@@ -195,6 +195,7 @@ class TokenCheckerTest extends TestCase
         ;
 
         $request->setSession($session);
+        $request->cookies->set($session->getName(), 'foo');
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -214,7 +215,7 @@ class TokenCheckerTest extends TestCase
         $this->assertSame($expect, $tokenChecker->canAccessPreview());
     }
 
-    public function getPreviewAllowedData(): \Generator
+    public static function getPreviewAllowedData(): iterable
     {
         yield 'Valid preview' => [
             ['showUnpublished' => true, 'previewLinkId' => 1],
@@ -336,7 +337,7 @@ class TokenCheckerTest extends TestCase
         $this->assertSame($expect, $tokenChecker->isPreviewMode());
     }
 
-    public function getPreviewModeData(): \Generator
+    public static function getPreviewModeData(): iterable
     {
         yield [false, false];
         yield [true, true];
@@ -492,18 +493,26 @@ class TokenCheckerTest extends TestCase
     /**
      * @dataProvider getFrontendGuestData
      */
-    public function testIfAFrontendGuestIsAvailable(bool $expected, bool $hasFrontendGuest): void
+    public function testIfAFrontendGuestIsAvailable(bool $expected, bool $hasFrontendGuest, bool $hasPreviousSession): void
     {
         $session = $this->createMock(SessionInterface::class);
         $session
-            ->expects($this->once())
+            ->expects($hasPreviousSession ? $this->once() : $this->never())
             ->method('get')
             ->with(FrontendPreviewAuthenticator::SESSION_NAME)
             ->willReturn($hasFrontendGuest ? ['showUnpublished' => false, 'previewLinkId' => 123] : null)
         ;
 
-        $request = new Request();
-        $request->setSession($session);
+        $request = $this->createMock(Request::class);
+        $request
+            ->method('getSession')
+            ->willReturn($session)
+        ;
+
+        $request
+            ->method('hasPreviousSession')
+            ->willReturn($hasPreviousSession)
+        ;
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -527,22 +536,22 @@ class TokenCheckerTest extends TestCase
         $this->assertSame($expected, $tokenChecker->hasFrontendGuest());
     }
 
-    public function getFrontendGuestData(): \Generator
+    public static function getFrontendGuestData(): iterable
     {
-        yield [false, false];
-        yield [true, true];
+        yield [false, false, false];
+        yield [false, false, true];
+        yield [true, true, true];
     }
 
     /**
      * @param class-string<User> $class
-     *
-     * @return User&MockObject
      */
     private function mockUser(string $class): User
     {
-        $user = $this->createPartialMock($class, []);
-        $user->id = 1;
-        $user->username = 'foobar';
+        $user = (new \ReflectionClass($class))->newInstanceWithoutConstructor();
+
+        $data = new \ReflectionProperty($user, 'arrData');
+        $data->setValue($user, ['id' => 1, 'username' => 'foobar']);
 
         return $user;
     }
@@ -555,10 +564,7 @@ class TokenCheckerTest extends TestCase
         return $requestStack;
     }
 
-    /**
-     * @return FirewallMap&MockObject
-     */
-    private function mockFirewallMapWithConfigContext(string $context): FirewallMap
+    private function mockFirewallMapWithConfigContext(string $context): FirewallMap&MockObject
     {
         $config = new FirewallConfig('', '', null, true, false, null, $context);
 
@@ -571,10 +577,7 @@ class TokenCheckerTest extends TestCase
         return $map;
     }
 
-    /**
-     * @return SessionInterface&MockObject
-     */
-    private function mockSessionWithToken(TokenInterface $token): SessionInterface
+    private function mockSessionWithToken(TokenInterface $token): SessionInterface&MockObject
     {
         $session = $this->createMock(SessionInterface::class);
         $session
@@ -598,10 +601,7 @@ class TokenCheckerTest extends TestCase
         return $session;
     }
 
-    /**
-     * @return SessionInterface&MockObject
-     */
-    private function mockSessionWithPreview(bool $isPreview): SessionInterface
+    private function mockSessionWithPreview(bool $isPreview): SessionInterface&MockObject
     {
         $session = $this->createMock(SessionInterface::class);
         $session

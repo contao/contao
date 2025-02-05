@@ -20,7 +20,7 @@ use Contao\PageModel;
 #[AsCallback('tl_layout', target: 'fields.newsfeeds.options')]
 class LayoutFeedOptionsListener
 {
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
     }
 
@@ -38,7 +38,7 @@ class LayoutFeedOptionsListener
         $formats = ['rss' => 'RSS 2.0', 'atom' => 'Atom', 'json' => 'JSON'];
 
         foreach ($feeds as $feed) {
-            $options[$feed->id] = sprintf('%s (%s)', $feed->title, $formats[$feed->feedFormat]);
+            $options[$feed->id] = \sprintf('%s (%s)', $feed->title, $formats[$feed->feedFormat]);
         }
 
         return $options;

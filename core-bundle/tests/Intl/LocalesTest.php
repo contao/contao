@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Intl;
 
-use Contao\ArrayUtil;
 use Contao\CoreBundle\Intl\Locales;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
@@ -45,9 +44,8 @@ class LocalesTest extends TestCase
     {
         $localeIds = $this->getLocalesService()->getLocaleIds();
 
-        $this->assertIsArray($localeIds);
         $this->assertNotEmpty($localeIds);
-        $this->assertFalse(ArrayUtil::isAssoc($localeIds));
+        $this->assertTrue(array_is_list($localeIds));
 
         foreach ($localeIds as $localeId) {
             $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
@@ -59,7 +57,7 @@ class LocalesTest extends TestCase
         $this->assertSame(['en', 'de'], $this->getLocalesService()->getEnabledLocaleIds());
         $this->assertSame(
             ['gsw', 'de', 'en'],
-            $this->getLocalesService(null, null, null, [], [], 'gsw')->getEnabledLocaleIds()
+            $this->getLocalesService(null, null, null, [], [], 'gsw')->getEnabledLocaleIds(),
         );
     }
 
@@ -67,9 +65,8 @@ class LocalesTest extends TestCase
     {
         $localeIds = $this->getLocalesService()->getLanguageLocaleIds();
 
-        $this->assertIsArray($localeIds);
         $this->assertNotEmpty($localeIds);
-        $this->assertFalse(ArrayUtil::isAssoc($localeIds));
+        $this->assertTrue(array_is_list($localeIds));
 
         foreach ($localeIds as $localeId) {
             $this->assertEmpty(\Locale::getRegion($localeId), $localeId.' should have no region');
@@ -80,9 +77,7 @@ class LocalesTest extends TestCase
     {
         $locales = $this->getLocalesService()->getLocales('de');
 
-        $this->assertIsArray($locales);
         $this->assertNotEmpty($locales);
-        $this->assertTrue(ArrayUtil::isAssoc($locales));
 
         foreach ($locales as $localeId => $label) {
             $this->assertMatchesRegularExpression('/^[a-z]{2}/', $localeId);
@@ -97,7 +92,7 @@ class LocalesTest extends TestCase
                 'en' => 'English',
                 'de' => 'German',
             ],
-            $this->getLocalesService()->getEnabledLocales()
+            $this->getLocalesService()->getEnabledLocales(),
         );
 
         $this->assertSame(
@@ -105,7 +100,7 @@ class LocalesTest extends TestCase
                 'de' => 'Deutsch',
                 'en' => 'Englisch - English',
             ],
-            $this->getLocalesService()->getEnabledLocales('de', true)
+            $this->getLocalesService()->getEnabledLocales('de', true),
         );
 
         $this->assertSame(
@@ -114,7 +109,7 @@ class LocalesTest extends TestCase
                 'en' => 'Englisch - English',
                 'gsw' => 'Schweizerdeutsch - Schwiizertüütsch',
             ],
-            $this->getLocalesService(null, null, null, [], [], 'gsw')->getEnabledLocales('de', true)
+            $this->getLocalesService(null, null, null, [], [], 'gsw')->getEnabledLocales('de', true),
         );
     }
 
@@ -122,9 +117,9 @@ class LocalesTest extends TestCase
     {
         $languages = $this->getLocalesService()->getLanguages('de');
 
-        $this->assertIsArray($languages);
         $this->assertNotEmpty($languages);
-        $this->assertTrue(ArrayUtil::isAssoc($languages));
+        $this->assertArrayNotHasKey('en_POSIX', $languages);
+        $this->assertArrayNotHasKey('en_US_POSIX', $languages);
 
         foreach ($languages as $localeId => $label) {
             $this->assertEmpty(\Locale::getRegion($localeId), $localeId.' should have no region');
@@ -140,7 +135,7 @@ class LocalesTest extends TestCase
                 'de_at' => 'Deutsch (Österreich)',
                 'en' => 'Englisch - English',
             ],
-            $this->getLocalesService()->getDisplayNames(['en', 'de_at', 'de'], 'de', true)
+            $this->getLocalesService()->getDisplayNames(['en', 'de_at', 'de'], 'de', true),
         );
 
         $this->assertSame(
@@ -149,15 +144,15 @@ class LocalesTest extends TestCase
                 'de' => 'German',
                 'de_at' => 'German (Austria)',
             ],
-            $this->getLocalesService()->getDisplayNames(['en', 'de_at', 'de'], 'en')
+            $this->getLocalesService()->getDisplayNames(['en', 'de_at', 'de'], 'en'),
         );
 
         $this->assertSame(
             [
-                'gsw_Hans_AT' => 'Schwiizertüütsch (Veräifachti Chineesischi Schrift, Ööschtriich)',
+                'gsw_Latn_AT' => 'Schwiizertüütsch (Latiinisch, Ööschtriich)',
                 'de_CH' => 'Tüütsch (Schwiiz) - Deutsch (Schweiz)',
             ],
-            $this->getLocalesService()->getDisplayNames(['gsw_Hans_AT', 'de_CH'], 'gsw', true)
+            $this->getLocalesService()->getDisplayNames(['gsw_Latn_AT', 'de_CH'], 'gsw', true),
         );
     }
 
@@ -171,7 +166,7 @@ class LocalesTest extends TestCase
                     $this->assertSame('contao_languages', $domain);
 
                     return 'LNG.de' === $label;
-                }
+                },
             )
         ;
 
@@ -185,7 +180,7 @@ class LocalesTest extends TestCase
         $translator
             ->method('trans')
             ->willReturnCallback(
-                function (string $label, array $parameters, string $domain, string $locale = null) {
+                function (string $label, array $parameters, string $domain, string|null $locale = null) {
                     $this->assertSame('contao_languages', $domain);
                     $this->assertSame('de', $locale);
 
@@ -194,7 +189,7 @@ class LocalesTest extends TestCase
                     }
 
                     return $label;
-                }
+                },
             )
         ;
 
@@ -273,8 +268,8 @@ class LocalesTest extends TestCase
 
         // Remove regions
         $expected = array_values(array_unique(array_map(
-            static fn ($localeId) => preg_replace('/_(?:[A-Z]{2}|\d{3})(?=_|$)/', '', $localeId),
-            $expected
+            static fn ($localeId) => preg_replace('/_(?:[A-Z]{2}|\d{3}|POSIX)(?=_|$)/', '', $localeId),
+            $expected,
         )));
 
         $this->assertSame($expected, $localeIds);
@@ -285,7 +280,7 @@ class LocalesTest extends TestCase
         }
     }
 
-    public function getLocalesConfig(): \Generator
+    public static function getLocalesConfig(): iterable
     {
         yield [
             ['en', 'de'],
@@ -304,7 +299,7 @@ class LocalesTest extends TestCase
 
         yield [
             ['+zzz_ZZ', '+zzz'],
-            array_merge(\ResourceBundle::getLocales(''), ['zzz', 'zzz_ZZ']),
+            [...\ResourceBundle::getLocales(''), 'zzz', 'zzz_ZZ'],
         ];
 
         yield [
@@ -334,33 +329,45 @@ class LocalesTest extends TestCase
 
         $localesService = $this->getLocalesService(null, $requestStack, null, ['de', 'de_AT', 'de_CH', 'en_US']);
 
-        $this->assertSame([
-            'de' => 'Deutsch',
-            'de_AT' => 'Deutsch (Österreich)',
-            'de_CH' => 'Deutsch (Schweiz)',
-            'en_US' => 'Englisch (Vereinigte Staaten) - English (United States)',
-        ], $localesService->getLocales(null, true));
+        $this->assertSame(
+            [
+                'de' => 'Deutsch',
+                'de_AT' => 'Deutsch (Österreich)',
+                'de_CH' => 'Deutsch (Schweiz)',
+                'en_US' => 'Englisch (Vereinigte Staaten) - English (United States)',
+            ],
+            $localesService->getLocales(null, true),
+        );
 
-        $this->assertSame([
-            'de' => 'Deutsch',
-            'en' => 'Englisch - English',
-        ], $localesService->getEnabledLocales(null, true));
+        $this->assertSame(
+            [
+                'de' => 'Deutsch',
+                'en' => 'Englisch - English',
+            ],
+            $localesService->getEnabledLocales(null, true),
+        );
 
-        $this->assertSame([
-            'de' => 'Deutsch',
-            'en' => 'Englisch - English',
-        ], $localesService->getLanguages(null, true));
+        $this->assertSame(
+            [
+                'de' => 'Deutsch',
+                'en' => 'Englisch - English',
+            ],
+            $localesService->getLanguages(null, true),
+        );
 
-        $this->assertSame([
-            'de' => 'Deutsch',
-            'en' => 'Englisch - English',
-            'gsw' => 'Schweizerdeutsch - Schwiizertüütsch',
-        ], $localesService->getDisplayNames(['gsw', 'de', 'en'], null, true));
+        $this->assertSame(
+            [
+                'de' => 'Deutsch',
+                'en' => 'Englisch - English',
+                'gsw' => 'Schweizerdeutsch - Schwiizertüütsch',
+            ],
+            $localesService->getDisplayNames(['gsw', 'de', 'en'], null, true),
+        );
     }
 
-    private function getLocalesService(Translator $translator = null, RequestStack $requestStack = null, array $defaultEnabledLocales = null, array $configLocales = [], array $configEnabledLocales = [], string $defaultLocale = null): Locales
+    private function getLocalesService(Translator|null $translator = null, RequestStack|null $requestStack = null, array|null $defaultEnabledLocales = null, array $configLocales = [], array $configEnabledLocales = [], string|null $defaultLocale = null): Locales
     {
-        if (null === $translator) {
+        if (!$translator) {
             $translator = $this->createMock(Translator::class);
             $translator
                 ->method('getCatalogue')

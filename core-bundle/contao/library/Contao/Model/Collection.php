@@ -16,6 +16,8 @@ use Contao\Model;
 /**
  * The class handles traversing a set of models and lazy loads the database
  * result rows upon their first usage.
+ *
+ * @template T of Model
  */
 class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 {
@@ -33,14 +35,14 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 
 	/**
 	 * Models
-	 * @var Model[]
+	 * @var T[]
 	 */
 	protected $arrModels = array();
 
 	/**
 	 * Create a new collection
 	 *
-	 * @param array  $arrModels An array of models
+	 * @param T[]    $arrModels An array of models
 	 * @param string $strTable  The table name
 	 *
 	 * @throws \InvalidArgumentException
@@ -122,11 +124,12 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	public static function createFromDbResult(Result $objResult, $strTable)
 	{
 		$arrModels = array();
+
+		/** @var class-string<Model> $strClass */
 		$strClass = Model::getClassFromTable($strTable);
 
 		while ($objResult->next())
 		{
-			/** @var Model $strClass */
 			$objModel = Registry::getInstance()->fetch($strTable, $objResult->{$strClass::getPk()});
 
 			if ($objModel !== null)
@@ -212,7 +215,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	/**
 	 * Return the models as array
 	 *
-	 * @return Model[] An array of models
+	 * @return T[] An array of models
 	 */
 	public function getModels()
 	{
@@ -224,7 +227,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	 *
 	 * @param string $strKey The property name
 	 *
-	 * @return Collection|Model The model or a model collection if there are multiple rows
+	 * @return Collection<T>|T The model or a model collection if there are multiple rows
 	 */
 	public function getRelated($strKey)
 	{
@@ -262,7 +265,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	/**
 	 * Go to the previous row
 	 *
-	 * @return Collection|false The model collection object or false if there is no previous row
+	 * @return static|false The model collection object or false if there is no previous row
 	 */
 	public function prev()
 	{
@@ -279,7 +282,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	/**
 	 * Return the current model
 	 *
-	 * @return Model The model object
+	 * @return T The model object
 	 */
 	public function current()
 	{
@@ -294,7 +297,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	/**
 	 * Go to the next row
 	 *
-	 * @return Collection|false The model collection object or false if there is no next row
+	 * @return static|false The model collection object or false if there is no next row
 	 */
 	public function next()
 	{
@@ -397,7 +400,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	 *
 	 * @param integer $offset The offset
 	 *
-	 * @return Model|null The model or null
+	 * @return T|null The model or null
 	 */
 	#[\ReturnTypeWillChange]
 	public function offsetGet($offset)

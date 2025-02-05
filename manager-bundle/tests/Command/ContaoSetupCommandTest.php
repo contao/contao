@@ -64,13 +64,14 @@ class ContaoSetupCommandTest extends ContaoTestCase
         $consolePath = Path::join(Path::getDirectory($commandFilePath), '../../bin/contao-console');
 
         $commandArguments = [
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install-web-dir', 'public', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'assets:install', 'public', '--symlink', '--relative', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:install', 'public', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'contao:symlinks', 'public', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:clear', '--no-warmup', '--env=prod'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:clear', '--no-warmup', '--env=dev'], $flags),
-            array_merge([$phpPath], $phpFlags, [$consolePath, 'cache:warmup', '--env=prod'], $flags),
+            [$phpPath, ...$phpFlags, $consolePath, 'skeleton:install', 'public', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'assets:install', 'public', '--symlink', '--relative', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'contao:install', 'public', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'contao:symlinks', 'public', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'cache:clear', '--no-warmup', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'cache:clear', '--no-warmup', '--env=dev', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'cache:warmup', '--env=prod', ...$flags],
+            [$phpPath, ...$phpFlags, $consolePath, 'cmsig:seal:index-create', '--env=prod', ...$flags],
         ];
 
         $memoryLimit = ini_set('memory_limit', '1G');
@@ -79,12 +80,12 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
         (new CommandTester($command))->execute([], $options);
 
-        $this->assertSame(7, $invocationCount);
+        $this->assertSame(8, $invocationCount);
 
         ini_set('memory_limit', $memoryLimit);
     }
 
-    public function provideCommands(): \Generator
+    public static function provideCommands(): iterable
     {
         yield 'no arguments' => [
             [],
@@ -129,10 +130,10 @@ class ContaoSetupCommandTest extends ContaoTestCase
             'project/dir',
             'project/dir/public',
             'secret',
-            $this->getCreateProcessHandler($this->getProcessMocks(false))
+            $this->getCreateProcessHandler($this->getProcessMocks(false)),
         );
 
-        $commandTester = (new CommandTester($command));
+        $commandTester = new CommandTester($command);
 
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessageMatches('/An error occurred while executing the ".+" command: <error>/');
@@ -146,7 +147,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
             'project/dir',
             'project/dir/public',
             'secret',
-            $this->getCreateProcessHandler($this->getProcessMocks())
+            $this->getCreateProcessHandler($this->getProcessMocks()),
         );
 
         $commandTester = new CommandTester($command);
@@ -178,7 +179,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
             $projectDir,
             Path::join($projectDir, 'public'),
             $kernelSecret,
-            $this->getCreateProcessHandler($this->getProcessMocks())
+            $this->getCreateProcessHandler($this->getProcessMocks()),
         );
 
         $commandTester = new CommandTester($command);
@@ -194,20 +195,55 @@ class ContaoSetupCommandTest extends ContaoTestCase
 
         $this->assertStringContainsString(
             '[INFO] An APP_SECRET was generated and written to your .env.local file.',
-            $commandTester->getDisplay()
+            $commandTester->getDisplay(),
         );
 
         if (!$existingDotEnvFile) {
             $this->assertStringContainsString(
                 '[INFO] An empty .env file was created.',
-                $commandTester->getDisplay()
+                $commandTester->getDisplay(),
             );
         }
 
         $filesystem->remove([$dotEnvFile, $dotEnvLocalFile]);
     }
 
-    public function provideKernelSecretValues(): \Generator
+    public function testKeepsSymlinkedDotEnv(): void
+    {
+        $projectDir = $this->getTempDir();
+
+        $dotEnvFile = Path::join($projectDir, '.env');
+        $dotEnvLocalFile = Path::join($projectDir, '.env.local');
+        $dotEnvLocalTargetFile = Path::join($projectDir, '.env.local.target');
+
+        $filesystem = new Filesystem();
+        $filesystem->touch($dotEnvLocalTargetFile);
+        $filesystem->symlink($dotEnvLocalTargetFile, $dotEnvLocalFile);
+
+        $command = new ContaoSetupCommand(
+            $projectDir,
+            Path::join($projectDir, 'public'),
+            '',
+            $this->getCreateProcessHandler($this->getProcessMocks()),
+        );
+
+        $commandTester = new CommandTester($command);
+        $commandTester->execute([]);
+
+        $this->assertFileExists($dotEnvFile);
+        $this->assertFileExists($dotEnvLocalFile);
+        $this->assertFileExists($dotEnvLocalTargetFile);
+        $this->assertTrue(is_link($dotEnvLocalFile));
+
+        $vars = (new Dotenv())->parse(file_get_contents($dotEnvLocalTargetFile));
+
+        $this->assertArrayHasKey('APP_SECRET', $vars);
+        $this->assertSame(64, \strlen((string) $vars['APP_SECRET']));
+
+        $filesystem->remove([$dotEnvFile, $dotEnvLocalFile, $dotEnvLocalTargetFile]);
+    }
+
+    public static function provideKernelSecretValues(): iterable
     {
         yield 'no secret set, no .env file' => ['', false];
         yield 'default secret set, no .env file' => ['ThisTokenIsNotSoSecretChangeIt', false];
@@ -218,13 +254,13 @@ class ContaoSetupCommandTest extends ContaoTestCase
     /**
      * @return (\Closure(array<string>):Process)
      */
-    private function getCreateProcessHandler(array $processes, array $validateCommandArguments = null, &$invocationCount = null): callable
+    private function getCreateProcessHandler(array $processes, array|null $validateCommandArguments = null, &$invocationCount = null): callable
     {
         $invocationCount ??= 0;
 
-        return static function (array $command) use (&$invocationCount, $validateCommandArguments, $processes): Process {
+        return static function (array $command) use ($validateCommandArguments, &$invocationCount, $processes): Process {
             if (null !== $validateCommandArguments) {
-                self::assertEquals($validateCommandArguments[$invocationCount], $command);
+                self::assertSame($validateCommandArguments[$invocationCount], $command);
             }
 
             return $processes[$invocationCount++];
@@ -235,7 +271,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
     {
         $processes = [];
 
-        for ($i = 1; $i <= 7; ++$i) {
+        for ($i = 1; $i <= 8; ++$i) {
             $process = $this->createMock(Process::class);
             $process
                 ->method('isSuccessful')
@@ -249,7 +285,7 @@ class ContaoSetupCommandTest extends ContaoTestCase
                         $callable('', "[output $i]");
 
                         return true;
-                    }
+                    },
                 ))
             ;
 

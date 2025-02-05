@@ -38,7 +38,7 @@ class ContentAccordion extends ContentElement
 				->createFigureBuilder()
 				->from($this->singleSRC)
 				->setSize($this->size)
-				->setMetadata($this->objModel->getOverwriteMetadata())
+				->setOverwriteMetadata($this->objModel->getOverwriteMetadata())
 				->enableLightbox($this->fullsize)
 				->buildIfResourceExists();
 

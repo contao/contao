@@ -29,7 +29,7 @@ class ImportExtractorTest extends TestCase
         $this->assertSame($uses, (new ImportExtractor())->extract($method));
     }
 
-    public function methodProvider(): \Generator
+    public static function methodProvider(): iterable
     {
         yield 'empty return type and parameter list' => [
             [],
@@ -48,12 +48,9 @@ class ImportExtractorTest extends TestCase
                 ClassOne::class,
                 ClassTwo::class,
             ],
-            new MethodDefinition(
-                ClassOne::class,
-                [
-                    'arg1' => ClassTwo::class,
-                ]
-            ),
+            new MethodDefinition(ClassOne::class, [
+                'arg1' => ClassTwo::class,
+            ]),
         ];
 
         yield 'multiple parameters' => [
@@ -62,38 +59,29 @@ class ImportExtractorTest extends TestCase
                 ClassThree::class,
                 ClassTwo::class,
             ],
-            new MethodDefinition(
-                ClassOne::class,
-                [
-                    'arg1' => ClassTwo::class,
-                    'arg2' => ClassThree::class,
-                ]
-            ),
+            new MethodDefinition(ClassOne::class, [
+                'arg1' => ClassTwo::class,
+                'arg2' => ClassThree::class,
+            ]),
         ];
 
         yield 'multiple parameters with the same type' => [
             [
                 ClassOne::class,
             ],
-            new MethodDefinition(
-                'void',
-                [
-                    'arg1' => ClassOne::class,
-                    'arg2' => ClassOne::class,
-                ]
-            ),
+            new MethodDefinition('void', [
+                'arg1' => ClassOne::class,
+                'arg2' => ClassOne::class,
+            ]),
         ];
 
         yield 'same return type and parameter' => [
             [
                 ClassOne::class,
             ],
-            new MethodDefinition(
-                ClassOne::class,
-                [
-                    'arg1' => ClassOne::class,
-                ]
-            ),
+            new MethodDefinition(ClassOne::class, [
+                'arg1' => ClassOne::class,
+            ]),
         ];
     }
 }

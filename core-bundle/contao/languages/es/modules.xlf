@@ -39,6 +39,7 @@
       </trans-unit>
       <trans-unit id="MOD.page.1">
         <source>Set up the pages of your website(s)</source>
+        <target>Configure las páginas de su(s) sitio(s) web</target>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
@@ -50,6 +51,7 @@
       </trans-unit>
       <trans-unit id="MOD.accounts">
         <source>Accounts</source>
+        <target>Cuentas</target>
       </trans-unit>
       <trans-unit id="MOD.member.0">
         <source>Members</source>
@@ -159,6 +161,12 @@
         <source>Change your personal data or set a new password</source>
         <target>Este módulo permite al usuario actual cambiar su información personal como el nombre, correo electrónico o contraseña.</target>
       </trans-unit>
+      <trans-unit id="MOD.favorites.0">
+        <source>Favorites</source>
+      </trans-unit>
+      <trans-unit id="MOD.favorites.1">
+        <source>Manage your back end menu favorites</source>
+      </trans-unit>
       <trans-unit id="MOD.tl_content">
         <source>Content elements</source>
         <target>Elementos de contenido</target>
@@ -213,6 +221,7 @@
       </trans-unit>
       <trans-unit id="FMD.navigation.1">
         <source>Generates a navigation menu from the pages</source>
+        <target>Genera un menú de navegación a partir de las páginas.</target>
       </trans-unit>
       <trans-unit id="FMD.customnav.0">
         <source>Custom navigation</source>
@@ -236,6 +245,7 @@
       </trans-unit>
       <trans-unit id="FMD.quicknav.1">
         <source>Generates a drop-down menu from the pages</source>
+        <target>Genera un menú desplegable a partir de las páginas.</target>
       </trans-unit>
       <trans-unit id="FMD.quicklink.0">
         <source>Quick link</source>
@@ -267,6 +277,7 @@
       </trans-unit>
       <trans-unit id="FMD.sitemap.1">
         <source>Generates a list of all pages</source>
+        <target>Genera una lista de todas las páginas.</target>
       </trans-unit>
       <trans-unit id="FMD.user">
         <source>User</source>
@@ -378,9 +389,11 @@
       </trans-unit>
       <trans-unit id="FMD.unfiltered_html.0">
         <source>Unfiltered HTML</source>
+        <target>HTML sin filtrar</target>
       </trans-unit>
       <trans-unit id="FMD.unfiltered_html.1">
         <source>Allows you to add custom, unfiltered HTML code</source>
+        <target>Le permite agregar código HTML personalizado y sin filtrar</target>
       </trans-unit>
       <trans-unit id="FMD.template.0">
         <source>Custom template</source>
@@ -391,12 +404,17 @@
         <target>Genera un módulo para insertar una plantilla personalizada. </target>
       </trans-unit>
       <trans-unit id="FMD.rssReader.0">
-        <source>RSS reader</source>
-        <target>Lector RSS</target>
+        <source>RSS reader (deprecated)</source>
       </trans-unit>
       <trans-unit id="FMD.rssReader.1">
         <source>Adds an RSS feed to the page</source>
         <target>Este módulo permite importar datos de RSS feeds.</target>
+      </trans-unit>
+      <trans-unit id="FMD.feed_reader.0">
+        <source>Feed reader</source>
+      </trans-unit>
+      <trans-unit id="FMD.feed_reader.1">
+        <source>Adds an RSS, Atom or JSON feed to the page</source>
       </trans-unit>
       <trans-unit id="FMD.two_factor.0">
         <source>Two-factor authentication</source>
@@ -412,6 +430,7 @@
       </trans-unit>
       <trans-unit id="FMD.root_page_dependent_modules.1">
         <source>Generates different modules depending on the website root page</source>
+        <target>Genera diferentes módulos dependiendo de la página raíz del sitio web</target>
       </trans-unit>
     </body>
   </file>

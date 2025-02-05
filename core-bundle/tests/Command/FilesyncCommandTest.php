@@ -99,32 +99,31 @@ class FilesyncCommandTest extends TestCase
                             'baz' => ChangeSet::TYPE_DIRECTORY,
                             'baz/deleted1' => ChangeSet::TYPE_FILE,
                             'baz/deleted2' => ChangeSet::TYPE_FILE,
-                        ]
+                        ],
                     );
-                }
+                },
             )
         ;
 
         $command = $this->getCommand($manager);
 
-        $expectedOutput =
-            <<<'OUTPUT'
-                Synchronizing…
-                +--------+------------------------------------------------------------------------+
-                | Action | Resource / Change                                                      |
-                +--------+------------------------------------------------------------------------+
-                | add    | foo/new1 (new hash: 5493611ba7d91b0ee8e0f893f6bf837e)                  |
-                | add    | foo/new2 (new hash: 802ffec476939b66450caf0140bee49e)                  |
-                | move   | bar/old_path → bar/updated_path                                        |
-                | update | bar/file_that_changes (updated hash: 8a1631a4eacf47253f3ebb5aea2ccce7) |
-                | delete | baz                                                                    |
-                | delete | baz/deleted1                                                           |
-                | delete | baz/deleted2                                                           |
-                +--------+------------------------------------------------------------------------+
-                 Total items added: 2 | updated/moved: 2 | deleted: 3
-                 [OK] Synchronization complete in 3s.
+        $expectedOutput = <<<'OUTPUT'
+            Synchronizing…
+            +--------+------------------------------------------------------------------------+
+            | Action | Resource / Change                                                      |
+            +--------+------------------------------------------------------------------------+
+            | add    | foo/new1 (new hash: 5493611ba7d91b0ee8e0f893f6bf837e)                  |
+            | add    | foo/new2 (new hash: 802ffec476939b66450caf0140bee49e)                  |
+            | move   | bar/old_path → bar/updated_path                                        |
+            | update | bar/file_that_changes (updated hash: 8a1631a4eacf47253f3ebb5aea2ccce7) |
+            | delete | baz                                                                    |
+            | delete | baz/deleted1                                                           |
+            | delete | baz/deleted2                                                           |
+            +--------+------------------------------------------------------------------------+
+             Total items added: 2 | updated/moved: 2 | deleted: 3
+             [OK] Synchronization complete in 3s.
 
-                OUTPUT;
+            OUTPUT;
 
         $tester = new CommandTester($command);
         $tester->execute([]);
@@ -135,7 +134,7 @@ class FilesyncCommandTest extends TestCase
         $this->assertSame(0, $tester->getStatusCode());
     }
 
-    public function provideInputs(): \Generator
+    public static function provideInputs(): iterable
     {
         yield 'no input' => [
             [],
@@ -150,7 +149,7 @@ class FilesyncCommandTest extends TestCase
         ];
     }
 
-    private function getCommand(DbafsManager $manager = null): FilesyncCommand
+    private function getCommand(DbafsManager|null $manager = null): FilesyncCommand
     {
         return new FilesyncCommand($manager ?? $this->createMock(DbafsManager::class));
     }

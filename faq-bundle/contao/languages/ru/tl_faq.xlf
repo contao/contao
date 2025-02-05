@@ -153,9 +153,17 @@
         <source>Delete question ID %s</source>
         <target>Удалить вопрос ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_faq.toggle">
-        <source>Publish/unpublish question ID %s</source>
-        <target>Опубликовать/изъять вопрос ID %s</target>
+      <trans-unit id="tl_faq.toggle.0">
+        <source>Publish/unpublish question</source>
+        <target>Опубликовать/изъять вопрос</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.1">
+        <source>Unpublish question ID %s</source>
+        <target>Отменить публикацию вопроса ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.2">
+        <source>Publish question ID %s</source>
+        <target>Опубликовать вопрос ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>

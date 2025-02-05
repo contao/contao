@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection\Compiler;
 use Contao\CoreBundle\DependencyInjection\Compiler\ConfigureFilesystemPass;
 use Contao\CoreBundle\DependencyInjection\Filesystem\FilesystemConfiguration;
 use Contao\CoreBundle\Filesystem\MountManager;
+use Contao\CoreBundle\Filesystem\PublicUri\SymlinkedLocalFilesProvider;
 use Contao\CoreBundle\Tests\Fixtures\Filesystem\FilesystemConfiguringExtension;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Local\LocalFilesystemAdapter;
@@ -68,7 +69,7 @@ class ConfigureFilesystemPassTest extends TestCase
                         $this->assertSame($container, $config->getContainer());
 
                         return true;
-                    }
+                    },
                 ))
             ;
 
@@ -109,16 +110,21 @@ class ConfigureFilesystemPassTest extends TestCase
             new ParameterBag([
                 'kernel.project_dir' => $tempDir,
                 'contao.upload_path' => 'files',
-            ])
+            ]),
         );
 
         $container
             ->setDefinition(
                 $mountManagerId = 'contao.filesystem.mount_manager',
-                $mountManagerDefinition = new Definition(MountManager::class)
+                $mountManagerDefinition = new Definition(MountManager::class),
             )
             ->setPublic(true)
         ;
+
+        $container->setDefinition(
+            'contao.filesystem.public_uri.symlinked_local_files_provider',
+            $publicUriProviderDefinition = new Definition(SymlinkedLocalFilesProvider::class),
+        );
 
         (new ConfigureFilesystemPass())->process($container);
 
@@ -143,12 +149,18 @@ class ConfigureFilesystemPassTest extends TestCase
 
         $this->assertSame('dummy', $mountManager->read('files/foo/dummy.txt'));
 
+        $methodCallsOnPublicUriProvider = $publicUriProviderDefinition->getMethodCalls();
+        $this->assertCount(1, $methodCallsOnPublicUriProvider);
+        $this->assertSame('registerAdapter', $methodCallsOnPublicUriProvider[0][0]);
+        $this->assertSame('contao.filesystem.adapter.files_foo', (string) $methodCallsOnPublicUriProvider[0][1][0]);
+        $this->assertSame('files/foo', $methodCallsOnPublicUriProvider[0][1][1]);
+
         // Cleanup
         $filesystem->remove(Path::join($tempDir, 'files'));
         $filesystem->remove(Path::join($tempDir, 'vendor'));
     }
 
-    public function provideSymlinks(): \Generator
+    public static function provideSymlinks(): iterable
     {
         yield 'absolute symlink' => [
             '<root>/vendor/foo',
@@ -161,6 +173,52 @@ class ConfigureFilesystemPassTest extends TestCase
         ];
     }
 
+    public function testDoNotMountUploadFolderIfSymlink(): void
+    {
+        $tempDir = $this->getTempDir();
+        $releaseFolder = Path::join($tempDir, 'release');
+        $sharedFolder = Path::join($tempDir, 'shared');
+
+        // Setup directories with symlink
+        $filesystem = new Filesystem();
+        $filesystem->mkdir($releaseFolder);
+        $filesystem->mkdir(Path::join($sharedFolder, 'files'));
+        $filesystem->dumpFile(Path::join($sharedFolder, 'files/foo/dummy.txt'), 'dummy');
+
+        $this->createSymlink(Path::join($sharedFolder, 'files'), 'files', $releaseFolder);
+
+        $container = new ContainerBuilder(
+            new ParameterBag([
+                'kernel.project_dir' => $releaseFolder,
+                'contao.upload_path' => 'files',
+            ]),
+        );
+
+        $container
+            ->setDefinition(
+                'contao.filesystem.mount_manager',
+                $mountManagerDefinition = new Definition(MountManager::class),
+            )
+            ->setPublic(true)
+        ;
+
+        $container->setDefinition(
+            'contao.filesystem.public_uri.symlinked_local_files_provider',
+            new Definition(SymlinkedLocalFilesProvider::class),
+        );
+
+        (new ConfigureFilesystemPass())->process($container);
+
+        $methodCalls = $mountManagerDefinition->getMethodCalls();
+
+        $this->assertTrue($filesystem->exists(Path::join($releaseFolder, 'files/foo/dummy.txt'))); // the symlink works correctly
+        $this->assertCount(0, $methodCalls);
+
+        // Cleanup
+        $filesystem->remove($releaseFolder);
+        $filesystem->remove($sharedFolder);
+    }
+
     private function createSymlink(string $target, string $link, string $cwd): void
     {
         if ('\\' === \DIRECTORY_SEPARATOR) {
@@ -168,13 +226,11 @@ class ConfigureFilesystemPassTest extends TestCase
             $link = str_replace('/', '\\', $link);
 
             $isDirectory = !str_ends_with($target, '.txt');
-            $command = sprintf('mklink%s "${:link}" "${:target}"', $isDirectory ? ' /d' : '');
+            $command = \sprintf('mklink%s "${:link}" "${:target}"', $isDirectory ? ' /d' : '');
 
             Process::fromShellCommandline($command, $cwd)->mustRun(null, ['link' => $link, 'target' => $target]);
         } else {
             chdir($cwd);
-
-            /** @phpstan-ignore-next-line because we need to create relative symlinks and cannot use the Symfony file system for that */
             symlink($target, $link);
         }
     }

@@ -20,7 +20,7 @@ class AdapterTest extends TestCase
 {
     public function testImplementsTheMagicCallMethod(): void
     {
-        /** @var LegacyClass $adapter */
+        /** @var Adapter<LegacyClass> $adapter */
         $adapter = new Adapter(LegacyClass::class);
 
         $this->assertSame(['staticMethod', 1, 2], $adapter->staticMethod(1, 2));
@@ -33,7 +33,7 @@ class AdapterTest extends TestCase
         $this->expectException('TypeError');
 
         /** @noinspection PhpUndefinedMethodInspection */
-        /** @phpstan-ignore-next-line */
+        /** @phpstan-ignore method.notFound */
         $adapter->missingMethod();
     }
 }

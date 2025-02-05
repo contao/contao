@@ -25,8 +25,11 @@ use Symfony\Component\Routing\Route;
 
 abstract class AbstractPageRouteProvider implements RouteProviderInterface
 {
-    public function __construct(protected ContaoFramework $framework, protected CandidatesInterface $candidates, protected PageRegistry $pageRegistry)
-    {
+    public function __construct(
+        protected ContaoFramework $framework,
+        protected CandidatesInterface $candidates,
+        protected PageRegistry $pageRegistry,
+    ) {
     }
 
     /**
@@ -34,9 +37,9 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
      */
     protected function findCandidatePages(Request $request): array
     {
-        $candidates = array_map('strval', $this->candidates->getCandidates($request));
+        $candidates = array_map(\strval(...), $this->candidates->getCandidates($request));
 
-        if (empty($candidates)) {
+        if (!$candidates) {
             return [];
         }
 
@@ -53,11 +56,11 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
 
         $conditions = [];
 
-        if (!empty($ids)) {
+        if ($ids) {
             $conditions[] = 'tl_page.id IN ('.implode(',', $ids).')';
         }
 
-        if (!empty($aliases)) {
+        if ($aliases) {
             $conditions[] = 'tl_page.alias IN ('.implode(',', array_fill(0, \count($aliases), '?')).')';
         }
 
@@ -68,7 +71,6 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             return [];
         }
 
-        /** @var array<PageModel> $models */
         $models = $pages->getModels();
 
         return array_filter($models, fn (PageModel $model) => $this->pageRegistry->isRoutable($model));
@@ -98,7 +100,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         return array_unique($ids);
     }
 
-    protected function compareRoutes(Route $a, Route $b, array $languages = null): int
+    protected function compareRoutes(Route $a, Route $b, array|null $languages = null): int
     {
         if ('' !== $a->getHost() && '' === $b->getHost()) {
             return -1;
@@ -114,7 +116,8 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         /** @var PageModel|null $pageB */
         $pageB = $b->getDefault('pageModel');
 
-        // Check if the page models are valid (should always be the case, as routes are generated from pages)
+        // Check if the page models are valid (should always be the case, as routes are
+        // generated from pages)
         if (!$pageA instanceof PageModel || !$pageB instanceof PageModel) {
             return 0;
         }
@@ -129,8 +132,9 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             $langB = $this->getLocalePriority($fallbackB, $fallbackA, $languages);
 
             if (null === $langA && null === $langB && LocaleUtil::getPrimaryLanguage($pageA->rootLanguage) === LocaleUtil::getPrimaryLanguage($pageB->rootLanguage)) {
-                // If both pages have the same language without region and neither region has a priority,
-                // (e.g. user prefers "de" but we have "de-CH" and "de-DE"), sort by their root page order.
+                // If both pages have the same language without region and neither region has a
+                // priority, (e.g. user prefers "de" but we have "de-CH" and "de-DE"), sort by
+                // their root page order.
                 $langA = $pageA->rootSorting;
                 $langB = $pageB->rootSorting;
             }

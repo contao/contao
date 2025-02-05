@@ -11,7 +11,6 @@
 namespace Contao;
 
 use Contao\Filter\SyncExclude;
-use Contao\Model\Collection;
 use Symfony\Component\Filesystem\Path;
 
 /**
@@ -51,7 +50,7 @@ class Dbafs
 		$projectDir = Path::normalize(System::getContainer()->getParameter('kernel.project_dir'));
 
 		// Remove trailing slashes (see #5707)
-		if (substr($strResource, -1) == '/')
+		if (str_ends_with($strResource, '/'))
 		{
 			$strResource = substr($strResource, 0, -1);
 		}
@@ -84,7 +83,7 @@ class Dbafs
 		}
 
 		$arrPaths    = array();
-		$arrChunks   = array_filter(explode('/', Path::makeRelative($strResource, $uploadPath)));
+		$arrChunks   = array_filter(explode('/', Path::makeRelative($strResource, $uploadPath)), 'strlen');
 		$strPath     = $uploadPath;
 		$arrPids     = array($strPath => null);
 		$arrUpdate   = array($strResource);
@@ -326,8 +325,6 @@ class Dbafs
 		}
 
 		$strFolder = \dirname($strDestination);
-
-		/** @var FilesModel $objNewFile */
 		$objNewFile = clone $objFile->current();
 
 		// Set the new parent ID
@@ -361,16 +358,19 @@ class Dbafs
 
 			if ($objFiles !== null)
 			{
+				$arrMapper = array();
+
 				while ($objFiles->next())
 				{
-					/** @var FilesModel $objNew */
 					$objNew = clone $objFiles->current();
 
-					$objNew->pid    = $objNewFile->uuid;
+					$objNew->pid    = $arrMapper[$objFiles->pid] ?? $objNewFile->uuid;
 					$objNew->tstamp = time();
 					$objNew->uuid   = $objDatabase->getUuid();
 					$objNew->path   = str_replace($strSource . '/', $strDestination . '/', $objFiles->path);
 					$objNew->save();
+
+					$arrMapper[$objFiles->uuid] = $objNew->uuid;
 				}
 			}
 		}
@@ -440,7 +440,7 @@ class Dbafs
 			self::validateUtf8Path($strResource);
 
 			$strResource = Path::normalize($strResource);
-			$arrChunks   = array_filter(explode('/', Path::makeRelative($strResource, $uploadPath)));
+			$arrChunks   = array_filter(explode('/', Path::makeRelative($strResource, $uploadPath)), 'strlen');
 			$strPath     = $uploadPath;
 
 			// Do not check files
@@ -558,7 +558,6 @@ class Dbafs
 				}
 			}
 
-			/** @var Model $objModel */
 			$objModel = $arrModels[$strRelpath] ?? FilesModel::findByPath($strRelpath);
 
 			if ($objModel === null)
@@ -673,7 +672,6 @@ class Dbafs
 			$arrMapped = array();
 			$arrPidUpdate = array();
 
-			/** @var Collection|FilesModel $objFiles */
 			while ($objFiles->next())
 			{
 				$objFound = FilesModel::findBy(array('hash=?', 'found=2'), $objFiles->hash);
@@ -855,7 +853,7 @@ class Dbafs
 	{
 		if (preg_match('//u', $strPath) !== 1)
 		{
-			throw new \InvalidArgumentException(sprintf('Path "%s" contains malformed UTF-8 characters.', $strPath));
+			throw new \InvalidArgumentException(\sprintf('Path "%s" contains malformed UTF-8 characters.', $strPath));
 		}
 	}
 }

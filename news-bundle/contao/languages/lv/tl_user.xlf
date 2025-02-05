@@ -17,22 +17,6 @@
         <source>Here you can define the news archive permissions.</source>
         <target>Šeit varat noteikt ziņu arhīva atļaujas.</target>
       </trans-unit>
-      <trans-unit id="tl_user.newsfeeds.0">
-        <source>Allowed news feeds</source>
-        <target>Atļautās jaunumu plūsmas</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeeds.1">
-        <source>Here you can grant access to one or more news feeds.</source>
-        <target>Šeit jūs varat dot piekļuvi vienai vai vairākām jaunumu barotnēm.</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeedp.0">
-        <source>News feed permissions</source>
-        <target>Jaunumu plūsmas atļaujas</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeedp.1">
-        <source>Here you can define the news feed permissions.</source>
-        <target>Šeit jūs varat noteikt jaunumu barotnes atļaujas.</target>
-      </trans-unit>
       <trans-unit id="tl_user.news_legend">
         <source>News permissions</source>
         <target>Jaunumu atļaujas</target>

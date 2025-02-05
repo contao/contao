@@ -14,7 +14,7 @@ use Contao\CoreBundle\Exception\NoRootPageFoundException;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * Provide methods to manage front end controllers.
@@ -47,7 +47,7 @@ abstract class Frontend extends Controller
 	public function __construct()
 	{
 		parent::__construct();
-		$this->import(Database::class, 'Database');
+		$this->import(Database::class, 'Database'); // backwards compatibility
 	}
 
 	/**
@@ -57,9 +57,7 @@ abstract class Frontend extends Controller
 	 */
 	public static function getRootPageFromUrl()
 	{
-		$objRequest = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($objRequest instanceof Request)
+		if ($objRequest = System::getContainer()->get('request_stack')->getCurrentRequest())
 		{
 			$objPage = $objRequest->attributes->get('pageModel');
 
@@ -67,7 +65,7 @@ abstract class Frontend extends Controller
 			{
 				$objPage->loadDetails();
 
-				return PageModel::findByPk($objPage->rootId);
+				return PageModel::findById($objPage->rootId);
 			}
 		}
 
@@ -85,7 +83,6 @@ abstract class Frontend extends Controller
 	 */
 	public static function addToUrl($strRequest, $blnIgnoreParams=false, $arrUnset=array())
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$arrGet = array();
@@ -103,7 +100,7 @@ abstract class Frontend extends Controller
 		// Merge the new request string
 		foreach ($arrFragments as $strFragment)
 		{
-			list($key, $value) = explode('=', $strFragment);
+			list($key, $value) = explode('=', $strFragment) + array(null, null);
 
 			if (!$value)
 			{
@@ -150,7 +147,6 @@ abstract class Frontend extends Controller
 	 */
 	protected function jumpToOrReload($intId, $strParams=null)
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		// Always redirect if there are additional arguments (see #5734)
@@ -163,7 +159,9 @@ abstract class Frontend extends Controller
 
 		if ($intId > 0 && ($intId != $objPage->id || $blnForceRedirect) && ($objNextPage = PageModel::findPublishedById($intId)) !== null)
 		{
-			$this->redirect($objNextPage->getAbsoluteUrl($strParams));
+			$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
+
+			$this->redirect($urlGenerator->generate($objNextPage, $strParams ? array('parameters' => $strParams) : array(), UrlGeneratorInterface::ABSOLUTE_URL));
 		}
 
 		$this->reload();

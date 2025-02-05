@@ -39,8 +39,8 @@ class BackupStreamContentCommand extends Command
             return Command::FAILURE;
         }
 
-        if (null === ($backup = $this->backupManager->getBackupByName($input->getArgument('name')))) {
-            $io->error(sprintf('Backup "%s" not found.', $input->getArgument('name')));
+        if (!$backup = $this->backupManager->getBackupByName($input->getArgument('name'))) {
+            $io->error(\sprintf('Backup "%s" not found.', $input->getArgument('name')));
 
             return Command::FAILURE;
         }

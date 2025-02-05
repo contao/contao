@@ -15,16 +15,20 @@ namespace Contao\NewsBundle\EventListener;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\NewsModel;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @internal
  */
+#[AsEventListener]
 class PreviewUrlCreateListener
 {
-    public function __construct(private RequestStack $requestStack, private ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly RequestStack $requestStack,
+        private readonly ContaoFramework $framework,
+    ) {
     }
 
     /**
@@ -36,9 +40,7 @@ class PreviewUrlCreateListener
             return;
         }
 
-        $request = $this->requestStack->getCurrentRequest();
-
-        if (null === $request) {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
             throw new \RuntimeException('The request stack did not contain a request');
         }
 
@@ -66,6 +68,6 @@ class PreviewUrlCreateListener
 
     private function getNewsModel(int|string $id): NewsModel|null
     {
-        return $this->framework->getAdapter(NewsModel::class)->findByPk($id);
+        return $this->framework->getAdapter(NewsModel::class)->findById($id);
     }
 }

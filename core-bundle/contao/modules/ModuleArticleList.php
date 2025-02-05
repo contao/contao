@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+
 /**
  * Front end module "article list".
  */
@@ -52,7 +54,6 @@ class ModuleArticleList extends Module
 	 */
 	protected function compile()
 	{
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		if (!$this->inColumn)
@@ -62,16 +63,16 @@ class ModuleArticleList extends Module
 
 		$id = $objPage->id;
 		$objTarget = null;
+		$urlGenerator = System::getContainer()->get('contao.routing.content_url_generator');
 
 		$this->Template->request = Environment::get('requestUri');
 
 		// Show the articles of a different page
-		if ($this->defineRoot && ($objTarget = $this->objModel->getRelated('rootPage')) instanceof PageModel)
+		if ($this->defineRoot && ($objTarget = PageModel::findById($this->objModel->rootPage)))
 		{
 			$id = $objTarget->id;
 
-			/** @var PageModel $objTarget */
-			$this->Template->request = $objTarget->getFrontendUrl();
+			$this->Template->request = $urlGenerator->generate($objTarget);
 		}
 
 		// Get published articles
@@ -96,6 +97,15 @@ class ModuleArticleList extends Module
 				continue;
 			}
 
+			try
+			{
+				$href = $urlGenerator->generate($objArticles->current());
+			}
+			catch (ExceptionInterface)
+			{
+				continue;
+			}
+
 			$cssID = StringUtil::deserialize($objArticles->cssID, true);
 
 			$articles[] = array
@@ -104,7 +114,7 @@ class ModuleArticleList extends Module
 				'title' => StringUtil::specialchars($objArticles->title),
 				'id' => ($cssID[0] ?? null) ?: 'article-' . $objArticles->id,
 				'articleId' => $objArticles->id,
-				'href' => $objHelper->getFrontendUrl('/articles/' . ($objArticles->alias ?: $objArticles->id))
+				'href' => $href
 			);
 		}
 

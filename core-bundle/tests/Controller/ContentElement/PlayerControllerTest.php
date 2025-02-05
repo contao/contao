@@ -30,15 +30,15 @@ class PlayerControllerTest extends ContentElementTestCase
                     'player_autoplay', 'player_loop',
                 ]),
                 'playerCaption' => 'Caption',
-            ]
+            ],
         );
 
         $expectedOutput = <<<'HTML'
             <div class="content-player">
                 <figure>
                     <video controls autoplay loop>
-                        <source src="https://example.com/files/video.mp4">
-                        <source src="https://example.com/files/video.ogv">
+                        <source type="video/mp4" src="https://example.com/files/video.mp4">
+                        <source type="video/ogg" src="https://example.com/files/video.ogv">
                     </video>
                     <figcaption>Caption</figcaption>
                 </figure>
@@ -54,7 +54,7 @@ class PlayerControllerTest extends ContentElementTestCase
             new PlayerController($this->getDefaultStorage()),
             [
                 'type' => 'player',
-            ]
+            ],
         );
 
         $this->assertEmpty($response->getContent());
@@ -71,7 +71,7 @@ class PlayerControllerTest extends ContentElementTestCase
                     self::FILE_VIDEO_OGV,
                 ]),
             ],
-            asEditorView: true
+            asEditorView: true,
         );
 
         $expectedOutput = <<<'HTML'
@@ -84,6 +84,65 @@ class PlayerControllerTest extends ContentElementTestCase
                         <span>video.ogv</span> <span class="size">(0.0 Byte)</span>
                     </li>
                 </ul>
+            </div>
+            HTML;
+
+        $this->assertSameHtml($expectedOutput, $response->getContent());
+    }
+
+    public function testOutputsTextTrack(): void
+    {
+        $response = $this->renderWithModelData(
+            new PlayerController($this->getDefaultStorage()),
+            [
+                'type' => 'player',
+                'playerSRC' => serialize([
+                    self::FILE_VIDEO_MP4,
+                ]),
+                'textTrackSRC' => serialize([
+                    self::FILE_SUBTITLES_EN_VTT,
+                    self::FILE_SUBTITLES_DE_VTT,
+                ]),
+            ],
+        );
+
+        $expectedOutput = <<<'HTML'
+            <div class="content-player">
+                <figure>
+                    <video controls>
+                        <source type="video/mp4" src="https://example.com/files/video.mp4">
+                        <track label="English" srclang="en" src="https://example.com/files/subtitles-en.vtt" default/>
+                        <track kind="captions" label="Deutsch" srclang="de" src="https://example.com/files/subtitles-de.vtt"/>
+                    </video>
+                </figure>
+            </div>
+            HTML;
+
+        $this->assertSameHtml($expectedOutput, $response->getContent());
+    }
+
+    public function testEmptyTextTrackLabelsOrLanguages(): void
+    {
+        $response = $this->renderWithModelData(
+            new PlayerController($this->getDefaultStorage()),
+            [
+                'type' => 'player',
+                'playerSRC' => serialize([
+                    self::FILE_VIDEO_MP4,
+                ]),
+                'textTrackSRC' => serialize([
+                    self::FILE_SUBTITLES_INVALID_VTT,
+                ]),
+            ],
+        );
+
+        $expectedOutput = <<<'HTML'
+            <div class="content-player">
+                <figure>
+                    <video controls>
+                        <source type="video/mp4" src="https://example.com/files/video.mp4">
+                    </video>
+                </figure>
             </div>
             HTML;
 

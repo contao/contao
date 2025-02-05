@@ -1,0 +1,8 @@
+{% set template_editor_annotations_attributes = attrs()
+    .set('id', 'template-studio--annotations_' ~ identifier)
+    .set('type', 'application/json')
+    .set('data-contao--template-studio-target', 'editorAnnotations')
+%}
+<script{{ template_editor_annotations_attributes }}>
+    {{- annotations|json_encode|raw -}}
+</script>

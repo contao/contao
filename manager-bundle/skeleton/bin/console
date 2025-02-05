@@ -1,0 +1,28 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+use Contao\ManagerBundle\Console\ContaoApplication;
+use Contao\ManagerBundle\HttpKernel\ContaoKernel;
+use Symfony\Component\Console\Input\ArgvInput;
+
+set_time_limit(0);
+@ini_set('zlib.output_compression', '0');
+@ini_set('display_errors', '0');
+
+require __DIR__.'/../vendor/autoload.php';
+
+$input = new ArgvInput();
+$kernel = ContaoKernel::fromInput(\dirname(__DIR__), $input);
+
+$application = new ContaoApplication($kernel);
+$application->run($input);

@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 abstract class AbstractFrontendModuleController extends AbstractFragmentController
 {
-    public function __invoke(Request $request, ModuleModel $model, string $section, array $classes = null): Response
+    public function __invoke(Request $request, ModuleModel $model, string $section, array|null $classes = null): Response
     {
         if ($this->isBackendScope($request)) {
             return $this->getBackendWildcard($model);
@@ -77,7 +77,7 @@ abstract class AbstractFrontendModuleController extends AbstractFragmentControll
         if ($this->isLegacyTemplate($template->getName())) {
             // Legacy fragments
             $this->addHeadlineToTemplate($template, $modelData['headline'] ?? null);
-            $this->addCssAttributesToTemplate($template, $template->getName(), $modelData['cssID'] ?? null, $classes);
+            $this->addCssAttributesToTemplate($template, 'mod_'.$this->getType(), $modelData['cssID'] ?? null, $classes);
             $this->addPropertiesToTemplate($template, $properties);
             $this->addSectionToTemplate($template, $section);
 

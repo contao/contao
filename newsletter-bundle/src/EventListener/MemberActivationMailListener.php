@@ -16,10 +16,12 @@ use Contao\CoreBundle\Event\MemberActivationMailEvent;
 use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
+#[AsEventListener]
 class MemberActivationMailListener
 {
-    public function __construct(private Connection $connection)
+    public function __construct(private readonly Connection $connection)
     {
     }
 
@@ -34,10 +36,10 @@ class MemberActivationMailListener
         $channels = $this->connection->fetchFirstColumn(
             'SELECT title FROM tl_newsletter_channel WHERE id IN (?)',
             [$newsletter],
-            [Types::SIMPLE_ARRAY]
+            [Types::SIMPLE_ARRAY],
         );
 
-        if (empty($channels)) {
+        if (!$channels) {
             return;
         }
 

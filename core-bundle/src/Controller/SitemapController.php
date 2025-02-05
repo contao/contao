@@ -15,38 +15,36 @@ namespace Contao\CoreBundle\Controller;
 use Contao\ArticleModel;
 use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\SitemapEvent;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal
  */
-#[Route(defaults: ['_scope' => 'frontend'])]
+#[Route('/sitemap.xml', defaults: ['_scope' => 'frontend'])]
 class SitemapController extends AbstractController
 {
-    public function __construct(private PageRegistry $pageRegistry)
-    {
+    public function __construct(
+        private readonly PageRegistry $pageRegistry,
+        private readonly PageFinder $pageFinder,
+        private readonly ContentUrlGenerator $urlGenerator,
+    ) {
     }
 
-    #[Route('/sitemap.xml')]
     public function __invoke(Request $request): Response
     {
-        $this->initializeContaoFramework();
+        $rootPages = $this->pageFinder->findRootPagesForHost($request->getHost());
 
-        $pageModel = $this->getContaoAdapter(PageModel::class);
-        $rootPages = $pageModel->findPublishedRootPages(['dns' => $request->getHost()]);
-
-        if (null === $rootPages) {
-            // We did not find root pages by matching host name, let's fetch those that do not have any domain configured
-            $rootPages = $pageModel->findPublishedRootPages(['dns' => '']);
-
-            if (null === $rootPages) {
-                return new Response('', Response::HTTP_NOT_FOUND);
-            }
+        if (!$rootPages) {
+            throw $this->createNotFoundException();
         }
 
         $urls = [];
@@ -54,7 +52,7 @@ class SitemapController extends AbstractController
         $tags = ['contao.sitemap'];
 
         foreach ($rootPages as $rootPage) {
-            $urls = array_merge($urls, $this->getPageAndArticleUrls((int) $rootPage->id));
+            $urls = [...$urls, ...$this->getPageAndArticleUrls($rootPage)];
 
             $rootPageIds[] = $rootPage->id;
             $tags[] = 'contao.sitemap.'.$rootPage->id;
@@ -67,8 +65,10 @@ class SitemapController extends AbstractController
         $urlSet = $sitemap->createElementNS('https://www.sitemaps.org/schemas/sitemap/0.9', 'urlset');
 
         foreach ($urls as $url) {
-            $loc = $sitemap->createElement('loc', $url);
-            $urlEl = $sitemap->createElement('url');
+            $loc = $sitemap->createElementNS($urlSet->namespaceURI, 'loc');
+            $loc->appendChild($sitemap->createTextNode($url));
+
+            $urlEl = $sitemap->createElementNS($urlSet->namespaceURI, 'url');
             $urlEl->appendChild($loc);
             $urlSet->appendChild($urlEl);
         }
@@ -80,23 +80,32 @@ class SitemapController extends AbstractController
             ->dispatch(new SitemapEvent($sitemap, $request, $rootPageIds), ContaoCoreEvents::SITEMAP)
         ;
 
-        // Cache the response for a month in the shared cache and tag it for invalidation purposes
+        // Cache the response for a month in the shared cache and tag it for
+        // invalidation purposes
         $response = new Response((string) $sitemap->saveXML(), 200, ['Content-Type' => 'application/xml; charset=UTF-8']);
         $response->setSharedMaxAge(2592000); // will be unset by the MakeResponsePrivateListener if a user is logged in
+
+        // Make sure an authorized request does not retrieve the sitemap from the HTTP
+        // cache (see #6832)
+        $response->setVary('Cookie');
 
         $this->tagResponse($tags);
 
         return $response;
     }
 
-    private function getPageAndArticleUrls(int $parentPageId): array
+    private function getPageAndArticleUrls(PageModel $parentPageModel): array
     {
+        if ('root' === $parentPageModel->type && $parentPageModel->maintenanceMode) {
+            return [];
+        }
+
         $pageModelAdapter = $this->getContaoAdapter(PageModel::class);
 
-        // Since the publication status of a page is not inherited by its child
-        // pages, we have to use findByPid() instead of findPublishedByPid() and
-        // filter out unpublished pages in the foreach loop (see #2217)
-        $pageModels = $pageModelAdapter->findByPid($parentPageId, ['order' => 'sorting']);
+        // Since the publication status of a page is not inherited by its child pages, we
+        // have to use findByPid() instead of findPublishedByPid() and filter out
+        // unpublished pages in the foreach loop (see #2217)
+        $pageModels = $pageModelAdapter->findByPid($parentPageModel->id, ['order' => 'sorting']);
 
         if (null === $pageModels) {
             return [];
@@ -125,19 +134,23 @@ class SitemapController extends AbstractController
                 && $this->pageRegistry->isRoutable($pageModel)
                 && 'html' === $this->pageRegistry->getRoute($pageModel)->getDefault('_format')
             ) {
-                $urls = [$pageModel->getAbsoluteUrl()];
+                try {
+                    $urls = [$this->urlGenerator->generate($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL)];
 
-                // Get articles with teaser
-                if (null !== ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true]))) {
-                    foreach ($articleModels as $articleModel) {
-                        $urls[] = $pageModel->getAbsoluteUrl('/articles/'.($articleModel->alias ?: $articleModel->id));
+                    // Get articles with teaser
+                    if ($articleModels = $articleModelAdapter->findPublishedWithTeaserByPid($pageModel->id, ['ignoreFePreview' => true])) {
+                        foreach ($articleModels as $articleModel) {
+                            $urls[] = $this->urlGenerator->generate($articleModel, [], UrlGeneratorInterface::ABSOLUTE_URL);
+                        }
                     }
-                }
 
-                $result[] = $urls;
+                    $result[] = $urls;
+                } catch (ExceptionInterface) {
+                    // Skip URL for this page but generate child pages
+                }
             }
 
-            $result[] = $this->getPageAndArticleUrls((int) $pageModel->id);
+            $result[] = $this->getPageAndArticleUrls($pageModel);
         }
 
         return array_merge(...$result);

@@ -22,7 +22,7 @@ interface ResourceFinderInterface
     public function find(): Finder;
 
     /**
-     * Appends the subpath to the resource paths and returns a Finder object.
+     * Appends the sub-path to the resource paths and returns a Finder object.
      */
     public function findIn(string $subpath): Finder;
 }

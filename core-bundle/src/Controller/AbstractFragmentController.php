@@ -16,6 +16,7 @@ use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController
 use Contao\CoreBundle\Controller\FrontendModule\AbstractFrontendModuleController;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
@@ -33,6 +34,7 @@ use Symfony\Component\HttpFoundation\Response;
 abstract class AbstractFragmentController extends AbstractController implements FragmentOptionsAwareInterface
 {
     protected array $options = [];
+
     private string|null $view = null;
 
     public function setFragmentOptions(array $options): void
@@ -48,6 +50,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $services = parent::getSubscribedServices();
 
         $services['request_stack'] = RequestStack::class;
+        $services['contao.routing.page_finder'] = PageFinder::class;
         $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
         $services['contao.twig.filesystem_loader'] = ContaoFilesystemLoader::class;
         $services['contao.twig.interop.context_factory'] = ContextFactory::class;
@@ -57,25 +60,19 @@ abstract class AbstractFragmentController extends AbstractController implements 
 
     protected function getPageModel(): PageModel|null
     {
-        $request = $this->container->get('request_stack')->getCurrentRequest();
-
-        if (null !== $request && ($pageModel = $request->attributes->get('pageModel')) instanceof PageModel) {
-            return $pageModel;
-        }
-
-        return null;
+        return $this->container->get('contao.routing.page_finder')->getCurrentPage();
     }
 
     /**
      * Creates a FragmentTemplate container object by template name or from the
-     * "customTpl" field of the model and registers the effective template as
-     * default view when using render().
+     * "customTpl" field of the model and registers the effective template as default
+     * view when using render().
      *
-     * Calling getResponse() on the returned object will internally call
-     * render() with the set parameters and return the response.
+     * Calling getResponse() on the returned object will internally call render() with
+     * the set parameters and return the response.
      *
-     * Note: The $fallbackTemplateName argument will be removed in Contao 6;
-     * always set a template via the fragment options, instead.
+     * Note: The $fallbackTemplateName argument will be removed in Contao 6; always
+     * set a template via the fragment options, instead.
      */
     protected function createTemplate(Model $model, string|null $fallbackTemplateName = null): FragmentTemplate
     {
@@ -88,7 +85,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
             $this->view = $templateNameToView($templateName);
         }
 
-        $onGetResponse = function (FragmentTemplate $template, Response|null $preBuiltResponse) use ($templateNameToView, $templateName, $isLegacyTemplate): Response {
+        $onGetResponse = function (FragmentTemplate $template, Response|null $preBuiltResponse) use ($isLegacyTemplate, $templateName, $templateNameToView): Response {
             if ($isLegacyTemplate) {
                 // Render using the legacy framework
                 $legacyTemplate = $this->container->get('contao.framework')->createInstance(FrontendTemplate::class, [$templateName]);
@@ -97,16 +94,16 @@ abstract class AbstractFragmentController extends AbstractController implements 
                 try {
                     $response = $legacyTemplate->getResponse();
                 } catch (\Exception $e) {
-                    // Enhance the exception if a modern template name is defined
-                    // but still delegate to the legacy framework
+                    // Enhance the exception if a modern template name is defined but still delegate
+                    // to the legacy framework
                     if (null !== ($definedTemplateName = $this->options['template'] ?? null) && preg_match('/^Could not find template "\S+"$/', $e->getMessage())) {
-                        throw new \LogicException(sprintf('Could neither find template "%s" nor the legacy fallback template "%s". Did you forget to create a default template or manually define the "template" property of the controller\'s service tag/attribute?', $definedTemplateName, $templateName), 0, $e);
+                        throw new \LogicException(\sprintf('Could neither find template "%s" nor the legacy fallback template "%s". Did you forget to create a default template or manually define the "template" property of the controller\'s service tag/attribute?', $definedTemplateName, $templateName), 0, $e);
                     }
 
                     throw $e;
                 }
 
-                if (null !== $preBuiltResponse) {
+                if ($preBuiltResponse) {
                     return $preBuiltResponse->setContent($response->getContent());
                 }
 
@@ -149,8 +146,8 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $this->triggerDeprecationIfCallingFromCustomClass(__METHOD__);
 
         $data = StringUtil::deserialize($headline);
-        $template->headline = \is_array($data) ? $data['value'] : $data;
-        $template->hl = \is_array($data) ? $data['unit'] : 'h1';
+        $template->headline = \is_array($data) ? $data['value'] ?? '' : $data;
+        $template->hl = \is_array($data) && isset($data['unit']) ? $data['unit'] : 'h1';
     }
 
     /**
@@ -159,7 +156,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
      *           Attributes data is always added to the context of modern
      *           fragment templates.
      */
-    protected function addCssAttributesToTemplate(Template $template, string $templateName, array|string|null $cssID, array $classes = null): void
+    protected function addCssAttributesToTemplate(Template $template, string $templateName, array|string|null $cssID, array|null $classes = null): void
     {
         $this->triggerDeprecationIfCallingFromCustomClass(__METHOD__);
 
@@ -167,7 +164,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         $template->class = trim($templateName.' '.($data[1] ?? ''));
         $template->cssID = !empty($data[0]) ? ' id="'.$data[0].'"' : '';
 
-        if (!empty($classes)) {
+        if ($classes) {
             $template->class .= ' '.implode(' ', $classes);
         }
     }
@@ -223,19 +220,19 @@ abstract class AbstractFragmentController extends AbstractController implements 
     }
 
     /**
-     * Renders a template. If $view is set to null, the default template of
-     * this fragment will be rendered.
+     * Renders a template. If $view is set to null, the default template of this
+     * fragment will be rendered.
      *
-     * By default, the returned response will have the appropriate headers set,
-     * that allow our SubrequestCacheSubscriber to merge it with others of the
-     * same page. Pass a prebuilt Response if you want to have full control -
-     * no headers will be set then.
+     * By default, the returned response will have the appropriate headers set, that
+     * allow our SubrequestCacheSubscriber to merge it with others of the same page.
+     * Pass a prebuilt Response if you want to have full control - no headers will be
+     * set then.
      */
-    protected function render(string|null $view = null, array $parameters = [], Response $response = null): Response
+    protected function render(string|null $view = null, array $parameters = [], Response|null $response = null): Response
     {
         $view ??= $this->view ?? throw new \InvalidArgumentException('Cannot derive template name, please make sure createTemplate() was called before or specify the template explicitly.');
 
-        if (null === $response) {
+        if (!$response) {
             $response = new Response();
 
             $this->markResponseForInternalCaching($response);
@@ -244,7 +241,7 @@ abstract class AbstractFragmentController extends AbstractController implements 
         return parent::render($view, $parameters, $response);
     }
 
-    protected function isBackendScope(Request $request = null): bool
+    protected function isBackendScope(Request|null $request = null): bool
     {
         $request ??= $this->container->get('request_stack')->getCurrentRequest();
 
@@ -252,7 +249,8 @@ abstract class AbstractFragmentController extends AbstractController implements 
     }
 
     /**
-     * Marks the response to affect the caching of the current page but removes any default cache header.
+     * Marks the response to affect the caching of the current page but removes any
+     * default cache header.
      */
     protected function markResponseForInternalCaching(Response $response): void
     {
@@ -276,20 +274,19 @@ abstract class AbstractFragmentController extends AbstractController implements 
             ->exists("@Contao/$template.html.twig")
         ;
 
-        $shouldUseVariantTemplate = fn (string $variantTemplate): bool => $this->isLegacyTemplate($variantTemplate) ?
-            !$this->isBackendScope() :
-            $exists($variantTemplate)
-        ;
+        $shouldUseVariantTemplate = fn (string $variantTemplate): bool => $this->isLegacyTemplate($variantTemplate)
+            ? !$this->isBackendScope()
+            : $exists($variantTemplate);
 
         // Prefer using a custom variant template if defined and applicable
-        if (($variantTemplate = $model->customTpl) && $shouldUseVariantTemplate($variantTemplate)) {
-            return $variantTemplate;
+        if ($model->customTpl && $shouldUseVariantTemplate($model->customTpl)) {
+            return $model->customTpl;
         }
 
         $definedTemplateName = $this->options['template'] ?? null;
 
-        // Always use the defined name for legacy templates and for modern
-        // templates that exist (= those that do not need to have a fallback)
+        // Always use the defined name for legacy templates and for modern templates that
+        // exist (= those that do not need to have a fallback)
         if (null !== $definedTemplateName && ($this->isLegacyTemplate($definedTemplateName) || $exists($definedTemplateName))) {
             return $definedTemplateName;
         }

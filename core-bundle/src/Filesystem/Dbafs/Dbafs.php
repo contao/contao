@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Filesystem\Dbafs;
 use Contao\CoreBundle\Filesystem\Dbafs\ChangeSet\ChangeSet;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\Context;
 use Contao\CoreBundle\Filesystem\Dbafs\Hashing\HashGeneratorInterface;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\Filesystem\Dbafs\DbafsTest;
@@ -26,9 +27,9 @@ use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Service\ResetInterface;
 
 /**
- * @phpstan-type DatabasePaths array<string, self::RESOURCE_FILE|self::RESOURCE_DIRECTORY>
+ * @phpstan-type DatabasePaths array<string|int, self::RESOURCE_FILE|self::RESOURCE_DIRECTORY>
  * @phpstan-type FilesystemPaths \Generator<string, self::RESOURCE_*>
- * @phpstan-type Record array{isFile: bool, path: string, lastModified: ?int, fileSize: ?int, mimeType: ?string, extra: array<string, mixed>}
+ * @phpstan-type Record array{isFile: bool, path: string, lastModified: ?int, fileSize: ?int, mimeType: ?string, extra: ExtraMetadata}
  *
  * @phpstan-import-type CreateItemDefinition from ChangeSet
  * @phpstan-import-type UpdateItemDefinition from ChangeSet
@@ -39,21 +40,27 @@ use Symfony\Contracts\Service\ResetInterface;
 class Dbafs implements DbafsInterface, ResetInterface
 {
     final public const FILE_MARKER_EXCLUDED = '.nosync';
+
     final public const FILE_MARKER_PUBLIC = '.public';
 
     private const RESOURCE_FILE = ChangeSet::TYPE_FILE;
+
     private const RESOURCE_DIRECTORY = ChangeSet::TYPE_DIRECTORY;
+
     private const RESOURCE_DOES_NOT_EXIST = -1;
+
     private const PATH_SUFFIX_SHALLOW_DIRECTORY = '//';
 
     private string $dbPathPrefix = '';
+
     private int $bulkInsertSize = 100;
+
     private bool $useLastModified = true;
 
     /**
-     * @var array<string, array|null>
+     * @var array<string|int, array|null>
      *
-     * @phpstan-var array<string, Record|null>
+     * @phpstan-var array<string|int, Record|null>
      */
     private array $records = [];
 
@@ -71,11 +78,11 @@ class Dbafs implements DbafsInterface, ResetInterface
      * @internal Use the "contao.filesystem.dbafs_factory" service to create new instances.
      */
     public function __construct(
-        private HashGeneratorInterface $hashGenerator,
-        private Connection $connection,
-        private EventDispatcherInterface $eventDispatcher,
-        private VirtualFilesystemInterface $filesystem,
-        private string $table,
+        private readonly HashGeneratorInterface $hashGenerator,
+        private readonly Connection $connection,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly VirtualFilesystemInterface $filesystem,
+        private readonly string $table,
     ) {
     }
 
@@ -137,12 +144,12 @@ class Dbafs implements DbafsInterface, ResetInterface
         if ($deep) {
             $rows = $this->connection->fetchAllAssociative(
                 "SELECT * FROM $table WHERE path LIKE ? ORDER BY path",
-                [$searchLiteral]
+                [$searchLiteral],
             );
         } else {
             $rows = $this->connection->fetchAllAssociative(
                 "SELECT * FROM $table WHERE path LIKE ? AND path NOT LIKE ? ORDER BY path",
-                [$searchLiteral, "$searchLiteral/%"]
+                [$searchLiteral, "$searchLiteral/%"],
             );
         }
 
@@ -157,10 +164,10 @@ class Dbafs implements DbafsInterface, ResetInterface
         }
     }
 
-    public function setExtraMetadata(string $path, array $metadata): void
+    public function setExtraMetadata(string $path, ExtraMetadata $metadata): void
     {
-        if (null === $this->getRecord($path)) {
-            throw new \InvalidArgumentException(sprintf('Record for path "%s" does not exist.', $path));
+        if (!$this->getRecord($path)) {
+            throw new \InvalidArgumentException(\sprintf('Record for path "%s" does not exist.', $path));
         }
 
         $row = [
@@ -169,22 +176,17 @@ class Dbafs implements DbafsInterface, ResetInterface
         ];
 
         $columnFilter = array_flip($this->getExtraMetadataColumns());
-
-        $event = new StoreDbafsMetadataEvent(
-            $this->table,
-            $row,
-            // Remove non-matching columns before dispatching event
-            array_intersect_key($metadata, $columnFilter)
-        );
+        $event = new StoreDbafsMetadataEvent($this->table, $row, $metadata);
 
         $this->eventDispatcher->dispatch($event);
 
-        $this->connection->update(
-            $this->table,
-            // Filter columns again before performing the query
-            array_intersect_key($event->getRow(), $columnFilter),
-            ['uuid' => $uuid]
-        );
+        // Filter columns again before performing the query
+        if ($data = array_intersect_key($event->getRow(), $columnFilter)) {
+            $this->connection->update($this->table, $data, ['uuid' => $uuid]);
+        }
+
+        // Update the cache
+        $this->records[$path]['extra'] = $event->getExtraMetadata();
     }
 
     /**
@@ -209,6 +211,12 @@ class Dbafs implements DbafsInterface, ResetInterface
         $this->applyChangeSet($changeSet, $allUuidsByPath);
 
         // Update previously cached items
+        foreach ($changeSet->getItemsToCreate() as $itemToCreate) {
+            if (\array_key_exists($path = $itemToCreate->getPath(), $this->records)) {
+                unset($this->records[$path]);
+            }
+        }
+
         foreach ($changeSet->getItemsToUpdate() as $itemToUpdate) {
             $path = $itemToUpdate->getExistingPath();
 
@@ -235,8 +243,8 @@ class Dbafs implements DbafsInterface, ResetInterface
     }
 
     /**
-     * Computes the current change set. @See DbafsInterface::sync() for more
-     * details on the $paths parameter.
+     * Computes the current change set. @See DbafsInterface::sync() for more details
+     * on the $paths parameter.
      */
     public function computeChangeSet(string ...$paths): ChangeSet
     {
@@ -264,45 +272,36 @@ class Dbafs implements DbafsInterface, ResetInterface
         return new FilesystemItem(
             $record['isFile'],
             $record['path'],
-            isset($record['lastModified']) ? (int) ($record['lastModified']) : null,
-            isset($record['fileSize']) ? (int) ($record['fileSize']) : null,
+            isset($record['lastModified']) ? (int) $record['lastModified'] : null,
+            isset($record['fileSize']) ? (int) $record['fileSize'] : null,
             $record['mimeType'] ?? null,
-            [...$record['extra'], ...['uuid' => Uuid::fromBinary($uuid)]]
+            new ExtraMetadata([...$record['extra']->all(), ...['uuid' => Uuid::fromBinary($uuid)]]),
         );
     }
 
     /**
-     * @param array<string, int>      $dbPaths
-     * @param array<string, string>   $allDbHashesByPath
-     * @param array<string, int|null> $allLastModifiedByPath
-     * @param \Generator<string, int> $filesystemIterator
-     * @param array<string>           $searchPaths
+     * @param array<string|int, int>      $dbPaths
+     * @param array<string|int, string>   $allDbHashesByPath
+     * @param array<string|int, int|null> $allLastModifiedByPath
+     * @param \Generator<string, int>     $filesystemIterator
+     * @param array<string>               $searchPaths
      *
      * @phpstan-param DatabasePaths   $dbPaths
      * @phpstan-param FilesystemPaths $filesystemIterator
      */
     private function doComputeChangeSet(array $dbPaths, array $allDbHashesByPath, array $allLastModifiedByPath, \Generator $filesystemIterator, array $searchPaths): ChangeSet
     {
-        // We're identifying items by their (old) path and store any detected
-        // changes as an array of definitions
-        /** @phpstan-var array<string|int, CreateItemDefinition> $itemsToCreate */
+        // We're identifying items by their (old) path and store any detected changes as
+        // an array of definitions
         $itemsToCreate = [];
-
-        /** @phpstan-var array<string|int, UpdateItemDefinition> $itemsToUpdate */
         $itemsToUpdate = [];
 
-        // To detect orphans, we start with a list of all items and remove them
-        // once found
-        /** @phpstan-var array<string|int, DeleteItemDefinition> $itemsToDelete */
+        // To detect orphans, we start with a list of all items and remove them once found
         $itemsToDelete = $dbPaths;
 
-        // We keep a list of hashes and names of traversed child elements
-        // indexed by their directory path, so that we are later able to
-        // compute the directory hash
-        /** @var array<string|int, array<string>> $dirHashesParts */
+        // We keep a list of hashes and names of traversed child elements indexed by
+        // their directory path, so that we are later able to compute the directory hash
         $dirHashesParts = [];
-
-        /** @var array<string, int|null> $lastModifiedUpdates */
         $lastModifiedUpdates = [];
 
         $isPartialSync = \count($dbPaths) !== \count($allDbHashesByPath);
@@ -315,9 +314,8 @@ class Dbafs implements DbafsInterface, ResetInterface
             if (self::RESOURCE_FILE === $type) {
                 $oldLastModified = $allLastModifiedByPath[$path] ?? null;
 
-                // Allow falling back (= skip hashing) to the existing hash if
-                // useLastModified is enabled, and we already got an existing
-                // timestamp
+                // Allow falling back (= skip hashing) to the existing hash if useLastModified is
+                // enabled, and we already got an existing timestamp
                 $fallback = $this->useLastModified && null !== $oldLastModified ? $oldHash : null;
 
                 $hashContext = new Context($fallback, $oldLastModified);
@@ -331,16 +329,15 @@ class Dbafs implements DbafsInterface, ResetInterface
             } elseif (self::RESOURCE_DIRECTORY === $type) {
                 $childHashes = $dirHashesParts[$path] ?? [];
 
-                // In partial sync we need to manually add child hashes of
-                // items that we do not traverse but which still contribute to
-                // the directory hash
+                // In partial sync we need to manually add child hashes of items that we do not
+                // traverse but which still contribute to the directory hash
                 if ($isPartialSync && !$this->inPath($path, $searchPaths, false)) {
-                    $directChildrenPattern = sprintf('@^%s/[^/]+[/]?$@', preg_quote($path, '@'));
+                    $directChildrenPattern = \sprintf('@^%s/[^/]+[/]?$@', preg_quote($path, '@'));
 
                     foreach ($allDbHashesByPath as $childPath => $childHash) {
-                        $childName = basename($childPath);
+                        $childName = basename((string) $childPath);
 
-                        if (\array_key_exists($childName, $childHashes) || 1 !== preg_match($directChildrenPattern, $childPath)) {
+                        if (\array_key_exists($childName, $childHashes) || 1 !== preg_match($directChildrenPattern, (string) $childPath)) {
                             continue;
                         }
 
@@ -350,7 +347,8 @@ class Dbafs implements DbafsInterface, ResetInterface
 
                 // Compute directory hash
                 $childHashes = array_filter($childHashes);
-                ksort($childHashes);
+                ksort($childHashes, SORT_STRING);
+
                 $hash = $this->hashGenerator->hashString(implode("\0", $childHashes));
 
                 unset($dirHashesParts[$path]);
@@ -385,10 +383,10 @@ class Dbafs implements DbafsInterface, ResetInterface
         // Ignore all children of shallow directories
         $shallowDirectories = array_filter(
             $searchPaths,
-            static fn (string $path): bool => self::PATH_SUFFIX_SHALLOW_DIRECTORY === substr($path, -2)
+            static fn (string $path): bool => self::PATH_SUFFIX_SHALLOW_DIRECTORY === substr($path, -2),
         );
 
-        if (!empty($shallowDirectories)) {
+        if ($shallowDirectories) {
             foreach (array_keys($itemsToDelete) as $item) {
                 if ($this->inPath((string) $item, $shallowDirectories)) {
                     unset($itemsToDelete[$item]);
@@ -396,22 +394,22 @@ class Dbafs implements DbafsInterface, ResetInterface
             }
         }
 
-        // Detect moves: If items that should get created can be found in the
-        // list of orphans, only update their path.
+        // Detect moves: If items that should get created can be found in the list of
+        // orphans, only update their path.
         $hasMoves = false;
 
         foreach ($itemsToCreate as $path => $dataToInsert) {
             $candidates = array_intersect(
                 array_keys($itemsToDelete),
-                array_keys($allDbHashesByPath, $dataToInsert[ChangeSet::ATTR_HASH], true)
+                array_keys($allDbHashesByPath, $dataToInsert[ChangeSet::ATTR_HASH], true),
             );
 
             if (\count($candidates) > 1) {
-                // If two or more files with the same hash were moved, try to
-                // identify them by their name.
+                // If two or more files with the same hash were moved, try to identify them by
+                // their name.
                 $candidates = array_filter(
                     $candidates,
-                    static fn (string $candidatePath): bool => basename((string) $path) === basename((string) $candidatePath)
+                    static fn (string $candidatePath): bool => basename((string) $path) === basename($candidatePath),
                 );
             }
 
@@ -434,24 +432,24 @@ class Dbafs implements DbafsInterface, ResetInterface
         }
 
         if ($hasMoves) {
-            ksort($itemsToUpdate, SORT_DESC);
+            ksort($itemsToUpdate, SORT_NATURAL);
         } else {
-            $itemsToUpdate = array_reverse($itemsToUpdate);
+            $itemsToUpdate = array_reverse($itemsToUpdate, true);
         }
 
         return new ChangeSet(
             array_reverse(array_values($itemsToCreate)),
             $itemsToUpdate,
             $itemsToDelete,
-            $lastModifiedUpdates
+            $lastModifiedUpdates,
         );
     }
 
     private function loadRecordByUuid(string $uuid): void
     {
         $row = $this->connection->fetchAssociative(
-            sprintf('SELECT * FROM %s WHERE uuid=?', $this->connection->quoteIdentifier($this->table)),
-            [$uuid]
+            \sprintf('SELECT * FROM %s WHERE uuid=?', $this->connection->quoteIdentifier($this->table)),
+            [$uuid],
         );
 
         if (false === $row) {
@@ -466,8 +464,8 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function loadRecordById(int $id): void
     {
         $row = $this->connection->fetchAssociative(
-            sprintf('SELECT * FROM %s WHERE id=?', $this->connection->quoteIdentifier($this->table)),
-            [$id]
+            \sprintf('SELECT * FROM %s WHERE id=?', $this->connection->quoteIdentifier($this->table)),
+            [$id],
         );
 
         if (false === $row) {
@@ -482,8 +480,8 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function loadRecordByPath(string $path): void
     {
         $row = $this->connection->fetchAssociative(
-            sprintf('SELECT * FROM %s WHERE path=?', $this->connection->quoteIdentifier($this->table)),
-            [$this->convertToDatabasePath($path)]
+            \sprintf('SELECT * FROM %s WHERE path=?', $this->connection->quoteIdentifier($this->table)),
+            [$this->convertToDatabasePath($path)],
         );
 
         if (false === $row) {
@@ -523,10 +521,10 @@ class Dbafs implements DbafsInterface, ResetInterface
     }
 
     /**
-     * Updates the database from a given change set. We're using chunked inserts
-     * for better performance.
+     * Updates the database from a given change set. We're using chunked inserts for
+     * better performance.
      *
-     * @param array<string, string> $allUuidsByPath
+     * @param array<string|int, string> $allUuidsByPath
      */
     private function applyChangeSet(ChangeSet $changeSet, array $allUuidsByPath): void
     {
@@ -534,7 +532,7 @@ class Dbafs implements DbafsInterface, ResetInterface
             return;
         }
 
-        $getParentUuid = static function (string $path) use (&$allUuidsByPath): ?string {
+        $getParentUuid = static function (string $path) use (&$allUuidsByPath): string|null {
             if ('.' === ($parentPath = \dirname($path))) {
                 return null;
             }
@@ -574,8 +572,10 @@ class Dbafs implements DbafsInterface, ResetInterface
 
             // Backwards compatibility
             if ('tl_files' === $this->table) {
+                $extension = Path::getExtension($itemToCreate->getPath(), true);
+
                 $dataToInsert['name'] = basename($itemToCreate->getPath());
-                $dataToInsert['extension'] = $itemToCreate->isFile() ? Path::getExtension($itemToCreate->getPath()) : '';
+                $dataToInsert['extension'] = $itemToCreate->isFile() && \strlen($extension) <= 16 ? $extension : '';
                 $dataToInsert['tstamp'] = $currentTime;
             }
 
@@ -586,33 +586,50 @@ class Dbafs implements DbafsInterface, ResetInterface
             $inserts[] = $dataToInsert;
         }
 
-        if (!empty($inserts)) {
+        if ($inserts) {
             $table = $this->connection->quoteIdentifier($this->table);
-            $columns = sprintf('`%s`', implode('`, `', array_keys($inserts[0]))); // "uuid", "pid", …
-            $placeholders = sprintf('(%s)', implode(', ', array_fill(0, \count($inserts[0]), '?'))); // (?, ?, …, ?)
+            $columns = \sprintf('`%s`', implode('`, `', array_keys($inserts[0]))); // "uuid", "pid", …
+            $placeholders = \sprintf('(%s)', implode(', ', array_fill(0, \count($inserts[0]), '?'))); // (?, ?, …, ?)
 
             foreach (array_chunk($inserts, $this->bulkInsertSize) as $chunk) {
                 $this->connection->executeQuery(
-                    sprintf(
+                    \sprintf(
                         'INSERT INTO %s (%s) VALUES %s',
                         $table,
                         $columns,
-                        implode(', ', array_fill(0, \count($chunk), $placeholders))
+                        implode(', ', array_fill(0, \count($chunk), $placeholders)),
                     ),
-                    array_merge(...array_map('array_values', $chunk))
+                    array_merge(...array_map(array_values(...), $chunk)),
                 );
             }
         }
 
         // Updates
         foreach ($changeSet->getItemsToUpdate($this->useLastModified) as $itemToUpdate) {
-            $dataToUpdate = [
-                'tstamp' => $currentTime,
-            ];
+            $dataToUpdate = [];
+
+            // Backwards compatibility
+            if ('tl_files' === $this->table) {
+                $dataToUpdate['tstamp'] = $currentTime;
+            }
 
             if ($itemToUpdate->updatesPath()) {
                 $dataToUpdate['path'] = $this->convertToDatabasePath($itemToUpdate->getNewPath());
                 $dataToUpdate['pid'] = $getParentUuid($itemToUpdate->getNewPath());
+
+                // Backwards compatibility
+                if ('tl_files' === $this->table) {
+                    $dataToUpdate['name'] = basename($itemToUpdate->getNewPath());
+
+                    $this->connection->update(
+                        $this->table,
+                        ['extension' => Path::getExtension($itemToUpdate->getNewPath())],
+                        [
+                            'path' => $this->convertToDatabasePath($itemToUpdate->getExistingPath()),
+                            'type' => 'file',
+                        ],
+                    );
+                }
             }
 
             if ($itemToUpdate->updatesHash()) {
@@ -626,19 +643,16 @@ class Dbafs implements DbafsInterface, ResetInterface
             $this->connection->update(
                 $this->table,
                 $dataToUpdate,
-                ['path' => $this->convertToDatabasePath($itemToUpdate->getExistingPath())]
+                ['path' => $this->convertToDatabasePath($itemToUpdate->getExistingPath())],
             );
         }
 
         // Deletes
         foreach ($changeSet->getItemsToDelete() as $itemToDelete) {
-            $this->connection->delete(
-                $this->table,
-                [
-                    'path' => $this->convertToDatabasePath($itemToDelete->getPath()),
-                    'type' => $itemToDelete->isFile() ? 'file' : 'folder',
-                ]
-            );
+            $this->connection->delete($this->table, [
+                'path' => $this->convertToDatabasePath($itemToDelete->getPath()),
+                'type' => $itemToDelete->isFile() ? 'file' : 'folder',
+            ]);
         }
 
         $this->connection->commit();
@@ -656,9 +670,9 @@ class Dbafs implements DbafsInterface, ResetInterface
      * @param array<string> $searchPaths       non-empty list of search paths
      * @param array<string> $parentDirectories parent directories to consider
      *
-     * @return array<array<string, string|int|null>>
+     * @return array<array<string|int, string|int|null>>
      *
-     * @phpstan-return array{0: DatabasePaths, 1: array<string, string>, 2: array<string, int|null>, 3: array<string, string>}
+     * @phpstan-return array{0: DatabasePaths, 1: array<string|int, string>, 2: array<string|int, int|null>, 3: array<string|int, string|int>}
      */
     private function getDatabaseEntries(array $searchPaths, array $parentDirectories): array
     {
@@ -668,11 +682,11 @@ class Dbafs implements DbafsInterface, ResetInterface
         $allUuidsByPath = [];
 
         $items = $this->connection->fetchAllNumeric(
-            sprintf(
+            \sprintf(
                 "SELECT path, uuid, hash, IF(type='folder', 1, 0), %s FROM %s",
                 $this->useLastModified ? 'lastModified' : 'NULL',
                 $this->connection->quoteIdentifier($this->table),
-            )
+            ),
         );
 
         $fullScope = '' === $searchPaths[0];
@@ -680,8 +694,8 @@ class Dbafs implements DbafsInterface, ResetInterface
         foreach ($items as [$path, $uuid, $hash, $isDir, $lastModified]) {
             $path = $this->convertToFilesystemPath($path);
 
-            // Include a path if it is either inside the search paths or is a
-            // parent directory of it.
+            // Include a path if it is either inside the search paths or is a parent
+            // directory of it.
             if ($fullScope || $this->inPath($path, $searchPaths) || ($isDir && \in_array($path, $parentDirectories, true))) {
                 $dbPaths[$path] = $isDir ? self::RESOURCE_DIRECTORY : self::RESOURCE_FILE;
             }
@@ -695,8 +709,8 @@ class Dbafs implements DbafsInterface, ResetInterface
     }
 
     /**
-     * Traverses the filesystem and returns file and directory paths that can
-     * be synchronized.
+     * Traverses the filesystem and returns file and directory paths that can be
+     * synchronized.
      *
      * Items will always be listed before the directories they reside in (most
      * specific path first).
@@ -715,7 +729,6 @@ class Dbafs implements DbafsInterface, ResetInterface
                 return;
             }
 
-            /** @var FilesystemItem $item */
             foreach ($this->filesystem->listContents($directory, false, VirtualFilesystemInterface::BYPASS_DBAFS) as $item) {
                 $path = $item->getPath();
 
@@ -744,7 +757,6 @@ class Dbafs implements DbafsInterface, ResetInterface
         $analyzeDirectory = function (string $path): array {
             $paths = [];
 
-            /** @var FilesystemItem $entry */
             foreach ($this->filesystem->listContents($path, false, VirtualFilesystemInterface::BYPASS_DBAFS) as $entry) {
                 $paths[$entry->getPath()] = !$entry->isFile();
             }
@@ -752,11 +764,11 @@ class Dbafs implements DbafsInterface, ResetInterface
             return $paths;
         };
 
-        // If a search path does not point to an existing file, we need to
-        // determine if it's an existing directory or a non-existing resource.
-        // Directories are _only_ listed reliably when calling `listContents`
-        // on their parent directory (with deep=false). We keep track of
-        // existing analyzed paths and store whether they are a directory.
+        // If a search path does not point to an existing file, we need to determine if
+        // it's an existing directory or a non-existing resource. Directories are _only_
+        // listed reliably when calling `listContents` on their parent directory (with
+        // deep=false). We keep track of existing analyzed paths and store whether they
+        // are a directory.
         $analyzedPaths = [];
 
         foreach ($searchPaths as $searchPath) {
@@ -774,8 +786,9 @@ class Dbafs implements DbafsInterface, ResetInterface
             }
 
             if (null === ($isDir = $analyzedPaths[$searchPath] ?? null)) {
-                // Analyze parent path
-                $analyzedPaths = [...$analyzedPaths, ...$analyzeDirectory(Path::getDirectory($searchPath))];
+                // Analyze parent path. Do not use array_merge or array unpacking here, because
+                // there could be integer keys!
+                $analyzedPaths = $analyzeDirectory(Path::getDirectory($searchPath)) + $analyzedPaths;
                 $isDir = $analyzedPaths[$searchPath] ??= false;
             }
 
@@ -804,12 +817,11 @@ class Dbafs implements DbafsInterface, ResetInterface
     /**
      * Returns true if a path is inside any of the given base paths.
      *
-     * All provided paths are expected to be normalized and may contain a
-     * double slash (//) as suffix.
+     * All provided paths are expected to be normalized and may contain a double slash
+     * (//) as suffix.
      *
-     * If $considerShallowDirectories is set to false, paths that are directly
-     * inside shallow directories (e.g. "foo/bar" in "foo") do NOT yield a
-     * truthy result.
+     * If $considerShallowDirectories is set to false, paths that are directly inside
+     * shallow directories (e.g. "foo/bar" in "foo") do NOT yield a truthy result.
      *
      * @param array<string> $basePaths
      */
@@ -847,10 +859,10 @@ class Dbafs implements DbafsInterface, ResetInterface
     }
 
     /**
-     * Returns a normalized list of paths with redundant paths stripped as well
-     * as a list of all parent paths that are not covered by the arguments. To
-     * denote directories of which only the direct children should be read, we
-     * append a double slash (//) as an internal marker.
+     * Returns a normalized list of paths with redundant paths stripped as well as a
+     * list of all parent paths that are not covered by the arguments. To denote
+     * directories of which only the direct children should be read, we append a
+     * double slash (//) as an internal marker.
      *
      * @see DbafsTest::testNormalizesSearchPaths()
      *
@@ -863,19 +875,19 @@ class Dbafs implements DbafsInterface, ResetInterface
                 $path = trim(Path::canonicalize($path));
 
                 if (Path::isAbsolute($path)) {
-                    throw new \InvalidArgumentException(sprintf('Absolute path "%s" is not allowed when synchronizing.', $path));
+                    throw new \InvalidArgumentException(\sprintf('Absolute path "%s" is not allowed when synchronizing.', $path));
                 }
 
                 if (str_starts_with($path, '.')) {
-                    throw new \InvalidArgumentException(sprintf('Dot path "%s" is not allowed when synchronizing.', $path));
+                    throw new \InvalidArgumentException(\sprintf('Dot path "%s" is not allowed when synchronizing.', $path));
                 }
 
                 return $path;
             },
-            $paths
+            $paths,
         );
 
-        if (0 === \count($paths) || \in_array('', $paths, true)) {
+        if (!$paths || \in_array('', $paths, true)) {
             return [[''], []];
         }
 
@@ -900,7 +912,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
                 return $path;
             },
-            $paths
+            $paths,
         );
 
         $shallowDirectories = array_diff($shallowDirectories, $deepDirectories);
@@ -943,7 +955,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     {
         $columns = array_map(
             static fn (Column $column): string => $column->getName(),
-            $this->connection->createSchemaManager()->listTableColumns($this->table)
+            $this->connection->createSchemaManager()->listTableColumns($this->table),
         );
 
         $defaultFields = [

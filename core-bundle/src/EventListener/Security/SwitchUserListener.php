@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener\Security;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\SwitchUserToken;
 use Symfony\Component\Security\Http\Event\SwitchUserEvent;
@@ -20,10 +21,13 @@ use Symfony\Component\Security\Http\Event\SwitchUserEvent;
 /**
  * @internal
  */
+#[AsEventListener]
 class SwitchUserListener
 {
-    public function __construct(private TokenStorageInterface $tokenStorage, private LoggerInterface $logger)
-    {
+    public function __construct(
+        private readonly TokenStorageInterface $tokenStorage,
+        private readonly LoggerInterface $logger,
+    ) {
     }
 
     /**
@@ -31,9 +35,7 @@ class SwitchUserListener
      */
     public function __invoke(SwitchUserEvent $event): void
     {
-        $token = $this->tokenStorage->getToken();
-
-        if (null === $token) {
+        if (!$token = $this->tokenStorage->getToken()) {
             throw new \RuntimeException('The token storage did not contain a token.');
         }
 
@@ -47,13 +49,13 @@ class SwitchUserListener
         }
 
         if ($originalUser === $targetUser) {
-            $this->logger->info(sprintf('User "%s" has quit the impersonation of user "%s"', $originalUser, $sourceUser));
+            $this->logger->info(\sprintf('User "%s" has quit the impersonation of user "%s"', $originalUser, $sourceUser));
         } else {
-            if (!empty($originalUser)) {
+            if ($originalUser) {
                 $sourceUser = $originalUser;
             }
 
-            $this->logger->info(sprintf('User "%s" has switched to user "%s"', $sourceUser, $targetUser));
+            $this->logger->info(\sprintf('User "%s" has switched to user "%s"', $sourceUser, $targetUser));
         }
     }
 }

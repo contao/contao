@@ -207,13 +207,12 @@ class Date
 
 		if (!static::isNumericFormat($strFormat))
 		{
-			throw new \Exception(sprintf('Invalid date format "%s"', $strFormat));
+			throw new \Exception(\sprintf('Invalid date format "%s"', $strFormat));
 		}
 
 		return preg_replace_callback(
 			'/[a-zA-Z]/',
-			static function ($matches)
-			{
+			static function ($matches) {
 				// Thanks to Christian Labuda
 				$arrRegexp = array
 				(
@@ -257,7 +256,7 @@ class Date
 
 		if (!static::isNumericFormat($strFormat))
 		{
-			throw new \Exception(sprintf('Invalid date format "%s"', $strFormat));
+			throw new \Exception(\sprintf('Invalid date format "%s"', $strFormat));
 		}
 
 		$arrCharacterMapper = array();
@@ -297,7 +296,7 @@ class Date
 	{
 		if (!static::isNumericFormat($this->strFormat))
 		{
-			throw new \Exception(sprintf('Invalid date format "%s"', $this->strFormat));
+			throw new \Exception(\sprintf('Invalid date format "%s"', $this->strFormat));
 		}
 
 		$intCount  = 0;
@@ -406,7 +405,7 @@ class Date
 		// Validate the date (see #5086 and #7955)
 		if (!is_numeric($intMonth) || !is_numeric($intDay) || !is_numeric($intYear) || checkdate($intMonth, $intDay, $intYear) === false)
 		{
-			throw new \OutOfBoundsException(sprintf('Invalid date "%s"', $this->strDate));
+			throw new \OutOfBoundsException(\sprintf('Invalid date "%s"', $this->strDate));
 		}
 
 		$this->strDate = mktime($intHour, (int) $intMinute, (int) $intSecond, (int) $intMonth, (int) $intDay, (int) $intYear);
@@ -427,20 +426,58 @@ class Date
 		{
 			switch ($v)
 			{
-				case 'D': $chunks[$k] = 'a'; break;
-				case 'j': $chunks[$k] = 'e'; break;
-				case 'l': $chunks[$k] = 'A'; break;
-				case 'S': $chunks[$k] = 'o'; break;
-				case 'F': $chunks[$k] = 'B'; break;
-				case 'M': $chunks[$k] = 'b'; break;
-				case 'a': $chunks[$k] = 'p'; break;
-				case 'A': $chunks[$k] = 'p'; break;
-				case 'g': $chunks[$k] = 'l'; break;
-				case 'G': $chunks[$k] = 'k'; break;
-				case 'h': $chunks[$k] = 'I'; break;
-				case 'i': $chunks[$k] = 'M'; break;
-				case 's': $chunks[$k] = 'S'; break;
-				case 'U': $chunks[$k] = 's'; break;
+				case 'D':
+					$chunks[$k] = 'a';
+					break;
+
+				case 'j':
+					$chunks[$k] = 'e';
+					break;
+
+				case 'l':
+					$chunks[$k] = 'A';
+					break;
+
+				case 'S':
+					$chunks[$k] = 'o';
+					break;
+
+				case 'F':
+					$chunks[$k] = 'B';
+					break;
+
+				case 'M':
+					$chunks[$k] = 'b';
+					break;
+
+				case 'A':
+				case 'a':
+					$chunks[$k] = 'p';
+					break;
+
+				case 'g':
+					$chunks[$k] = 'l';
+					break;
+
+				case 'G':
+					$chunks[$k] = 'k';
+					break;
+
+				case 'h':
+					$chunks[$k] = 'I';
+					break;
+
+				case 'i':
+					$chunks[$k] = 'M';
+					break;
+
+				case 's':
+					$chunks[$k] = 'S';
+					break;
+
+				case 'U':
+					$chunks[$k] = 's';
+					break;
 			}
 		}
 
@@ -598,7 +635,7 @@ class Date
 	 */
 	protected static function resolveCustomModifiers($strDate)
 	{
-		if (strpos($strDate, '::') === false)
+		if (!str_contains($strDate, '::'))
 		{
 			return $strDate;
 		}
@@ -633,11 +670,11 @@ class Date
 					break;
 
 				case 3:
-					$strReturn .= $GLOBALS['TL_LANG']['MONTHS'][($index - 1)];
+					$strReturn .= $GLOBALS['TL_LANG']['MONTHS'][$index - 1];
 					break;
 
 				case 4:
-					$strReturn .= $GLOBALS['TL_LANG']['MONTHS_SHORT'][($index - 1)];
+					$strReturn .= $GLOBALS['TL_LANG']['MONTHS_SHORT'][$index - 1];
 					break;
 
 				default:

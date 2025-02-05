@@ -13,9 +13,11 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests;
 
 use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\DependencyInjection\Compiler\AccessDecisionStrategyPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAssetsPackagesPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddAvailableTransportsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddCronJobsPass;
+use Contao\CoreBundle\DependencyInjection\Compiler\AddInsertTagsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddNativeTransportFactoryPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\AddResourcesPathsPass;
 use Contao\CoreBundle\DependencyInjection\Compiler\ConfigureFilesystemPass;
@@ -46,9 +48,24 @@ use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnha
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\EventDispatcher\DependencyInjection\AddEventAliasesPass;
+use Symfony\Component\HttpFoundation\Request;
 
 class ContaoCoreBundleTest extends TestCase
 {
+    /**
+     * @runInSeparateProcess because request attributes are static
+     */
+    public function testAddsTheTurboStreamRequestFormatOnBoot(): void
+    {
+        $request = new Request();
+
+        $this->assertNull($request->getMimeType('turbo_stream'));
+
+        (new ContaoCoreBundle())->boot();
+
+        $this->assertSame('text/vnd.turbo-stream.html', $request->getMimeType('turbo_stream'));
+    }
+
     public function testAddsTheCompilerPasses(): void
     {
         $passes = [
@@ -74,6 +91,8 @@ class ContaoCoreBundleTest extends TestCase
             IntlInstalledLocalesAndCountriesPass::class,
             LoggerChannelPass::class,
             ConfigureFilesystemPass::class,
+            AddInsertTagsPass::class,
+            AccessDecisionStrategyPass::class,
         ];
 
         $security = $this->createMock(SecurityExtension::class);
@@ -106,7 +125,7 @@ class ContaoCoreBundleTest extends TestCase
                     $this->assertContains($pass::class, $passes);
 
                     return true;
-                }
+                },
             ))
         ;
 

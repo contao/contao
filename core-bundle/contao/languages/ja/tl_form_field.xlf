@@ -449,9 +449,17 @@
         <source>Delete form field ID %s</source>
         <target>ID %sのフォームの項目を削除</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.toggle">
-        <source>Hide/unhide form field ID %s</source>
-        <target>ID %sのフォームの項目を隠す/表示</target>
+      <trans-unit id="tl_form_field.toggle.0">
+        <source>Hide/unhide form field</source>
+        <target>フォームの項目を表示または非表示</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle.1">
+        <source>Hide form field ID %s</source>
+        <target>ID %sのフォームの項目を非表示</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle.2">
+        <source>Unhide form field ID %s</source>
+        <target>ID %sのフォームの項目を表示</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.0">
         <source>Paste at the top</source>

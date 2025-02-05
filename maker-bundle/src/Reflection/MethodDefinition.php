@@ -17,8 +17,10 @@ class MethodDefinition
     /**
      * @param array<string, (string|array|null)> $parameters
      */
-    public function __construct(private string|null $returnType, private array $parameters)
-    {
+    public function __construct(
+        private readonly string|null $returnType,
+        private readonly array $parameters,
+    ) {
     }
 
     public function getReturnType(): string|null
@@ -36,21 +38,12 @@ class MethodDefinition
 
     public function getBody(): string
     {
-        switch ($this->returnType) {
-            case 'string':
-                return "return '';";
-
-            case '?string':
-                return 'return null;';
-
-            case 'array':
-                return 'return [];';
-
-            case 'bool':
-                return 'return true;';
-
-            default:
-                return '// Do something';
-        }
+        return match ($this->returnType) {
+            'string' => "return '';",
+            '?string' => 'return null;',
+            'array' => 'return [];',
+            'bool' => 'return true;',
+            default => '// Do something',
+        };
     }
 }

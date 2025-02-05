@@ -12,8 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Filesystem;
 
+use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\File\MetadataBag;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
+use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\DirectoryAttributes;
 use League\Flysystem\FileAttributes;
@@ -24,6 +28,7 @@ class FilesystemItemTest extends TestCase
     public function testSetAndGetAttributes(): void
     {
         $uuid = Uuid::fromString('2fcae369-c955-4b43-bcf9-d069f9d25542');
+        $storage = $this->createMock(VirtualFilesystemInterface::class);
 
         $fileItem = new FilesystemItem(
             true,
@@ -31,7 +36,8 @@ class FilesystemItemTest extends TestCase
             123450,
             1024,
             'image/png',
-            ['foo' => 'bar', 'uuid' => $uuid]
+            new ExtraMetadata(['foo' => 'bar', 'uuid' => $uuid]),
+            $storage,
         );
 
         $this->assertTrue($fileItem->isFile());
@@ -45,6 +51,79 @@ class FilesystemItemTest extends TestCase
         $this->assertSame('bar.PNG', $fileItem->getName());
         $this->assertSame('bar', $fileItem->getExtraMetadata()['foo']);
         $this->assertSame('2fcae369-c955-4b43-bcf9-d069f9d25542', $fileItem->getUuid()->toRfc4122());
+        $this->assertSame($storage, $fileItem->getStorage());
+    }
+
+    public function testTypeHelperShortcuts(): void
+    {
+        $fileItem = new FilesystemItem(true, 'foo/bar.png', 123450, 1024, 'image/png');
+        $this->assertTrue($fileItem->isImage());
+        $this->assertFalse($fileItem->isAudio());
+        $this->assertFalse($fileItem->isVideo());
+        $this->assertFalse($fileItem->isPdf());
+        $this->assertFalse($fileItem->isSpreadsheet());
+
+        $fileItem = new FilesystemItem(true, 'foo/bar.mp4', 123450, 1024, 'video/mp4');
+        $this->assertFalse($fileItem->isImage());
+        $this->assertFalse($fileItem->isAudio());
+        $this->assertTrue($fileItem->isVideo());
+        $this->assertFalse($fileItem->isPdf());
+        $this->assertFalse($fileItem->isSpreadsheet());
+
+        $fileItem = new FilesystemItem(true, 'foo/bar.m4a', 123450, 1024, 'audio/mp4');
+        $this->assertFalse($fileItem->isImage());
+        $this->assertTrue($fileItem->isAudio());
+        $this->assertFalse($fileItem->isVideo());
+        $this->assertFalse($fileItem->isPdf());
+        $this->assertFalse($fileItem->isSpreadsheet());
+
+        $fileItem = new FilesystemItem(true, 'foo/bar.pdf', 123450, 1024, 'application/pdf');
+        $this->assertFalse($fileItem->isImage());
+        $this->assertFalse($fileItem->isAudio());
+        $this->assertFalse($fileItem->isVideo());
+        $this->assertTrue($fileItem->isPdf());
+        $this->assertFalse($fileItem->isSpreadsheet());
+
+        $fileItem = new FilesystemItem(true, 'foo/bar.xlsx', 123450, 1024, 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $this->assertFalse($fileItem->isImage());
+        $this->assertFalse($fileItem->isAudio());
+        $this->assertFalse($fileItem->isVideo());
+        $this->assertFalse($fileItem->isPdf());
+        $this->assertTrue($fileItem->isSpreadsheet());
+
+        $fileItem = new FilesystemItem(false, '/path/to/folder');
+        $this->assertFalse($fileItem->isImage());
+        $this->assertFalse($fileItem->isAudio());
+        $this->assertFalse($fileItem->isVideo());
+        $this->assertFalse($fileItem->isPdf());
+        $this->assertFalse($fileItem->isSpreadsheet());
+    }
+
+    /**
+     * @dataProvider provideSchemaOrgData
+     */
+    public function testGettingSchemaOrgData(string $path, string|null $mimeType, array $expectedSchema): void
+    {
+        $fileItem = new FilesystemItem(
+            true,
+            $path,
+            123450,
+            1024,
+            $mimeType,
+            new ExtraMetadata([
+                'uuid' => Uuid::fromString('2fcae369-c955-4b43-bcf9-d069f9d25542'),
+                'localized' => new MetadataBag(
+                    [
+                        'en' => new Metadata([
+                            Metadata::VALUE_TITLE => 'My title!',
+                        ]),
+                    ],
+                    ['en'],
+                ),
+            ]),
+        );
+
+        $this->assertSame($expectedSchema, $fileItem->getSchemaOrgData());
     }
 
     /**
@@ -60,7 +139,7 @@ class FilesystemItemTest extends TestCase
         $item->$property();
     }
 
-    public function provideProperties(): \Generator
+    public static function provideProperties(): iterable
     {
         yield 'file size' => [
             'getFileSize',
@@ -100,10 +179,10 @@ class FilesystemItemTest extends TestCase
 
                 return 'image/png';
             },
-            static function () use (&$invocationCounts): array {
+            static function () use (&$invocationCounts): ExtraMetadata {
                 ++$invocationCounts['extraMetadata'];
 
-                return ['foo' => 'bar'];
+                return new ExtraMetadata(['foo' => 'bar']);
             },
         );
 
@@ -115,7 +194,7 @@ class FilesystemItemTest extends TestCase
             $this->assertSame(123450, $fileItem->getLastModified());
             $this->assertSame(1024, $fileItem->getFileSize());
             $this->assertSame('image/png', $fileItem->getMimeType());
-            $this->assertSame(['foo' => 'bar'], $fileItem->getExtraMetadata());
+            $this->assertSame(['foo' => 'bar'], $fileItem->getExtraMetadata()->all());
         }
 
         foreach ($invocationCounts as $property => $invocationCount) {
@@ -131,7 +210,7 @@ class FilesystemItemTest extends TestCase
             null,
             123450,
             'image/png',
-            ['foo' => 'bar']
+            ['foo' => 'bar'],
         );
 
         $fileItem = FilesystemItem::fromStorageAttributes($fileAttributes);
@@ -141,12 +220,12 @@ class FilesystemItemTest extends TestCase
         $this->assertSame(123450, $fileItem->getLastModified());
         $this->assertSame(1024, $fileItem->getFileSize());
         $this->assertSame('image/png', $fileItem->getMimeType());
-        $this->assertSame(['foo' => 'bar'], $fileItem->getExtraMetadata());
+        $this->assertSame(['foo' => 'bar'], $fileItem->getExtraMetadata()->all());
 
         $directoryAttributes = new DirectoryAttributes(
             'foo/bar',
             null,
-            123450
+            123450,
         );
 
         $directoryItem = FilesystemItem::fromStorageAttributes($directoryAttributes);
@@ -209,7 +288,7 @@ class FilesystemItemTest extends TestCase
             null,
             static function (): never {
                 throw VirtualFilesystemException::unableToRetrieveMetadata('some/file.txt');
-            }
+            },
         );
 
         $this->expectException(VirtualFilesystemException::class);
@@ -227,7 +306,7 @@ class FilesystemItemTest extends TestCase
             null,
             static function (): never {
                 throw VirtualFilesystemException::unableToRetrieveMetadata('some/file.txt');
-            }
+            },
         );
 
         $this->assertSame('text/plain', $item->getMimeType('text/plain'));
@@ -241,5 +320,101 @@ class FilesystemItemTest extends TestCase
         $this->assertSame(123450, $item->getLastModified());
         $this->assertSame(1024, $item->getFileSize());
         $this->assertSame('image/png', $item->getMimeType());
+    }
+
+    public function testAccessingStorageIFNotSetResultsInAnException(): void
+    {
+        $item = new FilesystemItem(true, 'some/path');
+
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('No storage was set for this filesystem item.');
+
+        $item->getStorage();
+    }
+
+    public static function provideSchemaOrgData(): iterable
+    {
+        yield 'Test an image' => [
+            'foo/bar.png',
+            'image/png',
+            [
+                '@type' => 'ImageObject',
+                'contentUrl' => 'foo/bar.png',
+                'encodingFormat' => 'image/png',
+                'identifier' => '#/schema/file/2fcae369-c955-4b43-bcf9-d069f9d25542',
+                'name' => 'My title!',
+            ],
+        ];
+
+        yield 'Test a video' => [
+            'foo/bar.mp4',
+            'video/mp4',
+            [
+                '@type' => 'VideoObject',
+                'contentUrl' => 'foo/bar.mp4',
+                'encodingFormat' => 'video/mp4',
+                'identifier' => '#/schema/file/2fcae369-c955-4b43-bcf9-d069f9d25542',
+                'name' => 'My title!',
+            ],
+        ];
+
+        yield 'Test an audio file' => [
+            'foo/bar.m4a',
+            'audio/mp4',
+            [
+                '@type' => 'AudioObject',
+                'contentUrl' => 'foo/bar.m4a',
+                'encodingFormat' => 'audio/mp4',
+                'identifier' => '#/schema/file/2fcae369-c955-4b43-bcf9-d069f9d25542',
+                'name' => 'My title!',
+            ],
+        ];
+
+        yield 'Test a pdf file' => [
+            'foo/bar.pdf',
+            'application/pdf',
+            [
+                '@type' => 'DigitalDocument',
+                'contentUrl' => 'foo/bar.pdf',
+                'encodingFormat' => 'application/pdf',
+                'identifier' => '#/schema/file/2fcae369-c955-4b43-bcf9-d069f9d25542',
+                'name' => 'My title!',
+            ],
+        ];
+
+        yield 'Test a spreadsheet file' => [
+            'foo/bar.xlsx',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            [
+                '@type' => 'SpreadsheetDigitalDocument',
+                'contentUrl' => 'foo/bar.xlsx',
+                'encodingFormat' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'identifier' => '#/schema/file/2fcae369-c955-4b43-bcf9-d069f9d25542',
+                'name' => 'My title!',
+            ],
+        ];
+
+        yield 'Test file without special handling is a regular MediaObject' => [
+            'foo/bar.sql',
+            'application/sql',
+            [
+                '@type' => 'MediaObject',
+                'contentUrl' => 'foo/bar.sql',
+                'encodingFormat' => 'application/sql',
+                'identifier' => '#/schema/file/2fcae369-c955-4b43-bcf9-d069f9d25542',
+                'name' => 'My title!',
+            ],
+        ];
+
+        yield 'Test a file with unknown mime type' => [
+            'foo/bar.whatisthis',
+            null,
+            [
+                '@type' => 'MediaObject',
+                'contentUrl' => 'foo/bar.whatisthis',
+                'identifier' => '#/schema/file/2fcae369-c955-4b43-bcf9-d069f9d25542',
+                'name' => 'My title!',
+            ],
+        ];
     }
 }

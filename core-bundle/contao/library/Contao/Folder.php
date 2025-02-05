@@ -84,10 +84,9 @@ class Folder extends System
 		// Check whether it is a directory
 		if (is_file($this->strRootDir . '/' . $strFolder))
 		{
-			throw new \Exception(sprintf('File "%s" is not a directory', $strFolder));
+			throw new \Exception(\sprintf('File "%s" is not a directory', $strFolder));
 		}
 
-		$this->import(Files::class, 'Files');
 		$this->strFolder = $strFolder;
 
 		// Create the folder if it does not exist
@@ -95,12 +94,13 @@ class Folder extends System
 		{
 			$strPath = '';
 			$arrChunks = explode('/', $this->strFolder);
+			$filesObj = Files::getInstance();
 
 			// Create the folder
 			foreach ($arrChunks as $strChunk)
 			{
 				$strPath .= ($strPath ? '/' : '') . $strChunk;
-				$this->Files->mkdir($strPath);
+				$filesObj->mkdir($strPath);
 			}
 
 			// Update the database
@@ -176,7 +176,7 @@ class Folder extends System
 	 */
 	public function purge()
 	{
-		$this->Files->rrdir($this->strFolder, true);
+		Files::getInstance()->rrdir($this->strFolder, true);
 
 		// Update the database
 		if (Dbafs::shouldBeSynchronized($this->strFolder))
@@ -200,7 +200,7 @@ class Folder extends System
 	 */
 	public function delete()
 	{
-		$this->Files->rrdir($this->strFolder);
+		Files::getInstance()->rrdir($this->strFolder);
 
 		// Update the database
 		if (Dbafs::shouldBeSynchronized($this->strFolder))
@@ -218,7 +218,7 @@ class Folder extends System
 	 */
 	public function chmod($intChmod)
 	{
-		return $this->Files->chmod($this->strFolder, $intChmod);
+		return Files::getInstance()->chmod($this->strFolder, $intChmod);
 	}
 
 	/**
@@ -238,7 +238,7 @@ class Folder extends System
 			new self($strParent);
 		}
 
-		$return = $this->Files->rename($this->strFolder, $strNewName);
+		$return = Files::getInstance()->rename($this->strFolder, $strNewName);
 
 		// Update the database AFTER the folder has been renamed
 		$syncSource = Dbafs::shouldBeSynchronized($this->strFolder);
@@ -284,7 +284,7 @@ class Folder extends System
 			new self($strParent);
 		}
 
-		$this->Files->rcopy($this->strFolder, $strNewName);
+		Files::getInstance()->rcopy($this->strFolder, $strNewName);
 
 		// Update the database AFTER the folder has been renamed
 		$syncSource = Dbafs::shouldBeSynchronized($this->strFolder);
@@ -317,13 +317,13 @@ class Folder extends System
 		// Check if .public is a directory (see #3465)
 		if (is_dir($this->strRootDir . '/' . $this->strFolder . '/.public'))
 		{
-			throw new \RuntimeException(sprintf('Cannot protect folder "%s" because it contains a directory called ".public"', $this->strFolder));
+			throw new \RuntimeException(\sprintf('Cannot protect folder "%s" because it contains a directory called ".public"', $this->strFolder));
 		}
 
 		// Check if the .public file exists
 		if (!is_file($this->strRootDir . '/' . $this->strFolder . '/.public'))
 		{
-			throw new \RuntimeException(sprintf('Cannot protect folder "%s" because one of its parent folders is public', $this->strFolder));
+			throw new \RuntimeException(\sprintf('Cannot protect folder "%s" because one of its parent folders is public', $this->strFolder));
 		}
 
 		(new File($this->strFolder . '/.public'))->delete();
@@ -337,7 +337,7 @@ class Folder extends System
 		// Check if .public is a directory (see #3465)
 		if (is_dir($this->strRootDir . '/' . $this->strFolder . '/.public'))
 		{
-			throw new \RuntimeException(sprintf('Cannot unprotect folder "%s" because it contains a directory called ".public"', $this->strFolder));
+			throw new \RuntimeException(\sprintf('Cannot unprotect folder "%s" because it contains a directory called ".public"', $this->strFolder));
 		}
 
 		if (!is_file($this->strRootDir . '/' . $this->strFolder . '/.public'))
@@ -384,7 +384,7 @@ class Folder extends System
 		// Check if the .nosync file exists
 		if (!file_exists($this->strRootDir . '/' . $this->strFolder . '/.nosync'))
 		{
-			throw new \RuntimeException(sprintf('Cannot synchronize the folder "%s" because one of its parent folders is unsynchronized', $this->strFolder));
+			throw new \RuntimeException(\sprintf('Cannot synchronize the folder "%s" because one of its parent folders is unsynchronized', $this->strFolder));
 		}
 
 		(new File($this->strFolder . '/.nosync'))->delete();
@@ -450,7 +450,7 @@ class Folder extends System
 
 		foreach (static::scan($this->strRootDir . '/' . $this->strFolder, true) as $strFile)
 		{
-			if (strncmp($strFile, '.', 1) === 0)
+			if (str_starts_with($strFile, '.'))
 			{
 				continue;
 			}
@@ -509,7 +509,7 @@ class Folder extends System
 	public static function scan($strFolder, $blnUncached=false): array
 	{
 		// Add a trailing slash
-		if (substr($strFolder, -1, 1) != '/')
+		if (!str_ends_with($strFolder, '/'))
 		{
 			$strFolder .= '/';
 		}

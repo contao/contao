@@ -14,7 +14,6 @@ use Contao\Controller;
 use Contao\Database;
 use Contao\DcaExtractor;
 use Contao\System;
-use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Compares the existing database structure with the DCA table settings and
@@ -60,7 +59,7 @@ class Installer extends Controller
 			}
 
 			// Fields
-			if (\is_array($v['TABLE_FIELDS']))
+			if (\is_array($v['TABLE_FIELDS'] ?? null))
 			{
 				foreach ($v['TABLE_FIELDS'] as $kk=>$vv)
 				{
@@ -76,7 +75,7 @@ class Installer extends Controller
 			}
 
 			// Create definitions
-			if (\is_array($v['TABLE_CREATE_DEFINITIONS']))
+			if (\is_array($v['TABLE_CREATE_DEFINITIONS'] ?? null))
 			{
 				foreach ($v['TABLE_CREATE_DEFINITIONS'] as $kk=>$vv)
 				{
@@ -92,7 +91,7 @@ class Installer extends Controller
 			}
 
 			// Move auto_increment fields to the end of the array
-			if (\is_array($return['ALTER_ADD']))
+			if (\is_array($return['ALTER_ADD'] ?? null))
 			{
 				foreach (preg_grep('/auto_increment/i', $return['ALTER_ADD']) as $kk=>$vv)
 				{
@@ -101,7 +100,7 @@ class Installer extends Controller
 				}
 			}
 
-			if (\is_array($return['ALTER_CHANGE']))
+			if (\is_array($return['ALTER_CHANGE'] ?? null))
 			{
 				foreach (preg_grep('/auto_increment/i', $return['ALTER_CHANGE']) as $kk=>$vv)
 				{
@@ -124,7 +123,7 @@ class Installer extends Controller
 			if (!\in_array($k, $drop))
 			{
 				// Create definitions
-				if (\is_array($v['TABLE_CREATE_DEFINITIONS']))
+				if (\is_array($v['TABLE_CREATE_DEFINITIONS'] ?? null))
 				{
 					foreach ($v['TABLE_CREATE_DEFINITIONS'] as $kk=>$vv)
 					{
@@ -136,7 +135,7 @@ class Installer extends Controller
 				}
 
 				// Fields
-				if (\is_array($v['TABLE_FIELDS']))
+				if (\is_array($v['TABLE_FIELDS'] ?? null))
 				{
 					foreach ($v['TABLE_FIELDS'] as $kk=>$vv)
 					{
@@ -154,8 +153,7 @@ class Installer extends Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['sqlCompileCommands'] as $callback)
 			{
-				$this->import($callback[0]);
-				$return = $this->{$callback[0]}->{$callback[1]}($return);
+				$return = System::importStatic($callback[0])->{$callback[1]}($return);
 			}
 		}
 
@@ -172,7 +170,6 @@ class Installer extends Controller
 		$return = array();
 		$processed = array();
 
-		/** @var SplFileInfo[] $files */
 		$files = System::getContainer()->get('contao.resource_finder')->findIn('dca')->depth(0)->files()->name('*.php');
 
 		foreach ($files as $file)
@@ -200,8 +197,7 @@ class Installer extends Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['sqlGetFromDca'] as $callback)
 			{
-				$this->import($callback[0]);
-				$return = $this->{$callback[0]}->{$callback[1]}($return);
+				$return = System::importStatic($callback[0])->{$callback[1]}($return);
 			}
 		}
 
@@ -215,8 +211,8 @@ class Installer extends Controller
 	 */
 	public function getFromDb()
 	{
-		$this->import(Database::class, 'Database');
-		$tables = preg_grep('/^tl_/', $this->Database->listTables(null, true));
+		$db = Database::getInstance();
+		$tables = preg_grep('/^tl_/', $db->listTables(null, true));
 
 		if (empty($tables))
 		{
@@ -228,7 +224,7 @@ class Installer extends Controller
 
 		foreach ($tables as $table)
 		{
-			$fields = $this->Database->listFields($table, true);
+			$fields = $db->listFields($table, true);
 
 			foreach ($fields as $field)
 			{
@@ -240,9 +236,9 @@ class Installer extends Controller
 					unset($field['index'], $field['origtype']);
 
 					// Field type
-					if ($field['length'])
+					if (isset($field['length']))
 					{
-						$field['type'] .= '(' . $field['length'] . ($field['precision'] ? ',' . $field['precision'] : '') . ')';
+						$field['type'] .= '(' . $field['length'] . (isset($field['precision']) ? ',' . $field['precision'] : '') . ')';
 
 						unset($field['length'], $field['precision']);
 					}
@@ -283,9 +279,8 @@ class Installer extends Controller
 					$index_fields = implode(
 						', ',
 						array_map(
-							static function ($item) use ($quote)
-							{
-								if (strpos($item, '(') === false)
+							static function ($item) use ($quote) {
+								if (!str_contains($item, '('))
 								{
 									return $quote($item);
 								}
@@ -330,8 +325,7 @@ class Installer extends Controller
 		{
 			foreach ($GLOBALS['TL_HOOKS']['sqlGetFromDB'] as $callback)
 			{
-				$this->import($callback[0]);
-				$return = $this->{$callback[0]}->{$callback[1]}($return);
+				$return = System::importStatic($callback[0])->{$callback[1]}($return);
 			}
 		}
 

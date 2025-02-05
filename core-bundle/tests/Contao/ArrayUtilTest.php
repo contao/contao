@@ -39,14 +39,14 @@ class ArrayUtilTest extends TestCase
         $itemObjects = array_map(static fn ($item): \stdClass => (object) ['uuid' => $item], $items);
         $expectedObjects = array_map(static fn ($item): \stdClass => (object) ['uuid' => $item], $expected);
 
-        $this->assertSame(array_map('get_object_vars', $expectedObjects), array_map('get_object_vars', ArrayUtil::sortByOrderField($itemObjects, $order)));
-        $this->assertSame(array_map('get_object_vars', $expectedObjects), array_map('get_object_vars', ArrayUtil::sortByOrderField($itemObjects, serialize($order))));
+        $this->assertSame(array_map(get_object_vars(...), $expectedObjects), array_map(get_object_vars(...), ArrayUtil::sortByOrderField($itemObjects, $order)));
+        $this->assertSame(array_map(get_object_vars(...), $expectedObjects), array_map(get_object_vars(...), ArrayUtil::sortByOrderField($itemObjects, serialize($order))));
 
         $itemObjects = array_map(static fn ($item): \stdClass => (object) ['id' => $item], $items);
         $expectedObjects = array_map(static fn ($item): \stdClass => (object) ['id' => $item], $expected);
 
-        $this->assertSame(array_map('get_object_vars', $expectedObjects), array_map('get_object_vars', ArrayUtil::sortByOrderField($itemObjects, $order, 'id')));
-        $this->assertSame(array_map('get_object_vars', $expectedObjects), array_map('get_object_vars', ArrayUtil::sortByOrderField($itemObjects, serialize($order), 'id')));
+        $this->assertSame(array_map(get_object_vars(...), $expectedObjects), array_map(get_object_vars(...), ArrayUtil::sortByOrderField($itemObjects, $order, 'id')));
+        $this->assertSame(array_map(get_object_vars(...), $expectedObjects), array_map(get_object_vars(...), ArrayUtil::sortByOrderField($itemObjects, serialize($order), 'id')));
 
         $itemFlipped = array_map(static fn () => 'X', array_flip($items));
         $expectedFlipped = array_map(static fn () => 'X', array_flip($expected));
@@ -55,7 +55,7 @@ class ArrayUtilTest extends TestCase
         $this->assertSame($expectedFlipped, ArrayUtil::sortByOrderField($itemFlipped, serialize($order), null, true));
     }
 
-    public function sortByOrderFieldProvider(): \Generator
+    public static function sortByOrderFieldProvider(): iterable
     {
         yield [
             ['a', 'b', 'c'],
@@ -138,7 +138,7 @@ class ArrayUtilTest extends TestCase
                     'foo' => 'bar',
                 ],
             ],
-            $unsorted
+            $unsorted,
         );
     }
 }

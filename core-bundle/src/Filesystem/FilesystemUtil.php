@@ -24,17 +24,17 @@ use Symfony\Component\Uid\Uuid;
 class FilesystemUtil
 {
     /**
-     * Gets all files from a serialized string or array of binary UUIDs like
-     * for instance stored in "tl_content.multiSRC".
+     * Gets all files from a serialized string or array of binary UUIDs like for
+     * instance stored in "tl_content.multiSRC".
      *
      * The following rules apply:
      *  - Invalid or non-existent UUIDs are skipped without producing an error.
      *  - If the UUID points to a directory, its file contents are used (only first level).
      *  - Duplicate files are stripped.
      *
-     * @param string|array<string|null> $sources
+     * @param string|array<string|null>|null $sources
      */
-    public static function listContentsFromSerialized(VirtualFilesystemInterface $storage, array|string $sources): FilesystemItemIterator
+    public static function listContentsFromSerialized(VirtualFilesystemInterface $storage, array|string|null $sources): FilesystemItemIterator
     {
         $uuids = array_filter(StringUtil::deserialize($sources, true));
 
@@ -48,14 +48,14 @@ class FilesystemUtil
      */
     public static function assertIsResource(mixed $contents): void
     {
-        if (false === \is_resource($contents)) {
+        if (!\is_resource($contents)) {
             $type = \gettype($contents);
 
-            throw new \LogicException(sprintf('Invalid stream provided, expected stream resource, received "%s".', $type));
+            throw new \LogicException(\sprintf('Invalid stream provided, expected stream resource, received "%s".', $type));
         }
 
         if ('stream' !== ($type = get_resource_type($contents))) {
-            throw new \LogicException(sprintf('Invalid stream provided, expected stream resource, received resource of type "%s".', $type));
+            throw new \LogicException(\sprintf('Invalid stream provided, expected stream resource, received resource of type "%s".', $type));
         }
     }
 
@@ -103,7 +103,7 @@ class FilesystemUtil
             try {
                 $uuidObject = Uuid::isValid($uuid) ? Uuid::fromString($uuid) : Uuid::fromBinary($uuid);
 
-                if (null === ($item = $storage->get($uuidObject))) {
+                if (!$item = $storage->get($uuidObject)) {
                     continue;
                 }
             } catch (\InvalidArgumentException|UnableToResolveUuidException) {

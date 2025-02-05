@@ -17,22 +17,6 @@
         <source>Here you can define the news archive permissions.</source>
         <target>Tutaj możesz ustalić uprawnienia archiwum aktualności.</target>
       </trans-unit>
-      <trans-unit id="tl_user.newsfeeds.0">
-        <source>Allowed news feeds</source>
-        <target>Dozwolone kanały RSS aktualności</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeeds.1">
-        <source>Here you can grant access to one or more news feeds.</source>
-        <target>Tutaj możesz nadać dostęp dla jednego lub więcej kanałów aktualności.</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeedp.0">
-        <source>News feed permissions</source>
-        <target>Uprawnienia kanałów RSS aktualności</target>
-      </trans-unit>
-      <trans-unit id="tl_user.newsfeedp.1">
-        <source>Here you can define the news feed permissions.</source>
-        <target>Tutaj możesz ustalić uprawnienia kanału aktualności.</target>
-      </trans-unit>
       <trans-unit id="tl_user.news_legend">
         <source>News permissions</source>
         <target>Zezwolenia aktualności</target>

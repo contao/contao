@@ -1,5 +1,0 @@
-{
-    "require": {
-        "contao/monorepo-tools": "dev-main"
-    }
-}

@@ -21,7 +21,6 @@ use BaconQrCode\Renderer\RendererStyle\Fill;
 use Contao\BackendUser;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Tests\TestCase;
-use DASPRiD\Enum\AbstractEnum;
 use OTPHP\TOTP;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +29,7 @@ class AuthenticatorTest extends TestCase
 {
     protected function tearDown(): void
     {
-        $this->resetStaticProperties([SquareModule::class, Fill::class, EyeFill::class, Encoder::class, AbstractEnum::class, Version::class, Close::class]);
+        $this->resetStaticProperties([SquareModule::class, Fill::class, EyeFill::class, Encoder::class, Version::class, Close::class]);
 
         parent::tearDown();
     }
@@ -90,19 +89,19 @@ class AuthenticatorTest extends TestCase
         $authenticator = new Authenticator();
 
         $this->assertSame(
-            sprintf(
+            \sprintf(
                 'otpauth://totp/example.com:foobar@example.com?secret=%s&issuer=example.com',
-                Base32::encodeUpperUnpadded($secret)
+                Base32::encodeUpperUnpadded($secret),
             ),
-            $authenticator->getProvisionUri($user, $request)
+            $authenticator->getProvisionUri($user, $request),
         );
 
         $this->assertNotSame(
-            sprintf(
+            \sprintf(
                 'otpauth://totp/example.com:foobar@example.com?secret=%s&issuer=example.com',
-                Base32::encodeUpperUnpadded('foobar')
+                Base32::encodeUpperUnpadded('foobar'),
             ),
-            $authenticator->getProvisionUri($user, $request)
+            $authenticator->getProvisionUri($user, $request),
         );
     }
 

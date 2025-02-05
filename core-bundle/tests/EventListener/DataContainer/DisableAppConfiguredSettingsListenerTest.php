@@ -70,7 +70,7 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                 'adminEmail' => 'admin@example.org',
                 'dateFormat' => 'd.M.Y',
                 'fooBar' => false,
-            ]
+            ],
         );
         $listener->onLoadCallback();
 
@@ -103,7 +103,7 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                     'xlabel' => [['contao.listener.data_container.disable_app_configured_settings', 'renderHelpIcon']],
                 ],
             ],
-            $GLOBALS['TL_DCA']['tl_settings']['fields']
+            $GLOBALS['TL_DCA']['tl_settings']['fields'],
         );
     }
 
@@ -120,18 +120,18 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->willReturn('<img src="system/themes/icons/show.svg" alt="" title="title">')
+            ->willReturn('<img src="system/themes/icons/info.svg" alt="" data-contao--tooltips-target="tooltip">')
         ;
 
         $listener = $this->createListener(null, $translator, [Image::class => $imageAdapter]);
 
         $this->assertSame(
-            '<img src="system/themes/icons/show.svg" alt="" title="title">',
-            $listener->renderHelpIcon()
+            ' <img src="system/themes/icons/info.svg" alt="" data-contao--tooltips-target="tooltip">',
+            $listener->renderHelpIcon(),
         );
     }
 
-    private function createListener(array $localConfig = null, TranslatorInterface $translator = null, array $adapters = []): DisableAppConfiguredSettingsListener
+    private function createListener(array|null $localConfig = null, TranslatorInterface|null $translator = null, array $adapters = []): DisableAppConfiguredSettingsListener
     {
         $this->mockContaoFramework()->initialize();
 

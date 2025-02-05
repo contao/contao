@@ -27,8 +27,10 @@ use Twig\Environment;
 #[AsCallback(table: 'tl_undo', target: 'list.label.label')]
 class LabelListener
 {
-    public function __construct(private ContaoFramework $framework, private Environment $twig)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly Environment $twig,
+    ) {
     }
 
     public function __invoke(array $row, string $label, DataContainer $dc): string
@@ -42,8 +44,8 @@ class LabelListener
         $controller->loadDataContainer($table);
 
         return $this->twig->render(
-            '@ContaoCore/Backend/be_undo_label.html.twig',
-            $this->getTemplateData($table, $row, $originalRow)
+            '@Contao/backend/undo/label.html.twig',
+            $this->getTemplateData($table, $row, $originalRow),
         );
     }
 

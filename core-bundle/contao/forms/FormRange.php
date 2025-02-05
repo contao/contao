@@ -14,7 +14,6 @@ namespace Contao;
  * Class FormRange
  *
  * @property string  $value
- * @property string  $type
  * @property boolean $mandatory
  * @property integer $min
  * @property integer $max
@@ -106,12 +105,12 @@ class FormRange extends Widget
 	 */
 	public function generate()
 	{
-		return sprintf(
+		return \sprintf(
 			'<input type="%s" name="%s" id="ctrl_%s" class="range%s" value="%s"%s%s',
 			$this->type,
 			$this->strName,
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			StringUtil::specialchars($this->value),
 			$this->getAttributes(),
 			$this->strTagEnding

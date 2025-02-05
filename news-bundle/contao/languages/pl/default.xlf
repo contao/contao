@@ -51,9 +51,11 @@
       </trans-unit>
       <trans-unit id="PTY.news_feed.0">
         <source>News feed</source>
+        <target>Kanał RSS aktualności</target>
       </trans-unit>
       <trans-unit id="PTY.news_feed.1">
         <source>Create an RSS, Atom or JSON feed from your news archives.</source>
+        <target>Utwórz kanał RSS, Atom lub JSON z archiwum aktualności.</target>
       </trans-unit>
     </body>
   </file>

@@ -102,7 +102,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 				}
 				else
 				{
-					$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
+					$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
 				}
 			}
 
@@ -138,15 +138,15 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 		{
 			if ($file['error'] == 1 || $file['error'] == 2)
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb_readable));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb_readable));
 			}
 			elseif ($file['error'] == 3)
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filepartial'], $file['name']));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filepartial'], $file['name']));
 			}
 			elseif ($file['error'] > 0)
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileerror'], $file['error'], $file['name']));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['fileerror'], $file['error'], $file['name']));
 			}
 
 			unset($_FILES[$this->strName]);
@@ -157,7 +157,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 		// File is too big
 		if ($file['size'] > $maxlength_kb)
 		{
-			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb_readable));
+			$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $maxlength_kb_readable));
 			unset($_FILES[$this->strName]);
 
 			return;
@@ -169,7 +169,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 		// File type is not allowed
 		if (!\in_array($objFile->extension, $uploadTypes))
 		{
-			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
+			$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filetype'], $objFile->extension));
 			unset($_FILES[$this->strName]);
 
 			return;
@@ -182,7 +182,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 			// Image exceeds maximum image width
 			if ($intImageWidth > 0 && $arrImageSize[0] > $intImageWidth)
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filewidth'], $file['name'], $intImageWidth));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filewidth'], $file['name'], $intImageWidth));
 				unset($_FILES[$this->strName]);
 
 				return;
@@ -193,7 +193,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 			// Image exceeds maximum image height
 			if ($intImageHeight > 0 && $arrImageSize[1] > $intImageHeight)
 			{
-				$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], $file['name'], $intImageHeight));
+				$this->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], $file['name'], $intImageHeight));
 				unset($_FILES[$this->strName]);
 
 				return;
@@ -212,11 +212,11 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 				// Overwrite the upload folder with user's home directory
 				if ($this->useHomeDir && System::getContainer()->get('contao.security.token_checker')->hasFrontendUser())
 				{
-					$this->import(FrontendUser::class, 'User');
+					$user = FrontendUser::getInstance();
 
-					if ($this->User->assignDir && $this->User->homeDir)
+					if ($user->assignDir && $user->homeDir)
 					{
-						$intUploadFolder = $this->User->homeDir;
+						$intUploadFolder = $user->homeDir;
 					}
 				}
 
@@ -234,14 +234,12 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 				// Store the file if the upload folder exists
 				if ($strUploadFolder && is_dir($projectDir . '/' . $strUploadFolder))
 				{
-					$this->import(Files::class, 'Files');
-
 					// Do not overwrite existing files
 					if ($this->doNotOverwrite && file_exists($projectDir . '/' . $strUploadFolder . '/' . $file['name']))
 					{
 						$offset = 1;
 
-						$arrAll = Folder::scan($projectDir . '/' . $strUploadFolder);
+						$arrAll = Folder::scan($projectDir . '/' . $strUploadFolder, true);
 						$arrFiles = preg_grep('/^' . preg_quote($objFile->filename, '/') . '.*\.' . preg_quote($objFile->extension, '/') . '/', $arrAll);
 
 						foreach ($arrFiles as $strFile)
@@ -249,7 +247,7 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 							if (preg_match('/__[0-9]+\.' . preg_quote($objFile->extension, '/') . '$/', $strFile))
 							{
 								$strFile = str_replace('.' . $objFile->extension, '', $strFile);
-								$intValue = (int) substr($strFile, (strrpos($strFile, '_') + 1));
+								$intValue = (int) substr($strFile, strrpos($strFile, '_') + 1);
 
 								$offset = max($offset, $intValue);
 							}
@@ -259,8 +257,9 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 					}
 
 					// Move the file to its destination
-					$this->Files->move_uploaded_file($file['tmp_name'], $strUploadFolder . '/' . $file['name']);
-					$this->Files->chmod($strUploadFolder . '/' . $file['name'], 0666 & ~umask());
+					$filesObj = Files::getInstance();
+					$filesObj->move_uploaded_file($file['tmp_name'], $strUploadFolder . '/' . $file['name']);
+					$filesObj->chmod($strUploadFolder . '/' . $file['name'], 0666 & ~umask());
 
 					$strUuid = null;
 					$strFile = $strUploadFolder . '/' . $file['name'];
@@ -307,11 +306,11 @@ class FormUpload extends Widget implements UploadableWidgetInterface
 	 */
 	public function generate()
 	{
-		return sprintf(
+		return \sprintf(
 			'<input type="file" name="%s" id="ctrl_%s" class="upload%s"%s%s',
 			$this->strName,
 			$this->strId,
-			($this->strClass ? ' ' . $this->strClass : ''),
+			$this->strClass ? ' ' . $this->strClass : '',
 			$this->getAttributes(),
 			$this->strTagEnding
 		);

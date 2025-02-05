@@ -25,7 +25,7 @@ trait BackendTemplateTrait
 		$container = System::getContainer();
 
 		return
-			'var Contao={'
+			'var Contao={...(Contao ?? {}), ...{'
 				. 'theme:"' . Backend::getTheme() . '",'
 				. 'lang:{'
 					. 'close:"' . $GLOBALS['TL_LANG']['MSC']['close'] . '",'
@@ -33,7 +33,10 @@ trait BackendTemplateTrait
 					. 'collapse:"' . $GLOBALS['TL_LANG']['MSC']['collapseNode'] . '",'
 					. 'expand:"' . $GLOBALS['TL_LANG']['MSC']['expandNode'] . '",'
 					. 'loading:"' . $GLOBALS['TL_LANG']['MSC']['loadingData'] . '",'
-					. 'apply:"' . $GLOBALS['TL_LANG']['MSC']['apply'] . '"'
+					. 'apply:"' . $GLOBALS['TL_LANG']['MSC']['apply'] . '",'
+					. 'noResults:"' . $GLOBALS['TL_LANG']['MSC']['noResults'] . '",'
+					. 'noOptions:"' . $GLOBALS['TL_LANG']['MSC']['noOptions'] . '",'
+					. 'removeItem:"' . $GLOBALS['TL_LANG']['MSC']['removeItem'] . '"'
 				. '},'
 				. 'script_url:"' . $container->get('contao.assets.assets_context')->getStaticUrl() . '",'
 				. 'path:"' . Environment::get('path') . '",'
@@ -42,7 +45,7 @@ trait BackendTemplateTrait
 				. '},'
 				. 'request_token:"' . System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue() . '",'
 				. 'referer_id:"' . $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id') . '"'
-			. '};';
+			. '}};';
 	}
 
 	/**

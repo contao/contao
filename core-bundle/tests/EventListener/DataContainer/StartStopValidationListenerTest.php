@@ -22,7 +22,7 @@ class StartStopValidationListenerTest extends TestCase
     /**
      * @dataProvider valueProvider
      */
-    public function testValidatesStartStop(array $values, array $currentRecord = null, bool $expectException = false): void
+    public function testValidatesStartStop(array $values, array|null $currentRecord = null, bool $expectException = false): void
     {
         $translator = $this->createMock(TranslatorInterface::class);
 
@@ -61,7 +61,7 @@ class StartStopValidationListenerTest extends TestCase
         $listener($values, $dc);
     }
 
-    public function valueProvider(): \Generator
+    public static function valueProvider(): iterable
     {
         yield 'Start and stop is not submitted' => [
             ['foo' => 'bar'],

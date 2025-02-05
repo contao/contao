@@ -1,0 +1,10 @@
+# Contrary to what the name might suggest, this file says nothing about who
+# "owns" Contao. The software is based on contributions from various developers
+# and and the intellectual property of each developer remains their own.
+
+# We use this file so that GitHub automatically requests a review from someone
+# when a pull request is added that modifies code that they "own". This can be
+# code that they once contributed, but also code that they feel responsible for
+# and want to stay informed about changes.
+
+* @leofeyer

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Crawl\Monolog;
 
 use Monolog\Handler\StreamHandler;
+use Monolog\LogRecord;
 use Terminal42\Escargot\CrawlUri;
 
 class CrawlCsvLogHandler extends StreamHandler
@@ -33,44 +34,39 @@ class CrawlCsvLogHandler extends StreamHandler
         return $this;
     }
 
-    protected function streamWrite($stream, array $record): void
+    protected function streamWrite($stream, LogRecord $record): void
     {
-        if (!isset($record['context']['source'])) {
+        if (!isset($record->context['source'])) {
             return;
         }
 
-        if ($this->filterSource && $this->filterSource !== $record['context']['source']) {
+        if ($this->filterSource && $this->filterSource !== $record->context['source']) {
             return;
         }
 
-        /** @var CrawlUri|null $crawlUri */
-        $crawlUri = $record['context']['crawlUri'] ?? null;
+        $crawlUri = null;
+
+        if (($record->context['crawlUri'] ?? null) instanceof CrawlUri) {
+            $crawlUri = $record->context['crawlUri'];
+        }
 
         $stat = fstat($stream);
         $size = $stat['size'];
 
         if (0 === $size) {
-            fputcsv($stream, [
-                'Time',
-                'Source',
-                'URI',
-                'Found on URI',
-                'Found on level',
-                'Tags',
-                'Message',
-            ]);
+            fputcsv($stream, ['Time', 'Source', 'URI', 'Found on URI', 'Found on level', 'Tags', 'Message'], ',', '"', '');
         }
 
         $columns = [
-            $record['datetime']->format(self::DATETIME_FORMAT),
-            $record['context']['source'],
-            null === $crawlUri ? '---' : (string) $crawlUri->getUri(),
-            null === $crawlUri ? '---' : (string) $crawlUri->getFoundOn(),
-            null === $crawlUri ? '---' : $crawlUri->getLevel(),
-            null === $crawlUri ? '---' : implode(', ', $crawlUri->getTags()),
-            preg_replace('/\r\n|\n|\r/', ' ', $record['message']),
+            $record->datetime->format(self::DATETIME_FORMAT),
+            $record->context['source'],
+            !$crawlUri ? '---' : (string) $crawlUri->getUri(),
+            !$crawlUri ? '---' : (string) $crawlUri->getFoundOn(),
+            !$crawlUri ? '---' : $crawlUri->getLevel(),
+            !$crawlUri ? '---' : implode(', ', $crawlUri->getTags()),
+            preg_replace('/\r\n|\n|\r/', ' ', $record->message),
         ];
 
-        fputcsv($stream, $columns);
+        fputcsv($stream, $columns, ',', '"', '');
     }
 }

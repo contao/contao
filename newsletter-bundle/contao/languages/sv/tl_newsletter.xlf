@@ -162,8 +162,8 @@
         <target>Skickat</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.sentOn">
-        <source>Sent on %s</source>
-        <target>Skickat den %s</target>
+        <source>Sent at %s</source>
+        <target>Skickades kl %s</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.notSent">
         <source>Not sent yet</source>

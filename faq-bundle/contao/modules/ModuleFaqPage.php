@@ -76,7 +76,6 @@ class ModuleFaqPage extends Module
 			return;
 		}
 
-		/** @var PageModel $objPage */
 		global $objPage;
 
 		$tags = array();
@@ -100,7 +99,7 @@ class ModuleFaqPage extends Module
 					->createFigureBuilder()
 					->from($objFaq->singleSRC)
 					->setSize($objFaq->size)
-					->setMetadata($objFaq->getOverwriteMetadata())
+					->setOverwriteMetadata($objFaq->getOverwriteMetadata())
 					->setLightboxGroupIdentifier('lightbox[' . substr(md5('mod_faqpage_' . $objFaq->id), 0, 6) . ']')
 					->enableLightbox($objFaq->fullsize)
 					->buildIfResourceExists();
@@ -118,21 +117,19 @@ class ModuleFaqPage extends Module
 
 			$strAuthor = '';
 
-			/** @var UserModel $objAuthor */
-			if (($objAuthor = $objFaq->getRelated('author')) instanceof UserModel)
+			if ($objAuthor = UserModel::findById($objFaq->author))
 			{
 				$strAuthor = $objAuthor->name;
 			}
 
-			$objTemp->info = sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
+			$objTemp->info = \sprintf($GLOBALS['TL_LANG']['MSC']['faqCreatedBy'], Date::parse($objPage->dateFormat, $objFaq->tstamp), $strAuthor);
 
-			/** @var FaqCategoryModel $objPid */
-			$objPid = $objFaq->getRelated('pid');
+			if (($objPid = FaqCategoryModel::findById($objFaq->pid)) && empty($arrFaqs[$objFaq->pid]))
+			{
+				$arrFaqs[$objFaq->pid] = $objPid->row();
+			}
 
-			// Order by PID
 			$arrFaqs[$objFaq->pid]['items'][] = $objTemp;
-			$arrFaqs[$objFaq->pid]['headline'] = $objPid->headline;
-			$arrFaqs[$objFaq->pid]['title'] = $objPid->title;
 
 			$tags[] = 'contao.db.tl_faq.' . $objFaq->id;
 		}
@@ -148,9 +145,8 @@ class ModuleFaqPage extends Module
 		$this->Template->request = Environment::get('requestUri');
 		$this->Template->topLink = $GLOBALS['TL_LANG']['MSC']['backToTop'];
 
-		$this->Template->getSchemaOrgData = static function () use ($objFaqs)
-		{
-			return ModuleFaq::getSchemaOrgData($objFaqs);
+		$this->Template->getSchemaOrgData = function () use ($objFaqs) {
+			return ModuleFaq::getSchemaOrgData($objFaqs, '#/schema/faq/' . $this->id);
 		};
 	}
 }

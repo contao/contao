@@ -30,7 +30,7 @@ class AddNodeTest extends TestCase
             new PrintNode(new ConstantExpression('foobar', 42), 42),
             'identifier',
             DocumentLocation::endOfBody,
-            1
+            1,
         );
 
         $compiler = new Compiler($this->createMock(Environment::class));
@@ -39,9 +39,15 @@ class AddNodeTest extends TestCase
         $expectedSource = <<<'SOURCE'
             if ($this->env->isDebug()) { ob_start(); } else { ob_start(static function () { return ''; }); }
             try {
-                // line 42
-                echo "foobar";
-                $__contao_document_content = ob_get_contents();
+                $__contao_document_content = '';
+                foreach((function () use (&$context, $macros, $blocks) {
+                    // line 42
+                    yield "foobar";
+                    yield '';
+                })() as $__contao_document_chunk) {
+                    $__contao_document_content .= ob_get_contents() . $__contao_document_chunk;
+                    ob_clean();
+                }
             } finally { ob_end_clean(); }
             $this->extensions["Contao\\CoreBundle\\Twig\\Extension\\ContaoExtension"]->addDocumentContent(
                 "identifier", $__contao_document_content, \Contao\CoreBundle\Twig\ResponseContext\DocumentLocation::endOfBody

@@ -24,7 +24,7 @@ class FragmentController extends AbstractFragmentController
         return $this->createTemplate($model);
     }
 
-    public function doRender(string|null $view = null, array $parameters = [], Response $response = null): Response
+    public function doRender(string|null $view = null, array $parameters = [], Response|null $response = null): Response
     {
         return $this->render($view, $parameters, $response);
     }

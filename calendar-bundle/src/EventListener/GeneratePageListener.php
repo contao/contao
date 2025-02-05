@@ -13,10 +13,10 @@ declare(strict_types=1);
 namespace Contao\CalendarBundle\EventListener;
 
 use Contao\CalendarFeedModel;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Environment;
 use Contao\LayoutModel;
-use Contao\Model\Collection;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\Template;
@@ -24,9 +24,10 @@ use Contao\Template;
 /**
  * @internal
  */
+#[AsHook('generatePage')]
 class GeneratePageListener
 {
-    public function __construct(private ContaoFramework $framework)
+    public function __construct(private readonly ContaoFramework $framework)
     {
     }
 
@@ -45,7 +46,7 @@ class GeneratePageListener
 
         $adapter = $this->framework->getAdapter(CalendarFeedModel::class);
 
-        if (!($feeds = $adapter->findByIds($calendarfeeds)) instanceof Collection) {
+        if (!$feeds = $adapter->findByIds($calendarfeeds)) {
             return;
         }
 
@@ -54,9 +55,9 @@ class GeneratePageListener
 
         foreach ($feeds as $feed) {
             $GLOBALS['TL_HEAD'][] = $template->generateFeedTag(
-                sprintf('%sshare/%s.xml', $feed->feedBase ?: $environment->get('base'), $feed->alias),
+                \sprintf('%sshare/%s.xml', $feed->feedBase ?: $environment->get('base'), $feed->alias),
                 $feed->format,
-                $feed->title
+                $feed->title,
             );
         }
     }

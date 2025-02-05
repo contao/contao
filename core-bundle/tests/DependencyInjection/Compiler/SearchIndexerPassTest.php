@@ -24,14 +24,14 @@ class SearchIndexerPassTest extends TestCase
     {
         $container = new ContainerBuilder();
 
-        $delegatingDefinition = new Definition();
-        $delegatingDefinition->addTag('contao.search_indexer');
-        $container->setDefinition('contao.search.delegating_indexer', $delegatingDefinition);
-
         $definition = new Definition();
         $definition->addTag('contao.search_indexer');
-        $container->setDefinition('contao.search.super-indexer', $definition);
 
+        $delegatingDefinition = new Definition();
+        $delegatingDefinition->addTag('contao.search_indexer');
+
+        $container->setDefinition('contao.search.super-indexer', $definition);
+        $container->setDefinition('contao.search.delegating_indexer', $delegatingDefinition);
         $container->setDefinition('contao.listener.search_index', new Definition());
         $container->setDefinition('contao.crawl.escargot.search_index_subscriber', new Definition());
 
@@ -56,8 +56,8 @@ class SearchIndexerPassTest extends TestCase
 
         $delegatingDefinition = new Definition();
         $delegatingDefinition->addTag('contao.search_indexer');
-        $container->setDefinition('contao.search.delegating_indexer', $delegatingDefinition);
 
+        $container->setDefinition('contao.search.delegating_indexer', $delegatingDefinition);
         $container->setDefinition('contao.listener.search_index', new Definition());
         $container->setDefinition('contao.crawl.escargot.search_index_subscriber', new Definition());
 

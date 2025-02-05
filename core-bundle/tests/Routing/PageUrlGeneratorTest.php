@@ -27,10 +27,7 @@ class PageUrlGeneratorTest extends TestCase
 {
     private PageUrlGenerator $generator;
 
-    /**
-     * @var PageRegistry&MockObject
-     */
-    private PageRegistry $pageRegistry;
+    private PageRegistry&MockObject $pageRegistry;
 
     protected function setUp(): void
     {
@@ -68,7 +65,7 @@ class PageUrlGeneratorTest extends TestCase
         $url = $this->generator->generate(
             PageRoute::PAGE_BASED_ROUTE_NAME,
             [RouteObjectInterface::CONTENT_OBJECT => $page],
-            UrlGeneratorInterface::ABSOLUTE_URL
+            UrlGeneratorInterface::ABSOLUTE_URL,
         );
 
         $this->assertSame('https://www.example.com/some-language/foobar.html', $url);
@@ -100,7 +97,7 @@ class PageUrlGeneratorTest extends TestCase
         $url = $this->generator->generate(
             PageRoute::PAGE_BASED_ROUTE_NAME,
             [RouteObjectInterface::CONTENT_OBJECT => $page],
-            UrlGeneratorInterface::ABSOLUTE_URL
+            UrlGeneratorInterface::ABSOLUTE_URL,
         );
 
         $this->assertSame('https://www.example.com/en/', $url);
@@ -132,7 +129,7 @@ class PageUrlGeneratorTest extends TestCase
         $url = $this->generator->generate(
             PageRoute::PAGE_BASED_ROUTE_NAME,
             [RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => null],
-            UrlGeneratorInterface::ABSOLUTE_URL
+            UrlGeneratorInterface::ABSOLUTE_URL,
         );
 
         $this->assertSame('https://www.example.com/en/', $url);
@@ -164,7 +161,7 @@ class PageUrlGeneratorTest extends TestCase
         $url = $this->generator->generate(
             PageRoute::PAGE_BASED_ROUTE_NAME,
             [RouteObjectInterface::CONTENT_OBJECT => $page, 'parameters' => '/foobar'],
-            UrlGeneratorInterface::ABSOLUTE_URL
+            UrlGeneratorInterface::ABSOLUTE_URL,
         );
 
         $this->assertSame('https://www.example.com/en/index/foobar.html', $url);
@@ -196,7 +193,7 @@ class PageUrlGeneratorTest extends TestCase
         $url = $this->generator->generate(
             PageRoute::PAGE_BASED_ROUTE_NAME,
             [RouteObjectInterface::CONTENT_OBJECT => $page],
-            UrlGeneratorInterface::ABSOLUTE_URL
+            UrlGeneratorInterface::ABSOLUTE_URL,
         );
 
         $this->assertSame('https://www.example.com/en/index/foo.html', $url);
@@ -231,7 +228,7 @@ class PageUrlGeneratorTest extends TestCase
             $this->generator->generate(
                 PageRoute::PAGE_BASED_ROUTE_NAME,
                 [RouteObjectInterface::CONTENT_OBJECT => $page, 'bar' => 'baz'],
-                UrlGeneratorInterface::NETWORK_PATH
+                UrlGeneratorInterface::NETWORK_PATH,
             );
         } catch (RouteParametersException $exception) {
             $this->assertSame($route, $exception->getRoute());

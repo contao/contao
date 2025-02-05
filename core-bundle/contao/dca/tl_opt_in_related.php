@@ -18,6 +18,7 @@ $GLOBALS['TL_DCA']['tl_opt_in_related'] = array
 			'keys' => array
 			(
 				'id' => 'primary',
+				'pid' => 'index',
 				'relTable,relId' => 'index'
 			)
 		)

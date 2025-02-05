@@ -29,11 +29,10 @@ use Symfony\Component\Filesystem\Path;
  */
 class FilesystemConfiguration
 {
-    private AdapterDefinitionFactory $adapterDefinitionFactory;
-
-    public function __construct(private ContainerBuilder $container)
-    {
-        $this->adapterDefinitionFactory = new AdapterDefinitionFactory();
+    public function __construct(
+        private readonly ContainerBuilder $container,
+        private readonly AdapterDefinitionFactory|null $adapterDefinitionFactory = new AdapterDefinitionFactory(),
+    ) {
     }
 
     public function getContainer(): ContainerBuilder
@@ -44,8 +43,8 @@ class FilesystemConfiguration
     /**
      * Adds another new VirtualFilesystem service.
      *
-     * Setting the name to "foo" will create a "contao.filesystem.virtual.foo"
-     * service and additionally enable constructor injection with an argument
+     * Setting the name to "foo" will create a "contao.filesystem.virtual.foo" service
+     * and additionally enable constructor injection with an argument
      * "VirtualFilesystemInterface $fooStorage" if autowiring is available.
      *
      * @return Definition the newly created definition
@@ -53,15 +52,17 @@ class FilesystemConfiguration
     public function addVirtualFilesystem(string $name, string $prefix, bool $readonly = false): Definition
     {
         if (null !== $this->getVirtualFilesystem($name)) {
-            throw new InvalidConfigurationException(sprintf('A virtual filesystem with the name "%s" is already defined.', $name));
+            throw new InvalidConfigurationException(\sprintf('A virtual filesystem with the name "%s" is already defined.', $name));
         }
 
         $definition = new Definition(VirtualFilesystem::class, [$prefix, $readonly]);
         $definition->setFactory(new Reference('contao.filesystem.virtual_factory'));
         $definition->addTag('contao.virtual_filesystem', ['name' => $name, 'prefix' => $prefix]);
 
+        $aliasName = lcfirst(Container::camelize($name));
+
         $this->container->setDefinition($id = "contao.filesystem.virtual.$name", $definition);
-        $this->container->registerAliasForArgument($id, VirtualFilesystemInterface::class, "{$name}Storage");
+        $this->container->registerAliasForArgument($id, VirtualFilesystemInterface::class, "{$aliasName}Storage");
 
         return $definition;
     }
@@ -69,24 +70,24 @@ class FilesystemConfiguration
     /**
      * Mounts a new Flysystem adapter to the virtual filesystem.
      *
-     * The $adapter and $options can be set analogous to the configuration of
-     * the Flysystem Symfony bundle. Alternatively you can pass in an id of an
-     * already existing filesystem adapter service.
+     * The $adapter and $options can be set analogous to the configuration of the
+     * Flysystem Symfony bundle. Alternatively you can pass in an id of an already
+     * existing filesystem adapter service.
      *
      * @see https://github.com/thephpleague/flysystem-bundle#basic-usage
      *
-     * The $mountPath must be a path relative to and inside the project root
-     * (e.g. "files/foo" or "assets/images").
+     * The $mountPath must be a path relative to and inside the project root (e.g.
+     * "files/foo" or "assets/images").
      *
-     * If you do not set a name, the id/alias for the adapter service will be
-     * derived from the mount path.
+     * If you do not set a name, the id/alias for the adapter service will be derived
+     * from the mount path.
      */
-    public function mountAdapter(string $adapter, array $options, string $mountPath, string $name = null): self
+    public function mountAdapter(string $adapter, array $options, string $mountPath, string|null $name = null): self
     {
         $name ??= str_replace(['.', '/', '-'], '_', Container::underscore($mountPath));
         $adapterId = "contao.filesystem.adapter.$name";
 
-        if (null !== ($adapterDefinition = $this->adapterDefinitionFactory->createDefinition($adapter, $options))) {
+        if ($adapterDefinition = $this->adapterDefinitionFactory->createDefinition($adapter, $options)) {
             // Native adapter
             $this->container
                 ->setDefinition($adapterId, $adapterDefinition)
@@ -111,18 +112,16 @@ class FilesystemConfiguration
     /**
      * Shortcut method to mount a filesystem path to the virtual filesystem.
      *
-     * If you want to use arbitrary adapters or options, please use
-     * mountAdapter() instead.
+     * If you want to use arbitrary adapters or options, please use mountAdapter() instead.
      *
-     * The $mountPath must be a path relative to and inside the project root
-     * (e.g. "files/foo" or "assets/images"); the $filesystemPath can either
-     * be absolute or relative to the project root and may contain
-     * placeholders (%name%).
+     * The $mountPath must be a path relative to and inside the project root (e.g.
+     * "files/foo" or "assets/images"); the $filesystemPath can either be absolute or
+     * relative to the project root and may contain placeholders (%name%).
      *
-     * If you do not set a name, the id for the adapter service will be derived
-     * from the mount path.
+     * If you do not set a name, the id for the adapter service will be derived from
+     * the mount path.
      */
-    public function mountLocalAdapter(string $filesystemPath, string $mountPath, string $name = null): self
+    public function mountLocalAdapter(string $filesystemPath, string $mountPath, string|null $name = null): self
     {
         $path = Path::isAbsolute($filesystemPath)
             ? Path::canonicalize($filesystemPath)
@@ -137,7 +136,7 @@ class FilesystemConfiguration
                 'skip_links' => true,
             ],
             Path::normalize($mountPath),
-            $name
+            $name,
         );
 
         return $this;
@@ -146,8 +145,8 @@ class FilesystemConfiguration
     /**
      * Registers a custom DBAFS service definition.
      *
-     * This is advanced stuff. If you want to use the default implementation,
-     * please use addDefaultDbafs() instead.
+     * This is advanced stuff. If you want to use the default implementation, please
+     * use addDefaultDbafs() instead.
      */
     public function registerDbafs(Definition $dbafs, string $pathPrefix): self
     {
@@ -162,22 +161,21 @@ class FilesystemConfiguration
     /**
      * Registers a DBAFS service with the default implementation.
      *
-     * If you want to fine tune settings (e.g. adjust the bulk insert size or
-     * the maximum file size) add method calls to the definition returned by
-     * this method.
+     * If you want to fine tune settings (e.g. adjust the bulk insert size or the
+     * maximum file size) add method calls to the definition returned by this method.
      *
      * @return Definition the newly created definition
      */
     public function addDefaultDbafs(string $virtualFilesystemName, string $table, string $hashFunction = 'md5', bool $useLastModified = true): Definition
     {
         if (null === ($virtualFilesystem = $this->getVirtualFilesystem($virtualFilesystemName))) {
-            throw new InvalidConfigurationException(sprintf('A virtual filesystem with the name "%s" does not exist.', $virtualFilesystemName));
+            throw new InvalidConfigurationException(\sprintf('A virtual filesystem with the name "%s" does not exist.', $virtualFilesystemName));
         }
 
         // Add an individual hash generator
         $this->container->setDefinition(
             $hashGeneratorId = "contao.filesystem.hash_generator.$virtualFilesystemName",
-            new Definition(HashGenerator::class, [$hashFunction, $useLastModified])
+            new Definition(HashGenerator::class, [$hashFunction, $useLastModified]),
         );
 
         // Add the DBAFS service
@@ -185,7 +183,7 @@ class FilesystemConfiguration
 
         $definition = new Definition(
             Dbafs::class,
-            [new Reference($virtualFilesystemId), new Reference($hashGeneratorId), $table]
+            [new Reference($virtualFilesystemId), new Reference($hashGeneratorId), $table],
         );
 
         $definition->setFactory(new Reference('contao.filesystem.dbafs_factory'));
@@ -194,8 +192,8 @@ class FilesystemConfiguration
 
         $this->container->setDefinition("contao.filesystem.dbafs.$virtualFilesystemName", $definition);
 
-        // Register the DBAFS in the DbafsManager using the same prefix as the
-        // associated virtual filesystem
+        // Register the DBAFS in the DbafsManager using the same prefix as the associated
+        // virtual filesystem
         $this->registerDbafs($definition, $prefix);
 
         return $definition;

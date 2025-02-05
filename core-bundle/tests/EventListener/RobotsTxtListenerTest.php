@@ -16,6 +16,7 @@ use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\EventListener\RobotsTxtListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use Symfony\Bundle\WebProfilerBundle\EventListener\WebDebugToolbarListener;
 use Symfony\Component\HttpFoundation\Request;
 use webignition\RobotsTxt\Directive\Directive;
 use webignition\RobotsTxt\DirectiveList\DirectiveList;
@@ -28,7 +29,7 @@ class RobotsTxtListenerTest extends TestCase
     /**
      * @dataProvider disallowProvider
      */
-    public function testRobotsTxt(string $providedRobotsTxt, string $expectedRobotsTxt): void
+    public function testRobotsTxt(string $providedRobotsTxt, bool|null $withWebProfiler, string $expectedRobotsTxt): void
     {
         $rootPage = $this->mockClassWithProperties(PageModel::class);
         $rootPage->id = 42;
@@ -36,26 +37,29 @@ class RobotsTxtListenerTest extends TestCase
         $rootPage->dns = 'www.foobar.com';
         $rootPage->useSSL = true;
 
-        $pageModelAdapter = $this->mockAdapter(['findPublishedFallbackByHostname']);
-        $pageModelAdapter
-            ->expects($this->exactly(2))
-            ->method('findPublishedFallbackByHostname')
-            ->willReturn($rootPage)
-        ;
-
-        $framework = $this->mockContaoFramework([PageModel::class => $pageModelAdapter]);
+        $framework = $this->mockContaoFramework();
         $framework
             ->expects($this->exactly(2))
             ->method('initialize')
         ;
 
+        $webDebugToolbar = null;
+
+        if (\is_bool($withWebProfiler)) {
+            $webDebugToolbar = $this->createMock(WebDebugToolbarListener::class);
+            $webDebugToolbar
+                ->expects($this->atLeastOnce())
+                ->method('isEnabled')
+                ->willReturn($withWebProfiler)
+            ;
+        }
+
         $parser = new Parser();
         $parser->setSource($providedRobotsTxt);
-        $file = $parser->getFile();
 
-        $event = new RobotsTxtEvent($file, new Request(), $rootPage);
+        $event = new RobotsTxtEvent($parser->getFile(), Request::create('https://www.example.org/robots.txt'), $rootPage);
 
-        $listener = new RobotsTxtListener($framework);
+        $listener = new RobotsTxtListener($framework, $webDebugToolbar);
         $listener($event);
 
         // Output should be the same, if there is another listener
@@ -64,10 +68,11 @@ class RobotsTxtListenerTest extends TestCase
         $this->assertSame($expectedRobotsTxt, (string) $event->getFile());
     }
 
-    public function disallowProvider(): \Generator
+    public static function disallowProvider(): iterable
     {
         yield 'Empty robots.txt content in root page' => [
             '',
+            null,
             <<<'EOF'
                 user-agent:*
                 disallow:/contao/
@@ -81,8 +86,8 @@ class RobotsTxtListenerTest extends TestCase
             <<<'EOF'
                 user-agent:*
                 allow:/
-                EOF
-            ,
+                EOF,
+            null,
             <<<'EOF'
                 user-agent:*
                 allow:/
@@ -97,14 +102,64 @@ class RobotsTxtListenerTest extends TestCase
             <<<'EOF'
                 user-agent:googlebot
                 allow:/
-                EOF
-            ,
+                EOF,
+            null,
             <<<'EOF'
                 user-agent:googlebot
                 allow:/
                 disallow:/contao/
                 disallow:/_contao/
 
+                user-agent:*
+                disallow:/contao/
+                disallow:/_contao/
+
+                sitemap:https://www.foobar.com/sitemap.xml
+                EOF,
+        ];
+
+        yield 'Empty robots.txt with web profiler enabled' => [
+            '',
+            true,
+            <<<'EOF'
+                user-agent:*
+                disallow:/contao/
+                disallow:/_contao/
+                disallow:/_profiler/
+                disallow:/_wdt/
+
+                sitemap:https://www.foobar.com/sitemap.xml
+                EOF,
+        ];
+
+        yield 'Multiple user-agents with web profiler enabled' => [
+            <<<'EOF'
+                user-agent:googlebot
+                allow:/
+                EOF,
+            true,
+            <<<'EOF'
+                user-agent:googlebot
+                allow:/
+                disallow:/contao/
+                disallow:/_contao/
+                disallow:/_profiler/
+                disallow:/_wdt/
+
+                user-agent:*
+                disallow:/contao/
+                disallow:/_contao/
+                disallow:/_profiler/
+                disallow:/_wdt/
+
+                sitemap:https://www.foobar.com/sitemap.xml
+                EOF,
+        ];
+
+        yield 'Empty robots.txt with web profiler disabled' => [
+            '',
+            false,
+            <<<'EOF'
                 user-agent:*
                 disallow:/contao/
                 disallow:/_contao/
@@ -119,7 +174,6 @@ class RobotsTxtListenerTest extends TestCase
      */
     public function testHandlesDynamicRoutePrefixes(string $routePrefix): void
     {
-        $request = $this->createMock(Request::class);
         $rootPage = $this->mockClassWithProperties(PageModel::class);
 
         $directiveList = $this->createMock(DirectiveList::class);
@@ -127,8 +181,8 @@ class RobotsTxtListenerTest extends TestCase
             ->expects($this->exactly(2))
             ->method('add')
             ->withConsecutive(
-                [$this->callback(static fn (Directive $directive) => ((string) $directive) === 'disallow:'.$routePrefix.'/')],
-                ['disallow:/_contao/']
+                [$this->callback(static fn (Directive $directive) => (string) $directive === 'disallow:'.$routePrefix.'/')],
+                ['disallow:/_contao/'],
             )
         ;
 
@@ -144,22 +198,14 @@ class RobotsTxtListenerTest extends TestCase
             ->willReturn([$record])
         ;
 
-        $event = new RobotsTxtEvent($file, $request, $rootPage);
+        $event = new RobotsTxtEvent($file, Request::create('https://www.example.org/robots.txt'), $rootPage);
+        $framework = $this->mockContaoFramework();
 
-        $pageModelAdapter = $this->mockAdapter(['findPublishedFallbackByHostname']);
-        $pageModelAdapter
-            ->expects($this->once())
-            ->method('findPublishedFallbackByHostname')
-            ->willReturn(null)
-        ;
-
-        $framework = $this->mockContaoFramework([PageModel::class => $pageModelAdapter]);
-
-        $listener = new RobotsTxtListener($framework, $routePrefix);
+        $listener = new RobotsTxtListener($framework, null, $routePrefix);
         $listener($event);
     }
 
-    public function routePrefixProvider(): \Generator
+    public static function routePrefixProvider(): iterable
     {
         yield ['/contao'];
         yield ['/admin'];

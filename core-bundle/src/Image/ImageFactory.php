@@ -32,20 +32,23 @@ class ImageFactory implements ImageFactoryInterface
 {
     private array $predefinedSizes = [];
 
+    private array $preserveMetadataFields;
+
     /**
-     * @internal Do not inherit from this class; decorate the "contao.image.factory" service instead
+     * @internal
      */
     public function __construct(
-        private ResizerInterface $resizer,
-        private ImagineInterface $imagine,
-        private ImagineInterface $imagineSvg,
-        private Filesystem $filesystem,
-        private ContaoFramework $framework,
-        private bool $bypassCache,
-        private array $imagineOptions,
-        private array $validExtensions,
-        private string $uploadDir,
+        private readonly ResizerInterface $resizer,
+        private readonly ImagineInterface $imagine,
+        private readonly ImagineInterface $imagineSvg,
+        private readonly Filesystem $filesystem,
+        private readonly ContaoFramework $framework,
+        private readonly bool $bypassCache,
+        private readonly array $imagineOptions,
+        private readonly array $validExtensions,
+        private readonly string $uploadDir,
     ) {
+        $this->preserveMetadataFields = (new ResizeOptions())->getPreserveCopyrightMetadata();
     }
 
     /**
@@ -56,16 +59,16 @@ class ImageFactory implements ImageFactoryInterface
         $this->predefinedSizes = $predefinedSizes;
     }
 
-    public function create($path, ResizeConfiguration|array|int|string|null $size = null, $options = null): ImageInterface
+    public function setPreserveMetadataFields(array $preserveMetadataFields): void
     {
-        if (null !== $options && !\is_string($options) && !$options instanceof ResizeOptions) {
-            throw new \InvalidArgumentException('Options must be of type null, string or '.ResizeOptions::class);
-        }
+        $this->preserveMetadataFields = $preserveMetadataFields;
+    }
 
+    public function create(ImageInterface|string $path, ResizeConfiguration|array|int|string|null $size = null, ResizeOptions|string|null $options = null): ImageInterface
+    {
         if ($path instanceof ImageInterface) {
             $image = $path;
         } else {
-            $path = (string) $path;
             $fileExtension = Path::getExtension($path, true);
 
             if (\in_array($fileExtension, ['svg', 'svgz'], true)) {
@@ -75,11 +78,11 @@ class ImageFactory implements ImageFactoryInterface
             }
 
             if (!\in_array($fileExtension, $this->validExtensions, true)) {
-                throw new \InvalidArgumentException(sprintf('Image type "%s" was not allowed to be processed', $fileExtension));
+                throw new \InvalidArgumentException(\sprintf('Image type "%s" was not allowed to be processed', $fileExtension));
             }
 
             if (!Path::isAbsolute($path)) {
-                throw new \InvalidArgumentException(sprintf('Image path "%s" must be absolute', $path));
+                throw new \InvalidArgumentException(\sprintf('Image path "%s" must be absolute', $path));
             }
 
             if (
@@ -105,12 +108,12 @@ class ImageFactory implements ImageFactoryInterface
             [$resizeConfig, $importantPart, $options] = $this->createConfig($size, $image);
         }
 
-        if (!\is_object($path) || !$path instanceof ImageInterface) {
+        if (!$path instanceof ImageInterface) {
             if (null === $importantPart) {
                 try {
                     $importantPart = $this->createImportantPart($image);
                 } catch (CoordinatesOutOfBoundsException $exception) {
-                    throw new CoordinatesOutOfBoundsException(sprintf('%s for file "%s"', $exception->getMessage(), $path), $exception->getCode(), $exception);
+                    throw new CoordinatesOutOfBoundsException(\sprintf('%s for file "%s"', $exception->getMessage(), $path), $exception->getCode(), $exception);
                 }
             }
 
@@ -142,10 +145,10 @@ class ImageFactory implements ImageFactoryInterface
         return $this->resizer->resize($image, $resizeConfig, $options);
     }
 
-    public function getImportantPartFromLegacyMode(ImageInterface $image, $mode): ImportantPart
+    public function getImportantPartFromLegacyMode(ImageInterface $image, string $mode): ImportantPart
     {
         if (1 !== substr_count($mode, '_')) {
-            throw new \InvalidArgumentException(sprintf('"%s" is not a legacy resize mode', $mode));
+            throw new \InvalidArgumentException(\sprintf('"%s" is not a legacy resize mode', $mode));
         }
 
         $importantPart = [0, 0, 1, 1];
@@ -182,16 +185,56 @@ class ImageFactory implements ImageFactoryInterface
         }
 
         $config = new ResizeConfiguration();
+
         $options = new ResizeOptions();
+        $options->setPreserveCopyrightMetadata($this->preserveMetadataFields);
 
         if (isset($size[2])) {
             // Database record
             if (is_numeric($size[2])) {
                 $imageModel = $this->framework->getAdapter(ImageSizeModel::class);
 
-                if (null !== ($imageSize = $imageModel->findByPk($size[2]))) {
+                if ($imageSize = $imageModel->findById($size[2])) {
                     $this->enhanceResizeConfig($config, $imageSize->row());
                     $options->setSkipIfDimensionsMatch((bool) $imageSize->skipIfDimensionsMatch);
+
+                    if ('delete' === $imageSize->preserveMetadata) {
+                        $options->setPreserveCopyrightMetadata([]);
+                    } elseif (
+                        'overwrite' === $imageSize->preserveMetadata
+                        && ($metadataFields = StringUtil::deserialize($imageSize->preserveMetadataFields, true))
+                    ) {
+                        $options->setPreserveCopyrightMetadata(
+                            array_merge_recursive(
+                                ...array_map(
+                                    static fn ($metadata) => StringUtil::deserialize($metadata, true),
+                                    $metadataFields,
+                                ),
+                            ),
+                        );
+                    }
+
+                    if ($quality = max(0, min(100, (int) $imageSize->imageQuality))) {
+                        $options->setImagineOptions([
+                            ...$this->imagineOptions,
+                            'quality' => $quality,
+                            'jpeg_quality' => $quality,
+                            'webp_quality' => $quality,
+                            'avif_quality' => $quality,
+                            'heic_quality' => $quality,
+                            'jxl_quality' => $quality,
+                        ]);
+
+                        if (100 === $quality) {
+                            $options->setImagineOptions([
+                                ...$options->getImagineOptions(),
+                                'webp_lossless' => true,
+                                'avif_lossless' => true,
+                                'heic_lossless' => true,
+                                'jxl_lossless' => true,
+                            ]);
+                        }
+                    }
                 }
 
                 return [$config, null, $options];
@@ -201,6 +244,18 @@ class ImageFactory implements ImageFactoryInterface
             if (isset($this->predefinedSizes[$size[2]])) {
                 $this->enhanceResizeConfig($config, $this->predefinedSizes[$size[2]]);
                 $options->setSkipIfDimensionsMatch($this->predefinedSizes[$size[2]]['skipIfDimensionsMatch'] ?? false);
+
+                $options->setPreserveCopyrightMetadata([
+                    ...$options->getPreserveCopyrightMetadata(),
+                    ...$this->predefinedSizes[$size[2]]['preserveMetadataFields'] ?? [],
+                ]);
+
+                if (!empty($this->predefinedSizes[$size[2]]['imagineOptions'])) {
+                    $options->setImagineOptions([
+                        ...$this->imagineOptions,
+                        ...$this->predefinedSizes[$size[2]]['imagineOptions'],
+                    ]);
+                }
 
                 return [$config, null, $options];
             }
@@ -222,7 +277,7 @@ class ImageFactory implements ImageFactoryInterface
             return [$config, null, null];
         }
 
-        trigger_deprecation('contao/core-bundle', '5.0', 'Using the legacy resize mode "%s" has been deprecated and will no longer work in Contao 6.0.', $size[2]);
+        trigger_deprecation('contao/core-bundle', '5.0', 'Using the legacy resize mode "%s" has been deprecated and will no longer work in Contao 6.', $size[2]);
 
         $config->setMode(ResizeConfiguration::MODE_CROP);
 
@@ -267,7 +322,7 @@ class ImageFactory implements ImageFactoryInterface
         $filesModel = $this->framework->getAdapter(FilesModel::class);
         $file = $filesModel->findByPath($image->getPath());
 
-        if (null === $file || !$file->importantPartWidth || !$file->importantPartHeight) {
+        if (!$file?->importantPartWidth || !$file->importantPartHeight) {
             return null;
         }
 
@@ -275,7 +330,7 @@ class ImageFactory implements ImageFactoryInterface
             (float) $file->importantPartX,
             (float) $file->importantPartY,
             (float) $file->importantPartWidth,
-            (float) $file->importantPartHeight
+            (float) $file->importantPartHeight,
         );
     }
 }

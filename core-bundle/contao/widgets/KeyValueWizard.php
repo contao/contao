@@ -64,7 +64,7 @@ class KeyValueWizard extends Widget
 			foreach ($options as $key=>$option)
 			{
 				// Unset empty rows
-				if (trim($option['key']) === '')
+				if (!$this->allowEmptyKeys && trim($option['key']) === '')
 				{
 					unset($options[$key]);
 					continue;
@@ -73,7 +73,7 @@ class KeyValueWizard extends Widget
 				$options[$key]['key'] = trim($option['key']);
 				$options[$key]['value'] = trim($option['value']);
 
-				if ($options[$key]['key'])
+				if ($options[$key]['key'] !== '' || ($this->allowEmptyKeys && $options[$key]['value'] !== ''))
 				{
 					$this->mandatory = false;
 				}
@@ -114,8 +114,8 @@ class KeyValueWizard extends Widget
 		$return = '<table id="ctrl_' . $this->strId . '" class="tl_key_value_wizard">
   <thead>
     <tr>
-      <th>' . $GLOBALS['TL_LANG']['MSC']['ow_key'] . '</th>
-      <th>' . $GLOBALS['TL_LANG']['MSC']['ow_value'] . '</th>
+      <th>' . ($this->keyLabel ?? $GLOBALS['TL_LANG']['MSC']['ow_key']) . '</th>
+      <th>' . ($this->valueLabel ?? $GLOBALS['TL_LANG']['MSC']['ow_value']) . '</th>
       <th></th>
     </tr>
   </thead>
@@ -131,17 +131,17 @@ class KeyValueWizard extends Widget
 
 			// Add row buttons
 			$return .= '
-      <td>';
+      <td class="tl_right">';
 
 			foreach ($arrButtons as $button)
 			{
 				if ($button == 'drag')
 				{
-					$return .= ' <button type="button" class="drag-handle" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button>';
+					$return .= ' <button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', $GLOBALS['TL_LANG']['MSC']['move']) . '</button>';
 				}
 				else
 				{
-					$return .= ' <button type="button" data-command="' . $button . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['ow_' . $button]) . '">' . Image::getHtml($button . '.svg') . '</button>';
+					$return .= ' <button type="button" data-command="' . $button . '">' . Image::getHtml($button . '.svg', $GLOBALS['TL_LANG']['MSC']['ow_' . $button]) . '</button>';
 				}
 			}
 

@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_module.news_readerModule.1">
         <source>Automatically switch to the newsreader if an item has been selected.</source>
+        <target>Automātiski pārslēgties uz jaunumu lasītāju, ja ir atlasīts kāds vienums.</target>
       </trans-unit>
       <trans-unit id="tl_module.news_template.0">
         <source>News template</source>
