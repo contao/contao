@@ -308,9 +308,9 @@ class MountManagerTest extends TestCase
         }
     }
 
-    public function provideCallsForFlysystemExceptions(): iterable
+    public static function provideCallsForFlysystemExceptions(): iterable
     {
-        yield from $this->provideCalls();
+        yield from self::provideCalls();
 
         yield 'copy' => [
             [
