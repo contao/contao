@@ -46,7 +46,7 @@ class TwoFactorController extends AbstractContentElementController
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         $user = $this->getUser();
-        $pageModel = $request->attributes->get('pageModel');
+        $pageModel = $this->getPageModel();
 
         if (!$user instanceof FrontendUser || !$pageModel instanceof PageModel) {
             return new Response('', Response::HTTP_NO_CONTENT);
