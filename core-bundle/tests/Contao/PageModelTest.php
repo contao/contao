@@ -32,7 +32,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -133,7 +132,6 @@ class PageModelTest extends TestCase
     }
 
     #[DataProvider('similarAliasProvider')]
-
     public function testFindSimilarByAlias(array $page, string $alias, array $rootData): void
     {
         PageModel::reset();
@@ -370,7 +368,6 @@ class PageModelTest extends TestCase
     }
 
     #[DataProvider('folderUrlProvider')]
-
     #[RunInSeparateProcess]
     public function testFolderUrlInheritsTheParentAlias(array $databaseResultData, string $expectedFolderUrl): void
     {
@@ -436,7 +433,6 @@ class PageModelTest extends TestCase
         ];
     }
 
-
     public function testUsesAbsolutePathReferenceForFrontendUrl(): void
     {
         $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getFrontendUrl\(\)" has been deprecated/');
@@ -457,7 +453,6 @@ class PageModelTest extends TestCase
 
         $this->assertSame('/page', $page->getFrontendUrl());
     }
-
 
     public function testUsesAbsoluteUrlReferenceForFrontendUrlOnOtherDomain(): void
     {
@@ -481,7 +476,6 @@ class PageModelTest extends TestCase
 
         $this->assertSame('https://foobar.com/page', $page->getFrontendUrl());
     }
-
 
     public function testUsesAbsoluteUrlReferenceForAbsoluteUrl(): void
     {

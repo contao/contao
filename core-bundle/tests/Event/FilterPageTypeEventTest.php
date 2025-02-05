@@ -14,12 +14,10 @@ namespace Contao\CoreBundle\Tests\Event;
 
 use Contao\CoreBundle\Event\FilterPageTypeEvent;
 use Contao\DataContainer;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 class FilterPageTypeEventTest extends TestCase
 {
-
     public function testReturnsDataContainer(): void
     {
         $dc = $this->createMock(DataContainer::class);
@@ -28,7 +26,6 @@ class FilterPageTypeEventTest extends TestCase
         $this->assertSame($dc, $event->getDataContainer());
     }
 
-
     public function testReturnsOptionsWithNumericKeys(): void
     {
         $dc = $this->createMock(DataContainer::class);
@@ -36,7 +33,6 @@ class FilterPageTypeEventTest extends TestCase
 
         $this->assertSame(['bar'], $event->getOptions());
     }
-
 
     public function testCanAddOption(): void
     {
@@ -50,7 +46,6 @@ class FilterPageTypeEventTest extends TestCase
         $this->assertSame(['foo'], $event->getOptions());
     }
 
-
     public function testDoesNotAddDuplicateOptions(): void
     {
         $dc = $this->createMock(DataContainer::class);
@@ -62,7 +57,6 @@ class FilterPageTypeEventTest extends TestCase
 
         $this->assertSame(['foo'], $event->getOptions());
     }
-
 
     public function testCanSetOptions(): void
     {
@@ -76,7 +70,6 @@ class FilterPageTypeEventTest extends TestCase
         $this->assertSame(['bar'], $event->getOptions());
     }
 
-
     public function testCanRemoveOption(): void
     {
         $dc = $this->createMock(DataContainer::class);
@@ -88,7 +81,6 @@ class FilterPageTypeEventTest extends TestCase
 
         $this->assertSame([], $event->getOptions());
     }
-
 
     public function testIgnoresMissingWhenRemovingOptions(): void
     {

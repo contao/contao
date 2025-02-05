@@ -27,7 +27,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\InsertTags;
 use Contao\System;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -78,7 +77,6 @@ class InsertTagParserTest extends TestCase
         $this->assertSame('{{doesnotexist}}', $parser->replace('{{doesnotexist}}'));
         $this->assertSame([[ChunkedText::TYPE_TEXT, '{{doesnotexist}}']], iterator_to_array($parser->replaceChunked('{{doesnotexist}}')));
     }
-
 
     public function testRender(): void
     {
@@ -149,7 +147,6 @@ class InsertTagParserTest extends TestCase
         $this->assertSame('bar', $sequence->get(2));
         $this->assertSame('baz', $sequence->get(3)->getName());
     }
-
 
     public function testRenderMixedCase(): void
     {

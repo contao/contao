@@ -35,7 +35,6 @@ use Imagine\Image\Box;
 use Imagine\Image\ImageInterface as ImagineImageInterface;
 use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
@@ -488,7 +487,6 @@ class ImageFactoryTest extends TestCase
     }
 
     #[DataProvider('getCreateWithLegacyMode')]
-
     public function testCreatesAnImageObjectFromAnImagePathInLegacyMode(string $mode, array $expected): void
     {
         $path = Path::join($this->getTempDir(), 'images/none.jpg');
@@ -548,7 +546,7 @@ class ImageFactoryTest extends TestCase
         $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, $filesystem, $framework);
 
-        $this->expectUserDeprecationMessageMatches("/legacy resize mode \"\$mode\" has been deprecated/");
+        $this->expectUserDeprecationMessageMatches('/legacy resize mode "$mode" has been deprecated/');
 
         $image = $imageFactory->create($path, [50, 50, $mode]);
         $imageFromSerializedConfig = $imageFactory->create($path, serialize([50, 50, $mode]));

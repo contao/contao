@@ -13,12 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\ServiceAnnotation;
 
 use Contao\CoreBundle\ServiceAnnotation\Hook;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 class HookTest extends TestCase
 {
-
     public function testReturnsTheTagName(): void
     {
         $this->expectUserDeprecationMessageMatches('/Use the #\[AsHook] attribute instead\./');

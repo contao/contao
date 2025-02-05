@@ -13,12 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\ServiceAnnotation;
 
 use Contao\CoreBundle\ServiceAnnotation\Callback;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 class CallbackTest extends TestCase
 {
-
     public function testReturnsTheTagName(): void
     {
         $this->expectUserDeprecationMessageMatches('/Use the #\[AsCallback] attribute instead\./');

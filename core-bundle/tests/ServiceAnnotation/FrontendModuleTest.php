@@ -14,12 +14,10 @@ namespace Contao\CoreBundle\Tests\ServiceAnnotation;
 
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\ServiceAnnotation\FrontendModule;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 class FrontendModuleTest extends TestCase
 {
-
     public function testReturnsTheTagName(): void
     {
         $this->expectUserDeprecationMessageMatches('/Use the #\[AsFrontendModule] attribute instead\./');

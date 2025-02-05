@@ -32,7 +32,6 @@ use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -60,7 +59,6 @@ class MigrateCommandTest extends TestCase
         $this->assertMatchesRegularExpression('/All migrations completed/', $display);
     }
 
-
     public function testAbortsEarlyIfNonInteractiveAndThereAreOnlyDropMigrations(): void
     {
         $backupManager = $this->createBackupManager(false);
@@ -83,7 +81,6 @@ class MigrateCommandTest extends TestCase
         $this->assertMatchesRegularExpression('/Database dump skipped because there are no migrations to execute./', $display);
         $this->assertMatchesRegularExpression('/All migrations completed/', $display);
     }
-
 
     public function testExecutesBackupIfPendingSchemaDiff(): void
     {
@@ -131,7 +128,6 @@ class MigrateCommandTest extends TestCase
     }
 
     #[DataProvider('getOutputFormats')]
-
     public function testExecutesWithoutPendingMigrations(string $format): void
     {
         $command = $this->getCommand();
@@ -156,7 +152,6 @@ class MigrateCommandTest extends TestCase
     }
 
     #[DataProvider('getOutputFormatsAndBackup')]
-
     public function testExecutesPendingMigrations(string $format, bool $backupsEnabled): void
     {
         $command = $this->getCommand(
@@ -207,7 +202,6 @@ class MigrateCommandTest extends TestCase
     }
 
     #[DataProvider('getOutputFormats')]
-
     public function testExecutesSchemaDiff(string $format): void
     {
         $returnedCommands = [
@@ -287,7 +281,6 @@ class MigrateCommandTest extends TestCase
     }
 
     #[DataProvider('getOutputFormats')]
-
     public function testDoesNotExecuteWithDryRun(string $format): void
     {
         $commandCompiler = $this->createMock(CommandCompiler::class);
@@ -354,7 +347,6 @@ class MigrateCommandTest extends TestCase
         }
     }
 
-
     public function testAbortsIfAnswerIsNo(): void
     {
         $command = $this->getCommand(
@@ -377,7 +369,6 @@ class MigrateCommandTest extends TestCase
     }
 
     #[DataProvider('getOutputFormats')]
-
     public function testDoesNotAbortIfMigrationFails(string $format): void
     {
         $command = $this->getCommand(
@@ -416,7 +407,6 @@ class MigrateCommandTest extends TestCase
     }
 
     #[DataProvider('getOutputFormats')]
-
     public function testAbortsOnFatalError(string $format): void
     {
         $commandCompiler = $this->createMock(CommandCompiler::class);
@@ -445,7 +435,6 @@ class MigrateCommandTest extends TestCase
     }
 
     #[DataProvider('getOutputFormats')]
-
     public function testAbortsOnWrongServerVersion(string $format): void
     {
         $driverConnection = $this->createMock(ServerInfoAwareConnection::class);
@@ -495,7 +484,6 @@ class MigrateCommandTest extends TestCase
     }
 
     #[DataProvider('provideInvalidSqlModes')]
-
     public function testOutputsWarningIfNotRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
     {
         $connection = $this->createDefaultConnection($sqlMode, $driver);
@@ -691,7 +679,6 @@ class MigrateCommandTest extends TestCase
     }
 
     #[DataProvider('provideInvalidSqlModes')]
-
     public function testEmitsWarningMessageIfNotRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
     {
         $connection = $this->createDefaultConnection($sqlMode, $driver);

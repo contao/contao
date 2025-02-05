@@ -25,7 +25,6 @@ use Doctrine\DBAL\Exception\ConnectionException;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\Filesystem\Path;
 
 class TemplateLocatorTest extends TestCase
@@ -45,7 +44,6 @@ class TemplateLocatorTest extends TestCase
 
         $this->assertSame($expectedThemeDirectories, $locator->findThemeDirectories());
     }
-
 
     public function testFindsThemeDirectoriesOutsideTemplatesDirectory(): void
     {

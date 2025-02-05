@@ -16,7 +16,6 @@ use Contao\CoreBundle\Tests\Fixtures\Twig\ChildClassWithMembersStub;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\Template;
-use PHPUnit\Framework\Attributes\Group;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Loader\ArrayLoader;
@@ -101,7 +100,6 @@ class ContextFactoryTest extends TestCase
         $this->assertSame('b', $context['bar']());
         $this->assertSame('c', (string) $context['baz']['foobar']);
     }
-
 
     public function testCreateContextFromClass(): void
     {

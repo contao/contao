@@ -17,7 +17,6 @@ use Contao\CoreBundle\Image\Studio\FigureRenderer;
 use Contao\CoreBundle\Image\Studio\ImageResult;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Runtime\FigureRuntime;
-use PHPUnit\Framework\Attributes\Group;
 
 class FigureRendererRuntimeTest extends TestCase
 {
@@ -39,7 +38,6 @@ class FigureRendererRuntimeTest extends TestCase
         );
     }
 
-
     public function testDelegatesCallsWhenRenderingFigure(): void
     {
         $figureRenderer = $this->createMock(FigureRenderer::class);
@@ -58,7 +56,6 @@ class FigureRendererRuntimeTest extends TestCase
 
         $this->assertSame('<result>', $result);
     }
-
 
     public function testUsesFigureTemplateByDefaultWhenRenderingFigure(): void
     {

@@ -16,7 +16,6 @@ use Contao\CoreBundle\EventListener\MergeHttpHeadersListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\HttpKernel\Header\MemoryHeaderStorage;
 use Contao\CoreBundle\Tests\TestCase;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -41,7 +40,6 @@ class MergeHttpHeadersListenerTest extends TestCase
         $listener = new MergeHttpHeadersListener($framework, new MemoryHeaderStorage([]));
         $listener($responseEvent);
     }
-
 
     public function testMergesTheHeadersSent(): void
     {
@@ -81,7 +79,6 @@ class MergeHttpHeadersListenerTest extends TestCase
 
         $this->assertFalse($responseEvent->getResponse()->headers->has('Content-Type'));
     }
-
 
     public function testDoesNotOverrideMultiValueHeaders(): void
     {
@@ -168,7 +165,6 @@ class MergeHttpHeadersListenerTest extends TestCase
         );
     }
 
-
     public function testInheritsHeadersFromSubrequest(): void
     {
         $this->expectUserDeprecationMessageMatches('/Using the PHP header\(\) function to set HTTP headers/');
@@ -202,7 +198,6 @@ class MergeHttpHeadersListenerTest extends TestCase
         $this->assertTrue($response->headers->has('Content-Type'));
         $this->assertSame('application/json', $response->headers->get('Content-Type'));
     }
-
 
     public function testInheritsMultiHeadersFromSubrequest(): void
     {
@@ -244,7 +239,6 @@ class MergeHttpHeadersListenerTest extends TestCase
         $this->assertSame('new-content=foobar; path=/', $allHeaders[1]);
     }
 
-
     public function testDoesNotMergeCacheControlHeaders(): void
     {
         $this->expectUserDeprecationMessageMatches('/Using the PHP header\(\) function to set HTTP headers/');
@@ -269,7 +263,6 @@ class MergeHttpHeadersListenerTest extends TestCase
         $this->assertSame('no-cache, private', $response->headers->get('Cache-Control'));
     }
 
-
     public function testSetsTheStatusCodeFromHttpHeader(): void
     {
         $this->expectUserDeprecationMessageMatches('/Using the PHP header\(\) function to set HTTP headers/');
@@ -292,7 +285,6 @@ class MergeHttpHeadersListenerTest extends TestCase
 
         $this->assertSame(404, $response->getStatusCode());
     }
-
 
     public function testServiceIsResetable(): void
     {

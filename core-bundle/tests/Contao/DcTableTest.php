@@ -19,7 +19,6 @@ use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class DcTableTest extends TestCase
@@ -34,7 +33,6 @@ class DcTableTest extends TestCase
     }
 
     #[DataProvider('getPalette')]
-
     public function testGetPalette(array $dca, array $row, string $expected): void
     {
         $this->expectUserDeprecationMessageMatches('/Getting data from \$_POST with the "Contao\\\\Input" class has been deprecated/');

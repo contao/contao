@@ -14,12 +14,10 @@ namespace Contao\CoreBundle\Tests\ServiceAnnotation;
 
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\ServiceAnnotation\ContentElement;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 class ContentElementTest extends TestCase
 {
-
     public function testReturnsTheTagName(): void
     {
         $this->expectUserDeprecationMessageMatches('/Use the #\[AsContentElement] attribute instead\./');

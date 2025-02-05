@@ -29,7 +29,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\InsertTags;
 use Contao\System;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -105,7 +104,6 @@ class InsertTagsTest extends TestCase
     }
 
     #[DataProvider('insertTagsProvider')]
-
     public function testInsertTags(string $source, string $expected, bool $expectUserDeprecationMessage = true): void
     {
         if ($expectUserDeprecationMessage) {
@@ -310,7 +308,6 @@ class InsertTagsTest extends TestCase
     }
 
     #[DataProvider('provideFigureInsertTags')]
-
     public function testFigureInsertTag(string $input, array $expectedArguments): void
     {
         $usedArguments = [];
@@ -423,7 +420,6 @@ class InsertTagsTest extends TestCase
     }
 
     #[DataProvider('provideInvalidFigureInsertTags')]
-
     public function testFigureInsertTagReturnsEmptyStringIfInvalid(string $input, bool $invalidConfiguration): void
     {
         $figureRenderer = $this->createMock(FigureRenderer::class);
@@ -459,7 +455,6 @@ class InsertTagsTest extends TestCase
     }
 
     #[DataProvider('allowedInsertTagsProvider')]
-
     public function testAllowedInsertTags(string $source, string $expected, array $allowedTags): void
     {
         System::getContainer()->setParameter('contao.insert_tags.allowed_tags', $allowedTags);
@@ -541,7 +536,6 @@ class InsertTagsTest extends TestCase
     }
 
     #[DataProvider('encodeHtmlAttributesProvider')]
-
     public function testEncodeHtmlAttributes(string $source, string $expected): void
     {
         $reflectionClass = new \ReflectionClass(InsertTags::class);
@@ -760,7 +754,6 @@ class InsertTagsTest extends TestCase
     }
 
     #[DataProvider('languageInsertTagsProvider')]
-
     public function testRemovesLanguageInsertTags(string $source, string $expected, string $translatorLocale = 'en'): void
     {
         $translator = $this->createMock(TranslatorInterface::class);
@@ -1041,7 +1034,6 @@ class InsertTagsTest extends TestCase
         ];
     }
 
-
     public function testInfiniteNestedInsertTag(): void
     {
         $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook has been deprecated/');
@@ -1058,7 +1050,6 @@ class InsertTagsTest extends TestCase
         $insertTagParser->replaceInline('{{infinite-nested::1}}');
     }
 
-
     public function testInfiniteRecursionInsertTag(): void
     {
         $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook has been deprecated/');
@@ -1073,7 +1064,6 @@ class InsertTagsTest extends TestCase
         $insertTagParser->replaceInline('{{infinite-recursion::1}}');
     }
 
-
     public function testInfiniteRecursionWithCatchInsertTag(): void
     {
         $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook has been deprecated/');
@@ -1085,7 +1075,6 @@ class InsertTagsTest extends TestCase
 
         $this->assertSame('[{]infinite-try-catch::66[}]', $output);
     }
-
 
     public function testInfiniteRecursionWithCatchAndRetryInsertTag(): void
     {
@@ -1100,7 +1089,6 @@ class InsertTagsTest extends TestCase
 
         $insertTagParser->replaceInline('{{infinite-retry::1}}');
     }
-
 
     public function testPcreBacktrackLimit(): void
     {

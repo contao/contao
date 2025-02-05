@@ -21,7 +21,6 @@ use Contao\InputEncodingMode;
 use Contao\System;
 use Contao\Widget;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\HttpFoundation\Request;
@@ -66,7 +65,6 @@ class InputTest extends TestCase
     }
 
     #[DataProvider('encodeInputProvider')]
-
     public function testCleansTheGlobalArrays(string $source, string $expected): void
     {
         $_GET = $_POST = $_COOKIE = [$source => 1];
@@ -83,7 +81,6 @@ class InputTest extends TestCase
     }
 
     #[DataProvider('encodeInputProvider')]
-
     public function testGetAndPostEncoded(string $source, string $expected, string|null $expectedEncoded = null): void
     {
         $expectedEncoded ??= $expected;
@@ -128,7 +125,6 @@ class InputTest extends TestCase
     }
 
     #[DataProvider('encodeInputProvider')]
-
     public function testBackendRoundtrip(string $source, string $expected, string|null $expectedEncoded = null): void
     {
         $expectedEncoded ??= $expected;
@@ -152,7 +148,6 @@ class InputTest extends TestCase
         $this->assertSame($expected, Input::postHtml('decoded', true));
         $this->assertSame($expectedEncoded, Input::postHtml('encoded'));
     }
-
 
     public function testEncodesInsertTags(): void
     {
@@ -311,7 +306,6 @@ class InputTest extends TestCase
     }
 
     #[DataProvider('encodeNoneModeProvider')]
-
     public function testEncodeNoneMode(string $source, string $expected, string|null $expectedEncoded = null, string|null $expectedEncodedDouble = null): void
     {
         $expectedEncoded ??= $expected;
@@ -368,7 +362,6 @@ class InputTest extends TestCase
     }
 
     #[DataProvider('stripTagsProvider')]
-
     public function testStripTags(string $source, string $expected, string|null $expectedEncoded = null): void
     {
         $expectedEncoded ??= str_replace(['{{', '}}'], ['&#123;&#123;', '&#125;&#125;'], $expected);
@@ -675,7 +668,6 @@ class InputTest extends TestCase
     }
 
     #[DataProvider('stripTagsNoTagsAllowedProvider')]
-
     public function testStripTagsNoTagsAllowed(string $source, string $expected): void
     {
         $this->expectUserDeprecationMessageMatches('/stripTags\(\) without setting allowed tags and allowed attributes has been deprecated/');
@@ -711,7 +703,6 @@ class InputTest extends TestCase
         $this->assertSame($html, Input::stripTags($html, '<span>', serialize([['key' => '*', 'value' => '*']])));
     }
 
-
     public function testStripTagsNoAttributesAllowed(): void
     {
         $html = "<dIv class=gets-normalized bar-foo-something = 'keep'><spAN class=gets-normalized bar-foo-something = 'keep'>foo</SPan></DiV><notallowed></notallowed>";
@@ -725,7 +716,6 @@ class InputTest extends TestCase
         $this->expectUserDeprecationMessageMatches('/stripTags\(\) without setting allowed tags and allowed attributes has been deprecated/');
         $this->assertSame($expected, Input::stripTags($html, '<div><span>'));
     }
-
 
     public function testStripTagsScriptAllowed(): void
     {
@@ -748,7 +738,6 @@ class InputTest extends TestCase
     }
 
     #[DataProvider('simpleTokensWithHtmlProvider')]
-
     public function testSimpleTokensWithHtml(string $source, array $tokens, string $expected): void
     {
         $simpleTokenParser = new SimpleTokenParser(new ExpressionLanguage());
@@ -825,7 +814,6 @@ class InputTest extends TestCase
             '<a href="abdeghj"></a>',
         ];
     }
-
 
     public function testPostAndGetKeys(): void
     {
@@ -934,7 +922,6 @@ class InputTest extends TestCase
         $this->assertFalse($stack->getCurrentRequest()->attributes->has('auto_item'));
         $this->assertArrayNotHasKey('auto_item', $_GET);
     }
-
 
     public function testArrayValuesFromGetAndPost(): void
     {

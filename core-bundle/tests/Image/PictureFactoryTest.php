@@ -30,7 +30,6 @@ use Contao\ImageSizeModel;
 use Contao\Model\Collection;
 use Contao\System;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 
 class PictureFactoryTest extends TestCase
 {
@@ -432,7 +431,6 @@ class PictureFactoryTest extends TestCase
 
         $this->assertSame($imageMock, $picture->getRawImg()['src']);
     }
-
 
     public function testCreatesAPictureObjectInLegacyMode(): void
     {

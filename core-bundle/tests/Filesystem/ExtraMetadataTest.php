@@ -17,7 +17,6 @@ use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ImportantPart;
-use PHPUnit\Framework\Attributes\Group;
 
 class ExtraMetadataTest extends TestCase
 {
@@ -58,7 +57,6 @@ class ExtraMetadataTest extends TestCase
         $this->assertSame('baz', $extraMetadata->getLocalized()->get('en')->get('bar'));
     }
 
-
     public function testTriggersDeprecationWhenInitializingWithMetadataKey(): void
     {
         $localizedMetadata = new MetadataBag([]);
@@ -71,7 +69,6 @@ class ExtraMetadataTest extends TestCase
 
         $this->assertSame($localizedMetadata, $extraMetadata->getLocalized());
     }
-
 
     public function testTriggersDeprecationWhenAccessingMetadataKey(): void
     {

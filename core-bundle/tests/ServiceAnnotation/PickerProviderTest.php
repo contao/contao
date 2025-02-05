@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\ServiceAnnotation;
 
 use Contao\CoreBundle\ServiceAnnotation\PickerProvider;
-use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 
 class PickerProviderTest extends TestCase

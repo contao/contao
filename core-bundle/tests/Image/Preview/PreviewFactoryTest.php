@@ -34,7 +34,6 @@ use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
 use Imagine\Image\ImagineInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Group;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -339,7 +338,6 @@ class PreviewFactoryTest extends TestCase
 
         $factory->createPreviewPictures($sourcePath, [200, 200, 'box']);
     }
-
 
     public function testCreatePreviewFigureBuilder(): void
     {
