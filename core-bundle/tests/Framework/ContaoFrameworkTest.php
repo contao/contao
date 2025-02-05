@@ -76,18 +76,16 @@ class ContaoFrameworkTest extends TestCase
         $this->assertSame('de', $GLOBALS['TL_LANGUAGE']);
     }
 
-    public function testInitializesTheFrameworkWithoutARequest(): void
+    public function testInitializesTheFramework(): void
     {
         $framework = $this->getFramework();
         $framework->setContainer($this->getContainerWithContaoConfiguration());
-        $framework->initialize();
-    }
 
-    public function testInitializesTheFrameworkWithoutARequestInFrontendMode(): void
-    {
-        $framework = $this->getFramework();
-        $framework->setContainer($this->getContainerWithContaoConfiguration());
+        $this->assertFalse($framework->isInitialized());
+
         $framework->initialize();
+
+        $this->assertTrue($framework->isInitialized());
     }
 
     public function testInitializesTheFrameworkWithAnInsecurePath(): void
