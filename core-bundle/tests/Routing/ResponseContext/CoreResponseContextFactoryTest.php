@@ -120,33 +120,15 @@ class CoreResponseContextFactoryTest extends TestCase
             ->method('setResponseContext')
         ;
 
-        $matcher = $this->exactly(3);
-
         $insertTagsParser = $this->createMock(InsertTagParser::class);
         $insertTagsParser
-            ->expects($matcher)
+            ->expects($this->exactly(3))
             ->method('replaceInline')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher) {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('My title', $parameters[0]);
-
-                        return 'My title';
-                    }
-
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('My description', $parameters[0]);
-
-                        return 'My description';
-                    }
-
-                    if (3 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('{{link_url::42}}', $parameters[0]);
-
-                        return 'de/foobar.html';
-                    }
-                },
-            )
+            ->willReturnMap([
+                ['My title', 'My title'],
+                ['My description', 'My description'],
+                ['{{link_url::42}}', 'de/foobar.html'],
+            ])
         ;
 
         $requestStack = new RequestStack();
@@ -232,33 +214,15 @@ class CoreResponseContextFactoryTest extends TestCase
             ->method('setResponseContext')
         ;
 
-        $matcher = $this->exactly(3);
-
         $insertTagsParser = $this->createMock(InsertTagParser::class);
         $insertTagsParser
-            ->expects($matcher)
+            ->expects($this->exactly(3))
             ->method('replaceInline')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher, $url) {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('', $parameters[0]);
-
-                        return 'My title';
-                    }
-
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('', $parameters[0]);
-
-                        return 'My description';
-                    }
-
-                    if (3 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('{{link_url::42}}', $parameters[0]);
-
-                        return $url;
-                    }
-                },
-            )
+            ->willReturnMap([
+                ['', 'My title'],
+                ['', 'My description'],
+                ['{{link_url::42}}', $url],
+            ])
         ;
 
         $requestStack = new RequestStack();
