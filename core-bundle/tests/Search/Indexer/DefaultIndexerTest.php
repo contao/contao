@@ -232,27 +232,25 @@ class DefaultIndexerTest extends TestCase
     public function testClearsTheSearchIndex(): void
     {
         $framework = $this->mockContaoFramework();
-        $matcher = $this->exactly(3);
+
+        $expected = [
+            'TRUNCATE TABLE tl_search',
+            'TRUNCATE TABLE tl_search_index',
+            'TRUNCATE TABLE tl_search_term',
+        ];
 
         $connection = $this->createMock(Connection::class);
         $connection
-            ->expects($matcher)
+            ->expects($this->exactly(3))
             ->method('executeStatement')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher): void {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('TRUNCATE TABLE tl_search', $parameters[0]);
-                    }
+            ->with($this->callback(
+                static function (string $query) use (&$expected) {
+                    $pos = array_search($query, $expected, true);
+                    unset($expected[$pos]);
 
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('TRUNCATE TABLE tl_search_index', $parameters[0]);
-                    }
-
-                    if (3 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('TRUNCATE TABLE tl_search_term', $parameters[0]);
-                    }
+                    return false !== $pos;
                 },
-            )
+            ))
         ;
 
         $indexer = new DefaultIndexer($framework, $connection);
