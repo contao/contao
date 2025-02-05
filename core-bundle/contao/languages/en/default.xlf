@@ -2258,6 +2258,18 @@
       <trans-unit id="MSC.removeItem">
         <source>Remove item</source>
       </trans-unit>
+      <trans-unit id="MSC.ariaMenuLabel">
+        <source>Menu</source>
+      </trans-unit>
+      <trans-unit id="MSC.ariaMenuToggle">
+        <source>Toggle menu</source>
+      </trans-unit>
+      <trans-unit id="MSC.ariaMenuExpand">
+        <source>Expand menu: </source>
+      </trans-unit>
+      <trans-unit id="MSC.ariaMenuCollapse">
+        <source>Collapse menu: </source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
       </trans-unit>
