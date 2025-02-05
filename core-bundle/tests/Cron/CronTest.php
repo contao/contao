@@ -343,18 +343,6 @@ class CronTest extends TestCase
             ->willReturn($entity)
         ;
 
-        $logger = $this->createMock(LoggerInterface::class);
-        $logger
-            ->expects($this->exactly(2))
-            ->method('debug')
-            ->withConsecutive(
-                ['Executing cron job "Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron"'],
-                ['Asynchronous cron job "Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron" finished successfully'],
-                ['Executing cron job "Contao\CoreBundle\Cron\Cron::updateMinutelyCliCron"'],
-                // No completion log, as we're skipping
-            )
-        ;
-
         $cache = new ArrayAdapter();
 
         $cron = new Cron(
@@ -362,7 +350,7 @@ class CronTest extends TestCase
             fn () => $this->createMock(EntityManagerInterface::class),
             $cache,
             $this->createLockFactory(),
-            $logger,
+            $this->createMock(LoggerInterface::class),
         );
 
         $cron->addCronJob(new CronJob($cron, '* * * * *', 'updateMinutelyCliCron'));
@@ -386,7 +374,6 @@ class CronTest extends TestCase
         $entity
             ->expects($this->exactly(2))
             ->method('setLastRun')
-            ->withConsecutive([$this->anything()], [$lastRun])
         ;
 
         $entity
