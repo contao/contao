@@ -219,7 +219,7 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertSame($expectedResult, $files);
     }
 
-    public function containerConfigurationProvider(): iterable
+    public static function containerConfigurationProvider(): iterable
     {
         yield [
             __DIR__.'/../Fixtures/HttpKernel/WithParametersYml',
@@ -264,7 +264,7 @@ class ContaoKernelTest extends ContaoTestCase
         ];
 
         yield [
-            $this->getTempDir(),
+            static::getTempDir(),
             'prod',
             [],
         ];
