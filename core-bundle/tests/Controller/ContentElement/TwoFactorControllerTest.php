@@ -18,6 +18,7 @@ use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Controller\ContentElement\TwoFactorController;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
@@ -58,10 +59,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
         $controller->setContainer($container);
 
         $model = $this->mockClassWithProperties(ContentModel::class);
-        $page = $this->mockPageModel();
-
         $request = new Request();
-        $request->attributes->set('pageModel', $page);
 
         $response = $controller($request, $model, 'main');
 
@@ -105,10 +103,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
         $controller->setContainer($container);
 
         $model = $this->mockClassWithProperties(ContentModel::class);
-        $page = $this->mockPageModel();
-
         $request = new Request();
-        $request->attributes->set('pageModel', $page);
 
         $response = $controller($request, $model, 'main');
 
@@ -135,12 +130,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
         $controller->setContainer($container);
 
         $model = $this->mockClassWithProperties(ContentModel::class);
-
-        $page = $this->mockPageModel();
-        $page->enforceTwoFactor = true;
-
         $request = new Request();
-        $request->attributes->set('pageModel', $page);
 
         $response = $controller($request, $model, 'main');
 
@@ -166,10 +156,8 @@ class TwoFactorControllerTest extends ContentElementTestCase
         $controller->setContainer($container);
 
         $model = $this->mockClassWithProperties(ContentModel::class);
-        $page = $this->mockPageModel();
 
         $request = new Request();
-        $request->attributes->set('pageModel', $page);
         $request->request->set('FORM_SUBMIT', 'tl_two_factor_disable');
 
         $response = $controller($request, $model, 'main');
@@ -203,10 +191,8 @@ class TwoFactorControllerTest extends ContentElementTestCase
         $controller->setContainer($container);
 
         $model = $this->mockClassWithProperties(ContentModel::class);
-        $page = $this->mockPageModel();
 
         $request = new Request();
-        $request->attributes->set('pageModel', $page);
         $request->request->set('FORM_SUBMIT', 'tl_two_factor_disable');
 
         $container
@@ -243,10 +229,8 @@ class TwoFactorControllerTest extends ContentElementTestCase
         $controller->setContainer($container);
 
         $model = $this->mockClassWithProperties(ContentModel::class);
-        $page = $this->mockPageModel();
 
         $request = new Request();
-        $request->attributes->set('pageModel', $page);
         $request->request->set('2fa', 'enable');
 
         $container
@@ -282,7 +266,6 @@ class TwoFactorControllerTest extends ContentElementTestCase
         $page = $this->mockPageModel();
 
         $request = new Request();
-        $request->attributes->set('pageModel', $page);
         $request->request->set('2fa', 'enable');
 
         $container
@@ -318,7 +301,6 @@ class TwoFactorControllerTest extends ContentElementTestCase
         $page = $this->mockPageModel();
 
         $request = new Request();
-        $request->attributes->set('pageModel', $page);
         $request->request->set('2fa', 'enable');
         $request->request->set('FORM_SUBMIT', 'tl_two_factor');
         $request->request->set('verify', '123456');
@@ -361,7 +343,6 @@ class TwoFactorControllerTest extends ContentElementTestCase
         $page = $this->mockPageModel();
 
         $request = new Request();
-        $request->attributes->set('pageModel', $page);
         $request->request->set('2fa', 'enable');
         $request->request->set('FORM_SUBMIT', 'tl_two_factor');
         $request->request->set('verify', '123456');
@@ -398,10 +379,8 @@ class TwoFactorControllerTest extends ContentElementTestCase
         $controller->setContainer($container);
 
         $model = $this->mockClassWithProperties(ContentModel::class);
-        $page = $this->mockPageModel();
 
         $request = new Request();
-        $request->attributes->set('pageModel', $page);
         $request->request->set('FORM_SUBMIT', 'tl_two_factor_show_backup_codes');
 
         $response = $controller($request, $model, 'main');
@@ -435,10 +414,8 @@ class TwoFactorControllerTest extends ContentElementTestCase
         $controller->setContainer($container);
 
         $model = $this->mockClassWithProperties(ContentModel::class);
-        $page = $this->mockPageModel();
 
         $request = new Request();
-        $request->attributes->set('pageModel', $page);
         $request->request->set('FORM_SUBMIT', 'tl_two_factor_generate_backup_codes');
 
         $response = $controller($request, $model, 'main');
@@ -529,7 +506,19 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
     private function getContainerWithFrameworkTemplate(UserInterface|null $user = null, bool $isFullyAuthenticated = false): ContainerBuilder
     {
+        $page = $this->mockPageModel();
+
+        $request = new Request();
+        $request->attributes->set('pageModel', $page);
+
+        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder
+            ->method('getCurrentPage')
+            ->willReturn($page)
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
+        $container->set('contao.routing.page_finder', $pageFinder);
         $container->set('contao.framework', $this->mockFrameworkWithTemplate());
         $container->set('contao.routing.content_url_generator', $this->createMock(ContentUrlGenerator::class));
         $container->set('translator', $this->createMock(TranslatorInterface::class));
