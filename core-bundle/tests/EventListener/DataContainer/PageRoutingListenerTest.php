@@ -188,25 +188,14 @@ class PageRoutingListenerTest extends TestCase
         ;
 
         $backendAdapter = $this->mockAdapter(['addToUrl']);
-        $matcher = $this->exactly(3);
         $backendAdapter
-            ->expects($matcher)
+            ->expects($this->exactly(3))
             ->method('addToUrl')
-            ->willReturnCallback(
-                function (...$parameters) use ($matcher) {
-                    if (1 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('act=edit&id=2&popup=1&nb=1', $parameters[0]);
-                    }
-                    if (2 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('act=edit&id=3&popup=1&nb=1', $parameters[0]);
-                    }
-                    if (3 === $matcher->numberOfInvocations()) {
-                        $this->assertSame('act=edit&id=4&popup=1&nb=1', $parameters[0]);
-                    }
-
-                    return 'editUrl';
-                },
-            )
+            ->willReturnMap([
+                ['act=edit&id=2&popup=1&nb=1', 'editUrl'],
+                ['act=edit&id=3&popup=1&nb=1', 'editUrl'],
+                ['act=edit&id=4&popup=1&nb=1', 'editUrl'],
+            ])
         ;
 
         $framework = $this->mockContaoFramework([
