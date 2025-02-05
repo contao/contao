@@ -46,7 +46,7 @@ class LoginController extends AbstractContentElementController
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
         if (($user = $this->security->getUser()) && !$user instanceof FrontendUser) {
-            return new Response();
+            return new Response(status: Response::HTTP_NO_CONTENT);
         }
 
         $targetPath = $this->getTargetPath($request);

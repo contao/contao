@@ -124,6 +124,7 @@ services:
             - '@translator'
             - '@contao.routing.content_url_generator'
             - '@event_dispatcher'
+            - '@contao.framework'
 
     Contao\CoreBundle\Controller\ContentElement\ManagePasskeysController:
         arguments:
