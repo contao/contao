@@ -179,7 +179,12 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
         $environment->addExtension($contaoExtension);
 
-        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
+        $insertTagParser = new InsertTagParser(
+            $this->createMock(ContaoFramework::class),
+            $this->createMock(LoggerInterface::class),
+            $this->createMock(FragmentHandler::class),
+            $this->createMock(RequestStack::class),
+        );
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([

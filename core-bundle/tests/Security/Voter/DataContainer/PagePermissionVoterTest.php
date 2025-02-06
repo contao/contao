@@ -70,9 +70,7 @@ class PagePermissionVoterTest extends TestCase
     public function testVoter(CreateAction|DeleteAction|ReadAction|UpdateAction $subject, array $decisions, bool $accessGranted, array|null $pagemounts = null): void
     {
         $token = $this->mockToken($pagemounts);
-
         $framework = $this->mockContaoFrameworkWithDatabase($pagemounts);
-
         $decisionManager = $this->createMock(AccessDecisionManagerInterface::class);
 
         array_unshift($decisions, [['ROLE_ADMIN'], null, false]);

@@ -73,6 +73,7 @@ class FragmentTemplateTest extends TestCase
         $this->expectExceptionMessage(\sprintf('Calling the "%s()" function on a FragmentTemplate is not allowed. Set template data instead and optionally output it with getResponse().', $method));
 
         $parent = (new \ReflectionClass(FragmentTemplate::class))->getParentClass();
+
         $args = array_map(
             function (\ReflectionParameter $parameter) {
                 $type = $parameter->getType();
