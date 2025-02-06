@@ -44,7 +44,6 @@ export default class extends Controller {
     }
 
     colorChange(event) {
-        console.log(event);
         this.editor.setTheme(`ace/theme/${event.detail.mode === 'dark' ? 'twilight' : 'clouds'}`);
     }
 
