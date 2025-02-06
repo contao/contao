@@ -43,6 +43,11 @@ export default class extends Controller {
         this.container.remove();
     }
 
+    colorChange(event) {
+        console.log(event);
+        this.editor.setTheme(`ace/theme/${event.detail.mode === 'dark' ? 'twilight' : 'clouds'}`);
+    }
+
     setMaxLines() {
         this.editor.setOption('maxLines', Math.floor((window.innerHeight - 320) / Math.floor(12 * this.editor.container.style.lineHeight)));
     }
