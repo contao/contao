@@ -22,7 +22,7 @@ window.ace && window.addEvent('domready', function() {
   ta.style['display'] = 'none';
 
   // Instantiate the editor
-  let editor = ace.edit('<?= $this->selector ?>_div', {maxLines: Infinity});
+  let editor = ace.edit('<?= $this->selector ?>_div', {maxLines: Infinity, enableKeyboardAccessibility: true});
   editor.$blockScrolling = Infinity;
   editor.setTheme((document.documentElement.dataset.colorScheme === 'dark' ? 'ace/theme/twilight' : 'ace/theme/clouds'));
   editor.renderer.setScrollMargin(3, 3, 0, 0);
