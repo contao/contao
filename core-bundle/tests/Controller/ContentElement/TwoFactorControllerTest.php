@@ -19,6 +19,7 @@ use Contao\CoreBundle\Controller\ContentElement\TwoFactorController;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\PageFinder;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
@@ -43,6 +44,30 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TwoFactorControllerTest extends ContentElementTestCase
 {
+    public function testReturnsIfInBackendScope(): void
+    {
+        $container = $this->getContainerWithFrameworkTemplate($this->createMock(BackendUser::class), true);
+
+        $controller = new TwoFactorController(
+            $this->getDefaultFramework(),
+            $this->createMock(TranslatorInterface::class),
+            $this->createMock(BackupCodeManager::class),
+            $this->createMock(TrustedDeviceManager::class),
+            $this->mockAuthenticator($this->createMock(BackendUser::class)),
+            $this->mockAuthenticationUtils(),
+            $this->mockScopeMatcherWithOptionalScope(true),
+        );
+
+        $controller->setContainer($container);
+
+        $model = $this->mockClassWithProperties(ContentModel::class);
+        $request = new Request();
+
+        $response = $controller($request, $model, 'main');
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+    }
+
     public function testReturnsIfTheUserIsNotAFrontendUser(): void
     {
         $container = $this->getContainerWithFrameworkTemplate($this->createMock(BackendUser::class), true);
@@ -54,6 +79,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator($this->createMock(BackendUser::class)),
             $this->mockAuthenticationUtils(),
+            $this->mockScopeMatcherWithOptionalScope(),
         );
 
         $controller->setContainer($container);
@@ -77,6 +103,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator($this->createMock(BackendUser::class)),
             $this->mockAuthenticationUtils(),
+            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -99,6 +126,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
+            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -126,6 +154,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
+            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -152,6 +181,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
+            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -187,6 +217,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $trustedDeviceManager,
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
+            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -225,6 +256,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
+            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -259,6 +291,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(new InvalidTwoFactorCodeException()),
+            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -294,6 +327,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator($user, false),
             $this->mockAuthenticationUtils(new InvalidTwoFactorCodeException()),
+            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -336,6 +370,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator($user, true),
             $this->mockAuthenticationUtils(new InvalidTwoFactorCodeException()),
+            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -375,6 +410,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
+            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -410,6 +446,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
+            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -502,6 +539,18 @@ class TwoFactorControllerTest extends ContentElementTestCase
         ;
 
         return $tokenStorage;
+    }
+
+    private function mockScopeMatcherWithOptionalScope(bool $hasBackendScope = false): ScopeMatcher&MockObject
+    {
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher
+            ->expects($this->once())
+            ->method('isBackendRequest')
+            ->willReturn($hasBackendScope)
+        ;
+
+        return $scopeMatcher;
     }
 
     private function getContainerWithFrameworkTemplate(UserInterface|null $user = null, bool $isFullyAuthenticated = false): ContainerBuilder

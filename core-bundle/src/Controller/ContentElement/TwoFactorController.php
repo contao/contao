@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
@@ -40,11 +41,16 @@ class TwoFactorController extends AbstractContentElementController
         private readonly TrustedDeviceManager $trustedDeviceManager,
         private readonly Authenticator $authenticator,
         private readonly AuthenticationUtils $authenticationUtils,
+        private readonly ScopeMatcher $scopeMatcher,
     ) {
     }
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
+        if ($this->scopeMatcher->isBackendRequest($request)) {
+            return $template->getResponse();
+        }
+
         $user = $this->getUser();
         $pageModel = $this->getPageModel();
 
