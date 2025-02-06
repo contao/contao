@@ -20,12 +20,11 @@ use Doctrine\DBAL\Schema\Table;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Tools\SchemaTool;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DcaSchemaProviderTest extends DoctrineTestCase
 {
-    /**
-     * @dataProvider provideDefinitions
-     */
+    #[DataProvider('provideDefinitions')]
     public function testAppendToSchema(array $dca = []): void
     {
         $schema = $this->getSchema();
@@ -194,9 +193,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertFalse($table->getColumn('id')->getFixed());
     }
 
-    /**
-     * @dataProvider provideTableOptions
-     */
+    #[DataProvider('provideTableOptions')]
     public function testAppendToSchemaReadsTheTableOptions(string $options, \Closure $assertions): void
     {
         $dca = [
@@ -209,10 +206,10 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->getDcaSchemaProvider($dca)->appendToSchema($schema);
         $table = $schema->getTable('tl_member');
 
-        $assertions($table);
+        $assertions->bindTo($this)($table);
     }
 
-    public function provideTableOptions(): iterable
+    public static function provideTableOptions(): iterable
     {
         yield [
             'ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
@@ -284,9 +281,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame(['firstname', 'lastname'], $table->getIndex('name')->getColumns());
     }
 
-    /**
-     * @dataProvider provideIndexes
-     */
+    #[DataProvider('provideIndexes')]
     public function testAppendToSchemaAddsTheIndexLength(int|null $expected, string $tableOptions, bool|string|null $largePrefixes = null, string|null $version = null, string|null $filePerTable = null, string|null $fileFormat = null): void
     {
         $dca = [
@@ -578,9 +573,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame(['fulltext'], $table->getIndex('text')->getFlags());
     }
 
-    /**
-     * @dataProvider provideInvalidIndexDefinitions
-     */
+    #[DataProvider('provideInvalidIndexDefinitions')]
     public function testAppendToSchemaFailsIfIndexesAreInvalid(array $dca, string $expectedExceptionMessage): void
     {
         $dcaSchemaProvider = $this->getDcaSchemaProvider($dca);

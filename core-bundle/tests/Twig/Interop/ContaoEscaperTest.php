@@ -15,9 +15,11 @@ namespace Contao\CoreBundle\Tests\Twig\Interop;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Tests\Fixtures\Helper\HookHelper;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaper;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -32,9 +34,7 @@ class ContaoEscaperTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider provideHtmlInput
-     */
+    #[DataProvider('provideHtmlInput')]
     public function testEscapesHtml(int|string $input, string $expectedOutput): void
     {
         $this->assertSame($expectedOutput, $this->invokeEscapeHtml($input, null), 'no charset specified');
@@ -80,12 +80,10 @@ class ContaoEscaperTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideHtmlAttributeInput
-     */
+    #[DataProvider('provideHtmlAttributeInput')]
     public function testEscapesHtmlAttributes(string $input, string $expectedOutput): void
     {
-        $GLOBALS['TL_HOOKS'] = ['replaceInsertTags' => [[static::class, 'executeReplaceInsertTagsCallback']]];
+        HookHelper::registerHook('replaceInsertTags', $this->executeReplaceInsertTagsCallback(...));
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
@@ -98,19 +96,6 @@ class ContaoEscaperTest extends TestCase
         $this->assertSame($expectedOutput, $this->invokeEscapeHtmlAttr($input, 'utf-8'), 'utf-8');
 
         unset($GLOBALS['TL_HOOKS']);
-    }
-
-    public function executeReplaceInsertTagsCallback(string $tag, bool $cache): string|false
-    {
-        if ('bar' !== $tag) {
-            return false;
-        }
-
-        if ($cache) {
-            $this->fail('Controller::replaceInsertTags must not be called with $blnCache = true.');
-        }
-
-        return 'baz';
     }
 
     public static function provideHtmlAttributeInput(): iterable
@@ -150,6 +135,19 @@ class ContaoEscaperTest extends TestCase
         $this->expectExceptionMessage('The "contao_html_attr" escape filter does not support the ISO-8859-1 charset, use UTF-8 instead.');
 
         $this->invokeEscapeHtmlAttr('foo', 'ISO-8859-1');
+    }
+
+    private function executeReplaceInsertTagsCallback(string $tag, bool $cache): string|false
+    {
+        if ('bar' !== $tag) {
+            return false;
+        }
+
+        if ($cache) {
+            $this->fail('Controller::replaceInsertTags must not be called with $blnCache = true.');
+        }
+
+        return 'baz';
     }
 
     private function invokeEscapeHtml(int|string $input, string|null $charset): string

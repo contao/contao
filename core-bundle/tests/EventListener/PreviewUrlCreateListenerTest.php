@@ -18,6 +18,7 @@ use Contao\CoreBundle\EventListener\PreviewUrlCreateListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PreviewUrlCreateListenerTest extends TestCase
 {
@@ -57,9 +58,7 @@ class PreviewUrlCreateListenerTest extends TestCase
         $this->assertSame('page=42', $event->getQuery());
     }
 
-    /**
-     * @dataProvider getValidDoParameters
-     */
+    #[DataProvider('getValidDoParameters')]
     public function testDoesNotCreateAnyPreviewUrlIfTheFrameworkIsNotInitialized(string $do): void
     {
         $framework = $this->createMock(ContaoFramework::class);
@@ -76,9 +75,7 @@ class PreviewUrlCreateListenerTest extends TestCase
         $this->assertNull($event->getQuery());
     }
 
-    /**
-     * @dataProvider getInvalidDoParameters
-     */
+    #[DataProvider('getInvalidDoParameters')]
     public function testDoesNotCreateThePreviewUrlIfNeitherPageNorArticleParameterIsSet(string $do): void
     {
         $framework = $this->mockContaoFramework();
@@ -90,9 +87,7 @@ class PreviewUrlCreateListenerTest extends TestCase
         $this->assertNull($event->getQuery());
     }
 
-    /**
-     * @dataProvider getValidDoParameters
-     */
+    #[DataProvider('getValidDoParameters')]
     public function testDoesNotCreateThePreviewUrlIfThereIsNoId(string $do): void
     {
         $framework = $this->mockContaoFramework();
@@ -104,9 +99,7 @@ class PreviewUrlCreateListenerTest extends TestCase
         $this->assertNull($event->getQuery());
     }
 
-    /**
-     * @dataProvider getValidDoParameters
-     */
+    #[DataProvider('getValidDoParameters')]
     public function testDoesNotCreateThePreviewUrlIfThereIsNoPageItem(string $do): void
     {
         $articleModel = $this->mockClassWithProperties(ArticleModel::class, ['pid' => 42]);

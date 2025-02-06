@@ -18,6 +18,7 @@ use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -31,9 +32,7 @@ class BackupCreateCommandTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider successfulCommandRunProvider
-     */
+    #[DataProvider('successfulCommandRunProvider')]
     public function testSuccessfulCommandRun(array $arguments, \Closure $expectedCreateConfig, string $expectedOutput): void
     {
         $command = new BackupCreateCommand($this->mockBackupManager($expectedCreateConfig));
@@ -46,7 +45,7 @@ class BackupCreateCommandTest extends TestCase
         $this->assertSame(0, $code);
     }
 
-    public function successfulCommandRunProvider(): iterable
+    public static function successfulCommandRunProvider(): iterable
     {
         yield 'Default arguments' => [
             [],
@@ -94,9 +93,7 @@ class BackupCreateCommandTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider unsuccessfulCommandRunProvider
-     */
+    #[DataProvider('unsuccessfulCommandRunProvider')]
     public function testUnsuccessfulCommandRun(array $arguments, string $expectedOutput): void
     {
         $backupManager = $this->createMock(BackupManager::class);
@@ -154,7 +151,7 @@ class BackupCreateCommandTest extends TestCase
         $backupManager
             ->expects($this->once())
             ->method('create')
-            ->with($this->callback($expectedCreateConfig))
+            ->with($this->callback(\Closure::bind($expectedCreateConfig, $this)))
         ;
 
         return $backupManager;

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
@@ -26,9 +27,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BackendRebuildCacheMessageListenerTest extends TestCase
 {
-    /**
-     * @dataProvider provideRequestAndDirty
-     */
+    #[DataProvider('provideRequestAndDirty')]
     public function testDoesNotAddMessageIfNotBackendRequestOrAppCacheIsNotDirty(bool $backendRequest, bool $dirty): void
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);

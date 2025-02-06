@@ -14,11 +14,13 @@ namespace Contao\NewsBundle\Tests\Routing;
 
 use Contao\ArticleModel;
 use Contao\CoreBundle\Routing\Content\StringUrl;
+use Contao\Model;
 use Contao\NewsArchiveModel;
 use Contao\NewsBundle\Routing\NewsResolver;
 use Contao\NewsModel;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class NewsResolverTest extends ContaoTestCase
 {
@@ -106,30 +108,35 @@ class NewsResolverTest extends ContaoTestCase
     }
 
     /**
-     * @dataProvider getParametersForContentProvider
+     * @param class-string<Model> $class
      */
-    public function testGetParametersForContent(object $content, array $expected): void
+    #[DataProvider('getParametersForContentProvider')]
+    public function testGetParametersForContent(string $class, array $properties, array $expected): void
     {
+        $content = $this->mockClassWithProperties($class, $properties);
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $resolver = new NewsResolver($this->mockContaoFramework());
 
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));
     }
 
-    public function getParametersForContentProvider(): iterable
+    public static function getParametersForContentProvider(): iterable
     {
         yield 'Uses the news alias' => [
-            $this->mockClassWithProperties(NewsModel::class, ['id' => 42, 'alias' => 'foobar']),
+            NewsModel::class,
+            ['id' => 42, 'alias' => 'foobar'],
             ['parameters' => '/foobar'],
         ];
 
         yield 'Uses news ID if alias is empty' => [
-            $this->mockClassWithProperties(NewsModel::class, ['id' => 42, 'alias' => '']),
+            NewsModel::class,
+            ['id' => 42, 'alias' => ''],
             ['parameters' => '/42'],
         ];
 
         yield 'Only supports NewsModel' => [
-            $this->mockClassWithProperties(PageModel::class),
+            PageModel::class,
+            [],
             [],
         ];
     }

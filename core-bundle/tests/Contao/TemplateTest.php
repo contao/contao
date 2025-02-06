@@ -27,6 +27,7 @@ use Contao\FrontendTemplate;
 use Contao\System;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\DirectiveSet;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Filesystem\Filesystem;
@@ -333,9 +334,7 @@ class TemplateTest extends TestCase
         (new FrontendTemplate())->figure(1, null);
     }
 
-    /**
-     * @dataProvider provideBuffer
-     */
+    #[DataProvider('provideBuffer')]
     public function testCompileReplacesLiteralInsertTags(string $buffer, string $expectedOutput): void
     {
         $page = new \stdClass();

@@ -26,6 +26,7 @@ use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Runtime\SchemaOrgRuntime;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Path;
 use Twig\Environment;
@@ -34,9 +35,7 @@ use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
 class TwigMacrosTest extends TestCase
 {
-    /**
-     * @dataProvider provideAttributes
-     */
+    #[DataProvider('provideAttributes')]
     public function testHtmlAttributesMacro(string $attributes, string $expected): void
     {
         $this->assertSame($expected, $this->renderMacro("html_attributes($attributes)"));
@@ -60,9 +59,7 @@ class TwigMacrosTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideCaptionOptions
-     */
+    #[DataProvider('provideCaptionOptions')]
     public function testCaptionMacroWithOptions(string $templateOptions, array $figureOptions, string $expected): void
     {
         $figure = new Figure(
@@ -105,9 +102,7 @@ class TwigMacrosTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideImgData
-     */
+    #[DataProvider('provideImgData')]
     public function testImgMacro(array $imageData, Metadata|null $metadata, string $expected): void
     {
         $image = $this->createMock(ImageResult::class);
@@ -181,9 +176,7 @@ class TwigMacrosTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideImgOptions
-     */
+    #[DataProvider('provideImgOptions')]
     public function testImgMacroWithOptions(string $templateOptions, array $figureOptions, string $expected): void
     {
         $image = $this->createMock(ImageResult::class);
@@ -235,9 +228,7 @@ class TwigMacrosTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider providePictureSources
-     */
+    #[DataProvider('providePictureSources')]
     public function testPictureMacro(array $sources, string $expected): void
     {
         $image = $this->createMock(ImageResult::class);
@@ -301,9 +292,7 @@ class TwigMacrosTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider providePictureOptions
-     */
+    #[DataProvider('providePictureOptions')]
     public function testPictureMacroWithOptions(string $templateOptions, array $figureOptions, string $expected): void
     {
         $image = $this->createMock(ImageResult::class);
@@ -369,16 +358,14 @@ class TwigMacrosTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideFigureData
-     */
-    public function testFigureMacro(Metadata|null $metadata, array $linkAttributes, LightboxResult|null $lightbox, string $expected): void
+    #[DataProvider('provideFigureData')]
+    public function testFigureMacro(Metadata|null $metadata, array $linkAttributes, \Closure|null $lightboxDelegate, string $expected): void
     {
         $figure = new Figure(
             $this->createMock(ImageResult::class),
             $metadata,
             $linkAttributes,
-            $lightbox,
+            $lightboxDelegate ? $lightboxDelegate($this) : null,
         );
 
         $html = $this->renderMacro('figure(figure)', ['figure' => $figure]);
@@ -393,7 +380,7 @@ class TwigMacrosTest extends TestCase
         $this->assertSame($expected, trim($html));
     }
 
-    public function provideFigureData(): iterable
+    public static function provideFigureData(): iterable
     {
         yield 'minimal' => [
             null,
@@ -412,28 +399,32 @@ class TwigMacrosTest extends TestCase
             '<figure><a href="foo.html" data-link="bar"><picture></a></figure>',
         ];
 
-        $lightbox = $this->createMock(LightboxResult::class);
-        $lightbox
-            ->method('getLinkHref')
-            ->willReturn('lightbox/resource')
-        ;
+        $lightboxDelegate = static function (TestCase $testCase) {
+            $lightbox = $testCase->createMock(LightboxResult::class);
+            $lightbox
+                ->method('getLinkHref')
+                ->willReturn('lightbox/resource')
+            ;
 
-        $lightbox
-            ->method('getGroupIdentifier')
-            ->willReturn('gal1')
-        ;
+            $lightbox
+                ->method('getGroupIdentifier')
+                ->willReturn('gal1')
+            ;
+
+            return $lightbox;
+        };
 
         yield 'with lightbox link' => [
             null,
             [],
-            $lightbox,
+            $lightboxDelegate,
             '<figure><a href="lightbox/resource" data-lightbox="gal1"><picture></a></figure>',
         ];
 
         yield 'with lightbox link and title' => [
             new Metadata([Metadata::VALUE_TITLE => 'foo title']),
             [],
-            $lightbox,
+            $lightboxDelegate,
             '<figure><a href="lightbox/resource" title="foo title" data-lightbox="gal1"><picture></a></figure>',
         ];
 
@@ -445,9 +436,7 @@ class TwigMacrosTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideFigureOptions
-     */
+    #[DataProvider('provideFigureOptions')]
     public function testFigureMacroWithOptions(string $templateOptions, array $figureOptions, string $expected): void
     {
         $lightbox = $this->createMock(LightboxResult::class);
@@ -517,9 +506,7 @@ class TwigMacrosTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideAddSchemaOrgOptions
-     */
+    #[DataProvider('provideAddSchemaOrgOptions')]
     public function testDoesAddsSchemaOrgDataIfEnabled(string $call, array $schemaData): void
     {
         $figure = new Figure(

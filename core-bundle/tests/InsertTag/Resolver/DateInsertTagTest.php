@@ -9,12 +9,11 @@ use Contao\CoreBundle\InsertTag\ResolvedParameters;
 use Contao\CoreBundle\InsertTag\Resolver\DateInsertTag;
 use Contao\Date;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DateInsertTagTest extends ContaoTestCase
 {
-    /**
-     * @dataProvider expiresAtProvider
-     */
+    #[DataProvider('expiresAtProvider')]
     public function testExpiresAt(array $formats, \DateTimeImmutable|null $expectedExpiresAt): void
     {
         $dateAdapter = $this->mockAdapter(['parse']);

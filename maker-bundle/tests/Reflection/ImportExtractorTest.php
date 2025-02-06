@@ -17,13 +17,12 @@ use Contao\MakerBundle\Fixtures\ClassThree;
 use Contao\MakerBundle\Fixtures\ClassTwo;
 use Contao\MakerBundle\Reflection\ImportExtractor;
 use Contao\MakerBundle\Reflection\MethodDefinition;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class ImportExtractorTest extends TestCase
 {
-    /**
-     * @dataProvider methodProvider
-     */
+    #[DataProvider('methodProvider')]
     public function testExtraction(array $uses, MethodDefinition $method): void
     {
         $this->assertSame($uses, (new ImportExtractor())->extract($method));

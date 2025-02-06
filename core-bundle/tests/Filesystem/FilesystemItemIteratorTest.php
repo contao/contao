@@ -16,6 +16,7 @@ use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\FilesystemItemIterator;
 use Contao\CoreBundle\Filesystem\SortMode;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class FilesystemItemIteratorTest extends TestCase
 {
@@ -182,9 +183,7 @@ class FilesystemItemIteratorTest extends TestCase
         $iterator->limit(-1);
     }
 
-    /**
-     * @dataProvider provideInvalidItems
-     */
+    #[DataProvider('provideInvalidItems')]
     public function testEnsuresTypeSafetyWhenIterating(mixed $item, string $expectedType): void
     {
         $iterator = new FilesystemItemIterator([$item]);

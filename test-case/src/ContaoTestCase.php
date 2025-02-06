@@ -162,15 +162,31 @@ abstract class ContaoTestCase extends TestCase
      */
     protected function mockAdapter(array $methods): Adapter
     {
-        return $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->disableOriginalClone()
-            ->disableArgumentCloning()
-            ->disallowMockingUnknownTypes()
-            ->addMethods($methods)
-            ->getMock()
-        ;
+        sort($methods);
+
+        $namespace = 'Contao\DynamicTestClass';
+        $className = 'MockAdapter'.sha1(implode(':', $methods));
+        $path = sys_get_temp_dir().\DIRECTORY_SEPARATOR.$className.'.php';
+        $fqcn = $namespace.'\\'.$className;
+
+        if (!file_exists($path)) {
+            $methods = array_map(static fn (string $method): string => \sprintf('public function %s() {}', $method), $methods);
+
+            $classContent = \sprintf('<?php
+
+            namespace %s;
+
+            class %s extends \%s
+            {
+                %s
+            }', $namespace, $className, Adapter::class, implode(PHP_EOL, $methods));
+
+            file_put_contents($path, $classContent);
+        }
+
+        include_once $path;
+
+        return $this->createMock($fqcn);
     }
 
     /**

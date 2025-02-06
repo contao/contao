@@ -28,6 +28,7 @@ use Contao\Image\ResizerInterface;
 use Contao\System;
 use Imagine\Image\BoxInterface;
 use Imagine\Image\ImagineInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -140,11 +141,26 @@ class FigureTest extends TestCase
         $this->assertNull($figure->getMetadata());
     }
 
-    /**
-     * @dataProvider provideLinkAttributesAndPreconditions
-     */
+    #[DataProvider('provideLinkAttributesAndPreconditions')]
     public function testGetLinkAttributes(array $argumentsAndPreconditions, array $expectedAttributes, string|null $expectedHref): void
     {
+        foreach ($argumentsAndPreconditions as &$element) {
+            if ('__lightbox__' === $element) {
+                $lightbox = $this->createMock(LightboxResult::class);
+                $lightbox
+                    ->method('getLinkHref')
+                    ->willReturn('path/from/lightbox')
+                ;
+
+                $lightbox
+                    ->method('getGroupIdentifier')
+                    ->willReturn('12345')
+                ;
+
+                $element = $lightbox;
+            }
+        }
+
         $image = $this->createMock(ImageResult::class);
 
         [$attributes, $metadata, $lightbox] = $argumentsAndPreconditions;
@@ -156,18 +172,9 @@ class FigureTest extends TestCase
         $this->assertSame($expectedHref, $figure->getLinkAttributes(true)['href'] ?? null);
     }
 
-    public function provideLinkAttributesAndPreconditions(): iterable
+    public static function provideLinkAttributesAndPreconditions(): iterable
     {
-        $lightbox = $this->createMock(LightboxResult::class);
-        $lightbox
-            ->method('getLinkHref')
-            ->willReturn('path/from/lightbox')
-        ;
-
-        $lightbox
-            ->method('getGroupIdentifier')
-            ->willReturn('12345')
-        ;
+        $lightBoxPlaceholder = '__lightbox__';
 
         yield 'empty set of attributes' => [
             [[], null, null], [], '',
@@ -236,7 +243,7 @@ class FigureTest extends TestCase
 
         yield 'custom attributes and lightbox' => [
             [
-                ['foo' => 'a'], null, $lightbox,
+                ['foo' => 'a'], null, $lightBoxPlaceholder,
             ],
             [
                 'foo' => 'a',
@@ -247,7 +254,7 @@ class FigureTest extends TestCase
 
         yield 'custom attributes, metadata containing link and lightbox' => [
             [
-                ['foo' => 'a'], new Metadata([Metadata::VALUE_URL => 'will-be-ignored']), $lightbox,
+                ['foo' => 'a'], new Metadata([Metadata::VALUE_URL => 'will-be-ignored']), $lightBoxPlaceholder,
             ],
             [
                 'foo' => 'a',
@@ -266,7 +273,7 @@ class FigureTest extends TestCase
 
         yield 'custom attributes, force-set data-lightbox attribute and light-box' => [
             [
-                ['foo' => 'a', 'data-lightbox' => 'abcde'], new Metadata([Metadata::VALUE_URL => 'https://example.com']), $lightbox,
+                ['foo' => 'a', 'data-lightbox' => 'abcde'], new Metadata([Metadata::VALUE_URL => 'https://example.com']), $lightBoxPlaceholder,
             ],
             [
                 'foo' => 'a',
@@ -315,244 +322,261 @@ class FigureTest extends TestCase
         $this->assertSame([], $figure->getOptions());
     }
 
-    /**
-     * @dataProvider provideLegacyTemplateDataScenarios
-     */
-    public function testGetLegacyTemplateData(array $preconditions, array $buildAttributes, \Closure $assert): void
+    public function testBasicImageData(): void
     {
-        [$metadata, $linkAttributes, $lightbox, $options] = $preconditions;
-        [$includeFullMetadata, $floatingProperty, $marginProperty] = $buildAttributes;
+        $data = $this->getLegacyTemplateData([null, null, null, null], [false, null, null]);
 
-        $imageFactory = new ImageFactory(
-            $this->createMock(ResizerInterface::class),
-            $this->createMock(ImagineInterface::class),
-            $this->createMock(ImagineInterface::class),
-            new Filesystem(),
-            $this->createMock(ContaoFramework::class),
-            false,
-            ['jpeg_quality' => 80],
-            ['jpg', 'svg'],
-            $this->getFixturesDir(),
-        );
+        $this->assertSame(['img foo'], $data['picture']['img']);
+        $this->assertSame(['sources foo'], $data['picture']['sources']);
+        $this->assertSame('https://assets.url/files/public/foo.jpg', $data['src']);
+        $this->assertSame('path/to/resource.jpg', $data['singleSRC']);
+        $this->assertSame(100, $data['width']);
+        $this->assertSame(50, $data['height']);
 
-        $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
-        $container->set('contao.image.factory', $imageFactory);
-
-        System::setContainer($container);
-
-        $figure = new Figure($this->mockImage(), $metadata, $linkAttributes, $lightbox, $options);
-        $data = $figure->getLegacyTemplateData($marginProperty, $floatingProperty, $includeFullMetadata);
-
-        $assert($data);
+        $this->assertTrue($data['addImage']);
+        $this->assertFalse($data['fullsize']);
     }
 
-    public function provideLegacyTemplateDataScenarios(): iterable
+    public function testWithMetadata(): void
     {
-        yield 'basic image data' => [
-            [null, null, null, null],
-            [false, null, null],
-            function (array $data): void {
-                $this->assertSame(['img foo'], $data['picture']['img']);
-                $this->assertSame(['sources foo'], $data['picture']['sources']);
-                $this->assertSame('https://assets.url/files/public/foo.jpg', $data['src']);
-                $this->assertSame('path/to/resource.jpg', $data['singleSRC']);
-                $this->assertSame(100, $data['width']);
-                $this->assertSame(50, $data['height']);
-
-                $this->assertTrue($data['addImage']);
-                $this->assertFalse($data['fullsize']);
-            },
-        ];
-
         $simpleMetadata = new Metadata([
             Metadata::VALUE_ALT => 'a',
             Metadata::VALUE_TITLE => 't',
             'foo' => 'bar',
         ]);
 
+        $data = $this->getLegacyTemplateData(
+            [$simpleMetadata, null, null, null],
+            [false, null, null],
+        );
+
+        $this->assertSame('a', $data['picture']['alt']);
+        $this->assertSame('t', $data['picture']['title']);
+        $this->assertArrayNotHasKey('foo', $data);
+    }
+
+    public function testWithFullMetadata(): void
+    {
+        $simpleMetadata = new Metadata([
+            Metadata::VALUE_ALT => 'a',
+            Metadata::VALUE_TITLE => 't',
+            'foo' => 'bar',
+        ]);
+
+        $data = $this->getLegacyTemplateData(
+            [$simpleMetadata, null, null, null],
+            [true, null, null],
+        );
+
+        $this->assertSame('a', $data['alt']);
+        $this->assertSame('t', $data['imageTitle']);
+        $this->assertSame('bar', $data['foo']);
+    }
+
+    public function testWithMetadataContainingLink(): void
+    {
         $metadataWithLink = new Metadata([
             Metadata::VALUE_TITLE => 't',
             Metadata::VALUE_URL => 'foo://meta',
         ]);
 
+        $data = $this->getLegacyTemplateData(
+            [$metadataWithLink, null, null, null],
+            [true, null, null],
+        );
+
+        $this->assertSame('t', $data['linkTitle']);
+        $this->assertSame('foo://meta', $data['imageUrl']);
+        $this->assertSame('foo://meta', $data['href']);
+        $this->assertSame('', $data['attributes']);
+        $this->assertArrayNotHasKey('title', $data['picture']);
+    }
+
+    public function testWithLinkTitleAttribute(): void
+    {
+        $metadataWithLink = new Metadata([
+            Metadata::VALUE_TITLE => 't',
+            Metadata::VALUE_URL => 'foo://meta',
+        ]);
+
+        $data = $this->getLegacyTemplateData(
+            [$metadataWithLink, ['title' => 'foo', 'bar' => 'baz'], null, null],
+            [true, null, null],
+        );
+
+        $this->assertSame('foo', $data['linkTitle']);
+        $this->assertSame(' bar="baz"', $data['attributes'], 'must not contain link attribute');
+    }
+
+    public function testWithMetadataContainingHtml(): void
+    {
         $metadataWithHtml = new Metadata([
             Metadata::VALUE_ALT => 'Here <b>is</b> some <i>HTML</i>!',
             Metadata::VALUE_CAPTION => 'Here <b>is</b> some <i>HTML</i>!',
         ]);
 
-        yield 'with metadata' => [
-            [$simpleMetadata, null, null, null],
-            [false, null, null],
-            function (array $data): void {
-                $this->assertSame('a', $data['picture']['alt']);
-                $this->assertSame('t', $data['picture']['title']);
-                $this->assertArrayNotHasKey('foo', $data);
-            },
-        ];
-
-        yield 'with full metadata' => [
-            [$simpleMetadata, null, null, null],
-            [true, null, null],
-            function (array $data): void {
-                $this->assertSame('a', $data['alt']);
-                $this->assertSame('t', $data['imageTitle']);
-                $this->assertSame('bar', $data['foo']);
-            },
-        ];
-
-        yield 'with metadata containing link' => [
-            [$metadataWithLink, null, null, null],
-            [true, null, null],
-            function (array $data): void {
-                $this->assertSame('t', $data['linkTitle']);
-                $this->assertSame('foo://meta', $data['imageUrl']);
-                $this->assertSame('foo://meta', $data['href']);
-                $this->assertSame('', $data['attributes']);
-
-                $this->assertArrayNotHasKey('title', $data['picture']);
-            },
-        ];
-
-        yield 'with link title attribute' => [
-            [$metadataWithLink, ['title' => 'foo', 'bar' => 'baz'], null, null],
-            [true, null, null],
-            function (array $data): void {
-                $this->assertSame('foo', $data['linkTitle']);
-                $this->assertSame(' bar="baz"', $data['attributes'], 'must not contain link attribute');
-            },
-        ];
-
-        yield 'with metadata containing HTML' => [
+        $data = $this->getLegacyTemplateData(
             [$metadataWithHtml, null, null, null],
             [true, null, null],
-            function (array $data): void {
-                $this->assertSame('Here <b>is</b> some <i>HTML</i>!', $data['caption']);
-                $this->assertSame('Here &lt;b&gt;is&lt;/b&gt; some &lt;i&gt;HTML&lt;/i&gt;!', $data['alt']);
-            },
+        );
+
+        $this->assertSame('Here <b>is</b> some <i>HTML</i>!', $data['caption']);
+        $this->assertSame('Here &lt;b&gt;is&lt;/b&gt; some &lt;i&gt;HTML&lt;/i&gt;!', $data['alt']);
+    }
+
+    public function testWithHrefLinkAttribute(): void
+    {
+        $basicLinkAttributes = [
+            'href' => 'foo://bar',
         ];
+
+        $data = $this->getLegacyTemplateData(
+            [null, $basicLinkAttributes, null, null],
+            [false, null, null],
+        );
+
+        $this->assertSame('', $data['linkTitle']);
+        $this->assertSame('foo://bar', $data['href']);
+        $this->assertSame('', $data['attributes']);
+        $this->assertArrayNotHasKey('title', $data['picture']);
+    }
+
+    public function testWithFullMetadataAndHrefLinkAttribute(): void
+    {
+        $metadataWithLink = new Metadata([
+            Metadata::VALUE_TITLE => 't',
+            Metadata::VALUE_URL => 'foo://meta',
+        ]);
 
         $basicLinkAttributes = [
             'href' => 'foo://bar',
         ];
 
+        $data = $this->getLegacyTemplateData(
+            [$metadataWithLink, $basicLinkAttributes, null, null],
+            [true, null, null],
+        );
+
+        $this->assertSame('foo://meta', $data['imageUrl']);
+        $this->assertSame('foo://bar', $data['href']);
+    }
+
+    public function testWithExtendedLinkAttributes(): void
+    {
         $extendedLinkAttributes = [
             'href' => 'foo://bar',
             'target' => '_blank',
             'foo' => 'bar',
         ];
 
-        yield 'with href link attribute' => [
-            [null, $basicLinkAttributes, null, null],
-            [false, null, null],
-            function (array $data): void {
-                $this->assertSame('', $data['linkTitle']);
-                $this->assertSame('foo://bar', $data['href']);
-                $this->assertSame('', $data['attributes']);
-
-                $this->assertArrayNotHasKey('title', $data['picture']);
-            },
-        ];
-
-        yield 'with full metadata and href link attribute' => [
-            [$metadataWithLink, $basicLinkAttributes, null, null],
-            [true, null, null],
-            function (array $data): void {
-                $this->assertSame('foo://meta', $data['imageUrl']);
-                $this->assertSame('foo://bar', $data['href']);
-            },
-        ];
-
-        yield 'with extended link attributes' => [
+        $data = $this->getLegacyTemplateData(
             [null, $extendedLinkAttributes, null, null],
             [false, null, null],
-            function (array $data): void {
-                $this->assertTrue($data['fullsize']);
-                $this->assertSame(' target="_blank" foo="bar"', $data['attributes']);
-            },
-        ];
+        );
 
-        $lightboxImage = $this->createMock(ImageResult::class);
-        $lightboxImage
-            ->method('getImg')
-            ->willReturn(['lightbox img'])
-        ;
+        $this->assertTrue($data['fullsize']);
+        $this->assertSame(' target="_blank" foo="bar"', $data['attributes']);
+    }
 
-        $lightboxImage
-            ->method('getSources')
-            ->willReturn(['lightbox sources'])
-        ;
+    public function testWithLightbox(): void
+    {
+        $lightBoxDelegate = static function (TestCase $testCase) {
+            $lightboxImage = $testCase->createMock(ImageResult::class);
+            $lightboxImage
+                ->method('getImg')
+                ->willReturn(['lightbox img'])
+            ;
 
-        $lightbox = $this->createMock(LightboxResult::class);
-        $lightbox
-            ->method('hasImage')
-            ->willReturn(true)
-        ;
+            $lightboxImage
+                ->method('getSources')
+                ->willReturn(['lightbox sources'])
+            ;
 
-        $lightbox
-            ->method('getImage')
-            ->willReturn($lightboxImage)
-        ;
+            $lightbox = $testCase->createMock(LightboxResult::class);
+            $lightbox
+                ->method('hasImage')
+                ->willReturn(true)
+            ;
 
-        $lightbox
-            ->method('getGroupIdentifier')
-            ->willReturn('12345')
-        ;
+            $lightbox
+                ->method('getImage')
+                ->willReturn($lightboxImage)
+            ;
 
-        $lightbox
-            ->method('getLinkHref')
-            ->willReturn('foo://bar')
-        ;
+            $lightbox
+                ->method('getGroupIdentifier')
+                ->willReturn('12345')
+            ;
 
-        yield 'with lightbox' => [
-            [null, null, $lightbox, null],
+            $lightbox
+                ->method('getLinkHref')
+                ->willReturn('foo://bar')
+            ;
+
+            return $lightbox;
+        };
+
+        $data = $this->getLegacyTemplateData(
+            [null, null, $lightBoxDelegate, null],
             [false, null, null],
-            function (array $data): void {
-                $this->assertSame(['lightbox img'], $data['lightboxPicture']['img']);
-                $this->assertSame(['lightbox sources'], $data['lightboxPicture']['sources']);
+        );
 
-                $this->assertSame('foo://bar', $data['href']);
-                $this->assertSame(' data-lightbox="12345"', $data['attributes']);
+        $this->assertSame(['lightbox img'], $data['lightboxPicture']['img']);
+        $this->assertSame(['lightbox sources'], $data['lightboxPicture']['sources']);
 
-                $this->assertTrue($data['fullsize']);
-                $this->assertSame('', $data['linkTitle']);
-                $this->assertArrayNotHasKey('title', $data['picture']);
-            },
-        ];
+        $this->assertSame('foo://bar', $data['href']);
+        $this->assertSame(' data-lightbox="12345"', $data['attributes']);
 
-        yield 'with legacy properties 1' => [
+        $this->assertTrue($data['fullsize']);
+        $this->assertSame('', $data['linkTitle']);
+        $this->assertArrayNotHasKey('title', $data['picture']);
+    }
+
+    public function testWithLegacyProperties1(): void
+    {
+        $data = $this->getLegacyTemplateData(
             [null, null, null, null],
             [false, 'above', ['top' => '1', 'right' => '2', 'bottom' => '3', 'left' => '4', 'unit' => 'em']],
-            function (array $data): void {
-                $this->assertTrue($data['addBefore']);
-                $this->assertArrayNotHasKey('margin', $data);
-            },
-        ];
+        );
 
-        yield 'with legacy properties 2' => [
+        $this->assertTrue($data['addBefore']);
+        $this->assertArrayNotHasKey('margin', $data);
+    }
+
+    public function testWithLegacyProperties2(): void
+    {
+        $data = $this->getLegacyTemplateData(
             [null, null, null, null],
-            [false, 'above', 'a:5:{s:3:"top";s:1:"1";s:5:"right";s:1:"2";s:6:"bottom";s:1:"3";s:4:"left";s:1:"4";s:4:"unit";s:2:"em";}'],
-            function (array $data): void {
-                $this->assertTrue($data['addBefore']);
-                $this->assertArrayNotHasKey('margin', $data);
-            },
-        ];
+            [
+                false,
+                'above',
+                'a:5:{s:3:"top";s:1:"1";s:5:"right";s:1:"2";s:6:"bottom";s:1:"3";s:4:"left";s:1:"4";s:4:"unit";s:2:"em";}',
+            ],
+        );
 
-        yield 'with legacy properties 3' => [
+        $this->assertTrue($data['addBefore']);
+        $this->assertArrayNotHasKey('margin', $data);
+    }
+
+    public function testWithLegacyProperties3(): void
+    {
+        $data = $this->getLegacyTemplateData(
             [null, null, null, null],
             [false, 'below', null],
-            function (array $data): void {
-                $this->assertFalse($data['addBefore']);
-            },
-        ];
+        );
 
-        yield 'with template options' => [
+        $this->assertFalse($data['addBefore']);
+    }
+
+    public function testWithTemplateOptions(): void
+    {
+        $data = $this->getLegacyTemplateData(
             [null, null, null, ['foo' => 'bar', 'addImage' => false]],
             [false, null, null],
-            function (array $data): void {
-                $this->assertSame('bar', $data['foo']);
-                $this->assertFalse($data['addImage']);
-            },
-        ];
+        );
+
+        $this->assertSame('bar', $data['foo']);
+        $this->assertFalse($data['addImage']);
     }
 
     public function testApplyLegacyTemplate(): void
@@ -654,6 +678,38 @@ class FigureTest extends TestCase
             ],
             $figure->getSchemaOrgData(),
         );
+    }
+
+    private function getLegacyTemplateData(array $preconditions, array $buildAttributes): array
+    {
+        [$metadata, $linkAttributes, $lightbox, $options] = $preconditions;
+
+        if ($lightbox instanceof \Closure) {
+            $lightbox = $lightbox($this);
+        }
+
+        [$includeFullMetadata, $floatingProperty, $marginProperty] = $buildAttributes;
+
+        $imageFactory = new ImageFactory(
+            $this->createMock(ResizerInterface::class),
+            $this->createMock(ImagineInterface::class),
+            $this->createMock(ImagineInterface::class),
+            new Filesystem(),
+            $this->createMock(ContaoFramework::class),
+            false,
+            ['jpeg_quality' => 80],
+            ['jpg', 'svg'],
+            $this->getFixturesDir(),
+        );
+
+        $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
+        $container->set('contao.image.factory', $imageFactory);
+
+        System::setContainer($container);
+
+        $figure = new Figure($this->mockImage(), $metadata, $linkAttributes, $lightbox, $options);
+
+        return $figure->getLegacyTemplateData($marginProperty, $floatingProperty, $includeFullMetadata);
     }
 
     private function mockImage(): ImageResult&MockObject

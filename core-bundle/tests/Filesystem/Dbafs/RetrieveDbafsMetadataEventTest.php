@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Filesystem\Dbafs;
 
 use Contao\CoreBundle\Filesystem\Dbafs\RetrieveDbafsMetadataEvent;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Uid\Uuid;
 
 class RetrieveDbafsMetadataEventTest extends TestCase
@@ -42,9 +43,7 @@ class RetrieveDbafsMetadataEventTest extends TestCase
         $this->assertSame(['baz-data' => 42], $event->getExtraMetadata()->all());
     }
 
-    /**
-     * @dataProvider provideRowData
-     */
+    #[DataProvider('provideRowData')]
     public function testEnforcesRequiredValues(array $row, string $expectedExceptionMessage): void
     {
         $this->expectException(\InvalidArgumentException::class);

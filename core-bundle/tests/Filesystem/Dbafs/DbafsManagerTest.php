@@ -20,6 +20,7 @@ use Contao\CoreBundle\Filesystem\Dbafs\UnableToResolveUuidException;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Uid\Uuid;
@@ -55,25 +56,25 @@ class DbafsManagerTest extends TestCase
         $this->assertFalse($manager->match('baz/../foobar'));
     }
 
-    /**
-     * @dataProvider provideInvalidConfigurations
-     */
-    public function testValidatesTransitiveProperties(array $paths, string $exception): void
+    #[DataProvider('provideInvalidConfigurations')]
+    public function testValidatesTransitiveProperties(\Closure $pathDelegates, string $exception): void
     {
         $manager = $this->getDbafsManager();
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage($exception);
 
+        $paths = $pathDelegates->bindTo($this)();
+
         foreach ($paths as $path => $dbafsItem) {
             $manager->register($dbafsItem, $path);
         }
     }
 
-    public function provideInvalidConfigurations(): iterable
+    public static function provideInvalidConfigurations(): iterable
     {
         yield 'more specific one which does not support last modified should be reported' => [
-            [
+            fn () => [
                 'files' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE),
                 'files/media' => $this->getDbafsWithProperties(DbafsInterface::FEATURES_NONE),
             ],
@@ -81,7 +82,7 @@ class DbafsManagerTest extends TestCase
         ];
 
         yield 'should ignore valid configurations in between' => [
-            [
+            fn () => [
                 'abc' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_FILE_SIZE),
                 'files' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE),
                 'abc/def' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE),
@@ -91,7 +92,7 @@ class DbafsManagerTest extends TestCase
         ];
 
         yield 'make sure nested folders work as well' => [
-            [
+            fn () => [
                 'foo' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_MIME_TYPE),
                 'foo/bar/baz' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE),
             ],
@@ -99,7 +100,7 @@ class DbafsManagerTest extends TestCase
         ];
 
         yield 'adding a less specific one that covers more than the children should be reported' => [
-            [
+            fn () => [
                 'foo/bar' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE),
                 '' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE),
             ],
@@ -387,9 +388,7 @@ class DbafsManagerTest extends TestCase
         $manager->setExtraMetadata('foo/bar/baz', $extraMetadata);
     }
 
-    /**
-     * @dataProvider provideListModes
-     */
+    #[DataProvider('provideListModes')]
     public function testListContents(bool $deep): void
     {
         $dbafs1 = $this->getDbafsListingRecords('bar', ['bar', 'baz', 'bar/file1'], $deep);

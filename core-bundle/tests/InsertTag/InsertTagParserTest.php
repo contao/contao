@@ -26,8 +26,8 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InsertTags;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
@@ -36,8 +36,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class InsertTagParserTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -80,9 +78,6 @@ class InsertTagParserTest extends TestCase
         $this->assertSame([[ChunkedText::TYPE_TEXT, '{{doesnotexist}}']], iterator_to_array($parser->replaceChunked('{{doesnotexist}}')));
     }
 
-    /**
-     * @group legacy
-     */
     public function testRender(): void
     {
         $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
@@ -95,7 +90,7 @@ class InsertTagParserTest extends TestCase
         $this->assertSame('{{does_not_exist}}', $parser->renderTag('does_not_exist')->getValue());
 
         $this->expectExceptionMessage('Rendering a single insert tag has to return a single chunk');
-        $this->expectDeprecation('%sInvalid insert tag name%s');
+        $this->expectUserDeprecationMessageMatches('/Invalid insert tag name/');
 
         $parser->renderTag('br}}foo{{br');
     }
@@ -153,15 +148,12 @@ class InsertTagParserTest extends TestCase
         $this->assertSame('baz', $sequence->get(3)->getName());
     }
 
-    /**
-     * @group legacy
-     */
     public function testRenderMixedCase(): void
     {
         $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
 
-        $this->expectDeprecation('%sInsert tags with uppercase letters%s');
+        $this->expectUserDeprecationMessageMatches('/Insert tags with uppercase letters/');
 
         $this->assertSame('<br>', $parser->renderTag('bR')->getValue());
     }
@@ -187,11 +179,10 @@ class InsertTagParserTest extends TestCase
         $this->assertSame([[ChunkedText::TYPE_RAW, '<br>']], iterator_to_array($parser->replaceInlineChunked('{{fragment::{{br}}}}')));
     }
 
-    /**
-     * @dataProvider getLegacyReplaceInsertTagsHooks
-     */
+    #[DataProvider('getLegacyReplaceInsertTagsHooks')]
     public function testLegacyReplaceInsertTagsHook(string $source, string $expected, \Closure $hook): void
     {
+        $hook = \Closure::bind($hook, $this);
         $GLOBALS['TL_HOOKS']['replaceInsertTags'] = [
             [
                 new class($hook) {
@@ -221,7 +212,7 @@ class InsertTagParserTest extends TestCase
         $this->assertSame($expected, $parser->replaceInline($source));
     }
 
-    public function getLegacyReplaceInsertTagsHooks(): iterable
+    public static function getLegacyReplaceInsertTagsHooks(): iterable
     {
         yield [
             'foo {{tag}} bar',
@@ -288,11 +279,10 @@ class InsertTagParserTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getLegacyInsertTagFlagsHooks
-     */
+    #[DataProvider('getLegacyInsertTagFlagsHooks')]
     public function testLegacyInsertTagFlagsHook(string $source, string $expected, \Closure $hook): void
     {
+        $hook = \Closure::bind($hook, $this);
         $GLOBALS['TL_HOOKS']['insertTagFlags'] = [
             [
                 new class($hook) {
@@ -320,7 +310,7 @@ class InsertTagParserTest extends TestCase
         $this->assertSame($expected, $parser->replaceInline($source));
     }
 
-    public function getLegacyInsertTagFlagsHooks(): iterable
+    public static function getLegacyInsertTagFlagsHooks(): iterable
     {
         yield [
             'foo{{br|flag}}bar',

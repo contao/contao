@@ -19,6 +19,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Monolog\Level;
 use Monolog\LogRecord;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -36,10 +37,9 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
-     * @dataProvider actionLevelProvider
-     *
      * @phpstan-param Level::Alert|Level::Critical|Level::Debug|Level::Emergency|Level::Error|Level::Info|Level::Notice|Level::Warning $logLevel
      */
+    #[DataProvider('actionLevelProvider')]
     public function testReturnsDifferentActionsForDifferentErrorLevels(Level $logLevel, string $expectedAction): void
     {
         $record = $this->getRecord(['contao' => new ContaoContext(__METHOD__)], $logLevel);
@@ -54,10 +54,9 @@ class ContaoTableProcessorTest extends TestCase
     }
 
     /**
-     * @dataProvider actionLevelProvider
-     *
      * @phpstan-param Level::Alert|Level::Critical|Level::Debug|Level::Emergency|Level::Error|Level::Info|Level::Notice|Level::Warning $logLevel
      */
+    #[DataProvider('actionLevelProvider')]
     public function testDoesNotChangeAnExistingAction(Level $logLevel): void
     {
         $record = $this->getRecord(['contao' => new ContaoContext(__METHOD__, ContaoContext::CRON)], $logLevel);
@@ -153,9 +152,7 @@ class ContaoTableProcessorTest extends TestCase
         $this->assertSame('N/A', $context->getUsername());
     }
 
-    /**
-     * @dataProvider sourceProvider
-     */
+    #[DataProvider('sourceProvider')]
     public function testAddsTheSource(string|null $scope, string|null $contextSource, string $expectedSource): void
     {
         $requestStack = new RequestStack();
@@ -190,9 +187,7 @@ class ContaoTableProcessorTest extends TestCase
         yield [ContaoCoreBundle::SCOPE_BACKEND, null, 'BE'];
     }
 
-    /**
-     * @dataProvider requestProvider
-     */
+    #[DataProvider('requestProvider')]
     public function testAddsTheRequestUri(Request|null $request = null, string|null $uri = null): void
     {
         $requestStack = new RequestStack();
@@ -225,11 +220,11 @@ class ContaoTableProcessorTest extends TestCase
         yield 'no request' => [null, null];
     }
 
-    /**
-     * @dataProvider requestWithPageIdProvider
-     */
-    public function testAddsThePageId(Request|null $request = null, int|null $pageId = null): void
+    #[DataProvider('requestWithPageIdProvider')]
+    public function testAddsThePageId(\Closure|Request|null $request = null, int|null $pageId = null): void
     {
+        $request = $request instanceof \Closure ? \Closure::bind($request, $this)() : $request;
+
         $requestStack = new RequestStack();
 
         if ($request) {
@@ -246,12 +241,10 @@ class ContaoTableProcessorTest extends TestCase
         $this->assertSame($pageId, $context->getPageId());
     }
 
-    public function requestWithPageIdProvider(): iterable
+    public static function requestWithPageIdProvider(): iterable
     {
-        $pageModel = $this->mockClassWithProperties(PageModel::class, ['id' => 13]);
-
         yield 'request with page model ID' => [new Request([], [], ['pageModel' => '42']), 42];
-        yield 'request with page model' => [new Request([], [], ['pageModel' => $pageModel]), 13];
+        yield 'request with page model' => [fn () => new Request([], [], ['pageModel' => $this->mockClassWithProperties(PageModel::class, ['id' => 13])]), 13];
         yield 'request without page model' => [new Request(), null];
         yield 'no request' => [null, null];
     }

@@ -15,85 +15,45 @@ namespace Contao\CalendarBundle\Tests\Security\Voter;
 use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\CalendarBundle\Security\Voter\CalendarEventsAccessVoter;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\Security\DataContainer\CreateAction;
-use Contao\CoreBundle\Security\DataContainer\DeleteAction;
-use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use PHPUnit\Framework\TestCase;
+use Contao\CoreBundle\Tests\Security\Voter\DataContainer\AbstractAccessVoterTestCase;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class CalendarEventsAccessVoterTest extends TestCase
+class CalendarEventsAccessVoterTest extends AbstractAccessVoterTestCase
 {
-    public function testVoter(): void
+    public static function votesProvider(): \Generator
     {
-        $token = $this->createMock(TokenInterface::class);
-
-        $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
-        $accessDecisionManager
-            ->expects($this->exactly(5))
-            ->method('decide')
-            ->withConsecutive(
-                [$token, [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE]],
-                [$token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], 42],
-                [$token, [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE]],
-                [$token, [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE]],
-                [$token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], 42],
-            )
-            ->willReturnOnConsecutiveCalls(true, true, false, true, false)
-        ;
-
-        $voter = new CalendarEventsAccessVoter($accessDecisionManager);
-
-        $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_calendar_events'));
-        $this->assertFalse($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_calendar'));
-        $this->assertTrue($voter->supportsType(CreateAction::class));
-        $this->assertTrue($voter->supportsType(ReadAction::class));
-        $this->assertTrue($voter->supportsType(UpdateAction::class));
-        $this->assertTrue($voter->supportsType(DeleteAction::class));
-        $this->assertFalse($voter->supportsType(CalendarEventsAccessVoter::class));
-
-        // Unsupported attribute
-        $this->assertSame(
-            VoterInterface::ACCESS_ABSTAIN,
-            $voter->vote(
-                $token,
-                new ReadAction('tl_calendar_events', ['pid' => 42]),
-                ['whatever'],
-            ),
-        );
-
         // Permission granted, so abstain! Our voters either deny or abstain, they must
         // never grant access (see #6201).
-        $this->assertSame(
-            VoterInterface::ACCESS_ABSTAIN,
-            $voter->vote(
-                $token,
-                new ReadAction('tl_calendar_events', ['pid' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_calendar_events'],
-            ),
-        );
+        yield [
+            ['pid' => 42],
+            [
+                [[ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], null, true],
+                [[ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], 42, true],
+            ],
+            true,
+        ];
 
         // Permission denied on back end module
-        $this->assertSame(
-            VoterInterface::ACCESS_DENIED,
-            $voter->vote(
-                $token,
-                new ReadAction('tl_calendar_events', ['pid' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_calendar_events'],
-            ),
-        );
+        yield [
+            ['pid' => 42],
+            [
+                [[ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], null, false],
+            ],
+            false,
+        ];
 
         // Permission denied on calendar
-        $this->assertSame(
-            VoterInterface::ACCESS_DENIED,
-            $voter->vote(
-                $token,
-                new ReadAction('tl_calendar_events', ['pid' => 42]),
-                [ContaoCorePermissions::DC_PREFIX.'tl_calendar_events'],
-            ),
-        );
+        yield [
+            ['pid' => 42],
+            [
+                [[ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], null, true],
+                [[ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], 42, false],
+            ],
+            false,
+        ];
     }
 
     public function testDeniesUpdateActionToNewParent(): void
@@ -104,12 +64,11 @@ class CalendarEventsAccessVoterTest extends TestCase
         $accessDecisionManager
             ->expects($this->exactly(3))
             ->method('decide')
-            ->withConsecutive(
-                [$token, [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE]],
-                [$token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], 42],
-                [$token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], 43],
-            )
-            ->willReturnOnConsecutiveCalls(true, true, false)
+            ->willReturnMap([
+                [$token, [ContaoCalendarPermissions::USER_CAN_ACCESS_MODULE], null, true],
+                [$token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], 42, true],
+                [$token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], 43, false],
+            ])
         ;
 
         $voter = new CalendarEventsAccessVoter($accessDecisionManager);
@@ -122,5 +81,15 @@ class CalendarEventsAccessVoterTest extends TestCase
                 [ContaoCorePermissions::DC_PREFIX.'tl_calendar_events'],
             ),
         );
+    }
+
+    protected function getVoterClass(): string
+    {
+        return CalendarEventsAccessVoter::class;
+    }
+
+    protected function getTable(): string
+    {
+        return 'tl_calendar_events';
     }
 }

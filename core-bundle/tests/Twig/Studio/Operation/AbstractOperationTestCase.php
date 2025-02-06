@@ -18,32 +18,32 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
-abstract class AbstractOperationTest extends TestCase
+abstract class AbstractOperationTestCase extends TestCase
 {
-    public function provideCommonContextsForExistingAndNonExistingUserTemplates(): \Generator
+    public static function provideCommonContextsForExistingAndNonExistingUserTemplates(): \Generator
     {
         yield 'user template exists already' => [
-            $this->getOperationContext('content_element/existing_user_template'),
+            static::getOperationContext('content_element/existing_user_template'),
             true,
         ];
 
         yield 'user template in a theme exists already' => [
-            $this->getOperationContext('content_element/existing_user_template', 'my_theme'),
+            static::getOperationContext('content_element/existing_user_template', 'my_theme'),
             true,
         ];
 
         yield 'user template does not yet exist' => [
-            $this->getOperationContext('content_element/no_user_template'),
+            static::getOperationContext('content_element/no_user_template'),
             false,
         ];
 
         yield 'user template in a theme does not yet exist' => [
-            $this->getOperationContext('content_element/no_user_template', 'my_theme'),
+            static::getOperationContext('content_element/no_user_template', 'my_theme'),
             false,
         ];
     }
 
-    public function provideCommonThemeAndPathForNonExistingUserTemplate(): \Generator
+    public static function provideCommonThemeAndPathForNonExistingUserTemplate(): \Generator
     {
         yield 'no theme' => [
             null, 'content_element/no_user_template.html.twig',
@@ -54,7 +54,7 @@ abstract class AbstractOperationTest extends TestCase
         ];
     }
 
-    public function provideCommonThemeAndPathForExistingUserTemplate(): \Generator
+    public static function provideCommonThemeAndPathForExistingUserTemplate(): \Generator
     {
         yield 'no theme' => [
             null, 'content_element/existing_user_template.html.twig',
@@ -82,7 +82,7 @@ abstract class AbstractOperationTest extends TestCase
         return $container;
     }
 
-    protected function getOperationContext(string $identifier, string|null $themeSlug = null): OperationContext
+    protected static function getOperationContext(string $identifier, string|null $themeSlug = null): OperationContext
     {
         return new OperationContext(
             new ThemeNamespace(),

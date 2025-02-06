@@ -17,6 +17,7 @@ use Contao\CoreBundle\Routing\Enhancer\InputEnhancer;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\PageModel;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -36,9 +37,7 @@ class InputEnhancerTest extends TestCase
         $enhancer->enhance([], Request::create('/'));
     }
 
-    /**
-     * @dataProvider getLocales
-     */
+    #[DataProvider('getLocales')]
     public function testSetsTheLanguageWithUrlPrefix(string $urlPrefix, string $language): void
     {
         $input = $this->mockAdapter(['setGet']);
@@ -72,16 +71,18 @@ class InputEnhancerTest extends TestCase
         yield ['bar', 'en'];
     }
 
-    /**
-     * @dataProvider getParameters
-     */
+    #[DataProvider('getParameters')]
     public function testAddsParameters(string $parameters, array ...$setters): void
     {
+        $matcher = $this->exactly(\count($setters));
+
         $input = $this->mockAdapter(['setGet', 'setUnusedRouteParameters']);
         $input
-            ->expects($this->exactly(\count($setters)))
+            ->expects($matcher)
             ->method('setGet')
-            ->withConsecutive(...$setters)
+            ->with($this->callback(
+                static fn (...$parameters) => $setters[$matcher->numberOfInvocations() - 1] === $parameters,
+            ))
         ;
 
         $input

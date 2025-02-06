@@ -26,6 +26,7 @@ use Contao\Image\ImageInterface;
 use Contao\Image\PictureInterface;
 use Contao\Image\Resizer;
 use Imagine\Image\ImagineInterface;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -225,11 +226,11 @@ class ImageResultTest extends TestCase
         $this->assertSame('project/dir/file/path', $imageResult->getFilePath(true));
     }
 
-    /**
-     * @dataProvider provideDeferredImages
-     */
-    public function testCreateIfDeferred(array $img, array $sources, array $expectedDeferredImages): void
+    #[DataProvider('provideDeferredImages')]
+    public function testCreateIfDeferred(\Closure $parametersDelegate): void
     {
+        [$img, $sources, $expectedDeferredImages] = $parametersDelegate->bindTo($this)();
+
         $picture = $this->createMock(PictureInterface::class);
         $picture
             ->expects($this->once())
@@ -257,8 +258,10 @@ class ImageResultTest extends TestCase
             ->method('resizeDeferredImage')
             ->with($this->callback(
                 static function ($deferredImage) use (&$expectedDeferredImages) {
-                    if (false !== ($key = array_search($deferredImage, $expectedDeferredImages, true))) {
-                        unset($expectedDeferredImages[$key]);
+                    foreach ($expectedDeferredImages as $key => $expectedDeferredImage) {
+                        if ($expectedDeferredImage->getPath() === $deferredImage->getPath()) {
+                            unset($expectedDeferredImages[$key]);
+                        }
                     }
 
                     return true;
@@ -281,79 +284,91 @@ class ImageResultTest extends TestCase
         $this->assertEmpty($expectedDeferredImages, 'test all images were processed');
     }
 
-    public function provideDeferredImages(): iterable
+    public static function provideDeferredImages(): iterable
     {
-        $imagine = $this->createMock(ImagineInterface::class);
-        $dimensions = $this->createMock(ImageDimensions::class);
+        $imagine = fn () => $this->createMock(ImagineInterface::class);
+        $dimensions = fn () => $this->createMock(ImageDimensions::class);
 
-        $filesystem = $this->createMock(Filesystem::class);
-        $filesystem
-            ->method('exists')
-            ->willReturn(true)
-        ;
+        $filesystem = function () {
+            $filesystem = $this->createMock(Filesystem::class);
+            $filesystem
+                ->method('exists')
+                ->willReturn(true)
+            ;
 
-        $image = new Image('/project/dir/assets/image0.jpg', $imagine, $filesystem);
-        $deferredImage1 = new DeferredImage('/project/dir/assets/image1.jpg', $imagine, $dimensions);
-        $deferredImage2 = new DeferredImage('/project/dir/assets/image2.jpg', $imagine, $dimensions);
-        $deferredImage3 = new DeferredImage('/project/dir/assets/image3.jpg', $imagine, $dimensions);
-        $deferredImage4 = new DeferredImage('/project/dir/assets/image4.jpg', $imagine, $dimensions);
+            return $filesystem;
+        };
+
+        $image = fn () => new Image('/project/dir/assets/image0.jpg', $imagine->bindTo($this)(), $filesystem->bindTo($this)());
+        $deferredImage1 = fn () => new DeferredImage('/project/dir/assets/image1.jpg', $imagine->bindTo($this)(), $dimensions->bindTo($this)());
+        $deferredImage2 = fn () => new DeferredImage('/project/dir/assets/image2.jpg', $imagine->bindTo($this)(), $dimensions->bindTo($this)());
+        $deferredImage3 = fn () => new DeferredImage('/project/dir/assets/image3.jpg', $imagine->bindTo($this)(), $dimensions->bindTo($this)());
+        $deferredImage4 = fn () => new DeferredImage('/project/dir/assets/image4.jpg', $imagine->bindTo($this)(), $dimensions->bindTo($this)());
 
         yield 'no deferred images' => [
-            ['src' => $image],
-            [],
-            [],
+            fn () => [
+                ['src' => $image->bindTo($this)()],
+                [],
+                [],
+            ],
         ];
 
         yield 'img and sources with deferred images' => [
-            [
-                'src' => $deferredImage1,
-                'srcset' => [[$deferredImage2, 'foo'], [$deferredImage3]],
-            ],
-            [
+            fn () => [
                 [
-                    'src' => $deferredImage3,
-                    'srcset' => [[$deferredImage2], [$deferredImage4]],
+                    'src' => $deferredImage1->bindTo($this)(),
+                    'srcset' => [[$deferredImage2->bindTo($this)(), 'foo'], [$deferredImage3->bindTo($this)()]],
                 ],
                 [
-                    'src' => $deferredImage2,
-                    'srcset' => [[$deferredImage4]],
+                    [
+                        'src' => $deferredImage3->bindTo($this)(),
+                        'srcset' => [[$deferredImage2->bindTo($this)()], [$deferredImage4->bindTo($this)()]],
+                    ],
+                    [
+                        'src' => $deferredImage2->bindTo($this)(),
+                        'srcset' => [[$deferredImage4->bindTo($this)()]],
+                    ],
                 ],
+                [$deferredImage1->bindTo($this)(), $deferredImage2->bindTo($this)(), $deferredImage3->bindTo($this)(), $deferredImage4->bindTo($this)()],
             ],
-            [$deferredImage1, $deferredImage2, $deferredImage3, $deferredImage4],
         ];
 
         yield 'img and sources with both deferred and non-deferred images' => [
-            [
-                'src' => $deferredImage1,
-            ],
-            [
+            fn () => [
                 [
-                    'src' => $image,
+                    'src' => $deferredImage1->bindTo($this)(),
                 ],
                 [
-                    'src' => $deferredImage2,
-                    'srcset' => [[$deferredImage3]],
+                    [
+                        'src' => $image,
+                    ],
+                    [
+                        'src' => $deferredImage2->bindTo($this)(),
+                        'srcset' => [[$deferredImage3->bindTo($this)()]],
+                    ],
                 ],
+                [$deferredImage1->bindTo($this)(), $deferredImage2->bindTo($this)(), $deferredImage3->bindTo($this)()],
             ],
-            [$deferredImage1, $deferredImage2, $deferredImage3],
         ];
 
         yield 'elements without src or srcset key' => [
-            [
-                'foo' => 'bar',
+            fn () => [
+                [
+                    'foo' => 'bar',
+                ],
+                [
+                    [
+                        'bar' => 'foo',
+                    ],
+                    [
+                        'srcset' => [['foo'], [$deferredImage2->bindTo($this)()]],
+                    ],
+                    [
+                        'src' => $deferredImage1->bindTo($this)(),
+                    ],
+                ],
+                [$deferredImage1->bindTo($this)(), $deferredImage2->bindTo($this)()],
             ],
-            [
-                [
-                    'bar' => 'foo',
-                ],
-                [
-                    'srcset' => [['foo'], [$deferredImage2]],
-                ],
-                [
-                    'src' => $deferredImage1,
-                ],
-            ],
-            [$deferredImage1, $deferredImage2],
         ];
     }
 

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Command;
 use Contao\CoreBundle\Command\SuperviseWorkersCommand;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\ProcessUtil;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Messenger\Transport\Receiver\MessageCountAwareInterface;
@@ -24,9 +25,7 @@ use Toflar\CronjobSupervisor\Supervisor;
 
 class SuperviseWorkersCommandTest extends TestCase
 {
-    /**
-     * @dataProvider autoscalingProvider
-     */
+    #[DataProvider('autoscalingProvider')]
     public function testCorrectAmountOfWorkersAreCreated(int $messageCount, int $desiredSize, int $max, int $min, array $expectedCommands): void
     {
         $messengerTransportLocator = new Container();

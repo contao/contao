@@ -34,6 +34,7 @@ use Contao\UserModel;
 use FeedIo\Feed;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,9 +49,7 @@ class NewsFeedListenerTest extends ContaoTestCase
         $this->resetStaticProperties([Files::class, System::class]);
     }
 
-    /**
-     * @dataProvider featured
-     */
+    #[DataProvider('featured')]
     public function testFetchesArticlesFromArchives(string $feedFeatured, bool|null $featuredOnly): void
     {
         $insertTags = $this->createMock(InsertTagParser::class);
@@ -92,9 +91,7 @@ class NewsFeedListenerTest extends ContaoTestCase
         $this->assertSame([$newsModel], $event->getArticles());
     }
 
-    /**
-     * @dataProvider getFeedSource
-     */
+    #[DataProvider('getFeedSource')]
     public function testTransformsArticlesToFeedItems(string $feedSource, array $headline, array $content): void
     {
         $imageDir = Path::join($this->getTempDir(), 'files');

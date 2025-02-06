@@ -14,14 +14,14 @@ namespace Contao\CoreBundle\Tests\Util;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\CachingTraversable;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CachingTraversableTest extends TestCase
 {
     /**
-     * @dataProvider provideItems
-     *
      * @param list<array{0: mixed, 1: mixed}> $items
      */
+    #[DataProvider('provideItems')]
     public function testIterateMultipleTimes(array $items): void
     {
         $cachingTraversable = new CachingTraversable($this->generateItems($items, $generatorLog));

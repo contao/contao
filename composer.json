@@ -93,7 +93,7 @@
         "nyholm/psr7": "^1.2",
         "paragonie/constant_time_encoding": "^2.2",
         "phpspec/php-diff": "^1.0",
-        "phpunit/phpunit": "^9.5.19",
+        "phpunit/phpunit": "^11.5",
         "psr/cache": "^3.0",
         "psr/container": "^2.0",
         "psr/http-message": "^1.0 || ^2.0",
@@ -111,6 +111,7 @@
         "symfony/asset": "^6.4 || ^7.0",
         "symfony/cache": "^6.4 || ^7.0",
         "symfony/cache-contracts": "^3.0",
+        "symfony/clock": "^6.4 || ^7.0",
         "symfony/config": "^6.4 || ^7.0",
         "symfony/console": "^6.4 || ^7.0",
         "symfony/debug-bundle": "^6.4 || ^7.0",
@@ -185,10 +186,9 @@
         "composer/composer": "^2.0",
         "doctrine/annotations": "^2.0",
         "league/flysystem-memory": "^3.0",
-        "sebastian/diff": "^4.0",
+        "sebastian/diff": "^6.0",
         "shipmonk/composer-dependency-analyser": "^1.4",
-        "symfony/browser-kit": "^6.4 || ^7.0",
-        "symfony/phpunit-bridge": "^6.4 || ^7.0"
+        "symfony/browser-kit": "^6.4 || ^7.0"
     },
     "replace": {
         "contao/calendar-bundle": "self.version",
