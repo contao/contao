@@ -21,22 +21,27 @@ use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
+use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\FragmentTemplate;
 use Contao\FrontendUser;
 use Contao\PageModel;
 use Contao\System;
+use Contao\User;
 use PHPUnit\Framework\MockObject\MockObject;
+use Symfony\Bridge\Twig\AppVariable;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\UriSigner;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\Logout\LogoutUrlGenerator;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Twig\Environment;
 
 class LoginControllerTest extends ContentElementTestCase
 {
@@ -44,7 +49,7 @@ class LoginControllerTest extends ContentElementTestCase
     {
         $response = $this->renderWithModelData(
             new LoginController(
-                $this->mockSecurity(false),
+                $this->mockSecurity($this->createMock(BackendUser::class)),
                 $this->createMock(UriSigner::class),
                 $this->createMock(LogoutUrlGenerator::class),
                 $this->createMock(AuthenticationUtils::class),
@@ -64,13 +69,15 @@ class LoginControllerTest extends ContentElementTestCase
 
     public function testShowsLogoutFormIfFrontendUserIsLoggedIn(): void
     {
+        $user = $this->createMock(FrontendUser::class);
+
         $response = $this->renderWithModelData(
             new LoginController(
-                $this->mockSecurity(true, false, false),
+                $this->mockSecurity($user, false, false),
                 $this->createMock(UriSigner::class),
                 $this->createMock(LogoutUrlGenerator::class),
                 $this->createMock(AuthenticationUtils::class),
-                $this->createMock(TranslatorInterface::class),
+                $this->mockTranslator(),
                 $this->createMock(ContentUrlGenerator::class),
                 $this->createMock(EventDispatcherInterface::class),
                 $this->createMock(ContaoFramework::class),
@@ -80,14 +87,50 @@ class LoginControllerTest extends ContentElementTestCase
             ],
         );
 
-        $this->assertSame('', $response->getContent());
-        $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+        $this->assertTrue(str_contains($response->getContent(), '<div class="content-login logout">'));
+        $this->assertTrue(str_contains($response->getContent(), '<p class="login_info">translated(contao_default:MSC.loggedInAs[])<br>January 1, 2032 01:01</p>'));
+        $this->assertTrue(str_contains($response->getContent(), '<button type="submit" class="submit">MSC.logout</button>'));
     }
 
-    private function mockSecurity(bool|null $frontendUser = null, bool|null $isRemembered = null, bool|null $twoFaInProgress = null, TokenInterface|null|bool $token = false): Security&MockObject
+    protected function getEnvironment(ContaoFilesystemLoader $contaoFilesystemLoader, ContaoFramework $framework): Environment
     {
-        $user = null !== $frontendUser ? $this->createMock($frontendUser ? FrontendUser::class : BackendUser::class) :  null;
+        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user->lastLogin = strtotime('2032-01-01 01:01:01');
 
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage
+            ->method('getToken')
+            ->willReturn($token)
+        ;
+
+        $appVariable = new AppVariable();
+        $appVariable->setTokenStorage($tokenStorage);
+
+        $environment = parent::getEnvironment($contaoFilesystemLoader, $framework);
+        $environment->addGlobal('app', $appVariable);
+
+        return $environment;
+    }
+
+    private function mockTranslator(): TranslatorInterface&MockObject
+    {
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->method('trans')
+            ->willReturnArgument(0)
+        ;
+
+        return $translator;
+    }
+
+    private function mockSecurity(User|null $user = null, bool|null $isRemembered = null, bool|null $twoFaInProgress = null, TokenInterface|null|bool $token = false): Security&MockObject
+    {
         $security = $this->createMock(Security::class);
         $security
             ->expects($this->once())

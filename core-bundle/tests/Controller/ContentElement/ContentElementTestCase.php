@@ -67,6 +67,7 @@ use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
 use Nyholm\Psr7\Uri;
 use Psr\Log\LoggerInterface;
+use Symfony\Bridge\Twig\AppVariable;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
@@ -129,13 +130,13 @@ abstract class ContentElementTestCase extends TestCase
      *
      * @param-out array $responseContextData
      */
-    protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null, ContainerBuilder|null $adjustedContainer = null, array $nestedFragments = []): Response
+    protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null, ContainerBuilder|null $adjustedContainer = null, array $nestedFragments = [], User|null $user = null): Response
     {
         $framework = $this->getDefaultFramework($nestedFragments);
 
         // Setup Twig environment
         $loader = $this->getContaoFilesystemLoader();
-        $environment = $this->getEnvironment($loader, $framework);
+        $environment = $this->getEnvironment($loader, $framework, $user);
 
         // Setup container with helper services
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
@@ -343,6 +344,8 @@ abstract class ContentElementTestCase extends TestCase
         );
 
         $environment->enableStrictVariables();
+
+        $appVariable = new AppVariable();
 
         return $environment;
     }
