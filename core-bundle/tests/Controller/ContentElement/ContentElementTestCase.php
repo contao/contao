@@ -67,7 +67,6 @@ use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
 use Nyholm\Psr7\Uri;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\Twig\AppVariable;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
 use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
@@ -136,7 +135,7 @@ abstract class ContentElementTestCase extends TestCase
 
         // Setup Twig environment
         $loader = $this->getContaoFilesystemLoader();
-        $environment = $this->getEnvironment($loader, $framework, $user);
+        $environment = $this->getEnvironment($loader, $framework);
 
         // Setup container with helper services
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
@@ -344,8 +343,6 @@ abstract class ContentElementTestCase extends TestCase
         );
 
         $environment->enableStrictVariables();
-
-        $appVariable = new AppVariable();
 
         return $environment;
     }

@@ -13,30 +13,19 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\BackendUser;
-use Contao\ContentModel;
-use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Controller\ContentElement\LoginController;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
-use Contao\CoreBundle\Routing\PageFinder;
-use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
-use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
-use Contao\FragmentTemplate;
 use Contao\FrontendUser;
-use Contao\PageModel;
-use Contao\System;
 use Contao\User;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\Twig\AppVariable;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\Logout\LogoutUrlGenerator;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -87,9 +76,39 @@ class LoginControllerTest extends ContentElementTestCase
             ],
         );
 
-        $this->assertTrue(str_contains($response->getContent(), '<div class="content-login logout">'));
-        $this->assertTrue(str_contains($response->getContent(), '<p class="login_info">translated(contao_default:MSC.loggedInAs[])<br>January 1, 2032 01:01</p>'));
-        $this->assertTrue(str_contains($response->getContent(), '<button type="submit" class="submit">MSC.logout</button>'));
+        $content = $response->getContent();
+
+        $this->assertTrue(str_contains($content, '<div class="content-login logout">'));
+        $this->assertTrue(str_contains($content, '<p class="login_info">translated(contao_default:MSC.loggedInAs[])<br>January 1, 2032 01:01</p>'));
+        $this->assertTrue(str_contains($content, '<button type="submit" class="submit">MSC.logout</button>'));
+    }
+
+    public function testShowsTwoFactorCodeFormIfTowFactorInProgress(): void
+    {
+        $user = $this->createMock(FrontendUser::class);
+
+        $response = $this->renderWithModelData(
+            new LoginController(
+                $this->mockSecurity($user, false, true),
+                $this->createMock(UriSigner::class),
+                $this->createMock(LogoutUrlGenerator::class),
+                $this->createMock(AuthenticationUtils::class),
+                $this->mockTranslator(),
+                $this->createMock(ContentUrlGenerator::class),
+                $this->createMock(EventDispatcherInterface::class),
+                $this->createMock(ContaoFramework::class),
+            ),
+            [
+                'type' => 'login',
+            ],
+        );
+
+        $content = $response->getContent();
+
+        $this->assertTrue(str_contains($content, '<h3>translated(contao_default:MSC.twoFactorAuthentication)</h3>'));
+        $this->assertTrue(str_contains($content, '<label for="verify">translated(contao_default:MSC.twoFactorVerification)</label>'));
+        $this->assertTrue(str_contains($content, '<input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="one-time-code" required>'));
+        $this->assertTrue(str_contains($content, '<button type="submit" class="submit">MSC.continue</button>'));
     }
 
     protected function getEnvironment(ContaoFilesystemLoader $contaoFilesystemLoader, ContaoFramework $framework): Environment
@@ -129,7 +148,7 @@ class LoginControllerTest extends ContentElementTestCase
         return $translator;
     }
 
-    private function mockSecurity(User|null $user = null, bool|null $isRemembered = null, bool|null $twoFaInProgress = null, TokenInterface|null|bool $token = false): Security&MockObject
+    private function mockSecurity(User|null $user = null, bool|null $isRemembered = null, bool|null $twoFaInProgress = null): Security&MockObject
     {
         $security = $this->createMock(Security::class);
         $security
@@ -150,17 +169,17 @@ class LoginControllerTest extends ContentElementTestCase
 
         if ($isGrantedMap) {
             $security
-                ->expects($this->exactly(count($isGrantedMap)))
+                ->expects($this->exactly(\count($isGrantedMap)))
                 ->method('isGranted')
                 ->willReturnMap($isGrantedMap)
             ;
         }
 
-        if (false !== $token) {
+        if ($twoFaInProgress) {
             $security
                 ->expects($this->once())
                 ->method('getToken')
-                ->willReturn($token)
+                ->willReturn($this->createMock(TokenInterface::class))
             ;
         }
 
