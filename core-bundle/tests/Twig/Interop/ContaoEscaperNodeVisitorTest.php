@@ -138,7 +138,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
     {
         $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook has been deprecated/');
 
-        HookHelper::registerHook('replaceInsertTags', fn (...$args) => $this->executeReplaceInsertTagsCallback(...$args));
+        HookHelper::registerHook('replaceInsertTags', static fn (string $tag) => 'flavor' === $tag ? 'vanilla' : false);
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
@@ -156,11 +156,6 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $this->assertSame('<span title=vanilla&#x20;_is_&#x20;a&#x20;flavor></span>', $output);
 
         unset($GLOBALS['TL_HOOKS']);
-    }
-
-    public function executeReplaceInsertTagsCallback(string $tag): string|false
-    {
-        return 'flavor' === $tag ? 'vanilla' : false;
     }
 
     private function getEnvironment(string $templateContent): Environment
