@@ -166,25 +166,14 @@ abstract class ContaoTestCase extends TestCase
 
         $namespace = 'Contao\DynamicTestClass';
         $className = 'MockAdapter'.sha1(implode(':', $methods));
-        $path = sys_get_temp_dir().\DIRECTORY_SEPARATOR.$className.'.php';
         $fqcn = $namespace.'\\'.$className;
 
-        if (!file_exists($path)) {
+        if (!class_exists($fqcn, false)) {
+            $class = 'namespace %s; class %s extends \%s { %s }';
             $methods = array_map(static fn (string $method): string => \sprintf('public function %s() {}', $method), $methods);
 
-            $classContent = \sprintf('<?php
-
-            namespace %s;
-
-            class %s extends \%s
-            {
-                %s
-            }', $namespace, $className, Adapter::class, implode(PHP_EOL, $methods));
-
-            file_put_contents($path, $classContent);
+            eval(\sprintf($class, $namespace, $className, Adapter::class, implode(' ', $methods)));
         }
-
-        include_once $path;
 
         /** @var Adapter&MockObject $adapter */
         $adapter = $this->createMock($fqcn);
