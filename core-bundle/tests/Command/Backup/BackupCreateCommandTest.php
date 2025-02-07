@@ -143,7 +143,7 @@ class BackupCreateCommandTest extends TestCase
         $backupManager
             ->expects($this->once())
             ->method('create')
-            ->with($this->callback(\Closure::bind($expectedCreateConfig, $this)))
+            ->with($this->callback($expectedCreateConfig))
         ;
 
         return $backupManager;
