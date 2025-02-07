@@ -25,8 +25,8 @@ use Contao\Image\ImageDimensions;
 use Contao\Image\ImageInterface;
 use Contao\Image\PictureInterface;
 use Contao\Image\Resizer;
+use Contao\Image\ResizerInterface;
 use Imagine\Image\ImagineInterface;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -226,150 +226,129 @@ class ImageResultTest extends TestCase
         $this->assertSame('project/dir/file/path', $imageResult->getFilePath(true));
     }
 
-    #[DataProvider('provideDeferredImages')]
-    public function testCreateIfDeferred(\Closure $parametersDelegate): void
+    public function testCreatesIfDeferredWithNoDeferredImages(): void
     {
-        [$img, $sources, $expectedDeferredImages] = $parametersDelegate->bindTo($this)();
+        $imagine = $this->createMock(ImagineInterface::class);
 
-        $picture = $this->createMock(PictureInterface::class);
-        $picture
-            ->expects($this->once())
-            ->method('getSources')
-            ->with()
-            ->willReturn($sources)
-        ;
+        $img = ['src' => new Image('/project/dir/assets/image0.jpg', $imagine, $this->mockFilesystem())];
+        $deferredImages = [];
 
-        $picture
-            ->expects($this->once())
-            ->method('getImg')
-            ->with()
-            ->willReturn($img)
-        ;
-
-        $pictureFactory = $this->createMock(PictureFactoryInterface::class);
-        $pictureFactory
-            ->method('create')
-            ->willReturn($picture)
-        ;
-
-        $deferredResizer = $this->createMock(DeferredResizerInterface::class);
-        $deferredResizer
-            ->expects($expectedDeferredImages ? $this->atLeast(\count($expectedDeferredImages)) : $this->never())
-            ->method('resizeDeferredImage')
-            ->with($this->callback(
-                static function ($deferredImage) use (&$expectedDeferredImages) {
-                    foreach ($expectedDeferredImages as $key => $expectedDeferredImage) {
-                        if ($expectedDeferredImage->getPath() === $deferredImage->getPath()) {
-                            unset($expectedDeferredImages[$key]);
-                        }
-                    }
-
-                    return true;
-                },
-            ))
-        ;
-
-        $locator = $this->createMock(ContainerInterface::class);
-        $locator
-            ->method('get')
-            ->willReturnMap([
-                ['contao.image.picture_factory', $pictureFactory],
-                ['contao.image.resizer', $deferredResizer],
-            ])
-        ;
+        $pictureFactory = $this->mockPictureFactoryWithImgAndSources($img, []);
+        $deferredResizer = $this->mockDeferredResizer($deferredImages);
+        $locator = $this->mockLocator($pictureFactory, null, $deferredResizer);
 
         $imageResult = new ImageResult($locator, '/project/dir', '/project/dir/image.jpg');
         $imageResult->createIfDeferred();
 
-        $this->assertEmpty($expectedDeferredImages, 'test all images were processed');
+        $this->assertEmpty($deferredImages);
     }
 
-    public static function provideDeferredImages(): iterable
+    public function testCreatesIfDeferredWithDeferredImages(): void
     {
-        $imagine = fn () => $this->createMock(ImagineInterface::class);
-        $dimensions = fn () => $this->createMock(ImageDimensions::class);
+        $imagine = $this->createMock(ImagineInterface::class);
+        $dimensions = $this->createMock(ImageDimensions::class);
 
-        $filesystem = function () {
-            $filesystem = $this->createMock(Filesystem::class);
-            $filesystem
-                ->method('exists')
-                ->willReturn(true)
-            ;
+        $deferredImage1 = new DeferredImage('/project/dir/assets/image1.jpg', $imagine, $dimensions);
+        $deferredImage2 = new DeferredImage('/project/dir/assets/image2.jpg', $imagine, $dimensions);
+        $deferredImage3 = new DeferredImage('/project/dir/assets/image3.jpg', $imagine, $dimensions);
+        $deferredImage4 = new DeferredImage('/project/dir/assets/image4.jpg', $imagine, $dimensions);
 
-            return $filesystem;
-        };
+        $img = [
+            'src' => $deferredImage1,
+            'srcset' => [[$deferredImage2, 'foo'], [$deferredImage3]],
+        ];
 
-        $image = fn () => new Image('/project/dir/assets/image0.jpg', $imagine->bindTo($this)(), $filesystem->bindTo($this)());
-        $deferredImage1 = fn () => new DeferredImage('/project/dir/assets/image1.jpg', $imagine->bindTo($this)(), $dimensions->bindTo($this)());
-        $deferredImage2 = fn () => new DeferredImage('/project/dir/assets/image2.jpg', $imagine->bindTo($this)(), $dimensions->bindTo($this)());
-        $deferredImage3 = fn () => new DeferredImage('/project/dir/assets/image3.jpg', $imagine->bindTo($this)(), $dimensions->bindTo($this)());
-        $deferredImage4 = fn () => new DeferredImage('/project/dir/assets/image4.jpg', $imagine->bindTo($this)(), $dimensions->bindTo($this)());
-
-        yield 'no deferred images' => [
-            fn () => [
-                ['src' => $image->bindTo($this)()],
-                [],
-                [],
+        $sources = [
+            [
+                'src' => $deferredImage3,
+                'srcset' => [[$deferredImage2], [$deferredImage4]],
+            ],
+            [
+                'src' => $deferredImage2,
+                'srcset' => [[$deferredImage4]],
             ],
         ];
 
-        yield 'img and sources with deferred images' => [
-            fn () => [
-                [
-                    'src' => $deferredImage1->bindTo($this)(),
-                    'srcset' => [[$deferredImage2->bindTo($this)(), 'foo'], [$deferredImage3->bindTo($this)()]],
-                ],
-                [
-                    [
-                        'src' => $deferredImage3->bindTo($this)(),
-                        'srcset' => [[$deferredImage2->bindTo($this)()], [$deferredImage4->bindTo($this)()]],
-                    ],
-                    [
-                        'src' => $deferredImage2->bindTo($this)(),
-                        'srcset' => [[$deferredImage4->bindTo($this)()]],
-                    ],
-                ],
-                [$deferredImage1->bindTo($this)(), $deferredImage2->bindTo($this)(), $deferredImage3->bindTo($this)(), $deferredImage4->bindTo($this)()],
+        $deferredImages = [$deferredImage1, $deferredImage2, $deferredImage3, $deferredImage4];
+
+        $pictureFactory = $this->mockPictureFactoryWithImgAndSources($img, $sources);
+        $deferredResizer = $this->mockDeferredResizer($deferredImages);
+        $locator = $this->mockLocator($pictureFactory, null, $deferredResizer);
+
+        $imageResult = new ImageResult($locator, '/project/dir', '/project/dir/image.jpg');
+        $imageResult->createIfDeferred();
+
+        $this->assertEmpty($deferredImages);
+    }
+
+    public function testCreatesIfDeferredWithBothDeferredAndNotDeferredImages(): void
+    {
+        $imagine = $this->createMock(ImagineInterface::class);
+        $dimensions = $this->createMock(ImageDimensions::class);
+
+        $image = new Image('/project/dir/assets/image0.jpg', $imagine, $this->mockFilesystem());
+        $deferredImage1 = new DeferredImage('/project/dir/assets/image1.jpg', $imagine, $dimensions);
+        $deferredImage2 = new DeferredImage('/project/dir/assets/image2.jpg', $imagine, $dimensions);
+        $deferredImage3 = new DeferredImage('/project/dir/assets/image3.jpg', $imagine, $dimensions);
+
+        $img = [
+            'src' => $deferredImage1,
+        ];
+
+        $sources = [
+            [
+                'src' => $image,
+            ],
+            [
+                'src' => $deferredImage2,
+                'srcset' => [[$deferredImage3]],
             ],
         ];
 
-        yield 'img and sources with both deferred and non-deferred images' => [
-            fn () => [
-                [
-                    'src' => $deferredImage1->bindTo($this)(),
-                ],
-                [
-                    [
-                        'src' => $image,
-                    ],
-                    [
-                        'src' => $deferredImage2->bindTo($this)(),
-                        'srcset' => [[$deferredImage3->bindTo($this)()]],
-                    ],
-                ],
-                [$deferredImage1->bindTo($this)(), $deferredImage2->bindTo($this)(), $deferredImage3->bindTo($this)()],
+        $deferredImages = [$deferredImage1, $deferredImage2, $deferredImage3];
+
+        $pictureFactory = $this->mockPictureFactoryWithImgAndSources($img, $sources);
+        $deferredResizer = $this->mockDeferredResizer($deferredImages);
+        $locator = $this->mockLocator($pictureFactory, null, $deferredResizer);
+
+        $imageResult = new ImageResult($locator, '/project/dir', '/project/dir/image.jpg');
+        $imageResult->createIfDeferred();
+
+        $this->assertEmpty($deferredImages);
+    }
+
+    public function testCreatesIfDeferredElementsWithoutSrcOrSrcsetKey(): void
+    {
+        $imagine = $this->createMock(ImagineInterface::class);
+        $dimensions = $this->createMock(ImageDimensions::class);
+
+        $deferredImage1 = new DeferredImage('/project/dir/assets/image1.jpg', $imagine, $dimensions);
+        $deferredImage2 = new DeferredImage('/project/dir/assets/image2.jpg', $imagine, $dimensions);
+
+        $img = ['foo' => 'bar'];
+
+        $sources = [
+            [
+                'bar' => 'foo',
+            ],
+            [
+                'srcset' => [['foo'], [$deferredImage2]],
+            ],
+            [
+                'src' => $deferredImage1,
             ],
         ];
 
-        yield 'elements without src or srcset key' => [
-            fn () => [
-                [
-                    'foo' => 'bar',
-                ],
-                [
-                    [
-                        'bar' => 'foo',
-                    ],
-                    [
-                        'srcset' => [['foo'], [$deferredImage2->bindTo($this)()]],
-                    ],
-                    [
-                        'src' => $deferredImage1->bindTo($this)(),
-                    ],
-                ],
-                [$deferredImage1->bindTo($this)(), $deferredImage2->bindTo($this)()],
-            ],
-        ];
+        $deferredImages = [$deferredImage1, $deferredImage2];
+
+        $pictureFactory = $this->mockPictureFactoryWithImgAndSources($img, $sources);
+        $deferredResizer = $this->mockDeferredResizer($deferredImages);
+        $locator = $this->mockLocator($pictureFactory, null, $deferredResizer);
+
+        $imageResult = new ImageResult($locator, '/project/dir', '/project/dir/image.jpg');
+        $imageResult->createIfDeferred();
+
+        $this->assertEmpty($deferredImages);
     }
 
     public function testCreateIfDeferredFailsWithoutDeferredResizer(): void
@@ -465,7 +444,33 @@ class ImageResultTest extends TestCase
         return $pictureFactory;
     }
 
-    private function mockLocator(PictureFactoryInterface|null $pictureFactory = null, string|null $staticUrl = null): ContainerInterface&MockObject
+    private function mockPictureFactoryWithImgAndSources(array $img, array $sources): PictureFactoryInterface&MockObject
+    {
+        $picture = $this->createMock(PictureInterface::class);
+        $picture
+            ->expects($this->once())
+            ->method('getSources')
+            ->with()
+            ->willReturn($sources)
+        ;
+
+        $picture
+            ->expects($this->once())
+            ->method('getImg')
+            ->with()
+            ->willReturn($img)
+        ;
+
+        $pictureFactory = $this->createMock(PictureFactoryInterface::class);
+        $pictureFactory
+            ->method('create')
+            ->willReturn($picture)
+        ;
+
+        return $pictureFactory;
+    }
+
+    private function mockLocator(PictureFactoryInterface|null $pictureFactory = null, string|null $staticUrl = null, ResizerInterface|null $resizer = null): ContainerInterface&MockObject
     {
         $locator = $this->createMock(ContainerInterface::class);
         $context = null;
@@ -483,9 +488,43 @@ class ImageResultTest extends TestCase
             ->willReturnMap([
                 ['contao.image.picture_factory', $pictureFactory],
                 ['contao.assets.files_context', $context],
+                ['contao.image.resizer', $resizer],
             ])
         ;
 
         return $locator;
+    }
+
+    private function mockDeferredResizer(array|null &$expectedDeferredImages): DeferredResizerInterface&MockObject
+    {
+        $deferredResizer = $this->createMock(DeferredResizerInterface::class);
+        $deferredResizer
+            ->expects($expectedDeferredImages ? $this->atLeast(\count($expectedDeferredImages)) : $this->never())
+            ->method('resizeDeferredImage')
+            ->with($this->callback(
+                static function ($deferredImage) use (&$expectedDeferredImages) {
+                    foreach ($expectedDeferredImages as $key => $expectedDeferredImage) {
+                        if ($expectedDeferredImage->getPath() === $deferredImage->getPath()) {
+                            unset($expectedDeferredImages[$key]);
+                        }
+                    }
+
+                    return true;
+                },
+            ))
+        ;
+
+        return $deferredResizer;
+    }
+
+    private function mockFilesystem(): Filesystem&MockObject
+    {
+        $filesystem = $this->createMock(Filesystem::class);
+        $filesystem
+            ->method('exists')
+            ->willReturn(true)
+        ;
+
+        return $filesystem;
     }
 }

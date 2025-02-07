@@ -35,6 +35,28 @@ use Symfony\Component\Filesystem\Path;
 
 class FigureTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        $imageFactory = new ImageFactory(
+            $this->createMock(ResizerInterface::class),
+            $this->createMock(ImagineInterface::class),
+            $this->createMock(ImagineInterface::class),
+            new Filesystem(),
+            $this->createMock(ContaoFramework::class),
+            false,
+            ['jpeg_quality' => 80],
+            ['jpg', 'svg'],
+            $this->getFixturesDir(),
+        );
+
+        $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
+        $container->set('contao.image.factory', $imageFactory);
+
+        System::setContainer($container);
+
+        parent::setUp();
+    }
+
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_MIME']);
@@ -142,28 +164,24 @@ class FigureTest extends TestCase
     }
 
     #[DataProvider('provideLinkAttributesAndPreconditions')]
-    public function testGetLinkAttributes(array $argumentsAndPreconditions, array $expectedAttributes, string|null $expectedHref): void
+    public function testGetLinkAttributes(Metadata|null $metadata, array $attributes, bool $withLightbox, array $expectedAttributes, string|null $expectedHref): void
     {
-        foreach ($argumentsAndPreconditions as &$element) {
-            if ('__lightbox__' === $element) {
-                $lightbox = $this->createMock(LightboxResult::class);
-                $lightbox
-                    ->method('getLinkHref')
-                    ->willReturn('path/from/lightbox')
-                ;
+        $lightbox = null;
 
-                $lightbox
-                    ->method('getGroupIdentifier')
-                    ->willReturn('12345')
-                ;
+        if ($withLightbox) {
+            $lightbox = $this->createMock(LightboxResult::class);
+            $lightbox
+                ->method('getLinkHref')
+                ->willReturn('path/from/lightbox')
+            ;
 
-                $element = $lightbox;
-            }
+            $lightbox
+                ->method('getGroupIdentifier')
+                ->willReturn('12345')
+            ;
         }
 
         $image = $this->createMock(ImageResult::class);
-
-        [$attributes, $metadata, $lightbox] = $argumentsAndPreconditions;
 
         $figure = new Figure($image, $metadata, $attributes, $lightbox);
 
@@ -174,16 +192,18 @@ class FigureTest extends TestCase
 
     public static function provideLinkAttributesAndPreconditions(): iterable
     {
-        $lightBoxPlaceholder = '__lightbox__';
-
         yield 'empty set of attributes' => [
-            [[], null, null], [], '',
+            null,
+            [],
+            false,
+            [],
+            '',
         ];
 
         yield 'custom attributes' => [
-            [
-                ['foo' => 'a', 'bar' => 'b'], null, null,
-            ],
+            null,
+            ['foo' => 'a', 'bar' => 'b'],
+            false,
             [
                 'foo' => 'a',
                 'bar' => 'b',
@@ -192,9 +212,9 @@ class FigureTest extends TestCase
         ];
 
         yield 'custom attributes including href' => [
-            [
-                ['foo' => 'a', 'href' => 'foobar'], null, null,
-            ],
+            null,
+            ['foo' => 'a', 'href' => 'foobar'],
+            false,
             [
                 'foo' => 'a',
             ],
@@ -202,9 +222,9 @@ class FigureTest extends TestCase
         ];
 
         yield 'custom attributes including external href' => [
-            [
-                ['foo' => 'a', 'href' => 'https://example.com'], null, null,
-            ],
+            null,
+            ['foo' => 'a', 'href' => 'https://example.com'],
+            false,
             [
                 'foo' => 'a',
                 'rel' => 'noreferrer noopener',
@@ -213,9 +233,9 @@ class FigureTest extends TestCase
         ];
 
         yield 'custom attributes and metadata containing link' => [
-            [
-                ['foo' => 'a'], new Metadata([Metadata::VALUE_URL => 'foobar']), null,
-            ],
+            new Metadata([Metadata::VALUE_URL => 'foobar']),
+            ['foo' => 'a'],
+            false,
             [
                 'foo' => 'a',
             ],
@@ -223,9 +243,9 @@ class FigureTest extends TestCase
         ];
 
         yield 'custom attributes and metadata containing external link' => [
-            [
-                ['foo' => 'a'], new Metadata([Metadata::VALUE_URL => 'https://example.com']), null,
-            ],
+            new Metadata([Metadata::VALUE_URL => 'https://example.com']),
+            ['foo' => 'a'],
+            false,
             [
                 'foo' => 'a',
                 'rel' => 'noreferrer noopener',
@@ -234,17 +254,17 @@ class FigureTest extends TestCase
         ];
 
         yield 'custom href attribute and metadata containing link' => [
-            [
-                ['href' => 'this-will-win'], new Metadata([Metadata::VALUE_URL => 'will-be-overwritten']), null,
-            ],
+            new Metadata([Metadata::VALUE_URL => 'will-be-overwritten']),
+            ['href' => 'this-will-win'],
+            false,
             [],
             'this-will-win',
         ];
 
         yield 'custom attributes and lightbox' => [
-            [
-                ['foo' => 'a'], null, $lightBoxPlaceholder,
-            ],
+            null,
+            ['foo' => 'a'],
+            true,
             [
                 'foo' => 'a',
                 'data-lightbox' => '12345',
@@ -253,9 +273,9 @@ class FigureTest extends TestCase
         ];
 
         yield 'custom attributes, metadata containing link and lightbox' => [
-            [
-                ['foo' => 'a'], new Metadata([Metadata::VALUE_URL => 'will-be-ignored']), $lightBoxPlaceholder,
-            ],
+            new Metadata([Metadata::VALUE_URL => 'will-be-ignored']),
+            ['foo' => 'a'],
+            true,
             [
                 'foo' => 'a',
                 'data-lightbox' => '12345',
@@ -264,17 +284,17 @@ class FigureTest extends TestCase
         ];
 
         yield 'force-removed href attribute and metadata containing external link' => [
-            [
-                ['href' => null], new Metadata([Metadata::VALUE_URL => 'https://example.com']), null,
-            ],
+            new Metadata([Metadata::VALUE_URL => 'https://example.com']),
+            ['href' => null],
+            false,
             [],
             null,
         ];
 
         yield 'custom attributes, force-set data-lightbox attribute and light-box' => [
-            [
-                ['foo' => 'a', 'data-lightbox' => 'abcde'], new Metadata([Metadata::VALUE_URL => 'https://example.com']), $lightBoxPlaceholder,
-            ],
+            new Metadata([Metadata::VALUE_URL => 'https://example.com']),
+            ['foo' => 'a', 'data-lightbox' => 'abcde'],
+            true,
             [
                 'foo' => 'a',
                 'data-lightbox' => 'abcde',
@@ -324,7 +344,8 @@ class FigureTest extends TestCase
 
     public function testBasicImageData(): void
     {
-        $data = $this->getLegacyTemplateData([null, null, null, null], [false, null, null]);
+        $figure = new Figure($this->mockImage());
+        $data = $figure->getLegacyTemplateData(includeFullMetadata: false);
 
         $this->assertSame(['img foo'], $data['picture']['img']);
         $this->assertSame(['sources foo'], $data['picture']['sources']);
@@ -345,10 +366,8 @@ class FigureTest extends TestCase
             'foo' => 'bar',
         ]);
 
-        $data = $this->getLegacyTemplateData(
-            [$simpleMetadata, null, null, null],
-            [false, null, null],
-        );
+        $figure = new Figure($this->mockImage(), $simpleMetadata);
+        $data = $figure->getLegacyTemplateData(includeFullMetadata: false);
 
         $this->assertSame('a', $data['picture']['alt']);
         $this->assertSame('t', $data['picture']['title']);
@@ -363,10 +382,8 @@ class FigureTest extends TestCase
             'foo' => 'bar',
         ]);
 
-        $data = $this->getLegacyTemplateData(
-            [$simpleMetadata, null, null, null],
-            [true, null, null],
-        );
+        $figure = new Figure($this->mockImage(), $simpleMetadata);
+        $data = $figure->getLegacyTemplateData();
 
         $this->assertSame('a', $data['alt']);
         $this->assertSame('t', $data['imageTitle']);
@@ -380,10 +397,8 @@ class FigureTest extends TestCase
             Metadata::VALUE_URL => 'foo://meta',
         ]);
 
-        $data = $this->getLegacyTemplateData(
-            [$metadataWithLink, null, null, null],
-            [true, null, null],
-        );
+        $figure = new Figure($this->mockImage(), $metadataWithLink);
+        $data = $figure->getLegacyTemplateData();
 
         $this->assertSame('t', $data['linkTitle']);
         $this->assertSame('foo://meta', $data['imageUrl']);
@@ -399,10 +414,8 @@ class FigureTest extends TestCase
             Metadata::VALUE_URL => 'foo://meta',
         ]);
 
-        $data = $this->getLegacyTemplateData(
-            [$metadataWithLink, ['title' => 'foo', 'bar' => 'baz'], null, null],
-            [true, null, null],
-        );
+        $figure = new Figure($this->mockImage(), $metadataWithLink, ['title' => 'foo', 'bar' => 'baz']);
+        $data = $figure->getLegacyTemplateData();
 
         $this->assertSame('foo', $data['linkTitle']);
         $this->assertSame(' bar="baz"', $data['attributes'], 'must not contain link attribute');
@@ -415,10 +428,8 @@ class FigureTest extends TestCase
             Metadata::VALUE_CAPTION => 'Here <b>is</b> some <i>HTML</i>!',
         ]);
 
-        $data = $this->getLegacyTemplateData(
-            [$metadataWithHtml, null, null, null],
-            [true, null, null],
-        );
+        $figure = new Figure($this->mockImage(), $metadataWithHtml);
+        $data = $figure->getLegacyTemplateData();
 
         $this->assertSame('Here <b>is</b> some <i>HTML</i>!', $data['caption']);
         $this->assertSame('Here &lt;b&gt;is&lt;/b&gt; some &lt;i&gt;HTML&lt;/i&gt;!', $data['alt']);
@@ -430,10 +441,8 @@ class FigureTest extends TestCase
             'href' => 'foo://bar',
         ];
 
-        $data = $this->getLegacyTemplateData(
-            [null, $basicLinkAttributes, null, null],
-            [false, null, null],
-        );
+        $figure = new Figure($this->mockImage(), null, $basicLinkAttributes);
+        $data = $figure->getLegacyTemplateData(includeFullMetadata: false);
 
         $this->assertSame('', $data['linkTitle']);
         $this->assertSame('foo://bar', $data['href']);
@@ -452,10 +461,8 @@ class FigureTest extends TestCase
             'href' => 'foo://bar',
         ];
 
-        $data = $this->getLegacyTemplateData(
-            [$metadataWithLink, $basicLinkAttributes, null, null],
-            [true, null, null],
-        );
+        $figure = new Figure($this->mockImage(), $metadataWithLink, $basicLinkAttributes);
+        $data = $figure->getLegacyTemplateData();
 
         $this->assertSame('foo://meta', $data['imageUrl']);
         $this->assertSame('foo://bar', $data['href']);
@@ -469,10 +476,8 @@ class FigureTest extends TestCase
             'foo' => 'bar',
         ];
 
-        $data = $this->getLegacyTemplateData(
-            [null, $extendedLinkAttributes, null, null],
-            [false, null, null],
-        );
+        $figure = new Figure($this->mockImage(), null, $extendedLinkAttributes);
+        $data = $figure->getLegacyTemplateData(includeFullMetadata: false);
 
         $this->assertTrue($data['fullsize']);
         $this->assertSame(' target="_blank" foo="bar"', $data['attributes']);
@@ -480,46 +485,40 @@ class FigureTest extends TestCase
 
     public function testWithLightbox(): void
     {
-        $lightBoxDelegate = static function (TestCase $testCase) {
-            $lightboxImage = $testCase->createMock(ImageResult::class);
-            $lightboxImage
-                ->method('getImg')
-                ->willReturn(['lightbox img'])
-            ;
+        $lightboxImage = $this->createMock(ImageResult::class);
+        $lightboxImage
+            ->method('getImg')
+            ->willReturn(['lightbox img'])
+        ;
 
-            $lightboxImage
-                ->method('getSources')
-                ->willReturn(['lightbox sources'])
-            ;
+        $lightboxImage
+            ->method('getSources')
+            ->willReturn(['lightbox sources'])
+        ;
 
-            $lightbox = $testCase->createMock(LightboxResult::class);
-            $lightbox
-                ->method('hasImage')
-                ->willReturn(true)
-            ;
+        $lightbox = $this->createMock(LightboxResult::class);
+        $lightbox
+            ->method('hasImage')
+            ->willReturn(true)
+        ;
 
-            $lightbox
-                ->method('getImage')
-                ->willReturn($lightboxImage)
-            ;
+        $lightbox
+            ->method('getImage')
+            ->willReturn($lightboxImage)
+        ;
 
-            $lightbox
-                ->method('getGroupIdentifier')
-                ->willReturn('12345')
-            ;
+        $lightbox
+            ->method('getGroupIdentifier')
+            ->willReturn('12345')
+        ;
 
-            $lightbox
-                ->method('getLinkHref')
-                ->willReturn('foo://bar')
-            ;
+        $lightbox
+            ->method('getLinkHref')
+            ->willReturn('foo://bar')
+        ;
 
-            return $lightbox;
-        };
-
-        $data = $this->getLegacyTemplateData(
-            [null, null, $lightBoxDelegate, null],
-            [false, null, null],
-        );
+        $figure = new Figure($this->mockImage(), lightbox: $lightbox);
+        $data = $figure->getLegacyTemplateData(includeFullMetadata: false);
 
         $this->assertSame(['lightbox img'], $data['lightboxPicture']['img']);
         $this->assertSame(['lightbox sources'], $data['lightboxPicture']['sources']);
@@ -534,9 +533,11 @@ class FigureTest extends TestCase
 
     public function testWithLegacyProperties1(): void
     {
-        $data = $this->getLegacyTemplateData(
-            [null, null, null, null],
-            [false, 'above', ['top' => '1', 'right' => '2', 'bottom' => '3', 'left' => '4', 'unit' => 'em']],
+        $figure = new Figure($this->mockImage());
+        $data = $figure->getLegacyTemplateData(
+            ['top' => '1', 'right' => '2', 'bottom' => '3', 'left' => '4', 'unit' => 'em'],
+            'above',
+            false,
         );
 
         $this->assertTrue($data['addBefore']);
@@ -545,13 +546,11 @@ class FigureTest extends TestCase
 
     public function testWithLegacyProperties2(): void
     {
-        $data = $this->getLegacyTemplateData(
-            [null, null, null, null],
-            [
-                false,
-                'above',
-                'a:5:{s:3:"top";s:1:"1";s:5:"right";s:1:"2";s:6:"bottom";s:1:"3";s:4:"left";s:1:"4";s:4:"unit";s:2:"em";}',
-            ],
+        $figure = new Figure($this->mockImage());
+        $data = $figure->getLegacyTemplateData(
+            'a:5:{s:3:"top";s:1:"1";s:5:"right";s:1:"2";s:6:"bottom";s:1:"3";s:4:"left";s:1:"4";s:4:"unit";s:2:"em";}',
+            'above',
+            false,
         );
 
         $this->assertTrue($data['addBefore']);
@@ -560,20 +559,16 @@ class FigureTest extends TestCase
 
     public function testWithLegacyProperties3(): void
     {
-        $data = $this->getLegacyTemplateData(
-            [null, null, null, null],
-            [false, 'below', null],
-        );
+        $figure = new Figure($this->mockImage());
+        $data = $figure->getLegacyTemplateData(null, 'below', false);
 
         $this->assertFalse($data['addBefore']);
     }
 
     public function testWithTemplateOptions(): void
     {
-        $data = $this->getLegacyTemplateData(
-            [null, null, null, ['foo' => 'bar', 'addImage' => false]],
-            [false, null, null],
-        );
+        $figure = new Figure($this->mockImage(), options: ['foo' => 'bar', 'addImage' => false]);
+        $data = $figure->getLegacyTemplateData(includeFullMetadata: false);
 
         $this->assertSame('bar', $data['foo']);
         $this->assertFalse($data['addImage']);
@@ -581,23 +576,6 @@ class FigureTest extends TestCase
 
     public function testApplyLegacyTemplate(): void
     {
-        $imageFactory = new ImageFactory(
-            $this->createMock(ResizerInterface::class),
-            $this->createMock(ImagineInterface::class),
-            $this->createMock(ImagineInterface::class),
-            new Filesystem(),
-            $this->createMock(ContaoFramework::class),
-            false,
-            ['jpeg_quality' => 80],
-            ['jpg', 'svg'],
-            $this->getFixturesDir(),
-        );
-
-        $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
-        $container->set('contao.image.factory', $imageFactory);
-
-        System::setContainer($container);
-
         $template = new FrontendTemplate('ce_image');
 
         $figure = new Figure($this->mockImage());
@@ -615,23 +593,6 @@ class FigureTest extends TestCase
 
     public function testApplyLegacyTemplateDataDoesNotOverwriteHref(): void
     {
-        $imageFactory = new ImageFactory(
-            $this->createMock(ResizerInterface::class),
-            $this->createMock(ImagineInterface::class),
-            $this->createMock(ImagineInterface::class),
-            new Filesystem(),
-            $this->createMock(ContaoFramework::class),
-            false,
-            ['jpeg_quality' => 80],
-            ['jpg', 'svg'],
-            $this->getFixturesDir(),
-        );
-
-        $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
-        $container->set('contao.image.factory', $imageFactory);
-
-        System::setContainer($container);
-
         $template = new \stdClass();
 
         $figure = new Figure($this->mockImage(), null, ['href' => 'foo://bar']);
@@ -678,38 +639,6 @@ class FigureTest extends TestCase
             ],
             $figure->getSchemaOrgData(),
         );
-    }
-
-    private function getLegacyTemplateData(array $preconditions, array $buildAttributes): array
-    {
-        [$metadata, $linkAttributes, $lightbox, $options] = $preconditions;
-
-        if ($lightbox instanceof \Closure) {
-            $lightbox = $lightbox($this);
-        }
-
-        [$includeFullMetadata, $floatingProperty, $marginProperty] = $buildAttributes;
-
-        $imageFactory = new ImageFactory(
-            $this->createMock(ResizerInterface::class),
-            $this->createMock(ImagineInterface::class),
-            $this->createMock(ImagineInterface::class),
-            new Filesystem(),
-            $this->createMock(ContaoFramework::class),
-            false,
-            ['jpeg_quality' => 80],
-            ['jpg', 'svg'],
-            $this->getFixturesDir(),
-        );
-
-        $container = $this->getContainerWithContaoConfiguration(Path::canonicalize(__DIR__.'/../../Fixtures'));
-        $container->set('contao.image.factory', $imageFactory);
-
-        System::setContainer($container);
-
-        $figure = new Figure($this->mockImage(), $metadata, $linkAttributes, $lightbox, $options);
-
-        return $figure->getLegacyTemplateData($marginProperty, $floatingProperty, $includeFullMetadata);
     }
 
     private function mockImage(): ImageResult&MockObject

@@ -359,13 +359,28 @@ class TwigMacrosTest extends TestCase
     }
 
     #[DataProvider('provideFigureData')]
-    public function testFigureMacro(Metadata|null $metadata, array $linkAttributes, \Closure|null $lightboxDelegate, string $expected): void
+    public function testFigureMacro(Metadata|null $metadata, array $linkAttributes, bool $withLightbox, string $expected): void
     {
+        $lightbox = null;
+
+        if ($withLightbox) {
+            $lightbox = $this->createMock(LightboxResult::class);
+            $lightbox
+                ->method('getLinkHref')
+                ->willReturn('lightbox/resource')
+            ;
+
+            $lightbox
+                ->method('getGroupIdentifier')
+                ->willReturn('gal1')
+            ;
+        }
+
         $figure = new Figure(
             $this->createMock(ImageResult::class),
             $metadata,
             $linkAttributes,
-            $lightboxDelegate ? $lightboxDelegate($this) : null,
+            $lightbox,
         );
 
         $html = $this->renderMacro('figure(figure)', ['figure' => $figure]);
@@ -385,7 +400,7 @@ class TwigMacrosTest extends TestCase
         yield 'minimal' => [
             null,
             [],
-            null,
+            false,
             '<figure><picture></figure>',
         ];
 
@@ -395,43 +410,28 @@ class TwigMacrosTest extends TestCase
                 'href' => 'foo.html',
                 'data-link' => 'bar',
             ],
-            null,
+            false,
             '<figure><a href="foo.html" data-link="bar"><picture></a></figure>',
         ];
-
-        $lightboxDelegate = static function (TestCase $testCase) {
-            $lightbox = $testCase->createMock(LightboxResult::class);
-            $lightbox
-                ->method('getLinkHref')
-                ->willReturn('lightbox/resource')
-            ;
-
-            $lightbox
-                ->method('getGroupIdentifier')
-                ->willReturn('gal1')
-            ;
-
-            return $lightbox;
-        };
 
         yield 'with lightbox link' => [
             null,
             [],
-            $lightboxDelegate,
+            true,
             '<figure><a href="lightbox/resource" data-lightbox="gal1"><picture></a></figure>',
         ];
 
         yield 'with lightbox link and title' => [
             new Metadata([Metadata::VALUE_TITLE => 'foo title']),
             [],
-            $lightboxDelegate,
+            true,
             '<figure><a href="lightbox/resource" title="foo title" data-lightbox="gal1"><picture></a></figure>',
         ];
 
         yield 'with caption' => [
             new Metadata([Metadata::VALUE_CAPTION => 'foo caption']),
             [],
-            null,
+            false,
             '<figure><picture><figcaption></figure>',
         ];
     }

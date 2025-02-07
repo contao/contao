@@ -143,9 +143,9 @@ class SearchIndexSubscriberTest extends TestCase
     }
 
     #[DataProvider('needsContentProvider')]
-    public function testNeedsContent(\Closure $response, string $expectedDecision, string $expectedLogLevel = '', string $expectedLogMessage = '', CrawlUri|null $crawlUri = null): void
+    public function testNeedsContent(array $responseArguments, string $expectedDecision, string $expectedLogLevel = '', string $expectedLogMessage = '', CrawlUri|null $crawlUri = null): void
     {
-        $response = \Closure::bind($response, $this)();
+        $response = $this->mockResponse(...$responseArguments);
         $logger = $this->createMock(LoggerInterface::class);
 
         if ('' !== $expectedLogLevel) {
@@ -191,33 +191,33 @@ class SearchIndexSubscriberTest extends TestCase
     public static function needsContentProvider(): iterable
     {
         yield 'Test skips responses that were not successful' => [
-            fn () => $this->mockResponse(true, 404),
+            [true, 404],
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Did not index because according to the HTTP status code the response was not successful (404).',
         ];
 
         yield 'Test skips responses that were not HTML responses' => [
-            fn () => $this->mockResponse(false),
+            [false],
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Did not index because the response did not contain a "text/html" Content-Type header.',
         ];
 
         yield 'Test requests successful HTML responses' => [
-            fn () => $this->mockResponse(true),
+            [true],
             SubscriberInterface::DECISION_POSITIVE,
         ];
 
         yield 'Test skips redirected responses outside the target domain' => [
-            fn () => $this->mockResponse(false, 200, 'https://example.com'),
+            [false, 200, 'https://example.com'],
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Did not index because it was not part of the base URI collection.',
         ];
 
         yield 'Test skips URIs where the "X-Robots-Tag" header contains "noindex"' => [
-            fn () => $this->mockResponse(true),
+            [true],
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Do not request because it was marked "noindex" in the "X-Robots-Tag" header.',
@@ -343,9 +343,9 @@ class SearchIndexSubscriberTest extends TestCase
     }
 
     #[DataProvider('onTransportExceptionProvider')]
-    public function testOnTransportException(TransportException $exception, \Closure $response, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
+    public function testOnTransportException(TransportException $exception, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
     {
-        $response = \Closure::bind($response, $this)();
+        $response = $this->mockResponse(true, 404);
         $logger = $this->createMock(LoggerInterface::class);
 
         if ('' !== $expectedLogLevel) {
@@ -401,7 +401,6 @@ class SearchIndexSubscriberTest extends TestCase
     {
         yield 'Test reports transport exception responses' => [
             new TransportException('Could not resolve host or timeout'),
-            fn () => $this->mockResponse(true, 404),
             LogLevel::DEBUG,
             'Broken link! Could not request properly: Could not resolve host or timeout.',
             ['ok' => 0, 'warning' => 2, 'error' => 0],
@@ -410,10 +409,10 @@ class SearchIndexSubscriberTest extends TestCase
     }
 
     #[DataProvider('onHttpExceptionProvider')]
-    public function testOnHttpException(\Closure $exception, \Closure $response, ChunkInterface $chunk, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
+    public function testOnHttpException(ChunkInterface $chunk, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
     {
-        $exception = \Closure::bind($exception, $this)();
-        $response = \Closure::bind($response, $this)();
+        $response = $this->mockResponse(true, 404);
+        $exception = new ClientException($response);
         $logger = $this->createMock(LoggerInterface::class);
 
         if ('' !== $expectedLogLevel) {
@@ -468,8 +467,6 @@ class SearchIndexSubscriberTest extends TestCase
     public static function onHttpExceptionProvider(): iterable
     {
         yield 'Test reports responses that were not successful' => [
-            fn () => new ClientException($this->mockResponse(true, 404)),
-            fn () => $this->mockResponse(true, 404),
             new LastChunk(),
             LogLevel::DEBUG,
             'Broken link! HTTP Status Code: 404.',
@@ -477,8 +474,6 @@ class SearchIndexSubscriberTest extends TestCase
         ];
 
         yield 'Test reports responses that were not successful (with previous result)' => [
-            fn () => new ClientException($this->mockResponse(true, 404)),
-            fn () => $this->mockResponse(true, 404),
             new LastChunk(),
             LogLevel::DEBUG,
             'Broken link! HTTP Status Code: 404.',

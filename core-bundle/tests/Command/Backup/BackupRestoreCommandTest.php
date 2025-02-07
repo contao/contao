@@ -81,61 +81,41 @@ class BackupRestoreCommandTest extends TestCase
     {
         yield 'Default arguments' => [
             [],
-            function (RestoreConfig $config) {
-                $this->assertSame([], $config->getTablesToIgnore());
-                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilename());
-                $this->assertFalse($config->ignoreOriginCheck());
-
-                return true;
-            },
+            static fn (RestoreConfig $config) => [] === $config->getTablesToIgnore()
+                && 'test__20211101141254.sql.gz' === $config->getBackup()->getFilename()
+                && false === $config->ignoreOriginCheck(),
             '[OK] Successfully restored backup from "test__20211101141254.sql.gz".',
         ];
 
         yield 'Different tables to ignore' => [
             ['--ignore-tables' => 'foo,bar'],
-            function (RestoreConfig $config) {
-                $this->assertSame(['bar', 'foo'], $config->getTablesToIgnore());
-                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilename());
-                $this->assertFalse($config->ignoreOriginCheck());
-
-                return true;
-            },
+            static fn (RestoreConfig $config) => ['bar', 'foo'] === $config->getTablesToIgnore()
+                && 'test__20211101141254.sql.gz' === $config->getBackup()->getFilename()
+                && false === $config->ignoreOriginCheck(),
             '[OK] Successfully restored backup from "test__20211101141254.sql.gz".',
         ];
 
         yield 'Specific backup' => [
             ['name' => 'file__20211101141254.sql'],
-            function (RestoreConfig $config) {
-                $this->assertSame([], $config->getTablesToIgnore());
-                $this->assertSame('file__20211101141254.sql', $config->getBackup()->getFilename());
-                $this->assertFalse($config->ignoreOriginCheck());
-
-                return true;
-            },
+            static fn (RestoreConfig $config) => [] === $config->getTablesToIgnore()
+                && 'file__20211101141254.sql' === $config->getBackup()->getFilename()
+                && false === $config->ignoreOriginCheck(),
             '[OK] Successfully restored backup from "file__20211101141254.sql".',
         ];
 
         yield 'Force restore' => [
             ['--force' => true],
-            function (RestoreConfig $config) {
-                $this->assertSame([], $config->getTablesToIgnore());
-                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilename());
-                $this->assertTrue($config->ignoreOriginCheck());
-
-                return true;
-            },
+            static fn (RestoreConfig $config) => [] === $config->getTablesToIgnore()
+                && 'test__20211101141254.sql.gz' === $config->getBackup()->getFilename()
+                && $config->ignoreOriginCheck(),
             '[OK] Successfully restored backup from "test__20211101141254.sql.gz".',
         ];
 
         yield 'JSON format' => [
             ['--format' => 'json'],
-            function (RestoreConfig $config) {
-                $this->assertSame([], $config->getTablesToIgnore());
-                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilename());
-                $this->assertFalse($config->ignoreOriginCheck());
-
-                return true;
-            },
+            static fn (RestoreConfig $config) => [] === $config->getTablesToIgnore()
+                && 'test__20211101141254.sql.gz' === $config->getBackup()->getFilename()
+                && false === $config->ignoreOriginCheck(),
             '{"createdAt":"2021-11-01T14:12:54+00:00","size":100,"name":"test__20211101141254.sql.gz"}',
         ];
     }
@@ -155,7 +135,7 @@ class BackupRestoreCommandTest extends TestCase
         $backupManager
             ->expects($this->once())
             ->method('restore')
-            ->with($this->callback(\Closure::bind($expectedCreateConfig, $this)))
+            ->with($this->callback($expectedCreateConfig))
         ;
 
         return $backupManager;

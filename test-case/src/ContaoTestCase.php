@@ -186,7 +186,10 @@ abstract class ContaoTestCase extends TestCase
 
         include_once $path;
 
-        return $this->createMock($fqcn);
+        /** @var Adapter&MockObject $adapter */
+        $adapter = $this->createMock($fqcn);
+
+        return $adapter;
     }
 
     /**

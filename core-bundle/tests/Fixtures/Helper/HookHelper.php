@@ -30,4 +30,27 @@ class HookHelper
             '__invoke',
         ];
     }
+
+    public static function registerInsertTagsHook(\Closure $handler): void
+    {
+        $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = [
+            new class($handler) {
+                public function __construct(private readonly \Closure $handler)
+                {
+                }
+
+                // Cannot use ...spread operator because of references
+                public function __invoke(&$a, &$b, $c, &$d, &$e, $f, &$g, &$h)
+                {
+                    return ($this->handler)($a, $b, $c, $d, $e, $f, $g, $h);
+                }
+
+                public function __toString(): string
+                {
+                    return self::class;
+                }
+            },
+            '__invoke',
+        ];
+    }
 }
