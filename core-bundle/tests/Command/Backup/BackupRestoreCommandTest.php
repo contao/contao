@@ -107,7 +107,7 @@ class BackupRestoreCommandTest extends TestCase
             ['--force' => true],
             static fn (RestoreConfig $config) => [] === $config->getTablesToIgnore()
                     && 'test__20211101141254.sql.gz' === $config->getBackup()->getFilename()
-                    && true === $config->ignoreOriginCheck(),
+                    && $config->ignoreOriginCheck(),
             '[OK] Successfully restored backup from "test__20211101141254.sql.gz".',
         ];
 
