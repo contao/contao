@@ -40,7 +40,7 @@ class HookHelper
                 }
 
                 // Cannot use ...spread operator because of references
-                public function __invoke(string &$a, bool &$b, string $c, array &$d, array &$e, array $f, int &$g, int|string &$h)
+                public function __invoke(&$a, &$b, $c, &$d, &$e, $f, &$g, &$h)
                 {
                     return ($this->handler)($a, $b, $c, $d, $e, $f, $g, $h);
                 }
