@@ -57,16 +57,15 @@ class DbafsManagerTest extends TestCase
     }
 
     #[DataProvider('provideInvalidConfigurations')]
-    public function testValidatesTransitiveProperties(\Closure $pathDelegates, string $exception): void
+    public function testValidatesTransitiveProperties(array $paths, string $exception): void
     {
         $manager = $this->getDbafsManager();
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage($exception);
 
-        $paths = $pathDelegates->bindTo($this)();
-
-        foreach ($paths as $path => $dbafsItem) {
+        foreach ($paths as $path => $featureFlags) {
+            $dbafsItem = $this->getDbafsWithProperties($featureFlags);
             $manager->register($dbafsItem, $path);
         }
     }
@@ -74,35 +73,35 @@ class DbafsManagerTest extends TestCase
     public static function provideInvalidConfigurations(): iterable
     {
         yield 'more specific one which does not support last modified should be reported' => [
-            fn () => [
-                'files' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE),
-                'files/media' => $this->getDbafsWithProperties(DbafsInterface::FEATURES_NONE),
+            [
+                'files' => DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE,
+                'files/media' => DbafsInterface::FEATURES_NONE,
             ],
             'The transitive feature(s) "last modified" and "file size" must be supported for any DBAFS with a path prefix "files/media", because they are also supported for "files".',
         ];
 
         yield 'should ignore valid configurations in between' => [
-            fn () => [
-                'abc' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_FILE_SIZE),
-                'files' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE),
-                'abc/def' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE),
-                'files/media' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_MIME_TYPE),
+            [
+                'abc' => DbafsInterface::FEATURE_FILE_SIZE,
+                'files' => DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE,
+                'abc/def' => DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE,
+                'files/media' => DbafsInterface::FEATURE_MIME_TYPE,
             ],
             'The transitive feature(s) "file size" must be supported for any DBAFS with a path prefix "files/media", because they are also supported for "files".',
         ];
 
         yield 'make sure nested folders work as well' => [
-            fn () => [
-                'foo' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_MIME_TYPE),
-                'foo/bar/baz' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE),
+            [
+                'foo' => DbafsInterface::FEATURE_MIME_TYPE,
+                'foo/bar/baz' => DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE,
             ],
             'The transitive feature(s) "mime type" must be supported for any DBAFS with a path prefix "foo/bar/baz", because they are also supported for "foo".',
         ];
 
         yield 'adding a less specific one that covers more than the children should be reported' => [
-            fn () => [
-                'foo/bar' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE),
-                '' => $this->getDbafsWithProperties(DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE),
+            [
+                'foo/bar' => DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE,
+                '' => DbafsInterface::FEATURE_LAST_MODIFIED | DbafsInterface::FEATURE_FILE_SIZE | DbafsInterface::FEATURE_MIME_TYPE,
             ],
             'The transitive feature(s) "last modified" must be supported for any DBAFS with a path prefix "foo/bar", because they are also supported for "".',
         ];
