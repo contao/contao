@@ -50,29 +50,29 @@ class BackupCreateCommandTest extends TestCase
         yield 'Default arguments' => [
             [],
             static fn (CreateConfig $config) => [] === $config->getTablesToIgnore()
-                    && 'test__20211101141254.sql.gz' === $config->getBackup()->getFilename(),
+                && 'test__20211101141254.sql.gz' === $config->getBackup()->getFilename(),
             '[OK] Successfully created SQL dump "test__20211101141254.sql.gz".',
         ];
 
         yield 'Different tables to ignore' => [
             ['--ignore-tables' => 'foo,bar'],
             static fn (CreateConfig $config) => ['bar', 'foo'] === $config->getTablesToIgnore()
-                    && 'test__20211101141254.sql.gz' === $config->getBackup()->getFilename(),
+                && 'test__20211101141254.sql.gz' === $config->getBackup()->getFilename(),
             '[OK] Successfully created SQL dump "test__20211101141254.sql.gz".',
         ];
 
         yield 'Different target file' => [
             ['name' => 'file__20211101141254.sql'],
             static fn (CreateConfig $config) => [] === $config->getTablesToIgnore()
-                    && 'file__20211101141254.sql' === $config->getBackup()->getFilename()
-                    && false === $config->isGzCompressionEnabled(),
+                && 'file__20211101141254.sql' === $config->getBackup()->getFilename()
+                && false === $config->isGzCompressionEnabled(),
             '[OK] Successfully created SQL dump "file__20211101141254.sql".',
         ];
 
         yield 'JSON format' => [
             ['--format' => 'json'],
             static fn (CreateConfig $config) => [] === $config->getTablesToIgnore()
-                    && 'test__20211101141254.sql.gz' === $config->getBackup()->getFilename(),
+                && 'test__20211101141254.sql.gz' === $config->getBackup()->getFilename(),
             '{"createdAt":"2021-11-01T14:12:54+00:00","size":100,"name":"test__20211101141254.sql.gz"}',
         ];
     }

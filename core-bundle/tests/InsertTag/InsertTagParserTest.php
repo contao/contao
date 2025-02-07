@@ -125,7 +125,6 @@ class InsertTagParserTest extends TestCase
     public function testParse(): void
     {
         $parser = $this->getInsertTagParser();
-
         $sequence = $parser->parse('foo{{insert_tag::a{{first}}b::a{{second}}b::foo=bar::baz[]={{value|valflag}}::baz[]=1.23|flag1|flag2}}bar{{baz}}');
 
         $this->assertSame('foo', $sequence->get(0));
