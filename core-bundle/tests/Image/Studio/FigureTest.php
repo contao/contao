@@ -164,28 +164,24 @@ class FigureTest extends TestCase
     }
 
     #[DataProvider('provideLinkAttributesAndPreconditions')]
-    public function testGetLinkAttributes(array $argumentsAndPreconditions, array $expectedAttributes, string|null $expectedHref): void
+    public function testGetLinkAttributes(Metadata|null $metadata, array $attributes, bool $withLightbox, array $expectedAttributes, string|null $expectedHref): void
     {
-        foreach ($argumentsAndPreconditions as &$element) {
-            if ('__lightbox__' === $element) {
-                $lightbox = $this->createMock(LightboxResult::class);
-                $lightbox
-                    ->method('getLinkHref')
-                    ->willReturn('path/from/lightbox')
-                ;
+        $lightbox = null;
 
-                $lightbox
-                    ->method('getGroupIdentifier')
-                    ->willReturn('12345')
-                ;
+        if ($withLightbox) {
+            $lightbox = $this->createMock(LightboxResult::class);
+            $lightbox
+                ->method('getLinkHref')
+                ->willReturn('path/from/lightbox')
+            ;
 
-                $element = $lightbox;
-            }
+            $lightbox
+                ->method('getGroupIdentifier')
+                ->willReturn('12345')
+            ;
         }
 
         $image = $this->createMock(ImageResult::class);
-
-        [$attributes, $metadata, $lightbox] = $argumentsAndPreconditions;
 
         $figure = new Figure($image, $metadata, $attributes, $lightbox);
 
@@ -196,16 +192,18 @@ class FigureTest extends TestCase
 
     public static function provideLinkAttributesAndPreconditions(): iterable
     {
-        $lightBoxPlaceholder = '__lightbox__';
-
         yield 'empty set of attributes' => [
-            [[], null, null], [], '',
+            null,
+            [],
+            false,
+            [],
+            '',
         ];
 
         yield 'custom attributes' => [
-            [
-                ['foo' => 'a', 'bar' => 'b'], null, null,
-            ],
+            null,
+            ['foo' => 'a', 'bar' => 'b'],
+            false,
             [
                 'foo' => 'a',
                 'bar' => 'b',
@@ -214,9 +212,9 @@ class FigureTest extends TestCase
         ];
 
         yield 'custom attributes including href' => [
-            [
-                ['foo' => 'a', 'href' => 'foobar'], null, null,
-            ],
+            null,
+            ['foo' => 'a', 'href' => 'foobar'],
+            false,
             [
                 'foo' => 'a',
             ],
@@ -224,9 +222,9 @@ class FigureTest extends TestCase
         ];
 
         yield 'custom attributes including external href' => [
-            [
-                ['foo' => 'a', 'href' => 'https://example.com'], null, null,
-            ],
+            null,
+            ['foo' => 'a', 'href' => 'https://example.com'],
+            false,
             [
                 'foo' => 'a',
                 'rel' => 'noreferrer noopener',
@@ -235,9 +233,9 @@ class FigureTest extends TestCase
         ];
 
         yield 'custom attributes and metadata containing link' => [
-            [
-                ['foo' => 'a'], new Metadata([Metadata::VALUE_URL => 'foobar']), null,
-            ],
+            new Metadata([Metadata::VALUE_URL => 'foobar']),
+            ['foo' => 'a'],
+            false,
             [
                 'foo' => 'a',
             ],
@@ -245,9 +243,9 @@ class FigureTest extends TestCase
         ];
 
         yield 'custom attributes and metadata containing external link' => [
-            [
-                ['foo' => 'a'], new Metadata([Metadata::VALUE_URL => 'https://example.com']), null,
-            ],
+            new Metadata([Metadata::VALUE_URL => 'https://example.com']),
+            ['foo' => 'a'],
+            false,
             [
                 'foo' => 'a',
                 'rel' => 'noreferrer noopener',
@@ -256,17 +254,17 @@ class FigureTest extends TestCase
         ];
 
         yield 'custom href attribute and metadata containing link' => [
-            [
-                ['href' => 'this-will-win'], new Metadata([Metadata::VALUE_URL => 'will-be-overwritten']), null,
-            ],
+            new Metadata([Metadata::VALUE_URL => 'will-be-overwritten']),
+            ['href' => 'this-will-win'],
+            false,
             [],
             'this-will-win',
         ];
 
         yield 'custom attributes and lightbox' => [
-            [
-                ['foo' => 'a'], null, $lightBoxPlaceholder,
-            ],
+            null,
+            ['foo' => 'a'],
+            true,
             [
                 'foo' => 'a',
                 'data-lightbox' => '12345',
@@ -275,9 +273,9 @@ class FigureTest extends TestCase
         ];
 
         yield 'custom attributes, metadata containing link and lightbox' => [
-            [
-                ['foo' => 'a'], new Metadata([Metadata::VALUE_URL => 'will-be-ignored']), $lightBoxPlaceholder,
-            ],
+            new Metadata([Metadata::VALUE_URL => 'will-be-ignored']),
+            ['foo' => 'a'],
+            true,
             [
                 'foo' => 'a',
                 'data-lightbox' => '12345',
@@ -286,17 +284,17 @@ class FigureTest extends TestCase
         ];
 
         yield 'force-removed href attribute and metadata containing external link' => [
-            [
-                ['href' => null], new Metadata([Metadata::VALUE_URL => 'https://example.com']), null,
-            ],
+            new Metadata([Metadata::VALUE_URL => 'https://example.com']),
+            ['href' => null],
+            false,
             [],
             null,
         ];
 
         yield 'custom attributes, force-set data-lightbox attribute and light-box' => [
-            [
-                ['foo' => 'a', 'data-lightbox' => 'abcde'], new Metadata([Metadata::VALUE_URL => 'https://example.com']), $lightBoxPlaceholder,
-            ],
+            new Metadata([Metadata::VALUE_URL => 'https://example.com']),
+            ['foo' => 'a', 'data-lightbox' => 'abcde'],
+            true,
             [
                 'foo' => 'a',
                 'data-lightbox' => 'abcde',
