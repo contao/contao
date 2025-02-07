@@ -23,10 +23,10 @@ use Contao\CoreBundle\InsertTag\Resolver\FragmentInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Tests\Fixtures\Helper\HookHelper;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InsertTags;
 use Contao\System;
-use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -62,8 +62,7 @@ class InsertTagParserTest extends TestCase
 
     public function testReplace(): void
     {
-        $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
-        $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
+        $parser = $this->getInsertTagParser();
 
         $this->assertSame('<br>', $parser->replace('{{br}}'));
         $this->assertSame([[ChunkedText::TYPE_RAW, '<br>']], iterator_to_array($parser->replaceChunked('{{br}}')));
@@ -71,8 +70,7 @@ class InsertTagParserTest extends TestCase
 
     public function testReplaceUnknown(): void
     {
-        $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
-        System::getContainer()->set('contao.insert_tag.parser', $parser);
+        $parser = $this->getInsertTagParser();
 
         $this->assertSame('{{doesnotexist}}', $parser->replace('{{doesnotexist}}'));
         $this->assertSame([[ChunkedText::TYPE_TEXT, '{{doesnotexist}}']], iterator_to_array($parser->replaceChunked('{{doesnotexist}}')));
@@ -80,10 +78,8 @@ class InsertTagParserTest extends TestCase
 
     public function testRender(): void
     {
-        $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
-        $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
+        $parser = $this->getInsertTagParser();
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'env', null, true, false));
-        System::getContainer()->set('contao.insert_tag.parser', $parser);
 
         $this->assertSame('<br>', $parser->renderTag('br')->getValue());
         $this->assertSame('', $parser->renderTag('env::empty-insert-tag')->getValue());
@@ -97,9 +93,9 @@ class InsertTagParserTest extends TestCase
 
     public function testParseTag(): void
     {
-        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
+        $parser = $this->getInsertTagParser();
 
-        $insertTag = $insertTagParser->parseTag('insert_tag::first::second::foo=bar::baz[]=1::baz[]=1.23|flag1|flag2');
+        $insertTag = $parser->parseTag('insert_tag::first::second::foo=bar::baz[]=1::baz[]=1.23|flag1|flag2');
 
         $this->assertInstanceOf(ResolvedInsertTag::class, $insertTag);
         $this->assertSame('insert_tag', $insertTag->getName());
@@ -115,7 +111,7 @@ class InsertTagParserTest extends TestCase
         $this->assertSame('flag1', $insertTag->getFlags()[0]->getName());
         $this->assertSame('flag2', $insertTag->getFlags()[1]->getName());
 
-        $insertTag = $insertTagParser->parseTag('insert_tag::param::foo={{bar::param|flag1}}|flag2');
+        $insertTag = $parser->parseTag('insert_tag::param::foo={{bar::param|flag1}}|flag2');
 
         $this->assertInstanceOf(ParsedInsertTag::class, $insertTag);
         $this->assertSame('insert_tag', $insertTag->getName());
@@ -128,8 +124,9 @@ class InsertTagParserTest extends TestCase
 
     public function testParse(): void
     {
-        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
-        $sequence = $insertTagParser->parse('foo{{insert_tag::a{{first}}b::a{{second}}b::foo=bar::baz[]={{value|valflag}}::baz[]=1.23|flag1|flag2}}bar{{baz}}');
+        $parser = $this->getInsertTagParser();
+
+        $sequence = $parser->parse('foo{{insert_tag::a{{first}}b::a{{second}}b::foo=bar::baz[]={{value|valflag}}::baz[]=1.23|flag1|flag2}}bar{{baz}}');
 
         $this->assertSame('foo', $sequence->get(0));
         $this->assertSame('insert_tag', $sequence->get(1)->getName());
@@ -150,8 +147,7 @@ class InsertTagParserTest extends TestCase
 
     public function testRenderMixedCase(): void
     {
-        $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
-        $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
+        $parser = $this->getInsertTagParser();
 
         $this->expectUserDeprecationMessageMatches('/Insert tags with uppercase letters/');
 
@@ -179,54 +175,27 @@ class InsertTagParserTest extends TestCase
         $this->assertSame([[ChunkedText::TYPE_RAW, '<br>']], iterator_to_array($parser->replaceInlineChunked('{{fragment::{{br}}}}')));
     }
 
-    #[DataProvider('getLegacyReplaceInsertTagsHooks')]
-    public function testLegacyReplaceInsertTagsHook(string $source, string $expected, \Closure $hook): void
+    public function testSimpleInsertTag(): void
     {
-        $hook = \Closure::bind($hook, $this);
-        $GLOBALS['TL_HOOKS']['replaceInsertTags'] = [
-            [
-                new class($hook) {
-                    public function __construct(private readonly \Closure $hook)
-                    {
-                    }
+        $parser = $this->getInsertTagParser();
 
-                    public function __invoke(string &$a, bool &$b, string $c, array &$d, array &$e, array $f, int &$g, int|string &$h): string
-                    {
-                        return ($this->hook)($a, $b, $c, $d, $e, $f, $g, $h);
-                    }
-
-                    public function __toString(): string
-                    {
-                        return self::class;
-                    }
-                },
-                '__invoke',
-            ],
-        ];
-
-        $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
-        $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
-        $parser->addBlockSubscription(new InsertTagSubscription(new IfLanguageInsertTag($this->createMock(TranslatorInterface::class)), '__invoke', 'ifnlng', 'ifnlng', true, false));
-        System::getContainer()->set('contao.insert_tag.parser', $parser);
-
-        $this->assertSame($expected, $parser->replaceInline($source));
-    }
-
-    public static function getLegacyReplaceInsertTagsHooks(): iterable
-    {
-        yield [
-            'foo {{tag}} bar',
-            'foo baz bar',
-            function ($tag) {
+        HookHelper::registerInsertTagsHook(
+            function (string $tag) {
                 $this->assertSame('tag', $tag);
 
                 return 'baz';
             },
-        ];
+        );
 
-        yield [
-            'prefix{{first::foo|bar|baz}}middle{{second::a:b::{{br|inner}}|outer}}middle{{br}}suffix',
-            'prefix[first::foo]middle[second::a:b::<br>]middle<br>suffix',
+        $result = $parser->replaceInline('foo {{tag}} bar');
+        $this->assertSame('foo baz bar', $result);
+    }
+
+    public function testNestedInsertTags(): void
+    {
+        $parser = $this->getInsertTagParser();
+
+        HookHelper::registerInsertTagsHook(
             function ($tag, $useCache, $cachedValue, $flags, $tags, $cache, $_rit, $_cnt) {
                 $this->assertFalse($useCache);
                 $this->assertEmpty($cache);
@@ -251,12 +220,18 @@ class InsertTagParserTest extends TestCase
 
                 return "[$tag]";
             },
-        ];
+        );
 
-        yield [
-            'a{{conditional}}b{{br}}c{{conditional_end}}d',
-            'ad',
-            function ($tag, $useCache, $cachedValue, $flags, $tags, $cache, &$_rit, $_cnt) {
+        $result = $parser->replaceInline('prefix{{first::foo|bar|baz}}middle{{second::a:b::{{br|inner}}|outer}}middle{{br}}suffix');
+        $this->assertSame('prefix[first::foo]middle[second::a:b::<br>]middle<br>suffix', $result);
+    }
+
+    public function testConditionalInsertTag(): void
+    {
+        $parser = $this->getInsertTagParser();
+
+        HookHelper::registerInsertTagsHook(
+            function ($tag, $useCache, $cachedValue, $flags, $tags, $cache, &$_rit) {
                 $this->assertSame('conditional', $tag);
                 $this->assertSame(0, $_rit);
                 $this->assertSame([], $flags);
@@ -265,56 +240,35 @@ class InsertTagParserTest extends TestCase
 
                 return '';
             },
-        ];
+        );
 
-        yield [
-            'a{{ifnlng::xx}}b{{tag}}c{{ifnlng}}d',
-            'abTAGcd',
-            function ($tag, $useCache, $cachedValue, $flags) {
+        $result = $parser->replaceInline('a{{conditional}}b{{br}}c{{conditional_end}}d');
+        $this->assertSame('ad', $result);
+    }
+
+    public function testInsertTagInConditionalIflng(): void
+    {
+        $parser = $this->getInsertTagParser();
+
+        HookHelper::registerInsertTagsHook(
+            function (string $tag, $useCache, $cachedValue, $flags) {
                 $this->assertSame('tag', $tag);
                 $this->assertSame([], $flags);
 
                 return 'TAG';
             },
-        ];
+        );
+
+        $result = $parser->replaceInline('a{{ifnlng::xx}}b{{tag}}c{{ifnlng}}d');
+        $this->assertSame('abTAGcd', $result);
     }
 
-    #[DataProvider('getLegacyInsertTagFlagsHooks')]
-    public function testLegacyInsertTagFlagsHook(string $source, string $expected, \Closure $hook): void
+    public function testSimpleInsertTagFlag(): void
     {
-        $hook = \Closure::bind($hook, $this);
-        $GLOBALS['TL_HOOKS']['insertTagFlags'] = [
-            [
-                new class($hook) {
-                    public function __construct(private readonly \Closure $hook)
-                    {
-                    }
+        $parser = $this->getInsertTagParser();
 
-                    public function __invoke(string &$a, string &$b, string &$c, array &$d, bool &$e, array &$f, array $g, int &$h, int &$i): string
-                    {
-                        return ($this->hook)($a, $b, $c, $d, $e, $f, $g, $h, $i);
-                    }
-
-                    public function __toString(): string
-                    {
-                        return self::class;
-                    }
-                },
-                '__invoke',
-            ],
-        ];
-
-        $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
-        $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
-
-        $this->assertSame($expected, $parser->replaceInline($source));
-    }
-
-    public static function getLegacyInsertTagFlagsHooks(): iterable
-    {
-        yield [
-            'foo{{br|flag}}bar',
-            'foo<BR>bar',
+        HookHelper::registerHook(
+            'insertTagFlags',
             function ($flag, $tag, $cachedValue, $flags, $useCache, $tags, $cache, $_rit, $_cnt) {
                 $this->assertSame('flag', $flag);
                 $this->assertSame('br', $tag);
@@ -328,11 +282,18 @@ class InsertTagParserTest extends TestCase
 
                 return '<BR>';
             },
-        ];
+        );
 
-        yield [
-            'foo{{br|flag}}bar{{br|foo|bar}}baz',
-            'foo<BR>bar<OE>baz',
+        $result = $parser->replaceInline('foo{{br|flag}}bar');
+        $this->assertSame('foo<BR>bar', $result);
+    }
+
+    public function testMultipleInsertTagFlags(): void
+    {
+        $parser = $this->getInsertTagParser();
+
+        HookHelper::registerHook(
+            'insertTagFlags',
             function ($flag, $tag, $cachedValue, $flags, $useCache, $tags, $cache, $_rit, $_cnt) {
                 $this->assertSame('br', $tag);
                 $this->assertFalse($useCache);
@@ -362,7 +323,10 @@ class InsertTagParserTest extends TestCase
 
                 return str_rot13($cachedValue);
             },
-        ];
+        );
+
+        $result = $parser->replaceInline('foo{{br|flag}}bar{{br|foo|bar}}baz');
+        $this->assertSame('foo<BR>bar<OE>baz', $result);
     }
 
     public function testBlockSubscriptionEndTagExists(): void
@@ -382,5 +346,15 @@ class InsertTagParserTest extends TestCase
         $this->assertTrue($parser->hasInsertTag('foo_start'));
         $this->assertFalse($parser->hasInsertTag('foo_end'));
         $this->assertTrue($parser->hasInsertTag('foo_end_different'));
+    }
+
+    private function getInsertTagParser(): InsertTagParser
+    {
+        $parser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
+        $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
+        $parser->addBlockSubscription(new InsertTagSubscription(new IfLanguageInsertTag($this->createMock(TranslatorInterface::class)), '__invoke', 'ifnlng', 'ifnlng', true, false));
+        System::getContainer()->set('contao.insert_tag.parser', $parser);
+
+        return $parser;
     }
 }
