@@ -480,44 +480,40 @@ class FigureTest extends TestCase
 
     public function testWithLightbox(): void
     {
-        $lightBoxDelegate = static function (TestCase $testCase) {
-            $lightboxImage = $testCase->createMock(ImageResult::class);
-            $lightboxImage
-                ->method('getImg')
-                ->willReturn(['lightbox img'])
-            ;
+        $lightboxImage = $this->createMock(ImageResult::class);
+        $lightboxImage
+            ->method('getImg')
+            ->willReturn(['lightbox img'])
+        ;
 
-            $lightboxImage
-                ->method('getSources')
-                ->willReturn(['lightbox sources'])
-            ;
+        $lightboxImage
+            ->method('getSources')
+            ->willReturn(['lightbox sources'])
+        ;
 
-            $lightbox = $testCase->createMock(LightboxResult::class);
-            $lightbox
-                ->method('hasImage')
-                ->willReturn(true)
-            ;
+        $lightbox = $this->createMock(LightboxResult::class);
+        $lightbox
+            ->method('hasImage')
+            ->willReturn(true)
+        ;
 
-            $lightbox
-                ->method('getImage')
-                ->willReturn($lightboxImage)
-            ;
+        $lightbox
+            ->method('getImage')
+            ->willReturn($lightboxImage)
+        ;
 
-            $lightbox
-                ->method('getGroupIdentifier')
-                ->willReturn('12345')
-            ;
+        $lightbox
+            ->method('getGroupIdentifier')
+            ->willReturn('12345')
+        ;
 
-            $lightbox
-                ->method('getLinkHref')
-                ->willReturn('foo://bar')
-            ;
-
-            return $lightbox;
-        };
+        $lightbox
+            ->method('getLinkHref')
+            ->willReturn('foo://bar')
+        ;
 
         $data = $this->getLegacyTemplateData(
-            [null, null, $lightBoxDelegate, null],
+            [null, null, $lightbox, null],
             [false, null, null],
         );
 
@@ -683,10 +679,6 @@ class FigureTest extends TestCase
     private function getLegacyTemplateData(array $preconditions, array $buildAttributes): array
     {
         [$metadata, $linkAttributes, $lightbox, $options] = $preconditions;
-
-        if ($lightbox instanceof \Closure) {
-            $lightbox = $lightbox($this);
-        }
 
         [$includeFullMetadata, $floatingProperty, $marginProperty] = $buildAttributes;
 
