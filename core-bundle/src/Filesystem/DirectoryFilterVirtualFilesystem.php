@@ -19,7 +19,7 @@ use Symfony\Component\Uid\Uuid;
 class DirectoryFilterVirtualFilesystem implements VirtualFilesystemInterface
 {
     /**
-     * @phpstan-use VirtualFilesystemDecoratorTrait<VirtualFilesystem>
+     * @phpstan-use VirtualFilesystemDecoratorTrait<VirtualFilesystemInterface>
      */
     use VirtualFilesystemDecoratorTrait;
 
