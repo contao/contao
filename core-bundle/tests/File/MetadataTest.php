@@ -17,10 +17,15 @@ use Contao\ContentModel;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\InsertTag\InsertTagSubscription;
+use Contao\CoreBundle\InsertTag\Resolver\EmptyInsertTag;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DcaLoader;
 use Contao\FilesModel;
+use Contao\Model;
+use Contao\Model\MetadataTrait;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -311,5 +316,117 @@ class MetadataTest extends TestCase
             ],
             $metadata->getSchemaOrgData('ImageObject'),
         );
+    }
+
+    #[DataProvider('getMetadataTraitRows')]
+    public function testMetadataTraitEmptyValues(array $row, array|null $expected): void
+    {
+        System::getContainer()->get('contao.insert_tag.parser')->addSubscription(
+            new InsertTagSubscription(new EmptyInsertTag(), '__invoke', 'empty', null, false, false),
+        );
+
+        $model = new class($row) extends Model {
+            use MetadataTrait;
+
+            public function __construct(array $row)
+            {
+                $this->arrData = $row;
+            }
+        };
+
+        $this->assertSame($expected, $model->getOverwriteMetadata()?->all());
+    }
+
+    public static function getMetadataTraitRows(): iterable
+    {
+        yield [
+            [
+                'overwriteMeta' => true,
+                'alt' => 'Alt',
+                'caption' => 'Caption',
+                'imageTitle' => 'Title',
+                'imageUrl' => '/url',
+                'foo' => 'bar',
+            ],
+            [
+                'alt' => 'Alt',
+                'caption' => 'Caption',
+                'title' => 'Title',
+                'link' => '/url',
+            ],
+        ];
+
+        yield [
+            [
+                'overwriteMeta' => false,
+                'alt' => 'Alt',
+                'caption' => 'Caption',
+                'imageTitle' => 'Title',
+                'imageUrl' => '/url',
+                'foo' => 'bar',
+            ],
+            null,
+        ];
+
+        yield [
+            [
+                'overwriteMeta' => true,
+                'alt' => null,
+                'caption' => '',
+                'imageTitle' => null,
+                'imageUrl' => '',
+                'foo' => 'bar',
+            ],
+            [],
+        ];
+
+        yield [
+            [
+                'overwriteMeta' => true,
+                'alt' => 'Alt',
+                'caption' => null,
+                'imageTitle' => 'Title',
+                'imageUrl' => null,
+                'foo' => 'bar',
+            ],
+            [
+                'alt' => 'Alt',
+                'title' => 'Title',
+            ],
+        ];
+
+        yield [
+            [
+                'overwriteMeta' => true,
+                'alt' => '{{empty}}',
+                'caption' => '{{empty}}',
+                'imageTitle' => '{{empty}}',
+                'imageUrl' => '{{empty}}',
+                'foo' => 'bar',
+            ],
+            [
+                'alt' => '{{empty}}',
+                'caption' => '{{empty}}',
+                'title' => '{{empty}}',
+                'link' => '',
+            ],
+        ];
+
+        yield [
+            [
+                'overwriteMeta' => true,
+                'alt' => '{{empty}}',
+                'caption' => '{{empty::foo}}',
+                'imageTitle' => '{{empty::bar}}',
+                'imageUrl' => '{{empty|urlattr}}',
+                'foo' => 'bar',
+            ],
+            [
+                'alt' => '{{empty}}',
+                'caption' => '{{empty::foo}}',
+                'title' => '{{empty::bar}}',
+                'link' => '',
+            ],
+        ];
     }
 }

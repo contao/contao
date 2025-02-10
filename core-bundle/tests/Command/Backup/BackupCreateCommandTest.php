@@ -18,6 +18,7 @@ use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -31,9 +32,7 @@ class BackupCreateCommandTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider successfulCommandRunProvider
-     */
+    #[DataProvider('successfulCommandRunProvider')]
     public function testSuccessfulCommandRun(array $arguments, \Closure $expectedCreateConfig, string $expectedOutput): void
     {
         $command = new BackupCreateCommand($this->mockBackupManager($expectedCreateConfig));
@@ -46,57 +45,39 @@ class BackupCreateCommandTest extends TestCase
         $this->assertSame(0, $code);
     }
 
-    public function successfulCommandRunProvider(): iterable
+    public static function successfulCommandRunProvider(): iterable
     {
         yield 'Default arguments' => [
             [],
-            function (CreateConfig $config) {
-                $this->assertSame([], $config->getTablesToIgnore());
-                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilename());
-
-                return true;
-            },
+            static fn (CreateConfig $config) => [] === $config->getTablesToIgnore()
+                && 'test__20211101141254.sql.gz' === $config->getBackup()->getFilename(),
             '[OK] Successfully created SQL dump "test__20211101141254.sql.gz".',
         ];
 
         yield 'Different tables to ignore' => [
             ['--ignore-tables' => 'foo,bar'],
-            function (CreateConfig $config) {
-                $this->assertSame(['bar', 'foo'], $config->getTablesToIgnore());
-                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilename());
-
-                return true;
-            },
+            static fn (CreateConfig $config) => ['bar', 'foo'] === $config->getTablesToIgnore()
+                && 'test__20211101141254.sql.gz' === $config->getBackup()->getFilename(),
             '[OK] Successfully created SQL dump "test__20211101141254.sql.gz".',
         ];
 
         yield 'Different target file' => [
             ['name' => 'file__20211101141254.sql'],
-            function (CreateConfig $config) {
-                $this->assertSame([], $config->getTablesToIgnore());
-                $this->assertSame('file__20211101141254.sql', $config->getBackup()->getFilename());
-                $this->assertFalse($config->isGzCompressionEnabled());
-
-                return true;
-            },
+            static fn (CreateConfig $config) => [] === $config->getTablesToIgnore()
+                && 'file__20211101141254.sql' === $config->getBackup()->getFilename()
+                && false === $config->isGzCompressionEnabled(),
             '[OK] Successfully created SQL dump "file__20211101141254.sql".',
         ];
 
         yield 'JSON format' => [
             ['--format' => 'json'],
-            function (CreateConfig $config) {
-                $this->assertSame([], $config->getTablesToIgnore());
-                $this->assertSame('test__20211101141254.sql.gz', $config->getBackup()->getFilename());
-
-                return true;
-            },
+            static fn (CreateConfig $config) => [] === $config->getTablesToIgnore()
+                && 'test__20211101141254.sql.gz' === $config->getBackup()->getFilename(),
             '{"createdAt":"2021-11-01T14:12:54+00:00","size":100,"name":"test__20211101141254.sql.gz"}',
         ];
     }
 
-    /**
-     * @dataProvider unsuccessfulCommandRunProvider
-     */
+    #[DataProvider('unsuccessfulCommandRunProvider')]
     public function testUnsuccessfulCommandRun(array $arguments, string $expectedOutput): void
     {
         $backupManager = $this->createMock(BackupManager::class);

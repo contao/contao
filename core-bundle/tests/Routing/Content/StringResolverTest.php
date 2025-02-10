@@ -18,6 +18,7 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\Content\StringResolver;
 use Contao\CoreBundle\Routing\Content\StringUrl;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\UrlHelper;
@@ -67,9 +68,7 @@ class StringResolverTest extends TestCase
         $resolver->resolve($content);
     }
 
-    /**
-     * @dataProvider stringUrlProvider
-     */
+    #[DataProvider('stringUrlProvider')]
     public function testResolvesStringUrlFromRequestStack(StringUrl $content, string $insertTagResult, string $baseUrl, string $expected): void
     {
         $insertTagParser = $this->createMock(InsertTagParser::class);
@@ -93,9 +92,7 @@ class StringResolverTest extends TestCase
         $this->assertSame($expected, $result->getTargetUrl());
     }
 
-    /**
-     * @dataProvider stringUrlProvider
-     */
+    #[DataProvider('stringUrlProvider')]
     public function testResolvesStringUrlFromRequestContext(StringUrl $content, string $insertTagResult, string $baseUrl, string $expected): void
     {
         $insertTagParser = $this->createMock(InsertTagParser::class);

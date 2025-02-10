@@ -27,7 +27,8 @@ use FOS\HttpCacheBundle\FOSHttpCacheBundle;
 use League\FlysystemBundle\FlysystemBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
 use Nelmio\SecurityBundle\NelmioSecurityBundle;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\BackupGlobals;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MonologBundle\MonologBundle;
@@ -45,13 +46,9 @@ use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 use Twig\Extra\TwigExtraBundle\TwigExtraBundle;
 
-/**
- * @backupGlobals enabled
- */
+#[BackupGlobals(true)]
 class PluginTest extends ContaoTestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -381,9 +378,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame(['example.com' => 'example.local'], $bag['contao.dns_mapping']);
     }
 
-    /**
-     * @dataProvider getDatabaseParameters
-     */
+    #[DataProvider('getDatabaseParameters')]
     public function testSetsTheDatabaseUrl(string|null $user, string|null $password, string|null $name, string $expected): void
     {
         $container = $this->getContainer();
@@ -598,9 +593,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame($extensionConfigs, $extensionConfig);
     }
 
-    /**
-     * @dataProvider provideDatabaseDrivers
-     */
+    #[DataProvider('provideDatabaseDrivers')]
     public function testEnablesStrictMode(array $connectionConfig, int $expectedOptionKey): void
     {
         $extensionConfigs = [
@@ -699,9 +692,7 @@ class PluginTest extends ContaoTestCase
         ];
     }
 
-    /**
-     * @dataProvider provideUserExtensionConfigs
-     */
+    #[DataProvider('provideUserExtensionConfigs')]
     public function testSetsDefaultCollation(array $userExtensionConfig): void
     {
         $extensionConfigs = [
@@ -838,9 +829,7 @@ class PluginTest extends ContaoTestCase
         $this->assertSame($expect, $extensionConfig);
     }
 
-    /**
-     * @dataProvider getMailerParameters
-     */
+    #[DataProvider('getMailerParameters')]
     public function testSetsTheMailerDsn(string $transport, string|null $host, string|null $user, string|null $password, int|null $port, string|null $encryption, string $expected): void
     {
         $container = $this->getContainer();
@@ -1033,9 +1022,7 @@ class PluginTest extends ContaoTestCase
         $this->assertEmpty($extensionConfig[0]);
     }
 
-    /**
-     * @dataProvider getOrmMappingConfigurations
-     */
+    #[DataProvider('getOrmMappingConfigurations')]
     public function testOnlyAddsTheDefaultDoctrineMappingIfAutoMappingIsEnabledAndNotAlreadyConfigured(array $ormConfig, string $defaultEntityManager, bool $shouldAdd): void
     {
         $extensionConfigs = [

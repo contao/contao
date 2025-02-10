@@ -17,6 +17,7 @@ use Contao\CoreBundle\HttpKernel\ModelArgumentResolver;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 
@@ -31,9 +32,7 @@ class ModelArgumentResolverTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider getArguments
-     */
+    #[DataProvider('getArguments')]
     public function testResolvesTheModel(string $name, string $class): void
     {
         System::setContainer($this->getContainerWithContaoConfiguration());

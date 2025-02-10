@@ -17,6 +17,7 @@ use Contao\CoreBundle\InsertTag\ParsedSequence;
 use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\ResolvedParameters;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ParsedSequenceTest extends TestCase
 {
@@ -36,9 +37,7 @@ class ParsedSequenceTest extends TestCase
         $this->assertSame('string{{tag}}result', $sequence->serialize());
     }
 
-    /**
-     * @dataProvider getHasInsertTags
-     */
+    #[DataProvider('getHasInsertTags')]
     public function testHasInsertTag(bool $expected, array $items): void
     {
         $sequence = new ParsedSequence($items);

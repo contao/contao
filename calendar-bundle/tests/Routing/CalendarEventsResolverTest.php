@@ -17,8 +17,10 @@ use Contao\CalendarBundle\Routing\CalendarEventsResolver;
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\CoreBundle\Routing\Content\StringUrl;
+use Contao\Model;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class CalendarEventsResolverTest extends ContaoTestCase
 {
@@ -105,30 +107,36 @@ class CalendarEventsResolverTest extends ContaoTestCase
     }
 
     /**
-     * @dataProvider getParametersForContentProvider
+     * @param class-string<Model> $class
      */
-    public function testGetParametersForContent(object $content, array $expected): void
+    #[DataProvider('getParametersForContentProvider')]
+    public function testGetParametersForContent(string $class, array $properties, array $expected): void
     {
+        $content = $this->mockClassWithProperties($class, $properties);
+
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $resolver = new CalendarEventsResolver($this->mockContaoFramework());
 
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));
     }
 
-    public function getParametersForContentProvider(): iterable
+    public static function getParametersForContentProvider(): iterable
     {
         yield 'Uses the event alias' => [
-            $this->mockClassWithProperties(CalendarEventsModel::class, ['id' => 42, 'alias' => 'foobar']),
+            CalendarEventsModel::class,
+            ['id' => 42, 'alias' => 'foobar'],
             ['parameters' => '/foobar'],
         ];
 
         yield 'Uses event ID if alias is empty' => [
-            $this->mockClassWithProperties(CalendarEventsModel::class, ['id' => 42, 'alias' => '']),
+            CalendarEventsModel::class,
+            ['id' => 42, 'alias' => ''],
             ['parameters' => '/42'],
         ];
 
         yield 'Only supports CalendarEventsModel' => [
-            $this->mockClassWithProperties(PageModel::class),
+            PageModel::class,
+            [],
             [],
         ];
     }

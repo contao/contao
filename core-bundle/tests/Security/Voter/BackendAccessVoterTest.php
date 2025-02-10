@@ -18,6 +18,7 @@ use Contao\CoreBundle\Security\Voter\BackendAccessVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
 use Contao\PageModel;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -111,9 +112,7 @@ class BackendAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, new \stdClass(), ['contao_user.alexf']));
     }
 
-    /**
-     * @dataProvider userDataProvider
-     */
+    #[DataProvider('userDataProvider')]
     public function testGrantsAccessIfTheUserDataIntersects(array $userData, string $attribute, int|string|null $subject): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, $userData);
@@ -128,9 +127,7 @@ class BackendAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, $subject, [$attribute]));
     }
 
-    /**
-     * @dataProvider userDataProvider
-     */
+    #[DataProvider('userDataProvider')]
     public function testDeniesAccessIfTheUserDataDoesNotIntersect(array $userData, string $attribute, int|string|null $subject): void
     {
         $userData = array_fill_keys(array_keys($userData), []);
@@ -474,9 +471,7 @@ class BackendAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_DENIED, $voter->vote($token, 1, [ContaoCorePermissions::USER_CAN_EDIT_PAGE]));
     }
 
-    /**
-     * @dataProvider getPageAndArticlePermissions
-     */
+    #[DataProvider('getPageAndArticlePermissions')]
     public function testPageAndArticlePermissions(string $attribute, array $chmod, int $cuser, int $cgroup, int $expected): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, 'groups' => [1]]);

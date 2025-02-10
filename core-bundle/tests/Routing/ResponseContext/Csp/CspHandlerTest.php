@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Routing\ResponseContext\Csp;
 use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandler;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\DirectiveSet;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -137,9 +138,7 @@ class CspHandlerTest extends TestCase
         $cspHandler->applyHeaders(new Response());
     }
 
-    /**
-     * @dataProvider cspExceedsMaximumLengthIsProperlyReducedProvider
-     */
+    #[DataProvider('cspExceedsMaximumLengthIsProperlyReducedProvider')]
     public function testCspExceedsMaximumLengthIsProperlyReduced(int $maxHeaderLength, array $styleHashes, array $scriptHashes, string $expectedLogMessage, string $expectedCspHeader): void
     {
         $logger = $this->createMock(LoggerInterface::class);

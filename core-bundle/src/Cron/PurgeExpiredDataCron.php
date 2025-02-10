@@ -17,12 +17,15 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCronJob;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Clock\ClockInterface;
+use Symfony\Component\Clock\NativeClock;
 
 class PurgeExpiredDataCron
 {
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly Connection $connection,
+        private readonly ClockInterface $clock = new NativeClock(),
     ) {
     }
 
@@ -46,7 +49,7 @@ class PurgeExpiredDataCron
 
         $this->connection->executeStatement(
             "DELETE FROM $table WHERE tstamp < :tstamp",
-            ['tstamp' => time() - $period],
+            ['tstamp' => $this->clock->now()->getTimestamp() - $period],
             ['tstamp' => Types::INTEGER],
         );
     }

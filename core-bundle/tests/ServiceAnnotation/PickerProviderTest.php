@@ -14,18 +14,12 @@ namespace Contao\CoreBundle\Tests\ServiceAnnotation;
 
 use Contao\CoreBundle\ServiceAnnotation\PickerProvider;
 use PHPUnit\Framework\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class PickerProviderTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
-    /**
-     * @group legacy
-     */
     public function testReturnsTheTagName(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.4: %s Use the #[AsPickerProvider] attribute instead.');
+        $this->expectUserDeprecationMessageMatches('/Use the #\[AsPickerProvider] attribute instead\./');
 
         $annotation = new PickerProvider();
 

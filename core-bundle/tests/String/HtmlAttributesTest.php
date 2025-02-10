@@ -14,12 +14,11 @@ namespace Contao\CoreBundle\Tests\String;
 
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class HtmlAttributesTest extends TestCase
 {
-    /**
-     * @dataProvider provideAttributeStrings
-     */
+    #[DataProvider('provideAttributeStrings')]
     public function testParsesAttributeStrings(string $attributeString, array $expectedAttributes): void
     {
         $attributes = new HtmlAttributes($attributeString);
@@ -282,9 +281,7 @@ class HtmlAttributesTest extends TestCase
         $this->assertSame(['foo' => 'bar', "f\u{FFFD}o\u{FFFD}o" => "b\u{C2}ar", 'baz' => '42'], iterator_to_array($attributes));
     }
 
-    /**
-     * @dataProvider provideInvalidAttributeNames
-     */
+    #[DataProvider('provideInvalidAttributeNames')]
     public function testRejectsInvalidAttributeNamesWhenConstructingFromArray(string $name): void
     {
         $this->expectException(\InvalidArgumentException::class);
@@ -293,9 +290,7 @@ class HtmlAttributesTest extends TestCase
         new HtmlAttributes([$name => 'bar']);
     }
 
-    /**
-     * @dataProvider provideInvalidAttributeNames
-     */
+    #[DataProvider('provideInvalidAttributeNames')]
     public function testRejectsInvalidAttributeNamesWhenSetting(string $name): void
     {
         $attributes = new HtmlAttributes();
@@ -637,9 +632,7 @@ class HtmlAttributesTest extends TestCase
         $this->assertSame('', (new HtmlAttributes())->toString(false));
     }
 
-    /**
-     * @dataProvider provideBooleanAttributes
-     */
+    #[DataProvider('provideBooleanAttributes')]
     public function testCorrectlySerializesBooleanAttributes(array $attrArray, string $attrString): void
     {
         $this->assertSame($attrString, (new HtmlAttributes($attrArray))->toString(false));
@@ -739,11 +732,10 @@ class HtmlAttributesTest extends TestCase
 
     public function testIteratorStringKeys(): void
     {
-        $attributes = new HtmlAttributes('0=foo 1=bar');
+        $attributes = new HtmlAttributes('0=foo');
 
         foreach ($attributes as $key => $value) {
-            $this->assertIsString($key);
-            $this->assertIsString($value);
+            $this->assertSame('0', $key);
         }
     }
 

@@ -17,12 +17,9 @@ use Contao\CoreBundle\File\MetadataBag;
 use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ImportantPart;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 
 class ExtraMetadataTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testGetValues(): void
     {
         $data = [
@@ -60,14 +57,11 @@ class ExtraMetadataTest extends TestCase
         $this->assertSame('baz', $extraMetadata->getLocalized()->get('en')->get('bar'));
     }
 
-    /**
-     * @group legacy
-     */
     public function testTriggersDeprecationWhenInitializingWithMetadataKey(): void
     {
         $localizedMetadata = new MetadataBag([]);
 
-        $this->expectDeprecation('%sUsing the key "metadata" to set localized metadata has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/Using the key "metadata" to set localized metadata has been deprecated/');
 
         $extraMetadata = new ExtraMetadata([
             'metadata' => $localizedMetadata,
@@ -76,9 +70,6 @@ class ExtraMetadataTest extends TestCase
         $this->assertSame($localizedMetadata, $extraMetadata->getLocalized());
     }
 
-    /**
-     * @group legacy
-     */
     public function testTriggersDeprecationWhenAccessingMetadataKey(): void
     {
         $localizedMetadata = new MetadataBag([]);
@@ -87,7 +78,7 @@ class ExtraMetadataTest extends TestCase
             'localized' => $localizedMetadata,
         ]);
 
-        $this->expectDeprecation('%sUsing the key "metadata" to get localized metadata has been deprecated%s');
+        $this->expectUserDeprecationMessageMatches('/Using the key "metadata" to get localized metadata has been deprecated/');
 
         $this->assertSame($localizedMetadata, $extraMetadata->get('metadata'));
     }

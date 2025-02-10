@@ -19,6 +19,7 @@ use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Slots\SlotTokenParser;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -33,9 +34,7 @@ class SlotTokenParserTest extends TestCase
         $this->assertSame('slot', $tokenParser->getTag());
     }
 
-    /**
-     * @dataProvider provideSources
-     */
+    #[DataProvider('provideSources')]
     public function testOutputsSlots(array $context, string $code, string $expectedOutput): void
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));

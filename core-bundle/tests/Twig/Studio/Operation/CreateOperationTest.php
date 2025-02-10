@@ -8,14 +8,13 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Studio\Operation\CreateOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
-class CreateOperationTest extends AbstractOperationTest
+class CreateOperationTest extends AbstractOperationTestCase
 {
-    /**
-     * @dataProvider provideCommonContextsForExistingAndNonExistingUserTemplates
-     */
+    #[DataProvider('provideCommonContextsForExistingAndNonExistingUserTemplates')]
     public function testCanExecute(OperationContext $context, bool $userTemplateExists): void
     {
         $this->assertSame(
@@ -24,9 +23,7 @@ class CreateOperationTest extends AbstractOperationTest
         );
     }
 
-    /**
-     * @dataProvider provideCommonThemeAndPathForExistingUserTemplate
-     */
+    #[DataProvider('provideCommonThemeAndPathForExistingUserTemplate')]
     public function testFailToCreateUserTemplateBecauseItAlreadyExists(string|null $themeSlug): void
     {
         $storage = $this->mockUserTemplatesStorage();
@@ -56,9 +53,7 @@ class CreateOperationTest extends AbstractOperationTest
         $this->assertSame('error.stream', $response->getContent());
     }
 
-    /**
-     * @dataProvider provideCommonThemeAndPathForNonExistingUserTemplate
-     */
+    #[DataProvider('provideCommonThemeAndPathForNonExistingUserTemplate')]
     public function testCreateUserTemplate(string|null $themeSlug, string $path): void
     {
         $loader = $this->mockContaoFilesystemLoader();

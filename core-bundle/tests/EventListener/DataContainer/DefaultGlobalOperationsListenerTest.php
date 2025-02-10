@@ -17,6 +17,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\DC_Folder;
 use Contao\DC_Table;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DefaultGlobalOperationsListenerTest extends TestCase
 {
@@ -34,9 +35,7 @@ class DefaultGlobalOperationsListenerTest extends TestCase
         unset($GLOBALS['TL_DCA']);
     }
 
-    /**
-     * @dataProvider editAllOperationProvider
-     */
+    #[DataProvider('editAllOperationProvider')]
     public function testAddsEditAllOperation(bool $closed, bool $notEditable, bool $notCopyable, bool $notDeletable, bool $hasOperation): void
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
@@ -84,9 +83,7 @@ class DefaultGlobalOperationsListenerTest extends TestCase
         yield 'does not have operation if records cannot be edited, copied and deleted' => [false, true, true, true, false];
     }
 
-    /**
-     * @dataProvider toggleNodesOperationProvider
-     */
+    #[DataProvider('toggleNodesOperationProvider')]
     public function testAddsToggleNodesOperation(string $driver, int $mode, bool $hasOperation): void
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */

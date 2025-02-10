@@ -19,6 +19,7 @@ use Doctrine\DBAL\Platforms\MariaDBPlatform;
 use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DnsMigrationTest extends TestCase
 {
@@ -81,9 +82,7 @@ class DnsMigrationTest extends TestCase
         $this->assertFalse($migration->shouldRun());
     }
 
-    /**
-     * @dataProvider getShouldRunMappings
-     */
+    #[DataProvider('getShouldRunMappings')]
     public function testShouldRun(array $mapping, string $query, array $params): void
     {
         $schemaManager = $this->createMock(AbstractSchemaManager::class);
@@ -198,9 +197,7 @@ class DnsMigrationTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getRunMappings
-     */
+    #[DataProvider('getRunMappings')]
     public function testRun(array $mapping, string $query, array $params): void
     {
         $db = $this->createMock(Connection::class);

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Fixtures\Twig;
 
+#[\AllowDynamicProperties]
 class ParentClassWithMembersStub
 {
     final public const PARENT_PUBLIC_CONSTANT = 3;

@@ -21,6 +21,7 @@ use Contao\CoreBundle\Security\Voter\DataContainer\FormFieldAccessVoter;
 use Contao\CoreBundle\Security\Voter\DataContainer\PageTypeAccessVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -66,19 +67,21 @@ class PageTypeAccessVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $result);
     }
 
-    /**
-     * @dataProvider decidesAccessOnPageTypeInActionProvider
-     */
+    #[DataProvider('decidesAccessOnPageTypeInActionProvider')]
     public function testDecidesAccessOnPageTypeInAction(CreateAction|DeleteAction|ReadAction|UpdateAction $subject, array $types, int $expected): void
     {
         $token = $this->createMock(TokenInterface::class);
+        $decisions = [];
+
+        foreach ($types as $type => $decision) {
+            $decisions[] = [$token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], $type, $decision];
+        }
 
         $decisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $decisionManager
             ->expects($this->exactly(\count($types)))
             ->method('decide')
-            ->withConsecutive(...array_map(static fn ($type) => [$token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], $type], array_keys($types)))
-            ->willReturnOnConsecutiveCalls(...array_values($types))
+            ->willReturnMap($decisions)
         ;
 
         $connection = $this->createMock(Connection::class);
@@ -134,9 +137,7 @@ class PageTypeAccessVoterTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider errorPagesAreOnlyAllowedInRootPageProvider
-     */
+    #[DataProvider('errorPagesAreOnlyAllowedInRootPageProvider')]
     public function testErrorPagesAreOnlyAllowedInRootPage(CreateAction|UpdateAction $subject, array|null $rootIds, array|null $rootTypes, int $expected): void
     {
         $token = $this->createMock(TokenInterface::class);
@@ -278,9 +279,7 @@ class PageTypeAccessVoterTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider rootPageMustBeAtTopLevelProvider
-     */
+    #[DataProvider('rootPageMustBeAtTopLevelProvider')]
     public function testOnlyRootPageMustBeAtTopLevel(CreateAction|UpdateAction $subject, int $expected): void
     {
         $token = $this->createMock(TokenInterface::class);

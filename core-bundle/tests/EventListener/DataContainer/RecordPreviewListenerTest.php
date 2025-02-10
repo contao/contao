@@ -21,6 +21,7 @@ use Contao\DC_Table;
 use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RecordPreviewListenerTest extends TestCase
 {
@@ -31,9 +32,7 @@ class RecordPreviewListenerTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider loadDataContainer
-     */
+    #[DataProvider('loadDataContainer')]
     public function testRegistersDeleteCallbackOnDeletableDataContainers(string $table, string $dataContainer, string $driver, bool $notDeletable, array|null $expected): void
     {
         $GLOBALS['TL_DCA'][$table]['config']['notDeletable'] = $notDeletable;

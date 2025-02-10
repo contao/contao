@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\WebauthnBackendRouteListener;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -21,9 +22,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class WebauthnBackendRouteListenerTest extends TestCase
 {
-    /**
-     * @dataProvider routeProvider
-     */
+    #[DataProvider('routeProvider')]
     public function testSetsTheCorrectScope(string $requestRoute, string|null $resultingScope): void
     {
         $request = new Request();

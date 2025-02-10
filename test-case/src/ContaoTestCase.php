@@ -162,15 +162,23 @@ abstract class ContaoTestCase extends TestCase
      */
     protected function mockAdapter(array $methods): Adapter
     {
-        return $this
-            ->getMockBuilder(Adapter::class)
-            ->disableOriginalConstructor()
-            ->disableOriginalClone()
-            ->disableArgumentCloning()
-            ->disallowMockingUnknownTypes()
-            ->addMethods($methods)
-            ->getMock()
-        ;
+        sort($methods);
+
+        $namespace = 'Contao\DynamicTestClass';
+        $className = 'MockAdapter'.sha1(implode(':', $methods));
+        $fqcn = $namespace.'\\'.$className;
+
+        if (!class_exists($fqcn, false)) {
+            $class = 'namespace %s; class %s extends \%s { %s }';
+            $methods = array_map(static fn (string $method): string => \sprintf('public function %s() {}', $method), $methods);
+
+            eval(\sprintf($class, $namespace, $className, Adapter::class, implode(' ', $methods)));
+        }
+
+        /** @var Adapter&MockObject $adapter */
+        $adapter = $this->createMock($fqcn);
+
+        return $adapter;
     }
 
     /**

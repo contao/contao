@@ -17,7 +17,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\MessageCatalogue;
 use Contao\System;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Config\Resource\ResourceInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Exception\LogicException;
@@ -25,8 +25,6 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 
 class MessageCatalogueTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_LANG']);
@@ -96,8 +94,10 @@ class MessageCatalogueTest extends TestCase
         $parentCatalogue
             ->expects($this->exactly(2))
             ->method('has')
-            ->withConsecutive(['foo', 'foobar'], ['bar', 'foobar'])
-            ->willReturnOnConsecutiveCalls(true, false)
+            ->willReturnMap([
+                ['foo', 'foobar', true],
+                ['bar', 'foobar', false],
+            ])
         ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
@@ -127,8 +127,10 @@ class MessageCatalogueTest extends TestCase
         $parentCatalogue
             ->expects($this->exactly(2))
             ->method('defines')
-            ->withConsecutive(['foo', 'foobar'], ['bar', 'foobar'])
-            ->willReturnOnConsecutiveCalls(true, false)
+            ->willReturnMap([
+                ['foo', 'foobar', true],
+                ['bar', 'foobar', false],
+            ])
         ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
@@ -158,8 +160,10 @@ class MessageCatalogueTest extends TestCase
         $parentCatalogue
             ->expects($this->exactly(2))
             ->method('get')
-            ->withConsecutive(['foo', 'foobar'], ['bar', 'foobar'])
-            ->willReturnOnConsecutiveCalls('Foo', 'bar')
+            ->willReturnMap([
+                ['foo', 'foobar', 'Foo'],
+                ['bar', 'foobar', 'bar'],
+            ])
         ;
 
         $catalogue = $this->createCatalogue($parentCatalogue);
@@ -178,9 +182,7 @@ class MessageCatalogueTest extends TestCase
         $this->assertSame('MSC.foobar', $catalogue->get('MSC.foobar', 'contao_default'));
     }
 
-    /**
-     * @dataProvider getForwardedDomainMethods
-     */
+    #[DataProvider('getForwardedDomainMethods')]
     public function testForwardsIfDomainIsNotContao(string $method, array $params, array $paramsContaoDomain, mixed $return = null): void
     {
         $parentCatalogue = $this->createMock(MessageCatalogueInterface::class);
@@ -229,10 +231,23 @@ class MessageCatalogueTest extends TestCase
     }
 
     /**
-     * @dataProvider getCompletelyForwardedMethods
+     * @param list<class-string>                   $paramMockClasses
+     * @param class-string|list<class-string>|null $returnMockClassOrClasses
      */
-    public function testForwardsCompletelyToParent(string $method, array $params, mixed $return = null): void
+    #[DataProvider('getCompletelyForwardedMethods')]
+    public function testForwardsCompletelyToParent(string $method, array $paramMockClasses, array|string|null $returnMockClassOrClasses = null): void
     {
+        $params = array_map(fn (string $class) => $this->createMock($class), $paramMockClasses);
+        $return = null;
+
+        if (\is_string($returnMockClassOrClasses)) {
+            $return = $this->createMock($returnMockClassOrClasses);
+        }
+
+        if (\is_array($returnMockClassOrClasses)) {
+            $return = array_map(fn (string $class) => $this->createMock($class), $returnMockClassOrClasses);
+        }
+
         $parentCatalogue = $this->createMock(MessageCatalogueInterface::class);
         $parentCatalogue
             ->expects($this->once())
@@ -245,33 +260,33 @@ class MessageCatalogueTest extends TestCase
         $this->assertSame($return, $catalogue->$method(...$params));
     }
 
-    public function getCompletelyForwardedMethods(): iterable
+    public static function getCompletelyForwardedMethods(): iterable
     {
         yield [
             'addCatalogue',
-            [$this->createMock(MessageCatalogueInterface::class)],
+            [MessageCatalogueInterface::class],
         ];
 
         yield [
             'addFallbackCatalogue',
-            [$this->createMock(MessageCatalogueInterface::class)],
+            [MessageCatalogueInterface::class],
         ];
 
         yield [
             'getFallbackCatalogue',
             [],
-            $this->createMock(MessageCatalogueInterface::class),
+            MessageCatalogueInterface::class,
         ];
 
         yield [
             'getResources',
             [],
-            [$this->createMock(ResourceInterface::class)],
+            [ResourceInterface::class],
         ];
 
         yield [
             'addResource',
-            [$this->createMock(ResourceInterface::class)],
+            [ResourceInterface::class],
         ];
     }
 

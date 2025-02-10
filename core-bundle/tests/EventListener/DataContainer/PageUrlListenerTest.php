@@ -24,6 +24,7 @@ use Contao\DataContainer;
 use Contao\Input;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -32,9 +33,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PageUrlListenerTest extends TestCase
 {
-    /**
-     * @dataProvider generatesAliasProvider
-     */
+    #[DataProvider('generatesAliasProvider')]
     public function testGeneratesAlias(array $currentRecord, array $input, string $slugResult, string $expectedAlias): void
     {
         $page = $this->mockClassWithProperties(PageModel::class, $currentRecord);
@@ -132,9 +131,7 @@ class PageUrlListenerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider duplicateAliasProvider
-     */
+    #[DataProvider('duplicateAliasProvider')]
     public function testChecksForDuplicatesWhenGeneratingAlias(array $currentRecord, array $pages, string $value, string $generated, bool $expectExists, bool $throwParametersException = false): void
     {
         $currentPage = $this->mockClassWithProperties(PageModel::class, $currentRecord);
@@ -208,9 +205,7 @@ class PageUrlListenerTest extends TestCase
         $listener->generateAlias('', $dc);
     }
 
-    /**
-     * @dataProvider duplicateAliasProvider
-     */
+    #[DataProvider('duplicateAliasProvider')]
     public function testChecksForDuplicatesWhenValidatingAlias(array $currentRecord, array $pages, string $value, string $generated, bool $expectExists, bool $throwParametersException = false): void
     {
         $currentPage = $this->mockClassWithProperties(PageModel::class, $currentRecord);
@@ -278,9 +273,7 @@ class PageUrlListenerTest extends TestCase
         $listener->generateAlias($value, $dc);
     }
 
-    /**
-     * @dataProvider duplicateAliasProvider
-     */
+    #[DataProvider('duplicateAliasProvider')]
     public function testDoesNotCheckAliasIfCurrentPageIsUnrouteable(array $currentRecord, array $pages, string $value): void
     {
         $currentPage = $this->mockClassWithProperties(PageModel::class, $currentRecord);
@@ -328,9 +321,7 @@ class PageUrlListenerTest extends TestCase
         $this->assertSame($value, $listener->generateAlias($value, $dc));
     }
 
-    /**
-     * @dataProvider duplicateAliasProvider
-     */
+    #[DataProvider('duplicateAliasProvider')]
     public function testDoesNotCheckAliasIfAliasPageIsUnrouteable(array $currentRecord, array $pages, string $value): void
     {
         $currentPage = $this->mockClassWithProperties(PageModel::class, $currentRecord);

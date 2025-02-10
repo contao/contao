@@ -8,14 +8,13 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Studio\Operation\DeleteOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Twig\Environment;
 
-class DeleteOperationTest extends AbstractOperationTest
+class DeleteOperationTest extends AbstractOperationTestCase
 {
-    /**
-     * @dataProvider provideCommonContextsForExistingAndNonExistingUserTemplates
-     */
+    #[DataProvider('provideCommonContextsForExistingAndNonExistingUserTemplates')]
     public function testCanExecute(OperationContext $context, bool $userTemplateExists): void
     {
         $this->assertSame(
@@ -24,9 +23,7 @@ class DeleteOperationTest extends AbstractOperationTest
         );
     }
 
-    /**
-     * @dataProvider provideCommonThemeAndPathForNonExistingUserTemplate
-     */
+    #[DataProvider('provideCommonThemeAndPathForNonExistingUserTemplate')]
     public function testFailToDeleteUserTemplateBecauseItDoesNotExists(string|null $themeSlug): void
     {
         $storage = $this->mockUserTemplatesStorage();
@@ -56,9 +53,7 @@ class DeleteOperationTest extends AbstractOperationTest
         $this->assertSame('error.stream', $response->getContent());
     }
 
-    /**
-     * @dataProvider provideCommonThemeAndPathForExistingUserTemplate
-     */
+    #[DataProvider('provideCommonThemeAndPathForExistingUserTemplate')]
     public function testStreamConfirmDialogWhenDeletingUserTemplate(string|null $themeSlug): void
     {
         $storage = $this->mockUserTemplatesStorage();
@@ -88,9 +83,7 @@ class DeleteOperationTest extends AbstractOperationTest
         $this->assertSame('delete_confirm.stream', $response->getContent());
     }
 
-    /**
-     * @dataProvider provideCommonThemeAndPathForExistingUserTemplate
-     */
+    #[DataProvider('provideCommonThemeAndPathForExistingUserTemplate')]
     public function testDeleteUserTemplate(string|null $themeSlug, string $path): void
     {
         $loader = $this->mockContaoFilesystemLoader();
