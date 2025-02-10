@@ -267,6 +267,6 @@ class tl_theme extends Backend
 	 */
 	public function exportTheme($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EXPORT_THEMES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EXPORT_THEMES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . ' data-turbo="false">' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 }
