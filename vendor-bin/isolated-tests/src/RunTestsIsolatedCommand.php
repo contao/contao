@@ -118,7 +118,7 @@ class RunTestsIsolatedCommand extends Command
             $buffer = new BufferedOutput();
 
             try {
-                $this->executeCommand([...$php, $phpunit, '--extensions', GlobalStateWatcher::class, '--filter', $filter, ...$commandFlags], $buffer);
+                $this->executeCommand([...$php, $phpunit, '--extension', GlobalStateWatcher::class, '--filter', $filter, ...$commandFlags], $buffer);
 
                 // Clear previously written line
                 $output->write("\e[1A\e[K");
