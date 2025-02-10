@@ -166,6 +166,11 @@ class FilesystemItemIterator implements \IteratorAggregate
         return null;
     }
 
+    public function count(): int
+    {
+        return \count($this->toArray());
+    }
+
     /**
      * @return \Traversable<FilesystemItem>
      */
