@@ -5,7 +5,7 @@ export default class OperationsMenuController extends Controller {
     static targets = ['menu', 'submenu', 'controller', 'title'];
 
     connect () {
-        if (!this.hasMenuTarget) {
+        if (!this.hasControllerTarget || !this.hasMenuTarget) {
             return;
         }
 
@@ -46,7 +46,7 @@ export default class OperationsMenuController extends Controller {
     }
 
     open (event) {
-        if (!this.hasMenuTarget || this.isInteractive(event.target)) {
+        if (!this.hasControllerTarget || !this.hasMenuTarget || this.isInteractive(event.target)) {
             return;
         }
 
