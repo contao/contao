@@ -79,7 +79,7 @@ class FilesystemConfigurationTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
-        $config = new FilesystemConfiguration($container, new AdapterDefinitionFactory());
+        $config = new FilesystemConfiguration($container);
         $config->mountAdapter('local', ['directory' => '/some/path'], 'path', 'foo');
 
         $this->assertTrue($container->hasDefinition('contao.filesystem.adapter.foo'));
@@ -100,7 +100,7 @@ class FilesystemConfigurationTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
-        $config = new FilesystemConfiguration($container, new AdapterDefinitionFactory());
+        $config = new FilesystemConfiguration($container);
         $config->mountAdapter('some-custom-adapter', ['some' => 'options'], 'path', 'foo');
 
         $this->assertTrue($container->hasAlias('contao.filesystem.adapter.foo'));
@@ -157,7 +157,7 @@ class FilesystemConfigurationTest extends TestCase
             'bar' => 'path/to/bar',
         ]);
 
-        $config = new FilesystemConfiguration($container, new AdapterDefinitionFactory());
+        $config = new FilesystemConfiguration($container);
         $config->mountLocalAdapter($filesystemPath, 'mount/path', 'my_adapter');
 
         $this->assertTrue($container->hasDefinition('contao.filesystem.adapter.my_adapter'));
@@ -264,18 +264,6 @@ class FilesystemConfigurationTest extends TestCase
         $this->expectExceptionMessage('A virtual filesystem with the name "foo" does not exist.');
 
         $config->addDefaultDbafs('foo', 'tl_foo');
-    }
-
-    private function getConfigurationWithAdapterDefinitionFactory(ContainerBuilder $container, AdapterDefinitionFactory $adapterDefinitionFactory): FilesystemConfiguration
-    {
-        $config = new FilesystemConfiguration($container);
-
-        $class = new \ReflectionClass(FilesystemConfiguration::class);
-        $property = $class->getProperty('adapterDefinitionFactory');
-        $property->setAccessible(true);
-        $property->setValue($config, $adapterDefinitionFactory);
-
-        return $config;
     }
 
     private function getContainerBuilder(array $parameters = []): ContainerBuilder
