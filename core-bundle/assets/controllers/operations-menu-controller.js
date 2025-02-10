@@ -11,7 +11,7 @@ export default class OperationsMenuController extends Controller {
 
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,
-            menuLinkSelector: 'a,button',
+            menuLinkSelector: 'a,button,img',
         });
 
         this.controllerTarget?.addEventListener('accessibleMenuExpand', () => {
