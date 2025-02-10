@@ -19,6 +19,8 @@ use Contao\CoreBundle\Fixtures\Cron\TestCronJob;
 use Contao\CoreBundle\Fixtures\Cron\TestInvokableCronJob;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Contao\CoreBundle\Tests\TestCase;
+use Doctrine\DBAL\Driver\Exception as DriverException;
+use Doctrine\DBAL\Exception\LockWaitTimeoutException;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
@@ -505,6 +507,36 @@ class CronTest extends TestCase
         );
 
         $cron->addCronJob(new CronJob($cronjob, '@hourly', 'skippingAsyncMethod'));
+        $cron->run(Cron::SCOPE_CLI);
+    }
+
+    public function testSkipsIfLockWaitTimeOut(): void
+    {
+        $repository = $this->createMock(CronJobRepository::class);
+        $repository
+            ->expects($this->once())
+            ->method('lockTable')
+            ->willThrowException(new LockWaitTimeoutException($this->createMock(DriverException::class), null))
+        ;
+
+        $repository
+            ->expects($this->never())
+            ->method('__call')
+        ;
+
+        $cron = new Cron(
+            static fn () => $repository,
+            fn () => $this->createMock(EntityManagerInterface::class),
+            $this->createMock(CacheItemPoolInterface::class),
+        );
+
+        $cronjob = $this->createMock(TestCronJob::class);
+        $cronjob
+            ->expects($this->never())
+            ->method('onHourly')
+        ;
+
+        $cron->addCronJob(new CronJob($cronjob, '@hourly', 'onHourly'));
         $cron->run(Cron::SCOPE_CLI);
     }
 }
