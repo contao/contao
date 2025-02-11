@@ -7,6 +7,9 @@ use Symfony\Component\Uid\UuidV4;
 
 final class Job
 {
+
+    private ?Job $parent = null;
+
     /**
      * Warnings can be any string, but it's recommended to use translation identifiers to have your
      * warnings translatable.
@@ -26,6 +29,11 @@ final class Job
      * @var array<mixed>
      */
     private array $metadata = [];
+
+    /**
+     * System owner jobs can be public and thus visible by all users.
+     */
+    private $isPublic = false;
 
     public function __construct(private string $uuid, private \DateTimeInterface $createdAt, private Status $status, private Owner $owner)
     {
@@ -54,10 +62,17 @@ final class Job
         return $this->owner;
     }
 
-    public function withStatus(Status $status): self
+    public function markPending(): self
     {
         $clone = clone $this;
-        $clone->status = $status;
+        $clone->status = Status::PENDING;
+        return $clone;
+    }
+
+    public function markFinished(): self
+    {
+        $clone = clone $this;
+        $clone->status = Status::FINISHED;
         return $clone;
     }
 
@@ -123,6 +138,33 @@ final class Job
         return $clone;
     }
 
+    public function isPublic(): bool
+    {
+        return $this->isPublic;
+    }
+
+    public function withIsPublic(bool $isPublic): self
+    {
+        if ($this->owner->getIdentifier() === Owner::SYSTEM) {
+            throw new \InvalidArgumentException('Only system user jobs can be public or private.');
+        }
+
+        $clone = clone $this;
+        $clone->isPublic = $isPublic;
+        return $clone;
+    }
+
+    public function withParent(?Job $parent): self
+    {
+        $clone = clone $this;
+        $clone->parent = $parent;
+        return $clone;
+    }
+
+    public function getParent(): ?Job
+    {
+        return $this->parent;
+    }
 
     public static function new(Owner $owner): self
     {

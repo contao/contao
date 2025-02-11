@@ -590,6 +590,14 @@ services:
             - '%contao.intl.enabled_locales%'
             - '%kernel.default_locale%'
 
+    contao.jobs:
+        class: Contao\CoreBundle\Job\Jobs
+        public: true
+        arguments:
+            - '@contao.repository.job'
+            - '@doctrine.orm.entity_manager'
+            - '@security.helper'
+
     contao.mailer:
         class: Contao\CoreBundle\Mailer\ContaoMailer
         decorates: mailer.mailer
@@ -730,6 +738,11 @@ services:
 
     contao.repository.cron_job:
         class: Contao\CoreBundle\Repository\CronJobRepository
+        arguments:
+            - '@doctrine'
+
+    contao.repository.job:
+        class: Contao\CoreBundle\Repository\JobRepository
         arguments:
             - '@doctrine'
 

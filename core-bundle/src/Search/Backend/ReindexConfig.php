@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Search\Backend;
 
+use Contao\CoreBundle\Job\Owner;
+
 /**
  * @experimental
  */
@@ -12,6 +14,8 @@ final class ReindexConfig
     private GroupedDocumentIds $limitedDocumentIds;
 
     private \DateTimeInterface|null $updateSince = null;
+
+    private ?string $jobId = null;
 
     public function __construct()
     {
@@ -44,6 +48,18 @@ final class ReindexConfig
         return $clone;
     }
 
+    public function withJobId(?string $jobId): self
+    {
+        $clone = clone $this;
+        $clone->jobId = $jobId;
+        return $clone;
+    }
+
+    public function getJobId(): ?string
+    {
+        return $this->jobId;
+    }
+
     public function equals(self $otherConfig): bool
     {
         return $this->toArray() === $otherConfig->toArray();
@@ -54,6 +70,7 @@ final class ReindexConfig
         return [
             'updatedSince' => $this->updateSince?->format(\DateTimeInterface::ATOM),
             'limitedDocumentIds' => $this->limitedDocumentIds->toArray(),
+            'jobId' => $this->jobId,
         ];
     }
 
@@ -62,6 +79,9 @@ final class ReindexConfig
         $config = new self();
         if (isset($array['updatedSince'])) {
             $config = $config->limitToDocumentsNewerThan(new \DateTimeImmutable($array['updatedSince']));
+        }
+        if (isset($array['jobId'])) {
+            $config = $config->withJobId($array['jobId']);
         }
 
         return $config->limitToDocumentIds(GroupedDocumentIds::fromArray($array['limitedDocumentIds']));

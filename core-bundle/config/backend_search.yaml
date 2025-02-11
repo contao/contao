@@ -28,6 +28,7 @@ services:
             - '@contao.search_backend.engine'
             - '@event_dispatcher'
             - '@messenger.bus.default'
+            - '@contao.jobs'
             - '@contao.messenger.web_worker'
             - '@contao.search.backend.seal_reindex_provider'
 

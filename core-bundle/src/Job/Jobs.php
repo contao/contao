@@ -10,9 +10,32 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class Jobs
 {
-    public function __construct(private EntityManagerInterface $entityManager, private Security $security)
+    public function __construct(private JobRepository $jobRepository, private EntityManagerInterface $entityManager, private Security $security)
     {
 
+    }
+
+    public function createJob(Owner $owner): Job
+    {
+        $job = Job::new($owner);
+        $this->persist($job);
+        return $job;
+    }
+
+    public function createSystemJob(): Job
+    {
+        return $this->createJob(Owner::asSystem());
+    }
+
+    public function createUserJob(?string $userId = null): Job
+    {
+        $userId = $userId ?? $this->security->getUser()?->getUserIdentifier();
+
+        if (null === $userId) {
+            throw new \LogicException('Cannot create a user job without having a user id.');
+        }
+
+        return $this->createJob(new Owner($userId));
     }
 
     /**
@@ -36,7 +59,7 @@ class Jobs
 
     private function buildQueryBuilderForMine(): ?QueryBuilder
     {
-        $qb = $this->getJobRepository()->createQueryBuilder('j');
+        $qb = $this->jobRepository->createQueryBuilder('j');
         $userid = $this->security->getUser()?->getUserIdentifier();
 
         if (null === $userid) {
@@ -70,7 +93,7 @@ class Jobs
 
     public function getByUuid(string $uuid): ?Job
     {
-        $jobEntity = $this->getJobRepository()->find($uuid);
+        $jobEntity = $this->jobRepository->find($uuid);
 
         if (null === $jobEntity) {
             return null;
@@ -82,7 +105,7 @@ class Jobs
     public function persist(Job $job): void
     {
         /** @var JobEntity|null $jobEntity */
-        $jobEntity = $this->getJobRepository()->find($job->getUuid());
+        $jobEntity = $this->jobRepository->find($job->getUuid());
 
         if (null === $jobEntity) {
             $jobEntity = JobEntity::fromDto($job);
@@ -90,13 +113,57 @@ class Jobs
             $jobEntity->updateFromDto($job);
         }
 
+        if ($parent = $job->getParent()) {
+            $this->persist($parent);
+            $jobEntity->setParent($this->jobRepository->find($parent->getUuid()));
+        }
+
         $this->entityManager->persist($jobEntity);
         $this->entityManager->flush();
+
+        // If this job is a child, update the status of the parent if required.
+        if ($job->getParent()) {
+            $this->updateStatusBasedOnChildren($job);
+        }
     }
 
-
-    private function getJobRepository(): JobRepository
+    public function createChild(Job $job): Job
     {
-        return $this->entityManager->getRepository(JobEntity::class);
+        $child = Job::new($job->getOwner())->withParent($job);
+        $this->persist($child);
+
+        return $child;
+    }
+
+    private function updateStatusBasedOnChildren(Job $job): void
+    {
+        $jobEntity = $this->jobRepository->find($job->getUuid());
+
+        if (null === $jobEntity) {
+            return;
+        }
+
+        $onePending = false;
+        $allFinished = true;
+
+        foreach ($jobEntity->getChildren() as $child) {
+            if ($child->toDto()->getStatus() === Status::PENDING) {
+                $onePending = true;
+                break;
+            }
+
+            if ($child->toDto()->getStatus() !== Status::FINISHED) {
+                $allFinished = false;
+            }
+        }
+
+        if ($onePending) {
+            $this->persist($job->markPending());
+            return;
+        }
+
+        if ($allFinished) {
+            $this->persist($job->markFinished());
+        }
     }
 }

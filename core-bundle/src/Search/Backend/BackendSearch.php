@@ -13,6 +13,9 @@ use CmsIg\Seal\Search\Condition\EqualCondition;
 use CmsIg\Seal\Search\Condition\SearchCondition;
 use CmsIg\Seal\Search\SearchBuilder;
 use Contao\CoreBundle\Event\BackendSearch\EnhanceHitEvent;
+use Contao\CoreBundle\Job\Job;
+use Contao\CoreBundle\Job\Jobs;
+use Contao\CoreBundle\Job\Owner;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\DeleteDocumentsMessage;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\ReindexMessage;
 use Contao\CoreBundle\Messenger\WebWorker;
@@ -40,6 +43,7 @@ class BackendSearch
         private readonly EngineInterface $engine,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly MessageBusInterface $messageBus,
+        private readonly Jobs $jobs,
         private readonly WebWorker $webWorker,
         private readonly SealReindexProvider $reindexProvider,
     ) {
@@ -81,14 +85,38 @@ class BackendSearch
 
     public function reindex(ReindexConfig $config, bool $async = true): self
     {
+        $job = $config->getJobId() ? $this->jobs->getByUuid($config->getJobId()) : null;
+
         if ($async) {
             // Split into multiple messages of max 64kb if needed, otherwise messages with
             // hundreds of IDs would fail
-            foreach ($config->getLimitedDocumentIds()->split(65536) as $group) {
-                $this->messageBus->dispatch(new ReindexMessage($config->limitToDocumentIds($group)));
+            $documentIdGroups = $config->getLimitedDocumentIds()->split(65536);
+            dd($config, $documentIdGroups);
+
+            // No special handling needed if it's just one group still (= no splitting needed)
+            if (1 === count($documentIdGroups)) {
+                $this->messageBus->dispatch(new ReindexMessage($config));
+            } else {
+                foreach ($documentIdGroups as $documentIdGroup) {
+                    // Create a new config with the chunk of this document ID group
+                    $config = $config->limitToDocumentIds($documentIdGroup);
+
+                    // If a job was given, we have to create child jobs here, so we can track progress across
+                    // multiple messages
+                    if ($job) {
+                        $config = $config->withJobId($this->jobs->createChild($job)->getUuid());
+                    }
+
+                    $this->messageBus->dispatch(new ReindexMessage($config));
+                }
             }
 
             return $this;
+        }
+
+        // If we have a job, mark it as pending now.
+        if ($job) {
+            $this->jobs->persist($job->markPending());
         }
 
         // Seal does not delete unused documents, it just re-indexes. So if some
@@ -98,6 +126,11 @@ class BackendSearch
         $this->deleteDocuments($config->getLimitedDocumentIds(), false);
 
         $this->engine->reindex([$this->reindexProvider], SealUtil::internalReindexConfigToSealReindexConfig($config));
+
+        // If we have a job, mark it as finished.
+        if ($job) {
+            $this->jobs->persist($job->markFinished());
+        }
 
         return $this;
     }
