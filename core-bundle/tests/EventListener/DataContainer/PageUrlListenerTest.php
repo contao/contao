@@ -25,6 +25,7 @@ use Contao\Input;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -57,7 +58,7 @@ class PageUrlListenerTest extends TestCase
         $slug
             ->expects($this->once())
             ->method('generate')
-            ->with($expectedTitle, $page->id, $this->isType('callable'))
+            ->with($expectedTitle, $page->id, new IsType('callable'))
             ->willReturn($slugResult)
         ;
 
@@ -1812,7 +1813,7 @@ class PageUrlListenerTest extends TestCase
                 ->method('generate')
                 ->with(
                     PageRoute::PAGE_BASED_ROUTE_NAME,
-                    $this->isType('array'),
+                    new IsType('array'),
                     UrlGeneratorInterface::ABSOLUTE_URL,
                 )
                 ->willReturnCallback(

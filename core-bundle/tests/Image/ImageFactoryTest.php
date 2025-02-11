@@ -620,25 +620,21 @@ class ImageFactoryTest extends TestCase
         $this->assertSame($path, $image->getPath());
     }
 
-    private function getImageFactory(ResizerInterface|null $resizer = null, ImagineInterface|null $imagine = null, ImagineInterface|null $imagineSvg = null, Filesystem|null $filesystem = null, ContaoFramework|null $framework = null, bool|null $bypassCache = null, array|null $imagineOptions = null, array|null $validExtensions = null, string|null $uploadDir = null): ImageFactory
+    private function getImageFactory(ResizerInterface|null $resizer = null, ImagineInterface|null $imagine = null, ImagineInterface|null $imagineSvg = null, Filesystem|null $filesystem = null, ContaoFramework|null $framework = null): ImageFactory
     {
         $resizer ??= $this->createMock(ResizerInterface::class);
         $imagine ??= $this->createMock(ImagineInterface::class);
         $imagineSvg ??= $this->createMock(ImagineInterface::class);
         $filesystem ??= new Filesystem();
         $framework ??= $this->createMock(ContaoFramework::class);
-        $bypassCache ??= false;
-        $validExtensions ??= ['jpg', 'svg'];
 
         // Do not use Path::join here (see #4596)
-        $uploadDir ??= $this->getTempDir().'/images';
+        $uploadDir = $this->getTempDir().'/images';
 
-        if (null === $imagineOptions) {
-            $imagineOptions = [
-                'jpeg_quality' => 80,
-                'interlace' => ImagineImageInterface::INTERLACE_PLANE,
-            ];
-        }
+        $imagineOptions = [
+            'jpeg_quality' => 80,
+            'interlace' => ImagineImageInterface::INTERLACE_PLANE,
+        ];
 
         return new ImageFactory(
             $resizer,
@@ -646,9 +642,9 @@ class ImageFactoryTest extends TestCase
             $imagineSvg,
             $filesystem,
             $framework,
-            $bypassCache,
+            false,
             $imagineOptions,
-            $validExtensions,
+            ['jpg', 'svg'],
             $uploadDir,
         );
     }

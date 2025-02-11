@@ -18,6 +18,7 @@ use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\UriSigner;
@@ -111,7 +112,7 @@ class PreviewLinkControllerTest extends TestCase
             ->method('fetchAssociative')
             ->with(
                 'SELECT * FROM tl_preview_link WHERE id=? AND published=1 AND expiresAt>UNIX_TIMESTAMP()',
-                $this->isType('array'),
+                new IsType('array'),
             )
             ->willReturn($link)
         ;
