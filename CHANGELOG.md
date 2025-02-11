@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.4.13] (2025-02-11)
+
+**Fixed issues:**
+
+- [#8035] Change the ACE editor theme on the color change event ([zoglo])
+- [#8017] Enable `enableKeyboardAccessibility` for the ACE editor ([zoglo])
+
 ## [5.4.12] (2025-01-22)
 
 **Fixed issues:**
@@ -159,6 +166,7 @@ This project adheres to [Semantic Versioning].
 - [#7229] Fix the `.nogrid` backwards compatibility layer ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.4.13]: https://github.com/contao/contao/releases/tag/5.4.13
 [5.4.12]: https://github.com/contao/contao/releases/tag/5.4.12
 [5.4.11]: https://github.com/contao/contao/releases/tag/5.4.11
 [5.4.10]: https://github.com/contao/contao/releases/tag/5.4.10
@@ -260,3 +268,5 @@ This project adheres to [Semantic Versioning].
 [#7841]: https://github.com/contao/contao/pull/7841
 [#7873]: https://github.com/contao/contao/pull/7873
 [#7922]: https://github.com/contao/contao/pull/7922
+[#8017]: https://github.com/contao/contao/pull/8017
+[#8035]: https://github.com/contao/contao/pull/8035
