@@ -1,37 +1,56 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
 namespace Contao\CoreBundle\Controller;
 
-use Contao\CoreBundle\Job\FindCriteria;
+use Contao\CoreBundle\Job\Job;
 use Contao\CoreBundle\Job\Jobs;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * @experimental
+ */
 class BackendJobsController extends AbstractController
 {
-    public function __construct(private Jobs $jobs )
+    public function __construct(private Jobs $jobs)
     {
-
     }
 
-    public function allJobsAction(Request $request): JsonResponse
+    #[Route(
+        '%contao.backend.route_prefix%/jobs',
+        defaults: ['_scope' => 'backend', '_store_referrer' => false],
+        methods: ['GET'],
+    )]
+    public function allJobsAction(): JsonResponse
     {
-        /*$findCriteria = new FindCriteria();
-        $findCriteria->limit = min($request->query->get('limit', 20), 20);
-        $findCriteria->offset = $request->query->get('offset', 1);
-        $findCriteria->owner
-
-        // TODO: just twig directly?
-        $jobs = [];
-        foreach ($this->jobs->findByCriteria() as $item) {
-
-        }*/
-
-        return new JsonResponse([]);
+        return $this->createResponse($this->jobs->findMine());
     }
 
+    #[Route(
+        '%contao.backend.route_prefix%/jobs/pending',
+        defaults: ['_scope' => 'backend', '_store_referrer' => false],
+        methods: ['GET'],
+    )]
     public function latestJobsAction(): JsonResponse
     {
-        return new JsonResponse([]);
+        return $this->createResponse($this->jobs->findMyPending());
+    }
+
+    /**
+     * @param array<Job> $jobs
+     */
+    private function createResponse(array $jobs): JsonResponse
+    {
+        return new JsonResponse(array_map(static fn (Job $job) => $job->toArray(), $jobs));
     }
 }

@@ -12,15 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Repository;
 
-use Contao\CoreBundle\Entity\CronJob;
 use Contao\CoreBundle\Entity\Job;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\DBAL\Connection;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 
 /**
  * @template-extends ServiceEntityRepository<Job>
- *     *
+ *
  * @internal
  */
 class JobRepository extends ServiceEntityRepository

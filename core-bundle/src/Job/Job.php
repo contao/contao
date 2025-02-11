@@ -1,18 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Contao\CoreBundle\Job;
 
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Uid\UuidV4;
 
+/**
+ * @experimental
+ */
 final class Job
 {
-
-    private ?Job $parent = null;
+    private Job|null $parent = null;
 
     /**
-     * Warnings can be any string, but it's recommended to use translation identifiers to have your
-     * warnings translatable.
+     * Warnings can be any string, but it's recommended to use translation identifiers
+     * to have your warnings translatable.
      *
      * @var array<string>
      */
@@ -35,10 +39,14 @@ final class Job
      */
     private $isPublic = false;
 
-    public function __construct(private string $uuid, private \DateTimeInterface $createdAt, private Status $status, private Owner $owner)
-    {
+    public function __construct(
+        private string $uuid,
+        private \DateTimeInterface $createdAt,
+        private Status $status,
+        private Owner $owner,
+    ) {
         if (!UuidV4::isValid($uuid)) {
-            throw new \InvalidArgumentException(sprintf('"%s" is not a valid UUID v4 format', $uuid));
+            throw new \InvalidArgumentException(\sprintf('"%s" is not a valid UUID v4 format', $uuid));
         }
     }
 
@@ -66,6 +74,7 @@ final class Job
     {
         $clone = clone $this;
         $clone->status = Status::PENDING;
+
         return $clone;
     }
 
@@ -73,6 +82,7 @@ final class Job
     {
         $clone = clone $this;
         $clone->status = Status::FINISHED;
+
         return $clone;
     }
 
@@ -81,20 +91,22 @@ final class Job
      */
     public function withWarnings(array $warnings): self
     {
-        assert(array_is_list($warnings), 'Warnings array must be a list.');
+        \assert(array_is_list($warnings), 'Warnings array must be a list.');
+
         foreach ($warnings as $warning) {
-            if (!is_string($warning)) {
-                throw new \InvalidArgumentException(sprintf('"%s" is not a valid string. Warnings must be strings.', $warning));
+            if (!\is_string($warning)) {
+                throw new \InvalidArgumentException(\sprintf('"%s" is not a valid string. Warnings must be strings.', $warning));
             }
         }
 
         $clone = clone $this;
         $clone->warnings = $warnings;
+
         return $clone;
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
     public function getWarnings(): array
     {
@@ -108,10 +120,11 @@ final class Job
 
     public function withProgress(float $progress): self
     {
-        assert($progress >= 0 && $progress <= 100, 'Progress must be a valid percentage.');
+        \assert($progress >= 0 && $progress <= 100, 'Progress must be a valid percentage.');
 
         $clone = clone $this;
         $clone->progress = $progress;
+
         return $clone;
     }
 
@@ -121,7 +134,7 @@ final class Job
     }
 
     /**
-     * @return mixed[]
+     * @return array<mixed>
      */
     public function getMetadata(): array
     {
@@ -129,12 +142,13 @@ final class Job
     }
 
     /**
-     * @param array<mixed> $metadata Can be anything but must be serializable data.
+     * @param array<mixed> $metadata can be anything but must be serializable data
      */
     public function withMetadata(array $metadata): self
     {
         $clone = clone $this;
         $clone->metadata = $metadata;
+
         return $clone;
     }
 
@@ -145,23 +159,25 @@ final class Job
 
     public function withIsPublic(bool $isPublic): self
     {
-        if ($this->owner->getIdentifier() === Owner::SYSTEM) {
+        if (Owner::SYSTEM === $this->owner->getIdentifier()) {
             throw new \InvalidArgumentException('Only system user jobs can be public or private.');
         }
 
         $clone = clone $this;
         $clone->isPublic = $isPublic;
+
         return $clone;
     }
 
-    public function withParent(?Job $parent): self
+    public function withParent(self|null $parent): self
     {
         $clone = clone $this;
         $clone->parent = $parent;
+
         return $clone;
     }
 
-    public function getParent(): ?Job
+    public function getParent(): self|null
     {
         return $this->parent;
     }
@@ -169,5 +185,15 @@ final class Job
     public static function new(Owner $owner): self
     {
         return new self(Uuid::v4()->toRfc4122(), new \DateTimeImmutable(), Status::NEW, $owner);
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'uuid' => $this->uuid,
+            'createdAt' => $this->createdAt->format('Y-m-d H:i:s'),
+            'progress' => $this->progress,
+            'metadata' => $this->metadata,
+        ];
     }
 }

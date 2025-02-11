@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Search\Backend;
 
-use Contao\CoreBundle\Job\Owner;
-
 /**
  * @experimental
  */
@@ -15,7 +13,7 @@ final class ReindexConfig
 
     private \DateTimeInterface|null $updateSince = null;
 
-    private ?string $jobId = null;
+    private string|null $jobId = null;
 
     public function __construct()
     {
@@ -48,14 +46,15 @@ final class ReindexConfig
         return $clone;
     }
 
-    public function withJobId(?string $jobId): self
+    public function withJobId(string|null $jobId): self
     {
         $clone = clone $this;
         $clone->jobId = $jobId;
+
         return $clone;
     }
 
-    public function getJobId(): ?string
+    public function getJobId(): string|null
     {
         return $this->jobId;
     }

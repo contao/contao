@@ -1,7 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Contao\CoreBundle\Entity;
 
+use Contao\CoreBundle\Job\Job as JobDto;
 use Contao\CoreBundle\Job\Owner;
 use Contao\CoreBundle\Job\Status;
 use Contao\CoreBundle\Repository\JobRepository;
@@ -15,8 +18,10 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
-use \Contao\CoreBundle\Job\Job as JobDto;
 
+/**
+ * @internal
+ */
 #[Table(name: 'tl_job')]
 #[Entity(repositoryClass: JobRepository::class)]
 #[Index(columns: ['owner'], name: 'owner_idx')]
@@ -25,16 +30,15 @@ use \Contao\CoreBundle\Job\Job as JobDto;
 #[Index(columns: ['created_at'], name: 'created_at_idx')]
 class Job
 {
-    // TODO: Does that create a primary index automatically?
     #[Id]
     #[Column(type: 'string', length: 255, nullable: false)]
     private string $uuid;
 
-    #[ManyToOne(targetEntity: Job::class, inversedBy: 'children')]
+    #[ManyToOne(targetEntity: self::class, inversedBy: 'children')]
     #[JoinColumn(referencedColumnName: 'uuid', nullable: true)]
-    private ?Job $parent = null;
+    private Job|null $parent = null;
 
-    #[OneToMany(targetEntity: Job::class, mappedBy: 'parent')]
+    #[OneToMany(targetEntity: self::class, mappedBy: 'parent')]
     private Collection $children;
 
     #[Column(type: 'string', length: 255, nullable: false)]
@@ -71,7 +75,7 @@ class Job
             ->withWarnings($this->data['warnings'] ?? [])
             ->withMetadata($this->data['metadata'] ?? [])
             ->withIsPublic($this->public)
-            ->withParent($this->parent?->toDto());
+            ->withParent($this->parent?->toDto())
         ;
     }
 
@@ -99,12 +103,12 @@ class Job
         return $this;
     }
 
-    public function getParent(): ?Job
+    public function getParent(): self|null
     {
         return $this->parent;
     }
 
-    public function setParent(?Job $parent = null): self
+    public function setParent(self|null $parent = null): self
     {
         $this->parent = $parent;
 

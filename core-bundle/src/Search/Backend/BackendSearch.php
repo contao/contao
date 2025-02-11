@@ -13,9 +13,7 @@ use CmsIg\Seal\Search\Condition\EqualCondition;
 use CmsIg\Seal\Search\Condition\SearchCondition;
 use CmsIg\Seal\Search\SearchBuilder;
 use Contao\CoreBundle\Event\BackendSearch\EnhanceHitEvent;
-use Contao\CoreBundle\Job\Job;
 use Contao\CoreBundle\Job\Jobs;
-use Contao\CoreBundle\Job\Owner;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\DeleteDocumentsMessage;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\ReindexMessage;
 use Contao\CoreBundle\Messenger\WebWorker;
@@ -91,18 +89,17 @@ class BackendSearch
             // Split into multiple messages of max 64kb if needed, otherwise messages with
             // hundreds of IDs would fail
             $documentIdGroups = $config->getLimitedDocumentIds()->split(65536);
-            dd($config, $documentIdGroups);
 
             // No special handling needed if it's just one group still (= no splitting needed)
-            if (1 === count($documentIdGroups)) {
+            if (1 === \count($documentIdGroups)) {
                 $this->messageBus->dispatch(new ReindexMessage($config));
             } else {
                 foreach ($documentIdGroups as $documentIdGroup) {
                     // Create a new config with the chunk of this document ID group
                     $config = $config->limitToDocumentIds($documentIdGroup);
 
-                    // If a job was given, we have to create child jobs here, so we can track progress across
-                    // multiple messages
+                    // If a job was given, we have to create child jobs here, so we can track
+                    // progress across multiple messages
                     if ($job) {
                         $config = $config->withJobId($this->jobs->createChild($job)->getUuid());
                     }

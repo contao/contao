@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Contao\CoreBundle\Job;
 
 use Contao\CoreBundle\Entity\Job as JobEntity;
@@ -8,17 +10,23 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bundle\SecurityBundle\Security;
 
+/**
+ * @experimental
+ */
 class Jobs
 {
-    public function __construct(private JobRepository $jobRepository, private EntityManagerInterface $entityManager, private Security $security)
-    {
-
+    public function __construct(
+        private JobRepository $jobRepository,
+        private EntityManagerInterface $entityManager,
+        private Security $security,
+    ) {
     }
 
     public function createJob(Owner $owner): Job
     {
         $job = Job::new($owner);
         $this->persist($job);
+
         return $job;
     }
 
@@ -27,7 +35,7 @@ class Jobs
         return $this->createJob(Owner::asSystem());
     }
 
-    public function createUserJob(?string $userId = null): Job
+    public function createUserJob(string|null $userId = null): Job
     {
         $userId = $userId ?? $this->security->getUser()?->getUserIdentifier();
 
@@ -52,46 +60,24 @@ class Jobs
         $qb->andWhere('j.status = :status');
         $qb->setParameter('status', Status::PENDING->value);
 
+        return $this->queryWithQueryBuilder($qb);
+    }
+
+    /**
+     * @return array<Job>
+     */
+    public function findMine(): array
+    {
+        $qb = $this->buildQueryBuilderForMine();
+
+        if (null === $qb) {
+            return [];
+        }
 
         return $this->queryWithQueryBuilder($qb);
     }
 
-
-    private function buildQueryBuilderForMine(): ?QueryBuilder
-    {
-        $qb = $this->jobRepository->createQueryBuilder('j');
-        $userid = $this->security->getUser()?->getUserIdentifier();
-
-        if (null === $userid) {
-            return null;
-        }
-
-        $qb->andWhere($qb->expr()
-            ->orX(
-                $qb->expr()->eq('j.owner', $userid),
-                $qb->expr()->eq('j.owner', Owner::SYSTEM),
-            )
-        );
-
-        return $qb;
-    }
-
-    private function queryWithQueryBuilder(QueryBuilder $queryBuilder): array
-    {
-        $jobs = [];
-        $jobEntities = $queryBuilder
-            ->getQuery()
-            ->getResult();
-
-        /** @var JobEntity $jobEntity */
-        foreach ($jobEntities as $jobEntity) {
-            $jobs[] = $jobEntity->toDto();
-        }
-
-        return $jobs;
-    }
-
-    public function getByUuid(string $uuid): ?Job
+    public function getByUuid(string $uuid): Job|null
     {
         $jobEntity = $this->jobRepository->find($uuid);
 
@@ -135,6 +121,49 @@ class Jobs
         return $child;
     }
 
+    private function buildQueryBuilderForMine(): QueryBuilder|null
+    {
+        $qb = $this->jobRepository->createQueryBuilder('j');
+        $userid = $this->security->getUser()?->getUserIdentifier();
+
+        if (null === $userid) {
+            return null;
+        }
+
+        $expr = $qb->expr();
+
+        $qb->andWhere('j.parent IS NULL'); // Only parents
+        $qb->andWhere(
+            $expr->orX(
+                $expr->eq('j.owner', ':userOwner'),
+                $expr->andX(
+                    $expr->eq('j.public', true),
+                    $expr->eq('j.owner', ':systemOwner'),
+                ),
+            ),
+        );
+        $qb->setParameter('userOwner', $userid);
+        $qb->setParameter('systemOwner', Owner::SYSTEM);
+
+        return $qb;
+    }
+
+    private function queryWithQueryBuilder(QueryBuilder $queryBuilder): array
+    {
+        $jobs = [];
+        $jobEntities = $queryBuilder
+            ->getQuery()
+            ->getResult()
+        ;
+
+        /** @var JobEntity $jobEntity */
+        foreach ($jobEntities as $jobEntity) {
+            $jobs[] = $jobEntity->toDto();
+        }
+
+        return $jobs;
+    }
+
     private function updateStatusBasedOnChildren(Job $job): void
     {
         $jobEntity = $this->jobRepository->find($job->getUuid());
@@ -143,22 +172,27 @@ class Jobs
             return;
         }
 
+        if ($jobEntity->getChildren()->isEmpty()) {
+            return;
+        }
+
         $onePending = false;
         $allFinished = true;
 
         foreach ($jobEntity->getChildren() as $child) {
-            if ($child->toDto()->getStatus() === Status::PENDING) {
+            if (Status::PENDING === $child->toDto()->getStatus()) {
                 $onePending = true;
                 break;
             }
 
-            if ($child->toDto()->getStatus() !== Status::FINISHED) {
+            if (Status::FINISHED !== $child->toDto()->getStatus()) {
                 $allFinished = false;
             }
         }
 
         if ($onePending) {
             $this->persist($job->markPending());
+
             return;
         }
 
