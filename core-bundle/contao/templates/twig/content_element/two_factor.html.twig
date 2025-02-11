@@ -44,7 +44,7 @@
                     <input type="hidden" name="FORM_SUBMIT" value="tl_two_factor_disable">
                     <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
                     <div class="submit_container">
-                        <a href="{{ href }}" class="submit">{{ 'MSC.edit'|trans }}</a>
+                        <a href="{{ enable_url }}" class="submit">{{ 'MSC.edit'|trans }}</a>
                         <button type="submit" class="submit">{{ 'MSC.disable'|trans }}</button>
                     </div>
                 </div>
@@ -113,7 +113,7 @@
         {% else %}
             <p>{{ 'MSC.twoFactorExplain'|trans }}</p>
             <div class="submit_container">
-                <a href="{{ href }}" class="submit">{{ 'MSC.enable'|trans }}</a>
+                <a href="{{ enable_url }}" class="submit">{{ 'MSC.enable'|trans }}</a>
             </div>
         {% endif %}
     {% endif%}

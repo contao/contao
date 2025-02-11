@@ -55,9 +55,6 @@ class TwoFactorController extends AbstractContentElementController
 
         $targetPage = $this->getTargetPage($model, $pageModel);
 
-        $template->set('enforce_two_factor', $pageModel->enforceTwoFactor);
-        $template->set('target_page', $targetPage);
-
         // Enable 2FA if it is forced in the page settings or was requested by a user
         if((!$user->useTwoFactor && $pageModel->enforceTwoFactor) || 'enable' === $request->get('2fa')) {
             $exception = $this->authenticationUtils->getLastAuthenticationError();
@@ -113,10 +110,13 @@ class TwoFactorController extends AbstractContentElementController
             }
         }
 
+        $template->set('is_enabled', $user->useTwoFactor);
+        $template->set('enforce_two_factor', $pageModel->enforceTwoFactor);
+
         $template->set('show_backup_codes', $showBackupCodes);
-        $template->set('is_enabled', (bool) $user->useTwoFactor);
-        $template->set('href', $this->generateContentUrl($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL).'?2fa=enable');
         $template->set('trusted_devices', $this->trustedDeviceManager->getTrustedDevices($user));
+        $template->set('enable_url', $this->generateContentUrl($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL).'?2fa=enable');
+        $template->set('target_page', $targetPage);
 
         return $template->getResponse();
     }
