@@ -142,7 +142,6 @@ services:
             - '@contao.security.two_factor.trusted_device_manager'
             - '@contao.security.two_factor.authenticator'
             - '@security.authentication_utils'
-            - '@contao.routing.scope_matcher'
 
     Contao\CoreBundle\Controller\ContentElement\UnfilteredHtmlController: ~
 

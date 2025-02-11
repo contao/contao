@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
@@ -29,7 +28,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 // todo: should this be in a new 'user' or 'security' category?
 #[AsContentElement(category: 'miscellaneous')]
@@ -41,21 +39,16 @@ class TwoFactorController extends AbstractContentElementController
         private readonly TrustedDeviceManager $trustedDeviceManager,
         private readonly Authenticator $authenticator,
         private readonly AuthenticationUtils $authenticationUtils,
-        private readonly ScopeMatcher $scopeMatcher,
     ) {
     }
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        if ($this->scopeMatcher->isBackendRequest($request)) {
-            return $template->getResponse();
-        }
-
         $user = $this->getUser();
         $pageModel = $this->getPageModel();
 
         if (!$user instanceof FrontendUser || !$pageModel instanceof PageModel) {
-            return new Response('', Response::HTTP_NO_CONTENT);
+            return $template->getResponse();
         }
 
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY', null, 'Full authentication is required to configure the two-factor authentication.');
