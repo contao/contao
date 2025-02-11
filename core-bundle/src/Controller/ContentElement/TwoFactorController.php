@@ -93,8 +93,7 @@ class TwoFactorController extends AbstractContentElementController
 
             $template->set('enable', true);
             $template->set('invalid_verification_code', $invalidCode);
-            $template->set('secret', Base32::encodeUpperUnpadded($user->secret));
-            $template->set('qr_code', base64_encode($this->authenticator->getQrCode($user, $request)));
+            $template->set('code', $this->generateCodeData($user, $request));
         }
 
         $formId = $request->request->get('FORM_SUBMIT');
@@ -152,5 +151,16 @@ class TwoFactorController extends AbstractContentElementController
             $user->secret = random_bytes(128);
             $user->save();
         }
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    private function generateCodeData(FrontendUser $user, Request $request): array
+    {
+        return [
+            'secret' => Base32::encodeUpperUnpadded($user->secret),
+            'qr_image' => base64_encode($this->authenticator->getQrCode($user, $request)),
+        ];
     }
 }
