@@ -2,6 +2,17 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.5.0-RC4] (2025-02-11)
+
+**Fixed issues:**
+
+- [#8043] Allow the `<img>` element within the operation menu links ([zoglo])
+- [#8048] Do not use Turbo Drive for the `exportTheme` link ([zoglo])
+- [#8045] Align the checkbox at the start within `tl_tree_checkbox` ([zoglo])
+- [#8044] Handle missing operations-menu-controller targets within the parent-view header ([zoglo])
+- [#8031] Fix a CSRF token issue with Passkey logins ([fritzmg])
+- [#8025] Enable the ACE keyboard accessibility in the Template Studio ([zoglo])
+
 ## [5.5.0-RC3] (2025-02-05)
 
 **Fixed issues:**
@@ -21,7 +32,7 @@ This project adheres to [Semantic Versioning].
 - [#7970] Correctly add the Template Studio menu item ([leofeyer])
 - [#7976] Remove the MooTools events before dispatching the `domready` event ([m-vo])
 - [#7953] Fix splitting grouped document IDs ([Toflar])
-- [#7950] Update the language key for the confirm action ([zoglo])
+- [#7950] Update the language key for the "confirm" action ([zoglo])
 - [#7937] Correctly toggle the icons ([aschempp])
 - [#7936] Prevent operation titles from being added multiple times ([aschempp])
 - [#7935] Insert the context menu icons at the correct position ([aschempp])
@@ -139,6 +150,7 @@ This project adheres to [Semantic Versioning].
 - [#7582] Add PostCSS as described in Symfony Encore ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.5.0-RC4]: https://github.com/contao/contao/releases/tag/5.5.0-RC4
 [5.5.0-RC3]: https://github.com/contao/contao/releases/tag/5.5.0-RC3
 [5.5.0-RC2]: https://github.com/contao/contao/releases/tag/5.5.0-RC2
 [5.5.0-RC1]: https://github.com/contao/contao/releases/tag/5.5.0-RC1
@@ -266,4 +278,10 @@ This project adheres to [Semantic Versioning].
 [#8018]: https://github.com/contao/contao/pull/8018
 [#8019]: https://github.com/contao/contao/pull/8019
 [#8021]: https://github.com/contao/contao/pull/8021
+[#8025]: https://github.com/contao/contao/pull/8025
 [#8028]: https://github.com/contao/contao/pull/8028
+[#8031]: https://github.com/contao/contao/pull/8031
+[#8043]: https://github.com/contao/contao/pull/8043
+[#8044]: https://github.com/contao/contao/pull/8044
+[#8045]: https://github.com/contao/contao/pull/8045
+[#8048]: https://github.com/contao/contao/pull/8048
