@@ -17,7 +17,7 @@ export default class extends Controller {
         this.element.style['display'] = 'none';
 
         // Instantiate the editor
-        this.editor = ace.edit(this.container, {enableKeyboardAccessibility: true});
+        this.editor = ace.edit(this.container);
         this.editor.getSession().setValue(this.element.value);
 
         this.editor.on('focus', () => {
@@ -41,6 +41,10 @@ export default class extends Controller {
     disconnect() {
         this.editor.destroy();
         this.container.remove();
+    }
+
+    colorChange(event) {
+        this.editor.setTheme(`ace/theme/${event.detail.mode === 'dark' ? 'twilight' : 'clouds'}`);
     }
 
     setMaxLines() {

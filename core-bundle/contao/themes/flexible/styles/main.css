@@ -1621,6 +1621,7 @@ table.tl_listing {
 
 .tl_right:has(.operations + :is(.tl_tree_checkbox, .tl_tree_radio)) {
 	display: flex;
+	align-items: start;
 }
 
 .cte_type {

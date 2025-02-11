@@ -11,6 +11,7 @@ export class TwigEditor {
             autoScrollEditorIntoView: true,
             readOnly: element.hasAttribute('readonly'),
             enableLiveAutocompletion: true,
+            enableKeyboardAccessibility: true,
         });
 
         this.setColorScheme(document.documentElement.dataset.colorScheme);

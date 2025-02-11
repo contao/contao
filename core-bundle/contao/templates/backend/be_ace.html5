@@ -37,17 +37,18 @@ if ($GLOBALS['TL_CONFIG']['useCE']):
         }
       });
 
-      // Enable code autocompletion
       editor.setOptions({
         enableSnippets: true,
         enableBasicAutocompletion: true,
-        enableLiveAutocompletion: true
+        enableLiveAutocompletion: true,
+        enableKeyboardAccessibility: true
       });
     }
 
     const target = document.getElementById('<?= $this->selector ?>');
     target.configCallback = config;
     target.setAttribute('data-controller', 'contao--ace');
+    target.setAttribute('data-action', 'contao--color-scheme:change@window->contao--ace#colorChange');
   }
 </script>
 <?php endif; ?>
