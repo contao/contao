@@ -56,7 +56,7 @@ class TwoFactorController extends AbstractContentElementController
         $targetPage = $this->getTargetPage($model, $pageModel);
 
         // Enable 2FA if it is forced in the page settings or was requested by a user
-        if((!$user->useTwoFactor && $pageModel->enforceTwoFactor) || 'enable' === $request->get('2fa')) {
+        if ((!$user->useTwoFactor && $pageModel->enforceTwoFactor) || 'enable' === $request->get('2fa')) {
             $exception = $this->authenticationUtils->getLastAuthenticationError();
 
             // Validate the verification code
@@ -97,12 +97,10 @@ class TwoFactorController extends AbstractContentElementController
 
         if ('tl_two_factor_clear_trusted_devices' === $formId) {
             $this->trustedDeviceManager->clearTrustedDevices($user);
-        }
-        elseif ('tl_two_factor_generate_backup_codes' === $formId) {
+        } elseif ('tl_two_factor_generate_backup_codes' === $formId) {
             $template->set('backup_codes', $this->backupCodeManager->generateBackupCodes($user));
             $showBackupCodes = true;
-        }
-        else {
+        } else {
             try {
                 $template->set('backup_codes', json_decode((string) $user->backupCodes, true, 512, JSON_THROW_ON_ERROR));
             } catch (\JsonException) {
