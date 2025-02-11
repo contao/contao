@@ -99,6 +99,7 @@ class TwoFactorController extends AbstractContentElementController
 
         // Disable 2FA if it was requested by a user
         if ('tl_two_factor_disable' === $formId && $user->useTwoFactor) {
+            // todo: require !$pageModel->enforceTwoFactor?
             $this->disable2FA($user);
 
             return new RedirectResponse($this->generateContentUrl($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL));
