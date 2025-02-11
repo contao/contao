@@ -71,11 +71,9 @@ class TwoFactorController extends AbstractContentElementController
         if((!$user->useTwoFactor && $pageModel->enforceTwoFactor) || 'enable' === $request->get('2fa')) {
             $exception = $this->authenticationUtils->getLastAuthenticationError();
 
-            if ($exception instanceof InvalidTwoFactorCodeException) {
-                $template->set('message', $this->translator->trans('ERR.invalidTwoFactor', [], 'contao_default'));
-            }
-
             // Validate the verification code
+            $invalidCode = false;
+
             if ('tl_two_factor' === $request->request->get('FORM_SUBMIT')) {
                 // Enable 2FA
                 if ($this->authenticator->validateCode($user, $request->request->get('verify'))) {
@@ -84,13 +82,16 @@ class TwoFactorController extends AbstractContentElementController
                     return new RedirectResponse($return);
                 }
 
-                $template->set('message', $this->translator->trans('ERR.invalidTwoFactor', [], 'contao_default'));
+                $invalidCode = true;
+            } elseif ($exception instanceof InvalidTwoFactorCodeException) {
+                $invalidCode = true;
             }
 
             // Generate the secret
             $this->ensureHasSecret($user);
 
             $template->set('enable', true);
+            $template->set('invalid_verification_code', $invalidCode);
             $template->set('secret', Base32::encodeUpperUnpadded($user->secret));
             $template->set('qr_code', base64_encode($this->authenticator->getQrCode($user, $request)));
         }

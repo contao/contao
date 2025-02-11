@@ -6,8 +6,8 @@
         {{ ('CTE.' ~ type ~ '.1')|trans }}
     {% else %}
         {% if enable|default %}
-            {% if message|default %}
-                <p class="tl_error">{{ message }}</p>
+            {% if invalid_verification_code %}
+                <p class="tl_error">{{ 'ERR.invalidTwoFactor'|trans }}</p>
             {% elseif enforce_two_factor %}
                 <p class="tl_error">{{ 'MSC.twoFactorEnforced'|trans }}</p>
             {% endif %}
