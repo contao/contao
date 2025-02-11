@@ -72,13 +72,8 @@ class TwoFactorController extends AbstractContentElementController
             $template->set('message', $this->translator->trans('MSC.twoFactorEnforced', [], 'contao_default'));
         }
 
-        $enable = 'enable' === $request->get('2fa');
-
-        if (!$user->useTwoFactor && $pageModel->enforceTwoFactor) {
-            $enable = true;
-        }
-
-        if($enable) {
+        // Enable 2FA if it is forced in the page settings or was requested by a user
+        if((!$user->useTwoFactor && $pageModel->enforceTwoFactor) || 'enable' === $request->get('2fa')) {
             $exception = $this->authenticationUtils->getLastAuthenticationError();
 
             if ($exception instanceof InvalidTwoFactorCodeException) {
@@ -111,34 +106,28 @@ class TwoFactorController extends AbstractContentElementController
 
         $formId = $request->request->get('FORM_SUBMIT');
 
-        if ('tl_two_factor_disable' === $formId && ($response = $this->disableTwoFactor($user, $pageModel))) {
-            return $response;
-        }
+        // Disable 2FA if it was requested by a user
+        if ('tl_two_factor_disable' === $formId && $user->useTwoFactor) {
+            $user->secret = null;
+            $user->useTwoFactor = false;
+            $user->backupCodes = null;
+            $user->save();
 
-        if('tl_two_factor_disable' === $formId) {
-            // Don't apply if 2FA is disabled already
-            if ($user->useTwoFactor) {
-                $user->secret = null;
-                $user->useTwoFactor = false;
-                $user->backupCodes = null;
-                $user->save();
+            // Clear all trusted devices
+            $this->trustedDeviceManager->clearTrustedDevices($user);
 
-                // Clear all trusted devices
-                $this->trustedDeviceManager->clearTrustedDevices($user);
-
-                return new RedirectResponse($this->generateContentUrl($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL));
-            }
-        }
-
-        try {
-            $template->set('backupCodes', json_decode((string) $user->backupCodes, true, 512, JSON_THROW_ON_ERROR));
-        } catch (\JsonException) {
-            $template->set('backup_codes', []);
+            return new RedirectResponse($this->generateContentUrl($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL));
         }
 
         if ('tl_two_factor_generate_backup_codes' === $formId) {
             $template->set('show_backup_codes', true);
             $template->set('backup_codes', $this->backupCodeManager->generateBackupCodes($user));
+        } else {
+            try {
+                $template->set('backup_codes', json_decode((string) $user->backupCodes, true, 512, JSON_THROW_ON_ERROR));
+            } catch (\JsonException) {
+                $template->set('backup_codes', []);
+            }
         }
 
         if ('tl_two_factor_clear_trusted_devices' === $formId) {
