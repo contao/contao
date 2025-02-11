@@ -36,7 +36,6 @@ class TwoFactorController extends AbstractContentElementController
 {
     public function __construct(
         private readonly ContaoFramework $framework,
-        private readonly TranslatorInterface $translator,
         private readonly BackupCodeManager $backupCodeManager,
         private readonly TrustedDeviceManager $trustedDeviceManager,
         private readonly Authenticator $authenticator,
