@@ -67,11 +67,6 @@ class TwoFactorController extends AbstractContentElementController
         $template->set('enforce_two_factor', $pageModel->enforceTwoFactor);
         $template->set('target_path', $return);
 
-        // Inform the user if 2FA is enforced
-        if ($pageModel->enforceTwoFactor) {
-            $template->set('message', $this->translator->trans('MSC.twoFactorEnforced', [], 'contao_default'));
-        }
-
         // Enable 2FA if it is forced in the page settings or was requested by a user
         if((!$user->useTwoFactor && $pageModel->enforceTwoFactor) || 'enable' === $request->get('2fa')) {
             $exception = $this->authenticationUtils->getLastAuthenticationError();
