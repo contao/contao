@@ -53,13 +53,10 @@ class TwoFactorController extends AbstractContentElementController
 
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY', null, 'Full authentication is required to configure the two-factor authentication.');
 
-        $adapter = $this->framework->getAdapter(PageModel::class);
-        // todo: there is no jumpTo on tl_content, yet
-        $redirectPage = $model->jumpTo > 0 ? $adapter->findById($model->jumpTo) : null;
-        $return = $this->generateContentUrl($redirectPage instanceof PageModel ? $redirectPage : $pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL);
+        $targetPage = $this->getTargetPage($model, $pageModel);
 
         $template->set('enforce_two_factor', $pageModel->enforceTwoFactor);
-        $template->set('target_path', $return);
+        $template->set('target_page', $targetPage);
 
         // Enable 2FA if it is forced in the page settings or was requested by a user
         if((!$user->useTwoFactor && $pageModel->enforceTwoFactor) || 'enable' === $request->get('2fa')) {
@@ -73,7 +70,7 @@ class TwoFactorController extends AbstractContentElementController
                 if ($this->authenticator->validateCode($user, $request->request->get('verify'))) {
                     $this->enable2FA($user);
 
-                    return new RedirectResponse($return);
+                    return new RedirectResponse($this->generateContentUrl($targetPage, [], UrlGeneratorInterface::ABSOLUTE_URL));
                 }
 
                 $invalidCode = true;
@@ -122,6 +119,15 @@ class TwoFactorController extends AbstractContentElementController
         $template->set('trusted_devices', $this->trustedDeviceManager->getTrustedDevices($user));
 
         return $template->getResponse();
+    }
+
+    private function getTargetPage(ContentModel $model, PageModel $pageModel): PageModel
+    {
+        $adapter = $this->framework->getAdapter(PageModel::class);
+        // todo: there is no jumpTo on tl_content, yet
+        $redirectPage = $model->jumpTo > 0 ? $adapter->findById($model->jumpTo) : null;
+
+        return $redirectPage instanceof PageModel ? $redirectPage : $pageModel;
     }
 
     private function enable2FA(FrontendUser $user): void
