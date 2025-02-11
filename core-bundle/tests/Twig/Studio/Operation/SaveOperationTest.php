@@ -7,7 +7,6 @@ namespace Contao\CoreBundle\Tests\Twig\Studio\Operation;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Inspector\TemplateInformation;
-use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\Operation\SaveOperation;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -46,7 +45,7 @@ class SaveOperationTest extends AbstractOperationTestCase
             ->willReturn('error.stream')
         ;
 
-        $operation = $this->getSaveOperation(storage: $storage, twig: $twig);
+        $operation = $this->getSaveOperation($storage, $twig);
 
         $response = $operation->execute(
             new Request(),
@@ -77,7 +76,7 @@ class SaveOperationTest extends AbstractOperationTestCase
             ->willReturn('save_result.stream')
         ;
 
-        $operation = $this->getSaveOperation(storage: $storage, twig: $twig);
+        $operation = $this->getSaveOperation($storage, $twig);
 
         $response = $operation->execute(
             new Request(request: ['code' => '<updated code>']),
@@ -87,7 +86,7 @@ class SaveOperationTest extends AbstractOperationTestCase
         $this->assertSame('save_result.stream', $response->getContent());
     }
 
-    private function getSaveOperation(ContaoFilesystemLoader|null $loader = null, VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null): SaveOperation
+    private function getSaveOperation(VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null): SaveOperation
     {
         $templateInformation = new TemplateInformation(
             new Source(
@@ -126,7 +125,7 @@ class SaveOperationTest extends AbstractOperationTestCase
         ;
 
         $operation = new SaveOperation($inspector);
-        $operation->setContainer($this->getContainer($loader, $storage, $twig));
+        $operation->setContainer($this->getContainer(null, $storage, $twig));
         $operation->setName('save');
 
         return $operation;

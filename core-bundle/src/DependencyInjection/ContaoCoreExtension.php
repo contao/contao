@@ -635,7 +635,11 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             return;
         }
 
-        $this->registerOperationAttribute(AsOperationForTemplateStudioElement::class, 'contao.operation.template_studio_element', $container);
+        $this->registerOperationAttribute(
+            AsOperationForTemplateStudioElement::class,
+            'contao.operation.template_studio_element',
+            $container,
+        );
 
         $loader->load('template_studio.yaml');
     }
