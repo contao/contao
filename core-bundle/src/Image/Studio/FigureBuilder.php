@@ -204,7 +204,7 @@ class FigureBuilder
     /**
      * Sets the image resource from an absolute or relative path.
      *
-     * @param bool $autoDetectDbafsPaths Set to false to skip searching for a FilesModel
+     * @param bool $autoDetectDbafsPaths Use false to skip searching for a FilesModel
      */
     public function fromPath(string $path, bool $autoDetectDbafsPaths = true): self
     {

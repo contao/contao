@@ -22,7 +22,7 @@ window.ace && window.addEvent('domready', function() {
   ta.style['display'] = 'none';
 
   // Instantiate the editor
-  let editor = ace.edit('<?= $this->selector ?>_div', {maxLines: Infinity, enableKeyboardAccessibility: true});
+  let editor = ace.edit('<?= $this->selector ?>_div', {maxLines: Infinity});
   editor.$blockScrolling = Infinity;
   editor.setTheme((document.documentElement.dataset.colorScheme === 'dark' ? 'ace/theme/twilight' : 'ace/theme/clouds'));
   editor.renderer.setScrollMargin(3, 3, 0, 0);
@@ -53,11 +53,11 @@ window.ace && window.addEvent('domready', function() {
     }
   });
 
-  // Enable code autocompletion
   editor.setOptions({
     enableSnippets: true,
     enableBasicAutocompletion: true,
-    enableLiveAutocompletion: true
+    enableLiveAutocompletion: true,
+    enableKeyboardAccessibility: true
   });
 
   editor.on('focus', function() {
