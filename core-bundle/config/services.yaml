@@ -102,7 +102,6 @@ services:
             - !service_closure '@contao.repository.cron_job'
             - !service_closure '@doctrine.orm.entity_manager'
             - '@cache.app'
-            - '@lock.factory'
             - '@?logger'
 
     contao.cron.purge_expired_altcha_challenges:

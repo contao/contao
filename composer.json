@@ -131,7 +131,6 @@
         "symfony/http-foundation": "^6.4 || ^7.0",
         "symfony/http-kernel": "^6.4 || ^7.0",
         "symfony/intl": "^6.4 || ^7.0",
-        "symfony/lock": "^6.4 || ^7.0",
         "symfony/mailer": "^6.4 || ^7.0",
         "symfony/maker-bundle": "^1.1",
         "symfony/messenger": "^6.4 || ^7.0",
