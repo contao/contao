@@ -31,6 +31,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+// todo: should this be in a new 'user' or 'security' category?
 #[AsContentElement(category: 'miscellaneous')]
 class TwoFactorController extends AbstractContentElementController
 {
@@ -60,6 +61,7 @@ class TwoFactorController extends AbstractContentElementController
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY', null, 'Full authentication is required to configure the two-factor authentication.');
 
         $adapter = $this->framework->getAdapter(PageModel::class);
+        // todo: there is no jumpTo on tl_content, yet
         $redirectPage = $model->jumpTo > 0 ? $adapter->findById($model->jumpTo) : null;
         $return = $this->generateContentUrl($redirectPage instanceof PageModel ? $redirectPage : $pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL);
 
