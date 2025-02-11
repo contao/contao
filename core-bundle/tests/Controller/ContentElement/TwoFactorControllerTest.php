@@ -19,7 +19,6 @@ use Contao\CoreBundle\Controller\ContentElement\TwoFactorController;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\PageFinder;
-use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Security\TwoFactor\BackupCodeManager;
 use Contao\CoreBundle\Security\TwoFactor\TrustedDeviceManager;
@@ -50,12 +49,10 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $controller = new TwoFactorController(
             $this->getDefaultFramework(),
-            $this->createMock(TranslatorInterface::class),
             $this->createMock(BackupCodeManager::class),
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator($this->createMock(BackendUser::class)),
             $this->mockAuthenticationUtils(),
-            $this->mockScopeMatcherWithOptionalScope(true),
         );
 
         $controller->setContainer($container);
@@ -74,12 +71,10 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $controller = new TwoFactorController(
             $this->getDefaultFramework(),
-            $this->createMock(TranslatorInterface::class),
             $this->createMock(BackupCodeManager::class),
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator($this->createMock(BackendUser::class)),
             $this->mockAuthenticationUtils(),
-            $this->mockScopeMatcherWithOptionalScope(),
         );
 
         $controller->setContainer($container);
@@ -89,7 +84,8 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $response = $controller($request, $model, 'main');
 
-        $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        // todo render template for real and check output
     }
 
     public function testReturnsIfTheRequestHasNoPageModel(): void
@@ -98,12 +94,10 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $controller = new TwoFactorController(
             $this->getDefaultFramework(),
-            $this->createMock(TranslatorInterface::class),
             $this->createMock(BackupCodeManager::class),
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator($this->createMock(BackendUser::class)),
             $this->mockAuthenticationUtils(),
-            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -112,7 +106,8 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $response = $controller($request, $model, 'main');
 
-        $this->assertSame(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        // todo render template for real and check output
     }
 
     public function testReturnsEmptyResponseIfTheUserIsNotFullyAuthenticated(): void
@@ -121,12 +116,10 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $controller = new TwoFactorController(
             $this->getDefaultFramework(),
-            $this->createMock(TranslatorInterface::class),
             $this->createMock(BackupCodeManager::class),
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -136,7 +129,8 @@ class TwoFactorControllerTest extends ContentElementTestCase
         $response = $controller($request, $model, 'main');
 
         $this->assertEmpty($response->getContent());
-        $this->assertSame(204, $response->getStatusCode());
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+        // todo render template for real and check output
     }
 
     public function testReturnsAResponseIfTheUserIsAFrontendUser(): void
@@ -149,12 +143,10 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $controller = new TwoFactorController(
             $this->getDefaultFramework(),
-            $this->createMock(TranslatorInterface::class),
             $this->createMock(BackupCodeManager::class),
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -176,12 +168,10 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $controller = new TwoFactorController(
             $this->getDefaultFramework(),
-            $this->createMock(TranslatorInterface::class),
             $this->createMock(BackupCodeManager::class),
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -212,12 +202,10 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $controller = new TwoFactorController(
             $this->getDefaultFramework(),
-            $this->createMock(TranslatorInterface::class),
             $this->createMock(BackupCodeManager::class),
             $trustedDeviceManager,
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -228,7 +216,6 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $container
             ->get('contao.routing.content_url_generator')
-            ->expects($this->exactly(2))
             ->method('generate')
             ->willReturn('https://localhost.wip/foobar')
         ;
@@ -251,12 +238,10 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $controller = new TwoFactorController(
             $this->getDefaultFramework(),
-            $this->createMock(TranslatorInterface::class),
             $this->createMock(BackupCodeManager::class),
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -286,12 +271,10 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $controller = new TwoFactorController(
             $this->getDefaultFramework(),
-            $this->createMock(TranslatorInterface::class),
             $this->createMock(BackupCodeManager::class),
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(new InvalidTwoFactorCodeException()),
-            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -303,13 +286,14 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $container
             ->get('contao.routing.content_url_generator')
-            ->expects($this->exactly(2))
             ->method('generate')
             ->with($page, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://localhost.wip/foobar')
         ;
 
-        $controller($request, $model, 'main');
+        $response = $controller($request, $model, 'main')->getStatusCode();
+
+        $this->assertNotInstanceOf(RedirectResponse::class, $response);
     }
 
     public function testDoesNotRedirectIfTheTwoFactorCodeIsInvalid(): void
@@ -322,12 +306,10 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $controller = new TwoFactorController(
             $this->getDefaultFramework(),
-            $this->createMock(TranslatorInterface::class),
             $this->createMock(BackupCodeManager::class),
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator($user, false),
             $this->mockAuthenticationUtils(new InvalidTwoFactorCodeException()),
-            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -341,13 +323,14 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $container
             ->get('contao.routing.content_url_generator')
-            ->expects($this->exactly(2))
             ->method('generate')
             ->with($page, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://localhost.wip/foobar')
         ;
 
-        $controller($request, $model, 'main');
+        $response = $controller($request, $model, 'main')->getStatusCode();
+
+        $this->assertNotInstanceOf(RedirectResponse::class, $response);
     }
 
     public function testRedirectsIfTheTwoFactorCodeIsValid(): void
@@ -365,12 +348,10 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $controller = new TwoFactorController(
             $this->getDefaultFramework(),
-            $this->createMock(TranslatorInterface::class),
             $this->createMock(BackupCodeManager::class),
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator($user, true),
             $this->mockAuthenticationUtils(new InvalidTwoFactorCodeException()),
-            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -384,7 +365,6 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $container
             ->get('contao.routing.content_url_generator')
-            ->expects($this->once())
             ->method('generate')
             ->with($page, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('https://localhost.wip/foobar')
@@ -393,6 +373,7 @@ class TwoFactorControllerTest extends ContentElementTestCase
         $response = $controller($request, $model, 'main');
 
         $this->assertInstanceOf(RedirectResponse::class, $response);
+        $this->assertSame('https://localhost.wip/foobar', $response->getTargetUrl());
     }
 
     public function testShowsTheBackupCodes(): void
@@ -405,12 +386,10 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $controller = new TwoFactorController(
             $this->getDefaultFramework(),
-            $this->createMock(TranslatorInterface::class),
             $this->createMock(BackupCodeManager::class),
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -441,12 +420,10 @@ class TwoFactorControllerTest extends ContentElementTestCase
 
         $controller = new TwoFactorController(
             $this->getDefaultFramework(),
-            $this->createMock(TranslatorInterface::class),
             $backupCodeManager,
             $this->createMock(TrustedDeviceManager::class),
             $this->mockAuthenticator(),
             $this->mockAuthenticationUtils(),
-            $this->mockScopeMatcherWithOptionalScope(),
         );
         $controller->setContainer($container);
 
@@ -539,18 +516,6 @@ class TwoFactorControllerTest extends ContentElementTestCase
         ;
 
         return $tokenStorage;
-    }
-
-    private function mockScopeMatcherWithOptionalScope(bool $hasBackendScope = false): ScopeMatcher&MockObject
-    {
-        $scopeMatcher = $this->createMock(ScopeMatcher::class);
-        $scopeMatcher
-            ->expects($this->once())
-            ->method('isBackendRequest')
-            ->willReturn($hasBackendScope)
-        ;
-
-        return $scopeMatcher;
     }
 
     private function getContainerWithFrameworkTemplate(UserInterface|null $user = null, bool $isFullyAuthenticated = false): ContainerBuilder

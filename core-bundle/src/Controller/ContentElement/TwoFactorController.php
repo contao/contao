@@ -48,8 +48,11 @@ class TwoFactorController extends AbstractContentElementController
         $pageModel = $this->getPageModel();
 
         if (!$user instanceof FrontendUser || !$pageModel instanceof PageModel) {
+            $template->set('can_use_2fa', false);
+
             return $template->getResponse();
         }
+        $template->set('can_use_2fa', true);
 
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY', null, 'Full authentication is required to configure the two-factor authentication.');
 
