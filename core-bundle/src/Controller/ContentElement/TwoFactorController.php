@@ -78,14 +78,56 @@ class TwoFactorController extends AbstractContentElementController
             $enable = true;
         }
 
-        if ($enable && ($response = $this->enableTwoFactor($template, $request, $user, $return))) {
-            return $response;
+        if($enable) {
+            $exception = $this->authenticationUtils->getLastAuthenticationError();
+
+            if ($exception instanceof InvalidTwoFactorCodeException) {
+                $template->set('message', $this->translator->trans('ERR.invalidTwoFactor', [], 'contao_default'));
+            }
+
+            // Validate the verification code
+            if ('tl_two_factor' === $request->request->get('FORM_SUBMIT')) {
+                if ($this->authenticator->validateCode($user, $request->request->get('verify'))) {
+                    // Enable 2FA
+                    $user->useTwoFactor = true;
+                    $user->save();
+
+                    return new RedirectResponse($return);
+                }
+
+                $template->set('message', $this->translator->trans('ERR.invalidTwoFactor', [], 'contao_default'));
+            }
+
+            // Generate the secret
+            if (!$user->secret) {
+                $user->secret = random_bytes(128);
+                $user->save();
+            }
+
+            $template->set('enable', true);
+            $template->set('secret', Base32::encodeUpperUnpadded($user->secret));
+            $template->set('qr_code', base64_encode($this->authenticator->getQrCode($user, $request)));
         }
 
         $formId = $request->request->get('FORM_SUBMIT');
 
         if ('tl_two_factor_disable' === $formId && ($response = $this->disableTwoFactor($user, $pageModel))) {
             return $response;
+        }
+
+        if('tl_two_factor_disable' === $formId) {
+            // Don't apply if 2FA is disabled already
+            if ($user->useTwoFactor) {
+                $user->secret = null;
+                $user->useTwoFactor = false;
+                $user->backupCodes = null;
+                $user->save();
+
+                // Clear all trusted devices
+                $this->trustedDeviceManager->clearTrustedDevices($user);
+
+                return new RedirectResponse($this->generateContentUrl($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL));
+            }
         }
 
         try {
@@ -108,57 +150,5 @@ class TwoFactorController extends AbstractContentElementController
         $template->set('trusted_devices', $this->trustedDeviceManager->getTrustedDevices($user));
 
         return $template->getResponse();
-    }
-
-    private function enableTwoFactor(FragmentTemplate $template, Request $request, FrontendUser $user, string $return): Response|null
-    {
-        $exception = $this->authenticationUtils->getLastAuthenticationError();
-
-        if ($exception instanceof InvalidTwoFactorCodeException) {
-            $template->set('message', $this->translator->trans('ERR.invalidTwoFactor', [], 'contao_default'));
-        }
-
-        // Validate the verification code
-        if ('tl_two_factor' === $request->request->get('FORM_SUBMIT')) {
-            if ($this->authenticator->validateCode($user, $request->request->get('verify'))) {
-                // Enable 2FA
-                $user->useTwoFactor = true;
-                $user->save();
-
-                return new RedirectResponse($return);
-            }
-
-            $template->set('message', $this->translator->trans('ERR.invalidTwoFactor', [], 'contao_default'));
-        }
-
-        // Generate the secret
-        if (!$user->secret) {
-            $user->secret = random_bytes(128);
-            $user->save();
-        }
-
-        $template->set('enable', true);
-        $template->set('secret', Base32::encodeUpperUnpadded($user->secret));
-        $template->set('qr_code', base64_encode($this->authenticator->getQrCode($user, $request)));
-
-        return null;
-    }
-
-    private function disableTwoFactor(FrontendUser $user, PageModel $pageModel): Response|null
-    {
-        // Return if 2FA is disabled already
-        if (!$user->useTwoFactor) {
-            return null;
-        }
-
-        $user->secret = null;
-        $user->useTwoFactor = false;
-        $user->backupCodes = null;
-        $user->save();
-
-        // Clear all trusted devices
-        $this->trustedDeviceManager->clearTrustedDevices($user);
-
-        return new RedirectResponse($this->generateContentUrl($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL));
     }
 }
