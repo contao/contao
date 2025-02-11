@@ -82,10 +82,9 @@ class TwoFactorController extends AbstractContentElementController
 
             // Validate the verification code
             if ('tl_two_factor' === $request->request->get('FORM_SUBMIT')) {
+                // Enable 2FA
                 if ($this->authenticator->validateCode($user, $request->request->get('verify'))) {
-                    // Enable 2FA
-                    $user->useTwoFactor = true;
-                    $user->save();
+                    $this->enable2FA($user);
 
                     return new RedirectResponse($return);
                 }
@@ -94,10 +93,7 @@ class TwoFactorController extends AbstractContentElementController
             }
 
             // Generate the secret
-            if (!$user->secret) {
-                $user->secret = random_bytes(128);
-                $user->save();
-            }
+            $this->ensureHasSecret($user);
 
             $template->set('enable', true);
             $template->set('secret', Base32::encodeUpperUnpadded($user->secret));
@@ -108,13 +104,7 @@ class TwoFactorController extends AbstractContentElementController
 
         // Disable 2FA if it was requested by a user
         if ('tl_two_factor_disable' === $formId && $user->useTwoFactor) {
-            $user->secret = null;
-            $user->useTwoFactor = false;
-            $user->backupCodes = null;
-            $user->save();
-
-            // Clear all trusted devices
-            $this->trustedDeviceManager->clearTrustedDevices($user);
+            $this->disable2FA($user);
 
             return new RedirectResponse($this->generateContentUrl($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL));
         }
@@ -139,5 +129,30 @@ class TwoFactorController extends AbstractContentElementController
         $template->set('trusted_devices', $this->trustedDeviceManager->getTrustedDevices($user));
 
         return $template->getResponse();
+    }
+
+    private function enable2FA(FrontendUser $user): void
+    {
+        $user->useTwoFactor = true;
+        $user->save();
+    }
+
+    private function disable2FA(FrontendUser $user): void
+    {
+        $user->secret = null;
+        $user->useTwoFactor = false;
+        $user->backupCodes = null;
+        $user->save();
+
+        // Clear all trusted devices
+        $this->trustedDeviceManager->clearTrustedDevices($user);
+    }
+
+    private function ensureHasSecret(FrontendUser $user): void
+    {
+        if (!$user->secret) {
+            $user->secret = random_bytes(128);
+            $user->save();
+        }
     }
 }
