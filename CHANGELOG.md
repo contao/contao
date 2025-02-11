@@ -4,10 +4,6 @@ This project adheres to [Semantic Versioning].
 
 ## [5.3.25] (2025-02-11)
 
-**New features:**
-
-- [#64] Use the `content-element-group` in the demo ([de-es])
-
 **Fixed issues:**
 
 - [#8053] Use table lock for the `contao.cron` service again ([fritzmg])
@@ -643,7 +639,6 @@ This project adheres to [Semantic Versioning].
 [Toflar]: https://github.com/Toflar
 [veronikaplenta]: https://github.com/veronikaplenta
 [zoglo]: https://github.com/zoglo
-[#64]: https://github.com/contao/contao/pull/64
 [#5424]: https://github.com/contao/contao/pull/5424
 [#5810]: https://github.com/contao/contao/pull/5810
 [#6157]: https://github.com/contao/contao/pull/6157
