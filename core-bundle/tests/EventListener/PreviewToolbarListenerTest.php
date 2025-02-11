@@ -18,6 +18,7 @@ use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -33,9 +34,7 @@ use Twig\Environment;
 
 class PreviewToolbarListenerTest extends TestCase
 {
-    /**
-     * @dataProvider getInjectToolbarData
-     */
+    #[DataProvider('getInjectToolbarData')]
     public function testInjectsTheToolbarBeforeTheClosingBodyTag(string $content, string $expected): void
     {
         $listener = new PreviewToolbarListener(
@@ -192,9 +191,7 @@ class PreviewToolbarListenerTest extends TestCase
         $this->assertSame('<html><head></head><body></body></html>', $response->getContent());
     }
 
-    /**
-     * @dataProvider getDisallowedStatusCodes
-     */
+    #[DataProvider('getDisallowedStatusCodes')]
     public function testDoesNotInjectToolbarOnDisallowedStatusCodes(int $statusCode, bool $hasSession): void
     {
         $response = new Response('<html><head></head><body></body></html>', $statusCode);
@@ -233,9 +230,7 @@ class PreviewToolbarListenerTest extends TestCase
         yield [500, false];
     }
 
-    /**
-     * @dataProvider getAllowedStatusCodes
-     */
+    #[DataProvider('getAllowedStatusCodes')]
     public function testInjectsToolbarOnAllowedStatusCodes(int $statusCode, bool $hasSession): void
     {
         $response = new Response('<html><head></head><body></body></html>');

@@ -25,6 +25,7 @@ use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,9 +103,7 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->assertSame(500, $event->getResponse()->getStatusCode());
     }
 
-    /**
-     * @dataProvider getErrorTypes
-     */
+    #[DataProvider('getErrorTypes')]
     public function testCreatesSubrequestForException(int $type, \Exception $exception): void
     {
         $errorPage = $this->mockPageWithProperties([

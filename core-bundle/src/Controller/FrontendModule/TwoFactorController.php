@@ -117,11 +117,6 @@ class TwoFactorController extends AbstractFrontendModuleController
 
     private function enableTwoFactor(Template $template, Request $request, FrontendUser $user, string $return): Response|null
     {
-        // Return if 2FA is enabled already
-        if ($user->useTwoFactor) {
-            return null;
-        }
-
         $translator = $this->container->get('translator');
         $authenticator = $this->container->get('contao.security.two_factor.authenticator');
         $exception = $this->container->get('security.authentication_utils')->getLastAuthenticationError();

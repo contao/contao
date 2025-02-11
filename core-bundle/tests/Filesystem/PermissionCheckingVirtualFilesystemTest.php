@@ -18,15 +18,14 @@ use Contao\CoreBundle\Filesystem\PermissionCheckingVirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class PermissionCheckingVirtualFilesystemTest extends TestCase
 {
-    /**
-     * @dataProvider provideOperationsThatShouldBeDenied
-     */
+    #[DataProvider('provideOperationsThatShouldBeDenied')]
     public function testDeniesAccess(string $operation, array $arguments, array|string $permissionToDeny, string $exception): void
     {
         $filesStorage = $this->createMock(VirtualFilesystem::class);
@@ -229,9 +228,7 @@ class PermissionCheckingVirtualFilesystemTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideInvalidPaths
-     */
+    #[DataProvider('provideInvalidPaths')]
     public function testDisallowsAccessForInvalidPaths(string $invalidPath, string $expectedMessage): void
     {
         $permissionCheckingVirtualFilesystem = new PermissionCheckingVirtualFilesystem(

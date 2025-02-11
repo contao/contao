@@ -16,15 +16,14 @@ use Contao\CoreBundle\Controller\Page\RedirectPageController;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class RedirectPageControllerTest extends TestCase
 {
-    /**
-     * @dataProvider getRedirectPages
-     */
+    #[DataProvider('getRedirectPages')]
     public function testRedirectsToUrl(string $redirect, string $url, string $redirectUrl): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class, [

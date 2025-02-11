@@ -15,12 +15,11 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 use Contao\CoreBundle\EventListener\DataContainer\LogoutPageRedirectListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DC_Table;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class LogoutPageRedirectListenerTest extends TestCase
 {
-    /**
-     * @dataProvider listenerProvider
-     */
+    #[DataProvider('listenerProvider')]
     public function testListener(array $attributes, array|null $currentRecord, bool|null $expected): void
     {
         $dataContainer = null;

@@ -27,8 +27,12 @@ class IntlInstalledLocalesAndCountriesPassTest extends TestCase
         $container
             ->expects($this->exactly(2))
             ->method('has')
-            ->withConsecutive(['contao.intl.locales'], ['contao.intl.countries'])
             ->willReturn(false)
+        ;
+
+        $container
+            ->expects($this->never())
+            ->method('findDefinition')
         ;
 
         $pass = new IntlInstalledLocalesAndCountriesPass();

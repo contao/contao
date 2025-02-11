@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Routing;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -31,9 +32,7 @@ class ScopeMatcherTest extends TestCase
         $this->matcher = $this->mockScopeMatcher();
     }
 
-    /**
-     * @dataProvider mainRequestProvider
-     */
+    #[DataProvider('mainRequestProvider')]
     public function testRecognizesTheContaoScopes(string|null $scope, int $requestType, bool $isMain, bool $isFrontend, bool $isBackend): void
     {
         $request = new Request();

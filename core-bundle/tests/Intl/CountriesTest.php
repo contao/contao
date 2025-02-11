@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Intl;
 
 use Contao\CoreBundle\Intl\Countries;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Intl\Countries as SymfonyCountries;
 use Symfony\Component\Translation\MessageCatalogueInterface;
@@ -22,8 +22,6 @@ use Symfony\Component\Translation\Translator;
 
 class CountriesTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         parent::tearDown();
@@ -108,9 +106,7 @@ class CountriesTest extends TestCase
         $this->assertLessThan($positionTr, $positionDe);
     }
 
-    /**
-     * @dataProvider getCountriesConfig
-     */
+    #[DataProvider('getCountriesConfig')]
     public function testGetsCountryCodesConfigured(array $configCountries, array $expected): void
     {
         $countryCodes = $this->getCountriesService(null, $configCountries)->getCountryCodes();
@@ -118,9 +114,7 @@ class CountriesTest extends TestCase
         $this->assertSame($expected, $countryCodes);
     }
 
-    /**
-     * @dataProvider getCountriesConfig
-     */
+    #[DataProvider('getCountriesConfig')]
     public function testGetsCountryNamesConfigured(array $configCountries, array $expected): void
     {
         $countryNames = $this->getCountriesService(null, $configCountries)->getCountries('de');

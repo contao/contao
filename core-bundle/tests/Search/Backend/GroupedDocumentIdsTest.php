@@ -138,5 +138,10 @@ class GroupedDocumentIdsTest extends TestCase
         $chunks = $groupedDocumentIds->split(65536);
         $this->assertCount(1, $chunks);
         $this->assertSame($typeToIds, $chunks[0]->toArray());
+
+        // Test splitting without typeToIds at all
+        $groupedDocumentIds = new GroupedDocumentIds();
+        $chunks = $groupedDocumentIds->split(65536);
+        $this->assertCount(1, $chunks);
     }
 }

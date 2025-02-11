@@ -17,6 +17,7 @@ use Contao\CoreBundle\Twig\Studio\Operation\AbstractOperation;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContext;
 use Contao\CoreBundle\Twig\Studio\Operation\OperationContextFactory;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -28,9 +29,7 @@ use Twig\Environment;
 
 class BackendTemplateStudioControllerTest extends TestCase
 {
-    /**
-     * @dataProvider provideControllerActionsThatValidateIdentifiers
-     */
+    #[DataProvider('provideControllerActionsThatValidateIdentifiers')]
     public function testInvalidIdentifierIsDenied(string $action, array $parameters, string|null $streamError = null, Request|null $request = null): void
     {
         $request ??= new Request();

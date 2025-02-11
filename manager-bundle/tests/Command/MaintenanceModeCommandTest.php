@@ -15,8 +15,8 @@ namespace Contao\ManagerBundle\Tests\Command;
 use Contao\CoreBundle\Intl\Locales;
 use Contao\ManagerBundle\Command\MaintenanceModeCommand;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
@@ -25,8 +25,6 @@ use Twig\Environment;
 
 class MaintenanceModeCommandTest extends ContaoTestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         $this->resetStaticProperties([Terminal::class]);
@@ -34,9 +32,7 @@ class MaintenanceModeCommandTest extends ContaoTestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider enableProvider
-     */
+    #[DataProvider('enableProvider')]
     public function testEnable(string $expectedTemplateName, array $expectedTemplateVars, string|null $customTemplateName = null, string|null $customTemplateVars = null): void
     {
         $twig = $this->mockEnvironment();

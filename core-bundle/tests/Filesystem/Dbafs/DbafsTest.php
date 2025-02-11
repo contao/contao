@@ -31,15 +31,14 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Column;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Uid\Uuid;
 
 class DbafsTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     private int $codePageBackup = 0;
 
     protected function setUp(): void
@@ -401,12 +400,11 @@ class DbafsTest extends TestCase
     }
 
     /**
-     * @dataProvider provideSearchPaths
-     *
      * @param array<int, string> $paths
      * @param array<int, string> $expectedSearchPaths
      * @param array<int, string> $expectedParentPaths
      */
+    #[DataProvider('provideSearchPaths')]
     public function testNormalizesSearchPaths(array $paths, array $expectedSearchPaths, array $expectedParentPaths): void
     {
         $dbafs = $this->getDbafs();
@@ -474,10 +472,9 @@ class DbafsTest extends TestCase
     }
 
     /**
-     * @dataProvider provideInvalidSearchPaths
-     *
      * @param array<int, string> $paths
      */
+    #[DataProvider('provideInvalidSearchPaths')]
     public function testRejectsInvalidPaths(array $paths, string $expectedException): void
     {
         $dbafs = $this->getDbafs();
@@ -512,10 +509,9 @@ class DbafsTest extends TestCase
     }
 
     /**
-     * @dataProvider provideFilesystemsAndExpectedChangeSets
-     *
      * @param string|array<int, string> $paths
      */
+    #[DataProvider('provideFilesystemsAndExpectedChangeSets')]
     public function testComputeChangeSet(VirtualFilesystemInterface $filesystem, array|string $paths, ChangeSet $expected): void
     {
         /*
@@ -562,12 +558,12 @@ class DbafsTest extends TestCase
         $this->assertSameChangeSet($expected, $changeSet);
     }
 
-    public function provideFilesystemsAndExpectedChangeSets(): iterable
+    public static function provideFilesystemsAndExpectedChangeSets(): iterable
     {
-        $getFilesystem = function (): VirtualFilesystemInterface {
+        $getFilesystem = static function (): VirtualFilesystemInterface {
             $filesystem = new VirtualFilesystem(
-                $this->getMountManagerWithRootAdapter(),
-                $this->createMock(DbafsManager::class),
+                (new MountManager())->mount(new InMemoryFilesystemAdapter()),
+                new DbafsManager(new EventDispatcher()),
             );
 
             $filesystem->write('file1', 'fly');

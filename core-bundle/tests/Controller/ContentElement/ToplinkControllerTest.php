@@ -14,12 +14,11 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\CoreBundle\Controller\ContentElement\ToplinkController;
 use Contao\CoreBundle\Twig\ResponseContext\DocumentLocation;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ToplinkControllerTest extends ContentElementTestCase
 {
-    /**
-     * @dataProvider provideLinkText
-     */
+    #[DataProvider('provideLinkText')]
     public function testOutputsToplinkAndScript(string $linkText, string $expectedLinkElement): void
     {
         $response = $this->renderWithModelData(

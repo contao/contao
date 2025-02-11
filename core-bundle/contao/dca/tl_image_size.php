@@ -152,7 +152,7 @@ $GLOBALS['TL_DCA']['tl_image_size'] = array
 		),
 		'formats' => array
 		(
-			'inputType'               => 'checkboxWizard',
+			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_image_size', 'getFormats'),
 			'eval'                    => array('multiple'=>true),
 			'sql'                     => "varchar(1024) NOT NULL default ''"
@@ -330,7 +330,12 @@ class tl_image_size extends Backend
 
 		$imageExtensions = System::getContainer()->getParameter('contao.image.valid_extensions');
 
-		foreach ($this->getSupportedFormats() as $format => $isSupported)
+		$supporedFormats = $this->getSupportedFormats();
+		$supporedFormats['jpg'] = true;
+		$supporedFormats['png'] = true;
+		$supporedFormats['gif'] = true;
+
+		foreach ($supporedFormats as $format => $isSupported)
 		{
 			if (!in_array($format, $imageExtensions))
 			{
@@ -344,11 +349,26 @@ class tl_image_size extends Backend
 				continue;
 			}
 
-			$formats[] = "png:$format,png";
-			$formats[] = "jpg:$format,jpg;jpeg:$format,jpeg";
-			$formats[] = "gif:$format,gif";
-			$formats[] = "$format:$format,png";
-			$formats[] = "$format:$format,jpg";
+			foreach ($supporedFormats as $subFormat => $subFormatSupported)
+			{
+				if (
+					!$subFormatSupported
+					|| $subFormat === $format
+					|| 'gif' === $subFormat
+					|| (in_array($format, array('jpg', 'png', 'gif')) && in_array($subFormat, array('jpg', 'png', 'gif')))
+				) {
+					continue;
+				}
+
+				if ('jpg' === $format)
+				{
+					$formats[] = "jpg:jpg,$subFormat;jpeg:jpeg,$subFormat";
+				}
+				else
+				{
+					$formats[] = "$format:$format,$subFormat";
+				}
+			}
 		}
 
 		if ($missingSupport)
@@ -371,6 +391,8 @@ class tl_image_size extends Backend
 
 			$options[$format] = strtoupper($from) . ' → ' . strtoupper($chunks[0]);
 		}
+
+		asort($options);
 
 		return $options;
 	}

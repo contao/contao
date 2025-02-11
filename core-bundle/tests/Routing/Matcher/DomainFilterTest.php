@@ -36,10 +36,18 @@ class DomainFilterTest extends TestCase
             ->willReturn($routes)
         ;
 
+        $expected = ['nohost', 'barfoo'];
         $collection
             ->expects($this->exactly(2))
             ->method('remove')
-            ->withConsecutive(['nohost'], ['barfoo'])
+            ->with($this->callback(
+                static function (string $name) use (&$expected) {
+                    $pos = array_search($name, $expected, true);
+                    unset($expected[$pos]);
+
+                    return false !== $pos;
+                },
+            ))
         ;
 
         $request = Request::create('/');

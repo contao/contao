@@ -43,7 +43,7 @@ class FragmentRuntimeTest extends TestCase
         );
 
         $runtime = new FragmentRuntime($framework);
-        $result = $runtime->renderModule('navigation', ['foo' => 'bar']);
+        $result = $runtime->renderModule([], 'navigation', ['foo' => 'bar']);
 
         $this->assertSame('runtime-result', $result);
     }
@@ -78,7 +78,28 @@ class FragmentRuntimeTest extends TestCase
         ]);
 
         $runtime = new FragmentRuntime($framework);
-        $result = $runtime->renderModule(42, ['foo' => 'bar']);
+        $result = $runtime->renderModule([], 42, ['foo' => 'bar']);
+
+        $this->assertSame('runtime-result', $result);
+    }
+
+    public function testRenderArticleModule(): void
+    {
+        $controllerAdapter = $this->mockAdapter(['getFrontendModule']);
+        $controllerAdapter
+            ->expects($this->once())
+            ->method('getFrontendModule')
+            ->with(0, 'foo')
+            ->willReturn('runtime-result')
+        ;
+
+        $framework = $this->mockContaoFramework(
+            [Controller::class => $controllerAdapter],
+            [ModuleModel::class => $this->mockClassWithProperties(ModuleModel::class)],
+        );
+
+        $runtime = new FragmentRuntime($framework);
+        $result = $runtime->renderModule(['_slot_name' => 'foo'], 'article');
 
         $this->assertSame('runtime-result', $result);
     }

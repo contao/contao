@@ -19,6 +19,7 @@ use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
 use Twig\Lexer;
@@ -39,9 +40,7 @@ class DynamicIncludeTokenParserTest extends TestCase
         $this->assertSame('include', $tokenParser->getTag());
     }
 
-    /**
-     * @dataProvider provideSources
-     */
+    #[DataProvider('provideSources')]
     public function testHandlesContaoIncludes(string $code, string ...$expectedStrings): void
     {
         $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
@@ -165,9 +164,7 @@ class DynamicIncludeTokenParserTest extends TestCase
         $parser->parse($tokenStream);
     }
 
-    /**
-     * @dataProvider provideTokens
-     */
+    #[DataProvider('provideTokens')]
     public function testParsesArguments(string $source, AbstractExpression|null $variables, bool $only, bool $ignoreMissing): void
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));

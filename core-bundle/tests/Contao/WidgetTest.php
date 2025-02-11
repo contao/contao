@@ -12,12 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Contao;
 
+use Contao\CoreBundle\Fixtures\Contao\FoobarWidget;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Input;
 use Contao\System;
 use Contao\TextField;
 use Contao\Widget;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -46,9 +48,8 @@ class WidgetTest extends TestCase
 
     /**
      * @param array<string>|string $value
-     *
-     * @dataProvider postProvider
      */
+    #[DataProvider('postProvider')]
     public function testReadsThePostData(string $key, string $input, array|string $value, string|null $expected = null): void
     {
         // Prevent "undefined index" errors
@@ -142,10 +143,10 @@ class WidgetTest extends TestCase
         $stack->push(new Request());
 
         $widget = $this
-            ->getMockBuilder(Widget::class)
+            ->getMockBuilder(FoobarWidget::class)
             ->disableOriginalConstructor()
             ->onlyMethods(['validator'])
-            ->getMockForAbstractClass()
+            ->getMock()
         ;
 
         $widget
@@ -175,9 +176,7 @@ class WidgetTest extends TestCase
         ;
     }
 
-    /**
-     * @dataProvider getAttributesFromDca
-     */
+    #[DataProvider('getAttributesFromDca')]
     public function testGetsAttributesFromDca(array $parameters, array $expected): void
     {
         $attrs = Widget::getAttributesFromDca(...$parameters);

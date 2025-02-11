@@ -34,14 +34,12 @@ use Contao\System;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface as ImagineImageInterface;
 use Imagine\Image\ImagineInterface;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 class ImageFactoryTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -50,7 +48,7 @@ class ImageFactoryTest extends TestCase
 
         foreach (['assets', 'images'] as $directory) {
             $filesystem->mirror(
-                Path::join((new self())->getFixturesDir(), $directory),
+                Path::join($this->getFixturesDir(), $directory),
                 Path::join(self::getTempDir(), $directory),
             );
         }
@@ -488,11 +486,7 @@ class ImageFactoryTest extends TestCase
         $this->assertSame($imageMock, $image);
     }
 
-    /**
-     * @dataProvider getCreateWithLegacyMode
-     *
-     * @group legacy
-     */
+    #[DataProvider('getCreateWithLegacyMode')]
     public function testCreatesAnImageObjectFromAnImagePathInLegacyMode(string $mode, array $expected): void
     {
         $path = Path::join($this->getTempDir(), 'images/none.jpg');
@@ -552,7 +546,7 @@ class ImageFactoryTest extends TestCase
         $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, $filesystem, $framework);
 
-        $this->expectDeprecation("%slegacy resize mode \"$mode\" has been deprecated%s");
+        $this->expectUserDeprecationMessageMatches("/legacy resize mode \"$mode\" has been deprecated/");
 
         $image = $imageFactory->create($path, [50, 50, $mode]);
         $imageFromSerializedConfig = $imageFactory->create($path, serialize([50, 50, $mode]));
@@ -561,9 +555,7 @@ class ImageFactoryTest extends TestCase
         $this->assertSame($imageMock, $imageFromSerializedConfig);
     }
 
-    /**
-     * @dataProvider getCreateWithLegacyMode
-     */
+    #[DataProvider('getCreateWithLegacyMode')]
     public function testReturnsTheImportantPartFromALegacyMode(string $mode, array $expected): void
     {
         $dimensionsMock = $this->createMock(ImageDimensions::class);

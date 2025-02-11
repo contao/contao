@@ -16,15 +16,15 @@ use Contao\MakerBundle\Reflection\MethodDefinition;
 use Contao\MakerBundle\Reflection\SignatureGenerator;
 use Contao\Module;
 use Contao\Widget;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class SignatureGeneratorTest extends TestCase
 {
     /**
      * @param array<array> $parameters
-     *
-     * @dataProvider methodProvider
      */
+    #[DataProvider('methodProvider')]
     public function testSignatureCreation(string $signature, string|null $returnType, array $parameters): void
     {
         $generator = new SignatureGenerator();
