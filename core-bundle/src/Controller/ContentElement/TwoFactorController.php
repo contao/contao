@@ -64,8 +64,8 @@ class TwoFactorController extends AbstractContentElementController
         $redirectPage = $model->jumpTo > 0 ? $adapter->findById($model->jumpTo) : null;
         $return = $this->generateContentUrl($redirectPage instanceof PageModel ? $redirectPage : $pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL);
 
-        $template->set('enforceTwoFactor', $pageModel->enforceTwoFactor);
-        $template->set('targetPath', $return);
+        $template->set('enforce_two_factor', $pageModel->enforceTwoFactor);
+        $template->set('target_path', $return);
 
         // Inform the user if 2FA is enforced
         if ($pageModel->enforceTwoFactor) {
@@ -91,21 +91,21 @@ class TwoFactorController extends AbstractContentElementController
         try {
             $template->set('backupCodes', json_decode((string) $user->backupCodes, true, 512, JSON_THROW_ON_ERROR));
         } catch (\JsonException) {
-            $template->set('backupCodes', []);
+            $template->set('backup_codes', []);
         }
 
         if ('tl_two_factor_generate_backup_codes' === $formId) {
-            $template->set('showBackupCodes', true);
-            $template->set('backupCodes', $this->backupCodeManager->generateBackupCodes($user));
+            $template->set('show_backup_codes', true);
+            $template->set('backup_codes', $this->backupCodeManager->generateBackupCodes($user));
         }
 
         if ('tl_two_factor_clear_trusted_devices' === $formId) {
             $this->trustedDeviceManager->clearTrustedDevices($user);
         }
 
-        $template->set('isEnabled', (bool) $user->useTwoFactor);
+        $template->set('is_enabled', (bool) $user->useTwoFactor);
         $template->set('href', $this->generateContentUrl($pageModel, [], UrlGeneratorInterface::ABSOLUTE_URL).'?2fa=enable');
-        $template->set('trustedDevices', $this->trustedDeviceManager->getTrustedDevices($user));
+        $template->set('trusted_devices', $this->trustedDeviceManager->getTrustedDevices($user));
 
         return $template->getResponse();
     }
@@ -139,7 +139,7 @@ class TwoFactorController extends AbstractContentElementController
 
         $template->set('enable', true);
         $template->set('secret', Base32::encodeUpperUnpadded($user->secret));
-        $template->set('qrCode', base64_encode($this->authenticator->getQrCode($user, $request)));
+        $template->set('qr_code', base64_encode($this->authenticator->getQrCode($user, $request)));
 
         return null;
     }
