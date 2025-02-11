@@ -379,6 +379,7 @@
       </trans-unit>
       <trans-unit id="ERR.copyUnique">
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>Element s ID %d nelze sem vložit, jelikož došlo k potížím s již existujícím elementem.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>

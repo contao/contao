@@ -2823,7 +2823,7 @@
       </trans-unit>
       <trans-unit id="MSC.noSerpPreview">
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
-        <target>Die Vorschau-URL kann nicht erstellt werden, weil die Route Parameter benötigt.</target>
+        <target>Die Vorschau-URL kann nicht erstellt werden, weil die Route ein Element erfordert.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>

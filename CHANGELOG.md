@@ -2,6 +2,36 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.25] (2025-02-11)
+
+**New features:**
+
+- [#64] Use the `content-element-group` in the demo ([de-es])
+
+**Fixed issues:**
+
+- [#8053] Use table lock for the `contao.cron` service again ([fritzmg])
+- [#8036] Fix the Mootools request URL ([aschempp])
+- [#8026] Replace the deprecated global variable `request_token` ([bytehead])
+- [#8022] Add the request token to Ajax request changing the sorting ([leofeyer])
+- [#8016] Enable `enableKeyboardAccessibility` for the ace editor ([zoglo])
+- [#8005] Remove `el.blur()` from all scripts ([leofeyer])
+- [#8001] Use Symfony locks instead of DB locks for the `Cron` service ([fritzmg])
+- [#7991] Sort the news feed in descending order ([zoglo])
+- [#7990] Unset the default `UriSigner` parameters when generating download URLs ([fritzmg])
+- [#7951] Update the `.draft` styles ([zoglo])
+- [#7995] Allow using basic entities in TinyMCE fields ([ausi])
+- [#7975] Add breadcrumb separators to the back end title ([ausi])
+- [#7986] Add missing `ref` for edit profile redirect ([fritzmg])
+- [#7988] Set `defaultSearchField` for `tl_page` to `title` ([fritzmg])
+- [#7977] Fix using numeric theme/identifier names in the `ContaoFilesystemLoader` ([m-vo])
+- [#7982] Prevent useless DB queries in the `CommandSchedulerListener` ([Toflar])
+- [#7920] Improve the `TemplateLocator` performance ([fritzmg])
+- [#7945] Fix the download mime type ([ausi])
+- [#7942] Remove background from regular `MODE_PARENT` listings ([fritzmg])
+- [#7943] Fix a bug with unknown insert tag end names ([ausi])
+- [#7939] Do not use `DC_Table::generateRecordLabel()` for breadcrumbs ([ausi])
+
 ## [5.3.24] (2025-01-22)
 
 **Fixed issues:**
@@ -553,6 +583,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.25]: https://github.com/contao/contao/releases/tag/5.3.25
 [5.3.24]: https://github.com/contao/contao/releases/tag/5.3.24
 [5.3.23]: https://github.com/contao/contao/releases/tag/5.3.23
 [5.3.22]: https://github.com/contao/contao/releases/tag/5.3.22
@@ -612,6 +643,7 @@ This project adheres to [Semantic Versioning].
 [Toflar]: https://github.com/Toflar
 [veronikaplenta]: https://github.com/veronikaplenta
 [zoglo]: https://github.com/zoglo
+[#64]: https://github.com/contao/contao/pull/64
 [#5424]: https://github.com/contao/contao/pull/5424
 [#5810]: https://github.com/contao/contao/pull/5810
 [#6157]: https://github.com/contao/contao/pull/6157
@@ -992,4 +1024,25 @@ This project adheres to [Semantic Versioning].
 [#7899]: https://github.com/contao/contao/pull/7899
 [#7904]: https://github.com/contao/contao/pull/7904
 [#7915]: https://github.com/contao/contao/pull/7915
+[#7920]: https://github.com/contao/contao/pull/7920
 [#7930]: https://github.com/contao/contao/pull/7930
+[#7939]: https://github.com/contao/contao/pull/7939
+[#7942]: https://github.com/contao/contao/pull/7942
+[#7943]: https://github.com/contao/contao/pull/7943
+[#7945]: https://github.com/contao/contao/pull/7945
+[#7951]: https://github.com/contao/contao/pull/7951
+[#7975]: https://github.com/contao/contao/pull/7975
+[#7977]: https://github.com/contao/contao/pull/7977
+[#7982]: https://github.com/contao/contao/pull/7982
+[#7986]: https://github.com/contao/contao/pull/7986
+[#7988]: https://github.com/contao/contao/pull/7988
+[#7990]: https://github.com/contao/contao/pull/7990
+[#7991]: https://github.com/contao/contao/pull/7991
+[#7995]: https://github.com/contao/contao/pull/7995
+[#8001]: https://github.com/contao/contao/pull/8001
+[#8005]: https://github.com/contao/contao/pull/8005
+[#8016]: https://github.com/contao/contao/pull/8016
+[#8022]: https://github.com/contao/contao/pull/8022
+[#8026]: https://github.com/contao/contao/pull/8026
+[#8036]: https://github.com/contao/contao/pull/8036
+[#8053]: https://github.com/contao/contao/pull/8053
