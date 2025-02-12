@@ -1,8 +1,10 @@
 import { Controller } from '@hotwired/stimulus';
 import { TwigEditor } from '../modules/twig-editor';
+import { TurboCable } from "../modules/turbo-cable";
 
 export default class extends Controller {
     editors = new Map();
+    turboCable = new TurboCable();
 
     static values = {
         followUrl: String,
@@ -14,11 +16,11 @@ export default class extends Controller {
     connect() {
         // Subscribe to events dispatched by the editors
         this.element.addEventListener('twig-editor:lens:follow', event => {
-            this._visit(this.followUrlValue, {name: event.detail.name});
+            this.turboCable.getStream(this.followUrlValue, {name: event.detail.name}, true);
         });
 
         this.element.addEventListener('twig-editor:lens:block-info', event => {
-            this._visit(this.blockInfoUrlValue, event.detail);
+            this.turboCable.getStream(this.blockInfoUrlValue, event.detail, true);
         });
 
         this.element.addEventListener('turbo:submit-start', event => {
@@ -108,33 +110,5 @@ export default class extends Controller {
         }
 
         return null;
-    }
-
-    async _visit(url, params) {
-        if (params !== null) {
-            url += '?' + new URLSearchParams(params).toString();
-        }
-
-        const response = await fetch(url, {
-            method: 'get',
-            headers: {
-                'Accept': 'text/vnd.turbo-stream.html',
-            }
-        });
-
-        if (response.redirected) {
-            document.location = response.url;
-
-            return;
-        }
-
-        if (!response.headers.get('content-type').startsWith('text/vnd.turbo-stream.html') || response.status >= 300) {
-            console.error(`There was an error processing the Turbo stream response from "${url}"`);
-
-            return;
-        }
-
-       const html = await response.text()
-       Turbo.renderStreamMessage(html);
     }
 }
