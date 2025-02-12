@@ -81,3 +81,8 @@ services:
         arguments:
             - '@database_connection'
             - !tagged_iterator security.remember_me_handler
+
+    contao.migration.version_505.overwrite_meta:
+        class: Contao\CoreBundle\Migration\Version505\OverwriteMetaMigration
+        arguments:
+            - '@database_connection'

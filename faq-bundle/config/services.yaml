@@ -20,6 +20,11 @@ services:
             - '@security.helper'
             - '@contao.routing.content_url_generator'
 
+    contao_faq.migration.overwrite_meta:
+        class: Contao\FaqBundle\Migration\OverwriteMetaMigration
+        arguments:
+            - '@database_connection'
+
     contao_faq.picker.faq_provider:
         class: Contao\FaqBundle\Picker\FaqPickerProvider
         arguments:
