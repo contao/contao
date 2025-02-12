@@ -33,6 +33,10 @@ class JobTest extends TestCase
                 'createdAt' => '2025-01-01 00:00:00',
                 'progress' => 0.0,
                 'metadata' => [],
+                'errors' => [],
+                'warnings' => [],
+                'parent' => null,
+                'children' => [],
             ],
             $job->toArray(),
         );
