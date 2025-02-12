@@ -4,10 +4,16 @@ export default class extends Controller {
     static targets = ['message'];
 
     messageTargetConnected(el) {
-        const duration = el.classList.contains('message--error') ? 10000 : 5000;
+        if(!el.querySelector('button.close')) {
+            setTimeout(() => this._hide(el), 5000);
+        }
+    }
 
-        el.style.animationDuration = `${duration}ms`;
+    removeMessage(event) {
+        this._hide(event.target.closest('*[data-contao--message-outlet-target]'));
+    }
 
-        setTimeout(() => el.remove(), duration);
+    _hide(el) {
+        el.setAttribute('aria-hidden', 'true');
     }
 }

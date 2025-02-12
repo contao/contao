@@ -1,6 +1,6 @@
 {% use "@Contao/backend/component/message/_message.html.twig" %}
 
-{% set id = id|default('message') %}
+{% set id = id|default('messages') %}
 <turbo-stream action="append" target="{{ id }}">
     <template>
         {{ block('message_component') }}

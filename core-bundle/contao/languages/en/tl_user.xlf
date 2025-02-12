@@ -68,6 +68,12 @@
       <trans-unit id="tl_user.doNotCollapse.1">
         <source>Do not collapse content elements in the back end preview.</source>
       </trans-unit>
+      <trans-unit id="tl_user.doNotHideMessages.0">
+        <source>Do not auto-hide flash messages</source>
+      </trans-unit>
+      <trans-unit id="tl_user.doNotHideMessages.1">
+        <source>Keep flash messages open until I close them.</source>
+      </trans-unit>
       <trans-unit id="tl_user.pwChange.0">
         <source>Password change required</source>
       </trans-unit>
