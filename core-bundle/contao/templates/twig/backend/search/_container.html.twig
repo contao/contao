@@ -21,7 +21,7 @@
     .set('placeholder', 'MSC.search'|trans)
     .set('name', 'keywords')
     .set('data-contao--backend-search-target', 'input')
-    .set('data-action', 'focus->contao--backend-search#open input->contao--backend-search#performSearch blur->contao--backend-search#close')
+    .set('data-action', 'focus->contao--backend-search#open input->contao--backend-search#performSearch blur->contao--backend-search#inputBlur')
 %}
 
 <div {{ search_container_attributes }}>

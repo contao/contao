@@ -83,6 +83,15 @@ export default class BackendSearchController extends Controller {
         this.setState("hidden");
     }
 
+    inputBlur(event)
+    {
+        if (this.element.contains(event.relatedTarget)) {
+            return;
+        }
+
+        this.close();
+    }
+
     documentClick(event) {
         if (this.element.contains(event.target)) {
             return;
