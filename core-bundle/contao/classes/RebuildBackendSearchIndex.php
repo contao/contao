@@ -54,7 +54,7 @@ class RebuildBackendSearchIndex extends Backend implements MaintenanceModuleInte
 
 		if (Input::post('FORM_SUBMIT') == 'tl_rebuild_backend_search' && $backendSearch->isAvailable())
 		{
-			$jobs = System::getContainer()->get('contao.jobs');
+			$jobs = System::getContainer()->get('contao.job.jobs');
 			$job = $jobs->createUserJob();
 
 			$reindexConfig = (new ReindexConfig())->withJobId($job->getUuid());

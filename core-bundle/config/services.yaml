@@ -594,7 +594,7 @@ services:
             - '%contao.intl.enabled_locales%'
             - '%kernel.default_locale%'
 
-    contao.jobs:
+    contao.job.jobs:
         class: Contao\CoreBundle\Job\Jobs
         public: true
         arguments:

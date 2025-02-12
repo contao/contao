@@ -47,7 +47,7 @@ services:
 
     Contao\CoreBundle\Controller\BackendJobsController:
         arguments:
-            - '@contao.jobs'
+            - '@contao.job.jobs'
         tags:
             - controller.service_arguments
 
