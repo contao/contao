@@ -144,6 +144,7 @@ class Jobs
         );
         $qb->setParameter('userOwner', $userid);
         $qb->setParameter('systemOwner', Owner::SYSTEM);
+        $qb->orderBy('j.createdAt', 'DESC');
 
         return $qb;
     }
