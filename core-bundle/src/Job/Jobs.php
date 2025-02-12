@@ -16,9 +16,9 @@ use Symfony\Bundle\SecurityBundle\Security;
 class Jobs
 {
     public function __construct(
-        private JobRepository $jobRepository,
-        private EntityManagerInterface $entityManager,
-        private Security $security,
+        private readonly JobRepository $jobRepository,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly Security $security,
     ) {
     }
 
@@ -37,7 +37,7 @@ class Jobs
 
     public function createUserJob(string|null $userId = null): Job
     {
-        $userId = $userId ?? $this->security->getUser()?->getUserIdentifier();
+        $userId ??= $this->security->getUser()?->getUserIdentifier();
 
         if (null === $userId) {
             throw new \LogicException('Cannot create a user job without having a user id.');
@@ -53,7 +53,7 @@ class Jobs
     {
         $qb = $this->buildQueryBuilderForMine();
 
-        if (null === $qb) {
+        if (!$qb) {
             return [];
         }
 
@@ -70,7 +70,7 @@ class Jobs
     {
         $qb = $this->buildQueryBuilderForMine();
 
-        if (null === $qb) {
+        if (!$qb) {
             return [];
         }
 

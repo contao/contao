@@ -19,7 +19,7 @@ final class Owner
 {
     public const SYSTEM = 'SYSTEM';
 
-    public function __construct(private string $identifier)
+    public function __construct(private readonly string $identifier)
     {
     }
 

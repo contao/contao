@@ -23,7 +23,7 @@ use Symfony\Component\Routing\Attribute\Route;
  */
 class BackendJobsController extends AbstractBackendController
 {
-    public function __construct(private Jobs $jobs)
+    public function __construct(private readonly Jobs $jobs)
     {
     }
 
