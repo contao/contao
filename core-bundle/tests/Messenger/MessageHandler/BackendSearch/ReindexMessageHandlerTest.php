@@ -12,6 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Messenger\MessageHandler\BackendSearch;
 
+use Contao\CoreBundle\Job\Job;
+use Contao\CoreBundle\Job\Jobs;
+use Contao\CoreBundle\Job\Owner;
+use Contao\CoreBundle\Job\Status;
 use Contao\CoreBundle\Messenger\Message\BackendSearch\ReindexMessage;
 use Contao\CoreBundle\Messenger\Message\ScopeAwareMessageInterface;
 use Contao\CoreBundle\Messenger\MessageHandler\BackendSearch\ReindexMessageHandler;
@@ -42,7 +46,40 @@ class ReindexMessageHandlerTest extends TestCase
             )
         ;
 
-        $messageHandler = new ReindexMessageHandler($backendSearch);
+        $messageHandler = new ReindexMessageHandler($backendSearch, $this->createMock(Jobs::class));
+        $messageHandler($message);
+    }
+
+    public function testMarksJobErroredIfNotOnCli(): void
+    {
+        $reindexConfig = (new ReindexConfig())
+            ->withJobId('foobar')
+        ;
+
+        $message = new ReindexMessage($reindexConfig);
+        $message->setScope(ScopeAwareMessageInterface::SCOPE_WEB);
+
+        $jobs = $this->createMock(Jobs::class);
+        $jobs
+            ->expects($this->once())
+            ->method('getByUuid')
+            ->with('foobar')
+            ->willReturn(Job::new(Owner::asSystem()))
+        ;
+
+        $jobs
+            ->expects($this->once())
+            ->method('persist')
+            ->with($this->callback(
+                function (Job $job) {
+                    $this->assertSame(Status::FINISHED, $job->getStatus());
+                    $this->assertSame([Job::ERROR_REQUIRES_CLI], $job->getErrors());
+
+                    return true;
+                }))
+        ;
+
+        $messageHandler = new ReindexMessageHandler($this->createMock(BackendSearch::class), $jobs);
         $messageHandler($message);
     }
 }

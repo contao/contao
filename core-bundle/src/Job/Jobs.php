@@ -109,7 +109,7 @@ class Jobs
 
         // If this job is a child, update the status of the parent if required.
         if ($job->getParent()) {
-            $this->updateStatusBasedOnChildren($job);
+            $this->updateStatusBasedOnChildren($job->getParent());
         }
     }
 

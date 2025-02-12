@@ -18,6 +18,7 @@ services:
         class: Contao\CoreBundle\Messenger\MessageHandler\BackendSearch\ReindexMessageHandler
         arguments:
             - '@contao.search.backend'
+            - '@contao.jobs'
 
     contao.search.backend:
         class: Contao\CoreBundle\Search\Backend\BackendSearch

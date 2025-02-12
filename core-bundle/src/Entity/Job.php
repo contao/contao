@@ -61,7 +61,7 @@ class Job
         $this->children = new ArrayCollection();
     }
 
-    public function toDto(): JobDto
+    public function toDto(bool $withParent = true): JobDto
     {
         $job = new JobDto(
             $this->uuid,
@@ -70,12 +70,16 @@ class Job
             new Owner($this->owner),
         );
 
+        $children = array_map(static fn (Job $child) => $child->toDto(false), $this->getChildren()->toArray());
+
         return $job
             ->withProgress($this->data['progress'] ?? 0)
             ->withWarnings($this->data['warnings'] ?? [])
+            ->withErrors($this->data['errors'] ?? [])
             ->withMetadata($this->data['metadata'] ?? [])
             ->withIsPublic($this->public)
-            ->withParent($this->parent?->toDto())
+            ->withParent($withParent ? $this->getParent()?->toDto() : null)
+            ->withChildren($children)
         ;
     }
 
@@ -95,6 +99,7 @@ class Job
         $data = [
             'metadata' => $job->getMetadata(),
             'progress' => $job->getProgress(),
+            'errors' => $job->getErrors(),
             'warnings' => $job->getWarnings(),
         ];
         $this->status = $job->getStatus()->value;
@@ -115,7 +120,7 @@ class Job
         if ($parent) {
             $parent->children->add($this);
         } else {
-            $parent->children->remove($this);
+            $parent->children->removeElement($this);
         }
 
         return $this;
