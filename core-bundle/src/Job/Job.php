@@ -47,7 +47,7 @@ final class Job
     /**
      * System owner jobs can be public and thus visible by all users.
      */
-    private $isPublic = false;
+    private bool $isPublic = false;
 
     /**
      * @var array<Job>

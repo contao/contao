@@ -38,6 +38,9 @@ class Job
     #[JoinColumn(referencedColumnName: 'uuid', nullable: true)]
     private Job|null $parent = null;
 
+    /**
+     * @var Collection<int, Job>
+     */
     #[OneToMany(targetEntity: self::class, mappedBy: 'parent')]
     private Collection $children;
 
@@ -117,17 +120,13 @@ class Job
     {
         $this->parent = $parent;
 
-        if ($parent) {
-            $parent->children->add($this);
-        } else {
-            $parent->children->removeElement($this);
-        }
+        $parent?->getChildren()->add($this);
 
         return $this;
     }
 
     /**
-     * @return Collection<Job>
+     * @return Collection<int, Job>
      */
     public function getChildren(): Collection
     {
