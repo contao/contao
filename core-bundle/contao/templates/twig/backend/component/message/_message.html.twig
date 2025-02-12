@@ -1,0 +1,12 @@
+{% block message_component %}
+    {% set success = success is defined ? success : true %}
+    {% set message_attributes = attrs()
+        .addClass('message')
+        .addClass('message--info', success)
+        .addClass('message--error', not success)
+        .set('data-contao--message-outlet-target', 'message')
+    %}
+    <div{{ message_attributes }}>
+        {% block content %}{{ content }}{% endblock %}
+    </div>
+{% endblock %}
