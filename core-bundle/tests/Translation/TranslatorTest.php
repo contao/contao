@@ -268,7 +268,7 @@ class TranslatorTest extends TestCase
         $translator->trans('foobar', [], 'contao_default', 'de');
     }
 
-    private function createTranslator(TranslatorInterface|null $translator = null, ContaoFramework|null $framework = null, ResourceFinder|null $resourceFinder = null): Translator
+    private function createTranslator(TranslatorInterface|null $translator = null, ContaoFramework|null $framework = null): Translator
     {
         if (!$translator) {
             $translator = $this->createMock(BaseTranslator::class);
@@ -289,7 +289,7 @@ class TranslatorTest extends TestCase
         }
 
         $framework ??= $this->mockContaoFramework();
-        $resourceFinder ??= $this->createMock(ResourceFinder::class);
+        $resourceFinder = $this->createMock(ResourceFinder::class);
 
         return new Translator($translator, $framework, $resourceFinder);
     }

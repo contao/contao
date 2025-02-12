@@ -49,7 +49,7 @@ class Inspector
 
         try {
             $source = $loader->getSourceContext($name);
-        } catch (LoaderError $e) {
+        } catch (LoaderError) {
             throw new InspectionException($name, reason: 'The template does not exist.');
         }
 

@@ -38,7 +38,7 @@ jobs:
                   working-directory: vendor-bin/isolated-tests
 
             - name: Run the unit tests
-              run: vendor/bin/phpunit --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher
+              run: vendor/bin/phpunit --extension Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher
 
             - name: Run the unit tests isolated
               run: vendor-bin/isolated-tests/bin/run-tests-isolated

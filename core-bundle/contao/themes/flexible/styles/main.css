@@ -55,6 +55,19 @@ html {
 	}
 }
 
+/* Skip link */
+.show-on-focus:focus {
+	clip: unset;
+	height: auto;
+	width: auto;
+	margin: 4px;
+	padding: 9px;
+	position: absolute;
+	z-index: 999;
+	background-color: var(--content-bg);
+	border-radius: 2px;
+}
+
 /* Body */
 body {
 	background: var(--body-bg);
@@ -1614,6 +1627,7 @@ table.tl_listing {
 
 .tl_right:has(.operations + :is(.tl_tree_checkbox, .tl_tree_radio)) {
 	display: flex;
+	align-items: start;
 }
 
 .cte_type {

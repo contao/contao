@@ -19,7 +19,7 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
  * Adds the "backend" scope to the back end routes of the WebauthnBundle.
  */
 #[AsEventListener(priority: 10)]
-class WebauthnBackendRouteListener
+class WebauthnRouteListener
 {
     /**
      * @param list<string> $routes
