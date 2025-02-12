@@ -62,6 +62,14 @@ class DefaultOperationsListener
             return $defaults;
         }
 
+        // Forward compatibility with Contao 5.5 (see #8061)
+        // TODO: remove this again in Contao 5.5!
+        foreach ($dca as $k => $v) {
+            if (\is_string($v)) {
+                $dca[$k] = ltrim($v, '!');
+            }
+        }
+
         $operations = [];
 
         // If none of the defined operations are name-only, we prepend the default operations.
