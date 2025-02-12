@@ -150,7 +150,7 @@
         <source>Rebuild index</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.backend_search.confirmation">
-        <source>Rebuilding is in progress. Unfortunately, there is currently no way of knowing when it is finished. Please check your search results regularly. A future version of Contao will give information about the progress.</source>
+        <source>Rebuilding is in progress. Check the jobs interface for updates on the process.</source>
       </trans-unit>
     </body>
   </file>
