@@ -17,7 +17,7 @@
                 {% set close_button_attributes = attrs()
                     .addClass('close')
                     .set('type', 'button')
-                    .set('data-action', 'contao--message-outlet#removeMessage')
+                    .set('data-action', 'contao--message-outlet#close')
                     .set('aria-label', 'MSC.cancelBT'|trans)
                     .mergeWith(close_button_attributes|default) %}
                 <button{{ close_button_attributes }}>x</button>

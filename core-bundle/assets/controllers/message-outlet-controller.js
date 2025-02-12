@@ -9,7 +9,7 @@ export default class extends Controller {
         }
     }
 
-    removeMessage(event) {
+    close(event) {
         this._hide(event.target.closest('*[data-contao--message-outlet-target]'));
     }
 
