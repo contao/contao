@@ -71,7 +71,21 @@ class BackendHeaderListener
             ->setExtra('translation_domain', false)
         ;
 
+        $jobsTitle = $this->translator->trans('MSC.jobs', [], 'contao_default');
+
         $tree->addChild($manual);
+
+        $jobs = $factory
+            ->createItem('jobs')
+            ->setLabel($jobsTitle)
+            ->setUri($this->router->generate('contao_backend_jobs'))
+            ->setLinkAttribute('class', 'icon-jobs')
+            ->setLinkAttribute('title', $jobsTitle)
+            ->setExtra('safe_label', true)
+            ->setExtra('translation_domain', false)
+        ;
+
+        $tree->addChild($jobs);
 
         $alerts = $event->getFactory()
             ->createItem('alerts')

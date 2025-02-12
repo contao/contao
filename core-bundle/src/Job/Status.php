@@ -12,9 +12,20 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Job;
 
+use function Symfony\Component\String\s;
+
 enum Status: string
 {
     case NEW = 'new';
     case PENDING = 'pending';
     case FINISHED = 'finished';
+
+    public function getTranslationKey(): string
+    {
+        return match ($this) {
+            self::NEW => 'new',
+            self::PENDING => 'pending',
+            self::FINISHED => 'finished',
+        };
+    }
 }

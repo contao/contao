@@ -1,0 +1,27 @@
+{% trans_default_domain "contao_jobs" %}
+{% extends '@Contao/be_main.html5' %}
+
+{% macro render_jobs(jobs, dateTimeFormat) %}
+    <ul>
+        {% for job in jobs %}
+            <li>
+                {{ job.createdAt|date(dateTimeFormat) }}
+                TODO: translate me: {{ job.status.translationKey }}
+                {% if job.children %}
+                <div class="children">
+                    {{ _self.render_jobs(job.children) }}
+                </div>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% block main %}
+    <main id="main" aria-labelledby="main_headline">
+        {# Headline #}
+        <h1 id="main_headline">{{ headline }}</h1>
+
+        {{ _self.render_jobs(jobs, dateTimeFormat) }}
+    </main>
+{% endblock %}

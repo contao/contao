@@ -15,12 +15,13 @@ namespace Contao\CoreBundle\Controller;
 use Contao\CoreBundle\Job\Job;
 use Contao\CoreBundle\Job\Jobs;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
  * @experimental
  */
-class BackendJobsController extends AbstractController
+class BackendJobsController extends AbstractBackendController
 {
     public function __construct(private Jobs $jobs)
     {
@@ -28,12 +29,18 @@ class BackendJobsController extends AbstractController
 
     #[Route(
         '%contao.backend.route_prefix%/jobs',
+        name: 'contao_backend_jobs',
         defaults: ['_scope' => 'backend', '_store_referrer' => false],
         methods: ['GET'],
     )]
-    public function allJobsAction(): JsonResponse
+    public function allJobsAction(): Response
     {
-        return $this->createResponse($this->jobs->findMine());
+        return $this->render('@Contao/backend/jobs/index.html.twig', [
+            'title' => 'Jobs',
+            'headline' => 'Jobs',
+            'jobs' =>  $this->jobs->findMine(),
+            'dateTimeFormat' => 'Y-m-d H:i:s', // TODO: System settings but why is this not available globally in Twig?
+        ]);
     }
 
     #[Route(
@@ -43,6 +50,7 @@ class BackendJobsController extends AbstractController
     )]
     public function latestJobsAction(): JsonResponse
     {
+        // TODO: This should become a Turbo stream, I guess?
         return $this->createResponse($this->jobs->findMyPending());
     }
 

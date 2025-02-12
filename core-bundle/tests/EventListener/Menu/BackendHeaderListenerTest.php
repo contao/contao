@@ -88,7 +88,7 @@ class BackendHeaderListenerTest extends TestCase
 
         $children = $tree->getChildren();
 
-        $this->assertSame(['manual', 'alerts', 'color-scheme', 'submenu', 'burger'], array_keys($children));
+        $this->assertSame(['manual', 'jobs', 'alerts', 'color-scheme', 'submenu', 'burger'], array_keys($children));
 
         // Manual
         $this->assertSame('MSC.manual', $children['manual']->getLabel());
