@@ -14,6 +14,6 @@ export default class extends Controller {
     }
 
     _hide(el) {
-        el.setAttribute('aria-hidden', 'true');
+        el.hidden = true;
     }
 }

@@ -48,14 +48,12 @@
         margin: 0 auto;
         max-width: 80ch;
 
-        &[aria-hidden="true"] {
+        &[hidden] {
             animation: untoast forwards .5s;
         }
 
         .inner {
-            &, * {
-                pointer-events: auto;
-            }
+            pointer-events: auto;
 
             grid-row: 1 / span 2;
             overflow: hidden;
