@@ -227,7 +227,7 @@ class BackendUser extends User
 		Config::set('useRTE', $this->useRTE);
 		Config::set('useCE', $this->useCE);
 		Config::set('doNotCollapse', $this->doNotCollapse);
-		Config::set('doNotHideMessages', $this->doNotCollapse);
+		Config::set('doNotHideMessages', $this->doNotHideMessages);
 		Config::set('thumbnails', $this->thumbnails);
 		Config::set('backendTheme', $this->backendTheme);
 
