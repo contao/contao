@@ -84,13 +84,11 @@ export default class BackendSearchController extends Controller {
     }
 
     inputBlur() {
-        setTimeout(() => {
-            if (this.element.contains(document.activeElement)) {
-                return;
-            }
+        if ("results" === this.state) {
+            return;
+        }
 
-            this.close();
-        }, 0)
+        this.close();
     }
 
     documentClick(event) {
@@ -102,6 +100,8 @@ export default class BackendSearchController extends Controller {
     }
 
     setState(state) {
+        this.state = state;
+
         BackendSearchController.classes.forEach(className => {
             this.element.classList.toggle(this[`${className}Class`], className === state);
         });
