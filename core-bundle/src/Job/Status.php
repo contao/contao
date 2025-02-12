@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Job;
 
-use function Symfony\Component\String\s;
-
 enum Status: string
 {
     case NEW = 'new';

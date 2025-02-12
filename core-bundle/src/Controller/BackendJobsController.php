@@ -38,7 +38,7 @@ class BackendJobsController extends AbstractBackendController
         return $this->render('@Contao/backend/jobs/index.html.twig', [
             'title' => 'Jobs',
             'headline' => 'Jobs',
-            'jobs' =>  $this->jobs->findMine(),
+            'jobs' => $this->jobs->findMine(),
             'dateTimeFormat' => 'Y-m-d H:i:s', // TODO: System settings but why is this not available globally in Twig?
         ]);
     }

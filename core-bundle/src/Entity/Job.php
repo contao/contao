@@ -133,4 +133,9 @@ class Job
     {
         return $this->children;
     }
+
+    public function getOwner(): string
+    {
+        return $this->owner;
+    }
 }
