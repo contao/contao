@@ -6,7 +6,9 @@
     {% set dialog_attributes = attrs()
         .set('data-controller', 'contao--dialog')
         .set('id', id)
-        .mergeWith(dialog_attributes|default) %}
+        .set('data-turbo-temporary')
+        .mergeWith(dialog_attributes|default)
+    %}
     <dialog{{ dialog_attributes }}>
         {% block inner %}
             <div class="dialog_wrapper">
@@ -22,7 +24,8 @@
                             .set('action', app.request.uri)
                             .set('method', 'post')
                             .set('data-action', 'contao--dialog#close')
-                            .mergeWith(form_attributes|default) %}
+                            .mergeWith(form_attributes|default)
+                        %}
                         <form{{ form_attributes }}>
                             {% block content %}{% endblock %}
 
@@ -33,7 +36,8 @@
                                         .set('type', 'button')
                                         .set('aria-controls', id)
                                         .set('data-action', 'contao--dialog#close')
-                                        .mergeWith(cancel_button_attributes|default) %}
+                                        .mergeWith(cancel_button_attributes|default)
+                                    %}
                                     <button{{ cancel_button_attributes }}>
                                         {%- block cancel_button_text %}{{ 'MSC.cancelBT'|trans }}{% endblock -%}
                                     </button>

@@ -10,7 +10,9 @@
         .addClass('message--error', not success)
         .set('aria-live', 'polite', success)
         .set('aria-alert', 'true', not success)
-        .set('data-contao--message-outlet-target', 'message') %}
+        .set('data-contao--message-outlet-target', 'message')
+        .set('data-turbo-temporary')
+    %}
     <div{{ message_attributes }}>
         <div class="inner">
             {% if show_close_button or contao.backend_user.doNotHideMessages|default(false) %}
@@ -19,7 +21,8 @@
                     .set('type', 'button')
                     .set('data-action', 'contao--message-outlet#close')
                     .set('aria-label', 'MSC.cancelBT'|trans)
-                    .mergeWith(close_button_attributes|default) %}
+                    .mergeWith(close_button_attributes|default)
+                %}
                 <button{{ close_button_attributes }}>x</button>
             {% endif %}
 
