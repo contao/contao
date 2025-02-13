@@ -33,8 +33,6 @@ export default class extends Controller {
     }
 
     disconnect () {
-        this.element.removeAttribute('data-initialized');
-
         this.element.parentNode?.classList.remove('wizard');
         this.select?.removeEventListener('change', this.updateWizard);
         this.buttonImage?.remove();

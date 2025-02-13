@@ -41,11 +41,8 @@ export default class extends Controller {
     }
 
     connect () {
-        this.element.addEventListener('click', this.handle);
-    }
 
-    disconnect () {
-        this.element.removeEventListener('click', this.handle);
+        this.element.addEventListener('click', this.handle);
     }
 
     handle (event) {
