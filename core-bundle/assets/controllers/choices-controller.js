@@ -2,7 +2,7 @@ import {Controller} from "@hotwired/stimulus"
 
 export default class ChoicesController extends Controller {
     connect() {
-        if (this.initGuard) {
+        if (this.initGuard || this.element.classList.contains('choices__input')) {
             return;
         }
 
@@ -50,7 +50,7 @@ export default class ChoicesController extends Controller {
             return;
         }
 
-        this.choices.destroy();
+        this.choices?.destroy();
         this.choices = null;
     }
 }

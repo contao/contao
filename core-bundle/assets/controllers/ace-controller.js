@@ -7,6 +7,10 @@ export default class extends Controller {
     }
 
     connect() {
+        if(this.element.querySelector('.ace_editor')) {
+            return;
+        }
+
         // Create a div to apply the editor to
         this.container = document.createElement('div');
         this.container.id = this.element.id + '_div';
@@ -39,8 +43,8 @@ export default class extends Controller {
     }
 
     disconnect() {
-        this.editor.destroy();
-        this.container.remove();
+        this.editor?.destroy();
+        this.container?.remove();
     }
 
     colorChange(event) {

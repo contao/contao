@@ -11,6 +11,12 @@ export default class extends Controller {
     }
 
     connect () {
+        if(this.element.hasAttribute('data-initialized')) {
+            return;
+        }
+
+        this.element.setAttribute('data-initialized', 'true');
+
         this.select = this.element.querySelector('select');
         this.button = document.createElement('button');
         this.button.type = 'button';
@@ -27,10 +33,12 @@ export default class extends Controller {
     }
 
     disconnect () {
-        this.element.parentNode.classList.remove('wizard');
-        this.select.removeEventListener('change', this.updateWizard);
-        this.buttonImage.remove();
-        this.button.remove();
+        this.element.removeAttribute('data-initialized');
+
+        this.element.parentNode?.classList.remove('wizard');
+        this.select?.removeEventListener('change', this.updateWizard);
+        this.buttonImage?.remove();
+        this.button?.remove();
     }
 
     updateWizard () {

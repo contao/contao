@@ -6,6 +6,10 @@ export default class extends Controller {
     }
 
     connect() {
+        if(this.element.nextElementSibling?.classList.contains('tox-tinymce')) {
+            return;
+        }
+
         if (!this.element.tinymceConfig) {
             console.error('No TinyMCE config was attached to the DOM element, expected an expando property called "tinymceConfig".', this.element);
             return;

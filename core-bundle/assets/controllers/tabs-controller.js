@@ -18,6 +18,11 @@ export default class TabsController extends Controller {
     }
 
     panelTargetConnected(panel) {
+        // Harden against double initialization
+        if(panel.hasAttribute('id') && this.navigationTarget.querySelector(`*[aria-controls="${panel.id}"]`)) {
+            return;
+        }
+
         this.lastTabId++;
 
         const control_reference = `tab-control_${this.instanceId}_${this.lastTabId}`;
@@ -65,8 +70,8 @@ export default class TabsController extends Controller {
 
     panelTargetDisconnected(panel) {
         // Remove controls
-        const li = document.getElementById(panel.getAttribute('aria-labelledby')).parentElement;
-        li.remove();
+        const li = document.getElementById(panel.getAttribute('aria-labelledby'))?.parentElement;
+        li?.remove();
 
         // Select the first tab/no tab if the current tab was active before closing.
         if (panel === this.activeTab) {
