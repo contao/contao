@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
-use Contao\CoreBundle\EventListener\SentEmailMessageListener;
+use Contao\CoreBundle\EventListener\LogEmailMessageListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Envelope;
@@ -22,7 +22,7 @@ use Symfony\Component\Mailer\SentMessage;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
-class SentEmailMessageListenerTest extends TestCase
+class LogEmailMessageListenerTest extends TestCase
 {
     public function testLogsSentEmailMessage(): void
     {
@@ -41,7 +41,7 @@ class SentEmailMessageListenerTest extends TestCase
         $sentMessage = new SentMessage($emailMessage, $this->createMock(Envelope::class));
         $event = new SentMessageEvent($sentMessage);
 
-        $listener = new SentEmailMessageListener($emailLogger, $this->createMock(LoggerInterface::class));
+        $listener = new LogEmailMessageListener($emailLogger, $this->createMock(LoggerInterface::class));
         $listener->onSentMessageEvent($event);
     }
 
@@ -62,7 +62,7 @@ class SentEmailMessageListenerTest extends TestCase
 
         $event = new FailedMessageEvent($emailMessage, new \Exception());
 
-        $listener = new SentEmailMessageListener($this->createMock(LoggerInterface::class), $errorLogger);
+        $listener = new LogEmailMessageListener($this->createMock(LoggerInterface::class), $errorLogger);
         $listener->onFailedMessagEvent($event);
     }
 }

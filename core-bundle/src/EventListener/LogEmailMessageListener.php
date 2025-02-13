@@ -19,7 +19,7 @@ use Symfony\Component\Mailer\Event\SentMessageEvent;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
 
-class SentEmailMessageListener
+class LogEmailMessageListener
 {
     public function __construct(
         private readonly LoggerInterface $contaoEmailLogger,
