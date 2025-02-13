@@ -280,6 +280,32 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertSame(['edit', 'foo', 'delete', 'show'], array_keys($operations));
     }
 
+    /**
+     * @todo Remove this again in Contao 5.5!
+     */
+    public function testHandlesForwardCompatibleKeys(): void
+    {
+        $GLOBALS['TL_DCA']['tl_foo'] = [
+            'list' => [
+                'sorting' => [
+                    'mode' => DataContainer::MODE_SORTED,
+                ],
+                'operations' => [
+                    '!edit',
+                    '!delete',
+                    'show',
+                ],
+            ],
+        ];
+
+        ($this->listener)('tl_foo');
+
+        $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+        $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
+
+        $this->assertSame(['edit', 'delete', 'show'], array_keys($operations));
+    }
+
     public function testManuallySortOperations(): void
     {
         $GLOBALS['TL_DCA']['tl_foo'] = [
