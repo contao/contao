@@ -7,7 +7,7 @@ export default class extends Controller {
     }
 
     connect() {
-        if(this.element.querySelector('.ace_editor')) {
+        if (this.element.querySelector('.ace_editor')) {
             return;
         }
 

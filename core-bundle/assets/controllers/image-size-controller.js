@@ -11,7 +11,7 @@ export default class extends Controller {
     }
 
     connect () {
-        if(this.element.hasAttribute('data-contao--image-size-initialized')) {
+        if (this.element.hasAttribute('data-contao--image-size-initialized')) {
             return;
         }
 
