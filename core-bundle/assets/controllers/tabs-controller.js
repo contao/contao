@@ -19,7 +19,7 @@ export default class TabsController extends Controller {
 
     panelTargetConnected(panel) {
         // Harden against double initialization
-        if(panel.hasAttribute('id') && this.navigationTarget.querySelector(`*[aria-controls="${panel.id}"]`)) {
+        if (panel.hasAttribute('id') && this.navigationTarget.querySelector(`*[aria-controls="${panel.id}"]`)) {
             return;
         }
 

@@ -30,7 +30,7 @@ export default class TooltipsController extends Controller {
      * DOM element is shared across targets.
      */
     connect() {
-        if(document.body.querySelector('body > div[role="tooltip"]')) {
+        if (document.body.querySelector('body > div[role="tooltip"]')) {
             return;
         }
 

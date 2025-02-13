@@ -6,7 +6,7 @@ export default class extends Controller {
     }
 
     connect() {
-        if(this.element.nextElementSibling?.classList.contains('tox-tinymce')) {
+        if (this.element.nextElementSibling?.classList.contains('tox-tinymce')) {
             return;
         }
 
