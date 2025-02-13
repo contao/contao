@@ -41,7 +41,6 @@ export default class extends Controller {
     }
 
     connect () {
-
         this.element.addEventListener('click', this.handle);
     }
 
