@@ -5,11 +5,11 @@ export default class OperationsMenuController extends Controller {
     static targets = ['menu', 'submenu', 'controller', 'title'];
 
     connect () {
-        if (!this.hasControllerTarget || !this.hasMenuTarget || this.menuTarget.hasAttribute('data-initialized')) {
+        if (!this.hasControllerTarget || !this.hasMenuTarget || this.menuTarget.hasAttribute('data-contao--operations-menu-initialized')) {
             return;
         }
 
-        this.menuTarget.setAttribute('data-initialized', true);
+        this.menuTarget.setAttribute('data-contao--operations-menu-initialized', true);
 
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,

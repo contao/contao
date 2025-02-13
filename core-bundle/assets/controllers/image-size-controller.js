@@ -11,11 +11,11 @@ export default class extends Controller {
     }
 
     connect () {
-        if(this.element.hasAttribute('data-initialized')) {
+        if(this.element.hasAttribute('data-contao--image-size-initialized')) {
             return;
         }
 
-        this.element.setAttribute('data-initialized', 'true');
+        this.element.setAttribute('data-contao--image-size-initialized', 'true');
 
         this.select = this.element.querySelector('select');
         this.button = document.createElement('button');
