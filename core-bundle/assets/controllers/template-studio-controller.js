@@ -12,12 +12,6 @@ export default class extends Controller {
     static targets = ['themeSelector', 'tabs', 'editor', 'editorAnnotations', 'dialog'];
 
     connect() {
-        if(this.element.hasAttribute('data-initialized')) {
-            return;
-        }
-
-        this.element.setAttribute('data-initialized', 'true');
-
         // Subscribe to events dispatched by the editors
         this.element.addEventListener('twig-editor:lens:follow', event => {
             this._visit(this.followUrlValue, {name: event.detail.name});
