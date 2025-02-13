@@ -30,15 +30,15 @@ export default class TooltipsController extends Controller {
      * DOM element is shared across targets.
      */
     connect() {
-        document.body.appendChild(this.tooltip = this._createTipContainer());
+        if(document.body.querySelector('body > div[role="tooltip"]')) {
+            return;
+        }
 
-        document.addEventListener('touchstart', this._touchStartDelegate);
+        document.body.appendChild(this.tooltip = this._createTipContainer());
     }
 
     disconnect() {
-        this.tooltip.remove();
-
-        document.removeEventListener('touchstart', this._touchStartDelegate);
+        this.tooltip?.remove();
     }
 
     tooltipTargetConnected(el) {
@@ -79,7 +79,7 @@ export default class TooltipsController extends Controller {
         return tooltip;
     }
 
-    _touchStartDelegate = (e) => {
+    touchStart = (e) => {
         [...this.activeTargets].filter(el => !el.contains(e.target)).forEach(this._hideTooltip.bind(this))
     };
 
