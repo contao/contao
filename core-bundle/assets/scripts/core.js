@@ -1668,6 +1668,12 @@ window.Backend =
 				}
 			},
 			clickEvent = function(e) {
+				const name = e.target.nodeName.toLowerCase();
+
+				if ('img' === name || 'a' === name || 'button' === name) {
+					return;
+				}
+
 				var input = this.getElement('input[type="checkbox"],input[type="radio"]'),
 					limitToggler = $(e.target).getParent('.limit_toggler');
 
