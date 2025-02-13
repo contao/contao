@@ -277,12 +277,13 @@ abstract class Controller extends System
 	/**
 	 * Generate a front end module and return it as string
 	 *
-	 * @param mixed  $intId     A module ID or a Model object
-	 * @param string $strColumn The name of the column
+	 * @param mixed  $intId        A module ID or a Model object
+	 * @param string $strColumn    The name of the column
+	 * @param array  $arrPreloaded
 	 *
 	 * @return string The module HTML markup
 	 */
-	public static function getFrontendModule($intId, $strColumn='main')
+	public static function getFrontendModule($intId, $strColumn='main', array $arrPreloaded=array())
 	{
 		if (!\is_object($intId) && !\strlen($intId))
 		{
@@ -353,7 +354,7 @@ abstract class Controller extends System
 
 			while ($objArticles->next())
 			{
-				$return .= static::getArticle($objArticles->current(), $blnMultiMode, false, $strColumn);
+				$return .= static::getArticle($objArticles->current(), $blnMultiMode, false, $strColumn, $arrPreloaded[$strColumn] ?? array());
 			}
 
 			return $return;
@@ -434,10 +435,11 @@ abstract class Controller extends System
 	 * @param boolean $blnMultiMode   If true, only teasers will be shown
 	 * @param boolean $blnIsInsertTag If true, there will be no page relation
 	 * @param string  $strColumn      The name of the column
+	 * @param array   $arrPreloaded
 	 *
 	 * @return string|boolean The article HTML markup or false
 	 */
-	public static function getArticle($varId, $blnMultiMode=false, $blnIsInsertTag=false, $strColumn='main')
+	public static function getArticle($varId, $blnMultiMode=false, $blnIsInsertTag=false, $strColumn='main', array $arrPreloaded=array())
 	{
 		global $objPage;
 
@@ -487,6 +489,7 @@ abstract class Controller extends System
 		}
 
 		$objArticle = new ModuleArticle($objRow, $strColumn);
+		$objArticle->setPreloadedModules($arrPreloaded);
 		$strBuffer = $objArticle->generate($blnIsInsertTag);
 
 		// Disable indexing if protected

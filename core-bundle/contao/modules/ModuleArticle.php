@@ -43,6 +43,8 @@ class ModuleArticle extends Module
 	 */
 	protected $blnNoMarkup = false;
 
+	protected $arrPreloadedModules = array();
+
 	/**
 	 * Check whether the article is published
 	 *
@@ -67,6 +69,14 @@ class ModuleArticle extends Module
 		}
 
 		return parent::generate();
+	}
+
+	/**
+	 * @internal
+	 */
+	public function setPreloadedModules(array $arrPreloadedModules)
+	{
+		$this->arrPreloadedModules = $arrPreloadedModules;
 	}
 
 	protected function isHidden()
@@ -186,7 +196,14 @@ class ModuleArticle extends Module
 		{
 			while ($objCte->next())
 			{
-				$arrElements[] = $this->getContentElement($objCte->current(), $this->strColumn);
+				if ($objCte->type === 'module' && ($this->arrPreloadedModules[$objCte->module] ?? null))
+				{
+					$arrElements[] = $this->arrPreloadedModules[$objCte->module];
+				}
+				else
+				{
+					$arrElements[] = $this->getContentElement($objCte->current(), $this->strColumn);
+				}
 			}
 		}
 

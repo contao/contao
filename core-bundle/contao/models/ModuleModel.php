@@ -293,4 +293,41 @@ class ModuleModel extends Model
 	 * @var string
 	 */
 	protected static $strTable = 'tl_module';
+
+	/**
+	 * @param array   $arrTypes         The module types
+	 * @param integer $intPid           The page ID
+	 * @param string  $strArticleColumn The article column
+	 * @param array   $arrOptions       An optional options array
+	 *
+	 * @return Collection<ModuleModel>|ModuleModel[]|null
+	 */
+	public static function findByTypesAndArticleByPublishedPidAndColumns($arrTypes, $intPid, $strArticleColumn, array $arrOptions=array())
+	{
+		$t = static::$strTable;
+		$arrColumns = array("$t.type IN (" . implode(', ', array_map(static fn () => '?', $arrTypes)) . ")");
+		$arrValues = $arrTypes;
+
+		$articleSelect = "SELECT id FROM tl_article WHERE pid=? AND inColumn=?";
+		$arrValues[] = $intPid;
+		$arrValues[] = $strArticleColumn;
+
+		if (!static::isPreviewMode($arrOptions))
+		{
+			$time = Date::floorToMinute();
+			$articleSelect .= " AND published=1 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)";
+		}
+
+		$contentSelect = "SELECT `module` FROM tl_content WHERE type='module' AND ptable='tl_article' AND pid IN ($articleSelect)";
+
+		if (!static::isPreviewMode($arrOptions))
+		{
+			$time = Date::floorToMinute();
+			$contentSelect .= " AND invisible=0 AND (start='' OR start<=$time) AND (stop='' OR stop>$time)";
+		}
+
+		$arrColumns[] = "$t.id IN ($contentSelect)";
+
+		return static::findBy($arrColumns, $arrValues, $arrOptions);
+	}
 }
