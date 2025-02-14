@@ -1830,6 +1830,11 @@ table.tl_listing {
 	background: var(--tree-header);
 }
 
+.tl_folder_top .tl_right .operations img {
+	position: relative;
+	top: -1px;
+}
+
 .tl_folder {
 	padding: calc(var(--row-padding) - 1px) 6px;
 	border-bottom: 1px solid var(--border);

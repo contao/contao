@@ -3856,7 +3856,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 <ul class="tl_listing ' . $treeClass . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">
   <li class="tl_folder_top cf"><div class="tl_left"></div> <div class="tl_right">';
 
-		$_buttons = '&nbsp;';
+		$_buttons = '';
 
 		// Show paste button only if there are no root records specified
 		if ($blnClipboard && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $this->rootPaste && Input::get('act') != 'select')

@@ -89,7 +89,7 @@ export default class TooltipsController extends Controller {
 
         if (options.useContent) {
             text = el.innerHTML;
-        } else if ('img' === el.nodeName.toLowerCase()) {
+        } else if (el instanceof HTMLImageElement) {
             text = el.getAttribute('alt');
             text = text?.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
         } else {

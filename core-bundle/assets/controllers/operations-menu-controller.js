@@ -90,15 +90,13 @@ export default class OperationsMenuController extends Controller {
     }
 
     isInteractive (el) {
-        let node = el.nodeName.toLowerCase();
-
-        if ('a' === node || 'button' === node || 'input' === node) {
+        if (el instanceof HTMLImageElement || el instanceof HTMLAnchorElement || el instanceof HTMLButtonElement) {
             return true;
         }
 
         // Also check the parent element if el is not interactive
-        node = el.parentElement.nodeName.toLowerCase();
+        const parent = el.parentElement;
 
-        return 'a' === node || 'button' === node || 'input' === node;
+        return parent instanceof HTMLImageElement || parent instanceof HTMLAnchorElement || parent instanceof HTMLButtonElement;
     }
 }

@@ -75,8 +75,6 @@ class DefaultOperationsListener
 
                 if (str_starts_with($v, '!')) {
                     $operations[$key]['primary'] = true;
-                } else {
-                    unset($operations[$key]['primary']);
                 }
 
                 continue;
