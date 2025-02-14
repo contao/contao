@@ -208,6 +208,9 @@ class AddAssetsPackagesPassTest extends TestCase
         $actualVersion = $container->getDefinition('assets._version_contao-components/contao')->getArgument(0);
 
         $this->assertSame($expectedVersion, $actualVersion);
+
+        // Non "contao-components" components should also map to assets
+        $this->assertSame('assets/foobar', $container->getDefinition('assets._package_test-component/foobar')->getArgument(0));
     }
 
     public function testRegistersTheThemes(): void

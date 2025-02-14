@@ -60,6 +60,7 @@
         "contao-components/tablesorter": "^2.1",
         "contao-components/tinymce4": "^5.0 || ^6.0",
         "contao-components/tristen-tablesort": "^5.3",
+        "test-component/foobar": "*",
         "contao/image": "^1.2",
         "contao/imagine-svg": "^1.0",
         "contao/manager-plugin": "^2.6.2",
@@ -330,5 +331,15 @@
         "rector": "@php vendor-bin/rector/vendor/bin/rector",
         "service-linter": "@php vendor-bin/service-linter/bin/lint-service-ids",
         "unit-tests": "@php vendor/bin/phpunit"
+    },
+    "repositories": {
+        "test-component/foobar": {
+            "type": "package",
+            "package": {
+                "name": "test-component/foobar",
+                "type": "contao-component",
+                "version": "1.0.0"
+            }
+        }
     }
 }
