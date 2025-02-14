@@ -30,12 +30,14 @@ class LogEmailMessageListenerTest extends TestCase
         $emailLogger
             ->expects($this->once())
             ->method('info')
-            ->with('An e-mail has been sent to "Foo Bar" <foobar@example.com>')
+            ->with('An e-mail has been sent to "Foo Bar" <foobar@example.com>, CC to lorem@example.com, "Max Meladze" <ipsum@example.com>, BCC to dolor@example.com')
         ;
 
         $emailMessage = (new Email())
             ->from('contao@example.com')
             ->to(new Address('foobar@example.com', 'Foo Bar'))
+            ->cc(new Address('lorem@example.com'), new Address('ipsum@example.com', 'Max Meladze'))
+            ->bcc(new Address('dolor@example.com'))
             ->text('Test')
         ;
         $sentMessage = new SentMessage($emailMessage, $this->createMock(Envelope::class));
@@ -51,12 +53,14 @@ class LogEmailMessageListenerTest extends TestCase
         $errorLogger
             ->expects($this->once())
             ->method('error')
-            ->with('Failed to send e-mail to "Foo Bar" <foobar@example.com>')
+            ->with('Failed to send e-mail to "Foo Bar" <foobar@example.com>, CC to lorem@example.com, "Max Meladze" <ipsum@example.com>, BCC to dolor@example.com')
         ;
 
         $emailMessage = (new Email())
             ->from('contao@example.com')
             ->to(new Address('foobar@example.com', 'Foo Bar'))
+            ->cc(new Address('lorem@example.com'), new Address('ipsum@example.com', 'Max Meladze'))
+            ->bcc(new Address('dolor@example.com'))
             ->text('Test')
         ;
 
