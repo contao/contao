@@ -63,6 +63,10 @@ export class TwigEditor {
 
         codeLens.registerCodeLensProvider(this.editor, {
             provideCodeLenses: (session, callback) => {
+                if(session.destroyed) {
+                    return;
+                }
+
                 let payload = [];
 
                 this.analyzeReferences().forEach(reference => {
