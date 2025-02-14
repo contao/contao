@@ -4,6 +4,7 @@ branch_filter: /^\d+\.(x|\d+)$/
 composer:
     require:
         contao/manager-plugin: ^2.6.2
+        test-component/foobar: '*'
     conflict:
         doctrine/annotations: <1.9
         nikic/php-parser: 4.7.0
