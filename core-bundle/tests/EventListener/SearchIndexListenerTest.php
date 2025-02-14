@@ -97,7 +97,7 @@ class SearchIndexListenerTest extends TestCase
         ];
 
         yield 'Should be skipped because it is a fragment request' => [
-            Request::create('_fragment/foo/bar'),
+            Request::create('/_fragment/foo/bar'),
             new Response(),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
@@ -105,7 +105,7 @@ class SearchIndexListenerTest extends TestCase
         ];
 
         yield 'Should be skipped because it is a contao backend request' => [
-            Request::create('contao?do=article'),
+            Request::create('/contao?do=article'),
             new Response(),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
