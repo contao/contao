@@ -70,8 +70,7 @@ export default class TabsController extends Controller {
 
     panelTargetDisconnected(panel) {
         // Remove controls
-        const li = document.getElementById(panel.getAttribute('aria-labelledby'))?.parentElement;
-        li?.remove();
+        document.getElementById(panel.getAttribute('aria-labelledby'))?.parentElement?.remove();
 
         // Select the first tab/no tab if the current tab was active before closing.
         if (panel === this.activeTab) {
