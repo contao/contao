@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\Database\Result;
 use Contao\Model\Collection;
 use Contao\Model\MetadataTrait;
 
@@ -450,5 +451,41 @@ class ContentModel extends Model
 		}
 
 		return static::countBy($arrColumns, array($intPid, $strParentTable), $arrOptions);
+	}
+
+	public static function findModulesByArticleByPublishedPidAndColumns($intPageId, $arrArticleColumns, array $arrOptions=array()): Result
+	{
+		$arrColumns = array();
+		$arrValues = array();
+		$objDatabase = Database::getInstance();
+
+		$strQuery = "SELECT tl_content.id, tl_module.type, tl_article.inColumn as `column` FROM tl_content, tl_module, tl_article WHERE ";
+
+		$arrColumns[] = "tl_content.pid=tl_article.id";
+		$arrColumns[] = "tl_content.module=tl_module.id";
+		$arrColumns[] = "tl_content.type=?";
+		$arrValues[] = 'module';
+		$arrColumns[] = "tl_content.ptable=?";
+		$arrValues[] = 'tl_article';
+		$arrColumns[] = "tl_article.pid=?";
+		$arrValues[] = $intPageId;
+		$arrColumns[] = "tl_article.inColumn IN (" . implode(', ', array_map(static fn () => '?', $arrArticleColumns)) . ")";
+		$arrValues = array(...$arrValues, ...$arrArticleColumns);
+
+		if (!static::isPreviewMode($arrOptions))
+		{
+			$time = Date::floorToMinute();
+			$arrColumns[] = "tl_content.invisible=0 AND (tl_content.start='' OR tl_content.start<=$time) AND (tl_content.stop='' OR tl_content.stop>$time)";
+			$arrColumns[] = "tl_article.published=1 AND (tl_article.start='' OR tl_article.start<=$time) AND (tl_article.stop='' OR tl_article.stop>$time)";
+		}
+
+		// Skip unsaved elements (see #2708)
+		$arrColumns[] = "tl_content.tstamp!=0";
+
+		$strQuery .= implode (" AND ", $arrColumns);
+		$strQuery .= " ORDER BY tl_content.pid, tl_content.sorting";
+
+		return $objDatabase->prepare($strQuery)
+			->execute(...$arrValues);
 	}
 }

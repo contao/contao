@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Class ModuleFaqReader
@@ -220,5 +221,10 @@ class ModuleFaqReader extends Module
 		$objConfig->moderate = $objCategory->moderate;
 
 		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_faq', $objFaq->id, $arrNotifies);
+	}
+
+	public static function shouldPreload(PageModel $objPage, Request $request): bool
+	{
+		return $request->attributes->has('auto_item');
 	}
 }

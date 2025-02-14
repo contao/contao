@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Front end module "newsletter reader".
@@ -130,5 +131,10 @@ class ModuleNewsletterReader extends Module
 			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags(array('contao.db.tl_newsletter.' . $objNewsletter->id));
 		}
+	}
+
+	public static function shouldPreload(PageModel $objPage, Request $request): bool
+	{
+		return $request->attributes->has('auto_item');
 	}
 }

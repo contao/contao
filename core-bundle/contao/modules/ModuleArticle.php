@@ -43,7 +43,7 @@ class ModuleArticle extends Module
 	 */
 	protected $blnNoMarkup = false;
 
-	protected $arrPreloadedModules = array();
+	protected $arrPreloadedContentElements = array();
 
 	/**
 	 * Check whether the article is published
@@ -74,9 +74,9 @@ class ModuleArticle extends Module
 	/**
 	 * @internal
 	 */
-	public function setPreloadedModules(array $arrPreloadedModules)
+	public function setPreloadedContentElements(array $arrPreloadedContentElements)
 	{
-		$this->arrPreloadedModules = $arrPreloadedModules;
+		$this->arrPreloadedContentElements = $arrPreloadedContentElements;
 	}
 
 	protected function isHidden()
@@ -196,9 +196,9 @@ class ModuleArticle extends Module
 		{
 			while ($objCte->next())
 			{
-				if ($objCte->type === 'module' && ($this->arrPreloadedModules[$objCte->module] ?? null))
+				if (isset($this->arrPreloadedContentElements[$objCte->id]))
 				{
-					$arrElements[] = $this->arrPreloadedModules[$objCte->module];
+					$arrElements[] = $this->arrPreloadedContentElements[$objCte->id];
 				}
 				else
 				{

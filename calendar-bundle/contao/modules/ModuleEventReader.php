@@ -15,6 +15,7 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Util\UrlUtil;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -518,5 +519,10 @@ class ModuleEventReader extends Events
 		}
 
 		return array($strDate, $strTime);
+	}
+
+	public static function shouldPreload(PageModel $objPage, Request $request): bool
+	{
+		return $request->attributes->has('auto_item');
 	}
 }

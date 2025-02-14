@@ -12,6 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Model\Collection;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
 /**
@@ -507,5 +508,10 @@ abstract class Module extends Frontend
 		}
 
 		return '';
+	}
+
+	public static function shouldPreload(PageModel $objPage, Request $request): bool
+	{
+		return false;
 	}
 }
