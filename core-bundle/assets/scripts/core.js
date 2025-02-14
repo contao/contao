@@ -344,7 +344,7 @@ window.AjaxRequest =
 				// Tree view
 				if (!(img instanceof HTMLElement) && img.forEach) {
 					img.forEach((img) => {
-						if (img.nodeName.toLowerCase() == 'img') {
+						if (img instanceof HTMLImageElement) {
 							if (!img.getParent('ul.tl_listing').hasClass('tl_tree_xtnd')) {
 								pa = img.getParent('a');
 
@@ -1668,9 +1668,7 @@ window.Backend =
 				}
 			},
 			clickEvent = function(e) {
-				const name = e.target.nodeName.toLowerCase();
-
-				if ('img' === name || 'a' === name || 'button' === name) {
+				if (e.target instanceof HTMLImageElement || e.target instanceof HTMLAnchorElement || e.target instanceof HTMLButtonElement) {
 					return;
 				}
 
