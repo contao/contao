@@ -2549,7 +2549,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Buttons
 			if ($arrClipboard !== false && Input::get('act') != 'select')
 			{
-				$_buttons = '&nbsp;';
+				$_buttons = '';
 			}
 			else
 			{
