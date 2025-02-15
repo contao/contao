@@ -73,7 +73,7 @@ document.documentElement.addEventListener('turbo:frame-missing', (e) => {
 // cannot be used for this task.
 document.documentElement.addEventListener('turbo:before-cache', (e) => {
     application.controllers.forEach(controller => {
-        if(typeof controller.beforeCache === 'function') {
+        if (typeof controller.beforeCache === 'function') {
             controller.beforeCache(e);
         }
     });
