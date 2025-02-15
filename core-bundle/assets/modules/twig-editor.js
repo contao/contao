@@ -1,5 +1,6 @@
 export class TwigEditor {
     constructor(element) {
+        this.containerBackup = element.cloneNode();
         this.name = element.dataset.name;
         this.resourceUrl = element.dataset.resourceUrl;
 
@@ -177,6 +178,12 @@ export class TwigEditor {
     }
 
     destroy() {
+        // Destroying the ace instance does not fully reset the HTML, so we
+        // manually restore the container by using the cloned backup with
+        // updated content.
+        this.containerBackup.textContent = this.getContent();
+        this.editor.container.replaceWith(this.containerBackup);
+
         this.editor.destroy();
     }
 }

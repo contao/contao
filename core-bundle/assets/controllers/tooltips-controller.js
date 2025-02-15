@@ -30,15 +30,11 @@ export default class TooltipsController extends Controller {
      * DOM element is shared across targets.
      */
     connect() {
-        if (document.body.querySelector('body > div[role="tooltip"]')) {
-            return;
-        }
-
-        document.body.appendChild(this.tooltip = this._createTipContainer());
+        this.tooltip = document.body.querySelector('body > div[role="tooltip"]') ?? this._createTipContainer();
     }
 
     disconnect() {
-        this.tooltip?.remove();
+        this.tooltip.remove();
     }
 
     tooltipTargetConnected(el) {
@@ -75,6 +71,8 @@ export default class TooltipsController extends Controller {
         tooltip.classList.add('tip');
         tooltip.style.position = 'absolute';
         tooltip.style.display = 'none';
+
+        document.body.appendChild(tooltip);
 
         return tooltip;
     }

@@ -5,11 +5,9 @@ export default class OperationsMenuController extends Controller {
     static targets = ['menu', 'submenu', 'controller', 'title'];
 
     connect () {
-        if (!this.hasControllerTarget || !this.hasMenuTarget || this.menuTarget.hasAttribute('data-contao--operations-menu-initialized')) {
+        if (!this.hasControllerTarget || !this.hasMenuTarget) {
             return;
         }
-
-        this.menuTarget.setAttribute('data-contao--operations-menu-initialized', true);
 
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,
@@ -30,6 +28,15 @@ export default class OperationsMenuController extends Controller {
         this.controllerTarget?.addEventListener('accessibleMenuCollapse', () => {
             this.element.classList.remove('hover');
         });
+    }
+
+    disconnect() {
+        // Cleanup menu instance, otherwise we would leak memory
+        for (const [key, value] of Object.entries(window.AccessibleMenu.menus)) {
+            if(value === this.$menu) {
+                delete window.AccessibleMenu.menus[key];
+            }
+        }
     }
 
     titleTargetConnected (el) {

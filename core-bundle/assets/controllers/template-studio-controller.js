@@ -35,6 +35,16 @@ export default class extends Controller {
         });
     }
 
+    beforeCache() {
+        // Destroy editor instances before Turbo caches the page - they will
+        // be recreated, when the editorTargetConnected() calls happens on the
+        // restored page.
+        for (const [key, editor] of this.editors) {
+            editor.destroy();
+            delete this.editors[key];
+        }
+    }
+
     close(event) {
         document.getElementById(event.target.getAttribute('aria-controls')).innerText = '';
     }
@@ -44,8 +54,8 @@ export default class extends Controller {
     }
 
     editorTargetDisconnected(el) {
-        this.editors?.get(el).destroy();
-        this.editors?.delete(el);
+        this.editors.get(el).destroy();
+        this.editors.delete(el);
     }
 
     editorAnnotationsTargetConnected(el) {
@@ -129,7 +139,9 @@ export default class extends Controller {
         }
 
         if (!response.headers.get('content-type').startsWith('text/vnd.turbo-stream.html') || response.status >= 300) {
-            console.error(`There was an error processing the Turbo stream response from "${url}"`);
+            if (window.console) {
+                console.error(`There was an error processing the Turbo stream response from "${url}"`);
+            }
 
             return;
         }

@@ -6,65 +6,82 @@ export default class TabsController extends Controller {
     }
 
     static targets = ['navigation', 'panel'];
-    static instanceCount = 0;
 
-    instanceId = undefined;
     lastTabId = 0;
     activeTab = null;
 
-    initialize() {
-        TabsController.instanceCount++;
-        this.instanceId = TabsController.instanceCount;
-    }
-
     panelTargetConnected(panel) {
-        // Harden against double initialization
-        if (panel.hasAttribute('id') && this.navigationTarget.querySelector(`*[aria-controls="${panel.id}"]`)) {
-            return;
+        // When the DOM is already set up, just register the panel id and
+        // install event listeners, otherwise we create the elements first.
+        const isRestore = panel.getAttribute('role') === 'tabpanel';
+
+        if(isRestore) {
+            this.lastTabId = Math.max(this.lastTabId, Number.parseInt(panel.dataset.tabId));
+        } else {
+            this.lastTabId++;
+            panel.dataset.tabId = this.lastTabId.toString();
         }
 
-        this.lastTabId++;
-
-        const control_reference = `tab-control_${this.instanceId}_${this.lastTabId}`;
-        const panel_reference = panel.id || `tab-panel_${this.instanceId}_${this.lastTabId}`;
+        const containerId = this.element.id;
+        const tabId = panel.dataset.tabId;
+        const panelReference = panel.id || `tab-panel_${containerId}_${tabId}`;
+        const controlReference = `tab-control_${containerId}_${tabId}`;
 
         // Create navigation elements
-        const selectButton = document.createElement('button');
-        selectButton.id = control_reference;
-        selectButton.className = 'select';
-        selectButton.innerText = panel.dataset.label;
-        selectButton.setAttribute('type', 'button');
-        selectButton.setAttribute('role', 'tab');
-        selectButton.setAttribute('aria-controls', panel_reference);
+        const selectButton = isRestore ?
+            this.navigationTarget.querySelector(`button.select[aria-controls="${panelReference}"]`) :
+            (() => {
+                const button = document.createElement('button');
+                button.id = controlReference;
+                button.className = 'select';
+                button.innerText = panel.dataset.label;
+                button.setAttribute('type', 'button');
+                button.setAttribute('role', 'tab');
+                button.setAttribute('aria-controls', panelReference);
+
+                return button;
+            })()
+        ;
 
         selectButton.addEventListener('click', () => {
             this.selectTab(panel);
         })
 
-        const closeButton = document.createElement('button');
-        closeButton.className = 'close';
-        closeButton.innerText = 'x';
-        closeButton.setAttribute('type', 'button');
-        closeButton.setAttribute('aria-controls', panel_reference);
-        closeButton.setAttribute('aria-label', this.closeLabelValue);
+        const closeButton = isRestore ?
+            this.navigationTarget.querySelector(`button.close[aria-controls="${panelReference}"]`) :
+            (() => {
+                const button = document.createElement('button');
+                button.className = 'close';
+                button.innerText = 'x';
+                button.setAttribute('type', 'button');
+                button.setAttribute('aria-controls', panelReference);
+                button.setAttribute('aria-label', this.closeLabelValue);
+
+                return button;
+            })()
+        ;
 
         closeButton.addEventListener('click', () => {
             // Remove the panel and let the disconnect handler do the rest
             panel.remove();
         });
 
-        const li = document.createElement('li');
-        li.setAttribute('role', 'presentation');
-        li.append(selectButton);
-        li.append(closeButton);
+        if(!isRestore) {
+            // Enhance panel container
+            panel.id = panelReference;
+            panel.setAttribute('role', 'tabpanel');
+            panel.setAttribute('aria-labelledby', controlReference);
 
-        // Enhance panel container
-        panel.id = panel_reference;
-        panel.setAttribute('role', 'tabpanel');
-        panel.setAttribute('aria-labelledby', control_reference);
+            // Add navigation element
+            const li = document.createElement('li');
+            li.setAttribute('role', 'presentation');
+            li.append(selectButton);
+            li.append(closeButton);
 
-        // Add navigation element and activate the newly added tab
-        this.navigationTarget.append(li);
+            this.navigationTarget.append(li);
+        }
+
+        // Activate tab
         this.selectTab(panel);
     }
 

@@ -1,14 +1,16 @@
 import {Controller} from "@hotwired/stimulus"
 
 export default class ChoicesController extends Controller {
+    mutationGuard = false;
+
     connect() {
-        if (this.initGuard || this.element.classList.contains('choices__input')) {
+        if (this._isGuarded()) {
             return;
         }
 
         // Choices wraps the element multiple times during initialization, leading to
         // multiple disconnects/reconnects of the controller that we need to ignore.
-        this.initGuard = true;
+        this._setGuard();
 
         const select = this.element;
 
@@ -33,8 +35,7 @@ export default class ChoicesController extends Controller {
                     choices.dataset.placeholder = select.dataset.placeholder;
                 }
 
-                // Reset guard as soon as the call stack has cleared
-                setTimeout(() => { this.initGuard = false; }, 0);
+                this._resetGuard();
             },
             loadingText: Contao.lang.loading,
             noResultsText: Contao.lang.noResults,
@@ -46,11 +47,41 @@ export default class ChoicesController extends Controller {
     }
 
     disconnect() {
-        if (this.initGuard) {
+        if (this._isGuarded()) {
             return;
         }
 
+        this._removeChoices();
+    }
+
+    beforeCache() {
+        // Let choices unwrap the element container before Turbo caches the
+        // page - it will be recreated, when the connect() call happens on
+        // the restored page.
+        this._removeChoices();
+    }
+
+    _removeChoices() {
+        // Safely unwrap the element by preventing disconnect/connect calls
+        // during the process.
+        this._setGuard();
+
         this.choices?.destroy();
         this.choices = null;
+
+        this._resetGuard();
+    }
+
+    _setGuard() {
+        this.mutationGuard = true;
+    }
+
+    _resetGuard() {
+        // Reset guard as soon as the call stack has cleared
+        setTimeout(() => { this.mutationGuard = false; }, 0);
+    }
+
+    _isGuarded() {
+        return this.mutationGuard;
     }
 }
