@@ -7,25 +7,22 @@ export default class TabsController extends Controller {
 
     static targets = ['navigation', 'panel'];
 
-    lastTabId = 0;
     activeTab = null;
 
     panelTargetConnected(panel) {
-        // When the DOM is already set up, just register the panel id and
+        // When the DOM is already set up, just set the panel id and
         // install event listeners, otherwise we create the elements first.
         const isRestore = panel.getAttribute('role') === 'tabpanel';
 
-        if(isRestore) {
-            this.lastTabId = Math.max(this.lastTabId, Number.parseInt(panel.dataset.tabId));
-        } else {
-            this.lastTabId++;
-            panel.dataset.tabId = this.lastTabId.toString();
-        }
-
+        const tabId = (Math.random() + 1).toString(36).substring(2, 7);
         const containerId = this.element.id;
-        const tabId = panel.dataset.tabId;
         const panelReference = panel.id || `tab-panel_${containerId}_${tabId}`;
         const controlReference = `tab-control_${containerId}_${tabId}`;
+
+        // Enhance panel container
+        panel.id = panelReference;
+        panel.setAttribute('role', 'tabpanel');
+        panel.setAttribute('aria-labelledby', controlReference);
 
         // Create navigation elements
         const selectButton = isRestore ?
@@ -42,7 +39,6 @@ export default class TabsController extends Controller {
                 return button;
             })()
         ;
-
         selectButton.addEventListener('click', () => {
             this.selectTab(panel);
         })
@@ -67,11 +63,6 @@ export default class TabsController extends Controller {
         });
 
         if(!isRestore) {
-            // Enhance panel container
-            panel.id = panelReference;
-            panel.setAttribute('role', 'tabpanel');
-            panel.setAttribute('aria-labelledby', controlReference);
-
             // Add navigation element
             const li = document.createElement('li');
             li.setAttribute('role', 'presentation');
