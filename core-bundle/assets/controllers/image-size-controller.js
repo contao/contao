@@ -8,12 +8,7 @@ export default class extends Controller {
     }
 
     connect () {
-        this.element.parentNode.classList.add('wizard');
         this.updateWizard();
-    }
-
-    disconnect () {
-        this.element.parentNode?.classList.remove('wizard');
     }
 
     updateWizard () {

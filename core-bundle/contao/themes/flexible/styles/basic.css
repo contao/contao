@@ -854,13 +854,13 @@ a.tl_submit {
 	width: 45%;
 }
 
-.wizard .tl_image_size {
+.tl_image_size {
 	display: flex;
 	align-items: center;
 	justify-content: flex-start;
 }
 
-.wizard img {
+.wizard img, .tl_image_size img {
 	margin-left: 4px;
 }
 
