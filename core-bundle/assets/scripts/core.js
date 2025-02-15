@@ -344,7 +344,7 @@ window.AjaxRequest =
 				// Tree view
 				if (!(img instanceof HTMLElement) && img.forEach) {
 					img.forEach((img) => {
-						if (img.nodeName.toLowerCase() == 'img') {
+						if (img instanceof HTMLImageElement) {
 							if (!img.getParent('ul.tl_listing').hasClass('tl_tree_xtnd')) {
 								pa = img.getParent('a');
 
@@ -1668,6 +1668,10 @@ window.Backend =
 				}
 			},
 			clickEvent = function(e) {
+				if (e.target instanceof HTMLImageElement || e.target instanceof HTMLAnchorElement || e.target instanceof HTMLButtonElement) {
+					return;
+				}
+
 				var input = this.getElement('input[type="checkbox"],input[type="radio"]'),
 					limitToggler = $(e.target).getParent('.limit_toggler');
 
