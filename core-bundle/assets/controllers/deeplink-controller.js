@@ -31,7 +31,10 @@ export default class extends Controller {
         setupController();
 
         Theme.setupCtrlClick = () => {
-            console.warn('Using Theme.setupCtrlClick() is deprecated and will be removed in Contao 6. Apply the Stimulus actions instead.');
+            if (window.console) {
+                console.warn('Using Theme.setupCtrlClick() is deprecated and will be removed in Contao 6. Apply the Stimulus actions instead.');
+            }
+
             setupController();
         }
     }
