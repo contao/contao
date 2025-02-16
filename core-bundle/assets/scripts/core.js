@@ -3,6 +3,8 @@
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
+import {Icon} from "../modules/icon";
+
 window.AjaxRequest =
 {
 	/**
@@ -905,7 +907,7 @@ window.Backend =
 			if (el.hasClass('removable')) {
 				new Element('button', {
 					type: 'button',
-					html: '&times;',
+					html: Icon.getTemplate('close', {'aria-hidden': true}).getHTML(),
 					'class': 'tl_red'
 				}).addEvent('click', function() {
 					var li = el.getParent('li'),
