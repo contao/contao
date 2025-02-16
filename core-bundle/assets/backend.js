@@ -30,7 +30,7 @@ application.register('contao--webauthn', WebAuthn);
 
 // Cancel all prefetch requests that contain a request token
 document.documentElement.addEventListener('turbo:before-prefetch', e => {
-    if ((new URLSearchParams(e.target.href)).has('rt') || e.target.classList.contains('header_back') || e.target.closest('.sf-toolbar') !== null || e.target.matches('[onclick^="Backend.openModalIframe(]"')) {
+    if ((new URLSearchParams(e.target.href)).has('rt') || e.target.classList.contains('header_back') || e.target.closest('.sf-toolbar') !== null || e.target.matches('[onclick^="Backend.openModalIframe("]')) {
         e.preventDefault();
     }
 });
