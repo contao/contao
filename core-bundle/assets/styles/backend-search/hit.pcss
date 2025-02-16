@@ -35,6 +35,15 @@
     font-weight: 500;
 }
 
+.hit_title,
+.hit_edit {
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 1px var(--contao);
+    }
+}
+
 .hit_context-container {
     margin-top: .5rem;
 
@@ -43,7 +52,7 @@
         color: var(--gray);
         margin: 0;
         line-height: normal;
-        // Prevent overflow for long serialized results (e. g. user-group settings)
+        /* Prevent overflow for long serialized results (e. g. user-group settings) */
         text-overflow: ellipsis;
         overflow: hidden;
     }
