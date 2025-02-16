@@ -30,6 +30,7 @@
 }
 
 .hit_title {
+    flex: 1;
     font-size: 1rem;
     font-weight: 500;
 }
@@ -42,5 +43,8 @@
         color: var(--gray);
         margin: 0;
         line-height: normal;
+        // Prevent overflow for long serialized results (e. g. user-group settings)
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
 }
