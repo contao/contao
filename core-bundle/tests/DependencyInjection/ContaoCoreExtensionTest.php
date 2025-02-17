@@ -32,7 +32,6 @@ use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Tests\Fixtures\ClassWithMethod;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -50,8 +49,6 @@ use Symfony\Component\Security\Http\Firewall;
 
 class ContaoCoreExtensionTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testValidatesTheSymfonyListenerPriorities(): void
     {
         $events = AbstractSessionListener::getSubscribedEvents();

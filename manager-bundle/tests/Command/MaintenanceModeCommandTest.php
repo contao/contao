@@ -16,7 +16,6 @@ use Contao\CoreBundle\Intl\Locales;
 use Contao\ManagerBundle\Command\MaintenanceModeCommand;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
@@ -25,8 +24,6 @@ use Twig\Environment;
 
 class MaintenanceModeCommandTest extends ContaoTestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         $this->resetStaticProperties([Terminal::class]);

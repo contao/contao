@@ -18,15 +18,12 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\MessageCatalogue;
 use Contao\CoreBundle\Translation\Translator;
 use Contao\System;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\Translator as BaseTranslator;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslatorTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_LANG']);

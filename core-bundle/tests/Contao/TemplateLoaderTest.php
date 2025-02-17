@@ -23,14 +23,11 @@ use Contao\FormText;
 use Contao\ModuleArticleList;
 use Contao\System;
 use Contao\TemplateLoader;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 class TemplateLoaderTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();

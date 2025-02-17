@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Contao;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Environment;
 use Contao\System;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\IpUtils;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,8 +22,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class EnvironmentTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     private string $projectDir;
 
     protected function setUp(): void
