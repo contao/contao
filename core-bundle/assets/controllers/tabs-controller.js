@@ -10,9 +10,9 @@ export default class TabsController extends Controller {
     activeTab = null;
 
     panelTargetConnected(panel) {
-        // When the DOM is already set up, just set the panel id and
-        // install event listeners, otherwise we create the elements first.
-        const isRestore = panel.getAttribute('role') === 'tabpanel';
+        // When the DOM is already set up, just set the panel ID and
+        // install the event listeners, otherwise create the elements first.
+        const isRestore = 'tabpanel' === panel.getAttribute('role');
 
         const tabId = isRestore ? panel.dataset.tabId : (Math.random() + 1).toString(36).substring(7);
         const containerId = this.element.id;
@@ -20,9 +20,9 @@ export default class TabsController extends Controller {
         const controlReference = `tab-control_${containerId}_${tabId}`;
 
         // Create navigation elements
-        const selectButton = isRestore ?
-            this.navigationTarget.querySelector(`button.select[aria-controls="${panelReference}"]`) :
-            (() => {
+        const selectButton = isRestore
+            ? this.navigationTarget.querySelector(`button.select[aria-controls="${panelReference}"]`)
+            : (() => {
                 const button = document.createElement('button');
                 button.id = controlReference;
                 button.className = 'select';
@@ -39,12 +39,12 @@ export default class TabsController extends Controller {
             this.selectTab(panel);
         })
 
-        const closeButton = isRestore ?
-            this.navigationTarget.querySelector(`button.close[aria-controls="${panelReference}"]`) :
-            (() => {
+        const closeButton = isRestore
+            ? this.navigationTarget.querySelector(`button.close[aria-controls="${panelReference}"]`)
+            : (() => {
                 const button = document.createElement('button');
                 button.className = 'close';
-                button.innerText = 'x';
+                button.innerText = '×';
                 button.setAttribute('type', 'button');
                 button.setAttribute('aria-controls', panelReference);
                 button.setAttribute('aria-label', this.closeLabelValue);
@@ -58,7 +58,7 @@ export default class TabsController extends Controller {
             panel.remove();
         });
 
-        if(!isRestore) {
+        if (!isRestore) {
             // Enhance panel container
             panel.dataset.tabId = tabId;
             panel.id = panelReference;

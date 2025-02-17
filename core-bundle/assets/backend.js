@@ -69,11 +69,11 @@ document.documentElement.addEventListener('turbo:frame-missing', (e) => {
 
 // Call the beforeCache() function on all controllers implementing it. This
 // allows controllers to tear down things before the page gets put into cache.
-// Note, that Stimulus' disconnect() function won't fire at this point and thus
-// cannot be used for this task.
+// Note that Stimulus' disconnect() function will not fire at this point and
+// thus cannot be used for this task.
 document.documentElement.addEventListener('turbo:before-cache', (e) => {
     application.controllers.forEach(controller => {
-        if (typeof controller.beforeCache === 'function') {
+        if ('function' === typeof controller.beforeCache) {
             controller.beforeCache(e);
         }
     });

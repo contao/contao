@@ -25,11 +25,11 @@ export default class extends Controller {
     }
 
     beforeCache() {
-        // Destroy tinyMCE before Turbo caches the page - it will be recreated,
+        // Destroy TinyMCE before Turbo caches the page. It will be recreated
         // when the connect() call happens on the restored page.
         this.disconnect();
 
-        // Remove the controller attribute - it will get re-added in the init
+        // Remove the controller attribute. They will be re-added in the init
         // script of the be_tinyMCE.html5 template.
         this.element.removeAttribute('data-controller');
     }

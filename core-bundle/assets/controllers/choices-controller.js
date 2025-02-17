@@ -56,8 +56,8 @@ export default class ChoicesController extends Controller {
 
     beforeCache() {
         // Let choices unwrap the element container before Turbo caches the
-        // page - it will be recreated, when the connect() call happens on
-        // the restored page.
+        // page. It will be recreated, when the connect() call happens on the
+        // restored page.
         this._removeChoices();
     }
 
@@ -77,7 +77,7 @@ export default class ChoicesController extends Controller {
     }
 
     _resetGuard() {
-        // Reset guard as soon as the call stack has cleared
+        // Reset guard as soon as the call stack has cleared.
         setTimeout(() => { this.mutationGuard = false; }, 0);
     }
 

@@ -64,7 +64,7 @@ export class TwigEditor {
 
         codeLens.registerCodeLensProvider(this.editor, {
             provideCodeLenses: (session, callback) => {
-                if(session.destroyed) {
+                if (session.destroyed) {
                     return;
                 }
 
@@ -178,7 +178,7 @@ export class TwigEditor {
     }
 
     destroy() {
-        // Destroying the ace instance does not fully reset the HTML, so we
+        // Destroying the ACE instance does not fully reset the HTML, so we
         // manually restore the container by using the cloned backup with
         // updated content.
         this.containerBackup.textContent = this.getContent();

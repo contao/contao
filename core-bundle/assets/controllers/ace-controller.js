@@ -44,8 +44,8 @@ export default class extends Controller {
     }
 
     beforeCache() {
-        // Remove the element container before Turbo caches the page - it will
-        // be recreated, when the connect() call happens on the restored page.
+        // Remove the element container before Turbo caches the page. It will
+        // be recreated when the connect() call happens on the restored page.
         this.disconnect();
     }
 
