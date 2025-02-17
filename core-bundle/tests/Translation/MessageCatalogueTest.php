@@ -17,7 +17,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\MessageCatalogue;
 use Contao\System;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Resource\ResourceInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Exception\LogicException;
@@ -25,8 +24,6 @@ use Symfony\Component\Translation\MessageCatalogueInterface;
 
 class MessageCatalogueTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_LANG']);
