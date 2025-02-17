@@ -330,6 +330,12 @@ services:
             - '@contao.routing.scope_matcher'
             - '@contao.intl.locales'
 
+    contao.listener.log_email_message:
+        class: Contao\CoreBundle\EventListener\LogEmailMessageListener
+        arguments:
+            - '@monolog.logger.contao.email'
+            - '@monolog.logger.contao.error'
+
     contao.listener.make_backend_response_uncacheable:
         class: Contao\CoreBundle\EventListener\MakeBackendResponseUncacheableListener
         arguments:
