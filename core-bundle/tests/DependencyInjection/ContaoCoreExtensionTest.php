@@ -488,7 +488,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $container->getDefinition('contao.listener.search_index');
 
         $this->assertSame(SearchIndexListener::class, $definition->getClass());
-        $this->assertSame(SearchIndexListener::FEATURE_INDEX, $definition->getArgument(2));
+        $this->assertSame(SearchIndexListener::FEATURE_INDEX, $definition->getArgument('$enabledFeatures'));
     }
 
     public function testRemovesTheSearchIndexListenerIfItIsDisabled(): void

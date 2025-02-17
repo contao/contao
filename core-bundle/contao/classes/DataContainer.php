@@ -1556,7 +1556,7 @@ abstract class DataContainer extends Backend
 		}
 		elseif (\in_array($mode, array(self::MODE_TREE, self::MODE_TREE_EXTENDED)))
 		{
-			$label = Image::getHtml('iconPLAIN.svg') . ' ' . $label;
+			$label = Image::getHtml('plain.svg') . ' ' . $label;
 		}
 
 		if (($labelConfig['showColumns'] ?? null) && !\in_array($mode, array(self::MODE_PARENT, self::MODE_TREE, self::MODE_TREE_EXTENDED)))

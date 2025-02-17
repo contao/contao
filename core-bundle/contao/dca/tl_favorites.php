@@ -40,7 +40,6 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 			'mode'                    => DataContainer::MODE_TREE,
 			'rootPaste'               => true,
 			'showRootTrails'          => true,
-			'icon'                    => 'favorites.svg'
 		),
 		'label' => array
 		(

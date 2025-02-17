@@ -26,11 +26,15 @@ Request.Contao = new Class(
 	},
 
 	initialize: function(options) {
-		if (options && !options.url && options.field && options.field.form && options.field.form.action) {
+		if (!options) {
+			options = {};
+		}
+
+		if (!options.url && options.field && options.field.form && options.field.form.action) {
 			options.url = options.field.form.action;
 		}
 
-		if (!options?.url) {
+		if (!options.url) {
 			options.url = window.location.href;
 		}
 
