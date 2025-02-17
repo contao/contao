@@ -6,8 +6,8 @@
     .set('data-action','
         click@document->contao--backend-search#documentClick
         keydown.esc@document->contao--backend-search#close
-        keydown.tab@document->contao--backend-search#focusTrapNext:prevent
-        keydown.shift+tab@document->contao--backend-search#focusTrapPrev:prevent
+        keydown.tab@document->contao--backend-search#focusTrapNext
+        keydown.shift+tab@document->contao--backend-search#focusTrapPrev
     ')
     .set('data-contao--backend-search-min-characters-value', '3')
     .set('data-contao--backend-search-hidden-class', 'search--hidden')
