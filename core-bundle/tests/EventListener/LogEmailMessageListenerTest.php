@@ -40,6 +40,7 @@ class LogEmailMessageListenerTest extends TestCase
             ->bcc(new Address('dolor@example.com'))
             ->text('Test')
         ;
+
         $sentMessage = new SentMessage($emailMessage, $this->createMock(Envelope::class));
         $event = new SentMessageEvent($sentMessage);
 

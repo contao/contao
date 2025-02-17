@@ -30,7 +30,9 @@ class LogEmailMessageListener
     #[AsEventListener]
     public function onSentMessageEvent(SentMessageEvent $event): void
     {
-        if (!($email = $event->getMessage()->getOriginalMessage()) instanceof Email) {
+        $email = $event->getMessage()->getOriginalMessage();
+
+        if (!$email instanceof Email) {
             return;
         }
 
@@ -42,7 +44,9 @@ class LogEmailMessageListener
     #[AsEventListener]
     public function onFailedMessagEvent(FailedMessageEvent $event): void
     {
-        if (!($email = $event->getMessage()) instanceof Email) {
+        $email = $event->getMessage();
+
+        if (!$email instanceof Email) {
             return;
         }
 
