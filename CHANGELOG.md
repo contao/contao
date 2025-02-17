@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.4.14] (2025-02-17)
+
+**Fixed issues:**
+
+- [#8083] Use the correct icon in the favorites menu ([leofeyer])
+- [#8082] Add `data-turbo-prefetch="false"` to the favorites menu ([leofeyer])
+
 ## [5.4.13] (2025-02-11)
 
 **Fixed issues:**
@@ -166,6 +173,7 @@ This project adheres to [Semantic Versioning].
 - [#7229] Fix the `.nogrid` backwards compatibility layer ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.4.14]: https://github.com/contao/contao/releases/tag/5.4.14
 [5.4.13]: https://github.com/contao/contao/releases/tag/5.4.13
 [5.4.12]: https://github.com/contao/contao/releases/tag/5.4.12
 [5.4.11]: https://github.com/contao/contao/releases/tag/5.4.11
@@ -270,3 +278,5 @@ This project adheres to [Semantic Versioning].
 [#7922]: https://github.com/contao/contao/pull/7922
 [#8017]: https://github.com/contao/contao/pull/8017
 [#8035]: https://github.com/contao/contao/pull/8035
+[#8082]: https://github.com/contao/contao/pull/8082
+[#8083]: https://github.com/contao/contao/pull/8083
