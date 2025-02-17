@@ -31,7 +31,7 @@ application.register('contao--webauthn', WebAuthn);
 // Cancel all prefetch requests that contain a request token or are related to
 // the Symfony toolbar
 document.documentElement.addEventListener('turbo:before-prefetch', e => {
-    if ((new URLSearchParams(e.target.href)).has('rt') || e.target.classList.contains('header_back') || e.target.closest('.sf-toolbar') !== null) {
+    if ((new URLSearchParams(e.target.href)).has('rt') || e.target.classList.contains('header_back') || e.target.closest('.sf-toolbar') !== null || e.target.matches('[onclick^="Backend.openModalIframe("]')) {
         e.preventDefault();
     }
 });

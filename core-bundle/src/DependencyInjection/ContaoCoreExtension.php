@@ -332,7 +332,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             $container->removeDefinition('contao.listener.search_index');
         } else {
             // Configure the search index listener
-            $container->getDefinition('contao.listener.search_index')->setArgument(2, $features);
+            $container->getDefinition('contao.listener.search_index')->setArgument('$enabledFeatures', $features);
         }
     }
 

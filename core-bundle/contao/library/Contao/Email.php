@@ -136,6 +136,8 @@ class Email
 		}
 		elseif ($this->objMailer instanceof \Swift_Mailer)
 		{
+			trigger_deprecation('contao/core-bundle', '5.3', 'Passing a Swift_Mailer instance has been deprecated and will no longer work in Contao 6.');
+
 			$this->objMessage = new \Swift_Message();
 		}
 		else
@@ -566,33 +568,13 @@ class Email
 		// Send the e-mail
 		$this->objMailer->send($this->objMessage);
 
-		$arrCc = $this->objMessage->getCc();
-		$arrBcc = $this->objMessage->getBcc();
-
-		// Add a log entry
-		$strMessage = 'An e-mail has been sent to ';
-
-		if ($this->objMessage instanceof EmailMessage)
+		if ($this->objMessage instanceof \Swift_Message)
 		{
-			$addresscb = static function (Address $address) {
-				return $address->getAddress();
-			};
+			// Add a log entry
+			$strMessage = 'An e-mail has been sent to ' . implode(', ', array_keys($this->objMessage->getTo()));
 
-			$strMessage .= implode(', ', array_map($addresscb, $this->objMessage->getTo()));
-
-			if (!empty($arrCc))
-			{
-				$strMessage .= ', CC to ' . implode(', ', array_map($addresscb, $arrCc));
-			}
-
-			if (!empty($arrBcc))
-			{
-				$strMessage .= ', BCC to ' . implode(', ', array_map($addresscb, $arrBcc));
-			}
-		}
-		else
-		{
-			$strMessage .= implode(', ', array_keys($this->objMessage->getTo()));
+			$arrCc = $this->objMessage->getCc();
+			$arrBcc = $this->objMessage->getBcc();
 
 			if (!empty($arrCc))
 			{
@@ -603,16 +585,16 @@ class Email
 			{
 				$strMessage .= ', BCC to ' . implode(', ', array_keys($arrBcc));
 			}
+
+			$context = array();
+
+			if ($this->strLogFile !== ContaoContext::EMAIL)
+			{
+				$context = array('contao' => new ContaoContext(__METHOD__, $this->strLogFile));
+			}
+
+			System::getContainer()->get('monolog.logger.contao.email')->info($strMessage, $context);
 		}
-
-		$context = array();
-
-		if ($this->strLogFile !== ContaoContext::EMAIL)
-		{
-			$context = array('contao' => new ContaoContext(__METHOD__, $this->strLogFile));
-		}
-
-		System::getContainer()->get('monolog.logger.contao.email')->info($strMessage, $context);
 
 		return true;
 	}
