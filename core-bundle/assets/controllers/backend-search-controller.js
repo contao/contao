@@ -74,7 +74,6 @@ export default class BackendSearchController extends Controller {
     }
 
     close() {
-        this.inputTarget.blur();
         this.inputTarget.value = "";
 
         this.active = false;
