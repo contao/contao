@@ -4159,7 +4159,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$class = $blnIsOpen ? 'foldable foldable--open' : 'foldable';
 			$alt = $blnIsOpen ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
-			$return .= '<a href="' . $this->addToUrl('ptg=' . $id) . '" class="' . $class . '" data-contao--toggle-nodes-target="toggle" data-action="contao--toggle-nodes#toggle" data-contao--toggle-nodes-id-param="' . $node . '_' . $id . '" data-contao--toggle-nodes-level-param="' . $level . '">' . Image::getHtml('chevron-right.svg', $alt) . '</a>';
+			$return .= '<a href="' . $this->addToUrl('ptg=' . $id) . '" class="' . $class . '" data-contao--toggle-nodes-target="toggle" data-action="contao--toggle-nodes#toggle:prevent" data-contao--toggle-nodes-id-param="' . $node . '_' . $id . '" data-contao--toggle-nodes-level-param="' . $level . '">' . Image::getHtml('chevron-right.svg', $alt) . '</a>';
 		}
 
 		// Check either the ID (tree mode or parent table) or the parent ID (child table)

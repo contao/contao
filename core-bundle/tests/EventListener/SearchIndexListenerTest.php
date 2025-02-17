@@ -50,7 +50,7 @@ class SearchIndexListenerTest extends TestCase
 
         $event = new TerminateEvent($this->createMock(HttpKernelInterface::class), $request, $response);
 
-        $listener = new SearchIndexListener($messenger, '_fragment', $features);
+        $listener = new SearchIndexListener($messenger, '_fragment', '/contao', $features);
         $listener($event);
     }
 
@@ -97,7 +97,15 @@ class SearchIndexListenerTest extends TestCase
         ];
 
         yield 'Should be skipped because it is a fragment request' => [
-            Request::create('_fragment/foo/bar'),
+            Request::create('/_fragment/foo/bar'),
+            new Response(),
+            SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
+            false,
+            false,
+        ];
+
+        yield 'Should be skipped because it is a contao backend request' => [
+            Request::create('/contao?do=article'),
             new Response(),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,

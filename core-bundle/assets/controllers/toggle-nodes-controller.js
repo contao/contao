@@ -29,8 +29,6 @@ export default class extends Controller {
     }
 
     toggle (event) {
-        event.preventDefault();
-
         const el = event.currentTarget;
         this.toggleToggler(el, event.params.id, event.params.level, event.params.folder);
     }
@@ -160,8 +158,6 @@ export default class extends Controller {
     }
 
     async toggleAll (event) {
-        event.preventDefault();
-
         const href = event.currentTarget.href;
 
         if (this.hasExpandedRoot() ^ (event ? event.altKey : false)) {
