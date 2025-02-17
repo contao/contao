@@ -1,9 +1,9 @@
 {% trans_default_domain "contao_default" %}
 
 {% set tabs_container_attributes = attrs()
+    .set('id', id)
     .set('data-controller', 'contao--tabs')
     .set('data-contao--tabs-close-label-value', 'MSC.close'|trans)
-    .set('data-turbo-temporary')
     .mergeWith(tabs_container_attributes|default)
 %}
 <div{{ tabs_container_attributes }}>
