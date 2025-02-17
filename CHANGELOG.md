@@ -2,6 +2,16 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.26] (2025-02-17)
+
+**Fixed issues:**
+
+- [#8087] Generate the correct path when adding Contao components as assets ([pressi])
+- [#8086] Log all sent and failed email messages ([fritzmg])
+- [#8088] Prevent useless messages in the search listener ([Toflar])
+- [#8068] Handle Contao 5.5 operation keys (forward compatibility) ([leofeyer])
+- [#8078] Make sure `Request.Contao` options are always initialized ([fritzmg])
+
 ## [5.3.25] (2025-02-11)
 
 **Fixed issues:**
@@ -579,6 +589,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.26]: https://github.com/contao/contao/releases/tag/5.3.26
 [5.3.25]: https://github.com/contao/contao/releases/tag/5.3.25
 [5.3.24]: https://github.com/contao/contao/releases/tag/5.3.24
 [5.3.23]: https://github.com/contao/contao/releases/tag/5.3.23
@@ -632,6 +643,7 @@ This project adheres to [Semantic Versioning].
 [md-netdesign]: https://github.com/md-netdesign
 [mpitz]: https://github.com/mpitz
 [patrickjDE]: https://github.com/patrickjDE
+[pressi]: https://github.com/pressi
 [qzminski]: https://github.com/qzminski
 [ReneLuecking]: https://github.com/ReneLuecking
 [SeverinGloeckle]: https://github.com/SeverinGloeckle
@@ -1041,3 +1053,8 @@ This project adheres to [Semantic Versioning].
 [#8026]: https://github.com/contao/contao/pull/8026
 [#8036]: https://github.com/contao/contao/pull/8036
 [#8053]: https://github.com/contao/contao/pull/8053
+[#8068]: https://github.com/contao/contao/pull/8068
+[#8078]: https://github.com/contao/contao/pull/8078
+[#8086]: https://github.com/contao/contao/pull/8086
+[#8087]: https://github.com/contao/contao/pull/8087
+[#8088]: https://github.com/contao/contao/pull/8088

@@ -107,6 +107,7 @@
  * Stefan Schleich ([stefanschleich](https://github.com/stefanschleich))
  * Stefan Schulz-Lauterbach ([stefansl](https://github.com/stefansl))
  * Stephan Gehle ([SGehle](https://github.com/SGehle))
+ * Stephan Preßl ([pressi](https://github.com/pressi))
  * Sven Baumann ([baumannsven](https://github.com/baumannsven))
  * Tsarma ([Tsarma](https://github.com/Tsarma))
  * Vladimir Reznichenko ([kalessil](https://github.com/kalessil))
