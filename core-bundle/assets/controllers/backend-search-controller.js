@@ -81,6 +81,41 @@ export default class BackendSearchController extends Controller {
         this.timeout = null;
 
         this.setState("hidden");
+        this._resetFocusableResults();
+    }
+
+    inputBlur() {
+        if ("results" === this.state) {
+            return;
+        }
+
+        this.close();
+    }
+
+    focusTrapNext(event) {
+        if ("results" === this.state && document.activeElement === this.lastFocus) {
+            event.preventDefault();
+            this.firstFocus?.focus();
+        }
+    }
+
+    focusTrapPrev(event) {
+        if ("results" === this.state && document.activeElement === this.firstFocus) {
+            event.preventDefault();
+            this.lastFocus?.focus();
+        }
+    }
+
+    _resetFocusableResults() {
+        this.firstFocus = null;
+        this.lastFocus = null;
+    }
+
+    _setFocusableResults() {
+        const elements = [this.inputTarget, ...this.resultsTarget.querySelectorAll('a[href]:not([disabled]), button:not([disabled])')]
+
+        this.firstFocus = elements[0] ?? []
+        this.lastFocus = elements[elements.length - 1] ?? []
     }
 
     documentClick(event) {
@@ -92,6 +127,14 @@ export default class BackendSearchController extends Controller {
     }
 
     setState(state) {
+        this.state = state;
+
+        if (state === "results") {
+            this._setFocusableResults();
+        } else {
+            this._resetFocusableResults();
+        }
+
         BackendSearchController.classes.forEach(className => {
             this.element.classList.toggle(this[`${className}Class`], className === state);
         });
