@@ -93,14 +93,12 @@ export default class BackendSearchController extends Controller {
 
     focusTrapNext(event) {
         if ("results" === this.state && document.activeElement === this.lastFocus) {
-            event.preventDefault();
             this.firstFocus?.focus();
         }
     }
 
     focusTrapPrev(event) {
         if ("results" === this.state && document.activeElement === this.firstFocus) {
-            event.preventDefault();
             this.lastFocus?.focus();
         }
     }
