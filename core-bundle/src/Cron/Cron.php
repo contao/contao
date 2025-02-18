@@ -81,7 +81,7 @@ class Cron
         // Return if another cron process is already running
         try {
             $repository->lockTable();
-        } catch (LockWaitTimeoutException) {
+        } catch (LockWaitTimeoutException $e) {
             return;
         }
 
