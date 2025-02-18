@@ -31,6 +31,7 @@ export default class BackendSearchController extends Controller {
         this.active = false;
         this.timeout = null;
 
+        this._initAbortController();
         this.setState("hidden");
     }
 
@@ -48,8 +49,9 @@ export default class BackendSearchController extends Controller {
 
     loadResults() {
         this.setState("loading");
+        this._initAbortController();
 
-        fetch(this.searchRoute)
+        fetch(this.searchRoute, {signal: this.signal})
             .then(res=> {
                 if (!res.ok) {
                     throw new Error(res.statusText);
@@ -62,6 +64,10 @@ export default class BackendSearchController extends Controller {
                 this.setState("results");
             })
             .catch(e => {
+                if ("AbortError" === e.name) {
+                    return;
+                }
+
                 this.setState("error");
             });
     }
@@ -104,6 +110,12 @@ export default class BackendSearchController extends Controller {
             event.preventDefault();
             this.lastFocus?.focus();
         }
+    }
+
+    _initAbortController() {
+        this.abortController?.abort();
+        this.abortController = new AbortController();
+        this.signal = this.abortController?.signal;
     }
 
     _resetFocusableResults() {
