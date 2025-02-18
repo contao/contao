@@ -25,7 +25,3 @@ indent_size = 2
 
 [core-bundle/assets/scripts/{core,mootao}.js]
 indent_style = tab
-
-[core-bundle/assets/controllers/*.js]
-indent_style = space
-indent_size = 4
