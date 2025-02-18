@@ -28,20 +28,16 @@ export default class extends Controller {
     };
 
     initialize () {
-        this.toggle = this.toggle.bind(this);
         this.setLabel = this.setLabel.bind(this);
     }
 
     connect () {
-        this.element.addEventListener('click', this.toggle);
-
         this.matchMedia = window.matchMedia('(prefers-color-scheme: dark)');
         this.matchMedia.addEventListener('change', this.setLabel);
         this.setLabel();
     }
 
     disconnect () {
-        this.element.removeEventListener('click', this.toggle);
         this.matchMedia.removeEventListener('change', this.setLabel);
     }
 

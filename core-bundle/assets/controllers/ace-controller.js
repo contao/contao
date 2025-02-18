@@ -39,8 +39,14 @@ export default class extends Controller {
     }
 
     disconnect() {
-        this.editor.destroy();
-        this.container.remove();
+        this.editor?.destroy();
+        this.container?.remove();
+    }
+
+    beforeCache() {
+        // Remove the element container before Turbo caches the page. It will
+        // be recreated when the connect() call happens on the restored page.
+        this.disconnect();
     }
 
     colorChange(event) {

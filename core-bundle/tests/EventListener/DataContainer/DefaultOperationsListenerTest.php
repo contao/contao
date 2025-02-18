@@ -437,7 +437,7 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertArrayHasKey('edit', $operations);
         $this->assertArrayHasKey('show', $operations);
         $this->assertArrayHasKey('foo', $operations);
-        $this->assertArrayNotHasKey('primary', $operations['edit']);
+        $this->assertArrayHasKey('primary', $operations['edit']);
         $this->assertTrue($operations['show']['primary']);
         $this->assertArrayNotHasKey('primary', $operations['foo']);
     }
