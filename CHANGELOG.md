@@ -2,6 +2,21 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.5.0] (2025-02-18)
+
+**Fixed issues:**
+
+- [#8101] Pass the correct argument to `URLSearchParams()` ([leofeyer])
+- [#8063] Fix the back end search results handling ([zoglo])
+- [#8098] Do not apply the `core.js` textarea resize script to the ACE editor ([m-vo])
+- [#8075] Harden the Stimulus controllers ([m-vo])
+- [#8090] Prevent Turbo prefetch for modal iframes ([fritzmg])
+- [#8092] Adjust the default location for Loupe ([Toflar])
+- [#8079] Prevent clicking operations from changing the picker selection ([leofeyer])
+- [#8084] Remove a non-breaking space from the root paste button ([leofeyer])
+- [#8073] Make the back end tabs "turbo-temporary" ([m-vo])
+- [#8067] Do not unset the default operation options ([leofeyer])
+
 ## [5.5.0-RC4] (2025-02-11)
 
 **Fixed issues:**
@@ -150,6 +165,7 @@ This project adheres to [Semantic Versioning].
 - [#7582] Add PostCSS as described in Symfony Encore ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.5.0]: https://github.com/contao/contao/releases/tag/5.5.0
 [5.5.0-RC4]: https://github.com/contao/contao/releases/tag/5.5.0-RC4
 [5.5.0-RC3]: https://github.com/contao/contao/releases/tag/5.5.0-RC3
 [5.5.0-RC2]: https://github.com/contao/contao/releases/tag/5.5.0-RC2
@@ -285,3 +301,13 @@ This project adheres to [Semantic Versioning].
 [#8044]: https://github.com/contao/contao/pull/8044
 [#8045]: https://github.com/contao/contao/pull/8045
 [#8048]: https://github.com/contao/contao/pull/8048
+[#8063]: https://github.com/contao/contao/pull/8063
+[#8067]: https://github.com/contao/contao/pull/8067
+[#8073]: https://github.com/contao/contao/pull/8073
+[#8075]: https://github.com/contao/contao/pull/8075
+[#8079]: https://github.com/contao/contao/pull/8079
+[#8084]: https://github.com/contao/contao/pull/8084
+[#8090]: https://github.com/contao/contao/pull/8090
+[#8092]: https://github.com/contao/contao/pull/8092
+[#8098]: https://github.com/contao/contao/pull/8098
+[#8101]: https://github.com/contao/contao/pull/8101
