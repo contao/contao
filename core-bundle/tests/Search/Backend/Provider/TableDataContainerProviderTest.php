@@ -130,9 +130,9 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
         // Sort the documents for deterministic tests
         /** @var array<Document> $documents */
         $documents = iterator_to_array($documentsIterator);
-        $this->assertCount(3, $documents);
         usort($documents, static fn (Document $a, Document $b) => $a->getId() <=> $b->getId());
 
+        $this->assertCount(3, $documents);
         $this->assertSame('1', $documents[0]->getId());
         $this->assertSame('contao.db.tl_content', $documents[0]->getType());
         $this->assertSame('tl_content', $documents[0]->getMetadata()['table']);

@@ -79,7 +79,7 @@ class TableDataContainerProvider implements ProviderInterface
                 continue;
             }
 
-            // Entire table is marked as to be ignored
+            // The table is marked to be ignored
             if ($GLOBALS['TL_DCA'][$table]['config']['backendSearchIgnore'] ?? false) {
                 continue;
             }
