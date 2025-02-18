@@ -16,6 +16,7 @@ use Contao\CoreBundle\Entity\CronJob as CronJobEntity;
 use Contao\CoreBundle\Exception\CronExecutionSkippedException;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Cron\CronExpression;
+use Doctrine\DBAL\Exception\LockWaitTimeoutException;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -77,10 +78,14 @@ class Cron
         $cronJobsToBeRun = [];
         $now = new \DateTimeImmutable();
 
+        // Return if another cron process is already running
         try {
-            // Lock cron table
             $repository->lockTable();
+        } catch (LockWaitTimeoutException $e) {
+            return;
+        }
 
+        try {
             // Go through each cron job
             foreach ($this->cronJobs as $cron) {
                 $interval = $cron->getInterval();
