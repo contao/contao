@@ -79,6 +79,11 @@ class TableDataContainerProvider implements ProviderInterface
                 continue;
             }
 
+            // Entire table is marked as to be ignored
+            if ($GLOBALS['TL_DCA'][$table]['config']['backendSearchIgnore'] ?? false) {
+                continue;
+            }
+
             foreach ($this->findDocuments($table, $config) as $document) {
                 yield $document;
             }
