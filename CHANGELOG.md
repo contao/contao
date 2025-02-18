@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.53] (2025-02-18)
+
+**Fixed issues:**
+
+- [#8055] Use a non-blocking table lock for `contao.cron` ([fritzmg])
+- [#8056] Make VFS tests compatible with `league/flysystem-bundle` 3.4.0 ([fritzmg])
+
 ## [4.13.52] (2025-01-22)
 
 **Fixed issues:**
@@ -1120,6 +1127,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.53]: https://github.com/contao/contao/releases/tag/4.13.53
 [4.13.52]: https://github.com/contao/contao/releases/tag/4.13.52
 [4.13.51]: https://github.com/contao/contao/releases/tag/4.13.51
 [4.13.50]: https://github.com/contao/contao/releases/tag/4.13.50
@@ -2035,3 +2043,5 @@ This project adheres to [Semantic Versioning].
 [#7883]: https://github.com/contao/contao/pull/7883
 [#7884]: https://github.com/contao/contao/pull/7884
 [#7929]: https://github.com/contao/contao/pull/7929
+[#8055]: https://github.com/contao/contao/pull/8055
+[#8056]: https://github.com/contao/contao/pull/8056
