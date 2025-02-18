@@ -34,8 +34,8 @@ document.documentElement.addEventListener('turbo:before-prefetch', e => {
     if (
         (e.target.search && (new URLSearchParams(e.target.search)).has('rt'))
         || e.target.classList.contains('header_back')
-        || e.target.closest('.sf-toolbar') !== null
         || e.target.matches('[onclick^="Backend.openModalIframe("]')
+        || e.target.closest('.sf-toolbar') !== null
     ) {
         e.preventDefault();
     }
