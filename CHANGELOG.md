@@ -2,6 +2,18 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.5.1] (2025-02-19)
+
+**Fixed issues:**
+
+- [#8122] Handle the case when there is no theme selector in the Template Studio ([m-vo])
+- [#8118] Allow passing children as `string` within the clipboard manager ([zoglo])
+- [#8120] Make the search bar less intrusive ([leofeyer])
+- [#8113] Increase the search delay to 300ms ([leofeyer])
+- [#8111] Only omit the request token for the edit operation in the form generator ([leofeyer])
+- [#8108] Add an `abortController` to the back end search ([zoglo])
+- [#8104] Allow entire tables to be excluded from the back end search ([Toflar])
+
 ## [5.5.0] (2025-02-18)
 
 **Fixed issues:**
@@ -165,6 +177,7 @@ This project adheres to [Semantic Versioning].
 - [#7582] Add PostCSS as described in Symfony Encore ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.5.1]: https://github.com/contao/contao/releases/tag/5.5.1
 [5.5.0]: https://github.com/contao/contao/releases/tag/5.5.0
 [5.5.0-RC4]: https://github.com/contao/contao/releases/tag/5.5.0-RC4
 [5.5.0-RC3]: https://github.com/contao/contao/releases/tag/5.5.0-RC3
@@ -311,3 +324,10 @@ This project adheres to [Semantic Versioning].
 [#8092]: https://github.com/contao/contao/pull/8092
 [#8098]: https://github.com/contao/contao/pull/8098
 [#8101]: https://github.com/contao/contao/pull/8101
+[#8104]: https://github.com/contao/contao/pull/8104
+[#8108]: https://github.com/contao/contao/pull/8108
+[#8111]: https://github.com/contao/contao/pull/8111
+[#8113]: https://github.com/contao/contao/pull/8113
+[#8118]: https://github.com/contao/contao/pull/8118
+[#8120]: https://github.com/contao/contao/pull/8120
+[#8122]: https://github.com/contao/contao/pull/8122
