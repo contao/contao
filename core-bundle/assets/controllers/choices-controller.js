@@ -43,7 +43,16 @@ export default class ChoicesController extends Controller {
             removeItemLabelText: function (value) {
                 return Contao.lang.removeItem.concat(' ').concat(value);
             },
-        })
+        });
+
+        // Trigger a custom "choicesInit" event to allow third parties to interact with the Choices instance
+        const initEvent = new CustomEvent('choicesInit', {
+            detail: {
+                choices: this.choices
+            }
+        });
+
+        select.dispatchEvent(initEvent);
     }
 
     disconnect() {
