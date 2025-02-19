@@ -20,6 +20,7 @@ $GLOBALS['TL_DCA']['tl_favorites'] = array
 		'enableVersioning'            => true,
 		'notCreatable'                => true,
 		'notCopyable'                 => true,
+		'backendSearchIgnore'         => true,
 		'sql' => array
 		(
 			'keys' => array
