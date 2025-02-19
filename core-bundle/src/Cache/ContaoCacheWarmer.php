@@ -123,10 +123,10 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $processed = [];
 
         foreach ($this->locales as $language) {
-            $files = $this->findLanguageFiles($language);
+            $files = iterator_to_array($this->findLanguageFiles($language));
 
             foreach ($files as $file) {
-                $name = substr($file->getBasename(), 0, -4);
+                $name = $file->getFilenameWithoutExtension();
 
                 if (isset($processed[$language][$name])) {
                     continue;
@@ -134,14 +134,8 @@ class ContaoCacheWarmer implements CacheWarmerInterface
 
                 $processed[$language][$name] = true;
 
-                $subfiles = $this->finder
-                    ->findIn(Path::join('languages', $language))
-                    ->files()
-                    ->name("/^$name\\.(php|xlf)$/")
-                ;
-
                 $dumper->dump(
-                    iterator_to_array($subfiles),
+                    array_filter($files, static fn (SplFileInfo $f): bool => $f->getFilenameWithoutExtension() === $name),
                     Path::join('languages', $language, "$name.php"),
                     ['type' => $language],
                 );
