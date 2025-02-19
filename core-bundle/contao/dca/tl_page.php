@@ -82,7 +82,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'mode'                    => DataContainer::MODE_TREE,
 			'rootPaste'               => true,
 			'showRootTrails'          => true,
-			'icon'                    => 'pagemounts.svg',
 			'panelLayout'             => 'filter;search',
 			'defaultSearchField'      => 'title'
 		),

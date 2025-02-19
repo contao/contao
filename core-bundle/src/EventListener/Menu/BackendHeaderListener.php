@@ -89,6 +89,7 @@ class BackendHeaderListener
             ->setLinkAttribute('class', 'icon-color-scheme')
             ->setLinkAttribute('title', '') // Required for the tips.js script
             ->setLinkAttribute('data-controller', 'contao--color-scheme')
+            ->setLinkAttribute('data-action', 'contao--color-scheme#toggle')
             ->setLinkAttribute('data-contao--color-scheme-target', 'label')
             ->setLinkAttribute(
                 'data-contao--color-scheme-i18n-value',
@@ -108,7 +109,7 @@ class BackendHeaderListener
 
         $submenu = $factory
             ->createItem('submenu')
-            ->setLabel('<button type="button" data-contao--profile-target="button" data-action="contao--profile#toggle">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
+            ->setLabel('<button type="button" data-contao--profile-target="button" data-action="contao--profile#toggle:prevent">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
             ->setAttribute('class', 'submenu')
             ->setAttribute('data-controller', 'contao--profile')
             ->setAttribute('data-contao--profile-target', 'menu')
