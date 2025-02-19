@@ -14,7 +14,7 @@ export default class BackendSearchController extends Controller {
         },
         delay: {
             type: Number,
-            default: 150,
+            default: 300,
         },
     }
 
@@ -41,10 +41,7 @@ export default class BackendSearchController extends Controller {
         }
 
         clearTimeout(this.timeout);
-
-        this.timeout = setTimeout(() => {
-            this.loadResults();
-        }, this.delayValue);
+        this.timeout = setTimeout(() => { this.loadResults(); }, this.delayValue);
     }
 
     loadResults() {
