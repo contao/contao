@@ -37,10 +37,10 @@
             position: relative;
             vertical-align: initial;
 
-            > img {
+            > svg {
                 position: absolute;
                 left: 7px;
-                top: 2px;
+                top: 3px;
                 pointer-events: none;
             }
         }
@@ -71,6 +71,20 @@
         padding-left: 30px;
         outline: none;
         border: 0 none;
+    }
+
+    .search--hidden {
+        svg {
+            color: var(--header-text);
+        }
+
+        #backend-search {
+            background: var(--header-background);
+
+            &::placeholder {
+                color: var(--header-text);
+            }
+        }
     }
 
     .backend-search_results-container {
