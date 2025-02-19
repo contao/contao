@@ -12,6 +12,7 @@
         .set('aria-alert', 'true', not success)
         .set('data-contao--message-outlet-target', 'message')
         .set('data-turbo-temporary')
+        .mergeWith(message_attributes|default)
     %}
     <div{{ message_attributes }}>
         <div class="inner">
