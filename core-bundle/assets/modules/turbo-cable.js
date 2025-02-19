@@ -38,7 +38,9 @@ export class TurboCable {
             response = await fetch(TurboCable.buildURL(url, query_params), params);
         } catch (e) {
             if(e !== this._abortSignal) {
-                console.error(`There was an error fetching the Turbo stream response from "${url}"`);
+                if (window.console) {
+                    console.error(`There was an error fetching the Turbo stream response from "${url}"`);
+                }
             }
 
             return;
@@ -51,7 +53,9 @@ export class TurboCable {
         }
 
         if (!response.headers.get('content-type').startsWith('text/vnd.turbo-stream.html') || response.status >= 300) {
-            console.error(`The Turbo stream response from "${url}" has an unprocessable format.`);
+            if (window.console) {
+                console.error(`The Turbo stream response from "${url}" has an unprocessable format.`);
+            }
 
             return;
         }
