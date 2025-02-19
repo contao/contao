@@ -3,7 +3,12 @@
 {% set search_container_attributes = attrs()
     .addClass(['backend-search', 'search--hidden'])
     .set('data-controller', 'contao--backend-search')
-    .set('data-action', 'keydown.esc@document->contao--backend-search#close click@document->contao--backend-search#documentClick')
+    .set('data-action','
+        click@document->contao--backend-search#documentClick
+        keydown.esc@document->contao--backend-search#close
+        keydown.tab@document->contao--backend-search#focusTrapNext
+        keydown.shift+tab@document->contao--backend-search#focusTrapPrev
+    ')
     .set('data-contao--backend-search-min-characters-value', '3')
     .set('data-contao--backend-search-hidden-class', 'search--hidden')
     .set('data-contao--backend-search-initial-class', 'search--initial')
@@ -21,7 +26,7 @@
     .set('placeholder', 'MSC.search'|trans)
     .set('name', 'keywords')
     .set('data-contao--backend-search-target', 'input')
-    .set('data-action', 'focus->contao--backend-search#open input->contao--backend-search#performSearch blur->contao--backend-search#close')
+    .set('data-action', 'focus->contao--backend-search#open input->contao--backend-search#performSearch blur->contao--backend-search#inputBlur')
 %}
 
 <div {{ search_container_attributes }}>

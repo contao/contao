@@ -37,6 +37,16 @@ export default class extends Controller {
         });
     }
 
+    beforeCache() {
+        // Destroy editor instances before Turbo caches the page. They will be
+        // recreated when the editorTargetConnected() calls happens on the
+        // restored page.
+        for (const [key, editor] of this.editors) {
+            editor.destroy();
+            delete this.editors[key];
+        }
+    }
+
     close(event) {
         document.getElementById(event.target.getAttribute('aria-controls')).innerText = '';
     }
