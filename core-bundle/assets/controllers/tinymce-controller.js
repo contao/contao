@@ -9,7 +9,7 @@ export default class extends Controller {
         // this from happening we delay the execution until the call stack has
         // cleared, and we are sure all microtasks (i.e. disconnect() calls)
         // did run.
-        setTimeout(() => this._connect(), 0);
+        queueMicrotask(() => this._connect());
     }
 
     _connect() {
