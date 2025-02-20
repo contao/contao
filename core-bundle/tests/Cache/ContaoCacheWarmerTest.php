@@ -198,7 +198,7 @@ class ContaoCacheWarmerTest extends TestCase
         $finder = $this->createMock(Finder::class);
         $finder
             ->method('getIterator')
-            ->willReturn(new \ArrayIterator([]))
+            ->willReturn(new \EmptyIterator())
         ;
 
         $resourceFinder = $this->createMock(ResourceFinder::class);
