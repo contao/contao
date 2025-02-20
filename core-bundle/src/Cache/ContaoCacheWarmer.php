@@ -123,7 +123,13 @@ class ContaoCacheWarmer implements CacheWarmerInterface
         $processed = [];
 
         foreach ($this->locales as $language) {
-            $files = iterator_to_array($this->findLanguageFiles($language));
+            $files = $this->findLanguageFiles($language);
+
+            // findLanguageFiles might return an empty array instead of a Traversable object
+            // which we cannot pass to iterator_to_array in PHP 8.1 directly.
+            if ($files instanceof \Traversable) {
+                $files = iterator_to_array($files);
+            }
 
             foreach ($files as $file) {
                 $name = $file->getFilenameWithoutExtension();
