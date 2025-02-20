@@ -78,17 +78,21 @@ body {
 }
 
 .login-providers li {
-	margin-bottom: 10px;
+	margin-bottom: 6px;
 	text-align: center;
 }
 
 .login-providers .has-icon {
-	padding-left: 36px;
-	background-position: 12px center;
-	background-repeat: no-repeat;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
-.login-providers .passkey .tl_submit {
+.login-providers .passkey .tl_submit:before {
+	content: "";
+	width: 16px;
+	height: 16px;
+	margin-right: 4px;
 	background-image: var(--icon-passkey);
 }
 
@@ -102,6 +106,8 @@ body {
 }
 
 .widget-checkbox {
+	display: flex;
+	align-items: center;
 	margin-top: 6px !important;
 }
 
@@ -111,10 +117,11 @@ body {
 
 .submit_container {
 	margin-top: 12px;
-	display: grid;
-	grid-template-columns: 1fr auto;
-	grid-gap: 12px;
-	align-items: center;
+}
+
+.submit_container button,
+.login-providers .tl_submit {
+	width: 100%;
 }
 
 label[for="username"] {
@@ -163,6 +170,18 @@ label[for="verify"] {
 
 .qr_code .tl_help {
 	line-height: 1.3;
+}
+
+.fe-link {
+	position: absolute;
+	right: 20px;
+	bottom: 20px;
+}
+
+.cancel-link {
+	position: absolute;
+	left: 20px;
+	bottom: 20px;
 }
 
 /* Error messages */
