@@ -51,11 +51,15 @@ body {
 }
 
 .formbody {
-	padding: 35px 45px 25px;
+	padding: 35px 45px 29px;
+}
+
+.be_login_two_factor .formbody {
+	padding-bottom: 35px;
 }
 
 .login-providers {
-	padding: 0 45px 25px;
+	padding: 0 45px 35px;
 }
 
 .login-providers .or {
@@ -119,9 +123,16 @@ body {
 	margin-top: 12px;
 }
 
-.submit_container button,
-.login-providers .tl_submit {
+.be_login_two_factor .submit_container {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-gap: 6px;
+	align-items: center;
+}
+
+.tl_submit {
 	width: 100%;
+	text-align: center;
 }
 
 label[for="username"] {
@@ -173,15 +184,10 @@ label[for="verify"] {
 }
 
 .fe-link {
-	position: absolute;
-	right: 20px;
-	bottom: 20px;
-}
-
-.cancel-link {
-	position: absolute;
-	left: 20px;
-	bottom: 20px;
+	display: block;
+	width: 100%;
+	margin-top: 2em;
+	text-align: center;
 }
 
 /* Error messages */

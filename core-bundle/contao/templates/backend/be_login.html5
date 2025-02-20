@@ -71,9 +71,9 @@
         </form>
         <?= $this->loginMenu ?>
       </main>
-      <a href="/" class="fe-link"><?= $this->feLink ?> ›</a>
       <?= $this->messages ?>
       <div class="tl_message passkey_message" data-contao--webauthn-error-target="message"></div>
+      <a href="/" class="fe-link"><?= $this->feLink ?></a>
     </div>
   <?php $this->endblock(); ?>
 
