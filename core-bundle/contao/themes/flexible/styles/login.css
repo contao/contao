@@ -186,7 +186,8 @@ label[for="verify"] {
 .fe-link {
 	display: block;
 	width: 100%;
-	margin-top: 2em;
+	margin-top: 3em;
+	font-size: 90%;
 	text-align: center;
 }
 
