@@ -1,4 +1,0 @@
-FMD:
-    <?= $element ?>:
-        - '<?= $name ?>'
-        - '<?= $description ?>'

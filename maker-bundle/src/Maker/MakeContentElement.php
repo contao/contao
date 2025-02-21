@@ -77,13 +77,15 @@ class MakeContentElement extends AbstractFragmentMaker
 
         if ($addTranslation) {
             $this->languageFileGenerator->generate([
-                'source' => 'content-element/translation.tpl.yaml',
                 'domain' => 'contao_default',
                 'language' => 'en',
                 'variables' => [
-                    'element' => $elementName,
-                    'name' => $input->getArgument('source-name'),
-                    'description' => $input->getArgument('source-description'),
+                    'CTE' => [
+                        $elementName => [
+                            $input->getArgument('source-name'),
+                            $input->getArgument('source-description'),
+                        ],
+                    ],
                 ],
             ]);
 
@@ -97,13 +99,15 @@ class MakeContentElement extends AbstractFragmentMaker
                 }
 
                 $this->languageFileGenerator->generate([
-                    'source' => 'content-element/translation.tpl.yaml',
                     'domain' => 'contao_default',
                     'language' => $input->getArgument('language-'.$i),
                     'variables' => [
-                        'element' => $elementName,
-                        'name' => $input->getArgument('target-name-'.$i),
-                        'description' => $input->getArgument('target-description-'.$i),
+                        'CTE' => [
+                            $elementName => [
+                                $input->getArgument('target-name-'.$i),
+                                $input->getArgument('target-description-'.$i),
+                            ],
+                        ],
                     ],
                 ]);
 

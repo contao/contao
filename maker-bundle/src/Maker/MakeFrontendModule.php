@@ -78,13 +78,15 @@ class MakeFrontendModule extends AbstractFragmentMaker
 
         if ($addTranslation) {
             $this->languageFileGenerator->generate([
-                'source' => 'frontend-module/translation.tpl.yaml',
                 'domain' => 'contao_modules',
                 'language' => 'en',
                 'variables' => [
-                    'element' => $elementName,
-                    'name' => $input->getArgument('source-name'),
-                    'description' => $input->getArgument('source-description'),
+                    'FMD' => [
+                        $elementName => [
+                            $input->getArgument('source-name'),
+                            $input->getArgument('source-description'),
+                        ],
+                    ],
                 ],
             ]);
 
@@ -98,13 +100,15 @@ class MakeFrontendModule extends AbstractFragmentMaker
                 }
 
                 $this->languageFileGenerator->generate([
-                    'source' => 'frontend-module/target.tpl.yaml',
                     'domain' => 'contao_modules',
                     'language' => $input->getArgument('language-'.$i),
                     'variables' => [
-                        'element' => $elementName,
-                        'name' => $input->getArgument('target-name-'.$i),
-                        'description' => $input->getArgument('target-description-'.$i),
+                        'FMD' => [
+                            $elementName => [
+                                $input->getArgument('target-name-'.$i),
+                                $input->getArgument('target-description-'.$i),
+                            ],
+                        ],
                     ],
                 ]);
 

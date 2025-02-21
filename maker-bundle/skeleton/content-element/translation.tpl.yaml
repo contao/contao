@@ -1,4 +1,0 @@
-CTE:
-    <?= $element ?>:
-        - '<?= $name ?>'
-        - '<?= $description ?>'

@@ -30,26 +30,17 @@ class LanguageFileGenerator implements GeneratorInterface
     public function generate(array $options): string
     {
         $options = $this->getOptionsResolver()->resolve($options);
-
-        $source = $this->getSourcePath($options['source']);
-
-        if ('yaml' !== pathinfo($source, PATHINFO_EXTENSION)) {
-            throw new \RuntimeException('Source file needs to be in YAML format.');
-        }
-
         $target = Path::join($this->projectDir, 'translations', \sprintf('%s.%s.yaml', $options['domain'], $options['language']));
-        $variables = $options['variables'];
-        $contents = $this->fileManager->parseTemplate($source, $options['variables']);
-        $yaml = Yaml::parse($contents);
 
         if ($this->fileManager->fileExists($target)) {
-            $yaml['CTE'][$variables['element']] = [
-                $variables['name'],
-                $variables['description'],
-            ];
+            $translations = Yaml::parse($this->fileManager->getFileContents($target));
+        } else {
+            $translations = [];
         }
 
-        $this->fileManager->dumpFile($target, Yaml::dump($yaml, inline: 3));
+        $translations = array_merge_recursive($translations, $options['variables']);
+
+        $this->fileManager->dumpFile($target, Yaml::dump($translations, inline: 10));
 
         return Path::makeRelative($target, $this->projectDir);
     }
@@ -57,14 +48,9 @@ class LanguageFileGenerator implements GeneratorInterface
     private function getOptionsResolver(): OptionsResolver
     {
         $resolver = new OptionsResolver();
-        $resolver->setRequired(['domain', 'source', 'language', 'variables']);
+        $resolver->setRequired(['domain', 'language', 'variables']);
         $resolver->setAllowedTypes('variables', ['array']);
 
         return $resolver;
-    }
-
-    private function getSourcePath(string $path): string
-    {
-        return Path::join(__DIR__.'/../../skeleton', $path);
     }
 }
