@@ -90,16 +90,12 @@ export default class extends Controller {
         }
     }
 
-    disconnect() {
-        this.rowTargets.forEach(row => {
-           this._wrap(row);
-        });
-    }
-
     beforeCache() {
         // Restore the original HTML with template tags before Turbo caches the
         // page. They will get unwrapped again at the restored page.
-        this.disconnect();
+        this.rowTargets.forEach(row => {
+            this._wrap(row);
+        });
     }
 
     _unwrap(template) {
