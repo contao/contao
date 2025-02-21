@@ -139,7 +139,7 @@ abstract class Model
 			// Look for joined fields
 			foreach ($arrData as $k=>$v)
 			{
-				if (str_contains($k, '__'))
+				if (static::isJoinedField($k))
 				{
 					list($key, $field) = explode('__', $k, 2);
 
@@ -231,7 +231,12 @@ abstract class Model
 	public function cloneDetached()
 	{
 		$clone = clone $this;
-		$clone->arrData[static::$strPk] = $this->arrData[static::$strPk];
+
+		if (isset($this->arrData[static::$strPk]))
+		{
+			$clone->arrData[static::$strPk] = $this->arrData[static::$strPk];
+		}
+
 		$clone->preventSaving(false);
 
 		return $clone;
@@ -370,9 +375,9 @@ abstract class Model
 	 */
 	public function setRow(array $arrData)
 	{
-		foreach ($arrData as $k=>$v)
+		foreach ($arrData as $k => $v)
 		{
-			if (str_contains($k, '__'))
+			if (static::isJoinedField($k))
 			{
 				unset($arrData[$k]);
 			}
@@ -399,7 +404,7 @@ abstract class Model
 	{
 		foreach ($arrData as $k=>$v)
 		{
-			if (str_contains($k, '__'))
+			if (static::isJoinedField($k))
 			{
 				continue;
 			}
@@ -975,7 +980,7 @@ abstract class Model
 			array
 			(
 				'limit'  => 1,
-				'column' => $isAlias ? array("BINARY $t.alias=?") : array("$t.id=?"),
+				'column' => $isAlias ? array("CAST($t.alias AS BINARY)=?") : array("$t.id=?"),
 				'value'  => $varId,
 				'return' => 'Model'
 			),
@@ -1454,5 +1459,15 @@ abstract class Model
 		}
 
 		return System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
+	}
+
+	/**
+	 * This method is a hot path so caching the keys gets rid of thousands of str_contains() calls.
+	 */
+	protected static function isJoinedField(string $key): bool
+	{
+		static $cache = array();
+
+		return $cache[$key] ??= str_contains($key, '__');
 	}
 }

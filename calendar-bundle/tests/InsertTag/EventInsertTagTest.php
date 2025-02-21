@@ -87,32 +87,32 @@ class EventInsertTagTest extends ContaoTestCase
         $listener = new EventInsertTag($this->mockContaoFramework($adapters), $urlGenerator);
 
         $this->assertSame(
-            '<a href="events/the-foobar-event.html" title="The &quot;foobar&quot; event">The "foobar" event</a>',
+            '<a href="events/the-foobar-event.html">The "foobar" event</a>',
             $listener(new ResolvedInsertTag('event', new ResolvedParameters(['2']), []))->getValue(),
         );
 
         $this->assertSame(
-            '<a href="events/the-foobar-event.html" title="The &quot;foobar&quot; event" target="_blank" rel="noreferrer noopener">The "foobar" event</a>',
+            '<a href="events/the-foobar-event.html" target="_blank" rel="noreferrer noopener">The "foobar" event</a>',
             $listener(new ResolvedInsertTag('event', new ResolvedParameters(['2', 'blank']), []))->getValue(),
         );
 
         $this->assertSame(
-            '<a href="events/the-foobar-event.html" title="The &quot;foobar&quot; event">',
+            '<a href="events/the-foobar-event.html">',
             $listener(new ResolvedInsertTag('event_open', new ResolvedParameters(['2']), []))->getValue(),
         );
 
         $this->assertSame(
-            '<a href="events/the-foobar-event.html" title="The &quot;foobar&quot; event" target="_blank" rel="noreferrer noopener">',
+            '<a href="events/the-foobar-event.html" target="_blank" rel="noreferrer noopener">',
             $listener(new ResolvedInsertTag('event_open', new ResolvedParameters(['2', 'blank']), []))->getValue(),
         );
 
         $this->assertSame(
-            '<a href="http://domain.tld/events/the-foobar-event.html" title="The &quot;foobar&quot; event" target="_blank" rel="noreferrer noopener">',
+            '<a href="http://domain.tld/events/the-foobar-event.html" target="_blank" rel="noreferrer noopener">',
             $listener(new ResolvedInsertTag('event_open', new ResolvedParameters(['2', 'blank', 'absolute']), []))->getValue(),
         );
 
         $this->assertSame(
-            '<a href="http://domain.tld/events/the-foobar-event.html" title="The &quot;foobar&quot; event" target="_blank" rel="noreferrer noopener">',
+            '<a href="http://domain.tld/events/the-foobar-event.html" target="_blank" rel="noreferrer noopener">',
             $listener(new ResolvedInsertTag('event_open', new ResolvedParameters(['2', 'absolute', 'blank']), []))->getValue(),
         );
 

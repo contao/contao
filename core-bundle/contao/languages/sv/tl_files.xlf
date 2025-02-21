@@ -209,6 +209,42 @@
         <source>Synchronize the file system and the database</source>
         <target>Synkronisera filsystemet och databasen</target>
       </trans-unit>
+      <trans-unit id="tl_files.textTrackLanguage.0">
+        <source>Language</source>
+        <target>Språk</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackLanguage.1">
+        <source>Please select the language of the file.</source>
+        <target>Vänligen välj språk för filen.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackType.0">
+        <source>Track type</source>
+        <target>Typ av spår</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackType.1">
+        <source>Here you can select the type of text track.</source>
+        <target>Här kan du välja vilken typ av textspår som ska användas.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.captions">
+        <source>Closed captions</source>
+        <target>Slutna undertexter</target>
+      </trans-unit>
+      <trans-unit id="tl_files.descriptions">
+        <source>Audio descriptions</source>
+        <target>Ljudbeskrivningar</target>
+      </trans-unit>
+      <trans-unit id="tl_files.subtitles">
+        <source>Subtitles</source>
+        <target>Undertexter</target>
+      </trans-unit>
+      <trans-unit id="tl_files.chapters">
+        <source>Chapters</source>
+        <target>Kapitel</target>
+      </trans-unit>
+      <trans-unit id="tl_files.metadata">
+        <source>Metadata</source>
+        <target>Metadata</target>
+      </trans-unit>
       <trans-unit id="tl_files.show">
         <source>Show the details of file or folder &quot;%s&quot;</source>
         <target>Visa filen eller mappens detaljer &quot;%s&quot;</target>

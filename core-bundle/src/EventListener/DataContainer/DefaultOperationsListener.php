@@ -50,8 +50,13 @@ class DefaultOperationsListener
 
     private function getForTable(string $table): array
     {
-        $defaults = $this->getDefaults($table);
         $dca = $GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null;
+
+        if ([] === $dca) {
+            return [];
+        }
+
+        $defaults = $this->getDefaults($table);
 
         if (!\is_array($dca)) {
             return $defaults;
@@ -59,19 +64,27 @@ class DefaultOperationsListener
 
         $operations = [];
 
-        // If none of the defined operations are name-only, we append the operations to
-        // the defaults.
-        if (!array_filter($dca, static fn ($v, $k) => isset($defaults[$k]) || (\is_string($v) && isset($defaults[$v])), ARRAY_FILTER_USE_BOTH)) {
+        // If none of the defined operations are name-only, we prepend the default operations.
+        if (!array_filter($dca, static fn ($v, $k) => isset($defaults[$k]) || (\is_string($v) && isset($defaults[ltrim($v, '!')])), ARRAY_FILTER_USE_BOTH)) {
             $operations = $defaults;
         }
 
         foreach ($dca as $k => $v) {
-            if (\is_string($v) && isset($defaults[$v])) {
-                $operations[$v] = $defaults[$v];
+            if (\is_string($v) && ($key = ltrim($v, '!')) && isset($defaults[$key])) {
+                $operations[$key] = $defaults[$key];
+
+                if (str_starts_with($v, '!')) {
+                    $operations[$key]['primary'] = true;
+                }
+
                 continue;
             }
 
-            $operations[$k] = \is_array($v) ? $v : [$v];
+            if (!\is_array($v)) {
+                continue;
+            }
+
+            $operations[$k] = $v;
         }
 
         return $operations;
@@ -86,7 +99,7 @@ class DefaultOperationsListener
         $ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'][0] ?? null;
 
         $canEdit = !($GLOBALS['TL_DCA'][$table]['config']['notEditable'] ?? false);
-        $canCopy = !($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? false) && !($GLOBALS['TL_DCA'][$table]['config']['notCopyable'] ?? false);
+        $canCopy = !($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? false) && !($GLOBALS['TL_DCA'][$table]['config']['notCreatable'] ?? false) && !($GLOBALS['TL_DCA'][$table]['config']['notCopyable'] ?? false);
         $canSort = !($GLOBALS['TL_DCA'][$table]['config']['notSortable'] ?? false);
         $canDelete = !($GLOBALS['TL_DCA'][$table]['config']['notDeletable'] ?? false);
 
@@ -95,7 +108,11 @@ class DefaultOperationsListener
                 'edit' => [
                     'href' => 'act=edit',
                     'icon' => 'edit.svg',
+                    'prefetch' => true,
+                    'attributes' => 'data-contao--deeplink-target="primary"',
                     'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
+                    'primary' => true,
+                    'showInHeader' => true,
                 ],
             ];
         }
@@ -108,7 +125,10 @@ class DefaultOperationsListener
                     'children' => [
                         'href' => 'table='.$ctable.($ctable === $table ? '&amp;ptable='.$table : ''),
                         'icon' => 'children.svg',
+                        'prefetch' => true,
+                        'attributes' => 'data-contao--deeplink-target="secondary"',
                         'button_callback' => $this->accessChildrenCallback($ctable, $table),
+                        'primary' => true,
                     ],
                 ];
             }
@@ -164,6 +184,7 @@ class DefaultOperationsListener
                 'icon' => 'visible.svg',
                 'showInHeader' => (bool) $ctable,
                 'button_callback' => $this->toggleCallback($table, $toggleField),
+                'primary' => true,
             ];
         }
 

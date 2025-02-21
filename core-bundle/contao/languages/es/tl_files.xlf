@@ -209,6 +209,42 @@
         <source>Synchronize the file system and the database</source>
         <target>Sincronizar los archivos y la base de datos</target>
       </trans-unit>
+      <trans-unit id="tl_files.textTrackLanguage.0">
+        <source>Language</source>
+        <target>Idioma</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackLanguage.1">
+        <source>Please select the language of the file.</source>
+        <target>Por favor seleccione el idioma del archivo.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackType.0">
+        <source>Track type</source>
+        <target>Tipo de pista</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackType.1">
+        <source>Here you can select the type of text track.</source>
+        <target>Aquí puede seleccionar el tipo de pista de texto.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.captions">
+        <source>Closed captions</source>
+        <target>Subtítulos cerrados</target>
+      </trans-unit>
+      <trans-unit id="tl_files.descriptions">
+        <source>Audio descriptions</source>
+        <target>Descripciones de audio</target>
+      </trans-unit>
+      <trans-unit id="tl_files.subtitles">
+        <source>Subtitles</source>
+        <target>Subtítulos</target>
+      </trans-unit>
+      <trans-unit id="tl_files.chapters">
+        <source>Chapters</source>
+        <target>Capítulos</target>
+      </trans-unit>
+      <trans-unit id="tl_files.metadata">
+        <source>Metadata</source>
+        <target>Metadatos</target>
+      </trans-unit>
       <trans-unit id="tl_files.show">
         <source>Show the details of file or folder &quot;%s&quot;</source>
         <target>Muestra los detalles del fichero o carpeta &quot;%s&quot;</target>

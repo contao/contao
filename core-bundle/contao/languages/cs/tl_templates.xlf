@@ -73,6 +73,10 @@
         <source>Compare &quot;%s&quot; with another template</source>
         <target>Srovnat &quot;%s&quot; a jinou předlohou</target>
       </trans-unit>
+      <trans-unit id="tl_templates.twig_studio_hint">
+        <source>If you want to create or edit Twig templates, use the %s instead.</source>
+        <target>Pokud chcete vytvořit nebo upravit předlohy Twigu, použitje místo toho %s.</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

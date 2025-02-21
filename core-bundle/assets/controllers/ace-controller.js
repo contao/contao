@@ -17,7 +17,7 @@ export default class extends Controller {
         this.element.style['display'] = 'none';
 
         // Instantiate the editor
-        this.editor = ace.edit(this.container, {maxLines: 50});
+        this.editor = ace.edit(this.container);
         this.editor.getSession().setValue(this.element.value);
 
         this.editor.on('focus', () => {
@@ -33,10 +33,27 @@ export default class extends Controller {
 
         // Execute the config callback
         this.element?.configCallback(this.editor);
+
+        this.setMaxLines();
+        window.addEventListener('resize', this.setMaxLines.bind(this));
     }
 
     disconnect() {
-        this.editor.destroy();
-        this.container.remove();
+        this.editor?.destroy();
+        this.container?.remove();
+    }
+
+    beforeCache() {
+        // Remove the element container before Turbo caches the page. It will
+        // be recreated when the connect() call happens on the restored page.
+        this.disconnect();
+    }
+
+    colorChange(event) {
+        this.editor.setTheme(`ace/theme/${event.detail.mode === 'dark' ? 'twilight' : 'clouds'}`);
+    }
+
+    setMaxLines() {
+        this.editor.setOption('maxLines', Math.floor((window.innerHeight - 320) / Math.floor(12 * this.editor.container.style.lineHeight)));
     }
 }

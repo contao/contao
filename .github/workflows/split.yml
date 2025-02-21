@@ -3,9 +3,9 @@ name: Split
 on:
     push:
         branches:
-            - 5.4
+            - 5.5
         tags:
-            - 5.4.*
+            - 5.5.*
 
 permissions: read-all
 
@@ -22,7 +22,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.3 # latest stable version
+                  php-version: 8.2
                   extensions: json, zlib
                   coverage: none
 

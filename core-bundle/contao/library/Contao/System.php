@@ -331,7 +331,7 @@ abstract class System
 			}
 
 			// Use a specific referer
-			if ($strTable && isset($session[$strTable]) && Input::get('act') != 'select')
+			if ($strTable && isset($session[$strTable]) && !isset($session['current']) && Input::get('act') != 'select')
 			{
 				$session['current'] = $session[$strTable];
 			}

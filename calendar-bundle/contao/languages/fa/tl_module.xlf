@@ -106,9 +106,11 @@
       </trans-unit>
       <trans-unit id="tl_module.cal_keepCanonical.0">
         <source>Use the current URL for canonical links</source>
+        <target>از URL فعلی برای پیوندهای کانونیکال استفاده کنید</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_keepCanonical.1">
         <source>Keep the current URL instead of the configured reader page for canonical links.</source>
+        <target>URL فعلی را به جای صفحه خواننده تنظیم‌شده برای پیوندهای کانونیکال نگه دارید.</target>
       </trans-unit>
       <trans-unit id="tl_module.cal_overview_legend">
         <source>Overview page</source>

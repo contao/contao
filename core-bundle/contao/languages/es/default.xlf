@@ -373,17 +373,41 @@
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
         <target>No hay ninguna dirección de correo electrónico de administrador configurada; comuníquese con el administrador del sitio.</target>
       </trans-unit>
+      <trans-unit id="ERR.altchaJavaScriptRequired">
+        <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.</source>
+        <target>JavaScript está actualmente deshabilitado o bloqueado. Sin JavaScript, la verificación antispam fallará. Habilite JavaScript temporalmente para enviar el formulario.</target>
+      </trans-unit>
       <trans-unit id="ERR.altchaVerificationFailed">
-        <source>ALTCHA antispam verification failed. Are you a human or a robot?</source>
+        <source>Anti-spam verification failed. Are you a human or a robot?</source>
+        <target>Error en la verificación antispam. ¿Eres un humano o un robot?</target>
       </trans-unit>
       <trans-unit id="ERR.altchaWidgetError">
         <source>Verification failed. Try again later.</source>
+        <target>Error en la verificación. Inténtalo de nuevo más tarde.</target>
       </trans-unit>
       <trans-unit id="ERR.altchaInsecureConnection">
         <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
+        <target>ALTCHA no está disponible sin una conexión HTTPS segura. Si su sitio web de producción no utiliza HTTPS (no recomendado), utilice la pregunta de seguridad en su lugar.</target>
       </trans-unit>
       <trans-unit id="ERR.personalDataPassword">
         <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
+        <target>Existe al menos un módulo de &quot;datos personales&quot; que permite cambiar la contraseña. Esto es un punto débil de seguridad y ya no funcionará en Contao 6. Utilice el módulo &quot;cambiar contraseña&quot; en su lugar.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeysUnsupported">
+        <source>Passkeys are not supported on this device.</source>
+        <target>Este dispositivo no admite passkeys.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAssertionFailure">
+        <source>Login with passkey failed.</source>
+        <target>Error al iniciar sesión con passkey.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAttestationFailure">
+        <source>Passkey could not be created.</source>
+        <target>No se pudo crear un passkey.</target>
+      </trans-unit>
+      <trans-unit id="ERR.copyUnique">
+        <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>El ID del elemento %d no se puede insertar aquí porque entra en conflicto con un elemento existente.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -791,9 +815,11 @@
       </trans-unit>
       <trans-unit id="FFL.altcha.0">
         <source>ALTCHA antispam</source>
+        <target>Antispam ALTCHA</target>
       </trans-unit>
       <trans-unit id="FFL.altcha.1">
         <source>Provides an ALTCHA antispam form field to verify that the form is submitted by a human (CAPTCHA).</source>
+        <target>Proporciona un campo de formulario antispam ALTCHA para verificar que el formulario sea enviado por un humano (CAPTCHA).</target>
       </trans-unit>
       <trans-unit id="FFL.captcha.0">
         <source>Security question</source>
@@ -1190,6 +1216,10 @@
       <trans-unit id="MSC.target.1">
         <source>Open the link in a new browser window.</source>
         <target>Si seleccionas esta opción, la URL de destino se abrirá en una ventana nueva.</target>
+      </trans-unit>
+      <trans-unit id="MSC.openTab">
+        <source>Open in a new tab</source>
+        <target>Abrir en una nueva pestaña</target>
       </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
@@ -1754,6 +1784,10 @@
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
         <target>Cancelar</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirmTitle">
+          <source>Are you sure?</source>
+          <target>¿Esta seguro?</target>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete element ID %s?</source>
@@ -2511,10 +2545,6 @@
         <source>Print this page</source>
         <target>Imprimir esta página</target>
       </trans-unit>
-      <trans-unit id="MSC.printAsPdf">
-        <source>Save article as PDF</source>
-        <target>Guardar artículo en PDF</target>
-      </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>
         <target>Compartir en Facebook</target>
@@ -2554,6 +2584,10 @@
       <trans-unit id="MSC.list_perPage">
         <source>Results per page</source>
         <target>Resultados por página</target>
+      </trans-unit>
+      <trans-unit id="MSC.or">
+        <source>or</source>
+        <target>ó</target>
       </trans-unit>
       <trans-unit id="MSC.published">
         <source>Published</source>
@@ -2603,6 +2637,10 @@
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
         <target>El enlace que se intenta abrir no pudo ser verificado. Si ha hecho clic en el enlace o lo ha recibido por una persona de confianza, se puede confirmar el proceso más adelante.</target>
       </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>Ha intentado restablecer su contraseña demasiadas veces. Vuelva a intentarlo en 15 minutos.</target>
+      </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
         <target>Conflicto de versiones</target>
@@ -2637,9 +2675,11 @@
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
         <source>Breadcrumb</source>
+        <target>Breadcrumb</target>
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
         <source>Main</source>
+        <target>Principal</target>
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
         <source>Header</source>
@@ -2647,6 +2687,7 @@
       </trans-unit>
       <trans-unit id="MSC.pagination">
         <source>Pagination</source>
+        <target>Paginación</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
         <source>Unicode numbers and lowercase letters</source>
@@ -2780,6 +2821,10 @@
         <source>Disable</source>
         <target>Desactivado</target>
       </trans-unit>
+      <trans-unit id="MSC.edit">
+        <source>Edit</source>
+        <target>Editar</target>
+      </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
         <target>Vista previa de los resultados de búsqueda de Google</target>
@@ -2890,18 +2935,83 @@
       </trans-unit>
       <trans-unit id="MSC.altchaFooter">
         <source>Protected by &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</source>
+        <target>Protegido por &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</target>
       </trans-unit>
       <trans-unit id="MSC.altchaLabel">
         <source>I'm not a robot</source>
+        <target>No soy un robot</target>
       </trans-unit>
       <trans-unit id="MSC.altchaVerified">
         <source>I'm human</source>
+        <target>Soy humano</target>
       </trans-unit>
       <trans-unit id="MSC.altchaVerifying">
         <source>Verifying …</source>
+        <target>Verificando…</target>
       </trans-unit>
       <trans-unit id="MSC.altchaWaitAlert">
         <source>Verifying … please wait.</source>
+        <target>Verificando… por favor espere.</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeys">
+        <source>Passkeys</source>
+        <target>Passkeys</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysDescription">
+        <source>Passkeys allow you to log in securely and easily without the need for a password and two-factor token.</source>
+        <target>Las passkeys le permiten iniciar sesión de forma segura y sencilla sin necesidad de una contraseña ni un token de dos factores.</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyLogin">
+        <source>Sign in with a passkey</source>
+        <target>Iniciar sesión con una passkey</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysName">
+        <source>Name/ID</source>
+        <target>Nombre/ID</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyNameInput">
+        <source>Name this passkey …</source>
+        <target>Nombra esta passkey…</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysCreatedAt">
+        <source>Created at</source>
+        <target>Creado en</target>
+      </trans-unit>
+      <trans-unit id="MSC.addPasskey">
+        <source>Add passkey</source>
+        <target>Añadir passkey</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsPlaceholder">
+        <source>Type to start searching</source>
+        <target>Escriba para iniciar la búsqueda</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsMin">
+        <source>Please enter at least %s characters</source>
+        <target>Por favor, introduzca al menos %s caracteres</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsLoading">
+        <source>Loading results...</source>
+        <target>Cargando resultados...</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitView">
+        <source>View %s</source>
+        <target>Ver %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitEdit">
+        <source>Edit %s</source>
+        <target>Editar %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.noResults">
+        <source>No results found.</source>
+        <target>No se encontraron resultados.</target>
+      </trans-unit>
+      <trans-unit id="MSC.noOptions">
+        <source>No options to choose from.</source>
+        <target>No hay opciones para elegir.</target>
+      </trans-unit>
+      <trans-unit id="MSC.removeItem">
+        <source>Remove item</source>
+        <target>Eliminar artículo</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -3086,6 +3196,10 @@
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
         <target>Arrastrar el elemento con ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.operations">
+        <source>Show operations for element ID %s</source>
+        <target>Mostrar operaciones para el ID del elemento %s</target>
       </trans-unit>
       <trans-unit id="DCA.children">
         <source>Edit the child elements of element ID %s</source>

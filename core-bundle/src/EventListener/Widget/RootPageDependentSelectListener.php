@@ -101,9 +101,8 @@ class RootPageDependentSelectListener
             $href = $this->router->generate('contao_backend', ['do' => 'themes', 'table' => 'tl_module', 'act' => 'edit', 'id' => $id, 'popup' => '1', 'nb' => '1']);
 
             $wizards[$rootPage] = \sprintf(
-                ' <a href="%s" title="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
+                ' <a href="%s" onclick="Backend.openModalIframe({\'title\':\'%s\',\'url\':this.href});return false">%s</a>',
                 StringUtil::specialcharsUrl($href),
-                StringUtil::specialchars($title),
                 StringUtil::specialchars(str_replace("'", "\\'", $title)),
                 Image::getHtml('edit.svg', $title),
             );

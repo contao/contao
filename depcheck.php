@@ -19,19 +19,20 @@ return (new Configuration())
         AppBundle::class,
         'Imagick',
         'Gmagick',
+        'SensitiveParameter',
         'Swift_Attachment',
         'Swift_EmbeddedFile',
         'Swift_Mailer',
         'Swift_Message',
     ])
+    ->disableExtensionsAnalysis()
     ->disableReportingUnmatchedIgnores()
 
     // Ignore the Contao components.
     ->ignoreErrorsOnPackage('contao-components/ace', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('contao-components/altcha', [ErrorType::UNUSED_DEPENDENCY])
-    ->ignoreErrorsOnPackage('contao-components/chosen', [ErrorType::UNUSED_DEPENDENCY])
+    ->ignoreErrorsOnPackage('contao-components/choices', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('contao-components/colorbox', [ErrorType::UNUSED_DEPENDENCY])
-    ->ignoreErrorsOnPackage('contao-components/colorpicker', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('contao-components/contao', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('contao-components/datepicker', [ErrorType::UNUSED_DEPENDENCY])
     ->ignoreErrorsOnPackage('contao-components/dropzone', [ErrorType::UNUSED_DEPENDENCY])
@@ -78,4 +79,15 @@ return (new Configuration())
     // This package provides the "u" Twig filter which is e.g. used in the
     // template_skeleton.html.twig template.
     ->ignoreErrorsOnPackage('twig/string-extra', [ErrorType::UNUSED_DEPENDENCY])
+
+    // We only use the assets from the web-auth/webauthn-stimulus package.
+    ->ignoreErrorsOnPackage('web-auth/webauthn-stimulus', [ErrorType::UNUSED_DEPENDENCY])
+
+    // These packages are required for the search integration.
+    ->ignoreErrorsOnPackage('cmsig/seal-symfony-bundle', [ErrorType::UNUSED_DEPENDENCY])
+    ->ignoreErrorsOnPackage('cmsig/seal-loupe-adapter', [ErrorType::UNUSED_DEPENDENCY])
+
+    // This package is required by cmsig/seal-loupe-adapter and may therefore be a
+    // shadow dependency.
+    ->ignoreErrorsOnPackage('loupe/loupe', [ErrorType::SHADOW_DEPENDENCY])
 ;

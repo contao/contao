@@ -33,12 +33,12 @@ class FileExtensionMigration extends AbstractMigration
             return false;
         }
 
-        return false !== $this->connection->fetchOne("SELECT * FROM tl_files WHERE CAST(extension AS BINARY) REGEXP BINARY '[[:upper:]]' LIMIT 1");
+        return false !== $this->connection->fetchOne("SELECT * FROM tl_files WHERE CAST(extension AS BINARY) REGEXP CAST('[[:upper:]]' AS BINARY) LIMIT 1");
     }
 
     public function run(): MigrationResult
     {
-        $this->connection->executeStatement("UPDATE tl_files SET extension = LOWER(extension) WHERE CAST(extension AS BINARY) REGEXP BINARY '[[:upper:]]'");
+        $this->connection->executeStatement("UPDATE tl_files SET extension = LOWER(extension) WHERE CAST(extension AS BINARY) REGEXP CAST('[[:upper:]]' AS BINARY)");
 
         return $this->createResult(true);
     }

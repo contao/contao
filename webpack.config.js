@@ -9,6 +9,7 @@ Encore
     .disableSingleRuntimeChunk()
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
+    .enablePostCssLoader()
     .addEntry('backend', './core-bundle/assets/backend.js')
 ;
 
@@ -21,12 +22,14 @@ Encore
     .setOutputPath('core-bundle/contao/themes/flexible')
     .setPublicPath('/system/themes/flexible')
     .setManifestKeyPrefix('')
-    .cleanupOutputBeforeBuild(['*.css', '*.json', '*.map'])
     .disableSingleRuntimeChunk()
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
     .configureCssLoader(config => {
         config.url = false;
+    })
+    .cleanupOutputBeforeBuild(config => {
+        config.keep = /(fonts|icons|styles)\//;
     })
     .addStyleEntry('backend', './core-bundle/contao/themes/flexible/styles/main.css')
     .addStyleEntry('confirm', './core-bundle/contao/themes/flexible/styles/confirm.css')

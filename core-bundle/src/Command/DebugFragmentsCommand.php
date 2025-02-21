@@ -20,6 +20,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Yaml\Yaml;
 
 #[AsCommand(
     name: 'debug:fragments',
@@ -42,7 +43,13 @@ class DebugFragmentsCommand extends Command
 
         foreach ($fragments as $identifier => $config) {
             $class = new \ReflectionClass(AbstractFragmentController::class);
-            $attributes = $class->getProperty('options')->getValue($this->container->get($config->getController()));
+
+            try {
+                $attributes = $class->getProperty('options')->getValue($this->container->get($config->getController()));
+            } catch (\ReflectionException) {
+                continue; // skip fragments which don't inherit from AbstractFragmentController
+            }
+
             $controller = $attributes['debugController'] ?? $config->getController();
 
             unset($attributes['debugController']);
@@ -80,6 +87,14 @@ class DebugFragmentsCommand extends Command
         foreach ($values as $k => $v) {
             if (\is_bool($v)) {
                 $v = $v ? 'true' : 'false';
+            } elseif (\is_array($v) && array_is_list($v)) {
+                $v = implode(', ', $v);
+            } elseif (!\is_scalar($v)) {
+                // For non-list arrays, use YAML notation and fix indentation on multiline strings
+                $v = Yaml::dump($v, indent: 2);
+                $v = explode("\n", $v);
+                array_walk($v, static fn (&$vv, $i) => $vv = $i > 0 ? str_repeat(' ', $length + 3).$vv : $vv);
+                $v = implode("\n", $v);
             }
 
             $return[] = \sprintf('%s : %s', str_pad($k, $length, ' ', STR_PAD_RIGHT), $v);

@@ -22,6 +22,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsOperationForTemplateStudioElement;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
 use Contao\CoreBundle\DependencyInjection\Filesystem\ConfigureFilesystemInterface;
@@ -32,10 +33,13 @@ use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Migration\MigrationInterface;
 use Contao\CoreBundle\Picker\PickerProviderInterface;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
+use Contao\CoreBundle\Search\Backend\BackendSearch;
+use Contao\CoreBundle\Search\Backend\Provider\ProviderInterface;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Imagine\Exception\RuntimeException as ImagineRuntimeException;
 use Imagine\Gd\Imagine;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -143,6 +147,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         $this->handleMessengerConfig($config, $container);
         $this->handleSearchConfig($config, $container);
+        $this->handleBackendSearchConfig($config, $container, $loader);
         $this->handleCrawlConfig($config, $container);
         $this->setPredefinedImageSizes($config, $container);
         $this->setPreserveMetadataFields($config, $container);
@@ -154,6 +159,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleSecurityConfig($config, $container);
         $this->handleCspConfig($config, $container);
         $this->handleAltcha($config, $container);
+        $this->handTemplateStudioConfig($config, $container, $loader);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -240,6 +246,12 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             ->mountLocalAdapter('var/backups', 'backups', 'backups')
             ->addVirtualFilesystem('backups', 'backups')
         ;
+
+        // User templates
+        $config
+            ->mountLocalAdapter('templates', 'user_templates', 'user_templates')
+            ->addVirtualFilesystem('user_templates', 'user_templates')
+        ;
     }
 
     private function handleMessengerConfig(array $config, ContainerBuilder $container): void
@@ -320,8 +332,38 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             $container->removeDefinition('contao.listener.search_index');
         } else {
             // Configure the search index listener
-            $container->getDefinition('contao.listener.search_index')->setArgument(2, $features);
+            $container->getDefinition('contao.listener.search_index')->setArgument('$enabledFeatures', $features);
         }
+    }
+
+    private function handleBackendSearchConfig(array $config, ContainerBuilder $container, LoaderInterface $loader): void
+    {
+        if (!$config['backend_search']['enabled']) {
+            return;
+        }
+
+        $container->registerForAutoconfiguration(ProviderInterface::class)->addTag('contao.backend_search_provider');
+        $loader->load('backend_search.yaml');
+
+        if (
+            !$container->hasDefinition('contao.search_backend.adapter')
+            || !$container->hasDefinition('contao.search_backend.engine')
+        ) {
+            return;
+        }
+
+        $indexName = $config['backend_search']['index_name'];
+
+        $adapter = $container->getDefinition('contao.search_backend.adapter');
+        $adapter->setArgument(0, $config['backend_search']['dsn']);
+
+        $engine = $container->getDefinition('contao.search_backend.engine');
+        $engine
+            ->setArgument(1, (new Definition(BackendSearch::class))
+                ->setFactory([null, 'getSearchEngineSchema'])
+                ->setArgument('$indexName', $indexName),
+            )
+        ;
     }
 
     private function handleCrawlConfig(array $config, ContainerBuilder $container): void
@@ -469,8 +511,6 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
 
         if ($container->hasParameter('security.role_hierarchy.roles') && \count($container->getParameter('security.role_hierarchy.roles')) > 0) {
             $tokenChecker->replaceArgument(4, new Reference('security.access.role_hierarchy_voter'));
-        } else {
-            $tokenChecker->replaceArgument(4, new Reference('security.access.simple_role_voter'));
         }
     }
 
@@ -584,5 +624,50 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $altcha->setArgument(3, $config['altcha']['algorithm']);
         $altcha->setArgument(4, $config['altcha']['range_max']);
         $altcha->setArgument(5, $config['altcha']['challenge_expiry']);
+    }
+
+    private function handTemplateStudioConfig(array $config, ContainerBuilder $container, LoaderInterface $loader): void
+    {
+        // Used to display/hide the menu entry in the back end
+        $container->setParameter('contao.template_studio.enabled', $config['template_studio']['enabled']);
+
+        if (!$config['template_studio']['enabled']) {
+            return;
+        }
+
+        $this->registerOperationAttribute(AsOperationForTemplateStudioElement::class, 'contao.operation.template_studio_element', $container);
+
+        $loader->load('template_studio.yaml');
+    }
+
+    /**
+     * @template T of object
+     *
+     * @param class-string<T> $attributeClass
+     */
+    private function registerOperationAttribute(string $attributeClass, string $tag, ContainerBuilder $container): void
+    {
+        $container->registerAttributeForAutoconfiguration(
+            $attributeClass,
+            static function (ChildDefinition $definition, object $attribute, \Reflector $reflector) use ($tag): void {
+                /** @var \ReflectionClass<T> $reflector */
+                $tagAttributes = get_object_vars($attribute);
+
+                $tagAttributes['name'] ??= (
+                    static function () use ($reflector) {
+                        // Derive name from class name - e.g. a "FooBarBazOperation" would become "foo_bar_baz"
+                        preg_match('/([^\\\\]+)Operation$/', $reflector->getName(), $matches);
+
+                        return Container::underscore($matches[1]);
+                    }
+                )();
+
+                $definition->addTag($tag, $tagAttributes);
+
+                if ($reflector->hasMethod('setName')) {
+                    $definition->addMethodCall('setName', [$tagAttributes['name']]);
+                }
+            },
+        );
     }
 }

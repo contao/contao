@@ -86,6 +86,12 @@
       <trans-unit id="XPL.imageSizeDensities.1.1">
         <source>If the sizes attribute is not defined, this setting simply defines the pixel densities you want to support. The dimensions of the images are adjusted automatically. E.g. &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code: &lt;code&gt;&amp;lt;img srcset="img-a.jpg 1x, img-b.jpg 1.5x, img-c.jpg 2x"&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;If the sizes attribute is defined, the same image sizes are generated but width descriptors are used for the srcset attribute. E.g. a 200 pixel wide image with the densities &lt;code&gt;1x, 1.5x, 2x&lt;/code&gt; creates the following HTML code: &lt;code&gt;&amp;lt;img srcset="img-a.jpg 200w, img-b.jpg 300w, img-c.jpg 400w"&amp;gt;&lt;/code&gt;&lt;br&gt;&lt;br&gt;For more information about the srcset attribute please visit &lt;a href="https://www.w3.org/TR/2016/PR-html51-20160915/semantics-embedded-content.html#element-attrdef-img-srcset" target="_blank" rel="noreferrer noopener"&gt;w3.org&lt;/a&gt;.</source>
       </trans-unit>
+      <trans-unit id="XPL.autocomplete.0.0">
+        <source>Autocomplete attributes</source>
+      </trans-unit>
+      <trans-unit id="XPL.autocomplete.0.1">
+        <source>For more information about autocomplete attributes, see &lt;a href="https://www.w3.org/TR/WCAG21/#input-purposes" target="_blank" rel="noreferrer noopener"&gt;https://www.w3.org/TR/WCAG21/#input-purposes&lt;/a&gt;.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

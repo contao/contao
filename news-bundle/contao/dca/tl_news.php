@@ -82,12 +82,14 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			(
 				'href'                => 'act=toggle&amp;field=published',
 				'icon'                => 'visible.svg',
+				'primary'             => true,
 				'showInHeader'        => true
 			),
 			'feature' => array
 			(
 				'href'                => 'act=toggle&amp;field=featured',
 				'icon'                => 'featured.svg',
+				'primary'             => true,
 			),
 			'show'
 		)

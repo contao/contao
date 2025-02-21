@@ -24,7 +24,6 @@ use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\ClassExistenceResource;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -36,8 +35,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ContaoKernelTest extends ContaoTestCase
 {
-    use ExpectDeprecationTrait;
-
     private array|string|false $shellVerbosityBackup;
 
     protected function setUp(): void
@@ -342,13 +339,13 @@ class ContaoKernelTest extends ContaoTestCase
         unset($_SERVER['TRUSTED_HOSTS']);
     }
 
-    public function testEnablesRequestHttpMethodParameterOverride(): void
+    public function testDoesNotEnableRequestHttpMethodParameterOverride(): void
     {
         $this->assertFalse(Request::getHttpMethodParameterOverride());
 
         ContaoKernel::fromRequest($this->getTempDir(), Request::create('/'));
 
-        $this->assertTrue(Request::getHttpMethodParameterOverride());
+        $this->assertFalse(Request::getHttpMethodParameterOverride());
     }
 
     public function testSetsProjectDirFromInput(): void

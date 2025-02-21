@@ -209,6 +209,42 @@
         <source>Synchronize the file system and the database</source>
         <target>Синхронизировать файловую систему и базу данных</target>
       </trans-unit>
+      <trans-unit id="tl_files.textTrackLanguage.0">
+        <source>Language</source>
+        <target>Язык</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackLanguage.1">
+        <source>Please select the language of the file.</source>
+        <target>Выберите язык файла.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackType.0">
+        <source>Track type</source>
+        <target>Тип трека</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackType.1">
+        <source>Here you can select the type of text track.</source>
+        <target>Вы можете выбрать тип текстового трека.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.captions">
+        <source>Closed captions</source>
+        <target>Скрытые субтитры</target>
+      </trans-unit>
+      <trans-unit id="tl_files.descriptions">
+        <source>Audio descriptions</source>
+        <target>Аудиодескрипция</target>
+      </trans-unit>
+      <trans-unit id="tl_files.subtitles">
+        <source>Subtitles</source>
+        <target>Субтитры</target>
+      </trans-unit>
+      <trans-unit id="tl_files.chapters">
+        <source>Chapters</source>
+        <target>Главы</target>
+      </trans-unit>
+      <trans-unit id="tl_files.metadata">
+        <source>Metadata</source>
+        <target>Метаданные</target>
+      </trans-unit>
       <trans-unit id="tl_files.show">
         <source>Show the details of file or folder &quot;%s&quot;</source>
         <target>Показать детали файла или каталога &quot;%s&quot;</target>

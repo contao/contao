@@ -16,6 +16,7 @@ use Contao\CoreBundle\Entity\CronJob as CronJobEntity;
 use Contao\CoreBundle\Exception\CronExecutionSkippedException;
 use Contao\CoreBundle\Repository\CronJobRepository;
 use Cron\CronExpression;
+use Doctrine\DBAL\Exception\LockWaitTimeoutException;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Promise\Promise;
 use GuzzleHttp\Promise\PromiseInterface;
@@ -129,10 +130,14 @@ class Cron
 
         $now = new \DateTimeImmutable();
 
+        // Return if another cron process is already running
         try {
-            // Lock cron table
             $repository->lockTable();
+        } catch (LockWaitTimeoutException) {
+            return;
+        }
 
+        try {
             // Go through each cron job
             foreach ($cronJobs as $cron) {
                 $interval = $cron->getInterval();
@@ -150,7 +155,7 @@ class Cron
                 }
 
                 // Check if the cron should be run
-                $expression = CronExpression::factory($interval);
+                $expression = new CronExpression($interval);
 
                 if (!$force && $lastRunDate && $now < $expression->getNextRunDate($lastRunDate)) {
                     continue;

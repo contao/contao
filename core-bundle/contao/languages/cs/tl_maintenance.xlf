@@ -114,7 +114,7 @@
         <target>Přetvořit soubory XML</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
-        <source>Recreates the XML files in the &lt;code&gt;shared&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
+        <source>Recreates the XML files in the &lt;code&gt;share&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
         <target>Přetvoří soubory XML ve &lt;code&gt;sdílené&lt;/code&gt; složce a vyčistí sdílené meziúložiště. Tím zmizí odkazy ke smazaným zdrojům.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
@@ -184,6 +184,22 @@
       <trans-unit id="tl_maintenance.crawlSubscriberNames.broken-link-checker">
         <source>Check for broken links</source>
         <target>Zkontrolovat poškozené odkazy</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.title">
+        <source>Back end search</source>
+        <target>Hledání v backendu</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.disabled">
+        <source>To use the back end search, please enable the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot;&gt;Contao cronjob framework&lt;/a&gt;.</source>
+        <target>Pro použítí hledání v backendu aktivujte prosím &lt;a href=&quot;%s&quot; target=&quot;_blank&quot;&gt;Contao cronjob framework&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.button">
+        <source>Rebuild index</source>
+        <target>Přetvořit index</target>
+      </trans-unit>
+      <trans-unit id="tl_maintenance.backend_search.confirmation">
+        <source>Rebuilding is in progress. Unfortunately, there is currently no way of knowing when it is finished. Please check your search results regularly. A future version of Contao will give information about the progress.</source>
+        <target>Znovusestavení právě probíhá. V současnosti bohužel není jasné, kdy skončí. Kontrolujte výsledky hledání pravidelně. Novější verze Contaa bude informovat o tomto procesu více podrobněji. </target>
       </trans-unit>
     </body>
   </file>

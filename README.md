@@ -1,8 +1,8 @@
-<p align="center"><img src="https://contao.org/files/contao/logo/contao-logo-corporate.svg" alt="Contao Open Source CMS"></p>
+<p align="center"><img src="https://contao.org/files/contao/logo/contao-logo-corporate.svg" alt></p>
 
 <p align="center">
-<a href="https://github.com/contao/contao/actions"><img src="https://github.com/contao/contao/actions/workflows/ci.yml/badge.svg?branch=5.4" alt></a>
-<a href="https://codecov.io/gh/contao/contao"><img src="https://codecov.io/gh/contao/contao/branch/5.4/graph/badge.svg" alt></a>
+<a href="https://github.com/contao/contao/actions"><img src="https://github.com/contao/contao/actions/workflows/ci.yml/badge.svg?branch=5.5" alt></a>
+<a href="https://codecov.io/gh/contao/contao"><img src="https://codecov.io/gh/contao/contao/branch/5.5/graph/badge.svg" alt></a>
 <a href="https://packagist.org/packages/contao/contao"><img src="https://img.shields.io/packagist/v/contao/contao.svg" alt></a>
 </p>
 
@@ -47,14 +47,14 @@ composer create-project --no-install contao/managed-edition <directory> <branch>
 
 Replace `<directory>` with the directory where you want to install the Managed Edition (use `.` for the current
 directory). Replace `<branch>` with `5.x-dev` if you want to add a new feature, or with `<lts-version>.x-dev` (currently
-`4.13.x-dev`) if you want to fix a bug.
+`5.3.x-dev`) if you want to fix a bug.
 
 Then adjust the `require` section in your `composer.json` file, so Composer loads the monorepo instead of the individual
 bundles:
 
 ```json
 "require": {
-    "php": "^8.1",
+    "php": "^8.2",
     "contao/contao": "5.x-dev"
 },
 ```
@@ -73,11 +73,18 @@ running `vendor/bin/contao-setup` on the command line.
 Any changes you make in `vendor/contao/contao` will be tracked via Git, so you can submit your pull request directly
 from your application.
 
+## Contao 4.13
+
+Pull requests for Contao 4.13 are no longer merged upstream into Contao 5, as the code base is now too different. If you
+want to fix a bug in Contao 4.13, please create a pull request for Contao 5.3 first and then a separate backport pull
+request for Contao 4.13.
+
 ## Running scripts
 
-First install the code quality tools:
+First install the code quality tools in `vendor/contao/contao`:
 
 ```bash
+composer update
 composer bin all install
 ```
 
@@ -145,7 +152,7 @@ The Contao end-to-end tests are availabe as an [NPM package][3]. You can install
 
 ```bash
 npm install contao-e2e-tests --save-dev
-npm run contao-e2e-tests
+npx contao-e2e-tests
 ```
 
 ## License

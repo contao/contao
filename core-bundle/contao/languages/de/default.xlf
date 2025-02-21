@@ -373,9 +373,13 @@
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
         <target>Es ist keine Administrator-E-Mail-Adresse hinterlegt. Bitte wenden Sie sich an den Administrator der Webseite.</target>
       </trans-unit>
+      <trans-unit id="ERR.altchaJavaScriptRequired">
+        <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.</source>
+        <target>JavaScript ist derzeit deaktiviert oder blockiert. Ohne JavaScript wird die Anti-Spam-Überprüfung fehlschlagen. Bitte aktivieren Sie JavaScript vorübergehend für die Übermittlung des Formulars.</target>
+      </trans-unit>
       <trans-unit id="ERR.altchaVerificationFailed">
-        <source>ALTCHA antispam verification failed. Are you a human or a robot?</source>
-        <target>ALTCHA Antispam-Überprüfung fehlgeschlagen. Sind Sie ein Mensch oder ein Roboter?</target>
+        <source>Anti-spam verification failed. Are you a human or a robot?</source>
+        <target>Antispam-Überprüfung fehlgeschlagen. Sind Sie ein Mensch oder ein Roboter?</target>
       </trans-unit>
       <trans-unit id="ERR.altchaWidgetError">
         <source>Verification failed. Try again later.</source>
@@ -388,6 +392,22 @@
       <trans-unit id="ERR.personalDataPassword">
         <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
         <target>Es gibt mindestens ein Modul &quot;Personendaten&quot;, das die Änderung des Passworts erlaubt. Das ist eine Sicherheitsschwachstelle und wird in Contao 6 nicht mehr funktionieren. Verwenden Sie stattdessen das Modul &quot;Passwort ändern&quot;.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeysUnsupported">
+        <source>Passkeys are not supported on this device.</source>
+        <target>Passkeys werden auf diesem Gerät nicht unterstützt.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAssertionFailure">
+        <source>Login with passkey failed.</source>
+        <target>Die Anmeldung mit dem Passkey ist fehlgeschlagen.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAttestationFailure">
+        <source>Passkey could not be created.</source>
+        <target>Der Passkey konnte nicht erstellt werden.</target>
+      </trans-unit>
+      <trans-unit id="ERR.copyUnique">
+        <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>Das Element ID %d kann hier nicht eingefügt werden, da es mit einem bestehenden Element kollidiert.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1197,6 +1217,10 @@
         <source>Open the link in a new browser window.</source>
         <target>Den Link in einem neuen Browserfenster öffnen.</target>
       </trans-unit>
+      <trans-unit id="MSC.openTab">
+        <source>Open in a new tab</source>
+        <target>In einem neuen Tab öffnen</target>
+      </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
         <target>,</target>
@@ -1760,6 +1784,10 @@
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
         <target>Abbruch</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirmTitle">
+          <source>Are you sure?</source>
+          <target>Sind Sie sicher?</target>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete element ID %s?</source>
@@ -2517,10 +2545,6 @@
         <source>Print this page</source>
         <target>Diese Seite drucken</target>
       </trans-unit>
-      <trans-unit id="MSC.printAsPdf">
-        <source>Save article as PDF</source>
-        <target>Artikel als PDF speichern</target>
-      </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>
         <target>Auf Facebook teilen</target>
@@ -2560,6 +2584,10 @@
       <trans-unit id="MSC.list_perPage">
         <source>Results per page</source>
         <target>Ergebnisse pro Seite</target>
+      </trans-unit>
+      <trans-unit id="MSC.or">
+        <source>or</source>
+        <target>oder</target>
       </trans-unit>
       <trans-unit id="MSC.published">
         <source>Published</source>
@@ -2608,6 +2636,10 @@
       <trans-unit id="MSC.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
         <target>Der Link, den Sie aufgerufen haben, konnte nicht verifiziert werden. Wenn Sie den Link selbst aufgerufen oder von einer vertrauenswürdigen Person erhalten haben, können Sie den Vorgang fortsetzen.</target>
+      </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>Sie haben zu oft versucht, Ihr Passwort zurückzusetzen. Bitte versuchen Sie es in 15 Minuten erneut.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
@@ -2789,6 +2821,10 @@
         <source>Disable</source>
         <target>Deaktivieren</target>
       </trans-unit>
+      <trans-unit id="MSC.edit">
+        <source>Edit</source>
+        <target>Bearbeiten</target>
+      </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
         <target>Google Suchergebnis-Vorschau</target>
@@ -2839,7 +2875,7 @@
       </trans-unit>
       <trans-unit id="MSC.noSerpPreview">
         <source>The preview URL cannot be generated, because the route has mandatory parameters.</source>
-        <target>Die Vorschau-URL kann nicht erstellt werden, weil die Route Parameter benötigt.</target>
+        <target>Die Vorschau-URL kann nicht erstellt werden, weil die Route ein Element erfordert.</target>
       </trans-unit>
       <trans-unit id="MSC.unknownOption">
         <source>Unknown option: %s</source>
@@ -2916,6 +2952,66 @@
       <trans-unit id="MSC.altchaWaitAlert">
         <source>Verifying … please wait.</source>
         <target>Überprüfen … Bitte warten.</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeys">
+        <source>Passkeys</source>
+        <target>Passkeys</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysDescription">
+        <source>Passkeys allow you to log in securely and easily without the need for a password and two-factor token.</source>
+        <target>Mit Passkeys können Sie sich sicher und einfach anmelden, ohne dass ein Passwort und ein Zwei-Faktor-Token erforderlich sind.</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyLogin">
+        <source>Sign in with a passkey</source>
+        <target>Mit einem Passkey anmelden</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysName">
+        <source>Name/ID</source>
+        <target>Name/ID</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyNameInput">
+        <source>Name this passkey …</source>
+        <target>Benennen Sie diesen Passkey …</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysCreatedAt">
+        <source>Created at</source>
+        <target>Erstellt am</target>
+      </trans-unit>
+      <trans-unit id="MSC.addPasskey">
+        <source>Add passkey</source>
+        <target>Passkey hinzufügen</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsPlaceholder">
+        <source>Type to start searching</source>
+        <target>Tippen Sie, um die Suche zu starten</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsMin">
+        <source>Please enter at least %s characters</source>
+        <target>Bitte geben Sie mindestens %s Zeichen ein</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsLoading">
+        <source>Loading results...</source>
+        <target>Ergebnisse werden geladen...</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitView">
+        <source>View %s</source>
+        <target>%s ansehen</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitEdit">
+        <source>Edit %s</source>
+        <target>%s bearbeiten</target>
+      </trans-unit>
+      <trans-unit id="MSC.noResults">
+        <source>No results found.</source>
+        <target>Keine Ergebnisse gefunden.</target>
+      </trans-unit>
+      <trans-unit id="MSC.noOptions">
+        <source>No options to choose from.</source>
+        <target>Keine Optionen zur Auswahl.</target>
+      </trans-unit>
+      <trans-unit id="MSC.removeItem">
+        <source>Remove item</source>
+        <target>Element entfernen</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -3100,6 +3196,10 @@
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
         <target>Element ID %s verschieben</target>
+      </trans-unit>
+      <trans-unit id="DCA.operations">
+        <source>Show operations for element ID %s</source>
+        <target>Operationen für Element ID %s anzeigen</target>
       </trans-unit>
       <trans-unit id="DCA.children">
         <source>Edit the child elements of element ID %s</source>

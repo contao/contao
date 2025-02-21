@@ -115,6 +115,28 @@ class RegisterFragmentsPassTest extends TestCase
         $this->assertSame('esi', $arguments[1]);
     }
 
+    public function testDoesNotRedefineExistingServices(): void
+    {
+        $contentController = new Definition('App\Fragments\Text');
+        $contentController->addTag('contao.content_element', ['type' => 'text']);
+
+        $duplicateContentController = new Definition('App\Fragments\EnhancedText');
+        $duplicateContentController->addTag('contao.content_element', ['type' => 'text']);
+
+        $container = $this->getContainerWithFragmentServices();
+        $container->setDefinition('app.fragments.content_controller.enhanced_text', $duplicateContentController);
+        $container->setDefinition('app.fragments.content_controller.text', $contentController);
+
+        (new ResolveClassPass())->process($container);
+        $pass = new RegisterFragmentsPass(ContentElementReference::TAG_NAME);
+        $pass->process($container);
+
+        $definition = $container->findDefinition('contao.fragment._contao.content_element.text');
+
+        $this->assertInstanceOf(ChildDefinition::class, $definition);
+        $this->assertSame('app.fragments.content_controller.enhanced_text', $definition->getParent());
+    }
+
     public function testMakesFragmentServicesPublic(): void
     {
         $contentController = new Definition('App\Fragments\Text');
@@ -264,11 +286,11 @@ class RegisterFragmentsPassTest extends TestCase
 
         $this->assertSame(
             [
-                'TL_CTE' => [
+                'TL_CTE' => [[
                     'content' => [
                         'text' => ContentProxy::class,
                     ],
-                ],
+                ]],
             ],
             $definition->getArguments()[0],
         );

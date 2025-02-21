@@ -530,8 +530,8 @@
         <target>Lütfen her site kök sayfası için bir modül seçin.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Choose module for &quot;%s&quot;</source>
-        <target>&quot;%s&quot; için bir modül seçin</target>
+        <source>Choose module for &quot;%s&quot; [%s]</source>
+        <target>&quot;%s&quot; [%s] için bir modül seçin</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

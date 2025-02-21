@@ -38,7 +38,7 @@ class DynamicExtendsTokenParserTest extends TestCase
     {
         $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
         $filesystemLoader
-            ->method('getDynamicParent')
+            ->method('getAllDynamicParentsByThemeSlug')
             ->willReturnCallback(
                 function (string $name, string $path) {
                     $this->assertSame('/path/to/the/template.html.twig', $path);
@@ -49,7 +49,7 @@ class DynamicExtendsTokenParserTest extends TestCase
                     ];
 
                     if (null !== ($resolved = $hierarchy[$name] ?? null)) {
-                        return $resolved;
+                        return ['' => $resolved];
                     }
 
                     throw new \LogicException('Template not found in hierarchy.');
@@ -67,10 +67,10 @@ class DynamicExtendsTokenParserTest extends TestCase
         );
 
         $tokenStream = (new Lexer($environment))->tokenize($source);
-        $serializedParentNode = (new Parser($environment))->parse($tokenStream)->getNode('parent');
+        $parentNode = (new Parser($environment))->parse($tokenStream)->getNode('parent');
 
         foreach ($expectedStrings as $expectedString) {
-            $this->assertStringContainsString($expectedString, (string) $serializedParentNode);
+            $this->assertStringContainsString($expectedString, (string) $parentNode);
         }
     }
 
@@ -112,8 +112,8 @@ class DynamicExtendsTokenParserTest extends TestCase
     {
         $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
         $filesystemLoader
-            ->method('getDynamicParent')
-            ->with('foo')
+            ->method('getAllDynamicParentsByThemeSlug')
+            ->with('foo', $this->anything())
             ->willThrowException(new \LogicException('Template not found in hierarchy.'))
         ;
 
@@ -168,11 +168,6 @@ class DynamicExtendsTokenParserTest extends TestCase
         yield 'extend from within macro' => [
             "{% macro m() %}{% extends '@Foo/bar.html.twig' %}{% endmacro %}",
             'Cannot use "extends" in a macro.',
-        ];
-
-        yield 'multiple extends' => [
-            "{% extends '@Foo/bar1.html.twig' %}{% extends '@Foo/bar2.html.twig' %}",
-            'Multiple extends tags are forbidden.',
         ];
     }
 }

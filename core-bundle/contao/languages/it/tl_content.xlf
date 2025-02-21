@@ -449,6 +449,12 @@
         <source>Here you can add the video/audio file or multiple files if you are using different codecs.</source>
         <target>Qui è possibile aggiungere il file video/audio o più file se si utilizza codec diversi.</target>
       </trans-unit>
+      <trans-unit id="tl_content.textTrackSRC.0">
+        <source>Text track files</source>
+      </trans-unit>
+      <trans-unit id="tl_content.textTrackSRC.1">
+        <source>The topmost .vtt file is loaded as the default track. Additional settings can be made within the .vtt file.</source>
+      </trans-unit>
       <trans-unit id="tl_content.youtube.0">
         <source>YouTube ID</source>
         <target>ID YouTube</target>
@@ -512,6 +518,13 @@
       <trans-unit id="tl_content.playerStop.1">
         <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
         <target>Interrompere la riproduzione del video al numero di secondi indicato. Impostare su 0 per disabilitare.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerTitle.0">
+        <source>Title</source>
+        <target>Nome del modulo</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerTitle.1">
+        <source>Here you can enter a title.</source>
       </trans-unit>
       <trans-unit id="tl_content.playerCaption.0">
         <source>Caption</source>
@@ -764,6 +777,9 @@
       <trans-unit id="tl_content.poster_legend">
         <source>Preview image</source>
         <target>Anteprima immagine</target>
+      </trans-unit>
+      <trans-unit id="tl_content.texttrack_legend">
+        <source>Text tracks</source>
       </trans-unit>
       <trans-unit id="tl_content.invisible_legend">
         <source>Visibility</source>

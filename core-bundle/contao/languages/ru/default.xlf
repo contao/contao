@@ -373,9 +373,13 @@
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
         <target>Адрес электронной почты администратора не указан, обратитесь к администратору сайта.</target>
       </trans-unit>
+      <trans-unit id="ERR.altchaJavaScriptRequired">
+        <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.</source>
+        <target>JavaScript в данный момент отключен или заблокирован. Без JavaScript проверка на спам не будет выполнена. Пожалуйста, временно включите JavaScript для отправки формы.</target>
+      </trans-unit>
       <trans-unit id="ERR.altchaVerificationFailed">
-        <source>ALTCHA antispam verification failed. Are you a human or a robot?</source>
-        <target>ALTCHA проверка на спам не удалась. Вы человек или робот?</target>
+        <source>Anti-spam verification failed. Are you a human or a robot?</source>
+        <target>Проверка на спам не пройдена. Вы человек или робот?</target>
       </trans-unit>
       <trans-unit id="ERR.altchaWidgetError">
         <source>Verification failed. Try again later.</source>
@@ -388,6 +392,22 @@
       <trans-unit id="ERR.personalDataPassword">
         <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
         <target>Существует как минимум один модуль &quot;личных данных&quot;, позволяющий изменить пароль. Это уязвимость безопасности, которая больше не будет работать в Contao 6. Вместо этого используйте модуль &quot;изменить пароль&quot;.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeysUnsupported">
+        <source>Passkeys are not supported on this device.</source>
+        <target>Passkey не поддерживается на этом устройстве.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAssertionFailure">
+        <source>Login with passkey failed.</source>
+        <target>Не удалось войти с помощью passkey.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAttestationFailure">
+        <source>Passkey could not be created.</source>
+        <target>Passkey не может быть создан.</target>
+      </trans-unit>
+      <trans-unit id="ERR.copyUnique">
+        <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>Элемент ID %d не может быть вставлен сюда, так как он конфликтует с существующим элементом.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1197,6 +1217,10 @@
         <source>Open the link in a new browser window.</source>
         <target>Открыть ссылку в новом окне браузера.</target>
       </trans-unit>
+      <trans-unit id="MSC.openTab">
+        <source>Open in a new tab</source>
+        <target>Открыть в новой вкладке</target>
+      </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
         <target>.</target>
@@ -1760,6 +1784,10 @@
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
         <target>Отмена</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirmTitle">
+          <source>Are you sure?</source>
+          <target>Вы уверены?</target>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete element ID %s?</source>
@@ -2517,10 +2545,6 @@
         <source>Print this page</source>
         <target>Печать страницы</target>
       </trans-unit>
-      <trans-unit id="MSC.printAsPdf">
-        <source>Save article as PDF</source>
-        <target>Сохранить в PDF</target>
-      </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>
         <target>Поделиться в Facebook</target>
@@ -2560,6 +2584,10 @@
       <trans-unit id="MSC.list_perPage">
         <source>Results per page</source>
         <target>Результатов на странице</target>
+      </trans-unit>
+      <trans-unit id="MSC.or">
+        <source>or</source>
+        <target>или</target>
       </trans-unit>
       <trans-unit id="MSC.published">
         <source>Published</source>
@@ -2608,6 +2636,10 @@
       <trans-unit id="MSC.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
         <target>Ссылка, которую вы пытались открыть не может быть проверена. Если вы нажали на ссылку самостоятельно или получили её от доверенного лица, можете подтвердить процесс ниже.</target>
+      </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>Вы превысили количество попыток сброса пароля. Повторите попытку через 15 минут.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
@@ -2789,6 +2821,10 @@
         <source>Disable</source>
         <target>Отключить</target>
       </trans-unit>
+      <trans-unit id="MSC.edit">
+        <source>Edit</source>
+        <target>Редактировать</target>
+      </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
         <target>Предпросмотр результатов поиска Google</target>
@@ -2916,6 +2952,66 @@
       <trans-unit id="MSC.altchaWaitAlert">
         <source>Verifying … please wait.</source>
         <target>Проверка... пожалуйста, подождите.</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeys">
+        <source>Passkeys</source>
+        <target>Passkeys</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysDescription">
+        <source>Passkeys allow you to log in securely and easily without the need for a password and two-factor token.</source>
+        <target>Passkey обеспечивает безопасный и простой вход в систему без необходимости ввода пароля и двухфакторного токена.</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyLogin">
+        <source>Sign in with a passkey</source>
+        <target>Войти с помощью passkey</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysName">
+        <source>Name/ID</source>
+        <target>Имя/ID</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyNameInput">
+        <source>Name this passkey …</source>
+        <target>Назовите этот passkey…</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysCreatedAt">
+        <source>Created at</source>
+        <target>Создано</target>
+      </trans-unit>
+      <trans-unit id="MSC.addPasskey">
+        <source>Add passkey</source>
+        <target>Добавить passkey</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsPlaceholder">
+        <source>Type to start searching</source>
+        <target>Введите текст, чтобы начать поиск</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsMin">
+        <source>Please enter at least %s characters</source>
+        <target>Введите не менее %s символов</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsLoading">
+        <source>Loading results...</source>
+        <target>Загрузка результатов...</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitView">
+        <source>View %s</source>
+        <target>Просмотр %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitEdit">
+        <source>Edit %s</source>
+        <target>Редактировать %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.noResults">
+        <source>No results found.</source>
+        <target>Ничего не найдено.</target>
+      </trans-unit>
+      <trans-unit id="MSC.noOptions">
+        <source>No options to choose from.</source>
+        <target>Нет вариантов для выбора.</target>
+      </trans-unit>
+      <trans-unit id="MSC.removeItem">
+        <source>Remove item</source>
+        <target>Удалить элемент</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -3100,6 +3196,10 @@
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
         <target>Перетащить элемент ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.operations">
+        <source>Show operations for element ID %s</source>
+        <target>Показать операции элемента ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.children">
         <source>Edit the child elements of element ID %s</source>

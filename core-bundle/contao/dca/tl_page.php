@@ -82,9 +82,8 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'mode'                    => DataContainer::MODE_TREE,
 			'rootPaste'               => true,
 			'showRootTrails'          => true,
-			'icon'                    => 'pagemounts.svg',
 			'panelLayout'             => 'filter;search',
-			'defaultSearchField'      => 'pageTitle'
+			'defaultSearchField'      => 'title'
 		),
 		'label' => array
 		(
@@ -732,7 +731,7 @@ class tl_page extends Backend
 		{
 			$GLOBALS['TL_DCA']['tl_page']['fields']['type']['default'] = 'root';
 		}
-		elseif (Input::get('mode') == 1)
+		elseif (Input::get('mode') == DataContainer::PASTE_AFTER)
 		{
 			$objPage = Database::getInstance()
 				->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")

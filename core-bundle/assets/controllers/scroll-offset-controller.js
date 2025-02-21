@@ -41,14 +41,20 @@ export default class extends Controller {
 
         if (window.Backend && !window.Backend.initScrollOffset) {
             window.Backend.initScrollOffset = () => {
-                console.warn('Backend.initScrollOffset() is deprecated. Please use the Stimulus controller instead.');
+                if (window.console) {
+                    console.warn('Backend.initScrollOffset() is deprecated. Please use the Stimulus controller instead.');
+                }
+
                 loadFallback();
             }
         }
 
         if (window.Backend && !window.Backend.getScrollOffset) {
             window.Backend.getScrollOffset = () => {
-                console.warn('Backend.getScrollOffset() is deprecated. Please use the Stimulus controller instead.');
+                if (window.console) {
+                    console.warn('Backend.getScrollOffset() is deprecated. Please use the Stimulus controller instead.');
+                }
+
                 loadFallback().then((controller) => controller.discard());
             }
         }
@@ -59,7 +65,14 @@ export default class extends Controller {
     }
 
     connect () {
+        this.restore();
+    }
+
+    async restore () {
         if (!this.offset) return;
+
+        // Execute scroll restore after Turbo scrolled to top
+        await new Promise(requestAnimationFrame);
 
         window.scrollTo({
             top: this.offset,

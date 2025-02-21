@@ -1,0 +1,99 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/explain.php" source-language="en" target-language="sk">
+    <body>
+      <trans-unit id="XPT.error">
+        <source>An error occurred</source>
+        <target>Vyskytla sa chyba</target>
+      </trans-unit>
+      <trans-unit id="XPT.matter">
+        <source>What's the matter?</source>
+        <target>Čo sa stalo?</target>
+      </trans-unit>
+      <trans-unit id="XPT.howToFix">
+        <source>How can I fix the issue?</source>
+        <target>Ako môžem odstrániť túto chybu?</target>
+      </trans-unit>
+      <trans-unit id="XPT.more">
+        <source>Tell me more, please</source>
+        <target>Dozvedieť sa viac</target>
+      </trans-unit>
+      <trans-unit id="XPT.hint">
+        <source>To customize this notice, create a custom Twig template overriding &lt;em&gt;%s&lt;/em&gt;.</source>
+        <target>Ak chcete toto oznámenie prispôsobiť, vytvorte si vlastnú šablónu Twig, ktorá prepíše &lt;em&gt;%s&lt;/em&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPT.errorOccurred">
+        <source>An error occurred while executing this script. Something does not work properly.</source>
+        <target>Pri spúšťaní tohto skriptu došlo k chybe. Niečo nepracuje správnym spôsobom.</target>
+      </trans-unit>
+      <trans-unit id="XPT.errorFixOne">
+        <source>Open the current log file in the &lt;code&gt;var/logs&lt;/code&gt; directory and find the associated error message (usually the last one).</source>
+        <target>Otvorte aktuálny súbor logu v &lt;code&gt;var/logs&lt;/code&gt; adresáry a nájdite súvisiace chybové hlásenie (zvyčajne posledné).</target>
+      </trans-unit>
+      <trans-unit id="XPT.errorExplain">
+        <source>The script execution stopped, because something does not work properly. The actual error message is hidden by this notice for security reasons and can be found in the current log file (see above). If you do not understand the error message or do not know how to fix the problem, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>Vykonávanie skriptu sa zastavilo, pretože niečo nefunguje správne. Skutočné chybové hlásenie je týmto upozornením z bezpečnostných dôvodov skryté a možno ho nájsť v aktuálnom súbore denníka (pozri vyššie). Ak nerozumiete chybovej správe alebo neviete, ako problém vyriešiť, navštívte stránku&lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPT.requestToken">
+        <source>Invalid request token</source>
+        <target>Neplatná požiadavka tokenu</target>
+      </trans-unit>
+      <trans-unit id="XPT.invalidToken">
+        <source>The request token could not be verified.</source>
+        <target>Požadovaný token nemohol byť overený.</target>
+      </trans-unit>
+      <trans-unit id="XPT.tokenReload">
+        <source>Reload the page</source>
+      </trans-unit>
+      <trans-unit id="XPT.tokenRetry">
+        <source>Use the button above to reload the page and try again. Do not use the back button of your browser.</source>
+      </trans-unit>
+      <trans-unit id="XPT.tokenExplainOne">
+        <source>This error occurs if there is a POST request without a valid request token. If the problem persists, you may be using an incompatible third-party extension or have not correctly updated your Contao installation.</source>
+      </trans-unit>
+      <trans-unit id="XPT.tokenExplainTwo">
+        <source>For more information, visit the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</source>
+        <target>Pre viac informácii navštívte &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;Contao support page&lt;/a&gt;.</target>
+      </trans-unit>
+      <trans-unit id="XPT.unavailable">
+        <source>Service unavailable</source>
+        <target>Služba nedostupná</target>
+      </trans-unit>
+      <trans-unit id="XPT.maintenance">
+        <source>The website is currently not available. Please come back later.</source>
+        <target>Stránka momentálne nie je k dispozícii. Prosím vráť sa neskôr.</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.title">
+        <source>Unable to generate front end URL</source>
+        <target>Nedá sa vygenerovať front-end URL</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.matter">
+        <source>The URL could not be generated, because the route has mandatory parameters that are not given. Additional information (e.g. a news alias) must be provided.</source>
+        <target>Adresu URL nebolo možné vygenerovať, pretože trasa má povinné parametre, ktoré nie sú zadané. Je potrebné poskytnúť ďalšie informácie (napr. alias správ).</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.explain">
+        <source>Symfony routes can have variable parameters, which are validated using regular expressions. The following configuration could not be resolved:</source>
+        <target>Route Symfony môžu mať variabilné parametre, ktoré sa overujú pomocou regulárnych výrazov. Nasledujúca konfigurácia sa nepodarilo vyriešiť:</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.path">
+        <source>Route path</source>
+        <target>Routa cesty</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterName">
+        <source>Name</source>
+        <target>Názov</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterRequirement">
+        <source>Requirement (Regex)</source>
+        <target>Požiadavka (regex)</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterDefault">
+        <source>Default value</source>
+        <target>Prednastavená hodnota</target>
+      </trans-unit>
+      <trans-unit id="XPT.missingRouteParameters.parameterEmpty">
+        <source>empty</source>
+        <target>prázdny</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener\Menu;
 use Contao\BackendUser;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Event\MenuEvent;
+use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Knp\Menu\FactoryInterface;
 use Knp\Menu\ItemInterface;
@@ -90,6 +91,7 @@ class BackendFavoritesListener
             ->setLinkAttribute('title', $this->translator->trans($collapsed ? 'MSC.expandNode' : 'MSC.collapseNode', [], 'contao_default'))
             ->setLinkAttribute('data-action', 'contao--toggle-navigation#toggle:prevent')
             ->setLinkAttribute('data-contao--toggle-navigation-category-param', 'favorites')
+            ->setLinkAttribute('data-turbo-prefetch', 'false')
             ->setLinkAttribute('aria-controls', 'favorites')
             ->setChildrenAttribute('id', 'favorites')
             ->setExtra('translation_domain', false)
@@ -170,10 +172,10 @@ class BackendFavoritesListener
 
             $item = $factory
                 ->createItem('favorite_'.$node['id'])
-                ->setLabel($node['title'])
+                ->setLabel(StringUtil::decodeEntities($node['title']))
                 ->setUri($node['url'].(str_contains((string) $node['url'], '?') ? '&' : '?').'ref='.$ref)
                 ->setLinkAttribute('class', 'navigation')
-                ->setLinkAttribute('title', $node['title'])
+                ->setLinkAttribute('title', StringUtil::decodeEntities($node['title']))
                 ->setCurrent($node['url'] === $requestUri)
                 ->setExtra('translation_domain', false)
             ;

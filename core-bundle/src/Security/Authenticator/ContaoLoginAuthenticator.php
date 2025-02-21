@@ -50,9 +50,13 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
 use Symfony\Component\Security\Http\ParameterBagUtils;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
+use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Twig\Environment;
 
 class ContaoLoginAuthenticator extends AbstractAuthenticator implements AuthenticationEntryPointInterface, InteractiveAuthenticatorInterface
 {
+    use TargetPathTrait;
+
     private readonly array $options;
 
     /**
@@ -72,6 +76,7 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         private readonly RequestStack $requestStack,
         private readonly TwoFactorAuthenticator $twoFactorAuthenticator,
         array $options,
+        private readonly Environment $twig,
     ) {
         $this->options = [
             'username_parameter' => 'username',
@@ -211,14 +216,41 @@ class ContaoLoginAuthenticator extends AbstractAuthenticator implements Authenti
         return $credentials;
     }
 
-    private function redirectToBackend(Request $request): RedirectResponse
+    private function redirectToBackend(Request $request): Response
     {
+        // If the current request was for a Turbo stream, make the page reload itself
+        // with the current browser URL. This way the redirect URL for the login page
+        // will be an endpoint, that a user can actually visit.
+        if (\in_array('text/vnd.turbo-stream.html', $request->getAcceptableContentTypes(), true)) {
+            return new Response($this->twig->render('@Contao/backend/reload.stream.html.twig'));
+        }
+
+        // No redirect parameter required if the 'contao_backend' route was requested
+        // without any parameters.
+        if ('contao_backend' === $request->attributes->get('_route') && [] === $request->query->all()) {
+            $loginParams = [];
+        } else {
+            $loginParams = ['redirect' => $request->getUri()];
+        }
+
         $url = $this->router->generate(
             'contao_backend_login',
-            ['redirect' => $request->getUri()],
+            $loginParams,
             UrlGeneratorInterface::ABSOLUTE_URL,
         );
 
-        return new RedirectResponse($this->uriSigner->sign($url));
+        // No URL signing required if we do not have any parameters.
+        if ([] !== $loginParams) {
+            $url = $this->uriSigner->sign($url);
+        }
+
+        // Our back end login controller will redirect based on the 'redirect' parameter,
+        // ignoring Symfony's target path session value. Thus, we remove the session
+        // variable here in order to not send an unnecessary session cookie.
+        if ($request->hasSession()) {
+            $this->removeTargetPath($request->getSession(), 'contao_backend');
+        }
+
+        return new RedirectResponse($url);
     }
 }

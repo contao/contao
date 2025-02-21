@@ -17,7 +17,6 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -25,8 +24,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class ContaoUserProviderTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testLoadsUsersByUsername(): void
     {
         $user = $this->createMock(BackendUser::class);
@@ -36,6 +33,17 @@ class ContaoUserProviderTest extends TestCase
         $provider = $this->getProvider($framework);
 
         $this->assertSame($user, $provider->loadUserByIdentifier('foobar'));
+    }
+
+    public function testLoadsUsersById(): void
+    {
+        $user = $this->createMock(BackendUser::class);
+        $adapter = $this->mockConfiguredAdapter(['loadUserById' => $user]);
+        $framework = $this->mockContaoFramework([BackendUser::class => $adapter]);
+
+        $provider = $this->getProvider($framework);
+
+        $this->assertSame($user, $provider->loadUserById(1));
     }
 
     public function testFailsToLoadAUserIfTheUsernameDoesNotExist(): void

@@ -40,7 +40,6 @@ return ECSConfig::configure()
         __DIR__.'/newsletter-bundle/tests',
         __DIR__.'/test-case/src',
         __DIR__.'/vendor-bin/ecs/config',
-        __DIR__.'/vendor-bin/isolated-tests/src',
         __DIR__.'/vendor-bin/phpstan/src',
         __DIR__.'/vendor-bin/service-linter/src',
     ])
@@ -56,5 +55,5 @@ return ECSConfig::configure()
     ->withParallel()
     ->withSpacing(Option::INDENTATION_SPACES, "\n")
     ->withConfiguredRule(HeaderCommentFixer::class, ['header' => "This file is part of Contao.\n\n(c) Leo Feyer\n\n@license LGPL-3.0-or-later"])
-    ->withCache(sys_get_temp_dir().'/ecs/contao54')
+    ->withCache(sys_get_temp_dir().'/ecs/contao5x')
 ;

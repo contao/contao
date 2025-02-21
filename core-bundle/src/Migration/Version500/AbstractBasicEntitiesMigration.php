@@ -52,9 +52,12 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
                 continue;
             }
 
-            $test = $this->connection->fetchOne(
-                "SELECT TRUE FROM $table WHERE `$column` REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' LIMIT 1;",
-            );
+            $test = $this->connection->fetchOne("
+                SELECT TRUE
+                FROM $table
+                WHERE CAST(`$column` AS BINARY) REGEXP CAST('\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' AS BINARY)
+                LIMIT 1
+            ");
 
             if (false !== $test) {
                 return true;
@@ -76,9 +79,13 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
                 continue;
             }
 
-            $values = $this->connection->fetchAllKeyValue(
-                "SELECT id, `$column` FROM $table WHERE `$column` REGEXP '\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]'",
-            );
+            $values = $this->connection->fetchAllKeyValue("
+                SELECT
+                    id,
+                    `$column`
+                FROM $table
+                WHERE CAST(`$column` AS BINARY) REGEXP CAST('\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' AS BINARY)
+            ");
 
             foreach ($values as $id => $value) {
                 $value = StringUtil::deserialize($value);

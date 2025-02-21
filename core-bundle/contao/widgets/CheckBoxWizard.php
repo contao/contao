@@ -52,7 +52,7 @@ class CheckBoxWizard extends Widget
 	{
 		if ($strKey == 'options')
 		{
-			$this->arrOptions = StringUtil::deserialize($varValue);
+			$this->arrOptions = StringUtil::deserialize($varValue, true);
 		}
 		else
 		{
@@ -148,7 +148,7 @@ class CheckBoxWizard extends Widget
 		// Generate options and add buttons
 		foreach ($arrAllOptions as $i=>$arrOption)
 		{
-			$arrOptions[] = $this->generateCheckbox($arrOption, $i, '<button type="button" class="drag-handle" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button> ');
+			$arrOptions[] = $this->generateCheckbox($arrOption, $i, '<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', $GLOBALS['TL_LANG']['MSC']['move']) . '</button> ');
 		}
 
 		// Add a "no entries found" message if there are no options

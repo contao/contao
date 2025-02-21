@@ -16,13 +16,16 @@ use Contao\ArticleModel;
 use Contao\Config;
 use Contao\ContentModel;
 use Contao\Controller;
-use Contao\CoreBundle\Cache\EntityCacheTags;
-use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Cache\CacheTagManager;
+use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Controller\ContentElement\AbstractContentElementController;
 use Contao\CoreBundle\Csp\WysiwygStyleProcessor;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\File\MetadataBag;
+use Contao\CoreBundle\File\TextTrack;
+use Contao\CoreBundle\File\TextTrackType;
+use Contao\CoreBundle\Filesystem\ExtraMetadata;
 use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
@@ -78,7 +81,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 use Twig\RuntimeLoader\FactoryRuntimeLoader;
 
-class ContentElementTestCase extends TestCase
+abstract class ContentElementTestCase extends TestCase
 {
     final public const FILE_IMAGE1 = '0a2073bc-c966-4e7b-83b9-163a06aa87e7';
 
@@ -91,6 +94,12 @@ class ContentElementTestCase extends TestCase
     final public const FILE_VIDEO_MP4 = 'e802b519-8e08-4075-913c-7603ec6f2376';
 
     final public const FILE_VIDEO_OGV = 'd950e33a-dacc-42ad-ba97-6387d05348c4';
+
+    final public const FILE_SUBTITLES_INVALID_VTT = '5234dfa3-d98f-42c7-ae36-ed8440478de2';
+
+    final public const FILE_SUBTITLES_EN_VTT = 'a3c1e6d9-7d5b-4e3f-9e7d-6b9f2d3c841b';
+
+    final public const FILE_SUBTITLES_DE_VTT = '1e48cbce-6354-4ca0-b133-6272aba46828';
 
     final public const ARTICLE1 = 123;
 
@@ -134,7 +143,7 @@ class ContentElementTestCase extends TestCase
         ;
 
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
+        $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
         $container->set('contao.routing.content_url_generator', $this->createMock(ContentUrlGenerator::class));
         $container->set('contao.routing.scope_matcher', $scopeMatcher);
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
@@ -254,10 +263,16 @@ class ContentElementTestCase extends TestCase
     {
         $resourceBasePath = Path::canonicalize(__DIR__.'/../../../');
 
+        $resourceFinder = $this->createMock(ResourceFinder::class);
+        $resourceFinder
+            ->method('getExistingSubpaths')
+            ->with('templates')
+            ->willReturn(['ContaoCore' => $resourceBasePath.'/contao/templates'])
+        ;
+
         $templateLocator = new TemplateLocator(
             '',
-            ['ContaoCore' => ContaoCoreBundle::class],
-            ['ContaoCore' => ['path' => $resourceBasePath]],
+            $resourceFinder,
             $themeNamespace = new ThemeNamespace(),
             $this->createMock(Connection::class),
         );
@@ -303,7 +318,7 @@ class ContentElementTestCase extends TestCase
                 $contaoFilesystemLoader,
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter()),
+                new InspectorNodeVisitor(new NullAdapter(), $environment),
             ),
         );
 
@@ -347,18 +362,53 @@ class ContentElementTestCase extends TestCase
                             123456,
                             1024,
                             'image/jpg',
-                            [
-                                'metadata' => new MetadataBag(
+                            new ExtraMetadata([
+                                'localized' => new MetadataBag(
                                     ['en' => new Metadata([Metadata::VALUE_TITLE => 'image1 title'])],
                                     ['en'],
                                 ),
-                            ],
+                            ]),
                         ),
                         self::FILE_IMAGE2 => new FilesystemItem(true, 'image2.jpg', null, null, 'image/jpeg'),
                         self::FILE_IMAGE3 => new FilesystemItem(true, 'image3.jpg', null, null, 'image/jpeg'),
                         self::FILE_IMAGE_MISSING => new FilesystemItem(true, 'image_missing.jpg', null, null, 'image/jpeg'),
                         self::FILE_VIDEO_MP4 => new FilesystemItem(true, 'video.mp4', null, null, 'video/mp4'),
                         self::FILE_VIDEO_OGV => new FilesystemItem(true, 'video.ogv', null, null, 'video/ogg'),
+                        self::FILE_SUBTITLES_INVALID_VTT => new FilesystemItem(true, 'subtitles-incomplete.vtt', null, null, 'text/vtt'),
+                        self::FILE_SUBTITLES_EN_VTT => new FilesystemItem(
+                            true,
+                            'subtitles-en.vtt',
+                            null,
+                            null,
+                            'text/vtt',
+                            new ExtraMetadata([
+                                'localized' => new MetadataBag(
+                                    ['en' => new Metadata([Metadata::VALUE_TITLE => 'English'])],
+                                    ['en'],
+                                ),
+                                'textTrack' => new TextTrack(
+                                    'en',
+                                    null,
+                                ),
+                            ]),
+                        ),
+                        self::FILE_SUBTITLES_DE_VTT => new FilesystemItem(
+                            true,
+                            'subtitles-de.vtt',
+                            null,
+                            null,
+                            'text/vtt',
+                            new ExtraMetadata([
+                                'localized' => new MetadataBag(
+                                    ['en' => new Metadata([Metadata::VALUE_TITLE => 'Deutsch'])],
+                                    ['en'],
+                                ),
+                                'textTrack' => new TextTrack(
+                                    'de',
+                                    TextTrackType::captions,
+                                ),
+                            ]),
+                        ),
                     ];
 
                     return $storageMap[$uuid->toRfc4122()] ?? null;
@@ -376,6 +426,9 @@ class ContentElementTestCase extends TestCase
                         'image3.jpg' => new Uri('https://example.com/files/image3.jpg'),
                         'video.mp4' => new Uri('https://example.com/files/video.mp4'),
                         'video.ogv' => new Uri('https://example.com/files/video.ogv'),
+                        'subtitles-incomplete.vtt' => new Uri('https://example.com/files/subtitles-incomplete.vtt'),
+                        'subtitles-en.vtt' => new Uri('https://example.com/files/subtitles-en.vtt'),
+                        'subtitles-de.vtt' => new Uri('https://example.com/files/subtitles-de.vtt'),
                     ];
 
                     return $publicUriMap[$path] ?? null;

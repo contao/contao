@@ -15,7 +15,7 @@ namespace Contao\CoreBundle\Tests\DependencyInjection;
 use Contao\CoreBundle\DependencyInjection\Configuration;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Image\ResizeConfiguration;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Imagine\Image\ImageInterface;
 use Symfony\Component\Config\Definition\ArrayNode;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
@@ -23,8 +23,6 @@ use Symfony\Component\Config\Definition\PrototypedArrayNode;
 
 class ConfigurationTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     private Configuration $configuration;
 
     protected function setUp(): void
@@ -52,6 +50,72 @@ class ConfigurationTest extends TestCase
         $configuration = (new Processor())->processConfiguration($this->configuration, $params);
 
         $this->assertSame('my_super_service', $configuration['image']['imagine_service']);
+    }
+
+    public function testInvalidImageExtension(): void
+    {
+        $params = [
+            'contao' => [
+                'image' => [
+                    'valid_extensions' => ['', '+', '-'],
+                ],
+            ],
+        ];
+
+        $this->expectException(InvalidConfigurationException::class);
+
+        (new Processor())->processConfiguration($this->configuration, $params);
+    }
+
+    public function testReplacesAllImageExtensions(): void
+    {
+        $extensions = ['jpeg', 'jpg', 'png'];
+
+        $params = [
+            'contao' => [
+                'image' => [
+                    'valid_extensions' => $extensions,
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame($extensions, $configuration['image']['valid_extensions']);
+    }
+
+    public function testAddsImageExtension(): void
+    {
+        $extensions = ['avif', 'bmp', 'gif', 'heic', 'jpeg', 'jpg', 'png', 'svg', 'svgz', 'tif', 'tiff', 'webp'];
+
+        $params = [
+            'contao' => [
+                'image' => [
+                    'valid_extensions' => ['+heic'],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame($extensions, $configuration['image']['valid_extensions']);
+    }
+
+    public function testRemovesImageExtension(): void
+    {
+        $extensions = ['avif', 'bmp', 'gif', 'jpeg', 'jpg', 'png', 'tif', 'tiff', 'webp'];
+
+        $params = [
+            'contao' => [
+                'image' => [
+                    'valid_extensions' => ['-svg', '-svgz'],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertSame($extensions, $configuration['image']['valid_extensions']);
     }
 
     /**
@@ -463,6 +527,39 @@ class ConfigurationTest extends TestCase
         ];
     }
 
+    public function testDoesNormalizeResamplingFilter(): void
+    {
+        $params = [
+            [
+                'image' => [
+                    'imagine_options' => [
+                        'resampling-filter' => ImageInterface::FILTER_LANCZOS,
+                    ],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertArrayHasKey('resampling-filter', $configuration['image']['imagine_options']);
+        $this->assertSame(ImageInterface::FILTER_LANCZOS, $configuration['image']['imagine_options']['resampling-filter']);
+
+        $params = [
+            [
+                'image' => [
+                    'imagine_options' => [
+                        'resampling_filter' => ImageInterface::FILTER_UNDEFINED,
+                    ],
+                ],
+            ],
+        ];
+
+        $configuration = (new Processor())->processConfiguration($this->configuration, $params);
+
+        $this->assertArrayHasKey('resampling-filter', $configuration['image']['imagine_options']);
+        $this->assertSame(ImageInterface::FILTER_UNDEFINED, $configuration['image']['imagine_options']['resampling-filter']);
+    }
+
     /**
      * Ensure that all non-deprecated configuration keys are in lower case and
      * separated by underscores (aka snake_case).
@@ -482,7 +579,7 @@ class ConfigurationTest extends TestCase
                 }
             }
 
-            if (\is_string($key) && !$value->isDeprecated()) {
+            if (\is_string($key) && !$value->isDeprecated() && 'resampling-filter' !== $key) {
                 $this->assertMatchesRegularExpression('/^[a-z][a-z_]+[a-z]$/', $key);
             }
         }

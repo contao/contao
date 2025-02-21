@@ -147,7 +147,8 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 			'inputType'               => 'checkbox',
 			'options_callback'        => array('tl_calendar_feed', 'getAllowedCalendars'),
 			'eval'                    => array('multiple'=>true, 'mandatory'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => "blob NULL",
+			'relation'                => array('table'=>'tl_calendar_feed', 'type'=>'hasMany', 'load'=>'lazy')
 		),
 		'format' => array
 		(
@@ -251,8 +252,6 @@ class tl_calendar_feed extends Backend
 			$GLOBALS['TL_DCA']['tl_calendar_feed']['config']['notDeletable'] = true;
 		}
 
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
 		// Check current action
 		switch (Input::get('act'))
 		{
@@ -281,6 +280,7 @@ class tl_calendar_feed extends Backend
 			case 'deleteAll':
 			case 'overrideAll':
 			case 'copyAll':
+				$objSession = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 				$session = $objSession->all();
 
 				if (Input::get('act') == 'deleteAll' && !$security->isGranted(ContaoCalendarPermissions::USER_CAN_DELETE_FEEDS))
@@ -404,7 +404,7 @@ class tl_calendar_feed extends Backend
 	 */
 	public function copyFeed($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCalendarPermissions::USER_CAN_CREATE_FEEDS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCalendarPermissions::USER_CAN_CREATE_FEEDS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -421,7 +421,7 @@ class tl_calendar_feed extends Backend
 	 */
 	public function deleteFeed($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCalendarPermissions::USER_CAN_DELETE_FEEDS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCalendarPermissions::USER_CAN_DELETE_FEEDS) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**

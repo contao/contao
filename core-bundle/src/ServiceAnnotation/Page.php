@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Terminal42\ServiceAnnotationBundle\Annotation\ServiceTagInterface;
 
 /**
- * Annotation class for @Page().
+ * Annotation to register a page.
  *
  * @Annotation
  *

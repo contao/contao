@@ -373,9 +373,13 @@
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
         <target>管理者の電子メールアドレスが設定されていません、サイトの管理者に連絡してください。</target>
       </trans-unit>
+      <trans-unit id="ERR.altchaJavaScriptRequired">
+        <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.</source>
+        <target>現在JavaScriptは無効、またはアクセスを禁止されています。JavaScriptなしでは、spam対策のための検証は失敗します。フォームの提出のためにはJavaScriptを一時的に有効にしてください。 </target>
+      </trans-unit>
       <trans-unit id="ERR.altchaVerificationFailed">
-        <source>ALTCHA antispam verification failed. Are you a human or a robot?</source>
-        <target>ALTCHAのspam防止による検証ができません。あなたは人間ですか、ロボットですか?</target>
+        <source>Anti-spam verification failed. Are you a human or a robot?</source>
+        <target>spam対策の検証に失敗しました。あなたは人間ですか、それともロボットですか?</target>
       </trans-unit>
       <trans-unit id="ERR.altchaWidgetError">
         <source>Verification failed. Try again later.</source>
@@ -388,6 +392,22 @@
       <trans-unit id="ERR.personalDataPassword">
         <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
         <target>パスワードを変更できるモジュールとして少なくとも1つ、「個人データ」があります。これはセキュリティ上の弱点で、Contao 6では動作しなくなります。代わりに「パスワード変更」モジュールを使用してください。</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeysUnsupported">
+        <source>Passkeys are not supported on this device.</source>
+        <target>この機器はパスキーをサポートしていません。</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAssertionFailure">
+        <source>Login with passkey failed.</source>
+        <target>パスキーでログインできませんでした。</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAttestationFailure">
+        <source>Passkey could not be created.</source>
+        <target>パスキーを作成できませんでした。</target>
+      </trans-unit>
+      <trans-unit id="ERR.copyUnique">
+        <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>%dのIDの要素は既存の要素と競合するため、ここには挿入できません。</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -1197,6 +1217,10 @@
         <source>Open the link in a new browser window.</source>
         <target>ブラウザーの新しいウィンドウでリンクを開きます。</target>
       </trans-unit>
+      <trans-unit id="MSC.openTab">
+        <source>Open in a new tab</source>
+        <target>新しいタブで開く</target>
+      </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
         <target>.</target>
@@ -1760,6 +1784,10 @@
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
         <target>取り止め</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirmTitle">
+          <source>Are you sure?</source>
+          <target>本当に?</target>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete element ID %s?</source>
@@ -2517,10 +2545,6 @@
         <source>Print this page</source>
         <target>このページを印刷</target>
       </trans-unit>
-      <trans-unit id="MSC.printAsPdf">
-        <source>Save article as PDF</source>
-        <target>アーティクルをPDFとして保存</target>
-      </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>
         <target>Facebookで共有</target>
@@ -2560,6 +2584,10 @@
       <trans-unit id="MSC.list_perPage">
         <source>Results per page</source>
         <target>1ページの結果の数</target>
+      </trans-unit>
+      <trans-unit id="MSC.or">
+        <source>or</source>
+        <target>または</target>
       </trans-unit>
       <trans-unit id="MSC.published">
         <source>Published</source>
@@ -2608,6 +2636,10 @@
       <trans-unit id="MSC.invalidTokenUrl">
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
         <target>開こうとしているURLを確認できません。あなた自身でクリックしたか、信頼に値する人から受け取ったリンクでしたら、以下を承認して処理を進めて良いでしょう。</target>
+      </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>パスワードを何回も再設定し過ぎです。15分待ってから再度試してください。</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
@@ -2789,6 +2821,10 @@
         <source>Disable</source>
         <target>無効</target>
       </trans-unit>
+      <trans-unit id="MSC.edit">
+        <source>Edit</source>
+        <target>編集</target>
+      </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
         <target>Google検索の結果のプレビュー</target>
@@ -2916,6 +2952,66 @@
       <trans-unit id="MSC.altchaWaitAlert">
         <source>Verifying … please wait.</source>
         <target>検証中...しばらくお待ちください。</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeys">
+        <source>Passkeys</source>
+        <target>パスキー</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysDescription">
+        <source>Passkeys allow you to log in securely and easily without the need for a password and two-factor token.</source>
+        <target>パスキーを使用すると、パスワードや2ファクター認証の必要なしに安全で簡単にログインできます。</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyLogin">
+        <source>Sign in with a passkey</source>
+        <target>パスキーでサインイン</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysName">
+        <source>Name/ID</source>
+        <target>名前・ID</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyNameInput">
+        <source>Name this passkey …</source>
+        <target>このパスキーの名前を設定...</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysCreatedAt">
+        <source>Created at</source>
+        <target>作成日時</target>
+      </trans-unit>
+      <trans-unit id="MSC.addPasskey">
+        <source>Add passkey</source>
+        <target>パスキーを追加</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsPlaceholder">
+        <source>Type to start searching</source>
+        <target>入力すると検索を開始</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsMin">
+        <source>Please enter at least %s characters</source>
+        <target>少なくとも%s文字入力してください。</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsLoading">
+        <source>Loading results...</source>
+        <target>結果を読み込み中...</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitView">
+        <source>View %s</source>
+        <target>%sを表示</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitEdit">
+        <source>Edit %s</source>
+        <target>%sを編集</target>
+      </trans-unit>
+      <trans-unit id="MSC.noResults">
+        <source>No results found.</source>
+        <target>何も見つかりません。</target>
+      </trans-unit>
+      <trans-unit id="MSC.noOptions">
+        <source>No options to choose from.</source>
+        <target>次からの選択肢がありません。</target>
+      </trans-unit>
+      <trans-unit id="MSC.removeItem">
+        <source>Remove item</source>
+        <target>項目を削除</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -3100,6 +3196,10 @@
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
         <target>ID %sの要素の詳細をドラッグ</target>
+      </trans-unit>
+      <trans-unit id="DCA.operations">
+        <source>Show operations for element ID %s</source>
+        <target>ID %sの要素の操作を表示</target>
       </trans-unit>
       <trans-unit id="DCA.children">
         <source>Edit the child elements of element ID %s</source>

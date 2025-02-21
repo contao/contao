@@ -288,11 +288,6 @@ class DebugContaoTwigCommandTest extends TestCase
             ['--theme' => 'my/theme'],
             'my_theme',
         ];
-
-        yield 'theme path (relative up)' => [
-            ['--theme' => '../themes/foo'],
-            '_themes_foo',
-        ];
     }
 
     private function getCommand(ContaoFilesystemLoader|null $filesystemLoader = null): DebugContaoTwigCommand
@@ -305,6 +300,8 @@ class DebugContaoTwigCommandTest extends TestCase
                     new Source("… code of $name …", $name),
                     ["{$name}_block1", "{$name}_block2"],
                     ["{$name}_slot1", "{$name}_slot2"],
+                    null,
+                    [],
                 ),
             )
         ;

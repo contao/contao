@@ -29,11 +29,7 @@ export default class extends Controller {
     }
 
     toggle (event) {
-        event.preventDefault();
-
         const el = event.currentTarget;
-        el.blur();
-
         this.toggleToggler(el, event.params.id, event.params.level, event.params.folder);
     }
 
@@ -57,12 +53,26 @@ export default class extends Controller {
 
     expandToggler (el) {
         el.classList.add('foldable--open');
-        el.title = this.collapseValue;
+
+        if (el.hasAttribute('title')) {
+            el.title = this.collapseValue;
+        }
+
+        el.getElements('img')?.forEach((image) => {
+            image.alt = this.collapseValue;
+        });
     }
 
     collapseToggler (el) {
         el.classList.remove('foldable--open');
-        el.title = this.expandValue;
+
+        if (el.hasAttribute('title')) {
+            el.title = this.expandValue;
+        }
+
+        el.getElements('img')?.forEach((image) => {
+            image.alt = this.expandValue;
+        });
     }
 
     loadToggler (el, enabled) {
@@ -148,8 +158,6 @@ export default class extends Controller {
     }
 
     async toggleAll (event) {
-        event.preventDefault();
-
         const href = event.currentTarget.href;
 
         if (this.hasExpandedRoot() ^ (event ? event.altKey : false)) {

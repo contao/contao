@@ -76,7 +76,7 @@ class BackendMain extends Backend
 				'do' => 'login',
 				'act' => 'edit',
 				'id' => $user->id,
-				'ref' => $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'),
+				'ref' => Input::get('ref') ?: $container->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id'),
 			));
 
 			$this->redirect($strUrl);
@@ -239,7 +239,7 @@ class BackendMain extends Backend
 
 		$data['theme'] = Backend::getTheme();
 		$data['language'] = $GLOBALS['TL_LANGUAGE'];
-		$data['title'] = StringUtil::specialchars(strip_tags($data['title'] ?? ''));
+		$data['title'] = StringUtil::specialchars(preg_replace('/^\s*›\s*|\s*›\s*$/u', '', strip_tags(preg_replace('/<span.*?>/', ' › ', $data['title'] ?? ''))));
 		$data['host'] = Backend::getDecodedHostname();
 		$data['charset'] = System::getContainer()->getParameter('kernel.charset');
 		$data['home'] = $GLOBALS['TL_LANG']['MSC']['home'];
@@ -247,9 +247,10 @@ class BackendMain extends Backend
 		$data['learnMore'] = \sprintf($GLOBALS['TL_LANG']['MSC']['learnMore'], '<a href="https://contao.org" target="_blank" rel="noreferrer noopener">contao.org</a>');
 
 		$twig = $container->get('twig');
+		$searchEnabled = $container->has('contao.search.backend') && $container->get('contao.search.backend')->isAvailable();
 
-		$data['menu'] = $twig->render('@ContaoCore/Backend/be_menu.html.twig');
-		$data['headerMenu'] = $twig->render('@ContaoCore/Backend/be_header_menu.html.twig');
+		$data['menu'] = $twig->render('@Contao/backend/chrome/main_menu.html.twig');
+		$data['headerMenu'] = $twig->render('@Contao/backend/chrome/header_menu.html.twig', array('searchEnabled' => $searchEnabled));
 
 		$responseContext = System::getContainer()->get('contao.routing.response_context_accessor')->getResponseContext();
 

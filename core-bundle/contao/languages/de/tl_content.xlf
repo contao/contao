@@ -449,6 +449,14 @@
         <source>Here you can add the video/audio file or multiple files if you are using different codecs.</source>
         <target>Hier können Sie die Video-/Audio-Datei bzw. – wenn Sie verschiedene Codecs verwenden – die Video-/Audio-Dateien hinzufügen.</target>
       </trans-unit>
+      <trans-unit id="tl_content.textTrackSRC.0">
+        <source>Text track files</source>
+        <target>Text-Spur-Dateien</target>
+      </trans-unit>
+      <trans-unit id="tl_content.textTrackSRC.1">
+        <source>The topmost .vtt file is loaded as the default track. Additional settings can be made within the .vtt file.</source>
+        <target>Die oberste .vtt-Datei wird als Standardspur geladen. Zusätzliche Einstellungen können innerhalb der .vtt-Datei vorgenommen werden.</target>
+      </trans-unit>
       <trans-unit id="tl_content.youtube.0">
         <source>YouTube ID</source>
         <target>YouTube-ID</target>
@@ -512,6 +520,14 @@
       <trans-unit id="tl_content.playerStop.1">
         <source>Stop playing the video at the given number of seconds. Set to 0 to disable.</source>
         <target>Beendet die Wiedergabe bei der festgelegten Anzahl an Sekunden. Geben Sie 0 ein, um das Feature zu deaktivieren.</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerTitle.0">
+        <source>Title</source>
+        <target>Titel</target>
+      </trans-unit>
+      <trans-unit id="tl_content.playerTitle.1">
+        <source>Here you can enter a title.</source>
+        <target>Hier können Sie einen Titel eingeben.</target>
       </trans-unit>
       <trans-unit id="tl_content.playerCaption.0">
         <source>Caption</source>
@@ -764,6 +780,10 @@
       <trans-unit id="tl_content.poster_legend">
         <source>Preview image</source>
         <target>Vorschaubild</target>
+      </trans-unit>
+      <trans-unit id="tl_content.texttrack_legend">
+        <source>Text tracks</source>
+        <target>Text-Spuren</target>
       </trans-unit>
       <trans-unit id="tl_content.invisible_legend">
         <source>Visibility</source>

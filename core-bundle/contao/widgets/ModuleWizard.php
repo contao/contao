@@ -192,7 +192,7 @@ class ModuleWizard extends Widget
 
 			$return .= '
   <tr>
-    <td><select name="' . $this->strId . '[' . $i . '][mod]" class="tl_select" data-action="focus->contao--scroll-offset#store" data-controller="contao--chosen">' . $options . '</select></td>';
+    <td><select name="' . $this->strId . '[' . $i . '][mod]" class="tl_select" data-action="focus->contao--scroll-offset#store" data-controller="contao--choices">' . $options . '</select></td>';
 
 			$options = '<option value="">-</option>';
 
@@ -212,11 +212,11 @@ class ModuleWizard extends Widget
 				if ($button == 'edit')
 				{
 					$href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>($this->varValue[$i]['mod'] ?? null), 'popup'=>'1')));
-					$return .= ' <a href="' . $href . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_layout']['edit_module']) . '" class="module_link' . (($this->varValue[$i]['mod'] ?? null) > 0 ? '' : ' hidden') . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_module'])) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg') . '</a>' . Image::getHtml('edit--disabled.svg', '', 'class="module_image' . (($this->varValue[$i]['mod'] ?? null) > 0 ? ' hidden' : '') . '"');
+					$return .= ' <a href="' . $href . '" class="module_link' . (($this->varValue[$i]['mod'] ?? null) > 0 ? '' : ' hidden') . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_module'])) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg', $GLOBALS['TL_LANG']['tl_layout']['edit_module']) . '</a>' . Image::getHtml('edit--disabled.svg', '', 'class="module_image' . (($this->varValue[$i]['mod'] ?? null) > 0 ? ' hidden' : '') . '"');
 				}
 				elseif ($button == 'drag')
 				{
-					$return .= ' <button type="button" class="drag-handle" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['move']) . '" aria-hidden="true">' . Image::getHtml('drag.svg') . '</button>';
+					$return .= ' <button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', $GLOBALS['TL_LANG']['MSC']['move']) . '</button>';
 				}
 				elseif ($button == 'enable')
 				{
@@ -224,7 +224,7 @@ class ModuleWizard extends Widget
 				}
 				else
 				{
-					$return .= ' <button type="button" data-command="' . $button . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_' . $button]) . '">' . Image::getHtml($button . '.svg') . '</button>';
+					$return .= ' <button type="button" data-command="' . $button . '">' . Image::getHtml($button . '.svg', $GLOBALS['TL_LANG']['MSC']['mw_' . $button]) . '</button>';
 				}
 			}
 

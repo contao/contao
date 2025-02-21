@@ -167,7 +167,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.addEnclosure.0">
         <source>Add enclosures</source>
-        <target>Dosya ekle</target>
+        <target>Zarflar ekle</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.addEnclosure.1">
         <source>Add one or more downloadable files to the event.</source>
@@ -175,7 +175,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.enclosure.0">
         <source>Enclosures</source>
-        <target>Dosyalar</target>
+        <target>Zarflar</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.enclosure.1">
         <source>Please choose the files you want to attach.</source>
@@ -319,7 +319,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.enclosure_legend">
         <source>Enclosures</source>
-        <target>Dosyalar</target>
+        <target>Zarflar</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.source_legend">
         <source>Redirect target</source>
