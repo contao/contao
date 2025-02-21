@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\MakerBundle\Generator;
 
-use Contao\MakerBundle\Config\XliffMerger;
 use Symfony\Bundle\MakerBundle\FileManager;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -22,7 +21,6 @@ class LanguageFileGenerator implements GeneratorInterface
 {
     public function __construct(
         private readonly FileManager $fileManager,
-        private readonly XliffMerger $xliffMerger,
         private readonly string $projectDir,
     ) {
     }

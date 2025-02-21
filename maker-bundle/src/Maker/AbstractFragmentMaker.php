@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\MakerBundle\Maker;
 
+use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\MakerBundle\Generator\ClassGenerator;
 use Contao\MakerBundle\Generator\DcaGenerator;
@@ -115,11 +117,31 @@ abstract class AbstractFragmentMaker extends AbstractMaker
         $io->writeln(' <fg=green>Suggested categories:</>');
         $io->listing($categories);
 
-        $question = new Question('Choose a category');
-        $question->setAutocompleterValues($categories);
-        $question->setValidator(Validator::notBlank(...));
+        $attributeClass = match (static::class) {
+            MakeContentElement::class => AsContentElement::class,
+            MakeFrontendModule::class => AsFrontendModule::class,
+            default => null,
+        };
 
-        $input->setArgument('category', $io->askQuestion($question));
+        if ($attributeClass) {
+            $reflection = new \ReflectionClass($attributeClass);
+            $params = $reflection->getConstructor()->getParameters();
+
+            foreach ($params as $param) {
+                if ('category' === $param->getName()) {
+                    $default = $param->getDefaultValue();
+
+                    break;
+                }
+            }
+        }
+
+        $question = new Question('Choose a category', $default ?? null);
+        $question->setAutocompleterValues($categories);
+
+        $category = $io->askQuestion($question);
+
+        $input->setArgument('category', $category === $default ? null : $category);
     }
 
     private function askForDcaPalette(InputInterface $input, ConsoleStyle $io, Command $command): void

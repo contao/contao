@@ -11,7 +11,7 @@ use Contao\CoreBundle\Twig\FragmentTemplate;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-#[AsFrontendModule(category: '<?= $category ?>')]
+#[AsFrontendModule<?php if ($category): ?>(category: '<?= $category ?>')<?php endif; ?>]
 class <?= $className ?> extends AbstractFrontendModuleController
 {
     protected function getResponse(FragmentTemplate $template, ModuleModel $model, Request $request): Response
