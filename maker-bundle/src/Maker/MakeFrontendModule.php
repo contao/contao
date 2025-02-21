@@ -64,7 +64,7 @@ class MakeFrontendModule extends AbstractFragmentMaker
         ]);
 
         $this->templateGenerator->generate([
-            'source' => 'frontend-module/frontend_module.tpl.php',
+            'source' => 'frontend-module/frontend_module.tpl.html.twig',
             'target' => $this->getTemplateName($classNameWithoutSuffix),
         ]);
 
@@ -78,13 +78,13 @@ class MakeFrontendModule extends AbstractFragmentMaker
 
         if ($addTranslation) {
             $this->languageFileGenerator->generate([
-                'source' => 'frontend-module/source.tpl.php',
-                'domain' => 'default',
+                'source' => 'frontend-module/translation.tpl.yaml',
+                'domain' => 'contao_modules',
                 'language' => 'en',
                 'variables' => [
                     'element' => $elementName,
-                    'sourceName' => $input->getArgument('source-name'),
-                    'sourceDescription' => $input->getArgument('source-description'),
+                    'name' => $input->getArgument('source-name'),
+                    'description' => $input->getArgument('source-description'),
                 ],
             ]);
 
@@ -98,15 +98,13 @@ class MakeFrontendModule extends AbstractFragmentMaker
                 }
 
                 $this->languageFileGenerator->generate([
-                    'source' => 'frontend-module/target.tpl.php',
-                    'domain' => 'default',
+                    'source' => 'frontend-module/target.tpl.yaml',
+                    'domain' => 'contao_modules',
                     'language' => $input->getArgument('language-'.$i),
                     'variables' => [
                         'element' => $elementName,
-                        'sourceName' => $input->getArgument('source-name'),
-                        'sourceDescription' => $input->getArgument('source-description'),
-                        'translatedName' => $input->getArgument('target-name-'.$i),
-                        'translatedDescription' => $input->getArgument('target-description-'.$i),
+                        'name' => $input->getArgument('target-name-'.$i),
+                        'description' => $input->getArgument('target-description-'.$i),
                     ],
                 ]);
 
@@ -130,6 +128,6 @@ class MakeFrontendModule extends AbstractFragmentMaker
 
     protected function getTemplatePrefix(): string
     {
-        return 'mod';
+        return 'frontend_module';
     }
 }

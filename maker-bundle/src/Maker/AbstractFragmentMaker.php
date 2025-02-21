@@ -81,8 +81,9 @@ abstract class AbstractFragmentMaker extends AbstractMaker
     {
         return Path::join(
             $this->projectDir,
-            'contao/templates',
-            \sprintf('%s_%s.html5', $this->getTemplatePrefix(), Container::underscore($className)),
+            'templates',
+            $this->getTemplatePrefix(),
+            \sprintf('%s.html.twig', Container::underscore($className)),
         );
     }
 

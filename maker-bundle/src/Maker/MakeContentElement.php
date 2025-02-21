@@ -63,7 +63,7 @@ class MakeContentElement extends AbstractFragmentMaker
         ]);
 
         $this->templateGenerator->generate([
-            'source' => 'content-element/content_element.tpl.php',
+            'source' => 'content-element/content_element.tpl.html.twig',
             'target' => $this->getTemplateName($classNameWithoutSuffix),
         ]);
 
@@ -77,13 +77,13 @@ class MakeContentElement extends AbstractFragmentMaker
 
         if ($addTranslation) {
             $this->languageFileGenerator->generate([
-                'source' => 'content-element/source.tpl.php',
-                'domain' => 'default',
+                'source' => 'content-element/translation.tpl.yaml',
+                'domain' => 'contao_default',
                 'language' => 'en',
                 'variables' => [
                     'element' => $elementName,
-                    'sourceName' => $input->getArgument('source-name'),
-                    'sourceDescription' => $input->getArgument('source-description'),
+                    'name' => $input->getArgument('source-name'),
+                    'description' => $input->getArgument('source-description'),
                 ],
             ]);
 
@@ -97,15 +97,13 @@ class MakeContentElement extends AbstractFragmentMaker
                 }
 
                 $this->languageFileGenerator->generate([
-                    'source' => 'content-element/target.tpl.php',
-                    'domain' => 'default',
+                    'source' => 'content-element/translation.tpl.yaml',
+                    'domain' => 'contao_default',
                     'language' => $input->getArgument('language-'.$i),
                     'variables' => [
                         'element' => $elementName,
-                        'sourceName' => $input->getArgument('source-name'),
-                        'sourceDescription' => $input->getArgument('source-description'),
-                        'translatedName' => $input->getArgument('target-name-'.$i),
-                        'translatedDescription' => $input->getArgument('target-description-'.$i),
+                        'name' => $input->getArgument('target-name-'.$i),
+                        'description' => $input->getArgument('target-description-'.$i),
                     ],
                 ]);
 
@@ -125,6 +123,6 @@ class MakeContentElement extends AbstractFragmentMaker
 
     protected function getTemplatePrefix(): string
     {
-        return 'ce';
+        return 'content_element';
     }
 }

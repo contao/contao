@@ -16,6 +16,7 @@ use Contao\MakerBundle\Config\XliffMerger;
 use Symfony\Bundle\MakerBundle\FileManager;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Yaml\Yaml;
 
 class LanguageFileGenerator implements GeneratorInterface
 {
@@ -31,24 +32,26 @@ class LanguageFileGenerator implements GeneratorInterface
         $options = $this->getOptionsResolver()->resolve($options);
 
         $source = $this->getSourcePath($options['source']);
-        $target = Path::join($this->projectDir, 'contao/languages', $options['language'], $options['domain'].'.xlf');
-        $contents = $this->fileManager->parseTemplate($source, $options['variables']);
-        $fileExists = $this->fileManager->fileExists($target);
 
-        if ($fileExists) {
-            $root = new \DOMDocument();
-            $root->load($target);
-
-            $document = new \DOMDocument();
-            $document->loadXML($contents);
-
-            $mergedDocument = $this->xliffMerger->merge($root, $document);
-            $contents = (string) $mergedDocument->saveXML();
+        if ('yaml' !== pathinfo($source, PATHINFO_EXTENSION)) {
+            throw new \RuntimeException('Source file needs to be in YAML format.');
         }
 
-        $this->fileManager->dumpFile($target, $contents);
+        $target = Path::join($this->projectDir, 'translations', \sprintf('%s.%s.yaml', $options['domain'], $options['language']));
+        $variables = $options['variables'];
+        $contents = $this->fileManager->parseTemplate($source, $options['variables']);
+        $yaml = Yaml::parse($contents);
 
-        return Path::join('contao/languages', $options['language'], $options['domain'].'.xlf');
+        if ($this->fileManager->fileExists($target)) {
+            $yaml['CTE'][$variables['element']] = [
+                $variables['name'],
+                $variables['description'],
+            ];
+        }
+
+        $this->fileManager->dumpFile($target, Yaml::dump($yaml, inline: 3));
+
+        return Path::makeRelative($target, $this->projectDir);
     }
 
     private function getOptionsResolver(): OptionsResolver
