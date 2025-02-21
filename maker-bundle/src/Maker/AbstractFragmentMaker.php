@@ -123,6 +123,8 @@ abstract class AbstractFragmentMaker extends AbstractMaker
             default => null,
         };
 
+        $default = null;
+
         if ($attributeClass) {
             $reflection = new \ReflectionClass($attributeClass);
             $params = $reflection->getConstructor()->getParameters();
@@ -136,12 +138,12 @@ abstract class AbstractFragmentMaker extends AbstractMaker
             }
         }
 
-        $question = new Question('Choose a category', $default ?? null);
+        $question = new Question('Choose a category', $default);
         $question->setAutocompleterValues($categories);
 
-        $category = $io->askQuestion($question);
+        $category = (string) $io->askQuestion($question);
 
-        $input->setArgument('category', $category === $default ? null : $category);
+        $input->setArgument('category', $category === (string) $default ? null : $category);
     }
 
     private function askForDcaPalette(InputInterface $input, ConsoleStyle $io, Command $command): void
