@@ -16,6 +16,7 @@ export default class extends Controller {
     }
 
     rowTargetDisconnected() {
+        this.rowSnapshots.delete(row);
         this._makeSortable();
     }
 
@@ -34,7 +35,6 @@ export default class extends Controller {
         const row = this._getRow(event);
 
         row.remove();
-        this.rowSnapshots.delete(row);
     }
 
     enable(event) {
