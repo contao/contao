@@ -53,7 +53,6 @@ class ModuleWizard extends Widget
 	public function generate()
 	{
 		$db = Database::getInstance();
-		$arrButtons = array('edit', 'copy', 'delete', 'enable', 'drag');
 
 		// Get all modules of the current theme
 		$objModules = $db
@@ -168,72 +167,49 @@ class ModuleWizard extends Widget
 			$this->varValue = array_merge(...array_values($arrCols));
 		}
 
-		// Add the label and the return wizard
-		$return = '<table id="ctrl_' . $this->strId . '" class="tl_modulewizard">
-  <thead>
-  <tr>
-    <th>' . $GLOBALS['TL_LANG']['MSC']['mw_module'] . '</th>
-    <th>' . $GLOBALS['TL_LANG']['MSC']['mw_column'] . '</th>
-    <th></th>
-  </tr>
-  </thead>
-  <tbody class="sortable">';
+		$rows = array();
 
-		// Add the input fields
-		for ($i=0, $c=\count($this->varValue); $i<$c; $i++)
+		// Compile rows
+		foreach ($this->varValue as $value)
 		{
-			$options = '';
+			$moduleOptions = array();
 
-			// Add modules
 			foreach ($modules as $v)
 			{
-				$options .= '<option value="' . self::specialcharsValue($v['id']) . '"' . static::optionSelected($v['id'], $this->varValue[$i]['mod'] ?? null) . '>' . $v['name'] . ' [' . $v['type'] . ']</option>';
+				$moduleOptions[] = array(
+					'value' => self::specialcharsValue($v['id']),
+					'label' => $v['name'] . ' [' . $v['type'] . ']',
+					'selected' => static::optionSelected($v['id'], $value['mod'] ?? null) !== '',
+				);
 			}
 
-			$return .= '
-  <tr>
-    <td><select name="' . $this->strId . '[' . $i . '][mod]" class="tl_select" data-action="focus->contao--scroll-offset#store" data-controller="contao--choices">' . $options . '</select></td>';
+			$layoutOptions = array(
+				array('value' => '', 'label' => '-', 'selected' => false),
+			);
 
-			$options = '<option value="">-</option>';
-
-			// Add columns
-			foreach ($cols as $k=>$v)
+			foreach ($cols as $k => $v)
 			{
-				$options .= '<option value="' . self::specialcharsValue($k) . '"' . static::optionSelected($k, $this->varValue[$i]['col'] ?? null) . '>' . $v . '</option>';
+				$layoutOptions[] = array(
+					'value' => self::specialcharsValue($k),
+					'label' => $v,
+					'selected' => static::optionSelected($k, $value['col'] ?? null) !== '',
+				);
 			}
 
-			$return .= '
-    <td><select name="' . $this->strId . '[' . $i . '][col]" class="tl_select_column" data-action="focus->contao--scroll-offset#store">' . $options . '</select></td>
-    <td class="tl_right">';
-
-			// Add buttons
-			foreach ($arrButtons as $button)
-			{
-				if ($button == 'edit')
-				{
-					$href = StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>($this->varValue[$i]['mod'] ?? null), 'popup'=>'1')));
-					$return .= ' <a href="' . $href . '" class="module_link' . (($this->varValue[$i]['mod'] ?? null) > 0 ? '' : ' hidden') . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $GLOBALS['TL_LANG']['tl_layout']['edit_module'])) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg', $GLOBALS['TL_LANG']['tl_layout']['edit_module']) . '</a>' . Image::getHtml('edit--disabled.svg', '', 'class="module_image' . (($this->varValue[$i]['mod'] ?? null) > 0 ? ' hidden' : '') . '"');
-				}
-				elseif ($button == 'drag')
-				{
-					$return .= ' <button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', $GLOBALS['TL_LANG']['MSC']['move']) . '</button>';
-				}
-				elseif ($button == 'enable')
-				{
-					$return .= ' <input name="' . $this->strId . '[' . $i . '][enable]" type="checkbox" class="tl_checkbox mw_enable" value="1" data-action="focus->contao--scroll-offset#store"' . (($this->varValue[$i]['enable'] ?? null) ? ' checked' : '') . '><button type="button" data-command="enable" class="mw_enable" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['mw_enable']) . '"></button>';
-				}
-				else
-				{
-					$return .= ' <button type="button" data-command="' . $button . '">' . Image::getHtml($button . '.svg', $GLOBALS['TL_LANG']['MSC']['mw_' . $button]) . '</button>';
-				}
-			}
-
-			$return .= '</td>
-  </tr>';
+			$rows[] = array(
+				'module_id' => $value['mod'] ?? null,
+				'module_options' => $moduleOptions,
+				'layout_options' => $layoutOptions,
+				'controls' => array(
+					'edit' => ($value['mod'] ?? null) <= 0,
+					'enable' => $value['enable'] ?? false,
+				),
+			);
 		}
 
-		return $return . '
-  </tbody>
-  </table>';
+		return System::getContainer()->get('twig')->render('@Contao/backend/widget/module_wizard.html.twig', array(
+			'id' => $this->strId,
+			'rows' => $rows,
+		));
 	}
 }

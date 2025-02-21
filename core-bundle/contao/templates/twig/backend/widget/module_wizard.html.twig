@@ -1,0 +1,99 @@
+{% trans_default_domain "contao_default" %}
+
+{% set table_attributes = attrs()
+    .set('id', 'ctrl_' ~ id)
+    .addClass('tl_modulewizard')
+%}
+<table{{ table_attributes }}>
+    <thead>
+    <tr>
+        <th>{{ 'MSC.mw_module'|trans }}</th>
+        <th>{{ 'MSC.mw_column'|trans }}</th>
+        <th></th>
+    </tr>
+    </thead>
+
+    <tbody class="sortable">
+        {% for row in rows %}
+            <tr>
+                {# Module #}
+                <td>
+                    {% set module_select_attributes = attrs()
+                        .set('name', "#{id}[#{loop.index0}][mod]")
+                        .set('data-action', 'focus->contao--scroll-offset#store')
+                        .set('data-controller', 'contao--choices')
+                        .addClass('tl_select')
+                    %}
+                    <select{{ module_select_attributes}}>
+                        {% for option in row.module_options %}
+                            {% set option_attributes = attrs()
+                                .set('value', option.value)
+                                .set('selected', 'selected', option.selected)
+                            %}
+                            <option{{ option_attributes }}>{{ option.label }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+
+                {# Layout #}
+                <td>
+                    {% set layout_select_attributes = attrs()
+                        .set('name', "#{id}[#{loop.index0}][col]")
+                        .addClass('tl_select_column')
+                        .set('data-action', 'focus->contao--scroll-offset#store')
+                    %}
+                    <select{{ layout_select_attributes}}>
+                        {% for option in row.layout_options %}
+                            {% set option_attributes = attrs()
+                                .set('value', option.value)
+                                .set('selected', 'selected', option.selected)
+                            %}
+                            <option{{ option_attributes }}>{{ option.label }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+
+                {# Controls #}
+                <td class="tl_right">
+                    {# Edit module #}
+                    {% set edit_anchor_attributes = attrs()
+                        .set('href', path('contao_backend', {do: 'themes', table: 'tl_module', act: 'edit', id: row.module_id, popup: '1'}))
+                        .set('onclick', "Backend.openModalIframe({'title': '#{'tl_layout.edit_module'|trans(domain: 'contao_layout')|e('js')}' , 'url': this.href});return false")
+                        .addClass('module_link')
+                        .addClass('hidden', row.controls.edit)
+                    %}
+                    <a{{ edit_anchor_attributes }}>{{ backend_icon('edit.svg', 'tl_layout.edit_module'|trans(domain: 'contao_layout') ) }}</a>
+                    {{ backend_icon('edit--disabled.svg', attributes: attrs().addClass('module_image').addClass('hidden', not row.controls.edit) ) }}
+
+                    {# Duplicate row #}
+                    <button type="button" data-command="copy">{{ backend_icon('copy.svg', 'MSC.mw_copy'|trans) }}</button>
+
+                    {# Delete row #}
+                    <button type="button" data-command="delete">{{ backend_icon('delete.svg', 'MSC.mw_delete'|trans) }}</button>
+
+                    {# Enable/Disable module #}
+                    {% set enable_input_attributes = attrs()
+                        .set('name', "#{id}[#{loop.index0}][enable]")
+                        .set('type', 'checkbox')
+                        .set('checked', condition: row.controls.enable)
+                        .set('value', '1')
+                        .set('data-action', 'focus->contao--scroll-offset#store')
+                        .addClass('tl_checkbox mw_enable')
+                    %}
+                    <input{{ enable_input_attributes }}>
+
+                    {% set enable_button_attributes = attrs()
+                        .set('type', 'button')
+                        .set('data-command', 'enable')
+                        .set('title', 'MSC.mw_enable'|trans)
+                        .addClass('mw_enable')
+                    %}
+                    <button{{ enable_button_attributes }}>{{ backend_icon('enable.svg', 'MSC.enable'|trans) }}</button>
+
+                    {# Drag row #}
+                    <button type="button" class="drag-handle" aria-hidden="true">{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
