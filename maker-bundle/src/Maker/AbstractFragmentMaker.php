@@ -21,6 +21,7 @@ use Contao\MakerBundle\Generator\LanguageFileGenerator;
 use Contao\MakerBundle\Generator\TemplateGenerator;
 use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Bundle\MakerBundle\DependencyBuilder;
+use Symfony\Bundle\MakerBundle\FileManager;
 use Symfony\Bundle\MakerBundle\Maker\AbstractMaker;
 use Symfony\Bundle\MakerBundle\Validator;
 use Symfony\Component\Console\Command\Command;
@@ -34,12 +35,13 @@ use Symfony\Component\Filesystem\Path;
 abstract class AbstractFragmentMaker extends AbstractMaker
 {
     public function __construct(
-        protected ContaoFramework $framework,
-        protected TemplateGenerator $templateGenerator,
-        protected ClassGenerator $classGenerator,
-        protected DcaGenerator $dcaGenerator,
-        protected LanguageFileGenerator $languageFileGenerator,
-        protected string $projectDir,
+        protected readonly ContaoFramework $framework,
+        protected readonly TemplateGenerator $templateGenerator,
+        protected readonly ClassGenerator $classGenerator,
+        protected readonly DcaGenerator $dcaGenerator,
+        protected readonly LanguageFileGenerator $languageFileGenerator,
+        protected readonly FileManager $fileManager,
+        protected readonly string $projectDir,
     ) {
     }
 
@@ -83,7 +85,7 @@ abstract class AbstractFragmentMaker extends AbstractMaker
     {
         return Path::join(
             $this->projectDir,
-            'templates',
+            'contao/templates',
             $this->getTemplatePrefix(),
             \sprintf('%s.html.twig', Container::underscore($className)),
         );

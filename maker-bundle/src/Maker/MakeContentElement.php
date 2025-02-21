@@ -20,6 +20,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Filesystem\Path;
 
 class MakeContentElement extends AbstractFragmentMaker
 {
@@ -66,6 +67,12 @@ class MakeContentElement extends AbstractFragmentMaker
             'source' => 'content-element/content_element.tpl.html.twig',
             'target' => $this->getTemplateName($classNameWithoutSuffix),
         ]);
+
+        $twigRoot = Path::join($this->projectDir, 'contao/templates/.twig-root');
+
+        if (!$this->fileManager->fileExists($twigRoot)) {
+            $this->fileManager->dumpFile($twigRoot, '');
+        }
 
         if ($addPalette) {
             $this->dcaGenerator->generate([

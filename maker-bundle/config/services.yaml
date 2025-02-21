@@ -29,6 +29,7 @@ services:
             - '@contao_maker.generator.class'
             - '@contao_maker.generator.dca'
             - '@contao_maker.generator.language_file'
+            - '@maker.file_manager'
             - '%kernel.project_dir%'
         tags:
             - maker.command
@@ -61,6 +62,7 @@ services:
             - '@contao_maker.generator.class'
             - '@contao_maker.generator.dca'
             - '@contao_maker.generator.language_file'
+            - '@maker.file_manager'
             - '%kernel.project_dir%'
         tags:
             - maker.command

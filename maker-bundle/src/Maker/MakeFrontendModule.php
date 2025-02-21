@@ -21,6 +21,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Filesystem\Path;
 
 class MakeFrontendModule extends AbstractFragmentMaker
 {
@@ -67,6 +68,12 @@ class MakeFrontendModule extends AbstractFragmentMaker
             'source' => 'frontend-module/frontend_module.tpl.html.twig',
             'target' => $this->getTemplateName($classNameWithoutSuffix),
         ]);
+
+        $twigRoot = Path::join($this->projectDir, 'contao/templates/.twig-root');
+
+        if (!$this->fileManager->fileExists($twigRoot)) {
+            $this->fileManager->dumpFile($twigRoot, '');
+        }
 
         if ($addPalette) {
             $this->dcaGenerator->generate([
