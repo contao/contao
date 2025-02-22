@@ -19,10 +19,12 @@ use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\RouterInterface;
@@ -151,15 +153,26 @@ class BackendControllerTest extends TestCase
         $controller->pickerAction($request);
     }
 
-    public function testCreatesBackendResponseContext(): void
+    public function testCreatesAndFinalizesBackendResponseContext(): void
     {
+        $requestStack = new RequestStack();
+        $requestStack->push(new Request(server: $_SERVER));
+
         $responseContext = new ResponseContext();
+        $responseContextAccessor = new ResponseContextAccessor($requestStack);
+        $responseContext->getHeaderBag()->set('X-Test', 'testCreatesAndFinalizesResponseContext');
 
         $responseContextFactory = $this->createMock(CoreResponseContextFactory::class);
         $responseContextFactory
             ->expects($this->once())
             ->method('createResponseContext')
-            ->willReturn($responseContext)
+            ->willReturnCallback(
+                static function () use ($responseContext, $responseContextAccessor): ResponseContext {
+                    $responseContextAccessor->setResponseContext($responseContext);
+
+                    return $responseContext;
+                },
+            )
         ;
 
         $backendMain = $this->createMock(BackendMain::class);
@@ -171,14 +184,16 @@ class BackendControllerTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.routing.response_context_factory', $responseContextFactory);
+        $container->set('contao.routing.response_context_accessor', $responseContextAccessor);
         $container->set('contao.framework', $this->mockContaoFramework([], [BackendMain::class => $backendMain]));
 
         $controller = new BackendController();
         $controller->setContainer($container);
 
-        $controller->mainAction();
+        $response = $controller->mainAction();
 
         $this->assertTrue($responseContext->has(HtmlHeadBag::class));
         $this->assertTrue($responseContext->has(HtmlAttributes::class));
+        $this->assertSame('testCreatesAndFinalizesResponseContext', $response->headers->get('X-Test'));
     }
 }

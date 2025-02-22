@@ -43,7 +43,11 @@ class BackendController extends AbstractController
 
         $controller = $this->container->get('contao.framework')->createInstance(BackendMain::class);
 
-        return $controller->run();
+        $response = $controller->run();
+
+        $this->finalizeResponseContext($response);
+
+        return $response;
     }
 
     #[Route('/login', name: 'contao_backend_login', defaults: ['_store_referrer' => false])]

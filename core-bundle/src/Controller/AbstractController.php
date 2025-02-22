@@ -21,6 +21,7 @@ use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\PageModel;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
@@ -42,8 +43,9 @@ abstract class AbstractController extends SymfonyAbstractController
         $services['logger'] = '?'.LoggerInterface::class;
         $services['fos_http_cache.http.symfony_response_tagger'] = '?'.SymfonyResponseTagger::class;
         $services['contao.csrf.token_manager'] = ContaoCsrfTokenManager::class;
-        $services['contao.routing.response_context_factory'] = CoreResponseContextFactory::class;
         $services['contao.cache.tag_manager'] = CacheTagManager::class;
+        $services['contao.routing.response_context_accessor'] = ResponseContextAccessor::class;
+        $services['contao.routing.response_context_factory'] = CoreResponseContextFactory::class;
 
         return $services;
     }
@@ -148,9 +150,25 @@ abstract class AbstractController extends SymfonyAbstractController
 
     protected function createBackendResponseContext(): ResponseContext
     {
-        return $this->container->get('contao.routing.response_context_factory')->createResponseContext()
-            ->addLazy(HtmlHeadBag::class)
-            ->addLazy(HtmlAttributes::class, static fn () => new HtmlAttributes())
-        ;
+        $responseContext = $this->container->get('contao.routing.response_context_accessor')->getResponseContext();
+
+        if (!$responseContext) {
+            $responseContext = $this->container->get('contao.routing.response_context_factory')->createResponseContext();
+        }
+
+        if (!$responseContext->has(HtmlHeadBag::class)) {
+            $responseContext->addLazy(HtmlHeadBag::class);
+        }
+
+        if (!$responseContext->has(HtmlAttributes::class)) {
+            $responseContext->addLazy(HtmlAttributes::class, static fn () => new HtmlAttributes());
+        }
+
+        return $responseContext;
+    }
+
+    protected function finalizeResponseContext(Response $response): void
+    {
+        $this->container->get('contao.routing.response_context_accessor')->finalizeCurrentContext($response);
     }
 }

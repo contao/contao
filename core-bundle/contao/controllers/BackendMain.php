@@ -258,8 +258,8 @@ class BackendMain extends Backend
 		{
 			$htmlHeadBag = $responseContext->get(HtmlHeadBag::class);
 			$data['metaTags'] = array_combine(
-				array_map(Contao\StringUtil::specialcharsAttribute(...), array_keys($htmlHeadBag->getMetaTags())),
-				array_map(Contao\StringUtil::specialcharsAttribute(...), array_values($htmlHeadBag->getMetaTags()))
+				array_map(StringUtil::specialcharsAttribute(...), array_keys($htmlHeadBag->getMetaTags())),
+				array_map(StringUtil::specialcharsAttribute(...), array_values($htmlHeadBag->getMetaTags()))
 			);
 		}
 

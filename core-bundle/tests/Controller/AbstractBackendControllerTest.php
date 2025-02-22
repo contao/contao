@@ -15,8 +15,12 @@ namespace Contao\CoreBundle\Tests\Controller;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Controller\AbstractBackendController;
+use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Session\Attribute\ArrayAttributeBag;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
 use Contao\Environment as ContaoEnvironment;
@@ -98,6 +102,8 @@ class AbstractBackendControllerTest extends TestCase
             'learnMore' => 'learn more',
             'menu' => '<menu>',
             'headerMenu' => '<header_menu>',
+            'metaTags' => [],
+            'rootAttributes' => '',
             'badgeTitle' => '',
             'foo' => 'bar',
         ];
@@ -167,6 +173,8 @@ class AbstractBackendControllerTest extends TestCase
             'learnMore' => 'learn more',
             'menu' => '<menu>',
             'headerMenu' => '<header_menu>',
+            'metaTags' => [],
+            'rootAttributes' => '',
             'badgeTitle' => '',
         ];
 
@@ -311,6 +319,8 @@ class AbstractBackendControllerTest extends TestCase
             'learnMore' => 'learn more',
             'menu' => '<menu>',
             'headerMenu' => '<header_menu>',
+            'metaTags' => [],
+            'rootAttributes' => '',
             'badgeTitle' => '',
             'foo' => 'bar',
         ];
@@ -323,6 +333,67 @@ class AbstractBackendControllerTest extends TestCase
         $controller->setContainer($container);
 
         $this->assertSame(Response::HTTP_UNPROCESSABLE_ENTITY, $controller->fooAction()->getStatusCode());
+    }
+
+    public function testCreatesAndFinalizesResponseContext(): void
+    {
+        // Legacy setup
+        ContaoEnvironment::reset();
+
+        $filesystem = new Filesystem();
+        $filesystem->mkdir(Path::join($this->getTempDir(), 'languages/en'));
+        $filesystem->touch(Path::join($this->getTempDir(), 'be_main.html5'));
+
+        $GLOBALS['TL_LANG']['MSC'] = [
+            'version' => 'version',
+            'dashboard' => 'dashboard',
+            'home' => 'home',
+            'learnMore' => 'learn more',
+        ];
+
+        $GLOBALS['TL_LANGUAGE'] = 'en';
+
+        $_SERVER['HTTP_HOST'] = 'localhost';
+
+        TemplateLoader::addFile('be_main', '');
+
+        $expectedContext = [
+            'version' => 'my version',
+            'headline' => 'dashboard',
+            'title' => '',
+            'theme' => 'flexible',
+            'language' => 'en',
+            'host' => 'localhost',
+            'charset' => 'UTF-8',
+            'home' => 'home',
+            'isPopup' => null,
+            'learnMore' => 'learn more',
+            'menu' => '<menu>',
+            'headerMenu' => '<header_menu>',
+            'metaTags' => [],
+            'rootAttributes' => ' data-test="foobar"',
+            'badgeTitle' => '',
+        ];
+
+        $container = $this->getContainerWithDefaultConfiguration($expectedContext);
+
+        $controller = new class() extends AbstractBackendController {
+            public function fooAction(): Response
+            {
+                $responseContext = $this->createBackendResponseContext();
+                $responseContext->getHeaderBag()->set('X-Test', 'testCreatesAndFinalizesResponseContext');
+
+                $attributes = $responseContext->get(HtmlAttributes::class);
+                $attributes->set('data-test', 'foobar');
+
+                return $this->render('custom_be.html.twig', ['version' => 'my version']);
+            }
+        };
+
+        System::setContainer($container);
+        $controller->setContainer($container);
+
+        $this->assertSame('testCreatesAndFinalizesResponseContext', $controller->fooAction()->headers->get('X-Test'));
     }
 
     private function getContainerWithDefaultConfiguration(array $expectedContext, Request|null $request = null): ContainerBuilder
@@ -342,6 +413,10 @@ class AbstractBackendControllerTest extends TestCase
             ->willReturnCallback(
                 function (string $template, array $context) use ($expectedContext) {
                     if ('custom_be.html.twig' === $template) {
+                        if (isset($context['rootAttributes'])) {
+                            $context['rootAttributes'] = (string) $context['rootAttributes'];
+                        }
+
                         $this->assertSame($expectedContext, $context);
                     }
 
@@ -367,6 +442,25 @@ class AbstractBackendControllerTest extends TestCase
         $container->set('twig', $twig);
         $container->set('router', $this->createMock(RouterInterface::class));
         $container->set('request_stack', $requestStack);
+
+        $responseContext = new ResponseContext();
+        $responseContextAccessor = new ResponseContextAccessor($requestStack);
+
+        $responseContextFactory = $this->createMock(CoreResponseContextFactory::class);
+        $responseContextFactory
+            ->expects($this->once())
+            ->method('createResponseContext')
+            ->willReturnCallback(
+                static function () use ($responseContext, $responseContextAccessor): ResponseContext {
+                    $responseContextAccessor->setResponseContext($responseContext);
+
+                    return $responseContext;
+                },
+            )
+        ;
+
+        $container->set('contao.routing.response_context_factory', $responseContextFactory);
+        $container->set('contao.routing.response_context_accessor', $responseContextAccessor);
 
         $container->setParameter('contao.resources_paths', $this->getTempDir());
 

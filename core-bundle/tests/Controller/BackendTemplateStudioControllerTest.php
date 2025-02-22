@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\CoreBundle\Controller\BackendTemplateStudioController;
+use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Finder\Finder;
@@ -189,6 +192,24 @@ class BackendTemplateStudioControllerTest extends TestCase
         $container->set('database_connection', $connection);
         $container->set('twig', $twig ?? $this->createMock(Environment::class));
         $container->set('request_stack', $requestStack);
+
+        $responseContext = new ResponseContext();
+        $responseContextAccessor = new ResponseContextAccessor($requestStack);
+
+        $responseContextFactory = $this->createMock(CoreResponseContextFactory::class);
+        $responseContextFactory
+            ->method('createResponseContext')
+            ->willReturnCallback(
+                static function () use ($responseContext, $responseContextAccessor): ResponseContext {
+                    $responseContextAccessor->setResponseContext($responseContext);
+
+                    return $responseContext;
+                },
+            )
+        ;
+
+        $container->set('contao.routing.response_context_factory', $responseContextFactory);
+        $container->set('contao.routing.response_context_accessor', $responseContextAccessor);
 
         $controller->setContainer($container);
 

@@ -43,6 +43,8 @@ abstract class AbstractBackendController extends AbstractController
      */
     protected function render(string $view, array $parameters = [], Response|null $response = null, bool|null $includeChromeContext = null): Response
     {
+        $this->createBackendResponseContext();
+
         $getBackendContext = static fn () => (new class() extends BackendMain {
             public function __invoke(): array
             {
@@ -89,6 +91,8 @@ abstract class AbstractBackendController extends AbstractController
         if ($this->container->get('request_stack')?->getMainRequest()->attributes->has('_contao_widget_error')) {
             $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
         }
+
+        $this->finalizeResponseContext($response);
 
         return $response;
     }
