@@ -16,6 +16,7 @@ use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\Controller\AbstractBackendController;
 use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
@@ -370,7 +371,7 @@ class AbstractBackendControllerTest extends TestCase
             'learnMore' => 'learn more',
             'menu' => '<menu>',
             'headerMenu' => '<header_menu>',
-            'metaTags' => [],
+            'metaTags' => ['foo' => 'bar'],
             'rootAttributes' => ' data-test="foobar"',
             'badgeTitle' => '',
         ];
@@ -381,10 +382,10 @@ class AbstractBackendControllerTest extends TestCase
             public function fooAction(): Response
             {
                 $responseContext = $this->createBackendResponseContext();
-                $responseContext->getHeaderBag()->set('X-Test', 'testCreatesAndFinalizesResponseContext');
 
-                $attributes = $responseContext->get(HtmlAttributes::class);
-                $attributes->set('data-test', 'foobar');
+                $responseContext->getHeaderBag()->set('X-Test', 'testCreatesAndFinalizesResponseContext');
+                $responseContext->get(HtmlAttributes::class)->set('data-test', 'foobar');
+                $responseContext->get(HtmlHeadBag::class)->setMetaTag('foo', 'bar');
 
                 return $this->render('custom_be.html.twig', ['version' => 'my version']);
             }
