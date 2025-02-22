@@ -15,7 +15,7 @@ export default class extends Controller {
         this._makeSortable();
     }
 
-    rowTargetDisconnected() {
+    rowTargetDisconnected(row) {
         this.rowSnapshots.delete(row);
         this._makeSortable();
     }
