@@ -22,9 +22,9 @@ interface ImageFactoryInterface
     /**
      * Creates an Image object.
      *
-     * @param string|ImageInterface              $path    The absolute path to the source image or an Image object
-     * @param int|array|ResizeConfiguration|null $size    An image size ID, an array with width, height and resize mode or a ResizeConfiguration object
-     * @param string|ResizeOptions|null          $options The target path as string or a ResizeOptions object
+     * @param string|ImageInterface                     $path    The absolute path to the source image or an Image object
+     * @param string|int|array|ResizeConfiguration|null $size    An image size ID, an array with width, height and resize mode or a ResizeConfiguration object
+     * @param string|ResizeOptions|null                 $options The target path as string or a ResizeOptions object
      */
     public function create(ImageInterface|string $path, ResizeConfiguration|array|int|string|null $size = null, ResizeOptions|string|null $options = null): ImageInterface;
 
