@@ -32,9 +32,7 @@ export default class extends Controller {
     }
 
     delete(event) {
-        const row = this._getRow(event);
-
-        row.remove();
+        this._getRow(event).remove();
     }
 
     enable(event) {
