@@ -36,6 +36,9 @@ Thanks to our platinum partners for helping us fund the development of Contao.
 
 <a href="https://postyou.de"><img src="https://contao.org/files/uploads/partner-logos/6889-postyou.svg" width="300" alt></a>
 
+## Sponsors
+This project is tested with <a href="https://www.browserstack.com/">BrowserStack</a>.
+
 ## Development
 
 To create a pull request and to test your changes within a running Contao application, it is the easiest to use the
