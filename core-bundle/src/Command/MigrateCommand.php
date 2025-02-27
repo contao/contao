@@ -459,9 +459,9 @@ class MigrateCommand extends Command
      * MySQL can run into the error "1118 (42000): Row size too large" when adding or
      * deleting columns. In MariaDB since version 10.4.0 this can also happen if a
      * larger number of columns got deleted in the past because of the "Instant DROP
-     * COLUMN" feature. If we encounter such an error we retry the affected query with
-     * the InnoDB strict mode disabled. Additionally, we optimize the table to prevent
-     * future errors due to the "Instant DROP COLUMN" feature. This approach
+     * COLUMN" feature. If we encounter such an error, we retry the affected query
+     * with the InnoDB strict mode disabled. Additionally, we optimize the table to
+     * prevent future errors due to the "Instant DROP COLUMN" feature. This approach
      * involuntarily enables using too many or too large columns. To mitigate that,
      * the migrate command shows a warning in these cases.
      *
