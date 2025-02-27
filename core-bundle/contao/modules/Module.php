@@ -284,6 +284,7 @@ abstract class Module extends Frontend
 
 		$items = array();
 		$security = System::getContainer()->get('security.helper');
+		$isMember = $security->isGranted('ROLE_MEMBER');
 		$blnShowUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
 
 		$objTemplate = new FrontendTemplate($this->navigationTpl ?: 'nav_default');
@@ -313,6 +314,12 @@ abstract class Module extends Frontend
 			if ($host !== null)
 			{
 				$objSubpage->domain = $host;
+			}
+
+			// Hide the page if it is only visible to guests
+			if ($objSubpage->guests && $isMember)
+			{
+				continue;
 			}
 
 			$subitems = '';

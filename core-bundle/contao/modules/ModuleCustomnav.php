@@ -84,11 +84,18 @@ class ModuleCustomnav extends Module
 
 		$container = System::getContainer();
 		$security = $container->get('security.helper');
+		$isMember = $security->isGranted('ROLE_MEMBER');
 		$urlGenerator = $container->get('contao.routing.content_url_generator');
 
 		foreach ($objPages as $objModel)
 		{
 			$objModel->loadDetails();
+
+			// Hide the page if it is only visible to guests
+			if ($objModel->guests && $isMember)
+			{
+				continue;
+			}
 
 			// PageModel->groups is an array after calling loadDetails()
 			if (!$objModel->protected || $this->showProtected || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objModel->groups))
