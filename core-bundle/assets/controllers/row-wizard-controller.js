@@ -32,7 +32,11 @@ export default class extends Controller {
     }
 
     delete(event) {
-        this._getRow(event).remove();
+        if(this.bodyTarget.children.length > 1) {
+            this._getRow(event).remove();
+        } else {
+            this._resetInputs(this._getRow(event));
+        }
     }
 
     enable(event) {
@@ -126,6 +130,16 @@ export default class extends Controller {
         for (let i = 0; i < selectsFrom.length; i++) {
             selectsTo[i].value = selectsFrom[i].value;
         }
+    }
+
+    _resetInputs(row) {
+        row.querySelectorAll('input').forEach((input) => {
+            input.value = '';
+        });
+
+        row.querySelectorAll('select').forEach((select) => {
+            select.value = select.children[0].value;
+        });
     }
 
     _makeSortable() {
