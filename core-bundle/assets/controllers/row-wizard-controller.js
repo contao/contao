@@ -28,7 +28,7 @@ export default class extends Controller {
         const newRow = row.nextElementSibling;
         this.rowSnapshots.set(newRow, snapshot);
 
-        this._syncSelects(row, newRow);
+        this._syncInputs(row, newRow);
     }
 
     delete(event) {
@@ -65,7 +65,10 @@ export default class extends Controller {
         }
     }
 
-    updateLink(event) {
+    /**
+     * This method is specific to the row wizard being a "module wizard".
+     */
+    updateModuleWizardLink(event) {
         const row = this._getRow(event);
         const link = row.querySelector('.module_link');
         const images = row.querySelectorAll('img.module_image');
@@ -97,28 +100,28 @@ export default class extends Controller {
     }
 
     _unwrap(template) {
-        this.rowSnapshots.set(template.content.querySelector('*[data-contao--module-wizard-target="row"]'), template.innerHTML);
+        this.rowSnapshots.set(template.content.querySelector('*[data-contao--row-wizard-target="row"]'), template.innerHTML);
 
         template.replaceWith(template.content);
     }
 
     _wrap(row) {
         const template = document.createElement('template');
-        template.setAttribute('data-contao--module-wizard-target', 'rowTemplate');
+        template.setAttribute('data-contao--row-wizard-target', 'rowTemplate');
         template.innerHTML = this.rowSnapshots.get(row);
 
-        this._syncSelects(row, template.content.querySelector('tr'));
+        this._syncInputs(row, template.content.querySelector('tr'));
 
         row.replaceWith(template);
     }
 
     _getRow(event) {
-        return event.target.closest('*[data-contao--module-wizard-target="row"]');
+        return event.target.closest('*[data-contao--row-wizard-target="row"]');
     }
 
-    _syncSelects(rowFrom, rowTo) {
-        const selectsFrom = rowFrom.querySelectorAll('select');
-        const selectsTo = rowTo.querySelectorAll('select');
+    _syncInputs(rowFrom, rowTo) {
+        const selectsFrom = rowFrom.querySelectorAll('input, select');
+        const selectsTo = rowTo.querySelectorAll('input, select');
 
         for (let i = 0; i < selectsFrom.length; i++) {
             selectsTo[i].value = selectsFrom[i].value;
