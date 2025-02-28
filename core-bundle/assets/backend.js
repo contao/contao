@@ -30,12 +30,12 @@ application.register('contao--webauthn', WebAuthn);
 
 document.documentElement.addEventListener('turbo:before-prefetch', e => {
     if (
-        // Do not prefetch, if the user wants to save data or is on a slow
+        // Do not prefetch if the user wants to save data or is on a slow
         // connection
         navigator.connection?.saveData
         || ['slow-2g', '2g'].includes(navigator.connection?.effectiveType)
 
-        // Do not prefetch, if the URL contains a request token or the element
+        // Do not prefetch if the URL contains a request token or the element
         // is part of the Symfony toolbar
         || (e.target.search && (new URLSearchParams(e.target.search)).has('rt'))
         || e.target.classList.contains('header_back')
