@@ -78,9 +78,16 @@ export default class extends Controller {
         const images = row.querySelectorAll('img.module_image');
         const select = event.target;
 
-        link.href = link.href.replace(/id=[0-9]+/, 'id=' + select.value);
+        const href = new URL(link.href);
+        const isContentElement = select.value.startsWith('content-');
 
-        if (select.value > 0) {
+        const id = isContentElement ? select.value.replace('content-', '') : select.value;
+        href.searchParams.set('table', isContentElement ? 'tl_content' : 'tl_module');
+        href.searchParams.set('id', id);
+
+        link.href = href.toString();
+
+        if (id > 0) {
             link.classList.remove('hidden');
 
             images.forEach((image) => {
