@@ -179,7 +179,7 @@ class ModuleWizard extends Widget
 				$moduleOptions[] = array(
 					'value' => self::specialcharsValue($v['id']),
 					'label' => $v['name'] . ' [' . $v['type'] . ']',
-					'selected' => static::optionSelected($v['id'], $value['mod'] ?? null) !== '',
+					'selected' => '' !== static::optionSelected($v['id'], $value['mod'] ?? null),
 				);
 			}
 
@@ -192,7 +192,7 @@ class ModuleWizard extends Widget
 				$layoutOptions[] = array(
 					'value' => self::specialcharsValue($k),
 					'label' => $v,
-					'selected' => static::optionSelected($k, $value['col'] ?? null) !== '',
+					'selected' => '' !== static::optionSelected($k, $value['col'] ?? null),
 				);
 			}
 

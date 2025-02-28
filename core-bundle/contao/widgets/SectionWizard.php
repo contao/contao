@@ -101,7 +101,7 @@ class SectionWizard extends Widget
 				$templateOptions[] = array(
 					'value' => self::specialcharsValue($k),
 					'label' => $v,
-					'selected' => static::optionSelected($k, $this->varValue[$i]['template'] ?? null) !== '',
+					'selected' => '' !== static::optionSelected($k, $this->varValue[$i]['template'] ?? null),
 				);
 			}
 
@@ -112,7 +112,7 @@ class SectionWizard extends Widget
 				$positionOptions[] = array(
 					'value' => self::specialcharsValue($v),
 					'label' => $GLOBALS['TL_LANG']['SECTIONS'][$v],
-					'selected' => static::optionSelected($v, $this->varValue[$i]['position'] ?? null) !== '',
+					'selected' => '' !== static::optionSelected($v, $this->varValue[$i]['position'] ?? null),
 				);
 			}
 

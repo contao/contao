@@ -7,13 +7,13 @@
 %}
 <table{{ table_attributes }}>
     <thead>
-    <tr>
-        <th>{{ 'MSC.sw_title'|trans }}</th>
-        <th>{{ 'MSC.sw_id'|trans }}</th>
-        <th>{{ 'MSC.sw_template'|trans }}</th>
-        <th>{{ 'MSC.sw_position'|trans }}</th>
-        <th></th>
-    </tr>
+        <tr>
+            <th>{{ 'MSC.sw_title'|trans }}</th>
+            <th>{{ 'MSC.sw_id'|trans }}</th>
+            <th>{{ 'MSC.sw_template'|trans }}</th>
+            <th>{{ 'MSC.sw_position'|trans }}</th>
+            <th></th>
+        </tr>
     </thead>
     <tbody class="sortable" data-contao--row-wizard-target="body">
         {% for row in rows %}
