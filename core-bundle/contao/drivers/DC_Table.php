@@ -1654,7 +1654,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// If there is a PID field but no parent table
-		if (!$this->ptable && $db->fieldExists('pid', $this->strTable))
+		if (!$this->ptable && self::MODE_TREE === ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) && $db->fieldExists('pid', $this->strTable))
 		{
 			$delete[$this->strTable] = $db->getChildRecords($this->intId, $this->strTable);
 			array_unshift($delete[$this->strTable], $this->intId);

@@ -18,7 +18,6 @@ use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
 use Contao\CoreBundle\Doctrine\Backup\Config\CreateConfig;
 use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
-use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Migration\CommandCompiler;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Contao\CoreBundle\Migration\MigrationResult;
@@ -808,8 +807,9 @@ class MigrateCommandTest extends TestCase
     }
 
     /**
-     * @param array<array<string>>          $pendingMigrations
-     * @param array<array<MigrationResult>> $migrationResults
+     * @param array<array<string>>              $pendingMigrations
+     * @param array<array<MigrationResult>>     $migrationResults
+     * @param (CommandCompiler&MockObject)|null $commandCompiler
      */
     private function getCommand(array $pendingMigrations = [], array $migrationResults = [], CommandCompiler|null $commandCompiler = null, BackupManager|null $backupManager = null, Connection|null $connection = null): MigrateCommand
     {
@@ -841,18 +841,17 @@ class MigrateCommandTest extends TestCase
             ->willReturn(...$migrationResults)
         ;
 
-        $schemaProvider = $this->createMock(SchemaProvider::class);
-        $schemaProvider
-            ->method('createSchema')
+        $commandCompiler ??= $this->createMock(CommandCompiler::class);
+        $commandCompiler
+            ->method('compileTargetSchema')
             ->willReturn(new Schema())
         ;
 
         return new MigrateCommand(
-            $commandCompiler ?? $this->createMock(CommandCompiler::class),
+            $commandCompiler,
             $connection ?? $this->createDefaultConnection(),
             $migrations,
             $backupManager ?? $this->createBackupManager(false),
-            $schemaProvider,
             $this->createMock(MysqlInnodbRowSizeCalculator::class),
         );
     }

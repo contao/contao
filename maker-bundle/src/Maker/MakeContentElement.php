@@ -20,6 +20,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\DependencyInjection\Container;
+use Symfony\Component\Filesystem\Path;
 
 class MakeContentElement extends AbstractFragmentMaker
 {
@@ -63,9 +64,15 @@ class MakeContentElement extends AbstractFragmentMaker
         ]);
 
         $this->templateGenerator->generate([
-            'source' => 'content-element/content_element.tpl.php',
+            'source' => 'content-element/content_element.tpl.html.twig',
             'target' => $this->getTemplateName($classNameWithoutSuffix),
         ]);
+
+        $twigRoot = Path::join($this->projectDir, 'contao/templates/.twig-root');
+
+        if (!$this->fileManager->fileExists($twigRoot)) {
+            $this->fileManager->dumpFile($twigRoot, '');
+        }
 
         if ($addPalette) {
             $this->dcaGenerator->generate([
@@ -77,13 +84,15 @@ class MakeContentElement extends AbstractFragmentMaker
 
         if ($addTranslation) {
             $this->languageFileGenerator->generate([
-                'source' => 'content-element/source.tpl.php',
-                'domain' => 'default',
+                'domain' => 'contao_default',
                 'language' => 'en',
                 'variables' => [
-                    'element' => $elementName,
-                    'sourceName' => $input->getArgument('source-name'),
-                    'sourceDescription' => $input->getArgument('source-description'),
+                    'CTE' => [
+                        $elementName => [
+                            $input->getArgument('source-name'),
+                            $input->getArgument('source-description'),
+                        ],
+                    ],
                 ],
             ]);
 
@@ -97,15 +106,15 @@ class MakeContentElement extends AbstractFragmentMaker
                 }
 
                 $this->languageFileGenerator->generate([
-                    'source' => 'content-element/target.tpl.php',
-                    'domain' => 'default',
+                    'domain' => 'contao_default',
                     'language' => $input->getArgument('language-'.$i),
                     'variables' => [
-                        'element' => $elementName,
-                        'sourceName' => $input->getArgument('source-name'),
-                        'sourceDescription' => $input->getArgument('source-description'),
-                        'translatedName' => $input->getArgument('target-name-'.$i),
-                        'translatedDescription' => $input->getArgument('target-description-'.$i),
+                        'CTE' => [
+                            $elementName => [
+                                $input->getArgument('target-name-'.$i),
+                                $input->getArgument('target-description-'.$i),
+                            ],
+                        ],
                     ],
                 ]);
 
@@ -125,6 +134,6 @@ class MakeContentElement extends AbstractFragmentMaker
 
     protected function getTemplatePrefix(): string
     {
-        return 'ce';
+        return 'content_element';
     }
 }

@@ -150,6 +150,15 @@ callbacks:
         arguments:
             dataContainer: Contao\DataContainer
 
+    fields.{field}.attributes:
+        return_type: array
+        arguments:
+            attributes: array
+            dataContainer: Contao\DataContainer
+        body: >
+            // Do something
+            return $attributes;
+
     fields.{field}.input_field:
         return_type: string
         arguments:
@@ -158,16 +167,20 @@ callbacks:
     fields.{field}.load:
         return_type: ~
         arguments:
-            currentValue: ~
+            value: ~
             # Since there are multiple parameters for multiple calls, we cannot
             # safely assume the following correct parameter names and types
+        body: >
+            return $value;
 
     fields.{field}.save:
         return_type: ~
         arguments:
-            currentValue: ~
+            value: ~
             # Since there are multiple parameters for multiple calls, we cannot
             # safely assume the following correct parameter names and types
+        body: >
+            return $value;
 
     fields.{field}.wizard:
         return_type: string
