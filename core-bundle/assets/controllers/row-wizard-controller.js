@@ -124,7 +124,7 @@ export default class extends Controller {
     }
 
     _syncInputs(rowFrom, rowTo) {
-        const selectsFrom = rowFrom.querySelectorAll('input, select');
+        const selectsFrom = rowFrom.querySelectorAll('input:not(.choices__input--cloned), select');
         const selectsTo = rowTo.querySelectorAll('input, select');
 
         for (let i = 0; i < selectsFrom.length; i++) {
