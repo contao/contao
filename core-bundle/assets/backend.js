@@ -26,11 +26,16 @@ application.load(context.keys()
 
 application.register('contao--webauthn', WebAuthn);
 
-// Cancel all prefetch requests that contain a request token or are related to
-// the Symfony toolbar
 document.documentElement.addEventListener('turbo:before-prefetch', e => {
     if (
-        (e.target.search && (new URLSearchParams(e.target.search)).has('rt'))
+        // Do not prefetch if the user wants to save data or is on a slow
+        // connection
+        navigator.connection?.saveData
+        || ['slow-2g', '2g'].includes(navigator.connection?.effectiveType)
+
+        // Do not prefetch if the URL contains a request token or the element
+        // is part of the Symfony toolbar
+        || (e.target.search && (new URLSearchParams(e.target.search)).has('rt'))
         || e.target.classList.contains('header_back')
         || e.target.matches('[onclick^="Backend.openModalIframe("]')
         || e.target.closest('.sf-toolbar') !== null
