@@ -1,6 +1,10 @@
 import {Controller} from "@hotwired/stimulus"
 
 export default class ChoicesController extends Controller {
+    static values = {
+        config: Object,
+    };
+
     mutationGuard = false;
 
     connect() {
@@ -14,7 +18,7 @@ export default class ChoicesController extends Controller {
 
         const select = this.element;
 
-        this.choices = new Choices(select, {
+        this.choices = new Choices(select, Object.assign({
             shouldSort: false,
             duplicateItemsAllowed: false,
             allowHTML: false,
@@ -28,6 +32,13 @@ export default class ChoicesController extends Controller {
                 includeScore: true,
                 threshold: 0.4,
             },
+            loadingText: Contao.lang.loading,
+            noResultsText: Contao.lang.noResults,
+            noChoicesText: Contao.lang.noOptions,
+            removeItemLabelText: function (value) {
+                return Contao.lang.removeItem.concat(' ').concat(value);
+            },
+        }, this.configValue, {
             callbackOnInit: () => {
                 const choices = select.closest('.choices')?.querySelector('.choices__list--dropdown > .choices__list');
 
@@ -36,14 +47,12 @@ export default class ChoicesController extends Controller {
                 }
 
                 this._resetGuard();
+
+                if (typeof this.configValue.callbackOnInit === 'function') {
+                    this.configValue.callbackOnInit(...arguments);
+                }
             },
-            loadingText: Contao.lang.loading,
-            noResultsText: Contao.lang.noResults,
-            noChoicesText: Contao.lang.noOptions,
-            removeItemLabelText: function (value) {
-                return Contao.lang.removeItem.concat(' ').concat(value);
-            },
-        })
+        }));
     }
 
     disconnect() {
