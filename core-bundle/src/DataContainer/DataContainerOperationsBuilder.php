@@ -94,9 +94,8 @@ class DataContainerOperationsBuilder implements \Stringable
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
             $v = \is_array($v) ? $v : [$v];
-            $operation = $this->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
 
-            if ($operation) {
+            foreach ($this->generateOperations($k, $v, $table, $record, $dataContainer, $legacyCallback) as $operation) {
                 $builder->append($operation);
             }
         }
@@ -131,9 +130,7 @@ class DataContainerOperationsBuilder implements \Stringable
                 $v['href'] = 'table='.$table;
             }
 
-            $operation = $this->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
-
-            if ($operation) {
+            foreach ($this->generateOperations($k, $v, $table, $record, $dataContainer, $legacyCallback) as $operation) {
                 $builder->append($operation);
             }
         }
@@ -186,7 +183,7 @@ class DataContainerOperationsBuilder implements \Stringable
 
         foreach ($body->childNodes as $node) {
             if ($node instanceof \DOMText) {
-                if ('' === (trim($html = $xml->saveHTML($node)))) {
+                if ('' === trim($html = $xml->saveHTML($node))) {
                     continue;
                 }
 
@@ -214,9 +211,10 @@ class DataContainerOperationsBuilder implements \Stringable
         return $operations;
     }
 
-    private function generateOperation(string $name, array $operation, string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): array|null
+    private function generateOperations(string $name, array $operation, string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): array
     {
         $config = new DataContainerOperation($name, $operation, $record, $dataContainer);
+        $result = [$config];
 
         // Call a custom function instead of using the default button
         if (\is_array($operation['button_callback'] ?? null)) {
@@ -229,7 +227,13 @@ class DataContainerOperationsBuilder implements \Stringable
                 && $type instanceof \ReflectionNamedType
                 && DataContainerOperation::class === $type->getName()
             ) {
-                $callback->{$operation['button_callback'][1]}($config);
+                $result = $callback->{$operation['button_callback'][1]}($config);
+
+                $result = match (true) {
+                    ($result instanceof DataContainerOperation) => [$result],
+                    \is_array($result) => $result,
+                    default => [$config],
+                };
             } else {
                 if (!$legacyCallback) {
                     throw new \RuntimeException('Cannot handle legacy button_callback, provide the $legacyCallback');
@@ -246,7 +250,13 @@ class DataContainerOperationsBuilder implements \Stringable
                 && $type instanceof \ReflectionNamedType
                 && DataContainerOperation::class === $type->getName()
             ) {
-                $operation['button_callback']($config);
+                $result = $operation['button_callback']($config);
+
+                $result = match (true) {
+                    $result instanceof DataContainerOperation => [$result],
+                    \is_array($result) => $result,
+                    default => [$config],
+                };
             } else {
                 if (!$legacyCallback) {
                     throw new \RuntimeException('Cannot handle legacy button_callback, provide the $legacyCallback');
@@ -256,37 +266,48 @@ class DataContainerOperationsBuilder implements \Stringable
             }
         }
 
-        if (null !== ($html = $config->getHtml())) {
-            if ('' === $html) {
-                return null;
+        $operations = [];
+
+        foreach ($result as $config) {
+            if (null !== ($html = $config->getHtml())) {
+                if ('' === $html) {
+                    continue;
+                }
+
+                $operations[] = [
+                    'html' => $html,
+                    'primary' => $config['primary'] ?? null,
+                ];
+
+                continue;
             }
 
-            return [
-                'html' => $html,
+            $isPopup = $this->isPopup($config->getName());
+            $href = $this->generateHref($config, $isPopup);
+
+            if (false !== ($toggle = $this->handleToggle($config, $table, $operation, $href))) {
+                $operations[] = $toggle;
+                continue;
+            }
+
+            $operations[] = [
+                'href' => $href,
+                'title' => $config['title'],
+                'popup' => $isPopup,
+                'label' => $config['label'],
+                'attributes' => $config['attributes'],
+                'icon' => Image::getHtml($config['icon'], $config['label']),
                 'primary' => $config['primary'] ?? null,
             ];
         }
 
-        $isPopup = $this->isPopup($name);
-        $href = $this->generateHref($config, $record, $isPopup);
-
-        if (false !== ($toggle = $this->handleToggle($config, $table, $record, $operation, $href))) {
-            return $toggle;
-        }
-
-        return [
-            'href' => $href,
-            'title' => $config['title'],
-            'popup' => $isPopup,
-            'label' => $config['label'],
-            'attributes' => $config['attributes'],
-            'icon' => Image::getHtml($config['icon'], $config['label']),
-            'primary' => $config['primary'] ?? null,
-        ];
+        return $operations;
     }
 
-    private function generateHref(DataContainerOperation $config, array $record, bool $isPopup): string|null
+    private function generateHref(DataContainerOperation $config, bool $isPopup): string|null
     {
+        $record = $config->getRecord();
+
         if (null !== $config->getUrl()) {
             return $config->getUrl();
         }
@@ -316,8 +337,10 @@ class DataContainerOperationsBuilder implements \Stringable
     /**
      * Returns true if this was a toggle operation (which is added to $operations).
      */
-    private function handleToggle(DataContainerOperation $config, string $table, array $record, array $operation, string|null $href): array|false|null
+    private function handleToggle(DataContainerOperation $config, string $table, array $operation, string|null $href): array|false|null
     {
+        $record = $config->getRecord();
+
         parse_str(StringUtil::decodeEntities($config['href'] ?? $operation['href'] ?? ''), $params);
 
         if ('toggle' !== ($params['act'] ?? null) || !isset($params['field'])) {
