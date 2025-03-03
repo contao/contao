@@ -324,7 +324,7 @@
         <source>Hide in navigation if logged in</source>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
-        <source>Hide the page in the menu if a member is logged in.</source>
+        <source>Hide the page in the navigation menu if a member is logged in.</source>
       </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
