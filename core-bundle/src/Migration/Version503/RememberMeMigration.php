@@ -60,6 +60,7 @@ class RememberMeMigration extends AbstractMigration
                         class,
                         userIdentifier
                     FROM tl_remember_me
+                    WHERE userIdentifier != ''
                 )
                 SQL,
             );
