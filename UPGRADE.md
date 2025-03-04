@@ -285,7 +285,8 @@ they are Twig-only and also follow the new naming scheme:
 
 ### Show to guests only
 
-The "show to guests only" function has been removed. Use the "protect page" function instead.
+The "show to guests only" function for articles, content elements and modules has been removed. Use the "protect"
+function instead.
 
 ### tl_content.ptable
 

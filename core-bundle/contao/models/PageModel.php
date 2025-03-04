@@ -79,6 +79,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property string            $cssClass
  * @property string            $sitemap
  * @property boolean           $hide
+ * @property boolean           $guests
  * @property string            $accesskey
  * @property boolean           $published
  * @property string|integer    $start
@@ -174,6 +175,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByCssClass($val, array $opt=array())
  * @method static PageModel|null findOneBySitemap($val, array $opt=array())
  * @method static PageModel|null findOneByHide($val, array $opt=array())
+ * @method static PageModel|null findOneByGuests($val, array $opt=array())
  * @method static PageModel|null findOneByAccesskey($val, array $opt=array())
  * @method static PageModel|null findOneByPublished($val, array $opt=array())
  * @method static PageModel|null findOneByStart($val, array $opt=array())
@@ -238,6 +240,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection<PageModel>|PageModel[]|null findByCssClass($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findBySitemap($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findByHide($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findByGuests($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findByAccesskey($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findByPublished($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findByStart($val, array $opt=array())
@@ -306,6 +309,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByCssClass($val, array $opt=array())
  * @method static integer countBySitemap($val, array $opt=array())
  * @method static integer countByHide($val, array $opt=array())
+ * @method static integer countByGuests($val, array $opt=array())
  * @method static integer countByAccesskey($val, array $opt=array())
  * @method static integer countByPublished($val, array $opt=array())
  * @method static integer countByStart($val, array $opt=array())
