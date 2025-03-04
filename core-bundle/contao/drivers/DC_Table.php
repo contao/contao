@@ -1654,7 +1654,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// If there is a PID field but no parent table
-		if (!$this->ptable && $db->fieldExists('pid', $this->strTable))
+		if (!$this->ptable && self::MODE_TREE === ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) && $db->fieldExists('pid', $this->strTable))
 		{
 			$delete[$this->strTable] = $db->getChildRecords($this->intId, $this->strTable);
 			array_unshift($delete[$this->strTable], $this->intId);
@@ -3795,22 +3795,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		$topMostRootIds = $this->root;
-
-		if (!empty($this->visibleRootTrails))
+		if (isset($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['visibleRoot']))
 		{
-			if (isset($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['visibleRoot']))
-			{
-				$topMostRootIds = array($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['visibleRoot']);
-			}
-			else
-			{
-				// Make sure we use the topmost root IDs only from all the visible root trail ids and also ensure correct sorting
-				$topMostRootIds = $db
-					->prepare("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL) AND id IN (" . implode(',', array_merge($this->visibleRootTrails, $this->root)) . ")" . ($db->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''))
-					->execute()
-					->fetchEach('id');
-			}
+			$topMostRootIds = array($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['visibleRoot']);
+		}
+		else
+		{
+			// Make sure we use the topmost root IDs only from all the visible root trail ids and also ensure correct sorting
+			$topMostRootIds = $db
+				->prepare("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL) AND id IN (" . implode(',', array_merge($this->visibleRootTrails, $this->root)) . ")" . ($db->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''))
+				->execute()
+				->fetchEach('id');
 		}
 
 		// Call a recursive function that builds the tree
@@ -4885,7 +4880,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Close the form
 		if (Input::get('act') == 'select')
 		{
-			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($this->strTable, $blnHasSorting, $this);
+			$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateSelectButtons($this->strTable, true, $this);
 
 			$return .= '
 </div>

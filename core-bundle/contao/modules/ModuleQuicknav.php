@@ -114,6 +114,7 @@ class ModuleQuicknav extends Module
 
 		$container = System::getContainer();
 		$security = $container->get('security.helper');
+		$isMember = $security->isGranted('ROLE_MEMBER');
 		$urlGenerator = $container->get('contao.routing.content_url_generator');
 		$db = Database::getInstance();
 
@@ -125,6 +126,12 @@ class ModuleQuicknav extends Module
 			if ($host !== null)
 			{
 				$objSubpage->domain = $host;
+			}
+
+			// Hide the page if it is only visible to guests
+			if ($objSubpage->guests && $isMember)
+			{
+				continue;
 			}
 
 			// PageModel->groups is an array after calling loadDetails()

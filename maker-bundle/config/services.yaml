@@ -1,7 +1,4 @@
 services:
-    contao_maker.config.xliff_merger:
-        class: Contao\MakerBundle\Config\XliffMerger
-
     contao_maker.generator.class:
         class: Contao\MakerBundle\Generator\ClassGenerator
         arguments:
@@ -17,7 +14,6 @@ services:
         class: Contao\MakerBundle\Generator\LanguageFileGenerator
         arguments:
             - '@maker.file_manager'
-            - '@contao_maker.config.xliff_merger'
             - '%kernel.project_dir%'
 
     contao_maker.generator.template:
@@ -33,6 +29,7 @@ services:
             - '@contao_maker.generator.class'
             - '@contao_maker.generator.dca'
             - '@contao_maker.generator.language_file'
+            - '@maker.file_manager'
             - '%kernel.project_dir%'
         tags:
             - maker.command
@@ -65,6 +62,7 @@ services:
             - '@contao_maker.generator.class'
             - '@contao_maker.generator.dca'
             - '@contao_maker.generator.language_file'
+            - '@maker.file_manager'
             - '%kernel.project_dir%'
         tags:
             - maker.command
