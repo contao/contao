@@ -2,6 +2,23 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.27] (2025-03-04)
+
+**Fixed issues:**
+
+- [#8146] Reintroduce "Show to guests only" for pages ([fritzmg])
+- [#8161] Always fetch root IDs in the correct order ([aschempp])
+- [#8159] Ignore tokens from Contao 4 in the `RememberMeMigration` ([leofeyer])
+- [#8150] Fix duplicate text in the search results context ([ausi])
+- [#8151] Also import SQL dumps from `var/backups` when importing a theme ([ausi])
+- [#8143] Fix row size too large error ([ausi])
+- [#8139] Only assume a self-referencing table in mode 5 when deleting records ([leofeyer])
+- [#8130] Add body template and attributes callback to the maker bundle ([aschempp])
+- [#8131] Add `spellcheck="false"` to the search input field ([fritzmg])
+- [#8128] Modernize the maker bundle ([fritzmg])
+- [#8093] Change `Template` to `FragmentTemplate` in the maker bundle ([christianbarkowsky])
+- [#8123] Improve the language cache warmer performance ([fritzmg])
+
 ## [5.3.26] (2025-02-17)
 
 **Fixed issues:**
@@ -589,6 +606,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.27]: https://github.com/contao/contao/releases/tag/5.3.27
 [5.3.26]: https://github.com/contao/contao/releases/tag/5.3.26
 [5.3.25]: https://github.com/contao/contao/releases/tag/5.3.25
 [5.3.24]: https://github.com/contao/contao/releases/tag/5.3.24
@@ -631,6 +649,7 @@ This project adheres to [Semantic Versioning].
 [bennyborn]: https://github.com/bennyborn
 [bezin]: https://github.com/bezin
 [bytehead]: https://github.com/bytehead
+[christianbarkowsky]: https://github.com/christianbarkowsky
 [CMSworker]: https://github.com/CMSworker
 [de-es]: https://github.com/de-es
 [falkgeist]: https://github.com/falkgeist
@@ -1058,3 +1077,15 @@ This project adheres to [Semantic Versioning].
 [#8086]: https://github.com/contao/contao/pull/8086
 [#8087]: https://github.com/contao/contao/pull/8087
 [#8088]: https://github.com/contao/contao/pull/8088
+[#8093]: https://github.com/contao/contao/pull/8093
+[#8123]: https://github.com/contao/contao/pull/8123
+[#8128]: https://github.com/contao/contao/pull/8128
+[#8130]: https://github.com/contao/contao/pull/8130
+[#8131]: https://github.com/contao/contao/pull/8131
+[#8139]: https://github.com/contao/contao/pull/8139
+[#8143]: https://github.com/contao/contao/pull/8143
+[#8146]: https://github.com/contao/contao/pull/8146
+[#8150]: https://github.com/contao/contao/pull/8150
+[#8151]: https://github.com/contao/contao/pull/8151
+[#8159]: https://github.com/contao/contao/pull/8159
+[#8161]: https://github.com/contao/contao/pull/8161
