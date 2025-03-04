@@ -2,6 +2,18 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.5.2] (2025-03-04)
+
+**Fixed issues:**
+
+- [#8160] Always make child records movable ([aschempp])
+- [#8153] Fix a typo in `ContaoCoreExtension::handleTemplateStudioConfig()` ([fritzmg])
+- [#8133] Fix the module wizard and section wizard scripts ([m-vo])
+- [#8145] Do not prefetch on slow connections or in data-saving mode ([m-vo])
+- [#8136] Ensure all content within `tl_content_right` is displayed in a single line ([zoglo])
+- [#8127] Restore TinyMCE properly on Safari ([m-vo])
+- [#8126] Fix the login screen ([leofeyer])
+
 ## [5.5.1] (2025-02-19)
 
 **Fixed issues:**
@@ -177,6 +189,7 @@ This project adheres to [Semantic Versioning].
 - [#7582] Add PostCSS as described in Symfony Encore ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.5.2]: https://github.com/contao/contao/releases/tag/5.5.2
 [5.5.1]: https://github.com/contao/contao/releases/tag/5.5.1
 [5.5.0]: https://github.com/contao/contao/releases/tag/5.5.0
 [5.5.0-RC4]: https://github.com/contao/contao/releases/tag/5.5.0-RC4
@@ -331,3 +344,10 @@ This project adheres to [Semantic Versioning].
 [#8118]: https://github.com/contao/contao/pull/8118
 [#8120]: https://github.com/contao/contao/pull/8120
 [#8122]: https://github.com/contao/contao/pull/8122
+[#8126]: https://github.com/contao/contao/pull/8126
+[#8127]: https://github.com/contao/contao/pull/8127
+[#8133]: https://github.com/contao/contao/pull/8133
+[#8136]: https://github.com/contao/contao/pull/8136
+[#8145]: https://github.com/contao/contao/pull/8145
+[#8153]: https://github.com/contao/contao/pull/8153
+[#8160]: https://github.com/contao/contao/pull/8160

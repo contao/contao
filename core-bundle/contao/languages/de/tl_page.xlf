@@ -425,6 +425,14 @@
         <source>Hide the page in the navigation menu.</source>
         <target>Diese Seite in der Navigation nicht anzeigen.</target>
       </trans-unit>
+      <trans-unit id="tl_page.guests.0">
+        <source>Hide if logged in</source>
+        <target>Verstecken, wenn angemeldet</target>
+      </trans-unit>
+      <trans-unit id="tl_page.guests.1">
+        <source>Hide the page in the navigation menu if a member is logged in.</source>
+        <target>Diese Seite in der Navigation nicht anzeigen, wenn ein Mitglied angemeldet ist.</target>
+      </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
         <target>Tastaturkürzel</target>
