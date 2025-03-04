@@ -15,6 +15,8 @@ namespace Contao\CoreBundle\Migration\Version503;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Schema\Table;
+use Doctrine\DBAL\Types\Types;
 
 /**
  * @internal
@@ -34,18 +36,30 @@ class RememberMeMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $this->connection->executeStatement(<<<'SQL'
-            CREATE TABLE `rememberme_token` (
-                `series`   varchar(88)  UNIQUE PRIMARY KEY NOT NULL,
-                `value`    varchar(88)  NOT NULL,
-                `lastUsed` datetime     NOT NULL COMMENT '(DC2Type:datetime_immutable)',
-                `class`    varchar(100) NOT NULL,
-                `username` varchar(200) NOT NULL
-            );
-            SQL,
-        );
+        $table = new Table('rememberme_token');
+        $table->addColumn('series', Types::STRING, ['length' => 88]);
+        $table->addColumn('value', Types::STRING, ['length' => 88]);
+        $table->addColumn('lastUsed', Types::DATETIME_IMMUTABLE);
+        $table->addColumn('class', Types::STRING, ['length' => 100]);
+        $table->addColumn('username', Types::STRING, ['length' => 200]);
+        $table->setPrimaryKey(['series']);
+
+        $params = $this->connection->getParams()['defaultTableOptions'] ?? [];
+
+        if (isset($params['charset'])) {
+            $table->addOption('charset', $params['charset']);
+        }
+
+        if (isset($params['engine'])) {
+            $table->addOption('engine', $params['engine']);
+        }
+
+        if (isset($params['collate'])) {
+            $table->addOption('collate', $params['collate']);
+        }
 
         $schemaManager = $this->connection->createSchemaManager();
+        $schemaManager->createTable($table);
 
         // If tl_remember_me.userIdentifier exists, the database is from Contao 5 and the
         // existing tokens can be migrated. Otherwise, it is a Contao 4 database and the
