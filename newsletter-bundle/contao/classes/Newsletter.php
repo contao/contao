@@ -98,14 +98,26 @@ class Newsletter extends Backend
 			}
 		}
 
-		// Replace insert tags
-		$html = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objNewsletter->content ?? '');
-		$text = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objNewsletter->text ?? '');
+		$requestStack = System::getContainer()->get('request_stack');
+		$subRequest = $requestStack->getCurrentRequest()->duplicate();
+		$subRequest->attributes->set('_scope', 'frontend');
+		$requestStack->push($subRequest);
+
+		try
+		{
+			// Replace insert tags
+			$html = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objNewsletter->content ?? '');
+			$text = System::getContainer()->get('contao.insert_tag.parser')->replaceInline($objNewsletter->text ?? '');
+		}
+		finally
+		{
+			$requestStack->pop();
+		}
 
 		// Convert relative URLs
 		$html = $this->convertRelativeUrls($html);
 
-		$objSession = System::getContainer()->get('request_stack')->getCurrentRequest()->getSession();
+		$objSession = $requestStack->getCurrentRequest()->getSession();
 		$token = Input::get('token');
 
 		// Send newsletter
