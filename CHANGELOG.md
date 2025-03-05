@@ -2,6 +2,14 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.28] (2025-03-05)
+
+**Fixed issues:**
+
+- [#8175] Fix an SQL error if there are no pages at all ([aschempp])
+- [#8167] Handle array values in the `form_session_data` insert tag ([leofeyer])
+- [#8165] Check the default table options in the `RememberMeMigration` ([leofeyer])
+
 ## [5.3.27] (2025-03-04)
 
 **Fixed issues:**
@@ -606,6 +614,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.28]: https://github.com/contao/contao/releases/tag/5.3.28
 [5.3.27]: https://github.com/contao/contao/releases/tag/5.3.27
 [5.3.26]: https://github.com/contao/contao/releases/tag/5.3.26
 [5.3.25]: https://github.com/contao/contao/releases/tag/5.3.25
@@ -1089,3 +1098,6 @@ This project adheres to [Semantic Versioning].
 [#8151]: https://github.com/contao/contao/pull/8151
 [#8159]: https://github.com/contao/contao/pull/8159
 [#8161]: https://github.com/contao/contao/pull/8161
+[#8165]: https://github.com/contao/contao/pull/8165
+[#8167]: https://github.com/contao/contao/pull/8167
+[#8175]: https://github.com/contao/contao/pull/8175
