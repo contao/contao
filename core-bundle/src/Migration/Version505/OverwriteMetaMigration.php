@@ -51,12 +51,13 @@ class OverwriteMetaMigration extends AbstractMigration
             \sprintf(<<<'SQL'
                 SELECT TRUE
                 FROM %s
-                WHERE overwriteMeta = 1 AND (
-                    alt = ''
-                    OR imageUrl = ''
-                    OR caption = ''
-                    OR imageTitle = ''
-                )
+                WHERE
+                    overwriteMeta = 1
+                    AND (alt = ''
+                        OR imageUrl = ''
+                        OR caption = ''
+                        OR imageTitle = ''
+                    )
                 LIMIT 1
                 SQL,
                 static::TABLE_NAME,
