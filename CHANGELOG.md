@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.5.3] (2025-03-05)
+
+**Fixed issues:**
+
+- [#8174] Correctly show the login provider icons ([leofeyer])
+
 ## [5.5.2] (2025-03-04)
 
 **Fixed issues:**
@@ -189,6 +195,7 @@ This project adheres to [Semantic Versioning].
 - [#7582] Add PostCSS as described in Symfony Encore ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.5.3]: https://github.com/contao/contao/releases/tag/5.5.3
 [5.5.2]: https://github.com/contao/contao/releases/tag/5.5.2
 [5.5.1]: https://github.com/contao/contao/releases/tag/5.5.1
 [5.5.0]: https://github.com/contao/contao/releases/tag/5.5.0
@@ -351,3 +358,4 @@ This project adheres to [Semantic Versioning].
 [#8145]: https://github.com/contao/contao/pull/8145
 [#8153]: https://github.com/contao/contao/pull/8153
 [#8160]: https://github.com/contao/contao/pull/8160
+[#8174]: https://github.com/contao/contao/pull/8174
