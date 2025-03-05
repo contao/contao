@@ -28,16 +28,9 @@ class DirectoryFilterVirtualFilesystemTest extends TestCase
     public function testFiltersStorage(): void
     {
         $mountManager = new MountManager([]);
-        $mountManager
-            ->mount(new InMemoryFilesystemAdapter(), '')
-        ;
+        $mountManager->mount(new InMemoryFilesystemAdapter());
 
-        $baseStorage = new VirtualFilesystem(
-            $mountManager,
-            $this->createMock(DbafsManager::class),
-            '',
-        );
-
+        $baseStorage = new VirtualFilesystem($mountManager, $this->createMock(DbafsManager::class), '');
         $baseStorage->createDirectory('images');
         $baseStorage->createDirectory('images/photos');
         $baseStorage->createDirectory('images/photos/foo');

@@ -363,11 +363,6 @@ class DirectoryFilterVirtualFilesystem implements VirtualFilesystemInterface
 
     private function getTrailItem(string $path): FilesystemItem
     {
-        return new FilesystemItem(
-            false,
-            $path,
-            extraMetadata: new ExtraMetadata([]),
-            storage: $this,
-        );
+        return new FilesystemItem(false, $path, extraMetadata: new ExtraMetadata([]), storage: $this);
     }
 }
