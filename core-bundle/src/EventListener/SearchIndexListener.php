@@ -34,6 +34,7 @@ class SearchIndexListener
     public function __construct(
         private readonly MessageBusInterface $messageBus,
         private readonly string $fragmentPath = '_fragment',
+        private readonly string $contaoBackendRoutePrefix = '/contao',
         private readonly int $enabledFeatures = self::FEATURE_INDEX | self::FEATURE_DELETE,
     ) {
     }
@@ -53,6 +54,16 @@ class SearchIndexListener
 
         // Only handle GET requests (see #1194, #7240)
         if (!$request->isMethod(Request::METHOD_GET)) {
+            return;
+        }
+
+        // Do not handle fragments
+        if (preg_match('~(?:^|/)'.preg_quote($this->fragmentPath, '~').'/~', $request->getPathInfo())) {
+            return;
+        }
+
+        // Do not handle Contao backend requests
+        if (preg_match('~(?:^|/)'.preg_quote($this->contaoBackendRoutePrefix, '~').'~', $request->getPathInfo())) {
             return;
         }
 
@@ -78,11 +89,6 @@ class SearchIndexListener
 
         // Do not index if called by crawler
         if (Factory::USER_AGENT === $request->headers->get('User-Agent')) {
-            return false;
-        }
-
-        // Do not handle fragments
-        if (preg_match('~(?:^|/)'.preg_quote($this->fragmentPath, '~').'/~', $request->getPathInfo())) {
             return false;
         }
 

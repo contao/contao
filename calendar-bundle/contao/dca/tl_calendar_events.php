@@ -85,8 +85,8 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		),
 		'operations' => array
 		(
-			'!edit',
-			'!children',
+			'edit',
+			'children',
 			'copy',
 			'cut',
 			'delete',

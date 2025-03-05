@@ -1532,6 +1532,7 @@ table.tl_listing {
 }
 
 .tl_content_right {
+	display: flex;
 	position: relative;
 	z-index: 1;
 	float: right;
@@ -1845,6 +1846,11 @@ table.tl_listing {
 	border: solid var(--tree-header-border);
 	border-width: 1px 0;
 	background: var(--tree-header);
+}
+
+.tl_folder_top .tl_right .operations img {
+	position: relative;
+	top: -1px;
 }
 
 .tl_folder {
@@ -2186,7 +2192,7 @@ ul.sgallery li {
 }
 
 /* Wizards */
-.tl_modulewizard button, .tl_optionwizard button, .tl_key_value_wizard button, .tl_tablewizard button, .tl_listwizard button, .tl_checkbox_wizard button, .tl_metawizard button, .tl_sectionwizard button, .tl_image_size + button {
+.tl_modulewizard button, .tl_optionwizard button, .tl_key_value_wizard button, .tl_tablewizard button, .tl_listwizard button, .tl_checkbox_wizard button, .tl_metawizard button, .tl_sectionwizard button, .tl_image_size button {
 	margin: 0;
 	padding: 0;
 	border: 0;

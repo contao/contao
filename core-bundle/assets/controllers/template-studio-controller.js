@@ -23,7 +23,7 @@ export default class extends Controller {
 
         this.element.addEventListener('turbo:submit-start', event => {
             // Add the currently open editor tabs to the request when selecting a theme
-            if (event.target === this.themeSelectorTarget) {
+            if (this.hasThemeSelectorTarget && event.target === this.themeSelectorTarget) {
                 this._addOpenEditorTabsToRequest(event);
             }
 
@@ -33,6 +33,16 @@ export default class extends Controller {
                 this._getActiveMutableEditor()?.focus();
             }
         });
+    }
+
+    beforeCache() {
+        // Destroy editor instances before Turbo caches the page. They will be
+        // recreated when the editorTargetConnected() calls happens on the
+        // restored page.
+        for (const [key, editor] of this.editors) {
+            editor.destroy();
+            delete this.editors[key];
+        }
     }
 
     close(event) {
@@ -129,7 +139,9 @@ export default class extends Controller {
         }
 
         if (!response.headers.get('content-type').startsWith('text/vnd.turbo-stream.html') || response.status >= 300) {
-            console.error(`There was an error processing the Turbo stream response from "${url}"`);
+            if (window.console) {
+                console.error(`There was an error processing the Turbo stream response from "${url}"`);
+            }
 
             return;
         }
