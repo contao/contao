@@ -92,11 +92,14 @@ body {
 	justify-content: center;
 }
 
-.login-providers .passkey .tl_submit:before {
+.login-providers .has-icon:before {
 	content: "";
 	width: 16px;
 	height: 16px;
 	margin-right: 4px;
+}
+
+.login-providers .passkey .has-icon:before {
 	background-image: var(--icon-passkey);
 }
 
