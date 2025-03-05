@@ -73,7 +73,7 @@
       </main>
       <?= $this->messages ?>
       <div class="tl_message passkey_message" data-contao--webauthn-error-target="message"></div>
-      <a href="/" class="fe-link"><?= $this->feLink ?></a>
+      <p class="fe-link"><a href="/"><?= $this->feLink ?></a></p>
     </div>
   <?php $this->endblock(); ?>
 
