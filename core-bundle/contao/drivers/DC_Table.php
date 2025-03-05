@@ -4021,7 +4021,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$topMostRootIds = $this->root;
 
-		if (!empty($this->visibleRootTrails))
+		if (!empty($this->visibleRootTrails) || !empty($this->root))
 		{
 			if (isset($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['visibleRoot']))
 			{
