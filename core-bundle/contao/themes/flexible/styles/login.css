@@ -82,7 +82,7 @@ body {
 }
 
 .login-providers li {
-	margin-bottom: 6px;
+	margin-bottom: 4px;
 	text-align: center;
 }
 
@@ -120,10 +120,11 @@ body {
 }
 
 .submit_container {
-	margin-top: 12px;
+	margin-top: 2px;
 }
 
 .be_login_two_factor .submit_container {
+	margin-top: 12px;
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	grid-gap: 6px;
@@ -184,8 +185,6 @@ label[for="verify"] {
 }
 
 .fe-link {
-	display: block;
-	width: 100%;
 	margin-top: 3em;
 	font-size: 90%;
 	text-align: center;
