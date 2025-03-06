@@ -965,7 +965,15 @@ class tl_content extends Backend
 		$objModel->setRow($arrRow);
 
 		$class = 'cte_preview';
-		$preview = StringUtil::insertTagToSrc($this->getContentElement($objModel));
+
+		try
+		{
+			$preview = StringUtil::insertTagToSrc($this->getContentElement($objModel));
+		}
+		catch (Throwable $exception)
+		{
+			$preview = '<p class="tl_error">' . StringUtil::specialchars($exception->getMessage()) . '</p>';
+		}
 
 		if (!empty($arrRow['sectionHeadline']))
 		{
