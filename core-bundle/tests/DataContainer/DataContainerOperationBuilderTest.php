@@ -51,7 +51,7 @@ class DataContainerOperationBuilderTest extends TestCase
 
         $builder = new DataContainerOperationsBuilder($twig, $this->createMock(Security::class), $this->createMock(UrlGeneratorInterface::class));
         $builder = $builder->initialize();
-        $builder->append(['html' => $html]);
+        $builder->append(['html' => $html], true);
         $builder->__toString();
     }
 
@@ -95,6 +95,11 @@ class DataContainerOperationBuilderTest extends TestCase
         yield [
             'foo <a href="#"><img src="pasteinto.svg" alt="Paste into">bar</a>',
             ['foo <a href="#"><img src="pasteinto.svg" alt="Paste into">bar</a>'],
+        ];
+
+        yield [
+            '<a href="#"><img src="pasteinto.svg" alt="Einfügen">foo</a> <img src="pasteafter.svg" alt="Danach einfügen"> ',
+            ['<a href="#"><img src="pasteinto.svg" alt="Einfügen">foo</a>', '<img src="pasteafter.svg" alt="Danach einfügen">'],
         ];
     }
 }
