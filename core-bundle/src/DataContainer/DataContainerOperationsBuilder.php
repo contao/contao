@@ -141,24 +141,32 @@ class DataContainerOperationsBuilder implements \Stringable
         return $builder;
     }
 
-    public function prepend(array $operation): self
+    public function prepend(array $operation, bool $parseHtml = false): self
     {
         if (null === $this->operations) {
             throw new \RuntimeException(self::class.' has not been initialized yet.');
         }
 
-        array_unshift($this->operations, ...$this->parseOperationsHtml($operation));
+        if ($parseHtml) {
+            array_unshift($this->operations, ...$this->parseOperationsHtml($operation));
+        } else {
+            array_unshift($this->operations, $operation);
+        }
 
         return $this;
     }
 
-    public function append(array $operation): self
+    public function append(array $operation, bool $parseHtml = false): self
     {
         if (null === $this->operations) {
             throw new \RuntimeException(self::class.' has not been initialized yet.');
         }
 
-        array_push($this->operations, ...$this->parseOperationsHtml($operation));
+        if ($parseHtml) {
+            array_push($this->operations, ...$this->parseOperationsHtml($operation));
+        } else {
+            $this->operations[] = $operation;
+        }
 
         return $this;
     }
