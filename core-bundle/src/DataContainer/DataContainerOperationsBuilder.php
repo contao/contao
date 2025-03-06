@@ -194,7 +194,7 @@ class DataContainerOperationsBuilder implements \Stringable
 
         foreach ($body->childNodes as $node) {
             if ($node instanceof \DOMText) {
-                if ('' === (trim($html = $xml->saveHTML($node)))) {
+                if ('' === trim($html = $xml->saveHTML($node))) {
                     continue;
                 }
 
