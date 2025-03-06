@@ -32,21 +32,19 @@ class DataContainerOperationBuilderTest extends TestCase
             ->method('render')
             ->with(
                 '@Contao/backend/data_container/operations.html.twig',
-                $this->callback(
-                    static function (array $data) use ($expected) {
-                        if (\count($data['operations']) !== \count($expected)) {
+                $this->callback(static function(array $data) use ($expected) {
+                    if (\count($data['operations']) !== \count($expected)) {
+                        return false;
+                    }
+
+                    foreach ($data['operations'] as $i => $operation) {
+                        if ($operation['html'] !== $expected[$i]) {
                             return false;
                         }
+                    }
 
-                        foreach ($data['operations'] as $i => $operation) {
-                            if ($operation['html'] !== $expected[$i]) {
-                                return false;
-                            }
-                        }
-
-                        return true;
-                    },
-                ),
+                    return true;
+                })
             )
             ->willReturn('success')
         ;
@@ -57,7 +55,7 @@ class DataContainerOperationBuilderTest extends TestCase
         $builder->__toString();
     }
 
-    public static function parsesOperationsHtmlProvider(): iterable
+    public function parsesOperationsHtmlProvider(): \Generator
     {
         yield [
             '',
