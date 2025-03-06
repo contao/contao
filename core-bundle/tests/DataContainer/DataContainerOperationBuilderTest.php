@@ -45,7 +45,7 @@ class DataContainerOperationBuilderTest extends TestCase
                         }
 
                         return true;
-                    }
+                    },
                 ),
             )
             ->willReturn('success')
