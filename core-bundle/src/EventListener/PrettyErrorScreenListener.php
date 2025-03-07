@@ -182,7 +182,7 @@ class PrettyErrorScreenListener
             return;
         }
 
-        // For BC reasons, check if a bundle template exists
+        // Backwards compatibility: check if a bundle template exists
         $view = '@ContaoCore/Error/'.$template.'.html.twig';
         $parameters = $this->getTemplateParameters($view, $statusCode, $event);
 
