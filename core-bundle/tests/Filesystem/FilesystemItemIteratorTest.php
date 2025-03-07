@@ -238,6 +238,8 @@ class FilesystemItemIteratorTest extends TestCase
         $iterator = new FilesystemItemIterator($this->generateItems());
         $this->assertSame(2, $iterator->count());
         $this->assertSame(1, $iterator->filter(static fn (FilesystemItem $f): bool => 'foo' === $f->getName())->count());
+
+        $this->assertCount(2, $iterator);
     }
 
     /**
