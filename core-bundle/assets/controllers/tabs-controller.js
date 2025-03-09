@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import { Icon } from '../modules/icon';
 
 export default class TabsController extends Controller {
     static values = {
@@ -44,7 +45,7 @@ export default class TabsController extends Controller {
             : (() => {
                 const button = document.createElement('button');
                 button.className = 'close';
-                button.innerText = '×';
+                button.append(Icon.getTemplate('close', {'aria-hidden': true, width: 12, height: 12}).content);
                 button.setAttribute('type', 'button');
                 button.setAttribute('aria-controls', panelReference);
                 button.setAttribute('aria-label', this.closeLabelValue);

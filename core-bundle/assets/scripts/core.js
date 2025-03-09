@@ -907,7 +907,7 @@ window.Backend =
 			if (el.hasClass('removable')) {
 				new Element('button', {
 					type: 'button',
-					html: Icon.getTemplate('close', {'aria-hidden': true}).getHTML(),
+					html: Icon.getTemplate('delete', {'aria-hidden': true}).getHTML(),
 					'class': 'tl_red'
 				}).addEvent('click', function() {
 					var li = el.getParent('li'),
@@ -919,7 +919,7 @@ window.Backend =
 			} else {
 				new Element('button', {
 					type: 'button',
-					html: '&times',
+					html: Icon.getTemplate('delete', {'aria-hidden': true}).getHTML(),
 					disabled: true
 				}).inject(el, 'after');
 			}
