@@ -25,7 +25,7 @@ export default class extends Controller {
 
         this.element.addEventListener('turbo:submit-start', event => {
             // Add the currently open editor tabs to the request when selecting a theme
-            if (event.target === this.themeSelectorTarget) {
+            if (this.hasThemeSelectorTarget && event.target === this.themeSelectorTarget) {
                 this._addOpenEditorTabsToRequest(event);
             }
 

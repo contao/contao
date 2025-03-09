@@ -80,4 +80,3 @@ services:
         class: Contao\CoreBundle\Migration\Version503\RememberMeMigration
         arguments:
             - '@database_connection'
-            - !tagged_iterator security.remember_me_handler

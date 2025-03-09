@@ -12,16 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\MakerBundle\Generator;
 
-use Contao\MakerBundle\Config\XliffMerger;
 use Symfony\Bundle\MakerBundle\FileManager;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Yaml\Yaml;
 
 class LanguageFileGenerator implements GeneratorInterface
 {
     public function __construct(
         private readonly FileManager $fileManager,
-        private readonly XliffMerger $xliffMerger,
         private readonly string $projectDir,
     ) {
     }
@@ -29,39 +28,27 @@ class LanguageFileGenerator implements GeneratorInterface
     public function generate(array $options): string
     {
         $options = $this->getOptionsResolver()->resolve($options);
+        $target = Path::join($this->projectDir, 'translations', \sprintf('%s.%s.yaml', $options['domain'], $options['language']));
 
-        $source = $this->getSourcePath($options['source']);
-        $target = Path::join($this->projectDir, 'contao/languages', $options['language'], $options['domain'].'.xlf');
-        $contents = $this->fileManager->parseTemplate($source, $options['variables']);
-        $fileExists = $this->fileManager->fileExists($target);
-
-        if ($fileExists) {
-            $root = new \DOMDocument();
-            $root->load($target);
-
-            $document = new \DOMDocument();
-            $document->loadXML($contents);
-
-            $mergedDocument = $this->xliffMerger->merge($root, $document);
-            $contents = (string) $mergedDocument->saveXML();
+        if ($this->fileManager->fileExists($target)) {
+            $translations = Yaml::parse($this->fileManager->getFileContents($target));
+        } else {
+            $translations = [];
         }
 
-        $this->fileManager->dumpFile($target, $contents);
+        $translations = array_merge_recursive($translations, $options['variables']);
 
-        return Path::join('contao/languages', $options['language'], $options['domain'].'.xlf');
+        $this->fileManager->dumpFile($target, Yaml::dump($translations, inline: 10));
+
+        return Path::makeRelative($target, $this->projectDir);
     }
 
     private function getOptionsResolver(): OptionsResolver
     {
         $resolver = new OptionsResolver();
-        $resolver->setRequired(['domain', 'source', 'language', 'variables']);
+        $resolver->setRequired(['domain', 'language', 'variables']);
         $resolver->setAllowedTypes('variables', ['array']);
 
         return $resolver;
-    }
-
-    private function getSourcePath(string $path): string
-    {
-        return Path::join(__DIR__.'/../../skeleton', $path);
     }
 }

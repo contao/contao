@@ -28,6 +28,7 @@ $GLOBALS['TL_DCA']['tl_opt_in'] = array
 		'notEditable'                 => true,
 		'notCopyable'                 => true,
 		'notDeletable'                => true,
+		'backendSearchIgnore'         => true,
 		'onshow_callback' => array
 		(
 			array('tl_opt_in', 'showRelatedRecords')

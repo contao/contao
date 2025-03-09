@@ -194,7 +194,7 @@ class MakeDcaCallback extends AbstractMaker
         $targets = [];
 
         foreach ($yaml['callbacks'] as $key => $config) {
-            $targets[$key] = new MethodDefinition($config['return_type'], $config['arguments']);
+            $targets[$key] = new MethodDefinition($config['return_type'], $config['arguments'], $config['body'] ?? null);
         }
 
         return $targets;

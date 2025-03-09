@@ -22,6 +22,7 @@ $GLOBALS['TL_DCA']['tl_log'] = array
 		'closed'                      => true,
 		'notEditable'                 => true,
 		'notCopyable'                 => true,
+		'backendSearchIgnore'         => true,
 		'sql' => array
 		(
 			'keys' => array
