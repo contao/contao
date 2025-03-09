@@ -1,10 +1,10 @@
 import { Controller } from '@hotwired/stimulus';
 import { TwigEditor } from '../modules/twig-editor';
-import { TurboCable } from "../modules/turbo-cable";
+import {TurboStreamConnection} from "../modules/turbo-stream-connection";
 
 export default class extends Controller {
     editors = new Map();
-    turboCable = new TurboCable();
+    turboStreamConnection = new TurboStreamConnection();
 
     static values = {
         followUrl: String,
@@ -16,11 +16,11 @@ export default class extends Controller {
     connect() {
         // Subscribe to events dispatched by the editors
         this.element.addEventListener('twig-editor:lens:follow', event => {
-            this.turboCable.getStream(this.followUrlValue, {name: event.detail.name}, true);
+            this.turboStreamConnection.get(this.followUrlValue, {name: event.detail.name}, true);
         });
 
         this.element.addEventListener('twig-editor:lens:block-info', event => {
-            this.turboCable.getStream(this.blockInfoUrlValue, event.detail, true);
+            this.turboStreamConnection.get(this.blockInfoUrlValue, event.detail, true);
         });
 
         this.element.addEventListener('turbo:submit-start', event => {

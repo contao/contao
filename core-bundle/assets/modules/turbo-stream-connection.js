@@ -1,9 +1,9 @@
-export class TurboCable {
+export class TurboStreamConnection {
     _abortController = null;
     _abortSignal = { reason: 'The request was substituted.' }
 
     /**
-     * Requests a stream response and lets Turbo handle it.
+     * Requests a stream response using GET and lets Turbo handle it.
      *
      * @param url The URL of the Symfony controller answering the stream request.
      * @param query_params An object of query parameters. If the value is an array, a key "foo" will be named "foo[]" and appear multiple times.
@@ -11,7 +11,7 @@ export class TurboCable {
      *
      * @returns {Promise<void>}
      */
-    async getStream(url, query_params = null, abortPending = false) {
+    async get(url, query_params = null, abortPending = false) {
         let params = {
             method: 'get',
             headers: {
@@ -35,7 +35,7 @@ export class TurboCable {
         let response;
 
         try {
-            response = await fetch(TurboCable.buildURL(url, query_params), params);
+            response = await fetch(TurboStreamConnection.buildURL(url, query_params), params);
         } catch (e) {
             if(e !== this._abortSignal) {
                 if (window.console) {
