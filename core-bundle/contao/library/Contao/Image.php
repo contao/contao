@@ -93,7 +93,6 @@ class Image
 			return 'assets/contao/images/' . $src;
 		}
 
-		$theme = Backend::getTheme();
 		$filename = pathinfo($src, PATHINFO_FILENAME);
 
 		if (\in_array($filename, self::$deprecated))
@@ -105,9 +104,18 @@ class Image
 			trigger_deprecation('contao/core-bundle', '5.2', 'Using the "%s" icon has been deprecated and will no longer work in Contao 6. Use the "%s--disabled" icon instead.', $filename, substr($filename, 0, -1));
 		}
 
-		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+		// Use path from icon manifest
+		$icons = System::getContainer()->getParameter('contao.backend.icons');
+
+		if (null !== ($icon = ($icons["$filename.svg"] ?? null)))
+		{
+			return ltrim($icon['path'], '/');
+		}
 
 		// Prefer SVG icons
+		$theme = Backend::getTheme();
+		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
+
 		if (file_exists($projectDir . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
 		{
 			return 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
@@ -193,6 +201,27 @@ class Image
 			return self::$htmlTemplateCache[$cacheKey];
 		}
 
+		/** @param string|list{string, string} $sources */
+		$getImageMarkup = static function (array|string $sources, int $width, int $height, string $attributesType = 'attributes') use (&$getImageMarkup) {
+			if (\is_array($sources))
+			{
+				return $getImageMarkup($sources[0], $width, $height, 'darkAttributes') . $getImageMarkup($sources[1], $width, $height, 'lightAttributes');
+			}
+
+			return \sprintf('<img src="%s" width="%d" height="%d" alt="{alt}"{%s}>', $sources, $width, $height, $attributesType);
+		};
+
+		$icons = System::getContainer()->getParameter('contao.backend.icons');
+
+		if (null !== ($icon = ($icons[$src] ?? null)))
+		{
+			$darkVariant = substr($src, 0, -4) . '--dark.svg';
+
+			$sources = (null !== ($darkIcon = ($icons[$darkVariant] ?? null))) ? array($darkIcon['path'], $icon['path']) : $icon['path'];
+
+			return self::$htmlTemplateCache[$cacheKey] = $getImageMarkup($sources, $icon['width'], $icon['height']);
+		}
+
 		$src = static::getPath($src);
 
 		if (!$src)
@@ -245,9 +274,9 @@ class Image
 				$darkSrc = substr($darkSrc, \strlen($webDir) + 1);
 			}
 
-			return self::$htmlTemplateCache[$cacheKey] = '<img src="' . self::getUrl($darkSrc) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="{alt}"{darkAttributes}><img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="{alt}"{lightAttributes}>';
+			return self::$htmlTemplateCache[$cacheKey] = $getImageMarkup(array(self::getUrl($darkSrc), self::getUrl($src)), $objFile->width, $objFile->height);
 		}
 
-		return self::$htmlTemplateCache[$cacheKey] = '<img src="' . self::getUrl($src) . '" width="' . $objFile->width . '" height="' . $objFile->height . '" alt="{alt}"{attributes}>';
+		return self::$htmlTemplateCache[$cacheKey] = $getImageMarkup(self::getUrl($src), $objFile->width, $objFile->height);
 	}
 }
