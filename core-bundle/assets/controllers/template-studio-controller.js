@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import { TwigEditor } from '../modules/twig-editor';
-import {TurboStreamConnection} from "../modules/turbo-stream-connection";
+import { TurboStreamConnection } from '../modules/turbo-stream-connection';
 
 export default class extends Controller {
     editors = new Map();
