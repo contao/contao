@@ -1,5 +1,6 @@
 const Encore = require('@symfony/webpack-encore');
 const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
+const path = require('node:path');
 
 // Core bundle assets
 Encore
@@ -80,6 +81,11 @@ Encore
         from: './core-bundle/contao/themes/flexible/icons',
         to: '[name].[ext]',
         pattern: /\.svg$/,
+    })
+    .configureWatchOptions(watchOptions => {
+        // Since we are overwriting the sources, we need to prevent the watcher
+        // from entering an endless loop.
+        watchOptions.ignored = [path.resolve('./core-bundle/contao/themes/flexible/icons')];
     })
 ;
 
