@@ -4021,20 +4021,25 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$topMostRootIds = $this->root;
 
-		if (!empty($this->visibleRootTrails) || !empty($this->root))
+		if (isset($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['visibleRoot']))
 		{
-			if (isset($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['visibleRoot']))
-			{
-				$topMostRootIds = array($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['visibleRoot']);
-			}
-			else
-			{
-				// Make sure we use the topmost root IDs only from all the visible root trail ids and also ensure correct sorting
-				$topMostRootIds = $db
-					->prepare("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL) AND id IN (" . implode(',', array_merge($this->visibleRootTrails, $this->root)) . ")" . ($db->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''))
-					->execute()
-					->fetchEach('id');
-			}
+			$topMostRootIds = array($GLOBALS['TL_DCA']['tl_page']['list']['sorting']['visibleRoot']);
+		}
+		elseif (!empty($this->visibleRootTrails))
+		{
+			// Make sure we use the topmost root IDs only from all the visible root trail ids and also ensure correct sorting
+			$topMostRootIds = $db
+				->prepare("SELECT id FROM $table WHERE (pid=0 OR pid IS NULL) AND id IN (" . implode(',', array_merge($this->visibleRootTrails, $this->root)) . ")" . ($db->fieldExists('sorting', $table) ? ' ORDER BY sorting, id' : ''))
+				->execute()
+				->fetchEach('id');
+		}
+		elseif (!empty($this->root) && $db->fieldExists('sorting', $table))
+		{
+			// Ensure correct sorting of root IDs, e.g. if user is given access to a limited set of root page.
+			$topMostRootIds = $db
+				->prepare("SELECT id FROM $table WHERE id IN (" . implode(',', $this->root) . ') ORDER BY sorting, id')
+				->execute()
+				->fetchEach('id');
 		}
 
 		// Call a recursive function that builds the tree
