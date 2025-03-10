@@ -35,7 +35,7 @@ export class TurboStreamConnection {
         let response;
 
         try {
-            response = await fetch(TurboStreamConnection.buildURL(url, query_params), params);
+            response = await fetch(this.constructor.buildURL(url, query_params), params);
         } catch (e) {
             if(e !== this._abortSignal) {
                 if (window.console) {
