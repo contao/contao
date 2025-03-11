@@ -417,7 +417,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
     private function getListener(bool $isBackendUser = false, Environment|null $twig = null, PageModel|null $errorPage = null, HttpKernelInterface|null $httpKernel = null): PrettyErrorScreenListener
     {
-        if (null === $twig) {
+        if (!$twig) {
             $twig = $this->createMock(Environment::class);
             $twig
                 ->method('render')
