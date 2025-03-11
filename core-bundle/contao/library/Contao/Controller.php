@@ -662,7 +662,7 @@ abstract class Controller extends System
 
 		$objRow->form = $objRow->id;
 
-		$objElement = new $strClass($objRow, $strColumn);
+		$objElement = new $strClass($objRow, $strColumn, $blnModule ? 'mod_' : 'ce_');
 		$strBuffer = $objElement->generate();
 
 		// HOOK: add custom logic

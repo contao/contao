@@ -297,16 +297,4 @@ class ModuleModel extends Model
 	 * @var string
 	 */
 	protected static $strTable = 'tl_module';
-
-	public function __get($strKey)
-	{
-		if ($strKey === 'typePrefix')
-		{
-			trigger_deprecation('contao/core-bundle', '5.6', 'The dynamic "typePrefix" property has been deprecated and will not be set anymore in Contao 6.');
-
-			return parent::__get($strKey) ?? 'mod_';
-		}
-
-		return parent::__get($strKey);
-	}
 }
