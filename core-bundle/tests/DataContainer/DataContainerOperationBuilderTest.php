@@ -26,7 +26,6 @@ class DataContainerOperationBuilderTest extends TestCase
     public function testParsesOperationsHtml(string $html, array $expected): void
     {
         $twig = $this->createMock(Environment::class);
-
         $twig
             ->expects($this->once())
             ->method('render')
@@ -51,10 +50,16 @@ class DataContainerOperationBuilderTest extends TestCase
             ->willReturn('success')
         ;
 
-        $builder = new DataContainerOperationsBuilder($twig, $this->createMock(Security::class), $this->createMock(UrlGeneratorInterface::class));
+        $builder = new DataContainerOperationsBuilder(
+            $twig,
+            $this->createMock(Security::class),
+            $this->createMock(UrlGeneratorInterface::class),
+        );
+
         $builder = $builder->initialize();
         $builder->append(['html' => $html], true);
-        $builder->__toString();
+
+        $this->assertSame('success', (string) $builder);
     }
 
     public static function parsesOperationsHtmlProvider(): iterable
