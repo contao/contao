@@ -1,16 +1,16 @@
 {
     "devDependencies": {
-        "@hotwired/stimulus": "^3.2.2",
-        "@hotwired/stimulus-webpack-helpers": "^1.0.1",
-        "@hotwired/turbo": "^8.0.12",
-        "@simplewebauthn/browser": "^13.0.0",
-        "@stimulus-components/color-picker": "^2.0.0",
-        "@symfony/webpack-encore": "^5.0.1",
+        "@hotwired/stimulus": "^3.2",
+        "@hotwired/stimulus-webpack-helpers": "^1.0",
+        "@hotwired/turbo": "^8.0",
+        "@simplewebauthn/browser": "^13.0",
+        "@stimulus-components/color-picker": "^2.0",
+        "@symfony/webpack-encore": "^5.1",
         "@web-auth/webauthn-stimulus": "file:vendor/web-auth/webauthn-stimulus/assets",
         "accessible-menu": "^4.2",
-        "postcss": "^8.4.47",
-        "postcss-loader": "^8.1.1",
-        "postcss-preset-env": "^10.0.7"
+        "postcss": "^8.5",
+        "postcss-loader": "^8.1",
+        "postcss-preset-env": "^10.1"
     },
     "browserslist": [
         "defaults"
@@ -22,5 +22,5 @@
         "build": "encore production --progress"
     },
     "private": true,
-    "packageManager": "npm@10.8.2"
+    "packageManager": "npm@11.1.0"
 }

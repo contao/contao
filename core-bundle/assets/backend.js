@@ -6,8 +6,6 @@ import WebAuthn from '@web-auth/webauthn-stimulus';
 import './scripts/mootao.js';
 import './scripts/core.js';
 import './scripts/limit-height.js';
-import './scripts/modulewizard.js';
-import './scripts/sectionwizard.js';
 
 import './styles/backend.pcss';
 
@@ -28,10 +26,20 @@ application.load(context.keys()
 
 application.register('contao--webauthn', WebAuthn);
 
-// Cancel all prefetch requests that contain a request token or are related to
-// the Symfony toolbar
 document.documentElement.addEventListener('turbo:before-prefetch', e => {
-    if ((new URLSearchParams(e.target.href)).has('rt') || e.target.classList.contains('header_back') || e.target.closest('.sf-toolbar') !== null || e.target.matches('[onclick^="Backend.openModalIframe("]')) {
+    if (
+        // Do not prefetch if the user wants to save data or is on a slow
+        // connection
+        navigator.connection?.saveData
+        || ['slow-2g', '2g'].includes(navigator.connection?.effectiveType)
+
+        // Do not prefetch if the URL contains a request token or the element
+        // is part of the Symfony toolbar
+        || (e.target.search && (new URLSearchParams(e.target.search)).has('rt'))
+        || e.target.classList.contains('header_back')
+        || e.target.matches('[onclick^="Backend.openModalIframe("]')
+        || e.target.closest('.sf-toolbar') !== null
+    ) {
         e.preventDefault();
     }
 });

@@ -14,12 +14,12 @@ namespace Contao\CoreBundle\Command;
 
 use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Doctrine\Schema\MysqlInnodbRowSizeCalculator;
-use Contao\CoreBundle\Doctrine\Schema\SchemaProvider;
 use Contao\CoreBundle\Migration\CommandCompiler;
 use Contao\CoreBundle\Migration\MigrationCollection;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Driver\Mysqli\Driver as MysqliDriver;
 use Doctrine\DBAL\Driver\ServerInfoAwareConnection;
+use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\VersionAwarePlatformDriver;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -43,7 +43,6 @@ class MigrateCommand extends Command
         private readonly Connection $connection,
         private readonly MigrationCollection $migrations,
         private readonly BackupManager $backupManager,
-        private readonly SchemaProvider $schemaProvider,
         private readonly MysqlInnodbRowSizeCalculator $rowSizeCalculator,
     ) {
         parent::__construct();
@@ -315,7 +314,7 @@ class MigrateCommand extends Command
 
     private function executeSchemaDiff(bool $dryRun, bool $asJson, bool $withDeletesOption, string|null $specifiedHash = null): bool
     {
-        if ($warnings = [...$this->compileConfigurationWarnings(), ...$this->compileSchemaWarnings()]) {
+        if ($warnings = [...$this->compileConfigurationWarnings(), ...$this->compileSchemaWarnings($withDeletesOption)]) {
             if ($asJson) {
                 foreach ($warnings as $message) {
                     $this->writeNdjson('warning', ['message' => $message]);
@@ -400,7 +399,11 @@ class MigrateCommand extends Command
                     }
 
                     try {
-                        $this->connection->executeQuery($command);
+                        try {
+                            $this->connection->executeQuery($command);
+                        } catch (\Throwable $e) {
+                            $this->fixFailedSqlCommand($command, $e);
+                        }
 
                         ++$count;
                         $commandExecuted = true;
@@ -450,6 +453,43 @@ class MigrateCommand extends Command
         }
 
         return true;
+    }
+
+    /**
+     * MySQL can run into the error "1118 (42000): Row size too large" when adding or
+     * deleting columns. In MariaDB since version 10.4.0 this can also happen if a
+     * larger number of columns got deleted in the past because of the "Instant DROP
+     * COLUMN" feature. If we encounter such an error, we retry the affected query
+     * with the InnoDB strict mode disabled. Additionally, we optimize the table to
+     * prevent future errors due to the "Instant DROP COLUMN" feature. This approach
+     * involuntarily enables using too many or too large columns. To mitigate that,
+     * the migrate command shows a warning in these cases.
+     *
+     * @see self::compileTableWarnings()
+     */
+    private function fixFailedSqlCommand(string $command, \Throwable $exception): void
+    {
+        if (
+            !$exception instanceof DriverException
+            || 1118 !== $exception->getCode()
+            || !str_contains($exception->getMessage(), 'Row size too large')
+            || !str_starts_with($command, 'ALTER TABLE ')
+            || 1 !== (int) $this->connection->fetchOne('SELECT @@innodb_strict_mode')
+        ) {
+            throw $exception;
+        }
+
+        $this->connection->executeQuery('SET SESSION innodb_strict_mode = 0');
+
+        try {
+            $this->connection->executeQuery($command);
+
+            $table = explode(' ', substr($command, 12), 2)[0];
+
+            $this->connection->executeQuery("OPTIMIZE TABLE $table");
+        } finally {
+            $this->connection->executeQuery('SET SESSION innodb_strict_mode = 1');
+        }
     }
 
     private function writeNdjson(string $type, array $data): void
@@ -629,10 +669,10 @@ class MigrateCommand extends Command
     /**
      * @return array<int, string>
      */
-    private function compileSchemaWarnings(): array
+    private function compileSchemaWarnings(bool $withDeletesOption): array
     {
         $warnings = [];
-        $schema = $this->schemaProvider->createSchema();
+        $schema = $this->commandCompiler->compileTargetSchema(!$withDeletesOption);
 
         foreach ($schema->getTables() as $table) {
             $warnings = [...$warnings, ...$this->compileTableWarnings($table)];
@@ -658,7 +698,7 @@ class MigrateCommand extends Command
         $innodbLimit = $this->rowSizeCalculator->getInnodbRowSizeLimit();
 
         if ($mysqlSize > $mysqlLimit || $innodbSize > $innodbLimit) {
-            $warnings[] = "The row size of table {$table->getName()} is too large:\n - MySQL row size: $mysqlSize of $mysqlLimit bytes\n - InnoDB row size: $innodbSize of $innodbLimit bytes";
+            $warnings[] = "The row size of table {$table->getName()} is too large, try changing or deleting some columns:\n - MySQL row size: $mysqlSize of $mysqlLimit bytes\n - InnoDB row size: $innodbSize of $innodbLimit bytes";
         }
 
         return $warnings;

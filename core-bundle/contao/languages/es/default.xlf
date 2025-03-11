@@ -407,6 +407,7 @@
       </trans-unit>
       <trans-unit id="ERR.copyUnique">
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>El ID del elemento %d no se puede insertar aquí porque entra en conflicto con un elemento existente.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -2586,6 +2587,7 @@
       </trans-unit>
       <trans-unit id="MSC.or">
         <source>or</source>
+        <target>ó</target>
       </trans-unit>
       <trans-unit id="MSC.published">
         <source>Published</source>
@@ -2981,27 +2983,35 @@
       </trans-unit>
       <trans-unit id="MSC.searchResultsPlaceholder">
         <source>Type to start searching</source>
+        <target>Escriba para iniciar la búsqueda</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsMin">
         <source>Please enter at least %s characters</source>
+        <target>Por favor, introduzca al menos %s caracteres</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
         <source>Loading results...</source>
+        <target>Cargando resultados...</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
+        <target>Ver %s</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitEdit">
         <source>Edit %s</source>
+        <target>Editar %s</target>
       </trans-unit>
       <trans-unit id="MSC.noResults">
         <source>No results found.</source>
+        <target>No se encontraron resultados.</target>
       </trans-unit>
       <trans-unit id="MSC.noOptions">
         <source>No options to choose from.</source>
+        <target>No hay opciones para elegir.</target>
       </trans-unit>
       <trans-unit id="MSC.removeItem">
         <source>Remove item</source>
+        <target>Eliminar artículo</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -3189,6 +3199,7 @@
       </trans-unit>
       <trans-unit id="DCA.operations">
         <source>Show operations for element ID %s</source>
+        <target>Mostrar operaciones para el ID del elemento %s</target>
       </trans-unit>
       <trans-unit id="DCA.children">
         <source>Edit the child elements of element ID %s</source>

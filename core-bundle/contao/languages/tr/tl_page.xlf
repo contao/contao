@@ -425,6 +425,14 @@
         <source>Hide the page in the navigation menu.</source>
         <target>Bu seçenek etkinleştirildiğinde, sayfa gezinme menüsünde gizlenir.</target>
       </trans-unit>
+      <trans-unit id="tl_page.guests.0">
+        <source>Hide if logged in</source>
+        <target>Oturum açılmış ise gizlensin</target>
+      </trans-unit>
+      <trans-unit id="tl_page.guests.1">
+        <source>Hide the page in the navigation menu if a member is logged in.</source>
+        <target>Sayfanın gezinme menüsünde oturum açmış kullanıcılara görüntülenmemesini sağlar.</target>
+      </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
         <target>Erişim tuşu</target>

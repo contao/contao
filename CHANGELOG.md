@@ -2,6 +2,51 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.5.3] (2025-03-05)
+
+**Fixed issues:**
+
+- [#8174] Correctly show the login provider icons ([leofeyer])
+
+## [5.5.2] (2025-03-04)
+
+**Fixed issues:**
+
+- [#8160] Always make child records movable ([aschempp])
+- [#8153] Fix a typo in `ContaoCoreExtension::handleTemplateStudioConfig()` ([fritzmg])
+- [#8133] Fix the module wizard and section wizard scripts ([m-vo])
+- [#8145] Do not prefetch on slow connections or in data-saving mode ([m-vo])
+- [#8136] Ensure all content within `tl_content_right` is displayed in a single line ([zoglo])
+- [#8127] Restore TinyMCE properly on Safari ([m-vo])
+- [#8126] Fix the login screen ([leofeyer])
+
+## [5.5.1] (2025-02-19)
+
+**Fixed issues:**
+
+- [#8122] Handle the case when there is no theme selector in the Template Studio ([m-vo])
+- [#8118] Allow passing children as `string` within the clipboard manager ([zoglo])
+- [#8120] Make the search bar less intrusive ([leofeyer])
+- [#8113] Increase the search delay to 300ms ([leofeyer])
+- [#8111] Only omit the request token for the edit operation in the form generator ([leofeyer])
+- [#8108] Add an `abortController` to the back end search ([zoglo])
+- [#8104] Allow entire tables to be excluded from the back end search ([Toflar])
+
+## [5.5.0] (2025-02-18)
+
+**Fixed issues:**
+
+- [#8101] Pass the correct argument to `URLSearchParams()` ([leofeyer])
+- [#8063] Fix the back end search results handling ([zoglo])
+- [#8098] Do not apply the `core.js` textarea resize script to the ACE editor ([m-vo])
+- [#8075] Harden the Stimulus controllers ([m-vo])
+- [#8090] Prevent Turbo prefetch for modal iframes ([fritzmg])
+- [#8092] Adjust the default location for Loupe ([Toflar])
+- [#8079] Prevent clicking operations from changing the picker selection ([leofeyer])
+- [#8084] Remove a non-breaking space from the root paste button ([leofeyer])
+- [#8073] Make the back end tabs "turbo-temporary" ([m-vo])
+- [#8067] Do not unset the default operation options ([leofeyer])
+
 ## [5.5.0-RC4] (2025-02-11)
 
 **Fixed issues:**
@@ -150,6 +195,10 @@ This project adheres to [Semantic Versioning].
 - [#7582] Add PostCSS as described in Symfony Encore ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.5.3]: https://github.com/contao/contao/releases/tag/5.5.3
+[5.5.2]: https://github.com/contao/contao/releases/tag/5.5.2
+[5.5.1]: https://github.com/contao/contao/releases/tag/5.5.1
+[5.5.0]: https://github.com/contao/contao/releases/tag/5.5.0
 [5.5.0-RC4]: https://github.com/contao/contao/releases/tag/5.5.0-RC4
 [5.5.0-RC3]: https://github.com/contao/contao/releases/tag/5.5.0-RC3
 [5.5.0-RC2]: https://github.com/contao/contao/releases/tag/5.5.0-RC2
@@ -285,3 +334,28 @@ This project adheres to [Semantic Versioning].
 [#8044]: https://github.com/contao/contao/pull/8044
 [#8045]: https://github.com/contao/contao/pull/8045
 [#8048]: https://github.com/contao/contao/pull/8048
+[#8063]: https://github.com/contao/contao/pull/8063
+[#8067]: https://github.com/contao/contao/pull/8067
+[#8073]: https://github.com/contao/contao/pull/8073
+[#8075]: https://github.com/contao/contao/pull/8075
+[#8079]: https://github.com/contao/contao/pull/8079
+[#8084]: https://github.com/contao/contao/pull/8084
+[#8090]: https://github.com/contao/contao/pull/8090
+[#8092]: https://github.com/contao/contao/pull/8092
+[#8098]: https://github.com/contao/contao/pull/8098
+[#8101]: https://github.com/contao/contao/pull/8101
+[#8104]: https://github.com/contao/contao/pull/8104
+[#8108]: https://github.com/contao/contao/pull/8108
+[#8111]: https://github.com/contao/contao/pull/8111
+[#8113]: https://github.com/contao/contao/pull/8113
+[#8118]: https://github.com/contao/contao/pull/8118
+[#8120]: https://github.com/contao/contao/pull/8120
+[#8122]: https://github.com/contao/contao/pull/8122
+[#8126]: https://github.com/contao/contao/pull/8126
+[#8127]: https://github.com/contao/contao/pull/8127
+[#8133]: https://github.com/contao/contao/pull/8133
+[#8136]: https://github.com/contao/contao/pull/8136
+[#8145]: https://github.com/contao/contao/pull/8145
+[#8153]: https://github.com/contao/contao/pull/8153
+[#8160]: https://github.com/contao/contao/pull/8160
+[#8174]: https://github.com/contao/contao/pull/8174

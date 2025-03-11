@@ -43,6 +43,7 @@
       </trans-unit>
       <trans-unit id="MOD.template_studio">
         <source>Add or edit Twig templates</source>
+        <target>Agregar o editar plantillas Twig</target>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>

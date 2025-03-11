@@ -68,6 +68,7 @@
 	--serp-preview: #3c4043;
 	--serp-preview-title: #1a0dab;
 	--nested-bg: #fbfbfd;
+	--search-field-bg: rgba(255, 255, 255, .2);
 }
 
 html[data-color-scheme="dark"] {
@@ -127,6 +128,7 @@ html[data-color-scheme="dark"] {
 	--serp-preview: #bdc1c6;
 	--serp-preview-title: #8ab4f8;
 	--nested-bg: #1e2024;
+	--search-field-bg: rgba(27, 29, 33, .3);
 }
 
 html[data-color-scheme="dark"] .color-scheme--light, .color-scheme--dark {

@@ -425,6 +425,14 @@
         <source>Hide the page in the navigation menu.</source>
         <target>Скрыть страницу в меню навигации.</target>
       </trans-unit>
+      <trans-unit id="tl_page.guests.0">
+        <source>Hide if logged in</source>
+        <target>Скрыть, при входе в систему</target>
+      </trans-unit>
+      <trans-unit id="tl_page.guests.1">
+        <source>Hide the page in the navigation menu if a member is logged in.</source>
+        <target>Скрыть страницу в меню навигации, если участник вошел в систему.</target>
+      </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
         <target>Клавиша быстрого доступа</target>
