@@ -626,4 +626,54 @@ class StringUtilTest extends TestCase
             StringUtil::insertTagToSrc('Foo <img src="{{file::##simple-token##|urlattr}}" /> Bar'),
         );
     }
+
+    /**
+     * @dataProvider basicEntitiesProvider
+     */
+    public function testConvertsBasicEntities(array|string $string, array|string $expected): void
+    {
+        $this->assertSame($expected, StringUtil::convertBasicEntities($string));
+    }
+
+    public function basicEntitiesProvider(): iterable
+    {
+        yield 'String value' => [
+            'foo&amp;bar',
+            'foo[&]bar',
+        ];
+
+        yield 'InputUnit field' => [
+            [
+                'unit' => 'h2',
+                'value' => '&lt;strong&gt;',
+            ],
+            [
+                'unit' => 'h2',
+                'value' => '[lt]strong[gt]',
+            ],
+        ];
+
+        yield 'KeyValue wizard' => [
+            [
+                [
+                    'key' => 'sum',
+                    'value' => '10&nbsp;€',
+                ],
+                [
+                    'key' => 'name',
+                    'value' => 'Con&shy;tao',
+                ],
+            ],
+            [
+                [
+                    'key' => 'sum',
+                    'value' => '10[nbsp]€',
+                ],
+                [
+                    'key' => 'name',
+                    'value' => 'Con[-]tao',
+                ],
+            ],
+        ];
+    }
 }

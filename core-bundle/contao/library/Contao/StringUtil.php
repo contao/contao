@@ -228,7 +228,19 @@ class StringUtil
 	 */
 	public static function convertBasicEntities($strBuffer)
 	{
-		return str_replace(array('&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;'), array('[&]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]'), $strBuffer);
+		$search = array('&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;');
+		$replace = array('[&]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]');
+
+		if (\is_array($strBuffer))
+		{
+			array_walk_recursive($strBuffer, static fn(&$value) => $value = str_replace($search, $replace, $value));
+		}
+		else
+		{
+			$strBuffer = str_replace($search, $replace, $strBuffer);
+		}
+
+		return $strBuffer;
 	}
 
 	/**
