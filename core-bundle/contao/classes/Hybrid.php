@@ -10,9 +10,7 @@
 
 namespace Contao;
 
-use Contao\ContentModel;
 use Contao\Model\Collection;
-use Contao\ModuleModel;
 
 /**
  * Parent class for objects that can be modules or content elements.
