@@ -398,6 +398,18 @@ class ContentModel extends Model
 	 */
 	protected static $strTable = 'tl_content';
 
+	public function __get($strKey)
+	{
+		if ($strKey === 'typePrefix')
+		{
+			trigger_deprecation('contao/core-bundle', '5.6', 'The dynamic "typePrefix" property has been deprecated and will not be set anymore in Contao 6.');
+
+			return parent::__get($strKey) ?? 'ce_';
+		}
+
+		return parent::__get($strKey);
+	}
+
 	/**
 	 * Find all published content elements by their parent ID and parent table
 	 *

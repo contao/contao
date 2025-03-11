@@ -10,7 +10,9 @@
 
 namespace Contao;
 
+use Contao\ContentModel;
 use Contao\Model\Collection;
+use Contao\ModuleModel;
 
 /**
  * Parent class for objects that can be modules or content elements.
@@ -149,7 +151,12 @@ abstract class Hybrid extends Frontend
 		}
 
 		$this->cssID = $cssID;
-		$this->typePrefix = $objElement->typePrefix;
+		$this->typePrefix = match (true)
+		{
+			$this->objParent instanceof ContentModel => 'ce_',
+			$this->objParent instanceof ModuleModel => 'mod_',
+			default => '',
+		};
 
 		$arrHeadline = StringUtil::deserialize($objElement->headline);
 		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] ?? '' : $arrHeadline;
