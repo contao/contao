@@ -79,23 +79,6 @@ class MaintenanceModeCommandTest extends ContaoTestCase
         $this->assertStringContainsString('[OK] Maintenance mode enabled', $commandTester->getDisplay(true));
     }
 
-    private function mockTwigLoader(Environment&MockObject $twig, string $expectedTemplateName): void
-    {
-        $serviceUnavailable = '@ContaoCore/Error/service_unavailable.html.twig';
-
-        if ($expectedTemplateName === $serviceUnavailable) {
-            $loader = $this->createMock(LoaderInterface::class);
-            $loader
-                ->expects($this->once())
-                ->method('exists')
-                ->with('@ContaoCore/Error/service_unavailable.html.twig')
-                ->willReturn(true)
-            ;
-
-            $twig->method('getLoader')->willReturn($loader);
-        }
-    }
-
     public function testDisable(): void
     {
         $filesystem = $this->mockFilesystem();
@@ -117,6 +100,26 @@ class MaintenanceModeCommandTest extends ContaoTestCase
         $commandTester->execute(['state' => 'disable']);
 
         $this->assertStringContainsString('[OK] Maintenance mode disabled', $commandTester->getDisplay(true));
+    }
+
+    private function mockTwigLoader(Environment&MockObject $twig, string $expectedTemplateName): void
+    {
+        $serviceUnavailable = '@ContaoCore/Error/service_unavailable.html.twig';
+
+        if ($expectedTemplateName === $serviceUnavailable) {
+            $loader = $this->createMock(LoaderInterface::class);
+            $loader
+                ->expects($this->once())
+                ->method('exists')
+                ->with('@ContaoCore/Error/service_unavailable.html.twig')
+                ->willReturn(true)
+            ;
+
+            $twig
+                ->method('getLoader')
+                ->willReturn($loader)
+            ;
+        }
     }
 
     public function testOutputIfEnabled(): void
