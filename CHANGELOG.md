@@ -2,6 +2,17 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.29] (2025-03-12)
+
+**Fixed issues:**
+
+- [#8186] Correctly set the tree root if `showRootTrails` is not enabled ([aschempp])
+- [#8176] Replace newsletter insert tags in front end scope ([ausi])
+- [#8173] Only add the `pid` and `sorting` fields in edit/override multiple mode for admins ([leofeyer])
+- [#8172] Also show the edit-all operation if a table is only sortable ([aschempp])
+- [#8179] Add the missing `scroll-offset#store` action to the `all` button ([zoglo])
+- [#8181] Show errors for failed elements in the back end ([ausi])
+
 ## [5.3.28] (2025-03-05)
 
 **Fixed issues:**
@@ -614,6 +625,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.29]: https://github.com/contao/contao/releases/tag/5.3.29
 [5.3.28]: https://github.com/contao/contao/releases/tag/5.3.28
 [5.3.27]: https://github.com/contao/contao/releases/tag/5.3.27
 [5.3.26]: https://github.com/contao/contao/releases/tag/5.3.26
@@ -1100,4 +1112,10 @@ This project adheres to [Semantic Versioning].
 [#8161]: https://github.com/contao/contao/pull/8161
 [#8165]: https://github.com/contao/contao/pull/8165
 [#8167]: https://github.com/contao/contao/pull/8167
+[#8172]: https://github.com/contao/contao/pull/8172
+[#8173]: https://github.com/contao/contao/pull/8173
 [#8175]: https://github.com/contao/contao/pull/8175
+[#8176]: https://github.com/contao/contao/pull/8176
+[#8179]: https://github.com/contao/contao/pull/8179
+[#8181]: https://github.com/contao/contao/pull/8181
+[#8186]: https://github.com/contao/contao/pull/8186
