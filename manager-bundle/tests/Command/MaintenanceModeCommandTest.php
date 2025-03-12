@@ -173,11 +173,11 @@ class MaintenanceModeCommandTest extends ContaoTestCase
     public static function enableProvider(): iterable
     {
         yield 'Test defaults' => [
-            '@Contao/error/service_unavailable.html.twig',
+            '@ContaoCore/Error/service_unavailable.html.twig',
             [
                 'statusCode' => 503,
                 'language' => 'en',
-                'template' => '@Contao/error/service_unavailable.html.twig',
+                'template' => '@ContaoCore/Error/service_unavailable.html.twig',
                 'defaultLabels' => [],
             ],
         ];
