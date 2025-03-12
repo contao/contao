@@ -77,8 +77,9 @@ class MaintenanceModeCommand extends Command
 
     private function enable(string $templateName, string $templateVars): void
     {
-        if (!$this->twig->getLoader()->exists($templateName)) {
-            $templateName = '@Contao/error/service_unavailable.html.twig';
+        // Change the error template namespace (see #8195)
+        if (str_starts_with($templateName, '@ContaoCore/Error') && !$this->twig->getLoader()->exists($templateName)) {
+            $templateName = str_replace('@ContaoCore/Error', '@Contao/error', $templateName);
         }
 
         // Render the template and write it to maintenance.html

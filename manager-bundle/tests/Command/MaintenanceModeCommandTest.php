@@ -21,6 +21,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
+use Twig\Loader\LoaderInterface;
 
 class MaintenanceModeCommandTest extends ContaoTestCase
 {
@@ -37,6 +38,9 @@ class MaintenanceModeCommandTest extends ContaoTestCase
     public function testEnable(string $expectedTemplateName, array $expectedTemplateVars, string|null $customTemplateName = null, string|null $customTemplateVars = null): void
     {
         $twig = $this->mockEnvironment();
+
+        $this->mockTwigLoader($twig, $expectedTemplateName);
+
         $twig
             ->expects($this->once())
             ->method('render')
@@ -73,6 +77,23 @@ class MaintenanceModeCommandTest extends ContaoTestCase
         $commandTester->execute($params);
 
         $this->assertStringContainsString('[OK] Maintenance mode enabled', $commandTester->getDisplay(true));
+    }
+
+    private function mockTwigLoader(Environment&MockObject $twig, string $expectedTemplateName): void
+    {
+        $serviceUnavailable = '@ContaoCore/Error/service_unavailable.html.twig';
+
+        if ($expectedTemplateName === $serviceUnavailable) {
+            $loader = $this->createMock(LoaderInterface::class);
+            $loader
+                ->expects($this->once())
+                ->method('exists')
+                ->with('@ContaoCore/Error/service_unavailable.html.twig')
+                ->willReturn(true)
+            ;
+
+            $twig->method('getLoader')->willReturn($loader);
+        }
     }
 
     public function testDisable(): void
@@ -173,11 +194,11 @@ class MaintenanceModeCommandTest extends ContaoTestCase
     public static function enableProvider(): iterable
     {
         yield 'Test defaults' => [
-            '@Contao/error/service_unavailable.html.twig',
+            '@ContaoCore/Error/service_unavailable.html.twig',
             [
                 'statusCode' => 503,
                 'language' => 'en',
-                'template' => '@Contao/error/service_unavailable.html.twig',
+                'template' => '@ContaoCore/Error/service_unavailable.html.twig',
                 'defaultLabels' => [],
             ],
         ];
