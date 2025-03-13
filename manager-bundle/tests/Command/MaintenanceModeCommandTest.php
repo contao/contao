@@ -39,7 +39,22 @@ class MaintenanceModeCommandTest extends ContaoTestCase
     {
         $twig = $this->mockEnvironment();
 
-        $this->mockTwigLoader($twig, $expectedTemplateName);
+        $serviceUnavailable = '@ContaoCore/Error/service_unavailable.html.twig';
+
+        if ($expectedTemplateName === $serviceUnavailable) {
+            $loader = $this->createMock(LoaderInterface::class);
+            $loader
+                ->expects($this->once())
+                ->method('exists')
+                ->with($serviceUnavailable)
+                ->willReturn(true)
+            ;
+
+            $twig
+                ->method('getLoader')
+                ->willReturn($loader)
+            ;
+        }
 
         $twig
             ->expects($this->once())
@@ -209,26 +224,6 @@ class MaintenanceModeCommandTest extends ContaoTestCase
             '@CustomBundle/maintenance.html.twig',
             '{"language":"de", "foo": "bar"}',
         ];
-    }
-
-    private function mockTwigLoader(Environment&MockObject $twig, string $expectedTemplateName): void
-    {
-        $serviceUnavailable = '@ContaoCore/Error/service_unavailable.html.twig';
-
-        if ($expectedTemplateName === $serviceUnavailable) {
-            $loader = $this->createMock(LoaderInterface::class);
-            $loader
-                ->expects($this->once())
-                ->method('exists')
-                ->with('@ContaoCore/Error/service_unavailable.html.twig')
-                ->willReturn(true)
-            ;
-
-            $twig
-                ->method('getLoader')
-                ->willReturn($loader)
-            ;
-        }
     }
 
     private function mockFilesystem(): Filesystem&MockObject
