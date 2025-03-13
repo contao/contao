@@ -37,24 +37,18 @@ class MaintenanceModeCommandTest extends ContaoTestCase
      */
     public function testEnable(string $expectedTemplateName, array $expectedTemplateVars, string|null $customTemplateName = null, string|null $customTemplateVars = null): void
     {
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->expects('@ContaoCore/Error/service_unavailable.html.twig' === $expectedTemplateName ? $this->once() : $this->never())
+            ->method('exists')
+            ->willReturn(true)
+        ;
+
         $twig = $this->mockEnvironment();
-
-        $serviceUnavailable = '@ContaoCore/Error/service_unavailable.html.twig';
-
-        if ($expectedTemplateName === $serviceUnavailable) {
-            $loader = $this->createMock(LoaderInterface::class);
-            $loader
-                ->expects($this->once())
-                ->method('exists')
-                ->with($serviceUnavailable)
-                ->willReturn(true)
-            ;
-
-            $twig
-                ->method('getLoader')
-                ->willReturn($loader)
-            ;
-        }
+        $twig
+            ->method('getLoader')
+            ->willReturn($loader)
+        ;
 
         $twig
             ->expects($this->once())
