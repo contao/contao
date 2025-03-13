@@ -21,6 +21,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
+use Twig\Loader\LoaderInterface;
 
 class MaintenanceModeCommandTest extends ContaoTestCase
 {
@@ -36,7 +37,19 @@ class MaintenanceModeCommandTest extends ContaoTestCase
      */
     public function testEnable(string $expectedTemplateName, array $expectedTemplateVars, string|null $customTemplateName = null, string|null $customTemplateVars = null): void
     {
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->expects('@ContaoCore/Error/service_unavailable.html.twig' === $expectedTemplateName ? $this->once() : $this->never())
+            ->method('exists')
+            ->willReturn(true)
+        ;
+
         $twig = $this->mockEnvironment();
+        $twig
+            ->method('getLoader')
+            ->willReturn($loader)
+        ;
+
         $twig
             ->expects($this->once())
             ->method('render')
