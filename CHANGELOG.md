@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.5.5] (2025-03-13)
+
+**Fixed issues:**
+
+- [#8195] Adjust the `service_unavailable` namespace for the maintenance mode ([zoglo])
+
 ## [5.5.4] (2025-03-12)
 
 **Fixed issues:**
@@ -202,6 +208,7 @@ This project adheres to [Semantic Versioning].
 - [#7582] Add PostCSS as described in Symfony Encore ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.5.5]: https://github.com/contao/contao/releases/tag/5.5.5
 [5.5.4]: https://github.com/contao/contao/releases/tag/5.5.4
 [5.5.3]: https://github.com/contao/contao/releases/tag/5.5.3
 [5.5.2]: https://github.com/contao/contao/releases/tag/5.5.2
@@ -369,3 +376,4 @@ This project adheres to [Semantic Versioning].
 [#8160]: https://github.com/contao/contao/pull/8160
 [#8174]: https://github.com/contao/contao/pull/8174
 [#8185]: https://github.com/contao/contao/pull/8185
+[#8195]: https://github.com/contao/contao/pull/8195
