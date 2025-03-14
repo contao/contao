@@ -31,9 +31,7 @@ class MessageListener
             return;
         }
 
-        // In case Doctrine is used as message broker, we want to close the connection when
-        // the worker is idle. Actually, this also seems useful when Doctrine is not used
-        // as message broker anyway to prevent dangling connections.
+        // Close database connection when the worker is idle (#8199)
         $this->connection->close();
     }
 
