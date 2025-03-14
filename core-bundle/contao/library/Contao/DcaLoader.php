@@ -84,8 +84,7 @@ class DcaLoader extends Controller
 
 	/**
 	 * DCA loading depends on the current request. Switching the request sets or
-	 * resets the global DCA array and makes it possible to (re)load a DCA once
-	 * again.
+	 * resets the global DCA array and makes it possible to (re)load a DCA.
 	 *
 	 * @internal
 	 */
