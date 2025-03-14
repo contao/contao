@@ -22,7 +22,7 @@ class MessageListener
 {
     public function __construct(
         private readonly LoggerInterface $logger,
-        private readonly Connection $connection
+        private readonly Connection $connection,
     ) {
     }
 
