@@ -1,6 +1,6 @@
 export class TurboStreamConnection {
     _abortController = null;
-    _abortSignal = { reason: 'The request was substituted.' }
+    _abortSignal = { reason: 'The request was substituted.' };
 
     /**
      * Requests a stream response using GET and lets Turbo handle it.
@@ -29,7 +29,7 @@ export class TurboStreamConnection {
             params = {
                 ...params,
                 signal: this._abortController.signal,
-            }
+            };
         }
 
         let response;
@@ -60,7 +60,7 @@ export class TurboStreamConnection {
             return;
         }
 
-        const html = await response.text()
+        const html = await response.text();
         Turbo.renderStreamMessage(html);
     }
 
