@@ -4,7 +4,7 @@ export default class extends Controller {
     static targets = ['message'];
 
     messageTargetConnected(el) {
-        if(!el.querySelector('button.close')) {
+        if (!el.querySelector('button.close')) {
             setTimeout(() => this._hide(el), 5000);
         }
     }

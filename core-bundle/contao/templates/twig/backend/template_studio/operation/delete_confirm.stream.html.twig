@@ -7,9 +7,7 @@
     {%- endset %}
 
     {% block content %}
-        <p class="description description--warning">
-            {{ 'dialog.delete.confirm'|trans([identifier_token])|raw }}
-        </p>
+        <p class="description description--warning">{{ 'dialog.delete.confirm'|trans([identifier_token])|raw }}</p>
     {% endblock %}
 
     {% block buttons %}

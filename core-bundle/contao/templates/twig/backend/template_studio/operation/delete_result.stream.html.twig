@@ -11,10 +11,10 @@
 {% endembed %}
 
 {% if was_last %}
-    {# Close tab #}
+    {# Close the tab #}
     <turbo-stream action="remove" target="template-studio--tab_{{ identifier }}"></turbo-stream>
 {% else %}
-    {# Reload tab #}
+    {# Reload the tab #}
     {{ render(path('_contao_template_studio_editor_tab.stream', {identifier})) }}
 {% endif %}
 
