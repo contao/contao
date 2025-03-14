@@ -184,7 +184,7 @@ class ContentUrlGenerator implements ResetInterface, RequestContextAwareInterfac
             $metadata = null;
         }
 
-        if (!$metadata) {
+        if (null === $metadata) {
             return $content::class.'->'.spl_object_id($content);
         }
 
