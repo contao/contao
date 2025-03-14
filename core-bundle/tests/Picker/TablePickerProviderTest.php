@@ -724,11 +724,7 @@ class TablePickerProviderTest extends ContaoTestCase
         $queryBuilder
             ->expects($this->once())
             ->method('select')
-<<<<<<< HEAD
-            ->with(['id'])
-=======
             ->with('id', 'pid')
->>>>>>> b20496fc2d (fix TablePickerProviderTest)
             ->willReturnSelf()
         ;
 

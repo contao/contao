@@ -939,7 +939,7 @@ class DbafsTest extends TestCase
             ->expects($this->exactly(3))
             ->method('update')
             ->willReturnCallback(
-                function (string $table, array $update, array $criteria): int|string {
+                function (string $table, array $update, array $criteria): int {
                     $this->assertSame('tl_files', $table);
 
                     $file = $criteria['path'] ?? null;
@@ -955,7 +955,7 @@ class DbafsTest extends TestCase
                     if ('file1' === $file) {
                         $this->assertSame('file2.txt', $update['path']);
 
-                        return;
+                        return 1;
                     }
 
                     if ('new.txt' === $file) {
