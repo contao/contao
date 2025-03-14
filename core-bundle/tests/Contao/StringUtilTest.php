@@ -707,21 +707,21 @@ class StringUtilTest extends TestCase
             [
                 [
                     'key' => 'sum',
-                    'value' => 'Con&shy;tao',
+                    'value' => '10[nbsp]€',
                 ],
                 [
                     'key' => 'name',
-                    'value' => '10&nbsp;€',
+                    'value' => 'Con[-]tao',
                 ],
             ],
             [
                 [
                     'key' => 'sum',
-                    'value' => 'Con[-]tao',
+                    'value' => '10&nbsp;€',
                 ],
                 [
                     'key' => 'name',
-                    'value' => '10[nbsp]€',
+                    'value' => 'Con&shy;tao',
                 ],
             ],
         ];
