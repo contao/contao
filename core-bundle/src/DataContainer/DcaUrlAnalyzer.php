@@ -28,8 +28,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class DcaUrlAnalyzer
 {
-    private Request $request;
-
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly RequestStack $requestStack,
@@ -37,6 +35,7 @@ class DcaUrlAnalyzer
         private readonly RouterInterface $router,
         private readonly TranslatorBagInterface&TranslatorInterface $translator,
         private readonly RecordLabeler $recordLabeler,
+        private readonly DcaRequestSwitcher $dcaRequestSwitcher,
     ) {
     }
 
@@ -45,15 +44,9 @@ class DcaUrlAnalyzer
      */
     public function getCurrentTableId(Request|string|null $request = null): array
     {
-        if (\is_string($request)) {
-            $this->request = Request::create($request);
-        } elseif ($request instanceof Request) {
-            $this->request = $request;
-        } elseif (!$this->request = $this->requestStack->getCurrentRequest()) {
-            throw new \LogicException('Unable to retrieve DCA information from empty request stack.');
-        }
+        $request = $this->resolveRequest($request);
 
-        return $this->findTableAndId();
+        return $this->dcaRequestSwitcher->runWithRequest($request, fn (): array => $this->findTableAndId());
     }
 
     /**
@@ -61,7 +54,89 @@ class DcaUrlAnalyzer
      */
     public function getTrail(Request|string|null $request = null): array
     {
-        [$table, $id] = $this->getCurrentTableId($request);
+        return $this->dcaRequestSwitcher->runWithRequest(
+            $this->resolveRequest($request),
+            fn () => $this->doGetTrail(...$this->findTableAndId()),
+        );
+    }
+
+    public function getEditUrl(string $table, int $id): string|null
+    {
+        $do = $this->findModuleFromTableId($table, $id, null);
+
+        if (!$do) {
+            return null;
+        }
+
+        $query = [
+            'do' => $do,
+            'id' => $id,
+            'table' => $table,
+            'act' => 'edit',
+        ];
+
+        return $this->router->generate('contao_backend', $query);
+    }
+
+    public function getViewUrl(string $table, int $id): string|null
+    {
+        $do = $this->findModuleFromTableId($table, $id, null);
+
+        if (!$do) {
+            return null;
+        }
+
+        $query = $this->dcaRequestSwitcher->runWithRequest(
+            new Request(['do' => $do]),
+            function () use ($table, $id, $do): array {
+                [$ptable, $pid] = $this->findParentFromRecord($table, $id) ?? [null, null];
+
+                $query = [
+                    'do' => $do,
+                    'table' => $table,
+                    'ptable' => $ptable === $table ? $ptable : null,
+                    'id' => $pid,
+                ];
+
+                (new DcaLoader($table))->load();
+                $currentRecord = $this->getCurrentRecord($id, $table);
+
+                // Select the parent node
+                if (
+                    \in_array(
+                        $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null,
+                        [DataContainer::MODE_TREE_EXTENDED, DataContainer::MODE_TREE],
+                        true,
+                    )
+                ) {
+                    $query['pn'] = (int) ($currentRecord['pid'] ?? null);
+                }
+
+                return $query;
+            },
+        );
+
+        return $this->router->generate('contao_backend', $query);
+    }
+
+    private function resolveRequest(Request|string|null $request): Request
+    {
+        if (\is_string($request)) {
+            return Request::create($request);
+        }
+
+        if ($request instanceof Request) {
+            return $request;
+        }
+
+        return $this->requestStack->getCurrentRequest() ?? throw new \LogicException('Unable to retrieve DCA information from empty request stack.');
+    }
+
+    /**
+     * @return list<array{url: string, label: string}>
+     */
+    private function doGetTrail(string|null $table, int|null $id): array
+    {
         $do = $this->findGet('do');
 
         if (!$table || !$id) {
@@ -126,61 +201,9 @@ class DcaUrlAnalyzer
         return array_reverse($links);
     }
 
-    public function getEditUrl(string $table, int $id): string|null
-    {
-        $do = $this->findModuleFromTableId($table, $id, null);
-
-        if (!$do) {
-            return null;
-        }
-
-        $query = [
-            'do' => $do,
-            'id' => $id,
-            'table' => $table,
-            'act' => 'edit',
-        ];
-
-        return $this->router->generate('contao_backend', $query);
-    }
-
-    public function getViewUrl(string $table, int $id): string|null
-    {
-        $do = $this->findModuleFromTableId($table, $id, null);
-
-        if (!$do) {
-            return null;
-        }
-
-        [$ptable, $pid] = $this->findParentFromRecord($table, $id) ?? [null, null];
-
-        $query = [
-            'do' => $do,
-            'table' => $table,
-            'ptable' => $ptable === $table ? $ptable : null,
-            'id' => $pid,
-        ];
-
-        (new DcaLoader($table))->load();
-        $currentRecord = $this->getCurrentRecord($id, $table);
-
-        // Select the parent node
-        if (
-            \in_array(
-                $GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null,
-                [DataContainer::MODE_TREE_EXTENDED, DataContainer::MODE_TREE],
-                true,
-            )
-        ) {
-            $query['pn'] = (int) ($currentRecord['pid'] ?? null);
-        }
-
-        return $this->router->generate('contao_backend', $query);
-    }
-
     private function findGet(string $key): string|null
     {
-        $value = $this->framework->getAdapter(Input::class)->findGet($key, $this->request);
+        $value = $this->framework->getAdapter(Input::class)->findGet($key);
 
         return \is_string($value) ? $value : null;
     }

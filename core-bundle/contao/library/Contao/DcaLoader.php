@@ -10,6 +10,12 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Config\Dumper\CombinedFileDumper;
+use Contao\CoreBundle\Config\Loader\PhpFileLoader;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Path;
+use Symfony\Component\HttpFoundation\Request;
+
 /**
  * Loads a set of DCA files
  *
@@ -27,6 +33,15 @@ class DcaLoader extends Controller
 	 * @var array
 	 */
 	protected static $arrLoaded = array();
+
+	/**
+	 * @var \WeakMap<Request, array{array, array}>
+	 */
+	protected static \WeakMap $dcaByRequest;
+
+	protected static Request $nullRequest;
+
+	protected static Request|null $lastRequest = null;
 
 	/**
 	 * Table name
@@ -58,11 +73,56 @@ class DcaLoader extends Controller
 		$this->strTable = $strTable;
 	}
 
+	public static function reset(): void
+	{
+		self::$lastRequest = null;
+		self::$dcaByRequest = new \WeakMap();
+		self::$arrLoaded = array();
+
+		unset($GLOBALS['TL_DCA']);
+	}
+
+	/**
+	 * DCA loading depends on the current request. Switching the request sets or
+	 * resets the global DCA array and makes it possible to (re)load a DCA.
+	 *
+	 * @internal
+	 */
+	public static function switchToCurrentRequest(): void
+	{
+		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+
+		if (self::$lastRequest === $request)
+		{
+			return;
+		}
+
+		self::$nullRequest ??= new Request();
+		self::$dcaByRequest ??= new \WeakMap();
+		self::$dcaByRequest->offsetSet(self::$lastRequest ?? self::$nullRequest, array($GLOBALS['TL_DCA'] ?? array(), self::$arrLoaded ?? array()));
+
+		self::$lastRequest = $request;
+		$request ??= self::$nullRequest;
+
+		if (self::$dcaByRequest->offsetExists($request))
+		{
+			[$GLOBALS['TL_DCA'], self::$arrLoaded] = self::$dcaByRequest->offsetGet($request);
+			self::$dcaByRequest->offsetUnset($request);
+		}
+		else
+		{
+			self::$arrLoaded = array();
+			unset($GLOBALS['TL_DCA']);
+		}
+	}
+
 	/**
 	 * Load a set of DCA files
 	 */
 	public function load()
 	{
+		self::switchToCurrentRequest();
+
 		// Return if the data has been loaded already
 		if (isset(static::$arrLoaded['dcaFiles'][$this->strTable]))
 		{
@@ -99,12 +159,14 @@ class DcaLoader extends Controller
 	 */
 	private function loadDcaFiles()
 	{
+		$filesystem = new Filesystem();
 		$strCacheDir = System::getContainer()->getParameter('kernel.cache_dir');
+		$strCachePath = $strCacheDir . '/contao/dca/' . $this->strTable . '.php';
 
 		// Try to load from cache
-		if (file_exists($strCacheDir . '/contao/dca/' . $this->strTable . '.php'))
+		if (file_exists($strCachePath) && !System::getContainer()->getParameter('kernel.debug'))
 		{
-			include $strCacheDir . '/contao/dca/' . $this->strTable . '.php';
+			include $strCachePath;
 		}
 		else
 		{
@@ -117,9 +179,19 @@ class DcaLoader extends Controller
 				$files = array();
 			}
 
-			foreach ($files as $file)
+			if ($files)
 			{
-				include $file;
+				$dumper = new CombinedFileDumper($filesystem, new PhpFileLoader(), Path::join($strCacheDir, 'contao/dca'));
+				$dumper->dump($files, $this->strTable . '.php', array('type' => 'namespaced'));
+
+				try
+				{
+					include $strCachePath;
+				}
+				catch (\Throwable)
+				{
+					$filesystem->remove($strCachePath);
+				}
 			}
 		}
 
