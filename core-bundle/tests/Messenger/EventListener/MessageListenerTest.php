@@ -13,10 +13,13 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Messenger\EventListener;
 
 use Contao\CoreBundle\Messenger\EventListener\MessageListener;
+use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Event\WorkerMessageFailedEvent;
+use Symfony\Component\Messenger\Event\WorkerRunningEvent;
+use Symfony\Component\Messenger\Worker;
 
 class MessageListenerTest extends TestCase
 {
@@ -31,7 +34,7 @@ class MessageListenerTest extends TestCase
             ->method('error')
         ;
 
-        $listener = new MessageListener($logger);
+        $listener = new MessageListener($logger, $this->createMock(Connection::class));
         $listener->onWorkerMessageFailed($event);
     }
 
@@ -46,7 +49,35 @@ class MessageListenerTest extends TestCase
             ->with('Message "stdClass" failed: "error!"')
         ;
 
-        $listener = new MessageListener($logger);
+        $listener = new MessageListener($logger, $this->createMock(Connection::class));
         $listener->onWorkerMessageFailed($event);
+    }
+
+    public function testClosesDoctrineConnectionWhenIdle(): void
+    {
+        $event = new WorkerRunningEvent($this->createMock(Worker::class), true);
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('close')
+        ;
+
+        $listener = new MessageListener($this->createMock(LoggerInterface::class), $connection);
+        $listener->onWorkerRunning($event);
+    }
+
+    public function testDoesNotCloseDoctrineConnectionWhenNotIdle(): void
+    {
+        $event = new WorkerRunningEvent($this->createMock(Worker::class), false);
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method('close')
+        ;
+
+        $listener = new MessageListener($this->createMock(LoggerInterface::class), $connection);
+        $listener->onWorkerRunning($event);
     }
 }
