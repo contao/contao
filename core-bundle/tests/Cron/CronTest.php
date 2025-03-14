@@ -528,7 +528,7 @@ class CronTest extends TestCase
 
         $cron = new Cron(
             static fn () => $repository,
-            fn () =>$this->createEntityManagerMock(false),
+            fn () => $this->createEntityManagerMock(false),
             $this->createMock(CacheItemPoolInterface::class),
         );
 
@@ -553,7 +553,8 @@ class CronTest extends TestCase
         $entityManager = $this->createMock(EntityManagerInterface::class);
         $entityManager
             ->method('getConnection')
-            ->willReturn($connection);
+            ->willReturn($connection)
+        ;
 
         return $entityManager;
     }

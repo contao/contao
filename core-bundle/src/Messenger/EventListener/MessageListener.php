@@ -20,8 +20,10 @@ use Symfony\Component\Messenger\Event\WorkerRunningEvent;
 
 class MessageListener
 {
-    public function __construct(private readonly LoggerInterface $logger, private readonly Connection $connection)
-    {
+    public function __construct(
+        private readonly LoggerInterface $logger,
+        private readonly Connection $connection
+    ) {
     }
 
     #[AsEventListener]
