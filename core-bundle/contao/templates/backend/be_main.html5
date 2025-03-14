@@ -54,6 +54,11 @@
           <?= $this->headerMenu ?>
         </div>
       </header>
+
+      <?php $this->block('header_outlets'); ?>
+        <?php $this->insert('@Contao/backend/component/message/_outlet.html.twig') ?>
+        <?php $this->insert('@Contao/backend/component/dialog/_outlet.html.twig') ?>
+      <?php $this->block('header_outlets'); ?>
     <?php endif; ?>
   <?php $this->endblock(); ?>
 

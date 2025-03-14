@@ -11,7 +11,7 @@ export default class extends Controller {
         blockInfoUrl: String,
     };
 
-    static targets = ['themeSelector', 'tabs', 'editor', 'editorAnnotations', 'dialog'];
+    static targets = ['themeSelector', 'tabs', 'editor', 'editorAnnotations'];
 
     connect() {
         // Subscribe to events dispatched by the editors
@@ -65,16 +65,6 @@ export default class extends Controller {
             .get(el.closest('*[data-contao--template-studio-target="editor"]'))
             ?.setAnnotationsData(JSON.parse(el.innerText))
         ;
-    }
-
-    dialogTargetConnected(el) {
-        el.showModal();
-        el.querySelector('input')?.focus();
-        el.querySelector('input[type="text"]')?.select();
-
-        el.querySelector('form')?.addEventListener('submit', () => {
-            el.remove();
-        })
     }
 
     colorChange(event) {

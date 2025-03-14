@@ -37,7 +37,7 @@ export class TurboStreamConnection {
         try {
             response = await fetch(this.constructor.buildURL(url, query_params), params);
         } catch (e) {
-            if(e !== this._abortSignal) {
+            if (e !== this._abortSignal) {
                 if (window.console) {
                     console.error(`There was an error fetching the Turbo stream response from "${url}"`);
                 }

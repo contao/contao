@@ -315,6 +315,14 @@ trait TemplateInheritance
 	 */
 	public function insert($name, array|null $data=null)
 	{
+		// Allow inserting Twig templates (similar to "include" in Twig)
+		if (\is_string($name) && str_ends_with($name, '.html.twig'))
+		{
+			echo System::getContainer()->get('twig')->render($name, $data ?? array());
+
+			return;
+		}
+
 		if ($this instanceof Template)
 		{
 			/** @var Template $tpl */
