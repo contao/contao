@@ -635,7 +635,7 @@ class StringUtilTest extends TestCase
         $this->assertSame($expected, StringUtil::convertBasicEntities($string));
     }
 
-    public function convertBasicEntitiesProvider(): iterable
+    public static function convertBasicEntitiesProvider(): iterable
     {
         yield 'String value' => [
             'foo&amp;bar',
@@ -685,7 +685,7 @@ class StringUtilTest extends TestCase
         $this->assertSame($expected, StringUtil::restoreBasicEntities($string));
     }
 
-    public function restoreBasicEntitiesProvider(): iterable
+    public static function restoreBasicEntitiesProvider(): iterable
     {
         yield 'String value' => [
             'foo[&]bar',

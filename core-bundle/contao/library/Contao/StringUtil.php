@@ -228,7 +228,7 @@ class StringUtil
 	 */
 	public static function convertBasicEntities($strBuffer)
 	{
-		$convert = static function (&$value)
+		$replace = static function (&$value)
 		{
 			if (\is_string($value))
 			{
@@ -238,11 +238,11 @@ class StringUtil
 
 		if (\is_array($strBuffer))
 		{
-			array_walk_recursive($strBuffer, static fn(&$value) => $convert($value));
+			array_walk_recursive($strBuffer, static fn(&$value) => $replace($value));
 		}
 		else
 		{
-			$convert($strBuffer);
+			$replace($strBuffer);
 		}
 
 		return $strBuffer;
@@ -257,7 +257,7 @@ class StringUtil
 	 */
 	public static function restoreBasicEntities($strBuffer)
 	{
-		$convert = static function (&$value)
+		$replace = static function (&$value)
 		{
 			if (\is_string($value))
 			{
@@ -267,11 +267,11 @@ class StringUtil
 
 		if (\is_array($strBuffer))
 		{
-			array_walk_recursive($strBuffer, static fn(&$value) => $convert($value));
+			array_walk_recursive($strBuffer, static fn(&$value) => $replace($value));
 		}
 		else
 		{
-			$convert($strBuffer);
+			$replace($strBuffer);
 		}
 
 		return $strBuffer;
