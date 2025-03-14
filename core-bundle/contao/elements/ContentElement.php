@@ -99,7 +99,6 @@ use Contao\Model\Collection;
  * @property string|integer    $start
  * @property string|integer    $stop
  *
- * @property string  $typePrefix
  * @property string  $classes
  * @property integer $origId
  * @property string  $hl
