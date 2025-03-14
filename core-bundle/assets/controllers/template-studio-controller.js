@@ -1,24 +1,26 @@
 import { Controller } from '@hotwired/stimulus';
 import { TwigEditor } from '../modules/twig-editor';
+import { TurboStreamConnection } from '../modules/turbo-stream-connection';
 
 export default class extends Controller {
     editors = new Map();
+    turboStreamConnection = new TurboStreamConnection();
 
     static values = {
         followUrl: String,
         blockInfoUrl: String,
     };
 
-    static targets = ['themeSelector', 'tabs', 'editor', 'editorAnnotations', 'dialog'];
+    static targets = ['themeSelector', 'tabs', 'editor', 'editorAnnotations'];
 
     connect() {
         // Subscribe to events dispatched by the editors
         this.element.addEventListener('twig-editor:lens:follow', event => {
-            this._visit(this.followUrlValue, {name: event.detail.name});
+            this.turboStreamConnection.get(this.followUrlValue, {name: event.detail.name}, true);
         });
 
         this.element.addEventListener('twig-editor:lens:block-info', event => {
-            this._visit(this.blockInfoUrlValue, event.detail);
+            this.turboStreamConnection.get(this.blockInfoUrlValue, event.detail, true);
         });
 
         this.element.addEventListener('turbo:submit-start', event => {
@@ -65,16 +67,6 @@ export default class extends Controller {
         ;
     }
 
-    dialogTargetConnected(el) {
-        el.showModal();
-        el.querySelector('input')?.focus();
-        el.querySelector('input[type="text"]')?.select();
-
-        el.querySelector('form')?.addEventListener('submit', () => {
-            el.remove();
-        })
-    }
-
     colorChange(event) {
         this.editors.forEach(editor => {
             editor.setColorScheme(event.detail.mode);
@@ -118,35 +110,5 @@ export default class extends Controller {
         }
 
         return null;
-    }
-
-    async _visit(url, params) {
-        if (params !== null) {
-            url += '?' + new URLSearchParams(params).toString();
-        }
-
-        const response = await fetch(url, {
-            method: 'get',
-            headers: {
-                'Accept': 'text/vnd.turbo-stream.html',
-            }
-        });
-
-        if (response.redirected) {
-            document.location = response.url;
-
-            return;
-        }
-
-        if (!response.headers.get('content-type').startsWith('text/vnd.turbo-stream.html') || response.status >= 300) {
-            if (window.console) {
-                console.error(`There was an error processing the Turbo stream response from "${url}"`);
-            }
-
-            return;
-        }
-
-       const html = await response.text()
-       Turbo.renderStreamMessage(html);
     }
 }

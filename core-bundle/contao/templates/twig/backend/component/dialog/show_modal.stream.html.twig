@@ -1,0 +1,8 @@
+{% use "@Contao/backend/component/dialog/_dialog.html.twig" %}
+
+{% set id = id|default('dialog') %}
+<turbo-stream action="update" target="{{ id }}">
+    <template>
+        {{ block('dialog_component') }}
+    </template>
+</turbo-stream>

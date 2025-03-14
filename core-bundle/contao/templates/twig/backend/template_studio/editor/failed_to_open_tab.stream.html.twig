@@ -1,15 +1,11 @@
 {# Show a message #}
-<turbo-stream action="append" target="template-studio--message">
-    <template>
-        {% embed "@Contao/backend/template_studio/_message.html.twig" with {success: false} %}
-            {% trans_default_domain "contao_template_studio" %}
+{% embed "@Contao/backend/component/message/add_message.stream.html.twig" with {success: false} %}
+    {% trans_default_domain "contao_template_studio" %}
 
-            {% block content %}
-                {% set identifier_token -%}
-                    <span class="token">{{ identifier }}</span>
-                {%- endset %}
-                {{ 'message.open_tab.error'|trans([identifier_token])|raw }}
-            {% endblock %}
-        {% endembed %}
-    </template>
-</turbo-stream>
+    {% block content %}
+        {% set identifier_token -%}
+            <span class="token">{{ identifier }}</span>
+        {%- endset %}
+        {{ 'message.open_tab.error'|trans([identifier_token])|raw }}
+    {% endblock %}
+{% endembed %}

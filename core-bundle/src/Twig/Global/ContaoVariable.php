@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Global;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\PageModel;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class ContaoVariable
@@ -15,6 +17,7 @@ class ContaoVariable
         private readonly RequestStack $requestStack,
         private readonly TokenChecker $tokenChecker,
         private readonly ContaoCsrfTokenManager $tokenManager,
+        private readonly Security $security,
     ) {
     }
 
@@ -42,5 +45,12 @@ class ContaoVariable
     public function getRequest_token(): string
     {
         return $this->tokenManager->getDefaultTokenValue();
+    }
+
+    public function backend_user(): BackendUser|null
+    {
+        $user = $this->security->getUser();
+
+        return $user instanceof BackendUser ? $user : null;
     }
 }

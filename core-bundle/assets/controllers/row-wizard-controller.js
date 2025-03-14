@@ -32,7 +32,7 @@ export default class extends Controller {
     }
 
     delete(event) {
-        if(this.bodyTarget.children.length > 1) {
+        if (this.bodyTarget.children.length > 1) {
             this._getRow(event).remove();
         } else {
             this._resetInputs(this._getRow(event));
