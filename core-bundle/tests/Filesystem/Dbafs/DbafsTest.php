@@ -1125,7 +1125,7 @@ class DbafsTest extends TestCase
                         $this->assertSame('files/baz', $criteria['path']);
                         $this->assertSame('', $updates['extension']);
 
-                        return 0;
+                        return 1;
                     }
 
                     $this->assertSame('tl_files', $table);
@@ -1218,7 +1218,7 @@ class DbafsTest extends TestCase
                         $this->assertSame('a/file', $criteria['path']);
                         $this->assertSame('', $updates['extension']);
 
-                        return 0;
+                        return 1;
                     }
 
                     $this->assertSame('tl_files', $table);
