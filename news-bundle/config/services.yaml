@@ -85,6 +85,11 @@ services:
         arguments:
             - '@database_connection'
 
+    contao_news.migration.overwrite_meta:
+        class: Contao\NewsBundle\Migration\OverwriteMetaMigration
+        arguments:
+            - '@database_connection'
+
     contao_news.picker.news_provider:
         class: Contao\NewsBundle\Picker\NewsPickerProvider
         arguments:

@@ -164,7 +164,6 @@ $GLOBALS['TL_DCA']['tl_form'] = array
 		),
 		'skipEmpty' => array
 		(
-			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)

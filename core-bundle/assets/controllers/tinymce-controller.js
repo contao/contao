@@ -2,6 +2,16 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     connect() {
+        // Work around a bug in Safari where the transition to a new context
+        // causes disconnect() to be called before connect(). If the element ID
+        // is identical - which is the case when saving a record - this messes
+        // up the initialization of the editor. To prevent this, we delay the
+        // execution until the call stack has been cleared and all microtasks,
+        // i.e. disconnect() calls, have been executed.
+        queueMicrotask(() => this._connect());
+    }
+
+    _connect() {
         if (!this.element.tinymceConfig) {
             if (window.console) {
                 console.error('No TinyMCE config was attached to the DOM element, expected an expando property called "tinymceConfig".', this.element);

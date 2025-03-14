@@ -1532,6 +1532,7 @@ table.tl_listing {
 }
 
 .tl_content_right {
+	display: flex;
 	position: relative;
 	z-index: 1;
 	float: right;

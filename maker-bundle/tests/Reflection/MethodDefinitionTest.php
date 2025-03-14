@@ -19,13 +19,13 @@ use PHPUnit\Framework\TestCase;
 class MethodDefinitionTest extends TestCase
 {
     #[DataProvider('getReturnValues')]
-    public function testSetsTheCorrectMethodBody(string|null $returnType, string $body): void
+    public function testSetsTheCorrectMethodBody(string|null $returnType, string $expected, string|null $body = null): void
     {
-        $hookDefinition = new MethodDefinition($returnType, []);
+        $hookDefinition = new MethodDefinition($returnType, [], $body);
 
         $this->assertSame($returnType, $hookDefinition->getReturnType());
         $this->assertSame([], $hookDefinition->getParameters());
-        $this->assertSame($body, $hookDefinition->getBody());
+        $this->assertSame($expected, $hookDefinition->getBody());
     }
 
     public static function getReturnValues(): iterable
@@ -36,5 +36,6 @@ class MethodDefinitionTest extends TestCase
         yield ['bool', 'return true;'];
         yield [null, '// Do something'];
         yield ['Foo\Bar\Class', '// Do something'];
+        yield ['string', 'return $foo;', 'return $foo;'];
     }
 }

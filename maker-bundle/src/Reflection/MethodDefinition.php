@@ -20,6 +20,7 @@ class MethodDefinition
     public function __construct(
         private readonly string|null $returnType,
         private readonly array $parameters,
+        private readonly string|null $body = null,
     ) {
     }
 
@@ -38,6 +39,10 @@ class MethodDefinition
 
     public function getBody(): string
     {
+        if (null !== $this->body) {
+            return $this->body;
+        }
+
         return match ($this->returnType) {
             'string' => "return '';",
             '?string' => 'return null;',

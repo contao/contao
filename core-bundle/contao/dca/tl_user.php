@@ -264,7 +264,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'frontendModules' => array
 		(
-			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['FMD'],
 			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedGroups'=>true),

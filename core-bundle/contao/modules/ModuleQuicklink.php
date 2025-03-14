@@ -81,11 +81,18 @@ class ModuleQuicklink extends Module
 		$items = array();
 		$container = System::getContainer();
 		$security = $container->get('security.helper');
+		$isMember = $security->isGranted('ROLE_MEMBER');
 		$urlGenerator = $container->get('contao.routing.content_url_generator');
 
 		foreach ($objPages as $objSubpage)
 		{
 			$objSubpage->loadDetails();
+
+			// Hide the page if it is only visible to guests
+			if ($objSubpage->guests && $isMember)
+			{
+				continue;
+			}
 
 			// PageModel->groups is an array after calling loadDetails()
 			if (!$objSubpage->protected || $this->showProtected || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objSubpage->groups))
