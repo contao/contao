@@ -628,14 +628,14 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @dataProvider basicEntitiesProvider
+     * @dataProvider convertBasicEntitiesProvider
      */
     public function testConvertsBasicEntities(array|string $string, array|string $expected): void
     {
         $this->assertSame($expected, StringUtil::convertBasicEntities($string));
     }
 
-    public function basicEntitiesProvider(): iterable
+    public function convertBasicEntitiesProvider(): iterable
     {
         yield 'String value' => [
             'foo&amp;bar',
@@ -672,6 +672,56 @@ class StringUtilTest extends TestCase
                 [
                     'key' => 'name',
                     'value' => 'Con[-]tao',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider restoreBasicEntitiesProvider
+     */
+    public function testRestoresBasicEntities(array|string $string, array|string $expected): void
+    {
+        $this->assertSame($expected, StringUtil::restoreBasicEntities($string));
+    }
+
+    public function restoreBasicEntitiesProvider(): iterable
+    {
+        yield 'String value' => [
+            'foo[&]bar',
+            'foo&amp;bar',
+        ];
+
+        yield 'InputUnit field' => [
+            [
+                'unit' => 'h2',
+                'value' => '[lt]strong[gt]',
+            ],
+            [
+                'unit' => 'h2',
+                'value' => '&lt;strong&gt;',
+            ],
+        ];
+
+        yield 'KeyValue wizard' => [
+            [
+                [
+                    'key' => 'sum',
+                    'value' => 'Con&shy;tao',
+                ],
+                [
+                    'key' => 'name',
+                    'value' => '10&nbsp;€',
+                ],
+            ],
+            [
+                [
+                    'key' => 'sum',
+                    'value' => 'Con[-]tao',
+                ],
+                [
+                    'key' => 'name',
+                    'value' => '10[nbsp]€',
                 ],
             ],
         ];

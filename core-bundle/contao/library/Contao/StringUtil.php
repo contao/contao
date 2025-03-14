@@ -228,16 +228,21 @@ class StringUtil
 	 */
 	public static function convertBasicEntities($strBuffer)
 	{
-		$search = array('&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;');
-		$replace = array('[&]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]');
+		$convert = static function (&$value)
+		{
+			if (\is_string($value))
+			{
+				$value = str_replace(array('&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;'), array('[&]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]'), $value);
+			}
+		};
 
 		if (\is_array($strBuffer))
 		{
-			array_walk_recursive($strBuffer, static fn(&$value) => $value = str_replace($search, $replace, $value));
+			array_walk_recursive($strBuffer, static fn(&$value) => $convert($value));
 		}
 		else
 		{
-			$strBuffer = str_replace($search, $replace, $strBuffer);
+			$convert($strBuffer);
 		}
 
 		return $strBuffer;
@@ -252,7 +257,24 @@ class StringUtil
 	 */
 	public static function restoreBasicEntities($strBuffer)
 	{
-		return str_replace(array('[&]', '[&amp;]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]'), array('&amp;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;'), $strBuffer);
+		$convert = static function (&$value)
+		{
+			if (\is_string($value))
+			{
+				$value = str_replace(array('[&]', '[&amp;]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]'), array('&amp;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;'), $value);
+			}
+		};
+
+		if (\is_array($strBuffer))
+		{
+			array_walk_recursive($strBuffer, static fn(&$value) => $convert($value));
+		}
+		else
+		{
+			$convert($strBuffer);
+		}
+
+		return $strBuffer;
 	}
 
 	/**
