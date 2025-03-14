@@ -14,15 +14,14 @@ namespace Contao\CoreBundle\Tests\DataContainer;
 
 use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 
 class DataContainerOperationBuilderTest extends TestCase
 {
-    /**
-     * @dataProvider parsesOperationsHtmlProvider
-     */
+    #[DataProvider('parsesOperationsHtmlProvider')]
     public function testParsesOperationsHtml(string $html, array $expected): void
     {
         $twig = $this->createMock(Environment::class);
