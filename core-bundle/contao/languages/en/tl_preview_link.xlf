@@ -50,6 +50,9 @@
       <trans-unit id="tl_preview_link.share.1">
         <source>Copy the preview link ID %s to your clipboard.</source>
       </trans-unit>
+      <trans-unit id="tl_preview_link.copied_message">
+        <source>The link was copied to the clipboard.</source>
+      </trans-unit>
       <trans-unit id="tl_preview_link.url_legend">
         <source>Target URL</source>
       </trans-unit>
