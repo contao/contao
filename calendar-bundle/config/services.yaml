@@ -49,6 +49,11 @@ services:
             - '@security.helper'
             - '@contao.routing.content_url_generator'
 
+    contao_calendar.migration.overwrite_meta:
+        class: Contao\CalendarBundle\Migration\OverwriteMetaMigration
+        arguments:
+            - '@database_connection'
+
     contao_calendar.picker.event_provider:
         class: Contao\CalendarBundle\Picker\EventPickerProvider
         arguments:

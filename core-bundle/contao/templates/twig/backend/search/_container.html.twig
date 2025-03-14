@@ -3,7 +3,12 @@
 {% set search_container_attributes = attrs()
     .addClass(['backend-search', 'search--hidden'])
     .set('data-controller', 'contao--backend-search')
-    .set('data-action', 'keydown.esc@document->contao--backend-search#close click@document->contao--backend-search#documentClick')
+    .set('data-action','
+        click@document->contao--backend-search#documentClick
+        keydown.esc@document->contao--backend-search#close
+        keydown.tab@document->contao--backend-search#focusTrapNext
+        keydown.shift+tab@document->contao--backend-search#focusTrapPrev
+    ')
     .set('data-contao--backend-search-min-characters-value', '3')
     .set('data-contao--backend-search-hidden-class', 'search--hidden')
     .set('data-contao--backend-search-initial-class', 'search--initial')
@@ -21,7 +26,7 @@
     .set('placeholder', 'MSC.search'|trans)
     .set('name', 'keywords')
     .set('data-contao--backend-search-target', 'input')
-    .set('data-action', 'focus->contao--backend-search#open input->contao--backend-search#performSearch')
+    .set('data-action', 'focus->contao--backend-search#open input->contao--backend-search#performSearch blur->contao--backend-search#inputBlur')
 %}
 
 <div {{ search_container_attributes }}>
@@ -29,7 +34,9 @@
     <div class="backend-search_inner">
         <label>
             <span class="invisible">{{ 'MSC.search'|trans }}</span>
-            {{ backend_icon('search.svg') }}
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+            </svg>
             <input id="backend-search" type="text" {{ search_input_attributes }}>
         </label>
         <div class="backend-search_results-container">

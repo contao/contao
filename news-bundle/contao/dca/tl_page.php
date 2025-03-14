@@ -20,7 +20,6 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['newsArchives'] = array(
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['feedFormat'] = array(
 	'exclude' => true,
-	'filter' => true,
 	'inputType' => 'select',
 	'options' => array('rss' => 'RSS 2.0', 'atom' => 'Atom', 'json' => 'JSON'),
 	'eval' => array('tl_class' => 'w50'),

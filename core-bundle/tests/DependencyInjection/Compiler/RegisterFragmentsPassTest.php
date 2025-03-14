@@ -22,6 +22,7 @@ use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\Fragment\Reference\ContentElementReference;
 use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -315,9 +316,7 @@ class RegisterFragmentsPassTest extends TestCase
         $pass->process($container);
     }
 
-    /**
-     * @dataProvider provideTemplateNames
-     */
+    #[DataProvider('provideTemplateNames')]
     public function testSetsTemplatesInTemplatesOptionsListener(string|null $template, array $expectedCustomTemplates): void
     {
         $contentController = new Definition('App\Controller\TextController');

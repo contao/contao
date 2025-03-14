@@ -27,13 +27,12 @@ use Doctrine\DBAL\Schema\Table;
 use Doctrine\DBAL\Schema\View;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 
 class DumperTest extends ContaoTestCase
 {
-    /**
-     * @dataProvider successfulDumpProvider
-     */
+    #[DataProvider('successfulDumpProvider')]
     public function testSuccessfulDump(array $tables, array $views, array $queries, array $expectedDump): void
     {
         $backup = new Backup('backup__20211101141254.sql');
@@ -306,18 +305,15 @@ class DumperTest extends ContaoTestCase
         ;
 
         $calls = [];
-        $returns = [];
 
         foreach ($queries as $query => $results) {
-            $calls[] = [$query];
-            $returns[] = new Result(new ArrayResult($results), $connection);
+            $calls[] = [$query, [], [], null, new Result(new ArrayResult($results), $connection)];
         }
 
         $connection
             ->expects($this->exactly(\count($queries)))
             ->method('executeQuery')
-            ->withConsecutive(...$calls)
-            ->willReturnOnConsecutiveCalls(...$returns)
+            ->willReturnMap($calls)
         ;
 
         $connection

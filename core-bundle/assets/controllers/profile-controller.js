@@ -17,8 +17,6 @@ export default class extends Controller {
     }
 
     toggle(event) {
-        event.stopPropagation();
-
         this.menuTarget.classList.toggle('active');
 
         if (this.menuTarget.classList.contains('active')) {

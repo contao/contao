@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Twig\Inheritance;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Lexer;
@@ -31,9 +32,7 @@ class DynamicExtendsTokenParserTest extends TestCase
         $this->assertSame('extends', $tokenParser->getTag());
     }
 
-    /**
-     * @dataProvider provideSources
-     */
+    #[DataProvider('provideSources')]
     public function testHandlesContaoExtends(string $code, string ...$expectedStrings): void
     {
         $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
@@ -132,9 +131,7 @@ class DynamicExtendsTokenParserTest extends TestCase
         $parser->parse($tokenStream);
     }
 
-    /**
-     * @dataProvider provideSourcesWithErrors
-     */
+    #[DataProvider('provideSourcesWithErrors')]
     public function testValidatesTokenStream(string $code, string $expectedException): void
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));

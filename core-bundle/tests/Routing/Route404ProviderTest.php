@@ -19,6 +19,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Model\Collection;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Controller\RedirectController;
 use Symfony\Cmf\Component\Routing\Candidates\Candidates;
@@ -277,9 +278,7 @@ class Route404ProviderTest extends TestCase
         $this->assertSame('/de/{_url_fragment}', $route->getPath());
     }
 
-    /**
-     * @dataProvider sortRoutesProvider
-     */
+    #[DataProvider('sortRoutesProvider')]
     public function testCorrectlySortRoutes(array $expectedRoutes, array $languages, array ...$pagesData): void
     {
         $pages = [];

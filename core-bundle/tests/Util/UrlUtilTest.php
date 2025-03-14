@@ -14,12 +14,11 @@ namespace Contao\CoreBundle\Tests\Util;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\UrlUtil;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class UrlUtilTest extends TestCase
 {
-    /**
-     * @dataProvider getMakeAbsolute
-     */
+    #[DataProvider('getMakeAbsolute')]
     public function testMakeAbsolute(string $url, string $base, string $expected): void
     {
         $this->assertSame($expected, UrlUtil::makeAbsolute($url, $base));

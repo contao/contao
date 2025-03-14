@@ -71,7 +71,7 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		),
 		'operations' => array
 		(
-			'!edit',
+			'edit',
 			'delete',
 			'elements' => array
 			(
@@ -106,7 +106,8 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			(
 				'href'                => 'key=exportTheme',
 				'icon'                => 'theme_export.svg',
-				'button_callback'     => array('tl_theme', 'exportTheme')
+				'button_callback'     => array('tl_theme', 'exportTheme'),
+				'attributes'          => 'data-turbo="false"'
 			)
 		)
 	),

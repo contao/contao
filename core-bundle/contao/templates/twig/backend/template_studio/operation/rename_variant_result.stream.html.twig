@@ -1,18 +1,14 @@
 {# Show a message #}
-<turbo-stream action="append" target="template-studio--message">
-    <template>
-        {% embed "@Contao/backend/template_studio/_message.html.twig" with {success: true} %}
-            {% trans_default_domain "contao_template_studio" %}
+{% embed "@Contao/backend/component/message/add_message.stream.html.twig" with {success: true} %}
+    {% trans_default_domain "contao_template_studio" %}
 
-            {% block content %}
-                {% set new_identifier_token -%}
-                    <span class="token">{{ new_identifier }}</span>
-                {%- endset %}
-                {{ 'message.rename_variant.success'|trans([new_identifier_token])|raw }}
-            {% endblock %}
-        {% endembed %}
-    </template>
-</turbo-stream>
+    {% block content %}
+        {% set new_identifier_token -%}
+            <span class="token">{{ new_identifier }}</span>
+        {%- endset %}
+        {{ 'message.rename_variant.success'|trans([new_identifier_token])|raw }}
+    {% endblock %}
+{% endembed %}
 
 {# Close the old tab #}
 <turbo-stream action="remove" target="template-studio--tab_{{ old_identifier }}"></turbo-stream>

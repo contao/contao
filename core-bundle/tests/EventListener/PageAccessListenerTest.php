@@ -201,8 +201,10 @@ class PageAccessListenerTest extends TestCase
         $security
             ->expects($this->exactly(2))
             ->method('isGranted')
-            ->withConsecutive(['ROLE_MEMBER'], [ContaoCorePermissions::MEMBER_IN_GROUPS, [1, 2, 3]])
-            ->willReturn(true, false)
+            ->willReturnMap([
+                ['ROLE_MEMBER', null, true],
+                [ContaoCorePermissions::MEMBER_IN_GROUPS, [1, 2, 3], false],
+            ])
         ;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
@@ -236,8 +238,10 @@ class PageAccessListenerTest extends TestCase
         $security
             ->expects($this->exactly(2))
             ->method('isGranted')
-            ->withConsecutive(['ROLE_MEMBER'], [ContaoCorePermissions::MEMBER_IN_GROUPS, [-1, 1]])
-            ->willReturn(false, false)
+            ->willReturnMap([
+                ['ROLE_MEMBER', null, false],
+                [ContaoCorePermissions::MEMBER_IN_GROUPS, [-1, 1], false],
+            ])
         ;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
@@ -271,8 +275,10 @@ class PageAccessListenerTest extends TestCase
         $security
             ->expects($this->exactly(2))
             ->method('isGranted')
-            ->withConsecutive(['ROLE_MEMBER'], [ContaoCorePermissions::MEMBER_IN_GROUPS, [1, 2, 3]])
-            ->willReturn(true, true)
+            ->willReturnMap([
+                ['ROLE_MEMBER', null, true],
+                [ContaoCorePermissions::MEMBER_IN_GROUPS, [1, 2, 3], true],
+            ])
         ;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
@@ -303,8 +309,10 @@ class PageAccessListenerTest extends TestCase
         $security
             ->expects($this->exactly(2))
             ->method('isGranted')
-            ->withConsecutive(['ROLE_MEMBER'], [ContaoCorePermissions::MEMBER_IN_GROUPS, [-1, 1]])
-            ->willReturn(false, true)
+            ->willReturnMap([
+                ['ROLE_MEMBER', null, false],
+                [ContaoCorePermissions::MEMBER_IN_GROUPS, [-1, 1], true],
+            ])
         ;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class, [

@@ -43,6 +43,7 @@ use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Event\RobotsTxtEvent;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Event\SlugValidCharactersEvent;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use Symfony\Bundle\SecurityBundle\DependencyInjection\SecurityExtension;
 use Symfony\Cmf\Component\Routing\DependencyInjection\Compiler\RegisterRouteEnhancersPass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -52,9 +53,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ContaoCoreBundleTest extends TestCase
 {
-    /**
-     * @runInSeparateProcess because request attributes are static
-     */
+    #[RunInSeparateProcess]
     public function testAddsTheTurboStreamRequestFormatOnBoot(): void
     {
         $request = new Request();

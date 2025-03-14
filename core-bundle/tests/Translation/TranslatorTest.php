@@ -18,15 +18,13 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\MessageCatalogue;
 use Contao\CoreBundle\Translation\Translator;
 use Contao\System;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Translation\MessageCatalogueInterface;
 use Symfony\Component\Translation\Translator as BaseTranslator;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class TranslatorTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_LANG']);
@@ -34,9 +32,7 @@ class TranslatorTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider decoratedTranslatorDomainProvider
-     */
+    #[DataProvider('decoratedTranslatorDomainProvider')]
     public function testForwardsTheMethodCallsToTheDecoratedTranslator(string $domain): void
     {
         $originalTranslator = $this->createMock(BaseTranslator::class);
@@ -249,11 +245,16 @@ class TranslatorTest extends TestCase
             )
         ;
 
+        $expected = [['default', 'de'], ['default', 'en']];
+        $matcher = $this->exactly(2);
+
         $adapter = $this->mockAdapter(['loadLanguageFile']);
         $adapter
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('loadLanguageFile')
-            ->withConsecutive(['default', 'de'], ['default', 'en'])
+            ->with($this->callback(
+                static fn (...$args) => $args === $expected[$matcher->numberOfInvocations() - 1],
+            ))
         ;
 
         $framework = $this->mockContaoFramework([System::class => $adapter]);
@@ -267,7 +268,7 @@ class TranslatorTest extends TestCase
         $translator->trans('foobar', [], 'contao_default', 'de');
     }
 
-    private function createTranslator(TranslatorInterface|null $translator = null, ContaoFramework|null $framework = null, ResourceFinder|null $resourceFinder = null): Translator
+    private function createTranslator(TranslatorInterface|null $translator = null, ContaoFramework|null $framework = null): Translator
     {
         if (!$translator) {
             $translator = $this->createMock(BaseTranslator::class);
@@ -288,7 +289,7 @@ class TranslatorTest extends TestCase
         }
 
         $framework ??= $this->mockContaoFramework();
-        $resourceFinder ??= $this->createMock(ResourceFinder::class);
+        $resourceFinder = $this->createMock(ResourceFinder::class);
 
         return new Translator($translator, $framework, $resourceFinder);
     }

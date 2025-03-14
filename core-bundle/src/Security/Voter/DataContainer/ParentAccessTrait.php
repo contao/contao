@@ -30,10 +30,10 @@ trait ParentAccessTrait
         $pids = [];
 
         $pids[] = match (true) {
-            $action instanceof CreateAction => $action->getNewPid(),
+            $action instanceof CreateAction => (int) $action->getNewPid(),
             $action instanceof ReadAction,
             $action instanceof UpdateAction,
-            $action instanceof DeleteAction => $action->getCurrentPid(),
+            $action instanceof DeleteAction => (int) $action->getCurrentPid(),
         };
 
         if (

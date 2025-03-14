@@ -37,6 +37,7 @@ use Contao\System;
 use Contao\TemplateLoader;
 use Doctrine\DBAL\Connection;
 use Highlight\Highlighter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Filesystem;
@@ -342,9 +343,7 @@ class TwigIntegrationTest extends TestCase
         $this->assertSame($expectedOutput, $output);
     }
 
-    /**
-     * @dataProvider provideDeserializeFilterValues
-     */
+    #[DataProvider('provideDeserializeFilterValues')]
     public function testDeserializeFilter(mixed $values, string $expectedOutput): void
     {
         $templateContent = <<<'TEMPLATE'

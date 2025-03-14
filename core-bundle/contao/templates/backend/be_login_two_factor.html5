@@ -49,7 +49,7 @@
               <label for="trusted"><?= $this->trans('MSC.twoFactorTrustDevice') ?></label>
             </div>
             <div class="submit_container">
-              <a href="<?= $this->route('contao_backend_logout') ?>">‹ <?= $this->cancel ?></a>
+              <a href="<?= $this->route('contao_backend_logout') ?>" class="tl_submit"><?= $this->cancel ?></a>
               <button type="submit" name="login" id="login" class="tl_submit"><?= $this->loginButton ?></button>
             </div>
           </div>

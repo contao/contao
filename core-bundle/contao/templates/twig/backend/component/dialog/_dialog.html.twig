@@ -1,0 +1,52 @@
+{% trans_default_domain "contao_default" %}
+
+{% block dialog_component %}
+    {% set id = id|default('modal-dialog') %}
+
+    {% set dialog_attributes = attrs()
+        .set('data-controller', 'contao--dialog')
+        .set('id', id)
+        .set('data-turbo-temporary')
+        .mergeWith(dialog_attributes|default)
+    %}
+    <dialog{{ dialog_attributes }}>
+        {% block inner %}
+            <div class="dialog_wrapper">
+                {% block wrapper %}
+                    {% block header %}
+                        <div class="header_wrapper">
+                            <h3>{% block title %}{{ 'MSC.confirmTitle'|trans }}{% endblock %}</h3>
+                        </div>
+                    {% endblock %}
+
+                    {% block form %}
+                        {% set form_attributes = attrs()
+                            .set('action', app.request.uri)
+                            .set('method', 'post')
+                            .set('data-action', 'contao--dialog#close')
+                            .mergeWith(form_attributes|default)
+                        %}
+                        <form{{ form_attributes }}>
+                            {% block content %}{% endblock %}
+
+                            <div class="buttons tl_submit_container">
+                                {% block buttons %}
+                                    {% set cancel_button_attributes = attrs()
+                                        .addClass('close')
+                                        .set('type', 'button')
+                                        .set('aria-controls', id)
+                                        .set('data-action', 'contao--dialog#close')
+                                        .mergeWith(cancel_button_attributes|default)
+                                    %}
+                                    <button{{ cancel_button_attributes }}>
+                                        {%- block cancel_button_text %}{{ 'MSC.cancelBT'|trans }}{% endblock -%}
+                                    </button>
+                                {% endblock %}
+                            </div>
+                        </form>
+                    {% endblock %}
+                {% endblock %}
+            </div>
+        {% endblock %}
+    </dialog>
+{% endblock %}

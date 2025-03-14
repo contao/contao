@@ -34,14 +34,12 @@ use Contao\System;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface as ImagineImageInterface;
 use Imagine\Image\ImagineInterface;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 
 class ImageFactoryTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -50,7 +48,7 @@ class ImageFactoryTest extends TestCase
 
         foreach (['assets', 'images'] as $directory) {
             $filesystem->mirror(
-                Path::join((new self())->getFixturesDir(), $directory),
+                Path::join($this->getFixturesDir(), $directory),
                 Path::join(self::getTempDir(), $directory),
             );
         }
@@ -488,11 +486,7 @@ class ImageFactoryTest extends TestCase
         $this->assertSame($imageMock, $image);
     }
 
-    /**
-     * @dataProvider getCreateWithLegacyMode
-     *
-     * @group legacy
-     */
+    #[DataProvider('getCreateWithLegacyMode')]
     public function testCreatesAnImageObjectFromAnImagePathInLegacyMode(string $mode, array $expected): void
     {
         $path = Path::join($this->getTempDir(), 'images/none.jpg');
@@ -552,7 +546,7 @@ class ImageFactoryTest extends TestCase
         $framework = $this->mockContaoFramework([FilesModel::class => $filesAdapter]);
         $imageFactory = $this->getImageFactory($resizer, $imagine, $imagine, $filesystem, $framework);
 
-        $this->expectDeprecation("%slegacy resize mode \"$mode\" has been deprecated%s");
+        $this->expectUserDeprecationMessageMatches("/legacy resize mode \"$mode\" has been deprecated/");
 
         $image = $imageFactory->create($path, [50, 50, $mode]);
         $imageFromSerializedConfig = $imageFactory->create($path, serialize([50, 50, $mode]));
@@ -561,9 +555,7 @@ class ImageFactoryTest extends TestCase
         $this->assertSame($imageMock, $imageFromSerializedConfig);
     }
 
-    /**
-     * @dataProvider getCreateWithLegacyMode
-     */
+    #[DataProvider('getCreateWithLegacyMode')]
     public function testReturnsTheImportantPartFromALegacyMode(string $mode, array $expected): void
     {
         $dimensionsMock = $this->createMock(ImageDimensions::class);
@@ -628,25 +620,21 @@ class ImageFactoryTest extends TestCase
         $this->assertSame($path, $image->getPath());
     }
 
-    private function getImageFactory(ResizerInterface|null $resizer = null, ImagineInterface|null $imagine = null, ImagineInterface|null $imagineSvg = null, Filesystem|null $filesystem = null, ContaoFramework|null $framework = null, bool|null $bypassCache = null, array|null $imagineOptions = null, array|null $validExtensions = null, string|null $uploadDir = null): ImageFactory
+    private function getImageFactory(ResizerInterface|null $resizer = null, ImagineInterface|null $imagine = null, ImagineInterface|null $imagineSvg = null, Filesystem|null $filesystem = null, ContaoFramework|null $framework = null): ImageFactory
     {
         $resizer ??= $this->createMock(ResizerInterface::class);
         $imagine ??= $this->createMock(ImagineInterface::class);
         $imagineSvg ??= $this->createMock(ImagineInterface::class);
         $filesystem ??= new Filesystem();
         $framework ??= $this->createMock(ContaoFramework::class);
-        $bypassCache ??= false;
-        $validExtensions ??= ['jpg', 'svg'];
 
         // Do not use Path::join here (see #4596)
-        $uploadDir ??= $this->getTempDir().'/images';
+        $uploadDir = $this->getTempDir().'/images';
 
-        if (null === $imagineOptions) {
-            $imagineOptions = [
-                'jpeg_quality' => 80,
-                'interlace' => ImagineImageInterface::INTERLACE_PLANE,
-            ];
-        }
+        $imagineOptions = [
+            'jpeg_quality' => 80,
+            'interlace' => ImagineImageInterface::INTERLACE_PLANE,
+        ];
 
         return new ImageFactory(
             $resizer,
@@ -654,9 +642,9 @@ class ImageFactoryTest extends TestCase
             $imagineSvg,
             $filesystem,
             $framework,
-            $bypassCache,
+            false,
             $imagineOptions,
-            $validExtensions,
+            ['jpg', 'svg'],
             $uploadDir,
         );
     }

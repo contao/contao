@@ -21,6 +21,7 @@ use Contao\Image\ImageInterface;
 use Contao\Image\ResizeOptions;
 use Contao\LayoutModel;
 use Contao\PageModel;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -28,9 +29,7 @@ use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
 
 class LightboxResultTest extends TestCase
 {
-    /**
-     * @dataProvider provideInvalidConfigurations
-     */
+    #[DataProvider('provideInvalidConfigurations')]
     public function testCanOnlyBeConstructedWithEitherAResourceOrAnUrl(ImageInterface|string|null $resource, string|null $url): void
     {
         $locator = $this->createMock(ContainerInterface::class);

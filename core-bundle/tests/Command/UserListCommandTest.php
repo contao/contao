@@ -16,6 +16,7 @@ use Contao\CoreBundle\Command\UserListCommand;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\Table;
@@ -51,9 +52,7 @@ class UserListCommandTest extends TestCase
         $this->executeCommand($command, ['--format' => 'foo'], 1);
     }
 
-    /**
-     * @dataProvider listsUsersProvider
-     */
+    #[DataProvider('listsUsersProvider')]
     public function testListsUsers(array $input, array $data, string $expected): void
     {
         $command = $this->getCommand($this->mockQueryBuilder($data));
@@ -62,9 +61,7 @@ class UserListCommandTest extends TestCase
         $this->assertStringContainsString($expected, $output);
     }
 
-    /**
-     * @dataProvider listsUsersProvider
-     */
+    #[DataProvider('listsUsersProvider')]
     public function testListsUsersAsJson(array $input, array $data, string $expectedTxt, array $expected): void
     {
         $input['--format'] = 'json';

@@ -28,7 +28,6 @@ use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -37,8 +36,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 
 class ContaoFrameworkTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_HOOKS'], $GLOBALS['TL_LANGUAGE']);
@@ -79,40 +76,16 @@ class ContaoFrameworkTest extends TestCase
         $this->assertSame('de', $GLOBALS['TL_LANGUAGE']);
     }
 
-    public function testInitializesTheFrameworkWithoutARequest(): void
+    public function testInitializesTheFramework(): void
     {
         $framework = $this->getFramework();
         $framework->setContainer($this->getContainerWithContaoConfiguration());
+
+        $this->assertFalse($framework->isInitialized());
+
         $framework->initialize();
-    }
 
-    public function testInitializesTheFrameworkWithoutARequestInFrontendMode(): void
-    {
-        $framework = $this->getFramework();
-        $framework->setContainer($this->getContainerWithContaoConfiguration());
-        $framework->initialize();
-    }
-
-    public function testInitializesTheFrameworkWithAnInsecurePath(): void
-    {
-        $request = Request::create('/contao4/public/index.php/index.html');
-        $request->server->set('SCRIPT_FILENAME', '/var/www/contao4/public/index.php');
-        $request->server->set('SCRIPT_NAME', '/contao4/public/index.php');
-
-        $framework = $this->getFramework($request);
-        $framework->setContainer($this->getContainerWithContaoConfiguration());
-        $framework->initialize();
-    }
-
-    public function testInitializesTheFrameworkWithoutAScope(): void
-    {
-        $request = Request::create('/contao/login');
-        $request->attributes->set('_route', 'dummy');
-        $request->attributes->set('_contao_referer_id', 'foobar');
-
-        $framework = $this->getFramework($request);
-        $framework->setContainer($this->getContainerWithContaoConfiguration());
-        $framework->initialize();
+        $this->assertTrue($framework->isInitialized());
     }
 
     public function testInitializesTheFrameworkInPreviewMode(): void
@@ -431,12 +404,12 @@ class ContaoFrameworkTest extends TestCase
     /**
      * @return Adapter<Config>&MockObject
      */
-    private function mockConfigAdapter(bool $complete = true): Adapter&MockObject
+    private function mockConfigAdapter(): Adapter&MockObject
     {
         $config = $this->mockAdapter(['preload', 'isComplete', 'getInstance', 'get']);
         $config
             ->method('isComplete')
-            ->willReturn($complete)
+            ->willReturn(true)
         ;
 
         $config

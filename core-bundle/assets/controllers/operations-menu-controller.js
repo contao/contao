@@ -5,12 +5,13 @@ export default class OperationsMenuController extends Controller {
     static targets = ['menu', 'submenu', 'controller', 'title'];
 
     connect () {
-        if (!this.hasMenuTarget) {
+        if (!this.hasControllerTarget || !this.hasMenuTarget) {
             return;
         }
 
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,
+            menuLinkSelector: 'a,button,img',
         });
 
         this.controllerTarget?.addEventListener('accessibleMenuExpand', () => {
@@ -29,6 +30,15 @@ export default class OperationsMenuController extends Controller {
         });
     }
 
+    disconnect() {
+        // Cleanup menu instance, otherwise we would leak memory
+        for (const [key, value] of Object.entries(window.AccessibleMenu.menus)) {
+            if (value === this.$menu) {
+                delete window.AccessibleMenu.menus[key];
+            }
+        }
+    }
+
     titleTargetConnected (el) {
         el.removeAttribute(`data-${this.identifier}-target`);
 
@@ -45,7 +55,7 @@ export default class OperationsMenuController extends Controller {
     }
 
     open (event) {
-        if (!this.hasMenuTarget || this.isInteractive(event.target)) {
+        if (!this.hasControllerTarget || !this.hasMenuTarget || this.isInteractive(event.target)) {
             return;
         }
 
@@ -87,15 +97,13 @@ export default class OperationsMenuController extends Controller {
     }
 
     isInteractive (el) {
-        let node = el.nodeName.toLowerCase();
-
-        if ('a' === node || 'button' === node || 'input' === node) {
+        if (el instanceof HTMLImageElement || el instanceof HTMLAnchorElement || el instanceof HTMLButtonElement) {
             return true;
         }
 
         // Also check the parent element if el is not interactive
-        node = el.parentElement.nodeName.toLowerCase();
+        const parent = el.parentElement;
 
-        return 'a' === node || 'button' === node || 'input' === node;
+        return parent instanceof HTMLImageElement || parent instanceof HTMLAnchorElement || parent instanceof HTMLButtonElement;
     }
 }

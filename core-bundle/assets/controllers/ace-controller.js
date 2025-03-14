@@ -17,7 +17,7 @@ export default class extends Controller {
         this.element.style['display'] = 'none';
 
         // Instantiate the editor
-        this.editor = ace.edit(this.container, {enableKeyboardAccessibility: true});
+        this.editor = ace.edit(this.container);
         this.editor.getSession().setValue(this.element.value);
 
         this.editor.on('focus', () => {
@@ -39,8 +39,18 @@ export default class extends Controller {
     }
 
     disconnect() {
-        this.editor.destroy();
-        this.container.remove();
+        this.editor?.destroy();
+        this.container?.remove();
+    }
+
+    beforeCache() {
+        // Remove the element container before Turbo caches the page. It will
+        // be recreated when the connect() call happens on the restored page.
+        this.disconnect();
+    }
+
+    colorChange(event) {
+        this.editor.setTheme(`ace/theme/${event.detail.mode === 'dark' ? 'twilight' : 'clouds'}`);
     }
 
     setMaxLines() {

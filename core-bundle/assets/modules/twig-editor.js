@@ -1,5 +1,6 @@
 export class TwigEditor {
     constructor(element) {
+        this.containerBackup = element.cloneNode();
         this.name = element.dataset.name;
         this.resourceUrl = element.dataset.resourceUrl;
 
@@ -11,6 +12,7 @@ export class TwigEditor {
             autoScrollEditorIntoView: true,
             readOnly: element.hasAttribute('readonly'),
             enableLiveAutocompletion: true,
+            enableKeyboardAccessibility: true,
         });
 
         this.setColorScheme(document.documentElement.dataset.colorScheme);
@@ -62,6 +64,10 @@ export class TwigEditor {
 
         codeLens.registerCodeLensProvider(this.editor, {
             provideCodeLenses: (session, callback) => {
+                if (session.destroyed) {
+                    return;
+                }
+
                 let payload = [];
 
                 this.analyzeReferences().forEach(reference => {
@@ -172,6 +178,12 @@ export class TwigEditor {
     }
 
     destroy() {
+        // Destroying the ACE instance does not fully reset the HTML, so we
+        // manually restore the container by using the cloned backup with
+        // updated content.
+        this.containerBackup.textContent = this.getContent();
+        this.editor.container.replaceWith(this.containerBackup);
+
         this.editor.destroy();
     }
 }

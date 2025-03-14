@@ -73,6 +73,10 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
                     new Column('headline', Type::getType(Types::STRING)),
                     new Column('teaser', Type::getType(Types::STRING)),
                 ]),
+                new Table('tl_undo', [
+                    new Column('id', Type::getType(Types::INTEGER)),
+                    new Column('data', Type::getType(Types::BLOB)),
+                ]),
             ],
             [
                 'tl_content' => [
@@ -92,6 +96,12 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
                         'id' => 3,
                         'headline' => 'This is my news 3!',
                         'teaser' => 'Another great teaser!',
+                    ],
+                ],
+                'tl_undo' => [
+                    [
+                        'id' => 1,
+                        'data' => 'This should be ignored!',
                     ],
                 ],
             ],
@@ -125,6 +135,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
         $documents = iterator_to_array($documentsIterator);
         usort($documents, static fn (Document $a, Document $b) => $a->getId() <=> $b->getId());
 
+        $this->assertCount(3, $documents);
         $this->assertSame('1', $documents[0]->getId());
         $this->assertSame('contao.db.tl_content', $documents[0]->getType());
         $this->assertSame('tl_content', $documents[0]->getMetadata()['table']);

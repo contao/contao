@@ -1275,7 +1275,7 @@ abstract class DataContainer extends Backend
 		}
 
 		$return = '
-<form class="tl_form has-panels" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
+<form class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
 <div class="tl_formbody">
   <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
   <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
@@ -1556,7 +1556,7 @@ abstract class DataContainer extends Backend
 		}
 		elseif (\in_array($mode, array(self::MODE_TREE, self::MODE_TREE_EXTENDED)))
 		{
-			$label = Image::getHtml('iconPLAIN.svg') . ' ' . $label;
+			$label = Image::getHtml('plain.svg') . ' ' . $label;
 		}
 
 		if (($labelConfig['showColumns'] ?? null) && !\in_array($mode, array(self::MODE_PARENT, self::MODE_TREE, self::MODE_TREE_EXTENDED)))

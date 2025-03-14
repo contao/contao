@@ -68,23 +68,27 @@ class ImaginePreviewProviderTest extends TestCase
             ->willReturnSelf()
         ;
 
+        $matcher = $this->exactly(2);
+
         $image
-            ->expects($this->exactly(2))
+            ->expects($matcher)
             ->method('save')
-            ->withConsecutive(["{$targetPath}1.png"], ["{$targetPath}2.png"])
+            ->with($this->callback(
+                static fn (string $name) => $name === $targetPath.$matcher->numberOfInvocations().'.png',
+            ))
             ->willReturnSelf()
         ;
 
         $layers
+            ->expects($this->exactly(2))
             ->method('has')
-            ->withConsecutive([0], [1])
-            ->willReturn(true)
+            ->willReturnMap([[0, true], [1, true]])
         ;
 
         $layers
+            ->expects($this->exactly(2))
             ->method('get')
-            ->withConsecutive([0], [1])
-            ->willReturn($image)
+            ->willReturnMap([[0, $image], [1, $image]])
         ;
 
         $imagine = $this->createMock(ImagineInterface::class);
@@ -101,6 +105,11 @@ class ImaginePreviewProviderTest extends TestCase
             ["{$targetPath}1.png", "{$targetPath}2.png"],
             $provider->generatePreviews($sourcePath, 512, $targetPathCallback, 2),
         );
+    }
+
+    public function testThrowsExceptionWithoutImages(): void
+    {
+        $sourcePath = Path::join($this->getTempDir(), 'foo/bar.txt');
 
         $imagine = $this->createMock(ImagineInterface::class);
         $imagine
@@ -114,7 +123,7 @@ class ImaginePreviewProviderTest extends TestCase
 
         $this->expectException(UnableToGeneratePreviewException::class);
 
-        $provider->generatePreviews($sourcePath, 512, $targetPathCallback);
+        $provider->generatePreviews($sourcePath, 512, static fn (int $_) => '');
     }
 
     private function createProvider(ImagineInterface|null $imagine = null): ImaginePreviewProvider

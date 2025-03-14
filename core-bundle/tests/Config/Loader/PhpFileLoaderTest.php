@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Config\Loader;
 
 use Contao\CoreBundle\Config\Loader\PhpFileLoader;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class PhpFileLoaderTest extends TestCase
 {
@@ -200,9 +201,7 @@ class PhpFileLoaderTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider loadWithDeclareStatementsStrictType
-     */
+    #[DataProvider('loadWithDeclareStatementsStrictType')]
     public function testStripsDeclareStrictTypes(string $file): void
     {
         $content = <<<EOF
@@ -241,9 +240,7 @@ class PhpFileLoaderTest extends TestCase
         yield ['tl_test_with_declare2'];
     }
 
-    /**
-     * @dataProvider loadWithDeclareStatementsMultipleDefined
-     */
+    #[DataProvider('loadWithDeclareStatementsMultipleDefined')]
     public function testPreservesOtherDeclareDefinitions(string $file): void
     {
         $content = <<<EOF

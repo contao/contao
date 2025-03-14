@@ -44,8 +44,8 @@ class FaqCategoryAccessVoter extends AbstractDataContainerVoter
         return match (true) {
             $action instanceof CreateAction => $this->accessDecisionManager->decide($token, [ContaoFaqPermissions::USER_CAN_CREATE_CATEGORIES]),
             $action instanceof ReadAction,
-            $action instanceof UpdateAction => $this->accessDecisionManager->decide($token, [ContaoFaqPermissions::USER_CAN_EDIT_CATEGORY], $action->getCurrentId()),
-            $action instanceof DeleteAction => $this->accessDecisionManager->decide($token, [ContaoFaqPermissions::USER_CAN_EDIT_CATEGORY], $action->getCurrentId())
+            $action instanceof UpdateAction => $this->accessDecisionManager->decide($token, [ContaoFaqPermissions::USER_CAN_EDIT_CATEGORY], (int) $action->getCurrentId()),
+            $action instanceof DeleteAction => $this->accessDecisionManager->decide($token, [ContaoFaqPermissions::USER_CAN_EDIT_CATEGORY], (int) $action->getCurrentId())
                 && $this->accessDecisionManager->decide($token, [ContaoFaqPermissions::USER_CAN_DELETE_CATEGORIES]),
         };
     }

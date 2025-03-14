@@ -44,8 +44,8 @@ class CalendarAccessVoter extends AbstractDataContainerVoter
         return match (true) {
             $action instanceof CreateAction => $this->accessDecisionManager->decide($token, [ContaoCalendarPermissions::USER_CAN_CREATE_CALENDARS]),
             $action instanceof ReadAction,
-            $action instanceof UpdateAction => $this->accessDecisionManager->decide($token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], $action->getCurrentId()),
-            $action instanceof DeleteAction => $this->accessDecisionManager->decide($token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], $action->getCurrentId())
+            $action instanceof UpdateAction => $this->accessDecisionManager->decide($token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], (int) $action->getCurrentId()),
+            $action instanceof DeleteAction => $this->accessDecisionManager->decide($token, [ContaoCalendarPermissions::USER_CAN_EDIT_CALENDAR], (int) $action->getCurrentId())
                 && $this->accessDecisionManager->decide($token, [ContaoCalendarPermissions::USER_CAN_DELETE_CALENDARS]),
         };
     }

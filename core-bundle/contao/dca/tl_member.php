@@ -158,7 +158,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'city' => array
 		(
-			'filter'                  => true,
 			'search'                  => true,
 			'sorting'                 => true,
 			'inputType'               => 'text',

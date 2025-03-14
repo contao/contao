@@ -29,6 +29,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\PageModel;
 use Contao\System;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -121,9 +122,13 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $insertTagsParser = $this->createMock(InsertTagParser::class);
         $insertTagsParser
+            ->expects($this->exactly(3))
             ->method('replaceInline')
-            ->withConsecutive(['My title'], ['My description'], ['{{link_url::42}}'])
-            ->willReturnOnConsecutiveCalls('My title', 'My description', 'de/foobar.html')
+            ->willReturnMap([
+                ['My title', 'My title'],
+                ['My description', 'My description'],
+                ['{{link_url::42}}', 'de/foobar.html'],
+            ])
         ;
 
         $requestStack = new RequestStack();
@@ -200,9 +205,7 @@ class CoreResponseContextFactoryTest extends TestCase
         $this->assertSame('https://example.com/csp/report', $directives->getDirective('report-uri'));
     }
 
-    /**
-     * @dataProvider getContaoWebpageResponseContextCanonicalUrls
-     */
+    #[DataProvider('getContaoWebpageResponseContextCanonicalUrls')]
     public function testContaoWebpageResponseContextCanonicalUrls(string $url, string $expected): void
     {
         $responseAccessor = $this->createMock(ResponseContextAccessor::class);
@@ -213,9 +216,13 @@ class CoreResponseContextFactoryTest extends TestCase
 
         $insertTagsParser = $this->createMock(InsertTagParser::class);
         $insertTagsParser
+            ->expects($this->exactly(3))
             ->method('replaceInline')
-            ->withConsecutive([''], [''], ['{{link_url::42}}'])
-            ->willReturnOnConsecutiveCalls('My title', 'My description', $url)
+            ->willReturnMap([
+                ['', 'My title'],
+                ['', 'My description'],
+                ['{{link_url::42}}', $url],
+            ])
         ;
 
         $requestStack = new RequestStack();
