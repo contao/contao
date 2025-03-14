@@ -2,6 +2,19 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.5.5] (2025-03-13)
+
+**Fixed issues:**
+
+- [#8195] Adjust the `service_unavailable` namespace for the maintenance mode ([zoglo])
+
+## [5.5.4] (2025-03-12)
+
+**Fixed issues:**
+
+- [#8158] Parse the markup of HTML operations ([aschempp])
+- [#8185] Fix the BC layer for error templates ([m-vo])
+
 ## [5.5.3] (2025-03-05)
 
 **Fixed issues:**
@@ -195,6 +208,8 @@ This project adheres to [Semantic Versioning].
 - [#7582] Add PostCSS as described in Symfony Encore ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.5.5]: https://github.com/contao/contao/releases/tag/5.5.5
+[5.5.4]: https://github.com/contao/contao/releases/tag/5.5.4
 [5.5.3]: https://github.com/contao/contao/releases/tag/5.5.3
 [5.5.2]: https://github.com/contao/contao/releases/tag/5.5.2
 [5.5.1]: https://github.com/contao/contao/releases/tag/5.5.1
@@ -357,5 +372,8 @@ This project adheres to [Semantic Versioning].
 [#8136]: https://github.com/contao/contao/pull/8136
 [#8145]: https://github.com/contao/contao/pull/8145
 [#8153]: https://github.com/contao/contao/pull/8153
+[#8158]: https://github.com/contao/contao/pull/8158
 [#8160]: https://github.com/contao/contao/pull/8160
 [#8174]: https://github.com/contao/contao/pull/8174
+[#8185]: https://github.com/contao/contao/pull/8185
+[#8195]: https://github.com/contao/contao/pull/8195

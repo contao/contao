@@ -97,7 +97,7 @@ class DataContainerOperationsBuilder implements \Stringable
             $operation = $this->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
 
             if ($operation) {
-                $builder->operations[] = $operation;
+                $builder->append($operation);
             }
         }
 
@@ -134,33 +134,92 @@ class DataContainerOperationsBuilder implements \Stringable
             $operation = $this->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
 
             if ($operation) {
-                $builder->operations[] = $operation;
+                $builder->append($operation);
             }
         }
 
         return $builder;
     }
 
-    public function prepend(array $operation): self
+    public function prepend(array $operation, bool $parseHtml = false): self
     {
         if (null === $this->operations) {
             throw new \RuntimeException(self::class.' has not been initialized yet.');
         }
 
-        array_unshift($this->operations, $operation);
+        if ($parseHtml) {
+            array_unshift($this->operations, ...$this->parseOperationsHtml($operation));
+        } else {
+            array_unshift($this->operations, $operation);
+        }
 
         return $this;
     }
 
-    public function append(array $operation): self
+    public function append(array $operation, bool $parseHtml = false): self
     {
         if (null === $this->operations) {
             throw new \RuntimeException(self::class.' has not been initialized yet.');
         }
 
-        $this->operations[] = $operation;
+        if ($parseHtml) {
+            array_push($this->operations, ...$this->parseOperationsHtml($operation));
+        } else {
+            $this->operations[] = $operation;
+        }
 
         return $this;
+    }
+
+    /**
+     * Generate multiple operations if the given operation is using HTML.
+     */
+    private function parseOperationsHtml(array $operation): array
+    {
+        if (!isset($operation['html']) || '' === trim((string) $operation['html'])) {
+            return [$operation];
+        }
+
+        $xml = new \DOMDocument();
+        $xml->preserveWhiteSpace = false;
+        $xml->loadHTML('<?xml encoding="UTF-8">'.$operation['html']);
+        $body = $xml->getElementsByTagName('body')[0];
+
+        if ($body->childNodes->length < 2) {
+            return [$operation];
+        }
+
+        $operations = [];
+        $current = null;
+
+        foreach ($body->childNodes as $node) {
+            if ($node instanceof \DOMText) {
+                if ('' === trim($html = $xml->saveHTML($node))) {
+                    continue;
+                }
+
+                if ($current) {
+                    $current['html'] .= $html;
+                    continue;
+                }
+            }
+
+            if ($current) {
+                $operations[] = $current;
+            }
+
+            $current = $operation;
+            $current['html'] = $xml->saveHTML($node);
+
+            if ('a' === strtolower($node->nodeName)) {
+                $operations[] = $current;
+                $current = null;
+            }
+        }
+
+        $operations[] = $current;
+
+        return $operations;
     }
 
     private function generateOperation(string $name, array $operation, string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): array|null
