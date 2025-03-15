@@ -1,10 +1,10 @@
 {% trans_default_domain "contao_default" %}
 
-{% set minCharacters = minCharacters|default(3) %}
 {% set search_container_attributes = attrs()
     .set('data-controller', 'contao--backend-search')
     .set('data-contao--backend-search-url-value', path('_contao_backend_search.stream'))
-    .set('data-contao--backend-search-min-characters-value', minCharacters)
+    .set('data-contao--backend-search-min-characters-value', 3)
+    .set('data-contao--backend-search-debounce-delay-value', 300)
     .set('data-action','click@document->contao--backend-search#close keydown.esc@document->contao--backend-search#close')
     .set('data-contao--backend-search-hidden-class', 'search--hidden')
     .set('data-contao--backend-search-initial-class', 'search--initial')
@@ -39,7 +39,7 @@
         <div class="backend-search_results-container">
             {# Messages #}
             <span class="backend-search_message search-message--placeholder">{{ 'MSC.searchResultsPlaceholder'|trans }}</span>
-            <span class="backend-search_message search-message--invalid">{{ 'MSC.searchResultsMin'|trans([minCharacters]) }}</span>
+            <span class="backend-search_message search-message--invalid">{{ 'MSC.searchResultsMin'|trans([search_container_attributes['data-contao--backend-search-min-characters-value']]) }}</span>
             <span class="backend-search_message search-message--loading">{{ 'MSC.searchResultsLoading'|trans }}</span>
             <span class="backend-search_message search-message--error">{{ 'ERR.general'|trans }}</span>
 

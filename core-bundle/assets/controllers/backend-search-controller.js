@@ -7,14 +7,8 @@ export default class BackendSearchController extends Controller {
 
     static values = {
         url: String,
-        minCharacters: {
-            type: Number,
-            default: 3,
-        },
-        debounceDelay: {
-            type: Number,
-            default: 300,
-        },
+        minCharacters: Number,
+        debounceDelay: Number,
     }
 
     static classes = ['hidden', 'initial', 'loading', 'invalid', 'results', 'error'];
