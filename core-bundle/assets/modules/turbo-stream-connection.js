@@ -1,5 +1,5 @@
 export class TurboStreamConnection {
-    _abortController = null;
+    _abortController = new AbortController();
     _abortSignal = { reason: 'The request was substituted.' };
 
     /**
@@ -12,25 +12,17 @@ export class TurboStreamConnection {
      * @returns {Promise<void>}
      */
     async get(url, query_params = null, abortPending = false) {
+        if (abortPending) {
+            this.abortPending();
+        }
+
         let params = {
             method: 'get',
             headers: {
                 'Accept': 'text/vnd.turbo-stream.html',
-            }
+            },
+            signal: this._abortController.signal,
         };
-
-        if (abortPending) {
-            if (null !== this._abortController) {
-                this._abortController.abort(this._abortSignal);
-            }
-
-            this._abortController = new AbortController();
-
-            params = {
-                ...params,
-                signal: this._abortController.signal,
-            };
-        }
 
         let response;
 
@@ -62,6 +54,10 @@ export class TurboStreamConnection {
 
         const html = await response.text();
         Turbo.renderStreamMessage(html);
+    }
+    abortPending() {
+        this._abortController?.abort(this._abortSignal);
+        this._abortController = new AbortController();
     }
 
     static buildURL(url, query_params) {
