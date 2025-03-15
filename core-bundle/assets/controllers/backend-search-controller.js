@@ -1,155 +1,99 @@
-import {Controller} from "@hotwired/stimulus"
+import {Controller} from '@hotwired/stimulus'
+import {TurboStreamConnection} from '../modules/turbo-stream-connection';
+import {FocusTrap} from '../modules/focus-trap';
 
 export default class BackendSearchController extends Controller {
-    static targets = [
-        "input",
-        "results",
-    ];
+    static targets = ['input', 'results'];
 
     static values = {
-        route: String,
+        url: String,
         minCharacters: {
             type: Number,
             default: 3,
         },
-        delay: {
+        debounceDelay: {
             type: Number,
             default: 300,
         },
     }
 
-    static classes = [
-        "hidden",
-        "initial",
-        "loading",
-        "invalid",
-        "results",
-        "error",
-    ]
+    static classes = ['hidden', 'initial', 'loading', 'invalid', 'results', 'error'];
 
     connect() {
-        this.active = false;
-        this.timeout = null;
+        this.debounceTimeout = null;
+        this.searchResultConnection = new TurboStreamConnection();
 
-        this._initAbortController();
-        this.setState("hidden");
+        this.focusTrap = new FocusTrap(this.element);
+        this.focusTrap.enable(() => this.resultsTarget.childNodes.length > 0);
     }
 
-    performSearch() {
+    disconnect() {
+        this._stopPendingSearch();
+        this.focusTrap.disable();
+    }
+
+    async search() {
+        this._stopPendingSearch();
+
+        // Require a minimum amount of characters
         if (this.inputTarget.value.length < this.minCharactersValue) {
-            return this.setState("invalid");
+            return this._setState('invalid');
         }
 
-        clearTimeout(this.timeout);
-        this.timeout = setTimeout(() => { this.loadResults(); }, this.delayValue);
-    }
+        this._setState('loading');
 
-    loadResults() {
-        this.setState("loading");
-        this._initAbortController();
+        // Debounce to avoid too many requests
+        await new Promise(resolve => this.debounceTimeout = setTimeout(resolve, this.debounceDelayValue));
 
-        fetch(this.searchRoute, {signal: this.signal})
-            .then(res=> {
-                if (!res.ok) {
-                    throw new Error(res.statusText);
-                }
+        // Get the search results
+        const result = await this.searchResultConnection.get(
+            this.urlValue, {keywords: this.inputTarget.value}
+        );
 
-                return res.text();
-            })
-            .then(html => {
-                this.resultsTarget.innerHTML = html;
-                this.setState("results");
-            })
-            .catch(e => {
-                if ("AbortError" === e.name) {
-                    return;
-                }
-
-                this.setState("error");
-            });
+        if (result.ok) {
+            this._setState('results');
+        } else if (result.error) {
+            this._setState('error');
+        }
     }
 
     open() {
-        if (!this.active) {
-            this.setState("initial");
-            this.active = true;
+        // Ignore focus on input if tabbing through results
+        if (this.focusTrap.enabled) {
+            return;
         }
+
+        this._setState('initial');
     }
 
-    close() {
+    close(event) {
+        // Only close when clicking away
+        if (event instanceof PointerEvent && this.element.contains(event.target)) {
+            return;
+        }
+
+        // Ignore lost focus on input when tabbing through results
+        if (event.type === 'blur' && this.focusTrap.enabled) {
+            return;
+        }
+
+        this._stopPendingSearch();
+        this.resultsTarget.innerText = '';
+
         this.inputTarget.blur();
-        this.inputTarget.value = "";
+        this.inputTarget.value = '';
 
-        this.active = false;
-        this.timeout = null;
-
-        this.setState("hidden");
-        this._resetFocusableResults();
+        this._setState('hidden');
     }
 
-    inputBlur() {
-        if ("results" === this.state) {
-            return;
-        }
-
-        this.close();
+    _stopPendingSearch() {
+        clearTimeout(this.debounceTimeout);
+        this.searchResultConnection.abortPending();
     }
 
-    focusTrapNext(event) {
-        if ("results" === this.state && document.activeElement === this.lastFocus) {
-            event.preventDefault();
-            this.firstFocus?.focus();
-        }
-    }
-
-    focusTrapPrev(event) {
-        if ("results" === this.state && document.activeElement === this.firstFocus) {
-            event.preventDefault();
-            this.lastFocus?.focus();
-        }
-    }
-
-    _initAbortController() {
-        this.abortController?.abort();
-        this.abortController = new AbortController();
-        this.signal = this.abortController?.signal;
-    }
-
-    _resetFocusableResults() {
-        this.firstFocus = null;
-        this.lastFocus = null;
-    }
-
-    _setFocusableResults() {
-        const elements = [this.inputTarget, ...this.resultsTarget.querySelectorAll('a[href]:not([disabled]), button:not([disabled])')]
-
-        this.firstFocus = elements[0] ?? []
-        this.lastFocus = elements[elements.length - 1] ?? []
-    }
-
-    documentClick(event) {
-        if (this.element.contains(event.target)) {
-            return;
-        }
-
-        this.close();
-    }
-
-    setState(state) {
-        this.state = state;
-
-        if (state === "results") {
-            this._setFocusableResults();
-        } else {
-            this._resetFocusableResults();
-        }
-
+    _setState(state) {
         BackendSearchController.classes.forEach(className => {
             this.element.classList.toggle(this[`${className}Class`], className === state);
         });
-    }
-
-    get searchRoute() {
-        return this.routeValue + this.inputTarget.value;
     }
 }

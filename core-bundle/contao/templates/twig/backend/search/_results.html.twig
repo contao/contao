@@ -1,0 +1,35 @@
+{% trans_default_domain "contao_default" %}
+{% use "@Contao/component/_figure.html.twig" %}
+
+{% for hit in hits %}
+    <li class="tl_search_hit">
+        <div class="hit_header">
+            {% if hit.imageFigureBuilder %}
+                <div class="hit_preview">
+                    {% set figure = hit.imageFigureBuilder.setSize([200, 200]).buildIfResourceExists %}
+                    {% if figure %}
+                        {{ block('figure_component') }}
+                    {% endif %}
+                </div>
+            {% endif %}
+            <div class="hit_actions">
+                <a class="hit_title" href="{{ hit.viewUrl }}" title="{{ 'MSC.searchHitView'|trans([hit.title]) }}">
+                    {% for item in hit.breadcrumbs %}
+                        {{ item.label }} ›
+                    {% endfor %}
+                    {{ hit.title }}
+                </a>
+                {% if hit.editUrl %}
+                    <a class="hit_edit" href="{{ hit.editUrl }}">{{ backend_icon('edit.svg', 'MSC.searchHitEdit'|trans([hit.title])) }}</a>
+                {% endif %}
+            </div>
+        </div>
+        {% if hit.context %}
+            <div class="hit_context-container">
+                <p class="context">{{ hit.context }}</p>
+            </div>
+        {% endif %}
+    </li>
+{% else %}
+    <li class="search-message--empty">{{ 'MSC.noResults'|trans }}</li>
+{% endfor %}
