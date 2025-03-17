@@ -1,13 +1,13 @@
 {
     "dependencies": {
         "@hotwired/stimulus": "^3.2",
-        "@hotwired/stimulus-webpack-helpers": "^1.0",
         "@hotwired/turbo": "^8.0",
         "@stimulus-components/color-picker": "^2.0",
         "@web-auth/webauthn-stimulus": "file:vendor/web-auth/webauthn-stimulus/assets",
         "accessible-menu": "^4.2"
     },
     "devDependencies": {
+        "@hotwired/stimulus-webpack-helpers": "^1.0",
         "@symfony/webpack-encore": "^5.1",
         "postcss": "^8.5",
         "postcss-loader": "^8.1",
