@@ -19,7 +19,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Attribute\Route;
-use Twig\Environment;
 
 /**
  * @experimental
@@ -55,7 +54,7 @@ class BackendSearchController extends AbstractBackendController
         $result = $this->backendSearch->search($query);
 
         return $this->render('@Contao/backend/search/show_results.stream.html.twig', [
-                'hits' => $result->getHits()
+            'hits' => $result->getHits(),
         ]);
     }
 }
