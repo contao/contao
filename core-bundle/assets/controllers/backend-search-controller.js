@@ -1,6 +1,6 @@
 import {Controller} from '@hotwired/stimulus'
 import {TurboStreamConnection} from '../modules/turbo-stream-connection';
-import {FocusTrap} from '../modules/focus-trap';
+import * as focusTrap from 'focus-trap'
 
 export default class BackendSearchController extends Controller {
     static targets = ['input', 'results'];
@@ -17,13 +17,14 @@ export default class BackendSearchController extends Controller {
         this.debounceTimeout = null;
         this.searchResultConnection = new TurboStreamConnection();
 
-        this.focusTrap = new FocusTrap(this.element);
-        this.focusTrap.enable(() => this.resultsTarget.childNodes.length > 0);
+        this.focusTrap = focusTrap.createFocusTrap(this.element, {
+            escapeDeactivates: false,
+            allowOutsideClick: true,
+        });
     }
 
     disconnect() {
         this._stopPendingSearch();
-        this.focusTrap.disable();
     }
 
     async search() {
@@ -46,6 +47,7 @@ export default class BackendSearchController extends Controller {
 
         if (result.ok) {
             this._setState('results');
+            this.focusTrap.activate();
         } else if (result.error) {
             this._setState('error');
         }
@@ -53,7 +55,7 @@ export default class BackendSearchController extends Controller {
 
     open() {
         // Ignore focus on input if tabbing through results
-        if (this.focusTrap.enabled) {
+        if (this.focusTrap.active) {
             return;
         }
 
@@ -67,7 +69,7 @@ export default class BackendSearchController extends Controller {
         }
 
         // Ignore lost focus on input when tabbing through results
-        if (event.type === 'blur' && this.focusTrap.enabled) {
+        if (event.type === 'blur' && this.focusTrap.active) {
             return;
         }
 
@@ -83,6 +85,7 @@ export default class BackendSearchController extends Controller {
     _stopPendingSearch() {
         clearTimeout(this.debounceTimeout);
         this.searchResultConnection.abortPending();
+        this.focusTrap.deactivate();
     }
 
     _setState(state) {
