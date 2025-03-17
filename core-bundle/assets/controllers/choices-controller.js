@@ -1,4 +1,4 @@
-import {Controller} from "@hotwired/stimulus"
+import { Controller } from '@hotwired/stimulus';
 
 export default class ChoicesController extends Controller {
     mutationGuard = false;
@@ -43,7 +43,7 @@ export default class ChoicesController extends Controller {
             removeItemLabelText: function (value) {
                 return Contao.lang.removeItem.concat(' ').concat(value);
             },
-        })
+        });
     }
 
     disconnect() {
@@ -78,7 +78,9 @@ export default class ChoicesController extends Controller {
 
     _resetGuard() {
         // Reset guard as soon as the call stack has cleared.
-        setTimeout(() => { this.mutationGuard = false; }, 0);
+        setTimeout(() => {
+            this.mutationGuard = false;
+        }, 0);
     }
 
     _isGuarded() {

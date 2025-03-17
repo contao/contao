@@ -4,8 +4,8 @@ export default class extends Controller {
     static targets = ['button', 'menu'];
 
     static values = {
-        name: { type: String, default: 'tmenu__profile' }
-    }
+        name: { type: String, default: 'tmenu__profile' },
+    };
 
     buttonTargetConnected(button) {
         button.setAttribute('aria-controls', this.nameValue);

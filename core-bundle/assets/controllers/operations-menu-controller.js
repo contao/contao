@@ -4,7 +4,7 @@ import AccessibleMenu from 'accessible-menu';
 export default class OperationsMenuController extends Controller {
     static targets = ['menu', 'submenu', 'controller', 'title'];
 
-    connect () {
+    connect() {
         if (!this.hasControllerTarget || !this.hasMenuTarget) {
             return;
         }
@@ -19,7 +19,7 @@ export default class OperationsMenuController extends Controller {
                 if (menu !== this.$menu && menu.elements.submenuToggles[0].isOpen) {
                     menu.elements.submenuToggles[0].close();
                 }
-            })
+            });
 
             this.setFixedPosition();
             this.element.classList.add('hover');
@@ -39,7 +39,7 @@ export default class OperationsMenuController extends Controller {
         }
     }
 
-    titleTargetConnected (el) {
+    titleTargetConnected(el) {
         el.removeAttribute(`data-${this.identifier}-target`);
 
         const link = el.querySelector('a[title]');
@@ -54,7 +54,7 @@ export default class OperationsMenuController extends Controller {
         }
     }
 
-    open (event) {
+    open(event) {
         if (!this.hasControllerTarget || !this.hasMenuTarget || this.isInteractive(event.target)) {
             return;
         }
@@ -66,9 +66,11 @@ export default class OperationsMenuController extends Controller {
         this.setFixedPosition(event);
     }
 
-    setFixedPosition (event) {
+    setFixedPosition(event) {
         const rect = this.submenuTarget.getBoundingClientRect();
-        let x, y, offset = 0;
+        let x,
+            y,
+            offset = 0;
 
         if (event) {
             x = event.clientX;
@@ -96,7 +98,7 @@ export default class OperationsMenuController extends Controller {
         }
     }
 
-    isInteractive (el) {
+    isInteractive(el) {
         if (el instanceof HTMLImageElement || el instanceof HTMLAnchorElement || el instanceof HTMLButtonElement) {
             return true;
         }
@@ -104,6 +106,10 @@ export default class OperationsMenuController extends Controller {
         // Also check the parent element if el is not interactive
         const parent = el.parentElement;
 
-        return parent instanceof HTMLImageElement || parent instanceof HTMLAnchorElement || parent instanceof HTMLButtonElement;
+        return (
+            parent instanceof HTMLImageElement ||
+            parent instanceof HTMLAnchorElement ||
+            parent instanceof HTMLButtonElement
+        );
     }
 }

@@ -1,4 +1,4 @@
-import ColorPicker from "@stimulus-components/color-picker";
+import ColorPicker from '@stimulus-components/color-picker';
 
 export default class extends ColorPicker {
     // Override the onSave function to strip the leading `#`

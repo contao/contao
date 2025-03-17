@@ -14,7 +14,10 @@ export default class extends Controller {
     _connect() {
         if (!this.element.tinymceConfig) {
             if (window.console) {
-                console.error('No TinyMCE config was attached to the DOM element, expected an expando property called "tinymceConfig".', this.element);
+                console.error(
+                    'No TinyMCE config was attached to the DOM element, expected an expando property called "tinymceConfig".',
+                    this.element,
+                );
             }
             return;
         }
@@ -26,7 +29,9 @@ export default class extends Controller {
             this.editorId = editors[0]?.id;
 
             // Fire a custom event when the editor finished initializing.
-            this.dispatch('editor-loaded', { detail: { content: editors[0] ?? null } });
+            this.dispatch('editor-loaded', {
+                detail: { content: editors[0] ?? null },
+            });
         });
     }
 
@@ -45,7 +50,7 @@ export default class extends Controller {
     }
 
     leave(event) {
-        const editor = tinymce?.get(this.editorId)
+        const editor = tinymce?.get(this.editorId);
 
         if (!editor || !editor.plugins.hasOwnProperty('autosave') || editor.isNotDirty) {
             return;
