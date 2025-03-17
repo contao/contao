@@ -80,7 +80,7 @@ class ModuleWizard extends Widget
 			static function (array $element) use ($recordLabeler) {
 				return array(
 					'id' => 'content-' . $element['id'],
-					'title' => $recordLabeler->getLabel('contao.db.tl_content.' . $element['id'], $element),
+					'name' => $recordLabeler->getLabel('contao.db.tl_content.' . $element['id'], $element),
 					'type' => $GLOBALS['TL_LANG']['CTE'][$element['type']][0] ?? $element['type'],
 				);
 			},
@@ -88,7 +88,7 @@ class ModuleWizard extends Widget
 		);
 
 		usort($elements, static function (array $a, array $b) {
-			return strcmp($a['title'], $b['title']);
+			return strcmp($a['name'], $b['name']);
 		});
 
 		$GLOBALS['TL_LANG']['FMD']['article'] = $GLOBALS['TL_LANG']['MOD']['article'];
@@ -216,7 +216,7 @@ class ModuleWizard extends Widget
 			{
 				$elementOptions[] = array(
 					'value' => self::specialcharsValue($v['id']),
-					'label' => $v['title'] . ' [' . $v['type'] . ']',
+					'label' => $v['name'] . ' [' . $v['type'] . ']',
 					'selected' => '' !== static::optionSelected($v['id'], $value['mod'] ?? null),
 				);
 			}

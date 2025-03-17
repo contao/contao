@@ -36,8 +36,8 @@ class ContentRecordLabelListener
             return;
         }
 
-        if ($event->getData()['title'] ?? null) {
-            $event->setLabel($event->getData()['title']);
+        if ($event->getData()['name'] ?? null) {
+            $event->setLabel($event->getData()['name']);
 
             return;
         }
