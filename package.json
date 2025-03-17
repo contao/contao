@@ -1,15 +1,18 @@
 {
-    "devDependencies": {
+    "dependencies": {
         "@hotwired/stimulus": "^3.2",
         "@hotwired/stimulus-webpack-helpers": "^1.0",
         "@hotwired/turbo": "^8.0",
         "@stimulus-components/color-picker": "^2.0",
-        "@symfony/webpack-encore": "^5.1",
         "@web-auth/webauthn-stimulus": "file:vendor/web-auth/webauthn-stimulus/assets",
-        "accessible-menu": "^4.2",
+        "accessible-menu": "^4.2"
+    },
+    "devDependencies": {
+        "@symfony/webpack-encore": "^5.1",
         "postcss": "^8.5",
         "postcss-loader": "^8.1",
-        "postcss-preset-env": "^10.1"
+        "postcss-preset-env": "^10.1",
+        "prettier": "3.5.3"
     },
     "browserslist": [
         "defaults"
@@ -18,7 +21,8 @@
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "watch": "encore dev --watch",
-        "build": "encore production --progress"
+        "build": "encore production --progress",
+        "cs-fixer": "prettier --write core-bundle/assets"
     },
     "private": true,
     "packageManager": "npm@11.1.0"
