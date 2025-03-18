@@ -1668,7 +1668,7 @@ window.Backend =
 				}
 			},
 			clickEvent = function(e) {
-				if (e.target instanceof HTMLAnchorElement || e.target instanceof HTMLButtonElement || e.target instanceof HTMLInputElement || e.target?.closest('a, button, input')) {
+				if (e.target instanceof HTMLAnchorElement || e.target instanceof HTMLButtonElement || e.target instanceof HTMLInputElement || e.target?.closest('a, button, input, .operations')) {
 					return;
 				}
 
