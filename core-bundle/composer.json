@@ -69,6 +69,7 @@
         "doctrine/persistence": "^3.2",
         "dragonmantank/cron-expression": "^2.3",
         "debril/feed-io": "^6.0",
+        "enshrined/svg-sanitize": "^0.21",
         "friendsofsymfony/http-cache": "^2.15.1",
         "friendsofsymfony/http-cache-bundle": "^2.6",
         "guzzlehttp/promises": "^1.5",
