@@ -22,8 +22,6 @@ use Contao\DC_Table;
 use Contao\Idna;
 use Contao\Input;
 use Contao\LayoutModel;
-use Contao\Message;
-use Contao\Messages;
 use Contao\PageModel;
 use Contao\StringUtil;
 use Contao\System;
@@ -42,8 +40,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			array('tl_page', 'adjustDca'),
 			array('tl_page', 'addBreadcrumb'),
-			array('tl_page', 'setRootType'),
-			array('tl_page', 'showFallbackWarning'),
+			array('tl_page', 'setRootType')
 		),
 		'oncut_callback' => array
 		(
@@ -787,18 +784,6 @@ class tl_page extends Backend
 		$GLOBALS['objPage'] = $origObjPage;
 
 		return $title;
-	}
-
-	/**
-	 * Show a warning if there is no language fallback page
-	 */
-	public function showFallbackWarning()
-	{
-		if (in_array(Input::get('act'), array('paste', 'select', null)))
-		{
-			$messages = new Messages();
-			Message::addRaw($messages->languageFallback());
-		}
 	}
 
 	/**

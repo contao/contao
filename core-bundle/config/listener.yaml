@@ -558,6 +558,13 @@ services:
         arguments:
             - '@contao.routing.scope_matcher'
 
+    contao.listener.show_language_fallback_warning:
+        class: Contao\CoreBundle\EventListener\ShowLanguageFallbackWarningListener
+        arguments:
+            - '@request_stack'
+            - '@database_connection'
+            - '@translator'
+
     contao.listener.store_referer:
         class: Contao\CoreBundle\EventListener\StoreRefererListener
         arguments:
