@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
-use Contao\CoreBundle\EventListener\ShowLanguageFallbackWarningListener;
+use Contao\CoreBundle\EventListener\LanguageFallbackWarningListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Message;
@@ -22,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-class ShowLanguageFallbackWarningListenerTest extends TestCase
+class LanguageFallbackWarningListenerTest extends TestCase
 {
     #[DataProvider('provideRootRecords')]
     public function testGeneratesMessages(array $records, string $messages): void
@@ -40,7 +40,7 @@ class ShowLanguageFallbackWarningListenerTest extends TestCase
             ->willReturnCallback(static fn (string $msg) => $msg)
         ;
 
-        $listener = new ShowLanguageFallbackWarningListener($this->createMock(RequestStack::class), $connection, $translator, $this->createMock(ContaoFramework::class));
+        $listener = new LanguageFallbackWarningListener($this->createMock(RequestStack::class), $connection, $translator, $this->createMock(ContaoFramework::class));
 
         $this->assertSame($listener->getMessages(), $messages);
     }
@@ -109,7 +109,7 @@ class ShowLanguageFallbackWarningListenerTest extends TestCase
 
         $contaoFramework = $this->mockContaoFramework([Message::class => $contaoMessage]);
 
-        $listener = new ShowLanguageFallbackWarningListener($requestStack, $connection, $translator, $contaoFramework);
+        $listener = new LanguageFallbackWarningListener($requestStack, $connection, $translator, $contaoFramework);
         $listener->onPageLoad();
     }
 
@@ -142,7 +142,7 @@ class ShowLanguageFallbackWarningListenerTest extends TestCase
 
         $contaoFramework = $this->mockContaoFramework([Message::class => $contaoMessage]);
 
-        $listener = new ShowLanguageFallbackWarningListener($requestStack, $connection, $translator, $contaoFramework);
+        $listener = new LanguageFallbackWarningListener($requestStack, $connection, $translator, $contaoFramework);
         $listener->onPageLoad();
     }
 }

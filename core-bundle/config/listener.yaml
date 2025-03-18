@@ -358,6 +358,14 @@ services:
     contao.listener.json_ld_schema:
         class: Contao\CoreBundle\EventListener\ContaoJsonLdSchemaListener
 
+    contao.listener.language_fallback_warning:
+        class: Contao\CoreBundle\EventListener\LanguageFallbackWarningListener
+        arguments:
+            - '@request_stack'
+            - '@database_connection'
+            - '@translator'
+            - '@contao.framework'
+
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleSubscriber
         arguments:
@@ -557,14 +565,6 @@ services:
         class: Contao\CoreBundle\EventListener\ServiceUnavailableListener
         arguments:
             - '@contao.routing.scope_matcher'
-
-    contao.listener.show_language_fallback_warning:
-        class: Contao\CoreBundle\EventListener\ShowLanguageFallbackWarningListener
-        arguments:
-            - '@request_stack'
-            - '@database_connection'
-            - '@translator'
-            - '@contao.framework'
 
     contao.listener.store_referer:
         class: Contao\CoreBundle\EventListener\StoreRefererListener

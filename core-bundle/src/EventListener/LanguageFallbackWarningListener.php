@@ -26,7 +26,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  *
  * @internal
  */
-class ShowLanguageFallbackWarningListener
+class LanguageFallbackWarningListener
 {
     public function __construct(
         private readonly RequestStack $requestStack,
