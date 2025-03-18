@@ -20,6 +20,11 @@ use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+/**
+ * Generates the warning messages related to misconfigured website roots.
+ *
+ * @internal
+ */
 class ShowLanguageFallbackWarningListener
 {
     public function __construct(
