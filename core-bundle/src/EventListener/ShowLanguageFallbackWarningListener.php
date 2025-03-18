@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Date;
 use Contao\Message;
 use Doctrine\DBAL\Connection;
@@ -31,6 +32,7 @@ class ShowLanguageFallbackWarningListener
         private readonly RequestStack $requestStack,
         private readonly Connection $connection,
         private readonly TranslatorInterface $translator,
+        private readonly ContaoFramework $contaoFramework,
     ) {
     }
 
@@ -43,27 +45,11 @@ class ShowLanguageFallbackWarningListener
             return;
         }
 
-        foreach ($this->getMessages() as $message) {
-            Message::addError($message);
-        }
+        $this->contaoFramework->getAdapter(Message::class)->addRaw($this->getMessages());
     }
 
     #[AsHook('getSystemMessages')]
-    public function onGetSystemMessages(): string
-    {
-        $return = '';
-
-        foreach ($this->getMessages() as $message) {
-            $return .= '<p class="tl_error">'.$message.'</p>';
-        }
-
-        return $return;
-    }
-
-    /**
-     * @return list<string>
-     */
-    private function getMessages(): array
+    public function getMessages(): string
     {
         $time = Date::floorToMinute();
         $records = $this->connection->fetchAllAssociative("SELECT fallback, dns FROM tl_page WHERE type='root' AND published=1 AND (start='' OR start<=$time) AND (stop='' OR stop>$time) ORDER BY dns");
@@ -93,6 +79,6 @@ class ShowLanguageFallbackWarningListener
             }
         }
 
-        return $messages;
+        return implode('', array_map(static fn (string $message): string => '<p class="tl_error">'.$message.'</p>', $messages));
     }
 }

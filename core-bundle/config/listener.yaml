@@ -564,6 +564,7 @@ services:
             - '@request_stack'
             - '@database_connection'
             - '@translator'
+            - '@contao.framework'
 
     contao.listener.store_referer:
         class: Contao\CoreBundle\EventListener\StoreRefererListener
