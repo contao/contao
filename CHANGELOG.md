@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.54] (2025-03-18)
+
+**Security fixes:**
+
+- [CVE-2025-29790]: Cross site scripting through SVG uploads
+
 ## [4.13.53] (2025-02-18)
 
 **Fixed issues:**
@@ -1127,6 +1133,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.54]: https://github.com/contao/contao/releases/tag/4.13.54
 [4.13.53]: https://github.com/contao/contao/releases/tag/4.13.53
 [4.13.52]: https://github.com/contao/contao/releases/tag/4.13.52
 [4.13.51]: https://github.com/contao/contao/releases/tag/4.13.51
@@ -1184,6 +1191,7 @@ This project adheres to [Semantic Versioning].
 [4.13.0-RC3]: https://github.com/contao/contao/releases/tag/4.13.0-RC3
 [4.13.0-RC2]: https://github.com/contao/contao/releases/tag/4.13.0-RC2
 [4.13.0-RC1]: https://github.com/contao/contao/releases/tag/4.13.0-RC1
+[CVE-2025-29790]: https://github.com/contao/contao/security/advisories/GHSA-vqqr-fgmh-f626
 [CVE-2024-45604]: https://github.com/contao/contao/security/advisories/GHSA-4p75-5p53-65m9
 [CVE-2024-45398]: https://github.com/contao/contao/security/advisories/GHSA-vm6r-j788-hjh5
 [CVE-2024-45612]: https://github.com/contao/contao/security/advisories/GHSA-2xpq-xp6c-5mgj
