@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.30] (2025-03-18)
+
+**Security fixes:**
+
+- [CVE-2025-29790]: Cross site scripting through SVG uploads
+
 ## [5.3.29] (2025-03-12)
 
 **Fixed issues:**
@@ -625,6 +631,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.30]: https://github.com/contao/contao/releases/tag/5.3.30
 [5.3.29]: https://github.com/contao/contao/releases/tag/5.3.29
 [5.3.28]: https://github.com/contao/contao/releases/tag/5.3.28
 [5.3.27]: https://github.com/contao/contao/releases/tag/5.3.27
@@ -659,6 +666,7 @@ This project adheres to [Semantic Versioning].
 [5.3.0-RC3]: https://github.com/contao/contao/releases/tag/5.3.0-RC3
 [5.3.0-RC2]: https://github.com/contao/contao/releases/tag/5.3.0-RC2
 [5.3.0-RC1]: https://github.com/contao/contao/releases/tag/5.3.0-RC1
+[CVE-2025-29790]: https://github.com/contao/contao/security/advisories/GHSA-vqqr-fgmh-f626
 [CVE-2024-45398]: https://github.com/contao/contao/security/advisories/GHSA-vm6r-j788-hjh5
 [CVE-2024-45612]: https://github.com/contao/contao/security/advisories/GHSA-2xpq-xp6c-5mgj
 [CVE-2024-28235]: https://github.com/contao/contao/security/advisories/GHSA-9jh5-qf84-x6pr
