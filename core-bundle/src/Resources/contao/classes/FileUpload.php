@@ -10,6 +10,8 @@
 
 namespace Contao;
 
+use enshrined\svgSanitize\Sanitizer;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -159,6 +161,15 @@ class FileUpload extends Backend
 
 						continue;
 					}
+				}
+
+				// Sanitize SVGs
+				if (\in_array($strExtension, array('svg', 'svgz')) && !static::sanitizeSvg($file['tmp_name']))
+				{
+					Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileerror'], 'Invalid SVG', $file['name']));
+					$this->blnHasError = true;
+
+					continue;
 				}
 
 				// File type not allowed
@@ -350,6 +361,55 @@ class FileUpload extends Backend
 		}
 
 		return false;
+	}
+
+	/**
+	 * Sanitize an uploaded SVG image, return false if the file cannot be processed
+	 *
+	 * @internal
+	 *
+	 * @param string $strPath
+	 *
+	 * @return boolean
+	 */
+	public static function sanitizeSvg($strPath)
+	{
+		$strData = @file_get_contents($strPath);
+
+		if (!$strData)
+		{
+			return false;
+		}
+
+		$blnGzip = false;
+
+		if (0 === strncmp($strData, hex2bin('1F8B'), 2))
+		{
+			$strData = gzdecode($strData);
+			$blnGzip = true;
+		}
+
+		if (!$strData)
+		{
+			return false;
+		}
+
+		$sanitizer = new Sanitizer();
+		$strData = $sanitizer->sanitize($strData);
+
+		if (!$strData)
+		{
+			return false;
+		}
+
+		if ($blnGzip)
+		{
+			$strData = gzencode($strData);
+		}
+
+		(new Filesystem())->dumpFile($strPath, $strData);
+
+		return true;
 	}
 }
 

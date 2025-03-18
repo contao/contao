@@ -202,6 +202,15 @@ class FormFileUpload extends Widget implements UploadableWidgetInterface
 			}
 		}
 
+		// Sanitize SVGs
+		if (\in_array($objFile->extension, array('svg', 'svgz')) && !FileUpload::sanitizeSvg($file['tmp_name']))
+		{
+			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileerror'], 'Invalid SVG', $file['name']));
+			unset($_FILES[$this->strName]);
+
+			return;
+		}
+
 		// Store file in the session and optionally on the server
 		if (!$this->hasErrors())
 		{
