@@ -21,7 +21,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ShowLanguageFallbackWarningListenerTest extends TestCase
 {
-    #[DataProvider('provideRequestAndDirty')]
+    #[DataProvider('provideRootRecords')]
     public function testGeneratesMessages(array $records, string $messages): void
     {
         $connection = $this->createMock(Connection::class);
@@ -42,7 +42,7 @@ class ShowLanguageFallbackWarningListenerTest extends TestCase
         $this->assertSame($listener->onGetSystemMessages(), $messages);
     }
 
-    public static function provideRequestAndDirty(): iterable
+    public static function provideRootRecords(): iterable
     {
         yield [
             [['fallback' => 1, 'dns' => ''], ['fallback' => 0, 'dns' => '']],
