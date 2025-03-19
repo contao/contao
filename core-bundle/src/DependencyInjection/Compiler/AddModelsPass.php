@@ -33,7 +33,7 @@ class AddModelsPass implements CompilerPassInterface
     }
 
     /**
-     * @return array<string, array<int, array<string>>>
+     * @return array<string>
      */
     private function getModels(ContainerBuilder $container): array
     {
@@ -46,7 +46,8 @@ class AddModelsPass implements CompilerPassInterface
                     throw new InvalidDefinitionException(\sprintf('Missing table attribute in tagged model service with service id "%s"', $serviceId));
                 }
 
-                $models[$attributes['table']] = $serviceId;
+                $definition = $container->findDefinition($serviceId);
+                $models[$attributes['table']] = $definition->getClass();
             }
         }
 

@@ -119,12 +119,14 @@ services:
             - '@security.access.decision_manager'
             - '@database_connection'
 
-    Contao\NewsArchiveModel:
+    contao_news.news_archive_model:
+        class: Contao\NewsArchiveModel
         public: true
         tags:
-            - { name: contao.model, table: 'tl_news_archive' }
+            - { name: contao.model, table: tl_news_archive }
 
-    Contao\NewsModel:
+    contao_news.news_model:
+        class: Contao\NewsModel
         public: true
         tags:
-            - { name: contao.model, table: 'tl_news' }
+            - { name: contao.model, table: tl_news }
