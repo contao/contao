@@ -698,7 +698,8 @@ window.Backend =
 
 		var form = $(el) || el;
 		hidden.inject(form, 'bottom');
-		form.submit();
+		form.noValidate = true;
+		form.requestSubmit();
 	},
 
 	/**
