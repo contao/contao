@@ -1,4 +1,4 @@
-import {Controller} from '@hotwired/stimulus';
+import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     static targets = ['body', 'rowTemplate', 'row'];
@@ -8,7 +8,9 @@ export default class extends Controller {
     rowTemplateTargetConnected(template) {
         // We need to queue a micro task here, so that Stimulus will fire
         // rowTargetConnected().
-        queueMicrotask(() => {this._unwrap(template)});
+        queueMicrotask(() => {
+            this._unwrap(template);
+        });
     }
 
     rowTargetConnected() {
@@ -104,13 +106,16 @@ export default class extends Controller {
     beforeCache() {
         // Restore the original HTML with template tags before Turbo caches the
         // page. They will get unwrapped again at the restored page.
-        this.rowTargets.forEach(row => {
+        this.rowTargets.forEach((row) => {
             this._wrap(row);
         });
     }
 
     _unwrap(template) {
-        this.rowSnapshots.set(template.content.querySelector('*[data-contao--row-wizard-target="row"]'), template.innerHTML);
+        this.rowSnapshots.set(
+            template.content.querySelector('*[data-contao--row-wizard-target="row"]'),
+            template.innerHTML,
+        );
 
         template.replaceWith(template.content);
     }
@@ -162,7 +167,7 @@ export default class extends Controller {
             handle: '.drag-handle',
             onComplete: () => {
                 this._makeSortable(this.bodyTarget);
-            }
+            },
         });
-    };
+    }
 }
