@@ -96,7 +96,12 @@ export default class OperationsMenuController extends Controller {
         }
     }
 
-    isInteractive (el) {
-        return el instanceof HTMLAnchorElement || el instanceof HTMLButtonElement || el instanceof HTMLInputElement || el?.closest('a, button, input');
+    isInteractive(el) {
+        return (
+            el instanceof HTMLAnchorElement ||
+            el instanceof HTMLButtonElement ||
+            el instanceof HTMLInputElement ||
+            el?.closest('a, button, input')
+        );
     }
 }
