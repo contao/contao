@@ -1,0 +1,6 @@
+tabWidth: 4
+printWidth: 120
+overrides:
+    - files: '*.js'
+      options:
+          singleQuote: true

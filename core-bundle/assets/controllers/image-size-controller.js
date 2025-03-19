@@ -5,13 +5,13 @@ export default class extends Controller {
 
     static values = {
         config: Object,
-    }
+    };
 
-    connect () {
+    connect() {
         this.updateWizard();
     }
 
-    updateWizard () {
+    updateWizard() {
         if (this.canEdit()) {
             this.buttonTarget.title = this.configValue.title;
             this.buttonTarget.disabled = false;
@@ -29,14 +29,14 @@ export default class extends Controller {
         }
     }
 
-    openModal () {
+    openModal() {
         Backend.openModalIframe({
             title: this.configValue.title,
-            url: `${ this.configValue.href }&id=${ this.selectTarget.value }`
+            url: `${this.configValue.href}&id=${this.selectTarget.value}`,
         });
     }
 
-    canEdit () {
+    canEdit() {
         return this.configValue.ids.includes(Number(this.selectTarget.value));
     }
 }

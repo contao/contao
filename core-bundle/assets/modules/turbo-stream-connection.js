@@ -15,8 +15,8 @@ export class TurboStreamConnection {
         let params = {
             method: 'get',
             headers: {
-                'Accept': 'text/vnd.turbo-stream.html',
-            }
+                Accept: 'text/vnd.turbo-stream.html',
+            },
         };
 
         if (abortPending) {
@@ -77,7 +77,7 @@ export class TurboStreamConnection {
                 continue;
             }
 
-            value.forEach(value => pairs.push([key + '[]', value]));
+            value.forEach((value) => pairs.push([key + '[]', value]));
         }
 
         return url + '?' + new URLSearchParams(pairs).toString();
