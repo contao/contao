@@ -134,7 +134,7 @@
       <trans-unit id="tl_newsletter.notSent">
         <source>Not sent yet</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter.mailingDate">
+      <trans-unit id="tl_newsletter.date">
         <source>Mailing date</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.confirm">

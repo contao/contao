@@ -137,7 +137,6 @@ class AddCommentFieldsListener
         $GLOBALS['TL_DCA'][$table]['list']['sorting']['headerFields'][] = 'allowComments';
 
         $GLOBALS['TL_DCA'][$table]['fields']['noComments'] = [
-            'filter' => true,
             'inputType' => 'checkbox',
             'sql' => ['type' => 'boolean', 'default' => false],
         ];

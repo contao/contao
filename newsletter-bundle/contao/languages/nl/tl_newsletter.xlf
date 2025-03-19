@@ -177,7 +177,7 @@
         <source>Not sent yet</source>
         <target>Nog niet verstuurd</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.mailingDate">
+      <trans-unit id="tl_newsletter.date">
         <source>Mailing date</source>
         <target>Postdatum</target>
       </trans-unit>

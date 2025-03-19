@@ -175,7 +175,7 @@
         <source>Not sent yet</source>
         <target>تاکنون ارسال نشده</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.mailingDate">
+      <trans-unit id="tl_newsletter.date">
         <source>Mailing date</source>
         <target>تاریخ پست</target>
       </trans-unit>

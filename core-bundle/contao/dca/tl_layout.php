@@ -299,6 +299,7 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		),
 		'scripts' => array
 		(
+			'filter'                  => true,
 			'search'                  => true,
 			'inputType'               => 'checkboxWizard',
 			'options_callback' => static function () {

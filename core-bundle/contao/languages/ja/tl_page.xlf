@@ -425,6 +425,14 @@
         <source>Hide the page in the navigation menu.</source>
         <target>ナビゲーションメニューのページを表示しません。</target>
       </trans-unit>
+      <trans-unit id="tl_page.guests.0">
+        <source>Hide if logged in</source>
+        <target>ログイン時は非表示</target>
+      </trans-unit>
+      <trans-unit id="tl_page.guests.1">
+        <source>Hide the page in the navigation menu if a member is logged in.</source>
+        <target>メンバーがログインしている場合はページをナビゲーションに表示しません。</target>
+      </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
         <target>アクセスキー</target>

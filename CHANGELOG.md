@@ -2,6 +2,43 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.5.6] (2025-03-18)
+
+**Security fixes:**
+
+- [CVE-2025-29790]: Cross site scripting through SVG uploads
+
+## [5.5.5] (2025-03-13)
+
+**Fixed issues:**
+
+- [#8195] Adjust the `service_unavailable` namespace for the maintenance mode ([zoglo])
+
+## [5.5.4] (2025-03-12)
+
+**Fixed issues:**
+
+- [#8158] Parse the markup of HTML operations ([aschempp])
+- [#8185] Fix the BC layer for error templates ([m-vo])
+
+## [5.5.3] (2025-03-05)
+
+**Fixed issues:**
+
+- [#8174] Correctly show the login provider icons ([leofeyer])
+
+## [5.5.2] (2025-03-04)
+
+**Fixed issues:**
+
+- [#8160] Always make child records movable ([aschempp])
+- [#8153] Fix a typo in `ContaoCoreExtension::handleTemplateStudioConfig()` ([fritzmg])
+- [#8133] Fix the module wizard and section wizard scripts ([m-vo])
+- [#8145] Do not prefetch on slow connections or in data-saving mode ([m-vo])
+- [#8136] Ensure all content within `tl_content_right` is displayed in a single line ([zoglo])
+- [#8127] Restore TinyMCE properly on Safari ([m-vo])
+- [#8126] Fix the login screen ([leofeyer])
+
 ## [5.5.1] (2025-02-19)
 
 **Fixed issues:**
@@ -177,12 +214,18 @@ This project adheres to [Semantic Versioning].
 - [#7582] Add PostCSS as described in Symfony Encore ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.5.6]: https://github.com/contao/contao/releases/tag/5.5.6
+[5.5.5]: https://github.com/contao/contao/releases/tag/5.5.5
+[5.5.4]: https://github.com/contao/contao/releases/tag/5.5.4
+[5.5.3]: https://github.com/contao/contao/releases/tag/5.5.3
+[5.5.2]: https://github.com/contao/contao/releases/tag/5.5.2
 [5.5.1]: https://github.com/contao/contao/releases/tag/5.5.1
 [5.5.0]: https://github.com/contao/contao/releases/tag/5.5.0
 [5.5.0-RC4]: https://github.com/contao/contao/releases/tag/5.5.0-RC4
 [5.5.0-RC3]: https://github.com/contao/contao/releases/tag/5.5.0-RC3
 [5.5.0-RC2]: https://github.com/contao/contao/releases/tag/5.5.0-RC2
 [5.5.0-RC1]: https://github.com/contao/contao/releases/tag/5.5.0-RC1
+[CVE-2025-29790]: https://github.com/contao/contao/security/advisories/GHSA-vqqr-fgmh-f626
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
 [delirius]: https://github.com/delirius
@@ -331,3 +374,14 @@ This project adheres to [Semantic Versioning].
 [#8118]: https://github.com/contao/contao/pull/8118
 [#8120]: https://github.com/contao/contao/pull/8120
 [#8122]: https://github.com/contao/contao/pull/8122
+[#8126]: https://github.com/contao/contao/pull/8126
+[#8127]: https://github.com/contao/contao/pull/8127
+[#8133]: https://github.com/contao/contao/pull/8133
+[#8136]: https://github.com/contao/contao/pull/8136
+[#8145]: https://github.com/contao/contao/pull/8145
+[#8153]: https://github.com/contao/contao/pull/8153
+[#8158]: https://github.com/contao/contao/pull/8158
+[#8160]: https://github.com/contao/contao/pull/8160
+[#8174]: https://github.com/contao/contao/pull/8174
+[#8185]: https://github.com/contao/contao/pull/8185
+[#8195]: https://github.com/contao/contao/pull/8195
