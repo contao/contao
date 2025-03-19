@@ -53,7 +53,8 @@ class SuperviseWorkersCommand extends Command
             $this->supervisor = $this->supervisor->withCommand($this->createCommandForWorker('worker-'.($k + 1), $worker));
         }
 
-        // Close database connection if it was opened by some other service to free connections
+        // Close the database connection if it was opened by some other service to
+        // free connections.
         $this->connection->close();
 
         $io->info('Starting to supervise workers for a minute.');

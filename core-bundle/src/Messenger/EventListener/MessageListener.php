@@ -33,7 +33,7 @@ class MessageListener
             return;
         }
 
-        // Close database connection when the worker is idle (#8199)
+        // Close the database connection when the worker is idle (see #8199)
         $this->connection->close();
     }
 

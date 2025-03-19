@@ -232,7 +232,7 @@ class Cron
         }
 
         if ($promises) {
-            // Close DB connection to free them until async promises have completed.
+            // Close the DB connection until async promises have completed.
             $entityManager->getConnection()->close();
 
             Utils::settle($promises)->wait();
