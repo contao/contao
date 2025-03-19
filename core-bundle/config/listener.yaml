@@ -53,7 +53,6 @@ services:
     contao.listener.csrf_token_cookie:
         class: Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber
         arguments:
-            - '@contao.csrf.token_manager'
             - '@contao.csrf.token_storage'
             - '%contao.csrf_cookie_prefix%'
 
@@ -600,6 +599,7 @@ services:
         class: Contao\CoreBundle\Messenger\EventListener\MessageListener
         arguments:
             - '@monolog.logger.contao.error'
+            - '@database_connection'
 
     contao.twig.loader.auto_refresh_template_hierarchy_listener:
         class: Contao\CoreBundle\Twig\Loader\AutoRefreshTemplateHierarchyListener

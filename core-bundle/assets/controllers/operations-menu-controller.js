@@ -96,14 +96,12 @@ export default class OperationsMenuController extends Controller {
         }
     }
 
-    isInteractive (el) {
-        if (el instanceof HTMLImageElement || el instanceof HTMLAnchorElement || el instanceof HTMLButtonElement) {
-            return true;
-        }
-
-        // Also check the parent element if el is not interactive
-        const parent = el.parentElement;
-
-        return parent instanceof HTMLImageElement || parent instanceof HTMLAnchorElement || parent instanceof HTMLButtonElement;
+    isInteractive(el) {
+        return (
+            el instanceof HTMLAnchorElement ||
+            el instanceof HTMLButtonElement ||
+            el instanceof HTMLInputElement ||
+            el?.closest('a, button, input')
+        );
     }
 }

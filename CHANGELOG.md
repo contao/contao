@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.5.6] (2025-03-18)
+
+**Security fixes:**
+
+- [CVE-2025-29790]: Cross site scripting through SVG uploads
+
 ## [5.5.5] (2025-03-13)
 
 **Fixed issues:**
@@ -208,6 +214,7 @@ This project adheres to [Semantic Versioning].
 - [#7582] Add PostCSS as described in Symfony Encore ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.5.6]: https://github.com/contao/contao/releases/tag/5.5.6
 [5.5.5]: https://github.com/contao/contao/releases/tag/5.5.5
 [5.5.4]: https://github.com/contao/contao/releases/tag/5.5.4
 [5.5.3]: https://github.com/contao/contao/releases/tag/5.5.3
@@ -218,6 +225,7 @@ This project adheres to [Semantic Versioning].
 [5.5.0-RC3]: https://github.com/contao/contao/releases/tag/5.5.0-RC3
 [5.5.0-RC2]: https://github.com/contao/contao/releases/tag/5.5.0-RC2
 [5.5.0-RC1]: https://github.com/contao/contao/releases/tag/5.5.0-RC1
+[CVE-2025-29790]: https://github.com/contao/contao/security/advisories/GHSA-vqqr-fgmh-f626
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
 [delirius]: https://github.com/delirius
