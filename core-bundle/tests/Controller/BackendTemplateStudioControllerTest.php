@@ -48,7 +48,7 @@ class BackendTemplateStudioControllerTest extends TestCase
             ;
         }
 
-        $controller = $this->getBackendTemplatedStudioController(twig: $twig, request: $request);
+        $controller = $this->getBackendTemplatedStudioController($twig, $request);
         $response = $controller->$action(...$parameters);
 
         if (null === $streamError) {
@@ -101,7 +101,7 @@ class BackendTemplateStudioControllerTest extends TestCase
     /**
      * @param (Environment&MockObject)|null $twig
      */
-    private function getBackendTemplatedStudioController(AuthorizationCheckerInterface|null $authorizationChecker = null, Environment|null $twig = null, Request|null $request = null): BackendTemplateStudioController
+    private function getBackendTemplatedStudioController(Environment|null $twig = null, Request|null $request = null): BackendTemplateStudioController
     {
         $loader = $this->createMock(ContaoFilesystemLoader::class);
         $loader
@@ -171,13 +171,11 @@ class BackendTemplateStudioControllerTest extends TestCase
             ['foo_operation' => $fooOperation],
         );
 
-        if (!$authorizationChecker) {
-            $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
-            $authorizationChecker
-                ->method('isGranted')
-                ->willReturn(true)
-            ;
-        }
+        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
+        $authorizationChecker
+            ->method('isGranted')
+            ->willReturn(true)
+        ;
 
         $requestStack = new RequestStack();
         $requestStack->push($request ?? new Request());
