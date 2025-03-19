@@ -118,3 +118,13 @@ services:
         arguments:
             - '@security.access.decision_manager'
             - '@database_connection'
+
+    Contao\NewsArchiveModel:
+        public: true
+        tags:
+            - { name: contao.model, table: 'tl_news_archive' }
+
+    Contao\NewsModel:
+        public: true
+        tags:
+            - { name: contao.model, table: 'tl_news' }
