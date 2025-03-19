@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Translation;
 
 use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Translation\MessageCatalogue;
 use Contao\System;
@@ -77,7 +76,7 @@ class MessageCatalogueTest extends TestCase
             ->willReturn($finder)
         ;
 
-        $catalogue = $this->createCatalogue($parentCatalogue, null, $resourceFinder);
+        $catalogue = $this->createCatalogue($parentCatalogue, $resourceFinder);
 
         $this->assertSame(['foobar', 'bazfoo', 'contao_default', 'contao_tl_page'], $catalogue->getDomains());
     }
@@ -332,7 +331,7 @@ class MessageCatalogueTest extends TestCase
         $this->assertSame('', $string);
     }
 
-    private function createCatalogue(MessageCatalogueInterface|null $catalogue = null, ContaoFramework|null $framework = null, ResourceFinder|null $resourceFinder = null): MessageCatalogue
+    private function createCatalogue(MessageCatalogueInterface|null $catalogue = null, ResourceFinder|null $resourceFinder = null): MessageCatalogue
     {
         if (!$catalogue) {
             $catalogue = $this->createMock(MessageCatalogueInterface::class);
@@ -342,7 +341,7 @@ class MessageCatalogueTest extends TestCase
             ;
         }
 
-        $framework ??= $this->mockContaoFramework([System::class => $this->mockAdapter(['loadLanguageFile'])]);
+        $framework = $this->mockContaoFramework([System::class => $this->mockAdapter(['loadLanguageFile'])]);
         $resourceFinder ??= $this->createMock(ResourceFinder::class);
 
         return new MessageCatalogue($catalogue, $framework, $resourceFinder);

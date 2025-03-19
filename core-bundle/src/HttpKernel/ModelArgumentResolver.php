@@ -64,6 +64,8 @@ class ModelArgumentResolver implements ValueResolverInterface
 
         /** @var class-string<Model> $type */
         $type = $argument->getType();
+
+        /** @var Model|int $value */
         $value = $request->attributes->get($name);
 
         if ($type && $value instanceof $type) {
