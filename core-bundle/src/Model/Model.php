@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Model;
 
 use Contao\Model as ContaoModel;
 
-final class Model
+class Model
 {
     public const TAG_NAME = 'contao.models';
 

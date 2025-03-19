@@ -16,6 +16,7 @@ use Contao\Config;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\CoreBundle\Model\Model as ContaoModel;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
@@ -570,6 +571,12 @@ class StringUtilTest extends TestCase
         $connection
             ->method('createSchemaManager')
             ->willReturn($schemaManager)
+        ;
+
+        $model = $this->createMock(ContaoModel::class);
+        $model
+            ->method('getModels')
+            ->willReturn([])
         ;
 
         $container = System::getContainer();
