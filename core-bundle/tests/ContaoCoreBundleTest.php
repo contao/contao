@@ -93,7 +93,7 @@ class ContaoCoreBundleTest extends TestCase
             ConfigureFilesystemPass::class,
             AddInsertTagsPass::class,
             AccessDecisionStrategyPass::class,
-            AddModelsPass::class
+            AddModelsPass::class,
         ];
 
         $security = $this->createMock(SecurityExtension::class);
