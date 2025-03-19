@@ -90,6 +90,18 @@ services:
         arguments:
             - '@database_connection'
 
+    contao_news.news_archive_model:
+        class: Contao\NewsArchiveModel
+        public: true
+        tags:
+            - { name: contao.model, table: tl_news_archive }
+
+    contao_news.news_model:
+        class: Contao\NewsModel
+        public: true
+        tags:
+            - { name: contao.model, table: tl_news }
+
     contao_news.picker.news_provider:
         class: Contao\NewsBundle\Picker\NewsPickerProvider
         arguments:
@@ -118,15 +130,3 @@ services:
         arguments:
             - '@security.access.decision_manager'
             - '@database_connection'
-
-    contao_news.news_archive_model:
-        class: Contao\NewsArchiveModel
-        public: true
-        tags:
-            - { name: contao.model, table: tl_news_archive }
-
-    contao_news.news_model:
-        class: Contao\NewsModel
-        public: true
-        tags:
-            - { name: contao.model, table: tl_news }
