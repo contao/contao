@@ -137,11 +137,7 @@ export class TwigEditor {
                     tokens[i + 2].value === 'block' &&
                     tokens[i + 4]?.type === 'identifier'
                 ) {
-                    blocks.push({
-                        name: tokens[i + 4].value,
-                        row,
-                        column: tokens[i].start,
-                    });
+                    blocks.push({ name: tokens[i + 4].value, row, column: tokens[i].start });
                 }
             }
         }

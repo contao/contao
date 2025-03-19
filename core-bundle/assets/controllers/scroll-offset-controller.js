@@ -33,6 +33,7 @@ export default class extends Controller {
                 }
 
                 const { controllerAttribute } = application.schema;
+
                 document.documentElement.setAttribute(
                     controllerAttribute,
                     `${document.documentElement.getAttribute(controllerAttribute) || ''} ${identifier}`,
@@ -43,6 +44,7 @@ export default class extends Controller {
                         document.documentElement,
                         identifier,
                     );
+
                     (controller && resolve(controller)) || reject(controller);
                 }, 100);
             });

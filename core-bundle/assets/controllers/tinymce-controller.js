@@ -19,6 +19,7 @@ export default class extends Controller {
                     this.element,
                 );
             }
+
             return;
         }
 
@@ -29,9 +30,7 @@ export default class extends Controller {
             this.editorId = editors[0]?.id;
 
             // Fire a custom event when the editor finished initializing.
-            this.dispatch('editor-loaded', {
-                detail: { content: editors[0] ?? null },
-            });
+            this.dispatch('editor-loaded', { detail: { content: editors[0] ?? null } });
         });
     }
 

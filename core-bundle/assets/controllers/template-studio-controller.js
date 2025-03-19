@@ -94,6 +94,7 @@ export default class extends Controller {
             .getControllerForElementAndIdentifier(this.tabsTarget, 'contao--tabs')
             .getActiveTab()
             ?.querySelectorAll('*[data-contao--template-studio-target="editor"]');
+
         for (const el of editorElementsOnActiveTab ?? []) {
             const editor = this.editors.get(el);
 
