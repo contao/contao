@@ -228,7 +228,24 @@ class StringUtil
 	 */
 	public static function convertBasicEntities($strBuffer)
 	{
-		return str_replace(array('&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;'), array('[&]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]'), $strBuffer);
+		$replace = static function (&$value)
+		{
+			if (\is_string($value))
+			{
+				$value = str_replace(array('&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;'), array('[&]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]'), $value);
+			}
+		};
+
+		if (\is_array($strBuffer))
+		{
+			array_walk_recursive($strBuffer, $replace);
+		}
+		else
+		{
+			$replace($strBuffer);
+		}
+
+		return $strBuffer;
 	}
 
 	/**
@@ -240,7 +257,24 @@ class StringUtil
 	 */
 	public static function restoreBasicEntities($strBuffer)
 	{
-		return str_replace(array('[&]', '[&amp;]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]'), array('&amp;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;'), $strBuffer);
+		$replace = static function (&$value)
+		{
+			if (\is_string($value))
+			{
+				$value = str_replace(array('[&]', '[&amp;]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]'), array('&amp;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;'), $value);
+			}
+		};
+
+		if (\is_array($strBuffer))
+		{
+			array_walk_recursive($strBuffer, $replace);
+		}
+		else
+		{
+			$replace($strBuffer);
+		}
+
+		return $strBuffer;
 	}
 
 	/**
