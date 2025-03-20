@@ -31,6 +31,7 @@ use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\Exception\DriverException;
+use enshrined\svgSanitize\Sanitizer;
 use Imagine\Exception\RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -1796,6 +1797,17 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Save the file
 			if (md5($strContent) != md5($strSource))
 			{
+				if ($objFile->extension == 'svg' || $objFile->extension == 'svgz')
+				{
+					$sanitizer = new Sanitizer();
+					$strSource = $sanitizer->sanitize($strSource);
+
+					if (!$strSource)
+					{
+						throw new \Exception(\sprintf($GLOBALS['TL_LANG']['ERR']['invalidFile'], $this->intId));
+					}
+				}
+
 				if ($objFile->extension == 'svgz')
 				{
 					$strSource = gzencode($strSource);
