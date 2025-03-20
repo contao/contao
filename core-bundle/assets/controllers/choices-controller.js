@@ -1,16 +1,17 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class ChoicesController extends Controller {
-    mutationGuard = false;
+    addMutationGuard = false;
+    removeMutationGuard = false;
 
     connect() {
-        if (this._isGuarded()) {
+        if (this.addMutationGuard) {
             return;
         }
 
         // Choices wraps the element multiple times during initialization, leading to
         // multiple disconnects/reconnects of the controller that we need to ignore.
-        this._setGuard();
+        this.addMutationGuard = true;
 
         const select = this.element;
 
@@ -35,7 +36,9 @@ export default class ChoicesController extends Controller {
                     choices.dataset.placeholder = select.dataset.placeholder;
                 }
 
-                this._resetGuard();
+                queueMicrotask(() => {
+                    this.addMutationGuard = false;
+                });
             },
             loadingText: Contao.lang.loading,
             noResultsText: Contao.lang.noResults,
@@ -47,7 +50,7 @@ export default class ChoicesController extends Controller {
     }
 
     disconnect() {
-        if (this._isGuarded()) {
+        if (this.addMutationGuard || this.removeMutationGuard) {
             return;
         }
 
@@ -64,26 +67,13 @@ export default class ChoicesController extends Controller {
     _removeChoices() {
         // Safely unwrap the element by preventing disconnect/connect calls
         // during the process.
-        this._setGuard();
+        this.removeMutationGuard = true;
 
         this.choices?.destroy();
         this.choices = null;
 
-        this._resetGuard();
-    }
-
-    _setGuard() {
-        this.mutationGuard = true;
-    }
-
-    _resetGuard() {
-        // Reset guard as soon as the call stack has cleared.
-        setTimeout(() => {
-            this.mutationGuard = false;
-        }, 0);
-    }
-
-    _isGuarded() {
-        return this.mutationGuard;
+        queueMicrotask(() => {
+            this.removeMutationGuard = false;
+        });
     }
 }
