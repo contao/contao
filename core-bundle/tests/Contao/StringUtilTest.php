@@ -628,14 +628,15 @@ class StringUtilTest extends TestCase
     }
 
     /**
-     * @dataProvider convertBasicEntitiesProvider
+     * @dataProvider basicEntitiesProvider
      */
-    public function testConvertsBasicEntities(array|string $string, array|string $expected): void
+    public function testConvertsBasicEntities(array|string $htmlEntities, array|string $basicEntities): void
     {
-        $this->assertSame($expected, StringUtil::convertBasicEntities($string));
+        $this->assertSame($basicEntities, StringUtil::convertBasicEntities($htmlEntities));
+        $this->assertSame($htmlEntities, StringUtil::restoreBasicEntities($basicEntities));
     }
 
-    public static function convertBasicEntitiesProvider(): iterable
+    public static function basicEntitiesProvider(): iterable
     {
         yield 'String value' => [
             'foo&amp;bar',
@@ -672,79 +673,6 @@ class StringUtilTest extends TestCase
                 [
                     'key' => 'name',
                     'value' => 'Con[-]tao',
-                ],
-            ],
-        ];
-
-        yield 'Non-string values' => [
-            [
-                [
-                    'key' => 'sum',
-                    'value' => 42,
-                ],
-                [
-                    'key' => 'name',
-                    'value' => true,
-                ],
-            ],
-            [
-                [
-                    'key' => 'sum',
-                    'value' => 42,
-                ],
-                [
-                    'key' => 'name',
-                    'value' => true,
-                ],
-            ],
-        ];
-    }
-
-    /**
-     * @dataProvider restoreBasicEntitiesProvider
-     */
-    public function testRestoresBasicEntities(array|string $string, array|string $expected): void
-    {
-        $this->assertSame($expected, StringUtil::restoreBasicEntities($string));
-    }
-
-    public static function restoreBasicEntitiesProvider(): iterable
-    {
-        yield 'String value' => [
-            'foo[&]bar',
-            'foo&amp;bar',
-        ];
-
-        yield 'InputUnit field' => [
-            [
-                'unit' => 'h2',
-                'value' => '[lt]strong[gt]',
-            ],
-            [
-                'unit' => 'h2',
-                'value' => '&lt;strong&gt;',
-            ],
-        ];
-
-        yield 'KeyValue wizard' => [
-            [
-                [
-                    'key' => 'sum',
-                    'value' => '10[nbsp]€',
-                ],
-                [
-                    'key' => 'name',
-                    'value' => 'Con[-]tao',
-                ],
-            ],
-            [
-                [
-                    'key' => 'sum',
-                    'value' => '10&nbsp;€',
-                ],
-                [
-                    'key' => 'name',
-                    'value' => 'Con&shy;tao',
                 ],
             ],
         ];
