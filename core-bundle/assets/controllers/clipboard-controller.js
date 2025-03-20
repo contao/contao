@@ -10,7 +10,17 @@ export default class extends Controller {
         },
     };
 
-    write() {
-        navigator.clipboard.writeText(this.contentValue).then(() => Message.info(this.messageValue));
+    async write() {
+        if (!navigator.clipboard) {
+            if (window.console) {
+                console.error('The clipboard API is not available - make sure you are using a secure context (https).');
+            }
+
+            return;
+        }
+
+        await navigator.clipboard.writeText(this.contentValue);
+
+        Message.info(this.messageValue);
     }
 }
