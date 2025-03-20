@@ -184,13 +184,13 @@ class Cron
             $entityManager->flush();
         };
 
-        $this->executeCrons($cronJobsToBeRun, $scope, $onSkip);
+        $this->executeCrons($cronJobsToBeRun, $scope, $entityManager, $onSkip);
     }
 
     /**
      * @param array<CronJob> $crons
      */
-    private function executeCrons(array $crons, string $scope, \Closure $onSkip): void
+    private function executeCrons(array $crons, string $scope, EntityManagerInterface $entityManager, \Closure $onSkip): void
     {
         $promises = [];
         $exception = null;
@@ -232,6 +232,9 @@ class Cron
         }
 
         if ($promises) {
+            // Close the DB connection until async promises have completed.
+            $entityManager->getConnection()->close();
+
             Utils::settle($promises)->wait();
         }
 

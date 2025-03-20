@@ -53,7 +53,10 @@
         left: 0;
         height: 0;
         width: 0;
-        transition: width 0ms .25s, height 0ms .25s, opacity .25s;
+        transition:
+            width 0ms 0.25s,
+            height 0ms 0.25s,
+            opacity 0.25s;
         opacity: 0;
         z-index: 5;
 
@@ -62,8 +65,10 @@
 
     .backend-search_inner {
         position: absolute;
-        width: max(30%,280px);
-        transition: width .25s cubic-bezier(.1,.65,.1,1), max-width .25s cubic-bezier(.1,.65,.1,1);
+        width: max(30%, 280px);
+        transition:
+            width 0.25s cubic-bezier(0.1, 0.65, 0.1, 1),
+            max-width 0.25s cubic-bezier(0.1, 0.65, 0.1, 1);
     }
 
     #backend-search {
@@ -107,7 +112,10 @@
         .backend-search_overlay {
             height: 200vh;
             opacity: 1;
-            transition: width 0ms, height 0ms, opacity .25s;
+            transition:
+                width 0ms,
+                height 0ms,
+                opacity 0.25s;
             width: 100%;
         }
 
@@ -119,7 +127,7 @@
         .backend-search_results-container {
             opacity: 1;
             pointer-events: revert;
-            transition: opacity .4s;
+            transition: opacity 0.4s;
         }
 
         #backend-search {

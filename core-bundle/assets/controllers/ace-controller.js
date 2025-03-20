@@ -4,7 +4,7 @@ export default class extends Controller {
     static values = {
         type: String,
         readOnly: Boolean,
-    }
+    };
 
     connect() {
         // Create a div to apply the editor to
@@ -54,6 +54,9 @@ export default class extends Controller {
     }
 
     setMaxLines() {
-        this.editor.setOption('maxLines', Math.floor((window.innerHeight - 320) / Math.floor(12 * this.editor.container.style.lineHeight)));
+        this.editor.setOption(
+            'maxLines',
+            Math.floor((window.innerHeight - 320) / Math.floor(12 * this.editor.container.style.lineHeight)),
+        );
     }
 }
