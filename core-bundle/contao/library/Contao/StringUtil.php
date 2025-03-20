@@ -238,7 +238,7 @@ class StringUtil
 
 		if (\is_array($strBuffer))
 		{
-			array_walk_recursive($strBuffer, static fn(&$value) => $replace($value));
+			array_walk_recursive($strBuffer, $replace);
 		}
 		else
 		{
@@ -267,7 +267,7 @@ class StringUtil
 
 		if (\is_array($strBuffer))
 		{
-			array_walk_recursive($strBuffer, static fn(&$value) => $replace($value));
+			array_walk_recursive($strBuffer, $replace);
 		}
 		else
 		{
