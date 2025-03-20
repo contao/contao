@@ -2,6 +2,15 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.5.7] (2025-03-20)
+
+**Fixed issues:**
+
+- [#8203] Use separate signals to prevent executing connects/disconnects in the Choices controller ([m-vo])
+- [#8177] Use `requestSubmit` for `Backend.autoSubmit` ([fritzmg])
+- [#8206] Handle non-Contao base templates in the Twig inspector ([m-vo])
+- [#8163] Use a CSS selector to check for contained elements ([aschempp])
+
 ## [5.5.6] (2025-03-18)
 
 **Security fixes:**
@@ -214,6 +223,7 @@ This project adheres to [Semantic Versioning].
 - [#7582] Add PostCSS as described in Symfony Encore ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.5.7]: https://github.com/contao/contao/releases/tag/5.5.7
 [5.5.6]: https://github.com/contao/contao/releases/tag/5.5.6
 [5.5.5]: https://github.com/contao/contao/releases/tag/5.5.5
 [5.5.4]: https://github.com/contao/contao/releases/tag/5.5.4
@@ -382,6 +392,10 @@ This project adheres to [Semantic Versioning].
 [#8153]: https://github.com/contao/contao/pull/8153
 [#8158]: https://github.com/contao/contao/pull/8158
 [#8160]: https://github.com/contao/contao/pull/8160
+[#8163]: https://github.com/contao/contao/pull/8163
 [#8174]: https://github.com/contao/contao/pull/8174
+[#8177]: https://github.com/contao/contao/pull/8177
 [#8185]: https://github.com/contao/contao/pull/8185
 [#8195]: https://github.com/contao/contao/pull/8195
+[#8203]: https://github.com/contao/contao/pull/8203
+[#8206]: https://github.com/contao/contao/pull/8206
