@@ -10,9 +10,7 @@ export default class extends Controller {
         },
     };
 
-    write () {
-        navigator.clipboard.writeText(this.contentValue)
-            .then(() =>  Message.info(this.messageValue))
-        ;
+    write() {
+        navigator.clipboard.writeText(this.contentValue).then(() => Message.info(this.messageValue));
     }
 }

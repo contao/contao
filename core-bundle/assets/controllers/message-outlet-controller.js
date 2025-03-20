@@ -17,7 +17,7 @@ export default class extends Controller {
         const { type, message } = event.detail;
 
         for (const target of this.messagePrototypeTargets) {
-            if(target.dataset.type === type) {
+            if (target.dataset.type === type) {
                 const html = target.getHTML().replace('{{message}}', message);
                 this.element.append(document.createRange().createContextualFragment(html));
 

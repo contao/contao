@@ -20,8 +20,9 @@ export class Message {
     static _addMessage(message, type) {
         const event = new CustomEvent('contao--message', {
             detail: {
-                type, message
-            }
+                type,
+                message,
+            },
         });
 
         document.dispatchEvent(event);
