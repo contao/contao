@@ -1,0 +1,18 @@
+a[data-controller="contao--clipboard"] {
+    &:before {
+        display: inline-block;
+        content: "";
+        width: 1em;
+        height: 1em;
+        margin-right: 2px;
+        margin-bottom: 2px;
+        vertical-align: middle;
+        background: url("../../../contao/themes/flexible/icons/clipboard.svg") no-repeat center center;
+        background-size: contain;
+        filter: grayscale(100);
+    }
+
+    &:hover:before {
+        filter: grayscale(0);
+    }
+}
