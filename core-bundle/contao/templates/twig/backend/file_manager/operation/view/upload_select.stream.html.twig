@@ -1,0 +1,37 @@
+{# Show a dialog #}
+{% embed "@Contao/backend/template_studio/show_modal.stream.html.twig" %}
+    {% trans_default_domain "contao_file_manager" %}
+
+    {% block title %}{{ ('operation.view_upload.0')|trans }}{% endblock %}
+
+    {% block content %}
+        {% set target_directory_token -%}
+            <span class="token">{{ target_directory }}</span>
+        {%- endset %}
+
+        <div class="description">
+            {{ ('dialog.view_upload.select')|trans(target_directory != '' ? [target_directory_token] : ['root_name'|trans])|raw }}
+        </div>
+
+        <div class="controls">
+            <div class="control">
+                <label for="ctrl_file_upload">
+                    <span class="invisible">{{ 'MSC.mandatory'|trans(domain: 'contao_default') }}</span>
+                        {{ 'FFL.upload.0'|trans(domain: 'contao_default') }}
+                    <span class="mandatory">*</span>
+                </label>
+                <input type="file" name="ctrl_file_upload" data-path="{{ target_directory }}" multiple required>
+            </div>
+        </div>
+
+        <div class="tl_info">
+            {{ ('dialog.view_upload.hint')|trans([target_directory]) }}
+        </div>
+    {% endblock %}
+
+    {% block buttons %}
+        {{ parent() }}
+        <button class="confirm"
+                data-action="contao--file-manager#upload:prevent">{{ 'operation.view_upload.0'|trans }}</button>
+    {% endblock %}
+{% endembed %}

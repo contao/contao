@@ -1,0 +1,11 @@
+{# Show a message #}
+{% embed "@Contao/backend/component/message/add_message.stream.html.twig" with {success: false} %}
+    {% trans_default_domain "contao_file_manager" %}
+
+    {% block content %}
+        {% set operation_token -%}
+            <span class="token">{{ operation }}</span>
+        {%- endset %}
+        {{ 'message.operation_error'|trans([operation_token])|raw }}
+    {% endblock %}
+{% endembed %}

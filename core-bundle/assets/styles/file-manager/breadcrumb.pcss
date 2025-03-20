@@ -1,0 +1,37 @@
+#file-manager--breadcrumb nav {
+    display: flex;
+    align-items: center;
+    background-color: var(--content-bg);
+
+    ol {
+        display: flex;
+        align-items: center;
+        margin: 0;
+        padding: 0;
+
+        li {
+            display: flex;
+            align-items: center;
+
+            &:before {
+                width: 12px;
+                content: "\A0› ";
+                font-weight: 600;
+            }
+        }
+    }
+
+    button {
+        display: inline-flex;
+        gap: 4px;
+        background-color: var(--content-bg);
+        border: none;
+        padding: 8px;
+        color: var(--text);
+
+        &:hover,
+        &.active {
+            background-color: var(--panel-bg);
+        }
+    }
+}

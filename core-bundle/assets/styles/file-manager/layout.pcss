@@ -1,0 +1,71 @@
+@import "breadcrumb.pcss";
+@import "common.pcss";
+@import "content.pcss";
+@import "dialog.pcss";
+@import "drag-and-drop.pcss";
+@import "operations.pcss";
+@import "tree.pcss";
+@import "upload.pcss";
+
+#file-manager {
+    --hover-color: var(--blue);
+
+    height: calc(100vh - 7rem);
+    overflow: hidden;
+
+    display: grid;
+    grid-template-areas:
+        "tree upload     info"
+        "tree breadcrumb info"
+        "tree content    info";
+    grid-template-columns: auto 1fr min-content;
+    grid-template-rows: min-content auto 1fr;
+    position: relative;
+
+    * {
+        scrollbar-width: thin;
+    }
+
+    > :empty {
+        display: none;
+    }
+
+    #file-manager--tree {
+        grid-area: tree;
+        overflow: auto;
+        resize: horizontal;
+        min-width: 100px;
+        max-width: max-content;
+        padding-top: 4px;
+        border-right: 1px solid var(--border);
+    }
+
+    #file-manager--breadcrumb {
+        grid-area: breadcrumb;
+        border-bottom: 1px solid var(--border);
+    }
+
+    #file-manager--upload {
+        grid-area: upload;
+        border-bottom: 1px solid var(--border);
+    }
+
+    #file-manager--content {
+        grid-area: content;
+    }
+
+    #file-manager--info {
+        grid-area: info;
+        overflow-y: auto;
+        min-width: 220px;
+        border-left: 1px solid var(--border);
+
+        @media (min-width: 1540px) {
+            min-width: 320px;
+        }
+
+        @media (min-width: 1640px) {
+            min-width: 420px;
+        }
+    }
+}

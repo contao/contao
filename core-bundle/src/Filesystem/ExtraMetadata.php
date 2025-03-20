@@ -34,6 +34,11 @@ class ExtraMetadata implements \ArrayAccess
         }
     }
 
+    public function with(ExtraMetadata $extraMetadata): self
+    {
+        return new ExtraMetadata(array_merge($this->extraMetadata, $extraMetadata->extraMetadata));
+    }
+
     public function get(string $key): mixed
     {
         $this->handleDeprecatedMetadataKey($key);
@@ -41,6 +46,7 @@ class ExtraMetadata implements \ArrayAccess
         return $this->extraMetadata[$key] ?? null;
     }
 
+    // todo: deprecate in favor of using with()?
     public function set(string $key, mixed $value): void
     {
         $this->handleDeprecatedMetadataKey($key);
@@ -70,6 +76,7 @@ class ExtraMetadata implements \ArrayAccess
     /**
      * Sets a MetadataBag of localized metadata using the key "localized".
      */
+    // todo: deprecate in favor of using with()?
     public function setLocalized(MetadataBag $localizedMetadata): void
     {
         $this->set('localized', $localizedMetadata);

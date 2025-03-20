@@ -408,6 +408,14 @@ services:
             - '@translator'
             - '@contao.csrf.token_manager'
 
+    contao.listener.menu.backend_file_manager:
+        class: Contao\CoreBundle\EventListener\Menu\BackendFileManagerListener
+        arguments:
+            - '@router'
+            - '@request_stack'
+            - '@translator'
+            - '%contao.file_manager.enabled%'
+
     contao.listener.menu.backend_header:
         class: Contao\CoreBundle\EventListener\Menu\BackendHeaderListener
         arguments:

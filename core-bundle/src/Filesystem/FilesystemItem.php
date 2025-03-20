@@ -202,9 +202,11 @@ class FilesystemItem implements \Stringable
         return Path::getExtension($this->path, $forceLowerCase);
     }
 
-    public function getName(): string
+    public function getName(bool $withoutExtension = false): string
     {
-        return basename($this->path);
+        return $withoutExtension ?
+            Path::getFilenameWithoutExtension($this->path) :
+            basename($this->path);
     }
 
     public function getLastModified(): int|null

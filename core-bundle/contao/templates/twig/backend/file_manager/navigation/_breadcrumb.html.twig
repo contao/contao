@@ -1,0 +1,25 @@
+<form method="get" data-turbo-stream>
+    <nav>
+        {# Root #}
+        {{ block('navigate_button') }}
+
+        {# Nested directories #}
+        <ol>
+            {% if path %}
+                {% for name in path|split('/') %}
+                    <li>
+                        {% set element_path = prefix|default ~ name %}
+                        {% set prefix = element_path ~ '/' %}
+
+                        {% block navigate_button %}
+                            {% set button_attributes = attrs().addClass('active', path == element_path|default) %}
+                            {% with {path: element_path|default, name: name|default} %}
+                                {% include('@Contao/backend/file_manager/_directory_button.html.twig') %}
+                            {% endwith %}
+                        {% endblock %}
+                    </li>
+                {% endfor %}
+            {% endif %}
+        </ol>
+    </nav>
+</form>

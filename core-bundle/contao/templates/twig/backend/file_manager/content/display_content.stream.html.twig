@@ -1,0 +1,11 @@
+<turbo-stream action="update" target="file-manager--content">
+    <template>
+        {{ include("@Contao/backend/file_manager/content/_content.html.twig") }}
+    </template>
+</turbo-stream>
+
+<turbo-stream action="update" method="morph" target="file-manager--breadcrumb">
+    <template>
+        {{ include("@Contao/backend/file_manager/navigation/_breadcrumb.html.twig") }}
+    </template>
+</turbo-stream>

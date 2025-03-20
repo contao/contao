@@ -1,10 +1,5 @@
-#template-studio {
-    .token {
-        background-color: var(--code-bg);
-        color: var(--text);
-        padding: 0 4px;
-    }
-
+#template-studio,
+dialog[data-controller="contao--dialog"].template-studio {
     .template_name {
         display: flex;
         flex-direction: column;
@@ -77,39 +72,6 @@
 
             &.badge--origin {
                 color: var(--green);
-            }
-        }
-    }
-
-    .header_wrapper {
-        display: flex;
-        gap: 4px;
-        justify-content: space-between;
-
-        h3 {
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-
-        button {
-            font-size: 0.75rem;
-            display: grid;
-            background: none;
-            border: none;
-            place-items: center;
-            border-radius: 50%;
-            padding: 0;
-            width: 14px;
-            height: 14px;
-            opacity: 0.5;
-            font-family:
-                -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue",
-                sans-serif;
-
-            &:hover {
-                opacity: 1;
-                background: var(--gray);
             }
         }
     }

@@ -1,0 +1,20 @@
+{% trans_default_domain "contao_file_manager" %}
+
+{% if operations|length %}
+    <form method="post">
+        <ul class="operations">
+            {% for operation in operations %}
+                {% set button_attributes = attrs()
+                    .set('formaction', path('_contao_file_manager_view_operation.stream', {operation, path}))
+                    .set('data-operation', operation)
+                    .set('title',  ('operation.' ~ operation ~ '.1')|trans)
+                    .addClass('operation operation--' ~ operation)
+                    .mergeWith(button_attributes|default)
+                %}
+                <li>
+                    <button{{ button_attributes }}>{{ ('operation.' ~ operation ~ '.0')|trans }}</button>
+                </li>
+            {% endfor %}
+        </ul>
+    </form>
+{% endif %}

@@ -1,0 +1,12 @@
+{# Show a message #}
+{% embed "@Contao/backend/component/message/add_message.stream.html.twig" with {success: false} %}
+    {% trans_default_domain "contao_file_manager" %}
+
+    {% block content %}
+        {% if reasons|length %}
+            {{ reasons|join('<br>')|raw }}
+        {% else %}
+            {{ 'message.view_upload.error'|trans }}
+        {% endif %}
+    {% endblock %}
+{% endembed %}

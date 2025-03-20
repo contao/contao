@@ -1,0 +1,17 @@
+{# Show a dialog #}
+{% embed "@Contao/backend/file_manager/show_modal.stream.html.twig" with {'legacyProxy': true} %}
+    {% trans_default_domain "contao_file_manager" %}
+
+    {% block title %}
+        {{ 'dialog.elements_edit.title'|trans([item.name]) }}
+    {% endblock %}
+
+    {% block content %}
+        {{ edit_form|raw }}
+    {% endblock %}
+
+    {% block buttons %}
+        {{ parent() }}
+        <button name="save">{{ 'MSC.saveNclose'|trans(domain: 'contao_default') }}</button>
+    {% endblock %}
+{% endembed %}

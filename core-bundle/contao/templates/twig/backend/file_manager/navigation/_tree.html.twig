@@ -1,0 +1,32 @@
+{% macro tree_node(tree, prefix = '') %}
+    <ol>
+        {% for name, node in tree %}
+            <li>
+                {% set path = prefix ~ name %}
+
+                {% block navigate_button %}
+                    {% include('@Contao/backend/file_manager/_directory_button.html.twig') %}
+                {% endblock %}
+
+                {% if node is iterable %}
+                    {{ _self.tree_node(node, path ~ '/') }}
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ol>
+{% endmacro %}
+
+<form method="get" data-turbo-stream>
+    <nav>
+        {# Root #}
+        {% set button_attributes = attrs()
+            .set('formaction', path('_contao_file_manager_list_content.stream', {path: ''}))
+        %}
+        {% with {path: ''} %}
+            {% include('@Contao/backend/file_manager/_directory_button.html.twig') %}
+        {% endwith %}
+
+        {# Tree #}
+        {{ _self.tree_node(tree) }}
+    </nav>
+</form>

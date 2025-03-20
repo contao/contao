@@ -1,0 +1,12 @@
+{# Initiate download #}
+<turbo-stream action="download" url="{{ url }}">
+</turbo-stream>
+
+{# Show a message #}
+{% embed "@Contao/backend/component/message/add_message.stream.html.twig" %}
+    {% trans_default_domain "contao_file_manager" %}
+
+    {% block content %}
+        {{ 'message.elements_download'|trans }}
+    {% endblock %}
+{% endembed %}

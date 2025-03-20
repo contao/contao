@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+    <file source-language="en">
+        <body>
+            <trans-unit id="root">
+                <source>Filesystem root</source>
+            </trans-unit>
+            <trans-unit id="root_name">
+                <source>root</source>
+            </trans-unit>
+            <trans-unit id="open_directory">
+                <source>Open directory in the file manager</source>
+            </trans-unit>
+            <trans-unit id="display-layout_list">
+                <source>Display as list</source>
+            </trans-unit>
+            <trans-unit id="display-layout_grid">
+                <source>Display as grid</source>
+            </trans-unit>
+            <trans-unit id="navigate_up">
+                <source>Navigate one level up</source>
+            </trans-unit>
+            <trans-unit id="property.important_part">
+                <source>An "important part" was defined for this image file</source>
+            </trans-unit>
+            <trans-unit id="elements-operations-scope">
+                <source>%d selected element(s)</source>
+            </trans-unit>
+            <trans-unit id="operation.view_upload.0">
+                <source>Upload</source>
+            </trans-unit>
+            <trans-unit id="operation.view_upload.1">
+                <source>Upload files here</source>
+            </trans-unit>
+            <trans-unit id="operation.elements_delete.0">
+                <source>Delete</source>
+            </trans-unit>
+            <trans-unit id="operation.elements_delete.1">
+                <source>Delete %d element(s)</source>
+            </trans-unit>
+            <trans-unit id="operation.elements_download.0">
+                <source>Download</source>
+            </trans-unit>
+            <trans-unit id="operation.elements_download.1">
+                <source>Download the file</source>
+            </trans-unit>
+            <trans-unit id="operation.elements_edit.0">
+                <source>Edit</source>
+            </trans-unit>
+            <trans-unit id="operation.elements_edit.1">
+                <source>Edit %d element(s)</source>
+            </trans-unit>
+            <trans-unit id="operation.elements_move.0">
+                <source>Move</source>
+            </trans-unit>
+            <trans-unit id="operation.elements_move.1">
+                <source>Move %d element(s)</source>
+            </trans-unit>
+            <trans-unit id="operation.elements_rename.0">
+                <source>Rename</source>
+            </trans-unit>
+            <trans-unit id="operation.elements_rename.1">
+                <source>Rename %d element(s)</source>
+            </trans-unit>
+            <trans-unit id="message.elements_delete.success">
+                <source>Successfully deleted %s element(s).</source>
+            </trans-unit>
+            <trans-unit id="message.elements_delete.error">
+                <source>There was an error deleting %s element(s).</source>
+            </trans-unit>
+            <trans-unit id="message.elements_download">
+                <source>The download will start shortly…</source>
+            </trans-unit>
+            <trans-unit id="message.elements_edit.success">
+                <source>Successfully updated the element's metadata.</source>
+            </trans-unit>
+            <trans-unit id="message.elements_edit.not_available">
+                <source>Editing metadata is currently only available for files in "files".</source>
+            </trans-unit>
+            <trans-unit id="message.elements_rename.success">
+                <source>Successfully renamed %s element(s).</source>
+            </trans-unit>
+            <trans-unit id="message.elements_rename.error">
+                <source>There was an error renaming %s element(s).</source>
+            </trans-unit>
+            <trans-unit id="message.view_upload.error">
+                <source>There was an error while uploading.</source>
+            </trans-unit>
+            <trans-unit id="message.view_upload.error_upload_type">
+                <source>Cannot upload a %s file.</source>
+            </trans-unit>
+            <trans-unit id="message.operation_error">
+                <source>Operation %s could not be executed.</source>
+            </trans-unit>
+            <trans-unit id="dialog.elements_delete.confirm">
+                <source>This will delete the following element(s) and cannot be undone:</source>
+            </trans-unit>
+            <trans-unit id="dialog.elements_edit.title">
+                <source>Edit metadata of %s</source>
+            </trans-unit>
+            <trans-unit id="dialog.elements_rename.title">
+                <source>Rename %s element(s)</source>
+            </trans-unit>
+            <trans-unit id="dialog.elements_rename.description_single">
+                <source>Choose a new name for the element.</source>
+            </trans-unit>
+            <trans-unit id="dialog.elements_rename.description_multiple">
+                <source>Choose a new name for the elements. Use %s as a placeholder — it will be replaced by ascending numbers.</source>
+            </trans-unit>
+            <trans-unit id="dialog.elements_rename.start_with">
+                <source>Starting number for placeholder</source>
+            </trans-unit>
+            <trans-unit id="dialog.view_upload.select">
+                <source>Please select file(s) from your device, that should get uploaded into the %s directory.</source>
+            </trans-unit>
+            <trans-unit id="dialog.view_upload.hint">
+                <source>Did you know, that you can also upload files and directories by dragging them anywhere into the file manager?</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

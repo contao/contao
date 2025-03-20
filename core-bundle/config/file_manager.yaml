@@ -1,0 +1,49 @@
+services:
+    _defaults:
+        autoconfigure: true
+
+    _instanceof:
+        Symfony\Bundle\FrameworkBundle\Controller\AbstractController:
+            calls:
+                - [setContainer, ['@Psr\Container\ContainerInterface']]
+
+    Contao\CoreBundle\Controller\BackendFileManagerController:
+        arguments:
+            - '@contao.filesystem.virtual.files'
+            - '@security.helper'
+            - '@contao.image.studio'
+            - '@contao.filesystem.file_download_helper'
+            - !tagged_iterator { tag: contao.operation.file_manager_elements, index_by: name }
+            - !tagged_iterator { tag: contao.operation.file_manager_view, index_by: name }
+
+    contao.filesystem.file_manager.delete_elements_operation:
+        class: Contao\CoreBundle\Filesystem\FileManager\Operation\ElementsDeleteOperation
+
+    contao.filesystem.file_manager.download_elements_operation:
+        class: Contao\CoreBundle\Filesystem\FileManager\Operation\ElementsDownloadOperation
+        arguments:
+            - '@router'
+            - '@contao.filesystem.file_download_helper'
+
+    contao.filesystem.file_manager.edit_elements_operation:
+        class: Contao\CoreBundle\Filesystem\FileManager\Operation\ElementsEditOperation
+        arguments:
+            - '@contao.data_container.dca_request_switcher'
+            - '@event_dispatcher'
+
+    contao.filesystem.file_manager.move_elements_operation:
+        class: Contao\CoreBundle\Filesystem\FileManager\Operation\ElementsMoveOperation
+
+    contao.filesystem.file_manager.rename_elements_operation:
+        class: Contao\CoreBundle\Filesystem\FileManager\Operation\ElementsRenameOperation
+
+    contao.filesystem.file_manager.upload_view_operation:
+        class: Contao\CoreBundle\Filesystem\FileManager\Operation\ViewUploadOperation
+        arguments:
+            - '@event_dispatcher'
+
+    contao.filesystem.file_manager.upload.restrict_file_types_listener:
+        class: Contao\CoreBundle\Filesystem\FileManager\Upload\RestrictUploadFileTypesListener
+        arguments:
+            - '@translator'
+
