@@ -49,7 +49,7 @@ class SuperviseWorkersCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        if (null === $this->workers || null === $this->supervisor) {
+        if (!$this->workers || !$this->supervisor) {
             $io->error('No supervisor or workers defined.');
 
             return Command::FAILURE;
