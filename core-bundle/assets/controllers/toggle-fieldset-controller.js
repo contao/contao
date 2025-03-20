@@ -4,11 +4,11 @@ export default class extends Controller {
     static values = {
         id: String,
         table: String,
-    }
+    };
 
     static classes = ['collapsed'];
 
-    static afterLoad (identifier, application) {
+    static afterLoad(identifier, application) {
         const addController = (el, id, table) => {
             const fs = el.parentNode;
 
@@ -17,13 +17,19 @@ export default class extends Controller {
             fs.setAttribute(`data-${identifier}-table-value`, table);
             fs.setAttribute(`data-${identifier}-collapsed-class`, 'collapsed');
             el.setAttribute('tabindex', 0);
-            el.setAttribute('data-action', `click->${identifier}#toggle keydown.enter->${identifier}#toggle keydown.space->${identifier}#prevent:prevent keyup.space->${identifier}#toggle:prevent`);
-        }
+
+            el.setAttribute(
+                'data-action',
+                `click->${identifier}#toggle keydown.enter->${identifier}#toggle keydown.space->${identifier}#prevent:prevent keyup.space->${identifier}#toggle:prevent`,
+            );
+        };
 
         const migrateLegacy = () => {
-            document.querySelectorAll('legend[data-toggle-fieldset]').forEach(function(el) {
+            document.querySelectorAll('legend[data-toggle-fieldset]').forEach(function (el) {
                 if (window.console) {
-                    console.warn(`Using the "data-toggle-fieldset" attribute on fieldset legends is deprecated and will be removed in Contao 6. Apply the "${identifier}" Stimulus controller instead.`);
+                    console.warn(
+                        `Using the "data-toggle-fieldset" attribute on fieldset legends is deprecated and will be removed in Contao 6. Apply the "${identifier}" Stimulus controller instead.`,
+                    );
                 }
 
                 const { id, table } = JSON.parse(el.getAttribute('data-toggle-fieldset'));
@@ -39,30 +45,36 @@ export default class extends Controller {
                 }
 
                 if (window.console) {
-                    console.warn('Using AjaxRequest.toggleFieldset() is deprecated and will be removed in Contao 6. Apply the Stimulus actions instead.');
+                    console.warn(
+                        'Using AjaxRequest.toggleFieldset() is deprecated and will be removed in Contao 6. Apply the Stimulus actions instead.',
+                    );
                 }
 
                 addController(el, id, table);
 
                 // Optimistically wait until Stimulus has registered the new controller
-                setTimeout(() => { application.getControllerForElementAndIdentifier(fs, identifier).toggle(); }, 100);
+                setTimeout(() => {
+                    application.getControllerForElementAndIdentifier(fs, identifier).toggle();
+                }, 100);
             };
-        }
+        };
 
         // Called as soon as registered, so DOM may not have been loaded yet
-        if (document.readyState === "loading") {
-            document.addEventListener("DOMContentLoaded", migrateLegacy);
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', migrateLegacy);
         } else {
             migrateLegacy();
         }
     }
 
-    connect () {
+    connect() {
         if (this.element.querySelectorAll('label.error, label.mandatory').length) {
             this.element.classList.remove(this.collapsedClass);
         } else if (this.element.classList.contains('hide')) {
             if (window.console) {
-                console.warn(`Using class "hide" on a fieldset is deprecated and will be removed in Contao 6. Use class "${this.collapsedClass}" instead.`);
+                console.warn(
+                    `Using class "hide" on a fieldset is deprecated and will be removed in Contao 6. Use class "${this.collapsedClass}" instead.`,
+                );
             }
 
             this.element.classList.add(this.collapsedClass);
@@ -75,7 +87,7 @@ export default class extends Controller {
         }
     }
 
-    toggle () {
+    toggle() {
         if (this.element.classList.contains(this.collapsedClass)) {
             this.open();
             this.setAriaExpanded(true);
@@ -85,7 +97,7 @@ export default class extends Controller {
         }
     }
 
-    open () {
+    open() {
         if (!this.element.classList.contains(this.collapsedClass)) {
             return;
         }
@@ -94,7 +106,7 @@ export default class extends Controller {
         this.storeState(1);
     }
 
-    close () {
+    close() {
         if (this.element.classList.contains(this.collapsedClass)) {
             return;
         }
@@ -111,7 +123,7 @@ export default class extends Controller {
         }
 
         if (!collapse) {
-            if (typeof(form.checkValidity) == 'function') {
+            if (typeof form.checkValidity == 'function') {
                 form.querySelector('button[type="submit"]').click();
             }
         } else {
@@ -120,7 +132,7 @@ export default class extends Controller {
         }
     }
 
-    storeState (state) {
+    storeState(state) {
         if (!this.hasIdValue || !this.hasTableValue) {
             return;
         }
@@ -128,14 +140,14 @@ export default class extends Controller {
         fetch(window.location.href, {
             method: 'POST',
             headers: {
-                'X-Requested-With': 'XMLHttpRequest'
+                'X-Requested-With': 'XMLHttpRequest',
             },
             body: new URLSearchParams({
                 action: 'toggleFieldset',
                 id: this.idValue,
                 table: this.tableValue,
                 state: state,
-            })
+            }),
         });
     }
 

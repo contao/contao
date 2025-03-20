@@ -15,30 +15,32 @@ application.debug = process.env.NODE_ENV === 'development';
 
 // Register all controllers with `contao--` prefix
 const context = require.context('./controllers', true, /\.js$/);
-application.load(context.keys()
-    .map((key) => {
-        const identifier = identifierForContextKey(key);
-        if (identifier) {
-            return definitionForModuleAndIdentifier(context(key), `contao--${ identifier }`);
-        }
-    }).filter((value) => value)
+application.load(
+    context
+        .keys()
+        .map((key) => {
+            const identifier = identifierForContextKey(key);
+            if (identifier) {
+                return definitionForModuleAndIdentifier(context(key), `contao--${identifier}`);
+            }
+        })
+        .filter((value) => value),
 );
 
 application.register('contao--webauthn', WebAuthn);
 
-document.documentElement.addEventListener('turbo:before-prefetch', e => {
+document.documentElement.addEventListener('turbo:before-prefetch', (e) => {
     if (
         // Do not prefetch if the user wants to save data or is on a slow
         // connection
-        navigator.connection?.saveData
-        || ['slow-2g', '2g'].includes(navigator.connection?.effectiveType)
-
+        navigator.connection?.saveData ||
+        ['slow-2g', '2g'].includes(navigator.connection?.effectiveType) ||
         // Do not prefetch if the URL contains a request token or the element
         // is part of the Symfony toolbar
-        || (e.target.search && (new URLSearchParams(e.target.search)).has('rt'))
-        || e.target.classList.contains('header_back')
-        || e.target.matches('[onclick^="Backend.openModalIframe("]')
-        || e.target.closest('.sf-toolbar') !== null
+        (e.target.search && new URLSearchParams(e.target.search).has('rt')) ||
+        e.target.classList.contains('header_back') ||
+        e.target.matches('[onclick^="Backend.openModalIframe("]') ||
+        e.target.closest('.sf-toolbar') !== null
     ) {
         e.preventDefault();
     }
@@ -55,7 +57,7 @@ const mooDomready = () => {
 
         window.fireEvent('domready');
     }
-}
+};
 
 document.documentElement.addEventListener('turbo:render', mooDomready);
 document.documentElement.addEventListener('turbo:frame-render', mooDomready);
@@ -63,7 +65,7 @@ document.documentElement.addEventListener('turbo:frame-render', mooDomready);
 // Always break out of a missing frame (#7501)
 document.documentElement.addEventListener('turbo:frame-missing', (e) => {
     if (window.console) {
-        console.warn('Turbo frame #'+e.target.id+' is missing.');
+        console.warn('Turbo frame #' + e.target.id + ' is missing.');
     }
 
     // Do not break out of frames that load their content via src
@@ -80,7 +82,7 @@ document.documentElement.addEventListener('turbo:frame-missing', (e) => {
 // Note that Stimulus' disconnect() function will not fire at this point and
 // thus cannot be used for this task.
 document.documentElement.addEventListener('turbo:before-cache', (e) => {
-    application.controllers.forEach(controller => {
+    application.controllers.forEach((controller) => {
         if ('function' === typeof controller.beforeCache) {
             controller.beforeCache(e);
         }

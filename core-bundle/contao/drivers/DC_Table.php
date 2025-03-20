@@ -5663,7 +5663,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			$fields = '
-<select name="tl_limit" class="tl_select' . ($active ? ' active' : '') . '" onchange="this.form.submit()" data-controller="contao--choices">
+<select name="tl_limit" class="tl_select' . ($active ? ' active' : '') . '" onchange="this.form.requestSubmit()" data-controller="contao--choices">
   ' . $options . '
 </select> ';
 		}

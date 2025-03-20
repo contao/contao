@@ -9,7 +9,7 @@ export default class extends Controller {
         attestationFailureMessage: String,
         optionsFailureMessage: String,
         csrfUrl: String,
-    }
+    };
 
     handleUnsupported() {
         this.messageTarget.innerHTML = this.renderMessage(this.unsupportedMessageValue);
