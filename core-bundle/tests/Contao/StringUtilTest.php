@@ -675,6 +675,29 @@ class StringUtilTest extends TestCase
                 ],
             ],
         ];
+
+        yield 'Non-string values' => [
+            [
+                [
+                    'key' => 'sum',
+                    'value' => 42,
+                ],
+                [
+                    'key' => 'name',
+                    'value' => true,
+                ],
+            ],
+            [
+                [
+                    'key' => 'sum',
+                    'value' => 42,
+                ],
+                [
+                    'key' => 'name',
+                    'value' => true,
+                ],
+            ],
+        ];
     }
 
     /**
@@ -722,6 +745,29 @@ class StringUtilTest extends TestCase
                 [
                     'key' => 'name',
                     'value' => 'Con&shy;tao',
+                ],
+            ],
+        ];
+
+        yield 'Non-string values' => [
+            [
+                [
+                    'key' => 'sum',
+                    'value' => 42,
+                ],
+                [
+                    'key' => 'name',
+                    'value' => true,
+                ],
+            ],
+            [
+                [
+                    'key' => 'sum',
+                    'value' => 42,
+                ],
+                [
+                    'key' => 'name',
+                    'value' => true,
                 ],
             ],
         ];
