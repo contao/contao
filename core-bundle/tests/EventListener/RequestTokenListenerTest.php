@@ -402,7 +402,7 @@ class RequestTokenListenerTest extends TestCase
         $listener($event);
     }
 
-    private function createPostRequest(string $contentType = 'application/x-www-form-urlencoded')
+    private function createPostRequest(string $contentType = 'application/x-www-form-urlencoded'): Request
     {
         return Request::create('/account.html', 'POST', [], [], [], ['CONTENT_TYPE' => $contentType]);
     }
