@@ -16,6 +16,7 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Exception\InvalidRequestTokenException;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\HttpFoundation\HeaderUtils;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\Security\Csrf\CsrfToken;
@@ -58,7 +59,7 @@ class RequestTokenListener
         if (
             'POST' !== $request->getRealMethod()
             || $request->isXmlHttpRequest()
-            || !$this->isSimpleCorsRequest($request)
+            || !self::isSimpleCorsRequest($request)
             || false === $request->attributes->get('_token_check')
             || $this->csrfTokenManager->canSkipTokenValidation($request, $this->csrfCookiePrefix.$this->csrfTokenName)
             || (true !== $request->attributes->get('_token_check') && !$this->scopeMatcher->isContaoRequest($request))
@@ -73,6 +74,21 @@ class RequestTokenListener
         }
 
         throw new InvalidRequestTokenException('Invalid CSRF token. Please reload the page and try again.');
+    }
+
+    public static function isSimpleCorsRequest(Request $request): bool
+    {
+        $contentType = HeaderUtils::split($request->headers->get('content-type'), ';')[0] ?? '';
+
+        return \in_array(
+            $contentType,
+            [
+                'application/x-www-form-urlencoded',
+                'multipart/form-data',
+                'text/plain',
+            ],
+            true,
+        );
     }
 
     private function getTokenFromRequest(Request $request): string|null
@@ -90,18 +106,5 @@ class RequestTokenListener
         }
 
         return null;
-    }
-
-    private function isSimpleCorsRequest(Request $request): bool
-    {
-        return \in_array(
-            $request->headers->get('content-type'),
-            [
-                'application/x-www-form-urlencoded',
-                'multipart/form-data',
-                'text/plain',
-            ],
-            true,
-        );
     }
 }

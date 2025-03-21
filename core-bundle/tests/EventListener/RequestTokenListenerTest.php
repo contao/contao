@@ -334,6 +334,31 @@ class RequestTokenListenerTest extends TestCase
         $listener($event);
     }
 
+    #[DataProvider('simpleCorsRequestContentTypeProvider')]
+    public function testSimpleCorsRequest(string $contentType): void
+    {
+        $request = $this->createPostRequest($contentType);
+
+        $this->assertTrue(RequestTokenListener::isSimpleCorsRequest($request));
+    }
+
+    public static function simpleCorsRequestContentTypeProvider(): array
+    {
+        return [
+            'urlencoded basic' => ['application/x-www-form-urlencoded'],
+            'urlencoded with UTF-8' => ['application/x-www-form-urlencoded; charset=UTF-8'],
+            'urlencoded with ISO' => ['application/x-www-form-urlencoded; charset=ISO-8859-1'],
+            'multipart basic' => ['multipart/form-data'],
+            'multipart with WebKit boundary' => ['multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW'],
+            'multipart with charset and custom boundary' => ['multipart/form-data; charset=UTF-8; boundary=----MyCustomBoundary12345'],
+            'text plain basic' => ['text/plain'],
+            'text plain with UTF-8' => ['text/plain; charset=UTF-8'],
+            'text plain with ISO' => ['text/plain; charset=ISO-8859-1'],
+            'text plain flowed' => ['text/plain; format=flowed'],
+            'text plain UTF-8 flowed' => ['text/plain; charset=UTF-8; format=flowed'],
+        ];
+    }
+
     private function validateRequestTokenForRequest(Request $request, bool $shouldValidate = true): void
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
