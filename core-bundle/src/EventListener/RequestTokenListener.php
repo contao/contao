@@ -52,7 +52,7 @@ class RequestTokenListener
         // Only check the request token if
         // - the request is a POST request,
         // - the request is not an Ajax request,
-        // - the request is not a simple CORS Content-Type that does not require a preflight request,
+        // - the request is a CORS Content-Type that requires a preflight request,
         // - the _token_check attribute is not false,
         // - the _token_check attribute is true or the request is a Contao request and
         // - the request has cookies, an authenticated user or the session has been started.
