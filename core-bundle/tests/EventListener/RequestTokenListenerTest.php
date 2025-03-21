@@ -31,8 +31,7 @@ class RequestTokenListenerTest extends TestCase
 {
     public function testValidatesTheRequestToken(): void
     {
-        $request = Request::create('/account.html', 'POST');
-        $request->setMethod('POST');
+        $request = $this->createPostRequest();
 
         $request->attributes->set('_token_check', true);
         $request->request->set('REQUEST_TOKEN', 'foo');
@@ -44,8 +43,7 @@ class RequestTokenListenerTest extends TestCase
 
     public function testValidatesTheRequestTokenUponAuthenticatedRequest(): void
     {
-        $request = Request::create('/account.html');
-        $request->setMethod('POST');
+        $request = $this->createPostRequest();
 
         $request->headers->set('PHP_AUTH_USER', 'user');
         $request->request->set('REQUEST_TOKEN', 'foo');
@@ -58,8 +56,7 @@ class RequestTokenListenerTest extends TestCase
         $session = new Session(new MockArraySessionStorage());
         $session->set('foobar', 'foobaz');
 
-        $request = Request::create('/account.html');
-        $request->setMethod('POST');
+        $request = $this->createPostRequest();
         $request->setSession($session);
 
         $request->attributes->set('_token_check', true);
@@ -70,17 +67,14 @@ class RequestTokenListenerTest extends TestCase
 
     public function testDoesNotValidateTheRequestTokenWithoutCookies(): void
     {
-        $request = Request::create('/account.html');
-        $request->setMethod('POST');
+        $request = $this->createPostRequest();
 
         $this->validateRequestTokenForRequest($request, false);
     }
 
     public function testDoesNotValidateTheRequestTokenWithCsrfCookiesOnly(): void
     {
-        $request = Request::create('/account.html');
-        $request->setMethod('POST');
-
+        $request = $this->createPostRequest();
         $request->cookies = new InputBag(['csrf_contao_csrf_token' => 'value']);
 
         $this->validateRequestTokenForRequest($request, false);
@@ -102,9 +96,7 @@ class RequestTokenListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $request = Request::create('/account.html');
-        $request->setMethod('POST');
-
+        $request = $this->createPostRequest();
         $request->request->set('REQUEST_TOKEN', 'foo');
 
         $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
@@ -154,8 +146,7 @@ class RequestTokenListenerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $request = Request::create('/account.html');
-        $request->setMethod('POST');
+        $request = $this->createPostRequest();
 
         $request->request->set('REQUEST_TOKEN', 'foo');
 
@@ -214,11 +205,34 @@ class RequestTokenListenerTest extends TestCase
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
 
-        $request = Request::create('/account.html');
-        $request->setMethod('POST');
+        $request = $this->createPostRequest();
 
         $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
         $request->headers->set('X-Requested-With', 'XMLHttpRequest');
+
+        $event = $this->createMock(RequestEvent::class);
+        $event
+            ->expects($this->once())
+            ->method('getRequest')
+            ->willReturn($request)
+        ;
+
+        $event
+            ->expects($this->once())
+            ->method('isMainRequest')
+            ->willReturn(true)
+        ;
+
+        $listener = new RequestTokenListener($scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
+        $listener($event);
+    }
+
+    public function testDoesNotValidateTheRequestTokenUponPreflightedRequests(): void
+    {
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
+
+        $request = $this->createPostRequest('text/xml'); // Content-Type requiring preflighted request
 
         $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
 
@@ -244,8 +258,7 @@ class RequestTokenListenerTest extends TestCase
         $scopeMatcher = $this->createMock(ScopeMatcher::class);
         $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
 
-        $request = Request::create('/account.html');
-        $request->setMethod('POST');
+        $request = $this->createPostRequest();
 
         $request->attributes->set('_token_check', false);
 
@@ -279,8 +292,7 @@ class RequestTokenListenerTest extends TestCase
 
         $csrfTokenManager = $this->createMock(ContaoCsrfTokenManager::class);
 
-        $request = Request::create('/account.html');
-        $request->setMethod('POST');
+        $request = $this->createPostRequest();
 
         $request->cookies = new InputBag(['unrelated-cookie' => 'to-activate-csrf']);
 
@@ -363,5 +375,10 @@ class RequestTokenListenerTest extends TestCase
 
         $listener = new RequestTokenListener($scopeMatcher, $csrfTokenManager, 'contao_csrf_token');
         $listener($event);
+    }
+
+    private function createPostRequest(string $contentType = 'application/x-www-form-urlencoded')
+    {
+        return Request::create('/account.html', 'POST', [], [], [], ['CONTENT_TYPE' => $contentType]);
     }
 }
