@@ -5,6 +5,7 @@
         colors="true"
         defaultTestSuite="unit"
         bootstrap="vendor/autoload.php"
+        cacheDirectory=".phpunit.cache"
         beStrictAboutChangesToGlobalState="true"
         displayDetailsOnTestsThatTriggerDeprecations="true"
         displayDetailsOnTestsThatTriggerErrors="true"

@@ -10,7 +10,8 @@
         "focus-trap": "^7.6.4",
         "postcss": "^8.5",
         "postcss-loader": "^8.1",
-        "postcss-preset-env": "^10.1"
+        "postcss-preset-env": "^10.1",
+        "prettier": "^3.5"
     },
     "browserslist": [
         "defaults"
@@ -19,7 +20,8 @@
         "dev-server": "encore dev-server",
         "dev": "encore dev",
         "watch": "encore dev --watch",
-        "build": "encore production --progress"
+        "build": "encore production --progress",
+        "cs-fixer": "prettier --write core-bundle/assets"
     },
     "private": true,
     "packageManager": "npm@11.1.0"

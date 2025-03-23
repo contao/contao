@@ -78,7 +78,7 @@ export class TurboStreamConnection {
                 continue;
             }
 
-            value.forEach(value => pairs.push([key + '[]', value]));
+            value.forEach((value) => pairs.push([key + '[]', value]));
         }
 
         return url + '?' + new URLSearchParams(pairs).toString();

@@ -14,8 +14,12 @@ export default class extends Controller {
     _connect() {
         if (!this.element.tinymceConfig) {
             if (window.console) {
-                console.error('No TinyMCE config was attached to the DOM element, expected an expando property called "tinymceConfig".', this.element);
+                console.error(
+                    'No TinyMCE config was attached to the DOM element, expected an expando property called "tinymceConfig".',
+                    this.element,
+                );
             }
+
             return;
         }
 
@@ -45,7 +49,7 @@ export default class extends Controller {
     }
 
     leave(event) {
-        const editor = tinymce?.get(this.editorId)
+        const editor = tinymce?.get(this.editorId);
 
         if (!editor || !editor.plugins.hasOwnProperty('autosave') || editor.isNotDirty) {
             return;

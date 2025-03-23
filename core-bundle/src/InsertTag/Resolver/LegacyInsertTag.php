@@ -699,11 +699,9 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             static function (&$value): void {
                 if (is_numeric($value)) {
                     $value = (int) $value;
-
-                    return;
+                } else {
+                    $value = StringUtil::specialcharsAttribute($value);
                 }
-
-                $value = StringUtil::specialcharsAttribute($value);
             },
         );
 

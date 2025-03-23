@@ -698,7 +698,8 @@ window.Backend =
 
 		var form = $(el) || el;
 		hidden.inject(form, 'bottom');
-		form.submit();
+		form.noValidate = true;
+		form.requestSubmit();
 	},
 
 	/**
@@ -1668,7 +1669,7 @@ window.Backend =
 				}
 			},
 			clickEvent = function(e) {
-				if (e.target instanceof HTMLImageElement || e.target instanceof HTMLAnchorElement || e.target instanceof HTMLButtonElement) {
+				if (e.target instanceof HTMLAnchorElement || e.target instanceof HTMLButtonElement || e.target instanceof HTMLInputElement || e.target?.closest('a, button, input, .operations')) {
 					return;
 				}
 

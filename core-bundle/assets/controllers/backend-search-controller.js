@@ -1,96 +1,151 @@
-import {Controller} from '@hotwired/stimulus'
-import {TurboStreamConnection} from '../modules/turbo-stream-connection';
-import * as focusTrap from 'focus-trap'
+import { Controller } from '@hotwired/stimulus';
 
 export default class BackendSearchController extends Controller {
     static targets = ['input', 'results'];
 
     static values = {
-        url: String,
-        minCharacters: Number,
-        debounceDelay: Number,
-    }
+        route: String,
+        minCharacters: {
+            type: Number,
+            default: 3,
+        },
+        delay: {
+            type: Number,
+            default: 300,
+        },
+    };
 
     static classes = ['hidden', 'initial', 'loading', 'invalid', 'results', 'error'];
 
     connect() {
-        this.debounceTimeout = null;
-        this.searchResultConnection = new TurboStreamConnection();
+        this.active = false;
+        this.timeout = null;
 
-        this.focusTrap = focusTrap.createFocusTrap(this.element, {
-            escapeDeactivates: false,
-            allowOutsideClick: true,
-        });
+        this._initAbortController();
+        this.setState('hidden');
     }
 
-    disconnect() {
-        this._stopPendingSearch();
-    }
-
-    async search() {
-        this._stopPendingSearch();
-
-        // Require a minimum amount of characters
+    performSearch() {
         if (this.inputTarget.value.length < this.minCharactersValue) {
-            return this._setState('invalid');
+            return this.setState('invalid');
         }
 
-        this._setState('loading');
+        clearTimeout(this.timeout);
 
-        // Debounce to avoid too many requests
-        await new Promise(resolve => this.debounceTimeout = setTimeout(resolve, this.debounceDelayValue));
+        this.timeout = setTimeout(() => {
+            this.loadResults();
+        }, this.delayValue);
+    }
 
-        // Get the search results
-        const result = await this.searchResultConnection.get(
-            this.urlValue, {keywords: this.inputTarget.value}
-        );
+    loadResults() {
+        this.setState('loading');
+        this._initAbortController();
 
-        if (result.ok) {
-            this._setState('results');
-            this.focusTrap.activate();
-        } else if (result.error) {
-            this._setState('error');
-        }
+        fetch(this.searchRoute, { signal: this.signal })
+            .then((res) => {
+                if (!res.ok) {
+                    throw new Error(res.statusText);
+                }
+
+                return res.text();
+            })
+            .then((html) => {
+                this.resultsTarget.innerHTML = html;
+                this.setState('results');
+            })
+            .catch((e) => {
+                if ('AbortError' === e.name) {
+                    return;
+                }
+
+                this.setState('error');
+            });
     }
 
     open() {
-        // Ignore focus on input if tabbing through results
-        if (this.focusTrap.active) {
-            return;
+        if (!this.active) {
+            this.setState('initial');
+            this.active = true;
         }
-
-        this._setState('initial');
     }
 
-    close(event) {
-        // Only close when clicking away
-        if (event instanceof PointerEvent && this.element.contains(event.target)) {
-            return;
-        }
-
-        // Ignore lost focus on input when tabbing through results
-        if (event.type === 'blur' && this.focusTrap.active) {
-            return;
-        }
-
-        this._stopPendingSearch();
-        this.resultsTarget.innerText = '';
-
+    close() {
         this.inputTarget.blur();
         this.inputTarget.value = '';
 
-        this._setState('hidden');
+        this.active = false;
+        this.timeout = null;
+
+        this.setState('hidden');
+        this._resetFocusableResults();
     }
 
-    _stopPendingSearch() {
-        clearTimeout(this.debounceTimeout);
-        this.searchResultConnection.abortPending();
-        this.focusTrap.deactivate();
+    inputBlur() {
+        if ('results' === this.state) {
+            return;
+        }
+
+        this.close();
     }
 
-    _setState(state) {
-        BackendSearchController.classes.forEach(className => {
+    focusTrapNext(event) {
+        if ('results' === this.state && document.activeElement === this.lastFocus) {
+            event.preventDefault();
+            this.firstFocus?.focus();
+        }
+    }
+
+    focusTrapPrev(event) {
+        if ('results' === this.state && document.activeElement === this.firstFocus) {
+            event.preventDefault();
+            this.lastFocus?.focus();
+        }
+    }
+
+    _initAbortController() {
+        this.abortController?.abort();
+        this.abortController = new AbortController();
+        this.signal = this.abortController?.signal;
+    }
+
+    _resetFocusableResults() {
+        this.firstFocus = null;
+        this.lastFocus = null;
+    }
+
+    _setFocusableResults() {
+        const elements = [
+            this.inputTarget,
+            ...this.resultsTarget.querySelectorAll('a[href]:not([disabled]), button:not([disabled])'),
+        ];
+
+        this.firstFocus = elements[0] ?? [];
+        this.lastFocus = elements[elements.length - 1] ?? [];
+    }
+
+    documentClick(event) {
+        if (this.element.contains(event.target)) {
+            return;
+        }
+
+        this.close();
+    }
+
+    setState(state) {
+        this.state = state;
+
+        if (state === 'results') {
+            this._setFocusableResults();
+        } else {
+            this._resetFocusableResults();
+        }
+
+        BackendSearchController.classes.forEach((className) => {
             this.element.classList.toggle(this[`${className}Class`], className === state);
         });
+    }
+
+    get searchRoute() {
+        return this.routeValue + this.inputTarget.value;
     }
 }
