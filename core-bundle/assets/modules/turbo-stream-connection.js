@@ -19,7 +19,7 @@ export class TurboStreamConnection {
         let params = {
             method: 'get',
             headers: {
-                'Accept': 'text/vnd.turbo-stream.html',
+                Accept: 'text/vnd.turbo-stream.html',
             },
             signal: this._abortController.signal,
         };
