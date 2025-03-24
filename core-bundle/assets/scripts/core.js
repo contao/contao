@@ -613,8 +613,14 @@ window.Backend =
 			'draggable': false,
 			'overlayOpacity': .7,
 			'overlayClick': false,
-			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
-			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
+			'onShow': function() {
+				document.body.setStyle('overflow', 'hidden');
+				document.dispatchEvent(new CustomEvent('contao--simple-modal:show'));
+			},
+			'onHide': function() {
+				document.body.setStyle('overflow', 'auto');
+				document.dispatchEvent(new CustomEvent('contao--simple-modal:hide'));
+			}
 		});
 		M.addButton(Contao.lang.cancel, 'btn', function() {
 			if (this.buttons[0].hasClass('btn-disabled')) {
