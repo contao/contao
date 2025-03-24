@@ -132,7 +132,7 @@
         <source>Help text</source>
       </trans-unit>
       <trans-unit id="tl_form_field.help.1">
-        <source>Optional help text associated with the field.</source>
+        <source>Here you can enter a help text that is associated with the field.</source>
       </trans-unit>
       <trans-unit id="tl_form_field.customRgxp.0">
         <source>Custom regular expression</source>
