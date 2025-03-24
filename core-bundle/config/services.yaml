@@ -217,7 +217,6 @@ services:
         public: true
         arguments:
             - '@contao.framework'
-            - '@request_stack'
             - '@security.helper'
             - '@router'
             - '@contao.translation.translator'
