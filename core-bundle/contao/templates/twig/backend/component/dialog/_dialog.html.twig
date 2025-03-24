@@ -5,6 +5,7 @@
 
     {% set dialog_attributes = attrs()
         .set('data-controller', 'contao--dialog')
+        .set('data-action', 'contao--simple-modal:show@document->contao--dialog#suspend contao--simple-modal:hide@document->contao--dialog#resume')
         .set('id', id)
         .set('data-turbo-temporary')
         .mergeWith(dialog_attributes|default)

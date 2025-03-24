@@ -19,8 +19,18 @@ export default class extends Controller {
     }
 
     close() {
-        // Currently, we never want to reopen a dialog, so we remove the
-        // element instead of calling close().
         this.element.remove();
+    }
+
+    suspend() {
+        if (this.element.open) {
+            this.element.close();
+        }
+    }
+
+    resume() {
+        if (!this.element.open) {
+            this.element.showModal();
+        }
     }
 }

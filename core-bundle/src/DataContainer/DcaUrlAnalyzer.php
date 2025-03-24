@@ -21,7 +21,6 @@ use Contao\Input;
 use Contao\System;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -30,7 +29,6 @@ class DcaUrlAnalyzer
 {
     public function __construct(
         private readonly ContaoFramework $framework,
-        private readonly RequestStack $requestStack,
         private readonly Security $securityHelper,
         private readonly RouterInterface $router,
         private readonly TranslatorBagInterface&TranslatorInterface $translator,
@@ -44,8 +42,6 @@ class DcaUrlAnalyzer
      */
     public function getCurrentTableId(Request|string|null $request = null): array
     {
-        $request = $this->resolveRequest($request);
-
         return $this->dcaRequestSwitcher->runWithRequest($request, fn (): array => $this->findTableAndId());
     }
 
@@ -55,7 +51,7 @@ class DcaUrlAnalyzer
     public function getTrail(Request|string|null $request = null): array
     {
         return $this->dcaRequestSwitcher->runWithRequest(
-            $this->resolveRequest($request),
+            $request,
             fn () => $this->doGetTrail(...$this->findTableAndId()),
         );
     }
@@ -87,7 +83,7 @@ class DcaUrlAnalyzer
         }
 
         $query = $this->dcaRequestSwitcher->runWithRequest(
-            new Request(['do' => $do]),
+            '?'.http_build_query(['do' => $do]),
             function () use ($table, $id, $do): array {
                 [$ptable, $pid] = $this->findParentFromRecord($table, $id) ?? [null, null];
 
@@ -117,19 +113,6 @@ class DcaUrlAnalyzer
         );
 
         return $this->router->generate('contao_backend', $query);
-    }
-
-    private function resolveRequest(Request|string|null $request): Request
-    {
-        if (\is_string($request)) {
-            return Request::create($request);
-        }
-
-        if ($request instanceof Request) {
-            return $request;
-        }
-
-        return $this->requestStack->getCurrentRequest() ?? throw new \LogicException('Unable to retrieve DCA information from empty request stack.');
     }
 
     /**

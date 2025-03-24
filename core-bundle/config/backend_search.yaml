@@ -7,7 +7,8 @@ services:
         arguments:
             - '@security.helper'
             - '@contao.search.backend'
-            - '@twig'
+        calls:
+            - [setContainer, ['@Psr\Container\ContainerInterface']]
 
     contao.messenger.backend_search.delete_documents_message_handler:
         class: Contao\CoreBundle\Messenger\MessageHandler\BackendSearch\DeleteDocumentsMessageHandler
