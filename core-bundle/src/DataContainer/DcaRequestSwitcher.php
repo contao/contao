@@ -16,9 +16,15 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\DcaLoader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Contracts\Service\ResetInterface;
 
-class DcaRequestSwitcher
+class DcaRequestSwitcher implements ResetInterface
 {
+    /**
+     * @var array<string, Request>
+     */
+    private array $requestCache = [];
+
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly RequestStack $requestStack,
@@ -32,8 +38,14 @@ class DcaRequestSwitcher
      *
      * @return T
      */
-    public function runWithRequest(Request|string $request, \Closure $callback): mixed
+    public function runWithRequest(Request|string|null $request, \Closure $callback): mixed
     {
+        $request ??= $this->requestStack->getCurrentRequest();
+
+        if (null === $request) {
+            throw new \LogicException('Unable to retrieve DCA information from empty request stack.');
+        }
+
         if ($request === $this->requestStack->getCurrentRequest()) {
             return $callback();
         }
@@ -50,7 +62,16 @@ class DcaRequestSwitcher
     public function pushRequest(Request|string $request): void
     {
         if (\is_string($request)) {
-            $request = Request::create($request);
+            if ($this->requestCache[$request] ?? null) {
+                $request = $this->requestCache[$request];
+            } else {
+                $request = $this->requestCache[$request] = Request::create($request);
+
+                // Copy the session as the security voters need it
+                if ($session = $this->requestStack->getCurrentRequest()?->getSession()) {
+                    $request->setSession($session);
+                }
+            }
         }
 
         $this->requestStack->push($request);
@@ -63,5 +84,10 @@ class DcaRequestSwitcher
         $this->requestStack->pop();
 
         $this->framework->getAdapter(DcaLoader::class)->switchToCurrentRequest();
+    }
+
+    public function reset(): void
+    {
+        $this->requestCache = [];
     }
 }
