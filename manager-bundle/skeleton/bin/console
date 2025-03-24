@@ -20,10 +20,7 @@ set_time_limit(0);
 @ini_set('display_errors', '0');
 
 // System maintenance mode comes first as it has to work even if the vendor directory does not exist
-if (
-    'contao:cron' === ($_SERVER['argv'][1] ?? null)
-    && file_exists(__DIR__.'/../var/maintenance.html')
-) {
+if ('contao:cron' === ($_SERVER['argv'][1] ?? null) && file_exists(__DIR__.'/../var/maintenance.html')) {
     exit;
 }
 
