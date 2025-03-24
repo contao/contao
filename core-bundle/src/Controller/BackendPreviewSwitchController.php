@@ -97,8 +97,9 @@ class BackendPreviewSwitchController
         }
 
         // Backwards compatibility: render the legacy bundle template if it exists
-        $template = $this->twig->getLoader()->exists('@ContaoCore/Frontend/preview_toolbar_base.html.twig') ?
-            '@ContaoCore/Frontend/preview_toolbar_base.html.twig' : '@Contao/frontend_preview/toolbar.html.twig';
+        $template = $this->twig->getLoader()->exists('@ContaoCore/Frontend/preview_toolbar_base.html.twig')
+            ? '@ContaoCore/Frontend/preview_toolbar_base.html.twig'
+            : '@Contao/frontend_preview/toolbar.html.twig';
 
         try {
             return $this->twig->render($template, [

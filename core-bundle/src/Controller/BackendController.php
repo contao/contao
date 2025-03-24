@@ -160,8 +160,9 @@ class BackendController extends AbstractController
     public function backendFallback(): Response
     {
         // Backwards compatibility: render the legacy bundle template if it exists
-        $template = $this->container->get('twig')->getLoader()->exists('@ContaoCore/Error/backend.html.twig') ?
-            '@ContaoCore/Error/backend.html.twig' : '@Contao/error/backend.html.twig';
+        $template = $this->container->get('twig')->getLoader()->exists('@ContaoCore/Error/backend.html.twig')
+            ? '@ContaoCore/Error/backend.html.twig'
+            : '@Contao/error/backend.html.twig';
 
         return $this->render(
             $template,

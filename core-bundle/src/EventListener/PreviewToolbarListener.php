@@ -90,8 +90,9 @@ class PreviewToolbarListener
         $cspHandler = $this->createCspHandler($response);
 
         // Backwards compatibility: render the legacy bundle template if it exists
-        $template = $this->twig->getLoader()->exists('@ContaoCore/Frontend/preview_toolbar_base_js.html.twig') ?
-            '@ContaoCore/Frontend/preview_toolbar_base_js.html.twig' : '@Contao/frontend_preview/toolbar_js.html.twig';
+        $template = $this->twig->getLoader()->exists('@ContaoCore/Frontend/preview_toolbar_base_js.html.twig')
+            ? '@ContaoCore/Frontend/preview_toolbar_base_js.html.twig'
+            : '@Contao/frontend_preview/toolbar_js.html.twig';
 
         $toolbar = $this->twig->render($template, [
             'action' => $this->router->generate('contao_backend_switch'),
