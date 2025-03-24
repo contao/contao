@@ -24,8 +24,7 @@ if (
     'contao:cron' === ($_SERVER['argv'][1] ?? null)
     && file_exists(__DIR__.'/../var/maintenance.html')
 ) {
-    echo 'Contao maintenance mode is enabled, skipping cron jobs.';
-    exit(-1);
+    exit;
 }
 
 require __DIR__.'/../vendor/autoload.php';
