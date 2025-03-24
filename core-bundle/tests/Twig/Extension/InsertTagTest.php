@@ -27,6 +27,7 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\InsertTags;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -46,9 +47,7 @@ class InsertTagTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider provideVariableStatements
-     */
+    #[DataProvider('provideVariableStatements')]
     public function testReplacesInsertTags(string $content, string $expected): void
     {
         $context = ['text' => '<br> {{br}}'];

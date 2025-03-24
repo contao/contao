@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
 use Contao\Config;
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController;
 use Contao\CoreBundle\Routing\ScopeMatcher;
@@ -37,7 +37,7 @@ class FrontendModuleControllerTest extends TestCase
         parent::setUp();
 
         $this->container = $this->getContainerWithContaoConfiguration();
-        $this->container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
+        $this->container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
 
         System::setContainer($this->container);
     }
@@ -263,8 +263,8 @@ class FrontendModuleControllerTest extends TestCase
         $model = $this->mockClassWithProperties(ModuleModel::class);
         $model->id = 42;
 
-        $entityCacheTags = $this->createMock(EntityCacheTags::class);
-        $entityCacheTags
+        $cacheTagManager = $this->createMock(CacheTagManager::class);
+        $cacheTagManager
             ->expects($this->once())
             ->method('tagWith')
             ->with($model)
@@ -285,7 +285,7 @@ class FrontendModuleControllerTest extends TestCase
 
         $this->container->set('contao.framework', $framework);
         $this->container->set('contao.routing.scope_matcher', $this->mockScopeMatcher());
-        $this->container->set('contao.cache.entity_tags', $entityCacheTags);
+        $this->container->set('contao.cache.tag_manager', $cacheTagManager);
 
         $controller = new TestController();
         $controller->setContainer($this->container);

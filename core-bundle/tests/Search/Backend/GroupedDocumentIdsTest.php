@@ -106,4 +106,42 @@ class GroupedDocumentIdsTest extends TestCase
         $groupedDocumentIds = GroupedDocumentIds::fromArray($typeToIds);
         $this->assertSame($typeToIds, $groupedDocumentIds->toArray());
     }
+
+    public function testSplit(): void
+    {
+        $typeToIds = [
+            'type1' => ['id1', 'id2', 'id3'],
+            'type2' => ['id4', 'id5'],
+        ];
+
+        $groupedDocumentIds = new GroupedDocumentIds($typeToIds);
+
+        $chunks = $groupedDocumentIds->split(20);
+        $this->assertCount(3, $chunks);
+
+        $this->assertSame(
+            ['type1' => ['id1', 'id2']],
+            $chunks[0]->toArray(),
+        );
+
+        $this->assertSame(
+            ['type1' => ['id3'], 'type2' => ['id4']],
+            $chunks[1]->toArray(),
+        );
+
+        $this->assertSame(
+            ['type2' => ['id5']],
+            $chunks[2]->toArray(),
+        );
+
+        // Test no splitting needed
+        $chunks = $groupedDocumentIds->split(65536);
+        $this->assertCount(1, $chunks);
+        $this->assertSame($typeToIds, $chunks[0]->toArray());
+
+        // Test splitting without typeToIds at all
+        $groupedDocumentIds = new GroupedDocumentIds();
+        $chunks = $groupedDocumentIds->split(65536);
+        $this->assertCount(1, $chunks);
+    }
 }

@@ -56,7 +56,7 @@ class FormCheckbox extends Widget
 		switch ($strKey)
 		{
 			case 'options':
-				$this->arrOptions = StringUtil::deserialize($varValue);
+				$this->arrOptions = StringUtil::deserialize($varValue, true);
 				break;
 
 			case 'rgxp':

@@ -28,6 +28,8 @@ use Twig\Environment;
  */
 class DataContainerOperationsBuilder implements \Stringable
 {
+    private int|string|null $id = null;
+
     private array|null $operations = null;
 
     public function __construct(
@@ -44,7 +46,9 @@ class DataContainerOperationsBuilder implements \Stringable
         }
 
         return $this->twig->render('@Contao/backend/data_container/operations.html.twig', [
+            'id' => $this->id,
             'operations' => $this->operations,
+            'has_primary' => [] !== array_filter(array_column($this->operations, 'primary'), static fn ($v) => null !== $v),
         ]);
     }
 
@@ -67,13 +71,14 @@ class DataContainerOperationsBuilder implements \Stringable
         return ' <a href="'.$href.'" class="header_new" title="'.StringUtil::specialchars($labelNew[1] ?? '').'" accesskey="n" data-action="contao--scroll-offset#store">'.$labelNew[0].'</a> ';
     }
 
-    public function initialize(): self
+    public function initialize(int|string|null $id = null): self
     {
         if (null !== $this->operations) {
             throw new \RuntimeException(self::class.' has already been initialized.');
         }
 
         $builder = clone $this;
+        $builder->id = $id;
         $builder->operations = [];
 
         return $builder;
@@ -81,7 +86,7 @@ class DataContainerOperationsBuilder implements \Stringable
 
     public function initializeWithButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
     {
-        $builder = $this->initialize();
+        $builder = $this->initialize($record['id'] ?? null);
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
             return $this;
@@ -92,7 +97,7 @@ class DataContainerOperationsBuilder implements \Stringable
             $operation = $this->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
 
             if ($operation) {
-                $builder->operations[] = $operation;
+                $builder->append($operation);
             }
         }
 
@@ -101,7 +106,7 @@ class DataContainerOperationsBuilder implements \Stringable
 
     public function initializeWithHeaderButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
     {
-        $builder = $this->initialize();
+        $builder = $this->initialize($record['id'] ?? null);
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
             return $this;
@@ -129,33 +134,92 @@ class DataContainerOperationsBuilder implements \Stringable
             $operation = $this->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
 
             if ($operation) {
-                $builder->operations[] = $operation;
+                $builder->append($operation);
             }
         }
 
         return $builder;
     }
 
-    public function prepend(array $operation): self
+    public function prepend(array $operation, bool $parseHtml = false): self
     {
         if (null === $this->operations) {
             throw new \RuntimeException(self::class.' has not been initialized yet.');
         }
 
-        array_unshift($this->operations, $operation);
+        if ($parseHtml) {
+            array_unshift($this->operations, ...$this->parseOperationsHtml($operation));
+        } else {
+            array_unshift($this->operations, $operation);
+        }
 
         return $this;
     }
 
-    public function append(array $operation): self
+    public function append(array $operation, bool $parseHtml = false): self
     {
         if (null === $this->operations) {
             throw new \RuntimeException(self::class.' has not been initialized yet.');
         }
 
-        $this->operations[] = $operation;
+        if ($parseHtml) {
+            array_push($this->operations, ...$this->parseOperationsHtml($operation));
+        } else {
+            $this->operations[] = $operation;
+        }
 
         return $this;
+    }
+
+    /**
+     * Generate multiple operations if the given operation is using HTML.
+     */
+    private function parseOperationsHtml(array $operation): array
+    {
+        if (!isset($operation['html']) || '' === trim((string) $operation['html'])) {
+            return [$operation];
+        }
+
+        $xml = new \DOMDocument();
+        $xml->preserveWhiteSpace = false;
+        $xml->loadHTML('<?xml encoding="UTF-8">'.$operation['html']);
+        $body = $xml->getElementsByTagName('body')[0];
+
+        if ($body->childNodes->length < 2) {
+            return [$operation];
+        }
+
+        $operations = [];
+        $current = null;
+
+        foreach ($body->childNodes as $node) {
+            if ($node instanceof \DOMText) {
+                if ('' === trim($html = $xml->saveHTML($node))) {
+                    continue;
+                }
+
+                if ($current) {
+                    $current['html'] .= $html;
+                    continue;
+                }
+            }
+
+            if ($current) {
+                $operations[] = $current;
+            }
+
+            $current = $operation;
+            $current['html'] = $xml->saveHTML($node);
+
+            if ('a' === strtolower($node->nodeName)) {
+                $operations[] = $current;
+                $current = null;
+            }
+        }
+
+        $operations[] = $current;
+
+        return $operations;
     }
 
     private function generateOperation(string $name, array $operation, string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): array|null
@@ -207,7 +271,7 @@ class DataContainerOperationsBuilder implements \Stringable
 
             return [
                 'html' => $html,
-                'primary' => (bool) ($config['primary'] ?? false),
+                'primary' => $config['primary'] ?? null,
             ];
         }
 
@@ -225,6 +289,7 @@ class DataContainerOperationsBuilder implements \Stringable
             'label' => $config['label'],
             'attributes' => $config['attributes'],
             'icon' => Image::getHtml($config['icon'], $config['label']),
+            'primary' => $config['primary'] ?? null,
         ];
     }
 
@@ -309,9 +374,9 @@ class DataContainerOperationsBuilder implements \Stringable
             'href' => $href,
             'title' => $state ? $config['title'] : $titleDisabled,
             'label' => $config['label'],
-            'attributes' => ' data-title="'.StringUtil::specialchars($config['title']).'" data-title-disabled="'.StringUtil::specialchars($titleDisabled).'" data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,'.('visible.svg' === $icon ? 'true' : 'false').')"',
-            'icon' => Image::getHtml($state ? $icon : $_icon, $config['label'], 'data-icon="'.$icon.'" data-icon-disabled="'.$_icon.'" data-state="'.$state.'"'),
-            'primary' => (bool) ($config['primary'] ?? false),
+            'attributes' => ' data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,'.('visible.svg' === $icon ? 'true' : 'false').')"',
+            'icon' => Image::getHtml($state ? $icon : $_icon, $state ? $config['title'] : $titleDisabled, 'data-icon="'.$icon.'" data-icon-disabled="'.$_icon.'" data-state="'.$state.'" data-alt="'.StringUtil::specialchars($config['title']).'" data-alt-disabled="'.StringUtil::specialchars($titleDisabled).'"'),
+            'primary' => $config['primary'] ?? null,
         ];
     }
 }

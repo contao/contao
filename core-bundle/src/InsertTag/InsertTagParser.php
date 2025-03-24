@@ -67,6 +67,11 @@ class InsertTagParser implements ResetInterface
     private array $blockSubscriptions = [];
 
     /**
+     * @var array<string, int>
+     */
+    private array $blockSubscriptionEndTags = [];
+
+    /**
      * @var array<string, \Closure(InsertTagFlag, InsertTagResult):InsertTagResult>
      */
     private array $flagCallbacks = [];
@@ -111,6 +116,15 @@ class InsertTagParser implements ResetInterface
 
         if (isset($this->subscriptions[$subscription->name])) {
             throw new \InvalidArgumentException(\sprintf('The block insert tag "%s" is already registered as a regular insert tag.', $subscription->name));
+        }
+
+        if (null !== $subscription->endTag) {
+            $this->blockSubscriptionEndTags[$subscription->endTag] ??= 0;
+            ++$this->blockSubscriptionEndTags[$subscription->endTag];
+        }
+
+        if (null !== $previousEndTag = $this->blockSubscriptions[$subscription->name]->endTag ?? null) {
+            --$this->blockSubscriptionEndTags[$previousEndTag];
         }
 
         $this->blockSubscriptions[$subscription->name] = $subscription;
@@ -299,7 +313,7 @@ class InsertTagParser implements ResetInterface
      */
     public function hasInsertTag(string $name): bool
     {
-        return isset($this->subscriptions[$name]) || isset($this->blockSubscriptions[$name]);
+        return isset($this->subscriptions[$name]) || isset($this->blockSubscriptions[$name]) || ($this->blockSubscriptionEndTags[$name] ?? 0) > 0;
     }
 
     private function doParse(string $input): ParsedSequence

@@ -16,6 +16,7 @@ use Contao\CoreBundle\Crawl\Escargot\Factory;
 use Contao\CoreBundle\EventListener\SearchIndexListener;
 use Contao\CoreBundle\Messenger\Message\SearchIndexMessage;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,9 +27,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 
 class SearchIndexListenerTest extends TestCase
 {
-    /**
-     * @dataProvider getRequestResponse
-     */
+    #[DataProvider('getRequestResponse')]
     public function testIndexesOrDeletesTheDocument(Request $request, Response $response, int $features, bool $index, bool $delete): void
     {
         $dispatchCount = (int) $index + (int) $delete;
@@ -50,7 +49,7 @@ class SearchIndexListenerTest extends TestCase
 
         $event = new TerminateEvent($this->createMock(HttpKernelInterface::class), $request, $response);
 
-        $listener = new SearchIndexListener($messenger, '_fragment', $features);
+        $listener = new SearchIndexListener($messenger, '_fragment', '/contao', $features);
         $listener($event);
     }
 
@@ -97,7 +96,15 @@ class SearchIndexListenerTest extends TestCase
         ];
 
         yield 'Should be skipped because it is a fragment request' => [
-            Request::create('_fragment/foo/bar'),
+            Request::create('/_fragment/foo/bar'),
+            new Response(),
+            SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
+            false,
+            false,
+        ];
+
+        yield 'Should be skipped because it is a contao backend request' => [
+            Request::create('/contao?do=article'),
             new Response(),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,

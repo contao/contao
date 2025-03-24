@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Controller\FrontendModule;
 
 use Contao\Config;
 use Contao\Controller;
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Controller\FrontendModule\RootPageDependentModulesController;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Tests\TestCase;
@@ -38,7 +38,7 @@ class RootPageDependentModulesControllerTest extends TestCase
         parent::setUp();
 
         $this->container = $this->getContainerWithContaoConfiguration();
-        $this->container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
+        $this->container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
 
         System::setContainer($this->container);
     }

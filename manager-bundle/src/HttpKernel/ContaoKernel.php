@@ -238,9 +238,6 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
             Request::setTrustedProxies(explode(',', (string) $trustedProxies), $trustedHeaderSet);
         }
 
-        // TODO: Remove this line in Contao 5.4 with Symfony 7 only
-        Request::enableHttpMethodParameterOverride();
-
         $jwtManager = null;
         $env = null;
         $parseJwt = 'jwt' === $_SERVER['APP_ENV'];

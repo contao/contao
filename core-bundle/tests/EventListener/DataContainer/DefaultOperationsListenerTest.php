@@ -23,6 +23,7 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security;
 
@@ -409,6 +410,38 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertSame(['foo'], array_keys($operations));
     }
 
+    public function testSetsPriorityFromStringKey(): void
+    {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
+        $GLOBALS['TL_DCA']['tl_foo'] = [
+            'list' => [
+                'sorting' => [
+                    'mode' => DataContainer::MODE_SORTED,
+                ],
+                'operations' => [
+                    'edit',
+                    '!show',
+                    'foo' => [
+                        'href' => 'foo=bar',
+                        'icon' => 'foo.svg',
+                    ],
+                ],
+            ],
+        ];
+
+        ($this->listener)('tl_foo');
+
+        $this->assertArrayHasKey('operations', $GLOBALS['TL_DCA']['tl_foo']['list']);
+        $operations = $GLOBALS['TL_DCA']['tl_foo']['list']['operations'];
+
+        $this->assertArrayHasKey('edit', $operations);
+        $this->assertArrayHasKey('show', $operations);
+        $this->assertArrayHasKey('foo', $operations);
+        $this->assertArrayHasKey('primary', $operations['edit']);
+        $this->assertTrue($operations['show']['primary']);
+        $this->assertArrayNotHasKey('primary', $operations['foo']);
+    }
+
     public function testDoesNotAddEditOperationIfTableIsNotEditable(): void
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
@@ -548,9 +581,7 @@ class DefaultOperationsListenerTest extends TestCase
         $this->assertSame(['children', 'show'], array_keys($operations));
     }
 
-    /**
-     * @dataProvider checkPermissionsProvider
-     */
+    #[DataProvider('checkPermissionsProvider')]
     public function testCheckPermissions(string $name, string $actionClass, array $record, array $dca = [], array|null $newRecord = null): void
     {
         $GLOBALS['TL_DCA']['tl_foo'] = $dca;

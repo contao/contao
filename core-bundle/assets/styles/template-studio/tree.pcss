@@ -1,7 +1,6 @@
 #template-studio nav {
     white-space: nowrap;
     padding: 4px;
-    --tree-line: #ddd;
 
     ol {
         padding: 0;
@@ -11,11 +10,11 @@
     > ol > li {
         > ol {
             li {
-                margin-left: .75em;
+                margin-left: 0.75em;
                 border-left: thin solid var(--tree-line);
 
                 &:before {
-                    content: '';
+                    content: "";
                     width: 0.5em;
                     height: 0.75em;
                     vertical-align: top;
@@ -43,9 +42,8 @@
         }
     }
 
-
     .node {
-        font-size: .75rem;
+        font-size: 0.75rem;
         padding: 4px 0 2px 0;
         color: var(--green);
     }
@@ -62,7 +60,8 @@
             color: var(--blue);
         }
 
-        &:hover, .user:hover {
+        &:hover,
+        .user:hover {
             color: var(--hover-color);
             opacity: 1;
         }

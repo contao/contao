@@ -14,7 +14,7 @@ namespace Contao\NewsBundle\Tests\EventListener;
 
 use Contao\ContentModel;
 use Contao\Controller;
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
@@ -34,6 +34,7 @@ use Contao\UserModel;
 use FeedIo\Feed;
 use Imagine\Gd\Imagine;
 use Imagine\Image\Box;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,14 +49,12 @@ class NewsFeedListenerTest extends ContaoTestCase
         $this->resetStaticProperties([Files::class, System::class]);
     }
 
-    /**
-     * @dataProvider featured
-     */
+    #[DataProvider('featured')]
     public function testFetchesArticlesFromArchives(string $feedFeatured, bool|null $featuredOnly): void
     {
         $insertTags = $this->createMock(InsertTagParser::class);
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
-        $cacheTags = $this->createMock(EntityCacheTags::class);
+        $cacheTags = $this->createMock(CacheTagManager::class);
         $newsModel = $this->createMock(NewsModel::class);
 
         $collection = $this->createMock(Collection::class);
@@ -92,9 +91,7 @@ class NewsFeedListenerTest extends ContaoTestCase
         $this->assertSame([$newsModel], $event->getArticles());
     }
 
-    /**
-     * @dataProvider getFeedSource
-     */
+    #[DataProvider('getFeedSource')]
     public function testTransformsArticlesToFeedItems(string $feedSource, array $headline, array $content): void
     {
         $imageDir = Path::join($this->getTempDir(), 'files');
@@ -166,6 +163,7 @@ class NewsFeedListenerTest extends ContaoTestCase
             'date' => 1656578758,
             'headline' => $headline[0],
             'teaser' => $content[0],
+            'addImage' => true,
             'singleSRC' => 'binary_uuid',
             'addEnclosure' => serialize(['binary_uuid2']),
         ]);
@@ -209,7 +207,7 @@ class NewsFeedListenerTest extends ContaoTestCase
         $framework->setContainer($container);
 
         $feed = $this->createMock(Feed::class);
-        $cacheTags = $this->createMock(EntityCacheTags::class);
+        $cacheTags = $this->createMock(CacheTagManager::class);
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator

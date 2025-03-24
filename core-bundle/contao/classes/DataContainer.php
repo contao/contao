@@ -164,6 +164,16 @@ abstract class DataContainer extends Backend
 	public const SORT_BOTH = 18;
 
 	/**
+	 * Paste after the parent
+	 */
+	public const PASTE_AFTER = 1;
+
+	/**
+	 * Paste into the parent
+	 */
+	public const PASTE_INTO = 2;
+
+	/**
 	 * Current ID
 	 * @var integer|string
 	 */
@@ -303,6 +313,12 @@ abstract class DataContainer extends Backend
 	private static $arrCurrentRecordCache = array();
 
 	/**
+	 * Current panel state
+	 * @var bool
+	 */
+	protected $panelActive = false;
+
+	/**
 	 * Set an object property
 	 *
 	 * @param string $strKey
@@ -407,7 +423,7 @@ abstract class DataContainer extends Backend
 		// Add the help wizard
 		if ($arrData['eval']['helpwizard'] ?? null)
 		{
-			$xlabel .= ' <a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_help', array('table' => $this->strTable, 'field' => $this->strField))) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['helpWizard']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('help.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
+			$xlabel .= ' <a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_help', array('table' => $this->strTable, 'field' => $this->strField))) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $arrData['label'][0] ?? '')) . '\',\'url\':this.href});return false">' . Image::getHtml('help.svg', $GLOBALS['TL_LANG']['MSC']['helpWizard']) . '</a>';
 		}
 
 		// Add a custom xlabel
@@ -480,6 +496,12 @@ abstract class DataContainer extends Backend
 		}
 
 		$arrAttributes = $strClass::getAttributesFromDca($arrData, $this->strInputName, $this->varValue, $this->strField, $this->strTable, $this);
+		$blnColorPicker = isset($arrAttributes['colorpicker']);
+
+		if ($blnColorPicker)
+		{
+			$arrAttributes['data-contao--color-picker-target'] = 'input';
+		}
 
 		$objWidget = new $strClass($arrAttributes);
 		$objWidget->xlabel = $xlabel;
@@ -572,7 +594,7 @@ abstract class DataContainer extends Backend
 				$strOnSelect = ",\n        onSelect: function() { Backend.autoSubmit(\"" . $this->strTable . "\"); }";
 			}
 
-			$wizard .= ' ' . Image::getHtml('assets/datepicker/images/icon.svg', '', 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['datepicker']) . '" id="toggle_' . $objWidget->id . '" style="cursor:pointer"') . '
+			$wizard .= ' ' . Image::getHtml('assets/datepicker/images/icon.svg', $GLOBALS['TL_LANG']['MSC']['datepicker'], 'id="toggle_' . $objWidget->id . '" style="cursor:pointer" data-contao--tooltips-target="tooltip"') . '
   <script>
     window.addEvent("domready", function() {
       new Picker.Date($("ctrl_' . $objWidget->id . '"), {
@@ -590,25 +612,9 @@ abstract class DataContainer extends Backend
 		}
 
 		// Color picker
-		if ($arrAttributes['colorpicker'] ?? null)
+		if ($blnColorPicker)
 		{
-			// Support single fields as well (see #5240)
-			$strKey = ($arrAttributes['multiple'] ?? null) ? $this->strField . '_0' : $this->strField;
-
-			$wizard .= ' ' . Image::getHtml('pickcolor.svg', $GLOBALS['TL_LANG']['MSC']['colorpicker'], 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['colorpicker']) . '" id="moo_' . $this->strField . '" style="cursor:pointer"') . '
-  <script>
-    window.addEvent("domready", function() {
-      var cl = $("ctrl_' . $strKey . '").value.hexToRgb(true) || [255, 0, 0];
-      new MooRainbow("moo_' . $this->strField . '", {
-        id: "ctrl_' . $strKey . '",
-        startColor: cl,
-        imgPath: "assets/colorpicker/images/",
-        onComplete: function(color) {
-          $("ctrl_' . $strKey . '").value = color.hex.replace("#", "");
-        }
-      });
-    });
-  </script>';
+			$wizard .= '<div data-contao--color-picker-target="button"></div>';
 		}
 
 		$arrClasses = StringUtil::trimsplit(' ', $arrAttributes['tl_class'] ?? '');
@@ -777,7 +783,7 @@ abstract class DataContainer extends Backend
 		}
 
 		return $strPreview . '
-<div' . (!empty($arrAttributes['tl_class']) ? ' class="' . trim($arrAttributes['tl_class']) . '"' : '') . ($objWidget->hasErrors() ? ' data-contao--scroll-offset-target="widgetError"' : '') . '>' . $objWidget->parse() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass, $objWidget->description) : '') . '
+<div' . (!empty($arrAttributes['tl_class']) ? ' class="' . trim($arrAttributes['tl_class']) . '"' : '') . ($objWidget->hasErrors() ? ' data-contao--scroll-offset-target="widgetError"' : '') . ($blnColorPicker ? ' data-controller="contao--color-picker" data-contao--color-picker-theme-value="monolith"' : '') . '>' . $objWidget->parse() . $updateMode . (!$objWidget->hasErrors() ? $this->help($strHelpClass, $objWidget->description) : '') . '
 </div>';
 	}
 
@@ -1213,7 +1219,7 @@ abstract class DataContainer extends Backend
 				// Add the panel if it is not empty
 				if ($panel)
 				{
-					$panels = $panel . $panels;
+					$panels .= $panel;
 				}
 			}
 
@@ -1258,13 +1264,13 @@ abstract class DataContainer extends Backend
 				$submit = '
 <div class="tl_submit_panel tl_subpanel">
   <button name="filter" id="filter" class="tl_img_submit filter_apply" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['applyTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['apply'] . '</button>
-  <button name="filter_reset" id="filter_reset" value="1" class="tl_img_submit filter_reset" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['resetTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['reset'] . '</button>
+  <button' . ($this->panelActive ? '' : ' disabled') . ' name="filter_reset" id="filter_reset" value="1" class="tl_img_submit filter_reset" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['resetTitle']) . '">' . $GLOBALS['TL_LANG']['MSC']['reset'] . '</button>
 </div>';
 			}
 
 			$return .= '
-<div class="tl_panel cf">
-  ' . $submit . $arrPanels[$i] . '
+<div class="tl_panel">
+  ' . $arrPanels[$i] . $submit . '
 </div>';
 		}
 
@@ -1310,7 +1316,7 @@ abstract class DataContainer extends Backend
 		// Make sure tags are unique and empty ones are removed
 		$tags = array_filter(array_unique($tags));
 
-		System::getContainer()->get('contao.cache.tag_invalidator')->invalidateTags($tags);
+		System::getContainer()->get('contao.cache.tag_manager')->invalidateTags($tags);
 	}
 
 	public function addPtableTags($strTable, $intId, &$tags)
@@ -1550,7 +1556,7 @@ abstract class DataContainer extends Backend
 		}
 		elseif (\in_array($mode, array(self::MODE_TREE, self::MODE_TREE_EXTENDED)))
 		{
-			$label = Image::getHtml('iconPLAIN.svg') . ' ' . $label;
+			$label = Image::getHtml('plain.svg') . ' ' . $label;
 		}
 
 		if (($labelConfig['showColumns'] ?? null) && !\in_array($mode, array(self::MODE_PARENT, self::MODE_TREE, self::MODE_TREE_EXTENDED)))
@@ -1688,5 +1694,15 @@ abstract class DataContainer extends Backend
 				unset(self::$arrCurrentRecordCache[$key]);
 			}
 		}
+	}
+
+	public function setPanelState(bool $state): void
+	{
+		if ($this->panelActive)
+		{
+			return;
+		}
+
+		$this->panelActive = $state;
 	}
 }

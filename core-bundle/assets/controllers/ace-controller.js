@@ -4,7 +4,7 @@ export default class extends Controller {
     static values = {
         type: String,
         readOnly: Boolean,
-    }
+    };
 
     connect() {
         // Create a div to apply the editor to
@@ -39,11 +39,24 @@ export default class extends Controller {
     }
 
     disconnect() {
-        this.editor.destroy();
-        this.container.remove();
+        this.editor?.destroy();
+        this.container?.remove();
+    }
+
+    beforeCache() {
+        // Remove the element container before Turbo caches the page. It will
+        // be recreated when the connect() call happens on the restored page.
+        this.disconnect();
+    }
+
+    colorChange(event) {
+        this.editor.setTheme(`ace/theme/${event.detail.mode === 'dark' ? 'twilight' : 'clouds'}`);
     }
 
     setMaxLines() {
-        this.editor.setOption('maxLines', Math.floor((window.innerHeight - 320) / Math.floor(12 * this.editor.container.style.lineHeight)));
+        this.editor.setOption(
+            'maxLines',
+            Math.floor((window.innerHeight - 320) / Math.floor(12 * this.editor.container.style.lineHeight)),
+        );
     }
 }

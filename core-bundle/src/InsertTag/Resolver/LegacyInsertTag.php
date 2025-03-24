@@ -115,7 +115,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         break;
 
                     case 'email_open':
-                        $result = '<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;'.$strEmail.'" title="'.$strEmail.'" class="email">';
+                        $result = '<a href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;'.$strEmail.'" class="email">';
                         break;
 
                     case 'email_url':
@@ -310,11 +310,11 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 // Replace the tag
                 switch ($insertTag->getName()) {
                     case 'article':
-                        $result = \sprintf('<a href="%s" title="%s"%s>%s</a>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $strTarget, $objArticle->title);
+                        $result = \sprintf('<a href="%s" %s>%s</a>', $strUrl, $strTarget, $objArticle->title);
                         break;
 
                     case 'article_open':
-                        $result = \sprintf('<a href="%s" title="%s"%s>', $strUrl, StringUtil::specialcharsAttribute($objArticle->title), $strTarget);
+                        $result = \sprintf('<a href="%s" %s>', $strUrl, $strTarget);
                         break;
 
                     case 'article_url':
@@ -699,11 +699,9 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             static function (&$value): void {
                 if (is_numeric($value)) {
                     $value = (int) $value;
-
-                    return;
+                } else {
+                    $value = StringUtil::specialcharsAttribute($value);
                 }
-
-                $value = StringUtil::specialcharsAttribute($value);
             },
         );
 

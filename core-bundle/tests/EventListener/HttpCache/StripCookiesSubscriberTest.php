@@ -16,6 +16,7 @@ use Contao\CoreBundle\EventListener\HttpCache\StripCookiesSubscriber;
 use FOS\HttpCache\SymfonyCache\CacheEvent;
 use FOS\HttpCache\SymfonyCache\CacheInvalidation;
 use FOS\HttpCache\SymfonyCache\Events;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -28,9 +29,7 @@ class StripCookiesSubscriberTest extends TestCase
         $this->assertSame([Events::PRE_HANDLE => 'preHandle'], $subscriber::getSubscribedEvents());
     }
 
-    /**
-     * @dataProvider cookiesProvider
-     */
+    #[DataProvider('cookiesProvider')]
     public function testCookiesAreStrippedCorrectly(array $cookies, array $expectedCookies, array $allowList = [], array $removeFromDenyList = []): void
     {
         $request = Request::create('/', 'GET', [], $cookies);

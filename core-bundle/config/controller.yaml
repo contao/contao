@@ -20,6 +20,15 @@ services:
             tags:
                 - { name: container.service_subscriber, id: contao.csrf.token_manager }
 
+        Contao\CoreBundle\Controller\Page\AbstractLayoutPageController:
+            tags:
+                - { name: container.service_subscriber, id: contao.routing.page_finder }
+                - { name: container.service_subscriber, id: contao.routing.response_context_accessor }
+                - { name: container.service_subscriber, id: contao.routing.response_context_factory }
+                - { name: container.service_subscriber, id: contao.security.token_checker }
+                - { name: container.service_subscriber, id: contao.image.picture_factory }
+                - { name: container.service_subscriber, id: contao.image.preview_factory }
+
     # We explicitly allow autowiring and FQCN service IDs in controllers
     Contao\CoreBundle\Controller\AltchaController:
         arguments:
@@ -65,8 +74,6 @@ services:
     Contao\CoreBundle\Controller\CaptchaController:
         arguments:
             - '@contao.framework'
-            - '%kernel.project_dir%'
-            - '@contao.cache.entity_tags'
         tags:
             - controller.service_arguments
 
@@ -146,7 +153,7 @@ services:
             - '@contao.framework'
             - '@contao.routing.page_finder'
             - '%kernel.project_dir%'
-            - '@contao.cache.entity_tags'
+            - '@contao.cache.tag_manager'
         tags:
             - controller.service_arguments
 
@@ -194,6 +201,8 @@ services:
     Contao\CoreBundle\Controller\Page\RedirectPageController:
         arguments:
             - '@contao.routing.content_url_generator'
+
+    Contao\CoreBundle\Controller\Page\RegularPageController: ~
 
     Contao\CoreBundle\Controller\Page\RootPageController:
         arguments:

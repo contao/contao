@@ -20,6 +20,7 @@ use Contao\CoreBundle\Fragment\FragmentOptionsAwareInterface;
 use Contao\CoreBundle\Fragment\FragmentRegistry;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\ModuleArticle;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -47,9 +48,7 @@ class DebugFragmentsCommandTest extends TestCase
         $this->assertEmpty($command->getDefinition()->getOptions());
     }
 
-    /**
-     * @dataProvider commandOutputProvider
-     */
+    #[DataProvider('commandOutputProvider')]
     public function testCommandOutput(array $fragments, string $expectedOutput): void
     {
         $fragmentsRegistry = new FragmentRegistry();
@@ -133,6 +132,49 @@ class DebugFragmentsCommandTest extends TestCase
                   contao.foo.bar   Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController   esi        ignore_errors : false   category : esi
                                                                                                                                             foo      : bar
                  ---------------- --------------------------------------------------------------------- ---------- ----------------------- ------------------
+
+
+                OUTPUT,
+        ];
+
+        yield 'Fragment with options' => [
+            [
+                ['contao.foo.bar', new FragmentConfig(TestController::class), ['category' => 'test', 'foo' => ['bar', 'baz']]],
+            ],
+            <<<'OUTPUT'
+
+                Contao Fragments
+                ================
+
+                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ---------------------
+                  Identifier       Controller                                                            Renderer   Render Options   Fragment Options
+                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ---------------------
+                  contao.foo.bar   Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController   forward                     category : test
+                                                                                                                                     foo      : bar, baz
+                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ---------------------
+
+
+                OUTPUT,
+        ];
+
+        yield 'Nested fragment' => [
+            [
+                ['contao.foo.bar', new FragmentConfig(TestController::class), ['category' => 'test', 'nestedFragments' => ['allowedTypes' => ['alias', 'link']]]],
+            ],
+            <<<'OUTPUT'
+
+                Contao Fragments
+                ================
+
+                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ---------------------------------
+                  Identifier       Controller                                                            Renderer   Render Options   Fragment Options
+                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ---------------------------------
+                  contao.foo.bar   Contao\CoreBundle\Fixtures\Controller\FrontendModule\TestController   forward                     category        : test
+                                                                                                                                     nestedFragments : allowedTypes:
+                                                                                                                                                         - alias
+                                                                                                                                                         - link
+
+                 ---------------- --------------------------------------------------------------------- ---------- ---------------- ---------------------------------
 
 
                 OUTPUT,

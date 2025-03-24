@@ -1,49 +1,16 @@
-#template-studio--dialog {
-    dialog {
-        border: none;
-        padding: 0;
-        box-shadow: 0 0 48px rgb(0 0 0 / .3);
+dialog[data-controller="contao--dialog"].template-studio {
+    .name_container {
+        margin: 0 12px 10px;
 
-        > .header_wrapper, .description, .widget {
-            padding: 8px 12px;
+        h3 {
+            margin-bottom: 4px;
         }
+    }
 
-        &::backdrop {
-            background: var(--backdrop);
-        }
-
-        .description {
-            max-width: 60ch;
-            line-height: 1.5;
-            border: 1px solid var(--border);
-            margin: 5px 15px;
-
-            &.description--warning {
-                border-color: var(--red);
-            }
-        }
-
-        .buttons {
-            margin-top: 16px;
-            padding: 8px 12px;
-            border-top: 1px solid var(--border);
-            background: var(--panel-bg);
-
-            button {
-                height: 30px;
-                margin: 2px 0;
-                padding: 7px 12px;
-                border: 1px solid var(--form-border);
-                border-radius: 2px;
-                box-sizing: border-box;
-                cursor: pointer;
-                background: var(--form-button);
-                transition: background .2s ease;
-            }
-        }
-
-        input:invalid {
-            background-color: var(--diff-del);
-        }
+    input.identifier--user {
+        vertical-align: baseline;
+        border: 0 none;
+        border-radius: 4px;
+        background: var(--border);
     }
 }

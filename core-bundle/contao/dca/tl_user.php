@@ -22,6 +22,7 @@ use Contao\Input;
 use Contao\Message;
 use Contao\StringUtil;
 use Contao\System;
+use Doctrine\DBAL\Platforms\MySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_user'] = array
 (
@@ -74,6 +75,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			(
 				'href'                => 'key=su',
 				'icon'                => 'su.svg',
+				'primary'             => true,
 				'button_callback'     => array('tl_user', 'switchUser')
 			)
 		)
@@ -83,12 +85,12 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('inherit', 'admin'),
-		'login'                       => '{name_legend},name,email;{backend_legend},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{session_legend},session;{password_legend},password;{theme_legend:hide},backendTheme',
-		'admin'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{account_legend},disable,start,stop',
-		'default'                     => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
-		'group'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
-		'extend'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop',
-		'custom'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop'
+		'login'                       => '{name_legend},name,email;{backend_legend},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse,doNotHideMessages;{session_legend},session;{password_legend},password;{theme_legend:hide},backendTheme',
+		'admin'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse,doNotHideMessages;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{account_legend},disable,start,stop',
+		'default'                     => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse,doNotHideMessages;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
+		'group'                       => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse,doNotHideMessages;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{account_legend},disable,start,stop',
+		'extend'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse,doNotHideMessages;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop',
+		'custom'                      => '{name_legend},username,name,email;{backend_legend:hide},language,uploader,showHelp,thumbnails,useRTE,useCE,doNotCollapse,doNotHideMessages;{theme_legend:hide},backendTheme;{password_legend:hide},password,pwChange;{admin_legend},admin;{groups_legend},groups,inherit;{modules_legend},modules,themes,frontendModules;{elements_legend},elements,fields;{pagemounts_legend},pagemounts,alpty;{filemounts_legend},filemounts,fop;{imageSizes_legend},imageSizes;{forms_legend},forms,formp;{amg_legend},amg;{account_legend},disable,start,stop'
 	),
 
 	// Fields
@@ -183,6 +185,12 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => array('type' => 'boolean', 'default' => false)
 		),
+		'doNotHideMessages' => array
+		(
+			'inputType'               => 'checkbox',
+			'eval'                    => array('tl_class'=>'w50'),
+			'sql'                     => array('type' => 'boolean', 'default' => false)
+		),
 		'password' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['MSC']['password'],
@@ -256,7 +264,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'frontendModules' => array
 		(
-			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['FMD'],
 			'eval'                    => array('multiple'=>true, 'helpwizard'=>true, 'collapseUncheckedGroups'=>true),
@@ -351,7 +358,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		(
 			'input_field_callback'    => array('tl_user', 'sessionField'),
 			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
-			'sql'                     => "blob NULL"
+			'sql'                     => array('type' => 'blob', 'length' => MySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull' => false)
 		),
 		'dateAdded' => array
 		(
@@ -570,7 +577,7 @@ class tl_user extends Backend
 		$router = System::getContainer()->get('router');
 		$url = $router->generate('contao_backend', array('_switch_user'=>$row['username']));
 
-		return '<a href="' . $url . '" title="' . StringUtil::specialchars($title) . '">' . Image::getHtml($icon, $label) . '</a> ';
+		return '<a href="' . $url . '" data-turbo-prefetch="false">' . Image::getHtml($icon, $title) . '</a> ';
 	}
 
 	/**

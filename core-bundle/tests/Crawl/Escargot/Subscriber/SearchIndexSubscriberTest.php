@@ -17,6 +17,7 @@ use Contao\CoreBundle\Crawl\Escargot\Subscriber\SubscriberResult;
 use Contao\CoreBundle\Search\Indexer\IndexerException;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Nyholm\Psr7\Uri;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -25,7 +26,6 @@ use Symfony\Component\HttpClient\Chunk\LastChunk;
 use Symfony\Component\HttpClient\Exception\ClientException;
 use Symfony\Component\HttpClient\Exception\TransportException;
 use Symfony\Contracts\HttpClient\ChunkInterface;
-use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Terminal42\Escargot\BaseUriCollection;
@@ -45,9 +45,7 @@ class SearchIndexSubscriberTest extends TestCase
         $this->assertSame('search-index', $subscriber->getName());
     }
 
-    /**
-     * @dataProvider shouldRequestProvider
-     */
+    #[DataProvider('shouldRequestProvider')]
     public function testShouldRequest(CrawlUri $crawlUri, string $expectedDecision, string $expectedLogLevel = '', string $expectedLogMessage = '', CrawlUri|null $foundOnUri = null): void
     {
         $logger = $this->createMock(LoggerInterface::class);
@@ -144,11 +142,10 @@ class SearchIndexSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider needsContentProvider
-     */
-    public function testNeedsContent(ResponseInterface $response, string $expectedDecision, string $expectedLogLevel = '', string $expectedLogMessage = '', CrawlUri|null $crawlUri = null): void
+    #[DataProvider('needsContentProvider')]
+    public function testNeedsContent(array $responseArguments, string $expectedDecision, string $expectedLogLevel = '', string $expectedLogMessage = '', CrawlUri|null $crawlUri = null): void
     {
+        $response = $this->mockResponse(...$responseArguments);
         $logger = $this->createMock(LoggerInterface::class);
 
         if ('' !== $expectedLogLevel) {
@@ -191,36 +188,36 @@ class SearchIndexSubscriberTest extends TestCase
         $this->assertSame($expectedDecision, $decision);
     }
 
-    public function needsContentProvider(): iterable
+    public static function needsContentProvider(): iterable
     {
         yield 'Test skips responses that were not successful' => [
-            $this->mockResponse(true, 404),
+            [true, 404],
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Did not index because according to the HTTP status code the response was not successful (404).',
         ];
 
         yield 'Test skips responses that were not HTML responses' => [
-            $this->mockResponse(false),
+            [false],
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Did not index because the response did not contain a "text/html" Content-Type header.',
         ];
 
         yield 'Test requests successful HTML responses' => [
-            $this->mockResponse(true),
+            [true],
             SubscriberInterface::DECISION_POSITIVE,
         ];
 
         yield 'Test skips redirected responses outside the target domain' => [
-            $this->mockResponse(false, 200, 'https://example.com'),
+            [false, 200, 'https://example.com'],
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Did not index because it was not part of the base URI collection.',
         ];
 
         yield 'Test skips URIs where the "X-Robots-Tag" header contains "noindex"' => [
-            $this->mockResponse(true),
+            [true],
             SubscriberInterface::DECISION_NEGATIVE,
             LogLevel::DEBUG,
             'Do not request because it was marked "noindex" in the "X-Robots-Tag" header.',
@@ -228,9 +225,7 @@ class SearchIndexSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider onLastChunkProvider
-     */
+    #[DataProvider('onLastChunkProvider')]
     public function testOnLastChunk(IndexerException|null $indexerException, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = [], CrawlUri|null $crawlUri = null): void
     {
         $logger = $this->createMock(LoggerInterface::class);
@@ -347,11 +342,10 @@ class SearchIndexSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider onTransportExceptionProvider
-     */
-    public function testOnTransportException(TransportException $exception, ResponseInterface $response, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
+    #[DataProvider('onTransportExceptionProvider')]
+    public function testOnTransportException(TransportException $exception, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
     {
+        $response = $this->mockResponse(true, 404);
         $logger = $this->createMock(LoggerInterface::class);
 
         if ('' !== $expectedLogLevel) {
@@ -403,11 +397,10 @@ class SearchIndexSubscriberTest extends TestCase
         $this->assertSame($expectedStats, $result->getInfo('stats'));
     }
 
-    public function onTransportExceptionProvider(): iterable
+    public static function onTransportExceptionProvider(): iterable
     {
         yield 'Test reports transport exception responses' => [
             new TransportException('Could not resolve host or timeout'),
-            $this->mockResponse(true, 404),
             LogLevel::DEBUG,
             'Broken link! Could not request properly: Could not resolve host or timeout.',
             ['ok' => 0, 'warning' => 2, 'error' => 0],
@@ -415,11 +408,11 @@ class SearchIndexSubscriberTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider onHttpExceptionProvider
-     */
-    public function testOnHttpException(HttpExceptionInterface $exception, ResponseInterface $response, ChunkInterface $chunk, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
+    #[DataProvider('onHttpExceptionProvider')]
+    public function testOnHttpException(ChunkInterface $chunk, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = []): void
     {
+        $response = $this->mockResponse(true, 404);
+        $exception = new ClientException($response);
         $logger = $this->createMock(LoggerInterface::class);
 
         if ('' !== $expectedLogLevel) {
@@ -471,11 +464,9 @@ class SearchIndexSubscriberTest extends TestCase
         $this->assertSame($expectedStats, $result->getInfo('stats'));
     }
 
-    public function onHttpExceptionProvider(): iterable
+    public static function onHttpExceptionProvider(): iterable
     {
         yield 'Test reports responses that were not successful' => [
-            new ClientException($this->mockResponse(true, 404)),
-            $this->mockResponse(true, 404),
             new LastChunk(),
             LogLevel::DEBUG,
             'Broken link! HTTP Status Code: 404.',
@@ -483,8 +474,6 @@ class SearchIndexSubscriberTest extends TestCase
         ];
 
         yield 'Test reports responses that were not successful (with previous result)' => [
-            new ClientException($this->mockResponse(true, 404)),
-            $this->mockResponse(true, 404),
             new LastChunk(),
             LogLevel::DEBUG,
             'Broken link! HTTP Status Code: 404.',

@@ -38,7 +38,7 @@ class FileExtensionMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $this->connection->executeStatement("UPDATE tl_files SET extension = LOWER(extension) WHERE CAST(extension AS BINARY) REGEXP CAST('[[:upper:]] AS BINARY)'");
+        $this->connection->executeStatement("UPDATE tl_files SET extension = LOWER(extension) WHERE CAST(extension AS BINARY) REGEXP CAST('[[:upper:]]' AS BINARY)");
 
         return $this->createResult(true);
     }

@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Framework;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Contao\DcaLoader;
 use Contao\Environment;
 use Contao\Input;
 use Contao\InsertTags;
@@ -62,6 +63,7 @@ class ContaoFramework implements ResetInterface
         }
 
         Controller::resetControllerCache();
+        DcaLoader::reset();
         Environment::reset();
         Input::setUnusedRouteParameters([]);
         InsertTags::reset();
@@ -238,14 +240,14 @@ class ContaoFramework implements ResetInterface
         foreach ($this->hookListeners as $hookName => $priorities) {
             if (isset($GLOBALS['TL_HOOKS'][$hookName]) && \is_array($GLOBALS['TL_HOOKS'][$hookName])) {
                 if (isset($priorities[0])) {
-                    $priorities[0] = [...$GLOBALS['TL_HOOKS'][$hookName], ...$priorities[0]];
+                    $priorities[0] = [...array_values($GLOBALS['TL_HOOKS'][$hookName]), ...$priorities[0]];
                 } else {
                     $priorities[0] = $GLOBALS['TL_HOOKS'][$hookName];
                     krsort($priorities);
                 }
             }
 
-            $GLOBALS['TL_HOOKS'][$hookName] = array_merge(...$priorities);
+            $GLOBALS['TL_HOOKS'][$hookName] = array_merge(...array_values($priorities));
         }
     }
 }

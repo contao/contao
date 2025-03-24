@@ -35,7 +35,15 @@
       data-contao--webauthn-request-success-redirect-uri-value="<?= $this->webauthnSuccessUrl ?>"
       data-contao--webauthn-error-unsupported-message-value="<?= $this->trans('ERR.passkeysUnsupported') ?>"
       data-contao--webauthn-error-assertion-failure-message-value="<?= $this->trans('ERR.passkeyAssertionFailure') ?>"
-      data-action="webauthn:unsupported->contao--webauthn-error#handleUnsupported webauthn:assertion:failure->contao--webauthn-error#handleAssertionFailure"
+      data-contao--webauthn-error-options-failure-message-value="<?= $this->trans('ERR.passkeyAssertionFailure') ?>"
+      data-contao--webauthn-error-csrf-url-value="<?= $this->route('contao_frontend_request_token_script') ?>"
+      data-action="
+        webauthn:unsupported->contao--webauthn-error#handleUnsupported
+        webauthn:assertion:failure->contao--webauthn-error#handleAssertionFailure
+        webauthn:options:failure->contao--webauthn-error#handleOptionsFailure
+        webauthn:options:failure->contao--webauthn-error#loadCsrf
+        webauthn:options:success->contao--webauthn-error#loadCsrf
+      "
     >
       <main id="main">
         <form class="tl_login_form" method="post">
@@ -57,17 +65,15 @@
               <input type="password" name="password" id="password" class="tl_text" value="" autocomplete="current-password" placeholder="<?= $this->password ?>" required>
             </div>
             <div class="submit_container">
-              <a href="/">‹ <?= $this->feLink ?></a>
               <button type="submit" name="login" id="login" class="tl_submit"><?= $this->loginButton ?></button>
             </div>
           </div>
         </form>
+        <?= $this->loginMenu ?>
       </main>
       <?= $this->messages ?>
-      <div class="passkey_login">
-        <button type="button" class="tl_submit" data-action="contao--webauthn#signin"><?= $this->passkeyLogin ?></button>
-      </div>
       <div class="tl_message passkey_message" data-contao--webauthn-error-target="message"></div>
+      <p class="fe-link"><a href="/"><?= $this->feLink ?></a></p>
     </div>
   <?php $this->endblock(); ?>
 

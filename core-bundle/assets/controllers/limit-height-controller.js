@@ -9,21 +9,21 @@ export default class extends Controller {
         expandAllTitle: String,
         collapseAll: String,
         collapseAllTitle: String,
-    }
+    };
 
     static targets = ['operation', 'node'];
 
-    initialize () {
+    initialize() {
         super.initialize();
         this.togglerMap = new WeakMap();
         this.nextId = 1;
     }
 
-    operationTargetConnected () {
+    operationTargetConnected() {
         this.updateOperation();
     }
 
-    nodeTargetConnected (node) {
+    nodeTargetConnected(node) {
         const style = window.getComputedStyle(node, null);
         const padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
         const height = node.clientHeight - padding;
@@ -64,7 +64,7 @@ export default class extends Controller {
         this.updateOperation();
     }
 
-    nodeTargetDisconnected (node) {
+    nodeTargetDisconnected(node) {
         if (!this.togglerMap.has(node)) {
             return;
         }
@@ -75,7 +75,7 @@ export default class extends Controller {
         node.style.maxHeight = '';
     }
 
-    toggle (node) {
+    toggle(node) {
         if (node.style.maxHeight === '') {
             this.collapse(node);
         } else {
@@ -83,7 +83,7 @@ export default class extends Controller {
         }
     }
 
-    expand (node) {
+    expand(node) {
         if (!this.togglerMap.has(node)) {
             return;
         }
@@ -94,7 +94,7 @@ export default class extends Controller {
         button.setAttribute('aria-expanded', 'true');
     }
 
-    collapse (node) {
+    collapse(node) {
         if (!this.togglerMap.has(node)) {
             return;
         }
@@ -105,7 +105,7 @@ export default class extends Controller {
         button.setAttribute('aria-expanded', 'false');
     }
 
-    toggleAll (event) {
+    toggleAll(event) {
         event.preventDefault();
         const isExpanded = this.hasExpanded() ^ event.altKey;
 
@@ -120,11 +120,11 @@ export default class extends Controller {
         this.updateOperation(event);
     }
 
-    keypress (event) {
+    keypress(event) {
         this.updateOperation(event);
     }
 
-    updateOperation (event) {
+    updateOperation(event) {
         if (!this.hasOperationTarget) {
             return;
         }
@@ -145,7 +145,7 @@ export default class extends Controller {
         }
     }
 
-    hasExpanded () {
+    hasExpanded() {
         return !!this.nodeTargets.find((el) => this.togglerMap.has(el) && el.style.maxHeight === '');
     }
 }

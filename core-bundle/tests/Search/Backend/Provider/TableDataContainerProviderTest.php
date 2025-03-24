@@ -14,7 +14,7 @@ namespace Contao\CoreBundle\Tests\Search\Backend\Provider;
 
 use Contao\Config;
 use Contao\CoreBundle\Config\ResourceFinder;
-use Contao\CoreBundle\DataContainer\RecordLabeler;
+use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Provider\TableDataContainerProvider;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
@@ -27,6 +27,7 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
@@ -38,6 +39,8 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
 
         $this->resetStaticProperties([System::class, Config::class, DcaLoader::class]);
 
+        (new Filesystem())->remove(Path::join($this->getFixturesDir(), 'var/cache'));
+
         parent::tearDown();
     }
 
@@ -47,9 +50,9 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             $this->mockContaoFramework(),
             $this->createMock(ResourceFinder::class),
             $this->createMock(Connection::class),
-            $this->createMock(RecordLabeler::class),
             $this->createMock(AccessDecisionManagerInterface::class),
             $this->createMock(EventDispatcherInterface::class),
+            $this->createMock(DcaUrlAnalyzer::class),
         );
 
         $this->assertTrue($provider->supportsType(TableDataContainerProvider::TYPE_PREFIX.'foobar'));
@@ -69,6 +72,10 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
                     new Column('id', Type::getType(Types::INTEGER)),
                     new Column('headline', Type::getType(Types::STRING)),
                     new Column('teaser', Type::getType(Types::STRING)),
+                ]),
+                new Table('tl_undo', [
+                    new Column('id', Type::getType(Types::INTEGER)),
+                    new Column('data', Type::getType(Types::BLOB)),
                 ]),
             ],
             [
@@ -91,6 +98,12 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
                         'teaser' => 'Another great teaser!',
                     ],
                 ],
+                'tl_undo' => [
+                    [
+                        'id' => 1,
+                        'data' => 'This should be ignored!',
+                    ],
+                ],
             ],
         );
 
@@ -110,9 +123,9 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
             $framework,
             $resourceFinder,
             $connection,
-            $this->createMock(RecordLabeler::class),
             $this->createMock(AccessDecisionManagerInterface::class),
             $this->createMock(EventDispatcherInterface::class),
+            $this->createMock(DcaUrlAnalyzer::class),
         );
 
         $documentsIterator = $provider->updateIndex(new ReindexConfig());
@@ -122,6 +135,7 @@ class TableDataContainerProviderTest extends AbstractProviderTestCase
         $documents = iterator_to_array($documentsIterator);
         usort($documents, static fn (Document $a, Document $b) => $a->getId() <=> $b->getId());
 
+        $this->assertCount(3, $documents);
         $this->assertSame('1', $documents[0]->getId());
         $this->assertSame('contao.db.tl_content', $documents[0]->getType());
         $this->assertSame('tl_content', $documents[0]->getMetadata()['table']);

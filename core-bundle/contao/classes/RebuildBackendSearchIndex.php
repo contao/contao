@@ -37,8 +37,20 @@ class RebuildBackendSearchIndex extends Backend implements MaintenanceModuleInte
 
 		$backendSearch = System::getContainer()->get('contao.search.backend');
 
+		if (!$backendSearch->isAvailable())
+		{
+			Message::addInfo(
+				\sprintf(
+					$GLOBALS['TL_LANG']['tl_maintenance']['backend_search']['disabled'],
+					'https://to.contao.org/docs/cronjob-framework'
+				),
+				self::class
+			);
+		}
+
 		$objTemplate = new BackendTemplate('be_rebuild_backend_search');
 		$objTemplate->disabled = !$backendSearch->isAvailable();
+		$objTemplate->message = Message::generateUnwrapped(self::class);
 
 		if (Input::post('FORM_SUBMIT') == 'tl_rebuild_backend_search' && $backendSearch->isAvailable())
 		{

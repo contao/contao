@@ -305,6 +305,9 @@
       <trans-unit id="ERR.passkeyAttestationFailure">
         <source>Passkey could not be created.</source>
       </trans-unit>
+      <trans-unit id="ERR.copyUnique">
+        <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
       </trans-unit>
@@ -1050,13 +1053,19 @@
         <source>Delete the row</source>
       </trans-unit>
       <trans-unit id="MSC.mw_module">
-        <source>Module</source>
+        <source>Module or content element</source>
       </trans-unit>
       <trans-unit id="MSC.mw_column">
         <source>Layout section</source>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
-        <source>Enable/disable the module</source>
+        <source>Enable/disable the module or content element</source>
+      </trans-unit>
+      <trans-unit id="MSC.mw_modules">
+        <source>Front end modules</source>
+      </trans-unit>
+      <trans-unit id="MSC.mw_elements">
+        <source>Content elements</source>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
         <source>Title</source>
@@ -1337,7 +1346,7 @@
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
       </trans-unit>
-      <trans-unit id="MSC.confirm">
+      <trans-unit id="MSC.confirmTitle">
           <source>Are you sure?</source>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
@@ -1937,6 +1946,9 @@
       <trans-unit id="MSC.list_perPage">
         <source>Results per page</source>
       </trans-unit>
+      <trans-unit id="MSC.or">
+        <source>or</source>
+      </trans-unit>
       <trans-unit id="MSC.published">
         <source>Published</source>
       </trans-unit>
@@ -2111,6 +2123,9 @@
       <trans-unit id="MSC.disable">
         <source>Disable</source>
       </trans-unit>
+      <trans-unit id="MSC.edit">
+        <source>Edit</source>
+      </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
       </trans-unit>
@@ -2237,14 +2252,23 @@
       <trans-unit id="MSC.searchResultsLoading">
         <source>Loading results...</source>
       </trans-unit>
-      <trans-unit id="MSC.searchResultsEmpty">
-        <source>No results found!</source>
-      </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
       </trans-unit>
       <trans-unit id="MSC.searchHitEdit">
         <source>Edit %s</source>
+      </trans-unit>
+      <trans-unit id="MSC.noResults">
+        <source>No results found.</source>
+      </trans-unit>
+      <trans-unit id="MSC.noOptions">
+        <source>No options to choose from.</source>
+      </trans-unit>
+      <trans-unit id="MSC.removeItem">
+        <source>Remove item</source>
+      </trans-unit>
+      <trans-unit id="MSC.skipToContent">
+        <source>Skip to content</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2383,6 +2407,9 @@
       </trans-unit>
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.operations">
+        <source>Show operations for element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.children">
         <source>Edit the child elements of element ID %s</source>

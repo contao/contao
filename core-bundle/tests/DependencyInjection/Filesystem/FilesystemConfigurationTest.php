@@ -20,7 +20,9 @@ use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use League\FlysystemBundle\Adapter\AdapterDefinitionFactory;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -36,9 +38,7 @@ class FilesystemConfigurationTest extends TestCase
         $this->assertSame($container, $config->getContainer());
     }
 
-    /**
-     * @dataProvider provideReadOnlyValues
-     */
+    #[DataProvider('provideReadOnlyValues')]
     public function testAddVirtualFilesystem(bool $readOnly): void
     {
         $container = $this->getContainerBuilder();
@@ -78,25 +78,14 @@ class FilesystemConfigurationTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
-        $adapterDefinition = $this->createMock(Definition::class);
-        $adapterDefinition
-            ->expects($this->once())
-            ->method('setPublic')
-            ->with(false)
-        ;
-
-        $adapterDefinitionFactory = $this->createMock(AdapterDefinitionFactory::class);
-        $adapterDefinitionFactory
-            ->method('createDefinition')
-            ->with('some-native-adapter', ['some' => 'options'])
-            ->willReturn($adapterDefinition)
-        ;
-
-        $config = new FilesystemConfiguration($container, $adapterDefinitionFactory);
-        $config->mountAdapter('some-native-adapter', ['some' => 'options'], 'path', 'foo');
+        $config = new FilesystemConfiguration($container, new AdapterDefinitionFactory());
+        $config->mountAdapter('local', ['directory' => '/some/path'], 'path', 'foo');
 
         $this->assertTrue($container->hasDefinition('contao.filesystem.adapter.foo'));
-        $this->assertSame($adapterDefinition, $container->getDefinition('contao.filesystem.adapter.foo'));
+
+        $adapterDefinition = $container->getDefinition('contao.filesystem.adapter.foo');
+        $this->assertSame(LocalFilesystemAdapter::class, $adapterDefinition->getClass());
+        $this->assertFalse($adapterDefinition->isPublic());
 
         $calls = $container->getDefinition('contao.filesystem.mount_manager')->getMethodCalls();
 
@@ -110,14 +99,7 @@ class FilesystemConfigurationTest extends TestCase
     {
         $container = $this->getContainerBuilder();
 
-        $adapterDefinitionFactory = $this->createMock(AdapterDefinitionFactory::class);
-        $adapterDefinitionFactory
-            ->method('createDefinition')
-            ->with('some-custom-adapter', ['some' => 'options'])
-            ->willReturn(null)
-        ;
-
-        $config = new FilesystemConfiguration($container, $adapterDefinitionFactory);
+        $config = new FilesystemConfiguration($container, new AdapterDefinitionFactory());
         $config->mountAdapter('some-custom-adapter', ['some' => 'options'], 'path', 'foo');
 
         $this->assertTrue($container->hasAlias('contao.filesystem.adapter.foo'));
@@ -131,9 +113,7 @@ class FilesystemConfigurationTest extends TestCase
         $this->assertSame('path', $calls[0][1][1]);
     }
 
-    /**
-     * @dataProvider provideMountPaths
-     */
+    #[DataProvider('provideMountPaths')]
     public function testMountAdapterAutoGeneratesId(string $mountPath, string $expectedId): void
     {
         $container = $this->getContainerBuilder();
@@ -164,9 +144,7 @@ class FilesystemConfigurationTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideFilesystemPaths
-     */
+    #[DataProvider('provideFilesystemPaths')]
     public function testMountLocalAdapterNormalizesPath(string $filesystemPath, string $expected): void
     {
         $container = $this->getContainerBuilder([
@@ -174,17 +152,24 @@ class FilesystemConfigurationTest extends TestCase
             'bar' => 'path/to/bar',
         ]);
 
-        $adapterDefinitionFactory = $this->createMock(AdapterDefinitionFactory::class);
-        $adapterDefinitionFactory
-            ->method('createDefinition')
-            ->with('local', ['directory' => $expected, 'skip_links' => true])
-            ->willReturn($this->createMock(Definition::class))
-        ;
-
-        $config = new FilesystemConfiguration($container, $adapterDefinitionFactory);
+        $config = new FilesystemConfiguration($container, new AdapterDefinitionFactory());
         $config->mountLocalAdapter($filesystemPath, 'mount/path', 'my_adapter');
 
         $this->assertTrue($container->hasDefinition('contao.filesystem.adapter.my_adapter'));
+
+        $adapterDefinition = $container->getDefinition('contao.filesystem.adapter.my_adapter');
+
+        $this->assertSame(
+            $expected,
+            $adapterDefinition->getArgument(0),
+            'directory should be set',
+        );
+
+        $this->assertSame(
+            LocalFilesystemAdapter::SKIP_LINKS,
+            $adapterDefinition->getArgument(3),
+            'link handling should be set to skip links',
+        );
     }
 
     public static function provideFilesystemPaths(): iterable
@@ -219,9 +204,7 @@ class FilesystemConfigurationTest extends TestCase
         $this->assertSame(['register', [$dbafsDefinition, 'foo/bar']], $calls[0]);
     }
 
-    /**
-     * @dataProvider provideUseLastModifiedValues
-     */
+    #[DataProvider('provideUseLastModifiedValues')]
     public function testAddDefaultDbafs(bool $useLastModified): void
     {
         $container = $this->getContainerBuilder();

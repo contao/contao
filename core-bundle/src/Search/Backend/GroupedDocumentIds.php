@@ -87,6 +87,47 @@ final class GroupedDocumentIds
         return $this->typeToIds;
     }
 
+    /**
+     * Splits the current instance into an array of GroupedDocumentIds instances, each
+     * containing no more than $maxBytes worth of data.
+     *
+     * @param int $maxBytes Maximum size of each chunk in bytes
+     *
+     * @return array<GroupedDocumentIds>
+     */
+    public function split(int $maxBytes): array
+    {
+        // No IDs provided at all, make sure we return ourselves as a chunk
+        if ([] === $this->typeToIds) {
+            return [$this];
+        }
+
+        $chunks = [];
+        $currentChunk = [];
+        $currentSize = 0;
+
+        foreach ($this->typeToIds as $type => $ids) {
+            foreach ($ids as $id) {
+                $entrySize = \strlen($type) + \strlen($id);
+
+                if ($currentSize + $entrySize > $maxBytes) {
+                    $chunks[] = new self($currentChunk);
+                    $currentChunk = [];
+                    $currentSize = 0;
+                }
+
+                $currentChunk[$type][] = $id;
+                $currentSize += $entrySize;
+            }
+        }
+
+        if ([] !== $currentChunk) {
+            $chunks[] = new self($currentChunk);
+        }
+
+        return $chunks;
+    }
+
     public static function fromArray(array $typeToIds): self
     {
         return new self($typeToIds);

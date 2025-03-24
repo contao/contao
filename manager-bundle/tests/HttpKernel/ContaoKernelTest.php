@@ -23,8 +23,10 @@ use Contao\ManagerPlugin\Bundle\Config\BundleConfig;
 use Contao\ManagerPlugin\Config\ConfigPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\PreserveGlobalState;
+use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\MockObject\MockObject;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\ClassExistenceResource;
 use Symfony\Component\Console\Input\ArgvInput;
@@ -36,8 +38,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ContaoKernelTest extends ContaoTestCase
 {
-    use ExpectDeprecationTrait;
-
     private array|string|false $shellVerbosityBackup;
 
     protected function setUp(): void
@@ -113,9 +113,7 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertArrayNotHasKey(AppBundle::class, $bundles);
     }
 
-    /**
-     * @runInSeparateProcess
-     */
+    #[RunInSeparateProcess]
     public function testRegistersAppBundle(): void
     {
         $bundleLoader = $this->createMock(BundleLoader::class);
@@ -188,9 +186,7 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertSame(['foo/bar'], $pluginLoader->getDisabledPackages());
     }
 
-    /**
-     * @dataProvider containerConfigurationProvider
-     */
+    #[DataProvider('containerConfigurationProvider')]
     public function testRegisterContainerConfiguration(string $projectDir, string $env, array $expectedResult): void
     {
         $files = [];
@@ -223,7 +219,7 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertSame($expectedResult, $files);
     }
 
-    public function containerConfigurationProvider(): iterable
+    public static function containerConfigurationProvider(): iterable
     {
         yield [
             __DIR__.'/../Fixtures/HttpKernel/WithParametersYml',
@@ -268,7 +264,7 @@ class ContaoKernelTest extends ContaoTestCase
         ];
 
         yield [
-            $this->getTempDir(),
+            static::getTempDir(),
             'prod',
             [],
         ];
@@ -342,13 +338,13 @@ class ContaoKernelTest extends ContaoTestCase
         unset($_SERVER['TRUSTED_HOSTS']);
     }
 
-    public function testEnablesRequestHttpMethodParameterOverride(): void
+    public function testDoesNotEnableRequestHttpMethodParameterOverride(): void
     {
         $this->assertFalse(Request::getHttpMethodParameterOverride());
 
         ContaoKernel::fromRequest($this->getTempDir(), Request::create('/'));
 
-        $this->assertTrue(Request::getHttpMethodParameterOverride());
+        $this->assertFalse(Request::getHttpMethodParameterOverride());
     }
 
     public function testSetsProjectDirFromInput(): void
@@ -368,10 +364,8 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertFalse($kernel->isDebug());
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[PreserveGlobalState(false)]
+    #[RunInSeparateProcess]
     public function testCreatesDevKernelFromConsoleArgument(): void
     {
         $input = new ArgvInput(['help', '--env=dev']);
@@ -390,10 +384,8 @@ class ContaoKernelTest extends ContaoTestCase
         ContaoKernel::fromInput($this->getTempDir(), $input);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[PreserveGlobalState(false)]
+    #[RunInSeparateProcess]
     public function testReturnsTheContaoKernelInDevMode(): void
     {
         $_SERVER['APP_ENV'] = 'dev';
@@ -404,10 +396,8 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertInstanceOf(ContaoKernel::class, $kernel);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[PreserveGlobalState(false)]
+    #[RunInSeparateProcess]
     public function testReturnsTheContaoCacheInProdMode(): void
     {
         unset($_SERVER['APP_ENV'], $_ENV['APP_ENV'], $_ENV['DISABLE_HTTP_CACHE'], $_SERVER['DISABLE_HTTP_CACHE']);
@@ -418,10 +408,8 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertInstanceOf(ContaoCache::class, $kernel);
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[PreserveGlobalState(false)]
+    #[RunInSeparateProcess]
     public function testCreatesDevKernelFromAppEnvVar(): void
     {
         $_SERVER['APP_ENV'] = 'dev';
@@ -433,10 +421,8 @@ class ContaoKernelTest extends ContaoTestCase
         $this->assertTrue($kernel->isDebug());
     }
 
-    /**
-     * @runInSeparateProcess
-     * @preserveGlobalState disabled
-     */
+    #[PreserveGlobalState(false)]
+    #[RunInSeparateProcess]
     public function testCreatesProdKernelFromAppEnvVar(): void
     {
         $_SERVER['APP_ENV'] = 'prod';

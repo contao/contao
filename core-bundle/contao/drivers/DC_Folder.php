@@ -16,6 +16,9 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\BadRequestException;
 use Contao\CoreBundle\Exception\NotFoundException;
 use Contao\CoreBundle\Exception\ResponseException;
+use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\File\MetadataBag;
+use Contao\CoreBundle\Filesystem\Dbafs\DbafsManager;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
@@ -28,6 +31,7 @@ use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\Exception\DriverException;
+use enshrined\svgSanitize\Sanitizer;
 use Imagine\Exception\RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -488,7 +492,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
 </div>' : '') . '
 <ul class="tl_listing tl_file_manager' . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">
-  <li class="tl_folder_top cf"><div class="tl_left"></div> <div class="tl_right">' . (($blnClipboard && empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable))) ? '<a href="' . $this->addToUrl('&amp;act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $this->strUploadPath . (!\is_array($arrClipboard['id'] ?? null) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars($labelPasteInto[0]) . '" data-action="contao--scroll-offset#store">' . $imagePasteInto . '</a>' : '&nbsp;') . '</div></li>' . $return . '
+  <li class="tl_folder_top cf"><div class="tl_left"></div> <div class="tl_right">' . (($blnClipboard && empty($this->arrFilemounts) && !\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['root'] ?? null) !== false && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable))) ? '<a href="' . $this->addToUrl('&amp;act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $this->strUploadPath . (!\is_array($arrClipboard['id'] ?? null) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" data-action="contao--scroll-offset#store">' . $imagePasteInto . '</a>' : '&nbsp;') . '</div></li>' . $return . '
 </ul>' . ($this->strPickerFieldType == 'radio' ? '
 <div class="tl_radio_reset">
 <label for="tl_radio_reset" class="tl_radio_label">' . $GLOBALS['TL_LANG']['MSC']['resetSelected'] . '</label> <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
@@ -653,21 +657,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Update the database AFTER the file has been moved
 			if ($this->blnIsDbAssisted)
 			{
-				$syncSource = Dbafs::shouldBeSynchronized($source);
-				$syncTarget = Dbafs::shouldBeSynchronized($destination);
-
-				if ($syncSource && $syncTarget)
-				{
-					Dbafs::moveResource($source, $destination);
-				}
-				elseif ($syncSource)
-				{
-					Dbafs::deleteResource($source);
-				}
-				elseif ($syncTarget)
-				{
-					Dbafs::addResource($destination);
-				}
+				$this->syncDbafsAndUpdateModelCache($source, $destination);
 			}
 
 			// Call the oncut_callback
@@ -837,17 +827,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		// Update the database AFTER the file has been copied
 		if ($this->blnIsDbAssisted)
 		{
-			$syncSource = Dbafs::shouldBeSynchronized($source);
-			$syncTarget = Dbafs::shouldBeSynchronized($destination);
-
-			if ($syncSource && $syncTarget)
-			{
-				Dbafs::copyResource($source, $destination);
-			}
-			elseif ($syncTarget)
-			{
-				Dbafs::addResource($destination);
-			}
+			$this->syncDbafsAndUpdateModelCache($source, $destination);
 		}
 
 		// Call the oncopy_callback
@@ -989,9 +969,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		// Update the database AFTER the resource has been deleted
-		if ($this->blnIsDbAssisted && Dbafs::shouldBeSynchronized($source))
+		if ($this->blnIsDbAssisted)
 		{
-			Dbafs::deleteResource($source);
+			$this->syncDbafsAndUpdateModelCache($source);
 		}
 
 		System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $source . '" has been deleted');
@@ -1109,10 +1089,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$this->reload();
 				}
 
-				foreach ($arrUploaded as $strFile)
-				{
-					Dbafs::addResource($strFile);
-				}
+				$this->syncDbafsAndUpdateModelCache(...$arrUploaded);
 			}
 			else
 			{
@@ -1137,9 +1114,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			// Update the hash of the target folder
-			if ($this->blnIsDbAssisted && Dbafs::shouldBeSynchronized($strFolder))
+			if ($this->blnIsDbAssisted)
 			{
-				Dbafs::updateFolderHashes($strFolder);
+				$this->syncDbafsAndUpdateModelCache($strFolder);
 			}
 
 			$request = System::getContainer()->get('request_stack')->getCurrentRequest();
@@ -1237,7 +1214,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				if ($objModel === null)
 				{
-					$objModel = Dbafs::addResource($this->intId);
+					$this->syncDbafsAndUpdateModelCache($this->intId);
+
+					$objModel = FilesModel::findByPath($this->intId);
 				}
 
 				$this->objActiveRecord = $objModel;
@@ -1387,12 +1366,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$return .= '
 </div>
   ' . $strButtons . '
-</form>
-</turbo-frame>';
+</form>';
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
-		$return = '
-<turbo-frame id="tl_edit_form_frame" target="_top" data-turbo-action="advance">' . $version . Message::generate() . ($this->noReload ? '
+		$return = $version . Message::generate() . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
 <div id="tl_buttons">
 ' . DataContainerOperationsBuilder::generateBackButton() . '
@@ -1526,7 +1503,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 					if ($objModel === null)
 					{
-						$objModel = Dbafs::addResource($id);
+						$this->syncDbafsAndUpdateModelCache($id);
+
+						$objModel = FilesModel::findByPath($id);
 					}
 
 					$this->objActiveRecord = $objModel;
@@ -1772,7 +1751,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			if ($objMeta === null)
 			{
-				$objMeta = Dbafs::addResource($objFile->value);
+				$this->syncDbafsAndUpdateModelCache($objFile->value);
+
+				$objMeta = FilesModel::findByPath($objFile->value);
 			}
 
 			$objVersions = new Versions($this->strTable, $objMeta->id);
@@ -1816,6 +1797,17 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Save the file
 			if (md5($strContent) != md5($strSource))
 			{
+				if ($objFile->extension == 'svg' || $objFile->extension == 'svgz')
+				{
+					$sanitizer = new Sanitizer();
+					$strSource = $sanitizer->sanitize($strSource);
+
+					if (!$strSource)
+					{
+						throw new \Exception(\sprintf($GLOBALS['TL_LANG']['ERR']['invalidFile'], $this->intId));
+					}
+				}
+
 				if ($objFile->extension == 'svgz')
 				{
 					$strSource = gzencode($strSource);
@@ -1882,7 +1874,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <div class="tl_tbox">
   <div class="widget">
     <h3><label for="ctrl_source">' . $GLOBALS['TL_LANG']['tl_files']['editor'][0] . '</label></h3>
-    <textarea name="source" id="ctrl_source" class="tl_textarea monospace" rows="12" cols="80" style="height:400px" data-action="focus->contao--scroll-offset#store">' . "\n" . htmlspecialchars($strContent, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '</textarea>' . ((Config::get('showHelp') && isset($GLOBALS['TL_LANG']['tl_files']['editor'][1])) ? '
+    <textarea name="source" id="ctrl_source" class="tl_textarea monospace' . (Config::get('useCE') ? ' noresize' : '') . '" rows="12" cols="80" style="height:400px" data-action="focus->contao--scroll-offset#store">' . "\n" . htmlspecialchars($strContent, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '</textarea>' . ((Config::get('showHelp') && isset($GLOBALS['TL_LANG']['tl_files']['editor'][1])) ? '
     <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_files']['editor'][1] . '</p>' : '') . '
   </div>
 </div>
@@ -2014,7 +2006,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				// Update the database
 				if ($this->blnIsDbAssisted && Dbafs::shouldBeSynchronized($this->strPath . '/' . $varValue . $this->strExtension))
 				{
-					$this->objActiveRecord = Dbafs::addResource($this->strPath . '/' . $varValue . $this->strExtension);
+					$this->syncDbafsAndUpdateModelCache($this->strPath . '/' . $varValue . $this->strExtension);
+
+					$this->objActiveRecord = FilesModel::findByPath($this->strPath . '/' . $varValue . $this->strExtension);
 				}
 
 				System::getContainer()->get('monolog.logger.contao.files')->info('Folder "' . $this->strPath . '/' . $varValue . $this->strExtension . '" has been created');
@@ -2024,21 +2018,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				// Update the database
 				if ($this->blnIsDbAssisted)
 				{
-					$syncSource = Dbafs::shouldBeSynchronized($this->strPath . '/' . $this->varValue . $this->strExtension);
-					$syncTarget = Dbafs::shouldBeSynchronized($this->strPath . '/' . $varValue . $this->strExtension);
-
-					if ($syncSource && $syncTarget)
-					{
-						Dbafs::moveResource($this->strPath . '/' . $this->varValue . $this->strExtension, $this->strPath . '/' . $varValue . $this->strExtension);
-					}
-					elseif ($syncSource)
-					{
-						Dbafs::deleteResource($this->strPath . '/' . $this->varValue . $this->strExtension);
-					}
-					elseif ($syncTarget)
-					{
-						Dbafs::addResource($this->strPath . '/' . $varValue . $this->strExtension);
-					}
+					$this->syncDbafsAndUpdateModelCache(
+						$this->strPath . '/' . $this->varValue . $this->strExtension,
+						$this->strPath . '/' . $varValue . $this->strExtension,
+					);
 				}
 
 				System::getContainer()->get('monolog.logger.contao.files')->info('File or folder "' . $this->strPath . '/' . $this->varValue . $this->strExtension . '" has been renamed to "' . $this->strPath . '/' . $varValue . $this->strExtension . '"');
@@ -2154,8 +2137,29 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					$varValue = Widget::getEmptyValueByFieldType($GLOBALS['TL_DCA'][$this->strTable]['fields'][$this->strField]['sql'] ?? array());
 				}
 
-				$this->objActiveRecord->{$this->strField} = $varValue;
-				$this->objActiveRecord->save();
+				if ($this->strTable === 'tl_files' && $this->strField === 'meta')
+				{
+					/** @var DbafsManager $dbafsManager */
+					$dbafsManager = System::getContainer()->get('contao.filesystem.dbafs_manager');
+					$path = $this->objActiveRecord->path;
+
+					$metadata = $dbafsManager->getExtraMetadata($path);
+					$metadata->setLocalized(
+						new MetadataBag(
+							array_map(
+								static fn ($values) => new Metadata($values),
+								StringUtil::deserialize($varValue, true)
+							)
+						)
+					);
+
+					$dbafsManager->setExtraMetadata($path, $metadata);
+				}
+				else
+				{
+					$this->objActiveRecord->{$this->strField} = $varValue;
+					$this->objActiveRecord->save();
+				}
 
 				if (!isset($arrData['eval']['versionize']) || $arrData['eval']['versionize'] !== false)
 				{
@@ -2397,14 +2401,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$blnIsOpen = true;
 			}
 
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_folder toggle_select hover-div" data-controller="contao--deeplink"><div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 16 : 0)) . 'px">';
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFolder, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_folder toggle_select hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"><div class="tl_left" style="padding-left:' . ($intMargin + (($countFiles < 1) ? 16 : 0)) . 'px">';
 
 			// Add a toggle button if there are children
 			if ($countFiles > 0)
 			{
 				$class = $blnIsOpen ? 'foldable foldable--open' : 'foldable';
 				$alt = $blnIsOpen ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
-				$return .= '<a href="' . $this->addToUrl('tg=' . $md5) . '" title="' . StringUtil::specialchars($alt) . '" class="' . $class . '" data-contao--toggle-nodes-target="toggle" data-action="contao--toggle-nodes#toggle" data-contao--toggle-nodes-id-param="filetree_' . $md5 . '" data-contao--toggle-nodes-folder-param="' . $currentFolder . '" data-contao--toggle-nodes-level-param="' . $level . '">' . Image::getHtml('chevron-right.svg') . '</a>';
+				$return .= '<a href="' . $this->addToUrl('tg=' . $md5) . '" class="' . $class . '" data-contao--toggle-nodes-target="toggle" data-action="contao--toggle-nodes#toggle:prevent" data-contao--toggle-nodes-id-param="filetree_' . $md5 . '" data-contao--toggle-nodes-folder-param="' . $currentFolder . '" data-contao--toggle-nodes-level-param="' . $level . '">' . Image::getHtml('chevron-right.svg', $alt) . '</a>';
 			}
 
 			$protected = $blnProtected;
@@ -2424,7 +2428,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			if ($this->isMounted($currentFolder))
 			{
-				$strFolderLabel = '<a href="' . $this->addToUrl('fn=' . $currentEncoded) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $strFolderLabel . '</a>';
+				$strFolderLabel = '<a href="' . $this->addToUrl('fn=' . $currentEncoded) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $strFolderLabel . '</a>';
 			}
 
 			$return .= Image::getHtml($folderImg, $folderAlt) . ' ' . $strFolderLabel . '</div> <div class="tl_right">';
@@ -2443,13 +2447,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 					}
 					else
 					{
-						$return .= '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $currentEncoded . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" title="' . StringUtil::specialchars(\sprintf($labelPasteInto[1], $currentEncoded)) . '" data-action="contao--scroll-offset#store">' . $imagePasteInto . '</a> ';
+						$return .= '<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $currentEncoded . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')) . '" data-action="contao--scroll-offset#store">' . $imagePasteInto . '</a> ';
 					}
 				}
 				// Default buttons
 				else
 				{
-					$uploadButton = ' <a href="' . $this->addToUrl('&amp;act=move&amp;mode=2&amp;pid=' . $currentEncoded) . '" title="' . StringUtil::specialchars(\sprintf($GLOBALS['TL_LANG']['tl_files']['uploadFF'], $currentEncoded)) . '">' . Image::getHtml('new.svg', $GLOBALS['TL_LANG']['tl_files']['move'][0]) . '</a>';
+					$uploadButton = ' <a href="' . $this->addToUrl('&amp;act=move&amp;mode=2&amp;pid=' . $currentEncoded) . '">' . Image::getHtml('new.svg', \sprintf($GLOBALS['TL_LANG']['tl_files']['uploadFF'], $currentEncoded)) . '</a>';
 
 					// Only show the upload button for mounted folders
 					if (!$user->isAdmin && \in_array($currentFolder, $user->filemounts))
@@ -2511,7 +2515,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 
 			$currentEncoded = $this->urlEncode($currentFile);
-			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file toggle_select hover-div" data-controller="contao--deeplink"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing) . 'px">';
+			$return .= "\n  " . '<li data-id="' . htmlspecialchars($currentFile, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '" class="tl_file toggle_select hover-div" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing) . 'px">';
 			$thumbnail .= ' <span class="tl_gray">(' . $this->getReadableSize($objFile->filesize);
 
 			if ($objFile->width && $objFile->height)
@@ -2551,13 +2555,13 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			}
 			else
 			{
-				$return .= '<a href="' . $staticUrl . $currentEncoded . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($objFile->icon, $iconAlt) . '</a> ' . $strFileNameEncoded . $thumbnail . '</div> <div class="tl_right">';
+				$return .= '<a href="' . $staticUrl . $currentEncoded . '" target="_blank">' . Image::getHtml($objFile->icon, $GLOBALS['TL_LANG']['MSC']['view']) . '</a> ' . $strFileNameEncoded . $thumbnail . '</div> <div class="tl_right">';
 			}
 
 			// Buttons
 			if ($arrClipboard !== false && Input::get('act') != 'select')
 			{
-				$_buttons = '&nbsp;';
+				$_buttons = '';
 			}
 			else
 			{
@@ -2598,10 +2602,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$active = isset($session['search'][$this->strTable]['value']) && (string) $session['search'][$this->strTable]['value'] !== '';
 
+		$this->setPanelState($active);
+
 		return '
     <div class="tl_search tl_subpanel">
       <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
-      <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '" data-controller="contao--chosen">
+      <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '" data-controller="contao--choices">
         <option value="name">' . ($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['label'][0] ?: (\is_array($GLOBALS['TL_LANG']['MSC']['name'] ?? null) ? $GLOBALS['TL_LANG']['MSC']['name'][0] : ($GLOBALS['TL_LANG']['MSC']['name'] ?? null))) . '</option>
       </select>
       <span>=</span>
@@ -2903,5 +2909,12 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$img = $picture->getImg($projectDir, $container->get('contao.assets.files_context')->getStaticUrl());
 
 		return \sprintf('<img src="%s"%s width="%s" height="%s" alt class="%s" loading="lazy">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], $isImportantPath ? 'preview-important' : 'preview-image');
+	}
+
+	private function syncDbafsAndUpdateModelCache(string ...$locations): void
+	{
+		System::getContainer()->get('contao.filesystem.dbafs_manager')->sync(...$locations);
+
+		FilesModel::findMultipleByPaths($locations);
 	}
 }

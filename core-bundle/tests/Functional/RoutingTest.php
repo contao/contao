@@ -14,12 +14,10 @@ namespace Contao\CoreBundle\Tests\Functional;
 
 use Contao\System;
 use Contao\TestCase\FunctionalTestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class RoutingTest extends FunctionalTestCase
 {
-    use ExpectDeprecationTrait;
-
     private static array|null $lastImport = null;
 
     protected function setUp(): void
@@ -32,9 +30,7 @@ class RoutingTest extends FunctionalTestCase
         $GLOBALS['TL_CONFIG']['addLanguageToUrl'] = false;
     }
 
-    /**
-     * @dataProvider getAliases
-     */
+    #[DataProvider('getAliases')]
     public function testResolvesAliases(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host): void
     {
         $_SERVER['REQUEST_URI'] = $request;
@@ -248,9 +244,7 @@ class RoutingTest extends FunctionalTestCase
         ];
     }
 
-    /**
-     * @dataProvider getAliasesWithLocale
-     */
+    #[DataProvider('getAliasesWithLocale')]
     public function testResolvesAliasesWithLocale(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host): void
     {
         $_SERVER['REQUEST_URI'] = $request;
@@ -479,9 +473,7 @@ class RoutingTest extends FunctionalTestCase
         ];
     }
 
-    /**
-     * @dataProvider getAliasesWithoutUrlSuffix
-     */
+    #[DataProvider('getAliasesWithoutUrlSuffix')]
     public function testResolvesAliasesWithoutUrlSuffix(array $fixtures, string $request, int $statusCode, string $pageTitle, array $query, string $host): void
     {
         $_SERVER['REQUEST_URI'] = $request;
@@ -638,9 +630,7 @@ class RoutingTest extends FunctionalTestCase
         ];
     }
 
-    /**
-     * @dataProvider getRootAliases
-     */
+    #[DataProvider('getRootAliases')]
     public function testResolvesTheRootPage(array $fixtures, string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
     {
         $_SERVER['REQUEST_URI'] = $request;
@@ -727,9 +717,7 @@ class RoutingTest extends FunctionalTestCase
         ];
     }
 
-    /**
-     * @dataProvider getRootAliasesWithLocale
-     */
+    #[DataProvider('getRootAliasesWithLocale')]
     public function testResolvesTheRootPageWithLocale(array $fixtures, string $request, int $statusCode, string $pageTitle, string $acceptLanguages, string $host): void
     {
         $_SERVER['REQUEST_URI'] = $request;
@@ -936,9 +924,8 @@ class RoutingTest extends FunctionalTestCase
 
     /**
      * @see https://github.com/contao/contao/issues/6328
-     *
-     * @dataProvider disabledLanguageRedirectsProvider
      */
+    #[DataProvider('disabledLanguageRedirectsProvider')]
     public function testCorrectHandlesDisabledLanguageRedirects(bool $disableLanguageRedirects, bool $indexAlias, string $requestLocale, string $expectedLocation): void
     {
         $request = 'https://example.local/';
@@ -1099,9 +1086,7 @@ class RoutingTest extends FunctionalTestCase
         $this->assertStringContainsString('Error 401 Page', $title);
     }
 
-    /**
-     * @dataProvider getUrlPrefixMixProvider
-     */
+    #[DataProvider('getUrlPrefixMixProvider')]
     public function testUrlPrefixMix(string $request, string $acceptLanguage, int $statusCode, string $pageTitle): void
     {
         $_SERVER['REQUEST_URI'] = $request;

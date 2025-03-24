@@ -2,6 +2,12 @@
 <xliff version="1.1">
     <file source-language="en">
         <body>
+            <trans-unit id="getting-started.0">
+                <source>Getting started</source>
+            </trans-unit>
+            <trans-unit id="getting-started.1">
+                <source>Select a template from the browser. You can then inspect all its representations and create your own versions and variants.</source>
+            </trans-unit>
             <trans-unit id="theme-selector">
                 <source>Theme context</source>
             </trans-unit>
@@ -71,11 +77,20 @@
             <trans-unit id="message.save.success">
                 <source>Your template for %s was saved.</source>
             </trans-unit>
+            <trans-unit id="message.save.error">
+                <source>Your template for %s could not be saved.</source>
+            </trans-unit>
             <trans-unit id="message.delete.success">
                 <source>Your template for %s was deleted.</source>
             </trans-unit>
             <trans-unit id="message.delete.error">
                 <source>Your template for %s could not be deleted.</source>
+            </trans-unit>
+            <trans-unit id="message.open_tab.error">
+                <source>The template %s cannot be found or opened in an editor tab.</source>
+            </trans-unit>
+            <trans-unit id="message.open_block_info.error">
+                <source>The block %s was not found yet. Did you save the template?</source>
             </trans-unit>
             <trans-unit id="dialog.delete.confirm">
                 <source>This deletes your template for %s and cannot be undone.</source>
@@ -85,6 +100,15 @@
             </trans-unit>
             <trans-unit id="dialog.rename_variant">
                 <source>Please define a new unique name for the variant template %s.</source>
+            </trans-unit>
+            <trans-unit id="editor_tab.relation.not_analyzable">
+                <source>The template's relation cannot be analyzed because it contains errors.</source>
+            </trans-unit>
+            <trans-unit id="editor_tab.relation.no_extend_warning">
+                <source>This template overwrites all previously defined content because it does not extend from %previous%.</source>
+            </trans-unit>
+            <trans-unit id="editor_tab.relation.no_use_warning">
+                <source>This template ignores all previously defined content because it does not use %previous%.</source>
             </trans-unit>
             <trans-unit id="info.block.title">
                 <source>Hierarchy of block %block%</source>

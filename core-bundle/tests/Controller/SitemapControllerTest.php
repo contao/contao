@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller;
 
 use Contao\ArticleModel;
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Controller\SitemapController;
 use Contao\CoreBundle\Event\SitemapEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -186,8 +186,10 @@ class SitemapControllerTest extends TestCase
         $urlGenerator
             ->expects($this->exactly(2))
             ->method('generate')
-            ->withConsecutive([$page1, [], UrlGeneratorInterface::ABSOLUTE_URL], [$page2, [], UrlGeneratorInterface::ABSOLUTE_URL])
-            ->willReturnOnConsecutiveCalls('https://www.foobar.com/en/page1.html', 'https://www.foobar.com/en/page2.html')
+            ->willReturnMap([
+                [$page1, [], UrlGeneratorInterface::ABSOLUTE_URL, 'https://www.foobar.com/en/page1.html'],
+                [$page2, [], UrlGeneratorInterface::ABSOLUTE_URL, 'https://www.foobar.com/en/page2.html'],
+            ])
         ;
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request), $urlGenerator);
@@ -369,14 +371,16 @@ class SitemapControllerTest extends TestCase
         $registry
             ->expects($this->exactly(2))
             ->method('supportsContentComposition')
-            ->withConsecutive([$page1], [$page2])
-            ->willReturn(false, true)
+            ->willReturnMap([
+                [$page1, false],
+                [$page2, true],
+            ])
         ;
 
         $registry
             ->expects($this->once())
             ->method('isRoutable')
-            ->withConsecutive([$page1])
+            ->with($page1)
             ->willReturn(true)
         ;
 
@@ -439,15 +443,13 @@ class SitemapControllerTest extends TestCase
         $registry
             ->expects($this->exactly(2))
             ->method('supportsContentComposition')
-            ->withConsecutive([$page1], [$page2])
-            ->willReturn(true, true)
+            ->willReturn(true)
         ;
 
         $registry
             ->expects($this->exactly(2))
             ->method('isRoutable')
-            ->withConsecutive([$page1], [$page2])
-            ->willReturn(false, true)
+            ->willReturnMap([[$page1, false], [$page2, true]])
         ;
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
@@ -509,22 +511,19 @@ class SitemapControllerTest extends TestCase
         $registry
             ->expects($this->exactly(2))
             ->method('supportsContentComposition')
-            ->withConsecutive([$page1], [$page2])
-            ->willReturn(true, true)
+            ->willReturn(true)
         ;
 
         $registry
             ->expects($this->exactly(2))
             ->method('isRoutable')
-            ->withConsecutive([$page1], [$page2])
-            ->willReturn(true, true)
+            ->willReturn(true)
         ;
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
             ->expects($this->exactly(2))
             ->method('generate')
-            ->withConsecutive([$page1, [], UrlGeneratorInterface::ABSOLUTE_URL], [$page2, [], UrlGeneratorInterface::ABSOLUTE_URL])
             ->willReturnCallback(static fn ($page) => match (true) {
                 $page === $page1 => throw new RuntimeException(),
                 $page === $page2 => 'https://www.foobar.com/en/page2.html',
@@ -600,8 +599,10 @@ class SitemapControllerTest extends TestCase
         $urlGenerator
             ->expects($this->exactly(2))
             ->method('generate')
-            ->withConsecutive([$page1, [], UrlGeneratorInterface::ABSOLUTE_URL], [$page3, [], UrlGeneratorInterface::ABSOLUTE_URL])
-            ->willReturnOnConsecutiveCalls('https://www.foobar.com/en/page1.html', 'https://www.foobar.com/en/page3.html')
+            ->willReturnMap([
+                [$page1, [], UrlGeneratorInterface::ABSOLUTE_URL, 'https://www.foobar.com/en/page1.html'],
+                [$page3, [], UrlGeneratorInterface::ABSOLUTE_URL, 'https://www.foobar.com/en/page3.html'],
+            ])
         ;
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request), $urlGenerator);
@@ -651,8 +652,10 @@ class SitemapControllerTest extends TestCase
         $urlGenerator
             ->expects($this->exactly(2))
             ->method('generate')
-            ->withConsecutive([$page1, [], UrlGeneratorInterface::ABSOLUTE_URL], [$article1, [], UrlGeneratorInterface::ABSOLUTE_URL])
-            ->willReturnOnConsecutiveCalls('https://www.foobar.com/en/page1.html', 'https://www.foobar.com/en/page1/articles/foobar.html')
+            ->willReturnMap([
+                [$page1, [], UrlGeneratorInterface::ABSOLUTE_URL, 'https://www.foobar.com/en/page1.html'],
+                [$article1, [], UrlGeneratorInterface::ABSOLUTE_URL, 'https://www.foobar.com/en/page1/articles/foobar.html'],
+            ])
         ;
 
         $controller = new SitemapController($registry, $this->mockPageFinder($request), $urlGenerator);
@@ -828,26 +831,26 @@ class SitemapControllerTest extends TestCase
 
     private function mockFrameworkWithPages(array $pages, array $articles): ContaoFramework&MockObject
     {
+        foreach ($pages as $parentId => $return) {
+            $pages[$parentId] = [$parentId, ['order' => 'sorting'], $return];
+        }
+
         $pageModelAdapter = $this->mockAdapter(['findPublishedRootPages', 'findByPid']);
         $pageModelAdapter
             ->expects($this->exactly(\count($pages)))
             ->method('findByPid')
-            ->withConsecutive(...array_map(
-                static fn ($parentId) => [$parentId, ['order' => 'sorting']],
-                array_keys($pages),
-            ))
-            ->willReturnOnConsecutiveCalls(...$pages)
+            ->willReturnMap($pages)
         ;
+
+        foreach ($articles as $pageId => $return) {
+            $articles[$pageId] = [$pageId, ['ignoreFePreview' => true], $return];
+        }
 
         $articleModelAdapter = $this->mockAdapter(['findPublishedWithTeaserByPid']);
         $articleModelAdapter
             ->expects($this->exactly(\count($articles)))
             ->method('findPublishedWithTeaserByPid')
-            ->withConsecutive(...array_map(
-                static fn ($pageId) => [$pageId, ['ignoreFePreview' => true]],
-                array_keys($articles),
-            ))
-            ->willReturnOnConsecutiveCalls(...$articles)
+            ->willReturnMap($articles)
         ;
 
         return $this->mockContaoFramework([
@@ -895,8 +898,8 @@ class SitemapControllerTest extends TestCase
             ;
         }
 
-        $entityCacheTags = $this->createMock(EntityCacheTags::class);
-        $entityCacheTags
+        $cacheTags = $this->createMock(CacheTagManager::class);
+        $cacheTags
             ->expects($this->once())
             ->method('tagWith')
             ->with([
@@ -910,7 +913,7 @@ class SitemapControllerTest extends TestCase
         $container->set('contao.framework', $framework);
         $container->set('event_dispatcher', $eventDispatcher);
         $container->set('security.authorization_checker', $authorizationChecker);
-        $container->set('contao.cache.entity_tags', $entityCacheTags);
+        $container->set('contao.cache.tag_manager', $cacheTags);
 
         return $container;
     }

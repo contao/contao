@@ -31,6 +31,7 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\Slots\SlotTokenParser;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\NullAdapter;
@@ -44,10 +45,12 @@ use Twig\Extension\CoreExtension;
 use Twig\Extension\EscaperExtension;
 use Twig\Loader\ArrayLoader;
 use Twig\Node\BodyNode;
+use Twig\Node\EmptyNode;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FilterExpression;
 use Twig\Node\ModuleNode;
 use Twig\Node\Node;
+use Twig\Node\Nodes;
 use Twig\NodeTraverser;
 use Twig\Runtime\EscaperRuntime;
 use Twig\Source;
@@ -183,9 +186,41 @@ class ContaoExtensionTest extends TestCase
 
         $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
         $filesystemLoader
-            ->method('getFirst')
+            ->method('getAllFirstByThemeSlug')
             ->with('foo')
-            ->willReturn('@Contao_Bar/foo.html.twig')
+            ->willReturn(['' => '@Contao_Bar/foo.html.twig'])
+        ;
+
+        $includeFunction = $this->getContaoExtension($environment, $filesystemLoader)->getFunctions()[0];
+        $args = [$environment, [], '@Contao/foo'];
+
+        $this->expectExceptionObject($methodCalledException);
+
+        ($includeFunction->getCallable())(...$args);
+    }
+
+    public function testIncludeFunctionDelegatesToTwigIncludeWithThemeContext(): void
+    {
+        $methodCalledException = new \Exception();
+
+        $environment = $this->createMock(Environment::class);
+        $environment
+            ->expects($this->once())
+            ->method('resolveTemplate')
+            ->with('@Contao_Theme_theme/foo.html.twig')
+            ->willThrowException($methodCalledException)
+        ;
+
+        $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $filesystemLoader
+            ->method('getAllFirstByThemeSlug')
+            ->with('foo')
+            ->willReturn(['theme' => '@Contao_Theme_theme/foo.html.twig', '' => '@Contao_Bar/foo.html.twig'])
+        ;
+
+        $filesystemLoader
+            ->method('getCurrentThemeSlug')
+            ->willReturn('theme')
         ;
 
         $includeFunction = $this->getContaoExtension($environment, $filesystemLoader)->getFunctions()[0];
@@ -242,7 +277,7 @@ class ContaoExtensionTest extends TestCase
                 new FilterExpression(
                     new ConstantExpression('text', 1),
                     new TwigFilter('escape'),
-                    new Node([
+                    new Nodes([
                         new ConstantExpression('html', 1),
                         new ConstantExpression(null, 1),
                         new ConstantExpression(true, 1),
@@ -251,9 +286,9 @@ class ContaoExtensionTest extends TestCase
                 ),
             ]),
             null,
-            new Node(),
-            new Node(),
-            new Node(),
+            new EmptyNode(),
+            new EmptyNode(),
+            new EmptyNode(),
             null,
             new Source('<code>', 'foo.html.twig'),
         );
@@ -372,9 +407,7 @@ class ContaoExtensionTest extends TestCase
         unset($GLOBALS['TL_LANG']);
     }
 
-    /**
-     * @dataProvider provideTemplateNames
-     */
+    #[DataProvider('provideTemplateNames')]
     public function testDefaultEscaperRules(string $templateName): void
     {
         $extension = $this->getContaoExtension();

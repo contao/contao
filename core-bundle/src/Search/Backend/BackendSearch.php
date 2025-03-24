@@ -42,7 +42,6 @@ class BackendSearch
         private readonly MessageBusInterface $messageBus,
         private readonly WebWorker $webWorker,
         private readonly SealReindexProvider $reindexProvider,
-        private readonly string $indexName,
     ) {
     }
 
@@ -58,7 +57,11 @@ class BackendSearch
         }
 
         if ($async) {
-            $this->messageBus->dispatch(new DeleteDocumentsMessage($groupedDocumentIds));
+            // Split into multiple messages of max 64kb if needed, otherwise messages with
+            // hundreds of IDs would fail
+            foreach ($groupedDocumentIds->split(65536) as $group) {
+                $this->messageBus->dispatch(new DeleteDocumentsMessage($group));
+            }
 
             return $this;
         }
@@ -71,7 +74,7 @@ class BackendSearch
             }
         }
 
-        $this->engine->bulk($this->indexName, [], $documentIds);
+        $this->engine->bulk(self::SEAL_INTERNAL_INDEX_NAME, [], $documentIds);
 
         return $this;
     }
@@ -79,7 +82,11 @@ class BackendSearch
     public function reindex(ReindexConfig $config, bool $async = true): self
     {
         if ($async) {
-            $this->messageBus->dispatch(new ReindexMessage($config));
+            // Split into multiple messages of max 64kb if needed, otherwise messages with
+            // hundreds of IDs would fail
+            foreach ($config->getLimitedDocumentIds()->split(65536) as $group) {
+                $this->messageBus->dispatch(new ReindexMessage($config->limitToDocumentIds($group)));
+            }
 
             return $this;
         }
@@ -150,8 +157,8 @@ class BackendSearch
     public function clear(): void
     {
         // TODO: We need an API for that in SEAL
-        $this->engine->dropIndex($this->indexName);
-        $this->engine->createIndex($this->indexName);
+        $this->engine->dropIndex(self::SEAL_INTERNAL_INDEX_NAME);
+        $this->engine->createIndex(self::SEAL_INTERNAL_INDEX_NAME);
     }
 
     private function createSearchBuilder(Query $query): SearchBuilder
@@ -182,6 +189,11 @@ class BackendSearch
         }
 
         $document = Document::fromArray(json_decode($document['document'], true, 512, JSON_THROW_ON_ERROR));
+
+        if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT, $document)) {
+            return null;
+        }
+
         $hit = $fileProvider->convertDocumentToHit($document);
 
         // The provider did not find any hit for it anymore so it must have been removed
@@ -189,10 +201,6 @@ class BackendSearch
         if (!$hit) {
             $this->deleteDocuments(new GroupedDocumentIds([$document->getType() => [$document->getId()]]));
 
-            return null;
-        }
-
-        if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_HIT, $hit)) {
             return null;
         }
 

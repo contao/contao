@@ -19,18 +19,22 @@ use Webauthn\PublicKeyCredentialUserEntity;
 
 final class WebauthnUserEntityRepository implements PublicKeyCredentialUserEntityRepositoryInterface
 {
-    public function __construct(private readonly ContaoUserProvider $userProvider)
+    public function __construct(private readonly ContaoUserProvider $backendUserProvider)
     {
     }
 
     public function findOneByUsername(string $username): PublicKeyCredentialUserEntity|null
     {
-        return $this->getUserEntity($this->userProvider->loadUserByIdentifier($username));
+        return $this->getUserEntity($this->backendUserProvider->loadUserByIdentifier($username));
     }
 
     public function findOneByUserHandle(string $userHandle): PublicKeyCredentialUserEntity|null
     {
-        return $this->getUserEntity($this->userProvider->loadUserById((int) $userHandle));
+        if (str_starts_with($userHandle, 'backend.')) {
+            return $this->getUserEntity($this->backendUserProvider->loadUserById((int) substr($userHandle, 8)));
+        }
+
+        return null;
     }
 
     private function getUserEntity(User|null $user): PublicKeyCredentialUserEntity|null
@@ -39,6 +43,6 @@ final class WebauthnUserEntityRepository implements PublicKeyCredentialUserEntit
             return null;
         }
 
-        return new PublicKeyCredentialUserEntity($user->username, (string) $user->id, $user->name);
+        return new PublicKeyCredentialUserEntity($user->username, $user->getPasskeyUserHandle(), $user->getDisplayName());
     }
 }

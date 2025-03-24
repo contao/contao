@@ -13,7 +13,6 @@ use Contao\BackendTemplate;
 use Contao\Config;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\ResponseException;
-use Contao\CoreBundle\Twig\Inspector\InspectionException;
 use Contao\DataContainer;
 use Contao\DC_Folder;
 use Contao\DiffRenderer;
@@ -28,7 +27,6 @@ use Contao\TemplateLoader;
 use Contao\Validator;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
-use Twig\Error\LoaderError;
 
 System::loadLanguageFile('tl_files');
 
@@ -39,7 +37,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 	(
 		'dataContainer'               => DC_Folder::class,
 		'uploadPath'                  => 'templates',
-		'editableFileTypes'           => 'html5,twig',
+		'editableFileTypes'           => 'html5',
 		'closed'                      => true,
 		'onload_callback' => array
 		(
@@ -72,6 +70,8 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'href'                => 'act=paste&amp;mode=copy',
 				'icon'                => 'copy.svg',
 				'attributes'          => 'data-action="contao--scroll-offset#store"',
+				// TODO: remove this again once #7854 has been fixed
+				'button_callback'     => array('tl_templates', 'copy')
 			),
 			'cut' => array
 			(
@@ -79,6 +79,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'href'                => 'act=paste&amp;mode=cut',
 				'icon'                => 'cut.svg',
 				'attributes'          => 'data-action="contao--scroll-offset#store"',
+				'button_callback'     => array('tl_templates', 'cut')
 			),
 			'delete',
 			'source' => array
@@ -86,6 +87,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['source'],
 				'href'                => 'act=source',
 				'icon'                => 'editor.svg',
+				'primary'             => true,
 				'button_callback'     => array('tl_templates', 'editSource')
 			),
 			'compare' => array
@@ -99,6 +101,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['cut'],
 				'icon'                => 'drag.svg',
 				'attributes'          => 'class="drag-handle" aria-hidden="true"',
+				'primary'             => true,
 				'button_callback'     => array('tl_templates', 'dragFile')
 			)
 		)
@@ -198,7 +201,7 @@ class tl_templates extends Backend
 			}
 			else
 			{
-				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . $this->addToUrl('fn=' . $strPath) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '">' . $strFolder . '</a>';
+				$arrLinks[] = Image::getHtml('folderC.svg') . ' <a href="' . $this->addToUrl('fn=' . $strPath) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['selectNode']) . '" data-contao--tooltips-target="tooltip">' . $strFolder . '</a>';
 			}
 		}
 
@@ -223,25 +226,7 @@ class tl_templates extends Backend
 	public function addNewTemplate()
 	{
 		$arrAllTemplates = array();
-
-		// Add modern templates
 		$container = System::getContainer();
-		$chains = $container->get('contao.twig.filesystem_loader')->getInheritanceChains();
-
-		foreach ($chains as $identifier => $chain)
-		{
-			if (!str_contains($identifier, '/'))
-			{
-				continue;
-			}
-
-			$parts = explode('/', $identifier);
-			$rootCategory = array_shift($parts);
-
-			$arrAllTemplates[$rootCategory]["@Contao/$identifier.html.twig"] = sprintf('%s [%s.html.twig]', implode('/', $parts), $identifier);
-
-			ksort($arrAllTemplates[$rootCategory]);
-		}
 
 		$files = $container->get('contao.resource_finder')->findIn('templates')->files()->name('/\.html5$/');
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
@@ -273,44 +258,6 @@ class tl_templates extends Backend
 		// Handle creating a new template
 		if (Input::post('FORM_SUBMIT') == 'tl_create_template')
 		{
-			$createModernTemplate = static function (string $template, string $target) use ($container, &$strError): void {
-				$filesystem = new Filesystem();
-				$targetFile = Path::join($container->getParameter('kernel.project_dir'), $target, substr($template, 8));
-
-				if ($filesystem->exists($targetFile))
-				{
-					$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['exists'], $targetFile);
-
-					return;
-				}
-
-				try
-				{
-					$info = $container->get('contao.twig.inspector')->inspectTemplate($template);
-				}
-				catch (InspectionException $e)
-				{
-					if ($e->getPrevious() instanceof LoaderError)
-					{
-						throw new RuntimeException('Invalid template ' . $template);
-					}
-
-					$strError = sprintf($GLOBALS['TL_LANG']['tl_templates']['hasErrors'], $template, $e->getPrevious()->getMessage());
-
-					return;
-				}
-
-				$content = $container->get('twig')->render(
-					'@Contao/backend/template_skeleton.html.twig',
-					array(
-						'type' => str_starts_with($template, '@Contao/component') ? 'use' : 'extends',
-						'template' => $info,
-					)
-				);
-
-				$filesystem->dumpFile($targetFile, $content);
-			};
-
 			$createLegacyTemplate = static function (string $strOriginal, $strTarget) use (&$strError, $arrAllTemplates): void {
 				$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
@@ -366,14 +313,7 @@ class tl_templates extends Backend
 
 			$strOriginal = Input::post('original', true);
 
-			if (str_starts_with($strOriginal, '@'))
-			{
-				$createModernTemplate($strOriginal, $strTarget);
-			}
-			else
-			{
-				$createLegacyTemplate($strOriginal, $strTarget);
-			}
+			$createLegacyTemplate($strOriginal, $strTarget);
 
 			if (!$strError)
 			{
@@ -413,7 +353,7 @@ class tl_templates extends Backend
 <div class="tl_tbox cf">
 <div class="w50 widget">
   <h3><label for="ctrl_original">' . $GLOBALS['TL_LANG']['tl_templates']['original'][0] . '</label></h3>
-  <select name="original" id="ctrl_original" class="tl_select" data-action="focus->contao--scroll-offset#store" data-controller="contao--chosen">' . $strAllTemplates . '</select>' . (($GLOBALS['TL_LANG']['tl_templates']['original'][1] && Config::get('showHelp')) ? '
+  <select name="original" id="ctrl_original" class="tl_select" data-controller="contao--choices" data-action="focus->contao--scroll-offset#store">' . $strAllTemplates . '</select>' . (($GLOBALS['TL_LANG']['tl_templates']['original'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_templates']['original'][1] . '</p>' : '') . '
 </div>
 <div class="w50 widget">
@@ -569,7 +509,7 @@ class tl_templates extends Backend
 	 */
 	public function compareButton($row, $href, $label, $title, $icon, $attributes)
 	{
-		return str_ends_with($row['id'], '.html5') && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", rawurldecode($row['id']))) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return str_ends_with($row['id'], '.html5') && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", rawurldecode($row['id']))) . '\',\'url\':this.href});return false"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -586,7 +526,54 @@ class tl_templates extends Backend
 	 */
 	public function dragFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		return '<button type="button" title="' . StringUtil::specialchars($title) . '" ' . $attributes . '>' . Image::getHtml($icon, $label) . '</button> ';
+		if ($this->isTwigFile($row))
+		{
+			return Image::getHtml($icon) . ' ';
+		}
+
+		return '<button type="button" ' . $attributes . '>' . Image::getHtml($icon, $title) . '</button> ';
+	}
+
+	/**
+	 * Return the copy button
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function copy($row, $href, $label, $title, $icon, $attributes)
+	{
+		return !$this->isTwigFile($row) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+	}
+
+	/**
+	 * Return the copy button
+	 *
+	 * @param array  $row
+	 * @param string $href
+	 * @param string $label
+	 * @param string $title
+	 * @param string $icon
+	 * @param string $attributes
+	 *
+	 * @return string
+	 */
+	public function cut($row, $href, $label, $title, $icon, $attributes)
+	{
+		return !$this->isTwigFile($row) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+	}
+
+	/**
+	 * @param array $row
+	 */
+	private function isTwigFile($row): bool
+	{
+		return $row['type'] === 'file' && Path::getExtension($row['id']) === 'twig';
 	}
 
 	/**
@@ -635,7 +622,7 @@ class tl_templates extends Backend
 		$dc = func_num_args() <= 12 ? null : func_get_arg(12);
 		$arrEditableFileTypes = $dc->editableFileTypes ?? StringUtil::trimsplit(',', strtolower($GLOBALS['TL_DCA']['tl_templates']['config']['editableFileTypes'] ?? System::getContainer()->getParameter('contao.editable_files')));
 
-		return in_array(Path::getExtension($row['id'], true), $arrEditableFileTypes) && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return in_array(Path::getExtension($row['id'], true), $arrEditableFileTypes) && is_file(System::getContainer()->getParameter('kernel.project_dir') . '/' . rawurldecode($row['id'])) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**

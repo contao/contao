@@ -21,7 +21,7 @@
     }
 
     .template {
-        border: 1px solid var(--chosen-border);
+        border: 1px solid var(--content-border);
         padding: 4px;
         margin-left: 4px;
         position: relative;
@@ -29,8 +29,8 @@
         &:before {
             counter-increment: templates;
             content: counter(templates);
-            border: 1px solid var(--chosen-border);
-            background-color: var(--chosen-bg);
+            border: 1px solid var(--content-border);
+            background-color: var(--panel-bg);
             border-radius: 50%;
             display: grid;
             place-content: center;
@@ -57,7 +57,15 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        height: 56px;
+        padding: 15px 0;
         color: var(--info);
+
+        svg {
+            flex-shrink: 0;
+        }
+
+        .warning {
+            max-width: min(80%, 450px);
+        }
     }
 }

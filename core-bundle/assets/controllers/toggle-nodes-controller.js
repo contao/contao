@@ -4,7 +4,7 @@ export default class extends Controller {
     static values = {
         mode: {
             type: Number,
-            default: 5
+            default: 5,
         },
         toggleAction: String,
         loadAction: String,
@@ -16,28 +16,24 @@ export default class extends Controller {
         expandAllTitle: String,
         collapseAll: String,
         collapseAllTitle: String,
-    }
+    };
 
     static targets = ['operation', 'node', 'toggle', 'child', 'rootChild'];
 
-    operationTargetConnected () {
+    operationTargetConnected() {
         this.updateOperation();
     }
 
-    childTargetConnected () {
+    childTargetConnected() {
         this.updateOperation();
     }
 
-    toggle (event) {
-        event.preventDefault();
-
+    toggle(event) {
         const el = event.currentTarget;
-        el.blur();
-
         this.toggleToggler(el, event.params.id, event.params.level, event.params.folder);
     }
 
-    toggleToggler (el, id, level, folder) {
+    toggleToggler(el, id, level, folder) {
         const item = document.id(id);
 
         if (item && item.style.display === 'none') {
@@ -55,29 +51,43 @@ export default class extends Controller {
         this.updateOperation();
     }
 
-    expandToggler (el) {
+    expandToggler(el) {
         el.classList.add('foldable--open');
-        el.title = this.collapseValue;
+
+        if (el.hasAttribute('title')) {
+            el.title = this.collapseValue;
+        }
+
+        el.getElements('img')?.forEach((image) => {
+            image.alt = this.collapseValue;
+        });
     }
 
-    collapseToggler (el) {
+    collapseToggler(el) {
         el.classList.remove('foldable--open');
-        el.title = this.expandValue;
+
+        if (el.hasAttribute('title')) {
+            el.title = this.expandValue;
+        }
+
+        el.getElements('img')?.forEach((image) => {
+            image.alt = this.expandValue;
+        });
     }
 
-    loadToggler (el, enabled) {
+    loadToggler(el, enabled) {
         el.classList[enabled ? 'add' : 'remove']('foldable--loading');
     }
 
-    showChild (item) {
+    showChild(item) {
         item.style.display = '';
     }
 
-    hideChild (item) {
+    hideChild(item) {
         item.style.display = 'none';
     }
 
-    async fetchChild (el, id, level, folder) {
+    async fetchChild(el, id, level, folder) {
         this.loadToggler(el, true);
 
         const url = new URL(location.href);
@@ -89,16 +99,16 @@ export default class extends Controller {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'X-Requested-With': 'XMLHttpRequest'
+                'X-Requested-With': 'XMLHttpRequest',
             },
             body: new URLSearchParams({
-                'action': this.loadActionValue,
-                'id': id,
-                'level': level,
-                'folder': folder,
-                'state': 1,
-                'REQUEST_TOKEN': this.requestTokenValue
-            })
+                action: this.loadActionValue,
+                id: id,
+                level: level,
+                folder: folder,
+                state: 1,
+                REQUEST_TOKEN: this.requestTokenValue,
+            }),
         });
 
         if (response.ok) {
@@ -147,15 +157,13 @@ export default class extends Controller {
         this.loadToggler(el, false);
     }
 
-    async toggleAll (event) {
-        event.preventDefault();
-
+    async toggleAll(event) {
         const href = event.currentTarget.href;
 
         if (this.hasExpandedRoot() ^ (event ? event.altKey : false)) {
             this.updateAllState(href, 0);
             this.toggleTargets.forEach((el) => this.collapseToggler(el));
-            this.childTargets.forEach((item) => item.style.display = 'none');
+            this.childTargets.forEach((item) => (item.style.display = 'none'));
         } else {
             this.childTargets.forEach((el) => el.remove());
             this.toggleTargets.forEach((el) => this.loadToggler(el, true));
@@ -164,12 +172,14 @@ export default class extends Controller {
             const promises = [];
 
             this.toggleTargets.forEach((el) => {
-                promises.push(this.fetchChild(
-                    el,
-                    el.getAttribute(`data-${this.identifier}-id-param`),
-                    0,
-                    el.getAttribute(`data-${this.identifier}-folder-param`)
-                ));
+                promises.push(
+                    this.fetchChild(
+                        el,
+                        el.getAttribute(`data-${this.identifier}-id-param`),
+                        0,
+                        el.getAttribute(`data-${this.identifier}-folder-param`),
+                    ),
+                );
             });
 
             await Promise.all(promises);
@@ -178,31 +188,31 @@ export default class extends Controller {
         this.updateOperation();
     }
 
-    keypress (event) {
+    keypress(event) {
         this.updateOperation(event);
     }
 
-    async updateState (el, id, state) {
+    async updateState(el, id, state) {
         await fetch(location.href, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'X-Requested-With': 'XMLHttpRequest'
+                'X-Requested-With': 'XMLHttpRequest',
             },
             body: new URLSearchParams({
-                'action': this.toggleActionValue,
-                'id': id,
-                'state': state,
-                'REQUEST_TOKEN': this.requestTokenValue
-            })
+                action: this.toggleActionValue,
+                id: id,
+                state: state,
+                REQUEST_TOKEN: this.requestTokenValue,
+            }),
         });
     }
 
-    async updateAllState (href, state) {
+    async updateAllState(href, state) {
         await fetch(`${href}&state=${state}`);
     }
 
-    updateOperation (event) {
+    updateOperation(event) {
         if (!this.hasOperationTarget) {
             return;
         }
@@ -216,7 +226,7 @@ export default class extends Controller {
         }
     }
 
-    hasExpandedRoot () {
-        return !!this.rootChildTargets.find((el) => el.style.display !== 'none')
+    hasExpandedRoot() {
+        return !!this.rootChildTargets.find((el) => el.style.display !== 'none');
     }
 }

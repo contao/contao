@@ -97,6 +97,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 				'prefetch'            => true,
 				'icon'                => 'edit.svg',
 				'attributes'          => 'data-contao--deeplink-target="primary"',
+				'primary'             => true,
 				'button_callback'     => array('tl_files', 'editFile')
 			),
 			'copy' => array
@@ -130,18 +131,21 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			(
 				'href'                => 'act=source',
 				'icon'                => 'editor.svg',
+				'primary'             => true,
 				'button_callback'     => array('tl_files', 'editSource')
 			),
 			'upload' => array
 			(
 				'href'                => 'act=move&amp;mode=2',
 				'icon'                => 'new.svg',
+				'primary'             => true,
 				'button_callback'     => array('tl_files', 'uploadFile')
 			),
 			'drag' => array
 			(
 				'icon'                => 'drag.svg',
 				'attributes'          => 'class="drag-handle" aria-hidden="true"',
+				'primary'             => true,
 				'button_callback'     => array('tl_files', 'dragFile')
 			)
 		)
@@ -698,7 +702,7 @@ class tl_files extends Backend
 		$security = System::getContainer()->get('security.helper');
 		$subject = new UpdateAction('tl_files', $row);
 
-		return $security->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_files', $subject) && $security->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id'], addRequestToken: false) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return $security->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_files', $subject) && $security->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id'], addRequestToken: false) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -715,7 +719,7 @@ class tl_files extends Backend
 	 */
 	public function copyFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -732,7 +736,7 @@ class tl_files extends Backend
 	 */
 	public function cutFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -749,7 +753,7 @@ class tl_files extends Backend
 	 */
 	public function dragFile($row, $href, $label, $title, $icon, $attributes)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<button type="button" title="' . StringUtil::specialchars($title) . '" ' . $attributes . '>' . Image::getHtml($icon, $label) . '</button> ' : ' ';
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_RENAME_FILE) ? '<button type="button"' . $attributes . '>' . Image::getHtml($icon, $title) . '</button> ' : ' ';
 	}
 
 	/**
@@ -768,7 +772,7 @@ class tl_files extends Backend
 	{
 		if (($row['type'] ?? null) == 'folder' && !($GLOBALS['TL_DCA']['tl_files']['config']['closed'] ?? null) && !($GLOBALS['TL_DCA']['tl_files']['config']['notCreatable'] ?? null) && Input::get('act') != 'select')
 		{
-			return '<a href="' . $this->addToUrl($href . '&amp;pid=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '" ' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
+			return '<a href="' . $this->addToUrl($href . '&amp;pid=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ';
 		}
 
 		return ' ';
@@ -794,17 +798,17 @@ class tl_files extends Backend
 
 		if (!is_dir($path))
 		{
-			return ($security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FILE) || $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_RECURSIVELY)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+			return ($security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FILE) || $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_RECURSIVELY)) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 		}
 
 		$finder = Finder::create()->in($path);
 
 		if ($finder->hasResults())
 		{
-			return $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_RECURSIVELY) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+			return $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_RECURSIVELY) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 		}
 
-		return $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		return $security->isGranted(ContaoCorePermissions::USER_CAN_DELETE_FILE) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 	}
 
 	/**
@@ -844,7 +848,7 @@ class tl_files extends Backend
 			return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
 		}
 
-		return '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . Image::getHtml($icon, $label) . '</a> ';
+		return '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ';
 	}
 
 	/**
@@ -866,7 +870,7 @@ class tl_files extends Backend
 			return '';
 		}
 
-		return '<a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_popup', array('src' => base64_encode($row['id'])))) . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . ' onclick="Backend.openModalIframe({\'title\':\'' . str_replace("'", "\\'", StringUtil::specialchars($row['fileNameEncoded'])) . '\',\'url\':this.href});return false">' . Image::getHtml($icon, $label) . '</a> ';
+		return '<a href="' . StringUtil::specialcharsUrl(System::getContainer()->get('router')->generate('contao_backend_popup', array('src' => base64_encode($row['id'])))) . '"' . $attributes . ' onclick="Backend.openModalIframe({\'title\':\'' . str_replace("'", "\\'", StringUtil::specialchars($row['fileNameEncoded'])) . '\',\'url\':this.href});return false">' . Image::getHtml($icon, $title) . '</a> ';
 	}
 
 	/**

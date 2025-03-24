@@ -37,20 +37,24 @@ class SlotNodeTest extends TestCase
 
         if (class_exists(YieldReady::class)) {
             $expectedSource = <<<'SOURCE'
-                if (isset($context['_slots']['foo'])) {
+                $context['_slot_name'] = "foo";
+                if ('' !== (string)($context['_slots']['foo'] ?? '')) {
                     yield "foo";
                 } else {
                     yield "bar";
                 }
+                unset($context['_slot_name']);
 
                 SOURCE;
         } else {
             $expectedSource = <<<'SOURCE'
-                if (isset($context['_slots']['foo'])) {
+                $context['_slot_name'] = "foo";
+                if ('' !== (string)($context['_slots']['foo'] ?? '')) {
                     echo "foo";
                 } else {
                     echo "bar";
                 }
+                unset($context['_slot_name']);
 
                 SOURCE;
         }

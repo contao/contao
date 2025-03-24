@@ -29,6 +29,8 @@ class ServiceArgumentsTest extends FunctionalTestCase
 
     public function testServices(): void
     {
+        $container = $this->getContainer();
+
         $files = Finder::create()
             ->files()
             ->name('*.yaml')
@@ -36,8 +38,6 @@ class ServiceArgumentsTest extends FunctionalTestCase
             ->exclude('vendor')
             ->in(\dirname(__DIR__, 3))
         ;
-
-        $container = $this->getContainer();
 
         foreach ($files as $file) {
             $yaml = Yaml::parseFile($file->getPathname(), Yaml::PARSE_CUSTOM_TAGS);
@@ -235,9 +235,9 @@ class ServiceArgumentsTest extends FunctionalTestCase
         }
 
         if ($argument) {
-            $this->addWarning(\sprintf('Argument %s of "%s" (value: %s) does not have a type.', $i, $serviceId, $argument));
+            $this->fail(\sprintf('Argument %s of "%s" (value: %s) does not have a type.', $i, $serviceId, $argument));
         } else {
-            $this->addWarning(\sprintf('Argument %s of "%s" does not have a type.', $i, $serviceId));
+            $this->fail(\sprintf('Argument %s of "%s" does not have a type.', $i, $serviceId));
         }
     }
 

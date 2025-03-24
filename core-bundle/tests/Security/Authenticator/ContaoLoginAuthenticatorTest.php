@@ -22,6 +22,7 @@ use Contao\CoreBundle\Security\User\ContaoUserProvider;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\PageModel;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\Passport\Credentials\TwoFactorCodeCredentials;
@@ -49,6 +50,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Token\PostAuthenticationToken;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
+use Twig\Environment;
 
 class ContaoLoginAuthenticatorTest extends TestCase
 {
@@ -224,9 +226,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $authenticator->authenticate($request);
     }
 
-    /**
-     * @dataProvider getUserData
-     */
+    #[DataProvider('getUserData')]
     public function testCreatesThePassportOnAuthentication(string|null $username, string|null $exception): void
     {
         $session = $this->createMock(SessionInterface::class);
@@ -355,10 +355,54 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $this->assertSame('/contao/login', $response->getTargetUrl());
     }
 
-    /**
-     * @dataProvider getAuthenticationData
-     */
-    public function testStartsTheAuthenticationProcessOnCurrentPage(TokenInterface|null $token, ResponseException|null $exception): void
+    public function testTriggersClientSideReloadOnATurboStreamRequest(): void
+    {
+        $scopeMatcher = $this->createMock(ScopeMatcher::class);
+        $scopeMatcher
+            ->expects($this->once())
+            ->method('isBackendRequest')
+            ->willReturn(true)
+        ;
+
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with('@Contao/backend/reload.stream.html.twig')
+            ->willReturn('<stream content>')
+        ;
+
+        $authenticator = $this->getContaoLoginAuthenticator(
+            scopeMatcher: $scopeMatcher,
+            twig: $twig,
+        );
+
+        $request = Request::create('https://example.com/foo/bar');
+        $request->headers->set('Accept', 'text/vnd.turbo-stream.html; charset=utf-8', true);
+
+        $response = $authenticator->start($request);
+
+        $this->assertSame('<stream content>', $response->getContent());
+    }
+
+    public function testStartsTheAuthenticationProcessOnCurrentPageWithoutException(): void
+    {
+        $this->assertStartsTheAuthenticationProcessOnCurrentPage(null);
+    }
+
+    public function testStartsTheAuthenticationProcessOnCurrentPageWithException(): void
+    {
+        $responseException = $this->createMock(ResponseException::class);
+        $responseException
+            ->expects($this->once())
+            ->method('getResponse')
+            ->willReturn($this->createMock(RedirectResponse::class))
+        ;
+
+        $this->assertStartsTheAuthenticationProcessOnCurrentPage($responseException);
+    }
+
+    public function assertStartsTheAuthenticationProcessOnCurrentPage(ResponseException|null $exception): void
     {
         $pageModel = $this->createMock(PageModel::class);
 
@@ -406,21 +450,6 @@ class ContaoLoginAuthenticatorTest extends TestCase
         $authenticator->start($request);
     }
 
-    public function getAuthenticationData(): iterable
-    {
-        $token = $this->createMock(UsernamePasswordToken::class);
-
-        $responseException = $this->createMock(ResponseException::class);
-        $responseException
-            ->expects($this->once())
-            ->method('getResponse')
-            ->willReturn($this->createMock(RedirectResponse::class))
-        ;
-
-        yield [$token, null];
-        yield [$token, $responseException];
-    }
-
     public function testThrowsExceptionIfThereIsNoErrorPage(): void
     {
         $this->expectException(UnauthorizedHttpException::class);
@@ -459,7 +488,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
     /**
      * @param UserProviderInterface<UserInterface>|null $userProvider
      */
-    private function getContaoLoginAuthenticator(UserProviderInterface|null $userProvider = null, AuthenticationSuccessHandlerInterface|null $successHandler = null, AuthenticationFailureHandlerInterface|null $failureHandler = null, ScopeMatcher|null $scopeMatcher = null, RouterInterface|null $router = null, UriSigner|null $uriSigner = null, PageModel|null $errorPage = null, TokenStorageInterface|null $tokenStorage = null, PageRegistry|null $pageRegistry = null, HttpKernelInterface|null $httpKernel = null, RequestStack|null $requestStack = null, TwoFactorAuthenticator|null $twoFactorAuthenticator = null, array $options = []): ContaoLoginAuthenticator
+    private function getContaoLoginAuthenticator(UserProviderInterface|null $userProvider = null, AuthenticationSuccessHandlerInterface|null $successHandler = null, AuthenticationFailureHandlerInterface|null $failureHandler = null, ScopeMatcher|null $scopeMatcher = null, RouterInterface|null $router = null, UriSigner|null $uriSigner = null, PageModel|null $errorPage = null, TokenStorageInterface|null $tokenStorage = null, PageRegistry|null $pageRegistry = null, HttpKernelInterface|null $httpKernel = null, RequestStack|null $requestStack = null, TwoFactorAuthenticator|null $twoFactorAuthenticator = null, array $options = [], Environment|null $twig = null): ContaoLoginAuthenticator
     {
         $pageFinder = $this->createMock(PageFinder::class);
         $pageFinder
@@ -483,6 +512,7 @@ class ContaoLoginAuthenticatorTest extends TestCase
             $requestStack ?? $this->mockRequestStack(),
             $twoFactorAuthenticator ?? $this->mockTwoFactorAuthenticator(),
             $options,
+            $twig ?? $this->mockTwig(),
         );
     }
 
@@ -532,5 +562,10 @@ class ContaoLoginAuthenticatorTest extends TestCase
     private function mockTwoFactorAuthenticator(): TwoFactorAuthenticator
     {
         return $this->createMock(TwoFactorAuthenticator::class);
+    }
+
+    private function mockTwig(): Environment
+    {
+        return $this->createMock(Environment::class);
     }
 }

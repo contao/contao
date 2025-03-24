@@ -52,7 +52,7 @@ class SitemapController extends AbstractController
         $tags = ['contao.sitemap'];
 
         foreach ($rootPages as $rootPage) {
-            $urls = [...$urls, ...$this->getPageAndArticleUrls($rootPage->id)];
+            $urls = [...$urls, ...$this->getPageAndArticleUrls($rootPage)];
 
             $rootPageIds[] = $rootPage->id;
             $tags[] = 'contao.sitemap.'.$rootPage->id;
@@ -94,14 +94,18 @@ class SitemapController extends AbstractController
         return $response;
     }
 
-    private function getPageAndArticleUrls(int $parentPageId): array
+    private function getPageAndArticleUrls(PageModel $parentPageModel): array
     {
+        if ('root' === $parentPageModel->type && $parentPageModel->maintenanceMode) {
+            return [];
+        }
+
         $pageModelAdapter = $this->getContaoAdapter(PageModel::class);
 
         // Since the publication status of a page is not inherited by its child pages, we
         // have to use findByPid() instead of findPublishedByPid() and filter out
         // unpublished pages in the foreach loop (see #2217)
-        $pageModels = $pageModelAdapter->findByPid($parentPageId, ['order' => 'sorting']);
+        $pageModels = $pageModelAdapter->findByPid($parentPageModel->id, ['order' => 'sorting']);
 
         if (null === $pageModels) {
             return [];
@@ -146,7 +150,7 @@ class SitemapController extends AbstractController
                 }
             }
 
-            $result[] = $this->getPageAndArticleUrls((int) $pageModel->id);
+            $result[] = $this->getPageAndArticleUrls($pageModel);
         }
 
         return array_merge(...$result);

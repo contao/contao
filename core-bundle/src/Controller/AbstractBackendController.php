@@ -43,7 +43,7 @@ abstract class AbstractBackendController extends AbstractController
      */
     protected function render(string $view, array $parameters = [], Response|null $response = null, bool|null $includeChromeContext = null): Response
     {
-        $getBackendContext = (new class() extends BackendMain {
+        $getBackendContext = static fn () => (new class() extends BackendMain {
             public function __invoke(): array
             {
                 $this->Template = new BackendTemplate('be_main');
@@ -62,7 +62,7 @@ abstract class AbstractBackendController extends AbstractController
 
                 return $this->Template->getData();
             }
-        });
+        })();
 
         $request = $this->getCurrentRequest();
 

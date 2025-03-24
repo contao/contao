@@ -23,13 +23,21 @@ Request.Contao = new Class(
 
 	options: {
 		followRedirects: true,
-		url: window.location.href
 	},
 
 	initialize: function(options) {
-		if (options && !options.url && options.field && options.field.form && options.field.form.action) {
-			this.options.url = options.field.form.action;
+		if (!options) {
+			options = {};
 		}
+
+		if (!options.url && options.field && options.field.form && options.field.form.action) {
+			options.url = options.field.form.action;
+		}
+
+		if (!options.url) {
+			options.url = window.location.href;
+		}
+
 		this.parent(options);
 	},
 

@@ -2,6 +2,8 @@
     label: identifier,
     panel_id: 'template-studio--tab_'~ identifier,
 } %}
+    {% trans_default_domain "contao_template_studio" %}
+
     {% block content %}
         {# Operations #}
         {% if operations|length %}
@@ -20,7 +22,7 @@
             {% set template_attributes = attrs()
                 .addClass('template')
                 .addClass('editable', editable)
-            %}
+                .addClass('shadowed', template.relation.shadowed) %}
             <div{{ template_attributes }}>
                 {% set template_editor_id = 'template-studio--editor_' ~ loop.index %}
 
@@ -32,7 +34,7 @@
                 {% include '@Contao/backend/template_studio/_template_badges.html.twig' with {
                     badges: [
                         editable ? 'user' : null,
-                        loop.last ? 'origin' : null,
+                        template.is_origin ? 'origin' : null,
                     ]|filter(e => e is not null)
                 } %}
 
@@ -41,12 +43,13 @@
                     {% set template_editor_attributes = attrs()
                         .set('id', template_editor_id)
                         .set('data-name', template.name)
-                        .set('readonly', not (can_edit and loop.first))
-                    %}
+                        .set('readonly', not (can_edit and loop.first)) %}
                     <textarea{{ template_editor_attributes }}>{{ template.code }}</textarea>
 
-                    {% if autocomplete|length %}
-                        {{ include('@Contao/backend/template_studio/editor/_autocomplete_data.html.twig') }}
+                    {% if template.annotations|length %}
+                        {% with {annotations: template.annotations} %}
+                            {{ include('@Contao/backend/template_studio/editor/_annotations_data.html.twig') }}
+                        {% endwith %}
                     {% endif %}
                 </div>
 
@@ -57,7 +60,40 @@
             {# Relation to next representation #}
             {% if not loop.last %}
                 <div class="relation">
-                    {{ backend_icon('arrow-down') }}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M8 18L12 22L16 18"/>
+                        <path d="M12 2V22"/>
+                    </svg>
+                    {% if template.relation.not_analyzable %}
+                        <div class="warning">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <line x1="12" x2="12" y1="8" y2="12"/>
+                                <line x1="12" x2="12.01" y1="16" y2="16"/>
+                            </svg>
+                            {{ 'editor_tab.relation.not_analyzable'|trans }}
+                        </div>
+                    {% elseif template.relation.warning %}
+                        <div class="warning">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/>
+                                <path d="M12 9v4"/>
+                                <path d="M12 17h.01"/>
+                            </svg>
+                            {% set message = 'editor_tab.relation.' ~ (template.is_component ? 'no_use_warning' : 'no_extend_warning') %}
+                            {% set previous_token -%}
+                                <span class="token">@Contao/{{ template.identifier }}.{{ template.extension }}</span>
+                            {%- endset %}
+                            {{ message|trans|replace({'%previous%': previous_token})|raw }}
+                        </div>
+                    {% endif %}
                 </div>
             {% endif %}
         {% endfor %}

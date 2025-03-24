@@ -12,10 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
+use Contao\CoreBundle\EventListener\ExceptionConverterListener;
 use Contao\CoreBundle\EventListener\UnwrapTwigExceptionListener;
 use Contao\CoreBundle\Exception\NoContentResponseException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -24,9 +26,7 @@ use Twig\Error\RuntimeError;
 
 class UnwrapTwigExceptionListenerTest extends TestCase
 {
-    /**
-     * @dataProvider provideExceptionsToUnwrap
-     */
+    #[DataProvider('provideExceptionsToUnwrap')]
     public function testUnwrapsException(\Exception $exception): void
     {
         $event = new ExceptionEvent(
@@ -50,11 +50,13 @@ class UnwrapTwigExceptionListenerTest extends TestCase
         yield 'RedirectResponseException' => [
             new RedirectResponseException('/foo'),
         ];
+
+        foreach (array_unique(ExceptionConverterListener::MAPPER) as $exception) {
+            yield $exception => [new $exception()];
+        }
     }
 
-    /**
-     * @dataProvider provideThrowableToIgnore
-     */
+    #[DataProvider('provideThrowableToIgnore')]
     public function testIgnoresOtherExceptions(\Throwable $throwable): void
     {
         $event = new ExceptionEvent(

@@ -96,7 +96,8 @@ class LinkInsertTag
                     switch ($insertTag->getName()) {
                         case 'link':
                         case 'link_open':
-                        case 'link_url': return new InsertTagResult('');
+                        case 'link_url':
+                            return new InsertTagResult('');
                     }
                 }
             }
@@ -117,8 +118,8 @@ class LinkInsertTag
         }
 
         return match ($insertTag->getName()) {
-            'link' => new InsertTagResult(\sprintf('<a href="%s" title="%s"%s%s>%s</a>', $strUrl, StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget, $strName), OutputType::html),
-            'link_open' => new InsertTagResult(\sprintf('<a href="%s" title="%s"%s%s>', $strUrl, StringUtil::specialcharsAttribute($strTitle), $strClass, $strTarget), OutputType::html),
+            'link' => new InsertTagResult(\sprintf('<a href="%s"%s%s>%s</a>', $strUrl, $strClass, $strTarget, $strName), OutputType::html),
+            'link_open' => new InsertTagResult(\sprintf('<a href="%s"%s%s>', $strUrl, $strClass, $strTarget), OutputType::html),
             'link_url' => new InsertTagResult($strUrl, OutputType::url),
             'link_title' => new InsertTagResult(StringUtil::specialcharsAttribute($strTitle), OutputType::html),
             'link_name' => new InsertTagResult(StringUtil::specialcharsAttribute($strName), OutputType::html),

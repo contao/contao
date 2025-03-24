@@ -24,4 +24,9 @@ class RenameContentElementVariantOperation extends AbstractRenameVariantOperatio
     {
         return 'content_element';
     }
+
+    protected function getDatabaseReferencesThatShouldBeMigrated(): array
+    {
+        return ['tl_content.customTpl'];
+    }
 }

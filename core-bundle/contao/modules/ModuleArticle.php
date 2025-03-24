@@ -63,7 +63,7 @@ class ModuleArticle extends Module
 		// Tag the article (see #2137)
 		if ($this->objModel !== null)
 		{
-			System::getContainer()->get('contao.cache.entity_tags')->tagWithModelInstance($this->objModel);
+			System::getContainer()->get('contao.cache.tag_manager')->tagWithModelInstance($this->objModel);
 		}
 
 		return parent::generate();

@@ -14,12 +14,11 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DC_Table;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DataContainerTest extends TestCase
 {
-    /**
-     * @dataProvider getCombinerValues
-     */
+    #[DataProvider('getCombinerValues')]
     public function testCombiner(array $source, array $expected): void
     {
         $class = new \ReflectionClass(DC_Table::class);

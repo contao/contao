@@ -26,6 +26,8 @@ use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
 use Twig\Error\LoaderError;
+use Twig\Loader\ArrayLoader;
+use Twig\Loader\ChainLoader;
 use Twig\Source;
 
 class InspectorTest extends TestCase
@@ -199,12 +201,91 @@ class InspectorTest extends TestCase
         $this->assertTrue($otherHierarchy[1]->isPrototype());
     }
 
+    public function testHandlesNonContaoParentTemplates(): void
+    {
+        $contaoTemplates = [
+            '@Contao_A/foo.twig' => <<<'SOURCE'
+                {% extends "@Contao_B/foo.twig" %}
+                {% use "@Contao_A/component.twig" %}
+                {% use "@SymfonyBundle/component.twig" %}
+                {% block bar %}{% endblock %}
+
+                SOURCE,
+
+            '@Contao_B/foo.twig' => <<<'SOURCE'
+                {% extends "@SymfonyBundle/foo.twig" %}
+
+                SOURCE,
+
+            '@Contao_A/component.twig' => <<<'SOURCE'
+                {% block contao_component %}{% endblock %}
+                SOURCE,
+        ];
+
+        $symfonyTemplates = [
+            '@SymfonyBundle/foo.twig' => <<<'SOURCE'
+                {% use "@SymfonyBundle/not_inspected.twig" %}
+                {% block bar %}{% endblock %}
+                {% block baz %}{% endblock %}
+
+                SOURCE,
+
+            '@SymfonyBundle/component.twig' => <<<'SOURCE'
+                {% use "@SymfonyBundle/not_inspected.twig" %}
+                {% block symfony_component %}{% endblock %}
+
+                SOURCE,
+
+            '@SymfonyBundle/not_inspected.twig' => <<<'SOURCE'
+                - ignored -
+
+                SOURCE,
+        ];
+
+        $environment = new Environment(new ChainLoader([
+            $contaoFilesystemLoader = $this->getContaoFilesystemLoader($contaoTemplates),
+            new ArrayLoader($symfonyTemplates),
+        ]));
+
+        $cacheAdapter = new ArrayAdapter();
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $contaoFilesystemLoader,
+                $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
+                new InspectorNodeVisitor($cacheAdapter, $environment),
+            ),
+        );
+
+        $inspector = new Inspector($environment, $cacheAdapter, $contaoFilesystemLoader);
+
+        $templateAInformation = $inspector->inspectTemplate('@Contao_A/foo.twig');
+
+        $this->assertSame(
+            ['bar', 'baz', 'contao_component', 'symfony_component'],
+            $templateAInformation->getBlockNames(),
+        );
+
+        $this->assertSame(
+            [['@Contao_A/component.twig', []], ['@SymfonyBundle/component.twig', []]],
+            $templateAInformation->getUses(),
+        );
+
+        $this->assertSame('@Contao_B/foo.twig', $templateAInformation->getExtends());
+
+        $templateBInformation = $inspector->inspectTemplate('@Contao_B/foo.twig');
+
+        $this->assertSame('@SymfonyBundle/foo.twig', $templateBInformation->getExtends());
+    }
+
     public function testCapturesErrorsWhenFailingToInspect(): void
     {
         $inspector = $this->getInspector();
 
         $this->expectException(InspectionException::class);
-        $this->expectExceptionMessage('Could not inspect template "foo.html.twig".');
+        $this->expectExceptionMessage('Could not inspect template "foo.html.twig". The template does not exist.');
 
         $inspector->inspectTemplate('foo.html.twig');
     }
@@ -251,7 +332,7 @@ class InspectorTest extends TestCase
         $filesystemLoader
             ->method('exists')
             ->willReturnCallback(
-                static fn (string $name): bool => \in_array($name, $templates, true),
+                static fn (string $name): bool => \array_key_exists($name, $templates),
             )
         ;
 

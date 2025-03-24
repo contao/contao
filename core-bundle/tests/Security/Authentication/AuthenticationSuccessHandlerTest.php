@@ -23,7 +23,6 @@ use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Trusted\TrustedDeviceManagerInterface;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\SecurityBundle\Security\FirewallMap;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -37,8 +36,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class AuthenticationSuccessHandlerTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testUpdatesTheUserAndAlwaysRedirectsToTargetPathInBackend(): void
     {
         $logger = $this->createMock(LoggerInterface::class);

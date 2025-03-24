@@ -19,7 +19,6 @@ use Contao\Image\DeferredImageInterface;
 use Contao\Image\DeferredImageStorageInterface;
 use Contao\Image\DeferredResizerInterface;
 use Contao\Image\ImageInterface;
-use Symfony\Bridge\PhpUnit\ClockMock;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -119,14 +118,10 @@ class ResizeImagesCommandTest extends TestCase
             ->willReturn(['image1.jpg', 'image2.jpg'])
         ;
 
-        ClockMock::withClockMock(1142164800);
-
         $command = $this->getCommand($factory, $resizer, $storage);
         $tester = new CommandTester($command);
         $code = $tester->execute(['--no-sub-process' => true, '--time-limit' => 0.5], ['capture_stderr_separately' => true]);
         $display = $tester->getDisplay();
-
-        ClockMock::withClockMock(false);
 
         $this->assertSame(0, $code);
         $this->assertMatchesRegularExpression('/image1.jpg/', $display);

@@ -66,9 +66,8 @@ class FaqInsertTag implements InsertTagResolverNestedResolvedInterface
         return match ($key) {
             'faq' => new InsertTagResult(
                 \sprintf(
-                    '<a href="%s" title="%s"%s>%s</a>',
+                    '<a href="%s"%s>%s</a>',
                     StringUtil::specialcharsAttribute($url ?: './'),
-                    StringUtil::specialcharsAttribute($faq->question),
                     $blank ? ' target="_blank" rel="noreferrer noopener"' : '',
                     $faq->question,
                 ),
@@ -76,9 +75,8 @@ class FaqInsertTag implements InsertTagResolverNestedResolvedInterface
             ),
             'faq_open' => new InsertTagResult(
                 \sprintf(
-                    '<a href="%s" title="%s"%s>',
+                    '<a href="%s"%s>',
                     StringUtil::specialcharsAttribute($url ?: './'),
-                    StringUtil::specialcharsAttribute($faq->question),
                     $blank ? ' target="_blank" rel="noreferrer noopener"' : '',
                 ),
                 OutputType::html,

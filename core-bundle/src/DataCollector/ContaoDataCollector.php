@@ -254,7 +254,7 @@ class ContaoDataCollector extends DataCollector implements FrameworkAwareInterfa
             return [];
         }
 
-        $models = $this->framework->getAdapter(ArticleModel::class)->findByPid($page->id, ['order' => 'tl_article.sorting']);
+        $models = $this->framework->getAdapter(ArticleModel::class)->findByPid($page->id, ['order' => 'tl_article.sorting']) ?? [];
         $articles = [];
 
         foreach ($models as $article) {

@@ -20,13 +20,14 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\GroupedDocumentIds;
-use Contao\CoreBundle\Search\Backend\Hit;
 use Contao\CoreBundle\Search\Backend\Provider\FilesStorageProvider;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use League\Flysystem\Config;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class FilesStorageProviderTest extends AbstractProviderTestCase
@@ -37,6 +38,8 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             $this->createMock(VirtualFilesystem::class),
             $this->createMock(Security::class),
             $this->createMock(Studio::class),
+            $this->createMock(RouterInterface::class),
+            'files',
         );
 
         $this->assertTrue($provider->supportsType(FilesStorageProvider::TYPE));
@@ -58,6 +61,8 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             $filesystem,
             $this->createMock(Security::class),
             $this->createMock(Studio::class),
+            $this->createMock(RouterInterface::class),
+            'files',
         );
 
         $documents = iterator_to_array($provider->updateIndex(new ReindexConfig()));
@@ -87,7 +92,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             ]))
         ;
 
-        $dbafsManager = new DbafsManager();
+        $dbafsManager = new DbafsManager($this->createMock(EventDispatcherInterface::class));
         $dbafsManager->register($dbafs, '');
 
         $filesystem = new VirtualFilesystem(
@@ -99,6 +104,8 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             $filesystem,
             $this->createMock(Security::class),
             $this->createMock(Studio::class),
+            $this->createMock(RouterInterface::class),
+            'files',
         );
 
         $since = new \DateTimeImmutable('1970-01-01 01:00:00');
@@ -125,7 +132,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             ]))
         ;
 
-        $dbafsManager = new DbafsManager();
+        $dbafsManager = new DbafsManager($this->createMock(EventDispatcherInterface::class));
         $dbafsManager->register($dbafs, '');
 
         $filesystem = new VirtualFilesystem(
@@ -137,6 +144,8 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             $filesystem,
             $this->createMock(Security::class),
             $this->createMock(Studio::class),
+            $this->createMock(RouterInterface::class),
+            'files',
         );
 
         $documents = iterator_to_array($provider->updateIndex((new ReindexConfig())->limitToDocumentIds(new GroupedDocumentIds([FilesStorageProvider::TYPE => ['bar']]))));
@@ -164,27 +173,16 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             $this->createMock(VirtualFilesystem::class),
             $security,
             $this->createMock(Studio::class),
+            $this->createMock(RouterInterface::class),
+            'files',
         );
 
-        $allowedHit = new Hit(
-            (new Document('', '', ''))->withMetadata(
-                ['path' => 'foo'],
-            ),
-            '',
-            '',
-        );
-
-        $disallowedHit = new Hit(
-            (new Document('', '', ''))->withMetadata(
-                ['path' => 'bar'],
-            ),
-            '',
-            '',
-        );
+        $allowedDocument = (new Document('', '', ''))->withMetadata(['path' => 'foo']);
+        $disallowedDocument = (new Document('', '', ''))->withMetadata(['path' => 'bar']);
 
         $token = $this->createMock(TokenInterface::class);
 
-        $this->assertTrue($provider->isHitGranted($token, $allowedHit));
-        $this->assertFalse($provider->isHitGranted($token, $disallowedHit));
+        $this->assertTrue($provider->isDocumentGranted($token, $allowedDocument));
+        $this->assertFalse($provider->isDocumentGranted($token, $disallowedDocument));
     }
 }

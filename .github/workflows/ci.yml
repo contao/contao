@@ -133,6 +133,20 @@ jobs:
             - name: Run YAMLlint
               run: yamllint --format=github .
 
+    prettier:
+        name: Prettier
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
+
+            - name: Run Prettier
+              uses: creyD/prettier_action@v4.3
+              with:
+                  prettier_options: --check core-bundle/assets
+
     service-linter:
         name: Service linter
         runs-on: ubuntu-latest
@@ -190,6 +204,8 @@ jobs:
                       $data = json_decode(file_get_contents(__DIR__."/composer.json"), true);
                       $data["repositories"][1]["type"] = "path";
                       $data["repositories"][1]["url"] = "../news-bundle";
+                      $data["repositories"][2]["type"] = "path";
+                      $data["repositories"][2]["url"] = "../test-case";
                       file_put_contents(__DIR__."/composer.json", json_encode($data, JSON_UNESCAPED_SLASHES));
                   '
                   composer install --no-interaction --no-progress
@@ -259,7 +275,7 @@ jobs:
               uses: ramsey/composer-install@v3
 
             - name: Run the unit tests in reverse order
-              run: vendor/bin/phpunit --order-by=reverse --extensions Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher
+              run: vendor/bin/phpunit --order-by=reverse --extension Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher
 
     nightly:
         name: PHP 8.4

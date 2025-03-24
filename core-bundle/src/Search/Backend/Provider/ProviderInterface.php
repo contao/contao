@@ -31,5 +31,5 @@ interface ProviderInterface
 
     public function supportsType(string $type): bool;
 
-    public function isHitGranted(TokenInterface $token, Hit $hit): bool;
+    public function isDocumentGranted(TokenInterface $token, Document $document): bool;
 }

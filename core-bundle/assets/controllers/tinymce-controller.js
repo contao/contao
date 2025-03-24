@@ -1,26 +1,30 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    initialize() {
-        Turbo.cache.exemptPageFromCache();
+    connect() {
+        // Work around a bug in Safari where the transition to a new context
+        // causes disconnect() to be called before connect(). If the element ID
+        // is identical - which is the case when saving a record - this messes
+        // up the initialization of the editor. To prevent this, we delay the
+        // execution until the call stack has been cleared and all microtasks,
+        // i.e. disconnect() calls, have been executed.
+        queueMicrotask(() => this._connect());
     }
 
-    connect() {
+    _connect() {
         if (!this.element.tinymceConfig) {
-            console.error('No TinyMCE config was attached to the DOM element, expected an expando property called "tinymceConfig".', this.element);
+            if (window.console) {
+                console.error(
+                    'No TinyMCE config was attached to the DOM element, expected an expando property called "tinymceConfig".',
+                    this.element,
+                );
+            }
+
             return;
         }
 
         const config = this.element.tinymceConfig;
         config.target = this.element;
-
-        // TinyMCE creates the editor ID based on the target element's ID (if set).
-        // This leads to a problem if an editor with the same ID is still around,
-        // which would be the case if the disconnect event cleaning up the resource
-        // has not run yet. We therefore remove the ID and re-add it after
-        // initializing the editor.
-        const elementId = this.element.id;
-        this.element.removeAttribute('id');
 
         tinymce?.init(config).then((editors) => {
             this.editorId = editors[0]?.id;
@@ -28,18 +32,26 @@ export default class extends Controller {
             // Fire a custom event when the editor finished initializing.
             this.dispatch('editor-loaded', { detail: { content: editors[0] ?? null } });
         });
-
-        this.element.setAttribute('id', elementId);
     }
 
     disconnect() {
         tinymce?.get(this.editorId)?.remove();
     }
 
-    leave(event) {
-        const editor = tinymce?.get(this.editorId)
+    beforeCache() {
+        // Destroy TinyMCE before Turbo caches the page. It will be recreated
+        // when the connect() call happens on the restored page.
+        this.disconnect();
 
-        if(!editor || !editor.plugins.hasOwnProperty('autosave') || editor.isNotDirty) {
+        // Remove the controller attribute. They will be re-added in the init
+        // script of the be_tinyMCE.html5 template.
+        this.element.removeAttribute('data-controller');
+    }
+
+    leave(event) {
+        const editor = tinymce?.get(this.editorId);
+
+        if (!editor || !editor.plugins.hasOwnProperty('autosave') || editor.isNotDirty) {
             return;
         }
 
@@ -47,7 +59,7 @@ export default class extends Controller {
         const delegate = document.createEvent('BeforeUnloadEvent');
         delegate.initEvent('beforeunload', false, true);
 
-        if(!window.dispatchEvent(delegate) && !confirm(delegate.returnValue)) {
+        if (!window.dispatchEvent(delegate) && !confirm(delegate.returnValue)) {
             event.preventDefault();
         }
     }

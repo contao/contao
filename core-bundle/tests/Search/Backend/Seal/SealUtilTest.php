@@ -90,8 +90,8 @@ class SealUtilTest extends TestCase
                 'type' => 'foobar',
                 'searchableContent' => 'searchable',
                 'tags' => [
-                    0 => 'tag1',
-                    1 => 'tag2',
+                    'tag1',
+                    'tag2',
                 ],
                 'document' => '{"id":"42","type":"foobar","searchableContent":"searchable","tags":["tag1","tag2"],"metadata":{"meta":"data"}}',
             ],

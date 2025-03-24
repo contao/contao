@@ -1,0 +1,37 @@
+@import "~@simonwep/pickr/dist/themes/monolith.min.css";
+
+/* Positioning inside the widget */
+[data-controller="contao--color-picker"] {
+    .pickr {
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 4px;
+        width: 18px;
+        height: 18px;
+        border: 1px solid var(--form-border);
+        border-radius: 2px;
+
+        .pcr-button {
+            padding: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        .pcr-button,
+        .pcr-button:before,
+        .pcr-button:after {
+            border-radius: 0;
+        }
+    }
+}
+
+/* Add color modes */
+.pcr-app {
+    background: var(--panel-bg, #fff);
+    border: 1px solid var(--content-border, #999);
+}
+
+.pcr-app .pcr-interaction .pcr-result {
+    background-color: var(--form-bg, #fff);
+    border: 1px solid var(--form-border, #aaa);
+}

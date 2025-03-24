@@ -1,8 +1,0 @@
-{% set template_editor_autocomplete_attributes = attrs()
-    .set('id', 'template-studio--autocomplete_' ~ identifier)
-    .set('type', 'application/json')
-    .set('data-contao--template-studio-target', 'editorAutocomplete')
-%}
-<script{{ template_editor_autocomplete_attributes }}>
-    {{- autocomplete|json_encode|raw -}}
-</script>

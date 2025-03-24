@@ -289,7 +289,7 @@ abstract class Controller extends System
 			return '';
 		}
 
-		global $objPage;
+		$objPage = System::getContainer()->get('contao.routing.page_finder')->getCurrentPage();
 
 		// Articles
 		if (!\is_object($intId) && $intId == 0)
@@ -398,8 +398,6 @@ abstract class Controller extends System
 			$objStopwatch = System::getContainer()->get('debug.stopwatch');
 			$objStopwatch->start($strStopWatchId, 'contao.layout');
 		}
-
-		$objRow->typePrefix = 'mod_';
 
 		$objModule = new $strClass($objRow, $strColumn);
 		$strBuffer = $objModule->generate();
@@ -564,7 +562,6 @@ abstract class Controller extends System
 		}
 
 		$objRow = $objRow->cloneDetached();
-		$objRow->typePrefix = 'ce_';
 		$strStopWatchId = 'contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
 		if ($objRow->type != 'module' && System::getContainer()->getParameter('kernel.debug') && System::getContainer()->has('debug.stopwatch'))
@@ -663,10 +660,9 @@ abstract class Controller extends System
 			return '';
 		}
 
-		$objRow->typePrefix = $blnModule ? 'mod_' : 'ce_';
 		$objRow->form = $objRow->id;
 
-		$objElement = new $strClass($objRow, $strColumn);
+		$objElement = new $strClass($objRow, $strColumn, $blnModule ? 'mod_' : 'ce_');
 		$strBuffer = $objElement->generate();
 
 		// HOOK: add custom logic

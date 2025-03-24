@@ -82,12 +82,14 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			(
 				'href'                => 'act=toggle&amp;field=published',
 				'icon'                => 'visible.svg',
+				'primary'             => true,
 				'showInHeader'        => true
 			),
 			'feature' => array
 			(
 				'href'                => 'act=toggle&amp;field=featured',
 				'icon'                => 'featured.svg',
+				'primary'             => true,
 			),
 			'show'
 		)
@@ -269,7 +271,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'imageTitle' => array
 		(
@@ -277,7 +279,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'size' => array
 		(
@@ -296,7 +298,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(2048) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'fullsize' => array
 		(
@@ -311,7 +313,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'allowHtml'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'floating' => array
 		(

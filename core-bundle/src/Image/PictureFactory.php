@@ -205,14 +205,8 @@ class PictureFactory implements PictureFactoryInterface
 
                         foreach (explode(';', $formatsString) as $format) {
                             [$source, $targets] = explode(':', $format, 2);
-                            $targets = explode(',', $targets);
 
-                            if (!isset($formats[$source])) {
-                                $formats[$source] = $targets;
-                                continue;
-                            }
-
-                            $formats[$source] = array_unique([...$formats[$source], ...$targets]);
+                            $formats[$source] = array_unique([...($formats[$source] ?? []), ...explode(',', $targets)]);
 
                             usort(
                                 $formats[$source],

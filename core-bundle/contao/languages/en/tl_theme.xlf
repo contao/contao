@@ -134,6 +134,9 @@
       <trans-unit id="tl_theme.modules">
         <source>Edit the front end modules of theme ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_theme.elements">
+        <source>Edit the content elements of theme ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_theme.layout">
         <source>Edit the page layouts of theme ID %s</source>
       </trans-unit>

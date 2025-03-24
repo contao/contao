@@ -94,10 +94,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($deleteCredentialId))
 				{
-					if ((int) $credential->userHandle !== $user->id)
-					{
-						throw new AccessDeniedHttpException('Cannot delete credential ID ' . $deleteCredentialId);
-					}
+					$this->denyAccessUnlessGranted($user, $credential);
 
 					$credentialRepo->remove($credential);
 				}
@@ -106,10 +103,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($editCredentialId))
 				{
-					if ((int) $credential->userHandle !== $user->id)
-					{
-						throw new AccessDeniedHttpException('Cannot edit credential ID ' . $editCredentialId);
-					}
+					$this->denyAccessUnlessGranted($user, $credential);
 
 					$this->redirect($this->addToUrl('edit_passkey=' . $editCredentialId));
 				}
@@ -123,10 +117,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($saveCredentialId))
 				{
-					if ((int) $credential->userHandle !== $user->id)
-					{
-						throw new AccessDeniedHttpException('Cannot save credential ID ' . $saveCredentialId);
-					}
+					$this->denyAccessUnlessGranted($user, $credential);
 
 					$credential->name = Input::post('passkey_name') ?? '';
 					$credentialRepo->saveCredentialSource($credential);
@@ -161,12 +152,6 @@ class ModuleTwoFactor extends BackendModule
 	 */
 	protected function enableTwoFactor(BackendUser $user, $return)
 	{
-		// Return if 2FA is enabled already
-		if ($user->useTwoFactor)
-		{
-			return;
-		}
-
 		$container = System::getContainer();
 		$authenticator = $container->get('contao.security.two_factor.authenticator');
 		$verifyHelp = $GLOBALS['TL_LANG']['MSC']['twoFactorVerificationHelp'];
@@ -225,5 +210,13 @@ class ModuleTwoFactor extends BackendModule
 		System::getContainer()->get('contao.security.two_factor.trusted_device_manager')->clearTrustedDevices($user);
 
 		throw new RedirectResponseException($return);
+	}
+
+	private function denyAccessUnlessGranted(BackendUser $user, WebauthnCredential $credential): void
+	{
+		if ($credential->userHandle !== $user->getPasskeyUserHandle())
+		{
+			throw new AccessDeniedHttpException('Cannot access credential ID ' . $credential->getId());
+		}
 	}
 }

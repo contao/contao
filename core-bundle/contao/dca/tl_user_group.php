@@ -170,7 +170,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		'imageSizes' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['imageSizes'],
-			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('multiple'=>true, 'collapseUncheckedGroups'=>true),
@@ -386,7 +385,7 @@ class tl_user_group extends Backend
 		// Get all excluded fields
 		foreach ($GLOBALS['TL_DCA'] as $k=>$v)
 		{
-			if (is_array($v['fields']))
+			if (is_array($v['fields'] ?? null))
 			{
 				foreach ($v['fields'] as $kk=>$vv)
 				{

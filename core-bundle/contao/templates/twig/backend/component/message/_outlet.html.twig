@@ -1,0 +1,7 @@
+{% set id = id|default('messages') %}
+{% set message_outlet_attributes = attrs()
+    .set('id', id)
+    .set('data-controller', 'contao--message-outlet')
+    .mergeWith(message_outlet_attributes|default)
+%}
+<div{{ message_outlet_attributes }}></div>

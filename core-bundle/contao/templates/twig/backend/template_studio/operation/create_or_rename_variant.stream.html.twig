@@ -1,41 +1,37 @@
 {# Show a dialog #}
-<turbo-stream action="update" target="template-studio--dialog">
-    <template>
-        {% embed "@Contao/backend/template_studio/_dialog.html.twig" %}
-            {% trans_default_domain "contao_template_studio" %}
+{% embed "@Contao/backend/template_studio/show_modal.stream.html.twig" %}
+    {% trans_default_domain "contao_template_studio" %}
 
-            {% set identifier_token -%}
-                <span class="token">{{ identifier }}</span>
-            {%- endset %}
+    {% set identifier_token -%}
+        <span class="token">{{ identifier }}</span>
+    {%- endset %}
 
-            {% block title %}{{ ('operation.'~operation~'.0')|trans }}{% endblock %}
+    {% block title %}{{ ('operation.'~operation~'.0')|trans }}{% endblock %}
 
-            {% block content %}
-                <p class="description">
-                    {{ ('dialog.'~operation_type~'_variant')|trans([identifier_token])|raw }}
-                </p>
+    {% block content %}
+        <div class="description">
+            {{ ('dialog.'~operation_type~'_variant')|trans([identifier_token])|raw }}
+        </div>
 
-                <div class="template_name widget">
-                    <h3>
-                        <label for="ctrl_variant_name">
-                            <span class="invisible">{{ 'MSC.mandatory'|trans(domain: 'contao_default') }}</span>
-                            {{ 'MSC.name'|trans(domain: 'contao_default') }}
-                            <span class="mandatory">*</span>
-                        </label>
-                    </h3>
-                    <span class="structure">
-                        <span class="identifier identifier--user">{{ identifier }}</span>
-                        <span class="/">/</span>
-                        <input class="identifier identifier--user" type="text" id="ctrl_variant_name" name="identifier_fragment" pattern="{{ allowed_identifier_fragment_pattern }}" value="{{ suggested_identifier_fragment }}" required>
-                        <span class="extension">.{{ extension }}</span>
-                    </span>
-                </div>
-            {% endblock %}
+        <div class="template_name name_container">
+            <h3>
+                <label for="ctrl_variant_name">
+                    <span class="invisible">{{ 'MSC.mandatory'|trans(domain: 'contao_default') }}</span>
+                    {{ 'MSC.name'|trans(domain: 'contao_default') }}
+                    <span class="mandatory">*</span>
+                </label>
+            </h3>
+            <span class="structure">
+                <span class="identifier identifier--user">{{ identifier }}</span>
+                <span class="/">/</span>
+                <input class="identifier identifier--user" type="text" id="ctrl_variant_name" name="identifier_fragment" pattern="{{ allowed_identifier_fragment_pattern }}" value="{{ suggested_identifier_fragment }}" required>
+                <span class="extension">.{{ extension }}</span>
+            </span>
+        </div>
+    {% endblock %}
 
-            {% block buttons %}
-                {{ parent() }}
-                <button>{{ 'MSC.apply'|trans(domain: 'contao_default') }}</button>
-            {% endblock %}
-        {% endembed %}
-    </template>
-</turbo-stream>
+    {% block buttons %}
+        {{ parent() }}
+        <button class="confirm">{{ 'MSC.apply'|trans(domain: 'contao_default') }}</button>
+    {% endblock %}
+{% endembed %}

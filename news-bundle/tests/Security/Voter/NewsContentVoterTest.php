@@ -21,6 +21,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Contao\NewsBundle\Security\Voter\NewsContentVoter;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -40,9 +41,7 @@ class NewsContentVoterTest extends TestCase
         $this->assertFalse($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_page'));
     }
 
-    /**
-     * @dataProvider checksElementAccessPermissionProvider
-     */
+    #[DataProvider('checksElementAccessPermissionProvider')]
     public function testChecksElementAccessPermission(CreateAction|DeleteAction|ReadAction|UpdateAction $action, array $parentRecords, array $newsArchives): void
     {
         $token = $this->createMock(TokenInterface::class);

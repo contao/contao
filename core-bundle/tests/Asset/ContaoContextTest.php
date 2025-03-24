@@ -24,6 +24,7 @@ use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Schema;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -79,9 +80,7 @@ class ContaoContextTest extends TestCase
         $this->assertSame('/foobar', $context->getBasePath());
     }
 
-    /**
-     * @dataProvider getBasePaths
-     */
+    #[DataProvider('getBasePaths')]
     public function testReadsTheBasePathFromThePageModel(string $domain, bool $useSSL, string $basePath, string $expected): void
     {
         $request = $this->createMock(Request::class);

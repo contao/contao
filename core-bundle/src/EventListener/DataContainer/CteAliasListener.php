@@ -18,7 +18,6 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Image;
-use Contao\StringUtil;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -77,7 +76,7 @@ class CteAliasListener implements ResetInterface
 
         $backendAdapter = $this->framework->getAdapter(Backend::class);
 
-        return '<a href="'.$backendAdapter->addToUrl($href.'&amp;id='.$row['id']).'" title="'.StringUtil::specialchars($title).'"'.$attributes.'>'.$imageAdapter->getHtml($icon, $label).'</a> ';
+        return '<a href="'.$backendAdapter->addToUrl($href.'&amp;id='.$row['id']).'"'.$attributes.'>'.$imageAdapter->getHtml($icon, $title).'</a> ';
     }
 
     public function reset(): void

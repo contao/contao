@@ -38,6 +38,9 @@ class ServiceUnavailableListenerTest extends TestCase
 
         $listener = new ServiceUnavailableListener($this->mockScopeMatcher());
         $listener($event);
+
+        // No exception was thrown
+        $this->addToAssertionCount(1);
     }
 
     public function testDoesNotHandleFrontendSubrequest(): void
@@ -56,6 +59,9 @@ class ServiceUnavailableListenerTest extends TestCase
 
         $listener = new ServiceUnavailableListener($this->mockScopeMatcher());
         $listener($event);
+
+        // No exception was thrown
+        $this->addToAssertionCount(1);
     }
 
     public function testDoesNotThrowExceptionInPreviewEntryPoint(): void
@@ -75,6 +81,9 @@ class ServiceUnavailableListenerTest extends TestCase
 
         $listener = new ServiceUnavailableListener($this->mockScopeMatcher());
         $listener($event);
+
+        // No exception was thrown
+        $this->addToAssertionCount(1);
     }
 
     public function testDoesNotThrowExceptionIfRouteBypassesMaintenance(): void
@@ -94,6 +103,9 @@ class ServiceUnavailableListenerTest extends TestCase
 
         $listener = new ServiceUnavailableListener($this->mockScopeMatcher());
         $listener($event);
+
+        // No exception was thrown
+        $this->addToAssertionCount(1);
     }
 
     public function testDoesNotThrowExceptionWithoutPageModelInRequest(): void
@@ -105,6 +117,9 @@ class ServiceUnavailableListenerTest extends TestCase
 
         $listener = new ServiceUnavailableListener($this->mockScopeMatcher());
         $listener($event);
+
+        // No exception was thrown
+        $this->addToAssertionCount(1);
     }
 
     public function testDoesNotThrowExceptionIfMaintenanceIsNotEnabled(): void
@@ -123,6 +138,9 @@ class ServiceUnavailableListenerTest extends TestCase
 
         $listener = new ServiceUnavailableListener($this->mockScopeMatcher());
         $listener($event);
+
+        // No exception was thrown
+        $this->addToAssertionCount(1);
     }
 
     public function testThrowExceptionIfMaintenanceIsEnabled(): void

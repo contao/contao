@@ -21,6 +21,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Config;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,9 +47,7 @@ class FileDownloadHelperTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider provideInlineContext
-     */
+    #[DataProvider('provideInlineContext')]
     public function testGenerateAndHandleInlineUrl(array|null $context, string $expectedUrl): void
     {
         $helper = $this->getFileDownloadHelper();
@@ -86,9 +85,7 @@ class FileDownloadHelperTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideDownloadContext
-     */
+    #[DataProvider('provideDownloadContext')]
     public function testGenerateAndHandleDownloadUrl(string|null $fileName, array|null $context, string $expectedUrl): void
     {
         $helper = $this->getFileDownloadHelper();
@@ -131,6 +128,28 @@ class FileDownloadHelperTest extends TestCase
         $this->assertSame("foo,bar\n", $this->getResponseContent($response));
     }
 
+    public function testGenerateAndHandleDownloadUrlUnknownMimeType(): void
+    {
+        $helper = $this->getFileDownloadHelper();
+        $url = $helper->generateDownloadUrl('https://example.com/', 'my_file.unknown');
+
+        $response = $helper->handle(Request::create($url), $this->getInMemoryStorage());
+
+        $this->assertInstanceOf(StreamedResponse::class, $response);
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertSame('application/octet-stream', $response->headers->get('Content-Type'));
+        $this->assertSame('attachment; filename=my_file.unknown', $response->headers->get('Content-Disposition'));
+        $this->assertSame('foo', $this->getResponseContent($response));
+    }
+
+    public function testPreservesQueryParameters(): void
+    {
+        $helper = $this->getFileDownloadHelper();
+        $url = $helper->generateDownloadUrl('https://example.com/path?foo=bar', 'my_file.txt');
+
+        $this->assertSame('https://example.com/path?_hash=TUK%2BRJDS6D7dOg8zPyttlPmt0mMRi3bx17OHbD8NIro%3D&d=attachment&foo=bar&p=my_file.txt', $url);
+    }
+
     public static function provideDownloadContext(): iterable
     {
         yield 'without filename or context' => [
@@ -162,6 +181,7 @@ class FileDownloadHelperTest extends TestCase
     {
         $adapter = new InMemoryFilesystemAdapter();
         $adapter->write('my_file.txt', 'foo', new Config());
+        $adapter->write('my_file.unknown', 'foo', new Config());
 
         $mountManager = new MountManager();
         $mountManager->mount($adapter);
@@ -173,7 +193,7 @@ class FileDownloadHelperTest extends TestCase
     {
         ob_start();
 
-        $response->send();
+        $response->sendContent();
 
         return ob_get_clean();
     }

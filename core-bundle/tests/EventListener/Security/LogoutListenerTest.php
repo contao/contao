@@ -18,7 +18,6 @@ use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Psr\Log\LoggerInterface;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorToken;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,8 +31,6 @@ use Symfony\Component\Security\Http\HttpUtils;
 
 class LogoutListenerTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_USERNAME']);

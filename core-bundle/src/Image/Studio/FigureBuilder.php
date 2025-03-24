@@ -20,6 +20,7 @@ use Contao\CoreBundle\Filesystem\FilesystemItem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemException;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Framework\Adapter;
+use Contao\CoreBundle\InsertTag\InsertTag;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\FilesModel;
@@ -205,7 +206,7 @@ class FigureBuilder
     /**
      * Sets the image resource from an absolute or relative path.
      *
-     * @param bool $autoDetectDbafsPaths Set to false to skip searching for a FilesModel
+     * @param bool $autoDetectDbafsPaths Use false to skip searching for a FilesModel
      */
     public function fromPath(string $path, bool $autoDetectDbafsPaths = true): self
     {
@@ -718,6 +719,16 @@ class FigureBuilder
         $locales = null !== $this->locale ? [$this->locale] : $this->getFallbackLocaleList();
         $metadata = $this->filesModel->getMetadata(...$locales);
         $overwriteMetadata = $this->overwriteMetadata ? $this->overwriteMetadata->all() : [];
+
+        foreach ($overwriteMetadata as $key => $value) {
+            if (str_starts_with($value, '{{empty')) {
+                $parsedValue = $this->locator->get('contao.insert_tag.parser')->parse($value);
+
+                if (1 === $parsedValue->count() && $parsedValue->get(0) instanceof InsertTag && 'empty' === $parsedValue->get(0)->getName()) {
+                    $overwriteMetadata[$key] = '';
+                }
+            }
+        }
 
         if ($metadata) {
             return $metadata

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Studio\Operation;
 
+use Doctrine\DBAL\Connection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -48,6 +49,7 @@ abstract class AbstractRenameVariantOperation extends AbstractOperation
         // Rename the variant template file
         $this->getUserTemplatesStorage()->move($context->getUserTemplatesStoragePath(), $newStoragePath);
 
+        $this->migrateDatabaseUsages($context->getIdentifier(), $newIdentifier);
         $this->refreshTemplateHierarchy();
 
         return $this->render('@Contao/backend/template_studio/operation/rename_variant_result.stream.html.twig', [
@@ -56,11 +58,31 @@ abstract class AbstractRenameVariantOperation extends AbstractOperation
         ]);
     }
 
+    public static function getSubscribedServices(): array
+    {
+        $services = parent::getSubscribedServices();
+
+        $services['database_connection'] = Connection::class;
+
+        return $services;
+    }
+
     /**
      * Return the template identifier prefix this operation is targeting (e.g.
      * "content_element").
      */
     abstract protected function getPrefix(): string;
+
+    /**
+     * Return a list of database references in the form of `<table>.<field>` storing
+     * template identifiers, that should get migrated when the variant is renamed.
+     *
+     * @return list<string>
+     */
+    protected function getDatabaseReferencesThatShouldBeMigrated(): array
+    {
+        return [];
+    }
 
     private function buildAllowedIdentifierFragmentsPattern(string $identifier): string
     {
@@ -80,5 +102,16 @@ abstract class AbstractRenameVariantOperation extends AbstractOperation
             '^(?!(%s)$).*',
             implode('|', array_map(preg_quote(...), $existingVariantNames)),
         );
+    }
+
+    private function migrateDatabaseUsages(string $from, string $to): void
+    {
+        $connection = $this->container->get('database_connection');
+
+        foreach ($this->getDatabaseReferencesThatShouldBeMigrated() as $reference) {
+            [$table, $field] = explode('.', $reference, 2);
+
+            $connection->update($table, [$field => $to], [$field => $from]);
+        }
     }
 }

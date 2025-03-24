@@ -17,6 +17,7 @@ use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Tests\Fixtures\Helper\HookHelper;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
@@ -27,7 +28,6 @@ use Contao\CoreBundle\Twig\Runtime\InsertTagRuntime;
 use Contao\InsertTags;
 use Contao\System;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -38,8 +38,6 @@ use Twig\TwigFunction;
 
 class ContaoEscaperNodeVisitorTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function tearDown(): void
     {
         unset($GLOBALS['TL_MIME'], $GLOBALS['objPage']);
@@ -136,14 +134,11 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $this->assertSame('&QUOT;A&QUOT; &AMP; &LT;B&GT;', $output);
     }
 
-    /**
-     * @group legacy
-     */
     public function testHtmlAttrFilter(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook has been deprecated/');
 
-        $GLOBALS['TL_HOOKS'] = ['replaceInsertTags' => [[static::class, 'executeReplaceInsertTagsCallback']]];
+        HookHelper::registerHook('replaceInsertTags', static fn (string $tag) => 'flavor' === $tag ? 'vanilla' : false);
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
@@ -161,11 +156,6 @@ class ContaoEscaperNodeVisitorTest extends TestCase
         $this->assertSame('<span title=vanilla&#x20;_is_&#x20;a&#x20;flavor></span>', $output);
 
         unset($GLOBALS['TL_HOOKS']);
-    }
-
-    public function executeReplaceInsertTagsCallback(string $tag): string|false
-    {
-        return 'flavor' === $tag ? 'vanilla' : false;
     }
 
     private function getEnvironment(string $templateContent): Environment
@@ -189,7 +179,12 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
         $environment->addExtension($contaoExtension);
 
-        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
+        $insertTagParser = new InsertTagParser(
+            $this->createMock(ContaoFramework::class),
+            $this->createMock(LoggerInterface::class),
+            $this->createMock(FragmentHandler::class),
+            $this->createMock(RequestStack::class),
+        );
 
         $environment->addRuntimeLoader(
             new FactoryRuntimeLoader([

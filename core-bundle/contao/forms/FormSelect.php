@@ -86,7 +86,7 @@ class FormSelect extends Widget
 				break;
 
 			case 'options':
-				$this->arrOptions = StringUtil::deserialize($varValue);
+				$this->arrOptions = StringUtil::deserialize($varValue, true);
 				break;
 
 			case 'rgxp':
@@ -195,7 +195,7 @@ class FormSelect extends Widget
 		// Chosen
 		if ($this->chosen)
 		{
-			$arrAttributes['data-controller'] = 'contao--chosen';
+			$strClass .= ' tl_chosen';
 		}
 
 		// Custom class
@@ -220,7 +220,7 @@ class FormSelect extends Widget
 		$blnHasGroups = false;
 
 		// Add empty option if there are none
-		if (empty($this->arrOptions) || !\is_array($this->arrOptions))
+		if (empty($this->arrOptions))
 		{
 			$this->arrOptions = array(array('value' => '', 'label' => '-'));
 		}
@@ -290,7 +290,7 @@ class FormSelect extends Widget
 		}
 
 		// Add empty option if there are none
-		if (empty($this->arrOptions) || !\is_array($this->arrOptions))
+		if (empty($this->arrOptions))
 		{
 			$this->arrOptions = array(array('value'=>'', 'label'=>'-'));
 		}

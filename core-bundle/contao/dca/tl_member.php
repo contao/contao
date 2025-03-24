@@ -69,6 +69,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			(
 				'href'                => 'key=su',
 				'icon'                => 'su.svg',
+				'primary'             => true,
 				'button_callback'     => array('tl_member', 'switchUser')
 			)
 		)
@@ -157,7 +158,6 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'city' => array
 		(
-			'filter'                  => true,
 			'search'                  => true,
 			'sorting'                 => true,
 			'inputType'               => 'text',
@@ -440,7 +440,7 @@ class tl_member extends Backend
 
 		$url = System::getContainer()->get('router')->generate('contao_backend_preview', array('user'=>$row['username']));
 
-		return '<a href="' . StringUtil::specialcharsUrl($url) . '" title="' . StringUtil::specialchars($title) . '" target="_blank">' . Image::getHtml($icon, $label) . '</a> ';
+		return '<a href="' . StringUtil::specialcharsUrl($url) . '" target="_blank" data-turbo-prefetch="false">' . Image::getHtml($icon, $title) . '</a> ';
 	}
 
 	/**

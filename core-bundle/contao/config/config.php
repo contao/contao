@@ -54,7 +54,6 @@ use Contao\LayoutModel;
 use Contao\ListWizard;
 use Contao\MemberGroupModel;
 use Contao\MemberModel;
-use Contao\Messages;
 use Contao\MetaWizard;
 use Contao\ModuleArticleList;
 use Contao\ModuleArticlenav;
@@ -143,7 +142,7 @@ $GLOBALS['BE_MOD'] = array
 	(
 		'themes' => array
 		(
-			'tables'      => array('tl_theme', 'tl_module', 'tl_layout', 'tl_image_size', 'tl_image_size_item'),
+			'tables'      => array('tl_theme', 'tl_module', 'tl_layout', 'tl_image_size', 'tl_image_size_item', 'tl_content'),
 			'importTheme' => array(Theme::class, 'importTheme'),
 			'exportTheme' => array(Theme::class, 'exportTheme'),
 		),
@@ -427,15 +426,6 @@ $GLOBALS['TL_PURGE'] = array
 		(
 			'callback' => array(Automator::class, 'generateSymlinks')
 		)
-	)
-);
-
-// Hooks
-$GLOBALS['TL_HOOKS'] = array
-(
-	'getSystemMessages' => array
-	(
-		array(Messages::class, 'languageFallback')
 	)
 );
 

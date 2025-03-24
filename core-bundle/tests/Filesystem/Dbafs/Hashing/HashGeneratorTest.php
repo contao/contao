@@ -20,6 +20,7 @@ use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemInterface;
 use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class HashGeneratorTest extends TestCase
 {
@@ -31,9 +32,7 @@ class HashGeneratorTest extends TestCase
         new HashGenerator('foofoo');
     }
 
-    /**
-     * @dataProvider provideExpectedHashes
-     */
+    #[DataProvider('provideExpectedHashes')]
     public function testHashString(string $algorithm, string $hash): void
     {
         $generator = new HashGenerator($algorithm);
@@ -41,9 +40,7 @@ class HashGeneratorTest extends TestCase
         $this->assertSame($hash, $generator->hashString("foo\0bar"));
     }
 
-    /**
-     * @dataProvider provideExpectedHashes
-     */
+    #[DataProvider('provideExpectedHashes')]
     public function testHashFileContent(string $algorithm, string $hash): void
     {
         $filesystem = $this->getDemoFilesystem();

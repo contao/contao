@@ -4,8 +4,22 @@
 @import "ace.pcss";
 @import "operations.pcss";
 @import "info.pcss";
-@import "message.pcss";
 @import "dialog.pcss";
+
+@keyframes point-left {
+    0% {
+        transform: translateX(1ch);
+        opacity: 0;
+    }
+    25% {
+        transform: translateX(-1ch);
+        opacity: 0.75;
+    }
+    100% {
+        transform: translateX(-1ch);
+        opacity: 0.75;
+    }
+}
 
 #template-studio {
     --hover-color: var(--green);
@@ -14,7 +28,7 @@
     overflow: hidden;
 
     display: grid;
-    grid-template-areas: "tree tabs info";
+    grid-template-areas: "nav tabs info";
     grid-template-columns: auto 1fr min-content;
     position: relative;
 
@@ -22,7 +36,7 @@
         scrollbar-width: thin;
     }
 
-    > *:not(:has(*)) {
+    > :empty {
         display: none;
     }
 
@@ -44,7 +58,7 @@
         max-width: 300px;
 
         label > span {
-            font-size: .8em;
+            font-size: 0.8em;
             margin-left: 4px;
             color: var(--info);
         }
@@ -59,6 +73,24 @@
         grid-area: tabs;
         position: relative;
         overflow-y: auto;
+
+        .explainer {
+            max-width: 60ch;
+            background-color: var(--content-bg);
+            padding: 12px;
+            line-height: 1.3;
+
+            h3 {
+                margin-bottom: 12px;
+            }
+
+            svg {
+                margin-left: 1ch;
+                vertical-align: middle;
+                transform: translateX(10px);
+                animation: point-left 4s infinite;
+            }
+        }
     }
 
     #template-studio--info {
@@ -66,6 +98,14 @@
         border-left: 1px solid var(--border);
         overflow-y: auto;
         min-width: 220px;
+
+        @media (min-width: 1540px) {
+            min-width: 320px;
+        }
+
+        @media (min-width: 1640px) {
+            min-width: 420px;
+        }
 
         .block {
             text-align: right;

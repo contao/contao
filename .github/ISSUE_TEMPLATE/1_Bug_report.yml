@@ -1,5 +1,6 @@
 name: 🐞 Report a bug
 description: Report errors and problems
+type: Bug
 labels: [bug, unconfirmed]
 body:
     - type: input

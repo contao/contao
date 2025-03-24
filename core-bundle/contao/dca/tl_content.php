@@ -74,39 +74,39 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('type', 'addImage', 'sortable', 'useImage', 'overwriteMeta', 'overwriteLink', 'protected', 'splashImage', 'markdownSource', 'showPreview'),
-		'default'                     => '{type_legend},type',
-		'headline'                    => '{type_legend},type,headline;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'text'                        => '{type_legend},type,headline;{text_legend},text;{image_legend},addImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'html'                        => '{type_legend},type;{text_legend},html;{template_legend:hide},customTpl;{protected_legend:hide},protected;{invisible_legend:hide},invisible,start,stop',
-		'unfiltered_html'             => '{type_legend},type;{text_legend},unfilteredHtml;{template_legend:hide},customTpl;{protected_legend:hide},protected;{invisible_legend:hide},invisible,start,stop',
-		'list'                        => '{type_legend},type,headline;{list_legend},listtype,listitems;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'description_list'            => '{type_legend},type,headline;{list_legend},data;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'table'                       => '{type_legend},type,headline;{table_legend},tableitems;{tconfig_legend},summary,thead,tfoot,tleft;{sortable_legend:hide},sortable;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'accordion'                   => '{type_legend},type,headline;{accordion_legend},closeSections;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'element_group'               => '{type_legend},type,headline;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'accordionStart'              => '{type_legend},type;{moo_legend},mooHeadline,mooStyle,mooClasses;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'accordionStop'               => '{type_legend},type;{moo_legend},mooClasses;{template_legend:hide},customTpl;{protected_legend:hide},protected;{invisible_legend:hide},invisible,start,stop',
-		'accordionSingle'             => '{type_legend},type;{moo_legend},mooHeadline,mooStyle,mooClasses;{text_legend},text;{image_legend},addImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'swiper'                      => '{type_legend},type,headline;{slider_legend},sliderDelay,sliderSpeed,sliderStartSlide,sliderContinuous;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'sliderStart'                 => '{type_legend},type,headline;{slider_legend},sliderDelay,sliderSpeed,sliderStartSlide,sliderContinuous;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'sliderStop'                  => '{type_legend},type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{invisible_legend:hide},invisible,start,stop',
-		'code'                        => '{type_legend},type,headline;{text_legend},highlight,code;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'markdown'                    => '{type_legend},type,headline;{text_legend},markdownSource;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'template'                    => '{type_legend},type,headline;{template_legend},data,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'hyperlink'                   => '{type_legend},type,headline;{link_legend},url,target,linkTitle,embed,titleText,rel;{imglink_legend:hide},useImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'toplink'                     => '{type_legend},type;{link_legend},linkTitle;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'image'                       => '{type_legend},type,headline;{source_legend},singleSRC,size,fullsize,overwriteMeta;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'gallery'                     => '{type_legend},type,headline;{source_legend},multiSRC,useHomeDir,sortBy,metaIgnore;{image_legend},size,perRow,perPage,numberOfItems,fullsize;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'player'                      => '{type_legend},type,headline;{source_legend},playerSRC;{texttrack_legend},textTrackSRC;{player_legend},playerOptions,playerSize,playerPreload,playerCaption,playerStart,playerStop;{poster_legend:hide},posterSRC;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'youtube'                     => '{type_legend},type,headline;{source_legend},youtube;{player_legend},youtubeOptions,playerTitle,playerSize,playerAspect,playerCaption,playerStart,playerStop;{splash_legend},splashImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'vimeo'                       => '{type_legend},type,headline;{source_legend},vimeo;{player_legend},vimeoOptions,playerTitle,playerSize,playerAspect,playerCaption,playerStart,playerColor;{splash_legend},splashImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'download'                    => '{type_legend},type,headline;{source_legend},singleSRC;{download_legend},inline,overwriteLink;{preview_legend},showPreview;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'downloads'                   => '{type_legend},type,headline;{source_legend},multiSRC,useHomeDir;{download_legend},inline,sortBy,metaIgnore;{preview_legend},showPreview;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'alias'                       => '{type_legend},type;{include_legend},cteAlias;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'article'                     => '{type_legend},type;{include_legend},articleAlias;{protected_legend:hide},protected;{invisible_legend:hide},invisible,start,stop',
-		'teaser'                      => '{type_legend},type;{include_legend},article;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'form'                        => '{type_legend},type,headline;{include_legend},form;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
-		'module'                      => '{type_legend},type;{include_legend},module;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop'
+		'default'                     => '{type_legend},title,type',
+		'headline'                    => '{type_legend},title,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'text'                        => '{type_legend},title,headline,type;{text_legend},text;{image_legend},addImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'html'                        => '{type_legend},title,type;{text_legend},html;{template_legend:hide},customTpl;{protected_legend:hide},protected;{invisible_legend:hide},invisible,start,stop',
+		'unfiltered_html'             => '{type_legend},title,type;{text_legend},unfilteredHtml;{template_legend:hide},customTpl;{protected_legend:hide},protected;{invisible_legend:hide},invisible,start,stop',
+		'list'                        => '{type_legend},title,headline,type;{list_legend},listtype,listitems;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'description_list'            => '{type_legend},title,headline,type;{list_legend},data;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'table'                       => '{type_legend},title,headline,type;{table_legend},tableitems;{tconfig_legend},summary,thead,tfoot,tleft;{sortable_legend:hide},sortable;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'accordion'                   => '{type_legend},title,headline,type;{accordion_legend},closeSections;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'element_group'               => '{type_legend},title,headline,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'accordionStart'              => '{type_legend},title,type;{moo_legend},mooHeadline,mooStyle,mooClasses;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'accordionStop'               => '{type_legend},title,type;{moo_legend},mooClasses;{template_legend:hide},customTpl;{protected_legend:hide},protected;{invisible_legend:hide},invisible,start,stop',
+		'accordionSingle'             => '{type_legend},title,type;{moo_legend},mooHeadline,mooStyle,mooClasses;{text_legend},text;{image_legend},addImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'swiper'                      => '{type_legend},title,headline,type;{slider_legend},sliderDelay,sliderSpeed,sliderStartSlide,sliderContinuous;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'sliderStart'                 => '{type_legend},title,headline,type;{slider_legend},sliderDelay,sliderSpeed,sliderStartSlide,sliderContinuous;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'sliderStop'                  => '{type_legend},title,type;{template_legend:hide},customTpl;{protected_legend:hide},protected;{invisible_legend:hide},invisible,start,stop',
+		'code'                        => '{type_legend},title,headline,type;{text_legend},highlight,code;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'markdown'                    => '{type_legend},title,headline,type;{text_legend},markdownSource;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'template'                    => '{type_legend},title,headline,type;{template_legend},data,customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'hyperlink'                   => '{type_legend},title,headline,type;{link_legend},url,target,linkTitle,embed,titleText,rel;{imglink_legend:hide},useImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'toplink'                     => '{type_legend},title,type;{link_legend},linkTitle;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'image'                       => '{type_legend},title,type;headline;{source_legend},singleSRC,size,fullsize,overwriteMeta;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'gallery'                     => '{type_legend},title,type;headline;{source_legend},multiSRC,useHomeDir,sortBy,metaIgnore;{image_legend},size,perRow,perPage,numberOfItems,fullsize;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'player'                      => '{type_legend},title,type;headline;{source_legend},playerSRC;{texttrack_legend},textTrackSRC;{player_legend},playerOptions,playerSize,playerPreload,playerCaption,playerStart,playerStop;{poster_legend:hide},posterSRC;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'youtube'                     => '{type_legend},title,type;headline;{source_legend},youtube;{player_legend},youtubeOptions,playerTitle,playerSize,playerAspect,playerCaption,playerStart,playerStop;{splash_legend},splashImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'vimeo'                       => '{type_legend},title,type;headline;{source_legend},vimeo;{player_legend},vimeoOptions,playerTitle,playerSize,playerAspect,playerCaption,playerStart,playerColor;{splash_legend},splashImage;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'download'                    => '{type_legend},title,type;headline;{source_legend},singleSRC;{download_legend},inline,overwriteLink;{preview_legend},showPreview;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'downloads'                   => '{type_legend},title,type;headline;{source_legend},multiSRC,useHomeDir;{download_legend},inline,sortBy,metaIgnore;{preview_legend},showPreview;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'alias'                       => '{type_legend},title,type;{include_legend},cteAlias;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'article'                     => '{type_legend},title,type;{include_legend},articleAlias;{protected_legend:hide},protected;{invisible_legend:hide},invisible,start,stop',
+		'teaser'                      => '{type_legend},title,type;{include_legend},article;{template_legend:hide},customTpl;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'form'                        => '{type_legend},title,type;headline;{include_legend},form;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop',
+		'module'                      => '{type_legend},title,type;{include_legend},module;{protected_legend:hide},protected;{expert_legend:hide},cssID;{invisible_legend:hide},invisible,start,stop'
 	),
 
 	// Sub-palettes
@@ -146,6 +146,13 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		'tstamp' => array
 		(
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
+		),
+		'title' => array
+		(
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
+			'sql'                     => array('type'=>'string', 'length'=>255, 'default'=>''),
 		),
 		'type' => array
 		(
@@ -217,14 +224,14 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'imageTitle' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'size' => array
 		(
@@ -252,7 +259,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'allowHtml'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'floating' => array
 		(
@@ -972,7 +979,15 @@ class tl_content extends Backend
 		$objModel->setRow($arrRow);
 
 		$class = 'cte_preview';
-		$preview = StringUtil::insertTagToSrc($this->getContentElement($objModel));
+
+		try
+		{
+			$preview = StringUtil::insertTagToSrc($this->getContentElement($objModel));
+		}
+		catch (Throwable $exception)
+		{
+			$preview = '<p class="tl_error">' . StringUtil::specialchars($exception->getMessage()) . '</p>';
+		}
 
 		if (!empty($arrRow['sectionHeadline']))
 		{
@@ -1048,7 +1063,7 @@ class tl_content extends Backend
 		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'], $dc->value);
 		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'form', 'table'=>'tl_form_field', 'id'=>$dc->value, 'popup'=>'1', 'nb'=>'1'));
 
-		return ' <a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg', $title) . '</a>';
+		return ' <a href="' . StringUtil::specialcharsUrl($href) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg', $title) . '</a>';
 	}
 
 	/**
@@ -1107,7 +1122,7 @@ class tl_content extends Backend
 		$title = sprintf($GLOBALS['TL_LANG']['tl_content']['editalias'], $module['id']);
 		$href = System::getContainer()->get('router')->generate('contao_backend', array('do'=>'themes', 'table'=>'tl_module', 'act'=>'edit', 'id'=>$module['id'], 'popup'=>'1', 'nb'=>'1'));
 
-		return ' <a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($title) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg', $title) . '</a>';
+		return ' <a href="' . StringUtil::specialcharsUrl($href) . '" onclick="Backend.openModalIframe({\'title\':\'' . StringUtil::specialchars(str_replace("'", "\\'", $title)) . '\',\'url\':this.href});return false">' . Image::getHtml('edit.svg', $title) . '</a>';
 	}
 
 	/**
@@ -1177,7 +1192,7 @@ class tl_content extends Backend
 	 */
 	public function listImportWizard()
 	{
-		return ' <a href="' . $this->addToUrl('key=list') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['lw_import'][1]) . '" data-action="contao--scroll-offset#store">' . Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['tw_import'][0]) . '</a>';
+		return ' <a href="' . $this->addToUrl('key=list') . '" data-action="contao--scroll-offset#store">' . Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['lw_import'][1]) . '</a>';
 	}
 
 	/**
@@ -1187,7 +1202,7 @@ class tl_content extends Backend
 	 */
 	public function tableImportWizard()
 	{
-		return ' <a href="' . $this->addToUrl('key=table') . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_import'][1]) . '" data-action="contao--scroll-offset#store">' . Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['tw_import'][0]) . '</a> ' . Image::getHtml('demagnify.svg', '', 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_shrink']) . '" style="cursor:pointer" onclick="Backend.tableWizardResize(0.9)"') . Image::getHtml('magnify.svg', '', 'title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['tw_expand']) . '" style="cursor:pointer" onclick="Backend.tableWizardResize(1.1)"');
+		return ' <a href="' . $this->addToUrl('key=table') . '" data-action="contao--scroll-offset#store">' . Image::getHtml('tablewizard.svg', $GLOBALS['TL_LANG']['MSC']['tw_import'][1]) . '</a> ' . Image::getHtml('demagnify.svg', $GLOBALS['TL_LANG']['MSC']['tw_shrink'], 'style="cursor:pointer" onclick="Backend.tableWizardResize(0.9)" data-contao--tooltips-target="tooltip"') . Image::getHtml('magnify.svg', $GLOBALS['TL_LANG']['MSC']['tw_expand'], 'style="cursor:pointer" onclick="Backend.tableWizardResize(1.1)" data-contao--tooltips-target="tooltip"');
 	}
 
 	/**

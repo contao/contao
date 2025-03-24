@@ -47,7 +47,7 @@ class ClipboardManager
         return $clipboard[$table];
     }
 
-    public function set(string $table, int|string $id, array|null $children, string $mode): void
+    public function set(string $table, int|string|null $id, string|null $children, string $mode): void
     {
         $session = $this->requestStack->getSession();
         $clipboard = $session->get(self::SESSION_KEY);

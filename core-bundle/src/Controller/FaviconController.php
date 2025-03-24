@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\FilesModel;
@@ -33,7 +33,7 @@ class FaviconController
         private readonly ContaoFramework $framework,
         private readonly PageFinder $pageFinder,
         private readonly string $projectDir,
-        private readonly EntityCacheTags $entityCacheTags,
+        private readonly CacheTagManager $cacheTagManager,
     ) {
     }
 
@@ -72,7 +72,7 @@ class FaviconController
                 break;
         }
 
-        $this->entityCacheTags->tagWithModelInstance($rootPage);
+        $this->cacheTagManager->tagWithModelInstance($rootPage);
 
         return $response;
     }

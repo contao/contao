@@ -1,23 +1,17 @@
 {# Show a dialog #}
-<turbo-stream action="update" target="template-studio--dialog">
-    <template>
-        {% embed "@Contao/backend/template_studio/_dialog.html.twig" %}
-            {% trans_default_domain "contao_template_studio" %}
+{% embed "@Contao/backend/template_studio/show_modal.stream.html.twig" %}
+    {% trans_default_domain "contao_template_studio" %}
 
-            {% set identifier_token -%}
-                <span class="token">{{ identifier }}</span>
-            {%- endset %}
+    {% set identifier_token -%}
+        <span class="token">{{ identifier }}</span>
+    {%- endset %}
 
-            {% block content %}
-                <p class="description description--warning">
-                    {{ 'dialog.delete.confirm'|trans([identifier_token])|raw }}
-                </p>
-            {% endblock %}
+    {% block content %}
+        <p class="description description--warning">{{ 'dialog.delete.confirm'|trans([identifier_token])|raw }}</p>
+    {% endblock %}
 
-            {% block buttons %}
-                {{ parent() }}
-                <button name="confirm_delete">{{ 'MSC.deleteSelected'|trans(domain: 'contao_default') }}</button>
-            {% endblock %}
-        {% endembed %}
-    </template>
-</turbo-stream>
+    {% block buttons %}
+        {{ parent() }}
+        <button class="confirm" name="confirm_delete">{{ 'MSC.deleteSelected'|trans(domain: 'contao_default') }}</button>
+    {% endblock %}
+{% endembed %}

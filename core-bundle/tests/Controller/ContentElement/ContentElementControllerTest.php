@@ -14,14 +14,14 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 
 use Contao\Config;
 use Contao\ContentModel;
-use Contao\CoreBundle\Cache\EntityCacheTags;
+use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestController;
 use Contao\CoreBundle\Fixtures\Controller\ContentElement\TestSharedMaxAgeController;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\System;
-use Symfony\Bridge\PhpUnit\ClockMock;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -35,7 +35,7 @@ class ContentElementControllerTest extends TestCase
         parent::setUp();
 
         $this->container = $this->getContainerWithContaoConfiguration();
-        $this->container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
+        $this->container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
         $this->container->set('contao.twig.filesystem_loader', $this->createMock(ContaoFilesystemLoader::class));
 
         System::setContainer($this->container);
@@ -170,9 +170,7 @@ class ContentElementControllerTest extends TestCase
         $this->assertSame('ce_test foo bar', $template['class']);
     }
 
-    /**
-     * @dataProvider provideScope
-     */
+    #[DataProvider('provideScope')]
     public function testSetsTemplateContextForModernFragments(bool $backendScope): void
     {
         $filesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
@@ -229,14 +227,14 @@ class ContentElementControllerTest extends TestCase
     {
         $model = $this->mockClassWithProperties(ContentModel::class, ['id' => 42]);
 
-        $entityCacheTags = $this->createMock(EntityCacheTags::class);
-        $entityCacheTags
+        $cacheTagManager = $this->createMock(CacheTagManager::class);
+        $cacheTagManager
             ->expects($this->once())
             ->method('tagWith')
             ->with($model)
         ;
 
-        $this->container->set('contao.cache.entity_tags', $entityCacheTags);
+        $this->container->set('contao.cache.tag_manager', $cacheTagManager);
 
         $controller = $this->getTestController();
 
@@ -245,8 +243,6 @@ class ContentElementControllerTest extends TestCase
 
     public function testSetsTheSharedMaxAgeIfTheElementHasAStartDate(): void
     {
-        ClockMock::withClockMock(true);
-
         $time = time();
         $start = strtotime('+2 weeks', $time);
         $expires = $start - $time;
@@ -259,14 +255,10 @@ class ContentElementControllerTest extends TestCase
         $response = $controller(new Request(), $model, 'main');
 
         $this->assertSame($expires, $response->getMaxAge());
-
-        ClockMock::withClockMock(false);
     }
 
     public function testSetsTheSharedMaxAgeIfTheElementHasAStopDate(): void
     {
-        ClockMock::withClockMock(true);
-
         $time = time();
         $stop = strtotime('+2 weeks', $time);
         $expires = $stop - $time;
@@ -279,8 +271,6 @@ class ContentElementControllerTest extends TestCase
         $response = $controller(new Request(), $model, 'main');
 
         $this->assertSame($expires, $response->getMaxAge());
-
-        ClockMock::withClockMock(false);
     }
 
     public function testDoesNotSetTheSharedMaxAgeIfTheElementHasNeitherAStartNorAStopDate(): void

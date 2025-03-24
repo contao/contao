@@ -1,18 +1,21 @@
-<div class="maintenance_inactive">
+<div id="tl_maintenance_search" class="maintenance_inactive">
 
   <h2 class="sub_headline"><?= $this->trans('tl_maintenance.backend_search.title') ?></h2>
 
-  <form class="tl_form" method="post">
-      <div class="tl_formbody_edit">
-        <input type="hidden" name="FORM_SUBMIT" value="tl_rebuild_backend_search">
-        <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
+  <?php if ($this->message): ?>
+    <div class="tl_message">
+      <?= $this->message ?>
+    </div>
+  <?php endif; ?>
 
-        <div class="tl_submit_container">
-          <button type="submit" name="clear" class="tl_submit"<?php if ($this->disabled): ?> disabled<?php endif; ?>><?= $this->trans('tl_maintenance.backend_search.button') ?></button>
-          <?php if ($this->disabled): ?>
-            <p class="tl_help tl_tip"><?= $this->trans('tl_maintenance.backend_search.disabled_explanation'); ?></p>
-          <?php endif; ?>
-        </div>
-    </form>
+  <form class="tl_form" method="post">
+    <div class="tl_formbody_edit">
+      <input type="hidden" name="FORM_SUBMIT" value="tl_rebuild_backend_search">
+      <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
+      <div class="tl_submit_container">
+        <button type="submit" name="clear" class="tl_submit"<?php if ($this->disabled): ?> disabled<?php endif; ?>><?= $this->trans('tl_maintenance.backend_search.button') ?></button>
+      </div>
+    </div>
+  </form>
 
 </div>

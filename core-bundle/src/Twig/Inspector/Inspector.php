@@ -12,13 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Inspector;
 
+use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Psr\Cache\CacheItemPoolInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
 use Twig\Error\SyntaxError;
-use Twig\TemplateWrapper;
 
 /**
  * @experimental
@@ -46,8 +46,26 @@ class Inspector
             $name = $this->filesystemLoader->getFirst($name);
         }
 
-        $blockNames = $this->loadTemplate($name)->getBlockNames();
-        $source = $this->twig->getLoader()->getSourceContext($name);
+        $loader = $this->twig->getLoader();
+
+        try {
+            $source = $loader->getSourceContext($name);
+        } catch (LoaderError) {
+            throw new InspectionException($name, reason: 'The template does not exist.');
+        }
+
+        $error = null;
+
+        try {
+            // Request blocks to trigger loading all parent templates
+            $blockNames = $this->twig->load($name)->getBlockNames();
+        } catch (LoaderError|SyntaxError $e) {
+            // In case of a syntax or loader error we cannot inspect the template
+            return new TemplateInformation($source, error: $e);
+        } catch (RuntimeError $e) {
+            $error = $e;
+            $blockNames = [];
+        }
 
         $data = $this->getData($name);
 
@@ -63,7 +81,7 @@ class Inspector
         sort($blockNames);
         sort($slots);
 
-        return new TemplateInformation($source, $blockNames, $slots, $parent, $uses);
+        return new TemplateInformation($source, $blockNames, $slots, $parent, $uses, $error);
     }
 
     /**
@@ -146,24 +164,20 @@ class Inspector
     {
         yield $data;
 
-        if ($data['parent'] ?? false) {
-            yield from $this->getDataFromAll($this->getData($data['parent']));
-        }
-    }
+        $parent = $data['parent'] ?? '';
 
-    private function loadTemplate(string $name): TemplateWrapper
-    {
-        try {
-            return $this->twig->load($name);
-        } catch (LoaderError|RuntimeError|SyntaxError $e) {
-            throw new InspectionException($name, $e);
+        if (null !== ContaoTwigUtil::parseContaoName($parent)) {
+            yield from $this->getDataFromAll($this->getData($parent));
         }
     }
 
     private function getData(string $templateName): array
     {
         // Make sure the template was compiled
-        $this->twig->load($templateName);
+        try {
+            $this->twig->load($templateName);
+        } catch (LoaderError|RuntimeError|SyntaxError) {
+        }
 
         $cache = $this->cachePool->getItem(self::CACHE_KEY)->get();
 
@@ -178,7 +192,7 @@ class Inspector
         }
 
         // Rebuild cache if path was not found
-        foreach ($this->filesystemLoader->getInheritanceChains() as $chain) {
+        foreach ($this->filesystemLoader->getInheritanceChains(true) as $chain) {
             foreach ($chain as $path => $name) {
                 $this->pathByTemplateName[$name] = $path;
             }

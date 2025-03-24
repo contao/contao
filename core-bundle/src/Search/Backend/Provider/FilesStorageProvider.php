@@ -20,6 +20,7 @@ use Contao\CoreBundle\Search\Backend\Document;
 use Contao\CoreBundle\Search\Backend\Hit;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 /**
@@ -35,6 +36,8 @@ class FilesStorageProvider implements ProviderInterface
         private readonly VirtualFilesystem $filesStorage,
         Security $security,
         private readonly Studio $studio,
+        private readonly RouterInterface $router,
+        private readonly string $uploadPath,
     ) {
         $this->permissionCheckingFilesStorage = new PermissionCheckingVirtualFilesystem(
             $this->filesStorage, $security,
@@ -94,9 +97,18 @@ class FilesStorageProvider implements ProviderInterface
             return null;
         }
 
-        // TODO: service for view and edit URLs
-        $viewUrl = 'https://todo.com?view='.$document->getId();
-        $editUrl = 'https://todo.com?edit='.$document->getId();
+        $parentFolder = \dirname($document->getId()) ?: '.';
+
+        $viewUrl = $this->router->generate('contao_backend', [
+            'do' => 'files',
+            'fn' => '.' === $parentFolder ? '' : "$this->uploadPath/$parentFolder",
+        ]);
+
+        $editUrl = $this->router->generate('contao_backend', [
+            'do' => 'files',
+            'id' => $this->uploadPath.'/'.$document->getId(),
+            'act' => 'edit',
+        ]);
 
         $hit = (new Hit($document, $item->getName(), $viewUrl))
             ->withEditUrl($editUrl)
@@ -119,10 +131,10 @@ class FilesStorageProvider implements ProviderInterface
         return $hit;
     }
 
-    public function isHitGranted(TokenInterface $token, Hit $hit): bool
+    public function isDocumentGranted(TokenInterface $token, Document $document): bool
     {
         return $this->permissionCheckingFilesStorage->canAccessLocation(
-            $hit->getDocument()->getMetadata()['path'] ?? '',
+            $document->getMetadata()['path'] ?? '',
         );
     }
 }

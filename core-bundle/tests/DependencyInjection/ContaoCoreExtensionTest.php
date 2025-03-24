@@ -32,7 +32,7 @@ use Contao\CoreBundle\Fragment\Reference\FrontendModuleReference;
 use Contao\CoreBundle\Search\Indexer\IndexerInterface;
 use Contao\CoreBundle\Tests\Fixtures\ClassWithMethod;
 use Contao\CoreBundle\Tests\TestCase;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -50,8 +50,6 @@ use Symfony\Component\Security\Http\Firewall;
 
 class ContaoCoreExtensionTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     public function testValidatesTheSymfonyListenerPriorities(): void
     {
         $events = AbstractSessionListener::getSubscribedEvents();
@@ -488,7 +486,7 @@ class ContaoCoreExtensionTest extends TestCase
         $definition = $container->getDefinition('contao.listener.search_index');
 
         $this->assertSame(SearchIndexListener::class, $definition->getClass());
-        $this->assertSame(SearchIndexListener::FEATURE_INDEX, $definition->getArgument(2));
+        $this->assertSame(SearchIndexListener::FEATURE_INDEX, $definition->getArgument('$enabledFeatures'));
     }
 
     public function testRemovesTheSearchIndexListenerIfItIsDisabled(): void
@@ -513,9 +511,7 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($container->has('contao.listener.search_index'));
     }
 
-    /**
-     * @dataProvider provideComposerJsonContent
-     */
+    #[DataProvider('provideComposerJsonContent')]
     public function testSetsTheWebDirFromTheRootComposerJson(array $composerJson, string $expectedWebDir): void
     {
         $container = new ContainerBuilder(
@@ -613,14 +609,19 @@ class ContaoCoreExtensionTest extends TestCase
             ->willReturn($container)
         ;
 
+        $matcher = $this->exactly(3);
+        $expected = [
+            ['upload/path', 'upload/path', 'files'],
+            ['var/backups', 'backups', 'backups'],
+            ['templates', 'user_templates', 'user_templates'],
+        ];
+
         $config
-            ->expects($this->exactly(3))
+            ->expects($matcher)
             ->method('mountLocalAdapter')
-            ->withConsecutive(
-                ['upload/path', 'upload/path', 'files'],
-                ['var/backups', 'backups', 'backups'],
-                ['templates', 'user_templates', 'user_templates'],
-            )
+            ->with($this->callback(
+                static fn (...$args) => $args === $expected[$matcher->numberOfInvocations() - 1],
+            ))
         ;
 
         $dbafsDefinition = $this->createMock(Definition::class);
@@ -712,8 +713,9 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertSame('whatever://search-adapter-you-like', $adapter->getArgument(0));
 
         $this->assertTrue($container->hasDefinition('contao.search.backend'));
-        $backendSearch = $container->getDefinition('contao.search.backend');
-        $this->assertSame('my_backend_search_index', $backendSearch->getArgument('$indexName'));
+        $this->assertTrue($container->hasDefinition('contao.search_backend.engine'));
+        $backendSearchEngine = $container->getDefinition('contao.search_backend.engine');
+        $this->assertSame('my_backend_search_index', $backendSearchEngine->getArgument(1)->getArgument('$indexName'));
     }
 
     public function testCspConfiguration(): void
@@ -1034,9 +1036,7 @@ class ContaoCoreExtensionTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider provideAttributesForMethods
-     */
+    #[DataProvider('provideAttributesForMethods')]
     public function testThrowsExceptionWhenTryingToDeclareTheMethodPropertyOnAMethodAttribute(string $attributeClass): void
     {
         $container = $this->getContainerBuilder();

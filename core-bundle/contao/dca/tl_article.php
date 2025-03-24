@@ -171,7 +171,7 @@ $GLOBALS['TL_DCA']['tl_article'] = array
 		(
 			'inputType'               => 'textarea',
 			'search'                  => true,
-			'eval'                    => array('rte'=>'tinyMCE', 'tl_class'=>'clr'),
+			'eval'                    => array('rte'=>'tinyMCE', 'basicEntities'=>true, 'tl_class'=>'clr'),
 			'sql'                     => "text NULL"
 		),
 		'printable' => array
@@ -308,7 +308,7 @@ class tl_article extends Backend
 
 		$href = System::getContainer()->get('router')->generate('contao_backend_preview', array('page'=>$row['pid'], 'article'=>($row['alias'] ?: $row['id'])));
 
-		return '<a href="' . StringUtil::specialcharsUrl($href) . '" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['view']) . '" target="_blank">' . Image::getHtml($image, '', $attributes) . '</a> ' . $label;
+		return '<a href="' . StringUtil::specialcharsUrl($href) . '" target="_blank">' . Image::getHtml($image, $GLOBALS['TL_LANG']['MSC']['view'], $attributes) . '</a> ' . $label;
 	}
 
 	/**

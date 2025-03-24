@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\EventListener;
 use Contao\CoreBundle\Exception\ResponseException;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Twig\Error\RuntimeError;
 
 /**
@@ -39,10 +40,23 @@ class UnwrapTwigExceptionListener
 
         $previous = $throwable->getPrevious();
 
-        if (!$previous instanceof ResponseException) {
-            return;
+        if ($previous && $this->shouldUnwrap($previous)) {
+            $event->setThrowable($previous);
+        }
+    }
+
+    private function shouldUnwrap(\Throwable $throwable): bool
+    {
+        if ($throwable instanceof ResponseException || $throwable instanceof HttpExceptionInterface) {
+            return true;
         }
 
-        $event->setThrowable($previous);
+        foreach (array_keys(ExceptionConverterListener::MAPPER) as $class) {
+            if (is_a($throwable, $class)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

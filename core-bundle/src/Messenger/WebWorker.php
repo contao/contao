@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Messenger;
 
+use Contao\CoreBundle\Messenger\Message\ScopeAwareMessageInterface;
 use Psr\Cache\CacheItemInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -20,6 +21,7 @@ use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\Messenger\Command\ConsumeMessagesCommand;
+use Symfony\Component\Messenger\Event\WorkerMessageReceivedEvent;
 use Symfony\Component\Messenger\Event\WorkerRunningEvent;
 use Symfony\Component\Messenger\Event\WorkerStartedEvent;
 
@@ -99,6 +101,16 @@ class WebWorker
 
         foreach ($event->getWorker()->getMetadata()->getTransportNames() as $transportName) {
             $this->ping($transportName);
+        }
+    }
+
+    #[AsEventListener]
+    public function onWorkerMessageReceived(WorkerMessageReceivedEvent $event): void
+    {
+        $message = $event->getEnvelope()->getMessage();
+
+        if ($message instanceof ScopeAwareMessageInterface) {
+            $message->setScope($this->webWorkerRunning ? ScopeAwareMessageInterface::SCOPE_WEB : ScopeAwareMessageInterface::SCOPE_CLI);
         }
     }
 

@@ -55,8 +55,6 @@ window.AjaxRequest =
 			console.warn('AjaxRequest.toggleStructure() is deprecated. Please use the stimulus controller instead.');
 		}
 
-		el.blur();
-
 		var item = $(id);
 
 		if (item) {
@@ -154,8 +152,6 @@ window.AjaxRequest =
 			console.warn('AjaxRequest.toggleFileManager() is deprecated. Please use the stimulus controller instead.');
 		}
 
-		el.blur();
-
 		var item = $(id);
 
 		if (item) {
@@ -225,7 +221,6 @@ window.AjaxRequest =
 	 * @param {string} field The field name
 	 */
 	toggleSubpalette: function(el, id, field) {
-		el.blur();
 		var item = $(id);
 
 		if (item) {
@@ -311,38 +306,36 @@ window.AjaxRequest =
 	/**
 	 * Toggle the state of a checkbox field
 	 *
-	 * @param {object}  el      The DOM element
-	 * @param {boolean} rowIcon Whether the row icon should be toggled as well
+	 * @param {object}  el       The DOM element
+	 * @param {boolean} rowIcon  Whether the row icon should be toggled as well
+	 * @param {boolean} iconOnly If only the icon should be toggled (without sending a request)
 	 *
 	 * @returns {boolean}
 	 */
-	toggleField: function(el, rowIcon) {
-		el.blur();
-
+	toggleField: function(el, rowIcon, iconOnly = false) {
 		var img = null,
 			images = $(el).getElements('img'),
 			published = (images[0].get('data-state') == 1),
-			div = el.getParent('div'),
-			next, pa;
+			div, next, pa, title;
 
-		if (rowIcon) {
+		if (rowIcon && !iconOnly) {
 			// Find the icon depending on the view (tree view, list view, parent view)
-			if (div.hasClass('tl_right')) {
+			if ((div = el.closest('.tl_right'))) {
 				img = div.getPrevious('div').getElements('img');
-			} else if (div.hasClass('tl_listing_container')) {
+			} else if ((div = el.closest('.tl_content_right')) && (next = div.getNext('div'))) {
+				if (next.hasClass('cte_type')) {
+					img = next;
+				}
+				if (img === null) { // newsletter recipients
+					img = next.getFirst('div.list_icon');
+				}
+			} else if (el.closest('.tl_listing_container') && el.getParent('tr')) {
 				img = el.getParent('td').getPrevious('td').getFirst('div.list_icon');
 				if (img === null) { // comments
 					img = el.getParent('td').getPrevious('td').getElement('div.cte_type');
 				}
 				if (img === null) { // showColumns
 					img = el.getParent('tr').getFirst('td').getElement('div.list_icon_new');
-				}
-			} else if (next = div.getNext('div')) {
-				if (next.hasClass('cte_type')) {
-					img = next;
-				}
-				if (img === null) { // newsletter recipients
-					img = next.getFirst('div.list_icon');
 				}
 			}
 
@@ -351,7 +344,7 @@ window.AjaxRequest =
 				// Tree view
 				if (!(img instanceof HTMLElement) && img.forEach) {
 					img.forEach((img) => {
-						if (img.nodeName.toLowerCase() == 'img') {
+						if (img instanceof HTMLImageElement) {
 							if (!img.getParent('ul.tl_listing').hasClass('tl_tree_xtnd')) {
 								pa = img.getParent('a');
 
@@ -390,16 +383,33 @@ window.AjaxRequest =
 		images.forEach(function(image) {
 			const newSrc = !published ? image.get('data-icon') : image.get('data-icon-disabled');
 			image.src = (image.src.includes('/') && !newSrc.includes('/')) ? image.src.slice(0, image.src.lastIndexOf('/') + 1) + newSrc : newSrc;
+			image.alt = title = !published ? image.get('data-alt') : image.get('data-alt-disabled');
 			image.set('data-state', !published ? 1 : 0);
 		});
 
 		if (!published && $(el).get('data-title')) {
-			el.title = $(el).get('data-title');
+			el.title = title = $(el).get('data-title');
 		} else if (published && $(el).get('data-title-disabled')) {
-			el.title = $(el).get('data-title-disabled');
+			el.title = title = $(el).get('data-title-disabled');
 		}
 
-		new Request.Contao({'url':el.href, 'followRedirects':false}).get();
+		if (title) {
+			el.childNodes.forEach((child) => {
+				if (child instanceof Text && child.nodeValue.trim()) {
+					child.replaceWith(new Text(title));
+				}
+			});
+		}
+
+		if (!iconOnly) {
+			document.body.querySelectorAll(`a[href="${el.getAttribute('href')}"]`).forEach((clone) => {
+				if (el !== clone) {
+					AjaxRequest.toggleField(clone, rowIcon, true);
+				}
+			});
+
+			new Request.Contao({'url':el.href, 'followRedirects':false}).get();
+		}
 
 		// Return false to stop the click event on link
 		return false;
@@ -414,8 +424,6 @@ window.AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleCheckboxGroup: function(el, id) {
-		el.blur();
-
 		var item = $(id);
 
 		if (item) {
@@ -605,8 +613,14 @@ window.Backend =
 			'draggable': false,
 			'overlayOpacity': .7,
 			'overlayClick': false,
-			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
-			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
+			'onShow': function() {
+				document.body.setStyle('overflow', 'hidden');
+				document.dispatchEvent(new CustomEvent('contao--simple-modal:show'));
+			},
+			'onHide': function() {
+				document.body.setStyle('overflow', 'auto');
+				document.dispatchEvent(new CustomEvent('contao--simple-modal:hide'));
+			}
 		});
 		M.addButton(Contao.lang.cancel, 'btn', function() {
 			if (this.buttons[0].hasClass('btn-disabled')) {
@@ -690,7 +704,8 @@ window.Backend =
 
 		var form = $(el) || el;
 		hidden.inject(form, 'bottom');
-		form.submit();
+		form.noValidate = true;
+		form.requestSubmit();
 	},
 
 	/**
@@ -843,20 +858,25 @@ window.Backend =
 
 		list.addEvent('complete', function(el) {
 			if (!list.active) return;
-			var id, pid, req, href;
+			var id, pid, url = new URL(window.location.href);
+
+			url.searchParams.set('rt', Contao.request_token);
+			url.searchParams.set('act', 'cut');
 
 			if (el.getPrevious('li')) {
 				id = el.get('id').replace(/li_/, '');
 				pid = el.getPrevious('li').get('id').replace(/li_/, '');
-				req = window.location.search.replace(/id=[0-9]*/, 'id=' + id) + '&act=cut&mode=1&pid=' + pid;
-				href = window.location.href.replace(/\?.*$/, '');
-				new Request.Contao({'url':href + req, 'followRedirects':false}).get();
+				url.searchParams.set('id', id);
+				url.searchParams.set('pid', pid);
+				url.searchParams.set('mode', 1);
+				new Request.Contao({'url':url.toString(), 'followRedirects':false}).get();
 			} else if (el.getParent('ul')) {
 				id = el.get('id').replace(/li_/, '');
 				pid = el.getParent('ul').get('id').replace(/ul_/, '');
-				req = window.location.search.replace(/id=[0-9]*/, 'id=' + id) + '&act=cut&mode=2&pid=' + pid;
-				href = window.location.href.replace(/\?.*$/, '');
-				new Request.Contao({'url':href + req, 'followRedirects':false}).get();
+				url.searchParams.set('id', id);
+				url.searchParams.set('pid', pid);
+				url.searchParams.set('mode', 2);
+				new Request.Contao({'url':url.toString(), 'followRedirects':false}).get();
 			}
 		});
 	},
@@ -1655,6 +1675,10 @@ window.Backend =
 				}
 			},
 			clickEvent = function(e) {
+				if (e.target instanceof HTMLAnchorElement || e.target instanceof HTMLButtonElement || e.target instanceof HTMLInputElement || e.target?.closest('a, button, input, .operations')) {
+					return;
+				}
+
 				var input = this.getElement('input[type="checkbox"],input[type="radio"]'),
 					limitToggler = $(e.target).getParent('.limit_toggler');
 

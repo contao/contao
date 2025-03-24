@@ -23,6 +23,7 @@ use Contao\CoreBundle\Security\Voter\DataContainer\FormFieldAccessVoter;
 use Contao\CoreBundle\Security\Voter\DataContainer\PagePermissionVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -65,15 +66,26 @@ class PagePermissionVoterTest extends TestCase
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $result);
     }
 
-    /**
-     * @dataProvider voterProvider
-     */
+    #[DataProvider('voterProvider')]
     public function testVoter(CreateAction|DeleteAction|ReadAction|UpdateAction $subject, array $decisions, bool $accessGranted, array|null $pagemounts = null): void
     {
         $token = $this->mockToken($pagemounts);
-
         $framework = $this->mockContaoFrameworkWithDatabase($pagemounts);
-        $decisionManager = $this->mockAccessDecisionManager($token, $decisions);
+        $decisionManager = $this->createMock(AccessDecisionManagerInterface::class);
+
+        array_unshift($decisions, [['ROLE_ADMIN'], null, false]);
+        array_walk(
+            $decisions,
+            static function (array &$decision) use ($token): void {
+                array_unshift($decision, $token);
+            },
+        );
+
+        $decisionManager
+            ->expects($this->exactly(\count($decisions)))
+            ->method('decide')
+            ->willReturnMap($decisions)
+        ;
 
         $voter = new PagePermissionVoter($framework, $decisionManager);
         $result = $voter->vote($token, $subject, [ContaoCorePermissions::DC_PREFIX.$subject->getDataSource()]);
@@ -87,9 +99,9 @@ class PagePermissionVoterTest extends TestCase
         yield 'Allows new page (1)' => [
             new CreateAction('tl_page'),
             [
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 1],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 1],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 1],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 1, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 1, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 1, true],
             ],
             true,
             [1, 2, 3],
@@ -98,11 +110,11 @@ class PagePermissionVoterTest extends TestCase
         yield 'Allows new page (2)' => [
             new CreateAction('tl_page'),
             [
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 1],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 2],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 3],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 3],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 3],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 1, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 2, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 3, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, true],
             ],
             true,
             [1, 2, 3],
@@ -111,14 +123,14 @@ class PagePermissionVoterTest extends TestCase
         yield 'Allows new page (3)' => [
             new CreateAction('tl_page'),
             [
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 1],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 1],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 2],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 2],
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 2],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 3],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 3],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 3],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 1, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 1, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 2, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 2, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 2, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 3, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, true],
             ],
             true,
             [1, 2, 3],
@@ -127,9 +139,9 @@ class PagePermissionVoterTest extends TestCase
         yield 'Denies new page (1)' => [
             new CreateAction('tl_page'),
             [
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 1],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 2],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 3],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 1, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 2, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, false],
             ],
             false,
             [1, 2, 3],
@@ -138,11 +150,11 @@ class PagePermissionVoterTest extends TestCase
         yield 'Denies new page (2)' => [
             new CreateAction('tl_page'),
             [
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 1],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 2],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 3],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 3],
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 3],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 1, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 2, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 3, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, false],
             ],
             false,
             [1, 2, 3],
@@ -151,13 +163,13 @@ class PagePermissionVoterTest extends TestCase
         yield 'Denies new page (3)' => [
             new CreateAction('tl_page'),
             [
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 1],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 1],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 2],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 2],
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 2],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 3],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 3],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 1, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 1, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 2, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 2, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 2, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 3, false],
             ],
             false,
             [1, 2, 3],
@@ -166,9 +178,9 @@ class PagePermissionVoterTest extends TestCase
         yield 'Allows new article (1)' => [
             new CreateAction('tl_article'),
             [
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 1],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 1],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 1],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 1, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 1, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 1, true],
             ],
             true,
             [1, 2, 3],
@@ -177,11 +189,11 @@ class PagePermissionVoterTest extends TestCase
         yield 'Allows new article (2)' => [
             new CreateAction('tl_article'),
             [
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 1],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 2],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 3],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 3],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 3],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 1, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 2, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 3, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 3, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, true],
             ],
             true,
             [1, 2, 3],
@@ -190,14 +202,14 @@ class PagePermissionVoterTest extends TestCase
         yield 'Allows new article (3)' => [
             new CreateAction('tl_article'),
             [
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 1],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 1],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 2],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 2],
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 2],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 3],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 3],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 3],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 1, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 1, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 2, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 2, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 2, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 3, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 3, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, true],
             ],
             true,
             [1, 2, 3],
@@ -206,9 +218,9 @@ class PagePermissionVoterTest extends TestCase
         yield 'Denies new article (1)' => [
             new CreateAction('tl_article'),
             [
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 1],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 2],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 3],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 1, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 2, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 3, false],
             ],
             false,
             [1, 2, 3],
@@ -217,11 +229,11 @@ class PagePermissionVoterTest extends TestCase
         yield 'Denies new article (2)' => [
             new CreateAction('tl_article'),
             [
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 1],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 2],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 3],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 3],
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 3],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 1, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 2, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 3, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 3, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, false],
             ],
             false,
             [1, 2, 3],
@@ -230,13 +242,13 @@ class PagePermissionVoterTest extends TestCase
         yield 'Denies new article (3)' => [
             new CreateAction('tl_article'),
             [
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 1],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 1],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 2],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 2],
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 2],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 3],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 3],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 1, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 1, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 2, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 2, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 2, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 3, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 3, false],
             ],
             false,
             [1, 2, 3],
@@ -246,11 +258,11 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can copy page if editable and any pagemount is editable (1)' => [
             new CreateAction('tl_page', ['id' => 42]),
             [
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 3],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 3],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 3],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 3, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, true],
             ],
             true,
             [3, 2, 1],
@@ -259,14 +271,14 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can copy page if editable and any pagemount is editable (2)' => [
             new CreateAction('tl_page', ['id' => 42]),
             [
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 3],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 2],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 2],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 1],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 1],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 1],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 2, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 2, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 1, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 1, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 1, true],
             ],
             true,
             [3, 2, 1],
@@ -275,12 +287,12 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can copy page if hierarchy and any pagemount is editable (1)' => [
             new CreateAction('tl_page', ['id' => 42]),
             [
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 42],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 3],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 3],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 3],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 3, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, true],
             ],
             true,
             [3, 2, 1],
@@ -289,15 +301,15 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can copy page if hierarchy and any pagemount is editable (2)' => [
             new CreateAction('tl_page', ['id' => 42]),
             [
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 42],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 3],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 2],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 2],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 1],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 1],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 1],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 2, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 2, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 1, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 1, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 1, true],
             ],
             true,
             [3, 2, 1],
@@ -306,8 +318,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot copy page if not editable' => [
             new CreateAction('tl_page', ['id' => 42]),
             [
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 42],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 42],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, false],
             ],
             false,
         ];
@@ -315,12 +327,12 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot copy page if no pagemounts are allowed' => [
             new CreateAction('tl_page', ['id' => 42]),
             [
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 42],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 3],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 2],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 1],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 2, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 1, false],
             ],
             false,
             [3, 2, 1],
@@ -329,11 +341,11 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can copy article if editable and any pagemount is editable (1)' => [
             new CreateAction('tl_article', ['id' => 21, 'pid' => 42]),
             [
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 42],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 3],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 3],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 3],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 3, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 3, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, true],
             ],
             true,
             [3, 2, 1],
@@ -342,14 +354,14 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can copy article if editable and any pagemount is editable (2)' => [
             new CreateAction('tl_article', ['id' => 21, 'pid' => 42]),
             [
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 42],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 3],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 2],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 2],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 1],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 1],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 1],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 3, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 2, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 2, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 1, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 1, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 1, true],
             ],
             true,
             [3, 2, 1],
@@ -358,12 +370,12 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can copy article if hierarchy and any pagemount is editable (1)' => [
             new CreateAction('tl_article', ['id' => 21, 'pid' => 42]),
             [
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 42],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 3],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 3],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 3],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 3, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 3, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, true],
             ],
             true,
             [3, 2, 1],
@@ -372,15 +384,15 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can copy article if hierarchy and any pagemount is editable (2)' => [
             new CreateAction('tl_article', ['id' => 21, 'pid' => 42]),
             [
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 42],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 3],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 2],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 2],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 1],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 1],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 1],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 3, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 2, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 2, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 1, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 1, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 1, true],
             ],
             true,
             [3, 2, 1],
@@ -389,8 +401,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot copy article if not editable' => [
             new CreateAction('tl_article', ['id' => 21, 'pid' => 42]),
             [
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 42],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 42],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, false],
             ],
             false,
         ];
@@ -398,12 +410,12 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot copy article if no pagemounts are allowed' => [
             new CreateAction('tl_article', ['id' => 21, 'pid' => 42]),
             [
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 42],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 3],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 2],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 1],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 3, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 2, false],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 1, false],
             ],
             false,
             [3, 2, 1],
@@ -413,9 +425,9 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can paste page if parent is allowed' => [
             new CreateAction('tl_page', ['pid' => 42, 'sorting' => 128]),
             [
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 42],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
             ],
             true,
         ];
@@ -423,7 +435,7 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot paste page if parent is not editable' => [
             new CreateAction('tl_page', ['pid' => 42, 'sorting' => 128]),
             [
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, false],
             ],
             false,
         ];
@@ -431,8 +443,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot paste page if parent hierarchy is not editable' => [
             new CreateAction('tl_page', ['pid' => 42, 'sorting' => 128]),
             [
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 42],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 42],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, false],
             ],
             false,
         ];
@@ -440,9 +452,9 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot paste page if parent is not allowed' => [
             new CreateAction('tl_page', ['pid' => 42, 'sorting' => 128]),
             [
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 42],
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, false],
             ],
             false,
         ];
@@ -450,9 +462,9 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can paste article if parent is allowed' => [
             new CreateAction('tl_article', ['pid' => 42, 'sorting' => 128]),
             [
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 42],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
             ],
             true,
         ];
@@ -460,7 +472,7 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot paste article if parent is not editable' => [
             new CreateAction('tl_article', ['pid' => 42, 'sorting' => 128]),
             [
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 42],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, false],
             ],
             false,
         ];
@@ -468,8 +480,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot paste article if parent hierarchy is not editable' => [
             new CreateAction('tl_article', ['pid' => 42, 'sorting' => 128]),
             [
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 42],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 42],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, false],
             ],
             false,
         ];
@@ -477,9 +489,9 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot paste article if parent is not allowed' => [
             new CreateAction('tl_article', ['pid' => 42, 'sorting' => 128]),
             [
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 42],
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, false],
             ],
             false,
         ];
@@ -488,7 +500,7 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can read page' => [
             new ReadAction('tl_page', ['id' => 42]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
             ],
             true,
         ];
@@ -496,7 +508,7 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot read page' => [
             new ReadAction('tl_page', ['id' => 42]),
             [
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, false],
             ],
             false,
         ];
@@ -504,7 +516,7 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can read article' => [
             new ReadAction('tl_article', ['pid' => 42]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
             ],
             true,
         ];
@@ -512,7 +524,7 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot read article' => [
             new ReadAction('tl_article', ['pid' => 42]),
             [
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, false],
             ],
             false,
         ];
@@ -521,8 +533,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Edit page operation is enabled' => [
             new UpdateAction('tl_page', ['id' => 42]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, true],
             ],
             true,
         ];
@@ -530,7 +542,7 @@ class PagePermissionVoterTest extends TestCase
         yield 'Edit page operation is disabled if not in pagemounts' => [
             new UpdateAction('tl_page', ['id' => 42]),
             [
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, false],
             ],
             false,
         ];
@@ -538,8 +550,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Edit page operation is disabled if permission is not given' => [
             new UpdateAction('tl_page', ['id' => 42]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, false],
             ],
             false,
         ];
@@ -547,8 +559,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Edit article operation is enabled' => [
             new UpdateAction('tl_article', ['pid' => 42]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, true],
             ],
             true,
         ];
@@ -556,7 +568,7 @@ class PagePermissionVoterTest extends TestCase
         yield 'Edit article operation is disabled if parent page is not in pagemounts' => [
             new UpdateAction('tl_article', ['pid' => 42]),
             [
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, false],
             ],
             false,
         ];
@@ -564,8 +576,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Edit article operation is disabled if permission is not given' => [
             new UpdateAction('tl_article', ['pid' => 42]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, false],
             ],
             false,
         ];
@@ -574,8 +586,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can move page' => [
             new UpdateAction('tl_page', ['id' => 42], ['sorting' => 128]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
             ],
             true,
         ];
@@ -583,7 +595,7 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot move page if not in pagemounts' => [
             new UpdateAction('tl_page', ['id' => 42], ['sorting' => 128]),
             [
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, false],
             ],
             false,
         ];
@@ -591,8 +603,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot move page if hierarchy cannot be changed' => [
             new UpdateAction('tl_page', ['id' => 42], ['sorting' => 128]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, false],
             ],
             false,
         ];
@@ -600,8 +612,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can move article' => [
             new UpdateAction('tl_article', ['pid' => 42], ['sorting' => 128]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, true],
             ],
             true,
         ];
@@ -609,7 +621,7 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot move article if parent page is not in pagemounts' => [
             new UpdateAction('tl_article', ['pid' => 42], ['sorting' => 128]),
             [
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, false],
             ],
             false,
         ];
@@ -617,8 +629,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot move article if hierarchy cannot be changed' => [
             new UpdateAction('tl_article', ['pid' => 42], ['sorting' => 128]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, false],
             ],
             false,
         ];
@@ -626,10 +638,10 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can move page to new parent' => [
             new UpdateAction('tl_page', ['id' => 42], ['pid' => 21, 'sorting' => 128]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 42],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 21],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 21],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 21, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 21, true],
             ],
             true,
         ];
@@ -637,7 +649,7 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot move page to new parent if current is not in pagemounts' => [
             new UpdateAction('tl_page', ['id' => 42], ['pid' => 21, 'sorting' => 128]),
             [
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, false],
             ],
             false,
         ];
@@ -645,8 +657,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot move page to new parent if current hierarchy cannot be changed' => [
             new UpdateAction('tl_page', ['id' => 42], ['pid' => 21, 'sorting' => 128]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, false],
             ],
             false,
         ];
@@ -654,9 +666,9 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot move page to new parent if new is not in pagemounts' => [
             new UpdateAction('tl_page', ['id' => 42], ['pid' => 21, 'sorting' => 128]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 42],
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 21],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 21, false],
             ],
             false,
         ];
@@ -664,10 +676,10 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot move page to new parent if new hierarchy cannot be changed' => [
             new UpdateAction('tl_page', ['id' => 42], ['pid' => 21, 'sorting' => 128]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 42],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 21],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 21],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 21, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 21, false],
             ],
             false,
         ];
@@ -675,10 +687,10 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can move article to new parent' => [
             new UpdateAction('tl_article', ['pid' => 42], ['pid' => 21, 'sorting' => 128]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 42],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 21],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 21],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 21, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 21, true],
             ],
             true,
         ];
@@ -686,7 +698,7 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot move article to new parent if current parent page is not in pagemounts' => [
             new UpdateAction('tl_article', ['pid' => 42], ['pid' => 21, 'sorting' => 128]),
             [
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, false],
             ],
             false,
         ];
@@ -694,8 +706,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot move article to new parent if current hierarchy cannot be changed' => [
             new UpdateAction('tl_article', ['pid' => 42], ['pid' => 21, 'sorting' => 128]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, false],
             ],
             false,
         ];
@@ -703,9 +715,9 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot move article to new parent if new parent page is not in pagemounts' => [
             new UpdateAction('tl_article', ['pid' => 42], ['pid' => 21, 'sorting' => 128]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 42],
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 21],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 21, false],
             ],
             false,
         ];
@@ -713,10 +725,10 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot move article to new parent if new hierarchy cannot be changed' => [
             new UpdateAction('tl_article', ['pid' => 42], ['pid' => 21, 'sorting' => 128]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 42],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 21],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY, 21],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 21, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 21, false],
             ],
             false,
         ];
@@ -725,8 +737,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can edit page' => [
             new UpdateAction('tl_page', ['id' => 42], ['foo' => 'bar']),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, true],
             ],
             true,
         ];
@@ -734,7 +746,7 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot edit page if not in pagemounts' => [
             new UpdateAction('tl_page', ['id' => 42], ['foo' => 'bar']),
             [
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, false],
             ],
             false,
         ];
@@ -742,8 +754,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot edit page if permission is not given' => [
             new UpdateAction('tl_page', ['id' => 42], ['foo' => 'bar']),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, false],
             ],
             false,
         ];
@@ -751,8 +763,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can edit article' => [
             new UpdateAction('tl_article', ['pid' => 42], ['foo' => 'bar']),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, true],
             ],
             true,
         ];
@@ -760,7 +772,7 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot edit article if parent page is not in pagemounts' => [
             new UpdateAction('tl_article', ['pid' => 42], ['foo' => 'bar']),
             [
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, false],
             ],
             false,
         ];
@@ -768,8 +780,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot edit article if permission is not given' => [
             new UpdateAction('tl_article', ['pid' => 42], ['foo' => 'bar']),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [false, ContaoCorePermissions::USER_CAN_EDIT_ARTICLES, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, false],
             ],
             false,
         ];
@@ -778,8 +790,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can delete page' => [
             new DeleteAction('tl_page', ['id' => 42]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_DELETE_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_DELETE_PAGE], 42, true],
             ],
             true,
         ];
@@ -787,7 +799,7 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot delete page if not in pagemounts' => [
             new DeleteAction('tl_page', ['id' => 42]),
             [
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, false],
             ],
             false,
         ];
@@ -795,8 +807,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot delete page if permission is not given' => [
             new DeleteAction('tl_page', ['id' => 42]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [false, ContaoCorePermissions::USER_CAN_DELETE_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_DELETE_PAGE], 42, false],
             ],
             false,
         ];
@@ -804,8 +816,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can delete article' => [
             new DeleteAction('tl_article', ['pid' => 42]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_DELETE_ARTICLES, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_DELETE_ARTICLES], 42, true],
             ],
             true,
         ];
@@ -813,7 +825,7 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot delete article if parent page is not in pagemounts' => [
             new DeleteAction('tl_article', ['pid' => 42]),
             [
-                [false, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, false],
             ],
             false,
         ];
@@ -821,8 +833,8 @@ class PagePermissionVoterTest extends TestCase
         yield 'Cannot delete article if permission is not given' => [
             new DeleteAction('tl_article', ['pid' => 42]),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [false, ContaoCorePermissions::USER_CAN_DELETE_ARTICLES, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_DELETE_ARTICLES], 42, false],
             ],
             false,
         ];
@@ -831,11 +843,11 @@ class PagePermissionVoterTest extends TestCase
         yield 'Can move and edit page' => [
             new UpdateAction('tl_page', ['id' => 42], ['pid' => 21, 'sorting' => 128, 'foo' => 'bar']),
             [
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 42],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 42],
-                [true, ContaoCorePermissions::USER_CAN_ACCESS_PAGE, 21],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY, 21],
-                [true, ContaoCorePermissions::USER_CAN_EDIT_PAGE, 42],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 21, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 21, true],
+                [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, true],
             ],
             true,
         ];
@@ -882,24 +894,5 @@ class PagePermissionVoterTest extends TestCase
         }
 
         return $this->mockContaoFramework([], [Database::class => $database]);
-    }
-
-    private function mockAccessDecisionManager(TokenInterface $token, array $decisions): AccessDecisionManagerInterface&MockObject
-    {
-        $decisionManager = $this->createMock(AccessDecisionManagerInterface::class);
-
-        array_unshift($decisions, [false, 'ROLE_ADMIN']);
-
-        $with = array_map(static fn ($decision) => isset($decision[2]) ? [$token, [$decision[1]], $decision[2]] : [$token, [$decision[1]]], $decisions);
-        $return = array_column($decisions, 0);
-
-        $decisionManager
-            ->expects($this->exactly(\count($decisions)))
-            ->method('decide')
-            ->withConsecutive(...$with)
-            ->willReturnOnConsecutiveCalls(...$return)
-        ;
-
-        return $decisionManager;
     }
 }

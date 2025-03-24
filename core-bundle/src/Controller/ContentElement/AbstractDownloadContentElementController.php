@@ -128,12 +128,11 @@ abstract class AbstractDownloadContentElementController extends AbstractContentE
         // TODO: Use an exclusive route once we have a strategy how to handle permissions
         // for it. Right now we use the current route and then throw a ResponseException
         // to initiate the download.
-        $currentUrl = $request->getSchemeAndHttpHost().$request->getBaseUrl().$request->getPathInfo();
         $context = ['id' => $model->id];
 
         return $inline
-            ? $this->container->get('contao.filesystem.file_download_helper')->generateInlineUrl($currentUrl, $path, $context)
-            : $this->container->get('contao.filesystem.file_download_helper')->generateDownloadUrl($currentUrl, $path, $filesystemItem->getName(), $context);
+            ? $this->container->get('contao.filesystem.file_download_helper')->generateInlineUrl($request->getUri(), $path, $context)
+            : $this->container->get('contao.filesystem.file_download_helper')->generateDownloadUrl($request->getUri(), $path, $filesystemItem->getName(), $context);
     }
 
     /**

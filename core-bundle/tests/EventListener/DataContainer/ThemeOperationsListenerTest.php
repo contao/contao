@@ -17,13 +17,12 @@ use Contao\CoreBundle\EventListener\DataContainer\ThemeOperationsListener;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class ThemeOperationsListenerTest extends TestCase
 {
-    /**
-     * @dataProvider themeOperationsProvider
-     */
+    #[DataProvider('themeOperationsProvider')]
     public function testThemeOperations(string|null $href, string|null $attribute, bool $isGranted): void
     {
         $security = $this->createMock(Security::class);
