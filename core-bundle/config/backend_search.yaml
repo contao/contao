@@ -2,16 +2,13 @@ services:
     _defaults:
         autoconfigure: true
 
-    _instanceof:
-        Symfony\Bundle\FrameworkBundle\Controller\AbstractController:
-            calls:
-                - [setContainer, ['@Psr\Container\ContainerInterface']]
-
     Contao\CoreBundle\Controller\BackendSearchController:
         public: true
         arguments:
             - '@security.helper'
             - '@contao.search.backend'
+        calls:
+            - [setContainer, ['@Psr\Container\ContainerInterface']]
 
     contao.messenger.backend_search.delete_documents_message_handler:
         class: Contao\CoreBundle\Messenger\MessageHandler\BackendSearch\DeleteDocumentsMessageHandler
