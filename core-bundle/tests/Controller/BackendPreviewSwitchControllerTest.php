@@ -33,6 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
+use Twig\Loader\LoaderInterface;
 
 class BackendPreviewSwitchControllerTest extends TestCase
 {
@@ -60,14 +61,30 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $this->assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 
-    public function testRendersToolbar(): void
+    /**
+     * @dataProvider providePreviewToolbarTemplateScenarios
+     */
+    public function testRendersToolbar(bool $legacyTemplateExists, string $expectedTemplate): void
     {
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->method('exists')
+            ->with('@ContaoCore/Frontend/preview_toolbar_base.html.twig')
+            ->willReturn($legacyTemplateExists)
+        ;
+
+        $twig = $this->getTwigMock();
+        $twig
+            ->method('getLoader')
+            ->willReturn($loader)
+        ;
+
         $controller = new BackendPreviewSwitchController(
             $this->mockFrontendPreviewAuthenticator(),
             $this->mockTokenChecker(),
             $this->createMock(Connection::class),
             $this->mockSecurity(),
-            $this->getTwigMock(),
+            $twig,
             $this->mockRouter(),
             $this->mockTokenManager(),
             $this->mockTranslator(),
@@ -88,7 +105,14 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertSame('CONTAO', $response->getContent());
+        $this->assertSame($expectedTemplate, $response->getContent());
+    }
+
+    public static function providePreviewToolbarTemplateScenarios(): iterable
+    {
+        yield 'legacy template' => [true, '@ContaoCore/Frontend/preview_toolbar_base.html.twig'];
+
+        yield 'modern template' => [false, '@Contao/frontend_preview/toolbar.html.twig'];
     }
 
     public function testAddsShareLinkToToolbar(): void
@@ -379,7 +403,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $twig = $this->createMock(Environment::class);
         $twig
             ->method('render')
-            ->willReturn('CONTAO')
+            ->willReturnArgument(0)
         ;
 
         return $twig;

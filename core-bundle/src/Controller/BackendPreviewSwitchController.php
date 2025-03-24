@@ -96,8 +96,13 @@ class BackendPreviewSwitchController
             ]);
         }
 
+        // Backwards compatibility: render the legacy bundle template if it exists
+        $template = $this->twig->getLoader()->exists('@ContaoCore/Frontend/preview_toolbar_base.html.twig')
+            ? '@ContaoCore/Frontend/preview_toolbar_base.html.twig'
+            : '@Contao/frontend_preview/toolbar.html.twig';
+
         try {
-            return $this->twig->render('@ContaoCore/Frontend/preview_toolbar_base.html.twig', [
+            return $this->twig->render($template, [
                 'request_token' => $this->tokenManager->getDefaultTokenValue(),
                 'action' => $this->router->generate('contao_backend_switch'),
                 'canSwitchUser' => $canSwitchUser,
