@@ -228,8 +228,7 @@ class StringUtil
 	 */
 	public static function convertBasicEntities($strBuffer)
 	{
-		$replace = static function (&$value)
-		{
+		$replace = static function (&$value) {
 			if (\is_string($value))
 			{
 				$value = str_replace(array('&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;'), array('[&]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]'), $value);
@@ -257,8 +256,7 @@ class StringUtil
 	 */
 	public static function restoreBasicEntities($strBuffer)
 	{
-		$replace = static function (&$value)
-		{
+		$replace = static function (&$value) {
 			if (\is_string($value))
 			{
 				$value = str_replace(array('[&]', '[&amp;]', '[lt]', '[gt]', '[nbsp]', '[-]', '[zwsp]'), array('&amp;', '&amp;', '&lt;', '&gt;', '&nbsp;', '&shy;', '&ZeroWidthSpace;'), $value);

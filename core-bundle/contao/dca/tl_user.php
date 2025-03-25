@@ -22,7 +22,7 @@ use Contao\Input;
 use Contao\Message;
 use Contao\StringUtil;
 use Contao\System;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_user'] = array
 (
@@ -352,7 +352,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			'input_field_callback'    => array('tl_user', 'sessionField'),
 			'options'                 => array('purge_session', 'purge_images', 'purge_previews', 'purge_pages'),
 			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
-			'sql'                     => array('type' => 'blob', 'length' => MySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull' => false)
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull' => false)
 		),
 		'dateAdded' => array
 		(
