@@ -631,7 +631,7 @@ class tl_user extends Backend
 
 		foreach ($allowedOperations as $i => $operation)
 		{
-			$operations[] = sprintf('<span><input type="checkbox" name="purge[]" id="opt_purge_%d" class="tl_checkbox" value="%s" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_%d">%s</label></span>',
+			$operations[] = sprintf('<input type="checkbox" name="purge[]" id="opt_purge_%d" class="tl_checkbox" value="%s" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_%d">%s</label>',
 				$i,
 				$operation,
 				$i,
@@ -645,7 +645,7 @@ class tl_user extends Backend
 <div class="widget">
   <fieldset class="tl_checkbox_container">
     <legend>' . $GLOBALS['TL_LANG']['tl_user']['session'][0] . '</legend>
-    <span><input type="checkbox" id="check_all_purge" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this, \'ctrl_purge\')"> <label for="check_all_purge" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label><br>
+    <input type="checkbox" id="check_all_purge" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this, \'ctrl_purge\')"> <label for="check_all_purge" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label><br>
     ' . $operations . '
   </fieldset>' . $dc->help() . '
 </div>';
