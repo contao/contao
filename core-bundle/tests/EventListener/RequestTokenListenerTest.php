@@ -356,6 +356,7 @@ class RequestTokenListenerTest extends TestCase
             'text plain with ISO' => ['text/plain; charset=ISO-8859-1'],
             'text plain flowed' => ['text/plain; format=flowed'],
             'text plain UTF-8 flowed' => ['text/plain; charset=UTF-8; format=flowed'],
+            'text plain uppercase' => ['TEXT/PLAIN'],
         ];
     }
 

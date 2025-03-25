@@ -81,7 +81,7 @@ class RequestTokenListener
         $contentType = HeaderUtils::split($request->headers->get('content-type'), ';')[0] ?? '';
 
         return \in_array(
-            $contentType,
+            strtolower($contentType),
             [
                 'application/x-www-form-urlencoded',
                 'multipart/form-data',
