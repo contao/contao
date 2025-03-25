@@ -238,7 +238,7 @@ class Form extends Hybrid
 				}
 
 				$objWidget = new $strClass($arrData);
-				$objWidget->required = $objField->mandatory ? true : false;
+				$objWidget->required = $objField->mandatory;
 
 				// HOOK: load form field callback
 				if (isset($GLOBALS['TL_HOOKS']['loadFormField']) && \is_array($GLOBALS['TL_HOOKS']['loadFormField']))
