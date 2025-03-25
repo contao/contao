@@ -623,4 +623,78 @@ class StringUtilTest extends TestCase
             StringUtil::insertTagToSrc('Foo <img src="{{file::##simple-token##|urlattr}}" /> Bar'),
         );
     }
+
+    /**
+     * @dataProvider basicEntitiesProvider
+     */
+    public function testConvertsBasicEntities(array|string $htmlEntities, array|string $basicEntities): void
+    {
+        $this->assertSame($basicEntities, StringUtil::convertBasicEntities($htmlEntities));
+        $this->assertSame($htmlEntities, StringUtil::restoreBasicEntities($basicEntities));
+    }
+
+    public static function basicEntitiesProvider(): iterable
+    {
+        yield 'String value' => [
+            'foo&amp;bar',
+            'foo[&]bar',
+        ];
+
+        yield 'InputUnit field' => [
+            [
+                'unit' => 'h2',
+                'value' => '&lt;strong&gt;',
+            ],
+            [
+                'unit' => 'h2',
+                'value' => '[lt]strong[gt]',
+            ],
+        ];
+
+        yield 'KeyValue wizard' => [
+            [
+                [
+                    'key' => 'sum',
+                    'value' => '10&nbsp;€',
+                ],
+                [
+                    'key' => 'name',
+                    'value' => 'Con&shy;tao',
+                ],
+            ],
+            [
+                [
+                    'key' => 'sum',
+                    'value' => '10[nbsp]€',
+                ],
+                [
+                    'key' => 'name',
+                    'value' => 'Con[-]tao',
+                ],
+            ],
+        ];
+
+        yield 'Non-string values' => [
+            [
+                [
+                    'key' => 'sum',
+                    'value' => 42,
+                ],
+                [
+                    'key' => 'name',
+                    'value' => true,
+                ],
+            ],
+            [
+                [
+                    'key' => 'sum',
+                    'value' => 42,
+                ],
+                [
+                    'key' => 'name',
+                    'value' => true,
+                ],
+            ],
+        ];
+    }
 }

@@ -2905,7 +2905,6 @@ fieldset:is(.tl_tbox,.tl_box) > legend {
 	color: var(--legend);
 	padding: 9px 12px 9px 28px;
 	background: url("icons/navcol.svg") 13px 10px no-repeat;
-	width: 100%;
 }
 
 fieldset:is(.tl_tbox,.tl_box) > legend[onclick] {
@@ -2920,7 +2919,6 @@ fieldset:is(.tl_tbox,.tl_box) > legend:has(> button) {
 fieldset:is(.tl_tbox,.tl_box) > legend > button {
 	text-align: initial;
 	border: 0 none;
-	width: 100%;
 	line-height: inherit;
 	box-sizing: border-box;
 	padding: 9px 12px 9px 28px;
