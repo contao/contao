@@ -586,10 +586,12 @@ class tl_user extends Backend
 
 		if (Input::post('FORM_SUBMIT') == 'tl_user')
 		{
-			$arrPurge = array_values(array_intersect(Input::post('purge'), $allowedOperations));
+			$arrPurge = Input::post('purge');
 
 			if (is_array($arrPurge))
 			{
+				$arrPurge = array_values(array_intersect($arrPurge, $allowedOperations));
+
 				$automator = new Automator();
 
 				if (in_array('purge_session', $arrPurge))
