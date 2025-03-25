@@ -350,7 +350,8 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'session' => array
 		(
 			'input_field_callback'    => array('tl_user', 'sessionField'),
-			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true, 'operations' => array('purge_session', 'purge_images', 'purge_previews', 'purge_pages')),
+			'options' 				  => array('purge_session', 'purge_images', 'purge_previews', 'purge_pages'),
+			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
 			'sql'                     => array('type' => 'blob', 'length' => MySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull' => false)
 		),
 		'dateAdded' => array
@@ -582,7 +583,7 @@ class tl_user extends Backend
 	 */
 	public function sessionField(DataContainer $dc)
 	{
-		$allowedOperations = $GLOBALS['TL_DCA']['tl_user']['fields']['session']['eval']['operations'] ?? array();
+		$allowedOperations = $GLOBALS['TL_DCA']['tl_user']['fields']['session']['options'] ?? array();
 
 		if (Input::post('FORM_SUBMIT') == 'tl_user')
 		{
