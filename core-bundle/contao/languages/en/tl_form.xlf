@@ -204,7 +204,7 @@
         <source>Define the available tables in the following DCA configuration: &lt;code&gt;%s&lt;/code&gt;.</source>
       </trans-unit>
       <trans-unit id="tl_form.storeSession.0">
-        <source>Store data in session</source>
+        <source>Store data in the session</source>
       </trans-unit>
       <trans-unit id="tl_form.storeSession.1">
         <source>Store the submitted data in the session so that they can be retrieved via the &lt;code&gt;{{form_session_data::*}}&lt;/code&gt; insert tag.</source>
