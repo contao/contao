@@ -2,6 +2,11 @@ services:
     _defaults:
         autoconfigure: true
 
+    _instanceof:
+        Symfony\Bundle\FrameworkBundle\Controller\AbstractController:
+            calls:
+                - [setContainer, ['@Psr\Container\ContainerInterface']]
+
     Contao\CoreBundle\Controller\BackendTemplateStudioController:
         arguments:
             - '@contao.twig.filesystem_loader'
@@ -12,8 +17,6 @@ services:
             - '@contao.twig.studio.autocomplete'
             - '@database_connection'
             - !tagged_iterator { tag: contao.operation.template_studio_element, index_by: name }
-        calls:
-            - [setContainer, ['@Psr\Container\ContainerInterface']]
 
     contao.twig.studio.autocomplete:
         class: Contao\CoreBundle\Twig\Studio\Autocomplete
