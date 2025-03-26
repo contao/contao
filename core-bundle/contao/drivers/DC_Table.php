@@ -3952,7 +3952,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if ($table == 'tl_page')
 		{
 			$objParent = PageModel::findWithDetails($id);
-			$blnProtected = $objParent->protected ? true : false;
+			$blnProtected = $objParent->protected;
 		}
 
 		$margin = $level * 16;
