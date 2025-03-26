@@ -596,19 +596,16 @@ abstract class DataContainer extends Backend
 
 			$wizard .= ' ' . Image::getHtml('assets/datepicker/images/icon.svg', $GLOBALS['TL_LANG']['MSC']['datepicker'], 'id="toggle_' . $objWidget->id . '" style="cursor:pointer" data-contao--tooltips-target="tooltip"') . '
   <script>
-    (function(){
-      if (!window.Picker) return;
-      new Picker.Date($("ctrl_' . $objWidget->id . '"), {
-        draggable: false,
-        toggle: $("toggle_' . $objWidget->id . '"),
-        format: "' . $format . '",
-        positionOffset: {x:-211,y:-209}' . $time . ',
-        pickerClass: "datepicker_bootstrap",
-        useFadeInOut: !Browser.ie' . $strOnSelect . ',
-        startDay: ' . $GLOBALS['TL_LANG']['MSC']['weekOffset'] . ',
-        titleFormat: "' . $GLOBALS['TL_LANG']['MSC']['titleFormat'] . '"
-      });
-    })();
+    new Picker.Date($("ctrl_' . $objWidget->id . '"), {
+      draggable: false,
+      toggle: $("toggle_' . $objWidget->id . '"),
+      format: "' . $format . '",
+      positionOffset: {x:-211,y:-209}' . $time . ',
+      pickerClass: "datepicker_bootstrap",
+      useFadeInOut: !Browser.ie' . $strOnSelect . ',
+      startDay: ' . $GLOBALS['TL_LANG']['MSC']['weekOffset'] . ',
+      titleFormat: "' . $GLOBALS['TL_LANG']['MSC']['titleFormat'] . '"
+    });
   </script>';
 		}
 
