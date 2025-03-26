@@ -219,7 +219,7 @@ class ImageSize extends Widget
 		}
 
 		$arrFields[] = \sprintf(
-			'<select name="%s[2]" id="ctrl_%s" class="tl_select_interval" data-contao--image-size-target="select" data-action="focus->contao--scroll-offset#store change->contao--image-size#updateWizard"%s>%s</select>',
+			'<select name="%s[2]" id="ctrl_%s" class="tl_select_interval" data-contao--image-size-target="select" data-action="focus->contao--scroll-offset#store change->contao--image-size#update"%s>%s</select>',
 			$this->strName,
 			$this->strId . '_3',
 			$this->getAttribute('disabled'),
@@ -229,7 +229,7 @@ class ImageSize extends Widget
 		for ($i=0; $i<2; $i++)
 		{
 			$arrFields[] = \sprintf(
-				'<input type="text" name="%s[%s]" id="ctrl_%s" class="tl_text_4 tl_imageSize_%s" value="%s"%s data-action="focus->contao--scroll-offset#store">',
+				'<input type="text" name="%s[%s]" id="ctrl_%s" class="tl_text_4 tl_imageSize_%s" value="%s"%s data-action="focus->contao--scroll-offset#store" data-contao--image-size-target="input">',
 				$this->strName,
 				$i,
 				$this->strId . '_' . $i,

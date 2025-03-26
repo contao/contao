@@ -1627,6 +1627,10 @@ window.Backend =
 	 * Update the fields of the imageSize widget upon change
 	 */
 	enableImageSizeWidgets: function() {
+		if (window.console) {
+			console.warn('Backend.enableImageSizeWidgets() is deprecated. Please use the stimulus controller instead.');
+		}
+
 		$$('.tl_image_size').each(function(el) {
 			var select = el.getElement('select'),
 				widthInput = el.getChildren('input')[0],
@@ -2268,7 +2272,6 @@ window.addEvent('domready', function() {
 	}
 
 	Backend.tableWizardSetWidth();
-	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
 
 	Theme.stopClickPropagation();
@@ -2284,7 +2287,6 @@ window.addEvent('resize', function() {
 
 // Re-apply certain changes upon ajax_change
 window.addEvent('ajax_change', function() {
-	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
 
 	Theme.stopClickPropagation();
