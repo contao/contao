@@ -49,8 +49,8 @@ const mooDomready = () => {
     if (!document.body.mooDomreadyFired) {
         document.body.mooDomreadyFired = true;
 
-        if (document.body.removeEvents) {
-            document.body.removeEvents();
+        if (Element.Events.removeEvents) {
+            Element.Events.removeEvents();
         }
 
         window.fireEvent('domready');
