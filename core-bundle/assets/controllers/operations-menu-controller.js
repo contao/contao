@@ -31,12 +31,8 @@ export default class OperationsMenuController extends Controller {
     }
 
     disconnect() {
-        if (window.AccessibleMenu === undefined) {
-            return;
-        }
-
         // Cleanup menu instance, otherwise we would leak memory
-        for (const [key, value] of Object.entries(window.AccessibleMenu.menus)) {
+        for (const [key, value] of Object.entries(window.AccessibleMenu?.menus ?? {})) {
             if (value === this.$menu) {
                 delete window.AccessibleMenu.menus[key];
             }
