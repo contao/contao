@@ -2283,4 +2283,6 @@ window.addEvent('ajax_change', function() {
 
 	Theme.stopClickPropagation();
 	Theme.setupTextareaResizing();
+	Theme.setupMenuToggle();
+	Theme.setupSplitButtonToggle();
 });

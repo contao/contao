@@ -44,21 +44,17 @@ document.documentElement.addEventListener('turbo:before-prefetch', e => {
     }
 });
 
-// Make the MooTools scripts reinitialize themselves
-const mooDomready = () => {
-    if (!document.body.mooDomreadyFired) {
-        document.body.mooDomreadyFired = true;
+// Fire the "ajax_change" event
+const ajaxChange = () => {
+    if (!document.body.ajaxChangeFired) {
+        document.body.ajaxChangeFired = true;
 
-        if (window.removeEvents) {
-            window.removeEvents();
-        }
-
-        window.fireEvent('domready');
+        window.fireEvent('ajax_change');
     }
 }
 
-document.documentElement.addEventListener('turbo:render', mooDomready);
-document.documentElement.addEventListener('turbo:frame-render', mooDomready);
+document.documentElement.addEventListener('turbo:render', ajaxChange);
+document.documentElement.addEventListener('turbo:frame-render', ajaxChange);
 
 // Always break out of a missing frame (#7501)
 document.documentElement.addEventListener('turbo:frame-missing', (e) => {
