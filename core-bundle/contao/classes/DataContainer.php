@@ -596,7 +596,8 @@ abstract class DataContainer extends Backend
 
 			$wizard .= ' ' . Image::getHtml('assets/datepicker/images/icon.svg', $GLOBALS['TL_LANG']['MSC']['datepicker'], 'id="toggle_' . $objWidget->id . '" style="cursor:pointer" data-contao--tooltips-target="tooltip"') . '
   <script>
-    window.addEvent("domready", function() {
+    (function(){
+      if (!window.Picker) return;
       new Picker.Date($("ctrl_' . $objWidget->id . '"), {
         draggable: false,
         toggle: $("toggle_' . $objWidget->id . '"),
@@ -607,7 +608,7 @@ abstract class DataContainer extends Backend
         startDay: ' . $GLOBALS['TL_LANG']['MSC']['weekOffset'] . ',
         titleFormat: "' . $GLOBALS['TL_LANG']['MSC']['titleFormat'] . '"
       });
-    });
+    })();
   </script>';
 		}
 
