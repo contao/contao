@@ -34,13 +34,13 @@
     {% set download = download|default(_context) %}
 
     {# Derive title and link text if not explicitly set #}
-    {% set title = download.title|default(download.file.extraMetadata.localized.default.title|default(download.file.name)) %}
+    {% set title = download.title|default(download.file.extraMetadata.localized.default.title|default('MSC.download'|trans([download.file.name]))) %}
     {% set text = download.text|default(title) %}
 
     {% block download_link %}
         {% set download_link_attributes = attrs(download.link_attributes|default)
             .set('href', download.href)
-            .set('title','MSC.download'|trans([title]))
+            .set('title', title)
             .setIfExists('type', download.file.mimeType(''))
             .mergeWith(download_link_attributes|default)
         %}
