@@ -22,11 +22,11 @@ class ContaoPageSchema extends BaseType
      *
      * @param array<int> $groups
      */
-    public function __construct(string $title, int $pageId, bool $noSearch, bool $protected, array $groups, bool $fePreview)
+    public function __construct(string $title, int $pageId, string $searchIndexer, bool $protected, array $groups, bool $fePreview)
     {
         $this->setTitle($title);
         $this->setPageId($pageId);
-        $this->setNoSearch($noSearch);
+        $this->setSearchIndexer($searchIndexer);
         $this->setProtected($protected);
         $this->setGroups($groups);
         $this->setFePreview($fePreview);
@@ -66,14 +66,14 @@ class ContaoPageSchema extends BaseType
         return $this;
     }
 
-    public function isNoSearch(): bool
+    public function getSearchIndexer(): string
     {
-        return $this->properties['noSearch'];
+        return $this->properties['searchIndexer'];
     }
 
-    public function setNoSearch(bool $noSearch): self
+    public function setSearchIndexer(string $searchIndexer): self
     {
-        $this->properties['noSearch'] = $noSearch;
+        $this->properties['searchIndexer'] = $searchIndexer;
 
         return $this;
     }
