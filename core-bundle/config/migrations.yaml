@@ -85,3 +85,8 @@ services:
         class: Contao\CoreBundle\Migration\Version505\OverwriteMetaMigration
         arguments:
             - '@database_connection'
+
+    contao.migration.version_506.search_indexer_settings:
+        class: Contao\CoreBundle\Migration\Version506\SearchIndexerSettingsMigration
+        arguments:
+            - '@database_connection'
