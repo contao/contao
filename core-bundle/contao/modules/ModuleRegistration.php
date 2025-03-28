@@ -124,18 +124,18 @@ class ModuleRegistration extends Module
 			(
 				'id' => 'registration',
 				'label' => $GLOBALS['TL_LANG']['MSC']['securityQuestion'],
-				'type' => 'captcha',
+				'type' => 'altcha',
 				'mandatory' => true,
 				'required' => true
 			);
 
-			/** @var class-string<FormCaptcha> $strClass */
-			$strClass = $GLOBALS['TL_FFL']['captcha'] ?? null;
+			/** @var class-string<FormAltcha> $strClass */
+			$strClass = $GLOBALS['TL_FFL']['altcha'] ?? null;
 
 			// Fallback to default if the class is not defined
 			if (!class_exists($strClass))
 			{
-				$strClass = 'FormCaptcha';
+				$strClass = 'FormAltcha';
 			}
 
 			$objCaptcha = new $strClass($arrCaptcha);
