@@ -122,11 +122,10 @@ class ModuleRegistration extends Module
 		{
 			$arrCaptcha = array
 			(
-				'id' => 'registration',
+				'name' => 'registration',
 				'label' => $GLOBALS['TL_LANG']['MSC']['securityQuestion'],
-				'type' => 'captcha',
-				'mandatory' => true,
-				'required' => true
+				'inputType' => 'captcha',
+				'eval' => array('mandatory'=>true, 'required'=>true)
 			);
 
 			/** @var class-string<FormCaptcha> $strClass */
@@ -138,7 +137,7 @@ class ModuleRegistration extends Module
 				$strClass = 'FormCaptcha';
 			}
 
-			$objCaptcha = new $strClass($arrCaptcha);
+			$objCaptcha = new $strClass($strClass::getAttributesFromDca($arrCaptcha, $arrCaptcha['name']));
 
 			if (Input::post('FORM_SUBMIT') == $strFormId)
 			{
