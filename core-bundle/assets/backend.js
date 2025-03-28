@@ -86,7 +86,8 @@ document.documentElement.addEventListener('turbo:before-cache', (e) => {
 });
 
 // We need to make sure act=create URLs are not called twice due to
-// data-turbo-track="reload". Thus we do a full load without Turbo Drive instead.
+// data-turbo-track="reload" in the subsequent HTML response. Thus we do a full
+// load without Turbo Drive instead.
 document.documentElement.addEventListener('turbo:before-visit', (e) => {
     const params = new URL(e.detail.url).searchParams;
 
