@@ -92,7 +92,7 @@ class SearchIndexListener
             return false;
         }
 
-        // Do not index if the X-Robots-Tag header contains "noindex"
+        // Do not index if the X-Robots-Tag header contains "noindex" (TODO: and page setting "searchIndexer" is not "always_index")
         if (str_contains((string) $response->headers->get('X-Robots-Tag', ''), 'noindex')) {
             return false;
         }
@@ -100,7 +100,7 @@ class SearchIndexListener
         try {
             $robots = $document->getContentCrawler()->filterXPath('//head/meta[@name="robots"]')->first()->attr('content');
 
-            // Do not index if the meta robots tag contains "noindex"
+            // Do not index if the meta robots tag contains "noindex" (TODO: and page setting "searchIndexer" is not "always_index")
             if (str_contains((string) $robots, 'noindex')) {
                 return false;
             }
@@ -124,7 +124,7 @@ class SearchIndexListener
             return false;
         }
 
-        // Delete if the X-Robots-Tag header contains "noindex"
+        // Delete if the X-Robots-Tag header contains "noindex" (TODO: and page setting "searchIndexer" is not "always_index")
         if (str_contains($response->headers->get('X-Robots-Tag', ''), 'noindex')) {
             return true;
         }
@@ -132,7 +132,7 @@ class SearchIndexListener
         try {
             $robots = $document->getContentCrawler()->filterXPath('//head/meta[@name="robots"]')->first()->attr('content');
 
-            // Delete if the meta robots tag contains "noindex"
+            // Delete if the meta robots tag contains "noindex" (TODO: and page setting "searchIndexer" is not "always_index")
             if (str_contains($robots, 'noindex')) {
                 return true;
             }
