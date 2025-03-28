@@ -41,10 +41,10 @@ class PageSearchListener
         return $value;
     }
 
-    #[AsCallback(table: 'tl_page', target: 'fields.noSearch.save')]
-    public function onSaveNoSearch(string $value, DataContainer $dc): string
+    #[AsCallback(table: 'tl_page', target: 'fields.searchIndexer.save')]
+    public function onSaveSearchIndexer(string $value, DataContainer $dc): string
     {
-        if (!$value || (bool) $value === (bool) ($dc->getCurrentRecord()['noSearch'] ?? false)) {
+        if ($value === ($dc->getCurrentRecord()['searchIndexer'] ?? null) || !str_starts_with($value, 'never')) {
             return $value;
         }
 
