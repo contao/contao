@@ -63,6 +63,7 @@ class PreviewLinkListenerTest extends TestCase
 
     public function testUnsetsTheDcaTableWithoutPreviewScript(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA'] = ['tl_preview_link' => ['config' => ['foo']]];
 
         $listener = new PreviewLinkListener(
@@ -84,6 +85,7 @@ class PreviewLinkListenerTest extends TestCase
 
     public function testDoesNotUnloadOtherTables(): void
     {
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_DCA'] = ['tl_preview_link' => 'foo', 'tl_member' => 'bar'];
 
         $listener = new PreviewLinkListener(
