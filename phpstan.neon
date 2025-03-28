@@ -54,6 +54,10 @@ parameters:
         # Ignore missing generated class names
         - message: '#setMockClassName\(\) expects class-string, string given#'
 
+        # Ignore @no-named-arguments until fixed in PHPUnit (see https://github.com/sebastianbergmann/phpunit/issues/6163)
+        - message: "#invoked with unpacked array with possibly string key, but it's not allowed because of @no-named-arguments#"
+          path: %currentWorkingDirectory%/core-bundle/tests/*
+
     treatPhpDocTypesAsCertain: false
     rememberPossiblyImpureFunctionValues: false
 
