@@ -74,7 +74,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property integer           $cuser
  * @property integer           $cgroup
  * @property string            $chmod
- * @property boolean           $noSearch
+ * @property boolean           $searchIndexer
  * @property boolean           $requireItem
  * @property string            $cssClass
  * @property string            $sitemap
@@ -171,7 +171,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByCuser($val, array $opt=array())
  * @method static PageModel|null findOneByCgroup($val, array $opt=array())
  * @method static PageModel|null findOneByChmod($val, array $opt=array())
- * @method static PageModel|null findOneByNoSearch($val, array $opt=array())
+ * @method static PageModel|null findOneBySearchIndexer($val, array $opt=array())
  * @method static PageModel|null findOneByCssClass($val, array $opt=array())
  * @method static PageModel|null findOneBySitemap($val, array $opt=array())
  * @method static PageModel|null findOneByHide($val, array $opt=array())
@@ -236,7 +236,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection<PageModel>|PageModel[]|null findByCuser($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findByCgroup($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findByChmod($val, array $opt=array())
- * @method static Collection<PageModel>|PageModel[]|null findByNoSearch($val, array $opt=array())
+ * @method static Collection<PageModel>|PageModel[]|null findBySearchIndexer($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findByCssClass($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findBySitemap($val, array $opt=array())
  * @method static Collection<PageModel>|PageModel[]|null findByHide($val, array $opt=array())
@@ -305,7 +305,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByCuser($val, array $opt=array())
  * @method static integer countByCgroup($val, array $opt=array())
  * @method static integer countByChmod($val, array $opt=array())
- * @method static integer countByNoSearch($val, array $opt=array())
+ * @method static integer countBySearchIndexer($val, array $opt=array())
  * @method static integer countByCssClass($val, array $opt=array())
  * @method static integer countBySitemap($val, array $opt=array())
  * @method static integer countByHide($val, array $opt=array())
