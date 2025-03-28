@@ -111,7 +111,7 @@ class CoreResponseContextFactory
                 new ContaoPageSchema(
                     $title ?: '',
                     $pageModel->id,
-                    $pageModel->noSearch,
+                    $pageModel->searchIndexer,
                     $pageModel->protected,
                     array_map(\intval(...), array_filter((array) $pageModel->groups)),
                     $this->tokenChecker->isPreviewMode(),
