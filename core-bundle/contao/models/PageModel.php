@@ -74,7 +74,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property integer           $cuser
  * @property integer           $cgroup
  * @property string            $chmod
- * @property boolean           $searchIndexer
+ * @property string            $searchIndexer
  * @property boolean           $requireItem
  * @property string            $cssClass
  * @property string            $sitemap
