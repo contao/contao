@@ -43,11 +43,6 @@ class SerpPreview extends Widget
 			throw new \RuntimeException('Could not fetch the associated model');
 		}
 
-		$id = $model->id;
-		$title = StringUtil::substr(str_replace(array('&nbsp;', '&shy;'), array(' ', ''), $this->getTitle($model)), 64);
-		$description = StringUtil::substr($this->getDescription($model), 160);
-		$alias = $this->getAlias($model);
-
 		try
 		{
 			// Get the URL with a %s placeholder for the alias or ID
@@ -55,97 +50,37 @@ class SerpPreview extends Widget
 
 			list($baseUrl) = explode('%s', $url);
 			$trail = implode(' › ', $this->convertUrlToItems($baseUrl));
-
-			// Use the base URL for the index page
-			if ($model instanceof PageModel && $alias == 'index')
-			{
-				$url = $trail;
-			}
-			else
-			{
-				$url = implode(' › ', $this->convertUrlToItems($baseUrl . ($alias ?: $model->id)));
-			}
 		}
 		catch (RouteParametersException)
 		{
-			return '<div class="serp-preview"><p class="tl_info">' . $GLOBALS['TL_LANG']['MSC']['noSerpPreview'] . '</p></div>';
+			return $this->render([
+				'error' => $this->trans('MSC.noSerpPreview', [], 'contao_default'),
+			]);
 		}
-		catch (ExceptionInterface)
-		{
-			$url = '';
+		catch (ExceptionInterface) {
 			$trail = '';
 		}
 
 		// Get the input field suffix (edit multiple mode)
 		$suffix = substr($this->objDca->inputName, \strlen($this->objDca->field));
 
-		$titleField = $this->getTitleField($suffix);
-		$titleFallbackField = $this->getTitleFallbackField($suffix);
-		$aliasField = $this->getAliasField($suffix);
-		$descriptionField = $this->getDescriptionField($suffix);
-		$descriptionFallbackField = $this->getDescriptionFallbackField($suffix);
-
-		if ($titleTag = $this->getTitleTag($model))
-		{
-			$title = StringUtil::substr(\sprintf($titleTag, $title), 64);
-		}
-
-		return <<<EOT
-			<div class="serp-preview">
-			  <p id="serp_url_$id" class="url">$url</p>
-			  <p id="serp_title_$id" class="title">$title</p>
-			  <p id="serp_description_$id" class="description">$description</p>
-			</div>
-			<script>
-			  (function() {
-			    const initSerpPreview = () => {
-			      if (!Contao.SerpPreview) return;
-			      new Contao.SerpPreview({
-			        id: '$id',
-			        trail: '$trail',
-			        titleField: '$titleField',
-			        titleFallbackField: '$titleFallbackField',
-			        aliasField: '$aliasField',
-			        descriptionField: '$descriptionField',
-			        descriptionFallbackField: '$descriptionFallbackField',
-			        titleTag: '$titleTag'
-			      });
-			      window.removeEvent('domready', initSerpPreview);
-			    };
-			    window.addEvent('domready', initSerpPreview);
-			  })();
-			</script>
-			EOT;
+		return $this->render([
+			'fields' => [
+				'title' => [$this->getTitleField($suffix), $this->getTitleFallbackField($suffix)],
+				'alias' => [$this->getAliasField($suffix)],
+				'description' => [$this->getDescriptionField($suffix), $this->getDescriptionFallbackField($suffix)],
+			],
+			'id' => $model->id,
+			'trail' => $trail,
+			'titleTag' => $this->getTitleTag($model),
+		]);
 	}
 
-	private function getTitle(Model $model)
-	{
-		if (!isset($this->titleFields))
-		{
-			return (string) $model->title;
-		}
-
-		return (string) ($model->{$this->titleFields[0]} ?: $model->{$this->titleFields[1]});
-	}
-
-	private function getDescription(Model $model)
-	{
-		if (!isset($this->descriptionFields))
-		{
-			return (string) $model->description;
-		}
-
-		return (string) ($model->{$this->descriptionFields[0]} ?: $model->{$this->descriptionFields[1]});
-	}
-
-	private function getAlias(Model $model)
-	{
-		if (!isset($this->aliasField))
-		{
-			return $model->alias;
-		}
-
-		return $model->{$this->aliasField};
+	private function render($parameters = []): string {
+		return System::getContainer()
+			->get('twig')
+			->render('@Contao/backend/widget/serp_preview.html.twig', $parameters)
+		;
 	}
 
 	/**
@@ -189,7 +124,7 @@ class SerpPreview extends Widget
 	{
 		if (!isset($this->title_tag_callback))
 		{
-			return '';
+			return '%s';
 		}
 
 		if (\is_array($this->title_tag_callback))
@@ -202,7 +137,7 @@ class SerpPreview extends Widget
 			return ($this->title_tag_callback)($model);
 		}
 
-		return '';
+		return '%s';
 	}
 
 	private function getTitleField($suffix)
