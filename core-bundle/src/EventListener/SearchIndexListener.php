@@ -102,10 +102,11 @@ class SearchIndexListener
             return false;
         }
 
-        $pageJsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
-
         // Do not index if the page setting is explicitly set to "never_index"
-        if ('never_index' === $pageJsonLds[0]['searchIndexer']) {
+        $pageJsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
+        $pageSearchIndexer = $pageJsonLds[0]['searchIndexer'] ?? null;
+
+        if ('never_index' === $pageSearchIndexer) {
             return false;
         }
 
@@ -113,7 +114,7 @@ class SearchIndexListener
             $robots = $document->getContentCrawler()->filterXPath('//head/meta[@name="robots"]')->first()->attr('content');
 
             // Do not index if the meta robots tag contains "noindex" and page setting "searchIndexer" is not set to "always_index"
-            if (str_contains((string) $robots, 'noindex') && 'always_index' !== $pageJsonLds[0]['searchIndexer']) {
+            if (str_contains((string) $robots, 'noindex') && 'always_index' !== $pageSearchIndexer) {
                 return false;
             }
         } catch (\Exception) {
@@ -141,10 +142,11 @@ class SearchIndexListener
             return true;
         }
 
-        $pageJsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
-
         // Delete if the page setting is explicitly set to "never_index"
-        if ('never_index' === $pageJsonLds[0]['searchIndexer']) {
+        $pageJsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
+        $pageSearchIndexer = $pageJsonLds[0]['searchIndexer'] ?? null;
+
+        if ('never_index' === $pageSearchIndexer) {
             return true;
         }
 
@@ -152,7 +154,7 @@ class SearchIndexListener
             $robots = $document->getContentCrawler()->filterXPath('//head/meta[@name="robots"]')->first()->attr('content');
 
             // Delete if the meta robots tag contains "noindex" and page setting "searchIndexer" is not set to "always_index"
-            if (str_contains($robots, 'noindex') && 'always_index' !== $pageJsonLds[0]['searchIndexer']) {
+            if (str_contains($robots, 'noindex') && 'always_index' !== $pageSearchIndexer) {
                 return true;
             }
         } catch (\Exception) {
