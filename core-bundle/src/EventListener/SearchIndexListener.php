@@ -92,24 +92,36 @@ class SearchIndexListener
             return false;
         }
 
-        // Do not index if the X-Robots-Tag header contains "noindex" (TODO: and page setting "searchIndexer" is not "always_index")
+        // Do not index if the X-Robots-Tag header contains "noindex"
         if (str_contains((string) $response->headers->get('X-Robots-Tag', ''), 'noindex')) {
+            return false;
+        }
+
+        // If there are no json ld scripts at all, this should not be handled by our indexer
+        if ([] !== $document->extractJsonLdScripts()) {
+            return false;
+        }
+
+        $pageJsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
+
+        // Do not index if the page setting is explicitly set to "never_index"
+        if ('never_index' === $pageJsonLds[0]['searchIndexer']) {
             return false;
         }
 
         try {
             $robots = $document->getContentCrawler()->filterXPath('//head/meta[@name="robots"]')->first()->attr('content');
 
-            // Do not index if the meta robots tag contains "noindex" (TODO: and page setting "searchIndexer" is not "always_index")
-            if (str_contains((string) $robots, 'noindex')) {
+            // Do not index if the meta robots tag contains "noindex" and page setting "searchIndexer" is not set to "always_index"
+            if (str_contains((string) $robots, 'noindex') && 'always_index' !== $pageJsonLds[0]['searchIndexer']) {
                 return false;
             }
         } catch (\Exception) {
             // No meta robots tag found
         }
 
-        // If there are no json ld scripts at all, this should not be handled by our indexer
-        return [] !== $document->extractJsonLdScripts();
+        // Otherwise index the page
+        return true;
     }
 
     private function needsDelete(Response $response, Document $document): bool
@@ -124,16 +136,23 @@ class SearchIndexListener
             return false;
         }
 
-        // Delete if the X-Robots-Tag header contains "noindex" (TODO: and page setting "searchIndexer" is not "always_index")
+        // Delete if the X-Robots-Tag header contains "noindex"
         if (str_contains($response->headers->get('X-Robots-Tag', ''), 'noindex')) {
+            return true;
+        }
+
+        $pageJsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
+
+        // Delete if the page setting is explicitly set to "never_index"
+        if ('never_index' === $pageJsonLds[0]['searchIndexer']) {
             return true;
         }
 
         try {
             $robots = $document->getContentCrawler()->filterXPath('//head/meta[@name="robots"]')->first()->attr('content');
 
-            // Delete if the meta robots tag contains "noindex" (TODO: and page setting "searchIndexer" is not "always_index")
-            if (str_contains($robots, 'noindex')) {
+            // Delete if the meta robots tag contains "noindex" and page setting "searchIndexer" is not set to "always_index"
+            if (str_contains($robots, 'noindex') && 'always_index' !== $pageJsonLds[0]['searchIndexer']) {
                 return true;
             }
         } catch (\Exception) {
