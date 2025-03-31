@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.5.9] (2025-03-31)
+
+**Fixed issues:**
+
+- [#8244] Fix issues with MooTools' `domready` event ([fritzmg])
+- [#8228] Handle undefined accessible menu instances ([zoglo])
+
 ## [5.5.8] (2025-03-26)
 
 **Fixed issues:**
@@ -231,6 +238,7 @@ This project adheres to [Semantic Versioning].
 - [#7582] Add PostCSS as described in Symfony Encore ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.5.9]: https://github.com/contao/contao/releases/tag/5.5.9
 [5.5.8]: https://github.com/contao/contao/releases/tag/5.5.8
 [5.5.7]: https://github.com/contao/contao/releases/tag/5.5.7
 [5.5.6]: https://github.com/contao/contao/releases/tag/5.5.6
@@ -409,5 +417,7 @@ This project adheres to [Semantic Versioning].
 [#8203]: https://github.com/contao/contao/pull/8203
 [#8206]: https://github.com/contao/contao/pull/8206
 [#8220]: https://github.com/contao/contao/pull/8220
+[#8228]: https://github.com/contao/contao/pull/8228
 [#8231]: https://github.com/contao/contao/pull/8231
 [#8236]: https://github.com/contao/contao/pull/8236
+[#8244]: https://github.com/contao/contao/pull/8244
