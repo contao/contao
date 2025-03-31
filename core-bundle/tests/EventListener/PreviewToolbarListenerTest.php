@@ -348,9 +348,7 @@ class PreviewToolbarListenerTest extends TestCase
         $this->assertSame('<html><head></head><body></body></html>', $response->getContent());
     }
 
-    /**
-     * @dataProvider providePreviewToolbarTemplateScenarios
-     */
+    #[DataProvider('providePreviewToolbarTemplateScenarios')]
     public function testRendersCorrectTemplate(bool $legacyTemplateExists, string $expectedTemplate): void
     {
         $response = new Response('<html><head></head><body></body></html>');

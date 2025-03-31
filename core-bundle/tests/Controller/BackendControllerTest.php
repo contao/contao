@@ -16,6 +16,7 @@ use Contao\CoreBundle\Controller\BackendController;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -147,9 +148,7 @@ class BackendControllerTest extends TestCase
         $controller->pickerAction($request);
     }
 
-    /**
-     * @dataProvider provideErrorTemplateScenarios
-     */
+    #[DataProvider('provideErrorTemplateScenarios')]
     public function testRendersFallbackRoute(bool $legacyTemplateExists, string $expectedTemplate): void
     {
         $loader = $this->createMock(LoaderInterface::class);

@@ -607,9 +607,7 @@ class StringUtilTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider basicEntitiesProvider
-     */
+    #[DataProvider('basicEntitiesProvider')]
     public function testConvertsBasicEntities(array|string $htmlEntities, array|string $basicEntities): void
     {
         $this->assertSame($basicEntities, StringUtil::convertBasicEntities($htmlEntities));
