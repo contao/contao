@@ -94,7 +94,7 @@ class ModuleUnsubscribe extends Module
 			// Fallback to default if the class is not defined
 			if (!class_exists($strClass))
 			{
-				$strClass = 'FormCaptcha';
+				$strClass = FormCaptcha::class;
 			}
 
 			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));

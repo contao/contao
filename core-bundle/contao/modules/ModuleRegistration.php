@@ -134,7 +134,7 @@ class ModuleRegistration extends Module
 			// Fallback to default if the class is not defined
 			if (!class_exists($strClass))
 			{
-				$strClass = 'FormCaptcha';
+				$strClass = FormCaptcha::class;
 			}
 
 			$objCaptcha = new $strClass($strClass::getAttributesFromDca($arrCaptcha, $arrCaptcha['name']));
