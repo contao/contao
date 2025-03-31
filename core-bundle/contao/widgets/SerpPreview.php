@@ -97,23 +97,16 @@ class SerpPreview extends Widget
 			  <p id="serp_description_$id" class="description">$description</p>
 			</div>
 			<script>
-			  (function() {
-			    const initSerpPreview = () => {
-			      if (!Contao.SerpPreview) return;
-			      new Contao.SerpPreview({
-			        id: '$id',
-			        trail: '$trail',
-			        titleField: '$titleField',
-			        titleFallbackField: '$titleFallbackField',
-			        aliasField: '$aliasField',
-			        descriptionField: '$descriptionField',
-			        descriptionFallbackField: '$descriptionFallbackField',
-			        titleTag: '$titleTag'
-			      });
-			      window.removeEvent('domready', initSerpPreview);
-			    };
-			    window.addEvent('domready', initSerpPreview);
-			  })();
+			  new Contao.SerpPreview({
+			    id: '$id',
+			    trail: '$trail',
+			    titleField: '$titleField',
+			    titleFallbackField: '$titleFallbackField',
+			    aliasField: '$aliasField',
+			    descriptionField: '$descriptionField',
+			    descriptionFallbackField: '$descriptionFallbackField',
+			    titleTag: '$titleTag'
+			  });
 			</script>
 			EOT;
 	}
