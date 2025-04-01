@@ -42,7 +42,36 @@ class DownloadsControllerTest extends ContentElementTestCase
 
         $expectedOutput = <<<'HTML'
             <div class="content-download download-element ext-jpg">
-                <a href="https://example.com/files/image1.jpg" title="translated(contao_default:MSC.download[image1 title])" type="image/jpg">image1 title</a>
+                <a href="https://example.com/files/image1.jpg" title="image1 title" type="image/jpeg">image1 title</a>
+            </div>
+            HTML;
+
+        $this->assertSameHtml($expectedOutput, $response->getContent());
+    }
+
+    public function testOutputsSingleDownloadWithNoMetaTitle(): void
+    {
+        $response = $this->renderWithModelData(
+            $this->getDownloadsController(),
+            [
+                'type' => 'download',
+                'singleSRC' => StringUtil::uuidToBin(ContentElementTestCase::FILE_IMAGE2),
+                'sortBy' => '',
+                'numberOfItems' => '0',
+                'showPreview' => '',
+                'overwriteLink' => '',
+                'inline' => false,
+                'fullsize' => false,
+            ],
+            null,
+            false,
+            $responseContext,
+            $this->getAdjustedContainer(),
+        );
+
+        $expectedOutput = <<<'HTML'
+            <div class="content-download download-element ext-jpg">
+                <a href="https://example.com/files/image2.jpg" title="translated(contao_default:MSC.download[image2.jpg])" type="image/jpeg">translated(contao_default:MSC.download[image2.jpg])</a>
             </div>
             HTML;
 
@@ -73,7 +102,7 @@ class DownloadsControllerTest extends ContentElementTestCase
 
         $expectedOutput = <<<'HTML'
             <div class="content-download download-element ext-jpg">
-                <a href="https://example.com/files/image1.jpg" title="translated(contao_default:MSC.download[Download the file])" type="image/jpg">The file</a>
+                <a href="https://example.com/files/image1.jpg" title="Download the file" type="image/jpeg">The file</a>
             </div>
             HTML;
 
@@ -131,10 +160,10 @@ class DownloadsControllerTest extends ContentElementTestCase
             <div class="content-downloads">
                 <ul>
                     <li class="download-element ext-jpg">
-                        <a href="https://example.com/files/image1.jpg" title="translated(contao_default:MSC.download[image1 title])" type="image/jpg">image1 title</a>
+                        <a href="https://example.com/files/image1.jpg" title="image1 title" type="image/jpeg">image1 title</a>
                     </li>
                     <li class="download-element ext-jpg">
-                        <a href="https://example.com/files/image2.jpg" title="translated(contao_default:MSC.download[image2.jpg])" type="image/jpeg">image2.jpg</a>
+                        <a href="https://example.com/files/image2.jpg" title="translated(contao_default:MSC.download[image2.jpg])" type="image/jpeg">translated(contao_default:MSC.download[image2.jpg])</a>
                     </li>
                 </ul>
             </div>
