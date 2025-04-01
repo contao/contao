@@ -189,7 +189,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                'Do not request because it was marked "never_index" in the searchIndexer page settings.',
+                'Do not request because it was marked "never_index" in the page setting "searchIndexer".',
             );
 
             return;
@@ -205,6 +205,12 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             );
 
             return;
+        } else if ($crawlUri->hasTag(RobotsSubscriber::TAG_NOINDEX) && 'always_index' === $pageSearchIndexer) {
+            $this->logWithCrawlUri(
+                $crawlUri,
+                LogLevel::DEBUG,
+                '"noindex" in the <meta name="robots"> HTML tag is ignored because the page setting "searchIndexer" explicitly specifies "always_index".',
+            );
         }
 
         try {
