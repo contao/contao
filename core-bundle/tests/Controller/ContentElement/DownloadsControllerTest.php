@@ -49,7 +49,7 @@ class DownloadsControllerTest extends ContentElementTestCase
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
-    public function testOutputsSingleDownloadWithNoMetaTitle(): void
+    public function testOutputsSingleDownloadWithNoMetadata(): void
     {
         $response = $this->renderWithModelData(
             $this->getDownloadsController(),
