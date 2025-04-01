@@ -27,10 +27,22 @@ export default class extends Controller {
         config.target = this.element;
 
         tinymce?.init(config).then((editors) => {
-            this.editorId = editors[0]?.id;
+            const editor = editors[0] ?? null;
+            this.editorId = editor?.id;
+
+            // Allow others to listen on the input event of the underlying textarea
+            editor?.on('keyup', () => {
+                const before = this.element.innerText;
+                const after = editor.getContent();
+
+                if (before !== after) {
+                    this.element.innerText = editor.getContent();
+                    this.element.dispatchEvent(new Event('input'));
+                }
+            });
 
             // Fire a custom event when the editor finished initializing.
-            this.dispatch('editor-loaded', { detail: { content: editors[0] ?? null } });
+            this.dispatch('editor-loaded', { detail: { content: editor } });
         });
     }
 
