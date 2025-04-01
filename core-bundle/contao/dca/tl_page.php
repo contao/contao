@@ -567,7 +567,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		(
 			'filter'                  => true,
 			'inputType'               => 'select',
-			'options'                 => array('default_index', 'always_index', 'never_index'),
+			'options'                 => array('use_robots_tag', 'always_index', 'never_index'),
 			'eval'                    => array('maxlength'=>32, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_page'],
 			'sql'                     => "varchar(32) NOT NULL default ''"
