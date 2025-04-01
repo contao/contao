@@ -56,7 +56,7 @@ class PageSearchListener
     #[AsCallback(table: 'tl_page', target: 'fields.robots.save')]
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
-        if ($value === ($dc->getCurrentRecord()['robots'] ?? null) || !str_starts_with($value, 'noindex')) {
+        if ($value === ($dc->getCurrentRecord()['robots'] ?? null) || !str_starts_with($value, 'noindex') || (str_starts_with($value, 'noindex') && str_starts_with($dc->getCurrentRecord()['searchIndexer'], 'always'))) {
             return $value;
         }
 
