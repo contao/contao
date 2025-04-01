@@ -95,7 +95,7 @@ class ModuleLostPassword extends Module
 			(
 				'name' => 'lost_password',
 				'label' => $GLOBALS['TL_LANG']['MSC']['securityQuestion'],
-				'inputType' => 'captcha',
+				'inputType' => 'altcha',
 				'eval' => array('mandatory'=>true)
 			);
 		}
