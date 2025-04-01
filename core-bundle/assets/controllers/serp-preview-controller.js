@@ -13,7 +13,7 @@ export default class extends Controller {
     sourceElements = new Map();
 
     connect() {
-        // Install event listeners on source fields
+        // Install event listeners on the source fields
         for (const [sourceType, ids] of Object.entries(this.fieldsValue)) {
             const elements = [];
 

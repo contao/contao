@@ -54,7 +54,7 @@ class SerpPreview extends Widget
 		catch (RouteParametersException)
 		{
 			return $this->render([
-				'error' => $this->trans('MSC.noSerpPreview', [], 'contao_default'),
+				'error' => true,
 			]);
 		}
 		catch (ExceptionInterface) {

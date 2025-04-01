@@ -2,7 +2,7 @@
 
 {% if error|default %}
     <div class="serp-preview">
-        <p class="tl_info">{{ error }}</p>
+        <p class="tl_info">{{ 'MSC.noSerpPreview'|trans }}</p>
     </div>
 {% else %}
     {% set serp_preview_attributes = attrs()
