@@ -209,7 +209,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
-                '"noindex" in the <meta name="robots"> HTML tag is ignored because the page setting "searchIndexer" explicitly specifies "always_index".',
+                'HTML robots tag "noindex" is ignored because page option "searchIndexer" is explicitly set to "always_index".',
             );
         }
 
