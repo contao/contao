@@ -302,7 +302,7 @@
       <trans-unit id="tl_page.searchIndexer.1">
         <source>Include or exclude the page from the search index.</source>
       </trans-unit>
-      <trans-unit id="tl_page.default_index">
+      <trans-unit id="tl_page.use_robots_tag">
         <source>Default (use robots tag)</source>
       </trans-unit>
       <trans-unit id="tl_page.always_index">
