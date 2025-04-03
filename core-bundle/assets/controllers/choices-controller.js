@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import Choices from 'choices.js';
-import css from '!!css-loader?{"url": false}!../styles/component/choices.pcss';
+import css from '!!css-loader!../styles/component/choices.pcss';
 
 export default class ChoicesController extends Controller {
     static styleSheet = null;
