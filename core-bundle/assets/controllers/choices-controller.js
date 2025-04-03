@@ -3,6 +3,8 @@ import Choices from 'choices.js';
 import css from '!!css-loader!../styles/component/choices.pcss';
 
 export default class ChoicesController extends Controller {
+    static values = { config: Object };
+
     static styleSheet = null;
 
     initialize() {
@@ -53,7 +55,7 @@ export default class ChoicesController extends Controller {
 
         // Allow others to alter the config before we create the instance
         this.dispatch('create', {
-            detail: { select, config },
+            detail: { select, config: Object.assign(config, this.configValue) },
         });
 
         this.choices = new Choices(select, config);
