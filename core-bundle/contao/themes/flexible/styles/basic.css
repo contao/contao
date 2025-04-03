@@ -69,9 +69,9 @@
 	--serp-preview-title: #1a0dab;
 	--nested-bg: #fbfbfd;
 	--search-field-bg: rgba(255, 255, 255, .2);
-	--choices-highlighted: #3997fe;
-	--choices-bg: #eee;
-	--choices-border: #bbb;
+	--select-highlighted: #3997fe;
+	--select-bg: #eee;
+	--select-border: #bbb;
 }
 
 html[data-color-scheme="dark"] {
@@ -132,9 +132,9 @@ html[data-color-scheme="dark"] {
 	--serp-preview-title: #8ab4f8;
 	--nested-bg: #1e2024;
 	--search-field-bg: rgba(27, 29, 33, .3);
-	--choices-highlighted: #1b325f;
-	--choices-bg: #27292f;
-	--choices-border: #464853;
+	--select-highlighted: #1b325f;
+	--select-bg: #27292f;
+	--select-border: #464853;
 }
 
 html[data-color-scheme="dark"] .color-scheme--light, .color-scheme--dark {

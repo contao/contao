@@ -81,7 +81,7 @@
     .choices__button {
         background-image: url("data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjEiIGhlaWdodD0iMjEiIHZpZXdCb3g9IjAgMCAyMSAyMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSIjMjIyIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0yLjU5Mi4wNDRsMTguMzY0IDE4LjM2NC0yLjU0OCAyLjU0OEwuMDQ0IDIuNTkyeiIvPjxwYXRoIGQ9Ik0wIDE4LjM2NEwxOC4zNjQgMGwyLjU0OCAyLjU0OEwyLjU0OCAyMC45MTJ6Ii8+PC9nPjwvc3ZnPg==");
         padding-bottom: 2px;
-        border-left-color: var(--choices-border) !important;
+        border-left-color: var(--select-border) !important;
     }
 
     .choices__list--dropdown, choices__list[aria-expanded] {
@@ -97,7 +97,7 @@
         .choices__item--selectable,
         .choices__list[aria-expanded] .choices__item--selectable {
             &.is-highlighted {
-                background: var(--choices-highlighted);
+                background: var(--select-highlighted);
                 color: #fff;
             }
         }
@@ -175,9 +175,9 @@
 
         .choices__inner .choices__item {
             border-radius: 2px;
-            background-color: var(--choices-bg);
+            background-color: var(--select-bg);
             color: var(--text, #222);
-            border: 1px solid var(--choices-border);
+            border: 1px solid var(--select-border);
             line-height: 16px;
             padding: 2px 6px 2px 6px;
             margin: 3px 0 3px 3px;
