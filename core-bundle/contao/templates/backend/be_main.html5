@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<?= $this->language ?>" data-controller="contao--scroll-offset" data-action="store-scroll-offset@window->contao--scroll-offset#store contao--tinymce:editor-loaded->contao--scroll-offset#scrollToWidgetError turbo:render@document->contao--scroll-offset#restore">
+<html lang="<?= $this->language ?>" data-controller="contao--scroll-offset contao--color-scheme" data-action="store-scroll-offset@window->contao--scroll-offset#store contao--tinymce:editor-loaded->contao--scroll-offset#scrollToWidgetError turbo:render@document->contao--scroll-offset#restore">
 <head>
 
   <?php $this->block('head'); ?>
