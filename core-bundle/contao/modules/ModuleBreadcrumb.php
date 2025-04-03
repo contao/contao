@@ -188,7 +188,7 @@ class ModuleBreadcrumb extends Module
 				'isRoot'   => false,
 				'isActive' => true,
 				// Use the current request without query string for the current page (see #3450)
-				'href'     => $request->getBasePath().$request->getPathInfo(),
+				'href'     => $request->getBaseUrl().$request->getPathInfo(),
 				'title'    => StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title),
 				'link'     => $pages[0]->title,
 				'data'     => $pages[0]->row(),
