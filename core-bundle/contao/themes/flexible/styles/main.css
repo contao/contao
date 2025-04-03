@@ -646,6 +646,7 @@ h2.sub_headline {
 
 .tl_filter > * {
 	margin: 0;
+	width: 100%;
 }
 
 .tl_version_panel {
