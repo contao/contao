@@ -12,7 +12,6 @@
       <meta name="referrer" content="origin">
     <?php $this->endblock(); ?>
 
-    <link rel="stylesheet" href="<?= $this->asset('css/choices.min.css', 'contao-components/choices') ?>">
     <link rel="stylesheet" href="<?= $this->asset('css/simplemodal.min.css', 'contao-components/simplemodal') ?>">
     <link rel="stylesheet" href="<?= $this->asset('css/datepicker.min.css', 'contao-components/datepicker') ?>">
     <link rel="stylesheet" href="<?= $this->asset('backend.css', 'system/themes/'.$this->theme) ?>">
@@ -21,7 +20,6 @@
 
     <script><?= $this->getLocaleString() ?></script>
     <script src="<?= $this->asset('js/mootools.min.js', 'contao-components/mootools') ?>"></script>
-    <script src="<?= $this->asset('js/choices.min.js', 'contao-components/choices') ?>"></script>
     <script src="<?= $this->asset('js/simplemodal.min.js', 'contao-components/simplemodal') ?>"></script>
     <script src="<?= $this->asset('js/datepicker.min.js', 'contao-components/datepicker') ?>"></script>
     <script src="<?= $this->asset('js/tinymce.min.js', 'contao-components/tinymce4') ?>"></script>
