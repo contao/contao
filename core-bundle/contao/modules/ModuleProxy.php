@@ -39,7 +39,7 @@ class ModuleProxy extends Module
 			throw new \RuntimeException('ModuleProxy must be constructed with a ModuleModel');
 		}
 
-		$this->reference = new FrontendModuleReference($objElement, $strColumn, array(), !Registry::getInstance()->isRegistered($objElement));
+		$this->reference = new FrontendModuleReference($objElement, $strColumn, array(), !Registry::getInstance()->isRegistered($objElement) || $objElement->isModified());
 		$this->strColumn = $strColumn;
 
 		// Do not call parent constructor

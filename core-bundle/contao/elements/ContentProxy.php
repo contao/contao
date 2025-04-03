@@ -45,7 +45,7 @@ class ContentProxy extends ContentElement
 				throw new \RuntimeException('ContentProxy must be constructed with a ContentModel');
 			}
 
-			$this->reference = new ContentElementReference($objElement, $strColumn, array(), !Registry::getInstance()->isRegistered($objElement));
+			$this->reference = new ContentElementReference($objElement, $strColumn, array(), !Registry::getInstance()->isRegistered($objElement) || $objElement->isModified());
 			$this->reference->setNestedFragments($nestedFragments);
 		}
 

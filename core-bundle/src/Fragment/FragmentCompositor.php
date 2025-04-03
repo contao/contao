@@ -57,7 +57,7 @@ class FragmentCompositor
                 continue;
             }
 
-            $contentElementReference = new ContentElementReference($child, 'main', [], !Registry::getInstance()->isRegistered($child));
+            $contentElementReference = new ContentElementReference($child, 'main', [], !Registry::getInstance()->isRegistered($child) || $child->isModified());
             $contentElementReference->setNestedFragments($this->getNestedFragments(ContentElementReference::TAG_NAME.'.'.$child->type, $child->id));
 
             $rendered[] = $contentElementReference;
