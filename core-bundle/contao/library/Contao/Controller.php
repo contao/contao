@@ -574,20 +574,28 @@ abstract class Controller extends System
 		$isContentProxy = is_a($strClass, ContentProxy::class, true);
 		$compositor = System::getContainer()->get('contao.fragment.compositor');
 
-		if ($isContentProxy && $contentElementReference)
+		if ($isContentProxy)
 		{
-			$objElement = new $strClass($contentElementReference, $strColumn);
-		}
-		elseif ($isContentProxy && $objRow->id && $compositor->supportsNesting(ContentElementReference::TAG_NAME . '.' . $objRow->type))
-		{
-			$objElement = new $strClass(
-				$objRow,
-				$strColumn,
-				$compositor->getNestedFragments(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->origId ?: $objRow->id)
-			);
+			if ($contentElementReference)
+			{
+				$objElement = new $strClass($contentElementReference, $strColumn);
+			}
+			elseif ($objRow->id && $compositor->supportsNesting(ContentElementReference::TAG_NAME . '.' . $objRow->type))
+			{
+				$objElement = new $strClass(
+					$objRow,
+					$strColumn,
+					$compositor->getNestedFragments(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->origId ?: $objRow->id)
+				);
+			}
+			else
+			{
+				$objElement = new $strClass($objRow, $strColumn);
+			}
 		}
 		else
 		{
+			// TODO: only cloneDetached() in Contao 5.6 if classes are not empty
 			$objRow = $objRow->cloneDetached();
 			$objRow->typePrefix = 'ce_';
 
