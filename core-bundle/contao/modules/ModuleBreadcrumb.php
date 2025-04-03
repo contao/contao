@@ -59,7 +59,9 @@ class ModuleBreadcrumb extends Module
 		$pages = array($objPage);
 		$items = array();
 
-		$blnShowUnpublished = System::getContainer()->get('contao.security.token_checker')->isPreviewMode();
+		$container = System::getContainer();
+		$blnShowUnpublished = $container->get('contao.security.token_checker')->isPreviewMode();
+		$request = $container->get('request_stack')->getCurrentRequest();
 
 		// Get all pages up to the root page
 		$objPages = PageModel::findParentsById($objPage->pid);
@@ -83,7 +85,7 @@ class ModuleBreadcrumb extends Module
 			(
 				'isRoot'   => true,
 				'isActive' => false,
-				'href'     => (($objFirstPage !== null) ? $this->generateContentUrl($objFirstPage) : Environment::get('base')),
+				'href'     => (($objFirstPage !== null) ? $this->generateContentUrl($objFirstPage) : $request->getBasePath()),
 				'title'    => StringUtil::specialchars($objPages->pageTitle ?: $objPages->title, true),
 				'link'     => $objPages->title,
 				'data'     => (($objFirstPage !== null) ? $objFirstPage->row() : array()),
@@ -186,7 +188,7 @@ class ModuleBreadcrumb extends Module
 				'isRoot'   => false,
 				'isActive' => true,
 				// Use the current request without query string for the current page (see #3450)
-				'href'     => strtok(Environment::get('request'), '?'),
+				'href'     => $request->getBasePath().$request->getPathInfo(),
 				'title'    => StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title),
 				'link'     => $pages[0]->title,
 				'data'     => $pages[0]->row(),
@@ -202,17 +204,22 @@ class ModuleBreadcrumb extends Module
 			}
 		}
 
-		$this->Template->getSchemaOrgData = static function () use ($items): array {
+		$this->Template->getSchemaOrgData = static function () use ($container, $items): array {
 			$jsonLd = array(
 				'@type' => 'BreadcrumbList',
 				'itemListElement' => array()
 			);
 
 			$position = 0;
-			$htmlDecoder = System::getContainer()->get('contao.string.html_decoder');
+			$htmlDecoder = $container->get('contao.string.html_decoder');
 
 			foreach ($items as $item)
 			{
+				// Do not show the index page in the metadata (#7274)
+				if ($item['isActive'] && 'index' === ($item['data']['alias'] ?? null)) {
+					continue;
+				}
+
 				$jsonLd['itemListElement'][] = array(
 					'@type' => 'ListItem',
 					'position' => ++$position,
@@ -229,7 +236,7 @@ class ModuleBreadcrumb extends Module
 		$this->Template->items = $items;
 
 		// Tag the pages
-		if (!System::getContainer()->has('fos_http_cache.http.symfony_response_tagger'))
+		if (!$container->has('fos_http_cache.http.symfony_response_tagger'))
 		{
 			return;
 		}
@@ -246,7 +253,7 @@ class ModuleBreadcrumb extends Module
 
 		if (!empty($tags))
 		{
-			$responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
+			$responseTagger = $container->get('fos_http_cache.http.symfony_response_tagger');
 			$responseTagger->addTags($tags);
 		}
 	}
