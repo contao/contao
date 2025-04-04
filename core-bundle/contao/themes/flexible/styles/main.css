@@ -682,11 +682,7 @@ h2.sub_headline {
 	width: 100%;
 }
 
-.tl_search > .tl_select {
-	width: 38%;
-}
-
-.tl_search > .tl_text {
+.tl_search > :not(span, strong) {
 	width: 38%;
 }
 
