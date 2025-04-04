@@ -107,9 +107,9 @@ class Image
 		// Use path from icon manifest
 		$icons = System::getContainer()->getParameter('contao.backend.icons');
 
-		if (null !== ($icon = ($icons["$filename.svg"] ?? null)))
+		if (isset($icons["$filename.svg"]))
 		{
-			return ltrim($icon['path'], '/');
+			return ltrim($icons["$filename.svg"]['path'], '/');
 		}
 
 		// Prefer SVG icons
