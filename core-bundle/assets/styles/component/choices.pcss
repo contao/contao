@@ -41,21 +41,6 @@
         min-height: unset;
     }
 
-    .choices__list {
-        &:has(> .choices__group) > .choices__item {
-            padding-left: 20px;
-        }
-
-        &[data-placeholder]:before {
-            content: attr(data-placeholder);
-            display: block;
-            cursor: default;
-            opacity: .7;
-            padding: 3px 6px;
-            font-size: 13px;
-        }
-    }
-
     .choices__input {
         background: transparent;
         padding: 3px 6px;
@@ -106,6 +91,21 @@
         }
     }
 
+    .choices__list {
+        &:has(> .choices__group) > .choices__item {
+            padding-left: 20px;
+        }
+
+        &[data-placeholder]:before {
+            content: attr(data-placeholder);
+            display: block;
+            cursor: default;
+            opacity: .7;
+            padding: 3px 6px;
+            font-size: 13px;
+        }
+    }
+
     /* Select one */
     &[data-type="select-one"] {
         &::after {
@@ -153,6 +153,7 @@
             height: auto;
             padding: 3px 6px;
             border-bottom: 1px solid var(--form-border, #aaa);
+            background: transparent;
         }
 
         .choices__button {
