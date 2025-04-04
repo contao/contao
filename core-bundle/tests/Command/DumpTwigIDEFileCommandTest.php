@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Command;
+namespace Contao\CoreBundle\Tests\Command;
 
 use Contao\CoreBundle\Command\DumpTwigIDEFileCommand;
 use Contao\CoreBundle\Tests\TestCase;
@@ -20,21 +20,41 @@ use Symfony\Component\Console\Tester\CommandTester;
 
 class DumpTwigIDEFileCommandTest extends TestCase
 {
-    public function testWritesFile(): void
+    public function testWritesFileAtDefaultLocation(): void
     {
-        $namespaceLookupFileGenerator = $this->createMock(NamespaceLookupFileGenerator::class);
-        $namespaceLookupFileGenerator
-            ->expects($this->once())
-            ->method('write')
-            ->with('/project/dir/foo')
-        ;
+        $command = $this->getCommand('/project/var/build/contao-ide');
 
-        $command = new DumpTwigIDEFileCommand($namespaceLookupFileGenerator, '/project/dir');
+        $tester = new CommandTester($command);
+        $tester->execute([]);
+
+        $this->assertSame(Command::SUCCESS, $tester->getStatusCode());
+        $this->assertStringContainsString('The namespace lookup file was written to "var/build/contao-ide/ide-twig.json".', $tester->getDisplay());
+    }
+
+    public function testWritesFileToCustomLocation(): void
+    {
+        $command = $this->getCommand('/project/foo');
 
         $tester = new CommandTester($command);
         $tester->execute(['dir' => 'foo']);
 
         $this->assertSame(Command::SUCCESS, $tester->getStatusCode());
         $this->assertStringContainsString('The namespace lookup file was written to "foo/ide-twig.json".', $tester->getDisplay());
+    }
+
+    protected function getCommand(string $expectedWriteDir): DumpTwigIDEFileCommand
+    {
+        $namespaceLookupFileGenerator = $this->createMock(NamespaceLookupFileGenerator::class);
+        $namespaceLookupFileGenerator
+            ->expects($this->once())
+            ->method('write')
+            ->with($expectedWriteDir)
+        ;
+
+        return new DumpTwigIDEFileCommand(
+            $namespaceLookupFileGenerator,
+            '/project/var/build',
+            '/project',
+        );
     }
 }

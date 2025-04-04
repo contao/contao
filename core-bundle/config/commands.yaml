@@ -77,6 +77,7 @@ services:
         class: Contao\CoreBundle\Command\DumpTwigIDEFileCommand
         arguments:
             - '@contao.twig.ide.namespace_lookup_file_generator'
+            - '%kernel.build_dir%'
             - '%kernel.project_dir%'
 
     contao.command.filesync:

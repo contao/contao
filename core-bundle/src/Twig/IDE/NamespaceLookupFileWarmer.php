@@ -10,12 +10,11 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 
 class NamespaceLookupFileWarmer implements CacheWarmerInterface
 {
-    public const TARGET_DIR = 'var/contao-twig';
+    public const CONTAO_IDE_DIR = 'contao-ide';
 
     public function __construct(
         private readonly NamespaceLookupFileGenerator $namespaceLookupFileGenerator,
         private readonly string $environment,
-        private readonly string $projectDir,
     ) {
     }
 
@@ -26,12 +25,12 @@ class NamespaceLookupFileWarmer implements CacheWarmerInterface
 
     public function warmUp(string $cacheDir, string|null $buildDir = null): array
     {
-        if ('dev' !== $this->environment) {
+        if ('dev' !== $this->environment || null === $buildDir) {
             return [];
         }
 
         try {
-            $this->namespaceLookupFileGenerator->write(Path::join($this->projectDir, self::TARGET_DIR));
+            $this->namespaceLookupFileGenerator->write(Path::join($buildDir, self::CONTAO_IDE_DIR));
         } catch (IOException) {
             // ignore
         }

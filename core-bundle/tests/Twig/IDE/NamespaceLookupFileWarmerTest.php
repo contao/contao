@@ -22,10 +22,13 @@ class NamespaceLookupFileWarmerTest extends TestCase
         $namespaceLookupFileGenerator
             ->expects($this->once())
             ->method('write')
-            ->with('/project/var/contao-twig')
+            ->with('/var/build/contao-ide')
         ;
 
-        $this->getNamespaceLookupFileWarmer($namespaceLookupFileGenerator)->warmUp('');
+        $this
+            ->getNamespaceLookupFileWarmer($namespaceLookupFileGenerator)
+            ->warmUp('/var/cache', '/var/build')
+        ;
     }
 
     public function testDoesNotWriteFileInProd(): void
@@ -36,7 +39,24 @@ class NamespaceLookupFileWarmerTest extends TestCase
             ->method('write')
         ;
 
-        $this->getNamespaceLookupFileWarmer($namespaceLookupFileGenerator, 'prod')->warmUp('');
+        $this
+            ->getNamespaceLookupFileWarmer($namespaceLookupFileGenerator, 'prod')
+            ->warmUp('/var/cache', '/var/build')
+        ;
+    }
+
+    public function testDoesNotWriteFileIfNoBuildDirIsSpecified(): void
+    {
+        $namespaceLookupFileGenerator = $this->createMock(NamespaceLookupFileGenerator::class);
+        $namespaceLookupFileGenerator
+            ->expects($this->never())
+            ->method('write')
+        ;
+
+        $this
+            ->getNamespaceLookupFileWarmer($namespaceLookupFileGenerator, 'prod')
+            ->warmUp('/var/cache', null)
+        ;
     }
 
     public function testToleratesFailingWrites(): void
@@ -48,7 +68,10 @@ class NamespaceLookupFileWarmerTest extends TestCase
             ->willThrowException(new IOException('Unable to write'))
         ;
 
-        $this->getNamespaceLookupFileWarmer($namespaceLookupFileGenerator)->warmUp('');
+        $this
+            ->getNamespaceLookupFileWarmer($namespaceLookupFileGenerator)
+            ->warmUp('/var/cache', '/var/build')
+        ;
     }
 
     private function getNamespaceLookupFileWarmer(NamespaceLookupFileGenerator|null $namespaceLookupFileGenerator = null, string $environment = 'dev'): NamespaceLookupFileWarmer
@@ -56,7 +79,6 @@ class NamespaceLookupFileWarmerTest extends TestCase
         return new NamespaceLookupFileWarmer(
             $namespaceLookupFileGenerator ?? $this->createMock(NamespaceLookupFileGenerator::class),
             $environment,
-            '/project',
         );
     }
 }
