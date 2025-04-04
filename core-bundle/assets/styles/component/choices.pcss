@@ -29,7 +29,7 @@
         outline: revert;
     }
 
-    &.is-focused {
+    &.is-focused, &.is-open {
         z-index: 4; /* Higher z-index than tinymce and sticky-footer */
     }
 
@@ -83,11 +83,6 @@
                 background: var(--select-highlighted);
                 color: #fff;
             }
-        }
-
-        &.is-open {
-            border: 1px solid var(--form-border, #aaa);
-            z-index: 3;
         }
     }
 
