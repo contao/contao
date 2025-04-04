@@ -21,6 +21,7 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\UndoVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -97,9 +98,7 @@ class UndoVoterTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider voteOnActionProvider
-     */
+    #[DataProvider('voteOnActionProvider')]
     public function testVoteOnAction(array $user, CreateAction|DeleteAction|ReadAction|UpdateAction $action, int $expectedVote): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, $user);

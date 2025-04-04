@@ -112,7 +112,6 @@ services:
             - !service_closure '@contao.repository.cron_job'
             - !service_closure '@doctrine.orm.entity_manager'
             - '@cache.app'
-            - '@lock.factory'
             - '@?logger'
 
     contao.cron.purge_expired_altcha_challenges:
@@ -206,16 +205,23 @@ services:
         arguments:
             - '@request_stack'
 
+    contao.data_container.dca_request_switcher:
+        class: Contao\CoreBundle\DataContainer\DcaRequestSwitcher
+        public: true
+        arguments:
+            - '@contao.framework'
+            - '@request_stack'
+
     contao.data_container.dca_url_analyzer:
         class: Contao\CoreBundle\DataContainer\DcaUrlAnalyzer
         public: true
         arguments:
             - '@contao.framework'
-            - '@request_stack'
             - '@security.helper'
             - '@router'
             - '@contao.translation.translator'
             - '@contao.data_container.record_labeler'
+            - '@contao.data_container.dca_request_switcher'
 
     contao.data_container.operations_builder:
         class: Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder
@@ -1318,6 +1324,7 @@ services:
             - '@request_stack'
             - '@contao.security.token_checker'
             - '@contao.csrf.token_manager'
+            - '@security.helper'
 
     contao.twig.highlighter_runtime:
         class: Contao\CoreBundle\Twig\Runtime\HighlighterRuntime

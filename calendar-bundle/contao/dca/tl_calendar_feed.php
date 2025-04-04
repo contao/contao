@@ -80,7 +80,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 		),
 		'operations' => array
 		(
-			'!edit',
+			'edit',
 			'copy' => array
 			(
 				'href'                => 'act=copy',

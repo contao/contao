@@ -14,12 +14,11 @@ namespace Contao\CoreBundle\Tests\Contao;
 
 use Contao\ArrayUtil;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ArrayUtilTest extends TestCase
 {
-    /**
-     * @dataProvider sortByOrderFieldProvider
-     */
+    #[DataProvider('sortByOrderFieldProvider')]
     public function testSortsByOrderField(array $items, array $order, array $expected): void
     {
         $this->assertSame($expected, ArrayUtil::sortByOrderField($items, $order));

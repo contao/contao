@@ -16,6 +16,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Inheritance\RuntimeThemeDependentExpression;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
@@ -39,9 +40,7 @@ class InspectorNodeVisitorTest extends TestCase
         $this->assertSame(128, $inspectorNodeVisitor->getPriority());
     }
 
-    /**
-     * @dataProvider provideReferenceExpressions
-     */
+    #[DataProvider('provideReferenceExpressions')]
     public function testAnalyzesParent(AbstractExpression $parentExpression, string|null $expectedName): void
     {
         $arrayAdapter = new ArrayAdapter();
@@ -63,9 +62,7 @@ class InspectorNodeVisitorTest extends TestCase
         $this->assertSame($expectedName, $item->get()['path/to/template.html.twig']['parent']);
     }
 
-    /**
-     * @dataProvider provideReferenceExpressions
-     */
+    #[DataProvider('provideReferenceExpressions')]
     public function testAnalyzesUses(AbstractExpression $useExpression, string|null $expectedName): void
     {
         $arrayAdapter = new ArrayAdapter();

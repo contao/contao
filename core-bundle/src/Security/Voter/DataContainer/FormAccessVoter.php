@@ -43,8 +43,8 @@ class FormAccessVoter extends AbstractDataContainerVoter
         return match (true) {
             $action instanceof CreateAction => $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_CREATE_FORMS]),
             $action instanceof ReadAction,
-            $action instanceof UpdateAction => $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_EDIT_FORM], $action->getCurrentId()),
-            $action instanceof DeleteAction => $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_EDIT_FORM], $action->getCurrentId())
+            $action instanceof UpdateAction => $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_EDIT_FORM], (int) $action->getCurrentId()),
+            $action instanceof DeleteAction => $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_EDIT_FORM], (int) $action->getCurrentId())
                 && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_DELETE_FORMS]),
         };
     }

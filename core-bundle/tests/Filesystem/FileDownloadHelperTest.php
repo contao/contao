@@ -21,6 +21,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use League\Flysystem\Config;
 use League\Flysystem\InMemory\InMemoryFilesystemAdapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,9 +47,7 @@ class FileDownloadHelperTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider provideInlineContext
-     */
+    #[DataProvider('provideInlineContext')]
     public function testGenerateAndHandleInlineUrl(array|null $context, string $expectedUrl): void
     {
         $helper = $this->getFileDownloadHelper();
@@ -86,9 +85,7 @@ class FileDownloadHelperTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideDownloadContext
-     */
+    #[DataProvider('provideDownloadContext')]
     public function testGenerateAndHandleDownloadUrl(string|null $fileName, array|null $context, string $expectedUrl): void
     {
         $helper = $this->getFileDownloadHelper();
@@ -196,7 +193,7 @@ class FileDownloadHelperTest extends TestCase
     {
         ob_start();
 
-        $response->send();
+        $response->sendContent();
 
         return ob_get_clean();
     }

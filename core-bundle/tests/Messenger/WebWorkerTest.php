@@ -84,7 +84,7 @@ class WebWorkerTest extends TestCase
         );
 
         $this->addEventsToEventDispatcher($webWorker);
-        $this->triggerRealWorkers(['transport-1', 'transport-2']);
+        $this->triggerRealWorkers();
     }
 
     public function testWorkerIsStoppedIfIdle(): void
@@ -118,7 +118,7 @@ class WebWorkerTest extends TestCase
 
         $this->addEventsToEventDispatcher($webWorker);
         $this->assertFalse($webWorker->hasCliWorkersRunning());
-        $this->triggerRealWorkers(['transport-1', 'transport-2']);
+        $this->triggerRealWorkers();
         $this->assertTrue($webWorker->hasCliWorkersRunning());
     }
 
@@ -160,7 +160,7 @@ class WebWorkerTest extends TestCase
         ));
     }
 
-    private function triggerRealWorkers(array $transports): void
+    private function triggerRealWorkers(): void
     {
         $listener = static function (WorkerRunningEvent $event): void {
             if ($event->isWorkerIdle()) {
@@ -171,7 +171,7 @@ class WebWorkerTest extends TestCase
         $this->eventDispatcher->addListener(WorkerRunningEvent::class, $listener);
 
         $input = new ArrayInput([
-            'receivers' => $transports,
+            'receivers' => ['transport-1', 'transport-2'],
         ]);
 
         $this->command->run($input, new NullOutput());

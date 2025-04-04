@@ -16,6 +16,7 @@ use Contao\CoreBundle\Command\Backup\BackupListCommand;
 use Contao\CoreBundle\Doctrine\Backup\Backup;
 use Contao\CoreBundle\Doctrine\Backup\BackupManager;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Terminal;
@@ -30,9 +31,7 @@ class BackupListCommandTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider successfulCommandRunProvider
-     */
+    #[DataProvider('successfulCommandRunProvider')]
     public function testSuccessfulCommandRun(array $arguments, string $expectedOutput): void
     {
         $command = new BackupListCommand($this->mockBackupManager());

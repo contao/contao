@@ -25,6 +25,7 @@ use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use FeedIo\Feed\Item;
 use FeedIo\Specification;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\NullLogger;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\Request;
@@ -52,10 +53,8 @@ class NewsFeedControllerTest extends ContaoTestCase
         $this->assertSame(['.xml', '.json'], $controller->getUrlSuffixes());
     }
 
-    /**
-     * @dataProvider getXMLFeedFormats
-     * @dataProvider getJSONFeedFormats
-     */
+    #[DataProvider('getXMLFeedFormats')]
+    #[DataProvider('getJSONFeedFormats')]
     public function testConfiguresPageRoute(string $format, string $suffix): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
@@ -119,9 +118,7 @@ class NewsFeedControllerTest extends ContaoTestCase
         $this->assertSame(200, $response->getStatusCode());
     }
 
-    /**
-     * @dataProvider getXMLFeedFormats
-     */
+    #[DataProvider('getXMLFeedFormats')]
     public function testProperlyEncodesXMLEntities(string $format): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
@@ -153,10 +150,8 @@ class NewsFeedControllerTest extends ContaoTestCase
         $this->assertSame('Get latest news </channel>', $document->getElementsByTagName('description')->item(0)->textContent);
     }
 
-    /**
-     * @dataProvider getXMLFeedFormats
-     * @dataProvider getJSONFeedFormats
-     */
+    #[DataProvider('getXMLFeedFormats')]
+    #[DataProvider('getJSONFeedFormats')]
     public function testReturnsFeedInCorrectFormat(string $format, string $suffix, string $url, string $contentType): void
     {
         $pageModel = $this->mockClassWithProperties(PageModel::class, [

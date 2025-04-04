@@ -19,6 +19,7 @@ use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
@@ -38,11 +39,10 @@ class AddTokenParserTest extends TestCase
     }
 
     /**
-     * @dataProvider provideSources
-     *
      * @param list<string>|array<string, string> $expectedHeadContent
      * @param list<string>|array<string, string> $expectedBodyContent
      */
+    #[DataProvider('provideSources')]
     public function testAddsContent(string $code, array $expectedHeadContent, array $expectedStyleSheetContent, array $expectedBodyContent): void
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));
@@ -148,9 +148,7 @@ class AddTokenParserTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideInvalidSources
-     */
+    #[DataProvider('provideInvalidSources')]
     public function testValidatesSource(string $code, string $expectedException): void
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));

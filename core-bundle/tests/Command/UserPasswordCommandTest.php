@@ -16,6 +16,7 @@ use Contao\BackendUser;
 use Contao\CoreBundle\Command\UserPasswordCommand;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
@@ -169,9 +170,7 @@ class UserPasswordCommandTest extends TestCase
         (new CommandTester($command))->execute($input, ['interactive' => false]);
     }
 
-    /**
-     * @dataProvider usernamePasswordProvider
-     */
+    #[DataProvider('usernamePasswordProvider')]
     public function testResetsPassword(string $username, string $password): void
     {
         $connection = $this->createMock(Connection::class);

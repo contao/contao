@@ -55,8 +55,6 @@ window.AjaxRequest =
 			console.warn('AjaxRequest.toggleStructure() is deprecated. Please use the stimulus controller instead.');
 		}
 
-		el.blur();
-
 		var item = $(id);
 
 		if (item) {
@@ -154,8 +152,6 @@ window.AjaxRequest =
 			console.warn('AjaxRequest.toggleFileManager() is deprecated. Please use the stimulus controller instead.');
 		}
 
-		el.blur();
-
 		var item = $(id);
 
 		if (item) {
@@ -225,7 +221,6 @@ window.AjaxRequest =
 	 * @param {string} field The field name
 	 */
 	toggleSubpalette: function(el, id, field) {
-		el.blur();
 		var item = $(id);
 
 		if (item) {
@@ -349,7 +344,7 @@ window.AjaxRequest =
 				// Tree view
 				if (!(img instanceof HTMLElement) && img.forEach) {
 					img.forEach((img) => {
-						if (img.nodeName.toLowerCase() == 'img') {
+						if (img instanceof HTMLImageElement) {
 							if (!img.getParent('ul.tl_listing').hasClass('tl_tree_xtnd')) {
 								pa = img.getParent('a');
 
@@ -429,8 +424,6 @@ window.AjaxRequest =
 	 * @returns {boolean}
 	 */
 	toggleCheckboxGroup: function(el, id) {
-		el.blur();
-
 		var item = $(id);
 
 		if (item) {
@@ -620,8 +613,14 @@ window.Backend =
 			'draggable': false,
 			'overlayOpacity': .7,
 			'overlayClick': false,
-			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
-			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
+			'onShow': function() {
+				document.body.setStyle('overflow', 'hidden');
+				document.dispatchEvent(new CustomEvent('contao--simple-modal:show'));
+			},
+			'onHide': function() {
+				document.body.setStyle('overflow', 'auto');
+				document.dispatchEvent(new CustomEvent('contao--simple-modal:hide'));
+			}
 		});
 		M.addButton(Contao.lang.cancel, 'btn', function() {
 			if (this.buttons[0].hasClass('btn-disabled')) {
@@ -705,7 +704,8 @@ window.Backend =
 
 		var form = $(el) || el;
 		hidden.inject(form, 'bottom');
-		form.submit();
+		form.noValidate = true;
+		form.requestSubmit();
 	},
 
 	/**
@@ -858,20 +858,25 @@ window.Backend =
 
 		list.addEvent('complete', function(el) {
 			if (!list.active) return;
-			var id, pid, req, href;
+			var id, pid, url = new URL(window.location.href);
+
+			url.searchParams.set('rt', Contao.request_token);
+			url.searchParams.set('act', 'cut');
 
 			if (el.getPrevious('li')) {
 				id = el.get('id').replace(/li_/, '');
 				pid = el.getPrevious('li').get('id').replace(/li_/, '');
-				req = window.location.search.replace(/id=[0-9]*/, 'id=' + id) + '&act=cut&mode=1&pid=' + pid;
-				href = window.location.href.replace(/\?.*$/, '');
-				new Request.Contao({'url':href + req, 'followRedirects':false}).get();
+				url.searchParams.set('id', id);
+				url.searchParams.set('pid', pid);
+				url.searchParams.set('mode', 1);
+				new Request.Contao({'url':url.toString(), 'followRedirects':false}).get();
 			} else if (el.getParent('ul')) {
 				id = el.get('id').replace(/li_/, '');
 				pid = el.getParent('ul').get('id').replace(/ul_/, '');
-				req = window.location.search.replace(/id=[0-9]*/, 'id=' + id) + '&act=cut&mode=2&pid=' + pid;
-				href = window.location.href.replace(/\?.*$/, '');
-				new Request.Contao({'url':href + req, 'followRedirects':false}).get();
+				url.searchParams.set('id', id);
+				url.searchParams.set('pid', pid);
+				url.searchParams.set('mode', 2);
+				new Request.Contao({'url':url.toString(), 'followRedirects':false}).get();
 			}
 		});
 	},
@@ -1670,6 +1675,10 @@ window.Backend =
 				}
 			},
 			clickEvent = function(e) {
+				if (e.target instanceof HTMLAnchorElement || e.target instanceof HTMLButtonElement || e.target instanceof HTMLInputElement || e.target?.closest('a, button, input, .operations')) {
+					return;
+				}
+
 				var input = this.getElement('input[type="checkbox"],input[type="radio"]'),
 					limitToggler = $(e.target).getParent('.limit_toggler');
 

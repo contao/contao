@@ -27,6 +27,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @property string  $fop
  * @property array   $alexf
  * @property array   $imageSizes
+ * @property string  $doNotHideMessages
  */
 class BackendUser extends User
 {
@@ -226,6 +227,7 @@ class BackendUser extends User
 		Config::set('useRTE', $this->useRTE);
 		Config::set('useCE', $this->useCE);
 		Config::set('doNotCollapse', $this->doNotCollapse);
+		Config::set('doNotHideMessages', $this->doNotHideMessages);
 		Config::set('thumbnails', $this->thumbnails);
 		Config::set('backendTheme', $this->backendTheme);
 
@@ -458,5 +460,15 @@ class BackendUser extends User
 		}
 
 		return parent::isEqualTo($user);
+	}
+
+	public function getDisplayName(): string
+	{
+		return $this->name;
+	}
+
+	public function getPasskeyUserHandle(): string
+	{
+		return 'backend.' . $this->id;
 	}
 }

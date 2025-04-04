@@ -1,5 +1,6 @@
 export class TwigEditor {
     constructor(element) {
+        this.containerBackup = element.cloneNode();
         this.name = element.dataset.name;
         this.resourceUrl = element.dataset.resourceUrl;
 
@@ -11,6 +12,7 @@ export class TwigEditor {
             autoScrollEditorIntoView: true,
             readOnly: element.hasAttribute('readonly'),
             enableLiveAutocompletion: true,
+            enableKeyboardAccessibility: true,
         });
 
         this.setColorScheme(document.documentElement.dataset.colorScheme);
@@ -30,8 +32,8 @@ export class TwigEditor {
                         detail: {
                             name: this.name,
                             block: args[0],
-                        }
-                    })
+                        },
+                    }),
                 );
             },
         });
@@ -44,9 +46,9 @@ export class TwigEditor {
                     new CustomEvent('twig-editor:lens:follow', {
                         bubbles: true,
                         detail: {
-                            name: args[0]
-                        }
-                    })
+                            name: args[0],
+                        },
+                    }),
                 );
             },
         });
@@ -54,7 +56,7 @@ export class TwigEditor {
         // Setup code lenses
         this.editor.getSession().once('tokenizerUpdate', () => {
             this.registerCodeLensProvider();
-        })
+        });
     }
 
     registerCodeLensProvider() {
@@ -62,33 +64,37 @@ export class TwigEditor {
 
         codeLens.registerCodeLensProvider(this.editor, {
             provideCodeLenses: (session, callback) => {
+                if (session.destroyed) {
+                    return;
+                }
+
                 let payload = [];
 
-                this.analyzeReferences().forEach(reference => {
+                this.analyzeReferences().forEach((reference) => {
                     payload.push({
-                        start: {row: reference.row, column: reference.column},
+                        start: { row: reference.row, column: reference.column },
                         command: {
                             id: 'lens:follow',
                             title: reference.name,
-                            arguments: [reference.name]
-                        }
-                    })
+                            arguments: [reference.name],
+                        },
+                    });
                 });
 
-                this.analyzeBlocks().forEach(block => {
+                this.analyzeBlocks().forEach((block) => {
                     payload.push({
-                        start: {row: block.row, column: block.column},
+                        start: { row: block.row, column: block.column },
                         command: {
                             id: 'lens:block-info',
                             title: `Block "${block.name}"`,
-                            arguments: [block.name]
-                        }
-                    })
+                            arguments: [block.name],
+                        },
+                    });
                 });
 
                 callback(null, payload);
-            }
-        })
+            },
+        });
     }
 
     analyzeReferences() {
@@ -98,16 +104,17 @@ export class TwigEditor {
             const tokens = this.editor.getSession().getTokens(row);
 
             for (let i = 0; i < tokens.length; i++) {
-                if (tokens[i].type === 'meta.tag.twig'
-                    && /^{%-?$/.test(tokens[i].value)
-                    && tokens[i + 2]?.type === 'keyword.control.twig'
-                    && ['extends', 'use'].includes(tokens[i + 2].value)
-                    && tokens[i + 4]?.type === 'string'
+                if (
+                    tokens[i].type === 'meta.tag.twig' &&
+                    /^{%-?$/.test(tokens[i].value) &&
+                    tokens[i + 2]?.type === 'keyword.control.twig' &&
+                    ['extends', 'use'].includes(tokens[i + 2].value) &&
+                    tokens[i + 4]?.type === 'string'
                 ) {
                     const name = tokens[i + 4].value.replace(/["']/g, '');
 
                     if (/^@Contao(_.+)?\//.test(name)) {
-                        references.push({name, row, column: tokens[i].start});
+                        references.push({ name, row, column: tokens[i].start });
                     }
                 }
             }
@@ -123,13 +130,14 @@ export class TwigEditor {
             const tokens = this.editor.getSession().getTokens(row);
 
             for (let i = 0; i < tokens.length; i++) {
-                if (tokens[i].type === 'meta.tag.twig'
-                    && /^{%-?$/.test(tokens[i].value)
-                    && tokens[i + 2]?.type === 'keyword.control.twig'
-                    && tokens[i + 2].value === 'block'
-                    && tokens[i + 4]?.type === 'identifier'
+                if (
+                    tokens[i].type === 'meta.tag.twig' &&
+                    /^{%-?$/.test(tokens[i].value) &&
+                    tokens[i + 2]?.type === 'keyword.control.twig' &&
+                    tokens[i + 2].value === 'block' &&
+                    tokens[i + 4]?.type === 'identifier'
                 ) {
-                    blocks.push({name: tokens[i + 4].value, row, column: tokens[i].start});
+                    blocks.push({ name: tokens[i + 4].value, row, column: tokens[i].start });
                 }
             }
         }
@@ -138,11 +146,13 @@ export class TwigEditor {
     }
 
     setAnnotationsData(data) {
-        this.editor.completers = [{
-            getCompletions: function(editor, session, pos, prefix, callback) {
-                callback(null, data.autocomplete);
+        this.editor.completers = [
+            {
+                getCompletions: function (editor, session, pos, prefix, callback) {
+                    callback(null, data.autocomplete);
+                },
             },
-        }];
+        ];
 
         if ('error' in data) {
             this.editor.getSession().setAnnotations([
@@ -150,7 +160,7 @@ export class TwigEditor {
                     row: data.error.line - 1,
                     type: data.error.type || 'error',
                     text: ` ${data.error.message}`,
-                }
+                },
             ]);
         }
     }
@@ -172,6 +182,12 @@ export class TwigEditor {
     }
 
     destroy() {
+        // Destroying the ACE instance does not fully reset the HTML, so we
+        // manually restore the container by using the cloned backup with
+        // updated content.
+        this.containerBackup.textContent = this.getContent();
+        this.editor.container.replaceWith(this.containerBackup);
+
         this.editor.destroy();
     }
 }

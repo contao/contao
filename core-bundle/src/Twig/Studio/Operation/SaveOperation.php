@@ -33,7 +33,11 @@ class SaveOperation extends AbstractOperation
             return $this->error($context);
         }
 
-        $storage->write($context->getUserTemplatesStoragePath(), $request->get('code'));
+        if (null === ($code = $request->get('code'))) {
+            throw new \LogicException('The request did not contain the template code.');
+        }
+
+        $storage->write($context->getUserTemplatesStoragePath(), $code);
 
         // Invalidate template
         $this->getTwig()->removeCache(

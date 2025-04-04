@@ -17,6 +17,7 @@ use Contao\CoreBundle\Tests\Fixtures\Enum\IntBackedEnum;
 use Contao\CoreBundle\Tests\Fixtures\Enum\StringBackedEnum;
 use Contao\CoreBundle\Tests\Fixtures\Enum\TranslatableEnum;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class EnumOptionsListenerTest extends TestCase
@@ -43,10 +44,9 @@ class EnumOptionsListenerTest extends TestCase
     }
 
     /**
-     * @dataProvider backedEnumProvider
-     *
      * @param class-string<\BackedEnum> $enum
      */
+    #[DataProvider('backedEnumProvider')]
     public function testGeneratesOptionCallbackForBackedEnums(string $enum): void
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
@@ -101,9 +101,7 @@ class EnumOptionsListenerTest extends TestCase
         $this->assertSame($dca, $GLOBALS['TL_DCA']['tl_foo']);
     }
 
-    /**
-     * @dataProvider translatableDcaConfigurationProvider
-     */
+    #[DataProvider('translatableDcaConfigurationProvider')]
     public function testGeneratesTranslatedReferenceForLabeledEnum(array $dca): void
     {
         /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */

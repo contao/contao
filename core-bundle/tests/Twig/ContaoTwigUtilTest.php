@@ -14,12 +14,11 @@ namespace Contao\CoreBundle\Tests\Twig;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ContaoTwigUtilTest extends TestCase
 {
-    /**
-     * @dataProvider provideContaoNames
-     */
+    #[DataProvider('provideContaoNames')]
     public function testParseContaoNameSplitsNames(string $name, string $expectedNamespace, string|null $expectedShortName): void
     {
         [$namespace, $shortName] = ContaoTwigUtil::parseContaoName($name);
@@ -67,9 +66,7 @@ class ContaoTwigUtilTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideInvalidNamespaces
-     */
+    #[DataProvider('provideInvalidNamespaces')]
     public function testParseContaoNameIgnoresInvalidNamespaces(string $name): void
     {
         $this->assertNull(ContaoTwigUtil::parseContaoName($name));
@@ -83,9 +80,7 @@ class ContaoTwigUtilTest extends TestCase
         yield 'empty input' => [''];
     }
 
-    /**
-     * @dataProvider provideNames
-     */
+    #[DataProvider('provideNames')]
     public function testGetIdentifier(string $name, string $expectedIdentifier): void
     {
         $this->assertSame($expectedIdentifier, ContaoTwigUtil::getIdentifier($name));
@@ -129,9 +124,7 @@ class ContaoTwigUtilTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideLegacyTemplateNames
-     */
+    #[DataProvider('provideLegacyTemplateNames')]
     public function testIsLegacyTemplate(string $name, bool $isLegacyTemplate): void
     {
         $this->assertSame($isLegacyTemplate, ContaoTwigUtil::isLegacyTemplate($name));
@@ -185,9 +178,7 @@ class ContaoTwigUtilTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider providePaths
-     */
+    #[DataProvider('providePaths')]
     public function testGetExtension(string $path, string $extension): void
     {
         $this->assertSame($extension, ContaoTwigUtil::getExtension($path));

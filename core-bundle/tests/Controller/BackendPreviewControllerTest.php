@@ -18,6 +18,7 @@ use Contao\CoreBundle\Event\ContaoCoreEvents;
 use Contao\CoreBundle\Event\PreviewUrlConvertEvent;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\Http\Authenticator\TwoFactorAuthenticator;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -147,9 +148,7 @@ class BackendPreviewControllerTest extends TestCase
         $this->assertTrue($response->isRedirection());
     }
 
-    /**
-     * @dataProvider redirectsFromPreviewUrlConvertEventListener
-     */
+    #[DataProvider('redirectsFromPreviewUrlConvertEventListener')]
     public function testRedirectsFromPreviewUrlConvertEvent(string $requestUrl, string $targetUrl, string $expectedLocation, string|null $loginUrl = null, bool $twoFactorComplete = false): void
     {
         $dispatcher = new EventDispatcher();

@@ -43,7 +43,7 @@ services:
             - '@contao.cron'
             - '@database_connection'
             - '%fragment.path%'
-            - ~
+            - false
 
     contao.listener.csp_report:
         class: Contao\CoreBundle\EventListener\CspReportListener
@@ -53,7 +53,6 @@ services:
     contao.listener.csrf_token_cookie:
         class: Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber
         arguments:
-            - '@contao.csrf.token_manager'
             - '@contao.csrf.token_storage'
             - '%contao.csrf_cookie_prefix%'
 
@@ -231,6 +230,7 @@ services:
             - '@translator'
             - '@router'
             - '@uri_signer'
+            - '@clock'
             - '%contao.preview_script%'
 
     contao.listener.data_container.record_preview:
@@ -357,12 +357,26 @@ services:
     contao.listener.json_ld_schema:
         class: Contao\CoreBundle\EventListener\ContaoJsonLdSchemaListener
 
+    contao.listener.language_fallback_warning:
+        class: Contao\CoreBundle\EventListener\LanguageFallbackWarningListener
+        arguments:
+            - '@request_stack'
+            - '@database_connection'
+            - '@translator'
+            - '@contao.framework'
+
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleSubscriber
         arguments:
             - '@translator'
             - '@contao.routing.scope_matcher'
             - '@contao.intl.locales'
+
+    contao.listener.log_email_message:
+        class: Contao\CoreBundle\EventListener\LogEmailMessageListener
+        arguments:
+            - '@monolog.logger.contao.email'
+            - '@monolog.logger.contao.error'
 
     contao.listener.make_backend_response_uncacheable:
         class: Contao\CoreBundle\EventListener\MakeBackendResponseUncacheableListener
@@ -518,6 +532,7 @@ services:
         arguments:
             - '@messenger.bus.default'
             - '%fragment.path%'
+            - '%contao.backend.route_prefix%'
 
     contao.listener.security.logout:
         class: Contao\CoreBundle\EventListener\Security\LogoutListener
@@ -575,14 +590,15 @@ services:
             - '@contao.routing.scope_matcher'
             - '@event_dispatcher'
 
-    contao.listener.webauthn_backend_route:
-        class: Contao\CoreBundle\EventListener\WebauthnBackendRouteListener
+    contao.listener.webauthn_route:
+        class: Contao\CoreBundle\EventListener\WebauthnRouteListener
         arguments:
             -
                 - webauthn.controller.creation.request.contao_backend_add_authenticator
                 - webauthn.controller.creation.response.contao_backend_add_authenticator
                 - webauthn.controller.security.contao_backend.request.options
                 - webauthn.controller.security.contao_backend.request.result
+            - backend
 
     contao.listener.widget.custom_rgxp:
         class: Contao\CoreBundle\EventListener\Widget\CustomRgxpListener
@@ -605,6 +621,7 @@ services:
         class: Contao\CoreBundle\Messenger\EventListener\MessageListener
         arguments:
             - '@monolog.logger.contao.error'
+            - '@database_connection'
 
     contao.twig.loader.auto_refresh_template_hierarchy_listener:
         class: Contao\CoreBundle\Twig\Loader\AutoRefreshTemplateHierarchyListener

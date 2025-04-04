@@ -1,10 +1,7 @@
-import {Controller} from "@hotwired/stimulus"
+import { Controller } from '@hotwired/stimulus';
 
 export default class BackendSearchController extends Controller {
-    static targets = [
-        "input",
-        "results",
-    ];
+    static targets = ['input', 'results'];
 
     static values = {
         route: String,
@@ -14,29 +11,23 @@ export default class BackendSearchController extends Controller {
         },
         delay: {
             type: Number,
-            default: 150,
+            default: 300,
         },
-    }
+    };
 
-    static classes = [
-        "hidden",
-        "initial",
-        "loading",
-        "invalid",
-        "results",
-        "error",
-    ]
+    static classes = ['hidden', 'initial', 'loading', 'invalid', 'results', 'error'];
 
     connect() {
         this.active = false;
         this.timeout = null;
 
-        this.setState("hidden");
+        this._initAbortController();
+        this.setState('hidden');
     }
 
     performSearch() {
         if (this.inputTarget.value.length < this.minCharactersValue) {
-            return this.setState("invalid");
+            return this.setState('invalid');
         }
 
         clearTimeout(this.timeout);
@@ -47,40 +38,89 @@ export default class BackendSearchController extends Controller {
     }
 
     loadResults() {
-        this.setState("loading");
+        this.setState('loading');
+        this._initAbortController();
 
-        fetch(this.searchRoute)
-            .then(res=> {
+        fetch(this.searchRoute, { signal: this.signal })
+            .then((res) => {
                 if (!res.ok) {
                     throw new Error(res.statusText);
                 }
 
                 return res.text();
             })
-            .then(html => {
+            .then((html) => {
                 this.resultsTarget.innerHTML = html;
-                this.setState("results");
+                this.setState('results');
             })
-            .catch(e => {
-                this.setState("error");
+            .catch((e) => {
+                if ('AbortError' === e.name) {
+                    return;
+                }
+
+                this.setState('error');
             });
     }
 
     open() {
         if (!this.active) {
-            this.setState("initial");
+            this.setState('initial');
             this.active = true;
         }
     }
 
     close() {
         this.inputTarget.blur();
-        this.inputTarget.value = "";
+        this.inputTarget.value = '';
 
         this.active = false;
         this.timeout = null;
 
-        this.setState("hidden");
+        this.setState('hidden');
+        this._resetFocusableResults();
+    }
+
+    inputBlur() {
+        if ('results' === this.state) {
+            return;
+        }
+
+        this.close();
+    }
+
+    focusTrapNext(event) {
+        if ('results' === this.state && document.activeElement === this.lastFocus) {
+            event.preventDefault();
+            this.firstFocus?.focus();
+        }
+    }
+
+    focusTrapPrev(event) {
+        if ('results' === this.state && document.activeElement === this.firstFocus) {
+            event.preventDefault();
+            this.lastFocus?.focus();
+        }
+    }
+
+    _initAbortController() {
+        this.abortController?.abort();
+        this.abortController = new AbortController();
+        this.signal = this.abortController?.signal;
+    }
+
+    _resetFocusableResults() {
+        this.firstFocus = null;
+        this.lastFocus = null;
+    }
+
+    _setFocusableResults() {
+        const elements = [
+            this.inputTarget,
+            ...this.resultsTarget.querySelectorAll('a[href]:not([disabled]), button:not([disabled])'),
+        ];
+
+        this.firstFocus = elements[0] ?? [];
+        this.lastFocus = elements[elements.length - 1] ?? [];
     }
 
     documentClick(event) {
@@ -92,7 +132,15 @@ export default class BackendSearchController extends Controller {
     }
 
     setState(state) {
-        BackendSearchController.classes.forEach(className => {
+        this.state = state;
+
+        if (state === 'results') {
+            this._setFocusableResults();
+        } else {
+            this._resetFocusableResults();
+        }
+
+        BackendSearchController.classes.forEach((className) => {
             this.element.classList.toggle(this[`${className}Class`], className === state);
         });
     }

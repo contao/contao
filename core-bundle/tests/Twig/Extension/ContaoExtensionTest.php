@@ -31,6 +31,7 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
 use Contao\CoreBundle\Twig\Slots\SlotTokenParser;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Cache\Adapter\NullAdapter;
@@ -406,9 +407,7 @@ class ContaoExtensionTest extends TestCase
         unset($GLOBALS['TL_LANG']);
     }
 
-    /**
-     * @dataProvider provideTemplateNames
-     */
+    #[DataProvider('provideTemplateNames')]
     public function testDefaultEscaperRules(string $templateName): void
     {
         $extension = $this->getContaoExtension();

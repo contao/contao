@@ -53,6 +53,19 @@ html {
 	}
 }
 
+/* Skip link */
+.show-on-focus:focus {
+	clip: unset;
+	height: auto;
+	width: auto;
+	margin: 4px;
+	padding: 9px;
+	position: absolute;
+	z-index: 999;
+	background-color: var(--content-bg);
+	border-radius: 2px;
+}
+
 /* Body */
 body {
 	background: var(--body-bg);
@@ -1519,6 +1532,7 @@ table.tl_listing {
 }
 
 .tl_content_right {
+	display: flex;
 	position: relative;
 	z-index: 1;
 	float: right;
@@ -1608,6 +1622,7 @@ table.tl_listing {
 
 .tl_right:has(.operations + :is(.tl_tree_checkbox, .tl_tree_radio)) {
 	display: flex;
+	align-items: start;
 }
 
 .cte_type {
@@ -1831,6 +1846,11 @@ table.tl_listing {
 	border: solid var(--tree-header-border);
 	border-width: 1px 0;
 	background: var(--tree-header);
+}
+
+.tl_folder_top .tl_right .operations img {
+	position: relative;
+	top: -1px;
 }
 
 .tl_folder {
@@ -2172,7 +2192,7 @@ ul.sgallery li {
 }
 
 /* Wizards */
-.tl_modulewizard button, .tl_optionwizard button, .tl_key_value_wizard button, .tl_tablewizard button, .tl_listwizard button, .tl_checkbox_wizard button, .tl_metawizard button, .tl_sectionwizard button, .tl_image_size + button {
+.tl_modulewizard button, .tl_optionwizard button, .tl_key_value_wizard button, .tl_tablewizard button, .tl_listwizard button, .tl_checkbox_wizard button, .tl_metawizard button, .tl_sectionwizard button, .tl_image_size button {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -2902,7 +2922,6 @@ fieldset:is(.tl_tbox,.tl_box) > legend {
 	color: var(--legend);
 	padding: 9px 12px 9px 28px;
 	background: url("icons/navcol.svg") 13px 10px no-repeat;
-	width: 100%;
 }
 
 fieldset:is(.tl_tbox,.tl_box) > legend[onclick] {
@@ -2917,7 +2936,6 @@ fieldset:is(.tl_tbox,.tl_box) > legend:has(> button) {
 fieldset:is(.tl_tbox,.tl_box) > legend > button {
 	text-align: initial;
 	border: 0 none;
-	width: 100%;
 	line-height: inherit;
 	box-sizing: border-box;
 	padding: 9px 12px 9px 28px;

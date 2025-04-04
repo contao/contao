@@ -235,9 +235,9 @@ class ServiceArgumentsTest extends FunctionalTestCase
         }
 
         if ($argument) {
-            $this->addWarning(\sprintf('Argument %s of "%s" (value: %s) does not have a type.', $i, $serviceId, $argument));
+            $this->fail(\sprintf('Argument %s of "%s" (value: %s) does not have a type.', $i, $serviceId, $argument));
         } else {
-            $this->addWarning(\sprintf('Argument %s of "%s" does not have a type.', $i, $serviceId));
+            $this->fail(\sprintf('Argument %s of "%s" does not have a type.', $i, $serviceId));
         }
     }
 

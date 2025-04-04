@@ -24,11 +24,12 @@ use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Tests\Fixtures\Helper\HookHelper;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\InsertTags;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -36,13 +37,11 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class InsertTagsTest extends TestCase
 {
-    use ExpectDeprecationTrait;
-
     protected function setUp(): void
     {
         parent::setUp();
 
-        $GLOBALS['TL_HOOKS']['replaceInsertTags'][] = [self::class, 'replaceInsertTagsHook'];
+        HookHelper::registerHook('replaceInsertTags', $this->replaceInsertTagsHook(...));
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
@@ -65,54 +64,11 @@ class InsertTagsTest extends TestCase
         parent::tearDown();
     }
 
-    public function replaceInsertTagsHook(string $tag): string
+    #[DataProvider('insertTagsProvider')]
+    public function testInsertTags(string $source, string $expected, bool $expectUserDeprecationMessage = true): void
     {
-        $tagParts = explode('::', $tag, 2);
-
-        if ('infinite-nested' === $tagParts[0]) {
-            return '{{infinite-nested::'.((int) $tagParts[1] + 1).'}}';
-        }
-
-        if ('infinite-recursion' === $tagParts[0]) {
-            return (string) (new InsertTags())->replaceInternal('{{infinite-recursion::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
-        }
-
-        if ('infinite-try-catch' === $tagParts[0]) {
-            try {
-                return (string) (new InsertTags())->replaceInternal('{{infinite-try-catch::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
-            } catch (\RuntimeException $exception) {
-                $this->assertSame('Maximum insert tag nesting level of 64 reached', $exception->getMessage());
-
-                return '[{]infinite-try-catch::'.((int) $tagParts[1] + 1).'[}]';
-            }
-        }
-
-        if ('infinite-retry' === $tagParts[0]) {
-            try {
-                return (string) (new InsertTags())->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
-            } catch (\RuntimeException $exception) {
-                $this->assertSame('Maximum insert tag nesting level of 64 reached', $exception->getMessage());
-
-                if ((int) $tagParts[1] >= 100) {
-                    return (string) (new InsertTags())->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
-                }
-
-                throw $exception;
-            }
-        }
-
-        return str_replace(['[', ']'], ['{', '}'], $tagParts[1] ?? '');
-    }
-
-    /**
-     * @dataProvider insertTagsProvider
-     *
-     * @group legacy
-     */
-    public function testInsertTags(string $source, string $expected, bool $expectDeprecation = true): void
-    {
-        if ($expectDeprecation) {
-            $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        if ($expectUserDeprecationMessage) {
+            $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook has been deprecated/');
         }
 
         InsertTags::reset();
@@ -312,11 +268,7 @@ class InsertTagsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideFigureInsertTags
-     *
-     * @group legacy
-     */
+    #[DataProvider('provideFigureInsertTags')]
     public function testFigureInsertTag(string $input, array $expectedArguments): void
     {
         $usedArguments = [];
@@ -428,11 +380,7 @@ class InsertTagsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideInvalidFigureInsertTags
-     *
-     * @group legacy
-     */
+    #[DataProvider('provideInvalidFigureInsertTags')]
     public function testFigureInsertTagReturnsEmptyStringIfInvalid(string $input, bool $invalidConfiguration): void
     {
         $figureRenderer = $this->createMock(FigureRenderer::class);
@@ -467,11 +415,7 @@ class InsertTagsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider allowedInsertTagsProvider
-     *
-     * @group legacy
-     */
+    #[DataProvider('allowedInsertTagsProvider')]
     public function testAllowedInsertTags(string $source, string $expected, array $allowedTags): void
     {
         System::getContainer()->setParameter('contao.insert_tags.allowed_tags', $allowedTags);
@@ -552,11 +496,7 @@ class InsertTagsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider encodeHtmlAttributesProvider
-     *
-     * @group legacy
-     */
+    #[DataProvider('encodeHtmlAttributesProvider')]
     public function testEncodeHtmlAttributes(string $source, string $expected): void
     {
         $reflectionClass = new \ReflectionClass(InsertTags::class);
@@ -774,11 +714,7 @@ class InsertTagsTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider languageInsertTagsProvider
-     *
-     * @group legacy
-     */
+    #[DataProvider('languageInsertTagsProvider')]
     public function testRemovesLanguageInsertTags(string $source, string $expected, string $translatorLocale = 'en'): void
     {
         $translator = $this->createMock(TranslatorInterface::class);
@@ -822,7 +758,7 @@ class InsertTagsTest extends TestCase
         $source = str_replace('lng', 'LnG', $source);
 
         if (str_contains($source, 'LnG')) {
-            $this->expectDeprecation('%sInsert tags with uppercase letters%s');
+            $this->expectUserDeprecationMessageMatches('/Insert tags with uppercase letters/');
         }
 
         $this->assertSame($expected, $insertTagParser->replaceInline($source));
@@ -1059,12 +995,9 @@ class InsertTagsTest extends TestCase
         ];
     }
 
-    /**
-     * @group legacy
-     */
     public function testInfiniteNestedInsertTag(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook has been deprecated/');
 
         InsertTags::reset();
 
@@ -1078,12 +1011,9 @@ class InsertTagsTest extends TestCase
         $insertTagParser->replaceInline('{{infinite-nested::1}}');
     }
 
-    /**
-     * @group legacy
-     */
     public function testInfiniteRecursionInsertTag(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook has been deprecated/');
 
         InsertTags::reset();
 
@@ -1095,12 +1025,9 @@ class InsertTagsTest extends TestCase
         $insertTagParser->replaceInline('{{infinite-recursion::1}}');
     }
 
-    /**
-     * @group legacy
-     */
     public function testInfiniteRecursionWithCatchInsertTag(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook has been deprecated/');
 
         InsertTags::reset();
 
@@ -1110,12 +1037,9 @@ class InsertTagsTest extends TestCase
         $this->assertSame('[{]infinite-try-catch::66[}]', $output);
     }
 
-    /**
-     * @group legacy
-     */
     public function testInfiniteRecursionWithCatchAndRetryInsertTag(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook has been deprecated/');
 
         InsertTags::reset();
 
@@ -1127,12 +1051,9 @@ class InsertTagsTest extends TestCase
         $insertTagParser->replaceInline('{{infinite-retry::1}}');
     }
 
-    /**
-     * @group legacy
-     */
     public function testPcreBacktrackLimit(): void
     {
-        $this->expectDeprecation('Since contao/core-bundle 5.2: Using the "replaceInsertTags" hook has been deprecated %s.');
+        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook has been deprecated/');
 
         InsertTags::reset();
 
@@ -1171,6 +1092,45 @@ class InsertTagsTest extends TestCase
         } finally {
             ini_set('pcre.backtrack_limit', $backtrackLimit);
         }
+    }
+
+    private function replaceInsertTagsHook(string $tag): string
+    {
+        $tagParts = explode('::', $tag, 2);
+
+        if ('infinite-nested' === $tagParts[0]) {
+            return '{{infinite-nested::'.((int) $tagParts[1] + 1).'}}';
+        }
+
+        if ('infinite-recursion' === $tagParts[0]) {
+            return (string) (new InsertTags())->replaceInternal('{{infinite-recursion::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
+        }
+
+        if ('infinite-try-catch' === $tagParts[0]) {
+            try {
+                return (string) (new InsertTags())->replaceInternal('{{infinite-try-catch::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
+            } catch (\RuntimeException $exception) {
+                $this->assertSame('Maximum insert tag nesting level of 64 reached', $exception->getMessage());
+
+                return '[{]infinite-try-catch::'.((int) $tagParts[1] + 1).'[}]';
+            }
+        }
+
+        if ('infinite-retry' === $tagParts[0]) {
+            try {
+                return (string) (new InsertTags())->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
+            } catch (\RuntimeException $exception) {
+                $this->assertSame('Maximum insert tag nesting level of 64 reached', $exception->getMessage());
+
+                if ((int) $tagParts[1] >= 100) {
+                    return (string) (new InsertTags())->replaceInternal('{{infinite-retry::'.((int) $tagParts[1] + 1).'}}', false, System::getContainer()->get('contao.insert_tag.parser'));
+                }
+
+                throw $exception;
+            }
+        }
+
+        return str_replace(['[', ']'], ['{', '}'], $tagParts[1] ?? '');
     }
 
     private function setContainerWithContaoConfiguration(array $configuration = []): void

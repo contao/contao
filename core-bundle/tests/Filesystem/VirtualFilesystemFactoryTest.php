@@ -17,12 +17,11 @@ use Contao\CoreBundle\Filesystem\MountManager;
 use Contao\CoreBundle\Filesystem\VirtualFilesystem;
 use Contao\CoreBundle\Filesystem\VirtualFilesystemFactory;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class VirtualFilesystemFactoryTest extends TestCase
 {
-    /**
-     * @dataProvider provideReadOnlyValues
-     */
+    #[DataProvider('provideReadOnlyValues')]
     public function testCreatesVirtualFilesystemInstances(bool $readonly): void
     {
         $mountManager = $this->createMock(MountManager::class);

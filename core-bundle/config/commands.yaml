@@ -92,7 +92,6 @@ services:
             - '@database_connection'
             - '@contao.migration.collection'
             - '@contao.doctrine.backup_manager'
-            - '@contao.doctrine.schema_provider'
             - '@contao.doctrine.schema.mysql_innodb_row_size_calculator'
 
     contao.command.resize_images:
@@ -109,6 +108,7 @@ services:
         arguments:
             - '@messenger.receiver_locator'
             - '@contao.process_util'
+            - '@database_connection'
             - ~
             - ~
 

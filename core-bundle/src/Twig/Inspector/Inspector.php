@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Inspector;
 
+use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Psr\Cache\CacheItemPoolInterface;
 use Twig\Environment;
@@ -49,7 +50,7 @@ class Inspector
 
         try {
             $source = $loader->getSourceContext($name);
-        } catch (LoaderError $e) {
+        } catch (LoaderError) {
             throw new InspectionException($name, reason: 'The template does not exist.');
         }
 
@@ -163,8 +164,10 @@ class Inspector
     {
         yield $data;
 
-        if ($data['parent'] ?? false) {
-            yield from $this->getDataFromAll($this->getData($data['parent']));
+        $parent = $data['parent'] ?? '';
+
+        if (null !== ContaoTwigUtil::parseContaoName($parent)) {
+            yield from $this->getDataFromAll($this->getData($parent));
         }
     }
 

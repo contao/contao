@@ -12,11 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\NewsletterBundle\Tests\Routing;
 
+use Contao\Model;
 use Contao\NewsletterBundle\Routing\NewsletterResolver;
 use Contao\NewsletterChannelModel;
 use Contao\NewsletterModel;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class NewsletterResolverTest extends ContaoTestCase
 {
@@ -47,30 +49,36 @@ class NewsletterResolverTest extends ContaoTestCase
     }
 
     /**
-     * @dataProvider getParametersForContentProvider
+     * @param class-string<Model> $class
      */
-    public function testGetParametersForContent(object $content, array $expected): void
+    #[DataProvider('getParametersForContentProvider')]
+    public function testGetParametersForContent(string $class, array $properties, array $expected): void
     {
+        $content = $this->mockClassWithProperties($class, $properties);
+
         $pageModel = $this->mockClassWithProperties(PageModel::class);
         $resolver = new NewsletterResolver($this->mockContaoFramework());
 
         $this->assertSame($expected, $resolver->getParametersForContent($content, $pageModel));
     }
 
-    public function getParametersForContentProvider(): iterable
+    public static function getParametersForContentProvider(): iterable
     {
         yield 'Uses the newsletter alias' => [
-            $this->mockClassWithProperties(NewsletterModel::class, ['id' => 42, 'alias' => 'foobar']),
+            NewsletterModel::class,
+            ['id' => 42, 'alias' => 'foobar'],
             ['parameters' => '/foobar'],
         ];
 
         yield 'Uses newsletter ID if alias is empty' => [
-            $this->mockClassWithProperties(NewsletterModel::class, ['id' => 42, 'alias' => '']),
+            NewsletterModel::class,
+            ['id' => 42, 'alias' => ''],
             ['parameters' => '/42'],
         ];
 
         yield 'Only supports NewsletterModel' => [
-            $this->mockClassWithProperties(PageModel::class),
+            PageModel::class,
+            [],
             [],
         ];
     }

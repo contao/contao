@@ -19,12 +19,11 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Search;
 use Doctrine\DBAL\Connection;
 use Nyholm\Psr7\Uri;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DefaultIndexerTest extends TestCase
 {
-    /**
-     * @dataProvider indexProvider
-     */
+    #[DataProvider('indexProvider')]
     public function testIndexesADocument(Document $document, array|null $expectedIndexParams, string|null $expectedMessage = null, bool $indexProtected = false): void
     {
         $searchAdapter = $this->mockAdapter(['indexPage']);
@@ -234,15 +233,24 @@ class DefaultIndexerTest extends TestCase
     {
         $framework = $this->mockContaoFramework();
 
+        $expected = [
+            'TRUNCATE TABLE tl_search',
+            'TRUNCATE TABLE tl_search_index',
+            'TRUNCATE TABLE tl_search_term',
+        ];
+
         $connection = $this->createMock(Connection::class);
         $connection
             ->expects($this->exactly(3))
             ->method('executeStatement')
-            ->withConsecutive(
-                ['TRUNCATE TABLE tl_search'],
-                ['TRUNCATE TABLE tl_search_index'],
-                ['TRUNCATE TABLE tl_search_term'],
-            )
+            ->with($this->callback(
+                static function (string $query) use (&$expected) {
+                    $pos = array_search($query, $expected, true);
+                    unset($expected[$pos]);
+
+                    return false !== $pos;
+                },
+            ))
         ;
 
         $indexer = new DefaultIndexer($framework, $connection);

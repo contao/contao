@@ -25,6 +25,7 @@ use Contao\InsertTags;
 use Contao\PageModel;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\DocParser;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -39,9 +40,7 @@ class FormatDateInsertTagTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider getConvertedInsertTags
-     */
+    #[DataProvider('getConvertedInsertTags')]
     public function testReplacedInsertTag(string $insertTag, string|false $expected): void
     {
         $listener = new FormatDateInsertTag($this->getFramework(), new RequestStack());

@@ -18,6 +18,7 @@ use Contao\CoreBundle\Routing\ResponseContext\Csp\CspHandlerFactory;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\HeaderBag;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -30,12 +31,11 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouterInterface;
 use Twig\Environment;
+use Twig\Loader\LoaderInterface;
 
 class PreviewToolbarListenerTest extends TestCase
 {
-    /**
-     * @dataProvider getInjectToolbarData
-     */
+    #[DataProvider('getInjectToolbarData')]
     public function testInjectsTheToolbarBeforeTheClosingBodyTag(string $content, string $expected): void
     {
         $listener = new PreviewToolbarListener(
@@ -192,9 +192,7 @@ class PreviewToolbarListenerTest extends TestCase
         $this->assertSame('<html><head></head><body></body></html>', $response->getContent());
     }
 
-    /**
-     * @dataProvider getDisallowedStatusCodes
-     */
+    #[DataProvider('getDisallowedStatusCodes')]
     public function testDoesNotInjectToolbarOnDisallowedStatusCodes(int $statusCode, bool $hasSession): void
     {
         $response = new Response('<html><head></head><body></body></html>', $statusCode);
@@ -233,9 +231,7 @@ class PreviewToolbarListenerTest extends TestCase
         yield [500, false];
     }
 
-    /**
-     * @dataProvider getAllowedStatusCodes
-     */
+    #[DataProvider('getAllowedStatusCodes')]
     public function testInjectsToolbarOnAllowedStatusCodes(int $statusCode, bool $hasSession): void
     {
         $response = new Response('<html><head></head><body></body></html>');
@@ -350,6 +346,56 @@ class PreviewToolbarListenerTest extends TestCase
         $listener($event);
 
         $this->assertSame('<html><head></head><body></body></html>', $response->getContent());
+    }
+
+    #[DataProvider('providePreviewToolbarTemplateScenarios')]
+    public function testRendersCorrectTemplate(bool $legacyTemplateExists, string $expectedTemplate): void
+    {
+        $response = new Response('<html><head></head><body></body></html>');
+        $response->headers->set('Content-Type', 'text/html; charset=utf-8');
+
+        $event = new ResponseEvent(
+            $this->createMock(HttpKernelInterface::class),
+            $this->mockRequest(),
+            HttpKernelInterface::MAIN_REQUEST,
+            $response,
+        );
+
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->method('exists')
+            ->with('@ContaoCore/Frontend/preview_toolbar_base_js.html.twig')
+            ->willReturn($legacyTemplateExists)
+        ;
+
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->method('getLoader')
+            ->willReturn($loader)
+        ;
+
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with($expectedTemplate, $this->anything())
+        ;
+
+        $listener = new PreviewToolbarListener(
+            $this->mockScopeMatcher(),
+            $this->mockTokenChecker(),
+            $twig,
+            $this->mockRouterWithContext(),
+            new CspHandlerFactory(new CspParser(new PolicyManager())),
+        );
+
+        $listener($event);
+    }
+
+    public static function providePreviewToolbarTemplateScenarios(): iterable
+    {
+        yield 'legacy template' => [true, '@ContaoCore/Frontend/preview_toolbar_base_js.html.twig'];
+
+        yield 'modern template' => [false, '@Contao/frontend_preview/toolbar_js.html.twig'];
     }
 
     private function mockRequest(bool $isPreview = true, bool $isXmlHttpRequest = false, string $requestFormat = 'html', bool $hasSession = true): Request&MockObject

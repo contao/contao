@@ -31,6 +31,7 @@ use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\Exception\DriverException;
+use enshrined\svgSanitize\Sanitizer;
 use Imagine\Exception\RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -1365,12 +1366,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$return .= '
 </div>
   ' . $strButtons . '
-</form>
-</turbo-frame>';
+</form>';
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
-		$return = '
-<turbo-frame id="tl_edit_form_frame" target="_top" data-turbo-action="advance">' . $version . Message::generate() . ($this->noReload ? '
+		$return = $version . Message::generate() . ($this->noReload ? '
 <p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
 <div id="tl_buttons">
 ' . DataContainerOperationsBuilder::generateBackButton() . '
@@ -1798,6 +1797,17 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Save the file
 			if (md5($strContent) != md5($strSource))
 			{
+				if ($objFile->extension == 'svg' || $objFile->extension == 'svgz')
+				{
+					$sanitizer = new Sanitizer();
+					$strSource = $sanitizer->sanitize($strSource);
+
+					if (!$strSource)
+					{
+						throw new \Exception(\sprintf($GLOBALS['TL_LANG']['ERR']['invalidFile'], $this->intId));
+					}
+				}
+
 				if ($objFile->extension == 'svgz')
 				{
 					$strSource = gzencode($strSource);
@@ -1864,7 +1874,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 <div class="tl_tbox">
   <div class="widget">
     <h3><label for="ctrl_source">' . $GLOBALS['TL_LANG']['tl_files']['editor'][0] . '</label></h3>
-    <textarea name="source" id="ctrl_source" class="tl_textarea monospace" rows="12" cols="80" style="height:400px" data-action="focus->contao--scroll-offset#store">' . "\n" . htmlspecialchars($strContent, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '</textarea>' . ((Config::get('showHelp') && isset($GLOBALS['TL_LANG']['tl_files']['editor'][1])) ? '
+    <textarea name="source" id="ctrl_source" class="tl_textarea monospace' . (Config::get('useCE') ? ' noresize' : '') . '" rows="12" cols="80" style="height:400px" data-action="focus->contao--scroll-offset#store">' . "\n" . htmlspecialchars($strContent, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '</textarea>' . ((Config::get('showHelp') && isset($GLOBALS['TL_LANG']['tl_files']['editor'][1])) ? '
     <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_files']['editor'][1] . '</p>' : '') . '
   </div>
 </div>
@@ -2398,7 +2408,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			{
 				$class = $blnIsOpen ? 'foldable foldable--open' : 'foldable';
 				$alt = $blnIsOpen ? $GLOBALS['TL_LANG']['MSC']['collapseNode'] : $GLOBALS['TL_LANG']['MSC']['expandNode'];
-				$return .= '<a href="' . $this->addToUrl('tg=' . $md5) . '" class="' . $class . '" data-contao--toggle-nodes-target="toggle" data-action="contao--toggle-nodes#toggle" data-contao--toggle-nodes-id-param="filetree_' . $md5 . '" data-contao--toggle-nodes-folder-param="' . $currentFolder . '" data-contao--toggle-nodes-level-param="' . $level . '">' . Image::getHtml('chevron-right.svg', $alt) . '</a>';
+				$return .= '<a href="' . $this->addToUrl('tg=' . $md5) . '" class="' . $class . '" data-contao--toggle-nodes-target="toggle" data-action="contao--toggle-nodes#toggle:prevent" data-contao--toggle-nodes-id-param="filetree_' . $md5 . '" data-contao--toggle-nodes-folder-param="' . $currentFolder . '" data-contao--toggle-nodes-level-param="' . $level . '">' . Image::getHtml('chevron-right.svg', $alt) . '</a>';
 			}
 
 			$protected = $blnProtected;
@@ -2551,7 +2561,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Buttons
 			if ($arrClipboard !== false && Input::get('act') != 'select')
 			{
-				$_buttons = '&nbsp;';
+				$_buttons = '';
 			}
 			else
 			{

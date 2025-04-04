@@ -3,20 +3,15 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     static targets = ['navigation', 'section'];
 
-    connect () {
-        this.rebuildNavigation();
-        this.connected = true;
-    }
-
-    sectionTargetConnected () {
-        if (!this.connected) {
-            return;
-        }
-
+    sectionTargetConnected() {
         this.rebuildNavigation();
     }
 
-    rebuildNavigation () {
+    sectionTargetDisconnected() {
+        this.rebuildNavigation();
+    }
+
+    rebuildNavigation() {
         if (!this.hasNavigationTarget) {
             return;
         }

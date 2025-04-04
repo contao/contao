@@ -42,9 +42,8 @@
 
             {# Main editor section with multiple tabs #}
             {% embed "@Contao/backend/component/tabs/_container.html.twig" with {
-                tabs_container_attributes: attrs()
-                    .set('id', 'template-studio--tabs')
-                    .set('data-contao--template-studio-target', 'tabs'),
+                tabs_container_attributes: attrs().set('data-contao--template-studio-target', 'tabs'),
+                id: 'template-studio--tabs',
                 panels_container_id: 'template-studio--tab-panels',
             } %}
                 {% trans_default_domain "contao_template_studio" %}
@@ -67,10 +66,6 @@
 
             {# Info panel #}
             <div id="template-studio--info" data-panel></div>
-
-            {# Overlays #}
-            <div id="template-studio--message"></div>
-            <div id="template-studio--dialog"></div>
         </section>
     </main>
 {% endblock %}

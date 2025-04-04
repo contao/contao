@@ -16,6 +16,7 @@ use Contao\Database\Result;
 use Doctrine\DBAL\Cache\ArrayResult;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Result as DoctrineResult;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class ResultTest extends TestCase
@@ -187,9 +188,7 @@ class ResultTest extends TestCase
         $this->assertSame(2, $result->count());
     }
 
-    /**
-     * @dataProvider getInvalidStatements
-     */
+    #[DataProvider('getInvalidStatements')]
     public function testInvalidStatements(array|object|string $statement): void
     {
         $this->expectException('InvalidArgumentException');

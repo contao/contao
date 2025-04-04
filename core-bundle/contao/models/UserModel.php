@@ -28,6 +28,7 @@ use Contao\Model\Collection;
  * @property boolean           $useRTE
  * @property boolean           $useCE
  * @property boolean           $doNotCollapse
+ * @property boolean           $doNotHideMessages
  * @property string            $password
  * @property boolean           $pwChange
  * @property boolean           $admin
@@ -75,6 +76,7 @@ use Contao\Model\Collection;
  * @method static UserModel|null findOneByUseRTE($val, array $opt=array())
  * @method static UserModel|null findOneByUseCE($val, array $opt=array())
  * @method static UserModel|null findOneByDoNotCollapse($val, array $opt=array())
+ * @method static UserModel|null findOneByDoNotHideMessages($val, array $opt=array())
  * @method static UserModel|null findOneByPassword($val, array $opt=array())
  * @method static UserModel|null findOneByPwChange($val, array $opt=array())
  * @method static UserModel|null findOneByAdmin($val, array $opt=array())
@@ -115,6 +117,7 @@ use Contao\Model\Collection;
  * @method static Collection<UserModel>|UserModel[]|null findByUseRTE($val, array $opt=array())
  * @method static Collection<UserModel>|UserModel[]|null findByUseCE($val, array $opt=array())
  * @method static Collection<UserModel>|UserModel[]|null findByDoNotCollapse($val, array $opt=array())
+ * @method static Collection<UserModel>|UserModel[]|null findByDoNotHideMessages($val, array $opt=array())
  * @method static Collection<UserModel>|UserModel[]|null findByPassword($val, array $opt=array())
  * @method static Collection<UserModel>|UserModel[]|null findByPwChange($val, array $opt=array())
  * @method static Collection<UserModel>|UserModel[]|null findByAdmin($val, array $opt=array())
@@ -161,6 +164,7 @@ use Contao\Model\Collection;
  * @method static integer countByUseRTE($val, array $opt=array())
  * @method static integer countByUseCE($val, array $opt=array())
  * @method static integer countByDoNotCollapse($val, array $opt=array())
+ * @method static integer countByDoNotHideMessages($val, array $opt=array())
  * @method static integer countByPassword($val, array $opt=array())
  * @method static integer countByPwChange($val, array $opt=array())
  * @method static integer countByAdmin($val, array $opt=array())

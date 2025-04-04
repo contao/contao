@@ -92,6 +92,7 @@ class FilesystemUtil
         };
 
         foreach ($uuids as $uuid) {
+            /** @noinspection UselessIsComparisonInspection */
             if (!\is_string($uuid)) {
                 continue;
             }

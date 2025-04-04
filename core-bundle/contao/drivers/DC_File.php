@@ -307,10 +307,10 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 		}
 
 		$return = '
-<turbo-frame id="tl_edit_form_frame" target="_top" data-turbo-action="advance" data-controller="contao--jump-targets">
+<div data-controller="contao--jump-targets">
 	<div class="jump-targets"><div class="inner" data-contao--jump-targets-target="navigation"></div></div>
 	' . $return . '
-</turbo-frame>';
+</div>';
 
 		return $return;
 	}
@@ -332,7 +332,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 		// Make sure that checkbox values are boolean
 		if (($arrData['inputType'] ?? null) == 'checkbox' && !($arrData['eval']['multiple'] ?? null))
 		{
-			$varValue = $varValue ? true : false;
+			$varValue = (bool) $varValue;
 		}
 
 		if ($varValue)
