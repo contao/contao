@@ -64,7 +64,7 @@ class DumpTwigIDEFileCommand extends Command
 
         $io->success(\sprintf('The namespace lookup file was written to "%s/%s". Make sure the file is not ignored by your IDE.', $targetDir, NamespaceLookupFileGenerator::FILE_NAME));
 
-        if (NamespaceLookupFileWarmer::CONTAO_IDE_DIR !== $input->getArgument('dir')) {
+        if ($this->getDefinition()->getArgument('dir')->getDefault() !== $input->getArgument('dir')) {
             $io->info('Re-run this command after installing extensions or introducing new @Contao namespace locations.');
         }
 
