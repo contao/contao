@@ -50,11 +50,6 @@ document.documentElement.addEventListener('turbo:before-prefetch', (e) => {
 const mooDomready = () => {
     if (!document.body.mooDomreadyFired) {
         document.body.mooDomreadyFired = true;
-
-        if (Element.Events.removeEvents) {
-            Element.Events.removeEvents();
-        }
-
         window.fireEvent('domready');
     }
 };

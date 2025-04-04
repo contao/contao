@@ -445,7 +445,7 @@ class Database
 						  ->limit(1)
 						  ->execute(...$params);
 
-		return $objUnique->numRows ? false : true;
+		return $objUnique->numRows < 1;
 	}
 
 	/**

@@ -43,7 +43,7 @@ services:
             - '@contao.cron'
             - '@database_connection'
             - '%fragment.path%'
-            - ~
+            - false
 
     contao.listener.csp_report:
         class: Contao\CoreBundle\EventListener\CspReportListener
@@ -356,6 +356,14 @@ services:
 
     contao.listener.json_ld_schema:
         class: Contao\CoreBundle\EventListener\ContaoJsonLdSchemaListener
+
+    contao.listener.language_fallback_warning:
+        class: Contao\CoreBundle\EventListener\LanguageFallbackWarningListener
+        arguments:
+            - '@request_stack'
+            - '@database_connection'
+            - '@translator'
+            - '@contao.framework'
 
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleSubscriber
