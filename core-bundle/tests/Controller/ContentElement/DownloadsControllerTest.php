@@ -78,6 +78,9 @@ class DownloadsControllerTest extends ContentElementTestCase
         $this->assertSameHtml($expectedOutput, $response->getContent());
     }
 
+    /**
+     * @group legacy
+     */
     public function testOutputsSingleDownloadWithCustomMetadata(): void
     {
         $response = $this->renderWithModelData(
