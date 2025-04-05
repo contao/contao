@@ -82,7 +82,7 @@ class JsonLdManagerTest extends TestCase
         $graph->add((new ImageObject())->name('Name')->caption('Caption'));
 
         $graph = $schemaManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO);
-        $graph->set(new ContaoPageSchema('title', 42, false, false, [], false));
+        $graph->set(new ContaoPageSchema('title', 42, 'use_robots_tag', false, [], false));
 
         $this->assertSame(
             <<<'JSONLD'

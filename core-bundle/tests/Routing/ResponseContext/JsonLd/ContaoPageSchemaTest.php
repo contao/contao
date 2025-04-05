@@ -24,7 +24,7 @@ class ContaoPageSchemaTest extends TestCase
 
         $this->assertSame('title', $schema->getTitle());
         $this->assertSame(42, $schema->getPageId());
-        $this->assertSame('use_robots_tag', $schema->isSearchIndexer());
+        $this->assertSame('use_robots_tag', $schema->getSearchIndexer());
         $this->assertFalse($schema->isProtected());
         $this->assertSame([], $schema->getGroups());
         $this->assertFalse($schema->isFePreview());
@@ -36,7 +36,7 @@ class ContaoPageSchemaTest extends TestCase
         $this->assertSame(43, $schema->getPageId());
 
         $schema->setSearchIndexer('always_index');
-        $this->assertSame('always_index', $schema->isSearchIndexer());
+        $this->assertSame('always_index', $schema->getSearchIndexer());
 
         $schema->setProtected(true);
         $this->assertTrue($schema->isProtected());

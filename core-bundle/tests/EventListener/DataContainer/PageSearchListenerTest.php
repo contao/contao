@@ -79,7 +79,7 @@ class PageSearchListenerTest extends TestCase
         $listener->onSaveAlias('foo', $dc);
     }
 
-    public function testPurgesTheSearchIndexOnNoSearchChange(): void
+    public function testPurgesTheSearchIndexOnSearchIndexerChangeToNeverIndex(): void
     {
         $connection = $this->createMock(Connection::class);
         $connection
@@ -99,7 +99,7 @@ class PageSearchListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
-            ->willReturn(['noSearch' => 0])
+            ->willReturn(['searchIndexer' => 'use_robots_tag'])
         ;
 
         $listener = new PageSearchListener(
@@ -107,10 +107,10 @@ class PageSearchListenerTest extends TestCase
             $connection,
         );
 
-        $listener->onSaveNoSearch('1', $dc);
+        $listener->onSaveSearchIndexer('never_index', $dc);
     }
 
-    public function testDoesNotPurgeTheSearchIndexIfNoSearchIsDisabled(): void
+    public function testDoesNotPurgeTheSearchIndexOnSearchIndexerChangeToAlwaysIndex(): void
     {
         $connection = $this->createMock(Connection::class);
         $connection
@@ -127,7 +127,7 @@ class PageSearchListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
-            ->willReturn(['noSearch' => 1])
+            ->willReturn(['searchIndexer' => 'never_index']) // Not sure about this value... could be empty string '', 'use_robots_tag' or 'never_index'. Does this mean that three tests for alle cases should be added?
         ;
 
         $listener = new PageSearchListener(
@@ -135,10 +135,13 @@ class PageSearchListenerTest extends TestCase
             $connection,
         );
 
-        $listener->onSaveNoSearch('', $dc);
+        $listener->onSaveSearchIndexer('always_index', $dc);
     }
 
-    public function testDoesNotPurgeTheSearchIndexWithUnchangedNoSearch(): void
+    // Not sure about the following test (change 'searchIndexer' to 'use_robots_tag')
+    // Case 1: When 'robots tag' is 'noindex' the search index should be purged
+    // Case 2: When 'robots tag' is 'index' the search index should NOT be purged
+    public function testDoesNotPurgeTheSearchIndexOnSearchIndexerChangeToUseRobotsTag(): void
     {
         $connection = $this->createMock(Connection::class);
         $connection
@@ -155,7 +158,7 @@ class PageSearchListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
-            ->willReturn(['noSearch' => 1])
+            ->willReturn(['searchIndexer' => 'use_robots_tag']) // Not sure about this value... could be empty string '', 'use_robots_tag' or 'never_index'. Does this mean that three tests for alle cases should be added?
         ;
 
         $listener = new PageSearchListener(
@@ -163,9 +166,73 @@ class PageSearchListenerTest extends TestCase
             $connection,
         );
 
-        $listener->onSaveNoSearch('1', $dc);
+        $listener->onSaveSearchIndexer('use_robots_tag', $dc);
     }
 
+    // Not sure if the following test is required ('searchIndexer' uses empty string '')
+    // 'searchIndexer' could be empty in the database entries after the migration from 'noSearch' to 'searchIndexer'
+    // but it can not be changed to an empty string in the backend. If users select the default value, it's 'use_robots_tag'
+    public function testDoesNotPurgeTheSearchIndexOnSearchIndexerChangeToEmptyString(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['searchIndexer' => 'use_robots_tag']) // Not sure about this value... could be empty string '', 'use_robots_tag' or 'never_index'. Does this mean that three tests for alle cases should be added?
+        ;
+
+        $listener = new PageSearchListener(
+            $this->mockContaoFramework([Search::class => $search]),
+            $connection,
+        );
+
+        $listener->onSaveSearchIndexer('', $dc);
+    }
+
+    // Should the following test be added for all possible cases?
+    // 'searchIndexer could be an empty string '', 'use_robots_tag', 'always_index' or 'never_index'
+    public function testDoesNotPurgeTheSearchIndexWithUnchangedSearchIndexer(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn(['searchIndexer' => 'never_index'])
+        ;
+
+        $listener = new PageSearchListener(
+            $this->mockContaoFramework([Search::class => $search]),
+            $connection,
+        );
+
+        $listener->onSaveNoSearch('never_index', $dc);
+    }
+    
+
+    // Adjustment required? (help needed)
+    // If 'robots tag' gets changed from 'index' to 'noindex' an 'searchIndexer' is set to 'always_index', the search index should not be purged
     public function testPurgesTheSearchIndexOnRobotsChange(): void
     {
         $connection = $this->createMock(Connection::class);
@@ -197,6 +264,8 @@ class PageSearchListenerTest extends TestCase
         $listener->onSaveRobots('noindex,follow', $dc);
     }
 
+    // Adjustment required? (help needed)
+    // If 'robots tag' gets changed from 'noindex' to 'index' an 'searchIndexer' is set to 'never_index', the search index should be purged
     public function testDoesNotPurgeTheSearchIndexIfRobotsIsIndex(): void
     {
         $connection = $this->createMock(Connection::class);
