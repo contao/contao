@@ -227,7 +227,7 @@ class PageSearchListenerTest extends TestCase
             $connection,
         );
 
-        $listener->onSaveNoSearch('never_index', $dc);
+        $listener->onSaveSearchIndexer('never_index', $dc);
     }
     
 
