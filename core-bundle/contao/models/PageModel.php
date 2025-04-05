@@ -927,6 +927,9 @@ class PageModel extends Model
 		$trail = array($this->id, $pid);
 		$time = time();
 
+		// Backwards compatibility fallback (see #8252)
+		$this->noSearch = 'never_index' === $this->searchIndexer ? true : false;
+
 		// Inherit the settings
 		if ($this->type == 'root')
 		{
