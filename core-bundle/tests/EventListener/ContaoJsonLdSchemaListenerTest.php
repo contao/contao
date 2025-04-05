@@ -30,7 +30,7 @@ class ContaoJsonLdSchemaListenerTest extends TestCase
         $context = new ResponseContext();
         $context->add($headTagBag);
 
-        $schema = new ContaoPageSchema('Original title', 42, false, false, [], false);
+        $schema = new ContaoPageSchema('Original title', 42, 'use_robots_tag', false, [], false);
 
         $jsonLdManager = new JsonLdManager($context);
         $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->set($schema);
