@@ -47,6 +47,7 @@ use Contao\Model\MetadataTrait;
  * @property integer        $articleId
  * @property string         $url
  * @property boolean        $target
+ * @property string         $searchIndexer
  * @property string         $cssClass
  * @property boolean        $noComments
  * @property boolean        $featured
@@ -89,6 +90,7 @@ use Contao\Model\MetadataTrait;
  * @method static NewsModel|null findOneByArticleId($val, array $opt=array())
  * @method static NewsModel|null findOneByUrl($val, array $opt=array())
  * @method static NewsModel|null findOneByTarget($val, array $opt=array())
+ * @method static NewsModel|null findOneBySearchIndexer($val, array $opt=array())
  * @method static NewsModel|null findOneByCssClass($val, array $opt=array())
  * @method static NewsModel|null findOneByNoComments($val, array $opt=array())
  * @method static NewsModel|null findOneByFeatured($val, array $opt=array())
@@ -125,6 +127,7 @@ use Contao\Model\MetadataTrait;
  * @method static Collection<NewsModel>|NewsModel[]|null findByArticleId($val, array $opt=array())
  * @method static Collection<NewsModel>|NewsModel[]|null findByUrl($val, array $opt=array())
  * @method static Collection<NewsModel>|NewsModel[]|null findByTarget($val, array $opt=array())
+ * @method static Collection<NewsModel>|NewsModel[]|null findBySearchIndexer($val, array $opt=array())
  * @method static Collection<NewsModel>|NewsModel[]|null findByCssClass($val, array $opt=array())
  * @method static Collection<NewsModel>|NewsModel[]|null findByNoComments($val, array $opt=array())
  * @method static Collection<NewsModel>|NewsModel[]|null findByFeatured($val, array $opt=array())
@@ -166,6 +169,7 @@ use Contao\Model\MetadataTrait;
  * @method static integer countByArticleId($val, array $opt=array())
  * @method static integer countByUrl($val, array $opt=array())
  * @method static integer countByTarget($val, array $opt=array())
+ * @method static integer countBySearchIndexer($val, array $opt=array())
  * @method static integer countByCssClass($val, array $opt=array())
  * @method static integer countByNoComments($val, array $opt=array())
  * @method static integer countByFeatured($val, array $opt=array())

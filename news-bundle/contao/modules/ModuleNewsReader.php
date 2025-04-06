@@ -16,6 +16,8 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Util\UrlUtil;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 
 /**
  * Front end module "newsreader".
@@ -162,6 +164,14 @@ class ModuleNewsReader extends ModuleNews
 			{
 				$htmlHeadBag->setCanonicalUri($urlGenerator->generate($objArticle, array(), UrlGeneratorInterface::ABSOLUTE_URL));
 			}
+		}
+
+		// Update json ld searchIndexer setting
+		$pageSchema = $responseContext->get(JsonLdManager::class)->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
+
+		if (!empty($objArticle->searchIndexer) && 'use_reader_page_setting' !== $objArticle->searchIndexer)
+		{
+			$pageSchema['searchIndexer'] = $objArticle->searchIndexer;
 		}
 
 		$arrArticle = $this->parseArticle($objArticle);
