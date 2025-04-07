@@ -2978,6 +2978,8 @@ fieldset.collapsed > legend:not(:has(> button)) {
 @media (max-width: 991px) {
 	#container {
 		display: block;
+		overflow: hidden;
+		position: relative;
 	}
 
 	#main, #left {
@@ -3001,8 +3003,10 @@ fieldset.collapsed > legend:not(:has(> button)) {
 	#left {
 		visibility: hidden;
 		position: absolute;
-		top: 40px;
+		top: 0;
+		bottom: 0;
 		width: 240px;
+		overflow-y: scroll;
 		transition: transform .2s ease, visibility .2s ease;
 		-webkit-transform: translateX(-240px);
 		transform: translateX(-240px);
