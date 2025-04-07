@@ -16,6 +16,8 @@ use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Util\UrlUtil;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 
 /**
  * Front end module "event reader".
@@ -159,6 +161,14 @@ class ModuleEventReader extends Events
 			{
 				$htmlHeadBag->setCanonicalUri($urlGenerator->generate($objEvent, array(), UrlGeneratorInterface::ABSOLUTE_URL));
 			}
+		}
+
+		// Update json ld searchIndexer setting
+		$pageSchema = $responseContext->get(JsonLdManager::class)->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
+
+		if (!empty($objEvent->searchIndexer) && 'use_reader_page_setting' !== $objEvent->searchIndexer)
+		{
+			$pageSchema['searchIndexer'] = $objEvent->searchIndexer;
 		}
 
 		$intStartTime = $objEvent->startTime;
