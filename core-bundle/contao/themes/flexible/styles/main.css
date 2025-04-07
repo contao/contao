@@ -3006,7 +3006,7 @@ fieldset.collapsed > legend:not(:has(> button)) {
 		top: 0;
 		bottom: 0;
 		width: 240px;
-		overflow-y: scroll;
+		overflow-y: auto;
 		transition: transform .2s ease, visibility .2s ease;
 		-webkit-transform: translateX(-240px);
 		transform: translateX(-240px);
