@@ -3230,7 +3230,10 @@ fieldset.collapsed > legend:not(:has(> button)) {
 		border-radius: 0;
 		padding: 3px 5px;
 		background-color: var(--text);
-		color: var(--white)
+		color: var(--white);
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
 	}
 
 	html[data-color-scheme="dark"] {
