@@ -393,7 +393,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 		(
 			'filter'                  => true,
 			'inputType'               => 'select',
-			'options'                 => array('use_reader_page_setting', 'use_robots_tag', 'always_index', 'never_index'),
+			'options'                 => array('use_reader_page_setting', 'always_index', 'never_index'),
 			'eval'                    => array('maxlength'=>32, 'tl_class'=>'w50'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_news'],
 			'sql'                     => "varchar(32) NOT NULL default ''"

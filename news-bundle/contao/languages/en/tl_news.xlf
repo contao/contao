@@ -149,9 +149,6 @@
       <trans-unit id="tl_news.use_reader_page_setting">
         <source>Use setting of the page with the news reader</source>
       </trans-unit>
-      <trans-unit id="tl_news.use_robots_tag">
-        <source>Use robots tag of this news article</source>
-      </trans-unit>
       <trans-unit id="tl_news.always_index">
         <source>Always index this news article</source>
       </trans-unit>
