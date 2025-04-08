@@ -2271,10 +2271,10 @@
         <source>Skip to content</source>
       </trans-unit>
       <trans-unit id="MSC.searchIndexer.0">
-        <source>Search indexer (Contao Crawler)</source>
+        <source>Search indexer</source>
       </trans-unit>
       <trans-unit id="MSC.searchIndexer.1">
-        <source>Include or exclude this page from the search index.</source>
+        <source>Include or exclude this page from the search index (Contao Crawler).</source>
       </trans-unit>
       <trans-unit id="MSC.searchIndexerBlankOption">
         <source>Use robots tag</source>
