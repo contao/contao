@@ -81,6 +81,9 @@ document.documentElement.addEventListener('turbo:before-cache', (e) => {
         }
     });
 
+    // Remove all TinyMCE instances
+    tinymce.remove();
+
     // Remove the Symfony toolbar
     e.target.querySelector('.sf-toolbar')?.remove();
 });
