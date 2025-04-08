@@ -151,7 +151,7 @@ class CoreResponseContextFactoryTest extends TestCase
         $pageModel->robots = 'noindex,nofollow';
         $pageModel->enableCanonical = true;
         $pageModel->canonicalLink = '{{link_url::42}}';
-        $pageModel->searchIndexer = 'use_robots_tag';
+        $pageModel->searchIndexer = '';
         $pageModel->protected = false;
         $pageModel->enableCsp = true;
         $pageModel->csp = "script-src 'self'";
@@ -190,7 +190,7 @@ class CoreResponseContextFactoryTest extends TestCase
                 '@type' => 'Page',
                 'title' => 'My title',
                 'pageId' => 1,
-                'searchIndexer' => 'use_robots_tag',
+                'searchIndexer' => '',
                 'protected' => false,
                 'groups' => [],
                 'fePreview' => false,
@@ -232,7 +232,7 @@ class CoreResponseContextFactoryTest extends TestCase
         $pageModel->id = 0;
         $pageModel->enableCanonical = true;
         $pageModel->canonicalLink = '{{link_url::42}}';
-        $pageModel->searchIndexer = 'use_robots_tag';
+        $pageModel->searchIndexer = '';
         $pageModel->protected = false;
 
         $factory = new CoreResponseContextFactory(
@@ -272,7 +272,7 @@ class CoreResponseContextFactoryTest extends TestCase
         $pageModel->id = 0;
         $pageModel->title = 'We went from Alpha &#62; Omega';
         $pageModel->description = 'My description <strong>contains</strong> HTML<br>.';
-        $pageModel->searchIndexer = 'use_robots_tag';
+        $pageModel->searchIndexer = '';
         $pageModel->protected = false;
 
         $insertTagsParser = $this->createMock(InsertTagParser::class);
@@ -309,7 +309,7 @@ class CoreResponseContextFactoryTest extends TestCase
                 '@type' => 'Page',
                 'title' => 'We went from Alpha > Omega',
                 'pageId' => 0,
-                'searchIndexer' => 'use_robots_tag',
+                'searchIndexer' => '',
                 'protected' => false,
                 'groups' => [],
                 'fePreview' => false,
