@@ -62,6 +62,21 @@
       <trans-unit id="tl_faq.enclosure.1">
         <source>Please choose the files you want to attach.</source>
       </trans-unit>
+      <trans-unit id="tl_faq.searchIndexer.0">
+        <source>Search indexer settings</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.searchIndexer.1">
+        <source>Include or exclude this FAQ from the search index. This setting only applies to the FAQ detail view if you are using the FAQ reader module.</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.use_reader_page_setting">
+        <source>Use setting of the page with the FAQ reader</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.always_index">
+        <source>Always index this FAQ</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.never_index">
+        <source>Never index this FAQ</source>
+      </trans-unit>
       <trans-unit id="tl_faq.published.0">
         <source>Publish the FAQ</source>
       </trans-unit>
@@ -76,6 +91,9 @@
       </trans-unit>
       <trans-unit id="tl_faq.meta_legend">
         <source>Metadata</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.expert_legend">
+        <source>Expert settings</source>
       </trans-unit>
       <trans-unit id="tl_faq.image_legend">
         <source>Image settings</source>

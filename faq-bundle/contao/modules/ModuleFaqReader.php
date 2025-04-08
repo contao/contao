@@ -13,6 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 
 /**
  * Class ModuleFaqReader
@@ -119,6 +121,14 @@ class ModuleFaqReader extends Module
 			{
 				$htmlHeadBag->setMetaRobots($objFaq->robots);
 			}
+		}
+
+		// Update json ld searchIndexer setting
+		$pageSchema = $responseContext->get(JsonLdManager::class)->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
+
+		if (!empty($objFaq->searchIndexer) && 'use_reader_page_setting' !== $objFaq->searchIndexer)
+		{
+			$pageSchema['searchIndexer'] = $objFaq->searchIndexer;
 		}
 
 		$this->Template->question = $objFaq->question;

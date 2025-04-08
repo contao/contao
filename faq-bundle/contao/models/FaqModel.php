@@ -39,6 +39,7 @@ use Contao\Model\MetadataTrait;
  * @property string         $floating
  * @property boolean        $addEnclosure
  * @property string|null    $enclosure
+ * @property string         $searchIndexer
  * @property boolean        $noComments
  * @property boolean        $published
  *
@@ -69,6 +70,7 @@ use Contao\Model\MetadataTrait;
  * @method static FaqModel|null findOneByFloating($val, $opt=array())
  * @method static FaqModel|null findOneByAddEnclosure($val, $opt=array())
  * @method static FaqModel|null findOneByEnclosure($val, $opt=array())
+ * @method static FaqModel|null findOneBySearchIndexer($val, $opt=array())
  * @method static FaqModel|null findOneByNoComments($val, $opt=array())
  * @method static FaqModel|null findOneByPublished($val, $opt=array())
  *
@@ -93,6 +95,7 @@ use Contao\Model\MetadataTrait;
  * @method static Collection<FaqModel>|FaqModel[]|null findByFloating($val, $opt=array())
  * @method static Collection<FaqModel>|FaqModel[]|null findByAddEnclosure($val, $opt=array())
  * @method static Collection<FaqModel>|FaqModel[]|null findByEnclosure($val, $opt=array())
+ * @method static Collection<FaqModel>|FaqModel[]|null findBySearchIndexer($val, $opt=array())
  * @method static Collection<FaqModel>|FaqModel[]|null findByNoComments($val, $opt=array())
  * @method static Collection<FaqModel>|FaqModel[]|null findByPublished($val, $opt=array())
  * @method static Collection<FaqModel>|FaqModel[]|null findMultipleByIds($val, array $opt=array())
@@ -122,6 +125,7 @@ use Contao\Model\MetadataTrait;
  * @method static integer countByFloating($val, $opt=array())
  * @method static integer countByAddEnclosure($val, $opt=array())
  * @method static integer countByEnclosure($val, $opt=array())
+ * @method static integer countBySearchIndexer($val, $opt=array())
  * @method static integer countByNoComments($val, $opt=array())
  * @method static integer countByPublished($val, $opt=array())
  */
