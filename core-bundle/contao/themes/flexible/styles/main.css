@@ -3237,7 +3237,6 @@ fieldset.collapsed > legend:not(:has(> button)) {
 	}
 
 	html[data-color-scheme="dark"] {
-
 		#header .badge-title {
 			background-color: var(--invert-text);
 			color: var(--black)
