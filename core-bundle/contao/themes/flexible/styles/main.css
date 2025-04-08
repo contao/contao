@@ -2985,8 +2985,8 @@ fieldset.collapsed > legend:not(:has(> button)) {
 		width: 100%;
 		flex-shrink: 0;
 		position: relative;
-		will-change: transform;
 		transition: transform .2s ease;
+		will-change: transform;
 	}
 
 	.show-navigation #main {
