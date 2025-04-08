@@ -343,7 +343,7 @@ abstract class ContentElementTestCase extends TestCase
                             'image1.jpg',
                             123456,
                             1024,
-                            'image/jpg',
+                            'image/jpeg',
                             new ExtraMetadata([
                                 'localized' => new MetadataBag(
                                     ['en' => new Metadata([Metadata::VALUE_TITLE => 'image1 title'])],
