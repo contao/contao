@@ -77,9 +77,6 @@
       <trans-unit id="tl_faq.meta_legend">
         <source>Metadata</source>
       </trans-unit>
-      <trans-unit id="tl_faq.expert_legend">
-        <source>Expert settings</source>
-      </trans-unit>
       <trans-unit id="tl_faq.image_legend">
         <source>Image settings</source>
       </trans-unit>
