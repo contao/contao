@@ -44,7 +44,7 @@ class PageSearchListener
     #[AsCallback(table: 'tl_page', target: 'fields.searchIndexer.save')]
     public function onSaveSearchIndexer(string $value, DataContainer $dc): string
     {
-        if ($value === ($dc->getCurrentRecord()['searchIndexer'] ?? null) || !str_starts_with($value, 'never')) {
+        if (!$value || 'always_index' === $value || $value === ($dc->getCurrentRecord()['searchIndexer'] ?? null)) {
             return $value;
         }
 
