@@ -126,7 +126,7 @@ class ModuleFaqReader extends Module
 		// Update json ld searchIndexer setting
 		$pageSchema = $responseContext->get(JsonLdManager::class)->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
 
-		if (!empty($objFaq->searchIndexer) && 'use_reader_page_setting' !== $objFaq->searchIndexer)
+		if ($objFaq->searchIndexer)
 		{
 			$pageSchema['searchIndexer'] = $objFaq->searchIndexer;
 		}

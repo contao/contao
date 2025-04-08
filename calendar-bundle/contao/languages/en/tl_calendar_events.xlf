@@ -191,21 +191,6 @@
       <trans-unit id="tl_calendar_events.cssClass.1">
         <source>Here you can enter one or more classes.</source>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.searchIndexer.0">
-        <source>Search indexer settings</source>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.searchIndexer.1">
-        <source>Include or exclude this event from the search index.</source>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.use_reader_page_setting">
-        <source>Use setting of the page with the event reader</source>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.always_index">
-        <source>Always index this event</source>
-      </trans-unit>
-      <trans-unit id="tl_calendar_events.never_index">
-        <source>Never index this event</source>
-      </trans-unit>
       <trans-unit id="tl_calendar_events.featured.0">
         <source>Feature event</source>
       </trans-unit>

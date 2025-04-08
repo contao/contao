@@ -169,7 +169,7 @@ class ModuleNewsReader extends ModuleNews
 		// Update json ld searchIndexer setting
 		$pageSchema = $responseContext->get(JsonLdManager::class)->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
 
-		if (!empty($objArticle->searchIndexer) && 'use_reader_page_setting' !== $objArticle->searchIndexer)
+		if ($objArticle->searchIndexer)
 		{
 			$pageSchema['searchIndexer'] = $objArticle->searchIndexer;
 		}

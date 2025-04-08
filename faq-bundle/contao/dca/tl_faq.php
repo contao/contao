@@ -66,7 +66,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addImage', 'addEnclosure', 'overwriteMeta'),
-		'default'                     => '{title_legend},question,alias,author;{meta_legend},pageTitle,robots,description,serpPreview;{answer_legend},answer;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},searchIndexer;{publish_legend},published'
+		'default'                     => '{title_legend},question,alias,author;{meta_legend},pageTitle,description,serpPreview,robots,searchIndexer;{answer_legend},answer;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{publish_legend},published'
 	),
 
 	// Sub-palettes
@@ -144,14 +144,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'eval'                    => array('maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
-		'robots' => array
-		(
-			'search'                  => true,
-			'inputType'               => 'select',
-			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
-			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption' => true),
-			'sql'                     => "varchar(32) NOT NULL default ''"
-		),
 		'description' => array
 		(
 			'search'                  => true,
@@ -165,6 +157,24 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'inputType'               => 'serpPreview',
 			'eval'                    => array('titleFields'=>array('pageTitle', 'question'), 'descriptionFields'=>array('description', 'answer')),
 			'sql'                     => null
+		),
+		'robots' => array
+		(
+			'search'                  => true,
+			'inputType'               => 'select',
+			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
+			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption' => true),
+			'sql'                     => "varchar(32) NOT NULL default ''"
+		),
+		'searchIndexer' => array
+		(
+			'filter'                  => true,
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['searchIndexer'],
+			'inputType'               => 'select',
+			'options'                 => array('always_index', 'never_index'),
+			'eval'                    => array('maxlength'=>32, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'reference'               => &$GLOBALS['TL_LANG']['MSC']['searchIndexerOptions'],
+			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'addImage' => array
 		(
@@ -258,15 +268,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Config::get('allowedDownload'), 'mandatory'=>true, 'isSortable'=>true),
 			'sql'                     => "blob NULL"
-		),
-		'searchIndexer' => array
-		(
-			'filter'                  => true,
-			'inputType'               => 'select',
-			'options'                 => array('use_reader_page_setting', 'always_index', 'never_index'),
-			'eval'                    => array('maxlength'=>32, 'tl_class'=>'w50'),
-			'reference'               => &$GLOBALS['TL_LANG']['tl_faq'],
-			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'published' => array
 		(

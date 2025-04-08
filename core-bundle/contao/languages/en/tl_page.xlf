@@ -296,21 +296,6 @@
       <trans-unit id="tl_page.chmod.1">
         <source>Please assign the access rights for the page and its subpages.</source>
       </trans-unit>
-      <trans-unit id="tl_page.searchIndexer.0">
-        <source>Search indexer settings</source>
-      </trans-unit>
-      <trans-unit id="tl_page.searchIndexer.1">
-        <source>Include or exclude the page from the search index.</source>
-      </trans-unit>
-      <trans-unit id="tl_page.use_robots_tag">
-        <source>Default (use robots tag)</source>
-      </trans-unit>
-      <trans-unit id="tl_page.always_index">
-        <source>Always index</source>
-      </trans-unit>
-      <trans-unit id="tl_page.never_index">
-        <source>Never index</source>
-      </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
       </trans-unit>

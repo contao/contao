@@ -2270,6 +2270,21 @@
       <trans-unit id="MSC.skipToContent">
         <source>Skip to content</source>
       </trans-unit>
+      <trans-unit id="MSC.searchIndexer.0">
+        <source>Search indexer (Contao Crawler)</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchIndexer.1">
+        <source>Include or exclude this page from the search index.</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchIndexerBlankOption">
+        <source>Use robots tag</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchIndexerOptions.always_index">
+        <source>Always index</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchIndexerOptions.never_index">
+        <source>Never index</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
       </trans-unit>

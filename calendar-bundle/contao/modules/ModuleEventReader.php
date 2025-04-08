@@ -166,7 +166,7 @@ class ModuleEventReader extends Events
 		// Update json ld searchIndexer setting
 		$pageSchema = $responseContext->get(JsonLdManager::class)->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
 
-		if (!empty($objEvent->searchIndexer) && 'use_reader_page_setting' !== $objEvent->searchIndexer)
+		if ($objEvent->searchIndexer)
 		{
 			$pageSchema['searchIndexer'] = $objEvent->searchIndexer;
 		}

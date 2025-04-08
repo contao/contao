@@ -99,7 +99,7 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('source', 'addImage', 'addEnclosure', 'overwriteMeta'),
-		'default'                     => '{title_legend},headline,featured,alias,author;{date_legend},date,time;{source_legend},source,linkText,canonicalLink;{meta_legend},pageTitle,robots,description,serpPreview;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass,searchIndexer;{publish_legend},published,start,stop',
+		'default'                     => '{title_legend},headline,featured,alias,author;{date_legend},date,time;{source_legend},source,linkText,canonicalLink;{meta_legend},pageTitle,description,serpPreview,robots,searchIndexer;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
 		'internal'                    => '{title_legend},headline,featured,alias,author;{date_legend},date,time;{source_legend},source,jumpTo,linkText;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
 		'article'                     => '{title_legend},headline,featured,alias,author;{date_legend},date,time;{source_legend},source,articleId,linkText;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop',
 		'external'                    => '{title_legend},headline,featured,alias,author;{date_legend},date,time;{source_legend},source,url,target,linkText;{teaser_legend},subheadline,teaser;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},cssClass;{publish_legend},published,start,stop'
@@ -202,14 +202,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'eval'                    => array('maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
-		'robots' => array
-		(
-			'search'                  => true,
-			'inputType'               => 'select',
-			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
-			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption' => true),
-			'sql'                     => "varchar(32) NOT NULL default ''"
-		),
 		'description' => array
 		(
 			'search'                  => true,
@@ -223,6 +215,24 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'inputType'               => 'serpPreview',
 			'eval'                    => array('title_tag_callback'=>array('tl_news', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'headline'), 'descriptionFields'=>array('description', 'teaser')),
 			'sql'                     => null
+		),
+		'robots' => array
+		(
+			'search'                  => true,
+			'inputType'               => 'select',
+			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
+			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption' => true),
+			'sql'                     => "varchar(32) NOT NULL default ''"
+		),
+		'searchIndexer' => array
+		(
+			'filter'                  => true,
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['searchIndexer'],
+			'inputType'               => 'select',
+			'options'                 => array('always_index', 'never_index'),
+			'eval'                    => array('maxlength'=>32, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'reference'               => &$GLOBALS['TL_LANG']['MSC']['searchIndexerOptions'],
+			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'canonicalLink' => array
 		(
@@ -388,15 +398,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'inputType'               => 'text',
 			'eval'                    => array('tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
-		),
-		'searchIndexer' => array
-		(
-			'filter'                  => true,
-			'inputType'               => 'select',
-			'options'                 => array('use_reader_page_setting', 'always_index', 'never_index'),
-			'eval'                    => array('maxlength'=>32, 'tl_class'=>'w50'),
-			'reference'               => &$GLOBALS['TL_LANG']['tl_news'],
-			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'published' => array
 		(

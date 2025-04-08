@@ -140,21 +140,6 @@
       <trans-unit id="tl_news.articleId.1">
         <source>Please choose the article to which visitors will be redirected when clicking the news item.</source>
       </trans-unit>
-      <trans-unit id="tl_news.searchIndexer.0">
-        <source>Search indexer settings</source>
-      </trans-unit>
-      <trans-unit id="tl_news.searchIndexer.1">
-        <source>Include or exclude this news article from the search index.</source>
-      </trans-unit>
-      <trans-unit id="tl_news.use_reader_page_setting">
-        <source>Use setting of the page with the news reader</source>
-      </trans-unit>
-      <trans-unit id="tl_news.always_index">
-        <source>Always index this news article</source>
-      </trans-unit>
-      <trans-unit id="tl_news.never_index">
-        <source>Never index this news article</source>
-      </trans-unit>
       <trans-unit id="tl_news.cssClass.0">
         <source>CSS class</source>
       </trans-unit>
