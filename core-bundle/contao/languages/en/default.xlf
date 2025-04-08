@@ -2274,7 +2274,7 @@
         <source>Search indexer</source>
       </trans-unit>
       <trans-unit id="MSC.searchIndexer.1">
-        <source>Include or exclude this page from the search index (Contao Crawler).</source>
+        <source>Overrides the robots meta tag setting for the internal search index.</source>
       </trans-unit>
       <trans-unit id="MSC.searchIndexerBlankOption">
         <source>Use robots tag</source>
