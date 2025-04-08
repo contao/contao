@@ -223,6 +223,14 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 				}
 			)
 		),
+		'robots' => array
+		(
+			'search'                  => true,
+			'inputType'               => 'select',
+			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
+			'eval'                    => array('tl_class'=>'w50'),
+			'sql'                     => "varchar(32) NOT NULL default ''"
+		),
 		'description' => array
 		(
 			'search'                  => true,
@@ -236,14 +244,6 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'serpPreview',
 			'eval'                    => array('title_tag_callback'=>array('tl_page', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'title'), 'tl_class'=>'clr'),
 			'sql'                     => null
-		),
-		'robots' => array
-		(
-			'search'                  => true,
-			'inputType'               => 'select',
-			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
-			'eval'                    => array('tl_class'=>'w50'),
-			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'searchIndexer' => array
 		(

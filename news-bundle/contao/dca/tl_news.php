@@ -202,6 +202,14 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'eval'                    => array('maxlength'=>255, 'decodeEntities'=>true, 'tl_class'=>'w50'),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
+		'robots' => array
+		(
+			'search'                  => true,
+			'inputType'               => 'select',
+			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
+			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption' => true),
+			'sql'                     => "varchar(32) NOT NULL default ''"
+		),
 		'description' => array
 		(
 			'search'                  => true,
@@ -215,14 +223,6 @@ $GLOBALS['TL_DCA']['tl_news'] = array
 			'inputType'               => 'serpPreview',
 			'eval'                    => array('title_tag_callback'=>array('tl_news', 'getTitleTag'), 'titleFields'=>array('pageTitle', 'headline'), 'descriptionFields'=>array('description', 'teaser')),
 			'sql'                     => null
-		),
-		'robots' => array
-		(
-			'search'                  => true,
-			'inputType'               => 'select',
-			'options'                 => array('index,follow', 'index,nofollow', 'noindex,follow', 'noindex,nofollow'),
-			'eval'                    => array('tl_class'=>'w50', 'includeBlankOption' => true),
-			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'searchIndexer' => array
 		(
