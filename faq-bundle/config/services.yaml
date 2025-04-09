@@ -13,6 +13,12 @@ services:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
 
+    contao_faq.listener.data_container.faq_search:
+        class: Contao\FaqBundle\EventListener\DataContainer\FaqSearchListener
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.content_url_generator'
+
     contao_faq.listener.sitemap:
         class: Contao\FaqBundle\EventListener\SitemapListener
         arguments:

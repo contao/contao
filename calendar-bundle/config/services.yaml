@@ -18,6 +18,12 @@ services:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
 
+    contao_calendar.listener.data_container.event_search:
+        class: Contao\CalendarBundle\EventListener\DataContainer\EventSearchListener
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.content_url_generator'
+
     contao_calendar.listener.data_container.start_stop_validation:
         class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
         arguments:
