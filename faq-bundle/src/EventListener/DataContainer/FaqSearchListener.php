@@ -88,10 +88,8 @@ class FaqSearchListener
         } catch (ExceptionInterface) {
         }
 
-        if ($faqUrl) {
-            $search = $this->framework->getAdapter(Search::class);
+        $search = $this->framework->getAdapter(Search::class);
 
-            $search->removeEntry($faqUrl);
-        }
+        $search->removeEntry($faqUrl);
     }
 }

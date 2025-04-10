@@ -88,10 +88,8 @@ class EventSearchListener
         } catch (ExceptionInterface) {
         }
 
-        if ($eventUrl) {
-            $search = $this->framework->getAdapter(Search::class);
+        $search = $this->framework->getAdapter(Search::class);
 
-            $search->removeEntry($eventUrl);
-        }
+        $search->removeEntry($eventUrl);
     }
 }
