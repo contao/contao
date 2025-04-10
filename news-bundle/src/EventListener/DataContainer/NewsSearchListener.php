@@ -88,8 +88,10 @@ class NewsSearchListener
         } catch (ExceptionInterface) {
         }
 
-        $search = $this->framework->getAdapter(Search::class);
+        if ($newsUrl) {
+            $search = $this->framework->getAdapter(Search::class);
 
-        $search->removeEntry($newsUrl);
+            $search->removeEntry($newsUrl);
+        }
     }
 }
