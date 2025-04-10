@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Contao\CalendarBundle\EventListener\DataContainer;
 
 use Contao\CalendarEventsModel;
+use Contao\CalendarModel;
+use Contao\PageModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
@@ -47,7 +49,18 @@ class EventSearchListener
     #[AsCallback(table: 'tl_calendar_events', target: 'fields.robots.save')]
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
-        if (str_starts_with($value, 'index')) {
+
+        // Get the robots tag of the reader page that is linked in the calendar archive
+        $readerPageRobots = '';
+        
+        $readerPageId = $this->framework->getAdapter(CalendarModel::class)->findById($dc->getCurrentRecord()['pid'])->jumpTo ?? null;
+
+        if($readerPageId) {
+            $readerPageRobots = $this->framework->getAdapter(PageModel::class)->findById($readerPageId)->robots ?? '';
+        }
+
+        // Return if the search index has not to be purged
+        if (str_starts_with($value, 'index') || ($value === '' && str_starts_with($readerPageRobots, 'index'))) {
             return $value;
         }
 
@@ -68,7 +81,7 @@ class EventSearchListener
 
     private function purgeSearchIndex(int $eventId): void
     {
-        $objEvent = CalendarEventsModel::findById($eventId);
+        $objEvent = $this->framework->getAdapter(CalendarEventsModel::class)->findById($eventId);
 
         try {
             $eventUrl = $this->urlGenerator->generate($objEvent, [], UrlGeneratorInterface::ABSOLUTE_URL);

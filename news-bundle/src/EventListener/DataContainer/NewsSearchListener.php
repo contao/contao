@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\EventListener\DataContainer;
 
 use Contao\NewsModel;
+use Contao\NewsArchiveModel;
+use Contao\PageModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
@@ -47,7 +49,18 @@ class NewsSearchListener
     #[AsCallback(table: 'tl_news', target: 'fields.robots.save')]
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
-        if (str_starts_with($value, 'index')) {
+
+        // Get the robots tag of the reader page that is linked in the news archive
+        $readerPageRobots = '';
+        
+        $readerPageId = $this->framework->getAdapter(NewsArchiveModel::class)->findById($dc->getCurrentRecord()['pid'])->jumpTo ?? null;
+
+        if($readerPageId) {
+            $readerPageRobots = $this->framework->getAdapter(PageModel::class)->findById($readerPageId)->robots ?? '';
+        }
+
+        // Return if the search index has not to be purged
+        if (str_starts_with($value, 'index') || ($value === '' && str_starts_with($readerPageRobots, 'index'))) {
             return $value;
         }
 
@@ -68,7 +81,7 @@ class NewsSearchListener
 
     private function purgeSearchIndex(int $newsId): void
     {
-        $objNews = NewsModel::findById($newsId);
+        $objNews = $this->framework->getAdapter(NewsModel::class)->findById($newsId);
 
         try {
             $newsUrl = $this->urlGenerator->generate($objNews, [], UrlGeneratorInterface::ABSOLUTE_URL);

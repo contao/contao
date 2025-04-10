@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Contao\FaqBundle\EventListener\DataContainer;
 
 use Contao\FaqModel;
+use Contao\FaqCategoryModel;
+use Contao\PageModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
@@ -47,7 +49,18 @@ class FaqSearchListener
     #[AsCallback(table: 'tl_faq', target: 'fields.robots.save')]
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
-        if (str_starts_with($value, 'index')) {
+
+        // Get the robots tag of the reader page that is linked in the FAQ category
+        $readerPageRobots = '';
+        
+        $readerPageId = $this->framework->getAdapter(FaqCategoryModel::class)->findById($dc->getCurrentRecord()['pid'])->jumpTo ?? null;
+
+        if($readerPageId) {
+            $readerPageRobots = $this->framework->getAdapter(PageModel::class)->findById($readerPageId)->robots ?? '';
+        }
+
+        // Return if the search index has not to be purged
+        if (str_starts_with($value, 'index') || ($value === '' && str_starts_with($readerPageRobots, 'index'))) {
             return $value;
         }
 
@@ -68,7 +81,7 @@ class FaqSearchListener
 
     private function purgeSearchIndex(int $faqId): void
     {
-        $objFaq = FaqModel::findById($faqId);
+        $objFaq = $this->framework->getAdapter(FaqModel::class)->findById($faqId);
 
         try {
             $faqUrl = $this->urlGenerator->generate($objFaq, [], UrlGeneratorInterface::ABSOLUTE_URL);
