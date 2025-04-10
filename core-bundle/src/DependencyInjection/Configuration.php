@@ -235,15 +235,6 @@ class Configuration implements ConfigurationInterface
                                     ResizeConfiguration::MODE_BOX,
                                     ResizeConfiguration::MODE_PROPORTIONAL,
                                     ResizeConfiguration::MODE_CROP,
-                                    'left_top',
-                                    'center_top',
-                                    'right_top',
-                                    'left_center',
-                                    'center_center',
-                                    'right_center',
-                                    'left_bottom',
-                                    'center_bottom',
-                                    'right_bottom',
                                 ];
 
                                 foreach (array_keys($value) as $name) {
