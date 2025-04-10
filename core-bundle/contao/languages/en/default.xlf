@@ -1121,60 +1121,6 @@
       <trans-unit id="MSC.crop.1">
         <source>Preserves the important part of an image as specified in the file manager. If necessary, the image will be cropped.</source>
       </trans-unit>
-      <trans-unit id="MSC.left_top.0">
-        <source>Left | Top</source>
-      </trans-unit>
-      <trans-unit id="MSC.left_top.1">
-        <source>Preserves the left part of a landscape image and the top part of a portrait image.</source>
-      </trans-unit>
-      <trans-unit id="MSC.center_top.0">
-        <source>Center | Top</source>
-      </trans-unit>
-      <trans-unit id="MSC.center_top.1">
-        <source>Preserves the center part of a landscape image and the top part of a portrait image.</source>
-      </trans-unit>
-      <trans-unit id="MSC.right_top.0">
-        <source>Right | Top</source>
-      </trans-unit>
-      <trans-unit id="MSC.right_top.1">
-        <source>Preserves the right part of a landscape image and the top part of a portrait image.</source>
-      </trans-unit>
-      <trans-unit id="MSC.left_center.0">
-        <source>Left | Center</source>
-      </trans-unit>
-      <trans-unit id="MSC.left_center.1">
-        <source>Preserves the left part of a landscape image and the center part of a portrait image.</source>
-      </trans-unit>
-      <trans-unit id="MSC.center_center.0">
-        <source>Center | Center</source>
-      </trans-unit>
-      <trans-unit id="MSC.center_center.1">
-        <source>Preserves the center part of a landscape image and the center part of a portrait image.</source>
-      </trans-unit>
-      <trans-unit id="MSC.right_center.0">
-        <source>Right | Center</source>
-      </trans-unit>
-      <trans-unit id="MSC.right_center.1">
-        <source>Preserves the right part of a landscape image and the center part of a portrait image.</source>
-      </trans-unit>
-      <trans-unit id="MSC.left_bottom.0">
-        <source>Left | Bottom</source>
-      </trans-unit>
-      <trans-unit id="MSC.left_bottom.1">
-        <source>Preserves the left part of a landscape image and the bottom part of a portrait image.</source>
-      </trans-unit>
-      <trans-unit id="MSC.center_bottom.0">
-        <source>Center | Bottom</source>
-      </trans-unit>
-      <trans-unit id="MSC.center_bottom.1">
-        <source>Preserves the center part of a landscape image and the bottom part of a portrait image.</source>
-      </trans-unit>
-      <trans-unit id="MSC.right_bottom.0">
-        <source>Right | Bottom</source>
-      </trans-unit>
-      <trans-unit id="MSC.right_bottom.1">
-        <source>Preserves the right part of a landscape image and the bottom part of a portrait image.</source>
-      </trans-unit>
       <trans-unit id="MSC.id.0">
         <source>ID</source>
       </trans-unit>
