@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CalendarBundle\Tests\EventListener\DataContainer;
 
-use Contao\CalendarBundle\EventListener\DataContainer\PageSearchListener;
+use Contao\CalendarBundle\EventListener\DataContainer\EventSearchListener;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\Search;
