@@ -4580,11 +4580,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		// Begin a new submenu if the node is open or $arrFound is not empty (which means that there
-		// is an active filter and all matching nodes have to be loaded to avoid Ajax requests).
-		if (!$blnNoRecursion && !empty($children) && ($blnIsOpen || !empty($arrFound)))
+		// Begin a new submenu
+		if (!$blnNoRecursion && $blnIsOpen && !empty($children))
 		{
-			$return .= '<li class="parent" id="' . $node . '_' . $id . '"' . (!$blnIsOpen ? ' style="display:none"' : '') . ' data-contao--toggle-nodes-target="child' . ($level === 0 ? ' rootChild"' : '') . '"><ul class="level_' . $level . '">';
+			$return .= '<li class="parent" id="' . $node . '_' . $id . '" data-contao--toggle-nodes-target="child' . ($level === 0 ? ' rootChild"' : '') . '"><ul class="level_' . $level . '">';
 
 			static::preloadCurrentRecords($children, $table);
 
