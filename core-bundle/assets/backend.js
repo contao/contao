@@ -85,15 +85,14 @@ document.documentElement.addEventListener('turbo:before-cache', (e) => {
     e.target.querySelector('.sf-toolbar')?.remove();
 });
 
-// We need to make sure act=create URLs are not called twice due to
-// data-turbo-track="reload" in the subsequent HTML response. Thus we do a full
-// load without Turbo Drive instead.
+// Prevent duplicate "act=create" calls due to data-turbo-track="reload" in the
+// subsequent HTML response (see #8182).
+// TODO: Remove again once hotwired/turbo#1391 is fixed.
 document.documentElement.addEventListener('turbo:before-visit', (e) => {
     const params = new URL(e.detail.url).searchParams;
 
     if ('create' === params.get('act')) {
         e.preventDefault();
-
         window.location = e.detail.url;
     }
 });
