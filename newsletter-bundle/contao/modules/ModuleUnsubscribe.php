@@ -85,10 +85,19 @@ class ModuleUnsubscribe extends Module
 				'name' => 'unsubscribe_' . $this->id,
 				'label' => $GLOBALS['TL_LANG']['MSC']['securityQuestion'],
 				'inputType' => 'captcha',
-				'eval' => array('mandatory'=>true)
+				'eval' => array('mandatory'=>true, 'required'=>true)
 			);
 
-			$objWidget = new FormCaptcha(FormCaptcha::getAttributesFromDca($arrField, $arrField['name']));
+			/** @var class-string<FormCaptcha> $strClass */
+			$strClass = $GLOBALS['TL_FFL']['captcha'] ?? null;
+
+			// Fallback to default if the class is not defined
+			if (!class_exists($strClass))
+			{
+				$strClass = FormCaptcha::class;
+			}
+
+			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));
 		}
 
 		$strFormId = 'tl_unsubscribe_' . $this->id;
