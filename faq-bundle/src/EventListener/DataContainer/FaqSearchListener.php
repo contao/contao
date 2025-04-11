@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\FaqBundle\EventListener\DataContainer;
 
-use Contao\FaqModel;
 use Contao\FaqCategoryModel;
+use Contao\FaqModel;
 use Contao\PageModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -83,13 +83,17 @@ class FaqSearchListener
     {
         $objFaq = $this->framework->getAdapter(FaqModel::class)->findById($faqId);
 
+        $faqUrl = null;
+
         try {
             $faqUrl = $this->urlGenerator->generate($objFaq, [], UrlGeneratorInterface::ABSOLUTE_URL);
         } catch (ExceptionInterface) {
         }
 
-        $search = $this->framework->getAdapter(Search::class);
+        if ($faqUrl) {
+            $search = $this->framework->getAdapter(Search::class);
 
-        $search->removeEntry($faqUrl);
+            $search->removeEntry($faqUrl);
+        }
     }
 }

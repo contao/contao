@@ -83,13 +83,17 @@ class EventSearchListener
     {
         $objEvent = $this->framework->getAdapter(CalendarEventsModel::class)->findById($eventId);
 
+        $eventUrl = null;
+
         try {
             $eventUrl = $this->urlGenerator->generate($objEvent, [], UrlGeneratorInterface::ABSOLUTE_URL);
         } catch (ExceptionInterface) {
         }
 
-        $search = $this->framework->getAdapter(Search::class);
+        if ($eventUrl) {
+            $search = $this->framework->getAdapter(Search::class);
 
-        $search->removeEntry($eventUrl);
+            $search->removeEntry($eventUrl);
+        }
     }
 }

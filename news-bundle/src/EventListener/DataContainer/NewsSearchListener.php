@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\EventListener\DataContainer;
 
-use Contao\NewsModel;
 use Contao\NewsArchiveModel;
+use Contao\NewsModel;
 use Contao\PageModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -83,13 +83,17 @@ class NewsSearchListener
     {
         $objNews = $this->framework->getAdapter(NewsModel::class)->findById($newsId);
 
+        $newsUrl = null;
+        
         try {
             $newsUrl = $this->urlGenerator->generate($objNews, [], UrlGeneratorInterface::ABSOLUTE_URL);
         } catch (ExceptionInterface) {
         }
 
-        $search = $this->framework->getAdapter(Search::class);
+        if ($newsUrl) {
+            $search = $this->framework->getAdapter(Search::class);
 
-        $search->removeEntry($newsUrl);
+            $search->removeEntry($newsUrl);
+        }
     }
 }

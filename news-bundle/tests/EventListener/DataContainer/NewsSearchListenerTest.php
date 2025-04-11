@@ -13,24 +13,21 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\Tests\EventListener\DataContainer;
 
 use Contao\NewsBundle\EventListener\DataContainer\NewsSearchListener;
+use Contao\NewsArchiveModel;
+use Contao\NewsModel;
+use Contao\PageModel;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\Search;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class NewsSearchListenerTest extends TestCase
 {
     public function testPurgesTheSearchIndexOnAliasChange(): void
     {
-        // To be checked/changed (the following code is based on PageSearchListenerTest.php)
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('fetchFirstColumn')
-            ->with('SELECT url FROM tl_search WHERE pid=:pageId', ['pageId' => 17])
-            ->willReturn(['uri'])
-        ;
+        $newsModel = $this->createMock(NewsModel::class);
 
         $search = $this->mockAdapter(['removeEntry']);
         $search
@@ -39,6 +36,22 @@ class NewsSearchListenerTest extends TestCase
             ->with('uri')
         ;
 
+        $adapters = [
+            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
+            Search::class => $search,
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($newsModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('uri')
+        ;
+
+
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
@@ -46,8 +59,8 @@ class NewsSearchListenerTest extends TestCase
         ;
 
         $listener = new NewsSearchListener(
-            $this->mockContaoFramework([Search::class => $search]),
-            $connection,
+            $framework,
+            $urlGenerator
         );
 
         $listener->onSaveAlias('bar', $dc);
@@ -55,19 +68,27 @@ class NewsSearchListenerTest extends TestCase
 
     public function testDoesNotPurgeTheSearchIndexWithUnchangedAlias(): void
     {
-        // To be checked/changed (the following code is based on PageSearchListenerTest.php)
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
+        $newsModel = $this->createMock(NewsModel::class);
 
         $search = $this->mockAdapter(['removeEntry']);
         $search
             ->expects($this->never())
             ->method($this->anything())
         ;
+
+        $adapters = [
+            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
+            Search::class => $search,
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
@@ -76,8 +97,8 @@ class NewsSearchListenerTest extends TestCase
         ;
 
         $listener = new NewsSearchListener(
-            $this->mockContaoFramework([Search::class => $search]),
-            $connection,
+            $framework,
+            $urlGenerator
         );
 
         $listener->onSaveAlias('foo', $dc);
@@ -85,15 +106,7 @@ class NewsSearchListenerTest extends TestCase
 
     public function testPurgesTheSearchIndexOnRobotsChange(): void
     {
-        // To be checked/changed (the following code is based on PageSearchListenerTest.php)
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('fetchFirstColumn')
-            ->with('SELECT url FROM tl_search WHERE pid=:pageId', ['pageId' => 17])
-            ->willReturn(['uri'])
-        ;
+        $newsModel = $this->createMock(NewsModel::class);
 
         $search = $this->mockAdapter(['removeEntry']);
         $search
@@ -102,93 +115,62 @@ class NewsSearchListenerTest extends TestCase
             ->with('uri')
         ;
 
+        $adapters = [
+            NewsModel::class => $this->mockConfiguredAdapter([
+                'findById' => $newsModel
+            ]),
+            NewsArchiveModel::class => $this->mockConfiguredAdapter([
+                'findById' => [
+                    $this->mockClassWithProperties(NewsArchiveModel::class, ['jumpTo' => 42]),
+                ],
+            ]),
+            PageModel::class => $this->mockConfiguredAdapter([
+                'findById' => [
+                    $this->mockClassWithProperties(PageModel::class, ['robots' => 'index,follow'])
+                ],
+            ]),
+            Search::class => $search,
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($newsModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('uri')
+        ;
+
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
-            ->willReturn(['robots' => 'index,follow'])
+            ->willReturn([
+                'robots' => 'index,follow',
+                'pid' => 5
+            ])
         ;
 
         $listener = new NewsSearchListener(
-            $this->mockContaoFramework([Search::class => $search]),
-            $connection,
+            $framework,
+            $urlGenerator
         );
 
         $listener->onSaveRobots('noindex,follow', $dc);
     }
 
-    public function testDoesNotPurgeTheSearchIndexIfRobotsIsIndex(): void
-    {
-        // To be checked/changed (the following code is based on PageSearchListenerTest.php)
 
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
+/**  ###########################################################
+ *
+ *   ToDo: More tests are required here for robots field changes
+ * 
+ *   ###########################################################
+ **/
 
-        $search = $this->mockAdapter(['removeEntry']);
-        $search
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn(['robots' => 'noindex,follow'])
-        ;
-
-        $listener = new NewsSearchListener(
-            $this->mockContaoFramework([Search::class => $search]),
-            $connection,
-        );
-
-        $listener->onSaveRobots('index,follow', $dc);
-
-    }
-
-    public function testDoesNotPurgeTheSearchIndexWithUnchangedRobots(): void
-    {
-        // To be checked/changed (the following code is based on PageSearchListenerTest.php)
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $search = $this->mockAdapter(['removeEntry']);
-        $search
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn(['robots' => 'noindex,follow'])
-        ;
-
-        $listener = new NewsSearchListener(
-            $this->mockContaoFramework([Search::class => $search]),
-            $connection,
-        );
-
-        $listener->onSaveRobots('noindex,follow', $dc);
-
-    }
 
     public function testPurgesTheSearchIndexOnDelete(): void
     {
-        // To be checked/changed (the following code is based on PageSearchListenerTest.php)
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('fetchFirstColumn')
-            ->with('SELECT url FROM tl_search WHERE pid=:pageId', ['pageId' => 17])
-            ->willReturn(['uri'])
-        ;
+        $newsModel = $this->createMock(NewsModel::class);
 
         $search = $this->mockAdapter(['removeEntry']);
         $search
@@ -197,29 +179,51 @@ class NewsSearchListenerTest extends TestCase
             ->with('uri')
         ;
 
+        $adapters = [
+            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
+            Search::class => $search,
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($newsModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('uri')
+        ;
+
+
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
 
         $listener = new NewsSearchListener(
-            $this->mockContaoFramework([Search::class => $search]),
-            $connection,
+            $framework,
+            $urlGenerator
         );
 
         $listener->onDelete($dc);
-
     }
 
     public function testDoesNotPurgeTheSearchIndexWithoutId(): void
     {
-        // To be checked/changed (the following code is based on PageSearchListenerTest.php)
+        $newsModel = $this->createMock(NewsModel::class);
 
-        $connection = $this->createMock(Connection::class);
-        $connection
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
             ->expects($this->never())
             ->method($this->anything())
         ;
 
-        $search = $this->mockAdapter(['removeEntry']);
-        $search
+        $adapters = [
+            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
+            Search::class => $search,
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
             ->expects($this->never())
             ->method($this->anything())
         ;
@@ -227,11 +231,10 @@ class NewsSearchListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => null]);
 
         $listener = new NewsSearchListener(
-            $this->mockContaoFramework([Search::class => $search]),
-            $connection,
+            $framework,
+            $urlGenerator
         );
 
         $listener->onDelete($dc);
-
     }
 }
