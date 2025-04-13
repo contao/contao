@@ -87,7 +87,6 @@ class EventSearchListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
