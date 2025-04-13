@@ -61,8 +61,6 @@ class NewsSearchListener
                 }
                 
                 $this->purgeSearchIndex((int) $dc->id);
-
-                return $value;
             }
 
             return $value;
@@ -95,10 +93,7 @@ class NewsSearchListener
 
         $newsUrl = null;
         
-        try {
-            $newsUrl = $this->urlGenerator->generate($objNews, [], UrlGeneratorInterface::ABSOLUTE_URL);
-        } catch (ExceptionInterface) {
-        }
+        $newsUrl = $this->urlGenerator->generate($objNews, [], UrlGeneratorInterface::ABSOLUTE_URL);
 
         if ($newsUrl) {
             $search = $this->framework->getAdapter(Search::class);

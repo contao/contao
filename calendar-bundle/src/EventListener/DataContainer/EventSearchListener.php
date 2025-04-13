@@ -61,8 +61,6 @@ class EventSearchListener
                 }
                 
                 $this->purgeSearchIndex((int) $dc->id);
-
-                return $value;
             }
 
             return $value;
@@ -95,10 +93,7 @@ class EventSearchListener
 
         $eventUrl = null;
 
-        try {
-            $eventUrl = $this->urlGenerator->generate($objEvent, [], UrlGeneratorInterface::ABSOLUTE_URL);
-        } catch (ExceptionInterface) {
-        }
+        $eventUrl = $this->urlGenerator->generate($objEvent, [], UrlGeneratorInterface::ABSOLUTE_URL);
 
         if ($eventUrl) {
             $search = $this->framework->getAdapter(Search::class);

@@ -61,8 +61,6 @@ class FaqSearchListener
                 }
                 
                 $this->purgeSearchIndex((int) $dc->id);
-
-                return $value;
             }
 
             return $value;
@@ -95,10 +93,7 @@ class FaqSearchListener
 
         $faqUrl = null;
 
-        try {
-            $faqUrl = $this->urlGenerator->generate($objFaq, [], UrlGeneratorInterface::ABSOLUTE_URL);
-        } catch (ExceptionInterface) {
-        }
+        $faqUrl = $this->urlGenerator->generate($objFaq, [], UrlGeneratorInterface::ABSOLUTE_URL);
 
         if ($faqUrl) {
             $search = $this->framework->getAdapter(Search::class);
