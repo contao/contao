@@ -14,13 +14,12 @@ namespace Contao\CalendarBundle\EventListener\DataContainer;
 
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
-use Contao\PageModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\DataContainer;
+use Contao\PageModel;
 use Contao\Search;
-use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -49,7 +48,8 @@ class EventSearchListener
     #[AsCallback(table: 'tl_calendar_events', target: 'fields.robots.save')]
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
-        // If the blank option is used: Get the robots tag of the reader page that is linked in the calendar
+        // If the blank option is used:
+        // Get the robots tag of the reader page that is linked in the calendar
         if ('' === $value) {
             $readerPageId = $this->framework->getAdapter(CalendarModel::class)->findById($dc->getCurrentRecord()['pid'])->jumpTo ?? null;
 
@@ -64,17 +64,15 @@ class EventSearchListener
             }
 
             return $value;
+        }
 
-        } else {
-
-            if (str_starts_with($value, 'index')) {
-                return $value;
-            }
-
-            $this->purgeSearchIndex((int) $dc->id);
-
+        if (str_starts_with($value, 'index')) {
             return $value;
         }
+
+        $this->purgeSearchIndex((int) $dc->id);
+
+        return $value;
     }
 
     #[AsCallback(table: 'tl_calendar_events', target: 'config.ondelete', priority: 16)]

@@ -12,15 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\FaqBundle\EventListener\DataContainer;
 
-use Contao\FaqCategoryModel;
-use Contao\FaqModel;
-use Contao\PageModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\DataContainer;
+use Contao\FaqCategoryModel;
+use Contao\FaqModel;
+use Contao\PageModel;
 use Contao\Search;
-use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -49,7 +48,8 @@ class FaqSearchListener
     #[AsCallback(table: 'tl_faq', target: 'fields.robots.save')]
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
-        // If the blank option is used: Get the robots tag of the reader page that is linked in the FAQ category
+        // If the blank option is used:
+        // Get the robots tag of the reader page that is linked in the FAQ category
         if ('' === $value) {
             $readerPageId = $this->framework->getAdapter(FaqCategoryModel::class)->findById($dc->getCurrentRecord()['pid'])->jumpTo ?? null;
 
@@ -64,17 +64,15 @@ class FaqSearchListener
             }
 
             return $value;
+        }
 
-        } else {
-
-            if (str_starts_with($value, 'index')) {
-                return $value;
-            }
-
-            $this->purgeSearchIndex((int) $dc->id);
-
+        if (str_starts_with($value, 'index')) {
             return $value;
         }
+
+        $this->purgeSearchIndex((int) $dc->id);
+
+        return $value;
     }
 
     #[AsCallback(table: 'tl_faq', target: 'config.ondelete', priority: 16)]

@@ -12,15 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\FaqBundle\Tests\EventListener\DataContainer;
 
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\Tests\TestCase;
+use Contao\DataContainer;
 use Contao\FaqBundle\EventListener\DataContainer\FaqSearchListener;
 use Contao\FaqCategoryModel;
 use Contao\FaqModel;
 use Contao\PageModel;
-use Contao\CoreBundle\Routing\ContentUrlGenerator;
-use Contao\CoreBundle\Tests\TestCase;
-use Contao\DataContainer;
 use Contao\Search;
-use Doctrine\DBAL\Connection;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class FaqSearchListenerTest extends TestCase
@@ -60,7 +59,7 @@ class FaqSearchListenerTest extends TestCase
 
         $listener = new FaqSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveAlias('bar', $dc);
@@ -98,7 +97,7 @@ class FaqSearchListenerTest extends TestCase
 
         $listener = new FaqSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveAlias('foo', $dc);
@@ -157,13 +156,13 @@ class FaqSearchListenerTest extends TestCase
             ->method('getCurrentRecord')
             ->willReturn([
                 'robots' => 'index,follow',
-                'pid' => 5
+                'pid' => 5,
             ])
         ;
 
         $listener = new FaqSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveRobots('', $dc);
@@ -219,13 +218,13 @@ class FaqSearchListenerTest extends TestCase
             ->method('getCurrentRecord')
             ->willReturn([
                 'robots' => 'index,follow',
-                'pid' => 5
+                'pid' => 5,
             ])
         ;
 
         $listener = new FaqSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveRobots('', $dc);
@@ -245,14 +244,6 @@ class FaqSearchListenerTest extends TestCase
             ->willReturn($faqCategory)
         ;
 
-        $page = $this->mockClassWithProperties(PageModel::class);
-        
-        $pageAdapter = $this->mockAdapter(['findById']);
-        $pageAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
         $search = $this->mockAdapter(['removeEntry']);
         $search
             ->expects($this->never())
@@ -262,7 +253,6 @@ class FaqSearchListenerTest extends TestCase
         $adapters = [
             FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
             FaqCategoryModel::class => $faqCategoryAdapter,
-            PageModel::class => $pageAdapter,
             Search::class => $search,
         ];
 
@@ -279,13 +269,13 @@ class FaqSearchListenerTest extends TestCase
             ->method('getCurrentRecord')
             ->willReturn([
                 'robots' => 'index,follow',
-                'pid' => 5
+                'pid' => 5,
             ])
         ;
 
         $listener = new FaqSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveRobots('', $dc);
@@ -294,22 +284,6 @@ class FaqSearchListenerTest extends TestCase
     public function testPurgesTheSearchIndexOnRobotsChangeIfRobotsIsNoindex(): void
     {
         $faqModel = $this->createMock(FaqModel::class);
-
-        $faqCategory = $this->mockClassWithProperties(FaqCategoryModel::class);
-
-        $faqCategoryAdapter = $this->mockAdapter(['findById']);
-        $faqCategoryAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $page = $this->mockClassWithProperties(PageModel::class);
-        
-        $pageAdapter = $this->mockAdapter(['findById']);
-        $pageAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
 
         $search = $this->mockAdapter(['removeEntry']);
         $search
@@ -320,8 +294,6 @@ class FaqSearchListenerTest extends TestCase
 
         $adapters = [
             FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
-            FaqCategoryModel::class => $faqCategoryAdapter,
-            PageModel::class => $pageAdapter,
             Search::class => $search,
         ];
 
@@ -340,13 +312,13 @@ class FaqSearchListenerTest extends TestCase
             ->method('getCurrentRecord')
             ->willReturn([
                 'robots' => 'index,follow',
-                'pid' => 5
+                'pid' => 5,
             ])
         ;
 
         $listener = new FaqSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveRobots('noindex,follow', $dc);
@@ -356,22 +328,6 @@ class FaqSearchListenerTest extends TestCase
     {
         $faqModel = $this->createMock(FaqModel::class);
 
-        $faqCategory = $this->mockClassWithProperties(FaqCategoryModel::class);
-
-        $faqCategoryAdapter = $this->mockAdapter(['findById']);
-        $faqCategoryAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $page = $this->mockClassWithProperties(PageModel::class);
-        
-        $pageAdapter = $this->mockAdapter(['findById']);
-        $pageAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
         $search = $this->mockAdapter(['removeEntry']);
         $search
             ->expects($this->never())
@@ -380,8 +336,6 @@ class FaqSearchListenerTest extends TestCase
 
         $adapters = [
             FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
-            FaqCategoryModel::class => $faqCategoryAdapter,
-            PageModel::class => $pageAdapter,
             Search::class => $search,
         ];
 
@@ -398,13 +352,13 @@ class FaqSearchListenerTest extends TestCase
             ->method('getCurrentRecord')
             ->willReturn([
                 'robots' => 'noindex,follow',
-                'pid' => 5
+                'pid' => 5,
             ])
         ;
 
         $listener = new FaqSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveRobots('index,follow', $dc);
@@ -414,22 +368,6 @@ class FaqSearchListenerTest extends TestCase
     {
         $faqModel = $this->createMock(FaqModel::class);
 
-        $faqCategory = $this->mockClassWithProperties(FaqCategoryModel::class);
-
-        $faqCategoryAdapter = $this->mockAdapter(['findById']);
-        $faqCategoryAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $page = $this->mockClassWithProperties(PageModel::class);
-        
-        $pageAdapter = $this->mockAdapter(['findById']);
-        $pageAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
         $search = $this->mockAdapter(['removeEntry']);
         $search
             ->expects($this->never())
@@ -438,8 +376,6 @@ class FaqSearchListenerTest extends TestCase
 
         $adapters = [
             FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
-            FaqCategoryModel::class => $faqCategoryAdapter,
-            PageModel::class => $pageAdapter,
             Search::class => $search,
         ];
 
@@ -456,13 +392,13 @@ class FaqSearchListenerTest extends TestCase
             ->method('getCurrentRecord')
             ->willReturn([
                 'robots' => 'index,follow',
-                'pid' => 5
+                'pid' => 5,
             ])
         ;
 
         $listener = new FaqSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveRobots('index,follow', $dc);
@@ -499,11 +435,10 @@ class FaqSearchListenerTest extends TestCase
 
         $listener = new FaqSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onDelete($dc);
-
     }
 
     public function testDoesNotPurgeTheSearchIndexWithoutId(): void
@@ -533,7 +468,7 @@ class FaqSearchListenerTest extends TestCase
 
         $listener = new FaqSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onDelete($dc);

@@ -12,15 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\Tests\EventListener\DataContainer;
 
-use Contao\NewsBundle\EventListener\DataContainer\NewsSearchListener;
-use Contao\NewsArchiveModel;
-use Contao\NewsModel;
-use Contao\PageModel;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
+use Contao\NewsArchiveModel;
+use Contao\NewsBundle\EventListener\DataContainer\NewsSearchListener;
+use Contao\NewsModel;
+use Contao\PageModel;
 use Contao\Search;
-use Doctrine\DBAL\Connection;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class NewsSearchListenerTest extends TestCase
@@ -60,7 +59,7 @@ class NewsSearchListenerTest extends TestCase
 
         $listener = new NewsSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveAlias('bar', $dc);
@@ -98,7 +97,7 @@ class NewsSearchListenerTest extends TestCase
 
         $listener = new NewsSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveAlias('foo', $dc);
@@ -157,13 +156,13 @@ class NewsSearchListenerTest extends TestCase
             ->method('getCurrentRecord')
             ->willReturn([
                 'robots' => 'index,follow',
-                'pid' => 5
+                'pid' => 5,
             ])
         ;
 
         $listener = new NewsSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveRobots('', $dc);
@@ -219,13 +218,13 @@ class NewsSearchListenerTest extends TestCase
             ->method('getCurrentRecord')
             ->willReturn([
                 'robots' => 'index,follow',
-                'pid' => 5
+                'pid' => 5,
             ])
         ;
 
         $listener = new NewsSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveRobots('', $dc);
@@ -245,14 +244,6 @@ class NewsSearchListenerTest extends TestCase
             ->willReturn($newsArchive)
         ;
 
-        $page = $this->mockClassWithProperties(PageModel::class);
-        
-        $pageAdapter = $this->mockAdapter(['findById']);
-        $pageAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
         $search = $this->mockAdapter(['removeEntry']);
         $search
             ->expects($this->never())
@@ -262,7 +253,6 @@ class NewsSearchListenerTest extends TestCase
         $adapters = [
             NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
             NewsArchiveModel::class => $newsArchiveAdapter,
-            PageModel::class => $pageAdapter,
             Search::class => $search,
         ];
 
@@ -279,13 +269,13 @@ class NewsSearchListenerTest extends TestCase
             ->method('getCurrentRecord')
             ->willReturn([
                 'robots' => 'index,follow',
-                'pid' => 5
+                'pid' => 5,
             ])
         ;
 
         $listener = new NewsSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveRobots('', $dc);
@@ -294,22 +284,6 @@ class NewsSearchListenerTest extends TestCase
     public function testPurgesTheSearchIndexOnRobotsChangeIfRobotsIsNoindex(): void
     {
         $newsModel = $this->createMock(NewsModel::class);
-
-        $newsArchive = $this->mockClassWithProperties(NewsArchiveModel::class);
-
-        $newsArchiveAdapter = $this->mockAdapter(['findById']);
-        $newsArchiveAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $page = $this->mockClassWithProperties(PageModel::class);
-        
-        $pageAdapter = $this->mockAdapter(['findById']);
-        $pageAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
 
         $search = $this->mockAdapter(['removeEntry']);
         $search
@@ -320,8 +294,6 @@ class NewsSearchListenerTest extends TestCase
 
         $adapters = [
             NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
-            NewsArchiveModel::class => $newsArchiveAdapter,
-            PageModel::class => $pageAdapter,
             Search::class => $search,
         ];
 
@@ -340,13 +312,13 @@ class NewsSearchListenerTest extends TestCase
             ->method('getCurrentRecord')
             ->willReturn([
                 'robots' => 'index,follow',
-                'pid' => 5
+                'pid' => 5,
             ])
         ;
 
         $listener = new NewsSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveRobots('noindex,follow', $dc);
@@ -356,22 +328,6 @@ class NewsSearchListenerTest extends TestCase
     {
         $newsModel = $this->createMock(NewsModel::class);
 
-        $newsArchive = $this->mockClassWithProperties(NewsArchiveModel::class);
-
-        $newsArchiveAdapter = $this->mockAdapter(['findById']);
-        $newsArchiveAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $page = $this->mockClassWithProperties(PageModel::class);
-        
-        $pageAdapter = $this->mockAdapter(['findById']);
-        $pageAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
         $search = $this->mockAdapter(['removeEntry']);
         $search
             ->expects($this->never())
@@ -380,8 +336,6 @@ class NewsSearchListenerTest extends TestCase
 
         $adapters = [
             NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
-            NewsArchiveModel::class => $newsArchiveAdapter,
-            PageModel::class => $pageAdapter,
             Search::class => $search,
         ];
 
@@ -398,13 +352,13 @@ class NewsSearchListenerTest extends TestCase
             ->method('getCurrentRecord')
             ->willReturn([
                 'robots' => 'noindex,follow',
-                'pid' => 5
+                'pid' => 5,
             ])
         ;
 
         $listener = new NewsSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveRobots('index,follow', $dc);
@@ -414,22 +368,6 @@ class NewsSearchListenerTest extends TestCase
     {
         $newsModel = $this->createMock(NewsModel::class);
 
-        $newsArchive = $this->mockClassWithProperties(NewsArchiveModel::class);
-
-        $newsArchiveAdapter = $this->mockAdapter(['findById']);
-        $newsArchiveAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $page = $this->mockClassWithProperties(PageModel::class);
-        
-        $pageAdapter = $this->mockAdapter(['findById']);
-        $pageAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
         $search = $this->mockAdapter(['removeEntry']);
         $search
             ->expects($this->never())
@@ -438,8 +376,6 @@ class NewsSearchListenerTest extends TestCase
 
         $adapters = [
             NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
-            NewsArchiveModel::class => $newsArchiveAdapter,
-            PageModel::class => $pageAdapter,
             Search::class => $search,
         ];
 
@@ -456,13 +392,13 @@ class NewsSearchListenerTest extends TestCase
             ->method('getCurrentRecord')
             ->willReturn([
                 'robots' => 'index,follow',
-                'pid' => 5
+                'pid' => 5,
             ])
         ;
 
         $listener = new NewsSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveRobots('index,follow', $dc);
@@ -499,7 +435,7 @@ class NewsSearchListenerTest extends TestCase
 
         $listener = new NewsSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onDelete($dc);
@@ -532,7 +468,7 @@ class NewsSearchListenerTest extends TestCase
 
         $listener = new NewsSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onDelete($dc);

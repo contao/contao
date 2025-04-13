@@ -15,12 +15,11 @@ namespace Contao\CalendarBundle\Tests\EventListener\DataContainer;
 use Contao\CalendarBundle\EventListener\DataContainer\EventSearchListener;
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
-use Contao\PageModel;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
+use Contao\PageModel;
 use Contao\Search;
-use Doctrine\DBAL\Connection;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class EventSearchListenerTest extends TestCase
@@ -60,7 +59,7 @@ class EventSearchListenerTest extends TestCase
 
         $listener = new EventSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveAlias('bar', $dc);
@@ -98,7 +97,7 @@ class EventSearchListenerTest extends TestCase
 
         $listener = new EventSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveAlias('foo', $dc);
@@ -157,13 +156,13 @@ class EventSearchListenerTest extends TestCase
             ->method('getCurrentRecord')
             ->willReturn([
                 'robots' => 'index,follow',
-                'pid' => 5
+                'pid' => 5,
             ])
         ;
 
         $listener = new EventSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveRobots('', $dc);
@@ -219,13 +218,13 @@ class EventSearchListenerTest extends TestCase
             ->method('getCurrentRecord')
             ->willReturn([
                 'robots' => 'index,follow',
-                'pid' => 5
+                'pid' => 5,
             ])
         ;
 
         $listener = new EventSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveRobots('', $dc);
@@ -245,14 +244,6 @@ class EventSearchListenerTest extends TestCase
             ->willReturn($calendar)
         ;
 
-        $page = $this->mockClassWithProperties(PageModel::class);
-        
-        $pageAdapter = $this->mockAdapter(['findById']);
-        $pageAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
         $search = $this->mockAdapter(['removeEntry']);
         $search
             ->expects($this->never())
@@ -262,7 +253,6 @@ class EventSearchListenerTest extends TestCase
         $adapters = [
             CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
             CalendarModel::class => $calendarAdapter,
-            PageModel::class => $pageAdapter,
             Search::class => $search,
         ];
 
@@ -279,13 +269,13 @@ class EventSearchListenerTest extends TestCase
             ->method('getCurrentRecord')
             ->willReturn([
                 'robots' => 'index,follow',
-                'pid' => 5
+                'pid' => 5,
             ])
         ;
 
         $listener = new EventSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveRobots('', $dc);
@@ -294,22 +284,6 @@ class EventSearchListenerTest extends TestCase
     public function testPurgesTheSearchIndexOnRobotsChangeIfRobotsIsNoindex(): void
     {
         $eventModel = $this->createMock(CalendarEventsModel::class);
-
-        $calendar = $this->mockClassWithProperties(CalendarModel::class);
-
-        $calendarAdapter = $this->mockAdapter(['findById']);
-        $calendarAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $page = $this->mockClassWithProperties(PageModel::class);
-        
-        $pageAdapter = $this->mockAdapter(['findById']);
-        $pageAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
 
         $search = $this->mockAdapter(['removeEntry']);
         $search
@@ -320,8 +294,6 @@ class EventSearchListenerTest extends TestCase
 
         $adapters = [
             CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
-            CalendarModel::class => $calendarAdapter,
-            PageModel::class => $pageAdapter,
             Search::class => $search,
         ];
 
@@ -340,13 +312,13 @@ class EventSearchListenerTest extends TestCase
             ->method('getCurrentRecord')
             ->willReturn([
                 'robots' => 'index,follow',
-                'pid' => 5
+                'pid' => 5,
             ])
         ;
 
         $listener = new EventSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveRobots('noindex,follow', $dc);
@@ -398,13 +370,13 @@ class EventSearchListenerTest extends TestCase
             ->method('getCurrentRecord')
             ->willReturn([
                 'robots' => 'noindex,follow',
-                'pid' => 5
+                'pid' => 5,
             ])
         ;
 
         $listener = new EventSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveRobots('index,follow', $dc);
@@ -414,22 +386,6 @@ class EventSearchListenerTest extends TestCase
     {
         $eventModel = $this->createMock(CalendarEventsModel::class);
 
-        $calendar = $this->mockClassWithProperties(CalendarModel::class);
-
-        $calendarAdapter = $this->mockAdapter(['findById']);
-        $calendarAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $page = $this->mockClassWithProperties(PageModel::class);
-        
-        $pageAdapter = $this->mockAdapter(['findById']);
-        $pageAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
         $search = $this->mockAdapter(['removeEntry']);
         $search
             ->expects($this->never())
@@ -438,8 +394,6 @@ class EventSearchListenerTest extends TestCase
 
         $adapters = [
             CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
-            CalendarModel::class => $calendarAdapter,
-            PageModel::class => $pageAdapter,
             Search::class => $search,
         ];
 
@@ -456,13 +410,13 @@ class EventSearchListenerTest extends TestCase
             ->method('getCurrentRecord')
             ->willReturn([
                 'robots' => 'index,follow',
-                'pid' => 5
+                'pid' => 5,
             ])
         ;
 
         $listener = new EventSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onSaveRobots('index,follow', $dc);
@@ -498,7 +452,7 @@ class EventSearchListenerTest extends TestCase
 
         $listener = new EventSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onDelete($dc);
@@ -531,7 +485,7 @@ class EventSearchListenerTest extends TestCase
 
         $listener = new EventSearchListener(
             $framework,
-            $urlGenerator
+            $urlGenerator,
         );
 
         $listener->onDelete($dc);
