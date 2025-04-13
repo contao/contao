@@ -89,8 +89,6 @@ class FaqSearchListener
     {
         $objFaq = $this->framework->getAdapter(FaqModel::class)->findById($faqId);
 
-        $faqUrl = null;
-
         $faqUrl = $this->urlGenerator->generate($objFaq, [], UrlGeneratorInterface::ABSOLUTE_URL);
 
         if ($faqUrl) {

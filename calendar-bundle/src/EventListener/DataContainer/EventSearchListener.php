@@ -89,8 +89,6 @@ class EventSearchListener
     {
         $objEvent = $this->framework->getAdapter(CalendarEventsModel::class)->findById($eventId);
 
-        $eventUrl = null;
-
         $eventUrl = $this->urlGenerator->generate($objEvent, [], UrlGeneratorInterface::ABSOLUTE_URL);
 
         if ($eventUrl) {

@@ -89,8 +89,6 @@ class NewsSearchListener
     {
         $objNews = $this->framework->getAdapter(NewsModel::class)->findById($newsId);
 
-        $newsUrl = null;
-
         $newsUrl = $this->urlGenerator->generate($objNews, [], UrlGeneratorInterface::ABSOLUTE_URL);
 
         if ($newsUrl) {
