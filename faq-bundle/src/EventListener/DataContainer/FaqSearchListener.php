@@ -49,24 +49,34 @@ class FaqSearchListener
     #[AsCallback(table: 'tl_faq', target: 'fields.robots.save')]
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
+        // If the blank option is used: Get the robots tag of the reader page that is linked in the FAQ category
+        if ('' === $value) {
+            $readerPageId = $this->framework->getAdapter(FaqCategoryModel::class)->findById($dc->getCurrentRecord()['pid'])->jumpTo ?? null;
 
-        // Get the robots tag of the reader page that is linked in the FAQ category
-        $readerPageRobots = '';
-        
-        $readerPageId = $this->framework->getAdapter(FaqCategoryModel::class)->findById($dc->getCurrentRecord()['pid'])->jumpTo ?? null;
+            if ($readerPageId) {
+                $readerPageRobots = $this->framework->getAdapter(PageModel::class)->findById($readerPageId)->robots ?? '';
+                
+                if (str_starts_with($readerPageRobots, 'index')) {
+                    return $value;
+                }
+                
+                $this->purgeSearchIndex((int) $dc->id);
 
-        if($readerPageId) {
-            $readerPageRobots = $this->framework->getAdapter(PageModel::class)->findById($readerPageId)->robots ?? '';
-        }
+                return $value;
+            }
 
-        // Return if the search index has not to be purged
-        if (str_starts_with($value, 'index') || ($value === '' && str_starts_with($readerPageRobots, 'index'))) {
+            return $value;
+
+        } else {
+
+            if (str_starts_with($value, 'index')) {
+                return $value;
+            }
+
+            $this->purgeSearchIndex((int) $dc->id);
+
             return $value;
         }
-
-        $this->purgeSearchIndex((int) $dc->id);
-
-        return $value;
     }
 
     #[AsCallback(table: 'tl_faq', target: 'config.ondelete', priority: 16)]
