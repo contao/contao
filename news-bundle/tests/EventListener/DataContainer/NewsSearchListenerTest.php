@@ -50,7 +50,6 @@ class NewsSearchListenerTest extends TestCase
             ->willReturn('uri')
         ;
 
-
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
@@ -88,7 +87,6 @@ class NewsSearchListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
@@ -118,7 +116,7 @@ class NewsSearchListenerTest extends TestCase
         ;
 
         $page = $this->mockClassWithProperties(PageModel::class, ['robots' => 'noindex,follow']);
-        
+
         $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
@@ -183,7 +181,7 @@ class NewsSearchListenerTest extends TestCase
         ;
 
         $page = $this->mockClassWithProperties(PageModel::class, ['robots' => 'index,follow']);
-        
+
         $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
@@ -429,7 +427,6 @@ class NewsSearchListenerTest extends TestCase
             ->with($newsModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('uri')
         ;
-
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
 

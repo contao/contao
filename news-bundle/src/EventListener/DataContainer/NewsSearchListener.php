@@ -48,18 +48,18 @@ class NewsSearchListener
     #[AsCallback(table: 'tl_news', target: 'fields.robots.save')]
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
-        // If the blank option is used:
-        // Get the robots tag of the reader page that is linked in the news archive
+        // If the blank option is used: Get the robots tag of the reader page that is
+        // linked in the news archive
         if ('' === $value) {
             $readerPageId = $this->framework->getAdapter(NewsArchiveModel::class)->findById($dc->getCurrentRecord()['pid'])->jumpTo ?? null;
 
             if ($readerPageId) {
                 $readerPageRobots = $this->framework->getAdapter(PageModel::class)->findById($readerPageId)->robots ?? '';
-                
+
                 if (str_starts_with($readerPageRobots, 'index')) {
                     return $value;
                 }
-                
+
                 $this->purgeSearchIndex((int) $dc->id);
             }
 
@@ -90,7 +90,7 @@ class NewsSearchListener
         $objNews = $this->framework->getAdapter(NewsModel::class)->findById($newsId);
 
         $newsUrl = null;
-        
+
         $newsUrl = $this->urlGenerator->generate($objNews, [], UrlGeneratorInterface::ABSOLUTE_URL);
 
         if ($newsUrl) {

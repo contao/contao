@@ -50,7 +50,6 @@ class EventSearchListenerTest extends TestCase
             ->willReturn('uri')
         ;
 
-
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
@@ -118,7 +117,7 @@ class EventSearchListenerTest extends TestCase
         ;
 
         $page = $this->mockClassWithProperties(PageModel::class, ['robots' => 'noindex,follow']);
-        
+
         $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
@@ -183,7 +182,7 @@ class EventSearchListenerTest extends TestCase
         ;
 
         $page = $this->mockClassWithProperties(PageModel::class, ['robots' => 'index,follow']);
-        
+
         $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
@@ -328,22 +327,6 @@ class EventSearchListenerTest extends TestCase
     {
         $eventModel = $this->createMock(CalendarEventsModel::class);
 
-        $calendar = $this->mockClassWithProperties(CalendarModel::class);
-
-        $calendarAdapter = $this->mockAdapter(['findById']);
-        $calendarAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $page = $this->mockClassWithProperties(PageModel::class);
-        
-        $pageAdapter = $this->mockAdapter(['findById']);
-        $pageAdapter
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
         $search = $this->mockAdapter(['removeEntry']);
         $search
             ->expects($this->never())
@@ -352,8 +335,6 @@ class EventSearchListenerTest extends TestCase
 
         $adapters = [
             CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
-            CalendarModel::class => $calendarAdapter,
-            PageModel::class => $pageAdapter,
             Search::class => $search,
         ];
 

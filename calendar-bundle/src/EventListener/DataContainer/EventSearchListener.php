@@ -48,18 +48,18 @@ class EventSearchListener
     #[AsCallback(table: 'tl_calendar_events', target: 'fields.robots.save')]
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
-        // If the blank option is used:
-        // Get the robots tag of the reader page that is linked in the calendar
+        // If the blank option is used: Get the robots tag of the reader page that is
+        // linked in the calendar
         if ('' === $value) {
             $readerPageId = $this->framework->getAdapter(CalendarModel::class)->findById($dc->getCurrentRecord()['pid'])->jumpTo ?? null;
 
             if ($readerPageId) {
                 $readerPageRobots = $this->framework->getAdapter(PageModel::class)->findById($readerPageId)->robots ?? '';
-                
+
                 if (str_starts_with($readerPageRobots, 'index')) {
                     return $value;
                 }
-                
+
                 $this->purgeSearchIndex((int) $dc->id);
             }
 

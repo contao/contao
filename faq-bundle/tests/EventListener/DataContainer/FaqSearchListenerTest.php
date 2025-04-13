@@ -50,7 +50,6 @@ class FaqSearchListenerTest extends TestCase
             ->willReturn('uri')
         ;
 
-
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
@@ -88,7 +87,6 @@ class FaqSearchListenerTest extends TestCase
             ->method($this->anything())
         ;
 
-
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
@@ -118,7 +116,7 @@ class FaqSearchListenerTest extends TestCase
         ;
 
         $page = $this->mockClassWithProperties(PageModel::class, ['robots' => 'noindex,follow']);
-        
+
         $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
@@ -183,7 +181,7 @@ class FaqSearchListenerTest extends TestCase
         ;
 
         $page = $this->mockClassWithProperties(PageModel::class, ['robots' => 'index,follow']);
-        
+
         $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
             ->expects($this->once())
@@ -403,7 +401,7 @@ class FaqSearchListenerTest extends TestCase
 
         $listener->onSaveRobots('index,follow', $dc);
     }
-    
+
     public function testPurgesTheSearchIndexOnDelete(): void
     {
         $faqModel = $this->createMock(FaqModel::class);
@@ -429,7 +427,6 @@ class FaqSearchListenerTest extends TestCase
             ->with($faqModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('uri')
         ;
-
 
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
 
