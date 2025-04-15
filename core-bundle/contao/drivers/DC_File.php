@@ -110,85 +110,35 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 			$ajaxId = func_get_arg(1);
 		}
 
-		// Build an array from boxes and rows
 		$this->strPalette = $this->getPalette();
-		$boxes = StringUtil::trimsplit(';', $this->strPalette);
-		$legends = array();
+		$boxes = System::getContainer()->get('contao.data_container.palette_builder')->getBoxes($this->strPalette, $this->strTable);
 
 		if (!empty($boxes))
 		{
-			foreach ($boxes as $k=>$v)
-			{
-				$boxes[$k] = StringUtil::trimsplit(',', $v);
-
-				foreach ($boxes[$k] as $kk=>$vv)
-				{
-					if (preg_match('/^\[.*]$/', $vv))
-					{
-						continue;
-					}
-
-					if (preg_match('/^{.*}$/', $vv))
-					{
-						$legends[$k] = substr($vv, 1, -1);
-						unset($boxes[$k][$kk]);
-					}
-					elseif (!\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv] ?? null))
-					{
-						unset($boxes[$k][$kk]);
-					}
-				}
-
-				// Unset a box if it does not contain any fields
-				if (empty($boxes[$k]))
-				{
-					unset($boxes[$k]);
-				}
-			}
-
-			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-
 			// Render boxes
 			$class = 'tl_tbox';
-			$fs = $objSessionBag->get('fieldset_states');
 
-			foreach ($boxes as $k=>$v)
+			foreach ($boxes as $box)
 			{
 				$strAjax = '';
 				$blnAjax = false;
-				$key = '';
-				$cls = '';
+				$key = $box['key'];
 				$legend = '';
 
-				if (isset($legends[$k]))
+				if ($key)
 				{
-					list($key, $cls) = explode(':', $legends[$k]) + array(null, null);
-
 					$legend = "\n" . '<legend><button type="button" data-action="contao--toggle-fieldset#toggle">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</button></legend>';
-				}
 
-				if ($legend)
-				{
-					if (isset($fs[$this->strTable][$key]))
+					if ($box['class'])
 					{
-						$class .= ($fs[$this->strTable][$key] ? '' : ' collapsed');
-					}
-					elseif ($cls)
-					{
-						// Convert the ":hide" suffix from the DCA
-						if ($cls == 'hide')
-						{
-							$cls = 'collapsed';
-						}
-
-						$class .= ' ' . $cls;
+						$class .= ' ' . $box['class'];
 					}
 				}
 
 				$return .= "\n\n" . '<fieldset class="' . $class . ($legend ? '' : ' nolegend') . '" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="' . $key . '" data-contao--toggle-fieldset-table-value="' . $this->strTable . '" data-contao--toggle-fieldset-collapsed-class="collapsed" data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open">' . $legend . "\n" . '<div class="widget-group">';
 
 				// Build rows of the current box
-				foreach ($v as $vv)
+				foreach ($box['fields'] as $vv)
 				{
 					if ($vv == '[EOF]')
 					{

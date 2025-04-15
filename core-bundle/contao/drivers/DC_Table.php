@@ -2012,82 +2012,28 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$objVersions->initialize();
 		$intLatestVersion = $objVersions->getLatestVersion();
 
-		$security = System::getContainer()->get('security.helper');
-
-		// Build an array from boxes and rows
 		$this->strPalette = $this->getPalette();
-		$boxes = StringUtil::trimsplit(';', $this->strPalette);
-		$legends = array();
+		$boxes = System::getContainer()->get('contao.data_container.palette_builder')->getBoxes($this->strPalette, $this->strTable);
 
 		if (!empty($boxes))
 		{
-			foreach ($boxes as $k=>$v)
-			{
-				$eCount = 1;
-				$boxes[$k] = StringUtil::trimsplit(',', $v);
-
-				foreach ($boxes[$k] as $kk=>$vv)
-				{
-					if (preg_match('/^\[.*]$/', $vv))
-					{
-						++$eCount;
-						continue;
-					}
-
-					if (preg_match('/^{.*}$/', $vv))
-					{
-						$legends[$k] = substr($vv, 1, -1);
-						unset($boxes[$k][$kk]);
-					}
-					elseif (!\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv] ?? null) || (DataContainer::isFieldExcluded($this->strTable, $vv) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $vv)))
-					{
-						unset($boxes[$k][$kk]);
-					}
-				}
-
-				// Unset a box if it does not contain any fields
-				if (\count($boxes[$k]) < $eCount)
-				{
-					unset($boxes[$k]);
-				}
-			}
-
-			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-
 			$class = 'tl_tbox';
-			$fs = $objSessionBag->get('fieldset_states');
 
 			// Render boxes
-			foreach ($boxes as $k=>$v)
+			foreach ($boxes as $box)
 			{
 				$arrAjax = array();
 				$blnAjax = false;
-				$key = '';
-				$cls = '';
+				$key = $box['key'];
 				$legend = '';
 
-				if (isset($legends[$k]))
+				if ($key)
 				{
-					list($key, $cls) = explode(':', $legends[$k]) + array(null, null);
-
 					$legend = "\n" . '<legend><button type="button" data-action="contao--toggle-fieldset#toggle">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</button></legend>';
-				}
 
-				if ($legend)
-				{
-					if (isset($fs[$this->strTable][$key]))
+					if ($box['class'])
 					{
-						$class .= ($fs[$this->strTable][$key] ? '' : ' collapsed');
-					}
-					elseif ($cls)
-					{
-						// Convert the ":hide" suffix from the DCA
-						if ($cls == 'hide')
-						{
-							$cls = 'collapsed';
-						}
-
-						$class .= ' ' . $cls;
+						$class .= ' ' . $box['class'];
 					}
 				}
 
@@ -2095,7 +2041,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$thisId = '';
 
 				// Build rows of the current box
-				foreach ($v as $vv)
+				foreach ($box['fields'] as $vv)
 				{
 					if ($vv == '[EOF]')
 					{

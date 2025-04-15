@@ -13,15 +13,26 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DataContainer;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Input;
+use Contao\StringUtil;
 use Contao\System;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 
 /**
  * @internal
  */
 class PaletteBuilder
 {
+    public function __construct(
+        private readonly RequestStack $requestStack,
+        private readonly Security $security,
+    ) {
+    }
+
     /**
      * Return the name of the current palette.
      */
@@ -54,7 +65,7 @@ class PaletteBuilder
                         }
                     }
 
-                    if (($GLOBALS['TL_DCA'][$table]['fields'][$name]['inputType'] ?? null) === 'checkbox' && !($GLOBALS['TL_DCA'][$table]['fields'][$name]['eval']['multiple'] ?? null)) {
+                    if ('checkbox' === ($GLOBALS['TL_DCA'][$table]['fields'][$name]['inputType'] ?? null) && !($GLOBALS['TL_DCA'][$table]['fields'][$name]['eval']['multiple'] ?? null)) {
                         if ($trigger) {
                             $sValues[] = $name;
 
@@ -124,6 +135,67 @@ class PaletteBuilder
     }
 
     /**
+     * @return array<int, array{
+     *     key: string,
+     *     class: string,
+     *     fields: array<int,string>
+     * }>
+     */
+    public function getBoxes(string $palette, string $table): array
+    {
+        $boxes = [];
+        $fieldsetStates = $this->getFieldsetStates($table);
+
+        foreach (StringUtil::trimsplit(';', $palette) as $k => $v)
+        {
+            $emptyCount = 1;
+            $boxes[$k] = [
+                'key' => '',
+                'class' => '',
+                'fields' => [],
+            ];
+
+            foreach (StringUtil::trimsplit(',', $v) as $kk=>$vv) {
+                // Subpalette start/stop marker
+                if (preg_match('/^\[.*]$/', $vv)) {
+                    ++$emptyCount;
+                    $boxes[$k]['fields'][$kk] = $vv;
+                    continue;
+                }
+
+                if (preg_match('/^{.*}$/', $vv))
+                {
+                    [$key, $class] = explode(':', substr($vv, 1, -1)) + [null, false];
+
+                    // Convert the ":hide" suffix from the DCA
+                    if ('hide' === $class) {
+                        $class = 'collapsed';
+                    }
+
+                    // Override the class if the session has a state
+                    if (isset($fieldsetStates[$key])) {
+                        $class = ($fieldsetStates[$key] ? '' : ' collapsed');
+                    }
+
+                    $boxes[$k]['key'] = $key;
+                    $boxes[$k]['class'] = $class;
+                }
+                elseif (\is_array($GLOBALS['TL_DCA'][$table]['fields'][$vv] ?? null) && (!DataContainer::isFieldExcluded($table, $vv) || $this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $table . '::' . $vv)))
+                {
+                    $boxes[$k]['fields'][$kk] = $vv;
+                }
+            }
+
+            // Unset a box if it does not contain any fields
+            if (\count($boxes[$k]) < $emptyCount) {
+                unset($boxes[$k]);
+            }
+        }
+
+        return $boxes;
+    }
+
+    /**
      * Generate possible palette names from an array by taking the first value and
      * either adding or not adding the following values.
      */
@@ -144,5 +216,14 @@ class PaletteBuilder
         }
 
         return array_filter($return);
+    }
+
+    private function getFieldsetStates(string $table): array
+    {
+        /** @var AttributeBag $objSessionBag */
+        $objSessionBag = $this->requestStack->getSession()->getBag('contao_backend');
+        $fieldsetStates = $objSessionBag->get('fieldset_states');
+
+        return $fieldsetStates[$table] ?? [];
     }
 }

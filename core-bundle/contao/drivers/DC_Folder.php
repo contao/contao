@@ -1249,44 +1249,21 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$GLOBALS['TL_DCA'][$this->strTable]['fields'] = array_intersect_key($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array(), array('name' => true, 'protected' => true, 'syncExclude' => true));
 		}
 
-		$security = System::getContainer()->get('security.helper');
-
-		// Build an array from boxes and rows (do not show excluded fields)
 		$this->strPalette = $this->getPalette();
-		$boxes = StringUtil::trimsplit(';', $this->strPalette);
+		$boxes = System::getContainer()->get('contao.data_container.palette_builder')->getBoxes($this->strPalette, $this->strTable);
 
 		if (!empty($boxes))
 		{
-			// Get fields
-			foreach ($boxes as $k=>$v)
-			{
-				$boxes[$k] = StringUtil::trimsplit(',', $v);
-
-				foreach ($boxes[$k] as $kk=>$vv)
-				{
-					if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]) || (DataContainer::isFieldExcluded($this->strTable, $vv) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $vv)))
-					{
-						unset($boxes[$k][$kk]);
-					}
-				}
-
-				// Unset a box if it does not contain any fields
-				if (empty($boxes[$k]))
-				{
-					unset($boxes[$k]);
-				}
-			}
-
 			// Render boxes
 			$class = 'tl_tbox';
 
-			foreach ($boxes as $v)
+			foreach ($boxes as $box)
 			{
 				$return .= '
 <div class="' . $class . ' cf">';
 
 				// Build rows of the current box
-				foreach ($v as $vv)
+				foreach ($box['fields'] as $vv)
 				{
 					$this->strField = $vv;
 					$this->strInputName = $vv;
