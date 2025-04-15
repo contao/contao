@@ -2407,7 +2407,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->values = array($this->intId);
 					$this->arrSubmit = array();
 					$this->blnCreateNewVersion = false;
-					$this->strPalette = StringUtil::trimsplit('[;,]', $this->getPalette());
+					$this->strPalette = $this->getPalette();
+					$boxes = System::getContainer()->get('contao.data_container.palette_builder')->getBoxes($this->strPalette, $this->strTable, true);
+					$paletteFields = array_merge(...array_column($boxes, 'fields'));
 
 					// Reset the "noReload" state but remember it for the final handling
 					$blnNoReload = $blnNoReload || $this->noReload;
@@ -2416,41 +2418,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$objVersions = new Versions($this->strTable, $this->intId);
 					$objVersions->initialize();
 
-					// Add meta fields if the current user is an administrator
-					if ($user->isAdmin)
-					{
-						if ($db->fieldExists('sorting', $this->strTable))
-						{
-							array_unshift($this->strPalette, 'sorting');
-						}
-
-						if ($db->fieldExists('pid', $this->strTable))
-						{
-							array_unshift($this->strPalette, 'pid');
-						}
-					}
-
 					// Begin current row
 					$arrAjax = array();
 					$blnAjax = false;
 					$thisId = '';
 					$box = '';
 
-					$excludedFields = array();
-
 					// Store the active record (backwards compatibility)
 					$this->objActiveRecord = (object) $currentRecord;
 
-					foreach ($this->strPalette as $v)
+					foreach ($paletteFields as $v)
 					{
-						// Check whether field is excluded
-						if (isset($excludedFields[$v]) || (DataContainer::isFieldExcluded($this->strTable, $v) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $v)))
-						{
-							$excludedFields[$v] = true;
-
-							continue;
-						}
-
 						if ($v == '[EOF]')
 						{
 							if ($blnAjax && Environment::get('isAjaxRequest'))

@@ -18,6 +18,7 @@ use Contao\DataContainer;
 use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
+use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
@@ -30,6 +31,7 @@ class PaletteBuilder
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly Security $security,
+        private readonly Connection $connection,
     ) {
     }
 
@@ -141,13 +143,25 @@ class PaletteBuilder
      *     fields: array<int,string>
      * }>
      */
-    public function getBoxes(string $palette, string $table): array
+    public function getBoxes(string $palette, string $table, bool $addMetaFields = false): array
     {
         $boxes = [];
         $fieldsetStates = $this->getFieldsetStates($table);
 
-        foreach (StringUtil::trimsplit(';', $palette) as $k => $v)
-        {
+        // Add meta fields if the current user is an administrator
+        if (
+            $addMetaFields
+            && $this->security->isGranted('ROLE_ADMIN')
+            && ($adminFields = $this->getAdminFields($table))
+        ) {
+            $boxes[-1] = [
+                'key' => '',
+                'class' => '',
+                'fields' => $adminFields,
+            ];
+        }
+
+        foreach (StringUtil::trimsplit(';', $palette) as $k => $v) {
             $emptyCount = 1;
             $boxes[$k] = [
                 'key' => '',
@@ -225,5 +239,45 @@ class PaletteBuilder
         $fieldsetStates = $objSessionBag->get('fieldset_states');
 
         return $fieldsetStates[$table] ?? [];
+    }
+
+    private function getAdminFields(string $table): array
+    {
+        $adminFields = [];
+        $columns = $this->connection->createSchemaManager()->listTableColumns($table);
+
+        if (array_key_exists('pid', $columns)) {
+            $adminFields[] = 'pid';
+            $this->ensureAdminField($table, 'pid');
+        }
+
+        if (array_key_exists('sorting', $columns)) {
+            $adminFields[] = 'sorting';
+            $this->ensureAdminField($table, 'sorting');
+        }
+
+        return $adminFields;
+    }
+
+    /**
+     * Ensures a minimum configuration to edit the field.
+     */
+    private function ensureAdminField(string $table, string $field): void
+    {
+        if (!isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['label'])) {
+            $GLOBALS['TL_DCA'][$table]['fields'][$field]['label'] = &$GLOBALS['TL_LANG']['MSC'][$field];
+        }
+
+        if (!isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['inputType'])) {
+            $GLOBALS['TL_DCA'][$table]['fields'][$field]['inputType'] = 'text';
+        }
+
+        if (!isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['tl_class'])) {
+            $GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['tl_class'] = 'w50';
+        }
+
+        if (!isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['rgxp'])) {
+            $GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['rgxp'] = 'natural';
+        }
     }
 }
