@@ -422,102 +422,14 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 	 */
 	public function getPalette()
 	{
-		$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes']['default'] ?? '';
+		return System::getContainer()
+			->get('contao.data_container.palette_builder')
+			->getPalette($this->strTable, (int) $this->intId, $this)
+		;
+	}
 
-		// Check whether there are selector fields
-		if (!empty($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']))
-		{
-			$sValues = array();
-			$subpalettes = array();
-
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__'] as $name)
-			{
-				$trigger = Config::get($name);
-
-				// Overwrite the trigger if the page is not reloaded
-				if (Input::post('FORM_SUBMIT') == $this->strTable)
-				{
-					$key = (Input::get('act') == 'editAll') ? $name . '_' . $this->intId : $name;
-
-					if (!($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['submitOnChange'] ?? null))
-					{
-						$trigger = Input::post($key);
-					}
-				}
-
-				if ($trigger)
-				{
-					if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['multiple'] ?? null))
-					{
-						$sValues[] = $name;
-
-						// Look for a subpalette
-						if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$name]))
-						{
-							$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$name];
-						}
-					}
-					else
-					{
-						$sValues[] = $trigger;
-						$key = $name . '_' . $trigger;
-
-						// Look for a subpalette
-						if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key]))
-						{
-							$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key];
-						}
-					}
-				}
-			}
-
-			// Build possible palette names from the selector values
-			if (empty($sValues))
-			{
-				$names = array('default');
-			}
-			elseif (\count($sValues) > 1)
-			{
-				$names = $this->combiner($sValues);
-			}
-			else
-			{
-				$names = array($sValues[0]);
-			}
-
-			// Get an existing palette
-			foreach ($names as $paletteName)
-			{
-				if (isset($GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName]))
-				{
-					$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName];
-					break;
-				}
-			}
-
-			// Include sub-palettes
-			foreach ($subpalettes as $k=>$v)
-			{
-				$strPalette = preg_replace('/\b' . preg_quote($k, '/') . '\b/i', $k . ',[' . $k . '],' . $v . ',[EOF]', $strPalette);
-			}
-		}
-
-		// Call onpalette_callback
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] as $callback)
-			{
-				if (\is_array($callback))
-				{
-					$strPalette = System::importStatic($callback[0])->{$callback[1]}($strPalette, $this);
-				}
-				elseif (\is_callable($callback))
-				{
-					$strPalette = $callback($strPalette, $this);
-				}
-			}
-		}
-
-		return $strPalette;
+	public function getCurrentRecord(int|string|null $id = null, string|null $table = null): array|null
+	{
+		return $GLOBALS['TL_CONFIG'];
 	}
 }

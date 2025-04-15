@@ -2204,25 +2204,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 */
 	public function getPalette()
 	{
-		$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes']['default'];
-
-		// Call onpalette_callback
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] as $callback)
-			{
-				if (\is_array($callback))
-				{
-					$strPalette = System::importStatic($callback[0])->{$callback[1]}($strPalette, $this);
-				}
-				elseif (\is_callable($callback))
-				{
-					$strPalette = $callback($strPalette, $this);
-				}
-			}
-		}
-
-		return $strPalette;
+		return System::getContainer()
+			->get('contao.data_container.palette_builder')
+			->getPalette($this->strTable, (int) $this->intId, $this)
+		;
 	}
 
 	/**

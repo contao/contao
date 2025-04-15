@@ -811,26 +811,17 @@ abstract class DataContainer extends Backend
 	 * @param array $names
 	 *
 	 * @return array
+	 *
+	 * @deprecated Deprecated in Contao 5.6, to be removed in Contao 6.0.
 	 */
 	protected function combiner($names)
 	{
-		$return = array('');
-		$names = array_values($names);
+		trigger_deprecation('contao/core-bundle', '5.6', __METHOD__.' is deprecated.');
 
-		for ($i=0, $c=\count($names); $i<$c; $i++)
-		{
-			$buffer = array();
-
-			foreach ($return as $k=>$v)
-			{
-				$buffer[] = ($k%2 == 0) ? $v : $v . $names[$i];
-				$buffer[] = ($k%2 == 0) ? $v . $names[$i] : $v;
-			}
-
-			$return = $buffer;
-		}
-
-		return array_filter($return);
+		return System::getContainer()
+			->get('contao.data_container.palette_builder')
+			->combiner($names)
+		;
 	}
 
 	/**
