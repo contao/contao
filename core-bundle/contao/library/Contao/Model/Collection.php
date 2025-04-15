@@ -438,7 +438,7 @@ class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 	/**
 	 * Retrieve the iterator object
 	 *
-	 * @return \ArrayIterator The iterator object
+	 * @return \ArrayIterator<int, T> The iterator object
 	 */
 	#[\ReturnTypeWillChange]
 	public function getIterator()
