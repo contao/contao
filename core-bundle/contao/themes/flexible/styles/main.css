@@ -293,6 +293,7 @@ body.popup {
 	width: auto;
 	min-height: 0;
 	max-width: none;
+	display: block;
 }
 
 /* Left */
