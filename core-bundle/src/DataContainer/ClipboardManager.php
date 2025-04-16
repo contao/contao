@@ -139,7 +139,7 @@ class ClipboardManager
             return false;
         }
 
-        if ($id === $clipboard['id'] || (\is_array($clipboard['id']) && \in_array($id, $clipboard['id'], false))) {
+        if ((string) $id === (string) $clipboard['id'] || (\is_array($clipboard['id']) && \in_array($id, $clipboard['id'], false))) {
             return true;
         }
 
@@ -161,6 +161,6 @@ class ClipboardManager
             return false;
         }
 
-        return !(self::MODE_CUT === $clipboard['mode'] && $id === $clipboard['id']) && !(\is_array($clipboard['id']) && self::MODE_CUT_ALL === $clipboard['mode'] && \in_array($id, $clipboard['id'], false));
+        return !(self::MODE_CUT === $clipboard['mode'] && (string) $id === (string) $clipboard['id']) && !(\is_array($clipboard['id']) && self::MODE_CUT_ALL === $clipboard['mode'] && \in_array($id, $clipboard['id'], false));
     }
 }
