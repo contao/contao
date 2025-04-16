@@ -129,7 +129,7 @@ class ClipboardManager
     {
         // Only tree mode can have circular references. In extended tree, nodes (e.g.
         // articles) only have one level.
-        if (($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) !== DataContainer::MODE_TREE) {
+        if (DataContainer::MODE_TREE !== ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null)) {
             return false;
         }
 
