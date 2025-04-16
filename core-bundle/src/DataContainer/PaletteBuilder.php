@@ -169,7 +169,7 @@ class PaletteBuilder
                 'fields' => [],
             ];
 
-            foreach (StringUtil::trimsplit(',', $v) as $kk=>$vv) {
+            foreach (StringUtil::trimsplit(',', $v) as $kk => $vv) {
                 // Subpalette start/stop marker
                 if (preg_match('/^\[.*]$/', $vv)) {
                     ++$emptyCount;
@@ -177,8 +177,7 @@ class PaletteBuilder
                     continue;
                 }
 
-                if (preg_match('/^{.*}$/', $vv))
-                {
+                if (preg_match('/^{.*}$/', $vv)) {
                     [$key, $class] = explode(':', substr($vv, 1, -1)) + [null, false];
 
                     // Convert the ":hide" suffix from the DCA
@@ -193,9 +192,7 @@ class PaletteBuilder
 
                     $boxes[$k]['key'] = $key;
                     $boxes[$k]['class'] = $class;
-                }
-                elseif (\is_array($GLOBALS['TL_DCA'][$table]['fields'][$vv] ?? null) && (!DataContainer::isFieldExcluded($table, $vv) || $this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $table . '::' . $vv)))
-                {
+                } elseif (\is_array($GLOBALS['TL_DCA'][$table]['fields'][$vv] ?? null) && (!DataContainer::isFieldExcluded($table, $vv) || $this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $table.'::'.$vv))) {
                     $boxes[$k]['fields'][$kk] = $vv;
                 }
             }
@@ -246,11 +243,11 @@ class PaletteBuilder
         $adminFields = [];
         $columns = $this->connection->createSchemaManager()->listTableColumns($table);
 
-        if (array_key_exists('pid', $columns)) {
+        if (\array_key_exists('pid', $columns)) {
             $adminFields[] = 'pid';
         }
 
-        if (array_key_exists('sorting', $columns)) {
+        if (\array_key_exists('sorting', $columns)) {
             $adminFields[] = 'sorting';
         }
 

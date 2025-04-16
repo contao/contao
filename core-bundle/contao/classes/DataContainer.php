@@ -816,7 +816,7 @@ abstract class DataContainer extends Backend
 	 */
 	protected function combiner($names)
 	{
-		trigger_deprecation('contao/core-bundle', '5.6', __METHOD__.' is deprecated.');
+		trigger_deprecation('contao/core-bundle', '5.6', __METHOD__ . ' is deprecated.');
 
 		return System::getContainer()
 			->get('contao.data_container.palette_builder')
