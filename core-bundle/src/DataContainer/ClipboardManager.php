@@ -127,7 +127,8 @@ class ClipboardManager
 
     public function isCircularReference(string $table, int|string $id, bool $loadChildRecords = false): bool
     {
-        // Only tree mode can have circular references. In extended tree, nodes (e.g. articles) only have one level.
+        // Only tree mode can have circular references. In extended tree, nodes (e.g.
+        // articles) only have one level.
         if (($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null) !== DataContainer::MODE_TREE) {
             return false;
         }
@@ -138,7 +139,7 @@ class ClipboardManager
             return false;
         }
 
-        if ($id == $clipboard['id'] || (\is_array($clipboard['id']) && \in_array($id, $clipboard['id'], false))) {
+        if ($id === $clipboard['id'] || (\is_array($clipboard['id']) && \in_array($id, $clipboard['id'], false))) {
             return true;
         }
 
@@ -160,6 +161,6 @@ class ClipboardManager
             return false;
         }
 
-        return !(self::MODE_CUT === $clipboard['mode'] && $id == $clipboard['id']) && !(\is_array($clipboard['id']) && self::MODE_CUT_ALL === $clipboard['mode'] && \in_array($id, $clipboard['id'], false));
+        return !(self::MODE_CUT === $clipboard['mode'] && $id === $clipboard['id']) && !(\is_array($clipboard['id']) && self::MODE_CUT_ALL === $clipboard['mode'] && \in_array($id, $clipboard['id'], false));
     }
 }
