@@ -2264,6 +2264,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$version = '';
 		}
 
+		$security = System::getContainer()->get('security.helper');
 		$strButtons = System::getContainer()
 			->get('contao.data_container.buttons_builder')
 			->generateEditButtons(

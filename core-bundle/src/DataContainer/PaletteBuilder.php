@@ -248,36 +248,12 @@ class PaletteBuilder
 
         if (array_key_exists('pid', $columns)) {
             $adminFields[] = 'pid';
-            $this->ensureAdminField($table, 'pid');
         }
 
         if (array_key_exists('sorting', $columns)) {
             $adminFields[] = 'sorting';
-            $this->ensureAdminField($table, 'sorting');
         }
 
         return $adminFields;
-    }
-
-    /**
-     * Ensures a minimum configuration to edit the field.
-     */
-    private function ensureAdminField(string $table, string $field): void
-    {
-        if (!isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['label'])) {
-            $GLOBALS['TL_DCA'][$table]['fields'][$field]['label'] = &$GLOBALS['TL_LANG']['MSC'][$field];
-        }
-
-        if (!isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['inputType'])) {
-            $GLOBALS['TL_DCA'][$table]['fields'][$field]['inputType'] = 'text';
-        }
-
-        if (!isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['tl_class'])) {
-            $GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['tl_class'] = 'w50';
-        }
-
-        if (!isset($GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['rgxp'])) {
-            $GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['rgxp'] = 'natural';
-        }
     }
 }
