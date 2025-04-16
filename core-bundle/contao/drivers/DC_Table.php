@@ -3976,12 +3976,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$clipboardManager = System::getContainer()->get('contao.data_container.clipboard_manager');
-		$arrClipboard = $clipboardManager->get($this->strTable);
+		$arrClipboard = $clipboardManager->get($table);
 		$blnClipboard = null !== $arrClipboard;
 
 		for ($i=0, $c=\count($arrIds); $i<$c; $i++)
 		{
-			$return .= ' ' . trim($this->generateTree($table, $arrIds[$i], array('p'=>($arrIds[$i - 1] ?? null), 'n'=>($arrIds[$i + 1] ?? null)), $hasSorting, $margin, $blnClipboard ? $arrClipboard : false, $clipboardManager->isCircularReference($this->strTable, $arrIds[$i], !$blnPtable), $blnProtected));
+			$return .= ' ' . trim($this->generateTree($table, $arrIds[$i], array('p'=>($arrIds[$i - 1] ?? null), 'n'=>($arrIds[$i + 1] ?? null)), $hasSorting, $margin, $blnClipboard ? $arrClipboard : false, $clipboardManager->isCircularReference($table, $arrIds[$i], !$blnPtable), $blnProtected));
 		}
 
 		return $return;
