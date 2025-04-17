@@ -2,6 +2,14 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.5.10] (2025-04-17)
+
+**Fixed issues:**
+
+- [#8282] Fix the model phpDocs ([leofeyer])
+- [#8249] Do not use Turbo Drive for `act=create` requests ([fritzmg])
+- [#8254] Correctly initialize the CAPTCHA widget ([leofeyer])
+
 ## [5.5.9] (2025-03-31)
 
 **Fixed issues:**
@@ -30,7 +38,7 @@ This project adheres to [Semantic Versioning].
 
 **Security fixes:**
 
-- [CVE-2025-29790]: Cross site scripting through SVG uploads
+- [CVE-2025-29790]: Cross-site scripting through SVG uploads
 
 ## [5.5.5] (2025-03-13)
 
@@ -154,7 +162,7 @@ This project adheres to [Semantic Versioning].
 - [#7833] Fine-tune the template studio ([m-vo])
 - [#7826] Split the `BackendMenuListener` class into two separate classes ([leofeyer])
 - [#7851] Implement Flysystem default public URI support ([m-vo])
-- [#7838] Make sure back end search related messages are never too big ([Toflar])
+- [#7838] Make sure messages related to the back end search are never too big ([Toflar])
 - [#7837] Use stable SEAL versions ([Toflar])
 - [#7831] Use the `#[IsGranted]` PHP attribute in template studio controller ([fritzmg])
 - [#7814] Pass on the information if a message has been triggered via the WebWorker ([Toflar])
@@ -164,7 +172,7 @@ This project adheres to [Semantic Versioning].
 - [#7818] Move the "continue" button on the login screen to the right ([leofeyer])
 - [#7819] Correctly show the record label if `showColumns` is enabled ([ausi])
 - [#7675] Add a Stimulus controller and the UI for the back end search ([zoglo])
-- [#7811] Switch to new SEAL ReindexProvider framework ([Toflar])
+- [#7811] Switch to the new SEAL `ReindexProvider` framework ([Toflar])
 - [#7796] Use PHP CMS-IG SEAL for the back end search ([Toflar])
 - [#7684] Adjust the template studio layout ([zoglo])
 - [#7769] Implement search invalidation on DC_Table edits ([Toflar])
@@ -230,7 +238,7 @@ This project adheres to [Semantic Versioning].
 - [#7813] Update the back end search UI ([zoglo])
 - [#7819] Correctly show the record label if `showColumns` is enabled ([ausi])
 - [#7600] Fix prefetching of edit, children and select links ([aschempp])
-- [#7691] Fix the partials regex in the Twig template finder ([fritzmg])
+- [#7691] Fix the regex for partials in the Twig template finder ([fritzmg])
 - [#7701] Use the return value of the `InvalidateCacheTagsEvent` ([leofeyer])
 - [#7673] Fix a type hint in the figure renderer ([m-vo])
 - [#7649] Enable `pauseOnMouseEnter` by default ([fritzmg])
@@ -238,6 +246,7 @@ This project adheres to [Semantic Versioning].
 - [#7582] Add PostCSS as described in Symfony Encore ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.5.10]: https://github.com/contao/contao/releases/tag/5.5.10
 [5.5.9]: https://github.com/contao/contao/releases/tag/5.5.9
 [5.5.8]: https://github.com/contao/contao/releases/tag/5.5.8
 [5.5.7]: https://github.com/contao/contao/releases/tag/5.5.7
@@ -421,3 +430,6 @@ This project adheres to [Semantic Versioning].
 [#8231]: https://github.com/contao/contao/pull/8231
 [#8236]: https://github.com/contao/contao/pull/8236
 [#8244]: https://github.com/contao/contao/pull/8244
+[#8249]: https://github.com/contao/contao/pull/8249
+[#8254]: https://github.com/contao/contao/pull/8254
+[#8282]: https://github.com/contao/contao/pull/8282
