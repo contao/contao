@@ -68,8 +68,8 @@ class PageRegistry implements ResetInterface
                 $path = '/'.($pageModel->alias ?: $pageModel->id);
             } else {
                 $path = '/'.($pageModel->alias ?: $pageModel->id).'{!parameters}';
-                $defaults['parameters'] = '';
-                $requirements['parameters'] = $pageModel->requireItem ? '/.+?' : '(/.+?)?';
+                $defaults['parameters'] ??= '';
+                $requirements['parameters'] ??= $pageModel->requireItem ? '/.+?' : '(/.+?)?';
             }
         }
 
