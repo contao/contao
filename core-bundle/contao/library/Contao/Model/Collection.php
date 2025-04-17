@@ -17,7 +17,7 @@ use Contao\Model;
  * The class handles traversing a set of models and lazy loads the database
  * result rows upon their first usage.
  *
- * @template T of Model
+ * @template-covariant T of Model
  */
 class Collection implements \ArrayAccess, \Countable, \IteratorAggregate
 {
