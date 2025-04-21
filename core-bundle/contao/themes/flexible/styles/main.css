@@ -1550,13 +1550,11 @@ table.tl_listing {
 	padding: 6px 0;
 }
 
-.cte_preview .media--left figure,
-.cte_preview .float_left {
+.cte_preview .media--left figure {
 	float: left;
 }
 
-.cte_preview .media--right figure,
-.cte_preview .float_right {
+.cte_preview .media--right figure {
 	float: right;
 }
 
@@ -2561,6 +2559,14 @@ div.mce-edit-area {
 
 time[title] {
 	cursor: help;
+}
+
+.float_left {
+	float: left;
+}
+
+.float_right {
+	float: right;
 }
 
 .foldable img {
