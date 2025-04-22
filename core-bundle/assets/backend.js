@@ -85,14 +85,21 @@ document.documentElement.addEventListener('turbo:before-cache', (e) => {
     e.target.querySelector('.sf-toolbar')?.remove();
 });
 
-// Prevent duplicate "act=create" calls due to data-turbo-track="reload" in the
-// subsequent HTML response (see #8182).
+// If the previously fetched resource got redirected and a full page reload
+// occurs, Turbo currently uses the wrong URL (the originally fetched one, not
+// the effective URL after the redirect). This workaround solves the issue by
+// reloading the correct URL ourselves beforehand.
 // TODO: Remove again once hotwired/turbo#1391 is fixed.
-document.documentElement.addEventListener('turbo:before-visit', (e) => {
-    const params = new URL(e.detail.url).searchParams;
+let targetURLAfterRedirectedFetch = null;
 
-    if ('create' === params.get('act')) {
-        e.preventDefault();
-        window.location = e.detail.url;
+document.documentElement.addEventListener('turbo:reload', (event) => {
+    if (event.detail.reason !== 'request_failed' && targetURLAfterRedirectedFetch) {
+        window.location.href = targetURLAfterRedirectedFetch;
     }
+});
+
+document.documentElement.addEventListener('turbo:before-fetch-response', (event) => {
+    const response = event.detail.fetchResponse;
+
+    targetURLAfterRedirectedFetch = response.redirected ? response.response.url : null;
 });
