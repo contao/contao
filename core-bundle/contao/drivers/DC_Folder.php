@@ -2294,7 +2294,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Check the full path to see if the file extension has changed, because if
 			// $this->strExtension is empty, a new extension could otherwise be added to
 			// $varValue and change the file type!
-			if (Path::getExtension($varValue . $this->strExtension) !== Path::getExtension($this->varValue . $this->strExtension))
+			if (!is_dir(Path::join($this->strRootDir, $this->strPath, $this->varValue, $this->strExtension)) && Path::getExtension($varValue . $this->strExtension) !== Path::getExtension($this->varValue . $this->strExtension))
 			{
 				throw new \Exception($GLOBALS['TL_LANG']['ERR']['invalidName']);
 			}
