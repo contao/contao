@@ -113,7 +113,7 @@ class AbstractBackendControllerTest extends TestCase
     /**
      * @dataProvider provideRequests
      */
-    public function testHandlesTurboRequests(Request $request, bool|null $includeChromeContext, array $expectedContext, string $expectedRequestFormat = 'html'): void
+    public function testHandlesTurboRequests(Request $request, bool|null $includeChromeContext, array $expectedContext, string $expectedRequestFormat = 'html', int $expectedStatus = Response::HTTP_OK): void
     {
         $controller = new class() extends AbstractBackendController {
             public function fooAction(bool|null $includeChromeContext): Response
@@ -148,9 +148,11 @@ class AbstractBackendControllerTest extends TestCase
 
         System::setContainer($container);
         $controller->setContainer($container);
+        $response = $controller->fooAction($includeChromeContext);
 
-        $this->assertSame('<custom_be_main>', $controller->fooAction($includeChromeContext)->getContent());
+        $this->assertSame('<custom_be_main>', $response->getContent());
         $this->assertSame($expectedRequestFormat, $request->getRequestFormat());
+        $this->assertSame($expectedStatus, $response->getStatusCode());
     }
 
     public static function provideRequests(): iterable
@@ -237,6 +239,14 @@ class AbstractBackendControllerTest extends TestCase
             $plainRequest,
             false,
             $customContext,
+        ];
+
+        yield 'request with widget error' => [
+            new Request(attributes: ['_contao_widget_error' => true], server: ['HTTP_HOST' => 'localhost']),
+            false,
+            $customContext,
+            'html',
+            Response::HTTP_UNPROCESSABLE_ENTITY,
         ];
     }
 
