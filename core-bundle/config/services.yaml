@@ -1274,7 +1274,7 @@ services:
         class: Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader
         public: true
         arguments:
-            - '@cache.system'
+            - '@cache.app'
             - '@contao.twig.loader.template_locator'
             - '@contao.twig.loader.theme_namespace'
             - '@contao.framework'
@@ -1327,13 +1327,18 @@ services:
         public: true
         arguments:
             - '@twig'
-            - '@cache.system'
+            - '@contao.twig.inspector.storage'
             - '@contao.twig.filesystem_loader'
+
+    contao.twig.inspector.storage:
+        class: Contao\CoreBundle\Twig\Inspector\Storage
+        arguments:
+            - '@cache.app'
 
     contao.twig.inspector_node_visitor:
         class: Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor
         arguments:
-            - '@cache.system'
+            - '@contao.twig.inspector.storage'
             - '@twig'
 
     contao.twig.interop.context_factory:

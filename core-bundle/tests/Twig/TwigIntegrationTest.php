@@ -25,6 +25,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Interop\ContextFactory;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\Loader\TemplateLocator;
@@ -95,7 +96,7 @@ class TwigIntegrationTest extends TestCase
                 $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter(), $environment),
+                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
             ),
         );
 
@@ -175,7 +176,7 @@ class TwigIntegrationTest extends TestCase
                 $filesystemLoader,
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter(), $environment),
+                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
             ),
         );
 
@@ -226,7 +227,7 @@ class TwigIntegrationTest extends TestCase
                 $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter(), $environment),
+                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
             ),
         );
 
@@ -278,7 +279,7 @@ class TwigIntegrationTest extends TestCase
                 $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter(), $environment),
+                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
             ),
         );
 
@@ -333,7 +334,7 @@ class TwigIntegrationTest extends TestCase
                 $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter(), $environment),
+                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
             ),
         );
 
@@ -363,7 +364,7 @@ class TwigIntegrationTest extends TestCase
                 $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter(), $environment),
+                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
             ),
         );
 

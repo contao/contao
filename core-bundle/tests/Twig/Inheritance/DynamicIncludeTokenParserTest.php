@@ -18,8 +18,8 @@ use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
-use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
 use Twig\Lexer;
 use Twig\Loader\ArrayLoader;
@@ -135,7 +135,7 @@ class DynamicIncludeTokenParserTest extends TestCase
             $filesystemLoader,
             $this->createMock(ContaoCsrfTokenManager::class),
             $this->createMock(ContaoVariable::class),
-            new InspectorNodeVisitor(new NullAdapter(), $environment),
+            new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
         ));
 
         $this->assertSame('<foo-theme>', $environment->render('template.twig'));
