@@ -256,7 +256,7 @@ class AbstractBackendControllerTest extends TestCase
             $customContext,
             'html',
             Response::HTTP_INTERNAL_SERVER_ERROR,
-            (new Response(status: Response::HTTP_INTERNAL_SERVER_ERROR))
+            new Response(status: Response::HTTP_INTERNAL_SERVER_ERROR),
         ];
     }
 
