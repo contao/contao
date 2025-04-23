@@ -3168,11 +3168,11 @@ fieldset.collapsed > legend:not(:has(> button)) {
 		padding: 12px;
 	}
 
-	#header h1 a .app-title {
+	#header .app-title {
 		display: none;
 	}
 
-	#header h1 a .badge-title {
+	#header .badge-title {
 		margin-left: 32px;
 	}
 
@@ -3321,6 +3321,38 @@ fieldset.collapsed > legend:not(:has(> button)) {
 
 	.tl_metawizard .tl_text {
 		width: 100%;
+	}
+
+	#header:has(.badge-title) {
+		padding-top: 18px;
+
+		h1 {
+			width: 100%;
+		}
+
+		+ #container #left {
+			top: 58px;
+		}
+	}
+
+	#header .badge-title {
+		position: absolute;
+		inset: 0 0 auto;
+		margin: -18px 0 0;
+		border-radius: 0;
+		padding: 3px 5px;
+		background-color: var(--text);
+		color: var(--white);
+		overflow: hidden;
+		white-space: nowrap;
+		text-overflow: ellipsis;
+	}
+
+	html[data-color-scheme="dark"] {
+		#header .badge-title {
+			background-color: var(--invert-text);
+			color: var(--black)
+		}
 	}
 }
 

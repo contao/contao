@@ -51,7 +51,7 @@
       </trans-unit>
       <trans-unit id="tl_faq_category.edit">
         <source>Edit category ID %s</source>
-        <target>Editar categoría con ID %S</target>
+        <target>Editar categoría con ID %s</target>
       </trans-unit>
       <trans-unit id="tl_faq_category.children">
         <source>Edit the questions of category ID %s</source>
