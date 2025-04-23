@@ -688,6 +688,11 @@ h2.sub_headline {
 	width: 38%;
 }
 
+/* Add margin to initialized choices controllers that are not in the shadow-root */
+:not(.tl_subpanel) > .hidden[data-controller="contao--choices"] + div:not(.choices__list) {
+	margin: 3px 0;
+}
+
 .tl_img_submit {
 	white-space: nowrap;
 	background-color: var(--form-bg);
