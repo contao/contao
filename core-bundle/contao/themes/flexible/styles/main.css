@@ -633,7 +633,8 @@ h2.sub_headline {
 	min-width: 100px;
 }
 
-.tl_subpanel :is(select, input, button) {
+.tl_subpanel :is(select, input, button),
+.tl_subpanel > :not(span, strong) {
 	height: 30px;
 }
 
@@ -673,8 +674,9 @@ h2.sub_headline {
 	width: 20%;
 }
 
-.tl_limit .tl_select {
+.tl_limit > :not(strong) {
 	width: 57%;
+	height: 30px;
 }
 
 .tl_search {
@@ -740,7 +742,7 @@ h2.sub_headline {
 	width: 26%;
 }
 
-.tl_sorting .tl_select {
+.tl_sorting > :not(strong) {
 	width: 60%;
 	margin-left: 1%;
 }
