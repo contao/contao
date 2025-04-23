@@ -86,7 +86,7 @@ abstract class AbstractBackendController extends AbstractController
 
         // Set the status code to 422 if a widget did not validate, so that Turbo can
         // handle form errors.
-        if ($this->container->get('request_stack')->getMainRequest()->attributes->has('_contao_widget_error')) {
+        if (200 === $response->getStatusCode() && $this->container->get('request_stack')->getMainRequest()->attributes->has('_contao_widget_error')) {
             $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
