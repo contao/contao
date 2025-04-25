@@ -120,7 +120,7 @@ class PaletteManipulator
 
     public function applyToString(string $palette, bool $skipLegends = false): string
     {
-        $config = $this->explode($palette);
+        $config = static::explode($palette);
 
         if (!$skipLegends) {
             foreach ($this->legends as $legend) {
@@ -142,6 +142,48 @@ class PaletteManipulator
         }
 
         return $this->implode($config);
+    }
+
+    public static function fromString(string $palette): self
+    {
+        $instance = new self();
+
+        foreach (self::explode($palette) as $legend => $config) {
+            $instance->addLegend($legend, null, self::POSITION_AFTER, $config['hide']);
+
+            foreach ($config['fields'] as $field) {
+                $instance->addField($field, $legend);
+            }
+        }
+
+        return $instance;
+    }
+
+    public function hasLegend(string $legend): bool
+    {
+        foreach ($this->legends as $entry) {
+            if ($entry['name'] === $legend) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string|null $legend Optionally filter for a legend
+     */
+    public function hasField(string $field, string|null $legend = null): bool
+    {
+        foreach ($this->fields as $entry) {
+            if (\in_array($field, $entry['fields'], true)) {
+                if (null === $legend || \in_array($legend, $entry['parents'], true)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -166,7 +208,7 @@ class PaletteManipulator
      *
      * @return array<int|string, array>
      */
-    private function explode(string $palette): array
+    private static function explode(string $palette): array
     {
         if ('' === $palette) {
             return [];
