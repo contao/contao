@@ -152,7 +152,7 @@ class PaletteManipulator
             $instance->addLegend($legend, null, self::POSITION_AFTER, $config['hide']);
 
             foreach ($config['fields'] as $field) {
-                $instance->addField($field, $legend);
+                $instance->addField($field, $legend, self::POSITION_APPEND);
             }
         }
 
@@ -184,6 +184,11 @@ class PaletteManipulator
         }
 
         return false;
+    }
+
+    public function asString(): string
+    {
+        return $this->applyToString('');
     }
 
     /**

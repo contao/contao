@@ -510,5 +510,7 @@ class PaletteManipulatorTest extends TestCase
         $this->assertTrue($pm->hasField('baz', 'custom_legend'));
         $this->assertFalse($pm->hasField('baz', 'config_legend'));
         $this->assertFalse($pm->hasField('qux'));
+
+        $this->assertSame($palette, $pm->asString());
     }
 }
