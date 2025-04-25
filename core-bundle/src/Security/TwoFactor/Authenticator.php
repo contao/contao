@@ -55,7 +55,7 @@ class Authenticator
     public function getQrCode(User $user, Request $request): string
     {
         $renderer = new ImageRenderer(
-            new RendererStyle(180, 3),
+            new RendererStyle(180, 1),
             new SvgImageBackEnd(),
         );
 
