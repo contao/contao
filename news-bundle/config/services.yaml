@@ -54,6 +54,7 @@ services:
         class: Contao\NewsBundle\EventListener\NewsFeedListener
         arguments:
             - '@contao.framework'
+            - '@database_connection'
             - '@contao.image.factory'
             - '@contao.routing.content_url_generator'
             - '@contao.insert_tag.parser'

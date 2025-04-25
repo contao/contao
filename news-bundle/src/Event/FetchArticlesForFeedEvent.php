@@ -24,6 +24,8 @@ class FetchArticlesForFeedEvent
      */
     private array|null $articles = null;
 
+    private \DateTimeInterface|null $expires = null;
+
     public function __construct(
         private readonly FeedInterface $feed,
         private readonly Request $request,
@@ -51,6 +53,11 @@ class FetchArticlesForFeedEvent
         return $this->articles;
     }
 
+    public function getExpires(): \DateTimeInterface|null
+    {
+        return $this->expires;
+    }
+
     /**
      * @param array<NewsModel> $articles
      */
@@ -62,5 +69,12 @@ class FetchArticlesForFeedEvent
     public function addArticles(array $articles): void
     {
         $this->articles = [...$this->articles, ...$articles];
+    }
+
+    public function setExpires(\DateTimeInterface $expires, bool $override = false): void
+    {
+        if (!$this->expires || $override || $this->expires < $expires) {
+            $this->expires = $expires;
+        }
     }
 }
