@@ -120,7 +120,7 @@ class PaletteManipulator
 
     public function applyToString(string $palette, bool $skipLegends = false): string
     {
-        $config = static::explode($palette);
+        $config = self::explode($palette);
 
         if (!$skipLegends) {
             foreach ($this->legends as $legend) {
