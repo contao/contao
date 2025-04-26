@@ -241,9 +241,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$strKey = Input::get('popup') ? 'popupReferer' : 'referer';
 			$strRefererId = $request->attributes->get('_contao_referer_id');
-
 			$session = $objSession->get($strKey);
+
+			// Store previous URL
+			if (($previous = end($session)) && $previous['current'] ?? null) {
+				$session[$strRefererId]['last'] = $previous['current'];
+			}
+
+			// Store the current URL
 			$session[$strRefererId][$this->strTable] = Environment::get('requestUri');
+			$session[$strRefererId]['current'] = $session[$strRefererId][$this->strTable];
+
 			$objSession->set($strKey, $session);
 		}
 
