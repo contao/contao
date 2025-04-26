@@ -191,7 +191,10 @@ class BackupManager
             $data = deflate_add($deflateContext, $data, ZLIB_NO_FLUSH);
         }
 
-        @fwrite($fileHandle, $data);
+        if (false === fwrite($fileHandle, $data)) {
+            throw new \RuntimeException('Could not write backup data.');
+        }
+
         fflush($fileHandle);
     }
 
@@ -201,7 +204,9 @@ class BackupManager
     private function finishWriting(Backup $backup, $fileHandle, \DeflateContext|null $deflateContext): void
     {
         if ($deflateContext) {
-            fwrite($fileHandle, deflate_add($deflateContext, '', ZLIB_FINISH));
+            if (false === fwrite($fileHandle, deflate_add($deflateContext, '', ZLIB_FINISH))) {
+                throw new \RuntimeException('Could not write backup data.');
+            }
         }
 
         $this->backupsStorage->writeStream($backup->getFilename(), $fileHandle);
