@@ -28,9 +28,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ResetInterface;
 
-/**
- * @internal Do not use this class in your code; use the "contao.framework" service instead
- */
 class ContaoFramework implements ResetInterface
 {
     private static bool $initialized = false;
