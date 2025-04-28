@@ -2205,6 +2205,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						}
 					}
 
+					$this->arrSubmit[$this->strField] = $this->varValue;
+
 					// Re-set the current value
 					$this->objActiveRecord->{$this->strField} = $this->varValue;
 
