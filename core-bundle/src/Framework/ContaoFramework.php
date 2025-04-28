@@ -42,6 +42,9 @@ class ContaoFramework implements ResetInterface
 
     private array $hookListeners = [];
 
+    /**
+     * @internal Do not use this class in your code; use the "contao.framework" service instead
+     */
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly string $projectDir,
