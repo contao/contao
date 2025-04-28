@@ -126,9 +126,9 @@ class ModuleSubscribe extends Module
 		{
 			$flashBag = $session->getFlashBag();
 
-			if ($flashBag->has('nl_confirm'))
+			if ($flashBag->has('nl_confirm_'.$this->id))
 			{
-				$arrMessages = $flashBag->get('nl_confirm');
+				$arrMessages = $flashBag->get('nl_confirm_'.$this->id);
 
 				$this->Template->mclass = 'confirm';
 				$this->Template->message = $arrMessages[0];
@@ -383,7 +383,7 @@ class ModuleSubscribe extends Module
 			}
 		}
 
-		System::getContainer()->get('request_stack')->getSession()->getFlashBag()->set('nl_confirm', $GLOBALS['TL_LANG']['MSC']['nl_confirm']);
+		System::getContainer()->get('request_stack')->getSession()->getFlashBag()->set('nl_confirm_'.$this->id, $GLOBALS['TL_LANG']['MSC']['nl_confirm']);
 
 		$this->reload();
 	}
