@@ -35,6 +35,7 @@ services:
         class: Contao\NewsBundle\EventListener\DataContainer\NewsSearchListener
         arguments:
             - '@contao.framework'
+            - '@database_connection'
             - '@contao.routing.content_url_generator'
 
     contao_news.listener.data_container.page:

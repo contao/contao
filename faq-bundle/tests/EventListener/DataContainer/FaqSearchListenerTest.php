@@ -16,10 +16,9 @@ use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
 use Contao\FaqBundle\EventListener\DataContainer\FaqSearchListener;
-use Contao\FaqCategoryModel;
 use Contao\FaqModel;
-use Contao\PageModel;
 use Contao\Search;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class FaqSearchListenerTest extends TestCase
@@ -42,6 +41,12 @@ class FaqSearchListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework($adapters);
 
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
             ->expects($this->once())
@@ -58,6 +63,7 @@ class FaqSearchListenerTest extends TestCase
 
         $listener = new FaqSearchListener(
             $framework,
+            $connection,
             $urlGenerator,
         );
 
@@ -81,6 +87,12 @@ class FaqSearchListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework($adapters);
 
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
             ->expects($this->never())
@@ -95,6 +107,7 @@ class FaqSearchListenerTest extends TestCase
 
         $listener = new FaqSearchListener(
             $framework,
+            $connection,
             $urlGenerator,
         );
 
@@ -118,6 +131,12 @@ class FaqSearchListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework($adapters);
 
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
             ->expects($this->never())
@@ -135,6 +154,7 @@ class FaqSearchListenerTest extends TestCase
 
         $listener = new FaqSearchListener(
             $framework,
+            $connection,
             $urlGenerator,
         );
 
@@ -158,6 +178,12 @@ class FaqSearchListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework($adapters);
 
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
             ->expects($this->never())
@@ -175,6 +201,7 @@ class FaqSearchListenerTest extends TestCase
 
         $listener = new FaqSearchListener(
             $framework,
+            $connection,
             $urlGenerator,
         );
 
@@ -199,6 +226,12 @@ class FaqSearchListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework($adapters);
 
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
             ->expects($this->once())
@@ -218,6 +251,7 @@ class FaqSearchListenerTest extends TestCase
 
         $listener = new FaqSearchListener(
             $framework,
+            $connection,
             $urlGenerator,
         );
 
@@ -228,26 +262,6 @@ class FaqSearchListenerTest extends TestCase
     {
         $faqModel = $this->createMock(FaqModel::class);
 
-        $faqCategory = $this->mockClassWithProperties(FaqCategoryModel::class, ['jumpTo' => 42]);
-
-        $faqCategoryAdapter = $this->mockAdapter(['findById']);
-        $faqCategoryAdapter
-            ->expects($this->once())
-            ->method('findById')
-            ->with(5)
-            ->willReturn($faqCategory)
-        ;
-
-        $page = $this->mockClassWithProperties(PageModel::class, ['robots' => 'index,follow']);
-
-        $pageAdapter = $this->mockAdapter(['findById']);
-        $pageAdapter
-            ->expects($this->once())
-            ->method('findById')
-            ->with(42)
-            ->willReturn($page)
-        ;
-
         $search = $this->mockAdapter(['removeEntry']);
         $search
             ->expects($this->never())
@@ -256,12 +270,18 @@ class FaqSearchListenerTest extends TestCase
 
         $adapters = [
             FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
-            FaqCategoryModel::class => $faqCategoryAdapter,
-            PageModel::class => $pageAdapter,
             Search::class => $search,
         ];
 
         $framework = $this->mockContaoFramework($adapters);
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchOne')
+            ->with('SELECT p.robots FROM tl_page AS p, tl_faq_category AS c WHERE c.id = ? AND c.jumpTo = p.id', [5])
+            ->willReturn('index,follow')
+        ;
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
@@ -280,6 +300,7 @@ class FaqSearchListenerTest extends TestCase
 
         $listener = new FaqSearchListener(
             $framework,
+            $connection,
             $urlGenerator,
         );
 
@@ -290,26 +311,6 @@ class FaqSearchListenerTest extends TestCase
     {
         $faqModel = $this->createMock(FaqModel::class);
 
-        $faqCategory = $this->mockClassWithProperties(FaqCategoryModel::class, ['jumpTo' => 42]);
-
-        $faqCategoryAdapter = $this->mockAdapter(['findById']);
-        $faqCategoryAdapter
-            ->expects($this->once())
-            ->method('findById')
-            ->with(5)
-            ->willReturn($faqCategory)
-        ;
-
-        $page = $this->mockClassWithProperties(PageModel::class, ['robots' => 'noindex,follow']);
-
-        $pageAdapter = $this->mockAdapter(['findById']);
-        $pageAdapter
-            ->expects($this->once())
-            ->method('findById')
-            ->with(42)
-            ->willReturn($page)
-        ;
-
         $search = $this->mockAdapter(['removeEntry']);
         $search
             ->expects($this->once())
@@ -319,12 +320,18 @@ class FaqSearchListenerTest extends TestCase
 
         $adapters = [
             FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
-            FaqCategoryModel::class => $faqCategoryAdapter,
-            PageModel::class => $pageAdapter,
             Search::class => $search,
         ];
 
         $framework = $this->mockContaoFramework($adapters);
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchOne')
+            ->with('SELECT p.robots FROM tl_page AS p, tl_faq_category AS c WHERE c.id = ? AND c.jumpTo = p.id', [5])
+            ->willReturn('noindex,follow')
+        ;
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
@@ -345,60 +352,7 @@ class FaqSearchListenerTest extends TestCase
 
         $listener = new FaqSearchListener(
             $framework,
-            $urlGenerator,
-        );
-
-        $listener->onSaveRobots('', $dc);
-    }
-
-    public function testPurgesTheSearchIndexOnRobotsChangeFromIndexToBlankAndTheFAQCategoryDoesNotHaveAJumpToLinkToAReaderPage(): void
-    {
-        $faqModel = $this->createMock(FaqModel::class);
-
-        $faqCategory = $this->mockClassWithProperties(FaqCategoryModel::class);
-
-        $faqCategoryAdapter = $this->mockAdapter(['findById']);
-        $faqCategoryAdapter
-            ->expects($this->once())
-            ->method('findById')
-            ->with(5)
-            ->willReturn($faqCategory)
-        ;
-
-        $search = $this->mockAdapter(['removeEntry']);
-        $search
-            ->expects($this->once())
-            ->method('removeEntry')
-            ->with('uri')
-        ;
-
-        $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
-            FaqCategoryModel::class => $faqCategoryAdapter,
-            Search::class => $search,
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $urlGenerator
-            ->expects($this->once())
-            ->method('generate')
-            ->with($faqModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
-            ->willReturn('uri')
-        ;
-
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn([
-                'robots' => 'index,follow',
-                'pid' => 5,
-            ])
-        ;
-
-        $listener = new FaqSearchListener(
-            $framework,
+            $connection,
             $urlGenerator,
         );
 
@@ -423,6 +377,12 @@ class FaqSearchListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework($adapters);
 
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
             ->expects($this->once())
@@ -435,6 +395,7 @@ class FaqSearchListenerTest extends TestCase
 
         $listener = new FaqSearchListener(
             $framework,
+            $connection,
             $urlGenerator,
         );
 
@@ -458,6 +419,12 @@ class FaqSearchListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework($adapters);
 
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
             ->expects($this->never())
@@ -468,6 +435,7 @@ class FaqSearchListenerTest extends TestCase
 
         $listener = new FaqSearchListener(
             $framework,
+            $connection,
             $urlGenerator,
         );
 

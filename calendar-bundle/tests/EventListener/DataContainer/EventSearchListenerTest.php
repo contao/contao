@@ -14,12 +14,11 @@ namespace Contao\CalendarBundle\Tests\EventListener\DataContainer;
 
 use Contao\CalendarBundle\EventListener\DataContainer\EventSearchListener;
 use Contao\CalendarEventsModel;
-use Contao\CalendarModel;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
-use Contao\PageModel;
 use Contao\Search;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class EventSearchListenerTest extends TestCase
@@ -42,6 +41,12 @@ class EventSearchListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework($adapters);
 
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
             ->expects($this->once())
@@ -58,6 +63,7 @@ class EventSearchListenerTest extends TestCase
 
         $listener = new EventSearchListener(
             $framework,
+            $connection,
             $urlGenerator,
         );
 
@@ -81,6 +87,12 @@ class EventSearchListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework($adapters);
 
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
             ->expects($this->never())
@@ -95,6 +107,7 @@ class EventSearchListenerTest extends TestCase
 
         $listener = new EventSearchListener(
             $framework,
+            $connection,
             $urlGenerator,
         );
 
@@ -118,6 +131,12 @@ class EventSearchListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework($adapters);
 
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
             ->expects($this->never())
@@ -135,6 +154,7 @@ class EventSearchListenerTest extends TestCase
 
         $listener = new EventSearchListener(
             $framework,
+            $connection,
             $urlGenerator,
         );
 
@@ -158,6 +178,12 @@ class EventSearchListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework($adapters);
 
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
             ->expects($this->never())
@@ -175,6 +201,7 @@ class EventSearchListenerTest extends TestCase
 
         $listener = new EventSearchListener(
             $framework,
+            $connection,
             $urlGenerator,
         );
 
@@ -199,6 +226,12 @@ class EventSearchListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework($adapters);
 
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
             ->expects($this->once())
@@ -218,6 +251,7 @@ class EventSearchListenerTest extends TestCase
 
         $listener = new EventSearchListener(
             $framework,
+            $connection,
             $urlGenerator,
         );
 
@@ -228,26 +262,6 @@ class EventSearchListenerTest extends TestCase
     {
         $eventModel = $this->createMock(CalendarEventsModel::class);
 
-        $calendar = $this->mockClassWithProperties(CalendarModel::class, ['jumpTo' => 42]);
-
-        $calendarAdapter = $this->mockAdapter(['findById']);
-        $calendarAdapter
-            ->expects($this->once())
-            ->method('findById')
-            ->with(5)
-            ->willReturn($calendar)
-        ;
-
-        $page = $this->mockClassWithProperties(PageModel::class, ['robots' => 'index,follow']);
-
-        $pageAdapter = $this->mockAdapter(['findById']);
-        $pageAdapter
-            ->expects($this->once())
-            ->method('findById')
-            ->with(42)
-            ->willReturn($page)
-        ;
-
         $search = $this->mockAdapter(['removeEntry']);
         $search
             ->expects($this->never())
@@ -256,12 +270,18 @@ class EventSearchListenerTest extends TestCase
 
         $adapters = [
             CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
-            CalendarModel::class => $calendarAdapter,
-            PageModel::class => $pageAdapter,
             Search::class => $search,
         ];
 
         $framework = $this->mockContaoFramework($adapters);
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchOne')
+            ->with('SELECT p.robots FROM tl_page AS p, tl_calendar AS c WHERE c.id = ? AND c.jumpTo = p.id', [5])
+            ->willReturn('index,follow')
+        ;
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
@@ -280,6 +300,7 @@ class EventSearchListenerTest extends TestCase
 
         $listener = new EventSearchListener(
             $framework,
+            $connection,
             $urlGenerator,
         );
 
@@ -290,26 +311,6 @@ class EventSearchListenerTest extends TestCase
     {
         $eventModel = $this->createMock(CalendarEventsModel::class);
 
-        $calendar = $this->mockClassWithProperties(CalendarModel::class, ['jumpTo' => 42]);
-
-        $calendarAdapter = $this->mockAdapter(['findById']);
-        $calendarAdapter
-            ->expects($this->once())
-            ->method('findById')
-            ->with(5)
-            ->willReturn($calendar)
-        ;
-
-        $page = $this->mockClassWithProperties(PageModel::class, ['robots' => 'noindex,follow']);
-
-        $pageAdapter = $this->mockAdapter(['findById']);
-        $pageAdapter
-            ->expects($this->once())
-            ->method('findById')
-            ->with(42)
-            ->willReturn($page)
-        ;
-
         $search = $this->mockAdapter(['removeEntry']);
         $search
             ->expects($this->once())
@@ -319,12 +320,18 @@ class EventSearchListenerTest extends TestCase
 
         $adapters = [
             CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
-            CalendarModel::class => $calendarAdapter,
-            PageModel::class => $pageAdapter,
             Search::class => $search,
         ];
 
         $framework = $this->mockContaoFramework($adapters);
+
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchOne')
+            ->with('SELECT p.robots FROM tl_page AS p, tl_calendar AS c WHERE c.id = ? AND c.jumpTo = p.id', [5])
+            ->willReturn('noindex,follow')
+        ;
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
@@ -345,60 +352,7 @@ class EventSearchListenerTest extends TestCase
 
         $listener = new EventSearchListener(
             $framework,
-            $urlGenerator,
-        );
-
-        $listener->onSaveRobots('', $dc);
-    }
-
-    public function testPurgesTheSearchIndexOnRobotsChangeFromIndexToBlankAndTheArchiveDoesNotHaveAJumpToLinkToAReaderPage(): void
-    {
-        $eventModel = $this->createMock(CalendarEventsModel::class);
-
-        $calendar = $this->mockClassWithProperties(CalendarModel::class);
-
-        $calendarAdapter = $this->mockAdapter(['findById']);
-        $calendarAdapter
-            ->expects($this->once())
-            ->method('findById')
-            ->with(5)
-            ->willReturn($calendar)
-        ;
-
-        $search = $this->mockAdapter(['removeEntry']);
-        $search
-            ->expects($this->once())
-            ->method('removeEntry')
-            ->with('uri')
-        ;
-
-        $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
-            CalendarModel::class => $calendarAdapter,
-            Search::class => $search,
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $urlGenerator
-            ->expects($this->once())
-            ->method('generate')
-            ->with($eventModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
-            ->willReturn('uri')
-        ;
-
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn([
-                'robots' => 'index,follow',
-                'pid' => 5,
-            ])
-        ;
-
-        $listener = new EventSearchListener(
-            $framework,
+            $connection,
             $urlGenerator,
         );
 
@@ -423,6 +377,12 @@ class EventSearchListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework($adapters);
 
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
             ->expects($this->once())
@@ -435,6 +395,7 @@ class EventSearchListenerTest extends TestCase
 
         $listener = new EventSearchListener(
             $framework,
+            $connection,
             $urlGenerator,
         );
 
@@ -458,6 +419,12 @@ class EventSearchListenerTest extends TestCase
 
         $framework = $this->mockContaoFramework($adapters);
 
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
             ->expects($this->never())
@@ -468,6 +435,7 @@ class EventSearchListenerTest extends TestCase
 
         $listener = new EventSearchListener(
             $framework,
+            $connection,
             $urlGenerator,
         );
 

@@ -17,6 +17,7 @@ services:
         class: Contao\FaqBundle\EventListener\DataContainer\FaqSearchListener
         arguments:
             - '@contao.framework'
+            - '@database_connection'
             - '@contao.routing.content_url_generator'
 
     contao_faq.listener.sitemap:

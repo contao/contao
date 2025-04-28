@@ -22,6 +22,7 @@ services:
         class: Contao\CalendarBundle\EventListener\DataContainer\EventSearchListener
         arguments:
             - '@contao.framework'
+            - '@database_connection'
             - '@contao.routing.content_url_generator'
 
     contao_calendar.listener.data_container.start_stop_validation:

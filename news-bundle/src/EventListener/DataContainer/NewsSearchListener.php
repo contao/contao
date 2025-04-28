@@ -16,10 +16,9 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\DataContainer;
-use Contao\NewsArchiveModel;
 use Contao\NewsModel;
-use Contao\PageModel;
 use Contao\Search;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -29,6 +28,7 @@ class NewsSearchListener
 {
     public function __construct(
         private readonly ContaoFramework $framework,
+        private readonly Connection $connection,
         private readonly ContentUrlGenerator $urlGenerator,
     ) {
     }
@@ -54,14 +54,10 @@ class NewsSearchListener
 
         if ('' === $value && str_starts_with($dc->getCurrentRecord()['robots'], 'index')) {
             // Get robots tag of the reader page (linked in news archive)
-            $readerPageId = $this->framework->getAdapter(NewsArchiveModel::class)->findById($dc->getCurrentRecord()['pid'])->jumpTo ?? null;
+            $readerPageRobots = $this->connection->fetchOne('SELECT p.robots FROM tl_page AS p, tl_news_archive AS c WHERE c.id = ? AND c.jumpTo = p.id', [$dc->getCurrentRecord()['pid']]);
 
-            if ($readerPageId) {
-                $readerPageRobots = $this->framework->getAdapter(PageModel::class)->findById($readerPageId)->robots ?? '';
-
-                if (str_starts_with($readerPageRobots, 'index')) {
-                    return $value;
-                }
+            if (str_starts_with($readerPageRobots, 'index')) {
+                return $value;
             }
         }
 
