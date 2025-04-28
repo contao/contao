@@ -48,9 +48,12 @@ class FaqSearchListener
     #[AsCallback(table: 'tl_faq', target: 'fields.robots.save')]
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
-        // If the blank option is used: Get the robots tag of the reader page that is
-        // linked in the FAQ category
-        if ('' === $value) {
+        if ($dc->getCurrentRecord()['robots'] === $value || str_starts_with($value, 'index')) {
+            return $value;
+        }
+
+        if ('' === $value && str_starts_with($dc->getCurrentRecord()['robots'], 'index')) {
+            // Get robots tag of the reader page (linked in FAQ category)
             $readerPageId = $this->framework->getAdapter(FaqCategoryModel::class)->findById($dc->getCurrentRecord()['pid'])->jumpTo ?? null;
 
             if ($readerPageId) {
@@ -59,15 +62,7 @@ class FaqSearchListener
                 if (str_starts_with($readerPageRobots, 'index')) {
                     return $value;
                 }
-
-                $this->purgeSearchIndex((int) $dc->id);
             }
-
-            return $value;
-        }
-
-        if (str_starts_with($value, 'index')) {
-            return $value;
         }
 
         $this->purgeSearchIndex((int) $dc->id);

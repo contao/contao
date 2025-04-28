@@ -101,7 +101,192 @@ class FaqSearchListenerTest extends TestCase
         $listener->onSaveAlias('foo', $dc);
     }
 
-    public function testPurgesTheSearchIndexOnRobotsChangeIfRobotsIsBankAndTheReaderPageHasRobotsNoindex(): void
+    public function testDoesNotPurgeTheSearchIndexWithUnchangedRobots(): void
+    {
+        $faqModel = $this->createMock(FaqModel::class);
+
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $adapters = [
+            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
+            Search::class => $search,
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn([
+                'robots' => 'index,follow',
+                'pid' => 5,
+            ])
+        ;
+
+        $listener = new FaqSearchListener(
+            $framework,
+            $urlGenerator,
+        );
+
+        $listener->onSaveRobots('index,follow', $dc);
+    }
+
+    public function testDoesNotPurgeTheSearchIndexOnRobotsChangeToIndex(): void
+    {
+        $faqModel = $this->createMock(FaqModel::class);
+
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $adapters = [
+            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
+            Search::class => $search,
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn([
+                'robots' => 'noindex,follow',
+                'pid' => 5,
+            ])
+        ;
+
+        $listener = new FaqSearchListener(
+            $framework,
+            $urlGenerator,
+        );
+
+        $listener->onSaveRobots('index,follow', $dc);
+    }
+
+    public function testPurgesTheSearchIndexOnRobotsChangeToNoindex(): void
+    {
+        $faqModel = $this->createMock(FaqModel::class);
+
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
+            ->expects($this->once())
+            ->method('removeEntry')
+            ->with('uri')
+        ;
+
+        $adapters = [
+            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
+            Search::class => $search,
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($faqModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('uri')
+        ;
+
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn([
+                'robots' => 'index,follow',
+                'pid' => 5,
+            ])
+        ;
+
+        $listener = new FaqSearchListener(
+            $framework,
+            $urlGenerator,
+        );
+
+        $listener->onSaveRobots('noindex,follow', $dc);
+    }
+
+    public function testDoesNotPurgeTheSearchIndexOnRobotsChangeFromIndexToBlankAndTheReaderPageHasRobotsIndex(): void
+    {
+        $faqModel = $this->createMock(FaqModel::class);
+
+        $faqCategory = $this->mockClassWithProperties(FaqCategoryModel::class, ['jumpTo' => 42]);
+
+        $faqCategoryAdapter = $this->mockAdapter(['findById']);
+        $faqCategoryAdapter
+            ->expects($this->once())
+            ->method('findById')
+            ->with(5)
+            ->willReturn($faqCategory)
+        ;
+
+        $page = $this->mockClassWithProperties(PageModel::class, ['robots' => 'index,follow']);
+
+        $pageAdapter = $this->mockAdapter(['findById']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findById')
+            ->with(42)
+            ->willReturn($page)
+        ;
+
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $adapters = [
+            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
+            FaqCategoryModel::class => $faqCategoryAdapter,
+            PageModel::class => $pageAdapter,
+            Search::class => $search,
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn([
+                'robots' => 'index,follow',
+                'pid' => 5,
+            ])
+        ;
+
+        $listener = new FaqSearchListener(
+            $framework,
+            $urlGenerator,
+        );
+
+        $listener->onSaveRobots('', $dc);
+    }
+
+    public function testPurgesTheSearchIndexOnRobotsChangeFromIndexToBlankAndTheReaderPageHasRobotsNoindex(): void
     {
         $faqModel = $this->createMock(FaqModel::class);
 
@@ -166,69 +351,7 @@ class FaqSearchListenerTest extends TestCase
         $listener->onSaveRobots('', $dc);
     }
 
-    public function testDoesNotPurgeTheSearchIndexOnRobotsChangeIfRobotsIsBankAndTheReaderPageHasRobotsIndex(): void
-    {
-        $faqModel = $this->createMock(FaqModel::class);
-
-        $faqCategory = $this->mockClassWithProperties(FaqCategoryModel::class, ['jumpTo' => 42]);
-
-        $faqCategoryAdapter = $this->mockAdapter(['findById']);
-        $faqCategoryAdapter
-            ->expects($this->once())
-            ->method('findById')
-            ->with(5)
-            ->willReturn($faqCategory)
-        ;
-
-        $page = $this->mockClassWithProperties(PageModel::class, ['robots' => 'index,follow']);
-
-        $pageAdapter = $this->mockAdapter(['findById']);
-        $pageAdapter
-            ->expects($this->once())
-            ->method('findById')
-            ->with(42)
-            ->willReturn($page)
-        ;
-
-        $search = $this->mockAdapter(['removeEntry']);
-        $search
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
-            FaqCategoryModel::class => $faqCategoryAdapter,
-            PageModel::class => $pageAdapter,
-            Search::class => $search,
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $urlGenerator
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn([
-                'robots' => 'index,follow',
-                'pid' => 5,
-            ])
-        ;
-
-        $listener = new FaqSearchListener(
-            $framework,
-            $urlGenerator,
-        );
-
-        $listener->onSaveRobots('', $dc);
-    }
-
-    public function testDoesNotPurgeTheSearchIndexOnRobotsChangeIfRobotsIsBankAndTheArchiveDoesNotHaveAJumpToLinkToAReaderPage(): void
+    public function testPurgesTheSearchIndexOnRobotsChangeFromIndexToBlankAndTheFAQCategoryDoesNotHaveAJumpToLinkToAReaderPage(): void
     {
         $faqModel = $this->createMock(FaqModel::class);
 
@@ -244,47 +367,6 @@ class FaqSearchListenerTest extends TestCase
 
         $search = $this->mockAdapter(['removeEntry']);
         $search
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
-            FaqCategoryModel::class => $faqCategoryAdapter,
-            Search::class => $search,
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $urlGenerator
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn([
-                'robots' => 'index,follow',
-                'pid' => 5,
-            ])
-        ;
-
-        $listener = new FaqSearchListener(
-            $framework,
-            $urlGenerator,
-        );
-
-        $listener->onSaveRobots('', $dc);
-    }
-
-    public function testPurgesTheSearchIndexOnRobotsChangeIfRobotsIsNoindex(): void
-    {
-        $faqModel = $this->createMock(FaqModel::class);
-
-        $search = $this->mockAdapter(['removeEntry']);
-        $search
             ->expects($this->once())
             ->method('removeEntry')
             ->with('uri')
@@ -292,6 +374,7 @@ class FaqSearchListenerTest extends TestCase
 
         $adapters = [
             FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
+            FaqCategoryModel::class => $faqCategoryAdapter,
             Search::class => $search,
         ];
 
@@ -319,87 +402,7 @@ class FaqSearchListenerTest extends TestCase
             $urlGenerator,
         );
 
-        $listener->onSaveRobots('noindex,follow', $dc);
-    }
-
-    public function testDoesNotPurgeTheSearchIndexOnRobotsChangeIfRobotsIsIndex(): void
-    {
-        $faqModel = $this->createMock(FaqModel::class);
-
-        $search = $this->mockAdapter(['removeEntry']);
-        $search
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
-            Search::class => $search,
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $urlGenerator
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn([
-                'robots' => 'noindex,follow',
-                'pid' => 5,
-            ])
-        ;
-
-        $listener = new FaqSearchListener(
-            $framework,
-            $urlGenerator,
-        );
-
-        $listener->onSaveRobots('index,follow', $dc);
-    }
-
-    public function testDoesNotPurgeTheSearchIndexWithUnchangedRobots(): void
-    {
-        $faqModel = $this->createMock(FaqModel::class);
-
-        $search = $this->mockAdapter(['removeEntry']);
-        $search
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $adapters = [
-            FaqModel::class => $this->mockConfiguredAdapter(['findById' => $faqModel]),
-            Search::class => $search,
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $urlGenerator
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn([
-                'robots' => 'index,follow',
-                'pid' => 5,
-            ])
-        ;
-
-        $listener = new FaqSearchListener(
-            $framework,
-            $urlGenerator,
-        );
-
-        $listener->onSaveRobots('index,follow', $dc);
+        $listener->onSaveRobots('', $dc);
     }
 
     public function testPurgesTheSearchIndexOnDelete(): void

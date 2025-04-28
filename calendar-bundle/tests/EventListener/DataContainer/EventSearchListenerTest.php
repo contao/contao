@@ -101,7 +101,192 @@ class EventSearchListenerTest extends TestCase
         $listener->onSaveAlias('foo', $dc);
     }
 
-    public function testPurgesTheSearchIndexOnRobotsChangeIfRobotsIsBankAndTheReaderPageHasRobotsNoindex(): void
+    public function testDoesNotPurgeTheSearchIndexWithUnchangedRobots(): void
+    {
+        $eventModel = $this->createMock(CalendarEventsModel::class);
+
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $adapters = [
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
+            Search::class => $search,
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn([
+                'robots' => 'index,follow',
+                'pid' => 5,
+            ])
+        ;
+
+        $listener = new EventSearchListener(
+            $framework,
+            $urlGenerator,
+        );
+
+        $listener->onSaveRobots('index,follow', $dc);
+    }
+
+    public function testDoesNotPurgeTheSearchIndexOnRobotsChangeToIndex(): void
+    {
+        $eventModel = $this->createMock(CalendarEventsModel::class);
+
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $adapters = [
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
+            Search::class => $search,
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn([
+                'robots' => 'noindex,follow',
+                'pid' => 5,
+            ])
+        ;
+
+        $listener = new EventSearchListener(
+            $framework,
+            $urlGenerator,
+        );
+
+        $listener->onSaveRobots('index,follow', $dc);
+    }
+
+    public function testPurgesTheSearchIndexOnRobotsChangeToNoindex(): void
+    {
+        $eventModel = $this->createMock(CalendarEventsModel::class);
+
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
+            ->expects($this->once())
+            ->method('removeEntry')
+            ->with('uri')
+        ;
+
+        $adapters = [
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
+            Search::class => $search,
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($eventModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
+            ->willReturn('uri')
+        ;
+
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn([
+                'robots' => 'index,follow',
+                'pid' => 5,
+            ])
+        ;
+
+        $listener = new EventSearchListener(
+            $framework,
+            $urlGenerator,
+        );
+
+        $listener->onSaveRobots('noindex,follow', $dc);
+    }
+
+    public function testDoesNotPurgeTheSearchIndexOnRobotsChangeFromIndexToBlankAndTheReaderPageHasRobotsIndex(): void
+    {
+        $eventModel = $this->createMock(CalendarEventsModel::class);
+
+        $calendar = $this->mockClassWithProperties(CalendarModel::class, ['jumpTo' => 42]);
+
+        $calendarAdapter = $this->mockAdapter(['findById']);
+        $calendarAdapter
+            ->expects($this->once())
+            ->method('findById')
+            ->with(5)
+            ->willReturn($calendar)
+        ;
+
+        $page = $this->mockClassWithProperties(PageModel::class, ['robots' => 'index,follow']);
+
+        $pageAdapter = $this->mockAdapter(['findById']);
+        $pageAdapter
+            ->expects($this->once())
+            ->method('findById')
+            ->with(42)
+            ->willReturn($page)
+        ;
+
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $adapters = [
+            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
+            CalendarModel::class => $calendarAdapter,
+            PageModel::class => $pageAdapter,
+            Search::class => $search,
+        ];
+
+        $framework = $this->mockContaoFramework($adapters);
+
+        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $urlGenerator
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn([
+                'robots' => 'index,follow',
+                'pid' => 5,
+            ])
+        ;
+
+        $listener = new EventSearchListener(
+            $framework,
+            $urlGenerator,
+        );
+
+        $listener->onSaveRobots('', $dc);
+    }
+
+    public function testPurgesTheSearchIndexOnRobotsChangeFromIndexToBlankAndTheReaderPageHasRobotsNoindex(): void
     {
         $eventModel = $this->createMock(CalendarEventsModel::class);
 
@@ -166,69 +351,7 @@ class EventSearchListenerTest extends TestCase
         $listener->onSaveRobots('', $dc);
     }
 
-    public function testDoesNotPurgeTheSearchIndexOnRobotsChangeIfRobotsIsBankAndTheReaderPageHasRobotsIndex(): void
-    {
-        $eventModel = $this->createMock(CalendarEventsModel::class);
-
-        $calendar = $this->mockClassWithProperties(CalendarModel::class, ['jumpTo' => 42]);
-
-        $calendarAdapter = $this->mockAdapter(['findById']);
-        $calendarAdapter
-            ->expects($this->once())
-            ->method('findById')
-            ->with(5)
-            ->willReturn($calendar)
-        ;
-
-        $page = $this->mockClassWithProperties(PageModel::class, ['robots' => 'index,follow']);
-
-        $pageAdapter = $this->mockAdapter(['findById']);
-        $pageAdapter
-            ->expects($this->once())
-            ->method('findById')
-            ->with(42)
-            ->willReturn($page)
-        ;
-
-        $search = $this->mockAdapter(['removeEntry']);
-        $search
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
-            CalendarModel::class => $calendarAdapter,
-            PageModel::class => $pageAdapter,
-            Search::class => $search,
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $urlGenerator
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn([
-                'robots' => 'index,follow',
-                'pid' => 5,
-            ])
-        ;
-
-        $listener = new EventSearchListener(
-            $framework,
-            $urlGenerator,
-        );
-
-        $listener->onSaveRobots('', $dc);
-    }
-
-    public function testDoesNotPurgeTheSearchIndexOnRobotsChangeIfRobotsIsBankAndTheArchiveDoesNotHaveAJumpToLinkToAReaderPage(): void
+    public function testPurgesTheSearchIndexOnRobotsChangeFromIndexToBlankAndTheArchiveDoesNotHaveAJumpToLinkToAReaderPage(): void
     {
         $eventModel = $this->createMock(CalendarEventsModel::class);
 
@@ -244,47 +367,6 @@ class EventSearchListenerTest extends TestCase
 
         $search = $this->mockAdapter(['removeEntry']);
         $search
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
-            CalendarModel::class => $calendarAdapter,
-            Search::class => $search,
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $urlGenerator
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn([
-                'robots' => 'index,follow',
-                'pid' => 5,
-            ])
-        ;
-
-        $listener = new EventSearchListener(
-            $framework,
-            $urlGenerator,
-        );
-
-        $listener->onSaveRobots('', $dc);
-    }
-
-    public function testPurgesTheSearchIndexOnRobotsChangeIfRobotsIsNoindex(): void
-    {
-        $eventModel = $this->createMock(CalendarEventsModel::class);
-
-        $search = $this->mockAdapter(['removeEntry']);
-        $search
             ->expects($this->once())
             ->method('removeEntry')
             ->with('uri')
@@ -292,6 +374,7 @@ class EventSearchListenerTest extends TestCase
 
         $adapters = [
             CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
+            CalendarModel::class => $calendarAdapter,
             Search::class => $search,
         ];
 
@@ -319,87 +402,7 @@ class EventSearchListenerTest extends TestCase
             $urlGenerator,
         );
 
-        $listener->onSaveRobots('noindex,follow', $dc);
-    }
-
-    public function testDoesNotPurgeTheSearchIndexOnRobotsChangeIfRobotsIsIndex(): void
-    {
-        $eventModel = $this->createMock(CalendarEventsModel::class);
-
-        $search = $this->mockAdapter(['removeEntry']);
-        $search
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
-            Search::class => $search,
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $urlGenerator
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn([
-                'robots' => 'noindex,follow',
-                'pid' => 5,
-            ])
-        ;
-
-        $listener = new EventSearchListener(
-            $framework,
-            $urlGenerator,
-        );
-
-        $listener->onSaveRobots('index,follow', $dc);
-    }
-
-    public function testDoesNotPurgeTheSearchIndexWithUnchangedRobots(): void
-    {
-        $eventModel = $this->createMock(CalendarEventsModel::class);
-
-        $search = $this->mockAdapter(['removeEntry']);
-        $search
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $adapters = [
-            CalendarEventsModel::class => $this->mockConfiguredAdapter(['findById' => $eventModel]),
-            Search::class => $search,
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $urlGenerator
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn([
-                'robots' => 'index,follow',
-                'pid' => 5,
-            ])
-        ;
-
-        $listener = new EventSearchListener(
-            $framework,
-            $urlGenerator,
-        );
-
-        $listener->onSaveRobots('index,follow', $dc);
+        $listener->onSaveRobots('', $dc);
     }
 
     public function testPurgesTheSearchIndexOnDelete(): void
