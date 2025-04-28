@@ -6401,7 +6401,22 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Associative array
 					elseif (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['eval']['isAssociative'] ?? null) || ArrayUtil::isAssoc($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options'] ?? null))
 					{
-						$option_label = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options'][$vv] ?? null;
+						$option_label = null;
+
+						if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options'][$vv]))
+						{
+							$option_label = $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options'][$vv];
+						}
+						else
+						{
+							// Handle grouped options (see #7409)
+							$current = current($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['options']);
+
+							if (isset($current[$vv]))
+							{
+								$option_label = $current[$vv];
+							}
+						}
 					}
 
 					// No empty options allowed
