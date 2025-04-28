@@ -12,11 +12,18 @@ export default class extends Controller {
     }
 
     rowTargetConnected() {
+        if (this.preventDisconnect) {
+            this.preventDisconnect = false;
+        }
+
         this._makeSortable();
     }
 
     rowTargetDisconnected(row) {
-        this.rowSnapshots.delete(row);
+        if (!this.preventDisconnect) {
+            this.rowSnapshots.delete(row);
+        }
+
         this._makeSortable();
     }
 
@@ -45,6 +52,7 @@ export default class extends Controller {
 
     move(event) {
         const row = this._getRow(event);
+        this.preventDisconnect = true;
 
         if (event.code === 'ArrowUp' || event.keyCode === 38) {
             event.preventDefault();
@@ -154,8 +162,12 @@ export default class extends Controller {
             constrain: true,
             opacity: 0.6,
             handle: '.drag-handle',
+            onStart: () => {
+                this.preventDisconnect = true;
+            },
             onComplete: () => {
                 this._makeSortable(this.bodyTarget);
+                this.preventDisconnect = false;
             }
         });
     };
