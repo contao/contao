@@ -279,7 +279,6 @@ class EventSearchListenerTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchOne')
-            ->with('SELECT p.robots FROM tl_page AS p, tl_calendar AS c WHERE c.id = ? AND c.jumpTo = p.id', [5])
             ->willReturn('index,follow')
         ;
 
@@ -329,7 +328,6 @@ class EventSearchListenerTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchOne')
-            ->with('SELECT p.robots FROM tl_page AS p, tl_calendar AS c WHERE c.id = ? AND c.jumpTo = p.id', [5])
             ->willReturn('noindex,follow')
         ;
 

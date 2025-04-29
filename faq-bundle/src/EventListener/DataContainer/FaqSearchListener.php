@@ -36,7 +36,7 @@ class FaqSearchListener
     #[AsCallback(table: 'tl_faq', target: 'fields.alias.save')]
     public function onSaveAlias(string $value, DataContainer $dc): string
     {
-        if ($value === ($dc->getCurrentRecord()['alias'] ?? null)) {
+        if (($dc->getCurrentRecord()['alias'] ?? null) === $value) {
             return $value;
         }
 
@@ -48,13 +48,20 @@ class FaqSearchListener
     #[AsCallback(table: 'tl_faq', target: 'fields.robots.save')]
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
-        if ($dc->getCurrentRecord()['robots'] === $value || str_starts_with($value, 'index')) {
+        if (($dc->getCurrentRecord()['robots'] ?? null) === $value || str_starts_with($value, 'index')) {
             return $value;
         }
 
-        if ('' === $value && str_starts_with($dc->getCurrentRecord()['robots'], 'index')) {
-            // Get robots tag of the reader page (linked in FAQ category)
-            $readerPageRobots = $this->connection->fetchOne('SELECT p.robots FROM tl_page AS p, tl_faq_category AS c WHERE c.id = ? AND c.jumpTo = p.id', [$dc->getCurrentRecord()['pid']]);
+        if ('' === $value && str_starts_with($dc->getCurrentRecord()['robots'] ?? '', 'index')) {
+            // Get the robots tag of the reader page (linked in FAQ category)
+            $readerPageRobots = $this->connection->fetchOne(
+                <<<'SQL'
+                    SELECT p.robots
+                    FROM tl_page AS p, tl_faq_category AS c
+                    WHERE c.id = ? AND c.jumpTo = p.id
+                    SQL,
+                [$dc->getCurrentRecord()['pid']],
+            );
 
             if (str_starts_with($readerPageRobots, 'index')) {
                 return $value;
@@ -79,12 +86,10 @@ class FaqSearchListener
     private function purgeSearchIndex(int $faqId): void
     {
         $objFaq = $this->framework->getAdapter(FaqModel::class)->findById($faqId);
-
         $faqUrl = $this->urlGenerator->generate($objFaq, [], UrlGeneratorInterface::ABSOLUTE_URL);
 
         if ($faqUrl) {
             $search = $this->framework->getAdapter(Search::class);
-
             $search->removeEntry($faqUrl);
         }
     }

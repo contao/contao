@@ -36,7 +36,7 @@ class NewsSearchListener
     #[AsCallback(table: 'tl_news', target: 'fields.alias.save')]
     public function onSaveAlias(string $value, DataContainer $dc): string
     {
-        if ($value === ($dc->getCurrentRecord()['alias'] ?? null)) {
+        if (($dc->getCurrentRecord()['alias'] ?? null) === $value) {
             return $value;
         }
 
@@ -48,13 +48,20 @@ class NewsSearchListener
     #[AsCallback(table: 'tl_news', target: 'fields.robots.save')]
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
-        if ($dc->getCurrentRecord()['robots'] === $value || str_starts_with($value, 'index')) {
+        if (($dc->getCurrentRecord()['robots'] ?? null) === $value || str_starts_with($value, 'index')) {
             return $value;
         }
 
-        if ('' === $value && str_starts_with($dc->getCurrentRecord()['robots'], 'index')) {
-            // Get robots tag of the reader page (linked in news archive)
-            $readerPageRobots = $this->connection->fetchOne('SELECT p.robots FROM tl_page AS p, tl_news_archive AS c WHERE c.id = ? AND c.jumpTo = p.id', [$dc->getCurrentRecord()['pid']]);
+        if ('' === $value && str_starts_with($dc->getCurrentRecord()['robots'] ?? '', 'index')) {
+            // Get the robots tag of the reader page (linked in news archive)
+            $readerPageRobots = $this->connection->fetchOne(
+                <<<'SQL'
+                    SELECT p.robots
+                    FROM tl_page AS p, tl_news_archive AS c
+                    WHERE c.id = ? AND c.jumpTo = p.id
+                    SQL,
+                [$dc->getCurrentRecord()['pid']],
+            );
 
             if (str_starts_with($readerPageRobots, 'index')) {
                 return $value;
@@ -79,12 +86,10 @@ class NewsSearchListener
     private function purgeSearchIndex(int $newsId): void
     {
         $objNews = $this->framework->getAdapter(NewsModel::class)->findById($newsId);
-
         $newsUrl = $this->urlGenerator->generate($objNews, [], UrlGeneratorInterface::ABSOLUTE_URL);
 
         if ($newsUrl) {
             $search = $this->framework->getAdapter(Search::class);
-
             $search->removeEntry($newsUrl);
         }
     }

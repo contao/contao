@@ -36,7 +36,7 @@ class EventSearchListener
     #[AsCallback(table: 'tl_calendar_events', target: 'fields.alias.save')]
     public function onSaveAlias(string $value, DataContainer $dc): string
     {
-        if ($value === ($dc->getCurrentRecord()['alias'] ?? null)) {
+        if (($dc->getCurrentRecord()['alias'] ?? null) === $value) {
             return $value;
         }
 
@@ -48,13 +48,20 @@ class EventSearchListener
     #[AsCallback(table: 'tl_calendar_events', target: 'fields.robots.save')]
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
-        if ($dc->getCurrentRecord()['robots'] === $value || str_starts_with($value, 'index')) {
+        if (($dc->getCurrentRecord()['robots'] ?? null) === $value || str_starts_with($value, 'index')) {
             return $value;
         }
 
-        if ('' === $value && str_starts_with($dc->getCurrentRecord()['robots'], 'index')) {
-            // Get robots tag of the reader page (linked in calendar)
-            $readerPageRobots = $this->connection->fetchOne('SELECT p.robots FROM tl_page AS p, tl_calendar AS c WHERE c.id = ? AND c.jumpTo = p.id', [$dc->getCurrentRecord()['pid']]);
+        if ('' === $value && str_starts_with($dc->getCurrentRecord()['robots'] ?? '', 'index')) {
+            // Get the robots tag of the reader page (linked in calendar)
+            $readerPageRobots = $this->connection->fetchOne(
+                <<<'SQL'
+                    SELECT p.robots
+                    FROM tl_page AS p, tl_calendar AS c
+                    WHERE c.id = ? AND c.jumpTo = p.id
+                    SQL,
+                [$dc->getCurrentRecord()['pid']],
+            );
 
             if (str_starts_with($readerPageRobots, 'index')) {
                 return $value;
@@ -79,12 +86,10 @@ class EventSearchListener
     private function purgeSearchIndex(int $eventId): void
     {
         $objEvent = $this->framework->getAdapter(CalendarEventsModel::class)->findById($eventId);
-
         $eventUrl = $this->urlGenerator->generate($objEvent, [], UrlGeneratorInterface::ABSOLUTE_URL);
 
         if ($eventUrl) {
             $search = $this->framework->getAdapter(Search::class);
-
             $search->removeEntry($eventUrl);
         }
     }
