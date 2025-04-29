@@ -188,7 +188,7 @@ class ModuleBreadcrumb extends Module
 				'isRoot'   => false,
 				'isActive' => true,
 				// Use the current request without query string for the current page (see #3450)
-				'href'     => $request?->getBaseUrl().$request?->getPathInfo(),
+				'href'     => $request?->getBaseUrl() . $request?->getPathInfo(),
 				'title'    => StringUtil::specialchars($pages[0]->pageTitle ?: $pages[0]->title),
 				'link'     => $pages[0]->title,
 				'data'     => $pages[0]->row(),
@@ -216,7 +216,8 @@ class ModuleBreadcrumb extends Module
 			foreach ($items as $item)
 			{
 				// Do not show the index page in the metadata (#7274)
-				if ($item['isActive'] && 'index' === ($item['data']['alias'] ?? null)) {
+				if ($item['isActive'] && 'index' === ($item['data']['alias'] ?? null))
+				{
 					continue;
 				}
 

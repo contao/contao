@@ -1167,6 +1167,27 @@ class RoutingTest extends FunctionalTestCase
         ];
     }
 
+    public function testMultidomainWithLanguages(): void
+    {
+        $request = '/de/bar/bar';
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = 'example.ch';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en_US,en';
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
+
+        $client = $this->createClient([], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles(['theme', 'multidomain-languages']);
+
+        $crawler = $client->request('GET', "https://example.ch$request");
+        $title = trim($crawler->filterXPath('//head/title')->text());
+        $response = $client->getResponse();
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertStringContainsString('Bar -', $title);
+    }
+
     private function loadFixtureFiles(array $fileNames): void
     {
         // Do not reload the fixtures if they have not changed
