@@ -86,10 +86,10 @@ class FaqSearchListener
 
     private function purgeSearchIndex(int $faqId): void
     {
-        $objFaq = $this->framework->getAdapter(FaqModel::class)->findById($faqId);
+        $faq = $this->framework->getAdapter(FaqModel::class)->findById($faqId);
 
         try {
-            $faqUrl = $this->urlGenerator->generate($objFaq, [], UrlGeneratorInterface::ABSOLUTE_URL);
+            $faqUrl = $this->urlGenerator->generate($faq, [], UrlGeneratorInterface::ABSOLUTE_URL);
             $search = $this->framework->getAdapter(Search::class);
             $search->removeEntry($faqUrl);
         } catch (ExceptionInterface) {

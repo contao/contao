@@ -86,10 +86,10 @@ class EventSearchListener
 
     private function purgeSearchIndex(int $eventId): void
     {
-        $objEvent = $this->framework->getAdapter(CalendarEventsModel::class)->findById($eventId);
+        $event = $this->framework->getAdapter(CalendarEventsModel::class)->findById($eventId);
 
         try {
-            $eventUrl = $this->urlGenerator->generate($objEvent, [], UrlGeneratorInterface::ABSOLUTE_URL);
+            $eventUrl = $this->urlGenerator->generate($event, [], UrlGeneratorInterface::ABSOLUTE_URL);
             $search = $this->framework->getAdapter(Search::class);
             $search->removeEntry($eventUrl);
         } catch (ExceptionInterface) {

@@ -86,10 +86,10 @@ class NewsSearchListener
 
     private function purgeSearchIndex(int $newsId): void
     {
-        $objNews = $this->framework->getAdapter(NewsModel::class)->findById($newsId);
+        $news = $this->framework->getAdapter(NewsModel::class)->findById($newsId);
 
         try {
-            $newsUrl = $this->urlGenerator->generate($objNews, [], UrlGeneratorInterface::ABSOLUTE_URL);
+            $newsUrl = $this->urlGenerator->generate($news, [], UrlGeneratorInterface::ABSOLUTE_URL);
             $search = $this->framework->getAdapter(Search::class);
             $search->removeEntry($newsUrl);
         } catch (ExceptionInterface) {
