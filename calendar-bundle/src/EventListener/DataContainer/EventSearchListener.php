@@ -19,6 +19,7 @@ use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\DataContainer;
 use Contao\Search;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -63,7 +64,7 @@ class EventSearchListener
                 [$dc->getCurrentRecord()['pid']],
             );
 
-            if (str_starts_with($readerPageRobots, 'index')) {
+            if (str_starts_with((string) $readerPageRobots, 'index')) {
                 return $value;
             }
         }
@@ -86,11 +87,13 @@ class EventSearchListener
     private function purgeSearchIndex(int $eventId): void
     {
         $objEvent = $this->framework->getAdapter(CalendarEventsModel::class)->findById($eventId);
-        $eventUrl = $this->urlGenerator->generate($objEvent, [], UrlGeneratorInterface::ABSOLUTE_URL);
 
-        if ($eventUrl) {
+        try {
+            $eventUrl = $this->urlGenerator->generate($objEvent, [], UrlGeneratorInterface::ABSOLUTE_URL);
             $search = $this->framework->getAdapter(Search::class);
             $search->removeEntry($eventUrl);
+        } catch (ExceptionInterface) {
+            // noop
         }
     }
 }

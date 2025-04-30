@@ -19,6 +19,7 @@ use Contao\DataContainer;
 use Contao\NewsModel;
 use Contao\Search;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -63,7 +64,7 @@ class NewsSearchListener
                 [$dc->getCurrentRecord()['pid']],
             );
 
-            if (str_starts_with($readerPageRobots, 'index')) {
+            if (str_starts_with((string) $readerPageRobots, 'index')) {
                 return $value;
             }
         }
@@ -86,11 +87,13 @@ class NewsSearchListener
     private function purgeSearchIndex(int $newsId): void
     {
         $objNews = $this->framework->getAdapter(NewsModel::class)->findById($newsId);
-        $newsUrl = $this->urlGenerator->generate($objNews, [], UrlGeneratorInterface::ABSOLUTE_URL);
 
-        if ($newsUrl) {
+        try {
+            $newsUrl = $this->urlGenerator->generate($objNews, [], UrlGeneratorInterface::ABSOLUTE_URL);
             $search = $this->framework->getAdapter(Search::class);
             $search->removeEntry($newsUrl);
+        } catch (ExceptionInterface) {
+            // noop
         }
     }
 }

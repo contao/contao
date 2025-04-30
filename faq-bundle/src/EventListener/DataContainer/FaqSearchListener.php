@@ -19,6 +19,7 @@ use Contao\DataContainer;
 use Contao\FaqModel;
 use Contao\Search;
 use Doctrine\DBAL\Connection;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
@@ -63,7 +64,7 @@ class FaqSearchListener
                 [$dc->getCurrentRecord()['pid']],
             );
 
-            if (str_starts_with($readerPageRobots, 'index')) {
+            if (str_starts_with((string) $readerPageRobots, 'index')) {
                 return $value;
             }
         }
@@ -86,11 +87,13 @@ class FaqSearchListener
     private function purgeSearchIndex(int $faqId): void
     {
         $objFaq = $this->framework->getAdapter(FaqModel::class)->findById($faqId);
-        $faqUrl = $this->urlGenerator->generate($objFaq, [], UrlGeneratorInterface::ABSOLUTE_URL);
 
-        if ($faqUrl) {
+        try {
+            $faqUrl = $this->urlGenerator->generate($objFaq, [], UrlGeneratorInterface::ABSOLUTE_URL);
             $search = $this->framework->getAdapter(Search::class);
             $search->removeEntry($faqUrl);
+        } catch (ExceptionInterface) {
+            // noop
         }
     }
 }
