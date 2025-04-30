@@ -44,12 +44,16 @@ abstract class AbstractGuestsMigration extends AbstractMigration
                 continue;
             }
 
-            $test = $this->connection->fetchOne("
-                SELECT TRUE
-                FROM $table
-                WHERE `guests`='1' AND (`groups` IS NULL OR `groups` NOT LIKE '%\"-1\"%')
-                LIMIT 1
-            ");
+            $test = $this->connection->fetchOne(
+                <<<SQL
+                    SELECT TRUE
+                    FROM $table
+                    WHERE
+                        `guests` = '1'
+                        AND (`groups` IS NULL OR `groups` NOT LIKE '%\\"-1\\"%')
+                    LIMIT 1
+                    SQL,
+            );
 
             if (false !== $test) {
                 return true;
@@ -74,11 +78,15 @@ abstract class AbstractGuestsMigration extends AbstractMigration
                 continue;
             }
 
-            $values = $this->connection->fetchAllKeyValue("
-                SELECT id, `groups`
-                FROM $table
-                WHERE `guests`='1' AND (`groups` IS NULL OR `groups` NOT LIKE '%\"-1\"%')
-            ");
+            $values = $this->connection->fetchAllKeyValue(
+                <<<SQL
+                    SELECT id, `groups`
+                    FROM $table
+                    WHERE
+                        `guests` = '1'
+                        AND (`groups` IS NULL OR `groups` NOT LIKE '%\\"-1\\"%')
+                    SQL,
+            );
 
             foreach ($values as $id => $value) {
                 $groups = StringUtil::deserialize($value, true);

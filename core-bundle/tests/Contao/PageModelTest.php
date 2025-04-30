@@ -140,7 +140,7 @@ class PageModelTest extends TestCase
         $database
             ->expects($this->once())
             ->method('execute')
-            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
+            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type = 'root'")
             ->willReturn(new Result($rootData, ''))
         ;
 
@@ -155,7 +155,7 @@ class PageModelTest extends TestCase
         $database
             ->expects($this->once())
             ->method('prepare')
-            ->with('SELECT * FROM tl_page WHERE tl_page.alias LIKE ? AND tl_page.id!=?')
+            ->with('SELECT * FROM tl_page WHERE tl_page.alias LIKE ? AND tl_page.id != ?')
             ->willReturn($aliasStatement)
         ;
 

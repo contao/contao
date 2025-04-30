@@ -52,12 +52,14 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
                 continue;
             }
 
-            $test = $this->connection->fetchOne("
-                SELECT TRUE
-                FROM $table
-                WHERE CAST(`$column` AS BINARY) REGEXP CAST('\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' AS BINARY)
-                LIMIT 1
-            ");
+            $test = $this->connection->fetchOne(
+                <<<SQL
+                    SELECT TRUE
+                    FROM $table
+                    WHERE CAST(`$column` AS BINARY) REGEXP CAST('\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' AS BINARY)
+                    LIMIT 1
+                    SQL,
+            );
 
             if (false !== $test) {
                 return true;
@@ -79,13 +81,15 @@ abstract class AbstractBasicEntitiesMigration extends AbstractMigration
                 continue;
             }
 
-            $values = $this->connection->fetchAllKeyValue("
-                SELECT
-                    id,
-                    `$column`
-                FROM $table
-                WHERE CAST(`$column` AS BINARY) REGEXP CAST('\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' AS BINARY)
-            ");
+            $values = $this->connection->fetchAllKeyValue(
+                <<<SQL
+                    SELECT
+                        id,
+                        `$column`
+                    FROM $table
+                    WHERE CAST(`$column` AS BINARY) REGEXP CAST('\\\\[(&|&amp;|lt|gt|nbsp|-)\\\\]' AS BINARY)
+                    SQL,
+            );
 
             foreach ($values as $id => $value) {
                 $value = StringUtil::restoreBasicEntities(StringUtil::deserialize($value));

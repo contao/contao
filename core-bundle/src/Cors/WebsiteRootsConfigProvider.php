@@ -32,16 +32,16 @@ class WebsiteRootsConfigProvider implements ProviderInterface
             return [];
         }
 
-        $stmt = $this->connection->prepare("
-            SELECT EXISTS (
-                SELECT
-                    id
-                FROM
-                    tl_page
-                WHERE
-                    type = 'root' AND dns = :dns
-            )
-        ");
+        $stmt = $this->connection->prepare(
+            <<<'SQL'
+                SELECT EXISTS (
+                    SELECT id
+                    FROM tl_page
+                    WHERE type = 'root'
+                        AND dns = :dns
+                )
+                SQL,
+        );
 
         $stmt->bindValue('dns', preg_replace('@^https?://@', '', $request->headers->get('origin')));
 

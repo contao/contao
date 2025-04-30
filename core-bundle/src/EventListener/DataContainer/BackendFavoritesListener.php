@@ -32,7 +32,7 @@ class BackendFavoritesListener
         $userId = $user instanceof BackendUser ? (int) $user->id : 0;
 
         // Always filter the favorites by user
-        $GLOBALS['TL_DCA']['tl_favorites']['list']['sorting']['filter'][] = ['user=?', $userId];
+        $GLOBALS['TL_DCA']['tl_favorites']['list']['sorting']['filter'][] = ['user = ?', $userId];
 
         if (!$request = $this->requestStack->getCurrentRequest()) {
             return;
