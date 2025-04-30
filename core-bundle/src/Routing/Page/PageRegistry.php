@@ -219,7 +219,7 @@ class PageRegistry implements ResetInterface
             return;
         }
 
-        $results = $this->connection->fetchAllAssociative("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'");
+        $results = $this->connection->fetchAllAssociative("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type = 'root'");
 
         $urlSuffixes = [
             array_column($results, 'urlSuffix'),

@@ -167,7 +167,7 @@ class Statement
 				throw new \InvalidArgumentException('Set array must not be empty for UPDATE queries');
 			}
 
-			$strQuery = 'SET ' . implode('=?, ', $arrParamNames) . '=?';
+			$strQuery = 'SET ' . implode(' = ?, ', $arrParamNames) . ' = ?';
 		}
 
 		$this->strQuery = str_replace('%s', $strQuery, $this->strQuery);

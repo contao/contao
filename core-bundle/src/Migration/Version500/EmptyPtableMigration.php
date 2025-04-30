@@ -33,7 +33,7 @@ class EmptyPtableMigration extends AbstractMigration
             return false;
         }
 
-        $test = $this->connection->fetchOne("SELECT TRUE FROM tl_content WHERE ptable='' LIMIT 1");
+        $test = $this->connection->fetchOne("SELECT TRUE FROM tl_content WHERE ptable = '' LIMIT 1");
 
         return false !== $test;
     }

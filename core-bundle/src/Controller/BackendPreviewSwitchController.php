@@ -162,20 +162,18 @@ class BackendPreviewSwitchController
         $time = Date::floorToMinute();
 
         // Get the active front end users
-        $query = "
-            SELECT
-                username
-            FROM
-                tl_member
+        $query = <<<SQL
+            SELECT username
+            FROM tl_member
             WHERE
-                username LIKE ? $andWhereGroups
-                AND login=1
-                AND disable=0
-                AND (start='' OR start<=$time)
-                AND (stop='' OR stop>$time)
-            ORDER BY
-                username
-        ";
+                username LIKE ?
+                $andWhereGroups
+                AND login = 1
+                AND disable = 0
+                AND (start = '' OR start <= $time)
+                AND (stop = '' OR stop > $time)
+            ORDER BY username
+            SQL;
 
         $query = $this->connection->getDatabasePlatform()->modifyLimitQuery($query, 20);
 
