@@ -554,21 +554,8 @@ class Versions extends Controller
 						// Decode entities if the "decodeEntities" flag is not set (see #360)
 						if (empty($GLOBALS['TL_DCA'][$this->strTable]['fields'][$k]['eval']['decodeEntities']))
 						{
-							if (\is_array($to[$k])) {
-								array_walk_recursive($to[$k], static function (&$value) {
-									$value = StringUtil::decodeEntities($value);
-								});
-							} else {
-								$to[$k] = StringUtil::decodeEntities($to[$k]);
-							}
-
-							if (\is_array($from[$k])) {
-								array_walk_recursive($from[$k], static function (&$value) {
-									$value = StringUtil::decodeEntities($value);
-								});
-							} else {
-								$from[$k] = StringUtil::decodeEntities($from[$k]);
-							}
+							$to[$k] = StringUtil::decodeEntities($to[$k]);
+							$from[$k] = StringUtil::decodeEntities($from[$k]);
 						}
 
 						// Convert strings into arrays
