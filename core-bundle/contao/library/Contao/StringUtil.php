@@ -210,7 +210,7 @@ class StringUtil
 	{
 		if (\is_array($strString))
 		{
-			return array_map(__METHOD__, $strString);
+			return array_map(__METHOD__, $strString, $strQuoteStyle, $strCharset);
 		}
 
 		if ((string) $strString === '')
