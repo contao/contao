@@ -33,7 +33,7 @@
     <?php endforeach; ?>
 
     <?php if ($this->help): ?>
-      <span class="help" id="help_ctrl_<?= $this->id ?>"><?= $this->help ?></span>
+      <p class="help" id="help_ctrl_<?= $this->id ?>"><?= $this->help ?></p>
     <?php endif; ?>
 
   </fieldset>

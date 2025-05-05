@@ -20,6 +20,6 @@
   <textarea name="<?= $this->name ?>" id="ctrl_<?= $this->id ?>" class="textarea<?php if ($this->class): ?> <?= $this->class ?><?php endif; ?>" rows="<?= $this->rows ?>" cols="<?= $this->cols ?>"<?php if ($this->help): ?> aria-describedby="help_ctrl_<?= $this->id ?>"<?php endif; ?><?= $this->getAttributes() ?>><?= Contao\StringUtil::specialchars($this->value) ?></textarea>
 
   <?php if ($this->help): ?>
-    <span class="help" id="help_ctrl_<?= $this->id ?>"><?= $this->help ?></span>
+    <p class="help" id="help_ctrl_<?= $this->id ?>"><?= $this->help ?></p>
   <?php endif; ?>
 <?php $this->endblock(); ?>
