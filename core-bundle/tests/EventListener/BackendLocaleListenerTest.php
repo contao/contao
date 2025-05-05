@@ -54,6 +54,7 @@ class BackendLocaleListenerTest extends TestCase
         $kernel = $this->createMock(KernelInterface::class);
         $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
 
+        /** @phpstan-var array $GLOBALS (signals PHPStan that the array shape may change) */
         $GLOBALS['TL_LANGUAGE'] = 'en';
 
         $listener = new BackendLocaleListener($security, $translator);

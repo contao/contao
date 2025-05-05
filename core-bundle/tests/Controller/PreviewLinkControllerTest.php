@@ -111,7 +111,7 @@ class PreviewLinkControllerTest extends TestCase
             ->expects(null === $link ? $this->never() : $this->once())
             ->method('fetchAssociative')
             ->with(
-                'SELECT * FROM tl_preview_link WHERE id=? AND published=1 AND expiresAt>UNIX_TIMESTAMP()',
+                'SELECT * FROM tl_preview_link WHERE id = ? AND published = 1 AND expiresAt > UNIX_TIMESTAMP()',
                 new IsType('array'),
             )
             ->willReturn($link)

@@ -260,7 +260,7 @@ class RoutingTest extends FunctionalTestCase
         self::getContainer()
             ->get('doctrine')
             ->getConnection()
-            ->executeStatement('UPDATE tl_page SET urlPrefix=language')
+            ->executeStatement('UPDATE tl_page SET urlPrefix = language')
         ;
 
         $crawler = $client->request('GET', "https://$host$request");
@@ -489,7 +489,7 @@ class RoutingTest extends FunctionalTestCase
         self::getContainer()
             ->get('doctrine')
             ->getConnection()
-            ->executeStatement("UPDATE tl_page SET urlSuffix=''")
+            ->executeStatement("UPDATE tl_page SET urlSuffix = ''")
         ;
 
         $crawler = $client->request('GET', "https://$host$request");
@@ -733,7 +733,7 @@ class RoutingTest extends FunctionalTestCase
         self::getContainer()
             ->get('doctrine')
             ->getConnection()
-            ->executeStatement("UPDATE tl_page SET urlPrefix=language WHERE urlPrefix=''")
+            ->executeStatement("UPDATE tl_page SET urlPrefix = language WHERE urlPrefix = ''")
         ;
 
         $crawler = $client->request('GET', "https://$host$request");
@@ -940,19 +940,12 @@ class RoutingTest extends FunctionalTestCase
 
         $this->loadFixtureFiles(['disable-language-redirect']);
 
+        $disableLanguageRedirect = $disableLanguageRedirects ? 1 : 0;
+        $alias = $indexAlias ? 'index' : 'home';
+
         $connection = self::getContainer()->get('doctrine')->getConnection();
-
-        $connection->executeStatement("
-            UPDATE tl_page
-            SET disableLanguageRedirect = '".($disableLanguageRedirects ? 1 : 0)."'
-            WHERE id = 3
-        ");
-
-        $connection->executeStatement("
-            UPDATE tl_page
-            SET alias = '".($indexAlias ? 'index' : 'home')."'
-            WHERE type = 'regular'
-        ");
+        $connection->executeStatement("UPDATE tl_page SET disableLanguageRedirect = $disableLanguageRedirect WHERE id = 3");
+        $connection->executeStatement("UPDATE tl_page SET alias = '$alias' WHERE type = 'regular'");
 
         $client->request('GET', $request);
         $response = $client->getResponse();
@@ -1150,6 +1143,27 @@ class RoutingTest extends FunctionalTestCase
             404,
             'English 404 - English root',
         ];
+    }
+
+    public function testMultidomainWithLanguages(): void
+    {
+        $request = '/de/bar/bar';
+        $_SERVER['REQUEST_URI'] = $request;
+        $_SERVER['HTTP_HOST'] = 'example.ch';
+        $_SERVER['HTTP_ACCEPT_LANGUAGE'] = 'en_US,en';
+        $_SERVER['HTTP_ACCEPT'] = 'text/html';
+
+        $client = $this->createClient([], $_SERVER);
+        System::setContainer($client->getContainer());
+
+        $this->loadFixtureFiles(['theme', 'multidomain-languages']);
+
+        $crawler = $client->request('GET', "https://example.ch$request");
+        $title = trim($crawler->filterXPath('//head/title')->text());
+        $response = $client->getResponse();
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertStringContainsString('Bar -', $title);
     }
 
     private function loadFixtureFiles(array $fileNames): void

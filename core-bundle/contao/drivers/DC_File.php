@@ -332,7 +332,7 @@ class DC_File extends DataContainer implements EditableDataContainerInterface
 		// Make sure that checkbox values are boolean
 		if (($arrData['inputType'] ?? null) == 'checkbox' && !($arrData['eval']['multiple'] ?? null))
 		{
-			$varValue = $varValue ? true : false;
+			$varValue = (bool) $varValue;
 		}
 
 		if ($varValue)
