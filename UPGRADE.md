@@ -512,3 +512,10 @@ The back end widgets `pageSelector` and `fileSelector` have been removed. Use th
 ### Public folder
 
 The public folder is now called `public` by default. It can be renamed in the `composer.json` file.
+
+### Basic entities
+
+The "[basic entities](https://docs.contao.org/manual/en/article-management/insert-tags/#basic-entities)" such as
+`[-]`, `[nbsp]` etc. are not automatically converted back during rendering. Instead they are converted in the back
+end when saving a record to the database, if the respective field has `'basicEntities' => true` enabled in its `eval`
+section.
