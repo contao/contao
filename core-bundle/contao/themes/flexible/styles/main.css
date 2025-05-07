@@ -2893,13 +2893,15 @@ fieldset.collapsed > legend:not(:has(> button)) {
 
 .dropzone-filetree {
 	display: none;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-	opacity: .8;
 	z-index: 1;
+	background: rgba(255, 255, 255, 0.7) !important;
+	backdrop-filter: blur(3px);
+	margin: 0;
 }
 
 .dropzone-filetree-enabled {
@@ -2909,6 +2911,10 @@ fieldset.collapsed > legend:not(:has(> button)) {
 .dz-message span {
 	font-size: 1.3125rem;
 	color: var(--gray);
+}
+
+.dropzone.dropzone-filetree .dz-preview.dz-image-preview {
+	background-color: transparent;
 }
 
 /* TinyMCE */
