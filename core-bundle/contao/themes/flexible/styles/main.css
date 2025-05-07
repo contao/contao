@@ -2899,7 +2899,7 @@ fieldset.collapsed > legend:not(:has(> button)) {
 	width: 100%;
 	height: 100%;
 	z-index: 1;
-	background: rgba(255, 255, 255, 0.7) !important;
+	background: color-mix(in srgb, var(--form-bg) 70%, transparent) !important;
 	backdrop-filter: blur(3px);
 	margin: 0;
 }
