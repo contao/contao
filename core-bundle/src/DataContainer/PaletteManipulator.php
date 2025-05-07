@@ -186,7 +186,7 @@ class PaletteManipulator
 
             if (preg_match('#{(.+?)(:collapsed|:hide)?}#', (string) $fields[0], $matches)) {
                 $legend = $matches[1];
-                $hide = \count($matches) > 2 && (':collapsed' === $matches[2] || ':hide' === $matches[2]);
+                $hide = isset($matches[2]);
                 array_shift($fields);
             } else {
                 $legend = $legendCount++;
