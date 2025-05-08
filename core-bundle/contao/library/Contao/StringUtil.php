@@ -208,20 +208,28 @@ class StringUtil
 	 */
 	public static function decodeEntities($strString, $strQuoteStyle=ENT_QUOTES)
 	{
+		$replace = static function (&$value) use ($strQuoteStyle) {
+			if ((string) $value === '')
+			{
+				return '';
+			}
+
+			$value = preg_replace('/(&#*\w+)[\x00-\x20]+;/i', '$1;', $value);
+			$value = preg_replace('/(&#x*)([0-9a-f]+);/i', '$1$2;', $value);
+
+			return html_entity_decode($value, $strQuoteStyle | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
+		};
+
 		if (\is_array($strString))
 		{
-			return array_map(static fn ($v) => static::decodeEntities($v, $strQuoteStyle), $strString);
+			array_walk_recursive($strString, $replace);
 		}
-
-		if ((string) $strString === '')
+		else
 		{
-			return '';
+			$replace($strString);
 		}
 
-		$strString = preg_replace('/(&#*\w+)[\x00-\x20]+;/i', '$1;', $strString);
-		$strString = preg_replace('/(&#x*)([0-9a-f]+);/i', '$1$2;', $strString);
-
-		return html_entity_decode($strString, $strQuoteStyle | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
+		return $strString;
 	}
 
 	/**
