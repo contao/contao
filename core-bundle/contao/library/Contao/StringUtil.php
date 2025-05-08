@@ -200,17 +200,17 @@ class StringUtil
 	/**
 	 * Decode all entities
 	 *
-	 * @param mixed   $strString     The string to decode
+	 * @param string|array   $strString     The string to decode
 	 * @param integer $strQuoteStyle The quote style (defaults to ENT_QUOTES)
 	 * @param string  $strCharset    An optional charset
 	 *
-	 * @return string The decoded string
+	 * @return string|array The decoded string
 	 */
 	public static function decodeEntities($strString, $strQuoteStyle=ENT_QUOTES)
 	{
 		if (\is_array($strString))
 		{
-			return array_map(__METHOD__, $strString, $strQuoteStyle, $strCharset);
+			return array_map(static fn ($v) => static::decodeEntities($v, $strQuoteStyle), $strString);
 		}
 
 		if ((string) $strString === '')
