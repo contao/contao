@@ -6,13 +6,18 @@ namespace Contao\CoreBundle\DataContainer;
 
 use Contao\StringUtil;
 
-class Palette
+class Palette implements \Stringable
 {
     /**
      * @param array<string, array{fields: array<string>, hide: bool}> $config
      */
     private function __construct(private array $config = [])
     {
+    }
+
+    public function __toString(): string
+    {
+        return $this->toString();
     }
 
     /**
