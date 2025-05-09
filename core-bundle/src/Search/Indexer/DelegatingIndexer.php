@@ -30,22 +30,61 @@ class DelegatingIndexer implements IndexerInterface
 
     public function index(Document $document): void
     {
-        foreach ($this->indexers as $indexer) {
-            $indexer->index($document);
-        }
+        $this->wrapInTryCatch(
+            static function (IndexerInterface $indexer) use ($document): void {
+                $indexer->index($document);
+            },
+        );
     }
 
     public function delete(Document $document): void
     {
-        foreach ($this->indexers as $indexer) {
-            $indexer->delete($document);
-        }
+        $this->wrapInTryCatch(
+            static function (IndexerInterface $indexer) use ($document): void {
+                $indexer->delete($document);
+            },
+        );
     }
 
     public function clear(): void
     {
+        $this->wrapInTryCatch(
+            static function (IndexerInterface $indexer): void {
+                $indexer->clear();
+            },
+        );
+    }
+
+    private function wrapInTryCatch(callable $function): void
+    {
+        $warningsOnly = true;
+        $indexerExceptions = [];
+
         foreach ($this->indexers as $indexer) {
-            $indexer->clear();
+            try {
+                $function($indexer);
+            } catch (IndexerException $exception) {
+                $indexerExceptions[] = $exception;
+                if (!$exception->isOnlyWarning()) {
+                    $warningsOnly = false;
+                }
+            } catch (\Throwable) {
+                // noop
+            }
+        }
+
+        if ([] !== $indexerExceptions) {
+            $messages = [];
+
+            foreach ($indexerExceptions as $indexerException) {
+                $messages[] = $indexerException->getMessage();
+            }
+
+            if ($warningsOnly) {
+                throw IndexerException::createAsWarning(implode(' | ', $messages));
+            }
+
+            throw new IndexerException(implode(' | ', $messages));
         }
     }
 }
