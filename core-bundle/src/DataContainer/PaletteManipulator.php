@@ -12,8 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DataContainer;
 
-use Contao\StringUtil;
-
 class PaletteManipulator
 {
     final public const POSITION_BEFORE = 'before';
@@ -118,9 +116,10 @@ class PaletteManipulator
         return $this;
     }
 
-    public function applyToString(string $palette, bool $skipLegends = false): string
+    public function applyToString(Palette|string $palette, bool $skipLegends = false): string
     {
-        $config = self::explode($palette);
+        $palette = $palette instanceof Palette ? $palette : Palette::fromString($palette);
+        $config = $palette->getConfig();
 
         if (!$skipLegends) {
             foreach ($this->legends as $legend) {
@@ -144,53 +143,6 @@ class PaletteManipulator
         return $this->implode($config);
     }
 
-    public static function fromString(string $palette): self
-    {
-        $instance = new self();
-
-        foreach (self::explode($palette) as $legend => $config) {
-            $instance->addLegend($legend, null, self::POSITION_AFTER, $config['hide']);
-
-            foreach ($config['fields'] as $field) {
-                $instance->addField($field, $legend, self::POSITION_APPEND);
-            }
-        }
-
-        return $instance;
-    }
-
-    public function hasLegend(string $legend): bool
-    {
-        foreach ($this->legends as $entry) {
-            if ($entry['name'] === $legend) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param string|null $legend Optionally filter for a legend
-     */
-    public function hasField(string $field, string|null $legend = null): bool
-    {
-        foreach ($this->fields as $entry) {
-            if (\in_array($field, $entry['fields'], true)) {
-                if (null === $legend || \in_array($legend, $entry['parents'], true)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public function asString(): string
-    {
-        return $this->applyToString('');
-    }
-
     /**
      * @throws PalettePositionException
      */
@@ -206,43 +158,6 @@ class PaletteManipulator
         if (!\in_array($position, $positions, true)) {
             throw new PalettePositionException('Invalid legend position');
         }
-    }
-
-    /**
-     * Converts a palette string to a configuration array.
-     *
-     * @return array<int|string, array>
-     */
-    private static function explode(string $palette): array
-    {
-        if ('' === $palette) {
-            return [];
-        }
-
-        $legendCount = 0;
-        $legendMap = [];
-        $groups = StringUtil::trimsplit(';', $palette);
-
-        foreach ($groups as $group) {
-            if ('' === $group) {
-                continue;
-            }
-
-            $hide = false;
-            $fields = StringUtil::trimsplit(',', $group);
-
-            if (preg_match('#{(.+?)(:hide)?}#', (string) $fields[0], $matches)) {
-                $legend = $matches[1];
-                $hide = isset($matches[2]);
-                array_shift($fields);
-            } else {
-                $legend = $legendCount++;
-            }
-
-            $legendMap[$legend] = ['fields' => $fields, 'hide' => $hide];
-        }
-
-        return $legendMap;
     }
 
     /**

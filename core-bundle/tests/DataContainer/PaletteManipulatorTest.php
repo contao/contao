@@ -495,22 +495,4 @@ class PaletteManipulatorTest extends TestCase
             $pm->applyToString('{config_legend},baz'),
         );
     }
-
-    public function testFromStringParsesPaletteCorrectly(): void
-    {
-        $palette = '{config_legend},foo,bar;{custom_legend},baz';
-        $pm = PaletteManipulator::fromString($palette);
-
-        $this->assertTrue($pm->hasLegend('config_legend'));
-        $this->assertTrue($pm->hasLegend('custom_legend'));
-        $this->assertFalse($pm->hasLegend('nonexistent_legend'));
-
-        $this->assertTrue($pm->hasField('foo'));
-        $this->assertTrue($pm->hasField('bar', 'config_legend'));
-        $this->assertTrue($pm->hasField('baz', 'custom_legend'));
-        $this->assertFalse($pm->hasField('baz', 'config_legend'));
-        $this->assertFalse($pm->hasField('qux'));
-
-        $this->assertSame($palette, $pm->asString());
-    }
 }
