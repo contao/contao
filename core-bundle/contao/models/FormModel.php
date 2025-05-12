@@ -56,7 +56,6 @@ use Contao\Model\Collection;
  * @method static FormModel|null findOneByNovalidate($val, array $opt=array())
  * @method static FormModel|null findOneByAttributes($val, array $opt=array())
  * @method static FormModel|null findOneByFormID($val, array $opt=array())
- * @method static FormModel|null findOneByTableless($val, array $opt=array())
  * @method static FormModel|null findOneByAllowTags($val, array $opt=array())
  *
  * @method static Collection<FormModel>|FormModel[]|null findByTstamp($val, array $opt=array())
@@ -76,7 +75,6 @@ use Contao\Model\Collection;
  * @method static Collection<FormModel>|FormModel[]|null findByNovalidate($val, array $opt=array())
  * @method static Collection<FormModel>|FormModel[]|null findByAttributes($val, array $opt=array())
  * @method static Collection<FormModel>|FormModel[]|null findByFormID($val, array $opt=array())
- * @method static Collection<FormModel>|FormModel[]|null findByTableless($val, array $opt=array())
  * @method static Collection<FormModel>|FormModel[]|null findByAllowTags($val, array $opt=array())
  * @method static Collection<FormModel>|FormModel[]|null findMultipleByIds($val, array $opt=array())
  * @method static Collection<FormModel>|FormModel[]|null findBy($col, $val, array $opt=array())
@@ -100,7 +98,6 @@ use Contao\Model\Collection;
  * @method static integer countByNovalidate($val, array $opt=array())
  * @method static integer countByAttributes($val, array $opt=array())
  * @method static integer countByFormID($val, array $opt=array())
- * @method static integer countByTableless($val, array $opt=array())
  * @method static integer countByAllowTags($val, array $opt=array())
  */
 class FormModel extends Model
