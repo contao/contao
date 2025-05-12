@@ -26,7 +26,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
         $this->expectException(\RuntimeException::class);
 
         $builder = new DataContainerGlobalOperationsBuilder($this->mockContaoFramework(), $this->createMock(Environment::class), $this->createMock(UrlGeneratorInterface::class));
-        $builder->append(['href' => '']);
+        $builder->append(['html' => '']);
     }
 
     public function testRendersNothingWithoutOperations(): void
@@ -83,7 +83,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
 
         $this->assertSame('', (string) $builder);
 
-        unset($GLOBALS['TL_LANG']['MSC']);
+        unset($GLOBALS['TL_LANG']);
     }
 
     public static function backButtonHrefProvider(): \Generator
