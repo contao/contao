@@ -26,7 +26,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
         $this->expectException(\RuntimeException::class);
 
         $builder = new DataContainerGlobalOperationsBuilder($this->mockContaoFramework(), $this->createMock(Environment::class), $this->createMock(UrlGeneratorInterface::class));
-        $builder->append([]);
+        $builder->append(['href' => '']);
     }
 
     public function testRendersNothingWithoutOperations(): void

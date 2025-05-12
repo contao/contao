@@ -228,7 +228,7 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
         if ($config['icon'] ?? null) {
             $config['icon'] = $this->framework->getAdapter(Image::class)->getPath($config['icon']);
             $config['attributes']->addClass('header_icon');
-            $config['attributes']->addStyle(\sprintf('background-image:url(\'%s\')', $this->framework->getAdapter(Controller::class)->addAssetsUrlTo($config['icon'])));
+            $config['attributes']->addStyle(\sprintf("background-image:url('%s')", $this->framework->getAdapter(Controller::class)->addAssetsUrlTo($config['icon'])));
         }
 
         return [

@@ -59,6 +59,7 @@ class DataContainerOperationTest extends TestCase
 
         $operation['attributes'] .= ' foo="bar"';
 
+        /** @phpstan-ignore-next-line */
         $this->assertInstanceOf(HtmlAttributes::class, $operation['attributes']);
         $this->assertSame('bar', $operation['attributes']['foo']);
     }
