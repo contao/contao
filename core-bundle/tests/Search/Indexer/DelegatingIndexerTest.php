@@ -33,7 +33,7 @@ class DelegatingIndexerTest extends TestCase
         $delegating->clear();
     }
 
-    public function testDelegatesAndCollectsExceptions(): void
+    public function testDelegatesAndCollectsIndexerExceptions(): void
     {
         $indexer1 = $this->createIndexer(IndexerException::createAsWarning('Warning 1'));
         $indexer2 = $this->createIndexer(new IndexerException('Failure 2'));
@@ -63,6 +63,41 @@ class DelegatingIndexerTest extends TestCase
         } catch (IndexerException $exception) {
             $this->assertSame('Warning 1 | Failure 2', $exception->getMessage());
             $this->assertFalse($exception->isOnlyWarning());
+        }
+    }
+
+    public function testPrioritizesGeneralExceptionsOverIndexerExceptions(): void
+    {
+        $indexer1 = $this->createIndexer(IndexerException::createAsWarning('Warning 1'));
+        $indexer2 = $this->createIndexer(new \LogicException('General failure 1'));
+        $indexer3 = $this->createIndexer(new \LogicException('General failure 2'));
+        $indexer4 = $this->createIndexer(IndexerException::createAsWarning('Warning 2'));
+
+        $delegating = new DelegatingIndexer();
+        $delegating->addIndexer($indexer1);
+        $delegating->addIndexer($indexer2);
+        $delegating->addIndexer($indexer3);
+        $delegating->addIndexer($indexer4);
+
+        try {
+            $delegating->index($this->createMock(Document::class));
+        } catch (\Throwable $exception) {
+            $this->assertInstanceOf(\LogicException::class, $exception);
+            $this->assertSame('General failure 1 | General failure 2', $exception->getMessage());
+        }
+
+        try {
+            $delegating->delete($this->createMock(Document::class));
+        } catch (\Throwable $exception) {
+            $this->assertInstanceOf(\LogicException::class, $exception);
+            $this->assertSame('General failure 1 | General failure 2', $exception->getMessage());
+        }
+
+        try {
+            $delegating->clear();
+        } catch (\Throwable $exception) {
+            $this->assertInstanceOf(\LogicException::class, $exception);
+            $this->assertSame('General failure 1 | General failure 2', $exception->getMessage());
         }
     }
 
@@ -97,7 +132,7 @@ class DelegatingIndexerTest extends TestCase
         }
     }
 
-    private function createIndexer(IndexerException|null $indexerException = null): IndexerInterface
+    private function createIndexer(\Throwable|null $indexerException = null): IndexerInterface
     {
         $indexer = $this->createMock(IndexerInterface::class);
         $invocationMocker = $indexer
