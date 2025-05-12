@@ -59,7 +59,6 @@ class DelegatingIndexer implements IndexerInterface
     {
         $warningsOnly = true;
         $indexerExceptions = [];
-        $generalExceptions = [];
 
         foreach ($this->indexers as $indexer) {
             try {
@@ -69,21 +68,15 @@ class DelegatingIndexer implements IndexerInterface
                 if (!$exception->isOnlyWarning()) {
                     $warningsOnly = false;
                 }
-            } catch (\Throwable $exception) {
-                $generalExceptions[] = $exception;
             }
-        }
-
-        if ([] !== $generalExceptions) {
-            throw new \LogicException($this->getMergedExceptionMessage($generalExceptions));
         }
 
         if ([] !== $indexerExceptions) {
             if ($warningsOnly) {
-                throw IndexerException::createAsWarning($this->getMergedExceptionMessage($indexerExceptions));
+                throw IndexerException::createAsWarning($this->getMergedExceptionMessage($indexerExceptions), 0, $indexerExceptions[0]);
             }
 
-            throw new IndexerException($this->getMergedExceptionMessage($indexerExceptions));
+            throw new IndexerException($this->getMergedExceptionMessage($indexerExceptions), 0, $indexerExceptions[0]);
         }
     }
 
