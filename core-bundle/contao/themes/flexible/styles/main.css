@@ -294,6 +294,7 @@ body.popup {
 	width: auto;
 	min-height: 0;
 	max-width: none;
+	display: block;
 }
 
 /* Left */
@@ -3127,41 +3128,34 @@ fieldset.collapsed > legend:not(:has(> button)) {
 /* Tablet */
 @media (max-width: 991px) {
 	#container {
-		display: block;
-	}
-
-	#main, #left {
-		float: none;
+		overflow-x: clip;
+		width: auto;
 	}
 
 	#main {
-		width: 100% !important;
+		width: 100%;
+		flex-shrink: 0;
 		position: relative;
 		transition: transform .2s ease;
-		-webkit-transform: none;
-		transform: none;
+		will-change: transform;
 	}
 
 	.show-navigation #main {
-		-webkit-transform: translateX(240px);
 		transform: translateX(240px);
 	}
 
 	#left {
 		visibility: hidden;
-		position: absolute;
-		top: 40px;
 		width: 240px;
+		flex-shrink: 0;
+		margin-left: -240px;
 		transition: transform .2s ease, visibility .2s ease;
-		-webkit-transform: translateX(-240px);
-		transform: translateX(-240px);
 		will-change: transform, visibility;
 	}
 
 	.show-navigation #left {
 		visibility: visible;
-		-webkit-transform: none;
-		transform: none;
+		transform: translateX(240px);
 	}
 
 	#tmenu .burger {
