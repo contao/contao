@@ -39,8 +39,8 @@ class SuperviseWorkersCommand extends Command
         private readonly ContainerInterface $messengerTransportLocator,
         private readonly ProcessUtil $processUtil,
         private readonly Connection $connection,
-        private Supervisor|null $supervisor,
-        private readonly array|null $workers,
+        private Supervisor $supervisor,
+        private readonly array $workers,
     ) {
         parent::__construct();
     }
@@ -48,12 +48,6 @@ class SuperviseWorkersCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-
-        if (!$this->workers || !$this->supervisor) {
-            $io->error('No supervisor or workers defined.');
-
-            return Command::FAILURE;
-        }
 
         foreach ($this->workers as $k => $worker) {
             $this->supervisor = $this->supervisor->withCommand($this->createCommandForWorker('worker-'.($k + 1), $worker));

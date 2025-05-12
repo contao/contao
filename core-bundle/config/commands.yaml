@@ -110,8 +110,6 @@ services:
             - '@messenger.receiver_locator'
             - '@contao.process_util'
             - '@database_connection'
-            - ~
-            - ~
 
     contao.command.symlinks:
         class: Contao\CoreBundle\Command\SymlinksCommand
