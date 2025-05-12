@@ -2983,7 +2983,7 @@ fieldset.collapsed > legend:not(:has(> button)) {
 /* Tablet */
 @media (max-width: 991px) {
 	#container {
-		overflow: clip;
+		overflow-x: clip;
 		width: auto;
 	}
 
