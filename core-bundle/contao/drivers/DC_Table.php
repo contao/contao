@@ -2358,10 +2358,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
 		$return = $version . Message::generate() . ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . (Input::get('nb') ? '' : '
-<div id="tl_buttons">
-' . DataContainerOperationsBuilder::generateBackButton($strBackUrl) . '
-</div>') . '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . (Input::get('nb') ? '' : System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable)->addBackButton($strBackUrl)) . '
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
@@ -2732,10 +2729,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		// Return
 		return ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
-<div id="tl_buttons">
-' . DataContainerOperationsBuilder::generateBackButton() . '
-</div>' . $return;
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') .
+System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable)->addBackButton() . $return;
 	}
 
 	/**
@@ -3058,10 +3053,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		// Return
 		return Message::generate() . ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
-<div id="tl_buttons">
-' . DataContainerOperationsBuilder::generateBackButton() . '
-</div>' . $return;
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') .
+System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable)->addBackButton() . $return;;
 	}
 
 	/**
@@ -3699,32 +3692,34 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$security = System::getContainer()->get('security.helper');
 
 		// Begin buttons container
-		$buttons = '';
+		$operations = System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable);
 
 		if (Input::get('act') == 'select')
 		{
-			$buttons .= DataContainerOperationsBuilder::generateBackButton();
+			$operations->addBackButton();
 		}
 		elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 		{
-			$buttons .= DataContainerOperationsBuilder::generateBackButton(System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+			$operations->addBackButton($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
 		}
 
 		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $this->intCurrentPid, 'sorting' => 0))))
 		{
-			$buttons .= DataContainerOperationsBuilder::generateNewButton($this->strTable, $this->addToUrl('act=paste&amp;mode=create'));
+			$operations->addNewButton($this->addToUrl('act=paste&amp;mode=create'));
 		}
 
 		if ($blnClipboard)
 		{
-			$buttons .= DataContainerOperationsBuilder::generateClearClipboardButton();
+			$operations->addClearClipboardButton();
 		}
-		else
+		elseif (($buttons = $this->generateGlobalButtons($operations)) !== null)
 		{
-			$buttons .= $this->generateGlobalButtons();
+			trigger_deprecation('contao/core-bundle', '5.7', 'Overriding DataContainer::generateGlobalButtons is deprecated and will no longer work in Contao 6.');
+
+			$operations->append(['html' => $buttons]);
 		}
 
-		$return = Message::generate() . ($buttons ? '<div id="tl_buttons">' . $buttons . '</div>' : '');
+		$return = Message::generate() . (string) $operations;
 
 		$tree = '';
 		$blnHasSorting = $db->fieldExists('sorting', $table);
@@ -4371,35 +4366,37 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$db = Database::getInstance();
 		$security = System::getContainer()->get('security.helper');
-		$buttons = '';
+		$operations = System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable);
 
 		if (!Input::get('nb'))
 		{
 			if ($this->ptable)
 			{
-				$buttons .= DataContainerOperationsBuilder::generateBackButton($this->getReferer(true, $this->ptable));
+				$operations->addBackButton($this->getReferer(true, $this->ptable));
 			}
 			elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 			{
-				$buttons .= DataContainerOperationsBuilder::generateBackButton(System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+				$operations->addBackButton($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
 			}
 		}
 
 		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))))
 		{
-			$buttons .= DataContainerOperationsBuilder::generateNewButton($this->strTable, $this->addToUrl($blnHasSorting ? 'act=paste&amp;mode=create' : 'act=create&amp;mode=2&amp;pid=' . $this->intId));
+			$operations->addNewButton($this->addToUrl($blnHasSorting ? 'act=paste&amp;mode=create' : 'act=create&amp;mode=2&amp;pid=' . $this->intId));
 		}
 
 		if ($blnClipboard)
 		{
-			$buttons .= DataContainerOperationsBuilder::generateClearClipboardButton();
+			$operations->addClearClipboardButton();
 		}
-		else
+		elseif (($buttons = $this->generateGlobalButtons($operations)) !== null)
 		{
-			$buttons .= $this->generateGlobalButtons();
+			trigger_deprecation('contao/core-bundle', '5.7', 'Overriding DataContainer::generateGlobalButtons is deprecated and will no longer work in Contao 6.');
+
+			$operations->append(['html' => $buttons]);
 		}
 
-		$return = Message::generate() . ($buttons ? '<div id="tl_buttons">' . $buttons . '</div>' : '');
+		$return = Message::generate() . (string) $operations;
 
 		// Get all details of the parent record
 		$objParent = $db
@@ -5026,24 +5023,30 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$security = System::getContainer()->get('security.helper');
 
 		// Display buttons
-		$buttons = '';
+		$operations = System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable);
 
 		if (Input::get('act') == 'select' || $this->ptable)
 		{
-			$buttons .= DataContainerOperationsBuilder::generateBackButton($this->getReferer(true, $this->ptable));
+			$operations->addBackButton($this->getReferer(true, $this->ptable));
 		}
 		elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 		{
-			$buttons .= DataContainerOperationsBuilder::generateBackButton(System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+			$operations->addBackButton($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
 		}
 
 		if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable)))
 		{
-			$buttons .= DataContainerOperationsBuilder::generateNewButton($this->strTable, $this->ptable ? $this->addToUrl('act=create' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) < self::MODE_PARENT) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create'));
+			$operations->addNewButton($this->ptable ? $this->addToUrl('act=create' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) < self::MODE_PARENT) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create'));
 		}
 
-		$buttons .= $this->generateGlobalButtons();
-		$return = Message::generate() . ($buttons ? '<div id="tl_buttons">' . $buttons . '</div>' : '');
+		if (($buttons = $this->generateGlobalButtons($operations)) !== null)
+		{
+			trigger_deprecation('contao/core-bundle', '5.7', 'Overriding DataContainer::generateGlobalButtons is deprecated and will no longer work in Contao 6.');
+
+			$operations->append(['html' => $buttons]);
+		}
+
+		$return = Message::generate() . (string) $operations;
 
 		// Return "no records found" message
 		if ($objRow->numRows < 1)

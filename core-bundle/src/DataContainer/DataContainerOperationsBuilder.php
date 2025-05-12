@@ -52,25 +52,6 @@ class DataContainerOperationsBuilder implements \Stringable
         ]);
     }
 
-    public static function generateBackButton(string|null $href = null): string
-    {
-        $href ??= System::getReferer(true);
-
-        return ' <a href="'.$href.'" class="header_back" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['backBTTitle']).'" accesskey="b" data-action="contao--scroll-offset#discard">'.$GLOBALS['TL_LANG']['MSC']['backBT'].'</a> ';
-    }
-
-    public static function generateClearClipboardButton(): string
-    {
-        return ' <a href="'.Backend::addToUrl('clipboard=1').'" class="header_clipboard" title="'.StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['clearClipboard']).'" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['clearClipboard'].'</a> ';
-    }
-
-    public static function generateNewButton(string $table, string $href): string
-    {
-        $labelNew = $GLOBALS['TL_LANG'][$table]['new'] ?? $GLOBALS['TL_LANG']['DCA']['new'];
-
-        return ' <a href="'.$href.'" class="header_new" title="'.StringUtil::specialchars($labelNew[1] ?? '').'" accesskey="n" data-action="contao--scroll-offset#store">'.$labelNew[0].'</a> ';
-    }
-
     public function initialize(int|string|null $id = null): self
     {
         if (null !== $this->operations) {
@@ -374,7 +355,7 @@ class DataContainerOperationsBuilder implements \Stringable
             'href' => $href,
             'title' => $state ? $config['title'] : $titleDisabled,
             'label' => $config['label'],
-            'attributes' => ' data-action="contao--scroll-offset#store" onclick="return AjaxRequest.toggleField(this,'.('visible.svg' === $icon ? 'true' : 'false').')"',
+            'attributes' => $config['attributes']->set('data-action', 'contao--scroll-offset#store')->set('onclick', 'return AjaxRequest.toggleField(this,'.('visible.svg' === $icon ? 'true' : 'false').')'),
             'icon' => Image::getHtml($state ? $icon : $_icon, $state ? $config['title'] : $titleDisabled, 'data-icon="'.$icon.'" data-icon-disabled="'.$_icon.'" data-state="'.$state.'" data-alt="'.StringUtil::specialchars($config['title']).'" data-alt-disabled="'.StringUtil::specialchars($titleDisabled).'"'),
             'primary' => $config['primary'] ?? null,
         ];
