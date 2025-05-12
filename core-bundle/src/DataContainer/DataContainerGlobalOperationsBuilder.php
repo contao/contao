@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\DataContainer;
 
 use Contao\Backend;
 use Contao\Controller;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\DataContainer;
 use Contao\Image;
@@ -32,6 +33,7 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
     private array|null $operations = null;
 
     public function __construct(
+        private readonly ContaoFramework $framework,
         private readonly Environment $twig,
         private readonly UrlGeneratorInterface $urlGenerator,
     ) {
@@ -99,8 +101,8 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
         $this->ensureInitialized();
 
         if (null === $href) {
-            $href = System::getReferer(true);
-        } elseif (!str_contains($href, '=') || str_contains($href, '?')) {
+            $href = $this->framework->getAdapter(System::class)->getReferer(true);
+        } elseif (str_contains($href, '=') && !str_contains($href, '?')) {
             $href = $this->urlGenerator->generate('contao_backend').'?'.$href;
         }
 
@@ -119,7 +121,7 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
         $this->ensureInitialized();
 
         $this->append([
-            'href' => Backend::addToUrl('clipboard=1'),
+            'href' => $this->framework->getAdapter(Backend::class)->addToUrl('clipboard=1'),
             'label' => $GLOBALS['TL_LANG']['MSC']['clearClipboard'],
             'attributes' => (new HtmlAttributes())->addClass('header_clipboard')->set('accesskey', 'x'),
         ]);
@@ -151,8 +153,10 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
             return $this;
         }
 
+        $inputAdapter = $this->framework->getAdapter(Input::class);
+
         foreach ($GLOBALS['TL_DCA'][$this->table]['list']['global_operations'] as $k => $v) {
-            if (!($v['showOnSelect'] ?? null) && 'select' === Input::get('act')) {
+            if (!($v['showOnSelect'] ?? null) && 'select' === $inputAdapter->get('act')) {
                 continue;
             }
 
@@ -173,7 +177,7 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
 
         // Call a custom function instead of using the default button
         if (\is_array($operation['button_callback'] ?? null)) {
-            $callback = System::importStatic($operation['button_callback'][0]);
+            $callback = $this->framework->getAdapter(System::class)->importStatic($operation['button_callback'][0]);
             $ref = new \ReflectionMethod($callback, $operation['button_callback'][1]);
 
             if (
@@ -222,9 +226,9 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
         $href = $this->generateHref($config);
 
         if ($config['icon'] ?? null) {
-            $config['icon'] = Image::getPath($config['icon']);
+            $config['icon'] = $this->framework->getAdapter(Image::class)->getPath($config['icon']);
             $config['attributes']->addClass('header_icon');
-            $config['attributes']->addStyle(\sprintf('background-image:url(\'%s\')', Controller::addAssetsUrlTo($config['icon'])));
+            $config['attributes']->addStyle(\sprintf('background-image:url(\'%s\')', $this->framework->getAdapter(Controller::class)->addAssetsUrlTo($config['icon'])));
         }
 
         return [
@@ -250,7 +254,7 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
                 return $config['href'];
             }
 
-            return Backend::addToUrl($config['href'], addRequestToken: !($config['prefetch'] ?? false));
+            return $this->framework->getAdapter(Backend::class)->addToUrl($config['href'], addRequestToken: !($config['prefetch'] ?? false));
         }
 
         return null;
