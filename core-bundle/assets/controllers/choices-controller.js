@@ -17,9 +17,9 @@ export default class ChoicesController extends Controller {
     }
 
     connect() {
-        // Choices wraps/unwraps the underlying select element when the instance is created/destroyed and may create a
-        // lot of DOM nodes. To prevent interference with our Stimulus mutation observers, we therefore isolate it in a
-        // shadow root with its own cloned select element.
+        // Choices.js wraps/unwraps the underlying select element when the instance is created/destroyed and may create
+        // a lot of DOM nodes. To prevent interference with our Stimulus mutation observers, we therefore isolate it in
+        // a shadow root with its own cloned select element.
         const [shadowRoot, select] = this._initializeShadowRoot();
 
         const config = {
@@ -53,7 +53,7 @@ export default class ChoicesController extends Controller {
             },
         };
 
-        // Allow others to alter the config before we create the instance
+        // Allow others to alter the config before we create the instance.
         this.dispatch('create', {
             detail: { select, config: Object.assign(config, this.configValue) },
         });
@@ -66,26 +66,26 @@ export default class ChoicesController extends Controller {
     }
 
     beforeCache() {
-        // Restore changes to the DOM. They will get recreated, when the connect() call happens on the restored page.
+        // Restore changes to the DOM. They will get recreated when the connect() call happens on the restored page.
         this._restoreInitialState();
     }
 
     _initializeShadowRoot() {
-        // Create a sibling host element and hide the initial element
+        // Create a sibling host element and hide the initial element.
         this._host = document.createElement('div');
         this._host.setAttribute('data-contao--color-scheme-target', 'outlet');
 
         this.element.insertAdjacentElement('afterend', this._host);
         this.element.classList.add('hidden');
 
-        // Clone the initial element and link it with a "change" event listener
+        // Clone the initial element and link it with a "change" event listener.
         const selectForChoices = this.element.cloneNode(true);
 
         selectForChoices.addEventListener('change', () => {
             this.element.value = selectForChoices.value;
         });
 
-        // Create a shadow root where the cloned element and the Choices instance will live
+        // Create a shadow root where the cloned element and the Choices instance will live.
         const shadowRoot = this._host.attachShadow({ mode: 'open' });
 
         shadowRoot.appendChild(selectForChoices);
@@ -95,10 +95,10 @@ export default class ChoicesController extends Controller {
     }
 
     _restoreInitialState() {
-        // Make sure any document-wide event listeners are removed, so we aren't leaking memory
+        // Make sure any document-wide event listeners are removed, so we aren't leaking memory.
         this.choices.destroy();
 
-        // Remove the host element and restore initial styling
+        // Remove the host element and restore the initial styling.
         this._host.remove();
         this.element.classList.remove('hidden');
     }

@@ -11,12 +11,11 @@ const prefersDark = () => {
 }
 
 const setColorScheme = () => {
-    [
-        document.documentElement,
-        ...document.querySelectorAll('*[data-contao--color-scheme-target="outlet"]')
-    ].forEach((el) => {
+    document.documentElement.dataset.colorScheme = prefersDark() ? 'dark' : 'light';
+
+    document.querySelectorAll('*[data-contao--color-scheme-target="outlet"]').forEach((el) => {
         el.dataset.colorScheme = prefersDark() ? 'dark' : 'light';
-    })
+    });
 };
 
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setColorScheme);
