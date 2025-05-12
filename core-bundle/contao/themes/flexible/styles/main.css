@@ -1033,10 +1033,6 @@ h2.sub_headline {
 	margin: 0 15px;
 }
 
-.two-factor .qr-code img {
-	border: 3px solid #fff;
-}
-
 .two-factor .tl_listing_container {
 	margin-top: 6px;
 }
@@ -1551,6 +1547,14 @@ table.tl_listing {
 	padding: 6px 0;
 }
 
+.cte_preview .media--left figure {
+	float: left;
+}
+
+.cte_preview .media--right figure {
+	float: right;
+}
+
 .cte_preview th, .cte_preview td {
 	padding: 3px 6px;
 	border-bottom: 1px solid var(--border);
@@ -1581,12 +1585,14 @@ table.tl_listing {
 	color: var(--pre-disabled);
 }
 
-.cte_preview .content-gallery ul {
+.cte_preview .content-gallery ul,
+.cte_preview .ce_gallery ul {
 	margin: 0;
 	padding: 0;
-	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
+	display: flex;
+	flex-wrap: wrap;
 	list-style: none;
+	column-gap: 18px;
 }
 
 .cte_preview a {
@@ -2413,13 +2419,6 @@ ul.sgallery li {
 }
 
 /* Misc */
-.ce_gallery ul {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 6px;
-	margin-bottom: 6px;
-}
-
 .drag-handle {
 	cursor: move;
 }
@@ -2898,13 +2897,15 @@ fieldset.collapsed > legend:not(:has(> button)) {
 
 .dropzone-filetree {
 	display: none;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-	opacity: .8;
 	z-index: 1;
+	background: color-mix(in srgb, var(--form-bg) 70%, transparent) !important;
+	backdrop-filter: blur(3px);
+	margin: 0;
 }
 
 .dropzone-filetree-enabled {
@@ -2914,6 +2915,10 @@ fieldset.collapsed > legend:not(:has(> button)) {
 .dz-message span {
 	font-size: 1.3125rem;
 	color: var(--gray);
+}
+
+.dropzone.dropzone-filetree .dz-preview.dz-image-preview {
+	background-color: transparent;
 }
 
 /* TinyMCE */
