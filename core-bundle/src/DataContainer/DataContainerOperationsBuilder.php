@@ -89,12 +89,12 @@ class DataContainerOperationsBuilder implements \Stringable
         $builder = $this->initialize($record['id'] ?? null);
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
-            return $this;
+            return $builder;
         }
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
             $v = \is_array($v) ? $v : [$v];
-            $operation = $this->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
+            $operation = $builder->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
 
             if ($operation) {
                 $builder->append($operation);
@@ -109,7 +109,7 @@ class DataContainerOperationsBuilder implements \Stringable
         $builder = $this->initialize($record['id'] ?? null);
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
-            return $this;
+            return $builder;
         }
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
@@ -131,7 +131,7 @@ class DataContainerOperationsBuilder implements \Stringable
                 $v['href'] = 'table='.$table;
             }
 
-            $operation = $this->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
+            $operation = $builder->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
 
             if ($operation) {
                 $builder->append($operation);
