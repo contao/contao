@@ -22,7 +22,7 @@ use Contao\Input;
 use Contao\Message;
 use Contao\StringUtil;
 use Contao\System;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_user'] = array
 (
@@ -350,8 +350,9 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'session' => array
 		(
 			'input_field_callback'    => array('tl_user', 'sessionField'),
+			'options'                 => array('purge_session', 'purge_images', 'purge_previews', 'purge_pages'),
 			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
-			'sql'                     => array('type' => 'blob', 'length' => MySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull' => false)
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull' => false)
 		),
 		'dateAdded' => array
 		(
@@ -582,6 +583,8 @@ class tl_user extends Backend
 	 */
 	public function sessionField(DataContainer $dc)
 	{
+		$allowedOptions = $GLOBALS['TL_DCA']['tl_user']['fields']['session']['options'] ?? array();
+
 		if (Input::post('FORM_SUBMIT') == 'tl_user')
 		{
 			$arrPurge = Input::post('purge');
@@ -589,6 +592,7 @@ class tl_user extends Backend
 			if (is_array($arrPurge))
 			{
 				$automator = new Automator();
+				$arrPurge = array_values(array_intersect($arrPurge, $allowedOptions));
 
 				if (in_array('purge_session', $arrPurge))
 				{
@@ -619,15 +623,32 @@ class tl_user extends Backend
 			}
 		}
 
+		$options = array();
+
+		$labels = array(
+			'purge_session' => $GLOBALS['TL_LANG']['tl_user']['sessionLabel'],
+			'purge_images' => $GLOBALS['TL_LANG']['tl_user']['htmlLabel'],
+			'purge_previews' => $GLOBALS['TL_LANG']['tl_user']['previewLabel'],
+			'purge_pages' => $GLOBALS['TL_LANG']['tl_user']['tempLabel'],
+		);
+
+		foreach ($allowedOptions as $i => $operation)
+		{
+			$options[] = sprintf(
+				'<input type="checkbox" name="purge[]" id="opt_purge_%d" class="tl_checkbox" value="%s" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_%d">%s</label>',
+				$i,
+				$operation,
+				$i,
+				$labels[$operation]
+			);
+		}
+
 		return '
 <div class="widget">
   <fieldset class="tl_checkbox_container">
     <legend>' . $GLOBALS['TL_LANG']['tl_user']['session'][0] . '</legend>
     <input type="checkbox" id="check_all_purge" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this, \'ctrl_purge\')"> <label for="check_all_purge" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label><br>
-    <input type="checkbox" name="purge[]" id="opt_purge_0" class="tl_checkbox" value="purge_session" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_0">' . $GLOBALS['TL_LANG']['tl_user']['sessionLabel'] . '</label><br>
-    <input type="checkbox" name="purge[]" id="opt_purge_1" class="tl_checkbox" value="purge_images" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_1">' . $GLOBALS['TL_LANG']['tl_user']['htmlLabel'] . '</label><br>
-    <input type="checkbox" name="purge[]" id="opt_purge_2" class="tl_checkbox" value="purge_previews" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_2">' . $GLOBALS['TL_LANG']['tl_user']['previewLabel'] . '</label><br>
-    <input type="checkbox" name="purge[]" id="opt_purge_3" class="tl_checkbox" value="purge_pages" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_3">' . $GLOBALS['TL_LANG']['tl_user']['tempLabel'] . '</label>
+    ' . implode('<br>', $options) . '
   </fieldset>' . $dc->help() . '
 </div>';
 	}

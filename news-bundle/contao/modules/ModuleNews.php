@@ -86,7 +86,7 @@ abstract class ModuleNews extends Module
 		$objTemplate->class = $strClass;
 		$objTemplate->newsHeadline = $objArticle->headline;
 		$objTemplate->subHeadline = $objArticle->subheadline;
-		$objTemplate->hasSubHeadline = $objArticle->subheadline ? true : false;
+		$objTemplate->hasSubHeadline = '' !== $objArticle->subheadline;
 		$objTemplate->linkHeadline = $objArticle->headline;
 		$objTemplate->archive = NewsArchiveModel::findById($objArticle->pid);
 		$objTemplate->count = $intCount; // see #5708

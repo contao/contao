@@ -421,6 +421,7 @@
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page in the navigation menu if a member is logged in.</source>
+        <target>Če je uporabnik prijavljen, ne prikaži strani v navigacijskem meniju.</target>
       </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
@@ -444,6 +445,7 @@
       </trans-unit>
       <trans-unit id="tl_page.start.1">
         <source>If you want to prevent the page from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Če želite skriti stran pred določenim dnem oz. uro, ga oz. jo vnesite tu. Drugače pustite vnosno polje prazno.</target>
       </trans-unit>
       <trans-unit id="tl_page.stop.0">
         <source>Show until</source>
@@ -451,6 +453,7 @@
       </trans-unit>
       <trans-unit id="tl_page.stop.1">
         <source>If you want to prevent the page from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <target>Če želite skriti stran po določenem dnevu oz. uri, ga oz. jo vnesite tu. Drugače pustite vnosno polje prazno.</target>
       </trans-unit>
       <trans-unit id="tl_page.enforceTwoFactor.0">
         <source>Enforce two-factor authentication</source>
