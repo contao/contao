@@ -13,9 +13,8 @@ class Storage
 {
     private const CACHE_KEY = 'contao.twig.inspector';
 
-    public function __construct(
-        private readonly CacheItemPoolInterface $cachePool,
-    ) {
+    public function __construct(private readonly CacheItemPoolInterface $cachePool)
+    {
     }
 
     public function get(string $path): array|null
