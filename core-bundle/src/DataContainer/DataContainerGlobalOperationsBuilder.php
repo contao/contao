@@ -187,12 +187,10 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
                 && DataContainerOperation::class === $type->getName()
             ) {
                 $callback->{$operation['button_callback'][1]}($config);
-            } else {
-                if (!$legacyCallback) {
-                    throw new \RuntimeException('Cannot handle legacy button_callback, provide the $legacyCallback');
-                }
-
+            } elseif ($legacyCallback) {
                 $legacyCallback($config);
+            } else {
+                throw new \RuntimeException('Cannot handle legacy button_callback, provide the $legacyCallback');
             }
         } elseif (\is_callable($operation['button_callback'] ?? null)) {
             $ref = new \ReflectionFunction($operation['button_callback']);
@@ -204,12 +202,10 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
                 && DataContainerOperation::class === $type->getName()
             ) {
                 $operation['button_callback']($config);
-            } else {
-                if (!$legacyCallback) {
-                    throw new \RuntimeException('Cannot handle legacy button_callback, provide the $legacyCallback');
-                }
-
+            } elseif ($legacyCallback) {
                 $legacyCallback($config);
+            } else {
+                throw new \RuntimeException('Cannot handle legacy button_callback, provide the $legacyCallback');
             }
         }
 
