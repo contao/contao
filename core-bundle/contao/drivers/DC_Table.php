@@ -4367,6 +4367,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$labelCut = $GLOBALS['TL_LANG'][$this->strTable]['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
 		$labelPasteNew = $GLOBALS['TL_LANG'][$this->strTable]['pastenew'] ?? $GLOBALS['TL_LANG']['DCA']['pastenew'];
 		$labelPasteAfter = $GLOBALS['TL_LANG'][$this->strTable]['pasteafter'] ?? $GLOBALS['TL_LANG']['DCA']['pasteafter'];
+		$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
 		$limitHeight = BackendUser::getInstance()->doNotCollapse ? false : (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['limitHeight'] ?? 0);
 
 		$db = Database::getInstance();
@@ -4697,6 +4698,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$this->current[] = $row[$i]['id'];
 				$imagePasteAfter = Image::getHtml('pasteafter.svg', \sprintf($labelPasteAfter[1] ?? $labelPasteAfter[0], $row[$i]['id']));
+				$imagePasteInto = Image::getHtml('pasteinto.svg', \sprintf($labelPasteInto[1] ?? $labelPasteInto[0], $row[$i]['id']));
 				$imagePasteNew = Image::getHtml('new.svg', \sprintf($labelPasteNew[1] ?? $labelPasteNew[0], $row[$i]['id']));
 
 				// Make items sortable
@@ -4773,28 +4775,59 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 							$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
 						}
 
-						// Copy/move multiple
-						elseif ($blnMultiboard)
+						// Copy/move
+						elseif ($blnMultiboard || $blnClipboard)
 						{
-							$operations->append(array(
-								'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id']),
-								'title' => \sprintf($labelPasteAfter[1], $row[$i]['id']),
-								'attributes' => 'data-action="contao--scroll-offset#store"',
-								'icon' => $imagePasteAfter,
-								'primary' => true,
-							));
-						}
+							if ($blnMultiboard)
+							{
+								$pasteAfterHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id']);
+								$pasteIntoHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $row[$i]['id'] . '&amp;ptable=' . $this->strTable);
+							}
+							else
+							{
+								$pasteAfterHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $arrClipboard['id']);
+								$pasteIntoHref = $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $arrClipboard['id'] . '&amp;ptable=' . $this->strTable);
+							}
 
-						// Paste buttons
-						elseif ($blnClipboard)
-						{
 							$operations->append(array(
-								'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $arrClipboard['id']),
+								'href' => $pasteAfterHref,
 								'title' => \sprintf($labelPasteAfter[1], $row[$i]['id']),
 								'attributes' => 'data-action="contao--scroll-offset#store"',
 								'icon' => $imagePasteAfter,
 								'primary' => true,
 							));
+							$pasteIntoOperation = array(
+								'href' => $pasteIntoHref,
+								'title' => \sprintf($labelPasteInto[1], $row[$i]['id']),
+								'attributes' => 'data-action="contao--scroll-offset#store"',
+								'icon' => $imagePasteInto,
+								'primary' => true,
+							);
+
+							$ctable = $GLOBALS['TL_DCA'][$this->strTable]['config']['ctable'][0] ?? null;
+							$data = array(
+								'pid' => $row[$i]['id'] ?? null,
+							);
+
+							if ($GLOBALS['TL_DCA'][$ctable]['config']['dynamicPtable'] ?? false)
+							{
+								$data['ptable'] = $this->strTable;
+							}
+
+							$subject = new ReadAction($ctable, $data);
+
+							if (!$security->isGranted(ContaoCorePermissions::DC_PREFIX . $ctable, $subject))
+							{
+								if ($ctable !== $this->strTable)
+								{
+									$pasteIntoOperation['disabled'] = true;
+									$operations->append($pasteIntoOperation);
+								}
+							}
+							else
+							{
+								$operations->append($pasteIntoOperation);
+							}
 						}
 
 						// Drag handle
