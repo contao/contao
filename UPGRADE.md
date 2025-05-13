@@ -515,7 +515,8 @@ The public folder is now called `public` by default. It can be renamed in the `c
 
 ### Basic entities
 
-The "[basic entities](https://docs.contao.org/manual/en/article-management/insert-tags/#basic-entities)" such as
-`[-]`, `[nbsp]` etc. are not automatically converted back during rendering. Instead they are converted in the back
-end when saving a record to the database, if the respective field has `'basicEntities' => true` enabled in its `eval`
-section.
+[Basic entities][1] such as `[-]` or `[nbsp]` are no longer converted automatically when a page is rendered. Instead,
+you have to add `'basicEntities' => true` to the `eval` section of the fields you want to use them in, so they are
+converted when a record is saved in the back end.
+
+[1]: https://docs.contao.org/manual/en/article-management/insert-tags/#basic-entities
