@@ -23,7 +23,7 @@
                 {% if themes|length %}
                     <form id="template-studio--theme-selector" method="post" action="{{ path('_contao_template_studio_select_theme.stream') }}" data-turbo-stream data-contao--template-studio-target="themeSelector">
                         <label>
-                            <select name="theme" onchange="this.form.requestSubmit()" class="tl_select" data-controller="contao--choices">
+                            <select name="theme" onchange="this.form.requestSubmit()" class="tl_select" data-controller="contao--slim-select">
                                 <option{{ attrs().set('value', '').set('selected', current_theme is null) }}>{{ 'no_theme_context'|trans }}</option>
                                 {% for slug, name in themes %}
                                     <option{{ attrs().set('value', slug).set('selected', current_theme == slug) }}>{{ name }} [{{ slug}}]</option>

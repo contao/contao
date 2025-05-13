@@ -190,7 +190,7 @@ class SelectMenu extends Widget
 		// Chosen
 		if ($this->chosen)
 		{
-			$this->arrAttributes['data-controller'] = trim(($this->arrAttributes['data-controller'] ?? '') . ' contao--choices');
+			$this->arrAttributes['data-controller'] = trim(($this->arrAttributes['data-controller'] ?? '') . ' contao--slim-select');
 		}
 
 		return \sprintf(

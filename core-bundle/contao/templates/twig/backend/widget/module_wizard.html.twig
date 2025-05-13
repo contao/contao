@@ -23,7 +23,7 @@
                         {% set module_select_attributes = attrs()
                             .set('name', "#{id}[#{loop.index0}][mod]")
                             .set('data-action', 'focus->contao--scroll-offset#store contao--row-wizard#updateModuleWizardLink')
-                            .set('data-controller', 'contao--choices')
+                            .set('data-controller', 'contao--slim-select')
                             .addClass('tl_select')
                         %}
                         <select{{ module_select_attributes}}>

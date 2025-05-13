@@ -33,7 +33,7 @@ class RootPageDependentSelect extends SelectMenu
 			$this->strLabel = $rootPage->title;
 
 			$fields[] = \sprintf(
-				'<select name="%s[]" id="ctrl_%s" class="tl_select%s"%s data-action="focus->contao--scroll-offset#store" data-controller="contao--choices">%s</select>%s',
+				'<select name="%s[]" id="ctrl_%s" class="tl_select%s"%s data-action="focus->contao--scroll-offset#store" data-controller="contao--slim-select">%s</select>%s',
 				$this->strName,
 				\sprintf('%s-%s', $this->strId, $rootPage->id),
 				$this->strClass ? ' ' . $this->strClass : '',
