@@ -30,22 +30,68 @@ class DelegatingIndexer implements IndexerInterface
 
     public function index(Document $document): void
     {
-        foreach ($this->indexers as $indexer) {
-            $indexer->index($document);
-        }
+        $this->wrapInTryCatch(
+            static function (IndexerInterface $indexer) use ($document): void {
+                $indexer->index($document);
+            },
+        );
     }
 
     public function delete(Document $document): void
     {
-        foreach ($this->indexers as $indexer) {
-            $indexer->delete($document);
-        }
+        $this->wrapInTryCatch(
+            static function (IndexerInterface $indexer) use ($document): void {
+                $indexer->delete($document);
+            },
+        );
     }
 
     public function clear(): void
     {
+        $this->wrapInTryCatch(
+            static function (IndexerInterface $indexer): void {
+                $indexer->clear();
+            },
+        );
+    }
+
+    private function wrapInTryCatch(callable $function): void
+    {
+        $warningsOnly = true;
+        $indexerExceptions = [];
+
         foreach ($this->indexers as $indexer) {
-            $indexer->clear();
+            try {
+                $function($indexer);
+            } catch (IndexerException $exception) {
+                $indexerExceptions[] = $exception;
+
+                if (!$exception->isOnlyWarning()) {
+                    $warningsOnly = false;
+                }
+            }
         }
+
+        if ([] !== $indexerExceptions) {
+            if ($warningsOnly) {
+                throw IndexerException::createAsWarning($this->getMergedExceptionMessage($indexerExceptions), 0, $indexerExceptions[0]);
+            }
+
+            throw new IndexerException($this->getMergedExceptionMessage($indexerExceptions), 0, $indexerExceptions[0]);
+        }
+    }
+
+    /**
+     * @param array<\Throwable> $exceptions
+     */
+    private function getMergedExceptionMessage(array $exceptions): string
+    {
+        $messages = [];
+
+        foreach ($exceptions as $exception) {
+            $messages[] = $exception->getMessage();
+        }
+
+        return implode(' | ', $messages);
     }
 }
