@@ -3,9 +3,9 @@ import SlimSelect from 'slim-select';
 
 export default class SelectController extends Controller {
     static values = {
-        config: Object,
-        default: {
-
+        options: {
+            type: Object,
+            default: {}
         }
     }
 
