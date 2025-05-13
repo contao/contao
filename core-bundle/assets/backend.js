@@ -99,6 +99,5 @@ document.documentElement.addEventListener('turbo:reload', (event) => {
 
 document.documentElement.addEventListener('turbo:before-fetch-response', (event) => {
     const response = event.detail.fetchResponse;
-
     targetURLAfterRedirectedFetch = response.redirected ? response.response.url : null;
 });
