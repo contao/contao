@@ -65,6 +65,7 @@ class DelegatingIndexer implements IndexerInterface
                 $function($indexer);
             } catch (IndexerException $exception) {
                 $indexerExceptions[] = $exception;
+
                 if (!$exception->isOnlyWarning()) {
                     $warningsOnly = false;
                 }

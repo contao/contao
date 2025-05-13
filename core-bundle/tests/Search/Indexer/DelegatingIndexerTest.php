@@ -36,6 +36,7 @@ class DelegatingIndexerTest extends TestCase
     public function testDelegatesAndCollectsIndexerExceptions(): void
     {
         $firstException = IndexerException::createAsWarning('Warning 1');
+
         $indexer1 = $this->createIndexer($firstException);
         $indexer2 = $this->createIndexer(new IndexerException('Failure 2'));
         $indexer3 = $this->createIndexer();
@@ -106,6 +107,7 @@ class DelegatingIndexerTest extends TestCase
     public function testWarningExceptionCollectionOnly(): void
     {
         $firstException = IndexerException::createAsWarning('Warning 1');
+
         $indexer1 = $this->createIndexer($firstException);
         $indexer2 = $this->createIndexer(IndexerException::createAsWarning('Warning 2'));
 
@@ -141,10 +143,12 @@ class DelegatingIndexerTest extends TestCase
     private function createIndexer(\Throwable|null $indexerException = null, bool $expectsCalls = true): IndexerInterface
     {
         $indexer = $this->createMock(IndexerInterface::class);
+
         $invocationMocker = $indexer
             ->expects($expectsCalls ? $this->once() : $this->never())
             ->method('index')
         ;
+
         $invocationMocker->with($this->isInstanceOf(Document::class));
 
         if ($indexerException) {
@@ -155,6 +159,7 @@ class DelegatingIndexerTest extends TestCase
             ->expects($expectsCalls ? $this->once() : $this->never())
             ->method('delete')
         ;
+
         $invocationMocker->with($this->isInstanceOf(Document::class));
 
         if ($indexerException) {
