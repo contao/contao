@@ -6,7 +6,6 @@ namespace Contao\CoreBundle\Twig\Inspector;
 
 use Contao\CoreBundle\Twig\Inheritance\RuntimeThemeDependentExpression;
 use Contao\CoreBundle\Twig\Slots\SlotNode;
-use Psr\Cache\CacheItemPoolInterface;
 use Twig\Environment;
 use Twig\Node\BlockNode;
 use Twig\Node\Expression\ConstantExpression;
@@ -36,7 +35,7 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
     private \WeakMap $prototypeBlocks;
 
     public function __construct(
-        private readonly CacheItemPoolInterface $cachePool,
+        private readonly Storage $storage,
         private readonly Environment $twig,
     ) {
         $this->prototypeBlocks = new \WeakMap();
@@ -93,7 +92,7 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
             return $uses;
         };
 
-        $this->persist($node->getSourceContext()->getPath(), [
+        $this->storage->set($node->getSourceContext()->getPath(), [
             'slots' => array_unique($this->slots),
             'blocks' => $this->blocks,
             'parent' => $getParent($node),
@@ -114,18 +113,6 @@ final class InspectorNodeVisitor implements NodeVisitorInterface
     public function getPriority(): int
     {
         return 128;
-    }
-
-    private function persist(string $path, array $data): void
-    {
-        $item = $this->cachePool->getItem(Inspector::CACHE_KEY);
-
-        $entries = $item->get() ?? [];
-        $entries[$path] = $data;
-
-        $item->set($entries);
-
-        $this->cachePool->save($item);
     }
 
     private function isPrototype(BlockNode $block): bool

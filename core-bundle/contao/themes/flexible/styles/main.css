@@ -294,6 +294,7 @@ body.popup {
 	width: auto;
 	min-height: 0;
 	max-width: none;
+	display: block;
 }
 
 /* Left */
@@ -633,7 +634,8 @@ h2.sub_headline {
 	min-width: 100px;
 }
 
-.tl_subpanel :is(select, input, button) {
+.tl_subpanel :is(select, input, button),
+.tl_subpanel > :not(span, strong) {
 	height: 30px;
 }
 
@@ -646,6 +648,7 @@ h2.sub_headline {
 
 .tl_filter > * {
 	margin: 0;
+	width: 100%;
 }
 
 .tl_version_panel {
@@ -672,8 +675,9 @@ h2.sub_headline {
 	width: 20%;
 }
 
-.tl_limit .tl_select {
+.tl_limit > :not(strong) {
 	width: 57%;
+	height: 30px;
 }
 
 .tl_search {
@@ -681,12 +685,13 @@ h2.sub_headline {
 	width: 100%;
 }
 
-.tl_search > .tl_select {
+.tl_search > :not(span, strong) {
 	width: 38%;
 }
 
-.tl_search > .tl_text {
-	width: 38%;
+/* Add margin to initialized choices controllers that are not in the shadow-root */
+:not(.tl_subpanel) > .hidden[data-controller="contao--choices"] + div:not(.choices__list) {
+	margin: 3px 0;
 }
 
 .tl_img_submit {
@@ -743,7 +748,7 @@ h2.sub_headline {
 	width: 26%;
 }
 
-.tl_sorting .tl_select {
+.tl_sorting > :not(strong) {
 	width: 60%;
 	margin-left: 1%;
 }
@@ -1054,10 +1059,6 @@ h2.sub_headline {
 
 .two-factor .qr-code {
 	margin: 0 15px;
-}
-
-.two-factor .qr-code img {
-	border: 3px solid #fff;
 }
 
 .two-factor .tl_listing_container {
@@ -1675,6 +1676,14 @@ table.tl_listing {
 	padding: 6px 0;
 }
 
+.cte_preview .media--left figure {
+	float: left;
+}
+
+.cte_preview .media--right figure {
+	float: right;
+}
+
 .cte_preview th, .cte_preview td {
 	padding: 3px 6px;
 	border-bottom: 1px solid var(--border);
@@ -1705,12 +1714,14 @@ table.tl_listing {
 	color: var(--pre-disabled);
 }
 
-.cte_preview .content-gallery ul {
+.cte_preview .content-gallery ul,
+.cte_preview .ce_gallery ul {
 	margin: 0;
 	padding: 0;
-	display: grid;
-	grid-template-columns: 1fr 1fr 1fr;
+	display: flex;
+	flex-wrap: wrap;
 	list-style: none;
+	column-gap: 18px;
 }
 
 .cte_preview a {
@@ -2551,13 +2562,6 @@ ul.sgallery li {
 }
 
 /* Misc */
-.ce_gallery ul {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 6px;
-	margin-bottom: 6px;
-}
-
 .drag-handle {
 	cursor: move;
 }
@@ -3040,13 +3044,15 @@ fieldset.collapsed > legend:not(:has(> button)) {
 
 .dropzone-filetree {
 	display: none;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-	opacity: .8;
 	z-index: 1;
+	background: color-mix(in srgb, var(--form-bg) 70%, transparent) !important;
+	backdrop-filter: blur(3px);
+	margin: 0;
 }
 
 .dropzone-filetree-enabled {
@@ -3056,6 +3062,10 @@ fieldset.collapsed > legend:not(:has(> button)) {
 .dz-message span {
 	font-size: 1.3125rem;
 	color: var(--gray);
+}
+
+.dropzone.dropzone-filetree .dz-preview.dz-image-preview {
+	background-color: transparent;
 }
 
 /* TinyMCE */
@@ -3122,41 +3132,34 @@ fieldset.collapsed > legend:not(:has(> button)) {
 /* Tablet */
 @media (max-width: 991px) {
 	#container {
-		display: block;
-	}
-
-	#main, #left {
-		float: none;
+		overflow-x: clip;
+		width: auto;
 	}
 
 	#main {
-		width: 100% !important;
+		width: 100%;
+		flex-shrink: 0;
 		position: relative;
 		transition: transform .2s ease;
-		-webkit-transform: none;
-		transform: none;
+		will-change: transform;
 	}
 
 	.show-navigation #main {
-		-webkit-transform: translateX(240px);
 		transform: translateX(240px);
 	}
 
 	#left {
 		visibility: hidden;
-		position: absolute;
-		top: 40px;
 		width: 240px;
+		flex-shrink: 0;
+		margin-left: -240px;
 		transition: transform .2s ease, visibility .2s ease;
-		-webkit-transform: translateX(-240px);
-		transform: translateX(-240px);
 		will-change: transform, visibility;
 	}
 
 	.show-navigation #left {
 		visibility: visible;
-		-webkit-transform: none;
-		transform: none;
+		transform: translateX(240px);
 	}
 
 	#tmenu .burger {
