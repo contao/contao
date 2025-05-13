@@ -2,10 +2,17 @@ import { Controller } from '@hotwired/stimulus';
 import SlimSelect from 'slim-select';
 
 export default class SelectController extends Controller {
+    static values = {
+        config: Object,
+        default: {
+
+        }
+    }
 
     connect() {
         this.slimselect = new SlimSelect({
-          select: this.element
+            select: this.element,
+            ...this.optionsValue
         });
     }
 
