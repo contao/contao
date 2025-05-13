@@ -1,1 +1,47 @@
 @import "slim-select/styles";
+
+:root {
+    --ss-primary-color: #3997fe;
+    --ss-bg-color: var(--form-bg);
+    --ss-border-color: var(--form-border);
+    --ss-border-radius: 2px;
+    --ss-font-color: var(--text);
+}
+
+html[data-color-scheme=dark] {
+    --ss-primary-color: #1b325f;
+}
+
+.ss-content {
+
+    /** Resets */
+    &.tl_select {
+        padding: 0;
+        background: var(--form-bg);
+    }
+
+    .ss-search {
+        padding: 0;
+
+        input {
+            border-width: 0 0 1px;
+            border-radius: 0;
+
+            &:focus {
+                box-shadow: inset 0 0 1px 1px var(--ss-focus-color);
+            }
+        }
+    }
+
+    .ss-list {
+
+        .ss-option {
+
+            &:hover,
+            &.ss-highlighted,
+            &:not(.ss-disabled).ss-selected {
+                color: #fff;
+            }
+        }
+    }
+}
