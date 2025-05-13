@@ -634,8 +634,7 @@ h2.sub_headline {
 	min-width: 100px;
 }
 
-.tl_subpanel :is(select, input, button),
-.tl_subpanel > :not(span, strong) {
+.tl_subpanel :is(select, input, button) {
 	height: 30px;
 }
 
@@ -648,7 +647,6 @@ h2.sub_headline {
 
 .tl_filter > * {
 	margin: 0;
-	width: 100%;
 }
 
 .tl_version_panel {
@@ -675,9 +673,8 @@ h2.sub_headline {
 	width: 20%;
 }
 
-.tl_limit > :not(strong) {
+.tl_limit .tl_select {
 	width: 57%;
-	height: 30px;
 }
 
 .tl_search {
@@ -685,13 +682,12 @@ h2.sub_headline {
 	width: 100%;
 }
 
-.tl_search > :not(span, strong) {
+.tl_search > .tl_select {
 	width: 38%;
 }
 
-/* Add margin to initialized choices controllers that are not in the shadow-root */
-:not(.tl_subpanel) > .hidden[data-controller="contao--choices"] + div:not(.choices__list) {
-	margin: 3px 0;
+.tl_search > .tl_text {
+	width: 38%;
 }
 
 .tl_img_submit {
@@ -748,7 +744,7 @@ h2.sub_headline {
 	width: 26%;
 }
 
-.tl_sorting > :not(strong) {
+.tl_sorting .tl_select {
 	width: 60%;
 	margin-left: 1%;
 }

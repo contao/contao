@@ -12,17 +12,13 @@ const prefersDark = () => {
 
 const setColorScheme = () => {
     document.documentElement.dataset.colorScheme = prefersDark() ? 'dark' : 'light';
-
-    document.querySelectorAll('*[data-contao--color-scheme-target="outlet"]').forEach((el) => {
-        el.dataset.colorScheme = prefersDark() ? 'dark' : 'light';
-    });
 };
 
 window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', setColorScheme);
 setColorScheme();
 
 export default class extends Controller {
-    static targets = ['label', 'outlet'];
+    static targets = ['label'];
 
     static values = {
         i18n: {
@@ -43,10 +39,6 @@ export default class extends Controller {
 
     disconnect () {
         this.matchMedia.removeEventListener('change', this.setLabel);
-    }
-
-    outletTargetConnected() {
-        setColorScheme();
     }
 
     toggle (e) {

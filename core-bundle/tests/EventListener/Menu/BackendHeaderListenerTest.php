@@ -117,6 +117,7 @@ class BackendHeaderListenerTest extends TestCase
             [
                 'class' => 'icon-color-scheme',
                 'title' => '',
+                'data-controller' => 'contao--color-scheme',
                 'data-action' => 'contao--color-scheme#toggle',
                 'data-contao--color-scheme-target' => 'label',
                 'data-contao--color-scheme-i18n-value' => '{"dark":"MSC.darkMode","light":"MSC.lightMode"}',

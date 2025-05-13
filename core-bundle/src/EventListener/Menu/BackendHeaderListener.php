@@ -88,6 +88,7 @@ class BackendHeaderListener
             ->setUri('#')
             ->setLinkAttribute('class', 'icon-color-scheme')
             ->setLinkAttribute('title', '') // Required for the tips.js script
+            ->setLinkAttribute('data-controller', 'contao--color-scheme')
             ->setLinkAttribute('data-action', 'contao--color-scheme#toggle')
             ->setLinkAttribute('data-contao--color-scheme-target', 'label')
             ->setLinkAttribute(
