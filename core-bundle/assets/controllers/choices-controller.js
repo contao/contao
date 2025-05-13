@@ -1,21 +1,29 @@
 import { Controller } from '@hotwired/stimulus';
+import Choices from 'choices.js';
+import css from '!!css-loader!../styles/component/choices.pcss';
 
 export default class ChoicesController extends Controller {
-    addMutationGuard = false;
-    removeMutationGuard = false;
+    static values = { config: Object };
 
-    connect() {
-        if (this.addMutationGuard) {
+    static styleSheet = null;
+
+    initialize() {
+        if (ChoicesController.styleSheet) {
             return;
         }
 
-        // Choices wraps the element multiple times during initialization, leading to
-        // multiple disconnects/reconnects of the controller that we need to ignore.
-        this.addMutationGuard = true;
+        ChoicesController.styleSheet = new CSSStyleSheet();
+        ChoicesController.styleSheet.replace(css);
+    }
 
-        const select = this.element;
+    connect() {
+        // Choices.js wraps/unwraps the underlying select element when the instance is created/destroyed and may create
+        // a lot of DOM nodes. To prevent interference with our Stimulus mutation observers, we therefore isolate it in
+        // a shadow root with its own cloned select element.
+        const [shadowRoot, select] = this._initializeShadowRoot();
 
-        this.choices = new Choices(select, {
+        const config = {
+            shadowRoot: shadowRoot,
             shouldSort: false,
             duplicateItemsAllowed: false,
             allowHTML: false,
@@ -30,50 +38,68 @@ export default class ChoicesController extends Controller {
                 threshold: 0.4,
             },
             callbackOnInit: () => {
-                const choices = select.closest('.choices')?.querySelector('.choices__list--dropdown > .choices__list');
+                const choices = shadowRoot.querySelector('.choices__list--dropdown > .choices__list');
 
                 if (choices && select.dataset.placeholder) {
                     choices.dataset.placeholder = select.dataset.placeholder;
                 }
-
-                queueMicrotask(() => {
-                    this.addMutationGuard = false;
-                });
             },
+            itemSelectText: '', // suppress the "Press to select" text from taking half of the width
             loadingText: Contao.lang.loading,
             noResultsText: Contao.lang.noResults,
             noChoicesText: Contao.lang.noOptions,
             removeItemLabelText: function (value) {
                 return Contao.lang.removeItem.concat(' ').concat(value);
             },
+        };
+
+        // Allow others to alter the config before we create the instance.
+        this.dispatch('create', {
+            detail: { select, config: Object.assign(config, this.configValue) },
         });
+
+        this.choices = new Choices(select, config);
     }
 
     disconnect() {
-        if (this.addMutationGuard || this.removeMutationGuard) {
-            return;
-        }
-
-        this._removeChoices();
+        this._restoreInitialState();
     }
 
     beforeCache() {
-        // Let choices unwrap the element container before Turbo caches the
-        // page. It will be recreated, when the connect() call happens on the
-        // restored page.
-        this._removeChoices();
+        // Restore changes to the DOM. They will get recreated when the connect() call happens on the restored page.
+        this._restoreInitialState();
     }
 
-    _removeChoices() {
-        // Safely unwrap the element by preventing disconnect/connect calls
-        // during the process.
-        this.removeMutationGuard = true;
+    _initializeShadowRoot() {
+        // Create a sibling host element and hide the initial element.
+        this._host = document.createElement('div');
+        this._host.setAttribute('data-contao--color-scheme-target', 'outlet');
 
-        this.choices?.destroy();
-        this.choices = null;
+        this.element.insertAdjacentElement('afterend', this._host);
+        this.element.classList.add('hidden');
 
-        queueMicrotask(() => {
-            this.removeMutationGuard = false;
+        // Clone the initial element and link it with a "change" event listener.
+        const selectForChoices = this.element.cloneNode(true);
+
+        selectForChoices.addEventListener('change', () => {
+            this.element.value = selectForChoices.value;
         });
+
+        // Create a shadow root where the cloned element and the Choices instance will live.
+        const shadowRoot = this._host.attachShadow({ mode: 'open' });
+
+        shadowRoot.appendChild(selectForChoices);
+        shadowRoot.adoptedStyleSheets.push(ChoicesController.styleSheet);
+
+        return [shadowRoot, selectForChoices];
+    }
+
+    _restoreInitialState() {
+        // Make sure any document-wide event listeners are removed, so we aren't leaking memory.
+        this.choices.destroy();
+
+        // Remove the host element and restore the initial styling.
+        this._host.remove();
+        this.element.classList.remove('hidden');
     }
 }
