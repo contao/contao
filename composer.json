@@ -46,7 +46,6 @@
         "cmsig/seal-symfony-bundle": "^0.6",
         "contao-components/ace": "^1.8",
         "contao-components/altcha": "^1.0",
-        "contao-components/choices": "^11.0",
         "contao-components/colorbox": "^1.6",
         "contao-components/contao": "^9.1",
         "contao-components/datepicker": "^3.0",

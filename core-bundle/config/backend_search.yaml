@@ -40,6 +40,9 @@ services:
             - '@router'
             - '%contao.upload_path%'
 
+    contao.search.backend.format_binary_uuid_results_listener:
+        class: Contao\CoreBundle\Search\Backend\EventListener\FormatBinaryUuidSearchResultsListener
+
     contao.search.backend.format_core_widget_results_listener:
         class: Contao\CoreBundle\Search\Backend\EventListener\FormatCoreWidgetSearchResultsListener
 
