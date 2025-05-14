@@ -2,6 +2,29 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.33] (2025-05-14)
+
+**Fixed issues:**
+
+- [#8319] Recursively run `StringUtil::decodeEntities()` on arrays ([aschempp])
+- [#8274] Add search listeners for news, events and FAQs ([CMSworker])
+- [#8330] Mention basic entities in the `UPGRADE.md` file ([fritzmg])
+- [#8221] Add workers to the functional tests ([fritzmg])
+- [#8342] Catch exceptions in the `DelegatingIndexer` ([Toflar])
+- [#8269] Fix the back end layout for mobile devices ([fritzmg])
+- [#8286] Unify the `.cte_preview` styles ([fritzmg])
+- [#8324] Remove the `tableless` leftovers ([aschempp])
+- [#8327] Make `tl_newsletter_subscriptions.email` nullable ([fritzmg])
+- [#8334] Correctly support the `:collapsed` keyword in the palette manipulator ([zoglo])
+- [#8336] Make the Dropzone overlay in the file tree fixed ([fritzmg])
+- [#8322] Allow absolute URLs in DCA backlinks ([aschempp])
+- [#8341] Strip more irrelevant query parameters ([Toflar])
+- [#8344] Remove `error_reporting` from `contao-setup` ([fritzmg])
+- [#8328] Add `alwaysSave` to `tl_calendar_feed.feedBase` ([fritzmg])
+- [#8304] Render the QR code margin directly in the image ([Tastaturberuf])
+- [#8307] Throw an exception on backup errors ([fritzmg])
+- [#8309] Use the module ID for flash bag variables in the newsletter modules ([fritzmg])
+
 ## [5.3.32] (2025-04-17)
 
 **Fixed issues:**
@@ -35,7 +58,7 @@ This project adheres to [Semantic Versioning].
 
 **Security fixes:**
 
-- [CVE-2025-29790]: Cross site scripting through SVG uploads
+- [CVE-2025-29790]: Cross-site scripting through SVG uploads
 
 ## [5.3.29] (2025-03-12)
 
@@ -404,7 +427,7 @@ This project adheres to [Semantic Versioning].
 **Security fixes:**
 
 - [CVE-2024-28235]: Session cookie disclosure in the crawler
-- [CVE-2024-28190]: Cross site scripting in the file manager
+- [CVE-2024-28190]: Cross-site scripting in the file manager
 - [CVE-2024-28191]: Insert tag injection via the form generator
 - [CVE-2024-28234]: Insufficient BBCode sanitization
 
@@ -660,6 +683,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.33]: https://github.com/contao/contao/releases/tag/5.3.33
 [5.3.32]: https://github.com/contao/contao/releases/tag/5.3.32
 [5.3.31]: https://github.com/contao/contao/releases/tag/5.3.31
 [5.3.30]: https://github.com/contao/contao/releases/tag/5.3.30
@@ -728,6 +752,7 @@ This project adheres to [Semantic Versioning].
 [richardhj]: https://github.com/richardhj
 [SeverinGloeckle]: https://github.com/SeverinGloeckle
 [stefansl]: https://github.com/stefansl
+[Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
 [veronikaplenta]: https://github.com/veronikaplenta
 [zoglo]: https://github.com/zoglo
@@ -1167,6 +1192,7 @@ This project adheres to [Semantic Versioning].
 [#8201]: https://github.com/contao/contao/pull/8201
 [#8211]: https://github.com/contao/contao/pull/8211
 [#8219]: https://github.com/contao/contao/pull/8219
+[#8221]: https://github.com/contao/contao/pull/8221
 [#8232]: https://github.com/contao/contao/pull/8232
 [#8233]: https://github.com/contao/contao/pull/8233
 [#8240]: https://github.com/contao/contao/pull/8240
@@ -1176,5 +1202,22 @@ This project adheres to [Semantic Versioning].
 [#8263]: https://github.com/contao/contao/pull/8263
 [#8265]: https://github.com/contao/contao/pull/8265
 [#8267]: https://github.com/contao/contao/pull/8267
+[#8269]: https://github.com/contao/contao/pull/8269
 [#8270]: https://github.com/contao/contao/pull/8270
+[#8274]: https://github.com/contao/contao/pull/8274
 [#8275]: https://github.com/contao/contao/pull/8275
+[#8286]: https://github.com/contao/contao/pull/8286
+[#8304]: https://github.com/contao/contao/pull/8304
+[#8307]: https://github.com/contao/contao/pull/8307
+[#8309]: https://github.com/contao/contao/pull/8309
+[#8319]: https://github.com/contao/contao/pull/8319
+[#8322]: https://github.com/contao/contao/pull/8322
+[#8324]: https://github.com/contao/contao/pull/8324
+[#8327]: https://github.com/contao/contao/pull/8327
+[#8328]: https://github.com/contao/contao/pull/8328
+[#8330]: https://github.com/contao/contao/pull/8330
+[#8334]: https://github.com/contao/contao/pull/8334
+[#8336]: https://github.com/contao/contao/pull/8336
+[#8341]: https://github.com/contao/contao/pull/8341
+[#8342]: https://github.com/contao/contao/pull/8342
+[#8344]: https://github.com/contao/contao/pull/8344
