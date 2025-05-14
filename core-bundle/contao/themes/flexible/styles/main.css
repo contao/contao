@@ -1868,7 +1868,7 @@ table.tl_listing {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	line-height: 18px;
+	line-height: normal;
 }
 
 .tl_listing .tl_left.tl_left_dragging {
