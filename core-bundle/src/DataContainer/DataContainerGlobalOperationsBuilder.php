@@ -30,6 +30,14 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
 {
     private string $table;
 
+    /**
+     * @var list<array{html: string}|array{
+     *     href: string,
+     *     label: string,
+     *     title?: string,
+     *     attributes: HtmlAttributes
+     * }>
+     */
     private array|null $operations = null;
 
     public function __construct(
@@ -66,7 +74,8 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
     /**
      * @param array{html: string}|array{
      *     href: string,
-     *     title: string,
+     *     label: string,
+     *     title?: string,
      *     attributes?: HtmlAttributes,
      * } $operation
      */
@@ -137,8 +146,8 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
 
         $this->append([
             'href' => $href,
-            'label' => $labelNew[0] ?? '',
-            'title' => $labelNew[1] ?? '',
+            'label' => $labelNew[0] ?? 'new',
+            'title' => $labelNew[1] ?? null,
             'attributes' => (new HtmlAttributes())->addClass('header_new')->set('accesskey', 'n')->set('data-action', 'contao--scroll-offset#store'),
         ]);
 

@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\DataContainer;
 
 use Contao\Backend;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
@@ -30,6 +31,17 @@ class DataContainerOperationsBuilder implements \Stringable
 {
     private int|string|null $id = null;
 
+    /**
+     * @var list<array{html: string, primary?: bool}|array{
+     *     href: string,
+     *     popup?: bool,
+     *     title: string,
+     *     label: string,
+     *     attributes: HtmlAttributes,
+     *     icon: string,
+     *     primary?: bool
+     * }>
+     */
     private array|null $operations = null;
 
     public function __construct(
@@ -122,6 +134,17 @@ class DataContainerOperationsBuilder implements \Stringable
         return $builder;
     }
 
+    /**
+     * @param array{html: string, primary?: bool}|array{
+     *     href: string,
+     *     popup?: bool,
+     *     title: string,
+     *     label: string,
+     *     attributes: HtmlAttributes,
+     *     icon: string,
+     *     primary?: bool
+     * } $operation
+     */
     public function prepend(array $operation, bool $parseHtml = false): self
     {
         if (null === $this->operations) {
@@ -137,6 +160,17 @@ class DataContainerOperationsBuilder implements \Stringable
         return $this;
     }
 
+    /**
+     * @param array{html: string, primary?: bool}|array{
+     *     href: string,
+     *     popup?: bool,
+     *     title: string,
+     *     label: string,
+     *     attributes: HtmlAttributes,
+     *     icon: string,
+     *     primary?: bool|null
+     * } $operation
+     */
     public function append(array $operation, bool $parseHtml = false): self
     {
         if (null === $this->operations) {
