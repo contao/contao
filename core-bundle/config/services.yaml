@@ -235,6 +235,7 @@ services:
         class: Contao\CoreBundle\DataContainer\PaletteBuilder
         public: true
         arguments:
+            - '@contao.framework'
             - '@request_stack'
             - '@security.helper'
             - '@database_connection'

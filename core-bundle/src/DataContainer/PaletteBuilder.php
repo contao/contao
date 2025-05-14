@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DataContainer;
 
 use Contao\CoreBundle\Exception\AccessDeniedException;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\Input;
@@ -29,6 +30,7 @@ use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBag;
 class PaletteBuilder
 {
     public function __construct(
+        private readonly ContaoFramework $framework,
         private readonly RequestStack $requestStack,
         private readonly Security $security,
         private readonly Connection $connection,
@@ -55,15 +57,17 @@ class PaletteBuilder
 
             // Get selector values from DB
             if (null !== $currentRow) {
+                $inputAdapter = $this->framework->getAdapter(Input::class);
+
                 foreach ($GLOBALS['TL_DCA'][$table]['palettes']['__selector__'] as $name) {
                     $trigger = $currentRow[$name] ?? null;
 
                     // Overwrite the trigger
-                    if (Input::post('FORM_SUBMIT') === $table) {
-                        $key = 'editAll' === Input::get('act') ? $name.'_'.$id : $name;
+                    if ($inputAdapter->post('FORM_SUBMIT') === $table) {
+                        $key = 'editAll' === $inputAdapter->get('act') ? $name.'_'.$id : $name;
 
-                        if (null !== Input::post($key)) {
-                            $trigger = Input::post($key);
+                        if (null !== $inputAdapter->post($key)) {
+                            $trigger = $inputAdapter->post($key);
                         }
                     }
 
@@ -93,7 +97,7 @@ class PaletteBuilder
             }
 
             // Build possible palette names from the selector values
-            if (empty($sValues)) {
+            if ([] === $sValues) {
                 $names = ['default'];
             } elseif (\count($sValues) > 1) {
                 foreach ($sValues as $k => $v) {
@@ -124,9 +128,11 @@ class PaletteBuilder
 
         // Call onpalette_callback
         if (\is_array($GLOBALS['TL_DCA'][$table]['config']['onpalette_callback'] ?? null)) {
+            $systemAdapter = $this->framework->getAdapter(System::class);
+
             foreach ($GLOBALS['TL_DCA'][$table]['config']['onpalette_callback'] as $callback) {
                 if (\is_array($callback)) {
-                    $palette = System::importStatic($callback[0])->{$callback[1]}($palette, $dc);
+                    $palette = $systemAdapter->importStatic($callback[0])->{$callback[1]}($palette, $dc);
                 } elseif (\is_callable($callback)) {
                     $palette = $callback($palette, $dc);
                 }
