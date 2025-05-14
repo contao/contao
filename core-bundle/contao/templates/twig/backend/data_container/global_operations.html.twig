@@ -5,13 +5,11 @@
             {% if operation.html is defined %}
                 {{ operation.html|raw }}
             {% elseif operation.href|default %}
-                <a
-                    href="{{ operation.href }}"
-                    {% if operation.title|default %}title="{{ operation.title }}"{% endif %}
-                    {{ operation.attributes|default|raw }}
-                >
-                    {{ operation.label|default }}
-                </a>
+                {% set operation_attributes = attrs(operation.attributes|default)
+                    .set('href', operation.href)
+                    .setIfExists('title', operation.title|default)
+                %}
+                <a{{ operation_attributes|raw }}>{{ operation.label|default }}</a>
             {% endif %}
 
         {% endfor %}
