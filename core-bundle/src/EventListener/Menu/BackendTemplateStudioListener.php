@@ -61,7 +61,8 @@ class BackendTemplateStudioListener
 
         $templateStudioNode = $event->getFactory()
             ->createItem('template-studio')
-            ->setLabel($this->translator->trans('MOD.template_studio.0', [], 'contao_modules'))
+            ->setLabel('MOD.template_studio.0')
+            ->setExtra('translation_domain', 'contao_modules')
             ->setUri($this->router->generate('contao_template_studio'))
             ->setLinkAttribute('class', 'navigation template-studio')
             ->setLinkAttribute('title', $this->translator->trans('MOD.template_studio.1', [], 'contao_modules'))
