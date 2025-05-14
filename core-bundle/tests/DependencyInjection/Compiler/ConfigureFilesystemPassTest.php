@@ -231,6 +231,8 @@ class ConfigureFilesystemPassTest extends TestCase
             Process::fromShellCommandline($command, $cwd)->mustRun(null, ['link' => $link, 'target' => $target]);
         } else {
             chdir($cwd);
+
+            /** @phpstan-ignore filesystemcall.unsafe */
             symlink($target, $link);
         }
     }
