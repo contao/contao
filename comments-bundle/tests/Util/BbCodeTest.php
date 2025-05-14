@@ -10,6 +10,8 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
+namespace Contao\CommentsBundle\Tests\Util;
+
 use Contao\CommentsBundle\Util\BbCode;
 use PHPUnit\Framework\TestCase;
 
