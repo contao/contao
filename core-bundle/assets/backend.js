@@ -86,3 +86,15 @@ document.documentElement.addEventListener('turbo:before-cache', (e) => {
     // Remove the Symfony toolbar
     e.target.querySelector('.sf-toolbar')?.remove();
 });
+
+// Prevent duplicate "act=create" calls due to data-turbo-track="reload" in the
+// subsequent HTML response (see #8182).
+// TODO: Remove again once hotwired/turbo#1391 is fixed.
+document.documentElement.addEventListener('turbo:before-visit', (e) => {
+    const params = new URL(e.detail.url).searchParams;
+
+    if ('create' === params.get('act')) {
+        e.preventDefault();
+        window.location = e.detail.url;
+    }
+});

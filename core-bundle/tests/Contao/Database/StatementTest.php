@@ -181,7 +181,7 @@ class StatementTest extends TestCase
 
         yield [
             'UPDATE tl_content %s WHERE id = ?',
-            "UPDATE tl_content SET boolCol=1, intCol=123456, floatCol=123.456, stringCol='foo''bar', nullCol=NULL WHERE id = 123",
+            "UPDATE tl_content SET boolCol = 1, intCol = 123456, floatCol = 123.456, stringCol = 'foo''bar', nullCol = NULL WHERE id = 123",
             [123],
             [
                 'boolCol' => true,
