@@ -90,10 +90,11 @@ class FaqSearchListener
 
         try {
             $faqUrl = $this->urlGenerator->generate($faq, [], UrlGeneratorInterface::ABSOLUTE_URL);
-            $search = $this->framework->getAdapter(Search::class);
-            $search->removeEntry($faqUrl);
         } catch (ExceptionInterface) {
-            // noop
+            return;
         }
+
+        $search = $this->framework->getAdapter(Search::class);
+        $search->removeEntry($faqUrl);
     }
 }

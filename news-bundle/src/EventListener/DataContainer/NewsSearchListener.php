@@ -90,10 +90,11 @@ class NewsSearchListener
 
         try {
             $newsUrl = $this->urlGenerator->generate($news, [], UrlGeneratorInterface::ABSOLUTE_URL);
-            $search = $this->framework->getAdapter(Search::class);
-            $search->removeEntry($newsUrl);
         } catch (ExceptionInterface) {
-            // noop
+            return;
         }
+
+        $search = $this->framework->getAdapter(Search::class);
+        $search->removeEntry($newsUrl);
     }
 }

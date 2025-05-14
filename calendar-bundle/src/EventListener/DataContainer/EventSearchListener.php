@@ -90,10 +90,11 @@ class EventSearchListener
 
         try {
             $eventUrl = $this->urlGenerator->generate($event, [], UrlGeneratorInterface::ABSOLUTE_URL);
-            $search = $this->framework->getAdapter(Search::class);
-            $search->removeEntry($eventUrl);
         } catch (ExceptionInterface) {
-            // noop
+            return;
         }
+
+        $search = $this->framework->getAdapter(Search::class);
+        $search->removeEntry($eventUrl);
     }
 }
