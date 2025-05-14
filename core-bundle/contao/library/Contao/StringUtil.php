@@ -200,11 +200,11 @@ class StringUtil
 	/**
 	 * Decode all entities
 	 *
-	 * @param string|array   $strString     The string to decode
+	 * @param mixed   $strString     The string to decode
 	 * @param integer $strQuoteStyle The quote style (defaults to ENT_QUOTES)
 	 * @param string  $strCharset    An optional charset
 	 *
-	 * @return string|array The decoded string
+	 * @return string The decoded string
 	 */
 	public static function decodeEntities($strString, $strQuoteStyle=ENT_QUOTES)
 	{

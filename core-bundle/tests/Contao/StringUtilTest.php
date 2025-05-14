@@ -233,8 +233,8 @@ class StringUtilTest extends TestCase
 
     public function testDecodesEntities(): void
     {
-        $this->assertSame('10 €', StringUtil::decodeEntities('10&nbsp;€'));
-        $this->assertSame(['sum' => '10 €'], StringUtil::decodeEntities(['sum' => '10&nbsp;€']));
+        $this->assertSame("10\u{a0}€", StringUtil::decodeEntities('10&nbsp;€'));
+        $this->assertSame(['sum' => "10\u{a0}€"], StringUtil::decodeEntities(['sum' => '10&nbsp;€']));
     }
 
     public function testHandlesFalseyValuesWhenDecodingEntities(): void
