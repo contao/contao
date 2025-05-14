@@ -2299,6 +2299,14 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				throw new \Exception($GLOBALS['TL_LANG']['ERR']['invalidName']);
 			}
 
+			// Disallow renaming folders and files to a name starting with a dot, as they
+			// will be treated as hidden files in Unix and the file manager will not display
+			// them in any case.
+			if (str_starts_with($varValue, '.'))
+			{
+				throw new \Exception($GLOBALS['TL_LANG']['ERR']['invalidName']);
+			}
+
 			// The target exists
 			if (strcasecmp($this->strPath . '/' . $this->varValue . $this->strExtension, $this->strPath . '/' . $varValue . $this->strExtension) !== 0 && file_exists($this->strRootDir . '/' . $this->strPath . '/' . $varValue . $this->strExtension))
 			{
