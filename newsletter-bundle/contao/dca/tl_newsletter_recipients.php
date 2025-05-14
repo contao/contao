@@ -99,7 +99,7 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 				array('tl_newsletter_recipients', 'checkUniqueRecipient'),
 				array('tl_newsletter_recipients', 'checkDenyList')
 			),
-			'sql'                     => ['type'=>'string', 'length'=>255, 'notnull'=>false],
+			'sql'                     => array('type'=>'string', 'length'=>255, 'notnull'=>false),
 		),
 		'active' => array
 		(
