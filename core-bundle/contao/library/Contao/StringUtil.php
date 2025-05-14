@@ -215,6 +215,9 @@ class StringUtil
 				$value = preg_replace('/(&#x*)([0-9a-f]+);/i', '$1$2;', $value);
 				$value = html_entity_decode($value, $strQuoteStyle | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
 			}
+
+			// Cast the value to string (backwards compatibility)
+			$value = (string) $value;
 		};
 
 		if (\is_array($strString))
