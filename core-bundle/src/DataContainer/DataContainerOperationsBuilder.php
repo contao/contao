@@ -39,7 +39,7 @@ class DataContainerOperationsBuilder implements \Stringable
      *     label: string,
      *     attributes: HtmlAttributes,
      *     icon: string,
-     *     primary?: bool
+     *     primary?: bool|null
      * }>
      */
     private array|null $operations = null;
@@ -142,7 +142,7 @@ class DataContainerOperationsBuilder implements \Stringable
      *     label: string,
      *     attributes: HtmlAttributes,
      *     icon: string,
-     *     primary?: bool
+     *     primary?: bool|null
      * } $operation
      */
     public function prepend(array $operation, bool $parseHtml = false): self
