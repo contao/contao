@@ -5903,9 +5903,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$this->setPanelState($active);
 
 			// Begin select menu
+			$placeholder = (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null));
+
 			$fields .= '
-<select name="' . $field . '" id="' . $field . '" class="tl_select' . ($active ? ' active' : '') . '" data-placeholder="' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) . '" data-controller="contao--select">
-  <option value="tl_' . $field . '">---</option>';
+<select name="' . $field . '" id="' . $field . '" class="tl_select' . ($active ? ' active' : '') . '" data-placeholder="' . $placeholder . '" data-controller="contao--select">
+  <option value="tl_' . $field . '"' . ($placeholder ? ' data-placeholder="true"' : '') . '>---</option>';
 
 			if ($objFields->numRows)
 			{
