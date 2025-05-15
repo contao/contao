@@ -10,6 +10,8 @@ export default class SelectController extends Controller {
     }
 
     connect() {
+        this._prepare();
+
         this.slimselect = new SlimSelect({
             select: this.element,
             ...this.optionsValue
@@ -18,5 +20,25 @@ export default class SelectController extends Controller {
 
     disconnect() {
         this.slimselect.destroy();
+    }
+
+    _prepare() {
+        const select = this.element;
+        const placeholder = select.dataset.placeholder;
+
+        let settings = {
+            showSearch: select.options.length > 6,
+        };
+
+        if (placeholder) {
+            // Omit the `---` to show the placeholder
+            if (select.options[0]?.innerText === '---') {
+                select.options[0].innerText = '';
+            }
+
+            settings.placeholderText = placeholder;
+        }
+
+        this.optionsValue = Object.assign({ settings: settings }, this.optionsValue);
     }
 }
