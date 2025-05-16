@@ -37,6 +37,8 @@ class DebugDcaCommand extends Command
     protected function configure(): void
     {
         $this->addArgument('table', InputArgument::REQUIRED, 'The table name');
+        $this->addArgument('path', InputArgument::IS_ARRAY, 'The path of the DCA configuration to dump');
+        $this->addUsage('tl_member fields username');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -55,8 +57,21 @@ class DebugDcaCommand extends Command
         $cloner = new VarCloner();
         $dumper = new CliDumper();
 
-        $dumper->dump($cloner->cloneVar($GLOBALS['TL_DCA'][$table]));
+        $dumper->dump($cloner->cloneVar($this->getArray($input->getArgument('path') ?? [], $table)));
 
         return Command::SUCCESS;
     }
+
+    private function getArray(array $path, string $table): mixed
+    {
+        $current = $GLOBALS['TL_DCA'][$table];
+        foreach ($path as $key) {
+            if (!is_array($current) || !array_key_exists($key, $current)) {
+                throw new InvalidArgumentException('Invalid path: '.$key);
+            }
+            $current = $current[$key];
+        }
+        return $current;
+    }
+
 }
