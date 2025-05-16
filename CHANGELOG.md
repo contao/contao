@@ -9,7 +9,6 @@ This project adheres to [Semantic Versioning].
 - [#8350] Add the missing "Template Studio" translation ([de-es])
 - [#8298] Make Turbo use the correct URL after a redirect ([m-vo])
 - [#8297] Use the app cache instead of the system cache for the Template Studio ([m-vo])
-- [#8261] Fix the Choices.js quirks by isolating it in a shadow root ([m-vo])
 - [#8347] Return the correct object instance in the `DataContainerOperationsBuilder` ([aschempp])
 - [#8345] Fix the contrast of the new icons ([leofeyer])
 - [#8323] Allow absolute URLs in DCA backlinks ([aschempp])
