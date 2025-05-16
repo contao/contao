@@ -21,9 +21,9 @@ class IndexerException extends \RuntimeException
         return $this->isOnlyWarning;
     }
 
-    public static function createAsWarning(string $message): self
+    public static function createAsWarning(string $message, int $code = 0, \Throwable|null $previous = null): self
     {
-        $exception = new self($message);
+        $exception = new self($message, $code, $previous);
         $exception->isOnlyWarning = true;
 
         return $exception;

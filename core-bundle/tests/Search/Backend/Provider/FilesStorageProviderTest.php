@@ -108,7 +108,7 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
             'files',
         );
 
-        $since = new \DateTimeImmutable('1970-01-01 01:00:00');
+        $since = new \DateTimeImmutable('1970-01-01 01:00:00+00:00');
         $documents = iterator_to_array($provider->updateIndex((new ReindexConfig())->limitToDocumentsNewerThan($since)));
 
         $this->assertCount(1, $documents);
