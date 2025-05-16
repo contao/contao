@@ -66,7 +66,7 @@ class DebugDcaCommand extends Command
     {
         $current = $GLOBALS['TL_DCA'][$table];
         foreach ($path as $key) {
-            if (!is_array($current) || !array_key_exists($key, $current)) {
+            if (!\is_array($current) || !\array_key_exists($key, $current)) {
                 throw new InvalidArgumentException('Invalid path: '.$key);
             }
             $current = $current[$key];
