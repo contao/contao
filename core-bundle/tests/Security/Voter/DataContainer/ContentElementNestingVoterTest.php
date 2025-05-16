@@ -69,7 +69,7 @@ class ContentElementNestingVoterTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('fetchOne')
-            ->with('SELECT type FROM tl_content WHERE id=?', [42])
+            ->with('SELECT type FROM tl_content WHERE id = ?', [42])
             ->willReturn($databaseResult)
         ;
 

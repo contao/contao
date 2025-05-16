@@ -26,7 +26,7 @@ class PageSearchListenerTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchFirstColumn')
-            ->with('SELECT url FROM tl_search WHERE pid=:pageId', ['pageId' => 17])
+            ->with('SELECT url FROM tl_search WHERE pid = :pageId', ['pageId' => 17])
             ->willReturn(['uri'])
         ;
 
@@ -85,7 +85,7 @@ class PageSearchListenerTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchFirstColumn')
-            ->with('SELECT url FROM tl_search WHERE pid=:pageId', ['pageId' => 17])
+            ->with('SELECT url FROM tl_search WHERE pid = :pageId', ['pageId' => 17])
             ->willReturn(['uri'])
         ;
 
@@ -172,7 +172,7 @@ class PageSearchListenerTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchFirstColumn')
-            ->with('SELECT url FROM tl_search WHERE pid=:pageId', ['pageId' => 17])
+            ->with('SELECT url FROM tl_search WHERE pid = :pageId', ['pageId' => 17])
             ->willReturn(['uri'])
         ;
 
@@ -259,7 +259,7 @@ class PageSearchListenerTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchFirstColumn')
-            ->with('SELECT url FROM tl_search WHERE pid=:pageId', ['pageId' => 17])
+            ->with('SELECT url FROM tl_search WHERE pid = :pageId', ['pageId' => 17])
             ->willReturn(['uri'])
         ;
 
