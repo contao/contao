@@ -17,7 +17,7 @@ class Palette implements \Stringable
     final public const POSITION_APPEND = 'append';
 
     /**
-     * @param array<string, array{fields: array<string>, hide: bool}> $palette
+     * @param array<string|int, array{fields: array<string>, hide: bool}> $palette
      */
     private array $config;
 
@@ -243,7 +243,7 @@ class Palette implements \Stringable
     /**
      * Converts a palette string to a configuration array.
      *
-     * @return array<string, array{fields: array<string>, hide: bool}>
+     * @return array<string|int, array{fields: array<string>, hide: bool}>
      */
     private function explode(string $palette): array
     {
