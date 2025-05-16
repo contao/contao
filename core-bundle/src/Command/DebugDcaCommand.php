@@ -71,7 +71,7 @@ class DebugDcaCommand extends Command
             }
             $current = $current[$key];
         }
+
         return $current;
     }
-
 }
