@@ -41,7 +41,10 @@
         <source>Set up the pages of your website(s)</source>
         <target>Configura le pagine dei tuoi siti web</target>
       </trans-unit>
-      <trans-unit id="MOD.template_studio">
+      <trans-unit id="MOD.template_studio.0">
+        <source>Template Studio</source>
+      </trans-unit>
+      <trans-unit id="MOD.template_studio.1">
         <source>Add or edit Twig templates</source>
       </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
