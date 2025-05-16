@@ -25,6 +25,8 @@ class Document
 
     private array|null $jsonLds = null;
 
+    private string|null $searchableContent = null;
+
     /**
      * The key is the header name in lowercase letters and the value is again an array
      * of header values.
@@ -167,6 +169,53 @@ class Document
             $response->headers->all(),
             (string) $response->getContent(),
         );
+    }
+
+    public function getSearchableContent(): string
+    {
+        if (null !== $this->searchableContent) {
+            return $this->searchableContent;
+        }
+
+        // We're only interested in <body>
+        $body = $this->getContentCrawler()->filterXPath('//body');
+
+        // No <body> found, abort
+        if (0 === $body->count()) {
+            return '';
+        }
+
+        // Remove <script> and <style> tags
+        $body->filterXPath('//script | //style')->each(static fn (Crawler $node) => $node->getNode(0)->parentNode->removeChild($node->getNode(0)));
+
+        // Extract the HTML and filter it for indexer start and stop comments
+        $html = $body->html();
+
+        // Strip non-indexable areas
+        while (($start = strpos($html, '<!-- indexer::stop -->')) !== false) {
+            if (($end = strpos($html, '<!-- indexer::continue -->', $start)) !== false) {
+                $current = $start;
+
+                // Handle nested tags
+                while (($nested = strpos($html, '<!-- indexer::stop -->', $current + 22)) !== false && $nested < $end) {
+                    if (($newEnd = strpos($html, '<!-- indexer::continue -->', $end + 26)) !== false) {
+                        $end = $newEnd;
+                        $current = $nested;
+                    } else {
+                        break;
+                    }
+                }
+
+                $html = substr($html, 0, $start).substr($html, $end + 26);
+            } else {
+                break;
+            }
+        }
+
+        $html = strip_tags($html);
+
+        // Strip extra empty space
+        return $this->searchableContent = trim(preg_replace(['/^[ \t]*$/m', '/\s+/'], ['', ' '], $html));
     }
 
     private function filterJsonLd(array $jsonLds, string $context = '', string $type = ''): array
