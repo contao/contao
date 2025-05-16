@@ -65,6 +65,7 @@ class DebugDcaCommand extends Command
     private function getArray(array $path, string $table): mixed
     {
         $current = $GLOBALS['TL_DCA'][$table];
+
         foreach ($path as $key) {
             if (!\is_array($current) || !\array_key_exists($key, $current)) {
                 throw new InvalidArgumentException('Invalid path: '.$key);
