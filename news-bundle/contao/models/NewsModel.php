@@ -128,7 +128,6 @@ use Contao\Model\MetadataTrait;
  * @method static Collection<NewsModel>|null findByUrl($val, array $opt=array())
  * @method static Collection<NewsModel>|null findByTarget($val, array $opt=array())
  * @method static Collection<NewsModel>|null findByCssClass($val, array $opt=array())
- * @method static Collection<NewsModel>|null findBySearchIndexer($val, array $opt=array())
  * @method static Collection<NewsModel>|null findByNoComments($val, array $opt=array())
  * @method static Collection<NewsModel>|null findByFeatured($val, array $opt=array())
  * @method static Collection<NewsModel>|null findByPublished($val, array $opt=array())

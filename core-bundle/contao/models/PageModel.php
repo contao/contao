@@ -236,7 +236,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection<PageModel>|null findByCuser($val, array $opt=array())
  * @method static Collection<PageModel>|null findByCgroup($val, array $opt=array())
  * @method static Collection<PageModel>|null findByChmod($val, array $opt=array())
- * @method static Collection<PageModel>|null findBySearchIndexer($val, array $opt=array())
  * @method static Collection<PageModel>|null findByCssClass($val, array $opt=array())
  * @method static Collection<PageModel>|null findBySitemap($val, array $opt=array())
  * @method static Collection<PageModel>|null findByHide($val, array $opt=array())

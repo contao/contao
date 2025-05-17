@@ -152,7 +152,6 @@ use Contao\Model\MetadataTrait;
  * @method static Collection<CalendarEventsModel>|null findByUrl($val, array $opt=array())
  * @method static Collection<CalendarEventsModel>|null findByTarget($val, array $opt=array())
  * @method static Collection<CalendarEventsModel>|null findByCssClass($val, array $opt=array())
- * @method static Collection<CalendarEventsModel>|null findBySearchIndexer($val, array $opt=array())
  * @method static Collection<CalendarEventsModel>|null findByNoComments($val, array $opt=array())
  * @method static Collection<CalendarEventsModel>|null findByFeatured($val, array $opt=array())
  * @method static Collection<CalendarEventsModel>|null findByPublished($val, array $opt=array())
