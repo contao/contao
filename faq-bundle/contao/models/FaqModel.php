@@ -95,6 +95,7 @@ use Contao\Model\MetadataTrait;
  * @method static Collection<FaqModel>|null findByFloating($val, $opt=array())
  * @method static Collection<FaqModel>|null findByAddEnclosure($val, $opt=array())
  * @method static Collection<FaqModel>|null findByEnclosure($val, $opt=array())
+ * @method static Collection<FaqModel>|null findBySearchIndexer($val, $opt=array())
  * @method static Collection<FaqModel>|null findByNoComments($val, $opt=array())
  * @method static Collection<FaqModel>|null findByPublished($val, $opt=array())
  * @method static Collection<FaqModel>|null findMultipleByIds($val, array $opt=array())
