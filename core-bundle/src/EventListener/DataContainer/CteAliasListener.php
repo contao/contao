@@ -87,7 +87,7 @@ class CteAliasListener implements ResetInterface
     private function getAliasReferences(): array
     {
         if (null === $this->cteAliasCache) {
-            $this->cteAliasCache = $this->db->fetchAllKeyValue("SELECT cteAlias, TRUE FROM tl_content WHERE type='alias' GROUP BY cteAlias");
+            $this->cteAliasCache = $this->db->fetchAllKeyValue("SELECT cteAlias, TRUE FROM tl_content WHERE type = 'alias' GROUP BY cteAlias");
         }
 
         return $this->cteAliasCache;

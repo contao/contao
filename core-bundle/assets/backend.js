@@ -86,3 +86,20 @@ document.documentElement.addEventListener('turbo:before-cache', (e) => {
     // Remove the Symfony toolbar
     e.target.querySelector('.sf-toolbar')?.remove();
 });
+
+// If the previously fetched resource got redirected and a full page reload
+// occurs, Turbo currently uses the wrong URL (the originally fetched one, not
+// the effective URL after the redirect).
+// TODO: Remove again once hotwired/turbo#1391 is fixed.
+let targetURLAfterRedirectedFetch = null;
+
+document.documentElement.addEventListener('turbo:reload', (event) => {
+    if (event.detail.reason !== 'request_failed' && targetURLAfterRedirectedFetch) {
+        Turbo.session.adapter.location = new URL(targetURLAfterRedirectedFetch);
+    }
+});
+
+document.documentElement.addEventListener('turbo:before-fetch-response', (event) => {
+    const response = event.detail.fetchResponse;
+    targetURLAfterRedirectedFetch = response.redirected ? response.response.url : null;
+});

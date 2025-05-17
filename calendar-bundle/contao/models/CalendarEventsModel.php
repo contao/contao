@@ -255,7 +255,7 @@ class CalendarEventsModel extends Model
 	 * @param integer $intEnd     The end date as Unix timestamp
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Collection<CalendarEventsModel>|CalendarEventsModel[]|null A collection of models or null if there are no events
+	 * @return Collection<CalendarEventsModel>|null A collection of models or null if there are no events
 	 */
 	public static function findCurrentByPid($intPid, $intStart, $intEnd, array $arrOptions=array())
 	{
@@ -297,7 +297,7 @@ class CalendarEventsModel extends Model
 	 * @param integer $intPid     The calendar ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Collection<CalendarEventsModel>|CalendarEventsModel[]|null A collection of models or null if there are no events
+	 * @return Collection<CalendarEventsModel>|null A collection of models or null if there are no events
 	 */
 	public static function findPublishedDefaultByPid($intPid, array $arrOptions=array())
 	{
@@ -325,7 +325,7 @@ class CalendarEventsModel extends Model
 	 * @param integer $intLimit   An optional limit
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Collection<CalendarEventsModel>|CalendarEventsModel[]|null A collection of models or null if there are no events
+	 * @return Collection<CalendarEventsModel>|null A collection of models or null if there are no events
 	 */
 	public static function findUpcomingByPids($arrIds, $intLimit=0, array $arrOptions=array())
 	{

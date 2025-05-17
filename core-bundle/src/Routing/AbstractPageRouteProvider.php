@@ -125,7 +125,7 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
         $langA = null;
         $langB = null;
 
-        if (null !== $languages && $pageA->rootLanguage !== $pageB->rootLanguage) {
+        if (null !== $languages && ($pageA->rootLanguage !== $pageB->rootLanguage || $pageA->domain !== $pageB->domain)) {
             $fallbackA = LocaleUtil::getFallbacks($pageA->rootLanguage);
             $fallbackB = LocaleUtil::getFallbacks($pageB->rootLanguage);
             $langA = $this->getLocalePriority($fallbackA, $fallbackB, $languages);
@@ -148,22 +148,14 @@ abstract class AbstractPageRouteProvider implements RouteProviderInterface
             if ($pageB->rootIsFallback && !$pageA->rootIsFallback) {
                 return 1;
             }
-        } else {
-            if (null === $langA && null !== $langB) {
-                return 1;
-            }
-
-            if (null !== $langA && null === $langB) {
-                return -1;
-            }
-
-            if ($langA < $langB) {
-                return -1;
-            }
-
-            if ($langA > $langB) {
-                return 1;
-            }
+        } elseif (null === $langA && null !== $langB) {
+            return 1;
+        } elseif (null !== $langA && null === $langB) {
+            return -1;
+        } elseif ($langA < $langB) {
+            return -1;
+        } elseif ($langA > $langB) {
+            return 1;
         }
 
         if ('root' !== $pageA->type && 'root' === $pageB->type) {

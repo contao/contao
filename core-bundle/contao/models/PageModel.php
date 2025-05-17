@@ -373,7 +373,7 @@ class PageModel extends Model
 	 * @param integer $intPid     The parent ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Collection<PageModel>|PageModel[]|null A collection of models or null if there are no pages
+	 * @return Collection<PageModel>|null A collection of models or null if there are no pages
 	 */
 	public static function findPublishedByPid($intPid, array $arrOptions=array())
 	{
@@ -574,7 +574,7 @@ class PageModel extends Model
 	 * @param array $arrAliases An array of possible alias names
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection<PageModel>|PageModel[]|null A collection of models or null if there are no pages
+	 * @return Collection<PageModel>|null A collection of models or null if there are no pages
 	 */
 	public static function findByAliases($arrAliases, array $arrOptions=array())
 	{
@@ -613,7 +613,7 @@ class PageModel extends Model
 	/**
 	 * Find pages that have a similar alias
 	 *
-	 * @return Collection<PageModel>|PageModel[]|null A collection of models or null if there are no pages
+	 * @return Collection<PageModel>|null A collection of models or null if there are no pages
 	 */
 	public static function findSimilarByAlias(self $pageModel)
 	{
@@ -627,7 +627,7 @@ class PageModel extends Model
 		$t = static::$strTable;
 		$alias = '%' . self::stripPrefixesAndSuffixes($pageModel->alias, $pageModel->urlPrefix, $pageModel->urlSuffix) . '%';
 
-		return static::findBy(array("$t.alias LIKE ?", "$t.id!=?"), array($alias, $pageModel->id));
+		return static::findBy(array("$t.alias LIKE ?", "$t.id != ?"), array($alias, $pageModel->id));
 	}
 
 	/**
@@ -636,7 +636,7 @@ class PageModel extends Model
 	 * @param mixed $varId      The numeric ID or the alias name
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection<PageModel>|PageModel[]|null A collection of models or null if there are no pages
+	 * @return Collection<PageModel>|null A collection of models or null if there are no pages
 	 */
 	public static function findPublishedByIdOrAlias($varId, array $arrOptions=array())
 	{
@@ -658,7 +658,7 @@ class PageModel extends Model
 	 * @param array $arrIds     An array of page IDs
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection<PageModel>|PageModel[]|null A collection of models or null if there are no pages
+	 * @return Collection<PageModel>|null A collection of models or null if there are no pages
 	 */
 	public static function findPublishedRegularByIds($arrIds, array $arrOptions=array())
 	{
@@ -696,7 +696,7 @@ class PageModel extends Model
 	 * @param integer $intPid     The parent page's ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Collection<PageModel>|PageModel[]|null A collection of models or null if there are no pages
+	 * @return Collection<PageModel>|null A collection of models or null if there are no pages
 	 */
 	public static function findPublishedRegularByPid($intPid, array $arrOptions=array())
 	{
@@ -766,7 +766,7 @@ class PageModel extends Model
 	 *
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection<PageModel>|PageModel[]|null A collection of models or null if there are no parent pages
+	 * @return Collection<PageModel>|null A collection of models or null if there are no parent pages
 	 */
 	public static function findPublishedRootPages(array $arrOptions=array())
 	{
@@ -792,7 +792,7 @@ class PageModel extends Model
 	 *
 	 * @param integer $intId The page's ID
 	 *
-	 * @return Collection<PageModel>|PageModel[]|null A collection of models or null if there are no parent pages
+	 * @return Collection<PageModel>|null A collection of models or null if there are no parent pages
 	 */
 	public static function findParentsById($intId)
 	{
@@ -1298,7 +1298,7 @@ class PageModel extends Model
 		if (null === self::$prefixes || null === self::$suffixes)
 		{
 			$rows = Database::getInstance()
-				->execute("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
+				->execute("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type = 'root'")
 				->fetchAllAssoc()
 			;
 

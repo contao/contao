@@ -3707,7 +3707,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 		elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 		{
-			$buttons .= DataContainerOperationsBuilder::generateBackButton(System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+			$buttons .= DataContainerOperationsBuilder::generateBackButton((!str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '=') || str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '?') ? '' : System::getContainer()->get('router')->generate('contao_backend') . '?') . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
 		}
 
 		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $this->intCurrentPid, 'sorting' => 0))))
@@ -4120,7 +4120,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		// Calculate label and add a toggle button
 		$level = $intMargin / $intSpacing + 1;
-		$blnIsOpen = isset($session[$node][$id]) && $session[$node][$id] == 1;
+		$blnIsOpen = !empty($arrFound) || ($session[$node][$id] ?? null) == 1;
 
 		// Always show selected nodes
 		if (!$blnIsOpen && !empty($this->arrPickerValue) && (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE || $table !== $this->strTable))
@@ -4325,11 +4325,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 		}
 
-		// Begin a new submenu if the node is open or $arrFound is not empty (which means that there
-		// is an active filter and all matching nodes have to be loaded to avoid Ajax requests).
-		if (!$blnNoRecursion && !empty($children) && ($blnIsOpen || !empty($arrFound)))
+		// Begin a new submenu
+		if (!$blnNoRecursion && $blnIsOpen && !empty($children))
 		{
-			$return .= '<li class="parent" id="' . $node . '_' . $id . '"' . (!$blnIsOpen ? ' style="display:none"' : '') . ' data-contao--toggle-nodes-target="child' . ($level === 0 ? ' rootChild"' : '') . '"><ul class="level_' . $level . '">';
+			$return .= '<li class="parent" id="' . $node . '_' . $id . '" data-contao--toggle-nodes-target="child' . ($level === 0 ? ' rootChild"' : '') . '"><ul class="level_' . $level . '">';
 
 			static::preloadCurrentRecords($children, $table);
 
@@ -4382,7 +4381,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 			elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 			{
-				$buttons .= DataContainerOperationsBuilder::generateBackButton(System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+				$buttons .= DataContainerOperationsBuilder::generateBackButton((!str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '=') || str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '?') ? '' : System::getContainer()->get('router')->generate('contao_backend') . '?') . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
 			}
 		}
 
@@ -5035,7 +5034,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 		elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 		{
-			$buttons .= DataContainerOperationsBuilder::generateBackButton(System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+			$buttons .= DataContainerOperationsBuilder::generateBackButton((!str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '=') || str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '?') ? '' : System::getContainer()->get('router')->generate('contao_backend') . '?') . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
 		}
 
 		if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable)))

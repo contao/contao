@@ -78,7 +78,7 @@ class PageSearchListener
     private function purgeSearchIndex(int $pageId): void
     {
         $urls = $this->connection->fetchFirstColumn(
-            'SELECT url FROM tl_search WHERE pid=:pageId',
+            'SELECT url FROM tl_search WHERE pid = :pageId',
             ['pageId' => $pageId],
         );
 

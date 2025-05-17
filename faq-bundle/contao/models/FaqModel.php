@@ -172,7 +172,7 @@ class FaqModel extends Model
 	 * @param int   $intPid     The parent ID
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection<FaqModel>|FaqModel[]|null A collection of models or null if there are no FAQs
+	 * @return Collection<FaqModel>|null A collection of models or null if there are no FAQs
 	 */
 	public static function findPublishedByPid($intPid, array $arrOptions=array())
 	{
@@ -198,7 +198,7 @@ class FaqModel extends Model
 	 * @param array $arrPids    An array of FAQ category IDs
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection<FaqModel>|FaqModel[]|null A collection of models or null if there are no FAQs
+	 * @return Collection<FaqModel>|null A collection of models or null if there are no FAQs
 	 */
 	public static function findPublishedByPids($arrPids, array $arrOptions=array())
 	{
