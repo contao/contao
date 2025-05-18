@@ -187,12 +187,12 @@ class BackendTemplateStudioListenerTest extends ContaoTestCase
         $children = $event->getTree()->getChildren()['design']->getChildren();
 
         $this->assertArrayHasKey('template-studio', $children);
-        $this->assertSame('Template Studio', $children['template-studio']->getLabel());
+        $this->assertSame('MOD.template_studio.0', $children['template-studio']->getLabel());
 
         $this->assertSame(
             [
                 'class' => 'navigation template-studio',
-                'title' => 'MOD.template_studio',
+                'title' => 'MOD.template_studio.1',
             ],
             $children['template-studio']->getLinkAttributes(),
         );

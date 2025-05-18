@@ -115,6 +115,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.xml.1">
         <source>Recreates the XML files in the &lt;code&gt;share&lt;/code&gt; folder and then purges the shared cache, so there are no links to deleted resources.</source>
+        <target>فایل‌های XML موجود در پوشه‌ی &lt;code&gt;share&lt;/code&gt; را بازسازی کرده و سپس کش اشتراکی را پاک‌سازی می‌کند تا هیچ پیوندی به منابع حذف‌شده باقی نماند.</target>
       </trans-unit>
       <trans-unit id="tl_maintenance_jobs.symlinks.0">
         <source>Recreate the symlinks</source>
@@ -186,6 +187,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.backend_search.title">
         <source>Back end search</source>
+        <target>جستجوی بخش مدیریت</target>
       </trans-unit>
       <trans-unit id="tl_maintenance.backend_search.disabled">
         <source>To use the back end search, please enable the &lt;a href=&quot;%s&quot; target=&quot;_blank&quot;&gt;Contao cronjob framework&lt;/a&gt;.</source>
@@ -196,6 +198,7 @@
       </trans-unit>
       <trans-unit id="tl_maintenance.backend_search.confirmation">
         <source>Rebuilding is in progress. Unfortunately, there is currently no way of knowing when it is finished. Please check your search results regularly. A future version of Contao will give information about the progress.</source>
+        <target>بازسازی در حال انجام است. متاسفانه در حال حاضر راهی برای اطلاع از زمان پایان آن وجود ندارد. لطفا نتایج جستجوی خود را به‌طور منظم بررسی کنید. در نسخه‌های آتی Contao، اطلاعاتی درباره‌ی پیشرفت عملیات ارائه خواهد شد.</target>
       </trans-unit>
     </body>
   </file>

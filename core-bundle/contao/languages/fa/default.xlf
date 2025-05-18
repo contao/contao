@@ -375,6 +375,7 @@
       </trans-unit>
       <trans-unit id="ERR.altchaJavaScriptRequired">
         <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.</source>
+        <target>جاوااسکریپت در حال حاضر غیرفعال یا مسدود شده است. بدون جاوااسکریپت، تأیید ضد هرزنامه انجام نخواهد شد. لطفاً برای ارسال فرم، جاوااسکریپت را به‌صورت موقت فعال کنید.</target>
       </trans-unit>
       <trans-unit id="ERR.altchaVerificationFailed">
         <source>Anti-spam verification failed. Are you a human or a robot?</source>
@@ -2951,6 +2952,7 @@
       </trans-unit>
       <trans-unit id="MSC.passkeysDescription">
         <source>Passkeys allow you to log in securely and easily without the need for a password and two-factor token.</source>
+        <target>کلیدهای عبور ورود امن و راحت را بدون نیاز به گذرواژه و احراز هویت دومرحله‌ای ممکن می‌سازند.</target>
       </trans-unit>
       <trans-unit id="MSC.passkeyLogin">
         <source>Sign in with a passkey</source>
@@ -2961,6 +2963,7 @@
       </trans-unit>
       <trans-unit id="MSC.passkeyNameInput">
         <source>Name this passkey …</source>
+        <target>برای این کلیدعبور یک نام وارد کنید…</target>
       </trans-unit>
       <trans-unit id="MSC.passkeysCreatedAt">
         <source>Created at</source>
@@ -2978,21 +2981,26 @@
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
         <source>Loading results...</source>
+        <target>در حال بارگذاری نتایج...</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
+        <target>مشاهده‌ی %s</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitEdit">
         <source>Edit %s</source>
+        <target>ویرایش %s</target>
       </trans-unit>
       <trans-unit id="MSC.noResults">
         <source>No results found.</source>
+        <target>نتیجه‌ای یافت نشد.</target>
       </trans-unit>
       <trans-unit id="MSC.noOptions">
         <source>No options to choose from.</source>
       </trans-unit>
       <trans-unit id="MSC.removeItem">
         <source>Remove item</source>
+        <target>حذف آیتم</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
