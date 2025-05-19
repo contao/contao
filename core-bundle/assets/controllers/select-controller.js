@@ -3,10 +3,7 @@ import SlimSelect from 'slim-select';
 
 export default class SelectController extends Controller {
     static values = {
-        options: {
-            type: Object,
-            default: {}
-        }
+        options: Object
     }
 
     connect() {
@@ -27,16 +24,16 @@ export default class SelectController extends Controller {
         const placeholder = select.dataset.placeholder;
 
         let settings = {
+            searchPlaceholder: ' ',
             showSearch: select.options.length > 6,
+            searchText: Contao.lang.noResults,
+            searchingText: Contao.lang.loading,
         };
 
         if (placeholder) {
-            // Omit the `---` to show the placeholder
-            if (select.options[0]?.innerText === '---') {
-                select.options[0].innerText = '';
-            }
-
+            select.ariaLabel = placeholder;
             settings.placeholderText = placeholder;
+            settings.ariaLabel = placeholder;
         }
 
         this.optionsValue = Object.assign({ settings: settings }, this.optionsValue);
