@@ -46,25 +46,37 @@ class FaqSearchListener
         return $value;
     }
 
-    #[AsCallback(table: 'tl_faq', target: 'fields.robots.save')]
-    public function onSaveRobots(string $value, DataContainer $dc): string
+    #[AsCallback(table: 'tl_faq', target: 'fields.searchIndexer.save')]
+    public function onSaveSearchIndexer(string $value, DataContainer $dc): string
     {
-        if (($dc->getCurrentRecord()['robots'] ?? null) === $value || str_starts_with($value, 'index')) {
+        if (!$value || 'always_index' === $value || $value === ($dc->getCurrentRecord()['searchIndexer'] ?? null)) {
             return $value;
         }
 
-        if ('' === $value && str_starts_with($dc->getCurrentRecord()['robots'] ?? '', 'index')) {
-            // Get the robots tag of the reader page (linked in FAQ category)
-            $readerPageRobots = $this->connection->fetchOne(
+        $this->purgeSearchIndex((int) $dc->id);
+
+        return $value;
+    }
+
+    #[AsCallback(table: 'tl_faq', target: 'fields.robots.save')]
+    public function onSaveRobots(string $value, DataContainer $dc): string
+    {
+        if (($dc->getCurrentRecord()['robots'] ?? null) === $value || str_starts_with($value, 'index') || (str_starts_with($value, 'noindex') && str_starts_with($dc->getCurrentRecord()['searchIndexer'], 'always'))) {
+            return $value;
+        }
+
+        if ('' === $value) {
+            // Get robots and searchIndexer of the reader page (linked in FAQ category)
+            $readerPageRobots = $this->connection->fetchAssociative(
                 <<<'SQL'
-                    SELECT p.robots
+                    SELECT p.robots, p.searchIndexer
                     FROM tl_page AS p, tl_faq_category AS c
                     WHERE c.id = ? AND c.jumpTo = p.id
                     SQL,
                 [$dc->getCurrentRecord()['pid']],
             );
 
-            if (str_starts_with((string) $readerPageRobots, 'index')) {
+            if (str_starts_with((string) $readerPageRobots['robots'], 'index') || str_starts_with($readerPageRobots['searchIndexer'], 'always')) {
                 return $value;
             }
         }
