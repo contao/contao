@@ -5907,7 +5907,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			$fields .= '
 <select name="' . $field . '" id="' . $field . '" class="tl_select' . ($active ? ' active' : '') . '" data-placeholder="' . $placeholder . '" data-controller="contao--select">
-  <option value="tl_' . $field . '"' . ($placeholder ? ' data-placeholder="true"' : '') . '>---</option>';
+  <option data-placeholder="true"></option>
+  <option class="ss-placeholder-label" disabled>' . $placeholder . '</option>
+  <option value="tl_' . $field . '">---</option>';
 
 			if ($objFields->numRows)
 			{

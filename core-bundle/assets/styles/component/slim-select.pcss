@@ -10,6 +10,12 @@
 
 html[data-color-scheme=dark] {
     --ss-primary-color: #1b325f;
+    --ss-disabled-color: var(--form-bg-disabled);
+}
+
+.ss-main .ss-values .ss-placeholder {
+    padding-left: 3px;
+    color: inherit;
 }
 
 .ss-content {
@@ -35,6 +41,11 @@ html[data-color-scheme=dark] {
 
     .ss-list {
 
+        /* Making sure the overflow is not shown for the no results text */
+        .ss-search {
+            line-height: 1.2;
+        }
+
         .ss-option {
 
             &:hover,
@@ -44,4 +55,11 @@ html[data-color-scheme=dark] {
             }
         }
     }
+}
+
+/** Custom class for tl_filter placeholder labels */
+.ss-placeholder-label {
+    --ss-disabled-color: transparent;
+    --ss-font-color: var(--ss-font-placeholder-color);
+    cursor: default !important;
 }
