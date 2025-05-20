@@ -79,17 +79,19 @@ abstract class AbstractOrderFieldMigration extends AbstractMigration
         $orderFieldQuoted = $this->connection->quoteIdentifier($orderField);
         $fieldQuoted = $this->connection->quoteIdentifier($field);
 
-        $rows = $this->connection->fetchAllAssociative("
-            SELECT
-                $orderFieldQuoted, $fieldQuoted
-            FROM
-                $tableQuoted
-            WHERE
-                $orderFieldQuoted IS NOT NULL
-                AND $orderFieldQuoted != ''
-                AND $fieldQuoted IS NOT NULL
-                AND $fieldQuoted != ''
-        ");
+        $rows = $this->connection->fetchAllAssociative(
+            <<<SQL
+                SELECT
+                    $orderFieldQuoted,
+                    $fieldQuoted
+                FROM $tableQuoted
+                WHERE
+                    $orderFieldQuoted IS NOT NULL
+                    AND $orderFieldQuoted != ''
+                    AND $fieldQuoted IS NOT NULL
+                    AND $fieldQuoted != ''
+                SQL,
+        );
 
         foreach ($rows as $row) {
             $items = array_values(array_unique([
@@ -98,11 +100,15 @@ abstract class AbstractOrderFieldMigration extends AbstractMigration
             ]));
 
             $this->connection->executeStatement(
-                "
+                <<<SQL
                     UPDATE $tableQuoted
-                    SET $fieldQuoted = :items, $orderFieldQuoted = ''
-                    WHERE $fieldQuoted = :field AND $orderFieldQuoted = :orderField
-                ",
+                    SET
+                        $fieldQuoted = :items,
+                        $orderFieldQuoted = ''
+                    WHERE
+                        $fieldQuoted = :field
+                        AND $orderFieldQuoted = :orderField
+                    SQL,
                 [
                     'items' => serialize($items),
                     'field' => $row[$field],

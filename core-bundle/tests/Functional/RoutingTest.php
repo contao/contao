@@ -260,7 +260,7 @@ class RoutingTest extends FunctionalTestCase
         self::getContainer()
             ->get('doctrine')
             ->getConnection()
-            ->executeStatement('UPDATE tl_page SET urlPrefix=language')
+            ->executeStatement('UPDATE tl_page SET urlPrefix = language')
         ;
 
         $crawler = $client->request('GET', "https://$host$request");
@@ -489,7 +489,7 @@ class RoutingTest extends FunctionalTestCase
         self::getContainer()
             ->get('doctrine')
             ->getConnection()
-            ->executeStatement("UPDATE tl_page SET urlSuffix=''")
+            ->executeStatement("UPDATE tl_page SET urlSuffix = ''")
         ;
 
         $crawler = $client->request('GET', "https://$host$request");
@@ -733,7 +733,7 @@ class RoutingTest extends FunctionalTestCase
         self::getContainer()
             ->get('doctrine')
             ->getConnection()
-            ->executeStatement("UPDATE tl_page SET urlPrefix=language WHERE urlPrefix=''")
+            ->executeStatement("UPDATE tl_page SET urlPrefix = language WHERE urlPrefix = ''")
         ;
 
         $crawler = $client->request('GET', "https://$host$request");
@@ -940,19 +940,12 @@ class RoutingTest extends FunctionalTestCase
 
         $this->loadFixtureFiles(['disable-language-redirect']);
 
+        $disableLanguageRedirect = $disableLanguageRedirects ? 1 : 0;
+        $alias = $indexAlias ? 'index' : 'home';
+
         $connection = self::getContainer()->get('doctrine')->getConnection();
-
-        $connection->executeStatement("
-            UPDATE tl_page
-            SET disableLanguageRedirect = '".($disableLanguageRedirects ? 1 : 0)."'
-            WHERE id = 3
-        ");
-
-        $connection->executeStatement("
-            UPDATE tl_page
-            SET alias = '".($indexAlias ? 'index' : 'home')."'
-            WHERE type = 'regular'
-        ");
+        $connection->executeStatement("UPDATE tl_page SET disableLanguageRedirect = $disableLanguageRedirect WHERE id = 3");
+        $connection->executeStatement("UPDATE tl_page SET alias = '$alias' WHERE type = 'regular'");
 
         $client->request('GET', $request);
         $response = $client->getResponse();

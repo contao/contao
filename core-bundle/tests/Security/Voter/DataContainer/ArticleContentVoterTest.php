@@ -67,7 +67,7 @@ class ArticleContentVoterTest extends TestCase
                 $parent = array_pop($records);
 
                 $fetchAssociativeMap[] = [
-                    'SELECT id, pid, ptable FROM tl_content WHERE id=?',
+                    'SELECT id, pid, ptable FROM tl_content WHERE id = ?',
                     [(int) end($records)['pid']],
                     [],
                     $parent,
@@ -75,7 +75,7 @@ class ArticleContentVoterTest extends TestCase
             }
 
             $fetchAllAssociativeMap[] = [
-                'SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=:id'.str_repeat(' UNION SELECT id, @pid:=pid AS pid, ptable FROM tl_content WHERE id=@pid AND ptable=:ptable', 9),
+                'SELECT id, @pid := pid AS pid, ptable FROM tl_content WHERE id = :id'.str_repeat(' UNION SELECT id, @pid := pid AS pid, ptable FROM tl_content WHERE id = @pid AND ptable = :ptable', 9),
                 ['id' => $id, 'ptable' => 'tl_content'],
                 [],
                 $records,
@@ -86,7 +86,7 @@ class ArticleContentVoterTest extends TestCase
 
         foreach ($articleParents as $id => $pid) {
             $fetchOneMap[] = [
-                'SELECT pid FROM tl_article WHERE id=?',
+                'SELECT pid FROM tl_article WHERE id = ?',
                 [$id],
                 [],
                 $pid,
