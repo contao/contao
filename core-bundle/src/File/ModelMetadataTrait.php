@@ -19,6 +19,8 @@ trigger_deprecation('contao/core-bundle', '5.3', 'Using "Contao\CoreBundle\File\
 /**
  * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
  *             use Contao\Model\MetadataTrait instead.
+ *
+ * @phpstan-ignore trait.unused
  */
 trait ModelMetadataTrait
 {
