@@ -28,7 +28,7 @@ class Palette implements \Stringable
 
     public function __toString(): string
     {
-        return $this->implode();
+        return $this->toString();
     }
 
     public function toString(): string
@@ -104,7 +104,7 @@ class Palette implements \Stringable
             return $this;
         }
 
-        foreach ($parents as $parent) {
+        foreach ((array) $parents as $parent) {
             if (\array_key_exists($parent, $this->config)) {
                 $offset = array_search($parent, array_keys($this->config), true);
                 $offset += (int) (self::POSITION_AFTER === $position);
