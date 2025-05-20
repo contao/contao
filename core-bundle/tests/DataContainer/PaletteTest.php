@@ -90,14 +90,13 @@ class PaletteTest extends TestCase
     public function testAddFieldToFieldAfter(): void
     {
         $palette = new Palette('{legend},field1,field2');
-        $palette->addField('fieldNew', 'field1', Palette::POSITION_AFTER);
-        $legendFields = (string) $palette;
-        $this->assertStringContainsString('field1,fieldNew,field2', $legendFields);
+        $palette->addField('field3', 'field1');
+        $this->assertSame('{legend},field1,field3,field2', $palette->toString());
     }
 
     public function testAddFieldWithFallback(): void
     {
-        $palette = new Palette('');
+        $palette = new Palette();
         $palette->addField('fallbackField', null, Palette::POSITION_APPEND, ['fallbackLegend']);
         $this->assertTrue($palette->hasField('fallbackField'));
         $this->assertTrue($palette->hasLegend('fallbackLegend'));
