@@ -263,7 +263,7 @@ class Palette implements \Stringable
             $hide = false;
             $fields = StringUtil::trimsplit(',', $group);
 
-            if (preg_match('#{(.+?)(:hide)?}#', (string) $fields[0], $matches)) {
+            if (preg_match('#{(.+?)(:collapsed|:hide)?}#', (string) $fields[0], $matches)) {
                 $legend = $matches[1];
                 $hide = isset($matches[2]);
                 array_shift($fields);

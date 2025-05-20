@@ -25,6 +25,7 @@ use Contao\CoreBundle\Twig\Inheritance\DynamicExtendsTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicIncludeTokenParser;
 use Contao\CoreBundle\Twig\Inheritance\DynamicUseTokenParser;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Interop\ContaoEscaperNodeVisitor;
 use Contao\CoreBundle\Twig\Interop\PhpTemplateProxyNodeVisitor;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
@@ -34,7 +35,6 @@ use Contao\System;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -253,7 +253,7 @@ class ContaoExtensionTest extends TestCase
             $this->createMock(ContaoFilesystemLoader::class),
             $this->createMock(ContaoCsrfTokenManager::class),
             $this->createMock(ContaoVariable::class),
-            new InspectorNodeVisitor(new NullAdapter(), $environment),
+            new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
         );
 
         $this->expectException(\RuntimeException::class);
@@ -461,7 +461,7 @@ class ContaoExtensionTest extends TestCase
             $filesystemLoader,
             $this->createMock(ContaoCsrfTokenManager::class),
             $this->createMock(ContaoVariable::class),
-            new InspectorNodeVisitor(new NullAdapter(), $environment),
+            new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
         );
     }
 }

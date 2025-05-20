@@ -3707,7 +3707,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 		elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 		{
-			$buttons .= DataContainerOperationsBuilder::generateBackButton(System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+			$buttons .= DataContainerOperationsBuilder::generateBackButton((!str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '=') || str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '?') ? '' : System::getContainer()->get('router')->generate('contao_backend') . '?') . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
 		}
 
 		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $this->intCurrentPid, 'sorting' => 0))))
@@ -4381,7 +4381,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 			elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 			{
-				$buttons .= DataContainerOperationsBuilder::generateBackButton(System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+				$buttons .= DataContainerOperationsBuilder::generateBackButton((!str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '=') || str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '?') ? '' : System::getContainer()->get('router')->generate('contao_backend') . '?') . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
 			}
 		}
 
@@ -5034,7 +5034,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 		elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 		{
-			$buttons .= DataContainerOperationsBuilder::generateBackButton(System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+			$buttons .= DataContainerOperationsBuilder::generateBackButton((!str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '=') || str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '?') ? '' : System::getContainer()->get('router')->generate('contao_backend') . '?') . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
 		}
 
 		if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable)))

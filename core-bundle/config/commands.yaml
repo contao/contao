@@ -109,8 +109,8 @@ services:
             - '@messenger.receiver_locator'
             - '@contao.process_util'
             - '@database_connection'
-            - ~
-            - ~
+            - !abstract set by ContaoCoreExtension::handleMessengerConfig()
+            - !abstract set by ContaoCoreExtension::handleMessengerConfig()
 
     contao.command.symlinks:
         class: Contao\CoreBundle\Command\SymlinksCommand

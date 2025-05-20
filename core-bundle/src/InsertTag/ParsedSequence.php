@@ -52,7 +52,7 @@ final class ParsedSequence implements \IteratorAggregate, \Countable
     }
 
     /**
-     * @return \ArrayIterator<int, InsertTag|InsertTagResult|string>
+     * @return \ArrayIterator<int, InsertTag|InsertTagResult|non-empty-string>
      */
     public function getIterator(): \ArrayIterator
     {
