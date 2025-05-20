@@ -127,7 +127,7 @@ class PageSearchListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
-            ->willReturn(['searchIndexer' => 'never_index']) // Not sure about this value... could be empty string '' (= use robots tag) or 'never_index' here I think. Does this mean that two tests for both cases should be added?
+            ->willReturn(['searchIndexer' => 'never_index'])
         ;
 
         $listener = new PageSearchListener(
@@ -138,10 +138,7 @@ class PageSearchListenerTest extends TestCase
         $listener->onSaveSearchIndexer('always_index', $dc);
     }
 
-    // Not sure about the following test (change 'searchIndexer' to blank '' [= use robots tag])
-    // Case 1: When 'robots tag' is 'noindex' the search index should be purged
-    // Case 2: When 'robots tag' is 'index' the search index should NOT be purged
-    public function testDoesNotPurgeTheSearchIndexOnSearchIndexerChangeToEmptyString(): void
+    public function testDoesNotPurgeTheSearchIndexOnSearchIndexerChangeToBlankWhenRobotsIsSetToIndex(): void
     {
         $connection = $this->createMock(Connection::class);
         $connection
@@ -158,7 +155,10 @@ class PageSearchListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
-            ->willReturn(['searchIndexer' => '']) // Not sure about this value... could be empty string '' (= use robots tag) or 'never_index'. Does this mean that two tests for both cases should be added?
+            ->willReturn([
+                'robots' => 'index,follow',
+                'searchIndexer' => 'always_index',
+            ])
         ;
 
         $listener = new PageSearchListener(
@@ -166,11 +166,43 @@ class PageSearchListenerTest extends TestCase
             $connection,
         );
 
-        $listener->onSaveSearchIndexer('', $dc); // Change to blank option = use robots tag
+        $listener->onSaveSearchIndexer('', $dc);
     }
 
-    // Should the following test be added for all possible cases?
-    // 'searchIndexer could be an empty string '', 'always_index' or 'never_index'
+    public function testPurgesTheSearchIndexOnSearchIndexerChangeToBlankWhenRobotsIsSetToNoindex(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchFirstColumn')
+            ->with('SELECT url FROM tl_search WHERE pid = :pageId', ['pageId' => 17])
+            ->willReturn(['uri'])
+        ;
+
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
+            ->expects($this->once())
+            ->method('removeEntry')
+            ->with('uri')
+        ;
+
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn([
+                'robots' => 'noindex,follow',
+                'searchIndexer' => 'always_index',
+            ])
+        ;
+
+        $listener = new PageSearchListener(
+            $this->mockContaoFramework([Search::class => $search]),
+            $connection,
+        );
+
+        $listener->onSaveSearchIndexer('', $dc);
+    }
+
     public function testDoesNotPurgeTheSearchIndexWithUnchangedSearchIndexer(): void
     {
         $connection = $this->createMock(Connection::class);
@@ -198,11 +230,70 @@ class PageSearchListenerTest extends TestCase
 
         $listener->onSaveSearchIndexer('never_index', $dc);
     }
-    
 
-    // Adjustment required? (help needed)
-    // If 'robots tag' gets changed from 'index' to 'noindex' an 'searchIndexer' is set to 'always_index', the search index should not be purged
-    public function testPurgesTheSearchIndexOnRobotsChange(): void
+    public function testDoesNotPurgeTheSearchIndexOnRobotsChangeToIndexWhenSearchIndexerIsSetToBlank(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn([
+                'robots' => 'noindex,follow',
+                'searchIndexer' => '',
+            ])
+        ;
+
+        $listener = new PageSearchListener(
+            $this->mockContaoFramework([Search::class => $search]),
+            $connection,
+        );
+
+        $listener->onSaveRobots('index,follow', $dc);
+    }
+
+    public function testDoesNotPurgeTheSearchIndexOnRobotsChangeToIndexWhenSearchIndexerIsSetToAlwaysIndex(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
+            ->expects($this->never())
+            ->method($this->anything())
+        ;
+
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn([
+                'robots' => 'noindex,follow',
+                'searchIndexer' => 'always_index',
+            ])
+        ;
+
+        $listener = new PageSearchListener(
+            $this->mockContaoFramework([Search::class => $search]),
+            $connection,
+        );
+
+        $listener->onSaveRobots('index,follow', $dc);
+    }
+
+    public function testPurgesTheSearchIndexOnRobotsChangeToNoindexWhenSearchIndexerIsSetToBlank(): void
     {
         $connection = $this->createMock(Connection::class);
         $connection
@@ -222,7 +313,10 @@ class PageSearchListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
-            ->willReturn(['robots' => 'index,follow'])
+            ->willReturn([
+                'robots' => 'index,follow',
+                'searchIndexer' => '',
+            ])
         ;
 
         $listener = new PageSearchListener(
@@ -233,9 +327,7 @@ class PageSearchListenerTest extends TestCase
         $listener->onSaveRobots('noindex,follow', $dc);
     }
 
-    // Adjustment required? (help needed)
-    // If 'robots tag' gets changed from 'noindex' to 'index' an 'searchIndexer' is set to 'never_index', the search index should be purged
-    public function testDoesNotPurgeTheSearchIndexIfRobotsIsIndex(): void
+    public function testDoesNotPurgeTheSearchIndexOnRobotsChangeToNoindexWhenSearchIndexerIsSetToAlwaysIndex(): void
     {
         $connection = $this->createMock(Connection::class);
         $connection
@@ -252,7 +344,10 @@ class PageSearchListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
-            ->willReturn(['robots' => 'noindex,follow'])
+            ->willReturn([
+                'robots' => 'index,follow',
+                'searchIndexer' => 'always_index',
+            ])
         ;
 
         $listener = new PageSearchListener(
@@ -260,7 +355,41 @@ class PageSearchListenerTest extends TestCase
             $connection,
         );
 
-        $listener->onSaveRobots('index,follow', $dc);
+        $listener->onSaveRobots('noindex,follow', $dc);
+    }
+
+    public function testPurgesTheSearchIndexOnRobotsChangeToNoindexWhenSearchIndexerIsSetToNeverIndex(): void
+    {
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchFirstColumn')
+            ->with('SELECT url FROM tl_search WHERE pid = :pageId', ['pageId' => 17])
+            ->willReturn(['uri'])
+        ;
+
+        $search = $this->mockAdapter(['removeEntry']);
+        $search
+            ->expects($this->once())
+            ->method('removeEntry')
+            ->with('uri')
+        ;
+
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc
+            ->method('getCurrentRecord')
+            ->willReturn([
+                'robots' => 'index,follow',
+                'searchIndexer' => 'never_index',
+            ])
+        ;
+
+        $listener = new PageSearchListener(
+            $this->mockContaoFramework([Search::class => $search]),
+            $connection,
+        );
+
+        $listener->onSaveRobots('noindex,follow', $dc);
     }
 
     public function testDoesNotPurgeTheSearchIndexWithUnchangedRobots(): void

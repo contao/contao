@@ -49,8 +49,28 @@ class FaqSearchListener
     #[AsCallback(table: 'tl_faq', target: 'fields.searchIndexer.save')]
     public function onSaveSearchIndexer(string $value, DataContainer $dc): string
     {
-        if (!$value || 'always_index' === $value || $value === ($dc->getCurrentRecord()['searchIndexer'] ?? null)) {
+        if (($dc->getCurrentRecord()['searchIndexer'] ?? null) === $value || 'always_index' === $value) {
             return $value;
+        }
+
+        if (!$value) {
+            // Get robots and searchIndexer of the reader page (linked in calendar)
+            $readerPageSettings = $this->connection->fetchAssociative(
+                <<<'SQL'
+                    SELECT p.robots, p.searchIndexer
+                    FROM tl_page AS p, tl_faq_category AS c
+                    WHERE c.id = ? AND c.jumpTo = p.id
+                    SQL,
+                [$dc->getCurrentRecord()['pid']],
+            );
+
+            $readerSearchIndexer = (string) ($readerPageSettings['searchIndexer'] ?? null);
+            $readerRobots = (string) ($readerPageSettings['robots'] ?? null);
+            $entryRobots = (string) ($dc->getCurrentRecord()['robots'] ?? null);
+
+            if ('always_index' === $readerSearchIndexer || (!$readerSearchIndexer && (str_starts_with($entryRobots, 'index') || (!$entryRobots && str_starts_with($readerRobots, 'index'))))) {
+                return $value;
+            }
         }
 
         $this->purgeSearchIndex((int) $dc->id);
@@ -61,13 +81,13 @@ class FaqSearchListener
     #[AsCallback(table: 'tl_faq', target: 'fields.robots.save')]
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
-        if (($dc->getCurrentRecord()['robots'] ?? null) === $value || str_starts_with($value, 'index') || (str_starts_with($value, 'noindex') && str_starts_with($dc->getCurrentRecord()['searchIndexer'], 'always'))) {
+        if (($dc->getCurrentRecord()['robots'] ?? null) === $value || 'always_index' === $dc->getCurrentRecord()['searchIndexer']) {
             return $value;
         }
 
-        if ('' === $value) {
-            // Get robots and searchIndexer of the reader page (linked in FAQ category)
-            $readerPageRobots = $this->connection->fetchAssociative(
+        if (!$dc->getCurrentRecord()['searchIndexer']) {
+            // Get robots and searchIndexer of the reader page (linked in calendar)
+            $readerPageSettings = $this->connection->fetchAssociative(
                 <<<'SQL'
                     SELECT p.robots, p.searchIndexer
                     FROM tl_page AS p, tl_faq_category AS c
@@ -76,7 +96,10 @@ class FaqSearchListener
                 [$dc->getCurrentRecord()['pid']],
             );
 
-            if (str_starts_with((string) $readerPageRobots['robots'], 'index') || str_starts_with($readerPageRobots['searchIndexer'], 'always')) {
+            $readerSearchIndexer = (string) ($readerPageSettings['searchIndexer'] ?? null);
+            $readerRobots = (string) ($readerPageSettings['robots'] ?? null);
+
+            if ('always_index' === $readerSearchIndexer || (!$readerSearchIndexer && (str_starts_with($value, 'index') || (!$value && str_starts_with($readerRobots, 'index'))))) {
                 return $value;
             }
         }

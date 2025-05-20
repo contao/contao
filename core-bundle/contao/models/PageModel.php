@@ -345,6 +345,23 @@ class PageModel extends Model
 		self::$suffixes = null;
 	}
 
+  /**
+  * Return an object property
+  *
+  * @param string $strKey The property key
+  *
+  * @return mixed|null The property value or null
+  */
+  public function __get($strKey)
+  {
+    if ('noSearch' === $strKey)
+    {
+      return 'never_index' === $this->searchIndexer;
+    }
+
+    return parent::__get($strKey);
+  }
+
 	/**
 	 * Find a published page by its ID
 	 *
@@ -926,9 +943,6 @@ class PageModel extends Model
 		$ptitle = '';
 		$trail = array($this->id, $pid);
 		$time = time();
-
-		// Backwards compatibility fallback (see #8252)
-		$this->noSearch = 'never_index' === $this->searchIndexer ? true : false;
 
 		// Inherit the settings
 		if ($this->type == 'root')
