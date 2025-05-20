@@ -30,7 +30,7 @@ export default class BackendSearchController extends Controller {
     async search() {
         this._stopPendingSearch();
 
-        // Require a minimum amount of characters
+        // Require a minimum number of characters
         if (this.inputTarget.value.length < this.minCharactersValue) {
             return this._setState('invalid');
         }
