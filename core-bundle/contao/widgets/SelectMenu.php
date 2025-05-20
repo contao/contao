@@ -187,13 +187,7 @@ class SelectMenu extends Widget
 			}
 		}
 
-		// Chosen
-		if ($this->chosen)
-		{
-			$this->arrAttributes['data-controller'] = trim(($this->arrAttributes['data-controller'] ?? '') . ' contao--choices');
-		}
-
-		return \sprintf(
+		$strBuffer = \sprintf(
 			'%s<select name="%s" id="ctrl_%s" class="%s%s"%s data-action="focus->contao--scroll-offset#store">%s</select>%s',
 			$this->multiple ? '<input type="hidden" name="' . (str_ends_with($this->strName, '[]') ? substr($this->strName, 0, -2) : $this->strName) . '" value="">' : '',
 			$this->strName,
@@ -204,5 +198,13 @@ class SelectMenu extends Widget
 			implode('', $arrOptions),
 			$this->wizard
 		);
+
+		// Chosen
+		if ($this->chosen)
+		{
+			$strBuffer = '<div class="tl_select_wrapper" data-controller="contao--choices">'.$strBuffer.'</div>';
+		}
+
+		return $strBuffer;
 	}
 }

@@ -2607,9 +2607,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		return '
     <div class="tl_search tl_subpanel">
       <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
-      <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '" data-controller="contao--choices">
-        <option value="name">' . ($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['label'][0] ?: (\is_array($GLOBALS['TL_LANG']['MSC']['name'] ?? null) ? $GLOBALS['TL_LANG']['MSC']['name'][0] : ($GLOBALS['TL_LANG']['MSC']['name'] ?? null))) . '</option>
-      </select>
+      <div class="tl_select_wrapper" data-controller="contao--choices">
+          <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
+            <option value="name">' . ($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['label'][0] ?: (\is_array($GLOBALS['TL_LANG']['MSC']['name'] ?? null) ? $GLOBALS['TL_LANG']['MSC']['name'][0] : ($GLOBALS['TL_LANG']['MSC']['name'] ?? null))) . '</option>
+          </select>
+      </div>
       <span>=</span>
       <input type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
     </div>';
