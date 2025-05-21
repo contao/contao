@@ -63,7 +63,7 @@ export default class extends Controller {
     leave(event) {
         const editor = tinymce?.get(this.editorId);
 
-        if (!editor || !editor.plugins.hasOwnProperty('autosave') || editor.isNotDirty) {
+        if (!editor || !editor.plugins.hasOwn('autosave') || editor.isNotDirty) {
             return;
         }
 

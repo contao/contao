@@ -208,15 +208,28 @@ class StringUtil
 	 */
 	public static function decodeEntities($strString, $strQuoteStyle=ENT_QUOTES)
 	{
-		if ((string) $strString === '')
+		$replace = static function (&$value) use ($strQuoteStyle) {
+			if (\is_string($value))
+			{
+				$value = preg_replace('/(&#*\w+)[\x00-\x20]+;/i', '$1;', $value);
+				$value = preg_replace('/(&#x*)([0-9a-f]+);/i', '$1$2;', $value);
+				$value = html_entity_decode($value, $strQuoteStyle | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
+			}
+
+			// Cast the value to string (backwards compatibility)
+			$value = (string) $value;
+		};
+
+		if (\is_array($strString))
 		{
-			return '';
+			array_walk_recursive($strString, $replace);
+		}
+		else
+		{
+			$replace($strString);
 		}
 
-		$strString = preg_replace('/(&#*\w+)[\x00-\x20]+;/i', '$1;', $strString);
-		$strString = preg_replace('/(&#x*)([0-9a-f]+);/i', '$1$2;', $strString);
-
-		return html_entity_decode($strString, $strQuoteStyle | ENT_SUBSTITUTE | ENT_HTML5, 'UTF-8');
+		return $strString;
 	}
 
 	/**
