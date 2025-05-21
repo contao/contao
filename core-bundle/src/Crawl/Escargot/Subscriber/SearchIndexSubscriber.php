@@ -195,8 +195,9 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             return;
         }
 
-        // At this point, we know about the <meta name="robots"> tag
-        // Do not index if the meta robots tag contains "noindex" and page setting "searchIndexer" is not set to "always_index"
+        // At this point, we know about the <meta name="robots"> tag. Do not index if the
+        // meta robots tag contains "noindex" and page setting "searchIndexer" is not set
+        // to "always_index".
         if ($crawlUri->hasTag(RobotsSubscriber::TAG_NOINDEX) && 'always_index' !== $pageSearchIndexer) {
             $this->logWithCrawlUri(
                 $crawlUri,
@@ -205,7 +206,8 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             );
 
             return;
-        } else if ($crawlUri->hasTag(RobotsSubscriber::TAG_NOINDEX) && 'always_index' === $pageSearchIndexer) {
+        }
+        if ($crawlUri->hasTag(RobotsSubscriber::TAG_NOINDEX) && 'always_index' === $pageSearchIndexer) {
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,

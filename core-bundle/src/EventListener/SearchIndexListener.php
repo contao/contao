@@ -97,16 +97,16 @@ class SearchIndexListener
             return false;
         }
 
-        // searchIndexer settings overwrite robots tag settings
+        // searchIndexer setting has priority over robots tag
         $pageJsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
         $pageSearchIndexer = $pageJsonLds[0]['searchIndexer'] ?? null;
 
-        if ('never_index' === $pageSearchIndexer) {
-            return false;
-        }
-
         if ('always_index' === $pageSearchIndexer) {
             return true;
+        }
+
+        if ('never_index' === $pageSearchIndexer) {
+            return false;
         }
 
         try {
@@ -141,16 +141,16 @@ class SearchIndexListener
             return true;
         }
 
-        // searchIndexer settings overwrite robots tag settings
+        // searchIndexer setting has priority over robots tag
         $pageJsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
         $pageSearchIndexer = $pageJsonLds[0]['searchIndexer'] ?? null;
 
-        if ('never_index' === $pageSearchIndexer) {
-            return true;
-        }
-
         if ('always_index' === $pageSearchIndexer) {
             return false;
+        }
+
+        if ('never_index' === $pageSearchIndexer) {
+            return true;
         }
 
         try {

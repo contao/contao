@@ -157,10 +157,21 @@ class SearchIndexListenerTest extends TestCase
             false,
         ];
 
-        // Adjustment/more tests required here for different cases (not done yet):
-        // - Should not index but should delete because the meta robots tag contains "noindex" and searchIndexer is set to blank "" (= use robots tag)
-        // - Should not index but should delete because the meta robots tag contains "index" and searchIndexer is set to "never_index"
-        // - Should index because the meta robots tag contains "noindex" and searchIndexer is set to "always_index"
+        yield 'Should index and not delete because searchIndexer is set to "always_index"' => [
+            Request::create('/foobar'),
+            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"searchIndexer":"always_index","protected":false,"groups":[],"fePreview":false}</script></body></html>', 200),
+            SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
+            true,
+            false,
+        ];
+
+        yield 'Should not index but should delete because searchIndexer is set to "never_index"' => [
+            Request::create('/foobar'),
+            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"searchIndexer":"never_index","protected":false,"groups":[],"fePreview":false}</script></body></html>', 200),
+            SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
+            false,
+            true,
+        ];
 
         yield 'Should not index but should delete because the meta robots tag contains "noindex"' => [
             Request::create('/foobar'),

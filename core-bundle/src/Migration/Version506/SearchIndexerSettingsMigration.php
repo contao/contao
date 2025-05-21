@@ -23,7 +23,8 @@ use Doctrine\DBAL\Connection;
  */
 class SearchIndexerSettingsMigration extends AbstractMigration
 {
-    public function __construct(private readonly Connection $connection) {
+    public function __construct(private readonly Connection $connection)
+    {
     }
 
     public function shouldRun(): bool
@@ -38,14 +39,13 @@ class SearchIndexerSettingsMigration extends AbstractMigration
 
         if (!isset($columns['nosearch']) || isset($columns['searchindexer'])) {
             return false;
-        } else {
-            return true;
         }
+
+        return true;
     }
 
     public function run(): MigrationResult
     {
-
         $this->connection->executeStatement('
             ALTER TABLE tl_page
             ADD searchIndexer varchar(32) NOT NULL default ""
