@@ -354,8 +354,8 @@ class tl_templates extends Backend
 <div class="w50 widget">
   <h3><label for="ctrl_original">' . $GLOBALS['TL_LANG']['tl_templates']['original'][0] . '</label></h3>
   <div class="tl_select_wrapper" data-controller="contao--choices">
-    <select name="original" id="ctrl_original" class="tl_select" data-action="focus->contao--scroll-offset#store">' . $strAllTemplates . '</select>' . (($GLOBALS['TL_LANG']['tl_templates']['original'][1] && Config::get('showHelp')) ? '
-  </div>
+    <select name="original" id="ctrl_original" class="tl_select" data-action="focus->contao--scroll-offset#store">' . $strAllTemplates . '</select>
+  </div>' . (($GLOBALS['TL_LANG']['tl_templates']['original'][1] && Config::get('showHelp')) ? '
   <p class="tl_help tl_tip">' . $GLOBALS['TL_LANG']['tl_templates']['original'][1] . '</p>' : '') . '
 </div>
 <div class="w50 widget">
