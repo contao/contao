@@ -690,6 +690,14 @@ h2.sub_headline {
 	width: 38%;
 }
 
+.tl_select_wrapper {
+	margin: 3px 0;
+}
+
+.tl_select_wrapper > * {
+	margin: 0;
+}
+
 .tl_img_submit {
 	white-space: nowrap;
 	background-color: var(--form-bg);
