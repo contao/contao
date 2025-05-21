@@ -82,7 +82,7 @@ class DefaultIndexerTest extends TestCase
         yield 'Test does not index if searchIndexer is set to never_index' => [
             new Document(new Uri('https://example.com'), 200, [], '<html><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:pageId":2,"contao:searchIndexer":"never_index","contao:protected":false,"contao:groups":[],"contao:fePreview":false}</script></body></html>'),
             null,
-            'Page option "searchIndexer" is explicitly set to "never_index"',
+            'Was explicitly marked never_index in page settings.',
         ];
 
         yield 'Test does not index if there is no JSON-LD data' => [

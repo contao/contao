@@ -97,12 +97,7 @@ class SearchIndexListener
             return false;
         }
 
-        // If there are no json ld scripts at all, this should not be handled by our indexer
-        if ([] !== $document->extractJsonLdScripts()) {
-            return false;
-        }
-
-        // Do not index if the page setting is explicitly set to "never_index"
+        // searchIndexer settings overwrite robots tag settings
         $pageJsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
         $pageSearchIndexer = $pageJsonLds[0]['searchIndexer'] ?? null;
 
@@ -110,19 +105,23 @@ class SearchIndexListener
             return false;
         }
 
+        if ('always_index' === $pageSearchIndexer) {
+            return true;
+        }
+
         try {
             $robots = $document->getContentCrawler()->filterXPath('//head/meta[@name="robots"]')->first()->attr('content');
 
-            // Do not index if the meta robots tag contains "noindex" and page setting "searchIndexer" is not set to "always_index"
-            if (str_contains((string) $robots, 'noindex') && 'always_index' !== $pageSearchIndexer) {
+            // Do not index if the meta robots tag contains "noindex"
+            if (str_contains((string) $robots, 'noindex')) {
                 return false;
             }
         } catch (\Exception) {
             // No meta robots tag found
         }
 
-        // Otherwise index the page
-        return true;
+        // If there are no json ld scripts at all, this should not be handled by our indexer
+        return [] !== $document->extractJsonLdScripts();
     }
 
     private function needsDelete(Response $response, Document $document): bool
@@ -142,7 +141,7 @@ class SearchIndexListener
             return true;
         }
 
-        // Delete if the page setting is explicitly set to "never_index"
+        // searchIndexer settings overwrite robots tag settings
         $pageJsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
         $pageSearchIndexer = $pageJsonLds[0]['searchIndexer'] ?? null;
 
@@ -150,11 +149,15 @@ class SearchIndexListener
             return true;
         }
 
+        if ('always_index' === $pageSearchIndexer) {
+            return false;
+        }
+
         try {
             $robots = $document->getContentCrawler()->filterXPath('//head/meta[@name="robots"]')->first()->attr('content');
 
-            // Delete if the meta robots tag contains "noindex" and page setting "searchIndexer" is not set to "always_index"
-            if (str_contains($robots, 'noindex') && 'always_index' !== $pageSearchIndexer) {
+            // Delete if the meta robots tag contains "noindex"
+            if (str_contains($robots, 'noindex')) {
                 return true;
             }
         } catch (\Exception) {

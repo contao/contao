@@ -69,8 +69,8 @@ class DefaultIndexer implements IndexerInterface
         }
 
         // If search was disabled in the page settings, we do not index
-        if (isset($meta['searchIndexer']) && $meta['searchIndexer'] == 'never_index') {
-            $this->throwBecause('Was explicitly marked "Never index" in page settings.');
+        if (isset($meta['searchIndexer']) && 'never_index' === $meta['searchIndexer']) {
+            $this->throwBecause('Was explicitly marked never_index in page settings.');
         }
 
         // If the front end preview is activated, we do not index
