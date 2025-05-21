@@ -1,5 +1,6 @@
 {
     "devDependencies": {
+        "@biomejs/biome": "^1.9",
         "@hotwired/stimulus": "^3.2",
         "@hotwired/stimulus-webpack-helpers": "^1.0",
         "@hotwired/turbo": "^8.0",
@@ -10,8 +11,7 @@
         "focus-trap": "^7.6",
         "postcss": "^8.5",
         "postcss-loader": "^8.1",
-        "postcss-preset-env": "^10.1",
-        "prettier": "^3.5"
+        "postcss-preset-env": "^10.1"
     },
     "browserslist": [
         "defaults"
@@ -21,7 +21,7 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress",
-        "cs-fixer": "prettier --write core-bundle/assets"
+        "check": "biome check --write --unsafe core-bundle/assets"
     },
     "private": true,
     "packageManager": "npm@11.1.0"

@@ -43,9 +43,7 @@ export default class ChoicesController extends Controller {
             loadingText: Contao.lang.loading,
             noResultsText: Contao.lang.noResults,
             noChoicesText: Contao.lang.noOptions,
-            removeItemLabelText: function (value) {
-                return Contao.lang.removeItem.concat(' ').concat(value);
-            },
+            removeItemLabelText: (value) => Contao.lang.removeItem.concat(' ').concat(value),
         });
     }
 
