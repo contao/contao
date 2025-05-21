@@ -13,6 +13,8 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\System;
 
 /**
  * The priority must be lower than 0 (see #3255).
@@ -37,7 +39,16 @@ class DataContainerCallbackListener
         'url_callback',
     ];
 
+    // These "callbacks" do not support array notation, so they are wrapper with a closure
+    private const CLOSURES = [
+        'default',
+    ];
+
     private array $callbacks = [];
+
+    public function __construct(private readonly ContaoFramework $framework)
+    {
+    }
 
     public function setCallbacks(array $callbacks): void
     {
@@ -53,6 +64,16 @@ class DataContainerCallbackListener
         foreach ($this->callbacks[$table] as $target => $callbacks) {
             $keys = explode('.', (string) $target);
             $dcaRef = &$this->getDcaReference($table, $keys);
+
+            if (\in_array(end($keys), self::CLOSURES, true)) {
+                $systemAdapter = $this->framework->getAdapter(System::class);
+
+                foreach ($callbacks as $priority => $pCallbacks) {
+                    foreach ($pCallbacks as $k => $callback) {
+                        $callbacks[$priority][$k] =  static fn (...$args) => $systemAdapter->importStatic($callback[0])->{$callback[1]}(...$args);
+                    }
+                }
+            }
 
             if ((isset($keys[2]) && 'panel_callback' === $keys[2]) || \in_array(end($keys), self::SINGLETONS, true)) {
                 $this->updateSingleton($dcaRef, $callbacks);

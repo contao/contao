@@ -13,7 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\DataContainerCallbackListener;
+use Contao\CoreBundle\Fixtures\EventListener\TestListener;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DataContainer;
+use Contao\System;
 
 class DataContainerCallbackListenerTest extends TestCase
 {
@@ -23,7 +26,7 @@ class DataContainerCallbackListenerTest extends TestCase
     {
         parent::setUp();
 
-        $this->listener = new DataContainerCallbackListener();
+        $this->listener = new DataContainerCallbackListener($this->mockContaoFramework());
     }
 
     protected function tearDown(): void
@@ -143,11 +146,30 @@ class DataContainerCallbackListenerTest extends TestCase
     {
         $GLOBALS['TL_DCA']['tl_article'] = [];
 
-        $this->listener->setCallbacks(
+        $testListener = $this->createMock(TestListener::class);
+        $testListener
+            ->expects($this->once())
+            ->method('onDefault')
+            ->with($this->isInstanceOf(DataContainer::class))
+            ->willReturn('foo')
+        ;
+
+        $systemAdapter = $this->mockAdapter(['importStatic']);
+        $systemAdapter
+            ->expects($this->once())
+            ->method('importStatic')
+            ->willReturn($testListener)
+        ;
+
+        $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
+
+        $listener = new DataContainerCallbackListener($framework);
+
+        $listener->setCallbacks(
             [
                 'tl_article' => [
                     'fields.article.default' => [[
-                        ['Test\CallbackListener', 'onLoadCallback'],
+                        [TestListener::class, 'onDefault'],
                     ]],
                 ],
             ],
@@ -155,20 +177,13 @@ class DataContainerCallbackListenerTest extends TestCase
 
         $this->assertEmpty($GLOBALS['TL_DCA']['tl_article']);
 
-        $this->listener->onLoadDataContainer('tl_article');
+        $listener->onLoadDataContainer('tl_article');
 
         $this->assertNotEmpty($GLOBALS['TL_DCA']['tl_article']);
 
-        $this->assertSame(
-            [
-                'fields' => [
-                    'article' => [
-                        'default' => ['Test\CallbackListener', 'onLoadCallback'],
-                    ],
-                ],
-            ],
-            $GLOBALS['TL_DCA']['tl_article'],
-        );
+        $this->assertIsCallable($GLOBALS['TL_DCA']['tl_article']['fields']['article']['default']);
+
+        $this->assertSame('foo', $GLOBALS['TL_DCA']['tl_article']['fields']['article']['default']($this->createMock(DataContainer::class)));
     }
 
     public function testPanelLayoutCallbacks(): void
