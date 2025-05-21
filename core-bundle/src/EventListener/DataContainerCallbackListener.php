@@ -23,17 +23,18 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 class DataContainerCallbackListener
 {
     private const SINGLETONS = [
+        'button_callback',
+        'child_record_callback',
+        'default',
+        'group_callback',
+        'header_callback',
+        'input_field_callback',
+        'label_callback',
+        'options_callback',
         'panel_callback',
         'paste_button_callback',
-        'button_callback',
-        'label_callback',
-        'header_callback',
-        'child_record_callback',
-        'input_field_callback',
-        'options_callback',
-        'group_callback',
-        'url_callback',
         'title_tag_callback',
+        'url_callback',
     ];
 
     private array $callbacks = [];

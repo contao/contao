@@ -78,6 +78,7 @@ class DataContainerCallbackPass implements CompilerPassInterface
         if (
             !str_ends_with($attributes['target'], '_callback')
             && !str_contains((string) $attributes['target'], '.panel_callback.')
+            && !str_ends_with($attributes['target'], '.default')
             && !\in_array(substr($attributes['target'], -7), ['.wizard', '.xlabel'], true)
         ) {
             $attributes['target'] .= '_callback';

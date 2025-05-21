@@ -139,6 +139,38 @@ class DataContainerCallbackListenerTest extends TestCase
         );
     }
 
+    public function testRegistersDefaultCallbacks(): void
+    {
+        $GLOBALS['TL_DCA']['tl_article'] = [];
+
+        $this->listener->setCallbacks(
+            [
+                'tl_article' => [
+                    'fields.article.default' => [[
+                        ['Test\CallbackListener', 'onLoadCallback'],
+                    ]],
+                ],
+            ],
+        );
+
+        $this->assertEmpty($GLOBALS['TL_DCA']['tl_article']);
+
+        $this->listener->onLoadDataContainer('tl_article');
+
+        $this->assertNotEmpty($GLOBALS['TL_DCA']['tl_article']);
+
+        $this->assertSame(
+            [
+                'fields' => [
+                    'article' => [
+                        'default' => ['Test\CallbackListener', 'onLoadCallback'],
+                    ],
+                ],
+            ],
+            $GLOBALS['TL_DCA']['tl_article'],
+        );
+    }
+
     public function testPanelLayoutCallbacks(): void
     {
         $GLOBALS['TL_DCA']['tl_page'] = [];
