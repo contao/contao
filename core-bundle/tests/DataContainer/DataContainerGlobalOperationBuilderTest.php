@@ -82,7 +82,9 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
                 '@Contao/backend/data_container/global_operations.html.twig',
                 $this->callback(static fn (array $parameters) => isset($parameters['operations'])
                         && 1 === \count($parameters['operations'])
-                        && $parameters['operations'][0]['href'] === $expected,
+                        && $parameters['operations'][0]['href'] === $expected
+                        && $parameters['operations'][0]['label'] === 'Back'
+                        && $parameters['operations'][0]['title'] === 'Back Title',
                 ),
             )
             ->willReturn('')
@@ -99,8 +101,8 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             ->expects($this->exactly(2))
             ->method('trans')
             ->willReturnMap([
-                ['MSC.backBT', [], 'contao_default', 'Back'],
-                ['MSC.backBTTitle', [], 'contao_default', 'Back Title'],
+                ['MSC.backBT', [], 'contao_default', null, 'Back'],
+                ['MSC.backBTTitle', [], 'contao_default', null, 'Back Title'],
             ])
         ;
 
