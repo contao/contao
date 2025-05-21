@@ -414,9 +414,14 @@ abstract class Controller extends System
 		}
 
 		// Disable indexing if protected
-		if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer) && (\count($groups = StringUtil::deserialize($objModule->groups, true)) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true)))
+		if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			$groups = StringUtil::deserialize($objModule->groups, true);
+
+			if (\count($groups) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true))
+			{
+				$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			}
 		}
 
 		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
@@ -490,9 +495,14 @@ abstract class Controller extends System
 		$strBuffer = $objArticle->generate($blnIsInsertTag);
 
 		// Disable indexing if protected
-		if ($objArticle->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer) && (\count($groups = StringUtil::deserialize($objArticle->groups, true)) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true)))
+		if ($objArticle->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			$groups = StringUtil::deserialize($objArticle->groups, true);
+
+			if (\count($groups) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true))
+			{
+				$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			}
 		}
 
 		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
@@ -619,9 +629,14 @@ abstract class Controller extends System
 		}
 
 		// Disable indexing if protected
-		if ($objElement->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer) && (\count($groups = StringUtil::deserialize($objElement->groups, true)) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true)))
+		if ($objElement->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			$groups = StringUtil::deserialize($objElement->groups, true);
+
+			if (\count($groups) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true))
+			{
+				$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			}
 		}
 
 		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
