@@ -654,7 +654,7 @@ select[multiple] {
 	height: auto;
 }
 
-.tl_select, .tl_mselect, .tl_select_column {
+.tl_select, .tl_mselect, .tl_select_column, .tl_select_wrapper {
 	width: 100%;
 }
 
