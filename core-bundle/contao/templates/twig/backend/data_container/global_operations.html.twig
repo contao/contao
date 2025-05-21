@@ -8,7 +8,7 @@
                     .set('href', operation.href)
                     .setIfExists('title', operation.title|default)
                 %}
-                <li><a{{ operation_attributes|raw }}>{{ operation.label|default }}</a></li>
+                <li><a{{ operation_attributes }}>{{ operation.label|default }}</a></li>
             {% endif %}
         {% endfor %}
     </ul>
