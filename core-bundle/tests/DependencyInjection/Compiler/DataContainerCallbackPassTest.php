@@ -305,7 +305,7 @@ class DataContainerCallbackPassTest extends TestCase
         );
     }
 
-    public static function noSuffixProvider(): \Generator
+    public static function noSuffixProvider(): iterable
     {
         yield 'xlabel callback' => [
             [
