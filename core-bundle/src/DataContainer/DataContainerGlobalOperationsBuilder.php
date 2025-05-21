@@ -21,6 +21,7 @@ use Contao\Image;
 use Contao\Input;
 use Contao\System;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 /**
@@ -44,6 +45,7 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
         private readonly ContaoFramework $framework,
         private readonly Environment $twig,
         private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -117,8 +119,8 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
 
         $this->append([
             'href' => $href,
-            'label' => $GLOBALS['TL_LANG']['MSC']['backBT'],
-            'title' => $GLOBALS['TL_LANG']['MSC']['backBTTitle'],
+            'label' => $this->translator->trans('MSC.backBT', [], 'contao_default'),
+            'title' => $this->translator->trans('MSC.backBTTitle', [], 'contao_default'),
             'attributes' => (new HtmlAttributes())->addClass('header_back')->set('accesskey', 'b')->set('data-action', 'contao--scroll-offset#discard'),
         ]);
 
@@ -131,7 +133,7 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
 
         $this->append([
             'href' => $this->framework->getAdapter(Backend::class)->addToUrl('clipboard=1'),
-            'label' => $GLOBALS['TL_LANG']['MSC']['clearClipboard'],
+            'label' => $this->translator->trans('MSC.clearClipboard', [], 'contao_default'),
             'attributes' => (new HtmlAttributes())->addClass('header_clipboard')->set('accesskey', 'x'),
         ]);
 

@@ -230,6 +230,7 @@ services:
             - '@contao.framework'
             - '@twig'
             - '@router'
+            - '@translator'
 
     contao.data_container.operations_builder:
         class: Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder

@@ -23,6 +23,7 @@ use Contao\Input;
 use Contao\System;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
 
 class DataContainerGlobalOperationBuilderTest extends TestCase
@@ -31,7 +32,13 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
     {
         $this->expectException(\RuntimeException::class);
 
-        $builder = new DataContainerGlobalOperationsBuilder($this->mockContaoFramework(), $this->createMock(Environment::class), $this->createMock(UrlGeneratorInterface::class));
+        $builder = new DataContainerGlobalOperationsBuilder(
+            $this->mockContaoFramework(),
+            $this->createMock(Environment::class),
+            $this->createMock(UrlGeneratorInterface::class),
+            $this->createMock(TranslatorInterface::class),
+        );
+
         $builder->append(['html' => '']);
     }
 
@@ -43,7 +50,13 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             ->method('render')
         ;
 
-        $builder = new DataContainerGlobalOperationsBuilder($this->mockContaoFramework(), $twig, $this->createMock(UrlGeneratorInterface::class));
+        $builder = new DataContainerGlobalOperationsBuilder(
+            $this->mockContaoFramework(),
+            $twig,
+            $this->createMock(UrlGeneratorInterface::class),
+            $this->createMock(TranslatorInterface::class),
+        );
+
         $builder = $builder->initialize('tl_foo');
 
         $this->assertSame('', (string) $builder);
@@ -52,8 +65,6 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
     #[DataProvider('backButtonHrefProvider')]
     public function testBackButtonHref(string|null $href, string $expected): void
     {
-        $GLOBALS['TL_LANG']['MSC'] = ['backBT' => 'Back', 'backBTTitle' => 'Back'];
-
         $systemAdapter = $this->mockAdapter(['getReferer']);
         $systemAdapter
             ->expects(null === $href ? $this->once() : $this->never())
@@ -83,13 +94,21 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             ->willReturn('/contao')
         ;
 
-        $builder = new DataContainerGlobalOperationsBuilder($framework, $twig, $urlGenerator);
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->exactly(2))
+            ->method('trans')
+            ->willReturnMap([
+                ['MSC.backBT', [], 'contao_default', 'Back'],
+                ['MSC.backBTTitle', [], 'contao_default', 'Back Title'],
+            ])
+        ;
+
+        $builder = new DataContainerGlobalOperationsBuilder($framework, $twig, $urlGenerator, $translator);
         $builder = $builder->initialize('tl_foo');
         $builder->addBackButton($href);
 
         $this->assertSame('', (string) $builder);
-
-        unset($GLOBALS['TL_LANG']);
     }
 
     public static function backButtonHrefProvider(): \Generator
@@ -112,8 +131,6 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
 
     public function testAddClearClipboardButton(): void
     {
-        $GLOBALS['TL_LANG']['MSC']['clearClipboard'] = 'Clear Clipboard';
-
         $backendAdapter = $this->mockAdapter(['addToUrl']);
         $backendAdapter
             ->expects($this->once())
@@ -138,13 +155,19 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             ->willReturn('')
         ;
 
-        $builder = new DataContainerGlobalOperationsBuilder($framework, $twig, $this->createMock(UrlGeneratorInterface::class));
+        $translator = $this->createMock(TranslatorInterface::class);
+        $translator
+            ->expects($this->exactly(1))
+            ->method('trans')
+            ->with('MSC.clearClipboard', [], 'contao_default')
+            ->willReturn('Clear Clipboard')
+        ;
+
+        $builder = new DataContainerGlobalOperationsBuilder($framework, $twig, $this->createMock(UrlGeneratorInterface::class), $translator);
         $builder = $builder->initialize('tl_foo');
         $builder->addClearClipboardButton();
 
         $this->assertSame('', (string) $builder);
-
-        unset($GLOBALS['TL_LANG']);
     }
 
     public function testAddNewButton(): void
@@ -166,7 +189,13 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             ->willReturn('')
         ;
 
-        $builder = new DataContainerGlobalOperationsBuilder($this->mockContaoFramework(), $twig, $this->createMock(UrlGeneratorInterface::class));
+        $builder = new DataContainerGlobalOperationsBuilder(
+            $this->mockContaoFramework(),
+            $twig,
+            $this->createMock(UrlGeneratorInterface::class),
+            $this->createMock(TranslatorInterface::class),
+        );
+
         $builder = $builder->initialize('tl_foo');
         $builder->addNewButton('foo=bar');
 
@@ -191,6 +220,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             $this->mockContaoFramework(),
             $twig,
             $this->createMock(UrlGeneratorInterface::class),
+            $this->createMock(TranslatorInterface::class),
         );
 
         $builder = $builder->initialize('tl_foo');
@@ -256,7 +286,12 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             ->willReturnArgument(0)
         ;
 
-        $builder = new DataContainerGlobalOperationsBuilder($framework, $twig, $urlGenerator);
+        $builder = new DataContainerGlobalOperationsBuilder(
+            $framework,
+            $twig,
+            $urlGenerator,
+            $this->createMock(TranslatorInterface::class),
+        );
 
         $builder = $builder->initialize('tl_foo');
         $builder->addGlobalButtons($this->createMock(DataContainer::class));
@@ -340,6 +375,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             $this->createMock(ContaoFramework::class),
             $this->createMock(Environment::class),
             $this->createMock(UrlGeneratorInterface::class),
+            $this->createMock(TranslatorInterface::class),
         );
 
         $builder = $builder->initialize('tl_foo');
