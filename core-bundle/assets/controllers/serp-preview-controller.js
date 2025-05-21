@@ -37,9 +37,9 @@ export default class extends Controller {
 
     disconnect() {
         for (const elements of this.sourceElements.values()) {
-            elements.forEach((el) => {
+            for (const el of elements) {
                 el.removeEventListener('input', this._update);
-            });
+            }
         }
 
         this.sourceElements.clear();
@@ -87,7 +87,7 @@ export default class extends Controller {
             return str;
         }
 
-        return str.substr(0, str.lastIndexOf(' ', max)) + ' …';
+        return `${str.substr(0, str.lastIndexOf(' ', max))} …`;
     }
 
     _html2string(html) {

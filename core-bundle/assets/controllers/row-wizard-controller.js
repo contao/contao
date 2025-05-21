@@ -91,24 +91,24 @@ export default class extends Controller {
         if (id > 0) {
             link.classList.remove('hidden');
 
-            images.forEach((image) => {
+            for (const image of images) {
                 image.classList.add('hidden');
-            });
+            }
         } else {
             link.classList.add('hidden');
 
-            images.forEach((image) => {
+            for (const image of images) {
                 image.classList.remove('hidden');
-            });
+            }
         }
     }
 
     beforeCache() {
         // Restore the original HTML with template tags before Turbo caches the
         // page. They will get unwrapped again at the restored page.
-        this.rowTargets.forEach((row) => {
+        for (const row of this.rowTargets) {
             this._wrap(row);
-        });
+        }
     }
 
     _unwrap(template) {
@@ -144,20 +144,20 @@ export default class extends Controller {
     }
 
     _resetInputs(row) {
-        row.querySelectorAll('input').forEach((input) => {
+        for (const input of row.querySelectorAll('input')) {
             input.value = '';
-        });
+        }
 
-        row.querySelectorAll('select').forEach((select) => {
+        for (const select of row.querySelectorAll('select')) {
             select.value = select.children[0].value;
-        });
+        }
     }
 
     _makeSortable() {
         Array.from(this.bodyTarget.children).forEach((tr, i) => {
-            tr.querySelectorAll('input, select').forEach((el) => {
-                el.name = el.name.replace(/\[[0-9]+]/g, '[' + i + ']');
-            });
+            for (const el of tr.querySelectorAll('input, select')) {
+                el.name = el.name.replace(/\[[0-9]+]/g, `[${i}]`);
+            }
         });
 
         // TODO: replace this with a vanilla JS solution

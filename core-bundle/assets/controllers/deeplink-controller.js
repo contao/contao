@@ -6,7 +6,7 @@ export default class extends Controller {
 
     static afterLoad(identifier) {
         const setupController = () => {
-            document.querySelectorAll('.click2edit').forEach((el) => {
+            for (const el of document.querySelectorAll('.click2edit')) {
                 el.classList.remove('click2edit');
 
                 const primary = el.querySelector('a.edit');
@@ -21,7 +21,7 @@ export default class extends Controller {
                 }
 
                 el.dataset.controller = `${el.dataset.controller || ''} ${identifier}`;
-            });
+            }
         };
 
         document.addEventListener('DOMContentLoaded', setupController);
