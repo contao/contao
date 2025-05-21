@@ -259,7 +259,7 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
                 return $config['href'];
             }
 
-            return $this->framework->getAdapter(Backend::class)->addToUrl($config['href'], addRequestToken: !($config['prefetch'] ?? false));
+            return $this->framework->getAdapter(Backend::class)->addToUrl($config['href'], true, [], !($config['prefetch'] ?? false));
         }
 
         return null;
