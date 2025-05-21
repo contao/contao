@@ -281,7 +281,9 @@ class DataContainerCallbackPassTest extends TestCase
         );
     }
 
-    #[DataProvider('noSuffixProvider')]
+    /**
+     * @dataProvider noSuffixProvider
+     */
     public function testDoesNotAppendCallbackSuffix(array $attributes, array $expected): void
     {
         $attributes['table'] = 'tl_content';
@@ -341,7 +343,7 @@ class DataContainerCallbackPassTest extends TestCase
             [
                 'fields.article.default' => [
                     1 => [
-                        ['test.callback_listener', 'onFoobarCallback']
+                        ['test.callback_listener', 'onFoobarCallback'],
                     ],
                 ],
             ],
