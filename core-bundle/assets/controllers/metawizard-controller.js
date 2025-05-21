@@ -4,8 +4,8 @@ export default class extends Controller {
     static targets = ['input'];
 
     delete() {
-        this.inputTargets.forEach((input) => {
+        for (const input of this.inputTargets) {
             input.value = '';
-        });
+        }
     }
 }
