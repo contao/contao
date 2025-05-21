@@ -83,8 +83,8 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
                 $this->callback(static fn (array $parameters) => isset($parameters['operations'])
                         && 1 === \count($parameters['operations'])
                         && $parameters['operations'][0]['href'] === $expected
-                        && $parameters['operations'][0]['label'] === 'Back'
-                        && $parameters['operations'][0]['title'] === 'Back Title',
+                        && 'Back' === $parameters['operations'][0]['label']
+                        && 'Back Title' === $parameters['operations'][0]['title'],
                 ),
             )
             ->willReturn('')
