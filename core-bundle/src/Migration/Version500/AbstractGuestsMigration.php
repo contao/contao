@@ -91,6 +91,8 @@ abstract class AbstractGuestsMigration extends AbstractMigration
 
                 $this->connection->update($table, $data, ['id' => (int) $id]);
             }
+
+            $this->connection->executeStatement("ALTER TABLE $table DROP COLUMN `guests`");
         }
 
         return $this->createResult(true);
