@@ -159,7 +159,7 @@ class SearchIndexListenerTest extends TestCase
 
         yield 'Should index and not delete because searchIndexer is set to "always_index"' => [
             Request::create('/foobar'),
-            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"searchIndexer":"always_index","protected":false,"groups":[],"fePreview":false}</script></body></html>', 200),
+            new Response('<html><head><meta name="robots" content="noindex,nofollow"/></head><body><script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@graph":[{"@type":"Page","pageId":2,"searchIndexer":"always_index","protected":false,"groups":[],"fePreview":false}]}</script></body></html>'),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             true,
             false,
@@ -167,7 +167,7 @@ class SearchIndexListenerTest extends TestCase
 
         yield 'Should not index but should delete because searchIndexer is set to "never_index"' => [
             Request::create('/foobar'),
-            new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"searchIndexer":"never_index","protected":false,"groups":[],"fePreview":false}</script></body></html>', 200),
+            new Response('<html><head><meta name="robots" content="index,nofollow"/></head><body><script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@graph":[{"@type":"Page","pageId":2,"searchIndexer":"never_index","protected":false,"groups":[],"fePreview":false}]}</script></body></html>'),
             SearchIndexListener::FEATURE_DELETE | SearchIndexListener::FEATURE_INDEX,
             false,
             true,
