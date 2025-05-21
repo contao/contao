@@ -39,7 +39,7 @@ class DataContainerCallbackListener
         'url_callback',
     ];
 
-    // These "callbacks" do not support array notation, so they are wrapper with a closure
+    // These "callbacks" do not support array notation, so they are wrapped with a closure
     private const CLOSURES = [
         'default',
     ];
@@ -70,7 +70,7 @@ class DataContainerCallbackListener
 
                 foreach ($callbacks as $priority => $pCallbacks) {
                     foreach ($pCallbacks as $k => $callback) {
-                        $callbacks[$priority][$k] =  static fn (...$args) => $systemAdapter->importStatic($callback[0])->{$callback[1]}(...$args);
+                        $callbacks[$priority][$k] = static fn (...$args) => $systemAdapter->importStatic($callback[0])->{$callback[1]}(...$args);
                     }
                 }
             }
