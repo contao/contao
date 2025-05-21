@@ -37,11 +37,7 @@ class SearchIndexerSettingsMigration extends AbstractMigration
 
         $columns = $schemaManager->listTableColumns('tl_page');
 
-        if (!isset($columns['nosearch']) || isset($columns['searchindexer'])) {
-            return false;
-        }
-
-        return true;
+        return isset($columns['nosearch']) && !isset($columns['searchindexer']);
     }
 
     public function run(): MigrationResult
