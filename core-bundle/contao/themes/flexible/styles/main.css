@@ -496,9 +496,23 @@ body.popup {
 
 /* Buttons */
 #tl_buttons {
+	display: flex;
+	justify-content: flex-end;
+	flex-wrap: wrap;
+	gap: 8px 15px;
 	margin: 0;
 	padding: 9px 15px;
-	text-align: right;
+	list-style: none;
+}
+
+#tl_buttons li {
+	margin: 0;
+	padding: 0;
+}
+
+#tl_buttons a {
+	/* Reset left margin that is necessary in Contao < 5.6 */
+	margin-left: 0 !important;
 }
 
 .toggleWrap {
