@@ -31,11 +31,6 @@ class Palette implements \Stringable
         return $this->toString();
     }
 
-    public function toString(): string
-    {
-        return $this->implode();
-    }
-
     public function hasLegend(string $legend): bool
     {
         return isset($this->config[$legend]);
@@ -162,6 +157,29 @@ class Palette implements \Stringable
         return $this;
     }
 
+    public function toString(): string
+    {
+        $palette = '';
+
+        foreach ($this->config as $legend => $group) {
+            if (\count($group['fields']) < 1) {
+                continue;
+            }
+
+            if ('' !== $palette) {
+                $palette .= ';';
+            }
+
+            if (!\is_int($legend)) {
+                $palette .= \sprintf('{%s%s},', $legend, $group['hide'] ? ':hide' : '');
+            }
+
+            $palette .= implode(',', $group['fields']);
+        }
+
+        return $palette;
+    }
+
     private function addFieldsToLegend(array $fields, array $parents, string $position, \Closure|array|string|null $fallback, string $fallbackPosition, bool $skipLegends): void
     {
         // If $skipLegends is true, we usually only have one legend without name, so we
@@ -280,32 +298,6 @@ class Palette implements \Stringable
         }
 
         return $config;
-    }
-
-    /**
-     * Converts a configuration array to a palette string.
-     */
-    private function implode(): string
-    {
-        $palette = '';
-
-        foreach ($this->config as $legend => $group) {
-            if (\count($group['fields']) < 1) {
-                continue;
-            }
-
-            if ('' !== $palette) {
-                $palette .= ';';
-            }
-
-            if (!\is_int($legend)) {
-                $palette .= \sprintf('{%s%s},', $legend, $group['hide'] ? ':hide' : '');
-            }
-
-            $palette .= implode(',', $group['fields']);
-        }
-
-        return $palette;
     }
 
     /**
