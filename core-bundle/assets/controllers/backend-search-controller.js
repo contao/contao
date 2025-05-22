@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
-import { TurboStreamConnection } from '../modules/turbo-stream-connection';
 import * as focusTrap from 'focus-trap';
+import { TurboStreamConnection } from '../modules/turbo-stream-connection';
 
 export default class BackendSearchController extends Controller {
     static targets = ['input', 'results'];
@@ -87,8 +87,8 @@ export default class BackendSearchController extends Controller {
     }
 
     _setState(state) {
-        BackendSearchController.classes.forEach((className) => {
+        for (const className of BackendSearchController.classes) {
             this.element.classList.toggle(this[`${className}Class`], className === state);
-        });
+        }
     }
 }
