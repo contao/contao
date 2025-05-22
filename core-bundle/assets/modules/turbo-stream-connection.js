@@ -16,7 +16,7 @@ export class TurboStreamConnection {
             this.abortPending();
         }
 
-        let params = {
+        const params = {
             method: 'get',
             headers: {
                 Accept: 'text/vnd.turbo-stream.html',
@@ -70,7 +70,7 @@ export class TurboStreamConnection {
             return url;
         }
 
-        let pairs = [];
+        const pairs = [];
 
         for (const [key, value] of Object.entries(query_params)) {
             if (!Array.isArray(value)) {
@@ -78,10 +78,12 @@ export class TurboStreamConnection {
                 continue;
             }
 
-            value.forEach((value) => pairs.push([key + '[]', value]));
+            for (const value1 of value) {
+                pairs.push([`${key}[]`, value1]);
+            }
         }
 
-        return url + '?' + new URLSearchParams(pairs).toString();
+        return `${url}?${new URLSearchParams(pairs).toString()}`;
     }
 }
 

@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
-import { TwigEditor } from '../modules/twig-editor';
 import { TurboStreamConnection } from '../modules/turbo-stream-connection';
+import { TwigEditor } from '../modules/twig-editor';
 
 export default class extends Controller {
     editors = new Map();
@@ -67,19 +67,19 @@ export default class extends Controller {
     }
 
     colorChange(event) {
-        this.editors.forEach((editor) => {
+        for (const editor of this.editors) {
             editor.setColorScheme(event.detail.mode);
-        });
+        }
     }
 
     _addOpenEditorTabsToRequest(event) {
         const searchParams = event.detail.formSubmission.location.searchParams;
         const tabs = this.application.getControllerForElementAndIdentifier(this.tabsTarget, 'contao--tabs').getTabs();
 
-        Object.keys(tabs).forEach((tabId) => {
+        for (const tabId of Object.keys(tabs)) {
             // Extract identifier from tabId "template-studio--tab_<identifier>"
             searchParams.append('open_tab[]', tabId.substring(21));
-        });
+        }
     }
 
     _addEditorContentToRequest(event) {
@@ -98,7 +98,7 @@ export default class extends Controller {
         for (const el of editorElementsOnActiveTab ?? []) {
             const editor = this.editors.get(el);
 
-            if (editor && editor.isEditable()) {
+            if (editor?.isEditable()) {
                 return editor;
             }
         }
