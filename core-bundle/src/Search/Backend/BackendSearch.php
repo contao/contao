@@ -104,9 +104,8 @@ class BackendSearch
 
     /**
      * TODO: This Query API object will change for sure because we might want to
-     * introduce searching for multiple tags.
-     * It's a matter of putting in some work there but it will affect the signature of
-     * this object.
+     * introduce searching for multiple tags. It's a matter of putting in some work
+     * there but it will affect the signature of this object.
      */
     public function search(Query $query): Result
     {
