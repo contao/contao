@@ -10,6 +10,12 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
+use App\Entity\FooEntity;
+use App\EventListener\InvalidListener;
+use App\EventListener\ValidListener;
+use App\FrontendModule\LegacyModule;
+use App\Messenger\UnionTypeMessage;
+use App\Model\FooModel;
 use AppBundle\AppBundle;
 use ShipMonk\ComposerDependencyAnalyser\Config\Configuration;
 use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
@@ -17,6 +23,12 @@ use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 return (new Configuration())
     ->ignoreUnknownClasses([
         AppBundle::class,
+        FooEntity::class,
+        InvalidListener::class,
+        ValidListener::class,
+        LegacyModule::class,
+        UnionTypeMessage::class,
+        FooModel::class,
         'Imagick',
         'Gmagick',
         'SensitiveParameter',
