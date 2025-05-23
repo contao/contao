@@ -1,0 +1,23 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of Contao.
+ *
+ * (c) Leo Feyer
+ *
+ * @license LGPL-3.0-or-later
+ */
+
+namespace App\FrontendModule;
+
+use Contao\Module;
+
+class LegacyModule extends Module
+{
+    protected function compile(): void
+    {
+        // do something
+    }
+}
