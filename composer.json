@@ -137,7 +137,7 @@
         "symfony/intl": "^6.4 || ^7.0",
         "symfony/mailer": "^6.4 || ^7.0",
         "symfony/maker-bundle": "^1.1",
-        "symfony/messenger": "^6.4 || ^7.0",
+        "symfony/messenger": "^7.2",
         "symfony/mime": "^6.4 || ^7.0",
         "symfony/monolog-bridge": "^6.4 || ^7.0",
         "symfony/monolog-bundle": "^3.1",
