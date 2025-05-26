@@ -18,6 +18,6 @@ class LegacyModule extends Module
 {
     protected function compile(): void
     {
-        // do something
+        // Do something
     }
 }

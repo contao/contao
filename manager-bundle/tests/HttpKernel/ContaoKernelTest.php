@@ -286,7 +286,6 @@ class ContaoKernelTest extends ContaoTestCase
 
     public function testAutowiresSrcFiles(): void
     {
-        // preload for autoloading
         include_once __DIR__.'/../Fixtures/HttpKernel/AutowireSrc/src/Entity/FooEntity.php';
         include_once __DIR__.'/../Fixtures/HttpKernel/AutowireSrc/src/EventListener/InvalidListener.php';
         include_once __DIR__.'/../Fixtures/HttpKernel/AutowireSrc/src/EventListener/ValidListener.php';
@@ -335,7 +334,6 @@ class ContaoKernelTest extends ContaoTestCase
 
     public function testDoesNotAutowireSrcFilesIfAppNamespaceIsRegistered(): void
     {
-        // preload for autoloading
         include_once __DIR__.'/../Fixtures/HttpKernel/AutowireSrc/src/Entity/FooEntity.php';
         include_once __DIR__.'/../Fixtures/HttpKernel/AutowireSrc/src/EventListener/InvalidListener.php';
         include_once __DIR__.'/../Fixtures/HttpKernel/AutowireSrc/src/EventListener/ValidListener.php';

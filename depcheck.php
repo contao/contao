@@ -24,18 +24,18 @@ return (new Configuration())
     ->ignoreUnknownClasses([
         AppBundle::class,
         FooEntity::class,
-        InvalidListener::class,
-        ValidListener::class,
-        LegacyModule::class,
-        UnionTypeMessage::class,
         FooModel::class,
-        'Imagick',
         'Gmagick',
+        'Imagick',
+        InvalidListener::class,
+        LegacyModule::class,
         'SensitiveParameter',
         'Swift_Attachment',
         'Swift_EmbeddedFile',
         'Swift_Mailer',
         'Swift_Message',
+        UnionTypeMessage::class,
+        ValidListener::class,
     ])
     ->disableExtensionsAnalysis()
     ->disableReportingUnmatchedIgnores()
@@ -65,7 +65,7 @@ return (new Configuration())
     // managed edition.
     ->ignoreErrorsOnPackage('contao/manager-plugin', [ErrorType::DEV_DEPENDENCY_IN_PROD])
 
-    // This packages provides the trigger_deprecation() function.
+    // This package provides the trigger_deprecation() function.
     ->ignoreErrorsOnPackage('symfony/deprecation-contracts', [ErrorType::UNUSED_DEPENDENCY])
 
     // This package provides the "sanitize_html" Twig filter.
