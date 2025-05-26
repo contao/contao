@@ -212,22 +212,22 @@
       <trans-unit id="tl_news.new.1">
         <source>Create a new news item</source>
       </trans-unit>
-      <trans-unit id="tl_news.show">
+      <trans-unit id="tl_news.show.1">
         <source>Show the details of news item ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_news.edit">
+      <trans-unit id="tl_news.edit.1">
         <source>Edit news item ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_news.children">
+      <trans-unit id="tl_news.children.1">
         <source>Edit the content elements of news item ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_news.copy">
+      <trans-unit id="tl_news.copy.1">
         <source>Duplicate news item ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_news.cut">
+      <trans-unit id="tl_news.cut.1">
         <source>Move news item ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_news.delete">
+      <trans-unit id="tl_news.delete.1">
         <source>Delete news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.toggle.0">

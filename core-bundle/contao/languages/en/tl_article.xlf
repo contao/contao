@@ -12,7 +12,8 @@
         <source>Article alias</source>
       </trans-unit>
       <trans-unit id="tl_article.alias.1">
-        <source>The article alias is a unique reference to the article which can be called instead of its numeric ID.</source>
+        <source>The article alias is a unique reference to the article which can be called instead of its numeric ID.
+        </source>
       </trans-unit>
       <trans-unit id="tl_article.author.0">
         <source>Author</source>
@@ -84,13 +85,17 @@
         <source>Show from</source>
       </trans-unit>
       <trans-unit id="tl_article.start.1">
-        <source>If you want to prevent the article from showing on the website before a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <source>If you want to prevent the article from showing on the website before a certain date/time, you can enter
+          it here. Otherwise, leave the field blank.
+        </source>
       </trans-unit>
       <trans-unit id="tl_article.stop.0">
         <source>Show until</source>
       </trans-unit>
       <trans-unit id="tl_article.stop.1">
-        <source>If you want to prevent the article from showing on the website after a certain date/time, you can enter it here. Otherwise, leave the field blank.</source>
+        <source>If you want to prevent the article from showing on the website after a certain date/time, you can enter
+          it here. Otherwise, leave the field blank.
+        </source>
       </trans-unit>
       <trans-unit id="tl_article.tstamp.0">
         <source>Revision date</source>
@@ -140,22 +145,28 @@
       <trans-unit id="tl_article.new.1">
         <source>Create a new article</source>
       </trans-unit>
-      <trans-unit id="tl_article.show">
+      <trans-unit id="tl_article.show.0">
+        <source>Show details</source>
+      </trans-unit>
+      <trans-unit id="tl_article.show.1">
         <source>Show the details of article ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_article.edit">
+      <trans-unit id="tl_article.edit.1">
         <source>Edit article ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_article.children">
+      <trans-unit id="tl_article.children.0">
+        <source>Edit content elements</source>
+      </trans-unit>
+      <trans-unit id="tl_article.children.1">
         <source>Edit the content elements of article ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_article.copy">
+      <trans-unit id="tl_article.copy.1">
         <source>Duplicate article ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_article.cut">
+      <trans-unit id="tl_article.cut.1">
         <source>Move article ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_article.delete">
+      <trans-unit id="tl_article.delete.1">
         <source>Delete article ID %s</source>
       </trans-unit>
       <trans-unit id="tl_article.toggle.0">
@@ -167,8 +178,20 @@
       <trans-unit id="tl_article.toggle.2">
         <source>Publish article ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_article.toggle.3">
+        <source>Unpublish</source>
+      </trans-unit>
+      <trans-unit id="tl_article.toggle.4">
+        <source>Publish</source>
+      </trans-unit>
+      <trans-unit id="tl_article.pasteafter.0">
+        <source>Paste after article</source>
+      </trans-unit>
       <trans-unit id="tl_article.pasteafter.1">
         <source>Paste after article ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_article.pasteinto.0">
+        <source>Paste into page</source>
       </trans-unit>
       <trans-unit id="tl_article.pasteinto.1">
         <source>Paste into page ID %s</source>

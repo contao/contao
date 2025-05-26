@@ -87,7 +87,9 @@
         <source>Field "%s" must not contain any whitespace characters!</source>
       </trans-unit>
       <trans-unit id="ERR.filename">
-        <source>The name of at least one uploaded file contains invalid characters or exceeds the maximum length of 255 characters!</source>
+        <source>The name of at least one uploaded file contains invalid characters or exceeds the maximum length of 255
+          characters!
+        </source>
       </trans-unit>
       <trans-unit id="ERR.filesize">
         <source>The maximum size for file uploads is %s (Contao or php.ini settings)!</source>
@@ -198,10 +200,14 @@
         <source>Invalid selection (circular reference)!</source>
       </trans-unit>
       <trans-unit id="ERR.noFallbackEmpty">
-        <source>None of the active website root pages without an explicit DNS setting have the language fallback option set.</source>
+        <source>None of the active website root pages without an explicit DNS setting have the language fallback option
+          set.
+        </source>
       </trans-unit>
       <trans-unit id="ERR.noFallbackDns">
-        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback option set.</source>
+        <source>None of the active website root pages for &lt;strong&gt;%s&lt;/strong&gt; have the language fallback
+          option set.
+        </source>
       </trans-unit>
       <trans-unit id="ERR.multipleFallback">
         <source>You can only define one website root page per domain as the language fallback.</source>
@@ -261,7 +267,8 @@
         <source>Invalid custom regular expression!</source>
       </trans-unit>
       <trans-unit id="ERR.applicationCache">
-        <source>Please run the "cache:clear" command or use the Contao Manager to rebuild your application cache.</source>
+        <source>Please run the "cache:clear" command or use the Contao Manager to rebuild your application cache.
+        </source>
       </trans-unit>
       <trans-unit id="ERR.invalidThemeTemplatePath">
         <source>The template path "%s" must not contain the following characters: %s</source>
@@ -270,7 +277,9 @@
         <source>Unknown username: %s</source>
       </trans-unit>
       <trans-unit id="ERR.versionNotRestored">
-        <source>Version %d could not be restored because it is no longer compatible with the current database structure. Please restore the data manually.</source>
+        <source>Version %d could not be restored because it is no longer compatible with the current database structure.
+          Please restore the data manually.
+        </source>
       </trans-unit>
       <trans-unit id="ERR.startStop">
         <source>The end time must be later than the start time.</source>
@@ -282,7 +291,9 @@
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
       </trans-unit>
       <trans-unit id="ERR.altchaJavaScriptRequired">
-        <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.</source>
+        <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail.
+          Please enable JavaScript temporarily for form submission.
+        </source>
       </trans-unit>
       <trans-unit id="ERR.altchaVerificationFailed">
         <source>Anti-spam verification failed. Are you a human or a robot?</source>
@@ -291,10 +302,14 @@
         <source>Verification failed. Try again later.</source>
       </trans-unit>
       <trans-unit id="ERR.altchaInsecureConnection">
-        <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
+        <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS
+          (not recommended), please use the security question instead.
+        </source>
       </trans-unit>
       <trans-unit id="ERR.personalDataPassword">
-        <source>There is at least one "personal data" module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the "change password" module instead.</source>
+        <source>There is at least one "personal data" module that allows the password to be changed. This is a security
+          weakness and will no longer work in Contao 6. Use the "change password" module instead.
+        </source>
       </trans-unit>
       <trans-unit id="ERR.passkeysUnsupported">
         <source>Passkeys are not supported on this device.</source>
@@ -615,7 +630,8 @@
         <source>ALTCHA antispam</source>
       </trans-unit>
       <trans-unit id="FFL.altcha.1">
-        <source>Provides an ALTCHA antispam form field to verify that the form is submitted by a human (CAPTCHA).</source>
+        <source>Provides an ALTCHA antispam form field to verify that the form is submitted by a human (CAPTCHA).
+        </source>
       </trans-unit>
       <trans-unit id="FFL.captcha.0">
         <source>Security question</source>
@@ -639,7 +655,8 @@
         <source>External redirect</source>
       </trans-unit>
       <trans-unit id="PTY.redirect.1">
-        <source>This type of page automatically redirects visitors to an external website. It works like a hyperlink.</source>
+        <source>This type of page automatically redirects visitors to an external website. It works like a hyperlink.
+        </source>
       </trans-unit>
       <trans-unit id="PTY.forward.0">
         <source>Internal redirect</source>
@@ -663,13 +680,16 @@
         <source>401 Not authenticated</source>
       </trans-unit>
       <trans-unit id="PTY.error_401.1">
-        <source>If a visitor requests a protected page without being authenticated, a 401 error page will be loaded instead.</source>
+        <source>If a visitor requests a protected page without being authenticated, a 401 error page will be loaded
+          instead.
+        </source>
       </trans-unit>
       <trans-unit id="PTY.error_403.0">
         <source>403 Access denied</source>
       </trans-unit>
       <trans-unit id="PTY.error_403.1">
-        <source>If a member requests a protected page without permission, a 403 error page will be loaded instead.</source>
+        <source>If a member requests a protected page without permission, a 403 error page will be loaded instead.
+        </source>
       </trans-unit>
       <trans-unit id="PTY.error_404.0">
         <source>404 Page not found</source>
@@ -1107,19 +1127,25 @@
         <source>Proportional</source>
       </trans-unit>
       <trans-unit id="MSC.proportional.1">
-        <source>The longer side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
+        <source>The longer side of the image is adjusted to the given dimensions and the image is resized
+          proportionally.
+        </source>
       </trans-unit>
       <trans-unit id="MSC.box.0">
         <source>Fit the box</source>
       </trans-unit>
       <trans-unit id="MSC.box.1">
-        <source>The shorter side of the image is adjusted to the given dimensions and the image is resized proportionally.</source>
+        <source>The shorter side of the image is adjusted to the given dimensions and the image is resized
+          proportionally.
+        </source>
       </trans-unit>
       <trans-unit id="MSC.crop.0">
         <source>Crop (important part)</source>
       </trans-unit>
       <trans-unit id="MSC.crop.1">
-        <source>Preserves the important part of an image as specified in the file manager. If necessary, the image will be cropped.</source>
+        <source>Preserves the important part of an image as specified in the file manager. If necessary, the image will
+          be cropped.
+        </source>
       </trans-unit>
       <trans-unit id="MSC.left_top.0">
         <source>Left | Top</source>
@@ -1269,7 +1295,9 @@
         <source>Back end keyboard shortcuts</source>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href="%s" target="_blank" rel="noreferrer noopener"&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <source>Learn more about speeding up your workflow by using &lt;a href="%s" target="_blank" rel="noreferrer
+          noopener"&gt;keyboard shortcuts&lt;/a&gt;.
+        </source>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1347,7 +1375,7 @@
         <source>Cancel</source>
       </trans-unit>
       <trans-unit id="MSC.confirmTitle">
-          <source>Are you sure?</source>
+        <source>Are you sure?</source>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete element ID %s?</source>
@@ -1698,7 +1726,9 @@
         <source>Help wizard</source>
       </trans-unit>
       <trans-unit id="MSC.jsDisabled">
-        <source>It seems that you have disabled JavaScript in your browser. The Contao back end will not work properly without JavaScript.</source>
+        <source>It seems that you have disabled JavaScript in your browser. The Contao back end will not work properly
+          without JavaScript.
+        </source>
       </trans-unit>
       <trans-unit id="MSC.copyOf">
         <source>%s (copy)</source>
@@ -1728,7 +1758,9 @@
         <source>New registration on %s</source>
       </trans-unit>
       <trans-unit id="MSC.adminText">
-        <source>A new member (ID %s) has registered at your website.%sIf you did not allow e-mail activation, you have to enable the account manually in the back end.</source>
+        <source>A new member (ID %s) has registered at your website.%sIf you did not allow e-mail activation, you have
+          to enable the account manually in the back end.
+        </source>
       </trans-unit>
       <trans-unit id="MSC.requestPassword">
         <source>Request password</source>
@@ -1983,7 +2015,9 @@
         <source>The token has been re-sent to %s.</source>
       </trans-unit>
       <trans-unit id="MSC.invalidTokenUrl">
-        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
+        <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have
+          received it by a trustworthy person, you can confirm the process below.
+        </source>
       </trans-unit>
       <trans-unit id="MSC.tooManyPasswordResetAttempts">
         <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
@@ -1995,7 +2029,9 @@
         <source>Another user has created version %s while you were editing version %s of this record.</source>
       </trans-unit>
       <trans-unit id="MSC.versionConflict2">
-        <source>Your changes have been now been saved as version %s and have potentially overwritten the changes of version %s, therefore please compare the versions below:</source>
+        <source>Your changes have been now been saved as version %s and have potentially overwritten the changes of
+          version %s, therefore please compare the versions below:
+        </source>
       </trans-unit>
       <trans-unit id="MSC.dragItemsHint">
         <source>Drag the items to re-order them</source>
@@ -2052,7 +2088,11 @@
         <source>Please enter the verification code generated by your 2FA/TOTP app.</source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorExplain">
-        <source>Here you can enable two-factor authentication, which adds an extra layer of security to your account. In addition to your username and password, you will need to enter a verification code generated by a two-factor app such as 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator or any other TOTP app.</source>
+        <source>Here you can enable two-factor authentication, which adds an extra layer of security to your account. In
+          addition to your username and password, you will need to enter a verification code generated by a two-factor
+          app such as 1Password, Authy, Google Authenticator, Microsoft Authenticator, LastPass Authenticator or any
+          other TOTP app.
+        </source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorScan">
         <source>Please scan the QR code with your 2FA/TOTP app.</source>
@@ -2070,7 +2110,10 @@
         <source>Backup codes</source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesExplain">
-        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password! It is recommended to save them with a password manager such as Lastpass, 1Password or Keeper.</source>
+        <source>Backup codes can be used to access your account if you have lost your authentication device and cannot
+          generate two-factor codes anymore. Treat your backup codes with the same level of attention as your password!
+          It is recommended to save them with a password manager such as Lastpass, 1Password or Keeper.
+        </source>
       </trans-unit>
       <trans-unit id="MSC.twoFactorBackupCodesInfo">
         <source>Make sure to copy the codes now. You will not be able to see them again!</source>
@@ -2097,25 +2140,41 @@
         <source>Edit favorites</source>
       </trans-unit>
       <trans-unit id="MSC.userTemplateEditor">
-        <source>There is at least one regular user with access to the template editor. Since templates are PHP files, these users implicitly have full control over the system!</source>
+        <source>There is at least one regular user with access to the template editor. Since templates are PHP files,
+          these users implicitly have full control over the system!
+        </source>
       </trans-unit>
       <trans-unit id="MSC.groupTemplateEditor">
-        <source>There is at least one user group granting access to the template editor. Since templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <source>There is at least one user group granting access to the template editor. Since templates are PHP files,
+          users of these groups implicitly have full control over the system!
+        </source>
       </trans-unit>
       <trans-unit id="MSC.userThemeImport">
-        <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, these users implicitly have full control over the system!</source>
+        <source>There is at least one regular user with permission to import themes. Since themes can contain arbitrary
+          templates and templates are PHP files, these users implicitly have full control over the system!
+        </source>
       </trans-unit>
       <trans-unit id="MSC.groupThemeImport">
-        <source>There is at least one user group granting permission to import themes. Since themes can contain arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the system!</source>
+        <source>There is at least one user group granting permission to import themes. Since themes can contain
+          arbitrary templates and templates are PHP files, users of these groups implicitly have full control over the
+          system!
+        </source>
       </trans-unit>
       <trans-unit id="MSC.groupListingModule">
-        <source>There is at least one user group granting permission to the front end module "Listing" and its "list_*" fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over the system!</source>
+        <source>There is at least one user group granting permission to the front end module "Listing" and its "list_*"
+          fields. Since they can contain arbitrary SQL queries, users of these groups implicitly have full control over
+          the system!
+        </source>
       </trans-unit>
       <trans-unit id="MSC.groupUnfilteredHtml">
-        <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code of this element is not filtered, the users of these groups implicitly have full control over the system!</source>
+        <source>There is at least one user group that grants access to the unfiltered HTML element. Since the HTML code
+          of this element is not filtered, the users of these groups implicitly have full control over the system!
+        </source>
       </trans-unit>
       <trans-unit id="MSC.userUnfilteredHtml">
-        <source>There is at least one regular user with access to the unfiltered HTML element. Since the HTML code of that element is not filtered, these users implicitly have full control over the system!</source>
+        <source>There is at least one regular user with access to the unfiltered HTML element. Since the HTML code of
+          that element is not filtered, these users implicitly have full control over the system!
+        </source>
       </trans-unit>
       <trans-unit id="MSC.enable">
         <source>Enable</source>
@@ -2130,7 +2189,9 @@
         <source>Google search results preview</source>
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
-        <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
+        <source>Here you can preview the metadata in the Google search results. Other search engines might show longer
+          texts or crop at a different position.
+        </source>
       </trans-unit>
       <trans-unit id="MSC.numberOfItems.0">
         <source>Number of items</source>
@@ -2226,7 +2287,8 @@
         <source>Passkeys</source>
       </trans-unit>
       <trans-unit id="MSC.passkeysDescription">
-        <source>Passkeys allow you to log in securely and easily without the need for a password and two-factor token.</source>
+        <source>Passkeys allow you to log in securely and easily without the need for a password and two-factor token.
+        </source>
       </trans-unit>
       <trans-unit id="MSC.passkeyLogin">
         <source>Sign in with a passkey</source>
@@ -2405,19 +2467,40 @@
       <trans-unit id="DCA.new.1">
         <source>Create a new element</source>
       </trans-unit>
-      <trans-unit id="DCA.show">
+      <trans-unit id="DCA.show.0">
+        <source>Show details</source>
+      </trans-unit>
+      <trans-unit id="DCA.show.1">
         <source>Show the details of element ID %s</source>
       </trans-unit>
-      <trans-unit id="DCA.edit">
+      <trans-unit id="DCA.edit.0">
+        <source>Edit</source>
+      </trans-unit>
+      <trans-unit id="DCA.edit.1">
         <source>Edit element ID %s</source>
       </trans-unit>
-      <trans-unit id="DCA.cut">
+      <trans-unit id="DCA.cut.0">
+        <source>Move</source>
+      </trans-unit>
+      <trans-unit id="DCA.cut.1">
         <source>Move element ID %s</source>
       </trans-unit>
-      <trans-unit id="DCA.copy">
+      <trans-unit id="DCA.copy.0">
+        <source>Duplicate</source>
+      </trans-unit>
+      <trans-unit id="DCA.copy.1">
         <source>Duplicate element ID %s</source>
       </trans-unit>
-      <trans-unit id="DCA.delete">
+      <trans-unit id="DCA.copyChildren.0">
+        <source>Duplicate recursively</source>
+      </trans-unit>
+      <trans-unit id="DCA.copyChildren.1">
+        <source>Duplicate element ID %s with child nodes</source>
+      </trans-unit>
+      <trans-unit id="DCA.delete.0">
+        <source>Delete</source>
+      </trans-unit>
+      <trans-unit id="DCA.delete.1">
         <source>Delete element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.drag">
@@ -2429,7 +2512,10 @@
       <trans-unit id="DCA.operations">
         <source>Show operations for element ID %s</source>
       </trans-unit>
-      <trans-unit id="DCA.children">
+      <trans-unit id="DCA.children.0">
+        <source>Edit children</source>
+      </trans-unit>
+      <trans-unit id="DCA.children.1">
         <source>Edit the child elements of element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.toggle.0">
@@ -2441,22 +2527,40 @@
       <trans-unit id="DCA.toggle.2">
         <source>Publish element ID %s</source>
       </trans-unit>
-      <trans-unit id="DCA.pasteinto.0">
+      <trans-unit id="DCA.toggle.3">
+        <source>Unpublish</source>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.4">
+        <source>Publish</source>
+      </trans-unit>
+      <trans-unit id="DCA.pastetop">
         <source>Paste at the top</source>
+      </trans-unit>
+      <trans-unit id="DCA.pasteroot">
+        <source>Paste at the top</source>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.0">
+        <source>Paste into</source>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.1">
         <source>Paste into element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.pasteafter.0">
-        <source>Paste at the top</source>
+        <source>Paste after</source>
       </trans-unit>
       <trans-unit id="DCA.pasteafter.1">
         <source>Paste after element ID %s</source>
       </trans-unit>
-      <trans-unit id="DCA.pastenew.0">
-        <source>Create a new element at the top</source>
+      <trans-unit id="DCA.pastenewtop.0">
+        <source>Create new element</source>
       </trans-unit>
-      <trans-unit id="DCA.pastenew.1">
+      <trans-unit id="DCA.pastenewtop.1">
+        <source>Create a new element after element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewafter.0">
+        <source>Create new element</source>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewafter.1">
         <source>Create a new element after element ID %s</source>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">

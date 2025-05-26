@@ -467,22 +467,22 @@
       <trans-unit id="tl_page.new.1">
         <source>Create a new page</source>
       </trans-unit>
-      <trans-unit id="tl_page.show">
+      <trans-unit id="tl_page.show.1">
         <source>Show the details of page ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_page.edit">
+      <trans-unit id="tl_page.edit.1">
         <source>Edit page ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_page.cut">
+      <trans-unit id="tl_page.cut.1">
         <source>Move page ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_page.copy">
+      <trans-unit id="tl_page.copy.1">
         <source>Duplicate page ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_page.copyChildren">
+      <trans-unit id="tl_page.copyChildren.1">
         <source>Duplicate page ID %s with its subpages</source>
       </trans-unit>
-      <trans-unit id="tl_page.delete">
+      <trans-unit id="tl_page.delete.1">
         <source>Delete page ID %s</source>
       </trans-unit>
       <trans-unit id="tl_page.toggle.0">
@@ -494,8 +494,11 @@
       <trans-unit id="tl_page.toggle.2">
         <source>Publish page ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_page.pasteinto.0">
-        <source>Paste at the top</source>
+      <trans-unit id="tl_page.toggle.3">
+        <source>Unpublish</source>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.4">
+        <source>Publish</source>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.1">
         <source>Paste into page ID %s</source>
@@ -503,7 +506,10 @@
       <trans-unit id="tl_page.pasteafter.1">
         <source>Paste after page ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_page.articles">
+      <trans-unit id="tl_page.articles.0">
+        <source>Edit articles</source>
+      </trans-unit>
+      <trans-unit id="tl_page.articles.1">
         <source>Edit the articles of page ID %s</source>
       </trans-unit>
       <trans-unit id="tl_page.routeConflicts.0">

@@ -28,6 +28,8 @@ use Twig\Environment;
  */
 class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuilder
 {
+    private string $table;
+
     private int|string|null $id = null;
 
     public function __construct(
@@ -55,12 +57,13 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         ]);
     }
 
-    public function initialize(int|string|null $id = null): self
+    public function initialize(string $table, int|string|null $id = null): self
     {
         $this->ensureNotInitialized();
 
         $builder = clone $this;
         $builder->id = $id;
+        $builder->table = $table;
         $builder->operations = [];
 
         return $builder;
@@ -68,7 +71,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
 
     public function initializeWithButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
     {
-        $builder = $this->initialize($record['id'] ?? null);
+        $builder = $this->initialize($table, $record['id'] ?? null);
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
             return $builder;
@@ -81,7 +84,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             }
 
             $v = \is_array($v) ? $v : [$v];
-            $operation = $builder->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
+            $operation = $builder->generateOperation($k, $v, $record, $dataContainer, $legacyCallback);
 
             if ($operation) {
                 $builder->append($operation);
@@ -93,11 +96,13 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
 
     public function initializeWithHeaderButtons(string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): self
     {
-        $builder = $this->initialize($record['id'] ?? null);
+        $builder = $this->initialize($table, $record['id'] ?? null);
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
             return $builder;
         }
+
+        $inputAdapter = $this->framework->getAdapter(Input::class);
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
             // Show edit operation in the header by default (backwards compatibility)
@@ -105,7 +110,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
                 $v['showInHeader'] = true;
             }
 
-            if (empty($v['showInHeader']) || ('select' === Input::get('act') && !($v['showOnSelect'] ?? null))) {
+            if (empty($v['showInHeader']) || ('select' === $inputAdapter->get('act') && !($v['showOnSelect'] ?? null))) {
                 continue;
             }
 
@@ -118,7 +123,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
                 $v['href'] = 'table='.$table;
             }
 
-            $operation = $builder->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
+            $operation = $builder->generateOperation($k, $v, $record, $dataContainer, $legacyCallback);
 
             if ($operation) {
                 $builder->append($operation);
@@ -128,7 +133,43 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         return $builder;
     }
 
-    private function generateOperation(string $name, array $operation, string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): array|null
+    /**
+     * @param "pasteinto"|"pasteafter"|"pastetop"|"pasteroot"|"pastenewtop"|"pastenewafter" $type
+     */
+    public function addPasteButton(string $type, string|null $href): self
+    {
+        $icon = match($type) {
+            'pastetop' => 'pasteafter',
+            'pasteroot' => 'pasteinto',
+            'pastenewtop' => 'new',
+            'pastenewafter' => 'new',
+            default => $type
+        };
+
+        if (null === $href) {
+            $this->append([
+                'icon' => $icon.'--disabled.svg',
+                'primary' => true,
+            ]);
+
+            return $this;
+        }
+
+        [$label, $title] = $this->getLabelAndTitle($type);
+
+        $this->append([
+            'href' => $href,
+            'label' => $label,
+            'title' => $title,
+            'attributes' => 'data-action="contao--scroll-offset#store"',
+            'icon' => $icon.'.svg',
+            'primary' => !str_starts_with($type, 'pastenew'),
+        ]);
+
+        return $this;
+    }
+
+    private function generateOperation(string $name, array $operation, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): array|null
     {
         $config = new DataContainerOperation($name, $operation, $record, $dataContainer);
 
@@ -145,17 +186,20 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             ];
         }
 
-        $isPopup = 'show' === $name;
-        $href = $this->generateHref($config, $record, $isPopup);
+        $href = $this->generateHref($config, $record);
 
-        if (false !== ($toggle = $this->handleToggle($config, $table, $record, $operation, $href))) {
+        if (false !== ($toggle = $this->handleToggle($config, $record, $operation, $href))) {
             return $toggle;
         }
 
-        if ($isPopup) {
+        if ('show' === $name) {
             $config['attributes']->set(
                 'onclick',
-                \sprintf("Backend.openModalIframe({title:'%s', url:this.href});return false", StringUtil::specialchars($config['label'])),
+                \sprintf(
+                    "Backend.openModalIframe({title:'%s', url:'%s'});return false",
+                    StringUtil::specialchars($config['title']),
+                    $href.(str_contains($href, '?') ? '&' : '?').'popup=1',
+                ),
             );
         }
 
@@ -174,7 +218,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         ];
     }
 
-    private function generateHref(DataContainerOperation $config, array $record, bool $isPopup): string|null
+    private function generateHref(DataContainerOperation $config, array $record): string|null
     {
         if (null !== $config->getUrl()) {
             return $config->getUrl();
@@ -183,15 +227,11 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         if (!empty($config['route'])) {
             $params = ['id' => $record['id']];
 
-            if ($isPopup) {
-                $params['popup'] = '1';
-            }
-
             return $this->urlGenerator->generate($config['route'], $params);
         }
 
         if (isset($config['href'])) {
-            return Backend::addToUrl($config['href'].'&amp;id='.$record['id'].(Input::get('nb') ? '&amp;nc=1' : '').($isPopup ? '&amp;popup=1' : ''), addRequestToken: !($config['prefetch'] ?? false) && null === ($config['method'] ?? null));
+            return $this->framework->getAdapter(Backend::class)->addToUrl($config['href'].'&amp;id='.$record['id'].(Input::get('nb') ? '&amp;nc=1' : ''), addRequestToken: !($config['prefetch'] ?? false) && null === ($config['method'] ?? null));
         }
 
         return null;
@@ -200,7 +240,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
     /**
      * Returns true if this was a toggle operation (which is added to $operations).
      */
-    private function handleToggle(DataContainerOperation $config, string $table, array $record, array $operation, string|null $href): array|false|null
+    private function handleToggle(DataContainerOperation $config, array $record, array $operation, string|null $href): array|false|null
     {
         parse_str(StringUtil::decodeEntities($config['href'] ?? $operation['href'] ?? ''), $params);
 
@@ -211,11 +251,11 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         // Do not generate the toggle icon if the user does not have access to the field
         if (
             (
-                true !== ($GLOBALS['TL_DCA'][$table]['fields'][$params['field']]['toggle'] ?? false)
-                && true !== ($GLOBALS['TL_DCA'][$table]['fields'][$params['field']]['reverseToggle'] ?? false)
+                true !== ($GLOBALS['TL_DCA'][$this->table]['fields'][$params['field']]['toggle'] ?? false)
+                && true !== ($GLOBALS['TL_DCA'][$this->table]['fields'][$params['field']]['reverseToggle'] ?? false)
             ) || (
-                DataContainer::isFieldExcluded($table, $params['field'])
-                && !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $table.'::'.$params['field'])
+                DataContainer::isFieldExcluded($this->table, $params['field'])
+                && !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->table.'::'.$params['field'])
             )
         ) {
             return null;
@@ -236,8 +276,20 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
 
         $state = $record[$params['field']] ? 1 : 0;
 
-        if (($config['reverse'] ?? false) || ($GLOBALS['TL_DCA'][$table]['fields'][$params['field']]['reverseToggle'] ?? false)) {
+        if (($config['reverse'] ?? false) || ($GLOBALS['TL_DCA'][$this->table]['fields'][$params['field']]['reverseToggle'] ?? false)) {
             $state = $record[$params['field']] ? 0 : 1;
+        }
+
+        if (isset($config['labelEnabled'])) {
+            $labelEnabled = $config['labelEnabled'];
+        } else {
+            $labelEnabled = \is_array($operation['label'] ?? null) && isset($operation['label'][3]) ? $operation['label'][3] : $config['label'];
+        }
+
+        if (isset($config['labelDisabled'])) {
+            $labelDisabled = $config['labelDisabled'];
+        } else {
+            $labelDisabled = \is_array($operation['label'] ?? null) && isset($operation['label'][4]) ? $operation['label'][4] : $config['label'];
         }
 
         if (isset($config['titleDisabled'])) {
@@ -245,6 +297,14 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         } else {
             $titleDisabled = \is_array($operation['label'] ?? null) && isset($operation['label'][2]) ? \sprintf($operation['label'][2], $record['id']) : $config['title'];
         }
+
+        $attributes = $config['attributes']
+            ->set('data-label', $labelEnabled)
+            ->set('data-label-disabled', $labelDisabled)
+            ->set('data-title', $config['title'])
+            ->set('data-title-disabled', $titleDisabled)
+            ->set('data-action', 'contao--scroll-offset#store')
+            ->set('onclick', 'return AjaxRequest.toggleField(this,'.('visible.svg' === $icon ? 'true' : 'false').')');
 
         $iconAttributes = (new HtmlAttributes())
             ->set('data-icon', $icon)
@@ -257,11 +317,35 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         return [
             'href' => $href,
             'title' => $state ? $config['title'] : $titleDisabled,
-            'label' => $config['label'],
-            'attributes' => $config['attributes']->set('data-action', 'contao--scroll-offset#store')->set('onclick', 'return AjaxRequest.toggleField(this,'.('visible.svg' === $icon ? 'true' : 'false').')'),
+            'label' => $state ? $labelEnabled : $labelDisabled,
+            'attributes' => $attributes,
             'icon' => $state ? $icon : $_icon,
             'iconAttributes' => $iconAttributes,
             'primary' => $config['primary'] ?? null,
         ];
+    }
+
+    /**
+     * @return array{0: string, 1: string}
+     */
+    private function getLabelAndTitle(string $key): array
+    {
+        $label = $GLOBALS['TL_LANG'][$this->table][$key] ?? $GLOBALS['TL_LANG']['DCA'][$key] ?? null;
+
+        if (null === $label) {
+            return [$key, ''];
+        }
+
+        if (\is_string($label)) {
+            $label = [null, $label];
+        }
+
+        $label[1] = sprintf($label[1], $this->id);
+
+        if (!isset($label[0])) {
+            $label[0] = $GLOBALS['TL_LANG']['DCA'][$key][0] ?? $label[1];
+        }
+
+        return $label;
     }
 }
