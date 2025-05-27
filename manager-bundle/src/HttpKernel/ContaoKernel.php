@@ -181,7 +181,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
                 }
 
                 if ($container->fileExists(Path::join($this->getProjectDir(), 'src'), false)) {
-                    $loader->load(__DIR__.'/../../skeleton/config/services.php');
+                    $loader->load(Path::makeAbsolute('../../skeleton/config/services.php', __DIR__));
                 }
             },
         );
