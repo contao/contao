@@ -64,6 +64,8 @@ class PreviewUrlCreateListener
             $pageId = $this->connection->fetchOne('SELECT pid FROM tl_article WHERE id=?', [$id]);
         }
 
-        $event->setQuery('page='.$pageId);
+        if ($pageId) {
+            $event->setQuery('page='.$pageId);
+        }
     }
 }
