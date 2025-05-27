@@ -12,10 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener;
 
-use Contao\ArticleModel;
+use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
+use Contao\CoreBundle\DataContainer\DynamicPtableTrait;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\PageModel;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
 /**
@@ -24,8 +25,13 @@ use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 #[AsEventListener]
 class PreviewUrlCreateListener
 {
-    public function __construct(private readonly ContaoFramework $framework)
-    {
+    use DynamicPtableTrait;
+
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly DcaUrlAnalyzer $dcaUrlAnalyzer,
+        private readonly Connection $connection,
+    ) {
     }
 
     /**
@@ -33,24 +39,31 @@ class PreviewUrlCreateListener
      */
     public function __invoke(PreviewUrlCreateEvent $event): void
     {
-        if (!$this->framework->isInitialized() || (!$id = $event->getId()) || !\in_array($event->getKey(), ['page', 'article'], true)) {
+        if (!$this->framework->isInitialized() || !\in_array($event->getKey(), ['page', 'article'], true)) {
             return;
         }
 
-        if ('article' === $event->getKey()) {
-            $adapter = $this->framework->getAdapter(ArticleModel::class);
+        $pageId = $event->getId();
 
-            if (!$article = $adapter->findById($id)) {
+        if ('article' === $event->getKey()) {
+            [$table, $id] = $this->dcaUrlAnalyzer->getCurrentTableId();
+
+            // List view of articles
+            if (null === $id) {
                 return;
             }
 
-            $id = $article->pid;
+            if ('tl_content' === $table) {
+                [$table, $id] = $this->getParentTableAndId($this->connection, $table, $id);
+            }
+
+            if ('tl_article' !== $table) {
+                return;
+            }
+
+            $pageId = $this->connection->fetchOne('SELECT pid FROM tl_article WHERE id=?', [$id]);
         }
 
-        $adapter = $this->framework->getAdapter(PageModel::class);
-
-        if ($adapter->findById($id)) {
-            $event->setQuery('page='.$id);
-        }
+        $event->setQuery('page='.$pageId);
     }
 }
