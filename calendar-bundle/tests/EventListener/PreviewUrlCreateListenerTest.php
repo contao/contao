@@ -56,7 +56,6 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
 
     public function testDoesNotCreateThePreviewUrlIfTheCalendarParameterIsNotSet(): void
     {
-        $framework = $this->mockContaoFramework();
         $event = new PreviewUrlCreateEvent('news', 1);
 
         $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $this->createMock(DcaUrlAnalyzer::class), $this->createMock(Connection::class));
