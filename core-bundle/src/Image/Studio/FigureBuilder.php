@@ -774,8 +774,8 @@ class FigureBuilder
             }
 
             if (Path::isAbsolute($target)) {
-                // {{file::*}} insert tag returns an absolute path, i.e. "/files/…"
-                if (Path::isBasePath(Path::join('/', $this->uploadPath), $target)) {
+                // Treat absolute paths outside the project dir as absolute URL paths
+                if (!Path::isBasePath($this->projectDir, $target)) {
                     $filePath = Path::join($this->projectDir, $target);
                 } else {
                     $filePath = Path::canonicalize($target);
