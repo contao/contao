@@ -1232,7 +1232,7 @@ class FigureBuilderTest extends TestCase
         ];
 
         yield 'absolute file path returned by the {{files::*}} insert tag' => [
-            '/files/public/foo (bar).jpg',
+            '/files/public/foo%20(bar).jpg',
             [
                 Path::canonicalize(__DIR__.'/../../Fixtures/files/public/foo (bar).jpg'),
                 null,

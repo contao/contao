@@ -776,7 +776,7 @@ class FigureBuilder
             if (Path::isAbsolute($target)) {
                 // Treat absolute paths outside the project dir as absolute URL paths
                 if (!Path::isBasePath($this->projectDir, $target)) {
-                    $filePath = Path::join($this->projectDir, $target);
+                    $filePath = Path::join($this->projectDir, urldecode($target));
                 } else {
                     $filePath = Path::canonicalize($target);
                 }
