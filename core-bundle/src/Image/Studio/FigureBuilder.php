@@ -773,23 +773,28 @@ class FigureBuilder
                 return [null, $target];
             }
 
-            if (Path::isAbsolute($target)) {
-                // Treat absolute paths outside the project dir as absolute URL paths
-                if (!Path::isBasePath($this->projectDir, $target)) {
-                    $filePath = Path::join($this->projectDir, urldecode($target));
-                } else {
-                    $filePath = Path::canonicalize($target);
-                }
-            } else {
-                // URL relative to the project directory
-                $filePath = Path::makeAbsolute(urldecode($target), $this->projectDir);
+            $target = urldecode($target);
+
+            // Check if target is an absolute filesystem path to an existing resource
+            if (Path::isAbsolute($target) && is_file($target)) {
+                return [Path::canonicalize($target), null];
             }
 
-            if (!is_file($filePath)) {
-                $filePath = null;
+            // Check if target references a resource relative to the project dir
+            $projectPath = Path::join($this->projectDir, $target);
+
+            if (is_file($projectPath)) {
+                return [$projectPath, null];
             }
 
-            return [$filePath, null];
+            // Check if target references a resource relative to the public dir
+            $publicPath = Path::join($this->webDir, $target);
+
+            if (is_file($publicPath)) {
+                return [$publicPath, null];
+            }
+
+            return [null, null];
         };
 
         // Use explicitly set href (1) or lightbox resource (2), fall back to using
