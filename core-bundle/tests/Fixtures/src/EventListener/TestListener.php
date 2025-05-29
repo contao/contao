@@ -24,7 +24,7 @@ class TestListener
     {
     }
 
-    public function onDefault(DataContainer $dc): string
+    public function onClosure(DataContainer $dc): string
     {
         return 'foo';
     }

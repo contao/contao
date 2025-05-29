@@ -41,9 +41,17 @@ class DataContainerCallbackListener
 
     // These "callbacks" do not support array notation, so they are wrapped with a closure
     private const CLOSURES = [
-        'default',
+        '/fields.[^\.]+.default/',
     ];
 
+    /**
+     * @var array<string, array<string, array<int, array<array{
+     *     service: string,
+     *     method: string,
+     *     singleton: bool|null,
+     *     closure: bool|null,
+     * }>>>>
+     */
     private array $callbacks = [];
 
     public function __construct(private readonly ContaoFramework $framework)
@@ -61,21 +69,28 @@ class DataContainerCallbackListener
             return;
         }
 
-        foreach ($this->callbacks[$table] as $target => $callbacks) {
-            $keys = explode('.', (string) $target);
-            $dcaRef = &$this->getDcaReference($table, $keys);
+        $systemAdapter = $this->framework->getAdapter(System::class);
 
-            if (\in_array(end($keys), self::CLOSURES, true)) {
-                $systemAdapter = $this->framework->getAdapter(System::class);
+        foreach ($this->callbacks[$table] as $target => $configs) {
+            $keys = explode('.', $target);
+            $callbacks = [];
+            $singleton = false;
 
-                foreach ($callbacks as $priority => $pCallbacks) {
-                    foreach ($pCallbacks as $k => $callback) {
-                        $callbacks[$priority][$k] = static fn (...$args) => $systemAdapter->importStatic($callback[0])->{$callback[1]}(...$args);
+            foreach ($configs as $priority => $pConfigs) {
+                foreach ($pConfigs as $k => $config) {
+                    $singleton = $singleton || $this->isSingleton($config, $keys);
+
+                    if ($this->isClosure($config, $target)) {
+                        $callbacks[$priority][$k] = static fn (...$args) => $systemAdapter->importStatic($config['service'])->{$config['method']}(...$args);
+                    } else {
+                        $callbacks[$priority][$k] = [$config['service'], $config['method']];
                     }
                 }
             }
 
-            if ((isset($keys[2]) && 'panel_callback' === $keys[2]) || \in_array(end($keys), self::SINGLETONS, true)) {
+            $dcaRef = &$this->getDcaReference($table, $keys);
+
+            if ($singleton) {
                 $this->updateSingleton($dcaRef, $callbacks);
             } else {
                 $this->addCallbacks($dcaRef, $callbacks);
@@ -132,5 +147,29 @@ class DataContainerCallbackListener
         if ($postCallbacks) {
             array_push($dcaRef, ...$postCallbacks);
         }
+    }
+
+    private function isSingleton(array $callback, array $keys): bool
+    {
+        if (\is_bool($callback['singleton'] ?? null)) {
+            return $callback['singleton'];
+        }
+
+        return (isset($keys[2]) && 'panel_callback' === $keys[2]) || \in_array(end($keys), self::SINGLETONS, true);
+    }
+
+    private function isClosure(array $callback, string $target): bool
+    {
+        if (\is_bool($callback['closure'] ?? null)) {
+            return $callback['closure'];
+        }
+
+        foreach (self::CLOSURES as $regex) {
+            if (preg_match($regex, $target)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

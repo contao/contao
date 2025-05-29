@@ -48,7 +48,12 @@ class DataContainerCallbackPassTest extends TestCase
                 'tl_page' => [
                     'config.onload_callback' => [
                         10 => [
-                            ['test.callback_listener', 'onLoadPage'],
+                            [
+                                'service' => 'test.callback_listener',
+                                'method' => 'onLoadPage',
+                                'closure' => null,
+                                'singleton' => null,
+                            ],
                         ],
                     ],
                 ],
@@ -85,12 +90,22 @@ class DataContainerCallbackPassTest extends TestCase
                 'tl_module' => [
                     'fields.imageSize.options_callback' => [
                         [
-                            ['test.parent.listener', 'onOptions'],
+                            [
+                                'service' => 'test.parent.listener',
+                                'method' => 'onOptions',
+                                'closure' => null,
+                                'singleton' => null,
+                            ],
                         ],
                     ],
                     'fields.otherField.options_callback' => [
                         [
-                            ['test.child.listener', 'onOptions'],
+                            [
+                                'service' => 'test.child.listener',
+                                'method' => 'onOptions',
+                                'closure' => null,
+                                'singleton' => null,
+                            ],
                         ],
                     ],
                 ],
@@ -148,7 +163,12 @@ class DataContainerCallbackPassTest extends TestCase
                 'tl_page' => [
                     'config.onload_callback' => [
                         10 => [
-                            ['test.callback_listener', 'onLoadCallback'],
+                            [
+                                'service' => 'test.callback_listener',
+                                'method' => 'onLoadCallback',
+                                'closure' => null,
+                                'singleton' => null,
+                            ],
                         ],
                     ],
                 ],
@@ -179,7 +199,12 @@ class DataContainerCallbackPassTest extends TestCase
                 'tl_page' => [
                     'config.onload_callback' => [
                         10 => [
-                            ['test.callback_listener', '__invoke'],
+                            [
+                                'service' => 'test.callback_listener',
+                                'method' => '__invoke',
+                                'closure' => null,
+                                'singleton' => null,
+                            ],
                         ],
                     ],
                 ],
@@ -209,7 +234,12 @@ class DataContainerCallbackPassTest extends TestCase
             [
                 'tl_page' => [
                     'config.onload_callback' => [[
-                        ['test.callback_listener', 'onLoadPage'],
+                        [
+                            'service' => 'test.callback_listener',
+                            'method' => 'onLoadPage',
+                            'closure' => null,
+                            'singleton' => null,
+                        ],
                     ]],
                 ],
             ],
@@ -240,7 +270,12 @@ class DataContainerCallbackPassTest extends TestCase
                 'tl_page' => [
                     'config.onload_callback' => [
                         10 => [
-                            ['test.callback_listener', 'onLoadPage'],
+                            [
+                                'service' => 'test.callback_listener',
+                                'method' => 'onLoadPage',
+                                'closure' => null,
+                                'singleton' => null,
+                            ],
                         ],
                     ],
                 ],
@@ -272,7 +307,12 @@ class DataContainerCallbackPassTest extends TestCase
                 'tl_content' => [
                     'fields.article.wizard' => [
                         10 => [
-                            ['test.callback_listener', 'onArticleWizard'],
+                            [
+                                'service' => 'test.callback_listener',
+                                'method' => 'onArticleWizard',
+                                'closure' => null,
+                                'singleton' => null,
+                            ],
                         ],
                     ],
                 ],
@@ -316,7 +356,12 @@ class DataContainerCallbackPassTest extends TestCase
             [
                 'fields.listitems.xlabel' => [
                     10 => [
-                        ['test.callback_listener', 'onListitemsXlabel'],
+                        [
+                            'service' => 'test.callback_listener',
+                            'method' => 'onListitemsXlabel',
+                            'closure' => null,
+                            'singleton' => null,
+                        ],
                     ],
                 ],
             ],
@@ -329,7 +374,12 @@ class DataContainerCallbackPassTest extends TestCase
             ],
             [
                 'list.sorting.panel_callback.foobar' => [[
-                    ['test.callback_listener', 'onFoobarCallback'],
+                    [
+                        'service' => 'test.callback_listener',
+                        'method' => 'onFoobarCallback',
+                        'closure' => null,
+                        'singleton' => null,
+                    ],
                 ]],
             ],
         ];
@@ -343,7 +393,33 @@ class DataContainerCallbackPassTest extends TestCase
             [
                 'fields.article.default' => [
                     1 => [
-                        ['test.callback_listener', 'onFoobarCallback'],
+                        [
+                            'service' => 'test.callback_listener',
+                            'method' => 'onFoobarCallback',
+                            'closure' => null,
+                            'singleton' => null,
+                        ],
+                    ],
+                ],
+            ],
+        ];
+
+        yield 'exact attribute is true' => [
+            [
+                'target' => 'fields.foo.barCallback',
+                'priority' => 1,
+                'method' => 'onFoobarCallback',
+                'exact' => true,
+            ],
+            [
+                'fields.foo.barCallback' => [
+                    1 => [
+                        [
+                            'service' => 'test.callback_listener',
+                            'method' => 'onFoobarCallback',
+                            'closure' => null,
+                            'singleton' => null,
+                        ],
                     ],
                 ],
             ],
@@ -391,21 +467,46 @@ class DataContainerCallbackPassTest extends TestCase
             [
                 'tl_page' => [
                     'config.onload_callback' => [[
-                        ['test.callback_listener', 'loadFirst'],
-                        ['test.callback_listener', 'loadSecond'],
+                        [
+                            'service' => 'test.callback_listener',
+                            'method' => 'loadFirst',
+                            'closure' => null,
+                            'singleton' => null,
+                        ],
+                        [
+                            'service' => 'test.callback_listener',
+                            'method' => 'loadSecond',
+                            'closure' => null,
+                            'singleton' => null,
+                        ],
                     ]],
                 ],
                 'tl_article' => [
                     'fields.title.load_callback' => [[
-                        ['test.callback_listener', 'onLoadCallback'],
+                        [
+                            'service' => 'test.callback_listener',
+                            'method' => 'onLoadCallback',
+                            'closure' => null,
+                            'singleton' => null,
+                        ],
                     ]],
                     'fields.title.save_callback' => [[
-                        ['test.callback_listener', 'onSaveCallback'],
+                        [
+                            'service' => 'test.callback_listener',
+                            'method' => 'onSaveCallback',
+                            'closure' => null,
+                            'singleton' => null,
+                        ],
                     ]],
                 ],
                 'tl_content' => [
                     'list.sorting.child_record_callback' => [[
-                        ['test.callback_listener', 'onChildRecordCallback'],
+                        [
+                            'service' => 'test.callback_listener',
+                            'method' => 'onChildRecordCallback',
+                            'closure' => null,
+                            'singleton' => null,
+                        ],
                     ]],
                 ],
             ],
@@ -451,11 +552,26 @@ class DataContainerCallbackPassTest extends TestCase
                 'tl_page' => [
                     'config.onload_callback' => [
                         10 => [
-                            ['test.callback_listener.a', 'onLoadCallback'],
-                            ['test.callback_listener.b', 'onLoadFirst'],
+                            [
+                                'service' => 'test.callback_listener.a',
+                                'method' => 'onLoadCallback',
+                                'closure' => null,
+                                'singleton' => null,
+                            ],
+                            [
+                                'service' => 'test.callback_listener.b',
+                                'method' => 'onLoadFirst',
+                                'closure' => null,
+                                'singleton' => null,
+                            ],
                         ],
                         100 => [
-                            ['test.callback_listener.b', 'onLoadSecond'],
+                            [
+                                'service' => 'test.callback_listener.b',
+                                'method' => 'onLoadSecond',
+                                'closure' => null,
+                                'singleton' => null,
+                            ],
                         ],
                     ],
                 ],
