@@ -57,7 +57,7 @@ class BackendSearch
         }
 
         if ($async) {
-            // Split into multiple messages of max 64 kb if needed, otherwise messages with
+            // Split into multiple messages of max 64 KB if needed, otherwise messages with
             // hundreds of IDs would fail
             foreach ($groupedDocumentIds->split(65536) as $group) {
                 $this->messageBus->dispatch(new DeleteDocumentsMessage($group));
