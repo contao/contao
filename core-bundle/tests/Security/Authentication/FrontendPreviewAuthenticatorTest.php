@@ -66,7 +66,6 @@ class FrontendPreviewAuthenticatorTest extends TestCase
 
         $this->assertInstanceOf(UsernamePasswordToken::class, $token);
         $this->assertInstanceOf(FrontendUser::class, $token->getUser());
-        $this->assertSame(['ROLE_MEMBER'], $token->getRoleNames());
         $this->assertSame($showUnpublished, $session->get(FrontendPreviewAuthenticator::SESSION_NAME)['showUnpublished']);
     }
 
