@@ -375,7 +375,7 @@ instead.
 
 ### Template changes
 
-The items in the `ce_list` and `ce_table` templates no longer consist of an associative array containing the item‘s CSS
+The items in the `ce_list` and `ce_table` templates no longer consist of an associative array containing the item's CSS
 class and content. Instead, it will only be the content.
 
 ```php
