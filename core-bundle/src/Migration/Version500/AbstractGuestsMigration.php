@@ -40,14 +40,14 @@ abstract class AbstractGuestsMigration extends AbstractMigration
 
             $columns = $schemaManager->listTableColumns($table);
 
-            if (!isset($columns['guests'], $columns['groups'])) {
+            if (!isset($columns['guests'], $columns['groups'], $columns['protected'])) {
                 continue;
             }
 
             $test = $this->connection->fetchOne("
                 SELECT TRUE
                 FROM $table
-                WHERE `guests`='1' AND (`groups` IS NULL OR `groups` NOT LIKE '%\"-1\"%')
+                WHERE `guests`='1'
                 LIMIT 1
             ");
 
@@ -70,18 +70,18 @@ abstract class AbstractGuestsMigration extends AbstractMigration
 
             $columns = $schemaManager->listTableColumns($table);
 
-            if (!isset($columns['guests'], $columns['groups'])) {
+            if (!isset($columns['guests'], $columns['groups'], $columns['protected'])) {
                 continue;
             }
 
-            $values = $this->connection->fetchAllKeyValue("
-                SELECT id, `groups`
+            $values = $this->connection->fetchAllAssociative("
+                SELECT id, protected, `groups`
                 FROM $table
-                WHERE `guests`='1' AND (`groups` IS NULL OR `groups` NOT LIKE '%\"-1\"%')
+                WHERE `guests`='1'
             ");
 
-            foreach ($values as $id => $value) {
-                $groups = StringUtil::deserialize($value, true);
+            foreach ($values as $row) {
+                $groups = $row['protected'] ? StringUtil::deserialize($row['groups'], true) : [];
                 $groups[] = '-1';
 
                 $data = [
@@ -89,8 +89,10 @@ abstract class AbstractGuestsMigration extends AbstractMigration
                     '`groups`' => serialize($groups),
                 ];
 
-                $this->connection->update($table, $data, ['id' => (int) $id]);
+                $this->connection->update($table, $data, ['id' => (int) $row['id']]);
             }
+
+            $this->connection->executeStatement("ALTER TABLE $table DROP COLUMN `guests`");
         }
 
         return $this->createResult(true);

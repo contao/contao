@@ -311,7 +311,7 @@ class ContaoKernelTest extends ContaoTestCase
                         return $resource($container, 'prod');
                     }
 
-                    $this->assertSame(Path::makeAbsolute('../../skeleton/config/services.php', __DIR__), $resource);
+                    $this->assertSame(Path::join(__DIR__, '../../skeleton/config/services.php'), $resource);
 
                     return $innerLoader->load($resource);
                 },
@@ -362,7 +362,7 @@ class ContaoKernelTest extends ContaoTestCase
                         return $resource($container, 'prod');
                     }
 
-                    $this->assertSame(Path::makeAbsolute('../../skeleton/config/services.php', __DIR__), $resource);
+                    $this->assertSame(Path::join(__DIR__, '../../skeleton/config/services.php'), $resource);
 
                     return $innerLoader->load($resource);
                 },
