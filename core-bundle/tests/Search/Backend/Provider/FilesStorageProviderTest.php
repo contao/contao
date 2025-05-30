@@ -160,13 +160,25 @@ class FilesStorageProviderTest extends AbstractProviderTestCase
 
     public function testIsHitGranted(): void
     {
+        $method = new \ReflectionMethod(Security::class, 'isGranted');
+
+        // Backwards compatibility with symfony/security-core <7.3
+        if (2 === $method->getNumberOfParameters()) {
+            $returnMap = [
+                [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'foo', true],
+                [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'bar', false],
+            ];
+        } else {
+            $returnMap = [
+                [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'foo', null, true],
+                [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'bar', null, false],
+            ];
+        }
+
         $security = $this->createMock(Security::class);
         $security
             ->method('isGranted')
-            ->willReturnMap([
-                [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'foo', true],
-                [ContaoCorePermissions::USER_CAN_ACCESS_PATH, 'bar', false],
-            ])
+            ->willReturnMap($returnMap)
         ;
 
         $provider = new FilesStorageProvider(
