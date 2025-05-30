@@ -82,7 +82,7 @@ class RootPageDependentSelectTest extends TestCase
         $widget = new RootPageDependentSelect(RootPageDependentSelect::getAttributesFromDca($fieldConfig, $fieldConfig['name']));
 
         $expectedOutput = <<<'OUTPUT'
-            <div data-controller="contao--choices">
+            <div class="tl_select__wrapper" data-controller="contao--choices">
                 <select
                     name="rootPageDependentModules[]"
                     id="ctrl_rootPageDependentModules-1"
@@ -94,7 +94,7 @@ class RootPageDependentSelectTest extends TestCase
                     <option value="30">Module-30</option>
                 </select>
             </div>
-            <div data-controller="contao--choices">
+            <div class="tl_select__wrapper" data-controller="contao--choices">
                 <select
                     name="rootPageDependentModules[]"
                     id="ctrl_rootPageDependentModules-2"
@@ -106,7 +106,7 @@ class RootPageDependentSelectTest extends TestCase
                     <option value="30">Module-30</option>
                 </select>
             </div>
-            <div data-controller="contao--choices">
+            <div class="tl_select__wrapper" data-controller="contao--choices">
                 <select
                     name="rootPageDependentModules[]"
                     id="ctrl_rootPageDependentModules-3"

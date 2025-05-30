@@ -202,7 +202,7 @@ class SelectMenu extends Widget
 		// Chosen
 		if ($this->chosen)
 		{
-			$strBuffer = '<div class="tl_select_wrapper" data-controller="contao--choices">'.$strBuffer.'</div>';
+			$strBuffer = '<div class="tl_select_wrapper" data-controller="contao--choices">' . $strBuffer . '</div>';
 		}
 
 		return $strBuffer;
