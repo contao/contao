@@ -673,7 +673,7 @@ h2.sub_headline {
 	width: 20%;
 }
 
-.tl_limit .tl_select {
+.tl_limit .tl_select_wrapper {
 	width: 57%;
 }
 
@@ -682,12 +682,20 @@ h2.sub_headline {
 	width: 100%;
 }
 
-.tl_search > .tl_select {
+.tl_search > .tl_select_wrapper {
 	width: 38%;
 }
 
 .tl_search > .tl_text {
 	width: 38%;
+}
+
+.tl_select_wrapper {
+	margin: 3px 0;
+}
+
+.tl_select_wrapper > * {
+	margin: 0;
 }
 
 .tl_img_submit {
@@ -744,7 +752,7 @@ h2.sub_headline {
 	width: 26%;
 }
 
-.tl_sorting .tl_select {
+.tl_sorting .tl_select_wrapper {
 	width: 60%;
 	margin-left: 1%;
 }
@@ -3277,7 +3285,7 @@ fieldset.collapsed > legend:not(:has(> button)) {
 		width: 1%;
 	}
 
-	.tl_modulewizard td:first-child .tl_select {
+	.tl_modulewizard td:first-child .tl_select_wrapper {
 		max-width: 52vw;
 	}
 
@@ -3359,7 +3367,7 @@ fieldset.collapsed > legend:not(:has(> button)) {
 }
 
 @media (max-width: 479px) {
-	.tl_modulewizard td:first-child .tl_select {
+	.tl_modulewizard td:first-child .tl_select_wrapper {
 		max-width: 48vw;
 	}
 }
