@@ -86,13 +86,25 @@ return static function (ContainerConfigurator $configurator) use ($container): v
                 continue;
             }
 
+            $isLegacyClass = static function (\ReflectionType $type) use (&$isLegacyClass) {
+                if ($type instanceof \ReflectionUnionType || $type instanceof \ReflectionIntersectionType) {
+                    foreach ($type->getTypes() as $iType) {
+                        if ($isLegacyClass($iType)) {
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+
+                return $type instanceof \ReflectionNamedType
+                    && !$type->isBuiltin()
+                    && (is_a($type->getName(), System::class, true) || is_a($type->getName(), Model::class, true));
+            };
+
             $type = $parameter->getType();
 
-            if (
-                $type
-                && !$type->isBuiltin()
-                && (is_a($type->getName(), System::class, true) || is_a($type->getName(), Model::class, true))
-            ) {
+            if ($type && $isLegacyClass($type)) {
                 $container->removeDefinition($id);
                 --$serviceCount;
                 break;
