@@ -57,7 +57,7 @@ class BackendSearch
         }
 
         if ($async) {
-            // Split into multiple messages of max 64kb if needed, otherwise messages with
+            // Split into multiple messages of max 64 KB if needed, otherwise messages with
             // hundreds of IDs would fail
             foreach ($groupedDocumentIds->split(65536) as $group) {
                 $this->messageBus->dispatch(new DeleteDocumentsMessage($group));
@@ -104,9 +104,8 @@ class BackendSearch
 
     /**
      * TODO: This Query API object will change for sure because we might want to
-     * introduce searching for multiple tags which is currently not supported by SEAL.
-     * It's a matter of putting in some work there but it will affect the signature of
-     * this object.
+     * introduce searching for multiple tags. It's a matter of putting in some work
+     * there but it will affect the signature of this object.
      */
     public function search(Query $query): Result
     {
@@ -188,7 +187,11 @@ class BackendSearch
             return null;
         }
 
-        $document = Document::fromArray(json_decode($document['document'], true, 512, JSON_THROW_ON_ERROR));
+        try {
+            $document = Document::fromArray(json_decode($document['document'], true, 512, JSON_THROW_ON_ERROR));
+        } catch (\JsonException) {
+            return null;
+        }
 
         if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_BACKEND_SEARCH_DOCUMENT, $document)) {
             return null;
@@ -196,7 +199,7 @@ class BackendSearch
 
         $hit = $fileProvider->convertDocumentToHit($document);
 
-        // The provider did not find any hit for it anymore so it must have been removed
+        // The provider did not find any hit for it anymore, so it must have been removed
         // or expired. Remove from the index.
         if (!$hit) {
             $this->deleteDocuments(new GroupedDocumentIds([$document->getType() => [$document->getId()]]));
