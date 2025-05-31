@@ -1242,7 +1242,8 @@ class FigureBuilderTest extends TestCase
         yield 'path referencing file in the public dir' => [
             '/images/dummy_public.jpg',
             [
-                Path::canonicalize(__DIR__.'/../../Fixtures/public/images/dummy_public.jpg'),
+                null,
+                '/images/dummy_public.jpg',
                 null,
             ],
         ];
