@@ -773,25 +773,25 @@ class FigureBuilder
                 return [null, $target];
             }
 
-            $target = urldecode($target);
+            $filePath = urldecode($target);
 
             // Check if target is an absolute filesystem path to an existing resource
-            if (Path::isAbsolute($target) && is_file($target)) {
-                return [Path::canonicalize($target), null];
+            if (Path::isAbsolute($filePath) && is_file($filePath)) {
+                return [Path::canonicalize($filePath), null];
             }
 
             // Check if target references a resource relative to the project dir
-            $projectPath = Path::join($this->projectDir, $target);
+            $projectPath = Path::join($this->projectDir, $filePath);
 
             if (is_file($projectPath)) {
                 return [$projectPath, null];
             }
 
             // Check if target references a resource relative to the public dir
-            $publicPath = Path::join($this->webDir, $target);
+            $publicPath = Path::join($this->webDir, $filePath);
 
             if (is_file($publicPath)) {
-                return [$publicPath, null];
+                return [null, $target];
             }
 
             return [null, null];
