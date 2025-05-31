@@ -67,7 +67,9 @@ class NewsFeedListener
         $newsModel = $this->framework->getAdapter(NewsModel::class);
         $articles = $newsModel->findPublishedByPids($archives, $featured, $pageModel->maxFeedItems);
 
-        $event->setArticles($articles->getModels());
+        if ($articles) {
+            $event->setArticles($articles->getModels());
+        }
     }
 
     #[AsEventListener(TransformArticleForFeedEvent::class)]
