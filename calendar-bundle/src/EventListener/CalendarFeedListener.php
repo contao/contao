@@ -35,6 +35,7 @@ use FeedIo\Feed\ItemInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @internal
@@ -65,11 +66,8 @@ class CalendarFeedListener
             default => null,
         };
 
-        // TODO: feed mode to determine start and end
-        $start = time();
-        $end = strtotime('2032-01-01');
+        $events = $this->calendarEventsGenerator->getAllEvents($calendars, time(), PHP_INT_MAX, $featured, true, (int) $pageModel->feedRecurrenceLimit);
 
-        $events = $this->calendarEventsGenerator->getAllEvents($calendars, $start, $end, $featured);
         $event->setEvents($events);
     }
 
@@ -80,10 +78,13 @@ class CalendarFeedListener
 
         $item = new Item();
         $item->setTitle(html_entity_decode($calendarEvent['title'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $this->charset));
-        $item->setLastModified((new \DateTime())->setTimestamp($calendarEvent['tstamp']));
+        $item->setLastModified((new \DateTime())->setTimestamp($calendarEvent['startTime']));
         $item->setLink($this->urlGenerator->generate($calendarEvent['model'], [], UrlGeneratorInterface::ABSOLUTE_URL));
         $item->setContent($this->getContent($calendarEvent, $item, $systemEvent));
-        $item->setPublicId($item->getLink());
+
+        // Create a unique ID due to recurrences
+        $namespace = Uuid::fromString(Uuid::NAMESPACE_OID);
+        $item->setPublicId(Uuid::v5($namespace, $item->getLink().'#'.$calendarEvent['startTime'])->toRfc4122());
 
         if ($author = $this->getAuthor($calendarEvent)) {
             $item->setAuthor($author);

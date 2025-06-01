@@ -9,12 +9,16 @@ use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\ContentModel;
 use Contao\Controller;
+use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\Date;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Template;
+use FOS\HttpCache\ResponseTagger;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CalendarEventsGenerator
 {
@@ -23,11 +27,19 @@ class CalendarEventsGenerator
     private int|null $todayEnd = null;
 
     public function __construct(
+        private readonly ContaoFramework $contaoFramework,
         private readonly PageFinder $pageFinder,
+        private readonly ContentUrlGenerator $contentUrlGenerator,
+        private readonly TranslatorInterface $translator,
+        private readonly ResponseTagger|null $responseTagger,
     ) {
     }
 
-    public function getAllEvents(array $calendars, int $start, int $end, bool|null $featured = null, bool $noSpan = false): array
+    /**
+     * Returns the generated events including recurrences as a multidimensional array,
+     * grouped by day and timestamp.
+     */
+    public function getAllEvents(array $calendars, int $start, int $end, bool|null $featured = null, bool $noSpan = false, int|null $recurrenceLimit = null): array
     {
         if ([] === $calendars) {
             return [];
@@ -38,9 +50,11 @@ class CalendarEventsGenerator
         // Include all events of the day, expired events will be filtered out later
         $start = strtotime(date('Y-m-d', $start).' 00:00:00');
 
+        $calendarEventsModel = $this->contaoFramework->getAdapter(CalendarEventsModel::class);
+
         foreach ($calendars as $id) {
             // Get the events of the current period
-            $eventModels = CalendarEventsModel::findCurrentByPid($id, $start, $end, ['showFeatured' => $featured]);
+            $eventModels = $calendarEventsModel->findCurrentByPid($id, $start, $end, ['showFeatured' => $featured]);
 
             if (null === $eventModels) {
                 continue;
@@ -65,7 +79,7 @@ class CalendarEventsGenerator
                     $strtotime = '+ '.$repeat['value'].' '.$repeat['unit'];
 
                     while ($endTime < $end) {
-                        if ($eventModel->recurrences > 0 && $count++ >= $eventModel->recurrences) {
+                        if ($eventModel->recurrences > 0 && ($count++ >= $eventModel->recurrences || (null !== $recurrenceLimit && $count > $recurrenceLimit))) {
                             break;
                         }
 
@@ -103,31 +117,32 @@ class CalendarEventsGenerator
         return $events;
     }
 
-    private function addEvent(array &$events, CalendarEventsModel $event, int $start, int $end, int $limit, int $calendar, bool $noSpan): void
+    private function addEvent(array &$events, CalendarEventsModel $eventModel, int $start, int $end, int $limit, int $calendar, bool $noSpan): void
     {
         $page = $this->pageFinder->getCurrentPage();
 
-        $date = $start;
-        $intKey = date('Ymd', $start);
-        $strDate = Date::parse($page->dateFormat, $start);
-        $strDay = $GLOBALS['TL_LANG']['DAYS'][date('w', $start)];
-        $strMonth = $GLOBALS['TL_LANG']['MONTHS'][date('n', $start) - 1];
+        $timestamp = $start;
+        $key = date('Ymd', $start);
+        $formattedDate = Date::parse($page->dateFormat, $start);
+        $day = $this->translator->trans('DAYS.'.date('w', $start), [], 'contao_default');
+        $month = $this->translator->trans('MONTHS.'.(date('n', $start) - 1), [], 'contao_default');
         $span = Calendar::calculateSpan($start, $end);
+        $timeSeparator = $this->translator->trans('MSC.cal_timeSeparator', [], 'contao_default');
 
         if ($span > 0) {
-            $strDate = Date::parse($page->dateFormat, $start).$GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'].Date::parse($page->dateFormat, $end);
-            $strDay = '';
+            $formattedDate = Date::parse($page->dateFormat, $start).$timeSeparator.Date::parse($page->dateFormat, $end);
+            $day = '';
         }
 
-        $strTime = '';
+        $formattedTime = '';
 
-        if ($event->addTime) {
+        if ($eventModel->addTime) {
             if ($span > 0) {
-                $strDate = Date::parse($page->datimFormat, $start).$GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'].Date::parse($page->datimFormat, $end);
+                $formattedDate = Date::parse($page->datimFormat, $start).$timeSeparator.Date::parse($page->datimFormat, $end);
             } elseif ($start === $end) {
-                $strTime = Date::parse($page->timeFormat, $start);
+                $formattedTime = Date::parse($page->timeFormat, $start);
             } else {
-                $strTime = Date::parse($page->timeFormat, $start).$GLOBALS['TL_LANG']['MSC']['cal_timeSeparator'].Date::parse($page->timeFormat, $end);
+                $formattedTime = Date::parse($page->timeFormat, $start).$timeSeparator.Date::parse($page->timeFormat, $end);
             }
         }
 
@@ -135,108 +150,108 @@ class CalendarEventsGenerator
         $recurring = '';
 
         // Recurring event
-        if ($event->recurring) {
-            $arrRange = StringUtil::deserialize($event->repeatEach);
+        if ($eventModel->recurring) {
+            $range = StringUtil::deserialize($eventModel->repeatEach);
 
-            if (isset($arrRange['unit'], $arrRange['value'])) {
-                if (1 === $arrRange['value']) {
-                    $repeat = $GLOBALS['TL_LANG']['MSC']['cal_single_'.$arrRange['unit']];
+            if (isset($range['unit'], $range['value'])) {
+                if (1 === $range['value']) {
+                    $repeat = $this->translator->trans('MSC.cal_single_'.$range['unit'], [], 'contao_default');
                 } else {
-                    $repeat = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_multiple_'.$arrRange['unit']], $arrRange['value']);
+                    $repeat = $this->translator->trans('MSC.cal_multiple_'.$range['unit'], [$range['value']], 'contao_default');
                 }
 
-                if ($event->recurrences > 0) {
-                    $until = ' '.\sprintf($GLOBALS['TL_LANG']['MSC']['cal_until'], Date::parse($page->dateFormat, $event->repeatEnd));
+                if ($eventModel->recurrences > 0) {
+                    $until = ' '.$this->translator->trans('MSC.cal_until', [Date::parse($page->dateFormat, $eventModel->repeatEnd)], 'contao_default');
                 }
 
-                if ($event->recurrences > 0 && $end < time()) {
-                    $recurring = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat_ended'], $repeat, $until);
-                } elseif ($event->addTime) {
-                    $recurring = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d\TH:i:sP', $start), $strDate.($strTime ? ' '.$strTime : ''));
+                if ($eventModel->recurrences > 0 && $end < time()) {
+                    $recurring = $this->translator->trans('MSC.cal_repeat_ended', [$repeat, $until], 'contao_default');
+                } elseif ($eventModel->addTime) {
+                    $recurring = $this->translator->trans('MSC.cal_repeat', [$repeat, $until, date('Y-m-d\TH:i:sP', $start), $formattedDate.($formattedTime ? ' '.$formattedTime : '')], 'contao_default');
                 } else {
-                    $recurring = \sprintf($GLOBALS['TL_LANG']['MSC']['cal_repeat'], $repeat, $until, date('Y-m-d', $start), $strDate);
+                    $recurring = $this->translator->trans('MSC.cal_repeat', [$repeat, $until, date('Y-m-d', $start), $formattedDate], 'contao_default');
                 }
             }
         }
 
         // Tag the event (see #2137)
-        if (System::getContainer()->has('fos_http_cache.http.symfony_response_tagger')) {
-            $responseTagger = System::getContainer()->get('fos_http_cache.http.symfony_response_tagger');
-            $responseTagger->addTags(['contao.db.tl_calendar_events.'.$event->id]);
-        }
+        $this->responseTagger?->addTags(['contao.db.tl_calendar_events.'.$eventModel->id]);
 
         // Store raw data
-        $arrEvent = $event->row();
+        $event = $eventModel->row();
 
         try {
-            $url = System::getContainer()->get('contao.routing.content_url_generator')->generate($event);
+            $url = $this->contentUrlGenerator->generate($eventModel);
         } catch (ExceptionInterface) {
             $url = null;
         }
 
+        $calendarModel = $this->contaoFramework->getAdapter(CalendarModel::class);
+
         // Overwrite some settings
-        $arrEvent['date'] = $strDate;
-        $arrEvent['time'] = $strTime;
-        $arrEvent['datetime'] = $event->addTime ? date('Y-m-d\TH:i:sP', $start) : date('Y-m-d', $start);
-        $arrEvent['day'] = $strDay;
-        $arrEvent['month'] = $strMonth;
-        $arrEvent['parent'] = $calendar;
-        $arrEvent['model'] = $event;
-        $arrEvent['calendar'] = CalendarModel::findById($event->pid);
-        $arrEvent['link'] = $event->title;
-        $arrEvent['target'] = '';
-        $arrEvent['title'] = StringUtil::specialchars($event->title, true);
-        $arrEvent['href'] = $url;
-        $arrEvent['class'] = $event->cssClass ? ' '.$event->cssClass : '';
-        $arrEvent['recurring'] = $recurring;
-        $arrEvent['until'] = $until;
-        $arrEvent['begin'] = $start;
-        $arrEvent['end'] = $end;
-        $arrEvent['effectiveEndTime'] = $arrEvent['endTime'];
-        $arrEvent['details'] = '';
-        $arrEvent['hasTeaser'] = false;
+        $event['date'] = $formattedDate;
+        $event['time'] = $formattedTime;
+        $event['datetime'] = $eventModel->addTime ? date('Y-m-d\TH:i:sP', $start) : date('Y-m-d', $start);
+        $event['day'] = $day;
+        $event['month'] = $month;
+        $event['parent'] = $calendar;
+        $event['model'] = $eventModel;
+        $event['calendar'] = $calendarModel->findById($eventModel->pid);
+        $event['link'] = $eventModel->title;
+        $event['target'] = '';
+        $event['title'] = StringUtil::specialchars($eventModel->title, true);
+        $event['href'] = $url;
+        $event['class'] = $eventModel->cssClass ? ' '.$eventModel->cssClass : '';
+        $event['recurring'] = $recurring;
+        $event['until'] = $until;
+        $event['begin'] = $start;
+        $event['end'] = $end;
+        $event['effectiveEndTime'] = $event['endTime'];
+        $event['details'] = '';
+        $event['hasTeaser'] = false;
 
         // Set open-end events to 23:59:59, so they run until the end of the day (see #4476)
-        if ($start === $end && $event->addTime) {
-            $arrEvent['effectiveEndTime'] = strtotime(date('Y-m-d', $arrEvent['endTime']).' 23:59:59');
+        if ($start === $end && $eventModel->addTime) {
+            $event['effectiveEndTime'] = strtotime(date('Y-m-d', $event['endTime']).' 23:59:59');
         }
 
         // Override the link target
-        if ('external' === $event->source && $event->target) {
-            $arrEvent['target'] = ' target="_blank" rel="noreferrer noopener"';
+        if ('external' === $eventModel->source && $eventModel->target) {
+            $event['target'] = ' target="_blank" rel="noreferrer noopener"';
         }
 
         // Clean the RTE output
-        if ($arrEvent['teaser']) {
-            $arrEvent['hasTeaser'] = true;
-            $arrEvent['teaser'] = StringUtil::encodeEmail($arrEvent['teaser']);
+        if ($event['teaser']) {
+            $event['hasTeaser'] = true;
+            $event['teaser'] = StringUtil::encodeEmail($event['teaser']);
         }
 
         // Display the "read more" button for external/article links
-        if ('default' !== $event->source) {
-            $arrEvent['hasDetails'] = null !== $url;
+        if ('default' !== $eventModel->source) {
+            $event['hasDetails'] = null !== $url;
         }
 
         // Compile the event text
         else {
-            $id = $event->id;
+            $id = $eventModel->id;
+            $controller = $this->contaoFramework->getAdapter(Controller::class);
+            $contentModel = $this->contaoFramework->getAdapter(ContentModel::class);
+            $template = $this->contaoFramework->getAdapter(Template::class);
 
-            $arrEvent['details'] = Template::once(
-                static function () use ($id) {
-                    $strDetails = '';
-                    $objElement = ContentModel::findPublishedByPidAndTable($id, 'tl_calendar_events');
+            $event['details'] = $template->once(
+                static function () use ($contentModel, $controller, $id): string {
+                    $details = '';
+                    $elements = $contentModel->findPublishedByPidAndTable($id, 'tl_calendar_events');
 
-                    if (null !== $objElement) {
-                        while ($objElement->next()) {
-                            $strDetails .= Controller::getContentElement($objElement->current());
-                        }
+                    foreach ($elements ?? [] as $element) {
+                        $details .= $controller->getContentElement($element);
                     }
 
-                    return $strDetails;
-                }
+                    return $details;
+                },
             );
 
-            $arrEvent['hasDetails'] = null === $url ? false : Template::once(static fn () => ContentModel::countPublishedByPidAndTable($id, 'tl_calendar_events') > 0);
+            $event['hasDetails'] = null === $url ? false : $template->once(static fn (): bool => $contentModel->countPublishedByPidAndTable($id, 'tl_calendar_events') > 0);
         }
 
         // Get today's start and end timestamp
@@ -245,18 +260,18 @@ class CalendarEventsGenerator
 
         // Mark past and upcoming events (see #3692)
         if ($end < $this->todayBegin) {
-            $arrEvent['class'] .= ' bygone';
+            $event['class'] .= ' bygone';
         } elseif ($start > $this->todayEnd) {
-            $arrEvent['class'] .= ' upcoming';
+            $event['class'] .= ' upcoming';
         } else {
-            $arrEvent['class'] .= ' current';
+            $event['class'] .= ' current';
         }
 
-        if (1 === $arrEvent['featured']) {
-            $arrEvent['class'] .= ' featured';
+        if (1 === $event['featured']) {
+            $event['class'] .= ' featured';
         }
 
-        $events[$intKey][$start][] = $arrEvent;
+        $events[$key][$start][] = $event;
 
         // Multi-day event
         for ($i = 1; $i <= $span; ++$i) {
@@ -265,13 +280,13 @@ class CalendarEventsGenerator
                 break;
             }
 
-            $date = strtotime('+1 day', $date);
+            $timestamp = strtotime('+1 day', $timestamp);
 
-            if ($date > $limit) {
+            if ($timestamp > $limit) {
                 break;
             }
 
-            $events[date('Ymd', $date)][$date][] = $arrEvent;
+            $events[date('Ymd', $timestamp)][$timestamp][] = $event;
         }
     }
 }
