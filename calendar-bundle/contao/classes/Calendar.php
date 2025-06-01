@@ -40,6 +40,8 @@ class Calendar extends Frontend
 	 */
 	public function generateFeed($intId)
 	{
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "calendar_feed" page instead.', __METHOD__);
+
 		$objCalendar = CalendarFeedModel::findById($intId);
 
 		if ($objCalendar === null)
@@ -71,6 +73,8 @@ class Calendar extends Frontend
 	 */
 	public function generateFeeds()
 	{
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "calendar_feed" page instead.', __METHOD__);
+
 		(new Automator())->purgeXmlFiles();
 
 		$objCalendar = CalendarFeedModel::findAll();
@@ -94,6 +98,8 @@ class Calendar extends Frontend
 	 */
 	public function generateFeedsByCalendar($intId)
 	{
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "calendar_feed" page instead.', __METHOD__);
+
 		$objFeed = CalendarFeedModel::findByCalendar($intId);
 
 		if ($objFeed !== null)
@@ -481,6 +487,8 @@ class Calendar extends Frontend
 	 */
 	public function purgeOldFeeds()
 	{
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "calendar_feed" page instead.', __METHOD__);
+
 		$arrFeeds = array();
 		$objFeeds = CalendarFeedModel::findAll();
 

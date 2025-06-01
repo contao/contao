@@ -15,6 +15,7 @@ namespace Contao\CalendarBundle\EventListener;
 use Contao\CalendarBundle\CalendarEventsGenerator;
 use Contao\CalendarBundle\Event\FetchEventsForFeedEvent;
 use Contao\CalendarBundle\Event\TransformEventForFeedEvent;
+use Contao\CalendarModel;
 use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\Cache\CacheTagManager;
@@ -22,6 +23,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Environment;
 use Contao\File;
 use Contao\FilesModel;
@@ -35,6 +37,7 @@ use FeedIo\Feed\ItemInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Uid\Uuid;
 
 /**
@@ -51,6 +54,7 @@ class CalendarFeedListener
         private readonly string $projectDir,
         private readonly CacheTagManager $cacheTags,
         private readonly string $charset,
+        private readonly AuthorizationCheckerInterface $authorizationChecker,
     ) {
     }
 
@@ -58,7 +62,7 @@ class CalendarFeedListener
     public function onFetchEventsForFeed(FetchEventsForFeedEvent $event): void
     {
         $pageModel = $event->getPageModel();
-        $calendars = StringUtil::deserialize($pageModel->eventCalendars, true);
+        $calendars = $this->sortOutProtected(StringUtil::deserialize($pageModel->eventCalendars, true));
 
         $featured = match ($pageModel->feedFeatured) {
             'featured' => true,
@@ -198,5 +202,26 @@ class CalendarFeedListener
         }
 
         return $enclosures;
+    }
+
+    /**
+     * @param list<int> $calendarIds
+     *
+     * @return list<int>
+     */
+    private function sortOutProtected(array $calendarIds): array
+    {
+        $newsArchiveModel = $this->framework->getAdapter(CalendarModel::class);
+        $allowedIds = [];
+
+        foreach ($newsArchiveModel->findMultipleByIds($calendarIds) ?? [] as $calendar) {
+            if ($calendar->protected && !$this->authorizationChecker->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $calendar->groups)) {
+                continue;
+            }
+
+            $allowedIds[] = (int) $calendar->id;
+        }
+
+        return $allowedIds;
     }
 }

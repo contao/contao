@@ -43,10 +43,6 @@ if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendReques
 	$GLOBALS['TL_CSS'][] = 'bundles/contaocalendar/calendar.min.css|static';
 }
 
-// Register hooks
-$GLOBALS['TL_HOOKS']['removeOldFeeds'][] = array(Calendar::class, 'purgeOldFeeds');
-$GLOBALS['TL_HOOKS']['generateXmlFiles'][] = array(Calendar::class, 'generateFeeds');
-
 // Add permissions
 $GLOBALS['TL_PERMISSIONS'][] = 'calendars';
 $GLOBALS['TL_PERMISSIONS'][] = 'calendarp';
