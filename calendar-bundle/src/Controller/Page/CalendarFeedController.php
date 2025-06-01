@@ -66,20 +66,20 @@ class CalendarFeedController extends AbstractController implements DynamicRouteI
         $dispatcher = $this->container->get('event_dispatcher');
         $dispatcher->dispatch($event);
 
-        if ($events = $event->getEvents()) {
-            foreach ($events as $v) {
-                foreach ($v as $vv) {
-                    foreach ($vv as $event) {
-                        $systemEvent = new TransformEventForFeedEvent($event, $feed, $pageModel, $request, $baseUrl);
-                        $dispatcher->dispatch($systemEvent);
+        foreach ($events ?? [] as $v) {
+            foreach ($v as $vv) {
+                foreach ($vv as $event) {
+                    $systemEvent = new TransformEventForFeedEvent($event, $feed, $pageModel, $request, $baseUrl);
+                    $dispatcher->dispatch($systemEvent);
 
-                        if ($item = $systemEvent->getItem()) {
-                            $feed->add($item);
-
-                            $this->tagResponse($event['model']);
-                            $this->tagResponse('contao.db.tl_calendar.'.$event['pid']);
-                        }
+                    if (!$item = $systemEvent->getItem()) {
+                        continue;
                     }
+
+                    $feed->add($item);
+
+                    $this->tagResponse($event['model']);
+                    $this->tagResponse('contao.db.tl_calendar.'.$event['pid']);
                 }
             }
         }
