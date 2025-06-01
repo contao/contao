@@ -94,7 +94,7 @@ abstract class Events extends Module
 	{
 		$calendarEventsGenerator = System::getContainer()->get('contao_calendar.calendar_events_generator');
 
-		return $this->arrEvents = $calendarEventsGenerator->getAllEvents($arrCalendars, $intStart, $intEnd, $blnFeatured);
+		return $this->arrEvents = $calendarEventsGenerator->getAllEvents($arrCalendars, $intStart, $intEnd, $blnFeatured, (bool) $this->cal_noSpan);
 	}
 
 	/**
