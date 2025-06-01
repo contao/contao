@@ -92,91 +92,9 @@ abstract class Events extends Module
 	 */
 	protected function getAllEvents($arrCalendars, $intStart, $intEnd, $blnFeatured = null)
 	{
-		if (!\is_array($arrCalendars))
-		{
-			return array();
-		}
+		$calendarEventsGenerator = System::getContainer()->get('contao_calendar.calendar_events_generator');
 
-		// Include all events of the day, expired events will be filtered out later
-		$intStart = strtotime(date('Y-m-d', $intStart) . ' 00:00:00');
-
-		$this->arrEvents = array();
-
-		foreach ($arrCalendars as $id)
-		{
-			// Get the events of the current period
-			$objEvents = CalendarEventsModel::findCurrentByPid($id, $intStart, $intEnd, array('showFeatured' => $blnFeatured));
-
-			if ($objEvents === null)
-			{
-				continue;
-			}
-
-			while ($objEvents->next())
-			{
-				$objEvent = $objEvents->current();
-
-				$this->addEvent($objEvent, $objEvent->startTime, $objEvent->endTime, $intStart, $intEnd, $id);
-
-				// Recurring events
-				if ($objEvent->recurring)
-				{
-					$arrRepeat = StringUtil::deserialize($objEvent->repeatEach);
-
-					if (!isset($arrRepeat['unit'], $arrRepeat['value']) || $arrRepeat['value'] < 1)
-					{
-						continue;
-					}
-
-					$count = 0;
-					$intStartTime = $objEvent->startTime;
-					$intEndTime = $objEvent->endTime;
-					$strtotime = '+ ' . $arrRepeat['value'] . ' ' . $arrRepeat['unit'];
-
-					while ($intEndTime < $intEnd)
-					{
-						if ($objEvent->recurrences > 0 && $count++ >= $objEvent->recurrences)
-						{
-							break;
-						}
-
-						$intStartTime = strtotime($strtotime, $intStartTime);
-						$intEndTime = strtotime($strtotime, $intEndTime);
-
-						// Stop if the upper boundary is reached (see #8445)
-						if ($intStartTime === false || $intEndTime === false)
-						{
-							break;
-						}
-
-						// Skip events outside the scope
-						if ($intEndTime < $intStart || $intStartTime > $intEnd)
-						{
-							continue;
-						}
-
-						$this->addEvent($objEvent, $intStartTime, $intEndTime, $intStart, $intEnd, $id);
-					}
-				}
-			}
-		}
-
-		// Sort the array
-		foreach (array_keys($this->arrEvents) as $key)
-		{
-			ksort($this->arrEvents[$key]);
-		}
-
-		// HOOK: modify the result set
-		if (isset($GLOBALS['TL_HOOKS']['getAllEvents']) && \is_array($GLOBALS['TL_HOOKS']['getAllEvents']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['getAllEvents'] as $callback)
-			{
-				$this->arrEvents = System::importStatic($callback[0])->{$callback[1]}($this->arrEvents, $arrCalendars, $intStart, $intEnd, $this);
-			}
-		}
-
-		return $this->arrEvents;
+		return $this->arrEvents = $calendarEventsGenerator->getAllEvents($arrCalendars, $intStart, $intEnd, $blnFeatured);
 	}
 
 	/**
