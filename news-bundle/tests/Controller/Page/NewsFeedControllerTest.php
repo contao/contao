@@ -102,7 +102,7 @@ class NewsFeedControllerTest extends ContaoTestCase
             'feedDescription' => 'Get latest news',
             'feedFormat' => 'rss',
             'language' => 'en',
-            'newsArchives' => serialize([8472])
+            'newsArchives' => serialize([8472]),
         ]);
 
         $container = $this->getContainerWithContaoConfiguration();
