@@ -78,7 +78,7 @@ class ButtonsBuilder
         return $this->render($strTable, self::TYPE_EDIT, $arrButtons, $dc);
     }
 
-    public function generateSelectButtons(string $strTable, bool $isSortable, DataContainer $dc): string
+    public function generateSelectButtons(string $strTable, bool $isMovable, DataContainer $dc): string
     {
         $arrButtons = [];
 
@@ -93,12 +93,12 @@ class ButtonsBuilder
         if (!($GLOBALS['TL_DCA'][$strTable]['config']['notCopyable'] ?? null)) {
             $arrButtons['copy'] = '<button type="submit" name="copy" id="copy" class="tl_submit" accesskey="c">'.$GLOBALS['TL_LANG']['MSC']['copySelected'].'</button>';
 
-            if ($isSortable) {
+            if ($isMovable) {
                 $arrButtons['copyMultiple'] = '<button type="submit" name="copyMultiple" id="copyMultiple" class="tl_submit" accesskey="m">'.$GLOBALS['TL_LANG']['MSC']['copyMultiple'].'</button>';
             }
         }
 
-        if ($isSortable && !($GLOBALS['TL_DCA'][$strTable]['config']['notSortable'] ?? null)) {
+        if ($isMovable && !($GLOBALS['TL_DCA'][$strTable]['config']['notSortable'] ?? null)) {
             $arrButtons['cut'] = '<button type="submit" name="cut" id="cut" class="tl_submit" accesskey="x">'.$GLOBALS['TL_LANG']['MSC']['moveSelected'].'</button>';
         }
 

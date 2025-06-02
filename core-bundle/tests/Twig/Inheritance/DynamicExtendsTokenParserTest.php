@@ -150,7 +150,7 @@ class DynamicExtendsTokenParserTest extends TestCase
         $parser = new Parser($environment);
 
         $this->expectException(SyntaxError::class);
-        $this->expectExceptionMessage($expectedException);
+        $this->expectExceptionMessageMatches($expectedException);
 
         $parser->parse($tokenStream);
     }
@@ -159,12 +159,12 @@ class DynamicExtendsTokenParserTest extends TestCase
     {
         yield 'extend from within a block' => [
             "{% block b %}{% extends '@Foo/bar.html.twig' %}{% endblock %}",
-            'Cannot use "extends" in a block.',
+            '/^Cannot use "extends" in a block/',
         ];
 
         yield 'extend from within macro' => [
             "{% macro m() %}{% extends '@Foo/bar.html.twig' %}{% endmacro %}",
-            'Cannot use "extends" in a macro.',
+            '/^Cannot use "extends" in a macro/',
         ];
     }
 }

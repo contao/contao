@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\PhpunitExtension;
 
+use Contao\DcaLoader;
 use PhpParser\Lexer;
 use PHPUnit\Event\Test\Finished;
 use PHPUnit\Event\Test\FinishedSubscriber;
@@ -156,7 +157,7 @@ final class GlobalStateWatcher implements Extension
 
         $files = array_map(
             static fn ($path) => substr($path, \strlen($root) + 1),
-            glob("$root/*-bundle/tests/**/*"),
+            glob("$root/*-bundle/tests/{*,*/*,*/*/*}", GLOB_BRACE),
         );
 
         sort($files);
@@ -205,6 +206,7 @@ final class GlobalStateWatcher implements Extension
                 'Symfony\Bridge\PhpUnit\\',
                 'Symfony\Component\Cache\Adapter\\',
                 'Symfony\Component\Clock\Clock',
+                'Symfony\Component\Config\Resource\ClassExistenceResource',
                 'Symfony\Component\Config\Resource\ComposerResource',
                 'Symfony\Component\Console\Helper\\',
                 'Symfony\Component\Console\Terminal',
@@ -245,6 +247,10 @@ final class GlobalStateWatcher implements Extension
                 }
 
                 if ($value instanceof \WeakMap && 0 === $value->count() && $property->hasType() && !$property->getType()->allowsNull()) {
+                    continue;
+                }
+
+                if (DcaLoader::class === $class && 'nullRequest' === $property->getName()) {
                     continue;
                 }
 

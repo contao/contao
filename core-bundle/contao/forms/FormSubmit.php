@@ -54,7 +54,7 @@ class FormSubmit extends Widget
 				break;
 
 			case 'imageSubmit':
-				$this->arrConfiguration['imageSubmit'] = $varValue ? true : false;
+				$this->arrConfiguration['imageSubmit'] = (bool) $varValue;
 				break;
 
 			case 'name':

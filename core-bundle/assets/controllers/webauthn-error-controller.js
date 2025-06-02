@@ -9,7 +9,7 @@ export default class extends Controller {
         attestationFailureMessage: String,
         optionsFailureMessage: String,
         csrfUrl: String,
-    }
+    };
 
     handleUnsupported() {
         this.messageTarget.innerHTML = this.renderMessage(this.unsupportedMessageValue);
@@ -40,8 +40,6 @@ export default class extends Controller {
     }
 
     renderMessage(message, type) {
-        type = type ?? 'error';
-
-        return `<p class="tl_${type}">${message}</p>`;
+        return `<p class="tl_${type ?? 'error'}">${message}</p>`;
     }
 }

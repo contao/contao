@@ -31,7 +31,8 @@
                 color: var(--contao);
             }
 
-            .extension, .\/ {
+            .extension,
+            .\/ {
                 color: color-mix(in srgb, currentColor 50%, transparent);
             }
 
@@ -40,13 +41,17 @@
 
                 &.identifier--user {
                     color: var(--blue);
+
+                    &input {
+                        color: var(--black);
+                    }
                 }
             }
         }
 
         .namespace_info {
             color: var(--gray);
-            font-size: .75rem;
+            font-size: 0.75rem;
             margin: 0;
         }
     }
@@ -56,7 +61,7 @@
         align-items: center;
         gap: 4px;
         padding: 2px 4px;
-        font-size: .6rem;
+        font-size: 0.6rem;
         line-height: 1.5;
 
         .badge {
@@ -88,7 +93,7 @@
         }
 
         button {
-            font-size: .75rem;
+            font-size: 0.75rem;
             display: grid;
             background: none;
             border: none;
@@ -97,8 +102,10 @@
             padding: 0;
             width: 14px;
             height: 14px;
-            opacity: .5;
-            font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            opacity: 0.5;
+            font-family:
+                -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue",
+                sans-serif;
 
             &:hover {
                 opacity: 1;
@@ -108,7 +115,15 @@
     }
 
     .shadowed {
-        background-image: linear-gradient(45deg, var(--panel-bg) 25%, transparent 25%, transparent 50%, var(--panel-bg) 50%, var(--panel-bg) 75%, transparent 75%);
+        background-image: linear-gradient(
+            45deg,
+            var(--panel-bg) 25%,
+            transparent 25%,
+            transparent 50%,
+            var(--panel-bg) 50%,
+            var(--panel-bg) 75%,
+            transparent 75%
+        );
         background-size: 10px 10px;
     }
 

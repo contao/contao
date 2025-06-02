@@ -154,6 +154,7 @@ class BackendFavoritesListenerTest extends TestCase
             'title' => $collapsed ? 'Expand node' : 'Collapse node',
             'data-action' => 'contao--toggle-navigation#toggle:prevent',
             'data-contao--toggle-navigation-category-param' => 'favorites',
+            'data-turbo-prefetch' => 'false',
             'aria-controls' => 'favorites',
         ];
 

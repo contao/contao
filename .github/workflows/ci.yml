@@ -133,6 +133,21 @@ jobs:
             - name: Run YAMLlint
               run: yamllint --format=github .
 
+    biome:
+        name: Biome
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
+
+            - name: Install Biome
+              uses: biomejs/setup-biome@v2
+
+            - name: Run Biome
+              run: biome ci core-bundle/assets
+
     service-linter:
         name: Service linter
         runs-on: ubuntu-latest

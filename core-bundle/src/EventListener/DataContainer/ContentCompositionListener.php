@@ -107,7 +107,7 @@ class ContentCompositionListener
         }
 
         // Check whether there are articles (e.g. on copied pages)
-        $total = $this->connection->fetchOne('SELECT COUNT(*) FROM tl_article WHERE pid=:pid', ['pid' => $dc->id]);
+        $total = $this->connection->fetchOne('SELECT COUNT(*) FROM tl_article WHERE pid = :pid', ['pid' => $dc->id]);
 
         if ($total > 0) {
             return;

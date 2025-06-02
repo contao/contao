@@ -27,6 +27,7 @@ $GLOBALS['TL_DCA']['tl_undo'] = array
 		'notEditable'                 => true,
 		'notCopyable'                 => true,
 		'notDeletable'                => true,
+		'backendSearchIgnore'         => true,
 		'sql' => array
 		(
 			'keys' => array

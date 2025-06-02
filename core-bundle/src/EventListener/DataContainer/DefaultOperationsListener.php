@@ -75,8 +75,6 @@ class DefaultOperationsListener
 
                 if (str_starts_with($v, '!')) {
                     $operations[$key]['primary'] = true;
-                } else {
-                    unset($operations[$key]['primary']);
                 }
 
                 continue;
@@ -240,7 +238,7 @@ class DefaultOperationsListener
             }
 
             $childCount = $this->connection->fetchOne(
-                "SELECT COUNT(*) FROM $table WHERE pid=?",
+                "SELECT COUNT(*) FROM $table WHERE pid = ?",
                 [(string) $operation->getRecord()['id']],
             );
 

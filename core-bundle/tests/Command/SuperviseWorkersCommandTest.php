@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Command;
 use Contao\CoreBundle\Command\SuperviseWorkersCommand;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Util\ProcessUtil;
+use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\DependencyInjection\Container;
@@ -62,9 +63,16 @@ class SuperviseWorkersCommandTest extends TestCase
             )
         ;
 
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('close')
+        ;
+
         $command = new SuperviseWorkersCommand(
             $messengerTransportLocator,
             $processUtil,
+            $connection,
             $supervisor,
             $this->getWorkers($desiredSize, $max, $min),
         );

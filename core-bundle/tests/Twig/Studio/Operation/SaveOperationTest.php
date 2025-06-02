@@ -86,6 +86,25 @@ class SaveOperationTest extends AbstractOperationTestCase
         $this->assertSame('save_result.stream', $response->getContent());
     }
 
+    public function testThrowsExceptionIfTheTemplateCodeIsMissingWhenSaving(): void
+    {
+        $storage = $this->mockUserTemplatesStorage();
+        $storage
+            ->expects($this->never())
+            ->method('write')
+        ;
+
+        $twig = $this->mockTwigEnvironment();
+
+        $operation = $this->getSaveOperation($storage, $twig);
+        $context = $this->getOperationContext('content_element/existing_user_template');
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('The request did not contain the template code.');
+
+        $operation->execute(new Request(), $context);
+    }
+
     private function getSaveOperation(VirtualFilesystemInterface|null $storage = null, Environment|null $twig = null): SaveOperation
     {
         $templateInformation = new TemplateInformation(

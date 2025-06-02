@@ -280,7 +280,8 @@ they are Twig-only and also follow the new naming scheme:
 
 ### Show to guests only
 
-The "show to guests only" function has been removed. Use the "protect page" function instead.
+The "show to guests only" function for articles, content elements and modules has been removed. Use the "protect"
+function instead.
 
 ### tl_content.ptable
 
@@ -506,3 +507,11 @@ The back end widgets `pageSelector` and `fileSelector` have been removed. Use th
 ### Public folder
 
 The public folder is now called `public` by default. It can be renamed in the `composer.json` file.
+
+### Basic entities
+
+[Basic entities][1] such as `[-]` or `[nbsp]` are no longer converted automatically when a page is rendered. Instead,
+you have to add `'basicEntities' => true` to the `eval` section of the fields you want to use them in, so they are
+converted when a record is saved in the back end.
+
+[1]: https://docs.contao.org/manual/en/article-management/insert-tags/#basic-entities

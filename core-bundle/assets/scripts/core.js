@@ -344,7 +344,7 @@ window.AjaxRequest =
 				// Tree view
 				if (!(img instanceof HTMLElement) && img.forEach) {
 					img.forEach((img) => {
-						if (img.nodeName.toLowerCase() == 'img') {
+						if (img instanceof HTMLImageElement) {
 							if (!img.getParent('ul.tl_listing').hasClass('tl_tree_xtnd')) {
 								pa = img.getParent('a');
 
@@ -613,8 +613,14 @@ window.Backend =
 			'draggable': false,
 			'overlayOpacity': .7,
 			'overlayClick': false,
-			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
-			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
+			'onShow': function() {
+				document.body.setStyle('overflow', 'hidden');
+				document.dispatchEvent(new CustomEvent('contao--simple-modal:show'));
+			},
+			'onHide': function() {
+				document.body.setStyle('overflow', 'auto');
+				document.dispatchEvent(new CustomEvent('contao--simple-modal:hide'));
+			}
 		});
 		M.addButton(Contao.lang.cancel, 'btn', function() {
 			if (this.buttons[0].hasClass('btn-disabled')) {
@@ -698,7 +704,8 @@ window.Backend =
 
 		var form = $(el) || el;
 		hidden.inject(form, 'bottom');
-		form.submit();
+		form.noValidate = true;
+		form.requestSubmit();
 	},
 
 	/**
@@ -1668,6 +1675,10 @@ window.Backend =
 				}
 			},
 			clickEvent = function(e) {
+				if (e.target instanceof HTMLAnchorElement || e.target instanceof HTMLButtonElement || e.target instanceof HTMLInputElement || e.target?.closest('a, button, input, .operations')) {
+					return;
+				}
+
 				var input = this.getElement('input[type="checkbox"],input[type="radio"]'),
 					limitToggler = $(e.target).getParent('.limit_toggler');
 

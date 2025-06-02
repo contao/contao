@@ -36,7 +36,7 @@
   <?php /* If the following hash changes, Turbo will reload the entire page instead of merging contents. */ ?>
   <meta data-turbo-track="reload" content="<?= md5($this->stylesheets."\0".$this->javascripts); ?>">
 </head>
-<body id="top" class="be_main<?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->attributes ?> data-controller="contao--tooltips">
+<body id="top" class="be_main<?php if ($this->isPopup): ?> popup<?php endif; ?>"<?= $this->attributes ?> data-controller="contao--tooltips" data-action="touchstart@document->contao--tooltips#touchStart">
   <a class="invisible show-on-focus" href="#main" data-turbo="false"><?= $this->trans('MSC.skipToContent') ?></a>
 
   <?php $this->block('header'); ?>
@@ -54,6 +54,11 @@
           <?= $this->headerMenu ?>
         </div>
       </header>
+
+      <?php $this->block('header_outlets'); ?>
+        <?php $this->insert('@Contao/backend/component/message/_outlet.html.twig') ?>
+        <?php $this->insert('@Contao/backend/component/dialog/_outlet.html.twig') ?>
+      <?php $this->block('header_outlets'); ?>
     <?php endif; ?>
   <?php $this->endblock(); ?>
 

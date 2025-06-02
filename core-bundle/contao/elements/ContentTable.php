@@ -30,10 +30,10 @@ class ContentTable extends ContentElement
 
 		$this->Template->id = 'table_' . $this->id;
 		$this->Template->summary = StringUtil::specialchars($this->summary);
-		$this->Template->useHeader = $this->thead ? true : false;
-		$this->Template->useFooter = $this->tfoot ? true : false;
-		$this->Template->useLeftTh = $this->tleft ? true : false;
-		$this->Template->sortable = $this->sortable ? true : false;
+		$this->Template->useHeader = $this->thead;
+		$this->Template->useFooter = $this->tfoot;
+		$this->Template->useLeftTh = $this->tleft;
+		$this->Template->sortable = $this->sortable;
 
 		if ($this->sortable)
 		{

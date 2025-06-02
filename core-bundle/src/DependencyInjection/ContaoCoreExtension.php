@@ -159,7 +159,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleSecurityConfig($config, $container);
         $this->handleCspConfig($config, $container);
         $this->handleAltcha($config, $container);
-        $this->handTemplateStudioConfig($config, $container, $loader);
+        $this->handleTemplateStudioConfig($config, $container, $loader);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -285,8 +285,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             $supervisor->addArgument('%kernel.cache_dir%/worker-supervisor');
 
             $command = $container->getDefinition('contao.command.supervise_workers');
-            $command->setArgument(2, $supervisor);
-            $command->setArgument(3, $config['messenger']['workers']);
+            $command->setArgument('$supervisor', $supervisor);
+            $command->setArgument('$workers', $config['messenger']['workers']);
         }
 
         // No workers defined -> remove our cron job and the command
@@ -332,7 +332,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             $container->removeDefinition('contao.listener.search_index');
         } else {
             // Configure the search index listener
-            $container->getDefinition('contao.listener.search_index')->setArgument(2, $features);
+            $container->getDefinition('contao.listener.search_index')->setArgument('$enabledFeatures', $features);
         }
     }
 
@@ -626,7 +626,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $altcha->setArgument(5, $config['altcha']['challenge_expiry']);
     }
 
-    private function handTemplateStudioConfig(array $config, ContainerBuilder $container, LoaderInterface $loader): void
+    private function handleTemplateStudioConfig(array $config, ContainerBuilder $container, LoaderInterface $loader): void
     {
         // Used to display/hide the menu entry in the back end
         $container->setParameter('contao.template_studio.enabled', $config['template_studio']['enabled']);

@@ -65,7 +65,6 @@
               <input type="password" name="password" id="password" class="tl_text" value="" autocomplete="current-password" placeholder="<?= $this->password ?>" required>
             </div>
             <div class="submit_container">
-              <a href="/">‹ <?= $this->feLink ?></a>
               <button type="submit" name="login" id="login" class="tl_submit"><?= $this->loginButton ?></button>
             </div>
           </div>
@@ -74,6 +73,7 @@
       </main>
       <?= $this->messages ?>
       <div class="tl_message passkey_message" data-contao--webauthn-error-target="message"></div>
+      <p class="fe-link"><a href="/"><?= $this->feLink ?></a></p>
     </div>
   <?php $this->endblock(); ?>
 
