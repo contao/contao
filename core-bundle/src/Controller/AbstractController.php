@@ -18,6 +18,8 @@ use Contao\CoreBundle\EventListener\MakeResponsePrivateListener;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\PageModel;
 use FOS\HttpCacheBundle\Http\SymfonyResponseTagger;
 use Psr\Log\LoggerInterface;
@@ -34,6 +36,7 @@ abstract class AbstractController extends SymfonyAbstractController
 
         $services['contao.framework'] = ContaoFramework::class;
         $services['contao.routing.content_url_generator'] = ContentUrlGenerator::class;
+        $services['contao.routing.response_context_accessor'] = ResponseContextAccessor::class;
         $services['event_dispatcher'] = EventDispatcherInterface::class;
         $services['logger'] = '?'.LoggerInterface::class;
         $services['fos_http_cache.http.symfony_response_tagger'] = '?'.SymfonyResponseTagger::class;
@@ -130,6 +133,19 @@ abstract class AbstractController extends SymfonyAbstractController
     protected function generateContentUrl(object $content, array $parameters = [], int $referenceType = UrlGeneratorInterface::ABSOLUTE_PATH): string
     {
         return $this->container->get('contao.routing.content_url_generator')->generate($content, $parameters, $referenceType);
+    }
+
+    protected function getHtmlHeadBag(): HtmlHeadBag|null
+    {
+        try {
+            return $this->container
+                ->get('contao.routing.response_context_accessor')
+                ->getResponseContext()
+                ?->get(HtmlHeadBag::class)
+            ;
+        } catch (\InvalidArgumentException) {
+            return null;
+        }
     }
 
     protected function hasParameter(string $name): bool
