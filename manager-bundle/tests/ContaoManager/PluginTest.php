@@ -72,7 +72,6 @@ class PluginTest extends ContaoTestCase
     {
         $plugin = new Plugin();
 
-        $this->assertInstanceOf(DependentPluginInterface::class, $plugin);
         $this->assertSame(['contao/core-bundle'], $plugin->getPackageDependencies());
     }
 
