@@ -186,19 +186,22 @@ class Document
         }
 
         // Remove <script> and <style> tags
-        $body->filterXPath('//script | //style')->each(static fn (Crawler $node) => $node->getNode(0)->parentNode->removeChild($node->getNode(0)));
+        $body
+            ->filterXPath('//script | //style')
+            ->each(static fn (Crawler $node) => $node->getNode(0)->parentNode->removeChild($node->getNode(0)))
+        ;
 
         // Extract the HTML and filter it for indexer start and stop comments
         $html = $body->html();
 
         // Strip non-indexable areas
-        while (($start = strpos($html, '<!-- indexer::stop -->')) !== false) {
-            if (($end = strpos($html, '<!-- indexer::continue -->', $start)) !== false) {
+        while (false !== ($start = strpos($html, '<!-- indexer::stop -->'))) {
+            if (false !== ($end = strpos($html, '<!-- indexer::continue -->', $start))) {
                 $current = $start;
 
                 // Handle nested tags
-                while (($nested = strpos($html, '<!-- indexer::stop -->', $current + 22)) !== false && $nested < $end) {
-                    if (($newEnd = strpos($html, '<!-- indexer::continue -->', $end + 26)) !== false) {
+                while (false !== ($nested = strpos($html, '<!-- indexer::stop -->', $current + 22)) && $nested < $end) {
+                    if (false !== ($newEnd = strpos($html, '<!-- indexer::continue -->', $end + 26))) {
                         $end = $newEnd;
                         $current = $nested;
                     } else {
