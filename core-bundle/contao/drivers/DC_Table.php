@@ -3707,7 +3707,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 		elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 		{
-			$buttons .= DataContainerOperationsBuilder::generateBackButton(System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+			$buttons .= DataContainerOperationsBuilder::generateBackButton((!str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '=') || str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '?') ? '' : System::getContainer()->get('router')->generate('contao_backend') . '?') . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
 		}
 
 		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $this->intCurrentPid, 'sorting' => 0))))
@@ -4381,7 +4381,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 			elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 			{
-				$buttons .= DataContainerOperationsBuilder::generateBackButton(System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+				$buttons .= DataContainerOperationsBuilder::generateBackButton((!str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '=') || str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '?') ? '' : System::getContainer()->get('router')->generate('contao_backend') . '?') . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
 			}
 		}
 
@@ -5034,7 +5034,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 		elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 		{
-			$buttons .= DataContainerOperationsBuilder::generateBackButton(System::getContainer()->get('router')->generate('contao_backend') . '?' . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+			$buttons .= DataContainerOperationsBuilder::generateBackButton((!str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '=') || str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '?') ? '' : System::getContainer()->get('router')->generate('contao_backend') . '?') . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
 		}
 
 		if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable)))
@@ -5386,9 +5386,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return '
 <div class="tl_search tl_subpanel">
 <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
-<select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '" data-controller="contao--choices">
+<div class="tl_select_wrapper" data-controller="contao--choices">
+<select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
 ' . implode("\n", $options_sorter) . '
 </select>
+</div>
 <span>=</span>
 <input type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
 </div>';
@@ -5521,9 +5523,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		return '
 <div class="tl_sorting tl_subpanel">
 <strong>' . $GLOBALS['TL_LANG']['MSC']['sortBy'] . ':</strong>
-<select name="tl_sort" id="tl_sort" class="tl_select" data-controller="contao--choices">
+<div class="tl_select_wrapper"" data-controller="contao--choices">
+<select name="tl_sort" id="tl_sort" class="tl_select">
 ' . implode("\n", $options_sorter) . '
 </select>
+</div>
 </div>';
 	}
 
@@ -5662,9 +5666,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 
 			$fields = '
-<select name="tl_limit" class="tl_select' . ($active ? ' active' : '') . '" onchange="this.form.requestSubmit()" data-controller="contao--choices">
+<div class="tl_select_wrapper" data-controller="contao--choices">
+<select name="tl_limit" class="tl_select' . ($active ? ' active' : '') . '" onchange="this.form.requestSubmit()">
   ' . $options . '
-</select> ';
+</select>
+</div> ';
 		}
 
 		return '
@@ -5904,7 +5910,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			// Begin select menu
 			$fields .= '
-<select name="' . $field . '" id="' . $field . '" class="tl_select' . ($active ? ' active' : '') . '" data-placeholder="' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) . '" data-controller="contao--choices">
+<div class="tl_select_wrapper" data-controller="contao--choices">
+<select name="' . $field . '" id="' . $field . '" class="tl_select' . ($active ? ' active' : '') . '" data-placeholder="' . (\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : ($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'] ?? null)) . '">
   <option value="tl_' . $field . '">---</option>';
 
 			if ($objFields->numRows)
@@ -6137,7 +6144,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			// End select menu
 			$fields .= '
-</select> ';
+</select>
+</div> ';
 		}
 
 		return '
