@@ -12,15 +12,16 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Messenger\Message\BackendSearch;
 
-use Contao\CoreBundle\Messenger\Message\LowPriorityMessageInterface;
 use Contao\CoreBundle\Messenger\Message\ScopeAwareMessageInterface;
 use Contao\CoreBundle\Messenger\Message\ScopeAwareMessageTrait;
 use Contao\CoreBundle\Search\Backend\ReindexConfig;
+use Symfony\Component\Messenger\Attribute\AsMessage;
 
 /**
  * @experimental
  */
-class ReindexMessage implements LowPriorityMessageInterface, ScopeAwareMessageInterface
+#[AsMessage('contao_prio_low')]
+class ReindexMessage implements ScopeAwareMessageInterface
 {
     use ScopeAwareMessageTrait;
 
