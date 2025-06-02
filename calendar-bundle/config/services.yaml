@@ -11,7 +11,7 @@ services:
         class: Contao\CalendarBundle\CalendarEventsGenerator
         public: true
         arguments:
-            - '@contoa.framework'
+            - '@contao.framework'
             - '@contao.routing.page_finder'
             - '@contao.routing.content_url_generator'
             - '@?fos_http_cache.http.symfony_response_tagger'
