@@ -20,23 +20,23 @@
                 <tr data-contao--row-wizard-target="row">
                     {# Module/Content element #}
                     <td>
-                        {% set module_select_attributes = attrs()
-                            .set('name', "#{id}[#{loop.index0}][mod]")
-                            .set('data-action', 'focus->contao--scroll-offset#store contao--row-wizard#updateModuleWizardLink')
-                            .set('data-controller', 'contao--choices')
-                            .addClass('tl_select')
-                        %}
-                        <select{{ module_select_attributes}}>
-                            <optgroup label="{{ 'MSC.mw_elements'|trans }}">
-                                {% for option in row.element_options %}
-                                    {% set option_attributes = attrs()
-                                        .set('value', option.value)
-                                        .set('selected', 'selected', option.selected)
-                                    %}
-                                    <option{{ option_attributes }}>{{ option.label }}</option>
-                                {% endfor %}
-                            </optgroup>
-                            <optgroup label="{{ 'MSC.mw_modules'|trans }}">
+                        <div class="tl_select__wrapper" data-controller="contao--choices">
+                            {% set module_select_attributes = attrs()
+                                .set('name', "#{id}[#{loop.index0}][mod]")
+                                .set('data-action', 'focus->contao--scroll-offset#store contao--row-wizard#updateModuleWizardLink')
+                                .addClass('tl_select')
+                            %}
+                            <select{{ module_select_attributes}}>
+                                <optgroup label="{{ 'MSC.mw_elements'|trans }}">
+                                    {% for option in row.element_options %}
+                                        {% set option_attributes = attrs()
+                                            .set('value', option.value)
+                                            .set('selected', 'selected', option.selected)
+                                        %}
+                                        <option{{ option_attributes }}>{{ option.label }}</option>
+                                    {% endfor %}
+                                </optgroup>
+                                <optgroup label="{{ 'MSC.mw_modules'|trans }}">
                                 {% for option in row.module_options %}
                                     {% set option_attributes = attrs()
                                         .set('value', option.value)
@@ -44,26 +44,29 @@
                                     %}
                                     <option{{ option_attributes }}>{{ option.label }}</option>
                                 {% endfor %}
-                            </optgroup>
-                        </select>
+                                </optgroup>
+                            </select>
+                        </div>
                     </td>
 
                     {# Layout #}
                     <td>
-                        {% set layout_select_attributes = attrs()
-                            .set('name', "#{id}[#{loop.index0}][col]")
-                            .set('data-action', 'focus->contao--scroll-offset#store')
-                            .addClass('tl_select_column')
-                        %}
-                        <select{{ layout_select_attributes}}>
-                            {% for option in row.layout_options %}
-                                {% set option_attributes = attrs()
-                                    .set('value', option.value)
-                                    .set('selected', 'selected', option.selected)
-                                %}
-                                <option{{ option_attributes }}>{{ option.label }}</option>
-                            {% endfor %}
-                        </select>
+                        <div class="tl_select__wrapper" data-controller="contao--choices">
+                            {% set layout_select_attributes = attrs()
+                                .set('name', "#{id}[#{loop.index0}][col]")
+                                .set('data-action', 'focus->contao--scroll-offset#store')
+                                .addClass('tl_select_column')
+                            %}
+                            <select{{ layout_select_attributes}}>
+                                {% for option in row.layout_options %}
+                                    {% set option_attributes = attrs()
+                                        .set('value', option.value)
+                                        .set('selected', 'selected', option.selected)
+                                    %}
+                                    <option{{ option_attributes }}>{{ option.label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </td>
 
                     {# Controls #}
