@@ -407,6 +407,13 @@ services:
             - '@translator'
             - '@contao.framework'
 
+    contao.listener.menu.backend_jobs:
+        class: Contao\CoreBundle\EventListener\Menu\BackendJobsListener
+        arguments:
+            - '@security.helper'
+            - '@twig'
+            - '@contao.job.jobs'
+
     contao.listener.menu.backend_login:
         class: Contao\CoreBundle\EventListener\Menu\BackendLoginListener
         arguments:

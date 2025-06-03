@@ -12,9 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
-use Contao\CoreBundle\Job\Job;
 use Contao\CoreBundle\Job\Jobs;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -39,26 +37,20 @@ class BackendJobsController extends AbstractBackendController
             'title' => 'Jobs',
             'headline' => 'Jobs',
             'jobs' => $this->jobs->findMine(),
-            'dateTimeFormat' => 'Y-m-d H:i:s', // TODO: System settings but why is this not available globally in Twig?
         ]);
     }
 
     #[Route(
         '%contao.backend.route_prefix%/jobs/pending',
+        name: '_contao_jobs_pending.stream',
         defaults: ['_scope' => 'backend', '_store_referrer' => false],
         methods: ['GET'],
+        condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
     )]
-    public function latestJobsAction(): JsonResponse
+    public function latestJobsAction(): Response
     {
-        // TODO: This should become a Turbo stream, I guess?
-        return $this->createResponse($this->jobs->findMyPending());
-    }
-
-    /**
-     * @param array<Job> $jobs
-     */
-    private function createResponse(array $jobs): JsonResponse
-    {
-        return new JsonResponse(array_map(static fn (Job $job) => $job->toArray(), $jobs));
+        return $this->render('@Contao/backend/jobs/show_running_jobs.stream.html.twig', [
+            'jobs' => $this->jobs->findMyNewOrPending(),
+        ]);
     }
 }

@@ -61,7 +61,7 @@ class RebuildBackendSearchIndex extends Backend implements MaintenanceModuleInte
 			$job = $jobs->createUserJob();
 
 			$reindexConfig = (new ReindexConfig())->withJobId($job->getUuid());
-			$backendSearch->reindex(new ReindexConfig());
+			$backendSearch->reindex($reindexConfig);
 
 			Message::addConfirmation($GLOBALS['TL_LANG']['tl_maintenance']['backend_search']['confirmation'], self::class);
 

@@ -136,6 +136,14 @@ body.popup {
 	font-weight: 400;
 }
 
+#tmenu span:has(sup) a {
+	color: transparent;
+}
+
+#tmenu sup:empty {
+	display: none;
+}
+
 #tmenu .burger {
 	display: none;
 }

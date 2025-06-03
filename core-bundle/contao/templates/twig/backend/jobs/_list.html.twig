@@ -1,0 +1,23 @@
+{% macro render_jobs(jobs) %}
+    <ul>
+        {% for job in jobs %}
+            <li>
+                {# todo: make config available and use here #}
+                {% set dateTimeFormat = 'Y-m-d H:i:s' %}
+                {{ job.createdAt|date(dateTimeFormat) }}
+                TODO: translate me: {{ job.status.translationKey }}
+                {% if job.children %}
+                    <div class="children">
+                        {{ _self.render_jobs(job.children) }}
+                    </div>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+{% endmacro %}
+
+{% block main %}
+    <div{{ list_attributes|default }}>
+        {{ _self.render_jobs(jobs) }}
+    </div>
+{% endblock %}

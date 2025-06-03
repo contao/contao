@@ -49,7 +49,7 @@ class Jobs
     /**
      * @return array<Job>
      */
-    public function findMyPending(): array
+    public function findMyNewOrPending(): array
     {
         $qb = $this->buildQueryBuilderForMine();
 
@@ -57,8 +57,8 @@ class Jobs
             return [];
         }
 
-        $qb->andWhere('j.status = :status');
-        $qb->setParameter('status', Status::PENDING->value);
+        $qb->andWhere('j.status IN(:status)');
+        $qb->setParameter('status', [Status::NEW->value, Status::PENDING->value]);
 
         return $this->queryWithQueryBuilder($qb);
     }
