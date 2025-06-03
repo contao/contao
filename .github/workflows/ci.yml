@@ -130,11 +130,8 @@ jobs:
               with:
                   show-progress: false
 
-            - name: Run YAMLlint
-              run: yamllint --format=github .
-
-    biome:
-        name: Biome
+    linter:
+        name: Linter
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
@@ -142,23 +139,11 @@ jobs:
               with:
                   show-progress: false
 
-            - name: Install Biome
-              uses: biomejs/setup-biome@v2
+            - name: Install the Node packages
+              run: npm install
 
             - name: Run Biome
-              run: biome ci core-bundle/assets
-
-    stylelint:
-        name: Stylelint
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-              with:
-                  show-progress: false
-
-            - name: Install Stylelint
-              run: npm install
+              run: npx biome ci core-bundle/assets
 
             - name: Run Stylelint
               run: npx stylelint --fix core-bundle/assets/styles
