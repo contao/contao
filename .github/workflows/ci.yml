@@ -148,6 +148,20 @@ jobs:
             - name: Run Biome
               run: biome ci core-bundle/assets
 
+    prettier:
+        name: Prettier
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
+
+            - name: Run Prettier
+              uses: creyD/prettier_action@v4.3
+              with:
+                  prettier_options: --check core-bundle/assets/styles
+
     service-linter:
         name: Service linter
         runs-on: ubuntu-latest

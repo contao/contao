@@ -1,7 +1,10 @@
 {
     "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
     "files": {
-        "ignore": ["core-bundle/assets/scripts/*.js"]
+        "ignore": [
+            "core-bundle/assets/scripts",
+            "core-bundle/assets/styles"
+        ]
     },
     "formatter": {
         "indentStyle": "space",
