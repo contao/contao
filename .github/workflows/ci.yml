@@ -148,6 +148,21 @@ jobs:
             - name: Run Biome
               run: biome ci core-bundle/assets
 
+    stylelint:
+        name: Stylelint
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
+
+            - name: Install Stylelint
+              run: npm install
+
+            - name: Run Stylelint
+              run: npx stylelint --fix core-bundle/assets/styles
+
     service-linter:
         name: Service linter
         runs-on: ubuntu-latest
