@@ -1662,6 +1662,12 @@ table.tl_listing {
 	color: var(--gray);
 }
 
+.cte_type .drag-handle {
+	margin-left: -10px;
+	background: none;
+	border: none;
+}
+
 .cte_preview {
 	line-height: 1.25;
 	position: relative;
@@ -2239,6 +2245,7 @@ ul.sgallery li {
 	}
 }
 
+.tl_modulewizard td:first-child,
 .tl_modulewizard td:last-child {
 	width: 1%;
 	white-space: nowrap;
@@ -2473,7 +2480,9 @@ ul.sgallery li {
 	}
 }
 
+.tl_sectionwizard td:first-child,
 .tl_sectionwizard td:last-child {
+	width: 1%;
 	white-space: nowrap;
 }
 
@@ -2626,6 +2635,14 @@ ul.sortable button[disabled] {
 
 ul.sortable button[disabled]:hover {
 	background: rgba(255,255,255,.7);
+}
+
+.sortable-chosen {
+	opacity: 0.6 !important;
+}
+
+.sortable-drag {
+	opacity: 0 !important;
 }
 
 #picker-menu {

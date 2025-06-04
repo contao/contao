@@ -24,5 +24,8 @@
         "check": "biome check --write --unsafe core-bundle/assets"
     },
     "private": true,
-    "packageManager": "npm@11.1.0"
+    "packageManager": "npm@11.1.0",
+    "dependencies": {
+        "sortablejs": "^1.15.6"
+    }
 }

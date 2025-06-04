@@ -74,7 +74,7 @@ class Picker extends Widget
 		$arrValues = $this->generateValues();
 		$arrSet = array_keys($arrValues);
 
-		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . implode(',', $arrSet) . '"' . ($this->onchange ? ' onchange="' . $this->onchange . '"' : '') . '>' . '
+		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . implode(',', $arrSet) . '"' . ($this->onchange ? ' onchange="' . $this->onchange . '"' : '') . ' data-contao--input-map-target="input">' . '
   <div class="selector_container">' . (($this->isSortable && \count($arrValues) > 1) ? '
     <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '');
 
@@ -103,12 +103,12 @@ class Picker extends Widget
 			$return .= '
   </tr>
 </thead>
-<tbody id="sort_' . $this->strId . '">';
+<tbody id="sort_' . $this->strId . '" data-controller="contao--sortable" data-action="contao--sortable:update->contao--input-map#update">';
 
 			foreach ($arrValues as $k => $row)
 			{
 				$return .= '
-  <tr data-id="' . $k . '">';
+  <tr data-contao--input-map-target="source" data-id="' . $k . '">';
 
 				foreach ($row as $j=>$arg)
 				{
@@ -129,11 +129,11 @@ class Picker extends Widget
 		else
 		{
 			$return .= '
-    <ul id="sort_' . $this->strId . '" class="' . ($this->isSortable ? 'sortable' : '') . '">';
+    <ul id="sort_' . $this->strId . '"' . ($this->isSortable ? ' class="sortable" data-controller="contao--sortable" data-action="contao--sortable:update->contao--input-map#update"' : '') . '>';
 
 			foreach ($arrValues as $k=>$v)
 			{
-				$return .= '<li data-id="' . $k . '">' . $v . '</li>';
+				$return .= '<li data-contao--input-map-target="source" data-id="' . $k . '">' . $v . '</li>';
 			}
 
 			$return .= '</ul>';
@@ -171,11 +171,10 @@ class Picker extends Widget
           }
         });
       });
-    </script>' . ($this->isSortable ? '
-    <script>Backend.makeMultiSrcSortable("sort_' . $this->strId . '", "ctrl_' . $this->strId . '", "ctrl_' . $this->strId . '")</script>' : '');
+    </script>';
 		}
 
-		$return = '<div>' . $return . '</div></div>';
+		$return = '<div data-controller="contao--input-map" data-contao--input-map-attribute-value="data-id">' . $return . '</div></div>';
 
 		return $return;
 	}

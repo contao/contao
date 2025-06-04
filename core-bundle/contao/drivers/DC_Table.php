@@ -4355,6 +4355,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	{
 		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
 		$blnHasSorting = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'][0] ?? null) == 'sorting';
+		$blnIsSortable = $blnHasSorting && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null) && Input::get('act') != 'select';
 
 		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
 		$blnClipboard = null !== $arrClipboard;
@@ -4683,9 +4684,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Make items sortable
 			if ($blnHasSorting)
 			{
+				$requestToken = htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+
 				$return .= '
 
-<ul id="ul_' . $this->intCurrentPid . '">';
+<ul' . ($blnIsSortable ? ' data-controller="contao--sortable" data-contao--sortable-handle-value=".drag-handle" data-contao--sortable-parent-mode-value="true" data-contao--sortable-request-token-value="' . $requestToken . '" data-id="' . $this->intCurrentPid . '"' : '') . '>';
 			}
 
 			for ($i=0, $c=\count($row); $i<$c; $i++)
@@ -4703,7 +4706,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				if ($blnHasSorting)
 				{
 					$return .= '
-<li id="li_' . $row[$i]['id'] . '">';
+<li' . ($blnIsSortable ? ' data-id="' . $row[$i]['id'] . '"' : '') . '>';
 				}
 
 				// Add the group header
@@ -4798,9 +4801,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						}
 
 						// Drag handle
-						if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $row[$i])))
+						if ($blnIsSortable && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $row[$i])))
 						{
-							$operations->append(array('primary' => true, 'html'=>'<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', \sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '</button>'));
+							$operations->append(array('primary' => true, 'html'=>'<button type="button" class="drag-handle" style="display:none" aria-hidden="true">' . Image::getHtml('drag.svg', \sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '</button>'));
 						}
 					}
 
@@ -4844,14 +4847,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		{
 			$return .= '
 </ul>';
-
-			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null) && Input::get('act') != 'select')
-			{
-				$return .= '
-<script>
-  Backend.makeParentViewSortable("ul_' . $this->intCurrentPid . '");
-</script>';
-			}
 		}
 
 		$return .= ($this->strPickerFieldType == 'radio' ? '

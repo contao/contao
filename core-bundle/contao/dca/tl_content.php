@@ -1005,8 +1005,16 @@ class tl_content extends Backend
 			$class .= ' empty';
 		}
 
+		$dragHandle = '';
+
+		if (!Input::get('act'))
+		{
+			$labelCut = $GLOBALS['TL_LANG']['tl_content']['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
+			$dragHandle = '<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $arrRow['id'])) . '</button>';
+		}
+
 		return '
-<div class="cte_type ' . $key . '">' . $type . '</div>
+<div class="cte_type ' . $key . '">' . $dragHandle . $type . '</div>
 <div class="' . $class . '">' . $preview . '</div>';
 	}
 

@@ -14,12 +14,12 @@ export default class extends Controller {
     }
 
     rowTargetConnected() {
-        this._makeSortable();
+        this.updateSorting();
     }
 
     rowTargetDisconnected(row) {
         this.rowSnapshots.delete(row);
-        this._makeSortable();
+        this.updateSorting();
     }
 
     copy(event) {
@@ -103,6 +103,14 @@ export default class extends Controller {
         }
     }
 
+    updateSorting() {
+        Array.from(this.bodyTarget.children).forEach((tr, i) => {
+            for (const el of tr.querySelectorAll('input, select')) {
+                el.name = el.name.replace(/\[[0-9]+]/g, `[${i}]`);
+            }
+        });
+    }
+
     beforeCache() {
         // Restore the original HTML with template tags before Turbo caches the
         // page. They will get unwrapped again at the restored page.
@@ -151,23 +159,5 @@ export default class extends Controller {
         for (const select of row.querySelectorAll('select')) {
             select.value = select.children[0].value;
         }
-    }
-
-    _makeSortable() {
-        Array.from(this.bodyTarget.children).forEach((tr, i) => {
-            for (const el of tr.querySelectorAll('input, select')) {
-                el.name = el.name.replace(/\[[0-9]+]/g, `[${i}]`);
-            }
-        });
-
-        // TODO: replace this with a vanilla JS solution
-        new Sortables(this.bodyTarget, {
-            constrain: true,
-            opacity: 0.6,
-            handle: '.drag-handle',
-            onComplete: () => {
-                this._makeSortable(this.bodyTarget);
-            },
-        });
     }
 }

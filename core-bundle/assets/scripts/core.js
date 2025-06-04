@@ -795,6 +795,8 @@ window.Backend =
 	 * @author Martin Auswöger
 	 */
 	makeParentViewSortable: function(ul) {
+		console.warn('Backend.makeParentViewSortable() is deprecated. Please use the stimulus controllers instead.');
+
 		var ds = new Scroller(document.getElement('body'), {
 			onChange: function(x, y) {
 				this.element.scrollTo(this.element.getScroll().x, y);
@@ -889,6 +891,8 @@ window.Backend =
 	 * @param {string} val The value field
 	 */
 	makeMultiSrcSortable: function(id, oid, val) {
+		console.warn('Backend.makeMultiSrcSortable() is deprecated. Please use the stimulus controllers instead.');
+
 		var list = new Sortables($(id), {
 			constrain: true,
 			opacity: 0.6
@@ -1080,13 +1084,6 @@ window.Backend =
 	 */
 	listWizard: function(id) {
 		var ul = $(id),
-			makeSortable = function(ul) {
-				new Sortables(ul, {
-					constrain: true,
-					opacity: 0.6,
-					handle: '.drag-handle'
-				});
-			},
 			addEventsTo = function(li) {
 				var command, clone, input, previous, next;
 
@@ -1138,8 +1135,6 @@ window.Backend =
 					}
 				});
 			};
-
-		makeSortable(ul);
 
 		ul.getChildren().each(function(li) {
 			addEventsTo(li);
@@ -1583,13 +1578,6 @@ window.Backend =
 	 */
 	checkboxWizard: function(id) {
 		var container = $(id).getElement('.sortable'),
-			makeSortable = function(container) {
-				new Sortables(container, {
-					constrain: true,
-					opacity: 0.6,
-					handle: '.drag-handle'
-				});
-			},
 			addEventsTo = function(span) {
 				var nspan;
 				span.getElements('button').each(function(bt) {
@@ -1615,8 +1603,6 @@ window.Backend =
 					});
 				});
 			};
-
-		makeSortable(container);
 
 		container.getChildren().each(function(span) {
 			addEventsTo(span);
