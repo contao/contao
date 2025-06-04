@@ -133,8 +133,8 @@ jobs:
             - name: Run YAMLlint
               run: yamllint --format=github .
 
-    biome:
-        name: Biome
+    linter:
+        name: Linter
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
@@ -142,25 +142,14 @@ jobs:
               with:
                   show-progress: false
 
-            - name: Install Biome
-              uses: biomejs/setup-biome@v2
+            - name: Install the Node packages
+              run: npm install
 
             - name: Run Biome
-              run: biome ci core-bundle/assets
-
-    prettier:
-        name: Prettier
-        runs-on: ubuntu-latest
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v4
-              with:
-                  show-progress: false
+              run: npx biome ci core-bundle/assets
 
             - name: Run Prettier
-              uses: creyD/prettier_action@v4.3
-              with:
-                  prettier_options: --check core-bundle/assets/styles
+              run: npx prettier --write core-bundle/assets/styles
 
     service-linter:
         name: Service linter
