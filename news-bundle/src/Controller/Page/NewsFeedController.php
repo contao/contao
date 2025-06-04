@@ -20,6 +20,7 @@ use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\NewsBundle\Event\FetchArticlesForFeedEvent;
 use Contao\NewsBundle\Event\TransformArticleForFeedEvent;
 use Contao\PageModel;
+use Contao\StringUtil;
 use FeedIo\Feed;
 use FeedIo\Specification;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,9 +76,7 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
             }
 
             $feed->add($item);
-
             $this->tagResponse($article);
-            $this->tagResponse('contao.db.tl_news_archive.'.$article->pid);
         }
 
         $formatter = $this->specification->getStandard($pageModel->feedFormat)->getFormatter();
@@ -86,6 +85,10 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
         $response->headers->set('Content-Type', self::$contentTypes[$pageModel->feedFormat]);
 
         $this->setCacheHeaders($response, $pageModel);
+
+        // Always add the reponse tags for the selected archives
+        $archiveIds = StringUtil::deserialize($pageModel->newsArchives, true);
+        $this->tagResponse(array_map(static fn ($id): string => 'contao.db.tl_news_archive.'.$id, $archiveIds));
 
         return $response;
     }
