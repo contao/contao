@@ -67,15 +67,16 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
         $dispatcher = $this->container->get('event_dispatcher');
         $dispatcher->dispatch($event);
 
-        if (null !== ($articles = $event->getArticles())) {
-            foreach ($articles as $article) {
-                $event = new TransformArticleForFeedEvent($article, $feed, $pageModel, $request, $baseUrl);
-                $dispatcher->dispatch($event);
+        foreach ($event->getArticles() ?? [] as $article) {
+            $event = new TransformArticleForFeedEvent($article, $feed, $pageModel, $request, $baseUrl);
+            $dispatcher->dispatch($event);
 
-                $feed->add($event->getItem());
-
-                $this->tagResponse($article);
+            if (!$item = $event->getItem()) {
+                continue;
             }
+
+            $feed->add($item);
+            $this->tagResponse($article);
         }
 
         $formatter = $this->specification->getStandard($pageModel->feedFormat)->getFormatter();
