@@ -18,6 +18,8 @@ use Contao\CoreBundle\Job\Jobs;
 use Knp\Menu\Util\MenuManipulator;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\Routing\RouterInterface;
 use Twig\Environment;
 
 /**
@@ -29,6 +31,8 @@ class BackendJobsListener
     public function __construct(
         private readonly Security $security,
         private readonly Environment $twig,
+        private readonly RouterInterface $router,
+        private readonly RequestStack $requestStack,
         private readonly Jobs $jobs,
     ) {
     }
@@ -48,6 +52,7 @@ class BackendJobsListener
         }
 
         $markup = $this->twig->render('@Contao/backend/jobs/_menu_item.html.twig', [
+            'jobs_link' => $this->router->generate('contao_backend', ['do' => 'jobs', 'ref' => $this->getRefererId()]),
             'has_pending_jobs' => \count($this->jobs->findMyNewOrPending()) > 0,
         ]);
 
@@ -62,5 +67,14 @@ class BackendJobsListener
 
         // Move the favorites menu behind "alerts"
         (new MenuManipulator())->moveToPosition($tree, 3);
+    }
+
+    private function getRefererId(): string
+    {
+        if (!$request = $this->requestStack->getCurrentRequest()) {
+            throw new \RuntimeException('The request stack did not contain a request');
+        }
+
+        return $request->attributes->get('_contao_referer_id');
     }
 }

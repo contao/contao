@@ -11,7 +11,7 @@
 %}
 <div{{ controller_attributes }}>
     {% set menu_item_attributes = attrs()
-        .set('href', path('contao_backend_jobs'))
+        .set('href', jobs_link)
         .set('title', 'MSC.jobs'|trans)
         .set('class', 'icon-jobs')
         .set('data-turbo-prefetch', false)

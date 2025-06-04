@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/tl_job.php" source-language="en">
+    <body>
+      <trans-unit id="tl_job.tstamp.0">
+        <source>Created at</source>
+      </trans-unit>
+      <trans-unit id="tl_job.status.0">
+        <source>Status</source>
+      </trans-unit>
+      <trans-unit id="tl_job.owner.0">
+        <source>Owner</source>
+      </trans-unit>
+      <trans-unit id="tl_job.statusLabel.new">
+        <source>New</source>
+      </trans-unit>
+      <trans-unit id="tl_job.statusLabel.pending">
+        <source>Pending</source>
+      </trans-unit>
+      <trans-unit id="tl_job.statusLabel.finished">
+        <source>Finished</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

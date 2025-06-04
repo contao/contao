@@ -605,8 +605,7 @@ services:
         class: Contao\CoreBundle\Job\Jobs
         public: true
         arguments:
-            - '@contao.repository.job'
-            - '@doctrine.orm.entity_manager'
+            - '@database_connection'
             - '@security.helper'
 
     contao.mailer:

@@ -2,10 +2,10 @@
     <ul>
         {% for job in jobs %}
             <li>
-                {# todo: make config available and use here #}
+                {# todo: make backend system config available somehow and use here #}
                 {% set dateTimeFormat = 'Y-m-d H:i:s' %}
                 {{ job.createdAt|date(dateTimeFormat) }}
-                TODO: translate me: {{ job.status.translationKey }}
+                {{ job.status.label|trans }}
                 {% if job.children %}
                     <div class="children">
                         {{ _self.render_jobs(job.children) }}

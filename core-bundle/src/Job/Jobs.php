@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Job;
 
-use Contao\CoreBundle\Entity\Job as JobEntity;
-use Contao\CoreBundle\Repository\JobRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\QueryBuilder;
+use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\DBAL\Types\Types;
 use Symfony\Bundle\SecurityBundle\Security;
+
+use function Safe\json_encode;
 
 /**
  * @experimental
@@ -16,8 +18,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 class Jobs
 {
     public function __construct(
-        private readonly JobRepository $jobRepository,
-        private readonly EntityManagerInterface $entityManager,
+        private readonly Connection $connection,
         private readonly Security $security,
     ) {
     }
@@ -57,8 +58,8 @@ class Jobs
             return [];
         }
 
-        $qb->andWhere('j.status IN(:status)');
-        $qb->setParameter('status', [Status::NEW->value, Status::PENDING->value]);
+        $qb->andWhere('j.status IN (:status)');
+        $qb->setParameter('status', [Status::NEW->value, Status::PENDING->value], ArrayParameterType::STRING);
 
         return $this->queryWithQueryBuilder($qb);
     }
@@ -79,36 +80,69 @@ class Jobs
 
     public function getByUuid(string $uuid): Job|null
     {
-        $jobEntity = $this->jobRepository->find($uuid);
+        $jobData = $this->connection->fetchAssociative('SELECT * FROM tl_job WHERE uuid=?', [$uuid]);
 
-        if (null === $jobEntity) {
+        if (false === $jobData) {
             return null;
         }
 
-        return $jobEntity->toDto();
+        return $this->databaseRowToDto($jobData);
     }
 
     public function persist(Job $job): void
     {
-        /** @var JobEntity|null $jobEntity */
-        $jobEntity = $this->jobRepository->find($job->getUuid());
+        $existingJob = $this->getByUuid($job->getUuid());
 
-        if (null === $jobEntity) {
-            $jobEntity = JobEntity::fromDto($job);
-        } else {
-            $jobEntity->updateFromDto($job);
+        if (null === $existingJob) {
+            $this->connection->insert(
+                'tl_job',
+                [
+                    'uuid' => $job->getUuid(),
+                    'status' => $job->getStatus()->value,
+                    'owner' => $job->getOwner()->getIdentifier(),
+                    'tstamp' => (int) $job->getCreatedAt()->format('U'),
+                    'public' => $job->isPublic(),
+                ],
+                [
+                    Types::STRING,
+                    Types::STRING,
+                    Types::STRING,
+                    Types::INTEGER,
+                    Types::BOOLEAN,
+                ],
+            );
         }
 
-        if ($parent = $job->getParent()) {
+        // Update job data
+        $row = [];
+        $row['pid'] = 0;
+        $row['status'] = $job->getStatus()->value;
+        $row['jobData'] = json_encode([
+            'metadata' => $job->getMetadata(),
+            'progress' => $job->getProgress(),
+            'errors' => $job->getErrors(),
+            'warnings' => $job->getWarnings(),
+        ]);
+
+        $parent = $job->getParent();
+
+        if ($parent) {
             $this->persist($parent);
-            $jobEntity->setParent($this->jobRepository->find($parent->getUuid()));
+            $row['pid'] = $this->connection->fetchOne('SELECT id FROM tl_job WHERE uuid=?', [$parent->getUuid()]) ?? 0;
         }
 
-        $this->entityManager->persist($jobEntity);
-        $this->entityManager->flush();
+        $this->connection->update(
+            'tl_job',
+            $row,
+            ['uuid' => $job->getUuid()], [
+                    Types::INTEGER,
+                    Types::STRING,
+                    Types::STRING,
+            ],
+        );
 
-        // If this job is a child, update the status of the parent if required.
-        if ($job->getParent()) {
+        if ($parent) {
+            // If this job is a child, update the status of the parent if required.
             $this->updateStatusBasedOnChildren($job->getParent());
         }
     }
@@ -123,7 +157,11 @@ class Jobs
 
     private function buildQueryBuilderForMine(): QueryBuilder|null
     {
-        $qb = $this->jobRepository->createQueryBuilder('j');
+        $qb = $this->connection->createQueryBuilder()
+            ->select('*')
+            ->from('tl_job', 'j')
+        ;
+
         $userid = $this->security->getUser()?->getUserIdentifier();
 
         if (null === $userid) {
@@ -132,11 +170,11 @@ class Jobs
 
         $expr = $qb->expr();
 
-        $qb->andWhere('j.parent IS NULL'); // Only parents
+        $qb->andWhere('j.pid = 0'); // Only parents
         $qb->andWhere(
-            $expr->orX(
+            $expr->or(
                 $expr->eq('j.owner', ':userOwner'),
-                $expr->andX(
+                $expr->and(
                     $expr->eq('j.public', true),
                     $expr->eq('j.owner', ':systemOwner'),
                 ),
@@ -144,22 +182,20 @@ class Jobs
         );
         $qb->setParameter('userOwner', $userid);
         $qb->setParameter('systemOwner', Owner::SYSTEM);
-        $qb->orderBy('j.createdAt', 'DESC');
+        $qb->orderBy('j.tstamp', 'DESC');
 
         return $qb;
     }
 
+    /**
+     * @return array<Job>
+     */
     private function queryWithQueryBuilder(QueryBuilder $queryBuilder): array
     {
         $jobs = [];
-        $jobEntities = $queryBuilder
-            ->getQuery()
-            ->getResult()
-        ;
 
-        /** @var JobEntity $jobEntity */
-        foreach ($jobEntities as $jobEntity) {
-            $jobs[] = $jobEntity->toDto();
+        foreach ($queryBuilder->fetchAllAssociative() as $jobRow) {
+            $jobs[] = $this->databaseRowToDto($jobRow);
         }
 
         return $jobs;
@@ -167,26 +203,26 @@ class Jobs
 
     private function updateStatusBasedOnChildren(Job $job): void
     {
-        $jobEntity = $this->jobRepository->find($job->getUuid());
+        $id = $this->connection->fetchOne('SELECT id FROM tl_job WHERE uuid=?', [$job->getUuid()]);
 
-        if (null === $jobEntity) {
+        if (false === $id) {
             return;
         }
 
-        if ($jobEntity->getChildren()->isEmpty()) {
-            return;
-        }
+        $children = $this->connection->fetchAllAssociative('SELECT * FROM tl_job WHERE pid=?', [$id], [Types::INTEGER]);
 
         $onePending = false;
         $allFinished = true;
 
-        foreach ($jobEntity->getChildren() as $child) {
-            if (Status::PENDING === $child->toDto()->getStatus()) {
+        foreach ($children as $childRow) {
+            $childJob = $this->databaseRowToDto($childRow);
+
+            if (Status::PENDING === $childJob->getStatus()) {
                 $onePending = true;
                 break;
             }
 
-            if (Status::FINISHED !== $child->toDto()->getStatus()) {
+            if (Status::FINISHED !== $childJob->getStatus()) {
                 $allFinished = false;
             }
         }
@@ -200,5 +236,30 @@ class Jobs
         if ($allFinished) {
             $this->persist($job->markFinished());
         }
+    }
+
+    private function databaseRowToDto(array $row): Job
+    {
+        $job = new Job(
+            $row['uuid'],
+            \DateTimeImmutable::createFromFormat('U', (string) $row['tstamp']),
+            Status::from($row['status']),
+            new Owner($row['owner']),
+        );
+
+        $jobData = json_decode($row['jobData'] ?? '{}', true);
+
+        // $children = array_map(static fn (Job $child) => $child->toDto(false),
+        // $this->getChildren()->toArray());
+
+        return $job
+            ->withProgress($jobData['progress'] ?? 0)
+            ->withWarnings($jobData['warnings'] ?? [])
+            ->withErrors($jobData['errors'] ?? [])
+            ->withMetadata($jobData['metadata'] ?? [])
+            ->withIsPublic((bool) $row['public'])
+            // ->withParent($withParent ? $this->getParent()?->toDto() : null)
+            // ->withChildren($children)
+        ;
     }
 }

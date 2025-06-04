@@ -412,6 +412,8 @@ services:
         arguments:
             - '@security.helper'
             - '@twig'
+            - '@router'
+            - '@request_stack'
             - '@contao.job.jobs'
 
     contao.listener.menu.backend_login:

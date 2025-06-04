@@ -26,21 +26,6 @@ class BackendJobsController extends AbstractBackendController
     }
 
     #[Route(
-        '%contao.backend.route_prefix%/jobs',
-        name: 'contao_backend_jobs',
-        defaults: ['_scope' => 'backend', '_store_referrer' => false],
-        methods: ['GET'],
-    )]
-    public function allJobsAction(): Response
-    {
-        return $this->render('@Contao/backend/jobs/index.html.twig', [
-            'title' => 'Jobs',
-            'headline' => 'Jobs',
-            'jobs' => $this->jobs->findMine(),
-        ]);
-    }
-
-    #[Route(
         '%contao.backend.route_prefix%/jobs/pending',
         name: '_contao_jobs_pending.stream',
         defaults: ['_scope' => 'backend', '_store_referrer' => false],
