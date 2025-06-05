@@ -58,10 +58,15 @@ final class Job
         private string $uuid,
         private \DateTimeInterface $createdAt,
         private Status $status,
+        private string $type,
         private Owner $owner,
     ) {
         if (!UuidV4::isValid($uuid)) {
             throw new \InvalidArgumentException(\sprintf('"%s" is not a valid UUID v4 format', $uuid));
+        }
+
+        if ('' === $type) {
+            throw new \InvalidArgumentException('Job type is required');
         }
     }
 
@@ -78,6 +83,11 @@ final class Job
     public function getStatus(): Status
     {
         return $this->status;
+    }
+
+    public function getType(): string
+    {
+        return $this->type;
     }
 
     public function getOwner(): Owner
@@ -206,7 +216,7 @@ final class Job
 
     public function withIsPublic(bool $isPublic): self
     {
-        if (Owner::SYSTEM === $this->owner->getIdentifier()) {
+        if (Owner::SYSTEM !== $this->owner->getIdentifier()) {
             throw new \InvalidArgumentException('Only system user jobs can be public or private.');
         }
 
@@ -256,9 +266,9 @@ final class Job
         return $clone;
     }
 
-    public static function new(Owner $owner): self
+    public static function new(string $type, Owner $owner): self
     {
-        return new self(Uuid::v4()->toRfc4122(), new \DateTimeImmutable(), Status::NEW, $owner);
+        return new self(Uuid::v4()->toRfc4122(), new \DateTimeImmutable(), Status::NEW, $type, $owner);
     }
 
     public function toArray(bool $withParent = true): array

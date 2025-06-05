@@ -40,7 +40,7 @@ class JobsTest extends TestCase
         ;
 
         $jobs = $this->getJobs(null, $entityManager);
-        $job = $jobs->createSystemJob();
+        $job = $jobs->createSystemJob('my-type');
 
         $this->assertSame(Owner::SYSTEM, $job->getOwner()->getIdentifier());
     }

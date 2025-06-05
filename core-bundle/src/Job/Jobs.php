@@ -10,8 +10,6 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Bundle\SecurityBundle\Security;
 
-use function Safe\json_encode;
-
 /**
  * @experimental
  */
@@ -23,20 +21,23 @@ class Jobs
     ) {
     }
 
-    public function createJob(Owner $owner): Job
+    public function createJob(string $type): Job
     {
-        $job = Job::new($owner);
-        $this->persist($job);
+        $userId ??= $this->security->getUser()?->getUserIdentifier();
 
-        return $job;
+        if (null === $userId) {
+            return $this->createSystemJob($type);
+        }
+
+        return $this->createUserJob($type, $userId);
     }
 
-    public function createSystemJob(): Job
+    public function createSystemJob(string $type): Job
     {
-        return $this->createJob(Owner::asSystem());
+        return $this->doCreateJob($type, Owner::asSystem());
     }
 
-    public function createUserJob(string|null $userId = null): Job
+    public function createUserJob(string $type, string|null $userId = null): Job
     {
         $userId ??= $this->security->getUser()?->getUserIdentifier();
 
@@ -44,7 +45,7 @@ class Jobs
             throw new \LogicException('Cannot create a user job without having a user id.');
         }
 
-        return $this->createJob(new Owner($userId));
+        return $this->doCreateJob($type, new Owner($userId));
     }
 
     /**
@@ -60,20 +61,6 @@ class Jobs
 
         $qb->andWhere('j.status IN (:status)');
         $qb->setParameter('status', [Status::NEW->value, Status::PENDING->value], ArrayParameterType::STRING);
-
-        return $this->queryWithQueryBuilder($qb);
-    }
-
-    /**
-     * @return array<Job>
-     */
-    public function findMine(): array
-    {
-        $qb = $this->buildQueryBuilderForMine();
-
-        if (!$qb) {
-            return [];
-        }
 
         return $this->queryWithQueryBuilder($qb);
     }
@@ -98,12 +85,14 @@ class Jobs
                 'tl_job',
                 [
                     'uuid' => $job->getUuid(),
+                    'type' => $job->getType(),
                     'status' => $job->getStatus()->value,
                     'owner' => $job->getOwner()->getIdentifier(),
                     'tstamp' => (int) $job->getCreatedAt()->format('U'),
                     'public' => $job->isPublic(),
                 ],
                 [
+                    Types::STRING,
                     Types::STRING,
                     Types::STRING,
                     Types::STRING,
@@ -117,12 +106,15 @@ class Jobs
         $row = [];
         $row['pid'] = 0;
         $row['status'] = $job->getStatus()->value;
-        $row['jobData'] = json_encode([
-            'metadata' => $job->getMetadata(),
-            'progress' => $job->getProgress(),
-            'errors' => $job->getErrors(),
-            'warnings' => $job->getWarnings(),
-        ]);
+        $row['jobData'] = json_encode(
+            [
+                'metadata' => $job->getMetadata(),
+                'progress' => $job->getProgress(),
+                'errors' => $job->getErrors(),
+                'warnings' => $job->getWarnings(),
+            ],
+            JSON_THROW_ON_ERROR,
+        );
 
         $parent = $job->getParent();
 
@@ -131,15 +123,7 @@ class Jobs
             $row['pid'] = $this->connection->fetchOne('SELECT id FROM tl_job WHERE uuid=?', [$parent->getUuid()]) ?? 0;
         }
 
-        $this->connection->update(
-            'tl_job',
-            $row,
-            ['uuid' => $job->getUuid()], [
-                    Types::INTEGER,
-                    Types::STRING,
-                    Types::STRING,
-            ],
-        );
+        $this->connection->update('tl_job', $row, ['uuid' => $job->getUuid()], [Types::INTEGER, Types::STRING, Types::STRING]);
 
         if ($parent) {
             // If this job is a child, update the status of the parent if required.
@@ -149,10 +133,19 @@ class Jobs
 
     public function createChild(Job $job): Job
     {
-        $child = Job::new($job->getOwner())->withParent($job);
+        $child = Job::new($job->getType(), $job->getOwner())->withParent($job);
         $this->persist($child);
 
         return $child;
+    }
+
+    private function doCreateJob(string $type, Owner $owner): Job
+    {
+        // TODO: job factories or so?
+        $job = Job::new($type, $owner);
+        $this->persist($job);
+
+        return $job;
     }
 
     private function buildQueryBuilderForMine(): QueryBuilder|null
@@ -244,20 +237,24 @@ class Jobs
             $row['uuid'],
             \DateTimeImmutable::createFromFormat('U', (string) $row['tstamp']),
             Status::from($row['status']),
+            $row['type'],
             new Owner($row['owner']),
         );
 
         $jobData = json_decode($row['jobData'] ?? '{}', true);
 
-        // $children = array_map(static fn (Job $child) => $child->toDto(false),
-        // $this->getChildren()->toArray());
+        // TODO: FIX ME $children = array_map(static fn (Job $child) =>
+        // $child->toDto(false), $this->getChildren()->toArray());
+
+        if (Owner::SYSTEM === $job->getOwner()->getIdentifier()) {
+            $job = $job->withIsPublic((bool) $row['public']);
+        }
 
         return $job
             ->withProgress($jobData['progress'] ?? 0)
             ->withWarnings($jobData['warnings'] ?? [])
             ->withErrors($jobData['errors'] ?? [])
             ->withMetadata($jobData['metadata'] ?? [])
-            ->withIsPublic((bool) $row['public'])
             // ->withParent($withParent ? $this->getParent()?->toDto() : null)
             // ->withChildren($children)
         ;

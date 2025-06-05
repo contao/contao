@@ -21,6 +21,11 @@ enum Status: string implements TranslatableLabelInterface
     case PENDING = 'pending';
     case FINISHED = 'finished';
 
+    public function label(): TranslatableMessage
+    {
+        return new TranslatableMessage('tl_job.statusLabel.'.$this->getTranslationKey(), [], 'contao_tl_job');
+    }
+
     private function getTranslationKey(): string
     {
         return match ($this) {
@@ -28,10 +33,5 @@ enum Status: string implements TranslatableLabelInterface
             self::PENDING => 'pending',
             self::FINISHED => 'finished',
         };
-    }
-
-    public function label(): TranslatableMessage
-    {
-        return new TranslatableMessage('tl_job.statusLabel.'.$this->getTranslationKey(), [], 'contao_tl_job');
     }
 }

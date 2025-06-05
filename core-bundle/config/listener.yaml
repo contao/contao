@@ -149,6 +149,13 @@ services:
             - '@security.helper'
             - '@database_connection'
 
+
+    contao.listener.data_container.jobs:
+        class: Contao\CoreBundle\EventListener\DataContainer\JobsListener
+        arguments:
+            - '@security.helper'
+            - '@database_connection'
+
     contao.listener.data_container.layout_options:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
         arguments:

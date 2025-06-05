@@ -1,16 +1,14 @@
+{% trans_default_domain 'contao_tl_job' %}
+
 {% macro render_jobs(jobs) %}
     <ul>
         {% for job in jobs %}
             <li>
                 {# todo: make backend system config available somehow and use here #}
                 {% set dateTimeFormat = 'Y-m-d H:i:s' %}
-                {{ job.createdAt|date(dateTimeFormat) }}
-                {{ job.status.label|trans }}
-                {% if job.children %}
-                    <div class="children">
-                        {{ _self.render_jobs(job.children) }}
-                    </div>
-                {% endif %}
+
+                {# todo: the UI could need some love? #}
+                {{ ('tl_job.typeLabel.' ~ job.type)|trans }} ({{ job.status.label|trans }} - {{ job.createdAt|date(dateTimeFormat) }})
             </li>
         {% endfor %}
     </ul>

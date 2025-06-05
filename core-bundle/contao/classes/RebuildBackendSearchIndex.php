@@ -56,12 +56,7 @@ class RebuildBackendSearchIndex extends Backend implements MaintenanceModuleInte
 		{
 			// Drop the entire index as the schema might have changed after an update, etc.
 			$backendSearch->clear();
-
-			$jobs = System::getContainer()->get('contao.job.jobs');
-			$job = $jobs->createUserJob();
-
-			$reindexConfig = (new ReindexConfig())->withJobId($job->getUuid());
-			$backendSearch->reindex($reindexConfig);
+			$backendSearch->reindex(new ReindexConfig());
 
 			Message::addConfirmation($GLOBALS['TL_LANG']['tl_maintenance']['backend_search']['confirmation'], self::class);
 

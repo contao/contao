@@ -31,6 +31,7 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 				'uuid' => 'index',
 				'pid' => 'index',
 				'tstamp' => 'index',
+				'type' => 'index',
 				'owner' => 'index',
 				'status' => 'index',
 				'public' => 'index',
@@ -50,7 +51,7 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 		),
 		'label' => array
 		(
-			'fields'                  => array('tstamp', 'status', 'owner'),
+			'fields'                  => array('tstamp', 'type', 'status', 'owner'),
 			'showColumns'             => true,
 		),
 		'operations' => array
@@ -78,6 +79,12 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 		(
 			'flag' => DataContainer::SORT_DAY_DESC,
 			'sql' => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
+		),
+		'type' => array
+		(
+			'inputType' => 'select',
+			'reference' => &$GLOBALS['TL_LANG']['tl_job']['typeLabel'],
+			'sql' => array('type' => 'string', 'length' => 255, 'notnull' => true),
 		),
 		'owner' => array
 		(

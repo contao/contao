@@ -9,7 +9,10 @@
         <source>Status</source>
       </trans-unit>
       <trans-unit id="tl_job.owner.0">
-        <source>Owner</source>
+        <source>Initiated by</source>
+      </trans-unit>
+      <trans-unit id="tl_job.type.0">
+        <source>Type</source>
       </trans-unit>
       <trans-unit id="tl_job.statusLabel.new">
         <source>New</source>
@@ -19,6 +22,9 @@
       </trans-unit>
       <trans-unit id="tl_job.statusLabel.finished">
         <source>Finished</source>
+      </trans-unit>
+      <trans-unit id="tl_job.typeLabel.contao_backend_search_reindex">
+        <source>Build backend search index</source>
       </trans-unit>
     </body>
   </file>

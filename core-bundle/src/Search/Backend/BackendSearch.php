@@ -32,6 +32,8 @@ class BackendSearch
 {
     public const SEAL_INTERNAL_INDEX_NAME = 'contao_backend_search';
 
+    public const REINDEX_JOB_TYPE = 'contao_backend_search_reindex';
+
     /**
      * @param iterable<ProviderInterface> $providers
      */
@@ -81,9 +83,23 @@ class BackendSearch
         return $this;
     }
 
-    public function reindex(ReindexConfig $config, bool $async = true): self
+    /**
+     * @return string The job ID for the job framework
+     */
+    public function reindex(ReindexConfig $config, bool $async = true): string
     {
         $job = $config->getJobId() ? $this->jobs->getByUuid($config->getJobId()) : null;
+
+        // Create the job if not done already
+        if (null === $job) {
+            $job = $this->jobs->createJob(self::REINDEX_JOB_TYPE);
+            $config = $config->withJobId($job->getUuid());
+        }
+
+        // Validate the job type just in case it was not created from this method
+        if (self::REINDEX_JOB_TYPE !== $job->getType()) {
+            throw new \InvalidArgumentException(\sprintf('Provided a custom job type "%s" but must be "%s".', $job->getType(), self::REINDEX_JOB_TYPE));
+        }
 
         if ($async) {
             // Split into multiple messages of max 64kb if needed, otherwise messages with
@@ -98,23 +114,18 @@ class BackendSearch
                     // Create a new config with the chunk of this document ID group
                     $config = $config->limitToDocumentIds($documentIdGroup);
 
-                    // If a job was given, we have to create child jobs here, so we can track
-                    // progress across multiple messages
-                    if ($job) {
-                        $config = $config->withJobId($this->jobs->createChild($job)->getUuid());
-                    }
+                    // Create child jobs here, so we can track progress across multiple messages
+                    $config = $config->withJobId($this->jobs->createChild($job)->getUuid());
 
                     $this->messageBus->dispatch(new ReindexMessage($config));
                 }
             }
 
-            return $this;
+            return $config->getJobId();
         }
 
-        // If we have a job, mark it as pending now.
-        if ($job) {
-            $this->jobs->persist($job->markPending());
-        }
+        // Mark job as pending now
+        $this->jobs->persist($job->markPending());
 
         // Seal does not delete unused documents, it just re-indexes. So if some
         // identifier here does no longer exist, it would never get removed. Hence, we
@@ -124,12 +135,10 @@ class BackendSearch
 
         $this->engine->reindex([$this->reindexProvider], SealUtil::internalReindexConfigToSealReindexConfig($config));
 
-        // If we have a job, mark it as finished.
-        if ($job) {
-            $this->jobs->persist($job->markFinished());
-        }
+        // Mark job as pending finished
+        $this->jobs->persist($job->markFinished());
 
-        return $this;
+        return $config->getJobId();
     }
 
     /**
