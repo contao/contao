@@ -28,7 +28,6 @@ use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\FrontendUser;
 use Contao\PageModel;
-use Contao\StringUtil;
 use Contao\System;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -121,12 +120,12 @@ class CoreResponseContextFactoryTest extends TestCase
     {
         yield 'Unprotected page' => [
             [],
-            []
+            [],
         ];
 
         yield 'Protected page' => [
             [1, 2, 3],
-            [2]
+            [2],
         ];
     }
 
