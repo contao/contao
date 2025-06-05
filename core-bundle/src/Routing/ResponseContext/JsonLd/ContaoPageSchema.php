@@ -22,7 +22,7 @@ class ContaoPageSchema extends BaseType
      *
      * @param array<int> $groups
      */
-    public function __construct(string $title, int $pageId, bool $noSearch, bool $protected, array $groups, bool $fePreview)
+    public function __construct(string $title, int $pageId, bool $noSearch, bool $protected, array $groups, bool $fePreview, array $currentGroups = [])
     {
         $this->setTitle($title);
         $this->setPageId($pageId);
@@ -30,6 +30,7 @@ class ContaoPageSchema extends BaseType
         $this->setProtected($protected);
         $this->setGroups($groups);
         $this->setFePreview($fePreview);
+        $this->setCurrentGroups($currentGroups);
     }
 
     public function getContext(): string
@@ -99,11 +100,29 @@ class ContaoPageSchema extends BaseType
     }
 
     /**
+     * @return array<int>
+     */
+    public function getCurrentGroups(): array
+    {
+        return $this->properties['currentGroups'];
+    }
+
+    /**
      * @param array<int> $groups
      */
     public function setGroups(array $groups): self
     {
         $this->properties['groups'] = array_map(\intval(...), $groups);
+
+        return $this;
+    }
+
+    /**
+     * @param array<int> $currentGroups
+     */
+    public function setCurrentGroups(array $currentGroups): self
+    {
+        $this->properties['currentGroups'] = array_map(\intval(...), $currentGroups);
 
         return $this;
     }
