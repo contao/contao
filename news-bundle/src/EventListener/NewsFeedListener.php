@@ -27,6 +27,9 @@ use Contao\NewsBundle\Event\TransformArticleForFeedEvent;
 use Contao\NewsModel;
 use Contao\StringUtil;
 use Contao\UserModel;
+use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use FeedIo\Feed\Item;
 use FeedIo\Feed\Item\Author;
 use FeedIo\Feed\Item\AuthorInterface;
@@ -43,6 +46,7 @@ class NewsFeedListener
 {
     public function __construct(
         private readonly ContaoFramework $framework,
+        private readonly Connection $connection,
         private readonly ImageFactoryInterface $imageFactory,
         private readonly ContentUrlGenerator $urlGenerator,
         private readonly InsertTagParser $insertTags,
@@ -68,6 +72,10 @@ class NewsFeedListener
         $articles = $newsModel->findPublishedByPids($archives, $featured, $pageModel->maxFeedItems);
 
         $event->setArticles($articles->getModels());
+
+        if ($expires = $this->getExpires($archives, $featured, (int) $pageModel->maxFeedItems)) {
+            $event->setExpires($expires);
+        }
     }
 
     #[AsEventListener(TransformArticleForFeedEvent::class)]
@@ -194,5 +202,58 @@ class NewsFeedListener
         }
 
         return $enclosures;
+    }
+
+    private function getExpires(array $archives, bool|null $featured, int $maxResults): \DateTimeInterface|null
+    {
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('id, start, stop')
+            ->from('tl_news')
+            ->where('pid IN (:archives)')
+            ->setParameter('archives', $archives, ArrayParameterType::INTEGER)
+            ->andWhere('published=:published')
+            ->setParameter('published', true, ParameterType::BOOLEAN)
+            ->orderBy('date', 'DESC')
+            ->setMaxResults($maxResults)
+        ;
+
+        if (null !== $featured) {
+            $qb
+                ->andWhere('featured=:featured')
+                ->setParameter('featured', $featured, ParameterType::BOOLEAN)
+            ;
+        }
+
+        $news = $qb->fetchAllAssociative();
+
+        $qb = $this->connection->createQueryBuilder();
+        $qb
+            ->select('start, stop')
+            ->from('tl_content')
+            ->where("ptable='tl_news'")
+            ->andWhere('pid IN (:news)')
+            ->setParameter('news', array_column($news, 'id'), ArrayParameterType::INTEGER)
+            ->andWhere('invisible=:invisible')
+            ->setParameter('invisible', false, ParameterType::BOOLEAN)
+            ->andWhere("(start!='' OR stop!='')")
+        ;
+
+        $elements = $qb->fetchAllAssociative();
+
+        $now = time();
+        $expires = min([
+            PHP_INT_MAX,
+            ...array_filter(array_column($news, 'start'), static fn ($time) => '' !== $time && $time > $now),
+            ...array_filter(array_column($news, 'stop'), static fn ($time) => '' !== $time && $time > $now),
+            ...array_filter(array_column($elements, 'start'), static fn ($time) => '' !== $time && $time > $now),
+            ...array_filter(array_column($elements, 'stop'), static fn ($time) => '' !== $time && $time > $now),
+        ]);
+
+        if (PHP_INT_MAX === $expires) {
+            return null;
+        }
+
+        return \DateTimeImmutable::createFromFormat('U', $expires);
     }
 }

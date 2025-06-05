@@ -68,10 +68,10 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
 
         if (null !== ($articles = $event->getArticles())) {
             foreach ($articles as $article) {
-                $event = new TransformArticleForFeedEvent($article, $feed, $pageModel, $request, $baseUrl);
-                $dispatcher->dispatch($event);
+                $transformEvent = new TransformArticleForFeedEvent($article, $feed, $pageModel, $request, $baseUrl);
+                $dispatcher->dispatch($transformEvent);
 
-                $feed->add($event->getItem());
+                $feed->add($transformEvent->getItem());
 
                 $this->tagResponse($article);
                 $this->tagResponse('contao.db.tl_news_archive.'.$article->pid);
@@ -84,6 +84,7 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
         $response->headers->set('Content-Type', self::$contentTypes[$pageModel->feedFormat]);
 
         $this->setCacheHeaders($response, $pageModel);
+        $response->setExpires($event->getExpires());
 
         return $response;
     }
