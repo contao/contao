@@ -236,17 +236,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$request = $container->get('request_stack')->getCurrentRequest();
 		$route = $request->attributes->get('_route');
 
-		// Store the current referer
-		if (!empty($this->ctable) && !Input::get('ptable') && $route == 'contao_backend' && !Input::get('act') && !Input::get('key') && !Input::get('token') && !Environment::get('isAjaxRequest'))
-		{
-			$strKey = Input::get('popup') ? 'popupReferer' : 'referer';
-			$strRefererId = $request->attributes->get('_contao_referer_id');
-
-			$session = $objSession->get($strKey);
-			$session[$strRefererId][$this->strTable] = Environment::get('requestUri');
-			$objSession->set($strKey, $session);
-		}
-
 		if (!empty($arrClipboard[$this->strTable]) && $arrClipboard[$this->strTable]['mode'] != 'create')
 		{
 			if (\is_array($arrClipboard[$this->strTable]['id']))
