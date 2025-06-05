@@ -9,9 +9,12 @@
         "@web-auth/webauthn-stimulus": "file:vendor/web-auth/webauthn-stimulus/assets",
         "accessible-menu": "^4.2",
         "focus-trap": "^7.6",
+        "npm-run-all": "^4.1",
         "postcss": "^8.5",
         "postcss-loader": "^8.1",
-        "postcss-preset-env": "^10.1"
+        "postcss-preset-env": "^10.1",
+        "stylelint": "^16.20",
+        "stylelint-config-standard": "^38.0"
     },
     "browserslist": [
         "defaults"
@@ -21,7 +24,9 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress",
-        "check": "biome check --write --unsafe core-bundle/assets"
+        "lint:js": "biome check --write --unsafe core-bundle/assets",
+        "lint:css": "stylelint --fix core-bundle/assets/styles",
+        "lint": "run-s lint:js lint:css"
     },
     "private": true,
     "packageManager": "npm@11.1.0"
