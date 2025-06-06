@@ -1945,7 +1945,15 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Check the full path to see if the file extension has changed, because if
 			// $this->strExtension is empty, a new extension could otherwise be added to
 			// $varValue and change the file type!
-			if (Path::getExtension($varValue . $this->strExtension) !== Path::getExtension($this->varValue . $this->strExtension))
+			if (!is_dir(Path::join($this->strRootDir, $this->strPath, $this->varValue, $this->strExtension)) && Path::getExtension($varValue . $this->strExtension) !== Path::getExtension($this->varValue . $this->strExtension))
+			{
+				throw new \Exception($GLOBALS['TL_LANG']['ERR']['invalidName']);
+			}
+
+			// Disallow renaming folders and files to a name starting with a dot, as they
+			// will be treated as hidden files in Unix and the file manager will not display
+			// them in any case.
+			if (str_starts_with($varValue, '.'))
 			{
 				throw new \Exception($GLOBALS['TL_LANG']['ERR']['invalidName']);
 			}
@@ -2565,9 +2573,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		return '
     <div class="tl_search tl_subpanel">
       <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
-      <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '" data-controller="contao--choices">
-        <option value="name">' . ($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['label'][0] ?: (\is_array($GLOBALS['TL_LANG']['MSC']['name'] ?? null) ? $GLOBALS['TL_LANG']['MSC']['name'][0] : ($GLOBALS['TL_LANG']['MSC']['name'] ?? null))) . '</option>
-      </select>
+      <div class="tl_select_wrapper" data-controller="contao--choices">
+          <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
+            <option value="name">' . ($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['label'][0] ?: (\is_array($GLOBALS['TL_LANG']['MSC']['name'] ?? null) ? $GLOBALS['TL_LANG']['MSC']['name'][0] : ($GLOBALS['TL_LANG']['MSC']['name'] ?? null))) . '</option>
+          </select>
+      </div>
       <span>=</span>
       <input type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
     </div>';

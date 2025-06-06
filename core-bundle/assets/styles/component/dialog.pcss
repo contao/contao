@@ -6,7 +6,7 @@ dialog[data-controller="contao--dialog"] {
     .dialog_wrapper {
         background: var(--content-bg);
         border: 1px solid var(--border);
-        box-shadow: 0 0 1em rgb(0 0 0 / 0.3);
+        box-shadow: 0 0 1em rgb(0 0 0 / 30%);
         border-radius: 2px;
         max-width: 60ch;
     }
@@ -24,7 +24,7 @@ dialog[data-controller="contao--dialog"] {
     }
 
     &::backdrop {
-        background: rgba(0, 0, 0, 0.75);
+        background: rgb(0 0 0 / 75%);
     }
 
     .description {
@@ -65,7 +65,6 @@ dialog[data-controller="contao--dialog"] {
     .buttons {
         padding: 8px 12px;
         border-top: 1px solid var(--border);
-
         display: flex;
         flex-wrap: wrap;
         justify-content: flex-end;

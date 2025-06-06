@@ -89,7 +89,7 @@ export default class TabsController extends Controller {
     }
 
     selectTab(panel) {
-        this.panelTargets.forEach((el) => {
+        for (const el of this.panelTargets) {
             const isTarget = el === panel;
 
             el.toggleAttribute('aria-selected', isTarget);
@@ -98,21 +98,21 @@ export default class TabsController extends Controller {
 
             // Re-enable/disable the button access keys
             if (isTarget) {
-                el.querySelectorAll('button[data-disabled-accesskey]').forEach((button) => {
+                for (const button of el.querySelectorAll('button[data-disabled-accesskey]')) {
                     button.setAttribute('accesskey', button.getAttribute('data-disabled-accesskey'));
                     button.removeAttribute('data-disabled-accesskey');
-                });
+                }
             } else {
-                el.querySelectorAll('button[accesskey]').forEach((button) => {
+                for (const button of el.querySelectorAll('button[accesskey]')) {
                     button.setAttribute('data-disabled-accesskey', button.getAttribute('accesskey'));
                     button.removeAttribute('accesskey');
-                });
+                }
             }
 
             const selectButton = document.getElementById(el.getAttribute('aria-labelledby'));
             selectButton?.toggleAttribute('aria-selected', isTarget);
             selectButton?.parentElement.toggleAttribute('data-active', isTarget);
-        });
+        }
 
         this.activeTab = panel;
     }

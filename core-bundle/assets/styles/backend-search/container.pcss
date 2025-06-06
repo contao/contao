@@ -1,10 +1,10 @@
-@media (max-width: 991.98px) {
+@media (width < 992px) {
     .backend-search {
         display: none;
     }
 }
 
-@media (min-width: 992px) {
+@media (width >= 992px) {
     .backend-search_message,
     .backend-search_results {
         display: none;
@@ -47,7 +47,7 @@
     }
 
     .backend-search_overlay {
-        background-color: rgba(0, 0, 0, 0.7);
+        background-color: rgb(0 0 0 / 70%);
         position: fixed;
         top: 0;
         left: 0;
@@ -59,7 +59,6 @@
             opacity 0.25s;
         opacity: 0;
         z-index: 5;
-
         pointer-events: none;
     }
 

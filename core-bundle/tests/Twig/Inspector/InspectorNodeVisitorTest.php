@@ -14,11 +14,10 @@ namespace Contao\CoreBundle\Tests\Twig\Inspector;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Inheritance\RuntimeThemeDependentExpression;
-use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
-use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
 use Twig\Node\BodyNode;
 use Twig\Node\EmptyNode;
@@ -33,7 +32,7 @@ class InspectorNodeVisitorTest extends TestCase
     public function testHasLowPriority(): void
     {
         $inspectorNodeVisitor = new InspectorNodeVisitor(
-            new NullAdapter(),
+            $this->createMock(Storage::class),
             $this->createMock(Environment::class),
         );
 
@@ -43,7 +42,7 @@ class InspectorNodeVisitorTest extends TestCase
     #[DataProvider('provideReferenceExpressions')]
     public function testAnalyzesParent(AbstractExpression $parentExpression, string|null $expectedName): void
     {
-        $arrayAdapter = new ArrayAdapter();
+        $storage = new Storage(new ArrayAdapter());
         $environment = $this->createMock(Environment::class);
 
         $moduleNode = new ModuleNode(
@@ -56,16 +55,16 @@ class InspectorNodeVisitorTest extends TestCase
             new Source('…', 'template.html.twig', 'path/to/template.html.twig'),
         );
 
-        (new InspectorNodeVisitor($arrayAdapter, $environment))->leaveNode($moduleNode, $environment);
+        (new InspectorNodeVisitor($storage, $environment))->leaveNode($moduleNode, $environment);
 
-        $item = $arrayAdapter->getItem(Inspector::CACHE_KEY);
-        $this->assertSame($expectedName, $item->get()['path/to/template.html.twig']['parent']);
+        $data = $storage->get('path/to/template.html.twig');
+        $this->assertSame($expectedName, $data['parent']);
     }
 
     #[DataProvider('provideReferenceExpressions')]
     public function testAnalyzesUses(AbstractExpression $useExpression, string|null $expectedName): void
     {
-        $arrayAdapter = new ArrayAdapter();
+        $storage = new Storage(new ArrayAdapter());
         $environment = $this->createMock(Environment::class);
 
         $moduleNode = new ModuleNode(
@@ -80,10 +79,10 @@ class InspectorNodeVisitorTest extends TestCase
             new Source('…', 'template.html.twig', 'path/to/template.html.twig'),
         );
 
-        (new InspectorNodeVisitor($arrayAdapter, $environment))->leaveNode($moduleNode, $environment);
+        (new InspectorNodeVisitor($storage, $environment))->leaveNode($moduleNode, $environment);
 
-        $item = $arrayAdapter->getItem(Inspector::CACHE_KEY);
-        $this->assertSame($expectedName, $item->get()['path/to/template.html.twig']['uses'][0][0] ?? null);
+        $data = $storage->get('path/to/template.html.twig');
+        $this->assertSame($expectedName, $data['uses'][0][0] ?? null);
     }
 
     public static function provideReferenceExpressions(): iterable
