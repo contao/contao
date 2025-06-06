@@ -298,16 +298,16 @@
         },
         {
             "name": "contao/easy-coding-standard",
-            "version": "6.13.2",
+            "version": "6.13.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao/easy-coding-standard.git",
-                "reference": "ce25e5f73ec10894f8ae3842e363ade441ae2043"
+                "reference": "f251af7e5e34917f5ed9ab912ad18ce2f10b1799"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao/easy-coding-standard/zipball/ce25e5f73ec10894f8ae3842e363ade441ae2043",
-                "reference": "ce25e5f73ec10894f8ae3842e363ade441ae2043",
+                "url": "https://api.github.com/repos/contao/easy-coding-standard/zipball/f251af7e5e34917f5ed9ab912ad18ce2f10b1799",
+                "reference": "f251af7e5e34917f5ed9ab912ad18ce2f10b1799",
                 "shasum": ""
             },
             "require": {
@@ -318,7 +318,7 @@
             },
             "require-dev": {
                 "contao/rector": "^1.2",
-                "phpunit/phpunit": "^9.5"
+                "phpunit/phpunit": "^11.5"
             },
             "type": "library",
             "autoload": {
@@ -339,7 +339,7 @@
             "description": "EasyCodingStandard configurations for Contao",
             "support": {
                 "issues": "https://github.com/contao/easy-coding-standard/issues",
-                "source": "https://github.com/contao/easy-coding-standard/tree/6.13.2"
+                "source": "https://github.com/contao/easy-coding-standard/tree/6.13.3"
             },
             "funding": [
                 {
@@ -347,7 +347,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2025-02-13T10:21:52+00:00"
+            "time": "2025-06-02T15:17:08+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
@@ -641,16 +641,16 @@
         },
         {
             "name": "kubawerlos/php-cs-fixer-custom-fixers",
-            "version": "v3.25.0",
+            "version": "v3.26.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers.git",
-                "reference": "50e070e5457ca4570e032207d201b3874aaff942"
+                "reference": "67f253320e0db784ab0d1248af6fc42e5f2215e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kubawerlos/php-cs-fixer-custom-fixers/zipball/50e070e5457ca4570e032207d201b3874aaff942",
-                "reference": "50e070e5457ca4570e032207d201b3874aaff942",
+                "url": "https://api.github.com/repos/kubawerlos/php-cs-fixer-custom-fixers/zipball/67f253320e0db784ab0d1248af6fc42e5f2215e2",
+                "reference": "67f253320e0db784ab0d1248af6fc42e5f2215e2",
                 "shasum": ""
             },
             "require": {
@@ -681,9 +681,15 @@
             "description": "A set of custom fixers for PHP CS Fixer",
             "support": {
                 "issues": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers/issues",
-                "source": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers/tree/v3.25.0"
+                "source": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers/tree/v3.26.0"
             },
-            "time": "2025-05-06T20:12:43+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/kubawerlos",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-06-01T11:49:27+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",
