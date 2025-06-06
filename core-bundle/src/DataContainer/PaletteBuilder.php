@@ -175,16 +175,10 @@ class PaletteBuilder
                 'fields' => [],
             ];
 
-            foreach (StringUtil::trimsplit(',', $v) as $kk => $vv) {
-                // Subpalette start/stop marker
-                if (preg_match('/^\[.*]$/', $vv)) {
-                    ++$emptyCount;
-                    $boxes[$k]['fields'][$kk] = $vv;
-                    continue;
-                }
-
+            foreach (StringUtil::trimsplit(',', $v) as $vv) {
+                // Legend start/stop marker
                 if (preg_match('/^{.*}$/', $vv)) {
-                    [$key, $class] = explode(':', substr($vv, 1, -1)) + [null, false];
+                    [$key, $class] = explode(':', substr($vv, 1, -1)) + ['', ''];
 
                     // Convert the ":hide" suffix from the DCA
                     if ('hide' === $class) {
@@ -193,18 +187,33 @@ class PaletteBuilder
 
                     // Override the class if the session has a state
                     if (isset($fieldsetStates[$key])) {
-                        $class = ($fieldsetStates[$key] ? '' : ' collapsed');
+                        $class = ($fieldsetStates[$key] ? '' : 'collapsed');
                     }
 
                     $boxes[$k]['key'] = $key;
                     $boxes[$k]['class'] = $class;
-                } elseif (\is_array($GLOBALS['TL_DCA'][$table]['fields'][$vv] ?? null) && (!DataContainer::isFieldExcluded($table, $vv) || $this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $table.'::'.$vv))) {
-                    $boxes[$k]['fields'][$kk] = $vv;
+                    continue;
                 }
+
+                if (preg_match('/^\[.*]$/', $vv)) {
+                    // Do not count subpalette start/stop markers when checking if box is empty
+                    ++$emptyCount;
+                } elseif (
+                    !\is_array($GLOBALS['TL_DCA'][$table]['fields'][$vv] ?? null)
+                    || (
+                        DataContainer::isFieldExcluded($table, $vv)
+                        && !$this->security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $table.'::'.$vv)
+                    )
+                ) {
+                    // Skip the field if it does not exist or is excluded for current user
+                    continue;
+                }
+
+                $boxes[$k]['fields'][] = $vv;
             }
 
             // Unset a box if it does not contain any fields
-            if (\count($boxes[$k]) < $emptyCount) {
+            if (\count($boxes[$k]['fields']) < $emptyCount) {
                 unset($boxes[$k]);
             }
         }
