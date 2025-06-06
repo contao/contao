@@ -141,7 +141,6 @@ class Jobs
 
     private function doCreateJob(string $type, Owner $owner): Job
     {
-        // TODO: job factories or so?
         $job = Job::new($type, $owner);
         $this->persist($job);
 
@@ -231,7 +230,7 @@ class Jobs
         }
     }
 
-    private function databaseRowToDto(array $row): Job
+    private function databaseRowToDto(array $row, bool $withParent = true): Job
     {
         $job = new Job(
             $row['uuid'],
@@ -241,22 +240,31 @@ class Jobs
             new Owner($row['owner']),
         );
 
-        $jobData = json_decode($row['jobData'] ?? '{}', true);
-
-        // TODO: FIX ME $children = array_map(static fn (Job $child) =>
-        // $child->toDto(false), $this->getChildren()->toArray());
-
         if (Owner::SYSTEM === $job->getOwner()->getIdentifier()) {
             $job = $job->withIsPublic((bool) $row['public']);
         }
+
+        if (0 === $row['pid']) {
+            $children = [];
+
+            foreach ($this->connection->fetchAllAssociative('SELECT * FROM tl_job WHERE id=?', [$row['pid']], [Types::INTEGER]) as $jobRow) {
+                $children[] = $this->databaseRowToDto($jobRow, false);
+            }
+            $job = $job->withChildren($children);
+        } elseif ($withParent) {
+            $parentData = $this->connection->fetchOne('SELECT * FROM tl_job WHERE id=?', [$row['pid']]);
+            if (false !== $parentData) {
+                $job = $job->withParent($this->databaseRowToDto($parentData, false));
+            }
+        }
+
+        $jobData = json_decode($row['jobData'] ?? '{}', true);
 
         return $job
             ->withProgress($jobData['progress'] ?? 0)
             ->withWarnings($jobData['warnings'] ?? [])
             ->withErrors($jobData['errors'] ?? [])
             ->withMetadata($jobData['metadata'] ?? [])
-            // ->withParent($withParent ? $this->getParent()?->toDto() : null)
-            // ->withChildren($children)
         ;
     }
 }
