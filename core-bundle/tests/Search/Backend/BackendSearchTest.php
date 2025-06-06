@@ -99,7 +99,7 @@ class BackendSearchTest extends TestCase
             ->expects($this->once())
             ->method('getByUuid')
             ->with('foobar')
-            ->willReturn(Job::new(Owner::asSystem()))
+            ->willReturn(Job::new(BackendSearch::REINDEX_JOB_TYPE, Owner::asSystem()))
         ;
 
         $expected = [
@@ -148,13 +148,21 @@ class BackendSearchTest extends TestCase
             ->willReturn(new Envelope($this->createMock(ReindexMessage::class)))
         ;
 
+        $jobs = $this->createMock(Jobs::class);
+        $jobs
+            ->expects($this->once())
+            ->method('createJob')
+            ->with(BackendSearch::REINDEX_JOB_TYPE)
+            ->willReturn(Job::new(BackendSearch::REINDEX_JOB_TYPE, Owner::asSystem()))
+        ;
+
         $backendSearch = new BackendSearch(
             [],
             $this->createMock(Security::class),
             $this->createMock(EngineInterface::class),
             $this->createMock(EventDispatcherInterface::class),
             $messageBus,
-            $this->createMock(Jobs::class),
+            $jobs,
             $this->createMock(WebWorker::class),
             $this->createMock(SealReindexProvider::class),
         );

@@ -64,7 +64,7 @@ class ReindexMessageHandlerTest extends TestCase
             ->expects($this->once())
             ->method('getByUuid')
             ->with('foobar')
-            ->willReturn(Job::new(Owner::asSystem()))
+            ->willReturn(Job::new('job-type', Owner::asSystem()))
         ;
 
         $jobs

@@ -77,11 +77,11 @@ class JobTest extends TestCase
         $this->assertSame($metadata, $job->getMetadata());
     }
 
-    public function testWithIsPublicThrowsExceptionForSystemOwner(): void
+    public function testWithIsPublicThrowsExceptionForNonSystemOwner(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        (new Job(Uuid::v4()->toRfc4122(), new \DateTimeImmutable(), Status::NEW, Owner::asSystem()))
+        (new Job(Uuid::v4()->toRfc4122(), new \DateTimeImmutable(), Status::NEW, 'job-type', new Owner('owner')))
             ->withIsPublic(true)
         ;
     }
@@ -101,6 +101,7 @@ class JobTest extends TestCase
             $uuid,
             new \DateTimeImmutable('2025-01-01 00:00:00'),
             Status::NEW,
+            'job-type',
             Owner::asSystem(),
         );
     }
