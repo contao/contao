@@ -49,13 +49,13 @@ class DynamicPtableListener
                 continue;
             }
 
-            foreach ($module['tables'] as $mtable) {
-                $controllerAdapter->loadDataContainer($mtable);
+            foreach ($module['tables'] as $ptable) {
+                $controllerAdapter->loadDataContainer($ptable);
 
-                $ctable = $GLOBALS['TL_DCA'][$mtable]['config']['ctable'] ?? [];
+                $ctable = $GLOBALS['TL_DCA'][$ptable]['config']['ctable'] ?? [];
 
-                if (\in_array($mtable, $ctable, true)) {
-                    $GLOBALS['TL_DCA'][$mtable]['config']['ptable'] = $mtable;
+                if (\in_array($table, $ctable, true)) {
+                    $GLOBALS['TL_DCA'][$table]['config']['ptable'] = $ptable;
 
                     return;
                 }
