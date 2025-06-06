@@ -234,7 +234,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$this->initRoots();
 
 		$request = $container->get('request_stack')->getCurrentRequest();
-		$route = $request->attributes->get('_route');
 
 		if (!empty($arrClipboard[$this->strTable]) && $arrClipboard[$this->strTable]['mode'] != 'create')
 		{
