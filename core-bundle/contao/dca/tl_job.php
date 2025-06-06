@@ -18,6 +18,9 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 	'config' => array
 	(
 		'dataContainer'               => DC_Table::class,
+		'ptable'					  => 'tl_job',
+		'ctable'					  => array('tl_job'),
+		'doNotDeleteRecords'		  => true,
 		'closed'                      => true,
 		'notEditable'                 => true,
 		'notCopyable'                 => true,
@@ -47,15 +50,16 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 			'mode'                    => DataContainer::MODE_SORTED,
 			'fields'                  => array('tstamp'),
 			'panelLayout'             => 'filter;limit',
-			// TODO: Filter just for my jobs and system jobs
+			'headerFields'			  => array('tstamp', 'type', 'uuid', 'status', 'owner'),
 		),
 		'label' => array
 		(
 			'fields'                  => array('tstamp', 'type', 'status', 'owner'),
-			'showColumns'             => true,
+			'showColumns'			  => true,
 		),
 		'operations' => array
 		(
+			'children',
 			'show' => false,
 		)
 	),

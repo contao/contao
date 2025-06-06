@@ -155,6 +155,7 @@ services:
         arguments:
             - '@security.helper'
             - '@database_connection'
+            - '@request_stack'
 
     contao.listener.data_container.layout_options:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener

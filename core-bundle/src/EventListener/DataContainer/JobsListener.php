@@ -14,9 +14,11 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Job\Owner;
+use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 #[AsCallback(table: 'tl_job', target: 'config.onload')]
 class JobsListener
@@ -24,35 +26,38 @@ class JobsListener
     public function __construct(
         private readonly Security $security,
         private readonly Connection $connection,
+        private readonly RequestStack $requestStack,
     ) {
     }
 
     public function __invoke(): void
     {
+        $request = $this->requestStack->getCurrentRequest();
+
+        if (null === $request) {
+            return;
+        }
+
         $userIdentifier = $this->security->getUser()?->getUserIdentifier();
 
-        $query = \sprintf('pid = 0 AND (owner = %s OR (public = %s AND owner = %s))',
+        // Job children view
+        if ($request->query->has('ptable')) {
+            $pidFilter = 'pid != 0';
+            $GLOBALS['TL_DCA']['tl_job']['list']['sorting']['mode'] = DataContainer::MODE_PARENT;
+            $GLOBALS['TL_DCA']['tl_job']['list']['label']['fields'] = ['uuid', 'status'];
+            $GLOBALS['TL_DCA']['tl_job']['list']['label']['format'] = '%s <span class="label-info">%s</span>';
+            unset($GLOBALS['TL_DCA']['tl_job']['list']['operations']['children']);
+        } else {
+            $pidFilter = 'pid = 0';
+        }
+
+        $query = \sprintf('%s AND (owner = %s OR (public = %s AND owner = %s))',
+            $pidFilter,
             $this->connection->quote($userIdentifier),
             $this->connection->quote(true, ParameterType::BOOLEAN),
             $this->connection->quote(Owner::SYSTEM),
         );
 
         $GLOBALS['TL_DCA']['tl_job']['list']['sorting']['filter'][] = $query;
-
-        /*
-                $qb->andWhere('j.pid = 0'); // Only parents
-                $qb->andWhere(
-                    $expr->or(
-                        $expr->eq('j.owner', ':userOwner'),
-                        $expr->and(
-                            $expr->eq('j.public', true),
-                            $expr->eq('j.owner', ':systemOwner'),
-                        ),
-                    ),
-                );
-                $qb->setParameter('userOwner', $userid);
-                $qb->setParameter('systemOwner', Owner::SYSTEM);
-                $qb->orderBy('j.tstamp', 'DESC');
-        */
     }
 }
