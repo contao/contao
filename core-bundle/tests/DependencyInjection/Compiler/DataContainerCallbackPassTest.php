@@ -355,14 +355,12 @@ class DataContainerCallbackPassTest extends TestCase
             ],
             [
                 'fields.listitems.xlabel' => [
-                    10 => [
-                        [
-                            'service' => 'test.callback_listener',
-                            'method' => 'onListitemsXlabel',
-                            'closure' => null,
-                            'singleton' => null,
-                        ],
-                    ],
+                    10 => [[
+                        'service' => 'test.callback_listener',
+                        'method' => 'onListitemsXlabel',
+                        'closure' => null,
+                        'singleton' => null,
+                    ]],
                 ],
             ],
         ];
@@ -392,14 +390,12 @@ class DataContainerCallbackPassTest extends TestCase
             ],
             [
                 'fields.article.default' => [
-                    1 => [
-                        [
-                            'service' => 'test.callback_listener',
-                            'method' => 'onFoobarCallback',
-                            'closure' => null,
-                            'singleton' => null,
-                        ],
-                    ],
+                    1 => [[
+                        'service' => 'test.callback_listener',
+                        'method' => 'onFoobarCallback',
+                        'closure' => null,
+                        'singleton' => null,
+                    ]],
                 ],
             ],
         ];
@@ -413,14 +409,12 @@ class DataContainerCallbackPassTest extends TestCase
             ],
             [
                 'fields.foo.barCallback' => [
-                    1 => [
-                        [
-                            'service' => 'test.callback_listener',
-                            'method' => 'onFoobarCallback',
-                            'closure' => null,
-                            'singleton' => null,
-                        ],
-                    ],
+                    1 => [[
+                        'service' => 'test.callback_listener',
+                        'method' => 'onFoobarCallback',
+                        'closure' => null,
+                        'singleton' => null,
+                    ]],
                 ],
             ],
         ];
