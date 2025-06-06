@@ -225,6 +225,19 @@ class DefaultOperationsListener
                     $operation->disable();
                 }
             }
+
+            // If the child table is closed and there are no entries, we can disable the
+            // button as you can't do anything
+            if ($GLOBALS['TL_DCA'][$ctable]['config']['closed'] ?? false) {
+                $childCount = $this->connection->fetchOne(
+                    "SELECT COUNT(*) FROM $table WHERE pid = ?",
+                    [(string) $operation->getRecord()['id']],
+                );
+
+                if ($childCount < 1) {
+                    $operation->disable();
+                }
+            }
         };
     }
 
