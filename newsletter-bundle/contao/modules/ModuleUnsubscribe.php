@@ -126,9 +126,9 @@ class ModuleUnsubscribe extends Module
 		{
 			$flashBag = $session->getFlashBag();
 
-			if ($flashBag->has('nl_removed'))
+			if ($flashBag->has('nl_removed_' . $this->id))
 			{
-				$arrMessages = $flashBag->get('nl_removed');
+				$arrMessages = $flashBag->get('nl_removed_' . $this->id);
 
 				$this->Template->mclass = 'confirm';
 				$this->Template->message = $arrMessages[0];
@@ -302,7 +302,7 @@ class ModuleUnsubscribe extends Module
 			}
 		}
 
-		System::getContainer()->get('request_stack')->getSession()->getFlashBag()->set('nl_removed', $GLOBALS['TL_LANG']['MSC']['nl_removed']);
+		System::getContainer()->get('request_stack')->getSession()->getFlashBag()->set('nl_removed_' . $this->id, $GLOBALS['TL_LANG']['MSC']['nl_removed']);
 
 		$this->reload();
 	}

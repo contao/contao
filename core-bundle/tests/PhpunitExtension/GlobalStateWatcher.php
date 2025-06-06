@@ -163,6 +163,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 'Symfony\Bridge\PhpUnit\\',
                 'Symfony\Component\Cache\Adapter\\',
                 'Symfony\Component\Clock\Clock',
+                'Symfony\Component\Config\Resource\ClassExistenceResource',
                 'Symfony\Component\Config\Resource\ComposerResource',
                 'Symfony\Component\Console\Helper\\',
                 'Symfony\Component\Console\Terminal',

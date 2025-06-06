@@ -455,6 +455,7 @@
       </trans-unit>
       <trans-unit id="tl_content.textTrackSRC.1">
         <source>The topmost .vtt file is loaded as the default track. Additional settings can be made within the .vtt file.</source>
+        <target>نخستین فایل .vtt به‌عنوان ترک پیش‌فرض بارگذاری می‌شود. امکان اعمال تنظیمات بیشتر در خود فایل .vtt وجود دارد.</target>
       </trans-unit>
       <trans-unit id="tl_content.youtube.0">
         <source>YouTube ID</source>
