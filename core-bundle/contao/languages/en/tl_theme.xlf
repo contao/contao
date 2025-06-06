@@ -128,9 +128,6 @@
       <trans-unit id="tl_theme.delete">
         <source>Delete theme ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_theme.css">
-        <source>Edit the style sheets of theme ID %s</source>
-      </trans-unit>
       <trans-unit id="tl_theme.modules">
         <source>Edit the front end modules of theme ID %s</source>
       </trans-unit>
