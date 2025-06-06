@@ -111,5 +111,6 @@
   <?php endif; ?>
 
   <?= $this->mootools ?>
+
 </body>
 </html>
