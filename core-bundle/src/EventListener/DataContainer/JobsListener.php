@@ -34,7 +34,7 @@ class JobsListener
     {
         $request = $this->requestStack->getCurrentRequest();
 
-        if (null === $request) {
+        if (!$request) {
             return;
         }
 

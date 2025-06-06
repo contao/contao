@@ -91,7 +91,7 @@ class BackendSearch
         $job = $config->getJobId() ? $this->jobs->getByUuid($config->getJobId()) : null;
 
         // Create the job if not done already
-        if (null === $job) {
+        if (!$job) {
             $job = $this->jobs->createJob(self::REINDEX_JOB_TYPE);
             $config = $config->withJobId($job->getUuid());
         }

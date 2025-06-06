@@ -96,10 +96,7 @@ class JobsTest extends TestCase
             ],
         );
 
-        return new Jobs(
-            $connection ?? $this->createMock(Connection::class),
-            $security ?? $this->createMock(Security::class),
-        );
+        return new Jobs($connection, $security ?? $this->createMock(Security::class));
     }
 
     /**

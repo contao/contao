@@ -53,7 +53,7 @@ class BackendJobsListener
 
         $markup = $this->twig->render('@Contao/backend/jobs/_menu_item.html.twig', [
             'jobs_link' => $this->router->generate('contao_backend', ['do' => 'jobs', 'ref' => $this->getRefererId()]),
-            'has_pending_jobs' => \count($this->jobs->findMyNewOrPending()) > 0,
+            'has_pending_jobs' => [] !== $this->jobs->findMyNewOrPending(),
         ]);
 
         $tree = $event->getFactory()

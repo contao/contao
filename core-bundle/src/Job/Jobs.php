@@ -24,7 +24,7 @@ class Jobs
 
     public function createJob(string $type): Job
     {
-        $userId ??= $this->security->getUser()?->getUserIdentifier();
+        $userId = $this->security->getUser()?->getUserIdentifier();
 
         if (null === $userId) {
             return $this->createSystemJob($type);
@@ -81,7 +81,7 @@ class Jobs
     {
         $existingJob = $this->getByUuid($job->getUuid());
 
-        if (null === $existingJob) {
+        if (!$existingJob) {
             // Need to encode HTML entities here for Contao's DC_Table
             $this->connection->insert(
                 'tl_job',
@@ -114,7 +114,9 @@ class Jobs
                 'progress' => $job->getProgress(),
                 'errors' => $job->getErrors(),
                 'warnings' => $job->getWarnings(),
-            ], // No encoding needed because this data is not output anywhere at the moment, make sure to adjust when adding this to the output!
+            ],
+            // No encoding needed because this data is not output anywhere at the moment,
+            // make sure to adjust when adding this to the output!
             JSON_THROW_ON_ERROR,
         );
 
@@ -260,7 +262,7 @@ class Jobs
             }
         }
 
-        $jobData = json_decode($row['jobData'] ?? '{}', true);
+        $jobData = json_decode($row['jobData'] ?? '{}', true, 512, JSON_THROW_ON_ERROR);
 
         return $job
             ->withProgress($jobData['progress'] ?? 0)
