@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Job;
 
+use Contao\StringUtil;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -81,15 +82,16 @@ class Jobs
         $existingJob = $this->getByUuid($job->getUuid());
 
         if (null === $existingJob) {
+            // Need to encode HTML entities here for Contao's DC_Table
             $this->connection->insert(
                 'tl_job',
                 [
-                    'uuid' => $job->getUuid(),
-                    'type' => $job->getType(),
-                    'status' => $job->getStatus()->value,
-                    'owner' => $job->getOwner()->getIdentifier(),
-                    'tstamp' => (int) $job->getCreatedAt()->format('U'),
-                    'public' => $job->isPublic(),
+                    'uuid' => $job->getUuid(), // No encoding needed, UUID
+                    'type' => StringUtil::specialchars($job->getType()),
+                    'status' => $job->getStatus()->value, // No encoding needed, enum
+                    'owner' => StringUtil::specialchars($job->getOwner()->getIdentifier()),
+                    'tstamp' => (int) $job->getCreatedAt()->format('U'), // No encoding needed, integer
+                    'public' => $job->isPublic(), // No encoding needed, boolean
                 ],
                 [
                     Types::STRING,
@@ -104,15 +106,15 @@ class Jobs
 
         // Update job data
         $row = [];
-        $row['pid'] = 0;
-        $row['status'] = $job->getStatus()->value;
+        $row['pid'] = 0; // No encoding needed, integer
+        $row['status'] = $job->getStatus()->value; // No encoding needed, enum
         $row['jobData'] = json_encode(
             [
                 'metadata' => $job->getMetadata(),
                 'progress' => $job->getProgress(),
                 'errors' => $job->getErrors(),
                 'warnings' => $job->getWarnings(),
-            ],
+            ], // No encoding needed because this data is not output anywhere at the moment, make sure to adjust when adding this to the output!
             JSON_THROW_ON_ERROR,
         );
 
