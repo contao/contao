@@ -90,11 +90,18 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'operations' => array
 		(
+			'edit',
 			'articles' => array
 			(
 				'href'                => 'do=article',
 				'icon'                => 'article.svg'
-			)
+			),
+			'copy',
+			'copyChildren',
+			'cut',
+			'delete',
+			'toggle',
+			'show',
 		)
 	),
 

@@ -29,7 +29,9 @@
 </div>
 
 {% macro operation(operation, menu = false) %}
-    {% if operation.html is defined and (not menu or '<a ' in operation.html) %}
+    {% if operation.html is defined and menu and '<hr>' == operation.html %}
+        <li>{{ operation.html|raw }}</li>
+    {% elseif operation.html is defined and (not menu or '<a ' in operation.html) %}
         {% if operation.html|trim is not empty %}<li{% if menu %} data-contao--operations-menu-target="title"{% endif %}>{{ operation.html|raw }}</li>{% endif %}
     {% elseif operation.href|default %}
         <li{% if menu and not operation.title|default %} data-contao--operations-menu-target="title"{% endif %}>
