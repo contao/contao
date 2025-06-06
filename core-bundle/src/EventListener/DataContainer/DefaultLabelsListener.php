@@ -25,7 +25,7 @@ class DefaultLabelsListener
     public function __invoke(string $table): void
     {
         // Operations
-        foreach (array('global_operations', 'operations') as $key) {
+        foreach (['global_operations', 'operations'] as $key) {
             if (!isset($GLOBALS['TL_DCA'][$table]['list'][$key])) {
                 continue;
             }
