@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Global;
 
-use Contao\Config;
 use Contao\BackendUser;
+use Contao\Config;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
