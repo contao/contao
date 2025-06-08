@@ -127,7 +127,7 @@ class LoginController extends AbstractContentElementController
         $template->forceTargetPath = (int) $redirectBack;
         $template->targetPath = base64_encode($redirect);
 
-        if ($isTwoFactorInProgress && $request) {
+        if ($isTwoFactorInProgress) {
             // Dispatch 2FA form event to prepare 2FA providers
             $token = $this->security->getToken();
             $event = new TwoFactorAuthenticationEvent($request, $token);

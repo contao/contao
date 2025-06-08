@@ -130,7 +130,7 @@ abstract class ContentElementTestCase extends TestCase
      *
      * @param-out array $responseContextData
      */
-    protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null, ContainerBuilder|null $adjustedContainer = null, array $nestedFragments = [], User|null $user = null): Response
+    protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null, ContainerBuilder|null $adjustedContainer = null, array $nestedFragments = [], PageModel|null $page = null, Request|null $request = null): Response
     {
         $framework = $this->getDefaultFramework($nestedFragments);
 
@@ -145,6 +145,12 @@ abstract class ContentElementTestCase extends TestCase
             ->willReturn($asEditorView)
         ;
 
+        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder
+            ->method('getCurrentPage')
+            ->willReturn($page)
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
         $container->set('contao.routing.content_url_generator', $this->createMock(ContentUrlGenerator::class));
@@ -156,7 +162,7 @@ abstract class ContentElementTestCase extends TestCase
         $container->set('contao.framework', $framework);
         $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
         $container->set('fragment.handler', $this->createMock(FragmentHandler::class));
-        $container->set('contao.routing.page_finder', $this->createMock(PageFinder::class));
+        $container->set('contao.routing.page_finder', $pageFinder);
 
         if ($adjustedContainer) {
             $container->merge($adjustedContainer);
@@ -207,7 +213,7 @@ abstract class ContentElementTestCase extends TestCase
             'type' => $modelData['type'],
         ]);
 
-        $request = new Request();
+        $request ??= new Request();
         $request->attributes->set('nestedFragments', $nestedFragments);
 
         $response = $controller($request, $model, 'main');
