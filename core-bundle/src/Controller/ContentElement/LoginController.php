@@ -76,6 +76,8 @@ class LoginController extends AbstractContentElementController
             $template->formId = 'tl_logout_'.$model->id;
             $template->slabel = $this->translator->trans('MSC.logout', [], 'contao_default');
             $template->action = $this->logoutUrlGenerator->getLogoutPath();
+
+            // We do not base64_encode the URL here for Symfony's logout controller
             $template->targetPath = $redirect;
 
             return $template->getResponse();
