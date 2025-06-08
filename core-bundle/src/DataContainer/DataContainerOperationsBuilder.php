@@ -198,6 +198,7 @@ class DataContainerOperationsBuilder implements \Stringable
         $xml = new \DOMDocument();
         $xml->preserveWhiteSpace = false;
         $xml->loadHTML('<?xml encoding="UTF-8">'.$operation['html']);
+
         $body = $xml->getElementsByTagName('body')[0];
 
         if ($body->childNodes->length < 2) {

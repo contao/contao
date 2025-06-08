@@ -76,6 +76,7 @@ class SubrequestCacheSubscriberTest extends TestCase
 
         $mainResponse = new Response();
         $mainResponse->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
+
         $subResponse->setPublic();
         $mainResponse->setMaxAge(60);
 
