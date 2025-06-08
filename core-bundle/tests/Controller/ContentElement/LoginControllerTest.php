@@ -91,6 +91,7 @@ class LoginControllerTest extends ContentElementTestCase
         $this->assertTrue(str_contains($content, '<button type="submit" class="submit">MSC.login</button>'));
         $this->assertTrue(str_contains($content, '<button type="button" class="passkey-login">translated(contao_default:MSC.passkeyLogin)</button>'));
 
+        $this->assertFalse(str_contains($content, 'translated(contao_default:MSC.lostPassword)'));
         $this->assertFalse(str_contains($content, '<p class="login_info">'));
     }
 
@@ -126,18 +127,7 @@ class LoginControllerTest extends ContentElementTestCase
 
         $content = $response->getContent();
 
-        $this->assertTrue(str_contains($content, '<div class="content-login login">'));
-        $this->assertTrue(str_contains($content, '<form action id="tl_login_" method="post">'));
-        $this->assertTrue(str_contains($content, '<input type="hidden" name="FORM_SUBMIT" value="tl_login_">'));
         $this->assertTrue(str_contains($content, '<input type="hidden" name="_target_path" value="'.base64_encode('redirect_back').'">'));
-        $this->assertTrue(str_contains($content, '<label for="username">translated(contao_default:MSC.username)</label>'));
-        $this->assertTrue(str_contains($content, '<input type="text" name="username" id="username" class="text" value="" autocapitalize="off" autocomplete="username" required>'));
-        $this->assertTrue(str_contains($content, '<label for="password">translated(contao_default:MSC.password.0)</label>'));
-        $this->assertTrue(str_contains($content, '<input type="password" name="password" id="password" class="text password" value="" autocomplete="current-password" required>'));
-        $this->assertTrue(str_contains($content, '<button type="submit" class="submit">MSC.login</button>'));
-        $this->assertTrue(str_contains($content, '<button type="button" class="passkey-login">translated(contao_default:MSC.passkeyLogin)</button>'));
-
-        $this->assertFalse(str_contains($content, '<p class="login_info">'));
     }
 
     public function testUsesRedirectPageTargetPath(): void
@@ -191,18 +181,162 @@ class LoginControllerTest extends ContentElementTestCase
 
         $content = $response->getContent();
 
-        $this->assertTrue(str_contains($content, '<div class="content-login login">'));
-        $this->assertTrue(str_contains($content, '<form action id="tl_login_" method="post">'));
-        $this->assertTrue(str_contains($content, '<input type="hidden" name="FORM_SUBMIT" value="tl_login_">'));
         $this->assertTrue(str_contains($content, '<input type="hidden" name="_target_path" value="'.base64_encode('https://jump-to-test.com/foobar').'">'));
-        $this->assertTrue(str_contains($content, '<label for="username">translated(contao_default:MSC.username)</label>'));
-        $this->assertTrue(str_contains($content, '<input type="text" name="username" id="username" class="text" value="" autocapitalize="off" autocomplete="username" required>'));
-        $this->assertTrue(str_contains($content, '<label for="password">translated(contao_default:MSC.password.0)</label>'));
-        $this->assertTrue(str_contains($content, '<input type="password" name="password" id="password" class="text password" value="" autocomplete="current-password" required>'));
-        $this->assertTrue(str_contains($content, '<button type="submit" class="submit">MSC.login</button>'));
-        $this->assertTrue(str_contains($content, '<button type="button" class="passkey-login">translated(contao_default:MSC.passkeyLogin)</button>'));
+    }
 
-        $this->assertFalse(str_contains($content, '<p class="login_info">'));
+    public function testUsesRedirectBackTargetPathFromPostRequest(): void
+    {
+        $request = Request::create('https://target-path-post-test.com/login', 'POST', ['_target_path' => base64_encode('post_target_path')]);
+
+        $uriSigner = $this->createMock(UriSigner::class);
+        $uriSigner
+            ->expects($this->never())
+            ->method('checkRequest')
+        ;
+
+        $response = $this->renderWithModelData(
+            new LoginController(
+                $this->mockSecurity(),
+                $uriSigner,
+                $this->createMock(LogoutUrlGenerator::class),
+                $this->createMock(AuthenticationUtils::class),
+                $this->mockTranslator(),
+                $this->createMock(ContentUrlGenerator::class),
+                $this->createMock(EventDispatcherInterface::class),
+                $this->createMock(ContaoFramework::class),
+            ),
+            [
+                'type' => 'login',
+                'redirectBack' => 1,
+            ],
+            request: $request,
+        );
+
+        $content = $response->getContent();
+
+        $this->assertTrue(str_contains($content, '<input type="hidden" name="_target_path" value="'.base64_encode('post_target_path').'">'));
+    }
+
+    public function testUsesRedirectBackFromReferer(): void
+    {
+        $request = Request::create('https://request-referrer-test.com/login');
+        $request->headers->set('referer', 'https://request-referrer-test.com/foobar');
+
+        $uriSigner = $this->createMock(UriSigner::class);
+        $uriSigner
+            ->expects($this->never())
+            ->method('checkRequest')
+        ;
+
+        $response = $this->renderWithModelData(
+            new LoginController(
+                $this->mockSecurity(),
+                $uriSigner,
+                $this->createMock(LogoutUrlGenerator::class),
+                $this->createMock(AuthenticationUtils::class),
+                $this->mockTranslator(),
+                $this->createMock(ContentUrlGenerator::class),
+                $this->createMock(EventDispatcherInterface::class),
+                $this->createMock(ContaoFramework::class),
+            ),
+            [
+                'type' => 'login',
+                'redirectBack' => 1,
+            ],
+            request: $request,
+        );
+
+        $content = $response->getContent();
+
+        $this->assertTrue(str_contains($content, '<input type="hidden" name="_target_path" value="'.base64_encode('https://request-referrer-test.com/foobar').'">'));
+    }
+
+    public function testDoesNotUseRedirectBackFromRefererFromDifferentDomain(): void
+    {
+        $request = Request::create('https://request-referrer-test.com/login');
+        $request->headers->set('referer', 'https://other-domain.com/foobar');
+
+        $uriSigner = $this->createMock(UriSigner::class);
+        $uriSigner
+            ->expects($this->never())
+            ->method('checkRequest')
+        ;
+
+        $response = $this->renderWithModelData(
+            new LoginController(
+                $this->mockSecurity(),
+                $uriSigner,
+                $this->createMock(LogoutUrlGenerator::class),
+                $this->createMock(AuthenticationUtils::class),
+                $this->mockTranslator(),
+                $this->createMock(ContentUrlGenerator::class),
+                $this->createMock(EventDispatcherInterface::class),
+                $this->createMock(ContaoFramework::class),
+            ),
+            [
+                'type' => 'login',
+                'redirectBack' => 1,
+            ],
+            request: $request,
+        );
+
+        $content = $response->getContent();
+
+        $this->assertTrue(str_contains($content, '<input type="hidden" name="_target_path" value="'.base64_encode('https://request-referrer-test.com/login').'">'));
+    }
+
+    public function testShowsPasswordResetLink(): void
+    {
+        $pwResetPage = $this->mockClassWithProperties(PageModel::class, ['id']);
+        $pwResetPage->id = 8472;
+
+        $pageAdapter = $this->mockAdapter(['findById']);
+        $pageAdapter
+            ->expects($this->exactly(2))
+            ->method('findById')
+            ->willReturnCallback(
+                static function (int|null $pageId) use ($pwResetPage): PageModel|null {
+                    if (8472 === $pageId) {
+                        return $pwResetPage;
+                    }
+
+                    return null;
+                },
+            )
+        ;
+
+        $contaoFramework = $this->mockContaoFramework([
+            PageModel::class => $pageAdapter,
+        ]);
+
+        $contentUrlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $contentUrlGenerator
+            ->expects($this->once())
+            ->method('generate')
+            ->with($pwResetPage, [], UrlGeneratorInterface::ABSOLUTE_PATH)
+            ->willReturn('https://pw-reset-test.com/pw-reset')
+        ;
+
+        $response = $this->renderWithModelData(
+            new LoginController(
+                $this->mockSecurity(),
+                $this->createMock(UriSigner::class),
+                $this->createMock(LogoutUrlGenerator::class),
+                $this->createMock(AuthenticationUtils::class),
+                $this->mockTranslator(),
+                $contentUrlGenerator,
+                $this->createMock(EventDispatcherInterface::class),
+                $contaoFramework,
+            ),
+            [
+                'type' => 'login',
+                'pwResetPage' => 8472,
+            ],
+        );
+
+        $content = $response->getContent();
+
+        $this->assertTrue(str_contains($content, '<a href="https://pw-reset-test.com/pw-reset">translated(contao_default:MSC.lostPassword)</a>'));
     }
 
     public function testShowsLogoutFormIfFrontendUserIsLoggedIn(): void
