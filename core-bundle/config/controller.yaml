@@ -137,12 +137,6 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\MarkdownController: ~
 
-    Contao\CoreBundle\Controller\ContentElement\PasskeyLoginController:
-        arguments:
-            - '@contao.routing.content_url_generator'
-        tags:
-            - controller.service_arguments
-
     Contao\CoreBundle\Controller\ContentElement\PlayerController:
         arguments:
             - '@contao.filesystem.virtual.files'

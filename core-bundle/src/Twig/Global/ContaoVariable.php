@@ -52,7 +52,7 @@ class ContaoVariable
 
     public function getDatim_format(): string|null
     {
-        return $this->getPage()->datimFormat ?? $this->framework->getAdapter(Config::class)->get('datimFormat');
+        return $this->getPage()->datimFormat ?: $this->framework->getAdapter(Config::class)->get('datimFormat');
     }
 
     public function backend_user(): BackendUser|null
