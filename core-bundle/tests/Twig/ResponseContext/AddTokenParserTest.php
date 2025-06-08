@@ -17,9 +17,10 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\CoreBundle\Twig\ResponseContext\AddTokenParser;
-use Symfony\Component\Cache\Adapter\NullAdapter;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Twig\Environment;
 use Twig\Error\SyntaxError;
 use Twig\Lexer;
@@ -38,11 +39,10 @@ class AddTokenParserTest extends TestCase
     }
 
     /**
-     * @dataProvider provideSources
-     *
      * @param list<string>|array<string, string> $expectedHeadContent
      * @param list<string>|array<string, string> $expectedBodyContent
      */
+    #[DataProvider('provideSources')]
     public function testAddsContent(string $code, array $expectedHeadContent, array $expectedStyleSheetContent, array $expectedBodyContent): void
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));
@@ -53,7 +53,7 @@ class AddTokenParserTest extends TestCase
                 $this->createMock(ContaoFilesystemLoader::class),
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor(new NullAdapter(), $environment),
+                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
             ),
         );
 
@@ -148,9 +148,7 @@ class AddTokenParserTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider provideInvalidSources
-     */
+    #[DataProvider('provideInvalidSources')]
     public function testValidatesSource(string $code, string $expectedException): void
     {
         $environment = new Environment($this->createMock(LoaderInterface::class));

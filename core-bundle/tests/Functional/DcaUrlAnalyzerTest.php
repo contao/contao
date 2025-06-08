@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Functional;
 
 use Contao\System;
 use Contao\TestCase\FunctionalTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -21,9 +22,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
 {
     private static string|null $lastImport = null;
 
-    /**
-     * @dataProvider getCurrentTableId
-     */
+    #[DataProvider('getCurrentTableId')]
     public function testGetCurrentTableId(string $url, array $expected): void
     {
         $container = self::createClient()->getContainer();
@@ -42,11 +41,6 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         );
 
         $this->loadFixtureFile('default');
-
-        // TODO: fix DCA state by making reloadable DCAs possible
-        if ($GLOBALS['TL_DCA']['tl_content'] ?? null) {
-            $GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_article';
-        }
 
         $this->assertSame($expected, $container->get('contao.data_container.dca_url_analyzer')->getCurrentTableId());
     }
@@ -159,9 +153,7 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         ];
     }
 
-    /**
-     * @dataProvider getTrail
-     */
+    #[DataProvider('getTrail')]
     public function testGetTrail(string $url, array $expected): void
     {
         $container = self::createClient()->getContainer();
@@ -180,11 +172,6 @@ class DcaUrlAnalyzerTest extends FunctionalTestCase
         );
 
         $this->loadFixtureFile('default');
-
-        // TODO: fix DCA state by making reloadable DCAs possible
-        if ($GLOBALS['TL_DCA']['tl_content'] ?? null) {
-            $GLOBALS['TL_DCA']['tl_content']['config']['ptable'] = 'tl_article';
-        }
 
         $this->assertSame($expected, $container->get('contao.data_container.dca_url_analyzer')->getTrail());
     }

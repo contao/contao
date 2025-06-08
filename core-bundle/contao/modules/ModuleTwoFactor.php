@@ -94,7 +94,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($deleteCredentialId))
 				{
-					$this->checkCredentialAccess($user, $credential);
+					$this->denyAccessUnlessGranted($user, $credential);
 
 					$credentialRepo->remove($credential);
 				}
@@ -103,7 +103,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($editCredentialId))
 				{
-					$this->checkCredentialAccess($user, $credential);
+					$this->denyAccessUnlessGranted($user, $credential);
 
 					$this->redirect($this->addToUrl('edit_passkey=' . $editCredentialId));
 				}
@@ -117,7 +117,7 @@ class ModuleTwoFactor extends BackendModule
 			{
 				if ($credential = $credentialRepo->findOneById($saveCredentialId))
 				{
-					$this->checkCredentialAccess($user, $credential);
+					$this->denyAccessUnlessGranted($user, $credential);
 
 					$credential->name = Input::post('passkey_name') ?? '';
 					$credentialRepo->saveCredentialSource($credential);
@@ -212,7 +212,7 @@ class ModuleTwoFactor extends BackendModule
 		throw new RedirectResponseException($return);
 	}
 
-	private function checkCredentialAccess(BackendUser $user, WebauthnCredential $credential): void
+	private function denyAccessUnlessGranted(BackendUser $user, WebauthnCredential $credential): void
 	{
 		if ($credential->userHandle !== $user->getPasskeyUserHandle())
 		{

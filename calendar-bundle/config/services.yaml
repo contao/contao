@@ -18,6 +18,13 @@ services:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
 
+    contao_calendar.listener.data_container.event_search:
+        class: Contao\CalendarBundle\EventListener\DataContainer\EventSearchListener
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+            - '@contao.routing.content_url_generator'
+
     contao_calendar.listener.data_container.start_stop_validation:
         class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
         arguments:
@@ -48,6 +55,11 @@ services:
             - '@contao.framework'
             - '@security.helper'
             - '@contao.routing.content_url_generator'
+
+    contao_calendar.migration.overwrite_meta:
+        class: Contao\CalendarBundle\Migration\OverwriteMetaMigration
+        arguments:
+            - '@database_connection'
 
     contao_calendar.picker.event_provider:
         class: Contao\CalendarBundle\Picker\EventPickerProvider

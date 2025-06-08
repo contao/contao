@@ -24,6 +24,8 @@ use Contao\DataContainer;
 use Contao\Input;
 use Contao\PageModel;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Cmf\Component\Routing\RouteObjectInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -32,9 +34,7 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class PageUrlListenerTest extends TestCase
 {
-    /**
-     * @dataProvider generatesAliasProvider
-     */
+    #[DataProvider('generatesAliasProvider')]
     public function testGeneratesAlias(array $currentRecord, array $input, string $slugResult, string $expectedAlias): void
     {
         $page = $this->mockClassWithProperties(PageModel::class, $currentRecord);
@@ -58,7 +58,7 @@ class PageUrlListenerTest extends TestCase
         $slug
             ->expects($this->once())
             ->method('generate')
-            ->with($expectedTitle, $page->id, $this->isType('callable'))
+            ->with($expectedTitle, $page->id, new IsType('callable'))
             ->willReturn($slugResult)
         ;
 
@@ -132,9 +132,7 @@ class PageUrlListenerTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider duplicateAliasProvider
-     */
+    #[DataProvider('duplicateAliasProvider')]
     public function testChecksForDuplicatesWhenGeneratingAlias(array $currentRecord, array $pages, string $value, string $generated, bool $expectExists, bool $throwParametersException = false): void
     {
         $currentPage = $this->mockClassWithProperties(PageModel::class, $currentRecord);
@@ -208,9 +206,7 @@ class PageUrlListenerTest extends TestCase
         $listener->generateAlias('', $dc);
     }
 
-    /**
-     * @dataProvider duplicateAliasProvider
-     */
+    #[DataProvider('duplicateAliasProvider')]
     public function testChecksForDuplicatesWhenValidatingAlias(array $currentRecord, array $pages, string $value, string $generated, bool $expectExists, bool $throwParametersException = false): void
     {
         $currentPage = $this->mockClassWithProperties(PageModel::class, $currentRecord);
@@ -278,9 +274,7 @@ class PageUrlListenerTest extends TestCase
         $listener->generateAlias($value, $dc);
     }
 
-    /**
-     * @dataProvider duplicateAliasProvider
-     */
+    #[DataProvider('duplicateAliasProvider')]
     public function testDoesNotCheckAliasIfCurrentPageIsUnrouteable(array $currentRecord, array $pages, string $value): void
     {
         $currentPage = $this->mockClassWithProperties(PageModel::class, $currentRecord);
@@ -328,9 +322,7 @@ class PageUrlListenerTest extends TestCase
         $this->assertSame($value, $listener->generateAlias($value, $dc));
     }
 
-    /**
-     * @dataProvider duplicateAliasProvider
-     */
+    #[DataProvider('duplicateAliasProvider')]
     public function testDoesNotCheckAliasIfAliasPageIsUnrouteable(array $currentRecord, array $pages, string $value): void
     {
         $currentPage = $this->mockClassWithProperties(PageModel::class, $currentRecord);
@@ -1083,7 +1075,15 @@ class PageUrlListenerTest extends TestCase
             ->expects($this->once())
             ->method('fetchOne')
             ->with(
-                "SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'",
+                <<<'SQL'
+                    SELECT COUNT(*)
+                    FROM tl_page
+                    WHERE
+                        urlPrefix = :urlPrefix
+                        AND dns = :dns
+                        AND id != :rootId
+                        AND type = 'root'
+                    SQL,
                 ['urlPrefix' => 'en', 'dns' => 'www.example.com', 'rootId' => 1],
             )
             ->willReturn(1)
@@ -1706,7 +1706,17 @@ class PageUrlListenerTest extends TestCase
             $connection
                 ->expects($this->once())
                 ->method('fetchOne')
-                ->with("SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'")
+                ->with(
+                    <<<'SQL'
+                        SELECT COUNT(*)
+                        FROM tl_page
+                        WHERE
+                            urlPrefix = :urlPrefix
+                            AND dns = :dns
+                            AND id != :rootId
+                            AND type = 'root'
+                        SQL,
+                )
                 ->willReturn(0)
             ;
         }
@@ -1821,7 +1831,7 @@ class PageUrlListenerTest extends TestCase
                 ->method('generate')
                 ->with(
                     PageRoute::PAGE_BASED_ROUTE_NAME,
-                    $this->isType('array'),
+                    new IsType('array'),
                     UrlGeneratorInterface::ABSOLUTE_URL,
                 )
                 ->willReturnCallback(

@@ -24,6 +24,7 @@ use Contao\User;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\MySQLPlatform;
 use Doctrine\DBAL\Result;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\InputBag;
@@ -33,6 +34,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
+use Twig\Loader\LoaderInterface;
 
 class BackendPreviewSwitchControllerTest extends TestCase
 {
@@ -60,14 +62,28 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $this->assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 
-    public function testRendersToolbar(): void
+    #[DataProvider('providePreviewToolbarTemplateScenarios')]
+    public function testRendersToolbar(bool $legacyTemplateExists, string $expectedTemplate): void
     {
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->method('exists')
+            ->with('@ContaoCore/Frontend/preview_toolbar_base.html.twig')
+            ->willReturn($legacyTemplateExists)
+        ;
+
+        $twig = $this->getTwigMock();
+        $twig
+            ->method('getLoader')
+            ->willReturn($loader)
+        ;
+
         $controller = new BackendPreviewSwitchController(
             $this->mockFrontendPreviewAuthenticator(),
             $this->mockTokenChecker(),
             $this->createMock(Connection::class),
             $this->mockSecurity(),
-            $this->getTwigMock(),
+            $twig,
             $this->mockRouter(),
             $this->mockTokenManager(),
             $this->mockTranslator(),
@@ -88,7 +104,14 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $response = $controller($request);
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertSame('CONTAO', $response->getContent());
+        $this->assertSame($expectedTemplate, $response->getContent());
+    }
+
+    public static function providePreviewToolbarTemplateScenarios(): iterable
+    {
+        yield 'legacy template' => [true, '@ContaoCore/Frontend/preview_toolbar_base.html.twig'];
+
+        yield 'modern template' => [false, '@Contao/frontend_preview/toolbar.html.twig'];
     }
 
     public function testAddsShareLinkToToolbar(): void
@@ -119,9 +142,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $controller($request);
     }
 
-    /**
-     * @dataProvider getAuthenticationScenarios
-     */
+    #[DataProvider('getAuthenticationScenarios')]
     public function testProcessesAuthentication(string|null $username, string $authenticateMethod): void
     {
         $frontendPreviewAuthenticator = $this->createMock(FrontendPreviewAuthenticator::class);
@@ -301,14 +322,14 @@ class BackendPreviewSwitchControllerTest extends TestCase
             $router
                 ->expects($this->exactly(2))
                 ->method('generate')
-                ->withConsecutive(
+                ->willReturnMap([
                     [
                         'contao_backend',
-                        ['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => '1', 'rt' => 'csrf', 'nb' => '1'],
+                        ['do' => 'preview_link', 'act' => 'create', 'showUnpublished' => true, 'rt' => 'csrf', 'nb' => '1'],
+                        '/_contao/preview/1',
                     ],
-                    ['contao_backend_switch'],
-                )
-                ->willReturn('/_contao/preview/1', '/contao/preview_switch')
+                    ['contao_backend_switch', '/contao/preview_switch'],
+                ])
             ;
         } else {
             $router
@@ -358,11 +379,10 @@ class BackendPreviewSwitchControllerTest extends TestCase
             $security
                 ->expects($this->exactly(2))
                 ->method('isGranted')
-                ->withConsecutive(
-                    ['ROLE_ALLOWED_TO_SWITCH_MEMBER'],
-                    [ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'preview_link'],
-                )
-                ->willReturn(true, $canShare)
+                ->willReturnMap([
+                    ['ROLE_ALLOWED_TO_SWITCH_MEMBER', null, true],
+                    [ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'preview_link', $canShare],
+                ])
             ;
         } else {
             $security
@@ -379,7 +399,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $twig = $this->createMock(Environment::class);
         $twig
             ->method('render')
-            ->willReturn('CONTAO')
+            ->willReturnArgument(0)
         ;
 
         return $twig;

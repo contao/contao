@@ -15,12 +15,11 @@ namespace Contao\CoreBundle\Tests\Twig\Runtime;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Runtime\HighlighterRuntime;
 use Highlight\Highlighter;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class HighlighterRuntimeTest extends TestCase
 {
-    /**
-     * @dataProvider provideLanguageNames
-     */
+    #[DataProvider('provideLanguageNames')]
     public function testHighlight(string|null $languageName, string $expectedLanguageName): void
     {
         $result = new \stdClass();

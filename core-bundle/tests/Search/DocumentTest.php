@@ -14,12 +14,30 @@ namespace Contao\CoreBundle\Tests\Search;
 
 use Contao\CoreBundle\Search\Document;
 use Nyholm\Psr7\Uri;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 class DocumentTest extends TestCase
 {
+    #[DataProvider('searchableContentProvider')]
+    public function testSearchableContent(string $fixture, string $expectedResult): void
+    {
+        $request = Request::create('https://example.com/foo?bar=baz');
+        $response = new Response(file_get_contents(__DIR__.'/../Fixtures/Functional/Search/'.$fixture), 200, ['content-type' => ['text/html']]);
+        $document = Document::createFromRequestResponse($request, $response);
+        $this->assertSame($expectedResult, $document->getSearchableContent());
+    }
+
+    public static function searchableContentProvider(): iterable
+    {
+        yield 'Test extracing from site.html' => [
+            'site.html',
+            'This is just some content to test search indexing!',
+        ];
+    }
+
     public function testCreatesADocumentFromRequestAndResponse(): void
     {
         $request = Request::create('https://example.com/foo?bar=baz');
@@ -35,9 +53,7 @@ class DocumentTest extends TestCase
         $this->assertSame(['content-type' => ['text/html'], 'cache-control' => ['no-cache, private']], $headers);
     }
 
-    /**
-     * @dataProvider canonicalUriProvider
-     */
+    #[DataProvider('canonicalUriProvider')]
     public function testExtractsTheCanonicalUri(string $body, array $headers, Uri|null $expectedCanonicalUri): void
     {
         $document = new Document(
@@ -75,9 +91,7 @@ class DocumentTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider documentProvider
-     */
+    #[DataProvider('documentProvider')]
     public function testExtractsTheJsdonLdScript(string $body, array $expectedJsonLds, string $context = 'https://contao.org/'): void
     {
         $document = new Document(

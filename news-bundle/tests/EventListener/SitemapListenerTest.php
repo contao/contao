@@ -20,6 +20,7 @@ use Contao\NewsBundle\EventListener\SitemapListener;
 use Contao\NewsModel;
 use Contao\PageModel;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -45,9 +46,7 @@ class SitemapListenerTest extends ContaoTestCase
         $this->assertStringNotContainsString('<url><loc>', (string) $sitemapEvent->getDocument()->saveXML());
     }
 
-    /**
-     * @dataProvider getNewsArticles
-     */
+    #[DataProvider('getNewsArticles')]
     public function testNewsArticleIsAdded(array $pageProperties, array $newsArchiveProperties, bool $hasAuthenticatedMember): void
     {
         $adapters = [

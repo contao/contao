@@ -31,6 +31,13 @@ services:
             - '@contao.framework'
             - '@translator'
 
+    contao_news.listener.data_container.news_search:
+        class: Contao\NewsBundle\EventListener\DataContainer\NewsSearchListener
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+            - '@contao.routing.content_url_generator'
+
     contao_news.listener.data_container.page:
         class: Contao\NewsBundle\EventListener\DataContainer\PageListener
         arguments:
@@ -82,6 +89,11 @@ services:
 
     contao_news.migration.feed:
         class: Contao\NewsBundle\Migration\FeedMigration
+        arguments:
+            - '@database_connection'
+
+    contao_news.migration.overwrite_meta:
+        class: Contao\NewsBundle\Migration\OverwriteMetaMigration
         arguments:
             - '@database_connection'
 

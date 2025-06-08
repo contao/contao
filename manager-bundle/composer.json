@@ -29,7 +29,7 @@
     "require": {
         "php": "^8.2",
         "ext-json": "*",
-        "cmsig/seal-loupe-adapter": "^0.6",
+        "cmsig/seal-loupe-adapter": "^0.9",
         "contao/core-bundle": "self.version",
         "contao/manager-plugin": "^2.4",
         "doctrine/dbal": "^3.6",
@@ -71,8 +71,7 @@
         "composer/composer": "^2.0",
         "contao/test-case": "self.version",
         "contao/news-bundle": "self.version",
-        "phpunit/phpunit": "^9.5",
-        "symfony/phpunit-bridge": "^6.4 || ^7.0"
+        "phpunit/phpunit": "^11.5"
     },
     "autoload": {
         "psr-4": {

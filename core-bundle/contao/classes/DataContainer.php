@@ -596,17 +596,15 @@ abstract class DataContainer extends Backend
 
 			$wizard .= ' ' . Image::getHtml('assets/datepicker/images/icon.svg', $GLOBALS['TL_LANG']['MSC']['datepicker'], 'id="toggle_' . $objWidget->id . '" style="cursor:pointer" data-contao--tooltips-target="tooltip"') . '
   <script>
-    window.addEvent("domready", function() {
-      new Picker.Date($("ctrl_' . $objWidget->id . '"), {
-        draggable: false,
-        toggle: $("toggle_' . $objWidget->id . '"),
-        format: "' . $format . '",
-        positionOffset: {x:-211,y:-209}' . $time . ',
-        pickerClass: "datepicker_bootstrap",
-        useFadeInOut: !Browser.ie' . $strOnSelect . ',
-        startDay: ' . $GLOBALS['TL_LANG']['MSC']['weekOffset'] . ',
-        titleFormat: "' . $GLOBALS['TL_LANG']['MSC']['titleFormat'] . '"
-      });
+    new Picker.Date($("ctrl_' . $objWidget->id . '"), {
+      draggable: false,
+      toggle: $("toggle_' . $objWidget->id . '"),
+      format: "' . $format . '",
+      positionOffset: {x:-211,y:-209}' . $time . ',
+      pickerClass: "datepicker_bootstrap",
+      useFadeInOut: !Browser.ie' . $strOnSelect . ',
+      startDay: ' . $GLOBALS['TL_LANG']['MSC']['weekOffset'] . ',
+      titleFormat: "' . $GLOBALS['TL_LANG']['MSC']['titleFormat'] . '"
     });
   </script>';
 		}
@@ -1275,7 +1273,7 @@ abstract class DataContainer extends Backend
 		}
 
 		$return = '
-<form class="tl_form has-panels" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
+<form class="tl_form" method="post" aria-label="' . StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['searchAndFilter']) . '">
 <div class="tl_formbody">
   <input type="hidden" name="FORM_SUBMIT" value="tl_filters">
   <input type="hidden" name="REQUEST_TOKEN" value="' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5) . '">
@@ -1556,7 +1554,7 @@ abstract class DataContainer extends Backend
 		}
 		elseif (\in_array($mode, array(self::MODE_TREE, self::MODE_TREE_EXTENDED)))
 		{
-			$label = Image::getHtml('iconPLAIN.svg') . ' ' . $label;
+			$label = Image::getHtml('plain.svg') . ' ' . $label;
 		}
 
 		if (($labelConfig['showColumns'] ?? null) && !\in_array($mode, array(self::MODE_PARENT, self::MODE_TREE, self::MODE_TREE_EXTENDED)))

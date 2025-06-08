@@ -56,7 +56,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'operations' => array
 		(
-			'!edit',
+			'edit',
 			'copy',
 			'cut',
 			'delete',

@@ -2279,6 +2279,9 @@
       <trans-unit id="MSC.removeItem">
         <source>Remove item</source>
       </trans-unit>
+      <trans-unit id="MSC.skipToContent">
+        <source>Skip to content</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
       </trans-unit>

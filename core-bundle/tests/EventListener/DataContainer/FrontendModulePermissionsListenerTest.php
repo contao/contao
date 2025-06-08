@@ -102,11 +102,10 @@ class FrontendModulePermissionsListenerTest extends TestCase
         $security
             ->expects($this->exactly(2))
             ->method('isGranted')
-            ->withConsecutive(
-                [ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE, 'navigation'],
-                [ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE, 'html'],
-            )
-            ->willReturn(true, false)
+            ->willReturnMap([
+                [ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE, 'navigation', true],
+                [ContaoCorePermissions::USER_CAN_ACCESS_FRONTEND_MODULE_TYPE, 'html', false],
+            ])
         ;
 
         $connection = $this->createMock(Connection::class);

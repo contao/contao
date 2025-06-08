@@ -52,6 +52,7 @@ framework:
             contao_prio_low: doctrine://default?table_name=tl_message_queue&queue_name=prio_low&auto_setup=false
         routing:
             'Symfony\Component\Mailer\Messenger\SendEmailMessage': contao_prio_high
+            # TODO: Remove these interfaces and their routing configuration in Contao 6
             'Contao\CoreBundle\Messenger\Message\HighPriorityMessageInterface': contao_prio_high
             'Contao\CoreBundle\Messenger\Message\NormalPriorityMessageInterface': contao_prio_normal
             'Contao\CoreBundle\Messenger\Message\LowPriorityMessageInterface': contao_prio_low

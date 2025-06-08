@@ -4,21 +4,22 @@ import AccessibleMenu from 'accessible-menu';
 export default class OperationsMenuController extends Controller {
     static targets = ['menu', 'submenu', 'controller', 'title'];
 
-    connect () {
-        if (!this.hasMenuTarget) {
+    connect() {
+        if (!this.hasControllerTarget || !this.hasMenuTarget) {
             return;
         }
 
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,
+            menuLinkSelector: 'a,button,img',
         });
 
         this.controllerTarget?.addEventListener('accessibleMenuExpand', () => {
-            Object.values(window.AccessibleMenu.menus).forEach((menu) => {
+            for (const menu of Object.values(window.AccessibleMenu.menus)) {
                 if (menu !== this.$menu && menu.elements.submenuToggles[0].isOpen) {
                     menu.elements.submenuToggles[0].close();
                 }
-            })
+            }
 
             this.setFixedPosition();
             this.element.classList.add('hover');
@@ -29,7 +30,16 @@ export default class OperationsMenuController extends Controller {
         });
     }
 
-    titleTargetConnected (el) {
+    disconnect() {
+        // Cleanup menu instance, otherwise we would leak memory
+        for (const [key, value] of Object.entries(window.AccessibleMenu?.menus ?? {})) {
+            if (value === this.$menu) {
+                delete window.AccessibleMenu.menus[key];
+            }
+        }
+    }
+
+    titleTargetConnected(el) {
         el.removeAttribute(`data-${this.identifier}-target`);
 
         const link = el.querySelector('a[title]');
@@ -44,8 +54,8 @@ export default class OperationsMenuController extends Controller {
         }
     }
 
-    open (event) {
-        if (!this.hasMenuTarget || this.isInteractive(event.target)) {
+    open(event) {
+        if (!this.hasControllerTarget || !this.hasMenuTarget || this.isInteractive(event.target)) {
             return;
         }
 
@@ -56,9 +66,11 @@ export default class OperationsMenuController extends Controller {
         this.setFixedPosition(event);
     }
 
-    setFixedPosition (event) {
+    setFixedPosition(event) {
         const rect = this.submenuTarget.getBoundingClientRect();
-        let x, y, offset = 0;
+        let x;
+        let y;
+        let offset = 0;
 
         if (event) {
             x = event.clientX;
@@ -86,16 +98,12 @@ export default class OperationsMenuController extends Controller {
         }
     }
 
-    isInteractive (el) {
-        let node = el.nodeName.toLowerCase();
-
-        if ('a' === node || 'button' === node || 'input' === node) {
-            return true;
-        }
-
-        // Also check the parent element if el is not interactive
-        node = el.parentElement.nodeName.toLowerCase();
-
-        return 'a' === node || 'button' === node || 'input' === node;
+    isInteractive(el) {
+        return (
+            el instanceof HTMLAnchorElement ||
+            el instanceof HTMLButtonElement ||
+            el instanceof HTMLInputElement ||
+            el?.closest('a, button, input')
+        );
     }
 }

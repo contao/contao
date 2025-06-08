@@ -84,11 +84,13 @@ class DefaultGlobalOperationsListener
         $operations = [];
 
         $hasLimitHeight = ($GLOBALS['TL_DCA'][$table]['list']['sorting']['limitHeight'] ?? null) > 0;
+        $isParentMode = DataContainer::MODE_PARENT === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null);
         $isTreeMode = DataContainer::MODE_TREE === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null);
         $isExtendedTreeMode = DataContainer::MODE_TREE_EXTENDED === ($GLOBALS['TL_DCA'][$table]['list']['sorting']['mode'] ?? null);
 
         $canEdit = !($GLOBALS['TL_DCA'][$table]['config']['notEditable'] ?? false);
         $canCopy = !($GLOBALS['TL_DCA'][$table]['config']['closed'] ?? false) && !($GLOBALS['TL_DCA'][$table]['config']['notCopyable'] ?? false);
+        $canSort = !($GLOBALS['TL_DCA'][$table]['config']['notSortable'] ?? false);
         $canDelete = !($GLOBALS['TL_DCA'][$table]['config']['notDeletable'] ?? false);
 
         if ($isDcFolder || $isTreeMode || $isExtendedTreeMode) {
@@ -96,7 +98,7 @@ class DefaultGlobalOperationsListener
                 'toggleNodes' => [
                     'href' => $isDcFolder ? 'tg=all' : 'ptg=all',
                     'class' => 'header_toggle',
-                    'attributes' => ' data-contao--toggle-nodes-target="operation" data-action="contao--toggle-nodes#toggleAll keydown@window->contao--toggle-nodes#keypress keyup@window->contao--toggle-nodes#keypress"',
+                    'attributes' => ' data-contao--toggle-nodes-target="operation" data-action="contao--toggle-nodes#toggleAll:prevent keydown@window->contao--toggle-nodes#keypress keyup@window->contao--toggle-nodes#keypress"',
                     'showOnSelect' => true,
                 ],
             ];
@@ -109,13 +111,13 @@ class DefaultGlobalOperationsListener
             ];
         }
 
-        if ($canEdit || $canCopy || $canDelete) {
+        if ($canEdit || $canCopy || $canDelete || ($canSort && ($isParentMode || $isTreeMode || $isExtendedTreeMode))) {
             $operations += [
                 'all' => [
                     'href' => 'act=select',
                     'prefetch' => true,
                     'class' => 'header_edit_all',
-                    'attributes' => 'accesskey="e"',
+                    'attributes' => 'data-action="contao--scroll-offset#store" accesskey="e"',
                 ],
             ];
         }

@@ -6,8 +6,10 @@ export default class extends Controller {
     static values = {
         unsupportedMessage: String,
         assertionFailureMessage: String,
-        attestationFailureMessage: String
-    }
+        attestationFailureMessage: String,
+        optionsFailureMessage: String,
+        csrfUrl: String,
+    };
 
     handleUnsupported() {
         this.messageTarget.innerHTML = this.renderMessage(this.unsupportedMessageValue);
@@ -21,9 +23,23 @@ export default class extends Controller {
         this.messageTarget.innerHTML = this.renderMessage(this.attestationFailureMessageValue);
     }
 
-    renderMessage(message, type) {
-        type = type ?? 'error';
+    handleOptionsFailure() {
+        this.messageTarget.innerHTML = this.renderMessage(this.optionsFailureMessageValue);
+    }
 
-        return `<p class="tl_${type}">${message}</p>`; 
+    loadCsrf() {
+        if (this.csrfScript || !this.csrfUrlValue) {
+            return;
+        }
+
+        // Make sure we always have the correct request token and cookie
+        this.csrfScript = document.createElement('script');
+        this.csrfScript.src = this.csrfUrlValue;
+        this.csrfScript.async = true;
+        document.body.append(this.csrfScript);
+    }
+
+    renderMessage(message, type) {
+        return `<p class="tl_${type ?? 'error'}">${message}</p>`;
     }
 }

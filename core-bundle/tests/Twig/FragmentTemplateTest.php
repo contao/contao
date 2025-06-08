@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Twig;
 
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\FragmentTemplate;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Response;
 
 class FragmentTemplateTest extends TestCase
@@ -63,20 +64,41 @@ class FragmentTemplateTest extends TestCase
         $this->assertSame($returnedResponse, $template->getResponse($preBuiltResponse));
     }
 
-    /**
-     * @dataProvider provideIllegalParentMethods
-     */
-    public function testDisallowsAccessOfParentMethods(string $method, array $args): void
+    #[DataProvider('provideIllegalParentMethods')]
+    public function testDisallowsAccessOfParentMethods(string $method): void
     {
         $template = $this->getFragmentTemplate();
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage(\sprintf('Calling the "%s()" function on a FragmentTemplate is not allowed. Set template data instead and optionally output it with getResponse().', $method));
 
+        $parent = (new \ReflectionClass(FragmentTemplate::class))->getParentClass();
+
+        $args = array_map(
+            function (\ReflectionParameter $parameter) {
+                $type = $parameter->getType();
+
+                if (!$type instanceof \ReflectionNamedType) {
+                    return null;
+                }
+
+                /** @var 'bool'|'string'|'array'|class-string<object> $name */
+                $name = $type->getName();
+
+                return match ($name) {
+                    'bool' => false,
+                    'string' => '',
+                    'array' => [],
+                    default => $this->createMock($name),
+                };
+            },
+            $parent->getMethod($method)->getParameters(),
+        );
+
         $template->$method(...$args);
     }
 
-    public function provideIllegalParentMethods(): iterable
+    public static function provideIllegalParentMethods(): iterable
     {
         $excluded = [
             '__construct',
@@ -104,26 +126,7 @@ class FragmentTemplateTest extends TestCase
                 continue;
             }
 
-            $args = array_map(
-                function (\ReflectionParameter $parameter) {
-                    $type = $parameter->getType();
-
-                    if (!$type instanceof \ReflectionNamedType) {
-                        return null;
-                    }
-
-                    return match ($name = $type->getName()) {
-                        'bool' => false,
-                        'string' => '',
-                        'array' => [],
-                        /** @phpstan-ignore argument.templateType */
-                        default => $this->createMock($name),
-                    };
-                },
-                $method->getParameters(),
-            );
-
-            yield "accessing $name()" => [$name, $args];
+            yield "accessing $name()" => [$name];
         }
     }
 

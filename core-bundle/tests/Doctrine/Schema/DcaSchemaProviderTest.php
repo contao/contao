@@ -16,16 +16,14 @@ use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Doctrine\DBAL\Schema\Table;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Tools\SchemaTool;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class DcaSchemaProviderTest extends DoctrineTestCase
 {
-    /**
-     * @dataProvider provideDefinitions
-     */
+    #[DataProvider('provideDefinitions')]
     public function testAppendToSchema(array $dca = []): void
     {
         $schema = $this->getSchema();
@@ -194,10 +192,8 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertFalse($table->getColumn('id')->getFixed());
     }
 
-    /**
-     * @dataProvider provideTableOptions
-     */
-    public function testAppendToSchemaReadsTheTableOptions(string $options, \Closure $assertions): void
+    #[DataProvider('provideTableOptions')]
+    public function testAppendToSchemaReadsTheTableOptions(string $options, string $expectedEngine, string $expectedCharset, string $expectedCollate): void
     {
         $dca = [
             'tl_member' => [
@@ -209,37 +205,33 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->getDcaSchemaProvider($dca)->appendToSchema($schema);
         $table = $schema->getTable('tl_member');
 
-        $assertions($table);
+        $this->assertSame($expectedEngine, $table->getOption('engine'));
+        $this->assertSame($expectedCharset, $table->getOption('charset'));
+        $this->assertSame($expectedCollate, $table->getOption('collate'));
+        $this->assertFalse($table->hasOption('row_format'));
     }
 
-    public function provideTableOptions(): iterable
+    public static function provideTableOptions(): iterable
     {
         yield [
             'ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARSET=utf8 COLLATE utf8_unicode_ci',
-            function (Table $table): void {
-                $this->assertSame('InnoDB', $table->getOption('engine'));
-                $this->assertSame('utf8', $table->getOption('charset'));
-                $this->assertSame('utf8_unicode_ci', $table->getOption('collate'));
-            },
+            'InnoDB',
+            'utf8',
+            'utf8_unicode_ci',
         ];
 
         yield [
             'ENGINE=InnoDB ROW_FORMAT=DYNAMIC DEFAULT CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci',
-            function (Table $table): void {
-                $this->assertSame('InnoDB', $table->getOption('engine'));
-                $this->assertSame('utf8mb4', $table->getOption('charset'));
-                $this->assertSame('utf8mb4_unicode_ci', $table->getOption('collate'));
-            },
+            'InnoDB',
+            'utf8mb4',
+            'utf8mb4_unicode_ci',
         ];
 
         yield [
             'ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE latin1_general_ci',
-            function (Table $table): void {
-                $this->assertSame('MyISAM', $table->getOption('engine'));
-                $this->assertSame('latin1', $table->getOption('charset'));
-                $this->assertSame('latin1_general_ci', $table->getOption('collate'));
-                $this->assertFalse($table->hasOption('row_format'));
-            },
+            'MyISAM',
+            'latin1',
+            'latin1_general_ci',
         ];
     }
 
@@ -284,9 +276,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame(['firstname', 'lastname'], $table->getIndex('name')->getColumns());
     }
 
-    /**
-     * @dataProvider provideIndexes
-     */
+    #[DataProvider('provideIndexes')]
     public function testAppendToSchemaAddsTheIndexLength(int|null $expected, string $tableOptions, bool|string|null $largePrefixes = null, string|null $version = null, string|null $filePerTable = null, string|null $fileFormat = null): void
     {
         $dca = [
@@ -578,9 +568,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $this->assertSame(['fulltext'], $table->getIndex('text')->getFlags());
     }
 
-    /**
-     * @dataProvider provideInvalidIndexDefinitions
-     */
+    #[DataProvider('provideInvalidIndexDefinitions')]
     public function testAppendToSchemaFailsIfIndexesAreInvalid(array $dca, string $expectedExceptionMessage): void
     {
         $dcaSchemaProvider = $this->getDcaSchemaProvider($dca);

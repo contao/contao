@@ -1,81 +1,9 @@
-#template-studio--dialog {
-    dialog {
-        border: none;
-        background: none;
-        padding: 0;
+dialog[data-controller="contao--dialog"].template-studio {
+    .name_container {
+        margin: 0 12px 10px;
 
-        .dialog_wrapper {
-            background: var(--content-bg);
-            border: 1px solid var(--border);
-            box-shadow: 0 0 1em rgb(0 0 0 / .3);
-            border-radius: 2px;
-            max-width: 60ch;
-        }
-
-        form {
-            display: flex;
-            flex-flow: column;
-            row-gap: 1em;
-        }
-
-        .header_wrapper, .description, .widget {
-            padding: 8px 12px;
-        }
-
-        &::backdrop {
-            background: rgba(0, 0, 0, .75);
-        }
-
-        .description {
-            line-height: 1.5;
-            border: 1px solid var(--border);
-            margin: 5px 12px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-
-            &.description--warning {
-                border-color: var(--red);
-            }
-        }
-
-        .header_wrapper h3 {
-            font-size: larger;
-        }
-
-        .name_container {
-            margin: 0 12px 10px;
-
-            h3 {
-                margin-bottom: 4px;
-            }
-        }
-
-        .buttons {
-            padding: 8px 12px;
-            border-top: 1px solid var(--border);
-
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-            gap: 4px;
-            text-align: right;
-        }
-
-        button {
-            padding: .5rem 1.25rem;
-            border: 1px solid var(--form-border);
-            border-radius: 2px;
-            box-sizing: border-box;
-            background: var(--form-bg);
-            transition: background .2s ease;
-
-            &:is(:hover,:focus) {
-                background: var(--form-bg-hover);
-            }
-        }
-
-        input:invalid {
-            background-color: var(--diff-del);
+        h3 {
+            margin-bottom: 4px;
         }
     }
 

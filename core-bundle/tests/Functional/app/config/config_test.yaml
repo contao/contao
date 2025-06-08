@@ -61,6 +61,8 @@ contao:
     search:
         default_indexer:
             enable: false
+    messenger:
+        workers: [{ transports: [contao_test] }]
 
 scheb_two_factor:
     trusted_device:

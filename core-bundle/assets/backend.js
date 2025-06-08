@@ -6,8 +6,6 @@ import WebAuthn from '@web-auth/webauthn-stimulus';
 import './scripts/mootao.js';
 import './scripts/core.js';
 import './scripts/limit-height.js';
-import './scripts/modulewizard.js';
-import './scripts/sectionwizard.js';
 
 import './styles/backend.pcss';
 
@@ -17,20 +15,33 @@ application.debug = process.env.NODE_ENV === 'development';
 
 // Register all controllers with `contao--` prefix
 const context = require.context('./controllers', true, /\.js$/);
-application.load(context.keys()
-    .map((key) => {
-        const identifier = identifierForContextKey(key);
-        if (identifier) {
-            return definitionForModuleAndIdentifier(context(key), `contao--${ identifier }`);
-        }
-    }).filter((value) => value)
+application.load(
+    context
+        .keys()
+        .map((key) => {
+            const identifier = identifierForContextKey(key);
+            if (identifier) {
+                return definitionForModuleAndIdentifier(context(key), `contao--${identifier}`);
+            }
+        })
+        .filter((value) => value),
 );
 
 application.register('contao--webauthn', WebAuthn);
 
-// Cancel all prefetch requests that contain a request token
-document.documentElement.addEventListener('turbo:before-prefetch', e => {
-    if ((new URLSearchParams(e.target.href)).has('rt') || e.target.classList.contains('header_back') || e.target.closest('.sf-toolbar') !== null) {
+document.documentElement.addEventListener('turbo:before-prefetch', (e) => {
+    if (
+        // Do not prefetch if the user wants to save data or is on a slow
+        // connection
+        navigator.connection?.saveData ||
+        ['slow-2g', '2g'].includes(navigator.connection?.effectiveType) ||
+        // Do not prefetch if the URL contains a request token or the element
+        // is part of the Symfony toolbar
+        (e.target.search && new URLSearchParams(e.target.search).has('rt')) ||
+        e.target.classList.contains('header_back') ||
+        e.target.matches('[onclick^="Backend.openModalIframe("]') ||
+        e.target.closest('.sf-toolbar') !== null
+    ) {
         e.preventDefault();
     }
 });
@@ -39,14 +50,9 @@ document.documentElement.addEventListener('turbo:before-prefetch', e => {
 const mooDomready = () => {
     if (!document.body.mooDomreadyFired) {
         document.body.mooDomreadyFired = true;
-
-        if (Element.Events.removeEvents) {
-            Element.Events.removeEvents();
-        }
-
         window.fireEvent('domready');
     }
-}
+};
 
 document.documentElement.addEventListener('turbo:render', mooDomready);
 document.documentElement.addEventListener('turbo:frame-render', mooDomready);
@@ -54,7 +60,7 @@ document.documentElement.addEventListener('turbo:frame-render', mooDomready);
 // Always break out of a missing frame (#7501)
 document.documentElement.addEventListener('turbo:frame-missing', (e) => {
     if (window.console) {
-        console.warn('Turbo frame #'+e.target.id+' is missing.');
+        console.warn(`Turbo frame #${e.target.id} is missing.`);
     }
 
     // Do not break out of frames that load their content via src
@@ -64,4 +70,36 @@ document.documentElement.addEventListener('turbo:frame-missing', (e) => {
 
     e.preventDefault();
     e.detail.visit(e.detail.response);
+});
+
+// Call the beforeCache() function on all controllers implementing it. This
+// allows controllers to tear down things before the page gets put into cache.
+// Note that Stimulus' disconnect() function will not fire at this point and
+// thus cannot be used for this task.
+document.documentElement.addEventListener('turbo:before-cache', (e) => {
+    for (const controller of application.controllers) {
+        if ('function' === typeof controller.beforeCache) {
+            controller.beforeCache(e);
+        }
+    }
+
+    // Remove the Symfony toolbar
+    e.target.querySelector('.sf-toolbar')?.remove();
+});
+
+// If the previously fetched resource got redirected and a full page reload
+// occurs, Turbo currently uses the wrong URL (the originally fetched one, not
+// the effective URL after the redirect).
+// TODO: Remove again once hotwired/turbo#1391 is fixed.
+let targetURLAfterRedirectedFetch = null;
+
+document.documentElement.addEventListener('turbo:reload', (event) => {
+    if (event.detail.reason !== 'request_failed' && targetURLAfterRedirectedFetch) {
+        Turbo.session.adapter.location = new URL(targetURLAfterRedirectedFetch);
+    }
+});
+
+document.documentElement.addEventListener('turbo:before-fetch-response', (event) => {
+    const response = event.detail.fetchResponse;
+    targetURLAfterRedirectedFetch = response.redirected ? response.response.url : null;
 });

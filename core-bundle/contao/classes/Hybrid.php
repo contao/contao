@@ -77,8 +77,9 @@ abstract class Hybrid extends Frontend
 	 *
 	 * @param ContentModel|FormModel|ModuleModel $objElement
 	 * @param string                             $strColumn
+	 * @param string|null                        $strTypePrefix
 	 */
-	public function __construct($objElement, $strColumn='main')
+	public function __construct($objElement, $strColumn='main', $strTypePrefix=null)
 	{
 		parent::__construct();
 
@@ -149,7 +150,15 @@ abstract class Hybrid extends Frontend
 		}
 
 		$this->cssID = $cssID;
-		$this->typePrefix = $objElement->typePrefix;
+
+		if ($this->typePrefix = $objElement->typePrefix)
+		{
+			trigger_deprecation('contao/core-bundle', '5.6', 'Passing the "typePrefix" via the model has been deprecated and will no longer work in Contao 6. Pass the prefix via the constructor instead.');
+		}
+		else
+		{
+			$this->typePrefix = $strTypePrefix ?? ($this->objParent instanceof ModuleModel ? 'mod_' : 'ce_');
+		}
 
 		$arrHeadline = StringUtil::deserialize($objElement->headline);
 		$this->headline = \is_array($arrHeadline) ? $arrHeadline['value'] ?? '' : $arrHeadline;

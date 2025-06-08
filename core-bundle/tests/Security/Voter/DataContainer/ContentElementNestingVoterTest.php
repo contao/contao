@@ -22,6 +22,7 @@ use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\CoreBundle\Security\Voter\DataContainer\ContentElementNestingVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
@@ -62,15 +63,13 @@ class ContentElementNestingVoterTest extends TestCase
         );
     }
 
-    /**
-     * @dataProvider nestedElementsProvider
-     */
+    #[DataProvider('nestedElementsProvider')]
     public function testNestedElements(CreateAction|DeleteAction|ReadAction|UpdateAction $action, string|false $databaseResult, bool $supportsNesting, bool $isGranted): void
     {
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('fetchOne')
-            ->with('SELECT type FROM tl_content WHERE id=?', [42])
+            ->with('SELECT type FROM tl_content WHERE id = ?', [42])
             ->willReturn($databaseResult)
         ;
 

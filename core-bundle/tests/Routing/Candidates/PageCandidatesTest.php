@@ -20,14 +20,13 @@ use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Result;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\HttpFoundation\Request;
 
 class PageCandidatesTest extends TestCase
 {
-    /**
-     * @dataProvider getCandidatesProvider
-     */
+    #[DataProvider('getCandidatesProvider')]
     public function testGetCandidates(string $pathInfo, array $urlSuffixes, array $languages, array $expected): void
     {
         $request = $this->mockRequest($pathInfo);
@@ -38,9 +37,7 @@ class PageCandidatesTest extends TestCase
         $this->assertSame($expected['default'], $candidates->getCandidates($request));
     }
 
-    /**
-     * @dataProvider getCandidatesProvider
-     */
+    #[DataProvider('getCandidatesProvider')]
     public function testGetLocaleCandidates(string $pathInfo, array $urlSuffixes, array $languages, array $expected): void
     {
         $request = $this->mockRequest($pathInfo);

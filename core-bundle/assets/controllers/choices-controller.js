@@ -1,16 +1,8 @@
-import {Controller} from "@hotwired/stimulus"
+import { Controller } from '@hotwired/stimulus';
 
 export default class ChoicesController extends Controller {
     connect() {
-        if (this.initGuard) {
-            return;
-        }
-
-        // Choices wraps the element multiple times during initialization, leading to
-        // multiple disconnects/reconnects of the controller that we need to ignore.
-        this.initGuard = true;
-
-        const select = this.element;
+        const select = this.element.querySelector('select');
 
         this.choices = new Choices(select, {
             shouldSort: false,
@@ -32,25 +24,27 @@ export default class ChoicesController extends Controller {
                 if (choices && select.dataset.placeholder) {
                     choices.dataset.placeholder = select.dataset.placeholder;
                 }
-
-                // Reset guard as soon as the call stack has cleared
-                setTimeout(() => { this.initGuard = false; }, 0);
             },
             loadingText: Contao.lang.loading,
             noResultsText: Contao.lang.noResults,
             noChoicesText: Contao.lang.noOptions,
-            removeItemLabelText: function (value) {
-                return Contao.lang.removeItem.concat(' ').concat(value);
-            },
-        })
+            removeItemLabelText: (value) => Contao.lang.removeItem.concat(' ').concat(value),
+        });
     }
 
     disconnect() {
-        if (this.initGuard) {
-            return;
-        }
+        this._removeChoices();
+    }
 
-        this.choices.destroy();
+    beforeCache() {
+        // Let choices unwrap the element container before Turbo caches the
+        // page. It will be recreated, when the connect() call happens on the
+        // restored page.
+        this._removeChoices();
+    }
+
+    _removeChoices() {
+        this.choices?.destroy();
         this.choices = null;
     }
 }

@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Tests\Routing;
 use Contao\ArticleModel;
 use Contao\CoreBundle\Routing\Content\ContentUrlResolverInterface;
 use Contao\CoreBundle\Routing\Content\ContentUrlResult;
-use Contao\CoreBundle\Routing\Content\StringUrl;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\Page\PageRegistry;
 use Contao\CoreBundle\Routing\Page\PageRoute;
@@ -153,10 +152,11 @@ class ContentUrlGeneratorTest extends TestCase
         $urlGenerator = $this->mockUrlGenerator(null);
         $pageRegistry = $this->mockPageRegistry(null);
         $entityManager = $this->createMock(EntityManagerInterface::class);
+        $result = ContentUrlResult::url('https://example.net');
 
         $resolver = $this->mockResolver(
-            [$content, ContentUrlResult::url('https://example.net')],
-            [$this->isInstanceOf(StringUrl::class), new ContentUrlResult('https://example.net')],
+            [$content, $result],
+            [$result->content, new ContentUrlResult('https://example.net')],
         );
 
         $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, [$resolver]);
@@ -172,14 +172,15 @@ class ContentUrlGeneratorTest extends TestCase
         $urlGenerator = $this->mockUrlGenerator(null);
         $pageRegistry = $this->mockPageRegistry(null);
         $entityManager = $this->createMock(EntityManagerInterface::class);
+        $result = ContentUrlResult::url('https://example.net');
 
         $pageResolver = $this->mockResolver(
-            [$content, ContentUrlResult::url('https://example.net')],
-            [$this->isInstanceOf(StringUrl::class), null],
+            [$content, $result],
+            [$result->content, null],
         );
 
         $stringResolver = $this->mockResolver(
-            [$this->isInstanceOf(StringUrl::class), new ContentUrlResult('https://example.net')],
+            [$result->content, new ContentUrlResult('https://example.net')],
         );
 
         $service = new ContentUrlGenerator($urlGenerator, $pageRegistry, $entityManager, [$pageResolver, $stringResolver]);
@@ -332,8 +333,7 @@ class ContentUrlGeneratorTest extends TestCase
         $resolver
             ->expects($this->exactly(\count($cases)))
             ->method('resolve')
-            ->withConsecutive(...array_map(static fn (array $case) => [$case[0]], $cases))
-            ->willReturnOnConsecutiveCalls(...array_column($cases, 1))
+            ->willReturnMap($cases)
         ;
 
         return $resolver;

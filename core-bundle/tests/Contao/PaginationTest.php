@@ -18,6 +18,7 @@ use Contao\FrontendTemplate;
 use Contao\Input;
 use Contao\Pagination;
 use Contao\System;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -49,9 +50,7 @@ class PaginationTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @dataProvider paginationDataProvider
-     */
+    #[DataProvider('paginationDataProvider')]
     public function testGeneratesPaginationItems(array $data): void
     {
         $currentPage = $data['currentPage'] ?? 1;

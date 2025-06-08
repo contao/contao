@@ -2,18 +2,18 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     static values = {
-        content: String
-    }
+        content: String,
+    };
 
-    write () {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
+    write() {
+        if (navigator.clipboard?.writeText) {
             navigator.clipboard.writeText(this.contentValue).catch(this.clipboardFallback.bind(this));
         } else {
             this.clipboardFallback();
         }
     }
 
-    clipboardFallback  () {
+    clipboardFallback() {
         const input = document.createElement('input');
         input.value = this.contentValue;
         document.body.appendChild(input);

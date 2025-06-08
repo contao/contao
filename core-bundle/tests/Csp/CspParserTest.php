@@ -14,13 +14,12 @@ namespace Contao\CoreBundle\Tests\Csp;
 
 use Contao\CoreBundle\Csp\CspParser;
 use Nelmio\SecurityBundle\ContentSecurityPolicy\PolicyManager;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
 class CspParserTest extends TestCase
 {
-    /**
-     * @dataProvider directivesProvider
-     */
+    #[DataProvider('directivesProvider')]
     public function testParsesCspHeader(string $header, array $result): void
     {
         $cspParser = new CspParser(new PolicyManager());
