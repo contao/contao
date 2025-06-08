@@ -20,17 +20,24 @@ use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Contao\FrontendUser;
 use Contao\PageModel;
 use Contao\User;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
+use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Symfony\Bridge\Twig\AppVariable;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Http\Logout\LogoutUrlGenerator;
+use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
@@ -337,6 +344,60 @@ class LoginControllerTest extends ContentElementTestCase
         $content = $response->getContent();
 
         $this->assertTrue(str_contains($content, '<a href="https://pw-reset-test.com/pw-reset">translated(contao_default:MSC.lostPassword)</a>'));
+    }
+
+    #[DataProvider('getAuthenticationExceptions')]
+    public function testShowsAuthenticationException(AuthenticationException $exception, string $message): void
+    {
+        $session = new Session(new MockArraySessionStorage());
+        $session->start();
+        $session->setName('contao_frontend');
+
+        $request = Request::create('https://auth-exception-test/login');
+        $request->setSession($session);
+
+        $authUtils = $this->createMock(AuthenticationUtils::class);
+        $authUtils
+            ->expects($this->once())
+            ->method('getLastAuthenticationError')
+            ->willReturn($exception)
+        ;
+
+        $authUtils
+            ->expects($this->once())
+            ->method('getLastUsername')
+            ->willReturn('foobar')
+        ;
+
+        $response = $this->renderWithModelData(
+            new LoginController(
+                $this->mockSecurity(),
+                $this->createMock(UriSigner::class),
+                $this->createMock(LogoutUrlGenerator::class),
+                $authUtils,
+                $this->mockTranslator(),
+                $this->createMock(ContentUrlGenerator::class),
+                $this->createMock(EventDispatcherInterface::class),
+                $this->createMock(ContaoFramework::class),
+            ),
+            [
+                'type' => 'login',
+            ],
+            request: $request,
+        );
+
+        $content = $response->getContent();
+
+        $this->assertTrue(str_contains($content, '<p class="error">'.$message.'</p>'));
+        $this->assertSame($exception, $request->attributes->get(SecurityRequestAttributes::AUTHENTICATION_ERROR));
+        $this->assertSame('foobar', $request->attributes->get(SecurityRequestAttributes::LAST_USERNAME));
+    }
+
+    public static function getAuthenticationExceptions(): iterable
+    {
+        yield [new TooManyLoginAttemptsAuthenticationException(), 'ERR.tooManyLoginAttempts'];
+        yield [new InvalidTwoFactorCodeException(), 'ERR.invalidTwoFactor'];
+        yield [new AuthenticationException(), 'ERR.invalidLogin'];
     }
 
     public function testShowsLogoutFormIfFrontendUserIsLoggedIn(): void
