@@ -203,6 +203,7 @@ services:
         class: Contao\CoreBundle\DataContainer\ClipboardManager
         public: true
         arguments:
+            - '@contao.framework'
             - '@request_stack'
 
     contao.data_container.dca_request_switcher:
