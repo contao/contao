@@ -16,14 +16,13 @@ use Contao\ContentModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Entity\WebauthnCredential;
 use Contao\CoreBundle\Repository\WebauthnCredentialRepository;
-use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\UriSigner;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[AsContentElement]
@@ -32,7 +31,6 @@ class ManagePasskeysController extends AbstractContentElementController
     public function __construct(
         private readonly WebauthnCredentialRepository $credentialRepo,
         private readonly UriSigner $uriSigner,
-        private readonly ContentUrlGenerator $contentUrlGenerator,
     ) {
     }
 
@@ -53,45 +51,47 @@ class ManagePasskeysController extends AbstractContentElementController
         if ($request->request->get('FORM_SUBMIT') === 'passkeys_credentials_actions_'.$model->id) {
             if ($deleteCredentialId = $request->request->get('delete_passkey')) {
                 if ($credential = $this->credentialRepo->findOneById($deleteCredentialId)) {
-                    $this->checkCredentialAccess($user, $credential);
+                    $this->checkCredentialAccess($credential);
 
                     $this->credentialRepo->remove($credential);
                 }
             } elseif ($editCredentialId = $request->request->get('edit_passkey')) {
                 if ($credential = $this->credentialRepo->findOneById($editCredentialId)) {
-                    $this->checkCredentialAccess($user, $credential);
+                    $this->checkCredentialAccess($credential);
 
-                    return new RedirectResponse($this->contentUrlGenerator->generate($page, ['edit_passkey' => $editCredentialId]));
+                    return new RedirectResponse($this->generateContentUrl($page, ['edit_passkey' => $editCredentialId]));
                 }
             }
 
-            return new RedirectResponse($this->contentUrlGenerator->generate($page));
+            return new RedirectResponse($this->generateContentUrl($page));
         }
 
         if ($request->request->get('FORM_SUBMIT') === 'passkeys_credentials_edit_'.$model->id) {
             if ($saveCredentialId = $request->request->get('credential_id')) {
                 if ($credential = $this->credentialRepo->findOneById($saveCredentialId)) {
-                    $this->checkCredentialAccess($user, $credential);
+                    $this->checkCredentialAccess($credential);
 
                     $credential->name = $request->request->get('passkey_name') ?? '';
                     $this->credentialRepo->saveCredentialSource($credential);
                 }
             }
 
-            return new RedirectResponse($this->contentUrlGenerator->generate($page));
+            return new RedirectResponse($this->generateContentUrl($page));
         }
 
         $template->credentials = $this->credentialRepo->getAllForUser($user);
         $template->edit_passkey_id ??= $request->query->get('edit_passkey');
-        $template->success_redirect = $this->uriSigner->sign($this->contentUrlGenerator->generate($page, ['edit_new_passkey' => 1], UrlGeneratorInterface::ABSOLUTE_URL));
+        $template->success_redirect = $this->uriSigner->sign($this->generateContentUrl($page, ['edit_new_passkey' => 1], UrlGeneratorInterface::ABSOLUTE_URL));
 
         return $template->getResponse();
     }
 
-    private function checkCredentialAccess(FrontendUser $user, WebauthnCredential $credential): void
+    private function checkCredentialAccess(WebauthnCredential $credential): void
     {
-        if ($credential->userHandle !== $user->getPasskeyUserHandle()) {
-            throw new AccessDeniedHttpException('Cannot access credential ID '.$credential->getId());
-        }
+        $this->denyAccessUnlessGranted(
+            ContaoCorePermissions::WEBAUTHN_CREDENTIAL_OWNERSHIP,
+            $credential,
+            'Cannot access credential ID '.$credential->getId(),
+        );
     }
 }

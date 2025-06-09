@@ -128,10 +128,8 @@ services:
 
     Contao\CoreBundle\Controller\ContentElement\ManagePasskeysController:
         arguments:
-            - '@security.helper'
             - '@contao.repository.webauthn_credential'
             - '@uri_signer'
-            - '@contao.routing.content_url_generator'
         tags:
             - controller.service_arguments
 

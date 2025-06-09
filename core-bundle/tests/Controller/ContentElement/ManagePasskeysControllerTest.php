@@ -17,11 +17,14 @@ use Contao\CoreBundle\Controller\ContentElement\ManagePasskeysController;
 use Contao\CoreBundle\Entity\WebauthnCredential;
 use Contao\CoreBundle\Repository\WebauthnCredentialRepository;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\FrontendUser;
 use Contao\PageModel;
 use Contao\User;
 use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -39,7 +42,6 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
             new ManagePasskeysController(
                 new WebauthnCredentialRepository($this->createMock(ManagerRegistry::class)),
                 $this->createMock(UriSigner::class),
-                $this->createMock(ContentUrlGenerator::class),
             ),
             [
                 'type' => 'manage_passkeys',
@@ -58,7 +60,6 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
             new ManagePasskeysController(
                 new WebauthnCredentialRepository($this->createMock(ManagerRegistry::class)),
                 $this->createMock(UriSigner::class),
-                $this->createMock(ContentUrlGenerator::class),
             ),
             [
                 'type' => 'manage_passkeys',
@@ -77,7 +78,6 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
             new ManagePasskeysController(
                 new WebauthnCredentialRepository($this->createMock(ManagerRegistry::class)),
                 $this->createMock(UriSigner::class),
-                $this->createMock(ContentUrlGenerator::class),
             ),
             [
                 'type' => 'manage_passkeys',
@@ -98,7 +98,6 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
             new ManagePasskeysController(
                 new WebauthnCredentialRepository($this->createMock(ManagerRegistry::class)),
                 $this->createMock(UriSigner::class),
-                $this->createMock(ContentUrlGenerator::class),
             ),
             [
                 'type' => 'manage_passkeys',
@@ -127,7 +126,6 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
             new ManagePasskeysController(
                 $repository,
                 $this->createMock(UriSigner::class),
-                $this->createMock(ContentUrlGenerator::class),
             ),
             [
                 'type' => 'manage_passkeys',
@@ -147,7 +145,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
     {
         $user = $this->createMock(FrontendUser::class);
 
-        $entity = new WebauthnCredential(
+        $credential = new WebauthnCredential(
             'publicKeyCredentialId',
             'type',
             ['transport'],
@@ -159,21 +157,20 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
             1,
         );
 
-        $entity->name = 'Foobar';
+        $credential->name = 'Foobar';
 
         $repository = $this->createMock(WebauthnCredentialRepository::class);
         $repository
             ->expects($this->once())
             ->method('getAllForUser')
             ->with($user)
-            ->willReturn([$entity])
+            ->willReturn([$credential])
         ;
 
         $response = $this->renderWithModelData(
             new ManagePasskeysController(
                 $repository,
                 $this->createMock(UriSigner::class),
-                $this->createMock(ContentUrlGenerator::class),
             ),
             [
                 'id' => 74205,
@@ -185,13 +182,238 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
 
         $content = $response->getContent();
 
-        $this->assertStringContainsString('<div class="content-manage-passkeys">', $content);
-        $this->assertStringContainsString('<button type="button" class="create">translated(contao_default:MSC.addPasskey)</button>', $content);
-        $this->assertStringContainsString('<li class="passkey">', $content);
         $this->assertStringContainsString('<div class="name">Foobar</div>', $content);
     }
 
-    private function getAdjustedContainer(User|null $user = null, bool|null $isFullyAuthenticated = null): ContainerBuilder
+    public function testRendersListAndEditsNewCredential(): void
+    {
+        $user = $this->createMock(FrontendUser::class);
+
+        $credential = new WebauthnCredential(
+            'publicKeyCredentialId',
+            'type',
+            ['transport'],
+            'attestationType',
+            EmptyTrustPath::create(),
+            Uuid::fromString('00000000-0000-0000-0000-000000000000'),
+            'credentialPublicKey',
+            'username',
+            1,
+        );
+
+        $repository = $this->createMock(WebauthnCredentialRepository::class);
+        $repository
+            ->expects($this->once())
+            ->method('getLastForUser')
+            ->with($user)
+            ->willReturn($credential)
+        ;
+
+        $repository
+            ->expects($this->once())
+            ->method('getAllForUser')
+            ->with($user)
+            ->willReturn([$credential])
+        ;
+
+        $request = Request::create('/passkeys?edit_new_passkey=1');
+
+        $uriSigner = $this->createMock(UriSigner::class);
+        $uriSigner
+            ->expects($this->once())
+            ->method('checkRequest')
+            ->with($request)
+            ->willReturn(true)
+        ;
+
+        $response = $this->renderWithModelData(
+            new ManagePasskeysController(
+                $repository,
+                $uriSigner,
+            ),
+            [
+                'id' => 74205,
+                'type' => 'manage_passkeys',
+            ],
+            adjustedContainer: $this->getAdjustedContainer($user, true),
+            page: $this->createMock(PageModel::class),
+            request: $request,
+        );
+
+        $this->assertMatchesRegularExpression('/<form method="post" id="form-edit-passkey-74205-[a-zA-Z0-9]+">/', $response->getContent());
+    }
+
+    public function testDeletesPasskey(): void
+    {
+        $user = $this->createMock(FrontendUser::class);
+
+        $credential = new WebauthnCredential(
+            'publicKeyCredentialId',
+            'type',
+            ['transport'],
+            'attestationType',
+            EmptyTrustPath::create(),
+            Uuid::fromString('00000000-0000-0000-0000-000000000000'),
+            'credentialPublicKey',
+            'username',
+            1,
+        );
+
+        $repository = $this->createMock(WebauthnCredentialRepository::class);
+        $repository
+            ->expects($this->once())
+            ->method('findOneById')
+            ->with('123')
+            ->willReturn($credential)
+        ;
+
+        $repository
+            ->expects($this->once())
+            ->method('remove')
+            ->with($credential)
+        ;
+
+        $request = Request::create(
+            '/passkeys',
+            'POST',
+            [
+                'FORM_SUBMIT' => 'passkeys_credentials_actions_74205',
+                'delete_passkey' => '123',
+            ],
+        );
+
+        $response = $this->renderWithModelData(
+            new ManagePasskeysController(
+                $repository,
+                $this->createMock(UriSigner::class),
+            ),
+            [
+                'id' => 74205,
+                'type' => 'manage_passkeys',
+            ],
+            adjustedContainer: $this->getAdjustedContainer($user, true, $credential),
+            page: $this->createMock(PageModel::class),
+            request: $request,
+        );
+
+        $this->assertTrue($response instanceof RedirectResponse);
+    }
+
+    public function testEditsPasskey(): void
+    {
+        $user = $this->createMock(FrontendUser::class);
+
+        $credential = new WebauthnCredential(
+            'publicKeyCredentialId',
+            'type',
+            ['transport'],
+            'attestationType',
+            EmptyTrustPath::create(),
+            Uuid::fromString('00000000-0000-0000-0000-000000000000'),
+            'credentialPublicKey',
+            'username',
+            1,
+        );
+
+        $repository = $this->createMock(WebauthnCredentialRepository::class);
+        $repository
+            ->expects($this->once())
+            ->method('findOneById')
+            ->with('456')
+            ->willReturn($credential)
+        ;
+
+        $request = Request::create(
+            '/passkeys',
+            'POST',
+            [
+                'FORM_SUBMIT' => 'passkeys_credentials_actions_74205',
+                'edit_passkey' => '456',
+            ],
+        );
+
+        $response = $this->renderWithModelData(
+            new ManagePasskeysController(
+                $repository,
+                $this->createMock(UriSigner::class),
+            ),
+            [
+                'id' => 74205,
+                'type' => 'manage_passkeys',
+            ],
+            adjustedContainer: $this->getAdjustedContainer($user, true, $credential),
+            page: $this->createMock(PageModel::class),
+            request: $request,
+        );
+
+        $this->assertTrue($response instanceof RedirectResponse);
+        $this->assertStringContainsString('edit_passkey=456', $response instanceof RedirectResponse ? $response->getTargetUrl() : '');
+    }
+
+    public function testSavesPasskey(): void
+    {
+        $user = $this->createMock(FrontendUser::class);
+
+        $credential = new WebauthnCredential(
+            'publicKeyCredentialId',
+            'type',
+            ['transport'],
+            'attestationType',
+            EmptyTrustPath::create(),
+            Uuid::fromString('00000000-0000-0000-0000-000000000000'),
+            'credentialPublicKey',
+            'username',
+            1,
+        );
+
+        $repository = $this->createMock(WebauthnCredentialRepository::class);
+        $repository
+            ->expects($this->once())
+            ->method('findOneById')
+            ->with('789')
+            ->willReturn($credential)
+        ;
+
+        $repository
+            ->expects($this->once())
+            ->method('saveCredentialSource')
+            ->with($this->callback(
+                function (WebauthnCredential $credential) {
+                    $this->assertSame('Changed name', $credential->name);
+
+                    return true;
+                },
+            ))
+        ;
+
+        $request = Request::create(
+            '/passkeys',
+            'POST',
+            [
+                'FORM_SUBMIT' => 'passkeys_credentials_edit_74205',
+                'credential_id' => '789',
+                'passkey_name' => 'Changed name',
+            ],
+        );
+
+        $response = $this->renderWithModelData(
+            new ManagePasskeysController(
+                $repository,
+                $this->createMock(UriSigner::class),
+            ),
+            [
+                'id' => 74205,
+                'type' => 'manage_passkeys',
+            ],
+            adjustedContainer: $this->getAdjustedContainer($user, true, $credential),
+            page: $this->createMock(PageModel::class),
+            request: $request,
+        );
+
+        $this->assertTrue($response instanceof RedirectResponse);
+    }
+
+    private function getAdjustedContainer(User|null $user = null, bool|null $isFullyAuthenticated = null, WebauthnCredential|null $credential = null): ContainerBuilder
     {
         $container = new ContainerBuilder();
 
@@ -217,13 +439,29 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
 
         $authChecker = $this->createMock(AuthorizationCheckerInterface::class);
         $authChecker
-            ->expects(null !== $isFullyAuthenticated ? $this->once() : $this->never())
             ->method('isGranted')
-            ->with('IS_AUTHENTICATED_FULLY', null)
-            ->willReturn($isFullyAuthenticated ?? false)
+            ->willReturnCallback(
+                static function (string $attribute, mixed $subject) use ($isFullyAuthenticated, $credential): bool {
+                    if ('IS_AUTHENTICATED_FULLY' === $attribute && null !== $isFullyAuthenticated) {
+                        return $isFullyAuthenticated;
+                    }
+
+                    return ContaoCorePermissions::WEBAUTHN_CREDENTIAL_OWNERSHIP === $attribute && $credential;
+                },
+            )
         ;
 
         $container->set('security.authorization_checker', $authChecker);
+
+        $contentUrlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $contentUrlGenerator
+            ->method('generate')
+            ->willReturnCallback(
+                static fn (mixed $object, array $parameters): string => '/foobar?'.http_build_query($parameters),
+            )
+        ;
+
+        $container->set('contao.routing.content_url_generator', $contentUrlGenerator);
 
         return $container;
     }

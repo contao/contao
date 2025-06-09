@@ -27,7 +27,7 @@
 {% block list_item %}
     <div class="name">
         {%- if edit_passkey_id|default == item.id -%}
-            <form method="post" data-contao--passkeys-target="form" id="form-edit-passkey-{{ data.id }}-{{ item.id }}">
+            <form method="post" id="form-edit-passkey-{{ data.id }}-{{ item.id }}">
                 <input type="hidden" name="FORM_SUBMIT" value="passkeys_credentials_edit_{{ data.id }}">
                 <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
                 <input type="hidden" name="credential_id" value="{{ item.id }}">

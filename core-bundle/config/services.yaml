@@ -1176,6 +1176,9 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao.security.webauthn_credential_voter:
+        class: Contao\CoreBundle\Security\Voter\WebauthnCredentialVoter
+
     contao.session.factory:
         class: Contao\CoreBundle\Session\SessionFactory
         decorates: session.factory
