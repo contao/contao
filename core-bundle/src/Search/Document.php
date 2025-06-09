@@ -201,26 +201,28 @@ class Document
         $html = $body->html();
 
         // Strip non-indexable areas
-        while (($start = strpos($html, self::INDEXER_STOP)) !== false) {
+        while (false !== ($start = strpos($html, self::INDEXER_STOP))) {
             $afterStop = substr($html, $start + \strlen(self::INDEXER_STOP), \strlen(self::INDEXER_PROTECTED));
 
-            // Skip removal if protected tag is immediately after stop tag and allowProtected
-            // is true
+            // Skip removal if the protected tag is immediately after the stop tag and
+            // $allowProtected is true
             if ($allowProtected && self::INDEXER_PROTECTED === $afterStop) {
                 // Skip this and continue after this occurrence
                 $start = strpos($html, self::INDEXER_STOP, $start + \strlen(self::INDEXER_STOP));
+
                 if (false === $start) {
                     break;
                 }
+
                 continue;
             }
 
-            if (($end = strpos($html, self::INDEXER_CONTINUE, $start)) !== false) {
+            if (false !== ($end = strpos($html, self::INDEXER_CONTINUE, $start))) {
                 $current = $start;
 
                 // Handle nested tags
-                while (($nested = strpos($html, self::INDEXER_STOP, $current + \strlen(self::INDEXER_STOP))) !== false && $nested < $end) {
-                    if (($newEnd = strpos($html, self::INDEXER_CONTINUE, $end + \strlen(self::INDEXER_CONTINUE))) !== false) {
+                while (false !== ($nested = strpos($html, self::INDEXER_STOP, $current + \strlen(self::INDEXER_STOP))) && $nested < $end) {
+                    if (false !== ($newEnd = strpos($html, self::INDEXER_CONTINUE, $end + \strlen(self::INDEXER_CONTINUE)))) {
                         $end = $newEnd;
                         $current = $nested;
                     } else {
