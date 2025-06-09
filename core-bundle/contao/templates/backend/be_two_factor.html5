@@ -133,7 +133,7 @@
             </tr>
           </thead>
           <tbody>
-            <?php foreach ($this->credentials as $credential): ?>
+            <?php foreach ($this->credentials as $i => $credential): ?>
               <tr class="hover-row">
                 <td class="name">
                   <?php if ($this->editPassKeyId === $credential->getId()): ?>
@@ -141,7 +141,7 @@
                       <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials_edit">
                       <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
                       <input type="hidden" name="credential_id" value="<?= $credential->getId() ?>">
-                      <input type="text" name="passkey_name" value="<?= Contao\StringUtil::specialchars($credential->name) ?>" placeholder="<?= $this->trans('MSC.passkeyNameInput') ?>" data-action="keydown.esc->contao--passkeys#cancelEdit" data-contao--passkeys-target="nameInput">
+                      <input type="text" name="passkey_name" value="<?= Contao\StringUtil::specialchars($credential->name) ?>" placeholder="<?= $this->trans('MSC.passkeyNameInput') ?>" aria-label="<?= Contao\StringUtil::specialchars($this->trans('MSC.passkeyNameInput')) ?>" data-action="keydown.esc->contao--passkeys#cancelEdit" data-contao--passkeys-target="nameInput">
                     </form>
                   <?php else: ?>
                     <?= Contao\StringUtil::specialchars($credential->name ?: $credential->getId()) ?>
@@ -152,7 +152,7 @@
                   <form method="post">
                     <input type="hidden" name="FORM_SUBMIT" value="tl_passkeys_credentials_actions">
                     <input type="hidden" name="REQUEST_TOKEN" value="<?= $this->requestToken ?>">
-                    <?php if ($this->editPassKeyId === $credential->getId()): ?><button type="submit" name="save_passkey" form="form-edit-passkey-<?= $credential->getId() ?>" value="<?= $credential->getId() ?>"><?= Contao\Image::getHtml('save.svg', $this->trans('MSC.edit')) ?></button><?php else: ?><button type="submit" name="edit_passkey" value="<?= $credential->getId() ?>"><?= Contao\Image::getHtml('edit.svg', $this->trans('MSC.edit')) ?></button><?php endif; ?> <button type="submit" name="delete_passkey" value="<?= $credential->getId() ?>" onclick="if(!confirm('<?= $this->trans('MSC.deleteConfirm', [$credential->name ?: $credential->getId()]) ?>'))return false"><?= Contao\Image::getHtml('delete.svg', $this->trans('MSC.delete')) ?></button>
+                    <?php if ($this->editPassKeyId === $credential->getId()): ?><button type="submit" name="save_passkey" form="form-edit-passkey-<?= $credential->getId() ?>" value="<?= $credential->getId() ?>" aria-label="<?= Contao\StringUtil::specialchars($this->trans('MSC.savePasskey', [$credential->name ?: ($i + 1)])) ?>"><?= Contao\Image::getHtml('save.svg', $this->trans('MSC.edit')) ?></button><?php else: ?><button type="submit" name="edit_passkey" value="<?= $credential->getId() ?>" aria-label="<?= Contao\StringUtil::specialchars($this->trans('MSC.editPasskey', [$credential->name ?: ($i + 1)])) ?>"><?= Contao\Image::getHtml('edit.svg', $this->trans('MSC.edit')) ?></button><?php endif; ?> <button type="submit" name="delete_passkey" value="<?= $credential->getId() ?>" onclick="if(!confirm('<?= $this->trans('MSC.deleteConfirm', [$credential->name ?: $credential->getId()]) ?>'))return false" aria-label="<?= Contao\StringUtil::specialchars($this->trans('MSC.deletePasskey', [$credential->name ?: ($i + 1)])) ?>"><?= Contao\Image::getHtml('delete.svg', $this->trans('MSC.delete')) ?></button>
                   </form>
                 </td>
               </tr>
