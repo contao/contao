@@ -21,11 +21,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Document
 {
+    private const INDEXER_STOP = '<!-- indexer::stop -->';
+
+    private const INDEXER_PROTECTED = '<!-- indexer::protected -->';
+
+    private const INDEXER_CONTINUE = '<!-- indexer::continue -->';
+
     private Crawler|null $crawler = null;
 
     private array|null $jsonLds = null;
 
-    private string|null $searchableContent = null;
+    private array $searchableContents = [];
 
     /**
      * The key is the header name in lowercase letters and the value is again an array
@@ -171,10 +177,10 @@ class Document
         );
     }
 
-    public function getSearchableContent(): string
+    public function getSearchableContent(bool $allowProtected = false): string
     {
-        if (null !== $this->searchableContent) {
-            return $this->searchableContent;
+        if (isset($this->searchableContents[$allowProtected])) {
+            return $this->searchableContents[$allowProtected];
         }
 
         // We're only interested in <body>
@@ -195,13 +201,28 @@ class Document
         $html = $body->html();
 
         // Strip non-indexable areas
-        while (false !== ($start = strpos($html, '<!-- indexer::stop -->'))) {
-            if (false !== ($end = strpos($html, '<!-- indexer::continue -->', $start))) {
+        while (false !== ($start = strpos($html, self::INDEXER_STOP))) {
+            $afterStop = substr($html, $start + \strlen(self::INDEXER_STOP), \strlen(self::INDEXER_PROTECTED));
+
+            // Skip removal if the protected tag is immediately after the stop tag and
+            // $allowProtected is true
+            if ($allowProtected && self::INDEXER_PROTECTED === $afterStop) {
+                // Skip this and continue after this occurrence
+                $start = strpos($html, self::INDEXER_STOP, $start + \strlen(self::INDEXER_STOP));
+
+                if (false === $start) {
+                    break;
+                }
+
+                continue;
+            }
+
+            if (false !== ($end = strpos($html, self::INDEXER_CONTINUE, $start))) {
                 $current = $start;
 
                 // Handle nested tags
-                while (false !== ($nested = strpos($html, '<!-- indexer::stop -->', $current + 22)) && $nested < $end) {
-                    if (false !== ($newEnd = strpos($html, '<!-- indexer::continue -->', $end + 26))) {
+                while (false !== ($nested = strpos($html, self::INDEXER_STOP, $current + \strlen(self::INDEXER_STOP))) && $nested < $end) {
+                    if (false !== ($newEnd = strpos($html, self::INDEXER_CONTINUE, $end + \strlen(self::INDEXER_CONTINUE)))) {
                         $end = $newEnd;
                         $current = $nested;
                     } else {
@@ -209,7 +230,7 @@ class Document
                     }
                 }
 
-                $html = substr($html, 0, $start).substr($html, $end + 26);
+                $html = substr($html, 0, $start).substr($html, $end + \strlen(self::INDEXER_CONTINUE));
             } else {
                 break;
             }
@@ -218,7 +239,7 @@ class Document
         $html = strip_tags($html);
 
         // Strip extra empty space
-        return $this->searchableContent = trim(preg_replace(['/^[ \t]*$/m', '/\s+/'], ['', ' '], $html));
+        return $this->searchableContents[$allowProtected] = trim(preg_replace(['/^[ \t]*$/m', '/\s+/'], ['', ' '], $html));
     }
 
     private function filterJsonLd(array $jsonLds, string $context = '', string $type = ''): array
