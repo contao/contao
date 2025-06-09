@@ -1104,7 +1104,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Switch to edit mode
 					if (!$blnDoNotRedirect)
 					{
-						$this->redirect($this->switchToEdit($insertID));
+						// User cannot edit record, redirect back to the list view (see #6674)
+						if (($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null) || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord)))
+						{
+							$this->redirect($this->getReferer());
+						}
+						else
+						{
+							$this->redirect($this->switchToEdit($insertID));
+						}
 					}
 
 					return $insertID;
