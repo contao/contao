@@ -207,13 +207,8 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
             return;
         }
-        if ($crawlUri->hasTag(RobotsSubscriber::TAG_NOINDEX) && 'always_index' === $pageSearchIndexer) {
-            $this->logWithCrawlUri(
-                $crawlUri,
-                LogLevel::DEBUG,
-                'HTML robots tag "noindex" is ignored because page option "searchIndexer" is explicitly set to "always_index".',
-            );
-        }
+
+        $alwaysIndexHint = $crawlUri->hasTag(RobotsSubscriber::TAG_NOINDEX) && 'always_index' === $pageSearchIndexer ? 'Robots:noindex is ignored because of searchIndexer:always_index. ' : '';
 
         try {
             $this->indexer->index($document);
@@ -222,7 +217,7 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::INFO,
-                'Forwarded to the search indexer. Was indexed successfully.',
+                $alwaysIndexHint.'Forwarded to the search indexer. Was indexed successfully.',
             );
         } catch (IndexerException $e) {
             if ($e->isOnlyWarning()) {
