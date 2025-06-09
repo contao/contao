@@ -347,7 +347,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
         );
 
         $this->assertTrue($response instanceof RedirectResponse);
-        $this->assertStringContainsString('edit_passkey=456', $response instanceof RedirectResponse ? $response->getTargetUrl() : '');
+        $this->assertStringContainsString('edit_passkey=456', $response->getTargetUrl());
     }
 
     public function testSavesPasskey(): void
