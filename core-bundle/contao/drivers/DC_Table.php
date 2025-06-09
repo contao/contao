@@ -3802,10 +3802,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if (!empty($topMostRootIds))
 		{
 			static::preloadCurrentRecords($topMostRootIds, $table);
+			$clipboardManager = System::getContainer()->get('contao.data_container.clipboard_manager');
 
 			for ($i=0, $c=\count($topMostRootIds); $i<$c; $i++)
 			{
-				$tree .= $this->generateTree($table, $topMostRootIds[$i], array('p'=>($topMostRootIds[$i - 1] ?? null), 'n'=>($topMostRootIds[$i + 1] ?? null)), $blnHasSorting, -16, $blnClipboard ? $arrClipboard : false, ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $blnClipboard && $topMostRootIds[$i] == $arrClipboard['id'], false, false, $arrFound);
+				$tree .= $this->generateTree($table, $topMostRootIds[$i], array('p'=>($topMostRootIds[$i - 1] ?? null), 'n'=>($topMostRootIds[$i + 1] ?? null)), $blnHasSorting, -16, $blnClipboard ? $arrClipboard : false, $clipboardManager->isCircularReference($this->strTable, $topMostRootIds[$i]), false, false, $arrFound);
 			}
 		}
 
@@ -3974,12 +3975,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$arrIds[] = $objRows->id;
 		}
 
-		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
+		$clipboardManager = System::getContainer()->get('contao.data_container.clipboard_manager');
+		$arrClipboard = $clipboardManager->get($this->strTable);
 		$blnClipboard = null !== $arrClipboard;
 
 		for ($i=0, $c=\count($arrIds); $i<$c; $i++)
 		{
-			$return .= ' ' . trim($this->generateTree($table, $arrIds[$i], array('p'=>($arrIds[$i - 1] ?? null), 'n'=>($arrIds[$i + 1] ?? null)), $hasSorting, $margin, $blnClipboard ? $arrClipboard : false, $arrClipboard !== null && ($id == $arrClipboard['id'] || (\is_array($arrClipboard['id']) && \in_array($id, $arrClipboard['id'])) || (!$blnPtable && !\is_array($arrClipboard['id']) && \in_array($id, $db->getChildRecords($arrClipboard['id'], $table)))), $blnProtected));
+			$return .= ' ' . trim($this->generateTree($table, $arrIds[$i], array('p'=>($arrIds[$i - 1] ?? null), 'n'=>($arrIds[$i + 1] ?? null)), $hasSorting, $margin, $blnClipboard ? $arrClipboard : false, $clipboardManager->isCircularReference($this->strTable, $arrIds[$i], !$blnPtable), $blnProtected));
 		}
 
 		return $return;
@@ -4198,8 +4200,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Regular tree
 					if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 					{
+						$clipboardManager = System::getContainer()->get('contao.data_container.clipboard_manager');
+
 						// Disable buttons of the page and all its children on cut to avoid circular references
-						if ($blnCircularReference || !System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $id))
+						if ($clipboardManager->isCutMode($this->strTable) && ($blnCircularReference || !$clipboardManager->canPasteAfterOrInto($this->strTable, $id)))
 						{
 							$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
 							$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteinto--disabled.svg')));
@@ -4244,7 +4248,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Paste after the selected record (e.g. paste article after article X)
 						if ($this->strTable == $table)
 						{
-							if ($blnCircularReference || !System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $id) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1)))
+							$clipboardManager = System::getContainer()->get('contao.data_container.clipboard_manager');
+
+							if ($clipboardManager->isCutMode($this->strTable) && ($blnCircularReference || !$clipboardManager->canPasteAfterOrInto($this->strTable, $id) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
 							{
 								$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
 							}
@@ -4331,11 +4337,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$return .= '<li class="parent" id="' . $node . '_' . $id . '" data-contao--toggle-nodes-target="child' . ($level === 0 ? ' rootChild"' : '') . '"><ul class="level_' . $level . '">';
 
 			static::preloadCurrentRecords($children, $table);
+			$clipboardManager = System::getContainer()->get('contao.data_container.clipboard_manager');
 
 			// Add the records of the parent table
 			for ($k=0, $c=\count($children); $k<$c; $k++)
 			{
-				$return .= $this->generateTree($table, $children[$k], array('p'=>($children[$k - 1] ?? null), 'n'=>($children[$k + 1] ?? null)), $blnHasSorting, $intMargin + $intSpacing, $arrClipboard, (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && \is_array($arrClipboard) && $children[$k] == $arrClipboard['id']) || $blnCircularReference, $blnProtected || $protectedPage, $blnNoRecursion, $arrFound);
+				$return .= $this->generateTree($table, $children[$k], array('p'=>($children[$k - 1] ?? null), 'n'=>($children[$k + 1] ?? null)), $blnHasSorting, $intMargin + $intSpacing, $arrClipboard, $blnCircularReference || $clipboardManager->isCircularReference($table, $children[$k]), $blnProtected || $protectedPage, $blnNoRecursion, $arrFound);
 			}
 
 			$return .= '</ul></li>';
