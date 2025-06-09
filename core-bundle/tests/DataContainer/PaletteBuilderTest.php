@@ -498,7 +498,7 @@ class PaletteBuilderTest extends TestCase
 
         yield 'Does not add the pid field if user is not admin' => [
             [
-                0 => [
+                [
                     'key' => 'foo_legend',
                     'class' => '',
                     'fields' => ['foo'],
@@ -541,7 +541,7 @@ class PaletteBuilderTest extends TestCase
 
         yield 'Does not add the sorting field if user is not admin' => [
             [
-                0 => [
+                [
                     'key' => 'foo_legend',
                     'class' => '',
                     'fields' => ['foo'],

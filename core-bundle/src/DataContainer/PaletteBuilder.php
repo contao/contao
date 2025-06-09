@@ -155,20 +155,21 @@ class PaletteBuilder
         $fieldsetStates = $this->getFieldsetStates($table);
 
         // Add meta fields if the current user is an administrator
-        if (
-            $addMetaFields
-            && $this->security->isGranted('ROLE_ADMIN')
-            && ($adminFields = $this->getAdminFields($table))
-        ) {
-            $boxes[-1] = [
-                'key' => '',
-                'class' => '',
-                'fields' => $adminFields,
-            ];
+        if ($addMetaFields && $this->security->isGranted('ROLE_ADMIN')) {
+            $adminFields = $this->getAdminFields($table);
+
+            if ([] !== $adminFields) {
+                $boxes[-1] = [
+                    'key' => '',
+                    'class' => '',
+                    'fields' => $adminFields,
+                ];
+            }
         }
 
         foreach (StringUtil::trimsplit(';', $palette) as $k => $v) {
             $emptyCount = 1;
+
             $boxes[$k] = [
                 'key' => '',
                 'class' => '',
@@ -192,6 +193,7 @@ class PaletteBuilder
 
                     $boxes[$k]['key'] = $key;
                     $boxes[$k]['class'] = $class;
+
                     continue;
                 }
 
@@ -222,7 +224,7 @@ class PaletteBuilder
     }
 
     /**
-     * Generate possible palette names from an array by taking the first value and
+     * Generates possible palette names from an array by taking the first value and
      * either adding or not adding the following values.
      */
     public function combiner(array $names): array

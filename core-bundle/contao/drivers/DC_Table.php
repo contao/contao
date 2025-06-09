@@ -2273,6 +2273,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		$security = System::getContainer()->get('security.helper');
+
 		$strButtons = System::getContainer()
 			->get('contao.data_container.buttons_builder')
 			->generateEditButtons(
@@ -2417,6 +2418,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->arrSubmit = array();
 					$this->blnCreateNewVersion = false;
 					$this->strPalette = $this->getPalette();
+
 					$boxes = System::getContainer()->get('contao.data_container.palette_builder')->getBoxes($this->strPalette, $this->strTable, true);
 					$paletteFields = array_merge(...array_column($boxes, 'fields'));
 

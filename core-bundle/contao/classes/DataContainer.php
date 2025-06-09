@@ -812,11 +812,12 @@ abstract class DataContainer extends Backend
 	 *
 	 * @return array
 	 *
-	 * @deprecated Deprecated in Contao 5.6, to be removed in Contao 6.0.
+	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+	 *             use the "contao.data_container.palette_builder" service instead.
 	 */
 	protected function combiner($names)
 	{
-		trigger_deprecation('contao/core-bundle', '5.6', __METHOD__ . ' is deprecated.');
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "contao.data_container.palette_builder" service instead.', __METHOD__);
 
 		return System::getContainer()
 			->get('contao.data_container.palette_builder')

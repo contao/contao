@@ -1469,6 +1469,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$this->intId = $id;
 				$this->initialId = $id;
 				$this->strPalette = $this->getPalette();
+
 				$boxes = System::getContainer()->get('contao.data_container.palette_builder')->getBoxes($this->strPalette, $this->strTable);
 				$paletteFields = array_merge(...array_column($boxes, 'fields'));
 
