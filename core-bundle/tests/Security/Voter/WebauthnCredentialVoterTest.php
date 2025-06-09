@@ -21,7 +21,6 @@ use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Uid\NilUuid;
-use Symfony\Component\Uid\Uuid;
 use Webauthn\TrustPath\EmptyTrustPath;
 
 class WebauthnCredentialVoterTest extends TestCase

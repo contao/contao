@@ -32,7 +32,6 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Uid\NilUuid;
-use Symfony\Component\Uid\Uuid;
 use Webauthn\TrustPath\EmptyTrustPath;
 
 class ManagePasskeysControllerTest extends ContentElementTestCase
