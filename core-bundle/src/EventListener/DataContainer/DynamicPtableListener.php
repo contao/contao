@@ -33,7 +33,8 @@ class DynamicPtableListener
     {
         if (
             !($GLOBALS['TL_DCA'][$table]['config']['dynamicPtable'] ?? null)
-            || !isset($GLOBALS['BE_MOD']) || isset($GLOBALS['TL_DCA'][$table]['config']['ptable'])
+            || !isset($GLOBALS['BE_MOD'])
+            || isset($GLOBALS['TL_DCA'][$table]['config']['ptable'])
         ) {
             return;
         }
