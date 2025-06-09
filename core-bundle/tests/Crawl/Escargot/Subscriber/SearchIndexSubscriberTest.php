@@ -268,18 +268,9 @@ class SearchIndexSubscriberTest extends TestCase
         $subscriber->setEscargot($escargot);
         $subscriber->setLogger(new SubscriberLogger($logger, $subscriber::class));
 
-        $response = $this->mockResponse(true);
-
-        if ($searchIndexerJson) {
-            $response
-                ->method('getContent')
-                ->willReturn('<script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@graph":[{"@type":"Page","pageId":2,"searchIndexer":"'.$searchIndexerJson.'","protected":false,"groups":[],"fePreview":false}]}</script>')
-            ;
-        }
-
         $subscriber->onLastChunk(
             $crawlUri ?? new CrawlUri(new Uri('https://contao.org'), 0),
-            $response,
+            $this->mockResponse(true, 200, 'https://contao.org', $searchIndexerJson),
             $this->createMock(ChunkInterface::class),
         );
 
@@ -511,7 +502,7 @@ class SearchIndexSubscriberTest extends TestCase
         ];
     }
 
-    private function mockResponse(bool $asHtml, int $statusCode = 200, string $url = 'https://contao.org'): ResponseInterface
+    private function mockResponse(bool $asHtml, int $statusCode = 200, string $url = 'https://contao.org', string|null $searchIndexerJson = null): ResponseInterface
     {
         $headers = $asHtml ? ['content-type' => ['text/html']] : [];
 
@@ -537,6 +528,13 @@ class SearchIndexSubscriberTest extends TestCase
                 },
             )
         ;
+
+        if ($searchIndexerJson) {
+            $response
+                ->method('getContent')
+                ->willReturn('<script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@graph":[{"@type":"Page","pageId":2,"searchIndexer":"'.$searchIndexerJson.'","protected":false,"groups":[],"fePreview":false}]}</script>')
+            ;
+        }
 
         return $response;
     }
