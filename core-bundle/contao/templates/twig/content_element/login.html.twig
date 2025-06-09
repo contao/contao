@@ -92,7 +92,7 @@
             %}
             <script{{ script_attributes }}>
                 (function () {
-                    const { startRegistration, browserSupportsWebAuthn } = SimpleWebAuthnBrowser;
+                    const { startAuthentication, browserSupportsWebAuthn } = SimpleWebAuthnBrowser;
 
                     document.querySelectorAll('.content-{{ type|replace({'_': '-'}) }}').forEach((element) => {
                         const button = element.querySelector('.passkey-login')
