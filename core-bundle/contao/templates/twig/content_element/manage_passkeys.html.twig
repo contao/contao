@@ -1,59 +1,61 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
+{% use "@Contao/component/_list.html.twig" %}
 {% trans_default_domain "contao_default" %}
 
 {% block content %}
     {% block passkey_list %}
         {% if credentials|default %}
-            <table>
-                <thead>
-                    <tr>
-                        <th class="name">{{ 'MSC.passkeysName'|trans }}</th>
-                        <th class="created">{{ 'MSC.passkeysCreatedAt'|trans }}</th>
-                        <th class="actions"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for credential in credentials %}
-                        <tr>
-                            <td class="name">
-                                {% if edit_passkey_id|default == credential.id %}
-                                    <form method="post" data-contao--passkeys-target="form" id="form-edit-passkey-{{ data.id }}-{{ credential.id }}">
-                                        <input type="hidden" name="FORM_SUBMIT" value="passkeys_credentials_edit_{{ data.id }}">
-                                        <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
-                                        <input type="hidden" name="credential_id" value="{{ credential.id }}">
-                                        <input type="text" name="passkey_name" value="{{ credential.name }}" placeholder="{{ 'MSC.passkeyNameInput'|trans }}">
-                                    </form>
-                                {% else %}
-                                    {{ credential.name|default(credential.id) }}
-                                {% endif %}
-                            </td>
-                            <td class="created">{{ credential.createdAt|date('j. F Y, H:i') }}</td>
-                            <td class="actions">
-                                <form method="post">
-                                    <input type="hidden" name="FORM_SUBMIT" value="passkeys_credentials_actions_{{ data.id }}">
-                                    <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
-                                    {% if edit_passkey_id|default == credential.id -%}
-                                        <button type="submit" name="save_passkey" form="form-edit-passkey-{{ data.id }}-{{ credential.id }}" value="{{ credential.id }}">{{ 'MSC.save'|trans }}</button>
-                                    {%- else -%}
-                                        <button type="submit" name="edit_passkey" value="{{ credential.id }}">{{ 'MSC.edit'|trans }}</button>
-                                    {%- endif %}
-                                    <button type="submit" name="delete_passkey" value="{{ credential.id }}" onclick="if(!confirm('{{ 'MSC.deleteConfirm'|trans([credential.name|default(credential.id)]) }}'))return false">{{ 'MSC.delete'|trans }}</button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            {% with {items: credentials} %}{{ block('list_component') }}{% endwith %}
         {% endif %}
     {% endblock %}
 
-    <button type="button" class="create">{{ 'MSC.addPasskey'|trans }}</button>
-    <p class="error"></p>
+    {% block passkey_add %}
+        {% set button_attributes = attrs()
+            .set('type', 'button')
+            .addClass('create')
+            .mergeWith(dialog_attributes|default)
+        %}
+        <button{{ button_attributes }}>{{ 'MSC.addPasskey'|trans }}</button>
+        <p class="error"></p>
+    {% endblock %}
+{% endblock %}
+
+{% block list_item_attributes %}
+    {{- attrs(list.item_attributes|default).addClass('passkey') -}}
+{% endblock %}
+
+{% block list_item %}
+    <div class="name">
+        {% if edit_passkey_id|default == item.id %}
+            <form method="post" data-contao--passkeys-target="form" id="form-edit-passkey-{{ data.id }}-{{ item.id }}">
+                <input type="hidden" name="FORM_SUBMIT" value="passkeys_credentials_edit_{{ data.id }}">
+                <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+                <input type="hidden" name="credential_id" value="{{ item.id }}">
+                <input type="text" name="passkey_name" value="{{ item.name }}" placeholder="{{ 'MSC.passkeyNameInput'|trans }}" aria-label="{{ 'MSC.passkeyNameInput'|trans }}">
+            </form>
+        {% else %}
+            {{ item.name|default(item.id) }}
+        {% endif %}
+    </div>
+    <div class="created"><span class="label">{{ 'MSC.passkeysCreatedAt'|trans }}</span> <span class="date">{{ item.createdAt|date(contao.datim_format|default('j. F Y, H:i')) }}</span></div>
+    <div class="actions">
+        <form method="post">
+            <input type="hidden" name="FORM_SUBMIT" value="passkeys_credentials_actions_{{ data.id }}">
+            <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+            {% if edit_passkey_id|default == item.id -%}
+                <button type="submit" name="save_passkey" form="form-edit-passkey-{{ data.id }}-{{ item.id }}" value="{{ item.id }}" aria-label="{{ 'MSC.savePasskey'|trans([item.name|default(item.id)]) }}">{{ 'MSC.save'|trans }}</button>
+            {%- else -%}
+                <button type="submit" name="edit_passkey" value="{{ item.id }}" aria-label="{{ 'MSC.editPasskey'|trans([item.name|default(item.id)]) }}">{{ 'MSC.edit'|trans }}</button>
+            {%- endif %}
+            <button type="submit" name="delete_passkey" value="{{ item.id }}" onclick="if(!confirm('{{ 'MSC.deleteConfirm'|trans([item.name|default(item.id)]) }}'))return false" aria-label="{{ 'MSC.deletePasskey'|trans([item.name|default(item.id)]) }}">{{ 'MSC.delete'|trans }}</button>
+        </form>
+    </div>
 {% endblock %}
 
 {% block script %}
     {% if not as_editor_view %}
         {% add "@simplewebauthn/browser" to body %}
+            {# TODO: integrate as contao-component #}
             <script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.umd.min.js"></script>
         {% endadd %}
 
@@ -64,7 +66,7 @@
             %}
             <script{{ script_attributes }}>
                 (function () {
-                    const { startRegistration } = SimpleWebAuthnBrowser;
+                    const { startRegistration, browserSupportsWebAuthn } = SimpleWebAuthnBrowser;
 
                     document.querySelectorAll('.content-{{ type|replace({'_': '-'}) }}').forEach((element) => {
                         const button = element.querySelector('.create')
@@ -72,6 +74,12 @@
 
                         button.addEventListener('click', async () => {
                             elemError.innerHTML = '';
+
+                            if (!browserSupportsWebAuthn()) {
+                                elemError.innerHTML = '{{ 'ERR.passkeysUnsupported'|trans }}';
+
+                                return;
+                            }
 
                             const resp = await fetch('{{ path('webauthn.controller.creation.request.contao_frontend_add_authenticator') }}', {
                                 method: 'POST',
@@ -82,7 +90,7 @@
                             const optionsJSON = await resp.json();
 
                             if ('error' === optionsJSON.status) {
-                                elemError.innerText = optionsJSON.errorMessage;
+                                elemError.innerText = '{{ 'ERR.passkeyAttestationFailure'|trans }}';
 
                                 return;
                             }
@@ -93,7 +101,7 @@
                                 attResp = await startRegistration({ optionsJSON });
                             } catch (error) {
                                 if (error.name === 'InvalidStateError') {
-                                    elemError.innerText = 'Error: Authenticator was probably already registered by user';
+                                    elemError.innerText = '{{ 'ERR.passkeyInvalidStateError'|trans }}';
                                 } else {
                                     elemError.innerText = error;
                                 }
@@ -110,13 +118,21 @@
                             const verificationJSON = await verificationResp.json();
 
                             if ('error' === optionsJSON.status) {
-                                elemError.innerText = optionsJSON.errorMessage;
+                                elemError.innerText = '{{ 'ERR.passkeyAttestationFailure'|trans }}';
 
                                 return;
                             }
 
-                            window.location = '{{ success_redirect }}';
+                            window.location = '{{ success_redirect|raw }}';
                         });
+
+                        // Set focus on name input, if available
+                        const edit = element.querySelector('input[name="passkey_name"]');
+
+                        if (edit) {
+                            edit.focus();
+                            edit.select();
+                        }
                     });
                 })();
             </script>

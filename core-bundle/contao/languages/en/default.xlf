@@ -305,6 +305,9 @@
       <trans-unit id="ERR.passkeyAttestationFailure">
         <source>Passkey could not be created.</source>
       </trans-unit>
+      <trans-unit id="ERR.passkeyInvalidStateError">
+        <source>Authenticator was already registered by user.</source>
+      </trans-unit>
       <trans-unit id="ERR.copyUnique">
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
       </trans-unit>
@@ -2254,6 +2257,15 @@
       </trans-unit>
       <trans-unit id="MSC.addPasskey">
         <source>Add passkey</source>
+      </trans-unit>
+      <trans-unit id="MSC.editPasskey">
+        <source>Edit passkey "%s"</source>
+      </trans-unit>
+      <trans-unit id="MSC.savePasskey">
+        <source>Save passkey "%s"</source>
+      </trans-unit>
+      <trans-unit id="MSC.deletePasskey">
+        <source>Delete passkey "%s"</source>
       </trans-unit>
       <trans-unit id="MSC.searchResultsPlaceholder">
         <source>Type to start searching</source>

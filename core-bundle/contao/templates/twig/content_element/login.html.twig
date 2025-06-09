@@ -92,7 +92,7 @@
             %}
             <script{{ script_attributes }}>
                 (function () {
-                    const { startAuthentication } = SimpleWebAuthnBrowser;
+                    const { startRegistration, browserSupportsWebAuthn } = SimpleWebAuthnBrowser;
 
                     document.querySelectorAll('.content-{{ type|replace({'_': '-'}) }}').forEach((element) => {
                         const button = element.querySelector('.passkey-login')
@@ -100,6 +100,12 @@
 
                         button.addEventListener('click', async () => {
                             elemError.innerHTML = '';
+
+                            if (!browserSupportsWebAuthn()) {
+                                elemError.innerHTML = '{{ 'ERR.passkeysUnsupported'|trans }}';
+
+                                return;
+                            }
 
                             const resp = await fetch('{{ path('webauthn.controller.security.contao_frontend.request.options') }}', {
                                 method: 'POST',
@@ -116,7 +122,7 @@
                             const optionsJSON = await resp.json();
 
                             if ('error' === optionsJSON.status) {
-                                elemError.innerText = optionsJSON.errorMessage;
+                                elemError.innerText = '{{ 'ERR.passkeyAssertionFailure'|trans }}';
 
                                 return;
                             }
@@ -126,7 +132,7 @@
                             try {
                                 attResp = await startAuthentication({ optionsJSON });
                             } catch (error) {
-                                elemError.innerText = error;
+                                elemError.innerText = '{{ 'ERR.passkeyAssertionFailure'|trans }}';
 
                                 throw error;
                             }
@@ -140,7 +146,7 @@
                             const verificationJSON = await verificationResp.json();
 
                             if ('error' === optionsJSON.status) {
-                                elemError.innerText = optionsJSON.errorMessage;
+                                elemError.innerText = '{{ 'ERR.passkeyAssertionFailure'|trans }}';
 
                                 return;
                             }

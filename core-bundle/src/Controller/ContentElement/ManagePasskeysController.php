@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 #[AsContentElement]
 class ManagePasskeysController extends AbstractContentElementController
@@ -83,10 +84,8 @@ class ManagePasskeysController extends AbstractContentElementController
         }
 
         $template->credentials = $this->credentialRepo->getAllForUser($user);
-        $template->edit_passkey_id = $request->query->get('edit_passkey');
-        $template->success_redirect = $this->uriSigner->sign(
-            $this->contentUrlGenerator->generate($page, ['edit_new_passkey' => 1]),
-        );
+        $template->edit_passkey_id ??= $request->query->get('edit_passkey');
+        $template->success_redirect = $this->uriSigner->sign($this->contentUrlGenerator->generate($page, ['edit_new_passkey' => 1], UrlGeneratorInterface::ABSOLUTE_URL));
 
         return $template->getResponse();
     }
