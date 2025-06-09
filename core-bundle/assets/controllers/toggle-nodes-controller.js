@@ -58,7 +58,7 @@ export default class extends Controller {
             el.title = this.collapseValue;
         }
 
-        for (const image of el.getElements('img')) {
+        for (const image of el.querySelectorAll('img')) {
             image.alt = this.collapseValue;
         }
     }
@@ -70,7 +70,7 @@ export default class extends Controller {
             el.title = this.expandValue;
         }
 
-        for (const image of el.getElements('img')) {
+        for (const image of el.querySelectorAll('img')) {
             image.alt = this.expandValue;
         }
     }

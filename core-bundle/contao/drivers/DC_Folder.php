@@ -1257,44 +1257,21 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$GLOBALS['TL_DCA'][$this->strTable]['fields'] = array_intersect_key($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array(), array('name' => true, 'protected' => true, 'syncExclude' => true));
 		}
 
-		$security = System::getContainer()->get('security.helper');
-
-		// Build an array from boxes and rows (do not show excluded fields)
 		$this->strPalette = $this->getPalette();
-		$boxes = StringUtil::trimsplit(';', $this->strPalette);
+		$boxes = System::getContainer()->get('contao.data_container.palette_builder')->getBoxes($this->strPalette, $this->strTable);
 
 		if (!empty($boxes))
 		{
-			// Get fields
-			foreach ($boxes as $k=>$v)
-			{
-				$boxes[$k] = StringUtil::trimsplit(',', $v);
-
-				foreach ($boxes[$k] as $kk=>$vv)
-				{
-					if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]) || (DataContainer::isFieldExcluded($this->strTable, $vv) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $vv)))
-					{
-						unset($boxes[$k][$kk]);
-					}
-				}
-
-				// Unset a box if it does not contain any fields
-				if (empty($boxes[$k]))
-				{
-					unset($boxes[$k]);
-				}
-			}
-
 			// Render boxes
 			$class = 'tl_tbox';
 
-			foreach ($boxes as $v)
+			foreach ($boxes as $box)
 			{
 				$return .= '
 <div class="' . $class . ' cf">';
 
 				// Build rows of the current box
-				foreach ($v as $vv)
+				foreach ($box['fields'] as $vv)
 				{
 					$this->strField = $vv;
 					$this->strInputName = $vv;
@@ -1496,7 +1473,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				$this->intId = $id;
 				$this->initialId = $id;
-				$this->strPalette = StringUtil::trimsplit('[;,]', $this->getPalette());
+				$this->strPalette = $this->getPalette();
+
+				$boxes = System::getContainer()->get('contao.data_container.palette_builder')->getBoxes($this->strPalette, $this->strTable);
+				$paletteFields = array_merge(...array_column($boxes, 'fields'));
 
 				$objModel = null;
 				$objVersions = null;
@@ -1522,7 +1502,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				else
 				{
 					// Unset the database fields
-					$this->strPalette = array_filter($this->strPalette, static function ($val) { return $val == 'name' || $val == 'protected'; });
+					$paletteFields = array_filter($paletteFields, static function ($val) { return $val == 'name' || $val == 'protected'; });
 				}
 
 				$return .= '
@@ -1531,15 +1511,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$class = 'tl_box';
 				$strHash = md5($id);
 
-				foreach ($this->strPalette as $v)
+				foreach ($paletteFields as $v)
 				{
 					if (!\in_array($v, $fields))
-					{
-						continue;
-					}
-
-					// Check whether field is excluded
-					if (DataContainer::isFieldExcluded($this->strTable, $v) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $v))
 					{
 						continue;
 					}
@@ -2211,25 +2185,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 */
 	public function getPalette()
 	{
-		$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes']['default'];
-
-		// Call onpalette_callback
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] as $callback)
-			{
-				if (\is_array($callback))
-				{
-					$strPalette = System::importStatic($callback[0])->{$callback[1]}($strPalette, $this);
-				}
-				elseif (\is_callable($callback))
-				{
-					$strPalette = $callback($strPalette, $this);
-				}
-			}
-		}
-
-		return $strPalette;
+		return System::getContainer()
+			->get('contao.data_container.palette_builder')
+			->getPalette($this->strTable, (int) $this->intId, $this)
+		;
 	}
 
 	/**
