@@ -2020,82 +2020,28 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$objVersions->initialize();
 		$intLatestVersion = $objVersions->getLatestVersion();
 
-		$security = System::getContainer()->get('security.helper');
-
-		// Build an array from boxes and rows
 		$this->strPalette = $this->getPalette();
-		$boxes = StringUtil::trimsplit(';', $this->strPalette);
-		$legends = array();
+		$boxes = System::getContainer()->get('contao.data_container.palette_builder')->getBoxes($this->strPalette, $this->strTable);
 
 		if (!empty($boxes))
 		{
-			foreach ($boxes as $k=>$v)
-			{
-				$eCount = 1;
-				$boxes[$k] = StringUtil::trimsplit(',', $v);
-
-				foreach ($boxes[$k] as $kk=>$vv)
-				{
-					if (preg_match('/^\[.*]$/', $vv))
-					{
-						++$eCount;
-						continue;
-					}
-
-					if (preg_match('/^{.*}$/', $vv))
-					{
-						$legends[$k] = substr($vv, 1, -1);
-						unset($boxes[$k][$kk]);
-					}
-					elseif (!\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv] ?? null) || (DataContainer::isFieldExcluded($this->strTable, $vv) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $vv)))
-					{
-						unset($boxes[$k][$kk]);
-					}
-				}
-
-				// Unset a box if it does not contain any fields
-				if (\count($boxes[$k]) < $eCount)
-				{
-					unset($boxes[$k]);
-				}
-			}
-
-			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-
 			$class = 'tl_tbox';
-			$fs = $objSessionBag->get('fieldset_states');
 
 			// Render boxes
-			foreach ($boxes as $k=>$v)
+			foreach ($boxes as $box)
 			{
 				$arrAjax = array();
 				$blnAjax = false;
-				$key = '';
-				$cls = '';
+				$key = $box['key'];
 				$legend = '';
 
-				if (isset($legends[$k]))
+				if ($key)
 				{
-					list($key, $cls) = explode(':', $legends[$k]) + array(null, null);
-
 					$legend = "\n" . '<legend><button type="button" data-action="contao--toggle-fieldset#toggle">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</button></legend>';
-				}
 
-				if ($legend)
-				{
-					if (isset($fs[$this->strTable][$key]))
+					if ($box['class'])
 					{
-						$class .= ($fs[$this->strTable][$key] ? '' : ' collapsed');
-					}
-					elseif ($cls)
-					{
-						// Convert the ":hide" suffix from the DCA
-						if ($cls == 'hide')
-						{
-							$cls = 'collapsed';
-						}
-
-						$class .= ' ' . $cls;
+						$class .= ' ' . $box['class'];
 					}
 				}
 
@@ -2103,7 +2049,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$thisId = '';
 
 				// Build rows of the current box
-				foreach ($v as $vv)
+				foreach ($box['fields'] as $vv)
 				{
 					if ($vv == '[EOF]')
 					{
@@ -2326,6 +2272,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$version = '';
 		}
 
+		$security = System::getContainer()->get('security.helper');
+
 		$strButtons = System::getContainer()
 			->get('contao.data_container.buttons_builder')
 			->generateEditButtons(
@@ -2469,7 +2417,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->values = array($this->intId);
 					$this->arrSubmit = array();
 					$this->blnCreateNewVersion = false;
-					$this->strPalette = StringUtil::trimsplit('[;,]', $this->getPalette());
+					$this->strPalette = $this->getPalette();
+
+					$boxes = System::getContainer()->get('contao.data_container.palette_builder')->getBoxes($this->strPalette, $this->strTable, true);
+					$paletteFields = array_merge(...array_column($boxes, 'fields'));
 
 					// Reset the "noReload" state but remember it for the final handling
 					$blnNoReload = $blnNoReload || $this->noReload;
@@ -2478,41 +2429,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$objVersions = new Versions($this->strTable, $this->intId);
 					$objVersions->initialize();
 
-					// Add meta fields if the current user is an administrator
-					if ($user->isAdmin)
-					{
-						if ($db->fieldExists('sorting', $this->strTable))
-						{
-							array_unshift($this->strPalette, 'sorting');
-						}
-
-						if ($db->fieldExists('pid', $this->strTable))
-						{
-							array_unshift($this->strPalette, 'pid');
-						}
-					}
-
 					// Begin current row
 					$arrAjax = array();
 					$blnAjax = false;
 					$thisId = '';
 					$box = '';
 
-					$excludedFields = array();
-
 					// Store the active record (backwards compatibility)
 					$this->objActiveRecord = (object) $currentRecord;
 
-					foreach ($this->strPalette as $v)
+					foreach ($paletteFields as $v)
 					{
-						// Check whether field is excluded
-						if (isset($excludedFields[$v]) || (DataContainer::isFieldExcluded($this->strTable, $v) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $v)))
-						{
-							$excludedFields[$v] = true;
-
-							continue;
-						}
-
 						if ($v == '[EOF]')
 						{
 							if ($blnAjax && Environment::get('isAjaxRequest'))
@@ -3342,131 +3269,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function getPalette()
 	{
-		$palette = 'default';
-		$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes'][$palette] ?? '';
-
-		// Check whether there are selector fields
-		if (!empty($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']))
-		{
-			$sValues = array();
-			$subpalettes = array();
-
-			try
-			{
-				$currentRow = $this->getCurrentRecord();
-			}
-			catch (AccessDeniedException)
-			{
-				$currentRow = null;
-			}
-
-			// Get selector values from DB
-			if (null !== $currentRow)
-			{
-				foreach ($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__'] as $name)
-				{
-					$trigger = $currentRow[$name] ?? null;
-
-					// Overwrite the trigger
-					if (Input::post('FORM_SUBMIT') == $this->strTable)
-					{
-						$key = (Input::get('act') == 'editAll') ? $name . '_' . $this->intId : $name;
-
-						if (Input::post($key) !== null)
-						{
-							$trigger = Input::post($key);
-						}
-					}
-
-					if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['multiple'] ?? null))
-					{
-						if ($trigger)
-						{
-							$sValues[] = $name;
-
-							// Look for a subpalette
-							if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$name]))
-							{
-								$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$name];
-							}
-						}
-					}
-					else
-					{
-						// Use string comparison to allow "0"
-						if ((string) $trigger !== '')
-						{
-							$sValues[] = (string) $trigger;
-						}
-
-						$key = $name . '_' . $trigger;
-
-						// Look for a subpalette
-						if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key]))
-						{
-							$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key];
-						}
-					}
-				}
-			}
-
-			// Build possible palette names from the selector values
-			if (empty($sValues))
-			{
-				$names = array('default');
-			}
-			elseif (\count($sValues) > 1)
-			{
-				foreach ($sValues as $k=>$v)
-				{
-					// Unset selectors that just trigger sub-palettes (see #3738)
-					if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$v]))
-					{
-						unset($sValues[$k]);
-					}
-				}
-
-				$names = $this->combiner($sValues);
-			}
-			else
-			{
-				$names = array($sValues[0]);
-			}
-
-			// Get an existing palette
-			foreach ($names as $paletteName)
-			{
-				if (isset($GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName]))
-				{
-					$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName];
-					break;
-				}
-			}
-
-			// Include sub-palettes
-			foreach ($subpalettes as $k=>$v)
-			{
-				$strPalette = preg_replace('/\b' . preg_quote($k, '/') . '\b/i', $k . ',[' . $k . '],' . $v . ',[EOF]', $strPalette);
-			}
-		}
-
-		// Call onpalette_callback
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] as $callback)
-			{
-				if (\is_array($callback))
-				{
-					$strPalette = System::importStatic($callback[0])->{$callback[1]}($strPalette, $this);
-				}
-				elseif (\is_callable($callback))
-				{
-					$strPalette = $callback($strPalette, $this);
-				}
-			}
-		}
-
-		return $strPalette;
+		return System::getContainer()
+			->get('contao.data_container.palette_builder')
+			->getPalette($this->strTable, (int) $this->intId, $this)
+		;
 	}
 
 	/**

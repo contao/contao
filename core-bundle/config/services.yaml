@@ -232,6 +232,15 @@ services:
             - '@security.helper'
             - '@router'
 
+    contao.data_container.palette_builder:
+        class: Contao\CoreBundle\DataContainer\PaletteBuilder
+        public: true
+        arguments:
+            - '@contao.framework'
+            - '@request_stack'
+            - '@security.helper'
+            - '@database_connection'
+
     contao.data_container.record_labeler:
         class: Contao\CoreBundle\DataContainer\RecordLabeler
         public: true
