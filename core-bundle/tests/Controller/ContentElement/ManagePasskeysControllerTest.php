@@ -31,6 +31,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Uid\NilUuid;
 use Symfony\Component\Uid\Uuid;
 use Webauthn\TrustPath\EmptyTrustPath;
 
@@ -151,7 +152,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
             ['transport'],
             'attestationType',
             EmptyTrustPath::create(),
-            Uuid::fromString('00000000-0000-0000-0000-000000000000'),
+            new NilUuid(),
             'credentialPublicKey',
             'username',
             1,
@@ -195,7 +196,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
             ['transport'],
             'attestationType',
             EmptyTrustPath::create(),
-            Uuid::fromString('00000000-0000-0000-0000-000000000000'),
+            new NilUuid(),
             'credentialPublicKey',
             'username',
             1,
@@ -253,7 +254,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
             ['transport'],
             'attestationType',
             EmptyTrustPath::create(),
-            Uuid::fromString('00000000-0000-0000-0000-000000000000'),
+            new NilUuid(),
             'credentialPublicKey',
             'username',
             1,
@@ -309,7 +310,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
             ['transport'],
             'attestationType',
             EmptyTrustPath::create(),
-            Uuid::fromString('00000000-0000-0000-0000-000000000000'),
+            new NilUuid(),
             'credentialPublicKey',
             'username',
             1,
@@ -360,7 +361,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
             ['transport'],
             'attestationType',
             EmptyTrustPath::create(),
-            Uuid::fromString('00000000-0000-0000-0000-000000000000'),
+            new NilUuid(),
             'credentialPublicKey',
             'username',
             1,

@@ -20,6 +20,7 @@ use Contao\FrontendUser;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Symfony\Component\Uid\NilUuid;
 use Symfony\Component\Uid\Uuid;
 use Webauthn\TrustPath\EmptyTrustPath;
 
@@ -93,7 +94,7 @@ class WebauthnCredentialVoterTest extends TestCase
             ['transport'],
             'attestationType',
             EmptyTrustPath::create(),
-            Uuid::fromString('00000000-0000-0000-0000-000000000000'),
+            new NilUuid(),
             'credentialPublicKey',
             'frontend.42',
             1,
@@ -124,7 +125,7 @@ class WebauthnCredentialVoterTest extends TestCase
             ['transport'],
             'attestationType',
             EmptyTrustPath::create(),
-            Uuid::fromString('00000000-0000-0000-0000-000000000000'),
+            new NilUuid(),
             'credentialPublicKey',
             'frontend.42',
             1,
