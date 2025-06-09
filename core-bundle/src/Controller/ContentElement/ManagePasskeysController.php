@@ -19,7 +19,6 @@ use Contao\CoreBundle\Repository\WebauthnCredentialRepository;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +30,6 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 class ManagePasskeysController extends AbstractContentElementController
 {
     public function __construct(
-        private readonly Security $security,
         private readonly WebauthnCredentialRepository $credentialRepo,
         private readonly UriSigner $uriSigner,
         private readonly ContentUrlGenerator $contentUrlGenerator,
@@ -40,8 +38,8 @@ class ManagePasskeysController extends AbstractContentElementController
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        if (!($user = $this->security->getUser()) instanceof FrontendUser || !$page = $this->getPageModel()) {
-            return $template->getResponse();
+        if (!($user = $this->getUser()) instanceof FrontendUser || !$page = $this->getPageModel()) {
+            return new Response(status: Response::HTTP_NO_CONTENT);
         }
 
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY', message: 'Full authentication is required to manage the passkeys.');

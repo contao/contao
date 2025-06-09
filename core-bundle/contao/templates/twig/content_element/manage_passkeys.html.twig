@@ -26,16 +26,16 @@
 
 {% block list_item %}
     <div class="name">
-        {% if edit_passkey_id|default == item.id %}
+        {%- if edit_passkey_id|default == item.id -%}
             <form method="post" data-contao--passkeys-target="form" id="form-edit-passkey-{{ data.id }}-{{ item.id }}">
                 <input type="hidden" name="FORM_SUBMIT" value="passkeys_credentials_edit_{{ data.id }}">
                 <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
                 <input type="hidden" name="credential_id" value="{{ item.id }}">
                 <input type="text" name="passkey_name" value="{{ item.name }}" placeholder="{{ 'MSC.passkeyNameInput'|trans }}" aria-label="{{ 'MSC.passkeyNameInput'|trans }}">
             </form>
-        {% else %}
-            {{ item.name|default(item.id) }}
-        {% endif %}
+        {%- else -%}
+            {{- item.name|default(item.id) -}}
+        {%- endif -%}
     </div>
     <div class="created"><span class="label">{{ 'MSC.passkeysCreatedAt'|trans }}</span> <span class="date">{{ item.createdAt|date(contao.datim_format|default('j. F Y, H:i')) }}</span></div>
     <div class="actions">
