@@ -33,12 +33,11 @@ class JobsListener
     public function __invoke(): void
     {
         $request = $this->requestStack->getCurrentRequest();
+        $userIdentifier = $this->security->getUser()?->getUserIdentifier();
 
-        if (!$request) {
+        if (!$request || !$userIdentifier) {
             return;
         }
-
-        $userIdentifier = $this->security->getUser()?->getUserIdentifier();
 
         // Job children view
         if ($request->query->has('ptable')) {
