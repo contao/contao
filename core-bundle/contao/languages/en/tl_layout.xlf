@@ -338,9 +338,6 @@
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
       </trans-unit>
-      <trans-unit id="tl_layout.edit_styles">
-        <source>Edit the style sheets</source>
-      </trans-unit>
       <trans-unit id="tl_layout.edit_module">
         <source>Edit the module</source>
       </trans-unit>
