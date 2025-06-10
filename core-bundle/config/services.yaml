@@ -203,6 +203,7 @@ services:
         class: Contao\CoreBundle\DataContainer\ClipboardManager
         public: true
         arguments:
+            - '@contao.framework'
             - '@request_stack'
 
     contao.data_container.dca_request_switcher:
@@ -230,6 +231,15 @@ services:
             - '@twig'
             - '@security.helper'
             - '@router'
+
+    contao.data_container.palette_builder:
+        class: Contao\CoreBundle\DataContainer\PaletteBuilder
+        public: true
+        arguments:
+            - '@contao.framework'
+            - '@request_stack'
+            - '@security.helper'
+            - '@database_connection'
 
     contao.data_container.record_labeler:
         class: Contao\CoreBundle\DataContainer\RecordLabeler
