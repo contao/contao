@@ -1008,6 +1008,9 @@ class ContaoCoreExtensionTest extends TestCase
                     'target' => 'list.label.label',
                     'priority' => 32,
                     'method' => 'someMethod',
+                    'exact' => null,
+                    'singleton' => null,
+                    'closure' => null,
                 ],
             )
         ;

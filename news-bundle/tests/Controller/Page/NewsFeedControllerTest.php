@@ -14,7 +14,6 @@ namespace Contao\NewsBundle\Tests\Controller\Page;
 
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Cache\CacheTagManager;
-use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\NewsBundle\Controller\Page\NewsFeedController;
 use Contao\NewsBundle\Event\FetchArticlesForFeedEvent;
@@ -102,12 +101,21 @@ class NewsFeedControllerTest extends ContaoTestCase
             'feedDescription' => 'Get latest news',
             'feedFormat' => 'rss',
             'language' => 'en',
+            'newsArchives' => serialize([8472]),
         ]);
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
         $container->set('event_dispatcher', $this->createMock(EventDispatcher::class));
-        $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
+
+        $cacheTagManager = $this->createMock(CacheTagManager::class);
+        $cacheTagManager
+            ->expects($this->once())
+            ->method('tagWith')
+            ->with(['contao.db.tl_news_archive.8472'])
+        ;
+
+        $container->set('contao.cache.tag_manager', $cacheTagManager);
 
         $controller = $this->getController();
         $controller->setContainer($container);
@@ -133,6 +141,13 @@ class NewsFeedControllerTest extends ContaoTestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
         $container->set('event_dispatcher', $this->createMock(EventDispatcher::class));
+
+        $cacheTagManager = $this->createMock(CacheTagManager::class);
+        $cacheTagManager
+            ->expects($this->never())
+            ->method('tagWith')
+        ;
+
         $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
 
         $controller = $this->getController();
@@ -163,7 +178,6 @@ class NewsFeedControllerTest extends ContaoTestCase
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
-        $container->set('contao.cache.entity_tags', $this->createMock(EntityCacheTags::class));
         $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
 
         $dispatcher = $this->createMock(EventDispatcher::class);
