@@ -130,7 +130,7 @@ class CoreResponseContextFactoryTest extends TestCase
     }
 
     #[DataProvider('contaoWebpageResponseContext')]
-    public function testContaoWebpageResponseContext(array $groups, array $currentGroups): void
+    public function testContaoWebpageResponseContext(array $groups, array $memberGroups): void
     {
         $responseAccessor = $this->createMock(ResponseContextAccessor::class);
         $responseAccessor
@@ -163,13 +163,13 @@ class CoreResponseContextFactoryTest extends TestCase
         ;
 
         $user = $this->mockClassWithProperties(FrontendUser::class);
-        $user->groups = serialize($currentGroups);
+        $user->groups = serialize($memberGroups);
 
         $security = $this->createMock(Security::class);
         $security
             ->expects($this->once())
             ->method('getUser')
-            ->willReturn([] === $currentGroups ? null : $user)
+            ->willReturn([] === $memberGroups ? null : $user)
         ;
 
         $pageModel = $this->mockClassWithProperties(PageModel::class);
@@ -224,7 +224,7 @@ class CoreResponseContextFactoryTest extends TestCase
                 'protected' => [] !== $groups,
                 'groups' => $groups,
                 'fePreview' => false,
-                'currentGroups' => $currentGroups,
+                'memberGroups' => $memberGroups,
             ],
             $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray(),
         );
@@ -346,7 +346,7 @@ class CoreResponseContextFactoryTest extends TestCase
                 'protected' => false,
                 'groups' => [],
                 'fePreview' => false,
-                'currentGroups' => [],
+                'memberGroups' => [],
             ],
             $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray(),
         );

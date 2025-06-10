@@ -104,9 +104,9 @@ class JsonLdManagerTest extends TestCase
                     "@graph": [
                         {
                             "@type": "Page",
-                            "currentGroups": [],
                             "fePreview": false,
                             "groups": [],
+                            "memberGroups": [],
                             "noSearch": false,
                             "pageId": 42,
                             "protected": false,

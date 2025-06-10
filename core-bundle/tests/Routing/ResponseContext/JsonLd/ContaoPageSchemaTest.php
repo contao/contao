@@ -27,7 +27,7 @@ class ContaoPageSchemaTest extends TestCase
         $this->assertFalse($schema->isNoSearch());
         $this->assertFalse($schema->isProtected());
         $this->assertSame([1, 2, 3], $schema->getGroups());
-        $this->assertSame([2], $schema->getCurrentGroups());
+        $this->assertSame([2], $schema->getMemberGroups());
         $this->assertFalse($schema->isFePreview());
 
         $schema->setTitle('Foobar');
