@@ -78,6 +78,17 @@ class JobsTest extends TestCase
         $jobs->createUserJob('job-type');
     }
 
+    public function testEncodesAndDecodesDataCorrectlyForDCTable(): void
+    {
+        $jobs = $this->getJobs();
+        $job = $jobs->createUserJob('strange > type', "Kevin's Name is <bold>");
+
+        $job = $jobs->getByUuid($job->getUuid());
+
+        $this->assertSame('strange > type', $job->getType());
+        $this->assertSame("Kevin's Name is <bold>", $job->getOwner()->getIdentifier());
+    }
+
     private function getJobs(Security|null $security = null): Jobs
     {
         $connection = $this->createInMemorySQLiteConnection(

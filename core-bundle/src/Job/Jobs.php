@@ -240,8 +240,8 @@ class Jobs
             $row['uuid'],
             \DateTimeImmutable::createFromFormat('U', (string) $row['tstamp']),
             Status::from($row['status']),
-            $row['type'],
-            new Owner($row['owner']),
+            StringUtil::decodeEntities($row['type']), // Decode because it's encoded for DC_Table
+            new Owner(StringUtil::decodeEntities($row['owner'])), // Decode because it's encoded for DC_Table
         );
 
         if (Owner::SYSTEM === $job->getOwner()->getIdentifier()) {
