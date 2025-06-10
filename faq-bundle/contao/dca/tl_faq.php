@@ -302,7 +302,7 @@ class tl_faq extends Backend
 		if (!$objFaqCategory->jumpTo)
 		{
 			PaletteManipulator::create()
-				->removeField(array('pageTitle', 'robots', 'description', 'serpPreview'), 'meta_legend')
+				->removeField(array('pageTitle', 'robots', 'description', 'serpPreview', 'searchIndexer'), 'meta_legend')
 				->applyToPalette('default', 'tl_faq');
 		}
 	}
