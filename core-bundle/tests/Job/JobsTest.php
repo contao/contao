@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Job;
 
+use Contao\CoreBundle\Job\Job;
 use Contao\CoreBundle\Job\Jobs;
 use Contao\CoreBundle\Job\Owner;
 use Contao\CoreBundle\Tests\TestCase;
@@ -32,25 +33,10 @@ class JobsTest extends TestCase
     #[DataProvider('createJobProvider')]
     public function testCreateJob(bool $userLoggedIn): void
     {
-        $username = 'foobar';
-        $userMock = $this->createMock(UserInterface::class);
-        $userMock
-            ->expects($userLoggedIn ? $this->once() : $this->never())
-            ->method('getUserIdentifier')
-            ->willReturn($username)
-        ;
-
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($userLoggedIn ? $userMock : null)
-        ;
-
-        $jobs = $this->getJobs($security);
+        $jobs = $this->getJobs($this->mockSecurity($userLoggedIn ? 'foobar' : null));
         $job = $jobs->createJob('job-type');
 
-        $this->assertSame($userLoggedIn ? $username : Owner::SYSTEM, $job->getOwner()->getIdentifier());
+        $this->assertSame($userLoggedIn ? 'foobar' : Owner::SYSTEM, $job->getOwner()->getIdentifier());
     }
 
     public function testCreateSystemJob(): void
@@ -66,14 +52,7 @@ class JobsTest extends TestCase
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Cannot create a user job without having a user id.');
 
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn(null)
-        ;
-
-        $jobs = $this->getJobs($security);
+        $jobs = $this->getJobs($this->mockSecurity());
 
         $jobs->createUserJob('job-type');
     }
@@ -87,6 +66,60 @@ class JobsTest extends TestCase
 
         $this->assertSame('strange > type', $job->getType());
         $this->assertSame("Kevin's Name is <bold>", $job->getOwner()->getIdentifier());
+    }
+
+    public function testFindingMyNewOrPendingRestrictsCorrectly(): void
+    {
+        $securityUser1 = $this->mockSecurity('user-1');
+        $securityUser2 = $this->mockSecurity('user-2');
+
+        $jobsUser1 = $this->getJobs($securityUser1);
+        $jobsUser2 = $this->getJobs($securityUser2);
+
+        $uuid1 = $jobsUser1->createUserJob('my-type')->getUuid();
+        $uuid2 = $jobsUser1->createSystemJob('my-type')->getUuid();
+        $uuid3 = $jobsUser1->createSystemJob('my-type', false)->getUuid();
+        $uuid4 = $jobsUser2->createUserJob('my-type')->getUuid();
+
+        $this->assertContains($uuid1, $this->jobsToUuids($jobsUser1->findMyNewOrPending()));
+        $this->assertContains($uuid2, $this->jobsToUuids($jobsUser1->findMyNewOrPending()));
+        $this->assertNotContains($uuid3, $this->jobsToUuids($jobsUser1->findMyNewOrPending()));
+        $this->assertNotContains($uuid4, $this->jobsToUuids($jobsUser1->findMyNewOrPending()));
+
+        $this->assertNotContains($uuid1, $this->jobsToUuids($jobsUser2->findMyNewOrPending()));
+        $this->assertNotContains($uuid2, $this->jobsToUuids($jobsUser2->findMyNewOrPending()));
+        $this->assertNotContains($uuid3, $this->jobsToUuids($jobsUser2->findMyNewOrPending()));
+        $this->assertContains($uuid4, $this->jobsToUuids($jobsUser2->findMyNewOrPending()));
+    }
+
+    private function mockSecurity(string|null $username = null): Security
+    {
+        $username = 'foobar';
+        $userMock = $this->createMock(UserInterface::class);
+        $userMock
+            ->expects($username ? $this->atLeastOnce() : $this->never())
+            ->method('getUserIdentifier')
+            ->willReturn($username)
+        ;
+
+        $security = $this->createMock(Security::class);
+        $security
+            ->expects($this->atLeastOnce())
+            ->method('getUser')
+            ->willReturn($username ? $userMock : null)
+        ;
+
+        return $security;
+    }
+
+    /**
+     * @param array<Job> $jobs
+     *
+     * @return array<string>
+     */
+    private function jobsToUuids(array $jobs): array
+    {
+        return array_map(static fn (Job $job) => $job->getUuid(), $jobs);
     }
 
     private function getJobs(Security|null $security = null): Jobs

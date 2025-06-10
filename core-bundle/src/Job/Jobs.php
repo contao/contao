@@ -33,9 +33,9 @@ class Jobs
         return $this->createUserJob($type, $userId);
     }
 
-    public function createSystemJob(string $type): Job
+    public function createSystemJob(string $type, bool $public = true): Job
     {
-        return $this->doCreateJob($type, Owner::asSystem());
+        return $this->doCreateJob($type, Owner::asSystem(), $public);
     }
 
     public function createUserJob(string $type, string|null $userId = null): Job
@@ -143,9 +143,14 @@ class Jobs
         return $child;
     }
 
-    private function doCreateJob(string $type, Owner $owner): Job
+    private function doCreateJob(string $type, Owner $owner, bool $public = true): Job
     {
         $job = Job::new($type, $owner);
+
+        if (Owner::SYSTEM === $job->getOwner()->getIdentifier()) {
+            $job = $job->withIsPublic($public);
+        }
+
         $this->persist($job);
 
         return $job;
