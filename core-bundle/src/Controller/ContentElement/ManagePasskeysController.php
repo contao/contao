@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\UriSigner;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-#[AsContentElement]
+#[AsContentElement(category: 'user')]
 class ManagePasskeysController extends AbstractContentElementController
 {
     public function __construct(

@@ -542,6 +542,9 @@
       <trans-unit id="CTE.manage_passkeys.1">
         <source>Manages Passkeys for the front end member.</source>
       </trans-unit>
+      <trans-unit id="CTE.user">
+        <source>User</source>
+      </trans-unit>
       <trans-unit id="CTE.login.0">
         <source>Login form</source>
       </trans-unit>

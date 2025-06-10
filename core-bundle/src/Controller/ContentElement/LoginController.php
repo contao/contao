@@ -28,7 +28,7 @@ use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-#[AsContentElement]
+#[AsContentElement(category: 'user')]
 class LoginController extends AbstractContentElementController
 {
     public function __construct(
