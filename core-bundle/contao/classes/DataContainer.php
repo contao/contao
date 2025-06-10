@@ -596,17 +596,15 @@ abstract class DataContainer extends Backend
 
 			$wizard .= ' ' . Image::getHtml('assets/datepicker/images/icon.svg', $GLOBALS['TL_LANG']['MSC']['datepicker'], 'id="toggle_' . $objWidget->id . '" style="cursor:pointer" data-contao--tooltips-target="tooltip"') . '
   <script>
-    window.addEvent("domready", function() {
-      new Picker.Date($("ctrl_' . $objWidget->id . '"), {
-        draggable: false,
-        toggle: $("toggle_' . $objWidget->id . '"),
-        format: "' . $format . '",
-        positionOffset: {x:-211,y:-209}' . $time . ',
-        pickerClass: "datepicker_bootstrap",
-        useFadeInOut: !Browser.ie' . $strOnSelect . ',
-        startDay: ' . $GLOBALS['TL_LANG']['MSC']['weekOffset'] . ',
-        titleFormat: "' . $GLOBALS['TL_LANG']['MSC']['titleFormat'] . '"
-      });
+    new Picker.Date($("ctrl_' . $objWidget->id . '"), {
+      draggable: false,
+      toggle: $("toggle_' . $objWidget->id . '"),
+      format: "' . $format . '",
+      positionOffset: {x:-211,y:-209}' . $time . ',
+      pickerClass: "datepicker_bootstrap",
+      useFadeInOut: !Browser.ie' . $strOnSelect . ',
+      startDay: ' . $GLOBALS['TL_LANG']['MSC']['weekOffset'] . ',
+      titleFormat: "' . $GLOBALS['TL_LANG']['MSC']['titleFormat'] . '"
     });
   </script>';
 		}
@@ -813,26 +811,18 @@ abstract class DataContainer extends Backend
 	 * @param array $names
 	 *
 	 * @return array
+	 *
+	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+	 *             use the "contao.data_container.palette_builder" service instead.
 	 */
 	protected function combiner($names)
 	{
-		$return = array('');
-		$names = array_values($names);
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "contao.data_container.palette_builder" service instead.', __METHOD__);
 
-		for ($i=0, $c=\count($names); $i<$c; $i++)
-		{
-			$buffer = array();
-
-			foreach ($return as $k=>$v)
-			{
-				$buffer[] = ($k%2 == 0) ? $v : $v . $names[$i];
-				$buffer[] = ($k%2 == 0) ? $v . $names[$i] : $v;
-			}
-
-			$return = $buffer;
-		}
-
-		return array_filter($return);
+		return System::getContainer()
+			->get('contao.data_container.palette_builder')
+			->combiner($names)
+		;
 	}
 
 	/**

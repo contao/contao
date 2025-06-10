@@ -59,7 +59,7 @@ abstract class AbstractPickerProvider implements PickerProviderInterface
     /**
      * Generates the URL for the picker.
      */
-    private function generateUrl(PickerConfig $config, bool $ignoreValue): string|null
+    private function generateUrl(PickerConfig $config, bool $ignoreValue): string
     {
         $params = [
             ...$this->getRouteParameters($ignoreValue ? null : $config),

@@ -238,7 +238,7 @@ class DefaultOperationsListener
             }
 
             $childCount = $this->connection->fetchOne(
-                "SELECT COUNT(*) FROM $table WHERE pid=?",
+                "SELECT COUNT(*) FROM $table WHERE pid = ?",
                 [(string) $operation->getRecord()['id']],
             );
 

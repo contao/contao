@@ -16,16 +16,16 @@ export default class extends Controller {
             this.buttonTarget.title = this.configValue.title;
             this.buttonTarget.disabled = false;
 
-            this.imageTargets.forEach((img) => {
+            for (const img of this.imageTargets) {
                 img.src = this.configValue.icon;
-            });
+            }
         } else {
             this.buttonTarget.title = '';
             this.buttonTarget.disabled = true;
 
-            this.imageTargets.forEach((img) => {
+            for (const img of this.imageTargets) {
                 img.src = this.configValue.iconDisabled;
-            });
+            }
         }
     }
 

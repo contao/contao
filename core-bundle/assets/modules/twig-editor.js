@@ -68,9 +68,9 @@ export class TwigEditor {
                     return;
                 }
 
-                let payload = [];
+                const payload = [];
 
-                this.analyzeReferences().forEach((reference) => {
+                for (const reference of this.analyzeReferences()) {
                     payload.push({
                         start: { row: reference.row, column: reference.column },
                         command: {
@@ -79,9 +79,9 @@ export class TwigEditor {
                             arguments: [reference.name],
                         },
                     });
-                });
+                }
 
-                this.analyzeBlocks().forEach((block) => {
+                for (const block of this.analyzeBlocks()) {
                     payload.push({
                         start: { row: block.row, column: block.column },
                         command: {
@@ -90,7 +90,7 @@ export class TwigEditor {
                             arguments: [block.name],
                         },
                     });
-                });
+                }
 
                 callback(null, payload);
             },
@@ -98,7 +98,7 @@ export class TwigEditor {
     }
 
     analyzeReferences() {
-        let references = [];
+        const references = [];
 
         for (let row = 0; row < this.editor.getSession().getLength(); row++) {
             const tokens = this.editor.getSession().getTokens(row);
@@ -124,7 +124,7 @@ export class TwigEditor {
     }
 
     analyzeBlocks() {
-        let blocks = [];
+        const blocks = [];
 
         for (let row = 0; row < this.editor.getSession().getLength(); row++) {
             const tokens = this.editor.getSession().getTokens(row);
@@ -148,7 +148,7 @@ export class TwigEditor {
     setAnnotationsData(data) {
         this.editor.completers = [
             {
-                getCompletions: function (editor, session, pos, prefix, callback) {
+                getCompletions: (editor, session, pos, prefix, callback) => {
                     callback(null, data.autocomplete);
                 },
             },
