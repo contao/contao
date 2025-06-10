@@ -15,7 +15,6 @@ namespace Contao\CoreBundle\Migration\Version505;
 use Contao\CoreBundle\Migration\AbstractMigration;
 use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Types\Types;
 
 /**
  * @internal
