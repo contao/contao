@@ -10,6 +10,10 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\ContentElement\HtmlController;
+
+trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class has been deprecated and will no longer work in Contao 6. Use the "%s" class instead.', ContentHtml::class, HtmlController::class);
+
 /**
  * Front end content element "HTML".
  */

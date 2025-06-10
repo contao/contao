@@ -10,9 +10,12 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\ContentElement\DownloadsController;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Image\Preview\MissingPreviewProviderException;
 use Contao\CoreBundle\Image\Preview\UnableToGeneratePreviewException;
+
+trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class has been deprecated and will no longer work in Contao 6. Use the "%s" class instead.', ContentDownload::class, DownloadsController::class);
 
 /**
  * Front end content element "download".
