@@ -21,6 +21,29 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DocumentTest extends TestCase
 {
+    #[DataProvider('searchableContentProvider')]
+    public function testSearchableContent(string $fixture, string $expectedResult, bool $allowProtected = false): void
+    {
+        $request = Request::create('https://example.com/foo?bar=baz');
+        $response = new Response(file_get_contents(__DIR__.'/../Fixtures/Functional/Search/'.$fixture), 200, ['content-type' => ['text/html']]);
+        $document = Document::createFromRequestResponse($request, $response);
+        $this->assertSame($expectedResult, $document->getSearchableContent($allowProtected));
+    }
+
+    public static function searchableContentProvider(): iterable
+    {
+        yield 'Test extracting from site.html' => [
+            'site.html',
+            'This is just some content to test search indexing!',
+        ];
+
+        yield 'Test extracting from site.html with protected content allowed' => [
+            'site.html',
+            'This is just some content to test search indexing! This is protected content!',
+            true,
+        ];
+    }
+
     public function testCreatesADocumentFromRequestAndResponse(): void
     {
         $request = Request::create('https://example.com/foo?bar=baz');

@@ -34,6 +34,7 @@ class SitemapEventTest extends TestCase
     {
         $sitemap = new \DOMDocument('1.0', 'UTF-8');
         $sitemap->preserveWhiteSpace = false;
+
         $event = new SitemapEvent($sitemap, new Request(), []);
         $event->addUrlToDefaultUrlSet('https://contao.org');
 

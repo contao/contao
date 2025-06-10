@@ -1,19 +1,8 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class ChoicesController extends Controller {
-    addMutationGuard = false;
-    removeMutationGuard = false;
-
     connect() {
-        if (this.addMutationGuard) {
-            return;
-        }
-
-        // Choices wraps the element multiple times during initialization, leading to
-        // multiple disconnects/reconnects of the controller that we need to ignore.
-        this.addMutationGuard = true;
-
-        const select = this.element;
+        const select = this.element.querySelector('select');
 
         this.choices = new Choices(select, {
             shouldSort: false,
@@ -35,25 +24,15 @@ export default class ChoicesController extends Controller {
                 if (choices && select.dataset.placeholder) {
                     choices.dataset.placeholder = select.dataset.placeholder;
                 }
-
-                queueMicrotask(() => {
-                    this.addMutationGuard = false;
-                });
             },
             loadingText: Contao.lang.loading,
             noResultsText: Contao.lang.noResults,
             noChoicesText: Contao.lang.noOptions,
-            removeItemLabelText: function (value) {
-                return Contao.lang.removeItem.concat(' ').concat(value);
-            },
+            removeItemLabelText: (value) => Contao.lang.removeItem.concat(' ').concat(value),
         });
     }
 
     disconnect() {
-        if (this.addMutationGuard || this.removeMutationGuard) {
-            return;
-        }
-
         this._removeChoices();
     }
 
@@ -65,15 +44,7 @@ export default class ChoicesController extends Controller {
     }
 
     _removeChoices() {
-        // Safely unwrap the element by preventing disconnect/connect calls
-        // during the process.
-        this.removeMutationGuard = true;
-
         this.choices?.destroy();
         this.choices = null;
-
-        queueMicrotask(() => {
-            this.removeMutationGuard = false;
-        });
     }
 }
