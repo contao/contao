@@ -104,7 +104,7 @@ class JobsListenerTest extends TestCase
     {
         $requestStack = new RequestStack();
 
-        if (null !== $request) {
+        if ($request) {
             $requestStack->push($request);
         }
 
@@ -135,7 +135,7 @@ class JobsListenerTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('quote')
-            ->willReturnCallback(static fn ($value): string => '\''.$value.'\'')
+            ->willReturnCallback(static fn ($value): string => "'".$value."'")
         ;
 
         return $connection;
