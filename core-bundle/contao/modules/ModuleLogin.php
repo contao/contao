@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\ContentElement\LoginController;
 use Nyholm\Psr7\Uri;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
@@ -19,7 +20,7 @@ use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
-trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class has been deprecated and will no longer work in Contao 6. Use the "Login" content element instead.', ModuleLogin::class);
+trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class has been deprecated and will no longer work in Contao 6. Use the "%s" class instead.', ModuleLogin::class, LoginController::class);
 
 /**
  * Front end module "login".
