@@ -77,7 +77,7 @@ class Jobs
         return $this->databaseRowToDto($jobData);
     }
 
-    public function persist(Job $job): void
+    public function persist(Job $job, bool $applyRecursive = true): void
     {
         $existingJob = $this->getByUuid($job->getUuid());
 
@@ -122,22 +122,29 @@ class Jobs
 
         $parent = $job->getParent();
 
-        if ($parent) {
-            $this->persist($parent);
+        if ($parent && $applyRecursive) {
+            $this->persist($parent, false);
             $row['pid'] = $this->connection->fetchOne('SELECT id FROM tl_job WHERE uuid=?', [$parent->getUuid()]) ?? 0;
+        }
+
+        if ($applyRecursive) {
+            foreach ($job->getChildren() as $child) {
+                $child = $child->withParent($job);
+                $this->persist($child);
+            }
         }
 
         $this->connection->update('tl_job', $row, ['uuid' => $job->getUuid()], [Types::INTEGER, Types::STRING, Types::STRING]);
 
-        if ($parent) {
+        if ($parent && $applyRecursive) {
             // If this job is a child, update the status of the parent if required.
             $this->updateStatusBasedOnChildren($job->getParent());
         }
     }
 
-    public function createChild(Job $job): Job
+    public function createChildJob(Job $parent): Job
     {
-        $child = Job::new($job->getType(), $job->getOwner())->withParent($job);
+        $child = Job::new($parent->getType(), $parent->getOwner())->withParent($parent);
         $this->persist($child);
 
         return $child;
@@ -261,7 +268,7 @@ class Jobs
             }
             $job = $job->withChildren($children);
         } elseif ($withParent) {
-            $parentData = $this->connection->fetchOne('SELECT * FROM tl_job WHERE id=?', [$row['pid']]);
+            $parentData = $this->connection->fetchAssociative('SELECT * FROM tl_job WHERE id=?', [$row['pid']]);
             if (false !== $parentData) {
                 $job = $job->withParent($this->databaseRowToDto($parentData, false));
             }

@@ -7,6 +7,7 @@ namespace Contao\CoreBundle\Tests\Job;
 use Contao\CoreBundle\Job\Job;
 use Contao\CoreBundle\Job\Jobs;
 use Contao\CoreBundle\Job\Owner;
+use Contao\CoreBundle\Job\Status;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
@@ -92,14 +93,80 @@ class JobsTest extends TestCase
         $this->assertContains($uuid4, $this->jobsToUuids($jobsUser2->findMyNewOrPending()));
     }
 
+    public function testStatusOfChildrenUpdatesParentJobStatus(): void
+    {
+        $jobs = $this->getJobs($this->mockSecurity('foobar'));
+        $parentJob = $jobs->createUserJob('my-type');
+        $childJob1 = $jobs->createUserJob('my-type')->withMetadata(['child-1']);
+        $childJob2 = $jobs->createUserJob('my-type')->withMetadata(['child-2']);
+
+        $parentJob = $parentJob->withChildren([$childJob1, $childJob2]);
+        $jobs->persist($parentJob);
+
+        $parentJob = $jobs->getByUuid($parentJob->getUuid());
+        $childJob1 = $jobs->getByUuid($childJob1->getUuid());
+        $childJob2 = $jobs->getByUuid($childJob2->getUuid());
+
+        $this->assertNull($parentJob->getParent());
+        $this->assertSame($parentJob->getUuid(), $childJob1->getParent()->getUuid());
+        $this->assertSame($parentJob->getUuid(), $childJob2->getParent()->getUuid());
+
+        $this->assertSame(Status::NEW, $jobs->getByUuid($parentJob->getUuid())->getStatus());
+        $this->assertSame(Status::NEW, $jobs->getByUuid($childJob1->getUuid())->getStatus());
+        $this->assertSame(Status::NEW, $jobs->getByUuid($childJob2->getUuid())->getStatus());
+
+        $childJob2 = $childJob2->markPending();
+        $jobs->persist($childJob2);
+
+        $parentJob = $jobs->getByUuid($parentJob->getUuid());
+        $childJob1 = $jobs->getByUuid($childJob1->getUuid());
+        $childJob2 = $jobs->getByUuid($childJob2->getUuid());
+
+        $this->assertSame(Status::PENDING, $jobs->getByUuid($parentJob->getUuid())->getStatus());
+        $this->assertSame(Status::NEW, $jobs->getByUuid($childJob1->getUuid())->getStatus());
+        $this->assertSame(Status::PENDING, $jobs->getByUuid($childJob2->getUuid())->getStatus());
+
+        $childJob2 = $childJob2->markFinished();
+        $jobs->persist($childJob2);
+
+        $parentJob = $jobs->getByUuid($parentJob->getUuid());
+        $childJob1 = $jobs->getByUuid($childJob1->getUuid());
+        $childJob2 = $jobs->getByUuid($childJob2->getUuid());
+
+        $this->assertSame(Status::PENDING, $jobs->getByUuid($parentJob->getUuid())->getStatus());
+        $this->assertSame(Status::NEW, $jobs->getByUuid($childJob1->getUuid())->getStatus());
+        $this->assertSame(Status::FINISHED, $jobs->getByUuid($childJob2->getUuid())->getStatus());
+
+        $childJob1 = $childJob1->markPending();
+        $jobs->persist($childJob1);
+
+        $parentJob = $jobs->getByUuid($parentJob->getUuid());
+        $childJob1 = $jobs->getByUuid($childJob1->getUuid());
+        $childJob2 = $jobs->getByUuid($childJob2->getUuid());
+
+        $this->assertSame(Status::PENDING, $jobs->getByUuid($parentJob->getUuid())->getStatus());
+        $this->assertSame(Status::PENDING, $jobs->getByUuid($childJob1->getUuid())->getStatus());
+        $this->assertSame(Status::FINISHED, $jobs->getByUuid($childJob2->getUuid())->getStatus());
+
+        $childJob1 = $childJob1->markFinished();
+        $jobs->persist($childJob1);
+
+        $parentJob = $jobs->getByUuid($parentJob->getUuid());
+        $childJob1 = $jobs->getByUuid($childJob1->getUuid());
+        $childJob2 = $jobs->getByUuid($childJob2->getUuid());
+
+        $this->assertSame(Status::FINISHED, $jobs->getByUuid($parentJob->getUuid())->getStatus());
+        $this->assertSame(Status::FINISHED, $jobs->getByUuid($childJob1->getUuid())->getStatus());
+        $this->assertSame(Status::FINISHED, $jobs->getByUuid($childJob2->getUuid())->getStatus());
+    }
+
     private function mockSecurity(string|null $username = null): Security
     {
-        $username = 'foobar';
         $userMock = $this->createMock(UserInterface::class);
         $userMock
             ->expects($username ? $this->atLeastOnce() : $this->never())
             ->method('getUserIdentifier')
-            ->willReturn($username)
+            ->willReturn($username ?? '') // Cannot return null because that's not allowed but $this->never() asserts that '' is never returned
         ;
 
         $security = $this->createMock(Security::class);

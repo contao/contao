@@ -115,7 +115,7 @@ class BackendSearch
                     $config = $config->limitToDocumentIds($documentIdGroup);
 
                     // Create child jobs here, so we can track progress across multiple messages
-                    $config = $config->withJobId($this->jobs->createChild($job)->getUuid());
+                    $config = $config->withJobId($this->jobs->createChildJob($job)->getUuid());
 
                     $this->messageBus->dispatch(new ReindexMessage($config));
                 }

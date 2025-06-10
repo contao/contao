@@ -239,6 +239,21 @@ final class Job
         return $this->parent;
     }
 
+    public function withChild(self $child): self
+    {
+        $clone = clone $this;
+
+        foreach ($clone->children as $existingChild) {
+            if ($existingChild->getUuid() === $child->getUuid()) {
+                return $clone;
+            }
+        }
+
+        $clone->children[] = $child->withParent($this);
+
+        return $clone;
+    }
+
     /**
      * @return array<Job>
      */
@@ -254,14 +269,15 @@ final class Job
 
     public function withChildren(array $children): self
     {
+        $clone = clone $this;
+
         foreach ($children as $child) {
             if (!$child instanceof self) {
                 throw new \InvalidArgumentException('Children array must be an instance of Job.');
             }
-        }
 
-        $clone = clone $this;
-        $clone->children = $children;
+            $clone = $clone->withChild($child);
+        }
 
         return $clone;
     }
