@@ -45,18 +45,7 @@ class FormStoreSessionMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $platform = $this->connection->getDatabasePlatform();
-        $schemaManager = $this->connection->createSchemaManager();
-        $fromTable = $schemaManager->introspectSchema()->getTable('tl_form');
-        $toTable = clone $fromTable;
-        $toTable->addColumn('storeSession', Types::BOOLEAN, ['default' => false]);
-
-        $tableDiff = $schemaManager->createComparator()->compareTables($fromTable, $toTable);
-
-        foreach ($platform->getAlterTableSQL($tableDiff) as $query) {
-            $this->connection->executeQuery($query);
-        }
-
+        $this->connection->executeQuery('ALTER TABLE tl_form ADD storeSession TINYINT(1) DEFAULT 0 NOT NULL');
         $this->connection->executeQuery('UPDATE tl_form SET storeSession = 1');
 
         return $this->createResult(true);
