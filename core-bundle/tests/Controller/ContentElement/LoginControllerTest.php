@@ -573,44 +573,6 @@ class LoginControllerTest extends ContentElementTestCase
         return $translator;
     }
 
-    private function mockSecurity(User|null $user = null, bool|null $isRemembered = null, bool|null $twoFaInProgress = null): Security&MockObject
-    {
-        $security = $this->createMock(Security::class);
-        $security
-            ->expects($this->once())
-            ->method('getUser')
-            ->willReturn($user)
-        ;
-
-        $isGrantedMap = [];
-
-        if (null !== $isRemembered) {
-            $isGrantedMap[] = ['IS_REMEMBERED', null, $isRemembered];
-        }
-
-        if (null !== $twoFaInProgress) {
-            $isGrantedMap[] = ['IS_AUTHENTICATED_2FA_IN_PROGRESS', null, $twoFaInProgress];
-        }
-
-        if ($isGrantedMap) {
-            $security
-                ->expects($this->exactly(\count($isGrantedMap)))
-                ->method('isGranted')
-                ->willReturnMap($isGrantedMap)
-            ;
-        }
-
-        if ($twoFaInProgress) {
-            $security
-                ->expects($this->once())
-                ->method('getToken')
-                ->willReturn($this->createMock(TokenInterface::class))
-            ;
-        }
-
-        return $security;
-    }
-
     private function getAdjustedContainer(User|null $user = null, bool|null $isRemembered = false, bool|null $twoFaInProgress = false, PageModel|null $pageForContentUrl = null): ContainerBuilder
     {
         $container = new ContainerBuilder();
