@@ -134,6 +134,7 @@ class Configuration implements ConfigurationInterface
                     ->info('Contao provides a way to work on Messenger transports in the web process (kernel.terminate) if there is no real "messenger:consume" worker. You can configure its behavior here.')
                     ->children()
                         ->arrayNode('transports')
+                            ->performNoDeepMerging()
                             ->info('The transports to apply the web worker logic to.')
                             ->scalarPrototype()->end()
                             ->defaultValue([])
