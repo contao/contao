@@ -195,104 +195,12 @@ class DcaLoader extends Controller
 			}
 		}
 
-		// Set the ptable dynamically
-		$this->setDynamicPTable();
-
 		// HOOK: allow loading custom settings
 		if (isset($GLOBALS['TL_HOOKS']['loadDataContainer']) && \is_array($GLOBALS['TL_HOOKS']['loadDataContainer']))
 		{
 			foreach ($GLOBALS['TL_HOOKS']['loadDataContainer'] as $callback)
 			{
 				System::importStatic($callback[0])->{$callback[1]}($this->strTable);
-			}
-		}
-
-		$this->addDefaultLabels();
-	}
-
-	/**
-	 * Add the default labels (see #509)
-	 */
-	private function addDefaultLabels()
-	{
-		// Operations
-		foreach (array('global_operations', 'operations') as $key)
-		{
-			if (!isset($GLOBALS['TL_DCA'][$this->strTable]['list'][$key]))
-			{
-				continue;
-			}
-
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['list'][$key] as $k=>&$v)
-			{
-				if (!\is_array($v) || \array_key_exists('label', $v))
-				{
-					continue;
-				}
-
-				if (isset($GLOBALS['TL_LANG'][$this->strTable][$k]) || !isset($GLOBALS['TL_LANG']['DCA'][$k]))
-				{
-					$v['label'] = &$GLOBALS['TL_LANG'][$this->strTable][$k];
-				}
-				else
-				{
-					$v['label'] = &$GLOBALS['TL_LANG']['DCA'][$k];
-				}
-			}
-
-			unset($v);
-		}
-
-		// Fields
-		if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields']))
-		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['fields'] as $k=>&$v)
-			{
-				if (isset($v['label']))
-				{
-					continue;
-				}
-
-				$v['label'] = &$GLOBALS['TL_LANG'][$this->strTable][$k];
-			}
-
-			unset($v);
-		}
-	}
-
-	/**
-	 * Sets the parent table for the current table, if enabled and not set.
-	 */
-	private function setDynamicPTable(): void
-	{
-		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) || !isset($GLOBALS['BE_MOD']) || isset($GLOBALS['TL_DCA'][$this->strTable]['config']['ptable']))
-		{
-			return;
-		}
-
-		if (!$do = Input::get('do'))
-		{
-			return;
-		}
-
-		foreach (array_merge(...array_values($GLOBALS['BE_MOD'])) as $key => $module)
-		{
-			if ($do !== $key || !isset($module['tables']) || !\is_array($module['tables']))
-			{
-				continue;
-			}
-
-			foreach ($module['tables'] as $table)
-			{
-				Controller::loadDataContainer($table);
-				$ctable = $GLOBALS['TL_DCA'][$table]['config']['ctable'] ?? array();
-
-				if (\in_array($this->strTable, $ctable, true))
-				{
-					$GLOBALS['TL_DCA'][$this->strTable]['config']['ptable'] = $table;
-
-					return;
-				}
 			}
 		}
 	}
