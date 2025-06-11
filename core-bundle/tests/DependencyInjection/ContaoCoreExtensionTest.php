@@ -640,7 +640,6 @@ class ContaoCoreExtensionTest extends TestCase
     public function testHstsSecurityConfiguration(): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
 
         $this->assertTrue($container->hasDefinition('contao.listener.transport_security_header'));
         $listener = $container->findDefinition('contao.listener.transport_security_header');
@@ -680,7 +679,6 @@ class ContaoCoreExtensionTest extends TestCase
     public function testDoesNotRegisterAnyBackendSearchRelatedServicesIfNotEnabled(): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
 
         $this->assertFalse($container->hasDefinition(BackendSearchController::class));
         $this->assertFalse($container->hasDefinition('contao.search_backend.adapter_factory'));
@@ -717,7 +715,6 @@ class ContaoCoreExtensionTest extends TestCase
     public function testCspConfiguration(): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
 
         $this->assertTrue($container->hasDefinition('contao.csp.wysiwyg_style_processor'));
         $processor = $container->findDefinition('contao.csp.wysiwyg_style_processor');
@@ -787,8 +784,6 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersAsContentElementAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
-
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
 
         $this->assertArrayHasKey(AsContentElement::class, $autoConfiguredAttributes);
@@ -832,7 +827,6 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersAsFrontendModuleAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
 
         $this->assertArrayHasKey(AsFrontendModule::class, $autoConfiguredAttributes);
@@ -872,7 +866,6 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersAsPageAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
 
         $this->assertArrayHasKey(AsPage::class, $autoConfiguredAttributes);
@@ -921,7 +914,6 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersAsPickerProviderAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
 
         $this->assertArrayHasKey(AsPickerProvider::class, $autoConfiguredAttributes);
@@ -943,7 +935,6 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersAsCronjobAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
 
         $this->assertArrayHasKey(AsCronJob::class, $autoConfiguredAttributes);
@@ -971,7 +962,6 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersAsHookAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
 
         $this->assertArrayHasKey(AsHook::class, $autoConfiguredAttributes);
@@ -999,7 +989,6 @@ class ContaoCoreExtensionTest extends TestCase
     public function testRegistersAsCallbackAttribute(): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
 
         $this->assertArrayHasKey(AsCallback::class, $autoConfiguredAttributes);
@@ -1015,6 +1004,9 @@ class ContaoCoreExtensionTest extends TestCase
                     'target' => 'list.label.label',
                     'priority' => 32,
                     'method' => 'someMethod',
+                    'exact' => null,
+                    'singleton' => null,
+                    'closure' => null,
                 ],
             )
         ;
@@ -1038,7 +1030,6 @@ class ContaoCoreExtensionTest extends TestCase
     public function testThrowsExceptionWhenTryingToDeclareTheMethodPropertyOnAMethodAttribute(string $attributeClass): void
     {
         $container = $this->getContainerBuilder();
-        (new ContaoCoreExtension())->load([], $container);
         $autoConfiguredAttributes = $container->getAutoconfiguredAttributes();
 
         $definition = $this->createMock(ChildDefinition::class);

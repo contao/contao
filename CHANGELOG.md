@@ -2,6 +2,19 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.5.11] (2025-05-16)
+
+**Fixed issues:**
+
+- [#8350] Add the missing "Template Studio" translation ([de-es])
+- [#8298] Make Turbo use the correct URL after a redirect ([m-vo])
+- [#8297] Use the app cache instead of the system cache for the Template Studio ([m-vo])
+- [#8347] Return the correct object instance in the `DataContainerOperationsBuilder` ([aschempp])
+- [#8345] Fix the contrast of the new icons ([leofeyer])
+- [#8323] Allow absolute URLs in DCA backlinks ([aschempp])
+- [#8292] Set status code 422 for widget errors in `AbstractBackendController::render()` ([fritzmg])
+- [#8305] Fix binary UUIDs in the back end search results ([Toflar])
+
 ## [5.5.10] (2025-04-17)
 
 **Fixed issues:**
@@ -246,6 +259,7 @@ This project adheres to [Semantic Versioning].
 - [#7582] Add PostCSS as described in Symfony Encore ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.5.11]: https://github.com/contao/contao/releases/tag/5.5.11
 [5.5.10]: https://github.com/contao/contao/releases/tag/5.5.10
 [5.5.9]: https://github.com/contao/contao/releases/tag/5.5.9
 [5.5.8]: https://github.com/contao/contao/releases/tag/5.5.8
@@ -264,6 +278,7 @@ This project adheres to [Semantic Versioning].
 [CVE-2025-29790]: https://github.com/contao/contao/security/advisories/GHSA-vqqr-fgmh-f626
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
+[de-es]: https://github.com/de-es
 [delirius]: https://github.com/delirius
 [fritzmg]: https://github.com/fritzmg
 [leofeyer]: https://github.com/leofeyer
@@ -432,4 +447,13 @@ This project adheres to [Semantic Versioning].
 [#8244]: https://github.com/contao/contao/pull/8244
 [#8249]: https://github.com/contao/contao/pull/8249
 [#8254]: https://github.com/contao/contao/pull/8254
+[#8261]: https://github.com/contao/contao/pull/8261
 [#8282]: https://github.com/contao/contao/pull/8282
+[#8292]: https://github.com/contao/contao/pull/8292
+[#8297]: https://github.com/contao/contao/pull/8297
+[#8298]: https://github.com/contao/contao/pull/8298
+[#8305]: https://github.com/contao/contao/pull/8305
+[#8323]: https://github.com/contao/contao/pull/8323
+[#8345]: https://github.com/contao/contao/pull/8345
+[#8347]: https://github.com/contao/contao/pull/8347
+[#8350]: https://github.com/contao/contao/pull/8350

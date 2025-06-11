@@ -20,21 +20,22 @@
                 <tr data-contao--row-wizard-target="row">
                     {# Module #}
                     <td>
-                        {% set module_select_attributes = attrs()
-                            .set('name', "#{id}[#{loop.index0}][mod]")
-                            .set('data-action', 'focus->contao--scroll-offset#store contao--row-wizard#updateModuleWizardLink')
-                            .set('data-controller', 'contao--choices')
-                            .addClass('tl_select')
-                        %}
-                        <select{{ module_select_attributes}}>
-                            {% for option in row.module_options %}
-                                {% set option_attributes = attrs()
-                                    .set('value', option.value)
-                                    .set('selected', 'selected', option.selected)
-                                %}
-                                <option{{ option_attributes }}>{{ option.label }}</option>
-                            {% endfor %}
-                        </select>
+                        <div class="tl_select__wrapper" data-controller="contao--choices">
+                            {% set module_select_attributes = attrs()
+                                .set('name', "#{id}[#{loop.index0}][mod]")
+                                .set('data-action', 'focus->contao--scroll-offset#store contao--row-wizard#updateModuleWizardLink')
+                                .addClass('tl_select')
+                            %}
+                            <select{{ module_select_attributes}}>
+                                {% for option in row.module_options %}
+                                    {% set option_attributes = attrs()
+                                        .set('value', option.value)
+                                        .set('selected', 'selected', option.selected)
+                                    %}
+                                    <option{{ option_attributes }}>{{ option.label }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </td>
 
                     {# Layout #}

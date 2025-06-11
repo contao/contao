@@ -41,7 +41,10 @@
         <source>Set up the pages of your website(s)</source>
         <target>Nastavte stránky svého webu (webů)</target>
       </trans-unit>
-      <trans-unit id="MOD.template_studio">
+      <trans-unit id="MOD.template_studio.0">
+        <source>Template Studio</source>
+      </trans-unit>
+      <trans-unit id="MOD.template_studio.1">
         <source>Add or edit Twig templates</source>
         <target>Přidat nebo upravit předlohy Twigu</target>
       </trans-unit>

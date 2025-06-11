@@ -297,6 +297,8 @@ services:
 
     contao.listener.data_container_callback:
         class: Contao\CoreBundle\EventListener\DataContainerCallbackListener
+        arguments:
+            - '@contao.framework'
 
     contao.listener.dbafs_metadata:
         class: Contao\CoreBundle\EventListener\DbafsMetadataSubscriber
