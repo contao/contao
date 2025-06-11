@@ -151,7 +151,6 @@ class AddCommentFieldsListener
             'tl_faq' => isset($this->bundles['ContaoFaqBundle']),
             default => throw new \RuntimeException('Unsupported table '.$table),
         };
-        dump($table, $this->bundles, $isInstalled);
 
         if (!$isInstalled) {
             return;
