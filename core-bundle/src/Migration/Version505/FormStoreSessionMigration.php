@@ -35,16 +35,12 @@ class FormStoreSessionMigration extends AbstractMigration
 
         $columns = $schemaManager->listTableColumns('tl_form');
 
-        if (isset($columns['storesession'])) {
-            return false;
-        }
-
-        return (bool) $this->connection->fetchOne('SELECT TRUE FROM tl_form LIMIT 1');
+        return !isset($columns['storesession']);
     }
 
     public function run(): MigrationResult
     {
-        $this->connection->executeQuery('ALTER TABLE tl_form ADD storeSession TINYINT(1) DEFAULT 0 NOT NULL');
+        $this->connection->executeQuery('ALTER TABLE tl_form ADD storeSession tinyint(1) NOT NULL default 0');
         $this->connection->executeQuery('UPDATE tl_form SET storeSession = 1');
 
         return $this->createResult(true);
