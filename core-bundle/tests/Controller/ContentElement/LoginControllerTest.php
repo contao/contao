@@ -25,14 +25,15 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Symfony\Bridge\Twig\AppVariable;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockArraySessionStorage;
 use Symfony\Component\HttpFoundation\UriSigner;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\TooManyLoginAttemptsAuthenticationException;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -48,18 +49,17 @@ class LoginControllerTest extends ContentElementTestCase
     {
         $response = $this->renderWithModelData(
             new LoginController(
-                $this->mockSecurity($this->createMock(BackendUser::class)),
                 $this->createMock(UriSigner::class),
                 $this->createMock(LogoutUrlGenerator::class),
                 $this->createMock(AuthenticationUtils::class),
                 $this->createMock(TranslatorInterface::class),
-                $this->createMock(ContentUrlGenerator::class),
                 $this->createMock(EventDispatcherInterface::class),
                 $this->createMock(ContaoFramework::class),
             ),
             [
                 'type' => 'login',
             ],
+            adjustedContainer: $this->getAdjustedContainer($this->createMock(BackendUser::class), null, null),
         );
 
         $this->assertSame('', $response->getContent());
@@ -70,12 +70,10 @@ class LoginControllerTest extends ContentElementTestCase
     {
         $response = $this->renderWithModelData(
             new LoginController(
-                $this->mockSecurity(),
                 $this->createMock(UriSigner::class),
                 $this->createMock(LogoutUrlGenerator::class),
                 $this->createMock(AuthenticationUtils::class),
                 $this->mockTranslator(),
-                $this->createMock(ContentUrlGenerator::class),
                 $this->createMock(EventDispatcherInterface::class),
                 $this->createMock(ContaoFramework::class),
             ),
@@ -83,6 +81,7 @@ class LoginControllerTest extends ContentElementTestCase
                 'id' => 42,
                 'type' => 'login',
             ],
+            adjustedContainer: $this->getAdjustedContainer(),
         );
 
         $content = $response->getContent();
@@ -116,12 +115,10 @@ class LoginControllerTest extends ContentElementTestCase
 
         $response = $this->renderWithModelData(
             new LoginController(
-                $this->mockSecurity(),
                 $uriSigner,
                 $this->createMock(LogoutUrlGenerator::class),
                 $this->createMock(AuthenticationUtils::class),
                 $this->mockTranslator(),
-                $this->createMock(ContentUrlGenerator::class),
                 $this->createMock(EventDispatcherInterface::class),
                 $this->createMock(ContaoFramework::class),
             ),
@@ -129,6 +126,7 @@ class LoginControllerTest extends ContentElementTestCase
                 'type' => 'login',
                 'redirectBack' => 1,
             ],
+            adjustedContainer: $this->getAdjustedContainer(),
             request: $request,
         );
 
@@ -139,8 +137,9 @@ class LoginControllerTest extends ContentElementTestCase
 
     public function testUsesRedirectPageTargetPath(): void
     {
-        $jumpTo = $this->mockClassWithProperties(PageModel::class, ['id']);
+        $jumpTo = $this->mockClassWithProperties(PageModel::class, ['id', 'alias']);
         $jumpTo->id = 1;
+        $jumpTo->alias = 'foobar';
 
         $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
@@ -161,22 +160,12 @@ class LoginControllerTest extends ContentElementTestCase
             PageModel::class => $pageAdapter,
         ]);
 
-        $contentUrlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $contentUrlGenerator
-            ->expects($this->once())
-            ->method('generate')
-            ->with($jumpTo, [], UrlGeneratorInterface::ABSOLUTE_URL)
-            ->willReturn('https://jump-to-test.com/foobar')
-        ;
-
         $response = $this->renderWithModelData(
             new LoginController(
-                $this->mockSecurity(),
                 $this->createMock(UriSigner::class),
                 $this->createMock(LogoutUrlGenerator::class),
                 $this->createMock(AuthenticationUtils::class),
                 $this->mockTranslator(),
-                $contentUrlGenerator,
                 $this->createMock(EventDispatcherInterface::class),
                 $contaoFramework,
             ),
@@ -184,11 +173,12 @@ class LoginControllerTest extends ContentElementTestCase
                 'type' => 'login',
                 'jumpTo' => 1,
             ],
+            adjustedContainer: $this->getAdjustedContainer(pageForContentUrl: $jumpTo),
         );
 
         $content = $response->getContent();
 
-        $this->assertTrue(str_contains($content, '<input type="hidden" name="_target_path" value="'.base64_encode('https://jump-to-test.com/foobar').'">'));
+        $this->assertTrue(str_contains($content, '<input type="hidden" name="_target_path" value="'.base64_encode('https://example.com/foobar').'">'));
     }
 
     public function testUsesRedirectBackTargetPathFromPostRequest(): void
@@ -203,12 +193,10 @@ class LoginControllerTest extends ContentElementTestCase
 
         $response = $this->renderWithModelData(
             new LoginController(
-                $this->mockSecurity(),
                 $uriSigner,
                 $this->createMock(LogoutUrlGenerator::class),
                 $this->createMock(AuthenticationUtils::class),
                 $this->mockTranslator(),
-                $this->createMock(ContentUrlGenerator::class),
                 $this->createMock(EventDispatcherInterface::class),
                 $this->createMock(ContaoFramework::class),
             ),
@@ -216,6 +204,7 @@ class LoginControllerTest extends ContentElementTestCase
                 'type' => 'login',
                 'redirectBack' => 1,
             ],
+            adjustedContainer: $this->getAdjustedContainer(),
             request: $request,
         );
 
@@ -237,12 +226,10 @@ class LoginControllerTest extends ContentElementTestCase
 
         $response = $this->renderWithModelData(
             new LoginController(
-                $this->mockSecurity(),
                 $uriSigner,
                 $this->createMock(LogoutUrlGenerator::class),
                 $this->createMock(AuthenticationUtils::class),
                 $this->mockTranslator(),
-                $this->createMock(ContentUrlGenerator::class),
                 $this->createMock(EventDispatcherInterface::class),
                 $this->createMock(ContaoFramework::class),
             ),
@@ -250,6 +237,7 @@ class LoginControllerTest extends ContentElementTestCase
                 'type' => 'login',
                 'redirectBack' => 1,
             ],
+            adjustedContainer: $this->getAdjustedContainer(),
             request: $request,
         );
 
@@ -271,12 +259,10 @@ class LoginControllerTest extends ContentElementTestCase
 
         $response = $this->renderWithModelData(
             new LoginController(
-                $this->mockSecurity(),
                 $uriSigner,
                 $this->createMock(LogoutUrlGenerator::class),
                 $this->createMock(AuthenticationUtils::class),
                 $this->mockTranslator(),
-                $this->createMock(ContentUrlGenerator::class),
                 $this->createMock(EventDispatcherInterface::class),
                 $this->createMock(ContaoFramework::class),
             ),
@@ -284,6 +270,7 @@ class LoginControllerTest extends ContentElementTestCase
                 'type' => 'login',
                 'redirectBack' => 1,
             ],
+            adjustedContainer: $this->getAdjustedContainer(),
             request: $request,
         );
 
@@ -296,6 +283,7 @@ class LoginControllerTest extends ContentElementTestCase
     {
         $pwResetPage = $this->mockClassWithProperties(PageModel::class, ['id']);
         $pwResetPage->id = 8472;
+        $pwResetPage->alias = 'pw-reset';
 
         $pageAdapter = $this->mockAdapter(['findById']);
         $pageAdapter
@@ -316,22 +304,12 @@ class LoginControllerTest extends ContentElementTestCase
             PageModel::class => $pageAdapter,
         ]);
 
-        $contentUrlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $contentUrlGenerator
-            ->expects($this->once())
-            ->method('generate')
-            ->with($pwResetPage, [], UrlGeneratorInterface::ABSOLUTE_PATH)
-            ->willReturn('https://pw-reset-test.com/pw-reset')
-        ;
-
         $response = $this->renderWithModelData(
             new LoginController(
-                $this->mockSecurity(),
                 $this->createMock(UriSigner::class),
                 $this->createMock(LogoutUrlGenerator::class),
                 $this->createMock(AuthenticationUtils::class),
                 $this->mockTranslator(),
-                $contentUrlGenerator,
                 $this->createMock(EventDispatcherInterface::class),
                 $contaoFramework,
             ),
@@ -339,11 +317,12 @@ class LoginControllerTest extends ContentElementTestCase
                 'type' => 'login',
                 'pwResetPage' => 8472,
             ],
+            adjustedContainer: $this->getAdjustedContainer(pageForContentUrl: $pwResetPage),
         );
 
         $content = $response->getContent();
 
-        $this->assertTrue(str_contains($content, '<a href="https://pw-reset-test.com/pw-reset">translated(contao_default:MSC.lostPassword)</a>'));
+        $this->assertTrue(str_contains($content, '<a href="https://example.com/pw-reset">translated(contao_default:MSC.lostPassword)</a>'));
     }
 
     #[DataProvider('getAuthenticationExceptions')]
@@ -371,18 +350,17 @@ class LoginControllerTest extends ContentElementTestCase
 
         $response = $this->renderWithModelData(
             new LoginController(
-                $this->mockSecurity(),
                 $this->createMock(UriSigner::class),
                 $this->createMock(LogoutUrlGenerator::class),
                 $authUtils,
                 $this->mockTranslator(),
-                $this->createMock(ContentUrlGenerator::class),
                 $this->createMock(EventDispatcherInterface::class),
                 $this->createMock(ContaoFramework::class),
             ),
             [
                 'type' => 'login',
             ],
+            adjustedContainer: $this->getAdjustedContainer(),
             request: $request,
         );
 
@@ -402,77 +380,19 @@ class LoginControllerTest extends ContentElementTestCase
 
     public function testShowsLogoutFormIfFrontendUserIsLoggedIn(): void
     {
-        $user = $this->createMock(FrontendUser::class);
-
         $response = $this->renderWithModelData(
             new LoginController(
-                $this->mockSecurity($user, false, false),
                 $this->createMock(UriSigner::class),
                 $this->createMock(LogoutUrlGenerator::class),
                 $this->createMock(AuthenticationUtils::class),
                 $this->mockTranslator(),
-                $this->createMock(ContentUrlGenerator::class),
                 $this->createMock(EventDispatcherInterface::class),
                 $this->createMock(ContaoFramework::class),
             ),
             [
                 'type' => 'login',
             ],
-        );
-
-        $content = $response->getContent();
-
-        $this->assertTrue(str_contains($content, '<div class="content-login logout">'));
-        $this->assertTrue(str_contains($content, '<p class="login_info">translated(contao_default:MSC.loggedInAs[])<br>January 1, 2032 01:01</p>'));
-        $this->assertTrue(str_contains($content, '<button type="submit" class="submit">MSC.logout</button>'));
-    }
-
-    public function testShowsTwoFactorCodeFormIfTowFactorInProgress(): void
-    {
-        $user = $this->createMock(FrontendUser::class);
-
-        $response = $this->renderWithModelData(
-            new LoginController(
-                $this->mockSecurity($user, false, true),
-                $this->createMock(UriSigner::class),
-                $this->createMock(LogoutUrlGenerator::class),
-                $this->createMock(AuthenticationUtils::class),
-                $this->mockTranslator(),
-                $this->createMock(ContentUrlGenerator::class),
-                $this->createMock(EventDispatcherInterface::class),
-                $this->createMock(ContaoFramework::class),
-            ),
-            [
-                'type' => 'login',
-            ],
-        );
-
-        $content = $response->getContent();
-
-        $this->assertTrue(str_contains($content, '<h3>translated(contao_default:MSC.twoFactorAuthentication)</h3>'));
-        $this->assertTrue(str_contains($content, '<label for="verify">translated(contao_default:MSC.twoFactorVerification)</label>'));
-        $this->assertTrue(str_contains($content, '<input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="one-time-code" required>'));
-        $this->assertTrue(str_contains($content, '<button type="submit" class="submit">MSC.continue</button>'));
-    }
-
-    public function testShowsLogout(): void
-    {
-        $user = $this->createMock(FrontendUser::class);
-
-        $response = $this->renderWithModelData(
-            new LoginController(
-                $this->mockSecurity($user, false, false),
-                $this->createMock(UriSigner::class),
-                $this->createMock(LogoutUrlGenerator::class),
-                $this->createMock(AuthenticationUtils::class),
-                $this->mockTranslator(),
-                $this->createMock(ContentUrlGenerator::class),
-                $this->createMock(EventDispatcherInterface::class),
-                $this->createMock(ContaoFramework::class),
-            ),
-            [
-                'type' => 'login',
-            ],
+            adjustedContainer: $this->getAdjustedContainer($this->createMock(FrontendUser::class)),
         );
 
         $content = $response->getContent();
@@ -485,10 +405,33 @@ class LoginControllerTest extends ContentElementTestCase
         $this->assertTrue(str_contains($content, '<button type="submit" class="submit">MSC.logout</button>'));
     }
 
+    public function testShowsTwoFactorCodeFormIfTowFactorInProgress(): void
+    {
+        $response = $this->renderWithModelData(
+            new LoginController(
+                $this->createMock(UriSigner::class),
+                $this->createMock(LogoutUrlGenerator::class),
+                $this->createMock(AuthenticationUtils::class),
+                $this->mockTranslator(),
+                $this->createMock(EventDispatcherInterface::class),
+                $this->createMock(ContaoFramework::class),
+            ),
+            [
+                'type' => 'login',
+            ],
+            adjustedContainer: $this->getAdjustedContainer($this->createMock(FrontendUser::class), false, true),
+        );
+
+        $content = $response->getContent();
+
+        $this->assertTrue(str_contains($content, '<h3>translated(contao_default:MSC.twoFactorAuthentication)</h3>'));
+        $this->assertTrue(str_contains($content, '<label for="verify">translated(contao_default:MSC.twoFactorVerification)</label>'));
+        $this->assertTrue(str_contains($content, '<input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="one-time-code" required>'));
+        $this->assertTrue(str_contains($content, '<button type="submit" class="submit">MSC.continue</button>'));
+    }
+
     public function testUsesRedirectBackTargetPathForLogout(): void
     {
-        $user = $this->createMock(FrontendUser::class);
-
         $request = Request::create('https://redirect-back-test.com/foobar?redirect=redirect_back');
 
         $uriSigner = $this->createMock(UriSigner::class);
@@ -501,12 +444,10 @@ class LoginControllerTest extends ContentElementTestCase
 
         $response = $this->renderWithModelData(
             new LoginController(
-                $this->mockSecurity($user, false, false),
                 $uriSigner,
                 $this->createMock(LogoutUrlGenerator::class),
                 $this->createMock(AuthenticationUtils::class),
                 $this->mockTranslator(),
-                $this->createMock(ContentUrlGenerator::class),
                 $this->createMock(EventDispatcherInterface::class),
                 $this->createMock(ContaoFramework::class),
             ),
@@ -514,6 +455,7 @@ class LoginControllerTest extends ContentElementTestCase
                 'type' => 'login',
                 'redirectBack' => 1,
             ],
+            adjustedContainer: $this->getAdjustedContainer($this->createMock(FrontendUser::class)),
             request: $request,
         );
 
@@ -529,8 +471,6 @@ class LoginControllerTest extends ContentElementTestCase
 
     public function testUsesHomepageTargetPathForLogoutIfPageIsProtected(): void
     {
-        $user = $this->createMock(FrontendUser::class);
-
         $page = $this->mockClassWithProperties(PageModel::class, ['protected']);
         $page->protected = true;
 
@@ -538,18 +478,17 @@ class LoginControllerTest extends ContentElementTestCase
 
         $response = $this->renderWithModelData(
             new LoginController(
-                $this->mockSecurity($user, false, false),
                 $this->createMock(UriSigner::class),
                 $this->createMock(LogoutUrlGenerator::class),
                 $this->createMock(AuthenticationUtils::class),
                 $this->mockTranslator(),
-                $this->createMock(ContentUrlGenerator::class),
                 $this->createMock(EventDispatcherInterface::class),
                 $this->createMock(ContaoFramework::class),
             ),
             [
                 'type' => 'login',
             ],
+            adjustedContainer: $this->getAdjustedContainer($this->createMock(FrontendUser::class)),
             page: $page,
             request: $request,
         );
@@ -566,25 +505,22 @@ class LoginControllerTest extends ContentElementTestCase
 
     public function testShowsAuthenticateRemembered(): void
     {
-        $user = $this->createMock(FrontendUser::class);
-
         $page = $this->mockClassWithProperties(PageModel::class, ['protected']);
         $page->type = 'error_401';
 
         $response = $this->renderWithModelData(
             new LoginController(
-                $this->mockSecurity($user, true, false),
                 $this->createMock(UriSigner::class),
                 $this->createMock(LogoutUrlGenerator::class),
                 $this->createMock(AuthenticationUtils::class),
                 $this->mockTranslator(),
-                $this->createMock(ContentUrlGenerator::class),
                 $this->createMock(EventDispatcherInterface::class),
                 $this->createMock(ContaoFramework::class),
             ),
             [
                 'type' => 'login',
             ],
+            adjustedContainer: $this->getAdjustedContainer($this->createMock(FrontendUser::class), true, false),
             page: $page,
         );
 
@@ -673,5 +609,62 @@ class LoginControllerTest extends ContentElementTestCase
         }
 
         return $security;
+    }
+
+    private function getAdjustedContainer(User|null $user = null, bool|null $isRemembered = false, bool|null $twoFaInProgress = false, PageModel|null $pageForContentUrl = null): ContainerBuilder
+    {
+        $container = new ContainerBuilder();
+
+        if ($user) {
+            $token = $this->createMock(TokenInterface::class);
+            $token
+                ->expects($this->once())
+                ->method('getUser')
+                ->willReturn($user)
+            ;
+        } else {
+            $token = null;
+        }
+
+        $tokenStorage = $this->createMock(TokenStorageInterface::class);
+        $tokenStorage
+            ->expects($twoFaInProgress ? $this->exactly(2) : $this->once())
+            ->method('getToken')
+            ->willReturn($token)
+        ;
+
+        $container->set('security.token_storage', $tokenStorage);
+
+        $isGrantedMap = [];
+
+        if (null !== $isRemembered) {
+            $isGrantedMap[] = ['IS_REMEMBERED', null, $isRemembered];
+        }
+
+        if (null !== $twoFaInProgress) {
+            $isGrantedMap[] = ['IS_AUTHENTICATED_2FA_IN_PROGRESS', null, $twoFaInProgress];
+        }
+
+        $authChecker = $this->createMock(AuthorizationCheckerInterface::class);
+        $authChecker
+            ->expects($this->exactly(\count($isGrantedMap)))
+            ->method('isGranted')
+            ->willReturnMap($isGrantedMap)
+        ;
+
+        $container->set('security.authorization_checker', $authChecker);
+
+        $contentUrlGenerator = $this->createMock(ContentUrlGenerator::class);
+        $contentUrlGenerator
+            ->expects($pageForContentUrl ? $this->once() : $this->never())
+            ->method('generate')
+            ->willReturnCallback(
+                static fn (PageModel $page): string => 'https://example.com/'.$page->alias,
+            )
+        ;
+
+        $container->set('contao.routing.content_url_generator', $contentUrlGenerator);
+
+        return $container;
     }
 }

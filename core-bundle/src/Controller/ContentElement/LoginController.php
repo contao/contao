@@ -7,7 +7,6 @@ namespace Contao\CoreBundle\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsContentElement;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Twig\FragmentTemplate;
 use Contao\FrontendUser;
 use Contao\PageModel;
@@ -15,7 +14,6 @@ use Nyholm\Psr7\Uri;
 use Scheb\TwoFactorBundle\Security\Authentication\Exception\InvalidTwoFactorCodeException;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvent;
 use Scheb\TwoFactorBundle\Security\TwoFactor\Event\TwoFactorAuthenticationEvents;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\UriSigner;
@@ -32,12 +30,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class LoginController extends AbstractContentElementController
 {
     public function __construct(
-        private readonly Security $security,
         private readonly UriSigner $uriSigner,
         private readonly LogoutUrlGenerator $logoutUrlGenerator,
         private readonly AuthenticationUtils $authenticationUtils,
         private readonly TranslatorInterface $translator,
-        private readonly ContentUrlGenerator $contentUrlGenerator,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly ContaoFramework $framework,
     ) {
@@ -45,13 +41,13 @@ class LoginController extends AbstractContentElementController
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        if (($user = $this->security->getUser()) && !$user instanceof FrontendUser) {
+        if (($user = $this->getUser()) && !$user instanceof FrontendUser) {
             return new Response(status: Response::HTTP_NO_CONTENT);
         }
 
         $targetPath = $this->getTargetPath($request);
-        $isRemembered = $this->security->isGranted('IS_REMEMBERED');
-        $isTwoFactorInProgress = $this->security->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS');
+        $isRemembered = $this->isGranted('IS_REMEMBERED');
+        $isTwoFactorInProgress = $this->isGranted('IS_AUTHENTICATED_2FA_IN_PROGRESS');
         $page = $this->getPageModel();
         $redirect = $request->getUri();
 
@@ -122,7 +118,7 @@ class LoginController extends AbstractContentElementController
 
         // Redirect to the jumpTo page
         elseif ($targetPage = $pageAdapter->findById($model->jumpTo)) {
-            $redirect = $this->contentUrlGenerator->generate($targetPage, [], UrlGeneratorInterface::ABSOLUTE_URL);
+            $redirect = $this->generateContentUrl($targetPage, [], UrlGeneratorInterface::ABSOLUTE_URL);
         }
 
         $template->formId = 'tl_login_'.$model->id;
@@ -131,7 +127,7 @@ class LoginController extends AbstractContentElementController
 
         if ($isTwoFactorInProgress) {
             // Dispatch 2FA form event to prepare 2FA providers
-            $token = $this->security->getToken();
+            $token = $this->container->get('security.token_storage')->getToken();
             $event = new TwoFactorAuthenticationEvent($request, $token);
             $this->eventDispatcher->dispatch($event, TwoFactorAuthenticationEvents::FORM);
 
@@ -142,7 +138,7 @@ class LoginController extends AbstractContentElementController
         }
 
         if ($pwResetPage = $pageAdapter->findById($model->pwResetPage)) {
-            $template->pwResetUrl = $this->contentUrlGenerator->generate($pwResetPage);
+            $template->pwResetUrl = $this->generateContentUrl($pwResetPage);
         }
 
         $template->slabel = $this->translator->trans('MSC.login', [], 'contao_default');
