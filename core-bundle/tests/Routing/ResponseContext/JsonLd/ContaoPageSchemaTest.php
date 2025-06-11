@@ -20,13 +20,14 @@ class ContaoPageSchemaTest extends TestCase
 {
     public function testGeneralSettersAndGetters(): void
     {
-        $schema = new ContaoPageSchema('title', 42, '', false, [], false);
+        $schema = new ContaoPageSchema('title', 42, '', false, [1, 2, 3], false, [2]);
 
         $this->assertSame('title', $schema->getTitle());
         $this->assertSame(42, $schema->getPageId());
         $this->assertSame('', $schema->getSearchIndexer());
         $this->assertFalse($schema->isProtected());
-        $this->assertSame([], $schema->getGroups());
+        $this->assertSame([1, 2, 3], $schema->getGroups());
+        $this->assertSame([2], $schema->getMemberGroups());
         $this->assertFalse($schema->isFePreview());
 
         $schema->setTitle('Foobar');

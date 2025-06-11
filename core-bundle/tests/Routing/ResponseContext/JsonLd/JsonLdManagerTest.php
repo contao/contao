@@ -106,6 +106,7 @@ class JsonLdManagerTest extends TestCase
                             "@type": "Page",
                             "fePreview": false,
                             "groups": [],
+                            "memberGroups": [],
                             "pageId": 42,
                             "protected": false,
                             "searchIndexer": "",
