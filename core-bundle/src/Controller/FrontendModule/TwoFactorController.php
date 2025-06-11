@@ -41,13 +41,13 @@ class TwoFactorController extends AbstractFrontendModuleController
     {
         $services = parent::getSubscribedServices();
 
-        $services['contao.framework'] = ContaoFramework::class;
-        $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
-        $services['contao.security.two_factor.authenticator'] = Authenticator::class;
-        $services['security.authentication_utils'] = AuthenticationUtils::class;
-        $services['translator'] = TranslatorInterface::class;
-        $services['contao.security.two_factor.trusted_device_manager'] = TrustedDeviceManager::class;
-        $services['contao.security.two_factor.backup_code_manager'] = BackupCodeManager::class;
+        $services['contao.framework'] = '?'.ContaoFramework::class;
+        $services['contao.routing.scope_matcher'] = '?'.ScopeMatcher::class;
+        $services['contao.security.two_factor.authenticator'] = '?'.Authenticator::class;
+        $services['security.authentication_utils'] = '?'.AuthenticationUtils::class;
+        $services['translator'] = '?'.TranslatorInterface::class;
+        $services['contao.security.two_factor.trusted_device_manager'] = '?'.TrustedDeviceManager::class;
+        $services['contao.security.two_factor.backup_code_manager'] = '?'.BackupCodeManager::class;
 
         return $services;
     }

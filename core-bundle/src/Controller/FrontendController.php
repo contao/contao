@@ -102,8 +102,8 @@ class FrontendController extends AbstractController
     {
         $services = parent::getSubscribedServices();
 
-        $services['contao.cron'] = Cron::class;
-        $services['contao.csrf.token_manager'] = ContaoCsrfTokenManager::class;
+        $services['contao.cron'] = '?'.Cron::class;
+        $services['contao.csrf.token_manager'] = '?'.ContaoCsrfTokenManager::class;
 
         return $services;
     }
