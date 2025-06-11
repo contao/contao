@@ -69,6 +69,17 @@ class AddCommentFieldsListener
 
     private function applyParentFields(string $table): void
     {
+        $isInstalled = match ($table) {
+            'tl_news_archive' => isset($this->bundles['ContaoNewsBundle']),
+            'tl_calendar' => isset($this->bundles['ContaoCalendarBundle']),
+            'tl_faq_category' => isset($this->bundles['ContaoFaqBundle']),
+            default => throw new \RuntimeException('Unsupported table '.$table),
+        };
+
+        if (!$isInstalled) {
+            return;
+        }
+
         $GLOBALS['TL_DCA'][$table]['palettes']['__selector__'][] = 'allowComments';
         $GLOBALS['TL_DCA'][$table]['subpalettes']['allowComments'] = 'notify,sortOrder,perPage,moderate,bbcode,requireLogin,disableCaptcha';
 
@@ -134,6 +145,17 @@ class AddCommentFieldsListener
 
     private function applyChildFields(string $table): void
     {
+        $isInstalled = match ($table) {
+            'tl_news' => isset($this->bundles['ContaoNewsBundle']),
+            'tl_calendar_events' => isset($this->bundles['ContaoCalendarBundle']),
+            'tl_faq' => isset($this->bundles['ContaoFaqBundle']),
+            default => throw new \RuntimeException('Unsupported table '.$table),
+        };
+
+        if (!$isInstalled) {
+            return;
+        }
+
         $GLOBALS['TL_DCA'][$table]['list']['sorting']['headerFields'][] = 'allowComments';
 
         $GLOBALS['TL_DCA'][$table]['fields']['noComments'] = [
