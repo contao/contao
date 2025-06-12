@@ -49,11 +49,11 @@ abstract class AbstractFragmentController extends AbstractController implements 
     {
         $services = parent::getSubscribedServices();
 
-        $services['request_stack'] = RequestStack::class;
-        $services['contao.routing.page_finder'] = PageFinder::class;
-        $services['contao.routing.scope_matcher'] = ScopeMatcher::class;
-        $services['contao.twig.filesystem_loader'] = ContaoFilesystemLoader::class;
-        $services['contao.twig.interop.context_factory'] = ContextFactory::class;
+        $services['request_stack'] = '?'.RequestStack::class;
+        $services['contao.routing.page_finder'] = '?'.PageFinder::class;
+        $services['contao.routing.scope_matcher'] = '?'.ScopeMatcher::class;
+        $services['contao.twig.filesystem_loader'] = '?'.ContaoFilesystemLoader::class;
+        $services['contao.twig.interop.context_factory'] = '?'.ContextFactory::class;
 
         return $services;
     }
