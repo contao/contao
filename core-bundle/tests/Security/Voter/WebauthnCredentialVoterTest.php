@@ -39,14 +39,20 @@ class WebauthnCredentialVoterTest extends TestCase
         $token = $this->createMock(TokenInterface::class);
         $credential = $this->createMock(WebauthnCredential::class);
 
-        $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, $credential, ['contao_foobar']));
+        $this->assertSame(
+            VoterInterface::ACCESS_ABSTAIN,
+            $this->voter->vote($token, $credential, ['contao_foobar']),
+        );
     }
 
     public function testAbstainsIfTheSubjectIsNotWebauthnCredential(): void
     {
         $token = $this->createMock(TokenInterface::class);
 
-        $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $this->voter->vote($token, new \stdClass(), [ContaoCorePermissions::WEBAUTHN_CREDENTIAL_OWNERSHIP]));
+        $this->assertSame(
+            VoterInterface::ACCESS_ABSTAIN,
+            $this->voter->vote($token, new \stdClass(), [ContaoCorePermissions::WEBAUTHN_CREDENTIAL_OWNERSHIP]),
+        );
     }
 
     public function testDeniesAccessIfIsNotAFrontendUser(): void
@@ -60,7 +66,10 @@ class WebauthnCredentialVoterTest extends TestCase
 
         $credential = $this->createMock(WebauthnCredential::class);
 
-        $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, $credential, [ContaoCorePermissions::WEBAUTHN_CREDENTIAL_OWNERSHIP]));
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $this->voter->vote($token, $credential, [ContaoCorePermissions::WEBAUTHN_CREDENTIAL_OWNERSHIP]),
+        );
     }
 
     public function testDeniesAccessIfTokenIsTwoFactor(): void
@@ -68,7 +77,10 @@ class WebauthnCredentialVoterTest extends TestCase
         $token = $this->createMock(TwoFactorTokenInterface::class);
         $credential = $this->createMock(WebauthnCredential::class);
 
-        $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, $credential, [ContaoCorePermissions::WEBAUTHN_CREDENTIAL_OWNERSHIP]));
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $this->voter->vote($token, $credential, [ContaoCorePermissions::WEBAUTHN_CREDENTIAL_OWNERSHIP]),
+        );
     }
 
     public function testDeniesAccessIfWebauthnCredentialDoesNotBelongToUser(): void
@@ -99,7 +111,10 @@ class WebauthnCredentialVoterTest extends TestCase
             1,
         );
 
-        $this->assertSame(VoterInterface::ACCESS_DENIED, $this->voter->vote($token, $credential, [ContaoCorePermissions::WEBAUTHN_CREDENTIAL_OWNERSHIP]));
+        $this->assertSame(
+            VoterInterface::ACCESS_DENIED,
+            $this->voter->vote($token, $credential, [ContaoCorePermissions::WEBAUTHN_CREDENTIAL_OWNERSHIP]),
+        );
     }
 
     public function testGrantsAccessIfWebauthnCredentialBelongsToUser(): void
@@ -130,6 +145,9 @@ class WebauthnCredentialVoterTest extends TestCase
             1,
         );
 
-        $this->assertSame(VoterInterface::ACCESS_GRANTED, $this->voter->vote($token, $credential, [ContaoCorePermissions::WEBAUTHN_CREDENTIAL_OWNERSHIP]));
+        $this->assertSame(
+            VoterInterface::ACCESS_GRANTED,
+            $this->voter->vote($token, $credential, [ContaoCorePermissions::WEBAUTHN_CREDENTIAL_OWNERSHIP]),
+        );
     }
 }
