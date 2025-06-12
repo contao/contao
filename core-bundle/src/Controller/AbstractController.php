@@ -34,14 +34,14 @@ abstract class AbstractController extends SymfonyAbstractController
     {
         $services = parent::getSubscribedServices();
 
-        $services['contao.framework'] = ContaoFramework::class;
-        $services['contao.routing.content_url_generator'] = ContentUrlGenerator::class;
+        $services['contao.framework'] = '?'.ContaoFramework::class;
+        $services['contao.routing.content_url_generator'] = '?'.ContentUrlGenerator::class;
         $services['contao.routing.response_context_accessor'] = '?'.ResponseContextAccessor::class;
-        $services['event_dispatcher'] = EventDispatcherInterface::class;
+        $services['event_dispatcher'] = '?'.EventDispatcherInterface::class;
         $services['logger'] = '?'.LoggerInterface::class;
         $services['fos_http_cache.http.symfony_response_tagger'] = '?'.SymfonyResponseTagger::class;
-        $services['contao.csrf.token_manager'] = ContaoCsrfTokenManager::class;
-        $services['contao.cache.tag_manager'] = CacheTagManager::class;
+        $services['contao.csrf.token_manager'] = '?'.ContaoCsrfTokenManager::class;
+        $services['contao.cache.tag_manager'] = '?'.CacheTagManager::class;
 
         return $services;
     }
