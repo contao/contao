@@ -773,12 +773,12 @@ class FigureBuilder
                 return [null, $target];
             }
 
-            $filePath = urldecode($target);
-
             // Check if target is an absolute filesystem path to an existing resource
-            if (Path::isAbsolute($filePath) && is_file($filePath)) {
-                return [Path::canonicalize($filePath), null];
+            if (Path::isAbsolute($target) && is_file($target)) {
+                return [Path::canonicalize($target), null];
             }
+
+            $filePath = urldecode($target);
 
             // Check if target references a resource relative to the project dir
             $projectPath = Path::join($this->projectDir, $filePath);
