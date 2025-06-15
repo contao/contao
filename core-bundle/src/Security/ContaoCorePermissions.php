@@ -222,7 +222,7 @@ final class ContaoCorePermissions
     public const DC_PREFIX = 'contao_dc.';
 
     /**
-     * Access is granted if the give WebauthnCredential user belongs to the current user.
+     * Access is granted if the given WebauthnCredential user belongs to the current user.
      */
     public const WEBAUTHN_CREDENTIAL_OWNERSHIP = 'contao_webauthn_credential_ownership';
 }
