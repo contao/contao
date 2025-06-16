@@ -418,7 +418,7 @@ abstract class Controller extends System
 
 			if (\count($groups) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true))
 			{
-				$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+				$strBuffer = "\n<!-- indexer::stop --><!-- indexer::protected -->" . $strBuffer . "<!-- indexer::continue -->\n";
 			}
 		}
 
@@ -499,7 +499,7 @@ abstract class Controller extends System
 
 			if (\count($groups) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true))
 			{
-				$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+				$strBuffer = "\n<!-- indexer::stop --><!-- indexer::protected -->" . $strBuffer . "<!-- indexer::continue -->\n";
 			}
 		}
 
@@ -633,7 +633,7 @@ abstract class Controller extends System
 
 			if (\count($groups) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true))
 			{
-				$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+				$strBuffer = "\n<!-- indexer::stop --><!-- indexer::protected -->" . $strBuffer . "<!-- indexer::continue -->\n";
 			}
 		}
 
