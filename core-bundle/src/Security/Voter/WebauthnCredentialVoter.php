@@ -19,6 +19,9 @@ use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
+/**
+ * @extends Voter<string, WebauthnCredential>
+ */
 class WebauthnCredentialVoter extends Voter
 {
     public function supportsAttribute(string $attribute): bool
