@@ -189,14 +189,8 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
         // Call a custom function instead of using the default button
         if (\is_array($operation['button_callback'] ?? null)) {
             $callback = $this->framework->getAdapter(System::class)->importStatic($operation['button_callback'][0]);
-            $ref = new \ReflectionMethod($callback, $operation['button_callback'][1]);
 
-            if (
-                1 === $ref->getNumberOfParameters()
-                && ($type = $ref->getParameters()[0]->getType())
-                && $type instanceof \ReflectionNamedType
-                && DataContainerOperation::class === $type->getName()
-            ) {
+            if ($this->acceptsDataContainerOperation(new \ReflectionMethod($callback, $operation['button_callback'][1]))) {
                 $callback->{$operation['button_callback'][1]}($config);
             } elseif ($legacyCallback) {
                 $legacyCallback($config);
@@ -204,14 +198,7 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
                 throw new \RuntimeException('Cannot handle legacy button_callback, provide the $legacyCallback');
             }
         } elseif (\is_callable($operation['button_callback'] ?? null)) {
-            $ref = new \ReflectionFunction($operation['button_callback']);
-
-            if (
-                1 === $ref->getNumberOfParameters()
-                && ($type = $ref->getParameters()[0]->getType())
-                && $type instanceof \ReflectionNamedType
-                && DataContainerOperation::class === $type->getName()
-            ) {
+            if ($this->acceptsDataContainerOperation(new \ReflectionFunction($operation['button_callback']))) {
                 $operation['button_callback']($config);
             } elseif ($legacyCallback) {
                 $legacyCallback($config);
@@ -272,5 +259,13 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
         if (null === $this->operations) {
             throw new \RuntimeException(self::class.' has not been initialized yet.');
         }
+    }
+
+    private function acceptsDataContainerOperation(\ReflectionMethod|\ReflectionFunction $ref): bool
+    {
+        return 1 === $ref->getNumberOfParameters()
+            && ($type = $ref->getParameters()[0]->getType())
+            && $type instanceof \ReflectionNamedType
+            && DataContainerOperation::class === $type->getName();
     }
 }

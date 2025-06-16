@@ -245,14 +245,8 @@ class DataContainerOperationsBuilder implements \Stringable
         // Call a custom function instead of using the default button
         if (\is_array($operation['button_callback'] ?? null)) {
             $callback = System::importStatic($operation['button_callback'][0]);
-            $ref = new \ReflectionMethod($callback, $operation['button_callback'][1]);
 
-            if (
-                1 === $ref->getNumberOfParameters()
-                && ($type = $ref->getParameters()[0]->getType())
-                && $type instanceof \ReflectionNamedType
-                && DataContainerOperation::class === $type->getName()
-            ) {
+            if ($this->acceptsDataContainerOperation(new \ReflectionMethod($callback, $operation['button_callback'][1]))) {
                 $callback->{$operation['button_callback'][1]}($config);
             } elseif ($legacyCallback) {
                 $legacyCallback($config);
@@ -260,14 +254,7 @@ class DataContainerOperationsBuilder implements \Stringable
                 throw new \RuntimeException('Cannot handle legacy button_callback, provide the $legacyCallback');
             }
         } elseif (\is_callable($operation['button_callback'] ?? null)) {
-            $ref = new \ReflectionFunction($operation['button_callback']);
-
-            if (
-                1 === $ref->getNumberOfParameters()
-                && ($type = $ref->getParameters()[0]->getType())
-                && $type instanceof \ReflectionNamedType
-                && DataContainerOperation::class === $type->getName()
-            ) {
+            if ($this->acceptsDataContainerOperation(new \ReflectionFunction($operation['button_callback']))) {
                 $operation['button_callback']($config);
             } elseif ($legacyCallback) {
                 $legacyCallback($config);
@@ -390,5 +377,13 @@ class DataContainerOperationsBuilder implements \Stringable
             'icon' => Image::getHtml($state ? $icon : $_icon, $state ? $config['title'] : $titleDisabled, 'data-icon="'.$icon.'" data-icon-disabled="'.$_icon.'" data-state="'.$state.'" data-alt="'.StringUtil::specialchars($config['title']).'" data-alt-disabled="'.StringUtil::specialchars($titleDisabled).'"'),
             'primary' => $config['primary'] ?? null,
         ];
+    }
+
+    private function acceptsDataContainerOperation(\ReflectionMethod|\ReflectionFunction $ref): bool
+    {
+        return 1 === $ref->getNumberOfParameters()
+            && ($type = $ref->getParameters()[0]->getType())
+            && $type instanceof \ReflectionNamedType
+            && DataContainerOperation::class === $type->getName();
     }
 }
