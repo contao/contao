@@ -917,7 +917,6 @@ abstract class DataContainer extends Backend
 	/**
 	 * Compile global buttons from the table configuration array and return them as HTML
 	 *
-	 * @deprecated Deprecated in Contao 5.6, to be removed in Contao 6.
 	 * @return string|null
 	 */
 	protected function generateGlobalButtons(/* DataContainerGlobalOperationsBuilder $operations */)
