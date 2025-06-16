@@ -46,8 +46,10 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             return '';
         }
 
-        return $this->twig->render('@Contao/backend/data_container/global_operations.html.twig', [
+        return $this->twig->render('@Contao/backend/data_container/operations.html.twig', [
             'operations' => $this->operations,
+            'has_primary' => [] !== array_filter(array_column($this->operations, 'primary'), static fn ($v) => null !== $v),
+            'globalOperations' => true,
         ]);
     }
 
@@ -77,6 +79,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             'label' => $this->translator->trans('MSC.backBT', [], 'contao_default'),
             'title' => $this->translator->trans('MSC.backBTTitle', [], 'contao_default'),
             'attributes' => (new HtmlAttributes())->addClass('header_back')->set('accesskey', 'b')->set('data-action', 'contao--scroll-offset#discard'),
+            'primary' => true,
         ]);
 
         return $this;
@@ -90,6 +93,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             'href' => $this->framework->getAdapter(Backend::class)->addToUrl('clipboard=1'),
             'label' => $this->translator->trans('MSC.clearClipboard', [], 'contao_default'),
             'attributes' => (new HtmlAttributes())->addClass('header_clipboard')->set('accesskey', 'x'),
+            'primary' => true,
         ]);
 
         return $this;
@@ -106,6 +110,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             'label' => $labelNew[0] ?? 'new',
             'title' => $labelNew[1] ?? null,
             'attributes' => (new HtmlAttributes())->addClass('header_new')->set('accesskey', 'n')->set('data-action', 'contao--scroll-offset#store'),
+            'primary' => true,
         ]);
 
         return $this;
@@ -166,6 +171,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             'label' => $config['label'],
             'title' => $config['title'],
             'attributes' => $config['attributes'],
+            'primary' => $config['primary'] ?? null,
         ];
     }
 

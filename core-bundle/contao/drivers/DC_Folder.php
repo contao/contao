@@ -468,6 +468,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				'label' => $lblNew,
 				'title' => $ttlNew,
 				'attributes' => (new HtmlAttributes())->addClass($clsNew)->set('accesskey', 'n')->set('data-action', 'contao--scroll-offset#store'),
+				'primary' => true,
 			));
 
 			$operations->append(array(
@@ -475,6 +476,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				'label' => $GLOBALS['TL_LANG'][$this->strTable]['move'][0],
 				'title' => $GLOBALS['TL_LANG'][$this->strTable]['move'][1],
 				'attributes' => (new HtmlAttributes())->addClass('header_new')->set('data-action', 'contao--scroll-offset#store'),
+				'primary' => true,
 			));
 		}
 

@@ -516,6 +516,17 @@ body.popup {
 	margin-left: 0 !important;
 }
 
+#tl_buttons li button {
+	display: inline-block;
+	padding: 3px 0;
+	background: none;
+	border: none;
+}
+
+#tl_buttons li button:hover {
+	color: var(--contao);
+}
+
 .toggleWrap {
 	cursor: pointer;
 }
@@ -1627,7 +1638,7 @@ table.tl_listing {
 	display: block !important;
 }
 
-.operations-menu a {
+.operations-menu a:not(.no-icon) {
 	display: flex;
 	gap: 6px;
 	align-items: center;

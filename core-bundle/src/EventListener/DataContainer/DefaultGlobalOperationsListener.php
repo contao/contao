@@ -100,6 +100,7 @@ class DefaultGlobalOperationsListener
                     'class' => 'header_toggle',
                     'attributes' => ' data-contao--toggle-nodes-target="operation" data-action="contao--toggle-nodes#toggleAll:prevent keydown@window->contao--toggle-nodes#keypress keyup@window->contao--toggle-nodes#keypress"',
                     'showOnSelect' => true,
+                    'primary' => true,
                 ],
             ];
         } elseif ($hasLimitHeight) {
@@ -107,6 +108,7 @@ class DefaultGlobalOperationsListener
                 'toggleNodes' => [
                     'button_callback' => static fn () => '<button class="header_toggle" data-contao--limit-height-target="operation" data-action="contao--limit-height#toggleAll keydown@window->contao--limit-height#keypress keyup@window->contao--limit-height#keypress" style="display:none">'.$GLOBALS['TL_LANG']['DCA']['toggleNodes'][0].'</button> ',
                     'showOnSelect' => true,
+                    'primary' => true,
                 ],
             ];
         }
@@ -118,6 +120,7 @@ class DefaultGlobalOperationsListener
                     'prefetch' => true,
                     'class' => 'header_edit_all',
                     'attributes' => 'data-action="contao--scroll-offset#store" accesskey="e"',
+                    'primary' => true,
                 ],
             ];
         }

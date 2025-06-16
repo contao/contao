@@ -2,25 +2,30 @@
 {% set has_submenu = false %}
 {% set show_button = false %}
 
-<div class="operations">
-    <ul id="operations{{ id }}" data-contao--operations-menu-target="menu">
+<div class="operations"{% if globalOperations %} data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"{% endif %}>
+    <ul id="{{ id is defined ? 'operations'~id : 'tl_buttons' }}" data-contao--operations-menu-target="menu">
         {% for operation in operations %}
             {% set isLink = operation.href|default or (operation.html is defined and '<a ' in operation.html) %}
             {% set has_submenu = has_submenu or isLink %}
             {% if has_primary and not operation.primary|default(false) %}
                 {% set show_button = true %}
             {% else %}
-                {{ _self.operation(operation) }}
+                {{ _self.operation(operation, false, globalOperations) }}
             {% endif %}
         {% endfor %}
         {% if has_submenu %}
             <li class="operations-menu-container">
                 <button type="button" data-contao--operations-menu-target="controller"{% if not show_button %} style="display:none"{% endif %}>
-                    {{ backend_icon('more.svg', 'DCA.operations'|trans([id])) }}
+                    {% if globalOperations %}
+                        {{ backend_icon('more.svg', 'DCA.global_operations.1'|trans) }}
+                        {{ 'DCA.global_operations.0'|trans }}
+                    {% else %}
+                        {{ backend_icon('more.svg', 'DCA.operations'|trans([id|default])) }}
+                    {% endif %}
                 </button>
                 <ul class="operations-menu" data-contao--operations-menu-target="submenu">
                     {% for operation in operations %}
-                        {{ _self.operation(operation, true) }}
+                        {{ _self.operation(operation, true, globalOperations) }}
                     {% endfor %}
                 </ul>
             </li>
@@ -28,17 +33,19 @@
     </ul>
 </div>
 
-{% macro operation(operation, menu = false) %}
+{% macro operation(operation, menu = false, showLabels = false) %}
     {% if operation.html is defined and (not menu or '<a ' in operation.html) %}
         {% if operation.html|trim is not empty %}<li{% if menu %} data-contao--operations-menu-target="title"{% endif %}>{{ operation.html|raw }}</li>{% endif %}
     {% elseif operation.href|default %}
         <li{% if menu and not operation.title|default %} data-contao--operations-menu-target="title"{% endif %}>
-            <a
-                href="{{ operation.href }}"
-                {{ operation.attributes|default|raw }}
-            >
-                {{ operation.icon|raw }}
-                {% if menu %}{{ operation.title|default }}{% endif %}
+            {% set operation_attributes = attrs(operation.attributes|default)
+                .set('href', operation.href)
+                .setIfExists('title', operation.icon is defined ? null : operation.title|default)
+                .addClass('no-icon', operation.icon is not defined)
+            %}
+            <a{{ operation_attributes|raw }}>
+                {{ operation.icon|default|raw }}
+                {% if menu or showLabels %}{{ operation.label|default }}{% endif %}
             </a>
         </li>
     {% elseif operation.icon|default and not menu %}

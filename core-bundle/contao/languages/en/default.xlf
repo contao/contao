@@ -2408,6 +2408,12 @@
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
       </trans-unit>
+      <trans-unit id="DCA.global_operations.0">
+        <source>More</source>
+      </trans-unit>
+      <trans-unit id="DCA.global_operations.1">
+        <source>Show all operations</source>
+      </trans-unit>
       <trans-unit id="DCA.operations">
         <source>Show operations for element ID %s</source>
       </trans-unit>
