@@ -951,6 +951,7 @@ services:
             - '@contao.insert_tag.parser'
             - '@contao.routing.response_context.csp_handler_factory'
             - '@router'
+            - '@security.helper'
 
     contao.routing.route_404_provider:
         class: Contao\CoreBundle\Routing\Route404Provider
