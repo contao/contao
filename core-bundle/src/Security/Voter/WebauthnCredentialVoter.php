@@ -17,10 +17,9 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\User;
 use Scheb\TwoFactorBundle\Security\Authentication\Token\TwoFactorTokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\Vote;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class WebauthnCredentialVoter implements CacheableVoterInterface
+class WebauthnCredentialVoter extends Voter
 {
     public function supportsAttribute(string $attribute): bool
     {
@@ -32,26 +31,19 @@ class WebauthnCredentialVoter implements CacheableVoterInterface
         return WebauthnCredential::class === $subjectType;
     }
 
-    public function vote(TokenInterface $token, mixed $subject, array $attributes, Vote|null $vote = null): int
+    protected function supports(string $attribute, mixed $subject): bool
     {
-        if (!array_filter($attributes, $this->supportsAttribute(...))) {
-            return self::ACCESS_ABSTAIN;
-        }
+        return $this->supportsAttribute($attribute) && $this->supportsType($subject::class);
+    }
 
-        if (!$subject instanceof WebauthnCredential) {
-            return self::ACCESS_ABSTAIN;
-        }
-
+    protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
+    {
         $user = $token->getUser();
 
         if (!$user instanceof User || $token instanceof TwoFactorTokenInterface) {
-            return self::ACCESS_DENIED;
+            return false;
         }
 
-        if ($subject->userHandle === $user->getPasskeyUserHandle()) {
-            return self::ACCESS_GRANTED;
-        }
-
-        return self::ACCESS_DENIED;
+        return $subject->userHandle === $user->getPasskeyUserHandle();
     }
 }
