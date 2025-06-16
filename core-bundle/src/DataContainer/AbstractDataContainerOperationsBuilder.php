@@ -38,7 +38,6 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
      *     attributes: HtmlAttributes,
      *     icon?: string,
      *     primary?: bool|null,
-     *     popup?: bool,
      * }>
      */
     protected array|null $operations = null;
@@ -50,7 +49,6 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
     /**
      * @param array{html: string, primary?: bool}|array{
      *     href: string,
-     *     popup?: bool,
      *     title: string,
      *     label: string,
      *     attributes: HtmlAttributes,
@@ -74,7 +72,6 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
     /**
      * @param array{html: string, primary?: bool}|array{
      *     href: string,
-     *     popup?: bool,
      *     title: string,
      *     label: string,
      *     attributes: HtmlAttributes,

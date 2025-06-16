@@ -144,13 +144,19 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             return $toggle;
         }
 
+        if ($isPopup) {
+            $config['attributes']->set(
+                'onclick',
+                sprintf("Backend.openModalIframe({title:'%s', url:this.href});return false", StringUtil::specialchars($config['label']))
+            );
+        }
+
         return [
             'href' => $href,
             'label' => $config['label'],
             'title' => $config['title'],
             'attributes' => $config['attributes'],
             'icon' => Image::getHtml($config['icon'], $config['label']),
-            'popup' => $isPopup,
             'primary' => $config['primary'] ?? null,
         ];
     }

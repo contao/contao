@@ -35,7 +35,6 @@
         <li{% if menu and not operation.title|default %} data-contao--operations-menu-target="title"{% endif %}>
             <a
                 href="{{ operation.href }}"
-                {% if operation.popup|default %}onclick="Backend.openModalIframe({title:'{{ operation.label|default|replace({"'": "\'"}) }}', url:this.href});return false"{% endif%}
                 {{ operation.attributes|default|raw }}
             >
                 {{ operation.icon|raw }}
