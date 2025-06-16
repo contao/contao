@@ -31,7 +31,7 @@ class WebauthnCredentialVoter extends Voter
 
     public function supportsType(string $subjectType): bool
     {
-        return WebauthnCredential::class === $subjectType;
+        return is_a($subjectType, WebauthnCredential::class, true);
     }
 
     protected function supports(string $attribute, mixed $subject): bool
