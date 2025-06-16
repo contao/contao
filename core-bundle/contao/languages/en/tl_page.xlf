@@ -527,6 +527,24 @@
       <trans-unit id="tl_page.pasteafter.1">
         <source>Paste after page ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_page.pastenewtop.0">
+        <source>New page</source>
+      </trans-unit>
+      <trans-unit id="tl_page.pastenewtop.1">
+        <source>Add a new page at the top</source>
+      </trans-unit>
+      <trans-unit id="tl_page.pastenewafter.0">
+        <source>New after page</source>
+      </trans-unit>
+      <trans-unit id="tl_page.pastenewafter.1">
+        <source>Add a new page after page ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_page.pastenewinto.0">
+        <source>New inside page</source>
+      </trans-unit>
+      <trans-unit id="tl_page.pastenewinto.1">
+        <source>Add a new page inside page ID %s</source>
+      </trans-unit>
       <trans-unit id="tl_page.articles.0">
         <source>Articles</source>
       </trans-unit>

@@ -185,6 +185,12 @@
       <trans-unit id="tl_article.pasteinto.1">
         <source>Paste into page ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_article.pastenewafter.1">
+        <source>New article after article ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_article.pastenewinto.1">
+        <source>New article in page ID %s</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

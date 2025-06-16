@@ -2526,13 +2526,19 @@
         <source>New</source>
       </trans-unit>
       <trans-unit id="DCA.pastenewtop.1">
-        <source>Create a new element after element ID %s</source>
+        <source>Create a new element at the top</source>
       </trans-unit>
       <trans-unit id="DCA.pastenewafter.0">
         <source>New</source>
       </trans-unit>
       <trans-unit id="DCA.pastenewafter.1">
         <source>Create a new element after element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewinto.0">
+        <source>New</source>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewinto.1">
+        <source>Create a new element inside element ID %s</source>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>
