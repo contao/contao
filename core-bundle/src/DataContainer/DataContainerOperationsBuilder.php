@@ -94,7 +94,7 @@ class DataContainerOperationsBuilder implements \Stringable
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
             if ('-' === $v) {
-                $builder->appendSeparator();
+                $builder->addSeparator();
                 continue;
             }
 
@@ -176,10 +176,10 @@ class DataContainerOperationsBuilder implements \Stringable
         return $this;
     }
 
-    private function appendSeparator(): self
+    public function addSeparator(): self
     {
         $this->append([
-            'html' => '<hr>',
+            'separator' => true,
         ]);
 
         return $this;
