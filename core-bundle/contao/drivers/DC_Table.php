@@ -3528,12 +3528,12 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 		}
 		elseif (($buttons = $this->generateGlobalButtons($operations)) !== null)
 		{
-			trigger_deprecation('contao/core-bundle', '5.7', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 6.');
+			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 6.');
 
 			$operations->append(['html' => $buttons]);
 		}
 
-		$return = Message::generate() . (string) $operations;
+		$return = Message::generate() . $operations;
 
 		$tree = '';
 		$blnHasSorting = $db->fieldExists('sorting', $table);
