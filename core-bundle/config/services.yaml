@@ -237,6 +237,7 @@ services:
         class: Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder
         public: true
         arguments:
+            - '@contao.framework'
             - '@twig'
             - '@security.helper'
             - '@router'

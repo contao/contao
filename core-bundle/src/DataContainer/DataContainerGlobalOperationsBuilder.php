@@ -27,26 +27,17 @@ use Twig\Environment;
 /**
  * @internal
  */
-class DataContainerGlobalOperationsBuilder implements \Stringable
+class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperationsBuilder
 {
     private string $table;
 
-    /**
-     * @var list<array{html: string}|array{
-     *     href: string,
-     *     label: string,
-     *     title?: string,
-     *     attributes: HtmlAttributes
-     * }>
-     */
-    private array|null $operations = null;
-
     public function __construct(
-        private readonly ContaoFramework $framework,
+        ContaoFramework $framework,
         private readonly Environment $twig,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly TranslatorInterface $translator,
     ) {
+        parent::__construct($framework);
     }
 
     public function __toString(): string
@@ -62,49 +53,13 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
 
     public function initialize(string $table): self
     {
-        if (null !== $this->operations) {
-            throw new \RuntimeException(self::class.' has already been initialized.');
-        }
+        $this->ensureNotInitialized();
 
         $builder = clone $this;
         $builder->table = $table;
         $builder->operations = [];
 
         return $builder;
-    }
-
-    /**
-     * @param array{html: string}|array{
-     *     href: string,
-     *     label: string,
-     *     title?: string,
-     *     attributes?: HtmlAttributes,
-     * } $operation
-     */
-    public function prepend(array $operation): self
-    {
-        $this->ensureInitialized();
-
-        array_unshift($this->operations, $operation);
-
-        return $this;
-    }
-
-    /**
-     * @param array{html: string}|array{
-     *     href: string,
-     *     label: string,
-     *     title?: string,
-     *     attributes?: HtmlAttributes,
-     * } $operation
-     */
-    public function append(array $operation): self
-    {
-        $this->ensureInitialized();
-
-        $this->operations[] = $operation;
-
-        return $this;
     }
 
     public function addBackButton(string|null $href = null): self
@@ -186,26 +141,7 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
     {
         $config = new DataContainerOperation($name, $operation, null, $dataContainer);
 
-        // Call a custom function instead of using the default button
-        if (\is_array($operation['button_callback'] ?? null)) {
-            $callback = $this->framework->getAdapter(System::class)->importStatic($operation['button_callback'][0]);
-
-            if ($this->acceptsDataContainerOperation(new \ReflectionMethod($callback, $operation['button_callback'][1]))) {
-                $callback->{$operation['button_callback'][1]}($config);
-            } elseif ($legacyCallback) {
-                $legacyCallback($config);
-            } else {
-                throw new \RuntimeException('Cannot handle legacy button_callback, provide the $legacyCallback');
-            }
-        } elseif (\is_callable($operation['button_callback'] ?? null)) {
-            if ($this->acceptsDataContainerOperation(new \ReflectionFunction($operation['button_callback']))) {
-                $operation['button_callback']($config);
-            } elseif ($legacyCallback) {
-                $legacyCallback($config);
-            } else {
-                throw new \RuntimeException('Cannot handle legacy button_callback, provide the $legacyCallback');
-            }
-        }
+        $this->executeButtonCallback($config, $legacyCallback);
 
         if (null !== ($html = $config->getHtml())) {
             if ('' === $html) {
@@ -252,20 +188,5 @@ class DataContainerGlobalOperationsBuilder implements \Stringable
         }
 
         return null;
-    }
-
-    private function ensureInitialized(): void
-    {
-        if (null === $this->operations) {
-            throw new \RuntimeException(self::class.' has not been initialized yet.');
-        }
-    }
-
-    private function acceptsDataContainerOperation(\ReflectionMethod|\ReflectionFunction $ref): bool
-    {
-        return 1 === $ref->getNumberOfParameters()
-            && ($type = $ref->getParameters()[0]->getType())
-            && $type instanceof \ReflectionNamedType
-            && DataContainerOperation::class === $type->getName();
     }
 }

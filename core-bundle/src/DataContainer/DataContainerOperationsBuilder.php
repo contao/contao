@@ -13,13 +13,12 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DataContainer;
 
 use Contao\Backend;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
-use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\DataContainer;
 use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
-use Contao\System;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
@@ -27,28 +26,17 @@ use Twig\Environment;
 /**
  * @internal
  */
-class DataContainerOperationsBuilder implements \Stringable
+class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuilder
 {
     private int|string|null $id = null;
 
-    /**
-     * @var list<array{html: string, primary?: bool}|array{
-     *     href: string,
-     *     popup?: bool,
-     *     title: string,
-     *     label: string,
-     *     attributes: HtmlAttributes,
-     *     icon: string,
-     *     primary?: bool|null
-     * }>
-     */
-    private array|null $operations = null;
-
     public function __construct(
+        ContaoFramework $framework,
         private readonly Environment $twig,
         private readonly Security $security,
         private readonly UrlGeneratorInterface $urlGenerator,
     ) {
+        parent::__construct($framework);
     }
 
     public function __toString(): string
@@ -66,9 +54,7 @@ class DataContainerOperationsBuilder implements \Stringable
 
     public function initialize(int|string|null $id = null): self
     {
-        if (null !== $this->operations) {
-            throw new \RuntimeException(self::class.' has already been initialized.');
-        }
+        $this->ensureNotInitialized();
 
         $builder = clone $this;
         $builder->id = $id;
@@ -134,134 +120,11 @@ class DataContainerOperationsBuilder implements \Stringable
         return $builder;
     }
 
-    /**
-     * @param array{html: string, primary?: bool}|array{
-     *     href: string,
-     *     popup?: bool,
-     *     title: string,
-     *     label: string,
-     *     attributes: HtmlAttributes,
-     *     icon: string,
-     *     primary?: bool|null
-     * } $operation
-     */
-    public function prepend(array $operation, bool $parseHtml = false): self
-    {
-        if (null === $this->operations) {
-            throw new \RuntimeException(self::class.' has not been initialized yet.');
-        }
-
-        if ($parseHtml) {
-            array_unshift($this->operations, ...$this->parseOperationsHtml($operation));
-        } else {
-            array_unshift($this->operations, $operation);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param array{html: string, primary?: bool}|array{
-     *     href: string,
-     *     popup?: bool,
-     *     title: string,
-     *     label: string,
-     *     attributes: HtmlAttributes,
-     *     icon: string,
-     *     primary?: bool|null
-     * } $operation
-     */
-    public function append(array $operation, bool $parseHtml = false): self
-    {
-        if (null === $this->operations) {
-            throw new \RuntimeException(self::class.' has not been initialized yet.');
-        }
-
-        if ($parseHtml) {
-            array_push($this->operations, ...$this->parseOperationsHtml($operation));
-        } else {
-            $this->operations[] = $operation;
-        }
-
-        return $this;
-    }
-
-    /**
-     * Generate multiple operations if the given operation is using HTML.
-     */
-    private function parseOperationsHtml(array $operation): array
-    {
-        if (!isset($operation['html']) || '' === trim((string) $operation['html'])) {
-            return [$operation];
-        }
-
-        $xml = new \DOMDocument();
-        $xml->preserveWhiteSpace = false;
-        $xml->loadHTML('<?xml encoding="UTF-8">'.$operation['html']);
-
-        $body = $xml->getElementsByTagName('body')[0];
-
-        if ($body->childNodes->length < 2) {
-            return [$operation];
-        }
-
-        $operations = [];
-        $current = null;
-
-        foreach ($body->childNodes as $node) {
-            if ($node instanceof \DOMText) {
-                if ('' === trim($html = $xml->saveHTML($node))) {
-                    continue;
-                }
-
-                if ($current) {
-                    $current['html'] .= $html;
-                    continue;
-                }
-            }
-
-            if ($current) {
-                $operations[] = $current;
-            }
-
-            $current = $operation;
-            $current['html'] = $xml->saveHTML($node);
-
-            if ('a' === strtolower($node->nodeName)) {
-                $operations[] = $current;
-                $current = null;
-            }
-        }
-
-        $operations[] = $current;
-
-        return $operations;
-    }
-
     private function generateOperation(string $name, array $operation, string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): array|null
     {
         $config = new DataContainerOperation($name, $operation, $record, $dataContainer);
 
-        // Call a custom function instead of using the default button
-        if (\is_array($operation['button_callback'] ?? null)) {
-            $callback = System::importStatic($operation['button_callback'][0]);
-
-            if ($this->acceptsDataContainerOperation(new \ReflectionMethod($callback, $operation['button_callback'][1]))) {
-                $callback->{$operation['button_callback'][1]}($config);
-            } elseif ($legacyCallback) {
-                $legacyCallback($config);
-            } else {
-                throw new \RuntimeException('Cannot handle legacy button_callback, provide the $legacyCallback');
-            }
-        } elseif (\is_callable($operation['button_callback'] ?? null)) {
-            if ($this->acceptsDataContainerOperation(new \ReflectionFunction($operation['button_callback']))) {
-                $operation['button_callback']($config);
-            } elseif ($legacyCallback) {
-                $legacyCallback($config);
-            } else {
-                throw new \RuntimeException('Cannot handle legacy button_callback, provide the $legacyCallback');
-            }
-        }
+        $this->executeButtonCallback($config, $legacyCallback);
 
         if (null !== ($html = $config->getHtml())) {
             if ('' === $html) {
@@ -274,7 +137,7 @@ class DataContainerOperationsBuilder implements \Stringable
             ];
         }
 
-        $isPopup = $this->isPopup($name);
+        $isPopup = 'show' === $name;
         $href = $this->generateHref($config, $record, $isPopup);
 
         if (false !== ($toggle = $this->handleToggle($config, $table, $record, $operation, $href))) {
@@ -283,11 +146,11 @@ class DataContainerOperationsBuilder implements \Stringable
 
         return [
             'href' => $href,
-            'title' => $config['title'],
-            'popup' => $isPopup,
             'label' => $config['label'],
+            'title' => $config['title'],
             'attributes' => $config['attributes'],
             'icon' => Image::getHtml($config['icon'], $config['label']),
+            'popup' => $isPopup,
             'primary' => $config['primary'] ?? null,
         ];
     }
@@ -313,11 +176,6 @@ class DataContainerOperationsBuilder implements \Stringable
         }
 
         return null;
-    }
-
-    private function isPopup(string $name): bool
-    {
-        return 'show' === $name;
     }
 
     /**
@@ -377,13 +235,5 @@ class DataContainerOperationsBuilder implements \Stringable
             'icon' => Image::getHtml($state ? $icon : $_icon, $state ? $config['title'] : $titleDisabled, 'data-icon="'.$icon.'" data-icon-disabled="'.$_icon.'" data-state="'.$state.'" data-alt="'.StringUtil::specialchars($config['title']).'" data-alt-disabled="'.StringUtil::specialchars($titleDisabled).'"'),
             'primary' => $config['primary'] ?? null,
         ];
-    }
-
-    private function acceptsDataContainerOperation(\ReflectionMethod|\ReflectionFunction $ref): bool
-    {
-        return 1 === $ref->getNumberOfParameters()
-            && ($type = $ref->getParameters()[0]->getType())
-            && $type instanceof \ReflectionNamedType
-            && DataContainerOperation::class === $type->getName();
     }
 }
