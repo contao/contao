@@ -199,7 +199,7 @@ webauthn:
                 user_entity_guesser: contao.webauthn.user_entity_guesser
                 profile: contao_backend
             contao_frontend_add_authenticator:
-                options_path: /_contao/webauthn/frontend/add/options
-                result_path: /_contao/webauthn/frontend/add/result
+                options_path: /_contao/webauthn/add/options
+                result_path: /_contao/webauthn/add/result
                 user_entity_guesser: contao.webauthn.user_entity_guesser
                 profile: contao_frontend
