@@ -129,7 +129,7 @@ class PaletteManipulator
         }
 
         // Make sure there is at least one legend
-        if (0 === \count($config)) {
+        if ([] === $config) {
             $config = [['fields' => [], 'hide' => false]];
         }
 
