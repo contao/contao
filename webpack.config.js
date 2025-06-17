@@ -11,6 +11,7 @@ Encore
     .enableVersioning(Encore.isProduction())
     .enablePostCssLoader()
     .addEntry('backend', './core-bundle/assets/backend.js')
+    .addEntry('SimpleWebAuthnBrowser', './core-bundle/assets/SimpleWebAuthnBrowser.js')
 ;
 
 const jsConfig = Encore.getWebpackConfig();

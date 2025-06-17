@@ -80,9 +80,8 @@
 
 {% block script %}
     {% if not as_editor_view %}
-        {% add "@simplewebauthn/browser" to body %}
-            {# TODO: add as contao-component #}
-            <script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.umd.min.js"></script>
+        {% add "SimpleWebAuthnBrowser" to body %}
+            <script src="{{ asset('SimpleWebAuthnBrowser.js', 'contao_core') }}"></script>
         {% endadd %}
 
         {%  add "passkey_js" to body %}
