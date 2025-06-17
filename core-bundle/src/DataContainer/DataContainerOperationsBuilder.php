@@ -73,6 +73,11 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         }
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
+            if ('-' === $v) {
+                $builder->addSeparator();
+                continue;
+            }
+
             $v = \is_array($v) ? $v : [$v];
             $operation = $builder->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
 
@@ -119,6 +124,15 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         }
 
         return $builder;
+    }
+
+    public function addSeparator(): self
+    {
+        $this->append([
+            'separator' => true,
+        ]);
+
+        return $this;
     }
 
     private function generateOperation(string $name, array $operation, string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): array|null
