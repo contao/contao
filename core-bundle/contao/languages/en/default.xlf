@@ -1926,7 +1926,7 @@
         <source>Read more …</source>
       </trans-unit>
       <trans-unit id="MSC.readMore">
-        <source>Read the article: %s</source>
+        <source>Read more about %s</source>
       </trans-unit>
       <trans-unit id="MSC.targetPage">
         <source>Target page</source>

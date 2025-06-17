@@ -208,7 +208,7 @@ abstract class ModuleNews extends Module
 
 					$figure = $figureBuilder
 						->setLinkHref($objTemplate->link)
-						->setLinkAttribute('title', $linkTitle)
+						->setLinkAttribute('aria-label', $linkTitle)
 						->build();
 				}
 
@@ -312,12 +312,11 @@ abstract class ModuleNews extends Module
 		$strArticleUrl = $this->generateContentUrl($objArticle, $blnAddArchive);
 
 		return \sprintf(
-			'<a href="%s" title="%s"%s>%s%s</a>',
+			'<a href="%s" aria-label="%s"%s>%s</a>',
 			$strArticleUrl,
 			StringUtil::specialchars(\sprintf($strReadMore, $blnIsInternal ? $objArticle->headline : $strArticleUrl), true),
 			$objArticle->target && !$blnIsInternal ? ' target="_blank" rel="noreferrer noopener"' : '',
-			$strLink,
-			$blnIsReadMore && $blnIsInternal ? '<span class="invisible"> ' . $objArticle->headline . '</span>' : ''
+			$strLink
 		);
 	}
 

@@ -15,6 +15,7 @@ $this->hl = 'h1';
 <?php $this->block('content'); ?>
 
   <?= $this->text ?>
-  <p class="more"><a href="<?= $this->href ?>" title="<?= $this->readMore ?>"><?= $this->more ?><span class="invisible"> <?= $this->headline ?></span></a></p>
+
+  <p class="more"><a href="<?= $this->href ?>" aria-label="<?= $this->readMore ?>"><?= $this->more ?></a></p>
 
 <?php $this->endblock(); ?>

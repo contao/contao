@@ -22,7 +22,7 @@
 
     {% set read_more_link_attributes = attrs()
         .set('href', read_more.href)
-        .setIfExists('title', read_more.title|default)
+        .setIfExists('aria-label', read_more.title|default)
         .mergeWith(read_more_link_attributes|default)
     %}
     <a{% block read_more_link_attributes %}{{ read_more_link_attributes }}{% endblock %}>
