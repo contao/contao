@@ -67,16 +67,12 @@ $GLOBALS['TL_DCA']['tl_newsletter_channel'] = array
 		),
 		'operations' => array
 		(
-			'edit',
-			'children',
+			'-',
 			'recipients' => array
 			(
 				'href'                => 'table=tl_newsletter_recipients',
 				'icon'                => 'mgroup.svg'
-			),
-			'copy',
-			'delete',
-			'show',
+			)
 		)
 	),
 
