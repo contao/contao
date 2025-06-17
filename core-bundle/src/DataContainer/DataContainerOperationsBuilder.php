@@ -126,15 +126,6 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         return $builder;
     }
 
-    public function addSeparator(): self
-    {
-        $this->append([
-            'separator' => true,
-        ]);
-
-        return $this;
-    }
-
     private function generateOperation(string $name, array $operation, string $table, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): array|null
     {
         $config = new DataContainerOperation($name, $operation, $record, $dataContainer);

@@ -127,6 +127,11 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         $inputAdapter = $this->framework->getAdapter(Input::class);
 
         foreach ($GLOBALS['TL_DCA'][$this->table]['list']['global_operations'] as $k => $v) {
+            if ('-' === $v) {
+                $this->addSeparator();
+                continue;
+            }
+
             if (!($v['showOnSelect'] ?? null) && 'select' === $inputAdapter->get('act')) {
                 continue;
             }

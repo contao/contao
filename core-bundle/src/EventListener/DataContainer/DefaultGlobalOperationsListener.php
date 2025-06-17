@@ -50,6 +50,11 @@ class DefaultGlobalOperationsListener
         $operations = [];
 
         foreach ($dca as $k => $v) {
+            if ('-' === $v) {
+                $operations[$k] = $v;
+                continue;
+            }
+
             if (\is_string($v) && isset($defaults[$v])) {
                 $operations[$v] = $defaults[$v];
                 continue;

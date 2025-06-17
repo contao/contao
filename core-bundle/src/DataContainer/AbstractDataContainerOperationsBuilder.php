@@ -31,7 +31,7 @@ use Twig\Environment;
 abstract class AbstractDataContainerOperationsBuilder implements \Stringable
 {
     /**
-     * @var list<array{html: string, primary?: bool}|array{
+     * @var list<array{html: string, primary?: bool}|array{separator: true}|array{
      *     href: string,
      *     label: string,
      *     title?: string,
@@ -47,7 +47,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
     }
 
     /**
-     * @param array{html: string, primary?: bool}|array{
+     * @param array{html: string, primary?: bool}|array{separator: true}|array{
      *     href: string,
      *     title: string,
      *     label: string,
@@ -70,7 +70,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
     }
 
     /**
-     * @param array{html: string, primary?: bool}|array{
+     * @param array{html: string, primary?: bool}|array{separator: true}|array{
      *     href: string,
      *     title: string,
      *     label: string,
@@ -88,6 +88,15 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
         } else {
             $this->operations[] = $operation;
         }
+
+        return $this;
+    }
+
+    public function addSeparator(): self
+    {
+        $this->append([
+            'separator' => true,
+        ]);
 
         return $this;
     }
