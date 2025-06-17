@@ -79,7 +79,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             ->expects($this->once())
             ->method('render')
             ->with(
-                '@Contao/backend/data_container/global_operations.html.twig',
+                '@Contao/backend/data_container/operations.html.twig',
                 $this->callback(static fn (array $parameters) => isset($parameters['operations'])
                         && 1 === \count($parameters['operations'])
                         && $parameters['operations'][0]['href'] === $expected
@@ -147,7 +147,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             ->expects($this->once())
             ->method('render')
             ->with(
-                '@Contao/backend/data_container/global_operations.html.twig',
+                '@Contao/backend/data_container/operations.html.twig',
                 $this->callback(static fn (array $parameters) => isset($parameters['operations'])
                     && 1 === \count($parameters['operations'])
                     && 'clipboard=1' === $parameters['operations'][0]['href']
@@ -181,7 +181,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             ->expects($this->once())
             ->method('render')
             ->with(
-                '@Contao/backend/data_container/global_operations.html.twig',
+                '@Contao/backend/data_container/operations.html.twig',
                 $this->callback(static fn (array $parameters) => isset($parameters['operations'])
                     && 1 === \count($parameters['operations'])
                     && 'foo=bar' === $parameters['operations'][0]['href']
@@ -275,7 +275,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             ->expects($this->once())
             ->method('render')
             ->with(
-                '@Contao/backend/data_container/global_operations.html.twig',
+                '@Contao/backend/data_container/operations.html.twig',
                 $this->callback($expected),
             )
             ->willReturn('')

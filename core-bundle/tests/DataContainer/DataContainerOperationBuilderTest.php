@@ -50,6 +50,7 @@ class DataContainerOperationBuilderTest extends TestCase
         ;
 
         $builder = new DataContainerOperationsBuilder(
+            $this->mockContaoFramework(),
             $twig,
             $this->createMock(Security::class),
             $this->createMock(UrlGeneratorInterface::class),
