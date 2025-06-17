@@ -1104,7 +1104,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Switch to edit mode
 					if (!$blnDoNotRedirect)
 					{
-						$this->redirect($this->switchToEdit($insertID));
+						// User cannot edit record, redirect back to the list view (see #6674)
+						if (($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null) || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord)))
+						{
+							$this->redirect($this->getReferer());
+						}
+						else
+						{
+							$this->redirect($this->switchToEdit($insertID));
+						}
 					}
 
 					return $insertID;
@@ -2012,82 +2020,28 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$objVersions->initialize();
 		$intLatestVersion = $objVersions->getLatestVersion();
 
-		$security = System::getContainer()->get('security.helper');
-
-		// Build an array from boxes and rows
 		$this->strPalette = $this->getPalette();
-		$boxes = StringUtil::trimsplit(';', $this->strPalette);
-		$legends = array();
+		$boxes = System::getContainer()->get('contao.data_container.palette_builder')->getBoxes($this->strPalette, $this->strTable);
 
 		if (!empty($boxes))
 		{
-			foreach ($boxes as $k=>$v)
-			{
-				$eCount = 1;
-				$boxes[$k] = StringUtil::trimsplit(',', $v);
-
-				foreach ($boxes[$k] as $kk=>$vv)
-				{
-					if (preg_match('/^\[.*]$/', $vv))
-					{
-						++$eCount;
-						continue;
-					}
-
-					if (preg_match('/^{.*}$/', $vv))
-					{
-						$legends[$k] = substr($vv, 1, -1);
-						unset($boxes[$k][$kk]);
-					}
-					elseif (!\is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv] ?? null) || (DataContainer::isFieldExcluded($this->strTable, $vv) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $vv)))
-					{
-						unset($boxes[$k][$kk]);
-					}
-				}
-
-				// Unset a box if it does not contain any fields
-				if (\count($boxes[$k]) < $eCount)
-				{
-					unset($boxes[$k]);
-				}
-			}
-
-			$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
-
 			$class = 'tl_tbox';
-			$fs = $objSessionBag->get('fieldset_states');
 
 			// Render boxes
-			foreach ($boxes as $k=>$v)
+			foreach ($boxes as $box)
 			{
 				$arrAjax = array();
 				$blnAjax = false;
-				$key = '';
-				$cls = '';
+				$key = $box['key'];
 				$legend = '';
 
-				if (isset($legends[$k]))
+				if ($key)
 				{
-					list($key, $cls) = explode(':', $legends[$k]) + array(null, null);
-
 					$legend = "\n" . '<legend><button type="button" data-action="contao--toggle-fieldset#toggle">' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '</button></legend>';
-				}
 
-				if ($legend)
-				{
-					if (isset($fs[$this->strTable][$key]))
+					if ($box['class'])
 					{
-						$class .= ($fs[$this->strTable][$key] ? '' : ' collapsed');
-					}
-					elseif ($cls)
-					{
-						// Convert the ":hide" suffix from the DCA
-						if ($cls == 'hide')
-						{
-							$cls = 'collapsed';
-						}
-
-						$class .= ' ' . $cls;
+						$class .= ' ' . $box['class'];
 					}
 				}
 
@@ -2095,7 +2049,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$thisId = '';
 
 				// Build rows of the current box
-				foreach ($v as $vv)
+				foreach ($box['fields'] as $vv)
 				{
 					if ($vv == '[EOF]')
 					{
@@ -2318,6 +2272,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$version = '';
 		}
 
+		$security = System::getContainer()->get('security.helper');
+
 		$strButtons = System::getContainer()
 			->get('contao.data_container.buttons_builder')
 			->generateEditButtons(
@@ -2461,7 +2417,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$this->values = array($this->intId);
 					$this->arrSubmit = array();
 					$this->blnCreateNewVersion = false;
-					$this->strPalette = StringUtil::trimsplit('[;,]', $this->getPalette());
+					$this->strPalette = $this->getPalette();
+
+					$boxes = System::getContainer()->get('contao.data_container.palette_builder')->getBoxes($this->strPalette, $this->strTable, true);
+					$paletteFields = array_merge(...array_column($boxes, 'fields'));
 
 					// Reset the "noReload" state but remember it for the final handling
 					$blnNoReload = $blnNoReload || $this->noReload;
@@ -2470,41 +2429,17 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					$objVersions = new Versions($this->strTable, $this->intId);
 					$objVersions->initialize();
 
-					// Add meta fields if the current user is an administrator
-					if ($user->isAdmin)
-					{
-						if ($db->fieldExists('sorting', $this->strTable))
-						{
-							array_unshift($this->strPalette, 'sorting');
-						}
-
-						if ($db->fieldExists('pid', $this->strTable))
-						{
-							array_unshift($this->strPalette, 'pid');
-						}
-					}
-
 					// Begin current row
 					$arrAjax = array();
 					$blnAjax = false;
 					$thisId = '';
 					$box = '';
 
-					$excludedFields = array();
-
 					// Store the active record (backwards compatibility)
 					$this->objActiveRecord = (object) $currentRecord;
 
-					foreach ($this->strPalette as $v)
+					foreach ($paletteFields as $v)
 					{
-						// Check whether field is excluded
-						if (isset($excludedFields[$v]) || (DataContainer::isFieldExcluded($this->strTable, $v) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $v)))
-						{
-							$excludedFields[$v] = true;
-
-							continue;
-						}
-
 						if ($v == '[EOF]')
 						{
 							if ($blnAjax && Environment::get('isAjaxRequest'))
@@ -3334,131 +3269,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	public function getPalette()
 	{
-		$palette = 'default';
-		$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes'][$palette] ?? '';
-
-		// Check whether there are selector fields
-		if (!empty($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__']))
-		{
-			$sValues = array();
-			$subpalettes = array();
-
-			try
-			{
-				$currentRow = $this->getCurrentRecord();
-			}
-			catch (AccessDeniedException)
-			{
-				$currentRow = null;
-			}
-
-			// Get selector values from DB
-			if (null !== $currentRow)
-			{
-				foreach ($GLOBALS['TL_DCA'][$this->strTable]['palettes']['__selector__'] as $name)
-				{
-					$trigger = $currentRow[$name] ?? null;
-
-					// Overwrite the trigger
-					if (Input::post('FORM_SUBMIT') == $this->strTable)
-					{
-						$key = (Input::get('act') == 'editAll') ? $name . '_' . $this->intId : $name;
-
-						if (Input::post($key) !== null)
-						{
-							$trigger = Input::post($key);
-						}
-					}
-
-					if (($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['inputType'] ?? null) == 'checkbox' && !($GLOBALS['TL_DCA'][$this->strTable]['fields'][$name]['eval']['multiple'] ?? null))
-					{
-						if ($trigger)
-						{
-							$sValues[] = $name;
-
-							// Look for a subpalette
-							if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$name]))
-							{
-								$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$name];
-							}
-						}
-					}
-					else
-					{
-						// Use string comparison to allow "0"
-						if ((string) $trigger !== '')
-						{
-							$sValues[] = (string) $trigger;
-						}
-
-						$key = $name . '_' . $trigger;
-
-						// Look for a subpalette
-						if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key]))
-						{
-							$subpalettes[$name] = $GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$key];
-						}
-					}
-				}
-			}
-
-			// Build possible palette names from the selector values
-			if (empty($sValues))
-			{
-				$names = array('default');
-			}
-			elseif (\count($sValues) > 1)
-			{
-				foreach ($sValues as $k=>$v)
-				{
-					// Unset selectors that just trigger sub-palettes (see #3738)
-					if (isset($GLOBALS['TL_DCA'][$this->strTable]['subpalettes'][$v]))
-					{
-						unset($sValues[$k]);
-					}
-				}
-
-				$names = $this->combiner($sValues);
-			}
-			else
-			{
-				$names = array($sValues[0]);
-			}
-
-			// Get an existing palette
-			foreach ($names as $paletteName)
-			{
-				if (isset($GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName]))
-				{
-					$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes'][$paletteName];
-					break;
-				}
-			}
-
-			// Include sub-palettes
-			foreach ($subpalettes as $k=>$v)
-			{
-				$strPalette = preg_replace('/\b' . preg_quote($k, '/') . '\b/i', $k . ',[' . $k . '],' . $v . ',[EOF]', $strPalette);
-			}
-		}
-
-		// Call onpalette_callback
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] as $callback)
-			{
-				if (\is_array($callback))
-				{
-					$strPalette = System::importStatic($callback[0])->{$callback[1]}($strPalette, $this);
-				}
-				elseif (\is_callable($callback))
-				{
-					$strPalette = $callback($strPalette, $this);
-				}
-			}
-		}
-
-		return $strPalette;
+		return System::getContainer()
+			->get('contao.data_container.palette_builder')
+			->getPalette($this->strTable, (int) $this->intId, $this)
+		;
 	}
 
 	/**
@@ -3802,10 +3616,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if (!empty($topMostRootIds))
 		{
 			static::preloadCurrentRecords($topMostRootIds, $table);
+			$clipboardManager = System::getContainer()->get('contao.data_container.clipboard_manager');
 
 			for ($i=0, $c=\count($topMostRootIds); $i<$c; $i++)
 			{
-				$tree .= $this->generateTree($table, $topMostRootIds[$i], array('p'=>($topMostRootIds[$i - 1] ?? null), 'n'=>($topMostRootIds[$i + 1] ?? null)), $blnHasSorting, -16, $blnClipboard ? $arrClipboard : false, ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $blnClipboard && $topMostRootIds[$i] == $arrClipboard['id'], false, false, $arrFound);
+				$tree .= $this->generateTree($table, $topMostRootIds[$i], array('p'=>($topMostRootIds[$i - 1] ?? null), 'n'=>($topMostRootIds[$i + 1] ?? null)), $blnHasSorting, -16, $blnClipboard ? $arrClipboard : false, $clipboardManager->isCircularReference($this->strTable, $topMostRootIds[$i]), false, false, $arrFound);
 			}
 		}
 
@@ -3974,12 +3789,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$arrIds[] = $objRows->id;
 		}
 
-		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
+		$clipboardManager = System::getContainer()->get('contao.data_container.clipboard_manager');
+		$arrClipboard = $clipboardManager->get($this->strTable);
 		$blnClipboard = null !== $arrClipboard;
 
 		for ($i=0, $c=\count($arrIds); $i<$c; $i++)
 		{
-			$return .= ' ' . trim($this->generateTree($table, $arrIds[$i], array('p'=>($arrIds[$i - 1] ?? null), 'n'=>($arrIds[$i + 1] ?? null)), $hasSorting, $margin, $blnClipboard ? $arrClipboard : false, $arrClipboard !== null && ($id == $arrClipboard['id'] || (\is_array($arrClipboard['id']) && \in_array($id, $arrClipboard['id'])) || (!$blnPtable && !\is_array($arrClipboard['id']) && \in_array($id, $db->getChildRecords($arrClipboard['id'], $table)))), $blnProtected));
+			$return .= ' ' . trim($this->generateTree($table, $arrIds[$i], array('p'=>($arrIds[$i - 1] ?? null), 'n'=>($arrIds[$i + 1] ?? null)), $hasSorting, $margin, $blnClipboard ? $arrClipboard : false, $clipboardManager->isCircularReference($this->strTable, $arrIds[$i], !$blnPtable), $blnProtected));
 		}
 
 		return $return;
@@ -4198,8 +4014,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Regular tree
 					if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 					{
+						$clipboardManager = System::getContainer()->get('contao.data_container.clipboard_manager');
+
 						// Disable buttons of the page and all its children on cut to avoid circular references
-						if ($blnCircularReference || !System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $id))
+						if ($clipboardManager->isCutMode($this->strTable) && ($blnCircularReference || !$clipboardManager->canPasteAfterOrInto($this->strTable, $id)))
 						{
 							$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
 							$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteinto--disabled.svg')));
@@ -4244,7 +4062,9 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Paste after the selected record (e.g. paste article after article X)
 						if ($this->strTable == $table)
 						{
-							if ($blnCircularReference || !System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $id) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1)))
+							$clipboardManager = System::getContainer()->get('contao.data_container.clipboard_manager');
+
+							if ($clipboardManager->isCutMode($this->strTable) && ($blnCircularReference || !$clipboardManager->canPasteAfterOrInto($this->strTable, $id) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
 							{
 								$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
 							}
@@ -4331,11 +4151,12 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			$return .= '<li class="parent" id="' . $node . '_' . $id . '" data-contao--toggle-nodes-target="child' . ($level === 0 ? ' rootChild"' : '') . '"><ul class="level_' . $level . '">';
 
 			static::preloadCurrentRecords($children, $table);
+			$clipboardManager = System::getContainer()->get('contao.data_container.clipboard_manager');
 
 			// Add the records of the parent table
 			for ($k=0, $c=\count($children); $k<$c; $k++)
 			{
-				$return .= $this->generateTree($table, $children[$k], array('p'=>($children[$k - 1] ?? null), 'n'=>($children[$k + 1] ?? null)), $blnHasSorting, $intMargin + $intSpacing, $arrClipboard, (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && \is_array($arrClipboard) && $children[$k] == $arrClipboard['id']) || $blnCircularReference, $blnProtected || $protectedPage, $blnNoRecursion, $arrFound);
+				$return .= $this->generateTree($table, $children[$k], array('p'=>($children[$k - 1] ?? null), 'n'=>($children[$k + 1] ?? null)), $blnHasSorting, $intMargin + $intSpacing, $arrClipboard, $blnCircularReference || $clipboardManager->isCircularReference($table, $children[$k]), $blnProtected || $protectedPage, $blnNoRecursion, $arrFound);
 			}
 
 			$return .= '</ul></li>';
@@ -4763,6 +4584,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Create new button
 						if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $row[$i]['pid'], 'sorting' => $row[$i]['sorting'] + 1)))))
 						{
+							$operations->addSeparator();
+
 							$operations->append(array(
 								'href' => $this->addToUrl('act=create&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $objParent->id . (Input::get('nb') ? '&amp;nc=1' : '')),
 								'title' => \sprintf($labelPasteNew[1], $row[$i]['id']),

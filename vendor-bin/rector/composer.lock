@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao/rector.git",
-                "reference": "66b327ac98ef291b134b0a1c3a573fccb6cbd2d8"
+                "reference": "292fa6c233420272794635133ae79b817dd341c1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao/rector/zipball/66b327ac98ef291b134b0a1c3a573fccb6cbd2d8",
-                "reference": "66b327ac98ef291b134b0a1c3a573fccb6cbd2d8",
+                "url": "https://api.github.com/repos/contao/rector/zipball/292fa6c233420272794635133ae79b817dd341c1",
+                "reference": "292fa6c233420272794635133ae79b817dd341c1",
                 "shasum": ""
             },
             "require": {
@@ -54,7 +54,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2025-06-02T15:11:54+00:00"
+            "time": "2025-06-03T05:43:29+00:00"
         },
         {
             "name": "phpstan/phpstan",
@@ -116,16 +116,16 @@
         },
         {
             "name": "rector/rector",
-            "version": "2.0.17",
+            "version": "2.0.18",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector.git",
-                "reference": "caa4ffda1d48bde44434e6ba95d132ec32e7fd40"
+                "reference": "be3a452085b524a04056e3dfe72d861948711062"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector/zipball/caa4ffda1d48bde44434e6ba95d132ec32e7fd40",
-                "reference": "caa4ffda1d48bde44434e6ba95d132ec32e7fd40",
+                "url": "https://api.github.com/repos/rectorphp/rector/zipball/be3a452085b524a04056e3dfe72d861948711062",
+                "reference": "be3a452085b524a04056e3dfe72d861948711062",
                 "shasum": ""
             },
             "require": {
@@ -163,7 +163,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rectorphp/rector/issues",
-                "source": "https://github.com/rectorphp/rector/tree/2.0.17"
+                "source": "https://github.com/rectorphp/rector/tree/2.0.18"
             },
             "funding": [
                 {
@@ -171,7 +171,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-05-30T10:59:08+00:00"
+            "time": "2025-06-11T11:19:37+00:00"
         }
     ],
     "packages-dev": [],

@@ -93,6 +93,11 @@ class DataContainerOperationsBuilder implements \Stringable
         }
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
+            if ('-' === $v) {
+                $builder->addSeparator();
+                continue;
+            }
+
             $v = \is_array($v) ? $v : [$v];
             $operation = $builder->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
 
@@ -167,6 +172,15 @@ class DataContainerOperationsBuilder implements \Stringable
         } else {
             $this->operations[] = $operation;
         }
+
+        return $this;
+    }
+
+    public function addSeparator(): self
+    {
+        $this->append([
+            'separator' => true,
+        ]);
 
         return $this;
     }
