@@ -1,4 +1,4 @@
-import { startAuthentication, startRegistration, browserSupportsWebAuthn } from '@simplewebauthn/browser';
+import { browserSupportsWebAuthn, startAuthentication, startRegistration } from '@simplewebauthn/browser';
 
 window.SimpleWebAuthnBrowser = {
     startAuthentication: startAuthentication,
