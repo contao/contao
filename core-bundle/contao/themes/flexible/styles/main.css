@@ -597,7 +597,7 @@ h2.sub_headline {
 	color: var(--orange);
 }
 
-.tl_gerror a, .tl_error a, .tl_confirm a, .tl_info a, .tl_new  {
+.tl_gerror a, .tl_error a, .tl_confirm a, .tl_info a, .tl_new a {
 	text-decoration: underline;
 }
 
