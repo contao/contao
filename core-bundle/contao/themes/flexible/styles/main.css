@@ -1621,6 +1621,10 @@ table.tl_listing {
 	white-space: nowrap;
 }
 
+.operations-menu hr {
+	margin: 5px 0;
+}
+
 .tl_content_right:has(.operations-menu.show) {
 	z-index: 2;
 }
