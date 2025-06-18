@@ -1084,6 +1084,13 @@ window.Backend =
 	 */
 	listWizard: function(id) {
 		var ul = $(id),
+			makeSortable = function(ul) {
+				new Sortables(ul, {
+					constrain: true,
+					opacity: 0.6,
+					handle: '.drag-handle'
+				});
+			},
 			addEventsTo = function(li) {
 				var command, clone, input, previous, next;
 
@@ -1135,6 +1142,8 @@ window.Backend =
 					}
 				});
 			};
+
+		makeSortable(ul);
 
 		ul.getChildren().each(function(li) {
 			addEventsTo(li);
@@ -1578,6 +1587,13 @@ window.Backend =
 	 */
 	checkboxWizard: function(id) {
 		var container = $(id).getElement('.sortable'),
+			makeSortable = function(container) {
+				new Sortables(container, {
+					constrain: true,
+					opacity: 0.6,
+					handle: '.drag-handle'
+				});
+			},
 			addEventsTo = function(span) {
 				var nspan;
 				span.getElements('button').each(function(bt) {
@@ -1603,6 +1619,8 @@ window.Backend =
 					});
 				});
 			};
+
+		makeSortable(container);
 
 		container.getChildren().each(function(span) {
 			addEventsTo(span);
