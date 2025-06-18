@@ -1586,6 +1586,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	checkboxWizard: function(id) {
+		console.warn('Backend.checkboxWizard() is deprecated. Please use the Stimulus controller instead.');
+
 		var container = $(id).getElement('.sortable'),
 			makeSortable = function(container) {
 				new Sortables(container, {
