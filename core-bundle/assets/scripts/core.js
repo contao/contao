@@ -1079,6 +1079,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	listWizard: function(id) {
+		console.warn('Backend.listWizard() is deprecated. Please use the stimulus controller instead.');
+
 		var ul = $(id),
 			makeSortable = function(ul) {
 				new Sortables(ul, {
