@@ -18,6 +18,7 @@ use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\FaqBundle\ContaoFaqBundle;
 use Contao\NewsBundle\ContaoNewsBundle;
 use Contao\TestCase\ContaoTestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class AddCommentFieldsListenerTest extends ContaoTestCase
 {
@@ -81,37 +82,10 @@ class AddCommentFieldsListenerTest extends ContaoTestCase
         $this->assertSame($palettes, $GLOBALS['TL_DCA']['tl_module']['palettes']['fooreader']);
     }
 
-    public function testAppliesNewsArchiveFields(): void
-    {
-        $this->testAppliesParentFields(['ContaoNewsBundle' => ContaoNewsBundle::class], 'tl_news_archive');
-    }
-
-    public function testAppliesCalendarFields(): void
-    {
-        $this->testAppliesParentFields(['ContaoCalendarBundle' => ContaoCalendarBundle::class], 'tl_calendar');
-    }
-
-    public function testAppliesFaqCategoryFields(): void
-    {
-        $this->testAppliesParentFields(['ContaoFaqBundle' => ContaoFaqBundle::class], 'tl_faq_category');
-    }
-
-    public function testAppliesNewsFields(): void
-    {
-        $this->testAppliesChildrenFields(['ContaoNewsBundle' => ContaoNewsBundle::class], 'tl_news', true);
-    }
-
-    public function testAppliesCalendarEventFields(): void
-    {
-        $this->testAppliesChildrenFields(['ContaoCalendarBundle' => ContaoCalendarBundle::class], 'tl_calendar_events', true);
-    }
-
-    public function testAppliesFaqFields(): void
-    {
-        $this->testAppliesChildrenFields(['ContaoFaqBundle' => ContaoFaqBundle::class], 'tl_faq');
-    }
-
-    private function testAppliesParentFields(array $bundles, string $table): void
+    /**
+     * @dataProvider appliesParentFieldsValues
+     */
+    public function testAppliesParentFields(array $bundles, string $table): void
     {
         $palettes = '{foo_legend},bar';
         $expected = '{foo_legend},bar;{comments_legend:hide},allowComments';
@@ -137,7 +111,28 @@ class AddCommentFieldsListenerTest extends ContaoTestCase
         }
     }
 
-    private function testAppliesChildrenFields(array $bundles, string $table, bool $extended = false): void
+    public static function appliesParentFieldsValues(): iterable
+    {
+        yield [
+            ['ContaoNewsBundle' => ContaoNewsBundle::class],
+            'tl_news_archive',
+        ];
+
+        yield [
+            ['ContaoCalendarBundle' => ContaoCalendarBundle::class],
+            'tl_calendar',
+        ];
+
+        yield [
+            ['ContaoFaqBundle' => ContaoFaqBundle::class],
+            'tl_faq_category',
+        ];
+    }
+
+    /**
+     * @dataProvider appliesChildFieldsValues
+     */
+    public function testAppliesChildFields(array $bundles, string $table, bool $extended = false): void
     {
         $palettes = '{foo_legend},bar;{publish_legend},baz';
         $expected = '{foo_legend},bar;{expert_legend:hide},noComments;{publish_legend},baz';
@@ -170,5 +165,25 @@ class AddCommentFieldsListenerTest extends ContaoTestCase
             $this->assertSame($expected, $GLOBALS['TL_DCA'][$table]['palettes']['article']);
             $this->assertSame($expected, $GLOBALS['TL_DCA'][$table]['palettes']['external']);
         }
+    }
+
+    public static function appliesChildFieldsValues(): iterable
+    {
+        yield [
+            ['ContaoNewsBundle' => ContaoNewsBundle::class],
+            'tl_news',
+            true,
+        ];
+
+        yield [
+            ['ContaoCalendarBundle' => ContaoCalendarBundle::class],
+            'tl_calendar_events',
+            true,
+        ];
+
+        yield [
+            ['ContaoFaqBundle' => ContaoFaqBundle::class],
+            'tl_faq',
+        ];
     }
 }
