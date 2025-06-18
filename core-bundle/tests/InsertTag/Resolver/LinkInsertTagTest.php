@@ -70,7 +70,7 @@ class LinkInsertTagTest extends TestCase
         $page2 = $this->mockClassWithProperties(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
         $page2->alias = 'moobar';
         $page2->title = 'Moobar';
-        $page2->target = 1;
+        $page2->target = true;
 
         $page3 = $this->mockClassWithProperties(PageModel::class, ['title', 'pageTitle', 'target', 'cssClass']);
         $page3->alias = 'koobar';
