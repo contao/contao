@@ -1,10 +1,14 @@
-*[data-controller="contao--jobs"] {
+[data-controller="contao--jobs"] {
     #running-jobs {
+        display: none;
+    }
+    
+    &:has([data-contao--jobs-target="count"]:empty) #running-jobs {
         display: none;
     }
 
     /* Show an overlay on hover if there is at least one running job. */
-    &:not(&:has(*[data-contao--jobs-target="count"]:empty)):hover #running-jobs {
+    &:hover #running-jobs {
         display: flex;
         position: absolute;
         top: calc(100% + 5px);
