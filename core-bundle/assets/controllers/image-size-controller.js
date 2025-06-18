@@ -12,10 +12,12 @@ export default class extends Controller {
         this._updateInputs();
     }
 
-    inputTargetDisconnected(input) {
-        input.value = '';
-        input.removeAttribute('placeholder');
-        input.readOnly = false;
+    widthTargetDisconnected(input) {
+        this._resetInput(input);
+    }
+
+    heightTargetDisconnected(input) {
+        this._resetInput(input);
     }
 
     update() {
@@ -61,6 +63,12 @@ export default class extends Controller {
             this.widthTarget.readOnly = false;
             this.heightTarget.readOnly = false;
         }
+    }
+
+    _resetInput(input) {
+        input.value = '';
+        input.removeAttribute('placeholder');
+        input.readOnly = false;
     }
 
     openModal() {
