@@ -3530,7 +3530,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 		{
 			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 6.');
 
-			$operations->append(['html' => $buttons]);
+			$operations->append(['html' => $buttons], true);
 		}
 
 		$return = Message::generate() . $operations;
@@ -4212,9 +4212,9 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 		}
 		elseif (($buttons = $this->generateGlobalButtons($operations)) !== null)
 		{
-			trigger_deprecation('contao/core-bundle', '5.7', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 6.');
+			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 6.');
 
-			$operations->append(['html' => $buttons]);
+			$operations->append(['html' => $buttons], true);
 		}
 
 		$return = Message::generate() . (string) $operations;
@@ -4864,9 +4864,9 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 		if (($buttons = $this->generateGlobalButtons($operations)) !== null)
 		{
-			trigger_deprecation('contao/core-bundle', '5.7', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 6.');
+			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 6.');
 
-			$operations->append(['html' => $buttons]);
+			$operations->append(['html' => $buttons], true);
 		}
 
 		$return = Message::generate() . (string) $operations;

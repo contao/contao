@@ -488,7 +488,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 6.');
 
-			$operations->append(array('html' => $buttons));
+			$operations->append(array('html' => $buttons), true);
 		}
 
 		// Build the tree
