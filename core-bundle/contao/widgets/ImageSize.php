@@ -229,13 +229,14 @@ class ImageSize extends Widget
 		for ($i=0; $i<2; $i++)
 		{
 			$arrFields[] = \sprintf(
-				'<input type="text" name="%s[%s]" id="ctrl_%s" class="tl_text_4 tl_imageSize_%s" value="%s"%s data-action="focus->contao--scroll-offset#store" data-contao--image-size-target="input">',
+				'<input type="text" name="%s[%s]" id="ctrl_%s" class="tl_text_4 tl_imageSize_%s" value="%s"%s data-action="focus->contao--scroll-offset#store" data-contao--image-size-target="%s">',
 				$this->strName,
 				$i,
 				$this->strId . '_' . $i,
 				$i,
 				self::specialcharsValue(@$this->varValue[$i]), // see #4979
-				$this->getAttributes()
+				$this->getAttributes(),
+				$i ? 'height' : 'width',
 			);
 		}
 
