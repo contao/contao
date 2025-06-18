@@ -17,9 +17,9 @@ use Symfony\Component\Translation\TranslatableMessage;
 
 enum Status: string implements TranslatableLabelInterface
 {
-    case NEW = 'new';
-    case PENDING = 'pending';
-    case FINISHED = 'finished';
+    case New = 'new';
+    case Pending = 'pending';
+    case Finished = 'finished';
 
     public function label(): TranslatableMessage
     {
@@ -29,9 +29,9 @@ enum Status: string implements TranslatableLabelInterface
     private function getTranslationKey(): string
     {
         return match ($this) {
-            self::NEW => 'new',
-            self::PENDING => 'pending',
-            self::FINISHED => 'finished',
+            self::New => 'new',
+            self::Pending => 'pending',
+            self::Finished => 'finished',
         };
     }
 }

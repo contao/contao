@@ -25,7 +25,7 @@ class JobTest extends TestCase
         $job = $this->getJob();
         $this->assertSame('9ad2f29c-671b-4a1a-9a15-dabda4fd6bad', $job->getUuid());
         $this->assertSame('2025-01-01 00:00:00', $job->getCreatedAt()->format('Y-m-d H:i:s'));
-        $this->assertSame(Status::NEW, $job->getStatus());
+        $this->assertSame(Status::New, $job->getStatus());
         $this->assertSame(Owner::asSystem()->getIdentifier(), $job->getOwner()->getIdentifier());
         $this->assertSame(
             [
@@ -45,13 +45,13 @@ class JobTest extends TestCase
     public function testMarkPendingChangesStatus(): void
     {
         $job = $this->getJob()->markPending();
-        $this->assertSame(Status::PENDING, $job->getStatus());
+        $this->assertSame(Status::Pending, $job->getStatus());
     }
 
     public function testMarkFinishedChangesStatus(): void
     {
         $job = $this->getJob()->markFinished();
-        $this->assertSame(Status::FINISHED, $job->getStatus());
+        $this->assertSame(Status::Finished, $job->getStatus());
     }
 
     public function testCanAddWarnings(): void
@@ -81,7 +81,7 @@ class JobTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        (new Job(Uuid::v4()->toRfc4122(), new \DateTimeImmutable(), Status::NEW, 'job-type', new Owner('owner')))
+        (new Job(Uuid::v4()->toRfc4122(), new \DateTimeImmutable(), Status::New, 'job-type', new Owner('owner')))
             ->withIsPublic(true)
         ;
     }
@@ -100,7 +100,7 @@ class JobTest extends TestCase
         return new Job(
             $uuid,
             new \DateTimeImmutable('2025-01-01 00:00:00'),
-            Status::NEW,
+            Status::New,
             'job-type',
             Owner::asSystem(),
         );

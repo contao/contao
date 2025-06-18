@@ -72,7 +72,7 @@ class ReindexMessageHandlerTest extends TestCase
             ->method('persist')
             ->with($this->callback(
                 function (Job $job) {
-                    $this->assertSame(Status::FINISHED, $job->getStatus());
+                    $this->assertSame(Status::Finished, $job->getStatus());
                     $this->assertSame([Job::ERROR_REQUIRES_CLI], $job->getErrors());
 
                     return true;
