@@ -38,7 +38,7 @@ class FrontendUser extends User
 
 	/**
 	 * Group login page
-	 * @var string|int
+	 * @var string
 	 */
 	protected $strLoginPage;
 

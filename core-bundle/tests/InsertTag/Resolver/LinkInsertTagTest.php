@@ -210,12 +210,12 @@ class LinkInsertTagTest extends TestCase
         $pageAdapter
             ->expects($this->once())
             ->method('findByIdOrAlias')
-            ->with(1701)
+            ->with('1701')
             ->willReturn($loginPage)
         ;
 
         $frontendUser = $this->mockClassWithProperties(FrontendUser::class, ['loginPage']);
-        $frontendUser->loginPage = 1701;
+        $frontendUser->loginPage = '1701';
 
         $contaoFramework = $this->mockContaoFramework([PageModel::class => $pageAdapter], [FrontendUser::class => $frontendUser]);
 
