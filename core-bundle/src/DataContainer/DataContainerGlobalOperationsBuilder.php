@@ -171,6 +171,10 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             $config['attributes']->addStyle(\sprintf("background-image:url('%s')", $this->framework->getAdapter(Controller::class)->addAssetsUrlTo($config['icon'])));
         }
 
+        if ($config['class'] ?? null) {
+            $config['attributes']->addClass($config['class']);
+        }
+
         return [
             'href' => $href,
             'label' => $config['label'],

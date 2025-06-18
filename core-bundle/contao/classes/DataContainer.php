@@ -927,11 +927,11 @@ abstract class DataContainer extends Backend
 			if (\is_array($config['button_callback'] ?? null))
 			{
 				$callback = System::importStatic($config['button_callback'][0]);
-				$config->setHtml($callback->{$config['button_callback'][1]}($v['href'] ?? null, $config['label'], $config['title'], $v['class'] ?? null, (string) $config['attributes'], $this->strTable, $this->root));
+				$config->setHtml($callback->{$config['button_callback'][1]}($config['href'] ?? null, $config['label'], $config['title'], $config['class'] ?? null, (string) $config['attributes'], $this->strTable, $this->root));
 			}
 			elseif (\is_callable($config['button_callback'] ?? null))
 			{
-				$config->setHtml($config['button_callback']($config['href'] ?? null, $config['label'], $config['title'], $v['class'] ?? null, $config['attributes'], $this->strTable, $this->root));
+				$config->setHtml($config['button_callback']($config['href'] ?? null, $config['label'], $config['title'], $config['class'] ?? null, $config['attributes'], $this->strTable, $this->root));
 			}
 		};
 

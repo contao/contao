@@ -1642,7 +1642,8 @@ table.tl_listing {
 	display: flex;
 	gap: 6px;
 	align-items: center;
-	padding: 1px 0;
+	padding-top: 1px;
+	padding-bottom: 1px;
 	white-space: nowrap;
 }
 
