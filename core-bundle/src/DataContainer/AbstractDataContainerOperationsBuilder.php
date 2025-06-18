@@ -12,18 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DataContainer;
 
-use Contao\Backend;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\String\HtmlAttributes;
-use Contao\DataContainer;
-use Contao\Image;
-use Contao\Input;
-use Contao\StringUtil;
 use Contao\System;
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Twig\Environment;
 
 /**
  * @internal
@@ -49,10 +40,10 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
     /**
      * @param array{html: string, primary?: bool}|array{separator: true}|array{
      *     href: string,
-     *     title: string,
      *     label: string,
+     *     title?: string,
      *     attributes: HtmlAttributes,
-     *     icon: string,
+     *     icon?: string,
      *     primary?: bool|null
      * } $operation
      */
@@ -72,10 +63,10 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
     /**
      * @param array{html: string, primary?: bool}|array{separator: true}|array{
      *     href: string,
-     *     title: string,
      *     label: string,
+     *     title?: string,
      *     attributes: HtmlAttributes,
-     *     icon: string,
+     *     icon?: string,
      *     primary?: bool|null
      * } $operation
      */
@@ -153,21 +144,21 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
         return $operations;
     }
 
-    protected function executeButtonCallback(DataContainerOperation $config, callable|null $legacyCallback): void
+    protected function executeButtonCallback(array|callable|null $callback, DataContainerOperation $config, callable|null $legacyCallback): void
     {
-        if (\is_array($operation['button_callback'] ?? null)) {
-            $callback = $this->framework->getAdapter(System::class)->importStatic($operation['button_callback'][0]);
+        if (\is_array($callback)) {
+            $instance = $this->framework->getAdapter(System::class)->importStatic($callback[0]);
 
-            if ($this->acceptsDataContainerOperation(new \ReflectionMethod($callback, $operation['button_callback'][1]))) {
-                $callback->{$operation['button_callback'][1]}($config);
+            if ($this->acceptsDataContainerOperation(new \ReflectionMethod($instance, $callback[1]))) {
+                $instance->{$callback[1]}($config);
             } elseif ($legacyCallback) {
                 $legacyCallback($config);
             } else {
                 throw new \RuntimeException('Cannot handle legacy button_callback, provide the $legacyCallback');
             }
-        } elseif (\is_callable($operation['button_callback'] ?? null)) {
-            if ($this->acceptsDataContainerOperation(new \ReflectionFunction($operation['button_callback']))) {
-                $operation['button_callback']($config);
+        } elseif (\is_callable($callback)) {
+            if ($this->acceptsDataContainerOperation(new \ReflectionFunction($callback))) {
+                $callback($config);
             } elseif ($legacyCallback) {
                 $legacyCallback($config);
             } else {
@@ -176,7 +167,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
         }
     }
 
-    protected function acceptsDataContainerOperation(\ReflectionMethod|\ReflectionFunction $ref): bool
+    protected function acceptsDataContainerOperation(\ReflectionFunction|\ReflectionMethod $ref): bool
     {
         return 1 === $ref->getNumberOfParameters()
             && ($type = $ref->getParameters()[0]->getType())

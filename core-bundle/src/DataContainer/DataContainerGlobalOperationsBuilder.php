@@ -151,7 +151,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
     {
         $config = new DataContainerOperation($name, $operation, null, $dataContainer);
 
-        $this->executeButtonCallback($config, $legacyCallback);
+        $this->executeButtonCallback($operation['button_callback'] ?? null, $config, $legacyCallback);
 
         if (null !== ($html = $config->getHtml())) {
             if ('' === $html) {

@@ -130,7 +130,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
     {
         $config = new DataContainerOperation($name, $operation, $record, $dataContainer);
 
-        $this->executeButtonCallback($config, $legacyCallback);
+        $this->executeButtonCallback($operation['button_callback'] ?? null, $config, $legacyCallback);
 
         if (null !== ($html = $config->getHtml())) {
             if ('' === $html) {
@@ -153,7 +153,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         if ($isPopup) {
             $config['attributes']->set(
                 'onclick',
-                sprintf("Backend.openModalIframe({title:'%s', url:this.href});return false", StringUtil::specialchars($config['label']))
+                \sprintf("Backend.openModalIframe({title:'%s', url:this.href});return false", StringUtil::specialchars($config['label'])),
             );
         }
 
