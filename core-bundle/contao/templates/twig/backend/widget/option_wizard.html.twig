@@ -1,0 +1,85 @@
+{% trans_default_domain "contao_default" %}
+
+{% set table_attributes = attrs()
+    .set('id', 'ctrl_' ~ id)
+    .set('data-controller', 'contao--row-wizard')
+    .addClass('tl_optionwizard')
+%}
+<table{{ table_attributes }}>
+    <thead>
+        <tr>
+            <th></th>
+            <th>{{ 'MSC.ow_value'|trans }}</th>
+            <th>{{ 'MSC.ow_label'|trans }}</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody class="sortable" data-controller="contao--sortable" data-contao--sortable-handle-value=".drag-handle" data-action="contao--sortable:update->contao--row-wizard#updateSorting" data-contao--row-wizard-target="body">
+        {% for row in rows %}
+            <template data-contao--row-wizard-target="rowTemplate">
+                <tr data-contao--row-wizard-target="row">
+                    <td>
+                        {# Drag row #}
+                        {% set drag_handle_attributes = attrs()
+                            .set('type', 'button')
+                            .set('data-action', 'keydown->contao--row-wizard#move')
+                            .set('aria-hidden', 'true')
+                            .addClass('drag-handle')
+                        %}
+                        <button{{ drag_handle_attributes}}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
+                    </td>
+                    <td>
+                        {% set value_attributes = attrs()
+                            .set('type', 'text')
+                            .set('name', "#{id}[#{loop.index0}][value]")
+                            .set('id', '#{id}_value_#{loop.index0}')
+                            .set('value', row.value|default)
+                            .addClass('tl_text')
+                        %}
+                        <input{{ value_attributes }}>
+                    </td>
+                    <td>
+                        {% set label_attributes = attrs()
+                            .set('type', 'text')
+                            .set('name', "#{id}[#{loop.index0}][label]")
+                            .set('id', '#{id}_label_#{loop.index0}')
+                            .set('value', row.label|default)
+                            .addClass('tl_text')
+                        %}
+                        <input{{ label_attributes }}>
+                    </td>
+                    <td>
+                        <input type="hidden" name="{{ id }}[{{ loop.index0 }}][default]" value="">
+                        <input type="checkbox" name="{{ id }}[{{ loop.index0 }}][default]" id="{{ id }}_default_{{ loop.index0 }}" class="fw_checkbox" value="1"{% if row.default|default %} checked="checked"{% endif %}>
+                        <label for="{{ id }}_default_{{ loop.index0 }}">{{ 'MSC.ow_default'|trans }}</label>
+                    </td>
+                    <td>
+                        <input type="hidden" name="{{ id }}[{{ loop.index0 }}][group]" value="">
+                        <input type="checkbox" name="{{ id }}[{{ loop.index0 }}][group]" id="{{ id }}_group_{{ loop.index0 }}" class="fw_checkbox" value="1"{% if row.group|default %} checked="checked"{% endif %}>
+                        <label for="{{ id }}_group_{{ loop.index0 }}">{{ 'MSC.ow_group'|trans }}</label>
+                    </td>
+
+                    {# Controls #}
+                    <td class="tl_right">
+                        {# Copy row #}
+                        {% set copy_button_attributes = attrs()
+                            .set('type', 'button')
+                            .set('data-action', 'contao--row-wizard#copy contao--scroll-offset#store')
+                        %}
+                        <button{{ copy_button_attributes }}>{{ backend_icon('copy.svg', 'MSC.ow_copy'|trans) }}</button>
+
+                        {# Delete row #}
+                        {% set delete_button_attributes = attrs()
+                            .set('type', 'button')
+                            .set('data-action', 'contao--row-wizard#delete contao--scroll-offset#store')
+                        %}
+                        <button{{ delete_button_attributes }}>{{ backend_icon('delete.svg', 'MSC.ow_delete'|trans) }}</button>
+                    </td>
+                </tr>
+            </template>
+        {% endfor %}
+    </tbody>
+</table>

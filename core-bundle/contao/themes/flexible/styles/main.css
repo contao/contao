@@ -2326,7 +2326,9 @@ ul.sgallery li {
 	}
 }
 
-.tl_optionwizard td:nth-child(n+3), .tl_key_value_wizard td:nth-child(n+3) {
+.tl_optionwizard td:first-child,
+.tl_optionwizard td:last-child,
+.tl_key_value_wizard td:nth-child(n+3) {
 	width: 1%;
 	white-space: nowrap;
 }

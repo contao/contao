@@ -1385,6 +1385,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	optionsWizard: function(id) {
+		console.warn('Backend.optionsWizard() is deprecated. Please use the stimulus controller instead.');
+
 		var table = $(id),
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
