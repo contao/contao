@@ -13,11 +13,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\DataContainer;
 
 use Contao\Backend;
-use Contao\Controller;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\DataContainer;
-use Contao\Image;
 use Contao\Input;
 use Contao\System;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -165,12 +163,6 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
 
         $href = $this->generateHref($config);
 
-        if ($config['icon'] ?? null) {
-            $config['icon'] = $this->framework->getAdapter(Image::class)->getPath($config['icon']);
-            $config['attributes']->addClass('header_icon');
-            $config['attributes']->addStyle(\sprintf("background-image:url('%s')", $this->framework->getAdapter(Controller::class)->addAssetsUrlTo($config['icon'])));
-        }
-
         if ($config['class'] ?? null) {
             $config['attributes']->addClass($config['class']);
         }
@@ -180,6 +172,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             'label' => $config['label'],
             'title' => $config['title'],
             'attributes' => $config['attributes'],
+            'icon' => $config['icon'] ?? null,
             'primary' => $config['primary'] ?? null,
         ];
     }

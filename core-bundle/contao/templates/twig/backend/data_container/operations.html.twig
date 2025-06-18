@@ -46,11 +46,14 @@
                 .addClass('no-icon', not operation.icon|default)
             %}
             <a{{ operation_attributes|raw }}>
-                {{ operation.icon|default|raw }}
+                {% if operation.icon|default %}{{ backend_icon(operation.icon, operation.label|default, operation.iconAttributes|default(null)) }}{% endif %}
                 {% if menu or showLabels %}{{ operation.label|default }}{% endif %}
             </a>
         </li>
     {% elseif operation.icon|default and not menu %}
-        <li>{{ operation.icon|raw }}</li>
+        <li>
+            {{ backend_icon(operation.icon, operation.label|default, operation.iconAttributes|default(null)) }}
+            {% if menu or showLabels %}{{ operation.label|default }}{% endif %}
+        </li>
     {% endif %}
 {% endmacro %}

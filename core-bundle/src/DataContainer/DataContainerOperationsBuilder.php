@@ -15,8 +15,8 @@ namespace Contao\CoreBundle\DataContainer;
 use Contao\Backend;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\DataContainer;
-use Contao\Image;
 use Contao\Input;
 use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -162,7 +162,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             'label' => $config['label'],
             'title' => $config['title'],
             'attributes' => $config['attributes'],
-            'icon' => Image::getHtml($config['icon'], $config['label']),
+            'icon' => $config['icon'],
             'primary' => $config['primary'] ?? null,
         ];
     }
@@ -239,12 +239,21 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             $titleDisabled = \is_array($operation['label']) && isset($operation['label'][2]) ? \sprintf($operation['label'][2], $record['id']) : $config['title'];
         }
 
+        $iconAttributes = (new HtmlAttributes())
+            ->set('data-icon', $icon)
+            ->set('data-icon-disabled', $_icon)
+            ->set('data-state', $state)
+            ->set('data-alt', $config['title'])
+            ->set('data-alt-disabled', $titleDisabled)
+        ;
+
         return [
             'href' => $href,
             'title' => $state ? $config['title'] : $titleDisabled,
             'label' => $config['label'],
             'attributes' => $config['attributes']->set('data-action', 'contao--scroll-offset#store')->set('onclick', 'return AjaxRequest.toggleField(this,'.('visible.svg' === $icon ? 'true' : 'false').')'),
-            'icon' => Image::getHtml($state ? $icon : $_icon, $state ? $config['title'] : $titleDisabled, 'data-icon="'.$icon.'" data-icon-disabled="'.$_icon.'" data-state="'.$state.'" data-alt="'.StringUtil::specialchars($config['title']).'" data-alt-disabled="'.StringUtil::specialchars($titleDisabled).'"'),
+            'icon' => $state ? $icon : $_icon,
+            'iconAttributes' => $iconAttributes,
             'primary' => $config['primary'] ?? null,
         ];
     }

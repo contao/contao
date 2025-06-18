@@ -3672,18 +3672,18 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 			}
 			elseif (!$this->canPasteClipboard($arrClipboard, array('pid'=>0, 'sorting'=>0)))
 			{
-				$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteinto--disabled.svg')));
+				$operations->append(array('primary' => true, 'icon'=>'pasteinto--disabled.svg'));
 			}
 			else
 			{
 				$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
-				$imagePasteInto = Image::getHtml('pasteinto.svg', $labelPasteInto[0]);
 
 				$operations->append(array(
 					'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=0' . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')),
+					'label' => $labelPasteInto[0],
 					'title' => $labelPasteInto[0],
 					'attributes' => 'data-action="contao--scroll-offset#store"',
-					'icon' => $imagePasteInto,
+					'icon' => 'pasteinto.svg',
 					'primary' => true,
 				));
 			}
@@ -4001,10 +4001,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 				else
 				{
 					$labelPasteAfter = $GLOBALS['TL_LANG'][$this->strTable]['pasteafter'] ?? $GLOBALS['TL_LANG']['DCA']['pasteafter'];
-					$imagePasteAfter = Image::getHtml('pasteafter.svg', \sprintf($labelPasteAfter[1], $id));
-
 					$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
-					$imagePasteInto = Image::getHtml('pasteinto.svg', \sprintf($labelPasteInto[1], $id));
 
 					// Regular tree
 					if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
@@ -4014,37 +4011,39 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 						// Disable buttons of the page and all its children on cut to avoid circular references
 						if ($clipboardManager->isCutMode($this->strTable) && ($blnCircularReference || !$clipboardManager->canPasteAfterOrInto($this->strTable, $id)))
 						{
-							$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
-							$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteinto--disabled.svg')));
+							$operations->append(array('primary' => true, 'icon'=>'pasteafter--disabled.svg'));
+							$operations->append(array('primary' => true, 'icon'=>'pasteinto--disabled.svg'));
 						}
 						else
 						{
 							if ((!$this->rootPaste && \in_array($id, $this->root)) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1)))
 							{
-								$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
+								$operations->append(array('primary' => true, 'icon'=>'pasteafter--disabled.svg'));
 							}
 							else
 							{
 								$operations->append(array(
 									'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')),
+									'label' => \sprintf($labelPasteAfter[1], $id),
 									'title' => \sprintf($labelPasteAfter[1], $id),
 									'attributes' => 'data-action="contao--scroll-offset#store"',
-									'icon' => $imagePasteAfter,
+									'icon' => 'pasteafter.svg',
 									'primary' => true,
 								));
 							}
 
 							if (!$this->canPasteClipboard($arrClipboard, array('pid' => $id, 'sorting' => 0)))
 							{
-								$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteinto--disabled.svg')));
+								$operations->append(array('primary' => true, 'icon'=>'pasteinto--disabled.svg'));
 							}
 							else
 							{
 								$operations->append(array(
 									'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')),
+									'label' => \sprintf($labelPasteInto[1], $id),
 									'title' => \sprintf($labelPasteInto[1], $id),
 									'attributes' => 'data-action="contao--scroll-offset#store"',
-									'icon' => $imagePasteInto,
+									'icon' => 'pasteinto.svg',
 									'primary' => true,
 								));
 							}
@@ -4061,15 +4060,16 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 							if ($clipboardManager->isCutMode($this->strTable) && ($blnCircularReference || !$clipboardManager->canPasteAfterOrInto($this->strTable, $id) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
 							{
-								$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
+								$operations->append(array('primary' => true, 'icon'=>'pasteafter--disabled.svg'));
 							}
 							else
 							{
 								$operations->append(array(
 									'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')),
+									'label' => \sprintf($labelPasteAfter[1], $id),
 									'title' => \sprintf($labelPasteAfter[1], $id),
 									'attributes' => 'data-action="contao--scroll-offset#store"',
-									'icon' => $imagePasteAfter,
+									'icon' => 'pasteafter.svg',
 									'primary' => true,
 								));
 							}
@@ -4080,15 +4080,16 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 						{
 							if (!$this->canPasteClipboard($arrClipboard, array('pid' => $id, 'sorting' => 0)))
 							{
-								$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteinto--disabled.svg')));
+								$operations->append(array('primary' => true, 'icon'=>'pasteinto--disabled.svg'));
 							}
 							else
 							{
 								$operations->append(array(
 									'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')),
+									'label' => \sprintf($labelPasteInto[1], $id),
 									'title' => \sprintf($labelPasteInto[1], $id),
 									'attributes' => 'data-action="contao--scroll-offset#store"',
-									'icon' => $imagePasteInto,
+									'icon' => 'pasteinto.svg',
 									'primary' => true,
 								));
 							}
@@ -4246,7 +4247,6 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 		if (\in_array(Input::get('act'), array('select', null)))
 		{
 			// Header
-			$imagePasteNew = Image::getHtml('new.svg', $labelPasteNew[0]);
 			$imagePasteAfter = Image::getHtml('pasteafter.svg', $labelPasteAfter[0]);
 			$security = System::getContainer()->get('security.helper');
 
@@ -4273,8 +4273,9 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 					{
 						$operations->append(array(
 							'href' => $this->addToUrl('act=create&amp;mode=2&amp;pid=' . $objParent->id . '&amp;id=' . $this->intId),
+							'label' => $labelPasteNew[0],
 							'title' => $labelPasteNew[0],
-							'icon' => $imagePasteNew,
+							'icon' => 'new.svg',
 						));
 					}
 
@@ -4514,8 +4515,6 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $row[$i]));
 
 				$this->current[] = $row[$i]['id'];
-				$imagePasteAfter = Image::getHtml('pasteafter.svg', \sprintf($labelPasteAfter[1] ?? $labelPasteAfter[0], $row[$i]['id']));
-				$imagePasteNew = Image::getHtml('new.svg', \sprintf($labelPasteNew[1] ?? $labelPasteNew[0], $row[$i]['id']));
 
 				// Make items sortable
 				if ($blnHasSorting)
@@ -4582,15 +4581,16 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 							$operations->append(array(
 								'href' => $this->addToUrl('act=create&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $objParent->id . (Input::get('nb') ? '&amp;nc=1' : '')),
+								'label'=> \sprintf($labelPasteNew[1] ?? $labelPasteNew[0], $row[$i]['id']),
 								'title' => \sprintf($labelPasteNew[1], $row[$i]['id']),
-								'icon' => $imagePasteNew,
+								'icon' => 'new.svg',
 							));
 						}
 
 						// Prevent circular references
 						if ($blnClipboard && !System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $row[$i]['id']))
 						{
-							$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
+							$operations->append(array('primary' => true, 'icon'=>'pasteafter--disabled.svg'));
 						}
 
 						// Copy/move multiple
@@ -4598,9 +4598,10 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 						{
 							$operations->append(array(
 								'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id']),
+								'label' => \sprintf($labelPasteAfter[1] ?? $labelPasteAfter[0], $row[$i]['id']),
 								'title' => \sprintf($labelPasteAfter[1], $row[$i]['id']),
 								'attributes' => 'data-action="contao--scroll-offset#store"',
-								'icon' => $imagePasteAfter,
+								'icon' => 'pasteafter.svg',
 								'primary' => true,
 							));
 						}
@@ -4610,9 +4611,10 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 						{
 							$operations->append(array(
 								'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $arrClipboard['id']),
+								'label' => \sprintf($labelPasteAfter[1] ?? $labelPasteAfter[0], $row[$i]['id']),
 								'title' => \sprintf($labelPasteAfter[1], $row[$i]['id']),
 								'attributes' => 'data-action="contao--scroll-offset#store"',
-								'icon' => $imagePasteAfter,
+								'icon' => 'pasteafter.svg',
 								'primary' => true,
 							));
 						}

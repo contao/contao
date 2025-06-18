@@ -28,6 +28,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
      *     title?: string,
      *     attributes: HtmlAttributes,
      *     icon?: string,
+     *     iconAttributes?: HtmlAttributes,
      *     primary?: bool|null,
      * }>
      */
@@ -44,6 +45,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
      *     title?: string,
      *     attributes: HtmlAttributes,
      *     icon?: string,
+     *     iconAttributes?: HtmlAttributes,
      *     primary?: bool|null
      * } $operation
      */
@@ -67,6 +69,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
      *     title?: string,
      *     attributes: HtmlAttributes,
      *     icon?: string,
+     *     iconAttributes?: HtmlAttributes,
      *     primary?: bool|null
      * } $operation
      */

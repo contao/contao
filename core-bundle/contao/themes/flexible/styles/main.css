@@ -1607,6 +1607,13 @@ table.tl_listing {
 	margin: 0;
 }
 
+.operations a {
+	display: flex;
+	gap: 6px;
+	align-items: center;
+	white-space: nowrap;
+}
+
 .operations-menu-container {
 	position: relative;
 	align-items: center;
@@ -1638,13 +1645,9 @@ table.tl_listing {
 	display: block !important;
 }
 
-.operations-menu a:not(.no-icon) {
-	display: flex;
-	gap: 6px;
-	align-items: center;
+.operations a:not(.no-icon) {
 	padding-top: 1px;
 	padding-bottom: 1px;
-	white-space: nowrap;
 }
 
 .operations-menu hr {
