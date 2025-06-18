@@ -18,7 +18,6 @@ use Contao\CoreBundle\DataContainer\DataContainerGlobalOperationsBuilder;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\DataContainer;
-use Contao\Image;
 use Contao\Input;
 use Contao\System;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -251,12 +250,6 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             ->willReturnCallback(static fn (string $href, $blnAddRef, $arrUnset, $addRequestToken) => '/contao?'.$href.($addRequestToken ? '&rt=1234' : ''))
         ;
 
-        $imageAdapter = $this->mockAdapter(['getPath']);
-        $imageAdapter
-            ->method('getPath')
-            ->willReturnArgument(0)
-        ;
-
         $controllerAdapter = $this->mockAdapter(['addAssetsUrlTo']);
         $controllerAdapter
             ->method('addAssetsUrlTo')
@@ -266,7 +259,6 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
         $framework = $this->mockContaoFramework([
             Input::class => $inputAdapter,
             Backend::class => $backendAdapter,
-            Image::class => $imageAdapter,
             Controller::class => $controllerAdapter,
         ]);
 
@@ -364,7 +356,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
             ],
             static fn (array $parameters) => isset($parameters['operations'])
                 && 1 === \count($parameters['operations'])
-                && ' class="foo header_icon" style="background-image: url(&apos;/foo/icon.svg&apos;);"' === (string) $parameters['operations'][0]['attributes'],
+                && '/foo/icon.svg' === (string) $parameters['operations'][0]['icon'],
             0,
         ];
     }
