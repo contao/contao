@@ -103,8 +103,8 @@ class BackendSearchTest extends TestCase
         ;
 
         $expected = [
-            Status::Pending,
-            Status::Finished,
+            Status::pending,
+            Status::finished,
         ];
         $jobs
             ->expects($this->exactly(2))

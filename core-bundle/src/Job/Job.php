@@ -98,7 +98,7 @@ final class Job
     public function markPending(): self
     {
         $clone = clone $this;
-        $clone->status = Status::Pending;
+        $clone->status = Status::pending;
 
         return $clone;
     }
@@ -106,7 +106,7 @@ final class Job
     public function markFinished(): self
     {
         $clone = clone $this;
-        $clone->status = Status::Finished;
+        $clone->status = Status::finished;
 
         return $clone;
     }
@@ -284,7 +284,7 @@ final class Job
 
     public static function new(string $type, Owner $owner): self
     {
-        return new self(Uuid::v4()->toRfc4122(), new \DateTimeImmutable(), Status::New, $type, $owner);
+        return new self(Uuid::v4()->toRfc4122(), new \DateTimeImmutable(), Status::new, $type, $owner);
     }
 
     public function toArray(bool $withParent = true): array

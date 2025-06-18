@@ -61,7 +61,7 @@ class Jobs
         }
 
         $qb->andWhere('j.status IN (:status)');
-        $qb->setParameter('status', [Status::New->value, Status::Pending->value], ArrayParameterType::STRING);
+        $qb->setParameter('status', [Status::new->value, Status::pending->value], ArrayParameterType::STRING);
 
         return $this->queryWithQueryBuilder($qb);
     }
@@ -225,12 +225,12 @@ class Jobs
         foreach ($children as $childRow) {
             $childJob = $this->databaseRowToDto($childRow);
 
-            if (Status::Pending === $childJob->getStatus()) {
+            if (Status::pending === $childJob->getStatus()) {
                 $onePending = true;
                 break;
             }
 
-            if (Status::Finished !== $childJob->getStatus()) {
+            if (Status::finished !== $childJob->getStatus()) {
                 $allFinished = false;
             }
         }
