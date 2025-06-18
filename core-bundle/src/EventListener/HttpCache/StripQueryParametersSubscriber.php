@@ -22,10 +22,18 @@ class StripQueryParametersSubscriber implements EventSubscriberInterface
     private const DENY_LIST = [
         // Google click identifier
         'gclid',
+        'gbraid',
+        'wbraid',
         'dclid', // Used to be DoubleClick
 
         // Facebook click identifier
         'fbclid',
+
+        // TikTok click identifier
+        'ttclid',
+
+        // Microsoft Ads click identifier
+        'msclkid',
 
         // Awin click identifier
         'zanpid', // Used to be Zanox
@@ -40,9 +48,21 @@ class StripQueryParametersSubscriber implements EventSubscriberInterface
 
         // Google Ads
         'gclsrc',
+        'gad_source',
+        'gad_campaignid',
+        'ved',
 
-        //  Urchin Tracking Module (UTM) parameters
+        // Urchin Tracking Module (UTM) parameters
         'utm_[a-z]+',
+
+        // Matomo campaign parameters
+        'mtm_[a-z]+',
+
+        // etracker campaign parameters
+        'etcc_[a-z]+',
+
+        // HubSpot campaign parameters
+        'hsa_[a-z]+',
     ];
 
     private array $removeFromDenyList = [];

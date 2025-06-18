@@ -62,9 +62,7 @@ class BackendPreviewSwitchControllerTest extends TestCase
         $this->assertSame(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
     }
 
-    /**
-     * @dataProvider providePreviewToolbarTemplateScenarios
-     */
+    #[DataProvider('providePreviewToolbarTemplateScenarios')]
     public function testRendersToolbar(bool $legacyTemplateExists, string $expectedTemplate): void
     {
         $loader = $this->createMock(LoaderInterface::class);

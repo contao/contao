@@ -255,7 +255,7 @@ class TokenChecker
 
         if (!isset($this->previewLinks[$id])) {
             $this->previewLinks[$id] = $this->connection->fetchAssociative(
-                '
+                <<<'SQL'
                     SELECT
                         url,
                         showUnpublished,
@@ -265,7 +265,7 @@ class TokenChecker
                         id = :id
                         AND published = 1
                         AND expiresAt > UNIX_TIMESTAMP()
-                ',
+                    SQL,
                 ['id' => $id],
             );
         }

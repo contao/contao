@@ -65,6 +65,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'operations' => array
 		(
+			'-',
 			'su' => array
 			(
 				'href'                => 'key=su',

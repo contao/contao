@@ -21,9 +21,17 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Document
 {
+    private const INDEXER_STOP = '<!-- indexer::stop -->';
+
+    private const INDEXER_PROTECTED = '<!-- indexer::protected -->';
+
+    private const INDEXER_CONTINUE = '<!-- indexer::continue -->';
+
     private Crawler|null $crawler = null;
 
     private array|null $jsonLds = null;
+
+    private array $searchableContents = [];
 
     /**
      * The key is the header name in lowercase letters and the value is again an array
@@ -167,6 +175,71 @@ class Document
             $response->headers->all(),
             (string) $response->getContent(),
         );
+    }
+
+    public function getSearchableContent(bool $allowProtected = false): string
+    {
+        if (isset($this->searchableContents[$allowProtected])) {
+            return $this->searchableContents[$allowProtected];
+        }
+
+        // We're only interested in <body>
+        $body = $this->getContentCrawler()->filterXPath('//body');
+
+        // No <body> found, abort
+        if (0 === $body->count()) {
+            return '';
+        }
+
+        // Remove <script> and <style> tags
+        $body
+            ->filterXPath('//script | //style')
+            ->each(static fn (Crawler $node) => $node->getNode(0)->parentNode->removeChild($node->getNode(0)))
+        ;
+
+        // Extract the HTML and filter it for indexer start and stop comments
+        $html = $body->html();
+
+        // Strip non-indexable areas
+        while (false !== ($start = strpos($html, self::INDEXER_STOP))) {
+            $afterStop = substr($html, $start + \strlen(self::INDEXER_STOP), \strlen(self::INDEXER_PROTECTED));
+
+            // Skip removal if the protected tag is immediately after the stop tag and
+            // $allowProtected is true
+            if ($allowProtected && self::INDEXER_PROTECTED === $afterStop) {
+                // Skip this and continue after this occurrence
+                $start = strpos($html, self::INDEXER_STOP, $start + \strlen(self::INDEXER_STOP));
+
+                if (false === $start) {
+                    break;
+                }
+
+                continue;
+            }
+
+            if (false !== ($end = strpos($html, self::INDEXER_CONTINUE, $start))) {
+                $current = $start;
+
+                // Handle nested tags
+                while (false !== ($nested = strpos($html, self::INDEXER_STOP, $current + \strlen(self::INDEXER_STOP))) && $nested < $end) {
+                    if (false !== ($newEnd = strpos($html, self::INDEXER_CONTINUE, $end + \strlen(self::INDEXER_CONTINUE)))) {
+                        $end = $newEnd;
+                        $current = $nested;
+                    } else {
+                        break;
+                    }
+                }
+
+                $html = substr($html, 0, $start).substr($html, $end + \strlen(self::INDEXER_CONTINUE));
+            } else {
+                break;
+            }
+        }
+
+        $html = strip_tags($html);
+
+        // Strip extra empty space
+        return $this->searchableContents[$allowProtected] = trim(preg_replace(['/^[ \t]*$/m', '/\s+/'], ['', ' '], $html));
     }
 
     private function filterJsonLd(array $jsonLds, string $context = '', string $type = ''): array

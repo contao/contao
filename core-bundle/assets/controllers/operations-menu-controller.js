@@ -15,11 +15,11 @@ export default class OperationsMenuController extends Controller {
         });
 
         this.controllerTarget?.addEventListener('accessibleMenuExpand', () => {
-            Object.values(window.AccessibleMenu.menus).forEach((menu) => {
+            for (const menu of Object.values(window.AccessibleMenu.menus)) {
                 if (menu !== this.$menu && menu.elements.submenuToggles[0].isOpen) {
                     menu.elements.submenuToggles[0].close();
                 }
-            });
+            }
 
             this.setFixedPosition();
             this.element.classList.add('hover');
@@ -32,7 +32,7 @@ export default class OperationsMenuController extends Controller {
 
     disconnect() {
         // Cleanup menu instance, otherwise we would leak memory
-        for (const [key, value] of Object.entries(window.AccessibleMenu.menus)) {
+        for (const [key, value] of Object.entries(window.AccessibleMenu?.menus ?? {})) {
             if (value === this.$menu) {
                 delete window.AccessibleMenu.menus[key];
             }
@@ -68,9 +68,9 @@ export default class OperationsMenuController extends Controller {
 
     setFixedPosition(event) {
         const rect = this.submenuTarget.getBoundingClientRect();
-        let x,
-            y,
-            offset = 0;
+        let x;
+        let y;
+        let offset = 0;
 
         if (event) {
             x = event.clientX;

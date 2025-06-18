@@ -40,16 +40,8 @@ class AlwaysForwardMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $this->connection->executeStatement('
-            ALTER TABLE tl_page
-            ADD alwaysForward tinyint(1) NOT NULL default 0
-        ');
-
-        $this->connection->executeStatement("
-            UPDATE tl_page
-            SET alwaysForward = 1
-            WHERE type = 'forward'
-        ");
+        $this->connection->executeStatement('ALTER TABLE tl_page ADD alwaysForward tinyint(1) NOT NULL default 0');
+        $this->connection->executeStatement("UPDATE tl_page SET alwaysForward = 1 WHERE type = 'forward'");
 
         return $this->createResult(true);
     }

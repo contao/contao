@@ -70,11 +70,11 @@ class DbafsTest extends TestCase
             ->method('fetchAssociative')
             ->willReturnMap([
                 [
-                    'SELECT * FROM tl_files WHERE id=?', [1], [],
+                    'SELECT * FROM tl_files WHERE id = ?', [1], [],
                     ['id' => 1, 'uuid' => $uuid1->toBinary(), 'path' => 'foo/bar1', 'type' => 'file'],
                 ],
                 [
-                    'SELECT * FROM tl_files WHERE uuid=?', [$uuid2->toBinary()], [],
+                    'SELECT * FROM tl_files WHERE uuid = ?', [$uuid2->toBinary()], [],
                     ['id' => 2, 'uuid' => $uuid2->toBinary(), 'path' => 'foo/bar2', 'type' => 'file'],
                 ],
             ])
@@ -118,7 +118,7 @@ class DbafsTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('fetchAssociative')
-            ->with('SELECT * FROM tl_files WHERE path=?', ['foo/bar'], [])
+            ->with('SELECT * FROM tl_files WHERE path = ?', ['foo/bar'], [])
             ->willReturn([
                 'id' => 1,
                 'uuid' => $this->generateUuid(1)->toBinary(),
@@ -349,7 +349,7 @@ class DbafsTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('fetchAssociative')
-            ->with('SELECT * FROM tl_files WHERE path=?', ['files/foo/bar'], [])
+            ->with('SELECT * FROM tl_files WHERE path = ?', ['files/foo/bar'], [])
             ->willReturn([
                 'id' => 1,
                 'uuid' => $uuid->toBinary(),
@@ -379,7 +379,7 @@ class DbafsTest extends TestCase
         $connection
             ->expects($this->exactly(2))
             ->method('fetchAssociative')
-            ->with('SELECT * FROM tl_files WHERE id=?', [1], [])
+            ->with('SELECT * FROM tl_files WHERE id = ?', [1], [])
             ->willReturnOnConsecutiveCalls(
                 ['id' => 1, 'uuid' => $uuid1->toBinary(), 'path' => 'foo/bar', 'type' => 'file'],
                 ['id' => 1, 'uuid' => $uuid2->toBinary(), 'path' => 'other/path', 'type' => 'file'],
@@ -537,7 +537,7 @@ class DbafsTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchAllNumeric')
-            ->with("SELECT path, uuid, hash, IF(type='folder', 1, 0), NULL FROM tl_files", [], [])
+            ->with("SELECT path, uuid, hash, IF(type = 'folder', 1, 0), NULL FROM tl_files", [], [])
             ->willReturn([
                 ['file1', $this->generateUuid(1)->toBinary(), 'af17bc3b4a86a96a0f053a7e5f7c18ba', 0, null],
                 ['file2', $this->generateUuid(2)->toBinary(), 'ab86a1e1ef70dff97959067b723c5c24', 0, null],
@@ -910,7 +910,7 @@ class DbafsTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchAllNumeric')
-            ->with("SELECT path, uuid, hash, IF(type='folder', 1, 0), lastModified FROM tl_files", [], [])
+            ->with("SELECT path, uuid, hash, IF(type = 'folder', 1, 0), lastModified FROM tl_files", [], [])
             ->willReturn([
                 ['old', $this->generateUuid(1)->toBinary(), 'aa22b', 0, 99],
                 ['file1', $this->generateUuid(2)->toBinary(), '8446b', 0, 100],
@@ -1013,7 +1013,7 @@ class DbafsTest extends TestCase
         $connection = $this->createMock(Connection::class);
         $connection
             ->method('fetchAssociative')
-            ->with('SELECT * FROM tl_files WHERE path=?', ['foo'], [])
+            ->with('SELECT * FROM tl_files WHERE path = ?', ['foo'], [])
             ->willReturn([
                 'id' => 1,
                 'uuid' => $this->generateUuid(1)->toBinary(),
@@ -1035,7 +1035,7 @@ class DbafsTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchAllNumeric')
-            ->with("SELECT path, uuid, hash, IF(type='folder', 1, 0), NULL FROM tl_files", [], [])
+            ->with("SELECT path, uuid, hash, IF(type = 'folder', 1, 0), NULL FROM tl_files", [], [])
             ->willReturn([
                 ['files/foo', 'ee61', '48a6bbe07d25733e37e2c949ee412d5d', 1, null],
                 ['files/bar.file', 'ab54', 'af17bc3b4a86a96a0f053a7e5f7c18ba', 0, null],
@@ -1048,7 +1048,7 @@ class DbafsTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchAssociative')
-            ->with('SELECT * FROM tl_files WHERE path=?', ['files/baz'], [])
+            ->with('SELECT * FROM tl_files WHERE path = ?', ['files/baz'], [])
             ->willReturn([
                 'id' => 1,
                 'uuid' => $uuid->toBinary(),
@@ -1183,7 +1183,7 @@ class DbafsTest extends TestCase
         $connection
             ->expects($this->once())
             ->method('fetchAllNumeric')
-            ->with("SELECT path, uuid, hash, IF(type='folder', 1, 0), NULL FROM tl_files", [], [])
+            ->with("SELECT path, uuid, hash, IF(type = 'folder', 1, 0), NULL FROM tl_files", [], [])
             ->willReturn([
                 ['a', 'ee61', 'fdc43e4749862887eb87d5dde07c5cd8', 1, null],
                 ['b', 'ab54', 'd41d8cd98f00b204e9800998ecf8427e', 1, null],

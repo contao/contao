@@ -68,7 +68,7 @@ class BackendSearchControllerTest extends TestCase
             ->method('render')
             ->with(
                 '@Contao/backend/search/show_results.stream.html.twig',
-                $this->callback(static fn (array $parameters) => $parameters === ['hits' => $hits]),
+                $this->callback(static fn (array $parameters) => ['hits' => $hits] === $parameters),
             )
             ->willReturn('<stream>')
         ;
