@@ -26,13 +26,13 @@ export default class extends Controller {
         });
 
         // Backwards compatibility for parent mode, will unhide the operation if no other drag handle is found
-        [...this.element.children].forEach((el) => {
+        for (const el of [...this.element.children]) {
             const handles = el.querySelectorAll('.drag-handle');
 
             if (handles.length === 1) {
                 handles[0].style.display = '';
             }
-        });
+        }
     }
 
     disconnect() {

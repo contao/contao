@@ -9,9 +9,9 @@ export default class extends Controller {
     update() {
         const value = [];
 
-        this.sourceTargets.forEach((el) => {
+        for (const el of this.sourceTargets) {
             value.push(el.getAttribute(this.attributeValue));
-        });
+        }
 
         this.inputTarget.value = value.join(',');
     }
