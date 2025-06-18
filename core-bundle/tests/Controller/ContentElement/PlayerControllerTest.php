@@ -111,8 +111,8 @@ class PlayerControllerTest extends ContentElementTestCase
                 <figure>
                     <video controls>
                         <source type="video/mp4" src="https://example.com/files/video.mp4">
-                        <track label="English" srclang="en" src="https://example.com/files/subtitles-en.vtt" default/>
-                        <track kind="captions" label="Deutsch" srclang="de" src="https://example.com/files/subtitles-de.vtt"/>
+                        <track label="English" srclang="en" src="https://example.com/files/subtitles-en.vtt" default>
+                        <track kind="captions" label="Deutsch" srclang="de" src="https://example.com/files/subtitles-de.vtt">
                     </video>
                 </figure>
             </div>

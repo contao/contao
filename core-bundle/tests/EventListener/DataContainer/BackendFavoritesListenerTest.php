@@ -75,7 +75,7 @@ class BackendFavoritesListenerTest extends TestCase
         $listener();
 
         $this->assertFalse($GLOBALS['TL_DCA']['tl_favorites']['config']['notCreatable']);
-        $this->assertSame([['user=?', $userId]], $GLOBALS['TL_DCA']['tl_favorites']['list']['sorting']['filter']);
+        $this->assertSame([['user = ?', $userId]], $GLOBALS['TL_DCA']['tl_favorites']['list']['sorting']['filter']);
         $this->assertSame($url, $GLOBALS['TL_DCA']['tl_favorites']['fields']['url']['default']);
         $this->assertSame($userId, $GLOBALS['TL_DCA']['tl_favorites']['fields']['user']['default']);
     }
@@ -115,7 +115,7 @@ class BackendFavoritesListenerTest extends TestCase
         $listener();
 
         $this->assertTrue($GLOBALS['TL_DCA']['tl_favorites']['config']['notCreatable']);
-        $this->assertSame([['user=?', $userId]], $GLOBALS['TL_DCA']['tl_favorites']['list']['sorting']['filter']);
+        $this->assertSame([['user = ?', $userId]], $GLOBALS['TL_DCA']['tl_favorites']['list']['sorting']['filter']);
     }
 
     public function testShowsNothingIfThereIsNoUser(): void
@@ -142,6 +142,6 @@ class BackendFavoritesListenerTest extends TestCase
         $listener = new BackendFavoritesListener($security, $requestStack);
         $listener();
 
-        $this->assertSame([['user=?', 0]], $GLOBALS['TL_DCA']['tl_favorites']['list']['sorting']['filter']);
+        $this->assertSame([['user = ?', 0]], $GLOBALS['TL_DCA']['tl_favorites']['list']['sorting']['filter']);
     }
 }

@@ -654,7 +654,7 @@ select[multiple] {
 	height: auto;
 }
 
-.tl_select, .tl_mselect, .tl_select_column {
+.tl_select, .tl_mselect, .tl_select_column, .tl_select_wrapper {
 	width: 100%;
 }
 
@@ -848,8 +848,12 @@ a.tl_submit {
 	vertical-align: middle;
 }
 
-.wizard .tl_text, .wizard .tl_select {
+.wizard .tl_text, .wizard > .tl_select, .wizard > .tl_select__wrapper {
 	width: calc(100% - 24px);
+}
+
+.wizard > .tl_select__wrapper {
+	display: inline-block;
 }
 
 .wizard .tl_text_2 {

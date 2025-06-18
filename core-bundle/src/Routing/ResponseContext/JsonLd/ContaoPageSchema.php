@@ -18,11 +18,9 @@ use Spatie\SchemaOrg\BaseType;
 class ContaoPageSchema extends BaseType
 {
     /**
-     * ContaoPageSchema constructor.
-     *
      * @param array<int> $groups
      */
-    public function __construct(string $title, int $pageId, bool $noSearch, bool $protected, array $groups, bool $fePreview)
+    public function __construct(string $title, int $pageId, bool $noSearch, bool $protected, array $groups, bool $fePreview, array $memberGroups = [])
     {
         $this->setTitle($title);
         $this->setPageId($pageId);
@@ -30,6 +28,7 @@ class ContaoPageSchema extends BaseType
         $this->setProtected($protected);
         $this->setGroups($groups);
         $this->setFePreview($fePreview);
+        $this->setMemberGroups($memberGroups);
     }
 
     public function getContext(): string
@@ -99,11 +98,29 @@ class ContaoPageSchema extends BaseType
     }
 
     /**
+     * @return array<int>
+     */
+    public function getMemberGroups(): array
+    {
+        return $this->properties['memberGroups'];
+    }
+
+    /**
      * @param array<int> $groups
      */
     public function setGroups(array $groups): self
     {
         $this->properties['groups'] = array_map(\intval(...), $groups);
+
+        return $this;
+    }
+
+    /**
+     * @param array<int> $memberGroups
+     */
+    public function setMemberGroups(array $memberGroups): self
+    {
+        $this->properties['memberGroups'] = array_map(\intval(...), $memberGroups);
 
         return $this;
     }

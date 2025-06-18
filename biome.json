@@ -1,0 +1,26 @@
+{
+    "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+    "files": {
+        "ignore": [
+            "core-bundle/assets/scripts/",
+            "core-bundle/assets/styles/"
+        ]
+    },
+    "formatter": {
+        "indentStyle": "space",
+        "indentWidth": 4,
+        "lineWidth": 120
+    },
+    "javascript": {
+        "formatter": {
+            "quoteStyle": "single"
+        }
+    },
+    "linter": {
+        "rules": {
+            "suspicious": {
+                "noAssignInExpressions": "off"
+            }
+        }
+    }
+}

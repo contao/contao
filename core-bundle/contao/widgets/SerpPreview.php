@@ -53,30 +53,32 @@ class SerpPreview extends Widget
 		}
 		catch (RouteParametersException)
 		{
-			return $this->render([
+			return $this->render(array(
 				'error' => true,
-			]);
+			));
 		}
-		catch (ExceptionInterface) {
+		catch (ExceptionInterface)
+		{
 			$trail = '';
 		}
 
 		// Get the input field suffix (edit multiple mode)
 		$suffix = substr($this->objDca->inputName, \strlen($this->objDca->field));
 
-		return $this->render([
-			'fields' => [
-				'title' => [$this->getTitleField($suffix), $this->getTitleFallbackField($suffix)],
-				'alias' => [$this->getAliasField($suffix)],
-				'description' => [$this->getDescriptionField($suffix), $this->getDescriptionFallbackField($suffix)],
-			],
+		return $this->render(array(
+			'fields' => array(
+				'title' => array($this->getTitleField($suffix), $this->getTitleFallbackField($suffix)),
+				'alias' => array($this->getAliasField($suffix)),
+				'description' => array($this->getDescriptionField($suffix), $this->getDescriptionFallbackField($suffix)),
+			),
 			'id' => $model->id,
 			'trail' => $trail,
 			'titleTag' => $this->getTitleTag($model),
-		]);
+		));
 	}
 
-	private function render($parameters = []): string {
+	private function render($parameters = array()): string
+	{
 		return System::getContainer()
 			->get('twig')
 			->render('@Contao/backend/widget/serp_preview.html.twig', $parameters)
