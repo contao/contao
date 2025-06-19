@@ -82,8 +82,8 @@ class ListWizard extends Widget
 				}
 				else
 				{
-				$return .= ' <button type="button" data-command="' . $button . '">' . Image::getHtml($button . '.svg', $GLOBALS['TL_LANG']['MSC']['lw_' . $button]) . '</button>';
-			}
+					$return .= ' <button type="button" data-command="' . $button . '">' . Image::getHtml($button . '.svg', $GLOBALS['TL_LANG']['MSC']['lw_' . $button]) . '</button>';
+				}
 			}
 
 			$return .= '</li>';
