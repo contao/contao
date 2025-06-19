@@ -1667,6 +1667,7 @@ table.tl_listing {
 }
 
 .cte_type .drag-handle {
+	padding-block: 0;
 	margin-left: -10px;
 	background: none;
 	border: none;
@@ -2642,11 +2643,11 @@ ul.sortable button[disabled]:hover {
 }
 
 .sortable-chosen {
-	opacity: 0.6 !important;
+	opacity: 0.6;
 }
 
 .sortable-drag {
-	opacity: 0 !important;
+	opacity: 0;
 }
 
 #picker-menu {
