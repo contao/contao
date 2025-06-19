@@ -79,9 +79,10 @@ class Document
     }
 
     /**
-     * Returns a Symfony DomDocument component Crawler instance of the original document body.
-     * You are free to modify the contents of the Crawler instance. Every subsequent call to this
-     * method will ensure you get a new instance of the original contents.
+     * Returns a Symfony DomDocument component Crawler instance of the original
+     * document body. You are free to modify the contents of the Crawler instance.
+     * Every subsequent call to this method will ensure you get a new instance of the
+     * original contents.
      */
     public function getContentCrawler(): Crawler
     {
