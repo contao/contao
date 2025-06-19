@@ -39,12 +39,10 @@ return static function (ContainerConfigurator $configurator) use ($container): v
 
         // Trigger __destruct handler
         unset($config);
+    } catch (ParseError $e) {
+        // Re-throw parse errors, otherwise you are having a hard time debugging why your service is not registered.
+        throw $e;
     } catch (Throwable $e) {
-        // Throw parse errors. Otherwise, you are having a hard time debugging why your service is not registered.
-        if ($e instanceof ParseError) {
-            throw $e;
-        }
-
         // Ignore failed autoloading
     }
 
