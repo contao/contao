@@ -87,18 +87,14 @@ class Document
     public function getContentCrawler(): Crawler
     {
         // Try re-using an already parsed document if possible for performance reasons
-        if (null === $this->originalDocument) {
+        if (!$this->originalDocument) {
             $crawler = new Crawler($this->body);
 
             $originalDocument = $crawler->getNode(0)?->ownerDocument;
 
             if ($originalDocument instanceof \DOMDocument) {
                 $this->originalDocument = $originalDocument;
-
-                return new Crawler($this->originalDocument->cloneNode(true));
             }
-
-            return $crawler;
         }
 
         if ($this->originalDocument instanceof \DOMDocument) {
