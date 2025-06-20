@@ -138,24 +138,24 @@ class LinkInsertTagTest extends TestCase
 
     public static function getConvertedInsertTags(): iterable
     {
-        yield ['link::1', '<a href="/foobar" title="Foobar Meta">Foobar</a>', OutputType::html];
-        yield ['link::1::absolute', '<a href="https://example.com/foobar" title="Foobar Meta">Foobar</a>', OutputType::html];
-        yield ['link::1::blank', '<a href="/foobar" title="Foobar Meta" target="_blank" rel="noreferrer noopener">Foobar</a>', OutputType::html];
-        yield ['link::1::blank::absolute', '<a href="https://example.com/foobar" title="Foobar Meta" target="_blank" rel="noreferrer noopener">Foobar</a>', OutputType::html];
-        yield ['link_open::1', '<a href="/foobar" title="Foobar Meta">', OutputType::html];
+        yield ['link::1', '<a href="/foobar">Foobar</a>', OutputType::html];
+        yield ['link::1::absolute', '<a href="https://example.com/foobar">Foobar</a>', OutputType::html];
+        yield ['link::1::blank', '<a href="/foobar" target="_blank" rel="noreferrer noopener">Foobar</a>', OutputType::html];
+        yield ['link::1::blank::absolute', '<a href="https://example.com/foobar" target="_blank" rel="noreferrer noopener">Foobar</a>', OutputType::html];
+        yield ['link_open::1', '<a href="/foobar">', OutputType::html];
         yield ['link_close', '</a>', OutputType::html];
         yield ['link_url::1', '/foobar', OutputType::url];
         yield ['link_title::1', 'Foobar Meta', OutputType::html];
         yield ['link_name::1', 'Foobar', OutputType::html];
 
-        yield ['link::2', '<a href="/moobar" title="Moobar" target="_blank" rel="noreferrer noopener">Moobar</a>', OutputType::html];
-        yield ['link_open::2', '<a href="/moobar" title="Moobar" target="_blank" rel="noreferrer noopener">', OutputType::html];
+        yield ['link::2', '<a href="/moobar" target="_blank" rel="noreferrer noopener">Moobar</a>', OutputType::html];
+        yield ['link_open::2', '<a href="/moobar" target="_blank" rel="noreferrer noopener">', OutputType::html];
         yield ['link_url::2', '/moobar', OutputType::url];
         yield ['link_title::2', 'Moobar', OutputType::html];
         yield ['link_name::2', 'Moobar', OutputType::html];
 
-        yield ['link::3', '<a href="/koobar" title="Koobar" class="koobar">Koobar</a>', OutputType::html];
-        yield ['link_open::3', '<a href="/koobar" title="Koobar" class="koobar">', OutputType::html];
+        yield ['link::3', '<a href="/koobar" class="koobar">Koobar</a>', OutputType::html];
+        yield ['link_open::3', '<a href="/koobar" class="koobar">', OutputType::html];
         yield ['link_url::3', '/koobar', OutputType::url];
         yield ['link_title::3', 'Koobar', OutputType::html];
         yield ['link_name::3', 'Koobar', OutputType::html];
@@ -165,8 +165,8 @@ class LinkInsertTagTest extends TestCase
         yield ['link::5', '', OutputType::text];
         yield ['link_open::5', '<a>', OutputType::html];
 
-        yield ['link::https://foobar.com', '<a href="https://foobar.com" title="https://foobar.com">foobar.com</a>', OutputType::html];
-        yield ['link_open::https://foobar.com', '<a href="https://foobar.com" title="https://foobar.com">', OutputType::html];
+        yield ['link::https://foobar.com', '<a href="https://foobar.com">foobar.com</a>', OutputType::html];
+        yield ['link_open::https://foobar.com', '<a href="https://foobar.com">', OutputType::html];
         yield ['link_url::https://foobar.com', 'https://foobar.com', OutputType::url];
     }
 
@@ -238,7 +238,7 @@ class LinkInsertTagTest extends TestCase
 
         $result = $listener->replaceInsertTag($tag);
 
-        $this->assertSame('<a href="/login" title="Login">Login</a>', $result->getValue());
+        $this->assertSame('<a href="/login">Login</a>', $result->getValue());
     }
 
     private function getInsertTagParser(): InsertTagParser
