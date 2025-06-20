@@ -55,7 +55,7 @@
                             {% set layout_select_attributes = attrs()
                                 .set('name', "#{id}[#{loop.index0}][col]")
                                 .set('data-action', 'focus->contao--scroll-offset#store')
-                                .addClass('tl_select_column')
+                                .addClass('tl_select')
                             %}
                             <select{{ layout_select_attributes}}>
                                 {% for option in row.layout_options %}
