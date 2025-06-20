@@ -101,7 +101,7 @@ class SearchIndexListener
 
         // Cheap tests have been done at this stage. Now check the rate limiter if provided
         // which should be cheaper than extracting information from the document itself.
-        if (null !== $this->rateLimiterFactory) {
+        if ($this->rateLimiterFactory) {
             // Hash over the canoncial URI (or the URI as fallback) and the contents
             $hash = hash('xxh3', ($document->extractCanonicalUri() ?? $document->getUri()).'-'.$document->getGlobalSearchableContentHash());
 

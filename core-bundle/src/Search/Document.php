@@ -214,11 +214,7 @@ class Document
 
     public function getSearchableContentHash(bool $allowProtected = false): string
     {
-        if (isset($this->searchableContentHashes[$allowProtected])) {
-            return $this->searchableContentHashes[$allowProtected];
-        }
-
-        return $this->searchableContentHashes[$allowProtected] = hash('xxh3', $this->getSearchableContent($allowProtected));
+        return $this->searchableContentHashes[$allowProtected] ?? ($this->searchableContentHashes[$allowProtected] = hash('xxh3', $this->getSearchableContent($allowProtected)));
     }
 
     public function getSearchableContent(bool $allowProtected = false): string
