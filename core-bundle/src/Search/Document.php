@@ -27,7 +27,7 @@ class Document
 
     private const INDEXER_CONTINUE = '<!-- indexer::continue -->';
 
-    private Crawler|null $crawler = null;
+    private \DOMDocument|null $originalDocument = null;
 
     private array|null $jsonLds = null;
 
@@ -94,9 +94,31 @@ class Document
         return $this->body;
     }
 
+    /**
+     * Returns a Symfony DomDocument component Crawler instance of the original
+     * document body. You are free to modify the contents of the Crawler instance.
+     * Every subsequent call to this method will ensure you get a new instance of the
+     * original contents.
+     */
     public function getContentCrawler(): Crawler
     {
-        return $this->crawler ??= new Crawler($this->body);
+        // Try re-using an already parsed document if possible for performance reasons
+        if (!$this->originalDocument) {
+            $crawler = new Crawler($this->body);
+
+            $originalDocument = $crawler->getNode(0)?->ownerDocument;
+
+            if ($originalDocument instanceof \DOMDocument) {
+                $this->originalDocument = $originalDocument;
+            }
+        }
+
+        if ($this->originalDocument instanceof \DOMDocument) {
+            return new Crawler($this->originalDocument->cloneNode(true));
+        }
+
+        // Somehow cannot use the existing document, let's re-parse
+        return new Crawler($this->body);
     }
 
     public function extractCanonicalUri(): UriInterface|null
