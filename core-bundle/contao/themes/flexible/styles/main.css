@@ -1625,6 +1625,10 @@ table.tl_listing {
 	margin: 5px 0;
 }
 
+.operations-menu li:last-child:has(hr) {
+	display: none !important;
+}
+
 .tl_content_right:has(.operations-menu.show) {
 	z-index: 2;
 }
