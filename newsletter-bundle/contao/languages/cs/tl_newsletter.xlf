@@ -177,7 +177,7 @@
         <source>Not sent yet</source>
         <target>Ještě neodesláno</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.mailingDate">
+      <trans-unit id="tl_newsletter.date">
         <source>Mailing date</source>
         <target>Datum odeslání</target>
       </trans-unit>

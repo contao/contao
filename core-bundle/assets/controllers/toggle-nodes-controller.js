@@ -32,8 +32,6 @@ export default class extends Controller {
         event.preventDefault();
 
         const el = event.currentTarget;
-        el.blur();
-
         this.toggleToggler(el, event.params.id, event.params.level, event.params.folder);
     }
 

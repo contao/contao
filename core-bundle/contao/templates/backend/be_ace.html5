@@ -53,11 +53,11 @@ window.ace && window.addEvent('domready', function() {
     }
   });
 
-  // Enable code autocompletion
   editor.setOptions({
     enableSnippets: true,
     enableBasicAutocompletion: true,
-    enableLiveAutocompletion: true
+    enableLiveAutocompletion: true,
+    enableKeyboardAccessibility: true
   });
 
   editor.on('focus', function() {

@@ -116,7 +116,7 @@ class MakeHook extends AbstractMaker
         $hooks = [];
 
         foreach ($yaml['hooks'] as $key => $config) {
-            $hooks[$key] = new MethodDefinition($config['return_type'], $config['arguments']);
+            $hooks[$key] = new MethodDefinition($config['return_type'] ?? null, $config['arguments'] ?? [], $config['body'] ?? null);
         }
 
         return $hooks;

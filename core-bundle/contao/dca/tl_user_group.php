@@ -171,7 +171,6 @@ $GLOBALS['TL_DCA']['tl_user_group'] = array
 		'imageSizes' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_user']['imageSizes'],
-			'filter'                  => true,
 			'inputType'               => 'checkbox',
 			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'eval'                    => array('multiple'=>true, 'collapseUncheckedGroups'=>true),

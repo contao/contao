@@ -29,6 +29,18 @@ class CommandCompiler
     ) {
     }
 
+    public function compileTargetSchema(bool $skipDropStatements = false): Schema
+    {
+        $schemaManager = $this->connection->createSchemaManager();
+        $toSchema = $this->schemaProvider->createSchema();
+
+        if ($skipDropStatements) {
+            $this->copyMissingTablesAndColumns($schemaManager->introspectSchema(), $toSchema);
+        }
+
+        return $toSchema;
+    }
+
     /**
      * @return list<string>
      */
@@ -38,24 +50,8 @@ class CommandCompiler
         $toSchema = $this->schemaProvider->createSchema();
         $fromSchema = $schemaManager->introspectSchema();
 
-        // If tables or columns should be preserved, we copy the missing definitions over
-        // to the $toSchema, so that no DROP commands will be issued in the diff.
         if ($skipDropStatements) {
-            foreach ($fromSchema->getTables() as $table) {
-                if (!$toSchema->hasTable($table->getName())) {
-                    $this->copyTableDefinition($toSchema, $table);
-
-                    continue;
-                }
-
-                $toSchemaTable = $toSchema->getTable($table->getName());
-
-                foreach ($table->getColumns() as $column) {
-                    if (!$toSchemaTable->hasColumn($column->getName())) {
-                        $this->copyColumnDefinition($toSchemaTable, $column);
-                    }
-                }
-            }
+            $this->copyMissingTablesAndColumns($fromSchema, $toSchema);
         }
 
         // Get a list of SQL statements from the schema diff
@@ -69,6 +65,29 @@ class CommandCompiler
         $engineAndCollationCommands = $this->compileEngineAndCollationCommands($fromSchema, $toSchema);
 
         return array_unique([...$diffCommands, ...$engineAndCollationCommands]);
+    }
+
+    /**
+     * If tables or columns should be preserved, we copy the missing definitions over
+     * to the $toSchema, so that no DROP commands will be issued in the diff.
+     */
+    private function copyMissingTablesAndColumns(Schema $fromSchema, Schema $toSchema): void
+    {
+        foreach ($fromSchema->getTables() as $table) {
+            if (!$toSchema->hasTable($table->getName())) {
+                $this->copyTableDefinition($toSchema, $table);
+
+                continue;
+            }
+
+            $toSchemaTable = $toSchema->getTable($table->getName());
+
+            foreach ($table->getColumns() as $column) {
+                if (!$toSchemaTable->hasColumn($column->getName())) {
+                    $this->copyColumnDefinition($toSchemaTable, $column);
+                }
+            }
+        }
     }
 
     private function copyTableDefinition(Schema $targetSchema, Table $table): void

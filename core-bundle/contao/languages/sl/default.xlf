@@ -1621,6 +1621,7 @@
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
         <source>Learn more about speeding up your workflow by using &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Več informacij o načinu pohitritve dela z &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;bližnjicami na tipkovnici&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -2372,6 +2373,7 @@
       </trans-unit>
       <trans-unit id="MSC.verify">
         <source>Verify</source>
+        <target>Preveri</target>
       </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
@@ -2567,6 +2569,7 @@
       </trans-unit>
       <trans-unit id="MSC.tooManyPasswordResetAttempts">
         <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>Prevečkrat ste poskusili ponastaviti vaše geslo. Prosimo, poskusite znova čez 15 minut.</target>
       </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>

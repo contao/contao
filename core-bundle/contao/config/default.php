@@ -67,7 +67,7 @@ $GLOBALS['TL_CONFIG']['uploadTypes']
 	. 'doc,docx,dot,dotx,xls,xlsx,xlt,xltx,ppt,pptx,pot,potx,'
 	. 'mp3,mp4,m4a,m4v,webm,ogg,ogv,wma,wmv,ram,rm,mov,fla,flv,swf,'
 	. 'ttf,ttc,otf,eot,woff,woff2,'
-	. 'css,scss,less,js,html,htm,txt,zip,rar,7z,cto,md,ics';
+	. 'css,scss,less,txt,zip,rar,7z,cto,md,ics';
 $GLOBALS['TL_CONFIG']['maxFileSize']    = 2048000;
 $GLOBALS['TL_CONFIG']['imageWidth']     = 0;
 $GLOBALS['TL_CONFIG']['imageHeight']    = 0;

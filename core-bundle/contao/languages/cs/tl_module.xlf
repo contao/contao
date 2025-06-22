@@ -523,6 +523,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
         <source>Choose module for &quot;%s&quot; [%s]</source>
+        <target>Vyber modul pro &quot;%s&quot; [%s]</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

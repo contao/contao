@@ -272,8 +272,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             $supervisor->addArgument('%kernel.cache_dir%/worker-supervisor');
 
             $command = $container->getDefinition('contao.command.supervise_workers');
-            $command->setArgument(2, $supervisor);
-            $command->setArgument(3, $config['messenger']['workers']);
+            $command->setArgument('$supervisor', $supervisor);
+            $command->setArgument('$workers', $config['messenger']['workers']);
         }
 
         // No workers defined -> remove our cron job and the command
@@ -319,7 +319,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             $container->removeDefinition('contao.listener.search_index');
         } else {
             // Configure the search index listener
-            $container->getDefinition('contao.listener.search_index')->setArgument(2, $features);
+            $container->getDefinition('contao.listener.search_index')->setArgument('$enabledFeatures', $features);
         }
     }
 

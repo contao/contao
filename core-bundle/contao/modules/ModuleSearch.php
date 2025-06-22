@@ -246,21 +246,12 @@ class ModuleSearch extends Module
 				$arrMatches = Search::getMatchVariants(StringUtil::trimsplit(',', $arrResult[$i]['matches']), $strText, $GLOBALS['TL_LANGUAGE']);
 
 				// Get the context
-				foreach ($arrMatches as $strWord)
+				$arrChunks = array();
+				preg_match_all('((^|(?:\b|^).{0,' . $contextLength . '}(?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}))(?:' . implode('|', array_map('preg_quote', $arrMatches)) . ')((?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}).{0,' . $contextLength . '}(?:\b|$)|$))ui', $strText, $arrChunks);
+
+				foreach ($arrChunks[0] as $strContext)
 				{
-					$arrChunks = array();
-					preg_match_all('/(^|(?:\b|^).{0,' . $contextLength . '}(?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}))' . preg_quote($strWord, '/') . '((?:\PL|\p{Hiragana}|\p{Katakana}|\p{Han}|\p{Myanmar}|\p{Khmer}|\p{Lao}|\p{Thai}|\p{Tibetan}).{0,' . $contextLength . '}(?:\b|$)|$)/ui', $strText, $arrChunks);
-
-					foreach ($arrChunks[0] as $strContext)
-					{
-						$arrContext[] = ' ' . $strContext . ' ';
-					}
-
-					// Skip other terms if the total length is already reached
-					if (array_sum(array_map('mb_strlen', $arrContext)) >= $totalLength)
-					{
-						break;
-					}
+					$arrContext[] = ' ' . $strContext . ' ';
 				}
 
 				// Shorten the context and highlight all keywords
