@@ -434,11 +434,10 @@ class InsertTagParser implements ResetInterface
 
         $result = $subscription->service->{$subscription->method}($tag);
 
-        if (!$allowEsiTags) {
-            $result = $this->replaceEsiTags($result);
-        }
-
         foreach ($tag->getFlags() as $flag) {
+            // ESI tags need to be replaced before flags can be applied
+            $result = $this->replaceEsiTags($result);
+
             if ($callback = $this->flagCallbacks[strtolower($flag->getName())] ?? null) {
                 $result = $callback($flag, $result);
             } else {

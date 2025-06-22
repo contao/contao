@@ -39,13 +39,17 @@ class FragmentInsertTag implements InsertTagResolverNestedParsedInterface
             $attributes['_scope'] = $scope;
         }
 
+        // Pass the root page ID to the insert tags controller to have the right context
+        // when replacing the nested insert tags while maintaining good cachability
+        if ($pageId = $this->getPageModel()?->rootId) {
+            $attributes['pageModel'] = $pageId;
+        }
+
         $esiTag = $this->fragmentHandler->render(
             new ControllerReference(InsertTagsController::class.'::renderAction', $attributes),
             'esi',
             ['ignore_errors' => false], // see #48
         );
-
-        dump($esiTag);
 
         return new InsertTagResult($esiTag, OutputType::html);
     }

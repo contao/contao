@@ -12,7 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
+use Contao\PageModel;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -26,13 +30,26 @@ class InsertTagsController
 {
     public function __construct(
         private readonly InsertTagParser $insertTagParser,
+        private readonly ContaoFramework $framework,
+        private readonly RequestStack $requestStack,
     ) {
     }
 
-    public function renderAction(string $insertTag): Response
+    public function renderAction(Request $request, string $insertTag, PageModel|null $pageModel): Response
     {
-        $response = new Response($this->insertTagParser->replace($insertTag));
-        $response->setPrivate(); // always private
+        $this->framework->initialize();
+        $pageModelBefore = $GLOBALS['objPage'] ?? null;
+
+        $this->requestStack->push($request->duplicate([], [], null, null, [], array_merge($request->server->all(), ['REQUEST_URI' => '/'])));
+        $GLOBALS['objPage'] = $pageModel;
+
+        try {
+            $response = new Response($this->insertTagParser->replaceInline($insertTag));
+            $response->setPrivate(); // always private
+        } finally {
+            $GLOBALS['objPage'] = $pageModelBefore;
+            $this->requestStack->pop();
+        }
 
         return $response;
     }

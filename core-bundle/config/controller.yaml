@@ -179,6 +179,8 @@ services:
     Contao\CoreBundle\Controller\InsertTagsController:
         arguments:
             - '@contao.insert_tag.parser'
+            - '@contao.framework'
+            - '@request_stack'
         tags:
             - controller.service_arguments
 
