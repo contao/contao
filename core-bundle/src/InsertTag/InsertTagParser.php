@@ -436,7 +436,18 @@ class InsertTagParser implements ResetInterface
 
         foreach ($tag->getFlags() as $flag) {
             // ESI tags need to be replaced before flags can be applied
-            $result = $this->replaceEsiTags($result);
+            $result = $this->replaceEsiTags($result, $esiTagsCount);
+
+            if ($esiTagsCount) {
+                $this->logger->error(
+                    \sprintf(
+                        'Using the insert tag flag "%s" in %s on page %s disables lazy loading of the fragment',
+                        $flag->getName(),
+                        $tag->serialize(),
+                        $this->framework->getAdapter(Environment::class)->get('uri'),
+                    ),
+                );
+            }
 
             if ($callback = $this->flagCallbacks[strtolower($flag->getName())] ?? null) {
                 $result = $callback($flag, $result);
@@ -454,9 +465,13 @@ class InsertTagParser implements ResetInterface
 
     /**
      * @see \Symfony\Component\HttpKernel\HttpCache\Esi::process()
+     *
+     * @param-out int $esiTagsCount
      */
-    private function replaceEsiTags(InsertTagResult $result): InsertTagResult
+    private function replaceEsiTags(InsertTagResult $result, int|null &$esiTagsCount = 0): InsertTagResult
     {
+        $esiTagsCount = 0;
+
         if (OutputType::html !== $result->getOutputType()) {
             return $result;
         }
@@ -470,6 +485,8 @@ class InsertTagParser implements ResetInterface
         $i = 1;
 
         while (isset($chunks[$i])) {
+            ++$esiTagsCount;
+
             $options = [];
             preg_match_all('/(src|onerror|alt)="([^"]*?)"/', $chunks[$i], $matches, PREG_SET_ORDER);
 
