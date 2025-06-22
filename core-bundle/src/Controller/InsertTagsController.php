@@ -44,10 +44,13 @@ class InsertTagsController
         $GLOBALS['objPage'] = $pageModel;
 
         try {
-            $response = new Response($this->insertTagParser->replaceInline($insertTag));
-            $response->setPrivate(); // always private
+            $response = $this->insertTagParser->replaceInlineAsResponse($insertTag);
         } finally {
-            $GLOBALS['objPage'] = $pageModelBefore;
+            if (null === $pageModelBefore) {
+                unset($GLOBALS['objPage']);
+            } else {
+                $GLOBALS['objPage'] = $pageModelBefore;
+            }
             $this->requestStack->pop();
         }
 

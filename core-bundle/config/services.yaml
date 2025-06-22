@@ -453,9 +453,9 @@ services:
             - '@contao.framework'
             - '@monolog.logger.contao.error'
             - '@fragment.handler'
-            - '@request_stack'
             - ~
             - '%contao.insert_tags.allowed_tags%'
+            - '@?fos_http_cache.tag_handler.header_formatter'
 
     contao.insert_tag.php_function_flag:
         class: Contao\CoreBundle\InsertTag\Flag\PhpFunctionFlag

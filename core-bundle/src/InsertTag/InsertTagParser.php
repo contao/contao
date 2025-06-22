@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag;
 
-use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -20,9 +19,9 @@ use Contao\Environment;
 use Contao\InsertTags;
 use Contao\StringUtil;
 use Contao\System;
+use FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Controller\ControllerReference;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -83,9 +82,9 @@ class InsertTagParser implements ResetInterface
         private readonly ContaoFramework $framework,
         private readonly LoggerInterface $logger,
         private readonly FragmentHandler $fragmentHandler,
-        private readonly RequestStack $requestStack,
         private InsertTags|null $insertTags = null,
         array $allowedTags = ['*'],
+        private readonly TagHeaderFormatter|null $tagHeaderFormatter = null,
     ) {
         $this->allowedTagsRegex = '('.implode(
             '|',
@@ -155,6 +154,14 @@ class InsertTagParser implements ResetInterface
     }
 
     /**
+     * @return Response may include <esi> tags
+     */
+    public function replaceAsResponse(ParsedSequence|string $input): Response
+    {
+        return $this->executeAsResponse($input, true, OutputType::html);
+    }
+
+    /**
      * @return ChunkedText may include <esi> tags
      */
     public function replaceChunked(string $input): ChunkedText
@@ -174,6 +181,14 @@ class InsertTagParser implements ResetInterface
                 $this->executeReplace($input, false, OutputType::html),
             ),
         );
+    }
+
+    /**
+     * @return Response does not include <esi> tags
+     */
+    public function replaceInlineAsResponse(ParsedSequence|string $input): Response
+    {
+        return $this->executeAsResponse($input, false, OutputType::html);
     }
 
     /**
@@ -345,6 +360,49 @@ class InsertTagParser implements ResetInterface
         $result[] = substr($input, $lastOffset);
 
         return new ParsedSequence($result);
+    }
+
+    private function executeAsResponse(ParsedSequence|string $input, bool $allowEsiTags, OutputType $sourceType = OutputType::text): Response
+    {
+        $response = new Response();
+        $response->headers->set('Content-Type', OutputType::html === $sourceType ? 'text/html' : 'text/plain');
+
+        $replaced = $this->executeReplace($input, $allowEsiTags, $sourceType);
+
+        $expiresAt = null;
+        $cacheTags = [];
+        $contents = [];
+
+        foreach ($replaced as $result) {
+            if (OutputType::html === $result->getOutputType()) {
+                $contents[] = $result->getValue();
+            } else {
+                $contents[] = StringUtil::specialchars($result->getValue());
+            }
+
+            if ($result->getExpiresAt() && (!$expiresAt || $expiresAt->diff($result->getExpiresAt())->invert)) {
+                $expiresAt = $result->getExpiresAt();
+            }
+
+            foreach ($result->getCacheTags() as $cacheTag) {
+                $cacheTags[] = $cacheTag;
+            }
+        }
+
+        if ($expiresAt) {
+            $response->setSharedMaxAge($expiresAt->getTimestamp() - (new \DateTimeImmutable())->getTimestamp());
+        }
+
+        if ($cacheTags) {
+            $response->headers->set(
+                $this->tagHeaderFormatter?->getTagsHeaderName(),
+                $this->tagHeaderFormatter?->getTagsHeaderValue(array_unique($cacheTags)),
+            );
+        }
+
+        $response->setContent(implode('', $contents));
+
+        return $response;
     }
 
     /**
@@ -526,29 +584,6 @@ class InsertTagParser implements ResetInterface
         }
 
         return $subscription->service->{$subscription->method}($tag, $content);
-    }
-
-    private function getFragmentForTag(InsertTag $tag): InsertTagResult
-    {
-        $attributes = ['insertTag' => $tag->serialize()];
-
-        if ($scope = $this->requestStack->getCurrentRequest()?->attributes->get('_scope')) {
-            $attributes['_scope'] = $scope;
-        }
-
-        $query = [
-            'clientCache' => $GLOBALS['objPage']->clientCache ?? 0,
-            'pageId' => $GLOBALS['objPage']->id ?? null,
-            'request' => $this->requestStack->getCurrentRequest()?->getRequestUri(),
-        ];
-
-        $esiTag = $this->fragmentHandler->render(
-            new ControllerReference(InsertTagsController::class.'::renderAction', $attributes, $query),
-            'esi',
-            ['ignore_errors' => false], // see #48
-        );
-
-        return new InsertTagResult($esiTag, OutputType::html);
     }
 
     private function resolveNestedTags(InsertTag $tag): ResolvedInsertTag

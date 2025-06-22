@@ -18,23 +18,24 @@ use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 
 class InsertTagsControllerTest extends TestCase
 {
     public function testRendersInsertTag(): void
     {
+        $insertTagResponse = new Response();
+
         $insertTagParser = $this->createMock(InsertTagParser::class);
         $insertTagParser
-            ->method('replaceInline')
+            ->method('replaceInlineAsResponse')
             ->with('{{request_token}}')
-            ->willReturn('3858f62230ac3c915f300c664312c63f')
+            ->willReturn($insertTagResponse)
         ;
 
         $controller = new InsertTagsController($insertTagParser, $this->createMock(ContaoFramework::class), $this->createMock(RequestStack::class));
         $response = $controller->renderAction(new Request(), '{{request_token}}', null);
 
-        $this->assertTrue($response->headers->hasCacheControlDirective('private'));
-        $this->assertNull($response->getMaxAge());
-        $this->assertSame('3858f62230ac3c915f300c664312c63f', $response->getContent());
+        $this->assertSame($insertTagResponse, $response);
     }
 }
