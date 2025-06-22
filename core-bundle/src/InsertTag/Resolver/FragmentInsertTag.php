@@ -14,13 +14,13 @@ namespace Contao\CoreBundle\InsertTag\Resolver;
 
 use Contao\CoreBundle\Controller\InsertTagsController;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
-use Contao\CoreBundle\Fragment\FragmentHandler;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ParsedInsertTag;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
+use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 
 #[AsInsertTag('fragment')]
 class FragmentInsertTag implements InsertTagResolverNestedParsedInterface
