@@ -169,10 +169,6 @@
         <source>Delete theme ID %s</source>
         <target>%s kimlikli temayı sil</target>
       </trans-unit>
-      <trans-unit id="tl_theme.css">
-        <source>Edit the style sheets of theme ID %s</source>
-        <target>%s kimlikli temanın biçem sayfalarını düzenle</target>
-      </trans-unit>
       <trans-unit id="tl_theme.modules">
         <source>Edit the front end modules of theme ID %s</source>
         <target>%s kimlikli temanın ön yüz modüllerini düzenle</target>
