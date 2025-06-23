@@ -28,13 +28,6 @@ class DropZone extends FileUpload
 		// String of accepted file extensions
 		$strAccepted = implode(',', array_map(static function ($a) { return '.' . $a; }, StringUtil::trimsplit(',', strtolower(Config::get('uploadTypes')))));
 
-		// Add the scripts
-		if (!System::getContainer()->get('contao.routing.scope_matcher')->isBackendRequest())
-		{
-			$GLOBALS['TL_CSS'][] = 'assets/dropzone/css/dropzone.min.css';
-			$GLOBALS['TL_JAVASCRIPT'][] = 'assets/dropzone/js/dropzone.min.js';
-		}
-
 		// Generate the markup
 		$return = '
   <input type="hidden" name="action" value="fileupload">
