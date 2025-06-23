@@ -16,6 +16,7 @@ use Contao\CoreBundle\Search\Document;
 use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -42,6 +43,28 @@ class DocumentTest extends TestCase
             'This is just some content to test search indexing! This is protected content!',
             true,
         ];
+    }
+
+    public function testFetchingDocumentCrawlerReturnsNewInstance(): void
+    {
+        $html = '<body><style>body { background: grey; }</style></body>';
+        $request = Request::create('https://example.com/foo?bar=baz');
+        $response = new Response($html, 200, ['content-type' => ['text/html']]);
+        $document = Document::createFromRequestResponse($request, $response);
+
+        $crawler = $document->getContentCrawler();
+        $this->assertSame($crawler->html(), $html);
+
+        // Simulate some listener doing something with the document crawler and remove
+        // all <style> tags
+        $crawler->filterXPath('//style')->each(static fn (Crawler $node) => $node->getNode(0)->parentNode->removeChild($node->getNode(0)));
+
+        // Assert that our crawler indeed removed the style tags
+        $this->assertSame('<body></body>', $crawler->html());
+
+        // Now some other listener gets the crawler again, this must be untouched
+        $crawler = $document->getContentCrawler();
+        $this->assertSame($crawler->html(), $html);
     }
 
     public function testCreatesADocumentFromRequestAndResponse(): void
