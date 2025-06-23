@@ -2,6 +2,22 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.5.12] (2025-06-23)
+
+**Fixed issues:**
+
+- [#8444] Remove a superfluous space from the article insert tags ([fritzmg])
+- [#8431] Add the missing selector for `.tl_new a` ([fritzmg])
+- [#8428] Remove the redundant `.tl_select_column` class ([leofeyer])
+- [#8353] Set the line height to `normal` for `.tl_listing .tl_left` ([fritzmg])
+- [#8364] Replace the deprecated newsletter recipient icon ([de-es])
+- [#8277] Fix recursive paste permissions ([aschempp])
+- [#8360] Use a wrapper for Choices.js ([aschempp])
+- [#8371] Always add the operations menu ([aschempp])
+- [#8380] Use self-closing `<track>` tags ([fritzmg])
+- [#8378] Consider tracks in player being empty ([fritzmg])
+- [#8369] Update the `template_name` color within the Template Studio ([zoglo])
+
 ## [5.5.11] (2025-05-16)
 
 **Fixed issues:**
@@ -259,6 +275,7 @@ This project adheres to [Semantic Versioning].
 - [#7582] Add PostCSS as described in Symfony Encore ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.5.12]: https://github.com/contao/contao/releases/tag/5.5.12
 [5.5.11]: https://github.com/contao/contao/releases/tag/5.5.11
 [5.5.10]: https://github.com/contao/contao/releases/tag/5.5.10
 [5.5.9]: https://github.com/contao/contao/releases/tag/5.5.9
@@ -447,7 +464,7 @@ This project adheres to [Semantic Versioning].
 [#8244]: https://github.com/contao/contao/pull/8244
 [#8249]: https://github.com/contao/contao/pull/8249
 [#8254]: https://github.com/contao/contao/pull/8254
-[#8261]: https://github.com/contao/contao/pull/8261
+[#8277]: https://github.com/contao/contao/pull/8277
 [#8282]: https://github.com/contao/contao/pull/8282
 [#8292]: https://github.com/contao/contao/pull/8292
 [#8297]: https://github.com/contao/contao/pull/8297
@@ -457,3 +474,13 @@ This project adheres to [Semantic Versioning].
 [#8345]: https://github.com/contao/contao/pull/8345
 [#8347]: https://github.com/contao/contao/pull/8347
 [#8350]: https://github.com/contao/contao/pull/8350
+[#8353]: https://github.com/contao/contao/pull/8353
+[#8360]: https://github.com/contao/contao/pull/8360
+[#8364]: https://github.com/contao/contao/pull/8364
+[#8369]: https://github.com/contao/contao/pull/8369
+[#8371]: https://github.com/contao/contao/pull/8371
+[#8378]: https://github.com/contao/contao/pull/8378
+[#8380]: https://github.com/contao/contao/pull/8380
+[#8428]: https://github.com/contao/contao/pull/8428
+[#8431]: https://github.com/contao/contao/pull/8431
+[#8444]: https://github.com/contao/contao/pull/8444
