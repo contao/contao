@@ -107,15 +107,15 @@ export default class extends Controller {
         Array.from(this.bodyTarget.children).forEach((tr, i) => {
             for (const el of tr.querySelectorAll('label, input, select')) {
                 if (el.name) {
-                    el.name = el.name.replace(/\[[0-9]+]/g, `[${ i }]`);
+                    el.name = el.name.replace(/\[[0-9]+]/g, `[${i}]`);
                 }
 
                 if (el.id) {
-                    el.id = el.id.replace(/_[0-9]+(_|$)/g, `_${ i }$1`)
+                    el.id = el.id.replace(/_[0-9]+(_|$)/g, `_${i}$1`);
                 }
 
                 if (el.getAttribute('for')) {
-                    el.setAttribute('for', el.getAttribute('for').replace(/_[0-9]+(_|$)/g, `_${ i }$1`));
+                    el.setAttribute('for', el.getAttribute('for').replace(/_[0-9]+(_|$)/g, `_${i}$1`));
                 }
             }
         });
