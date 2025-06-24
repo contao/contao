@@ -795,6 +795,8 @@ window.Backend =
 	 * @author Martin Auswöger
 	 */
 	makeParentViewSortable: function(ul) {
+		console.warn('Backend.makeParentViewSortable() is deprecated. Please use the stimulus controllers instead.');
+
 		var ds = new Scroller(document.getElement('body'), {
 			onChange: function(x, y) {
 				this.element.scrollTo(this.element.getScroll().x, y);
@@ -889,6 +891,8 @@ window.Backend =
 	 * @param {string} val The value field
 	 */
 	makeMultiSrcSortable: function(id, oid, val) {
+		console.warn('Backend.makeMultiSrcSortable() is deprecated. Please use the stimulus controllers instead.');
+
 		var list = new Sortables($(id), {
 			constrain: true,
 			opacity: 0.6

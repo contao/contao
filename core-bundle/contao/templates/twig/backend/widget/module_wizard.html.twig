@@ -8,16 +8,27 @@
 <table{{ table_attributes }}>
     <thead>
         <tr>
+            <th></th>
             <th>{{ 'MSC.mw_module'|trans }}</th>
             <th>{{ 'MSC.mw_column'|trans }}</th>
             <th></th>
         </tr>
     </thead>
 
-    <tbody class="sortable" data-contao--row-wizard-target="body">
+    <tbody class="sortable" data-controller="contao--sortable" data-contao--sortable-handle-value=".drag-handle" data-action="contao--sortable:update->contao--row-wizard#updateSorting" data-contao--row-wizard-target="body">
         {% for row in rows %}
             <template data-contao--row-wizard-target="rowTemplate">
                 <tr data-contao--row-wizard-target="row">
+                    <td>
+                        {# Drag row #}
+                        {% set drag_handle_attributes = attrs()
+                            .set('type', 'button')
+                            .set('data-action', 'keydown->contao--row-wizard#move')
+                            .set('aria-hidden', 'true')
+                            .addClass('drag-handle')
+                        %}
+                        <button{{ drag_handle_attributes}}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
+                    </td>
                     {# Module/Content element #}
                     <td>
                         <div class="tl_select__wrapper" data-controller="contao--choices">
@@ -115,15 +126,6 @@
                             .addClass('mw_enable')
                         %}
                         <button{{ enable_button_attributes }}></button>
-
-                        {# Drag row #}
-                        {% set drag_handle_attributes = attrs()
-                            .set('type', 'button')
-                            .set('data-action', 'keydown->contao--row-wizard#move')
-                            .set('aria-hidden', 'true')
-                            .addClass('drag-handle')
-                        %}
-                        <button{{ drag_handle_attributes}}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
                     </td>
                 </tr>
             </template>
