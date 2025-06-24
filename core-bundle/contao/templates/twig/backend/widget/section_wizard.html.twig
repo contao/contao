@@ -8,6 +8,7 @@
 <table{{ table_attributes }}>
     <thead>
         <tr>
+            <th></th>
             <th>{{ 'MSC.sw_title'|trans }}</th>
             <th>{{ 'MSC.sw_id'|trans }}</th>
             <th>{{ 'MSC.sw_template'|trans }}</th>
@@ -15,10 +16,20 @@
             <th></th>
         </tr>
     </thead>
-    <tbody class="sortable" data-contao--row-wizard-target="body">
+    <tbody class="sortable" data-controller="contao--sortable" data-contao--sortable-handle-value=".drag-handle" data-action="contao--sortable:update->contao--row-wizard#updateSorting" data-contao--row-wizard-target="body">
         {% for row in rows %}
             <template data-contao--row-wizard-target="rowTemplate">
                 <tr data-contao--row-wizard-target="row">
+                    <td>
+                        {# Drag row #}
+                        {% set drag_handle_attributes = attrs()
+                            .set('type', 'button')
+                            .set('data-action', 'keydown->contao--row-wizard#move')
+                            .set('aria-hidden', 'true')
+                            .addClass('drag-handle')
+                        %}
+                        <button{{ drag_handle_attributes}}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
+                    </td>
                     {# Title #}
                     <td>
                         {% set title_input_attributes = attrs()
@@ -94,19 +105,9 @@
                             .set('data-action', 'contao--row-wizard#delete contao--scroll-offset#store')
                         %}
                         <button{{ delete_button_attributes }}>{{ backend_icon('delete.svg', 'MSC.mw_delete'|trans) }}</button>
-
-                        {# Drag row #}
-                        {% set drag_handle_attributes = attrs()
-                            .set('type', 'button')
-                            .set('data-action', 'keydown->contao--row-wizard#move')
-                            .set('aria-hidden', 'true')
-                            .addClass('drag-handle')
-                        %}
-                        <button{{ drag_handle_attributes}}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
                     </td>
                 </tr>
             </template>
         {% endfor %}
     </tbody>
 </table>
-

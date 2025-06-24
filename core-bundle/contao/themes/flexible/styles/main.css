@@ -1642,7 +1642,6 @@ table.tl_listing {
 	margin: 0 0 4px;
 	font-size: .75rem;
 	color: var(--info);
-	line-height: 16px;
 }
 
 .as-grid .cte_type {
@@ -1650,7 +1649,9 @@ table.tl_listing {
 	margin-bottom: 0;
 	padding: 8px 10px;
 	background-color: var(--table-header);
-	font-size: .8rem;
+	font-size: .815rem;
+	display: flex;
+	align-items: center;
 }
 
 .cte_type.published, .cte_type.published a {
@@ -1668,6 +1669,14 @@ table.tl_listing {
 
 .cte_type .visibility {
 	color: var(--gray);
+}
+
+.cte_type .drag-handle {
+	padding-block: 0;
+	margin-left: -10px;
+	background: none;
+	border: none;
+	padding-right: 3px;
 }
 
 .cte_preview {
@@ -2248,6 +2257,7 @@ ul.sgallery li {
 	}
 }
 
+.tl_modulewizard td:first-child,
 .tl_modulewizard td:last-child {
 	width: 1%;
 	white-space: nowrap;
@@ -2482,7 +2492,9 @@ ul.sgallery li {
 	}
 }
 
+.tl_sectionwizard td:first-child,
 .tl_sectionwizard td:last-child {
+	width: 1%;
 	white-space: nowrap;
 }
 
@@ -2635,6 +2647,14 @@ ul.sortable button[disabled] {
 
 ul.sortable button[disabled]:hover {
 	background: rgba(255,255,255,.7);
+}
+
+.sortable-chosen {
+	opacity: 0.6;
+}
+
+.sortable-drag {
+	opacity: 0;
 }
 
 #picker-menu {
