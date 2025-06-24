@@ -1642,7 +1642,6 @@ table.tl_listing {
 	margin: 0 0 4px;
 	font-size: .75rem;
 	color: var(--info);
-	line-height: 16px;
 }
 
 .as-grid .cte_type {
@@ -1651,6 +1650,8 @@ table.tl_listing {
 	padding: 8px 10px;
 	background-color: var(--table-header);
 	font-size: .8rem;
+	display: flex;
+	align-items: center;
 }
 
 .cte_type.published, .cte_type.published a {
@@ -1675,6 +1676,7 @@ table.tl_listing {
 	margin-left: -10px;
 	background: none;
 	border: none;
+	padding-right: 3px;
 }
 
 .cte_preview {

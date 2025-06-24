@@ -174,9 +174,7 @@ class Picker extends Widget
     </script>';
 		}
 
-		$return = '<div data-controller="contao--input-map" data-contao--input-map-attribute-value="data-id">' . $return . '</div></div>';
-
-		return $return;
+		return '<div data-controller="contao--input-map" data-contao--input-map-attribute-value="data-id">' . $return . '</div></div>';
 	}
 
 	protected function generateValues(): array

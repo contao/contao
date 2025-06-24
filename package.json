@@ -13,6 +13,7 @@
         "postcss": "^8.5",
         "postcss-loader": "^8.1",
         "postcss-preset-env": "^10.1",
+        "sortablejs": "^1.15",
         "stylelint": "^16.20",
         "stylelint-config-standard": "^38.0"
     },
@@ -29,8 +30,5 @@
         "lint": "run-s lint:js lint:css"
     },
     "private": true,
-    "packageManager": "npm@11.1.0",
-    "dependencies": {
-        "sortablejs": "^1.15.6"
-    }
+    "packageManager": "npm@11.1.0"
 }
