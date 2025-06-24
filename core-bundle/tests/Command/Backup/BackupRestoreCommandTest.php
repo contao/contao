@@ -70,6 +70,7 @@ class BackupRestoreCommandTest extends TestCase
 
         $commandTester = new CommandTester($command);
         $commandTester->setInputs([1]);
+
         $code = $commandTester->execute([]);
 
         $this->assertSame(0, $code);
