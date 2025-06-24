@@ -64,6 +64,17 @@ class BackupRestoreCommandTest extends TestCase
         $this->assertSame(1, $code);
     }
 
+    public function testBackupSelection(): void
+    {
+        $command = new BackupRestoreCommand($this->mockBackupManagerWithBackups());
+
+        $commandTester = new CommandTester($command);
+        $commandTester->setInputs([1]);
+        $code = $commandTester->execute([]);
+
+        $this->assertSame(0, $code);
+    }
+
     public static function unsuccessfulCommandRunProvider(): iterable
     {
         yield 'Text format' => [
@@ -139,5 +150,30 @@ class BackupRestoreCommandTest extends TestCase
         ;
 
         return $backupManager;
+    }
+
+    private function mockBackupManagerWithBackups(): BackupManager&MockObject
+    {
+        $backups = [
+            $this->createBackup('foo__20250000000000.sql.gz', 50000),
+            $this->createBackup('bar__20250000000000.sql.gz', 6005000),
+        ];
+
+        $backupManager = $this->createMock(BackupManager::class);
+        $backupManager
+            ->expects($this->once())
+            ->method('listBackups')
+            ->willReturn($backups)
+        ;
+
+        return $backupManager;
+    }
+
+    private function createBackup(string $filename, int $size): Backup
+    {
+        $backup = new Backup($filename);
+        $backup->setSize($size);
+
+        return $backup;
     }
 }

@@ -27,6 +27,8 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class BackupRestoreCommand extends AbstractBackupCommand
 {
+    private SymfonyStyle $io;
+
     private string|null $backupName = null;
 
     protected function configure(): void
@@ -34,6 +36,11 @@ class BackupRestoreCommand extends AbstractBackupCommand
         parent::configure();
 
         $this->addOption('force', null, InputOption::VALUE_NONE, 'By default, this command only restores backup that have been generated with Contao. Use --force to bypass this check.');
+    }
+
+    protected function initialize(InputInterface $input, OutputInterface $output): void
+    {
+        $this->io = new SymfonyStyle($input, $output);
     }
 
     protected function interact(InputInterface $input, OutputInterface $output): void
@@ -46,7 +53,7 @@ class BackupRestoreCommand extends AbstractBackupCommand
 
         if ([] !== $backups) {
             $question = new ChoiceQuestion('Select a Backup (press <return> to choose the latest one)', array_values($backups), 0);
-            $option = (new SymfonyStyle($input, $output))->askQuestion($question);
+            $option = $this->io->askQuestion($question);
 
             $this->backupName = $option->getFilename();
         }
@@ -54,8 +61,6 @@ class BackupRestoreCommand extends AbstractBackupCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
-
         $config = $this->backupManager->createRestoreConfig();
 
         if (null !== $this->backupName) {
@@ -74,21 +79,21 @@ class BackupRestoreCommand extends AbstractBackupCommand
             $this->backupManager->restore($config);
         } catch (BackupManagerException $e) {
             if ($this->isJson($input)) {
-                $io->writeln(json_encode(['error' => $e->getMessage()], JSON_THROW_ON_ERROR));
+                $this->io->writeln(json_encode(['error' => $e->getMessage()], JSON_THROW_ON_ERROR));
             } else {
-                $io->error($e->getMessage());
+                $this->io->error($e->getMessage());
             }
 
             return Command::FAILURE;
         }
 
         if ($this->isJson($input)) {
-            $io->writeln(json_encode($config->getBackup()->toArray(), JSON_THROW_ON_ERROR));
+            $this->io->writeln(json_encode($config->getBackup()->toArray(), JSON_THROW_ON_ERROR));
 
             return Command::SUCCESS;
         }
 
-        $io->success(\sprintf('Successfully restored backup from "%s".', $config->getBackup()->getFilename()));
+        $this->io->success(\sprintf('Successfully restored backup from "%s".', $config->getBackup()->getFilename()));
 
         return Command::SUCCESS;
     }
