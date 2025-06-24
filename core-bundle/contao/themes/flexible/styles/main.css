@@ -1649,7 +1649,7 @@ table.tl_listing {
 	margin-bottom: 0;
 	padding: 8px 10px;
 	background-color: var(--table-header);
-	font-size: .8rem;
+	font-size: .815rem;
 	display: flex;
 	align-items: center;
 }

@@ -16,6 +16,7 @@ use Contao\ContentTable;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
