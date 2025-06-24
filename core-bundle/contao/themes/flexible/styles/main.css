@@ -610,7 +610,7 @@ h2.sub_headline {
 	color: var(--orange);
 }
 
-.tl_gerror a, .tl_error a, .tl_confirm a, .tl_info a, .tl_new  {
+.tl_gerror a, .tl_error a, .tl_confirm a, .tl_info a, .tl_new a {
 	text-decoration: underline;
 }
 
@@ -1625,6 +1625,10 @@ table.tl_listing {
 	margin: 5px 0;
 }
 
+.operations-menu li:last-child:has(hr) {
+	display: none !important;
+}
+
 .tl_content_right:has(.operations-menu.show) {
 	z-index: 2;
 }
@@ -1904,7 +1908,8 @@ table.tl_listing {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	line-height: 18px;
+	line-height: normal;
+	min-height: 18px;
 }
 
 .tl_listing .tl_left.tl_left_dragging {
@@ -2256,7 +2261,7 @@ ul.sgallery li {
 	white-space: nowrap;
 }
 
-.tl_modulewizard .tl_select, .tl_modulewizard .tl_select_column {
+.tl_modulewizard .tl_select {
 	margin: 2px 0;
 }
 

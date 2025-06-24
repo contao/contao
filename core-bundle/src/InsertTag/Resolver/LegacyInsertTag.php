@@ -310,11 +310,11 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 // Replace the tag
                 switch ($insertTag->getName()) {
                     case 'article':
-                        $result = \sprintf('<a href="%s" %s>%s</a>', $strUrl, $strTarget, $objArticle->title);
+                        $result = \sprintf('<a href="%s"%s>%s</a>', $strUrl, $strTarget, $objArticle->title);
                         break;
 
                     case 'article_open':
-                        $result = \sprintf('<a href="%s" %s>', $strUrl, $strTarget);
+                        $result = \sprintf('<a href="%s"%s>', $strUrl, $strTarget);
                         break;
 
                     case 'article_url':
