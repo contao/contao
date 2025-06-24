@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Command\Backup;
 
 use Contao\CoreBundle\Doctrine\Backup\BackupManagerException;
-use Symfony\Bundle\MakerBundle\ConsoleStyle;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -28,8 +27,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class BackupRestoreCommand extends AbstractBackupCommand
 {
-    private ConsoleStyle $io;
-
     private string|null $backupName = null;
 
     protected function configure(): void
@@ -39,24 +36,17 @@ class BackupRestoreCommand extends AbstractBackupCommand
         $this->addOption('force', null, InputOption::VALUE_NONE, 'By default, this command only restores backup that have been generated with Contao. Use --force to bypass this check.');
     }
 
-    protected function initialize(InputInterface $input, OutputInterface $output): void
-    {
-        $this->io = new ConsoleStyle($input, $output);
-    }
-
     protected function interact(InputInterface $input, OutputInterface $output): void
     {
         if ($this->backupName = $input->getArgument('name') ?? null) {
             return;
         }
 
-        $this->io = new ConsoleStyle($input, $output);
-
         $backups = $this->backupManager->listBackups();
 
         if ([] !== $backups) {
             $question = new ChoiceQuestion('Select a Backup (press <return> to choose the latest one)', array_values($backups), 0);
-            $option = $this->io->askQuestion($question);
+            $option = (new SymfonyStyle($input, $output))->askQuestion($question);
 
             $this->backupName = $option->getFilename();
         }
