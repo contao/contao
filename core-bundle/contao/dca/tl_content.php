@@ -1007,7 +1007,7 @@ class tl_content extends Backend
 
 		$dragHandle = '';
 
-		if (!Input::get('act'))
+		if (!Input::get('act') && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $arrRow)))
 		{
 			$labelCut = $GLOBALS['TL_LANG']['tl_content']['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
 			$dragHandle = '<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $arrRow['id'])) . '</button>';
