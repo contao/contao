@@ -455,7 +455,8 @@ services:
             - '@fragment.handler'
             - ~
             - '%contao.insert_tags.allowed_tags%'
-            - '@?fos_http_cache.tag_handler.header_formatter'
+            - '@?fos_http_cache.http.symfony_response_tagger'
+            - '@contao.listener.subrequest_cache'
 
     contao.insert_tag.php_function_flag:
         class: Contao\CoreBundle\InsertTag\Flag\PhpFunctionFlag

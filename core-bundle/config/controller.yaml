@@ -180,7 +180,7 @@ services:
         arguments:
             - '@contao.insert_tag.parser'
             - '@contao.framework'
-            - '@request_stack'
+            - '@kernel'
         tags:
             - controller.service_arguments
 

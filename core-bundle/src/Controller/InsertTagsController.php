@@ -12,12 +12,13 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller;
 
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\PageModel;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * @internal Do not use this controller in your code
@@ -31,7 +32,7 @@ class InsertTagsController
     public function __construct(
         private readonly InsertTagParser $insertTagParser,
         private readonly ContaoFramework $framework,
-        private readonly RequestStack $requestStack,
+        private readonly HttpKernelInterface $kernel,
     ) {
     }
 
@@ -39,20 +40,37 @@ class InsertTagsController
     {
         $this->framework->initialize();
         $pageModelBefore = $GLOBALS['objPage'] ?? null;
-
-        $this->requestStack->push($request->duplicate([], [], null, null, [], array_merge($request->server->all(), ['REQUEST_URI' => '/'])));
         $GLOBALS['objPage'] = $pageModel;
 
+        $subRequest = $request->duplicate(
+            [],
+            [],
+            ['_controller' => self::class.'::renderForwardedAction', 'insertTag' => $insertTag, 'pageModel' => $pageModel],
+            null,
+            [],
+            array_merge($request->server->all(), ['REQUEST_URI' => '/']),
+        );
+
         try {
-            $response = $this->insertTagParser->replaceInlineAsResponse($insertTag);
+            $response = $this->kernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         } finally {
             if (null === $pageModelBefore) {
                 unset($GLOBALS['objPage']);
             } else {
                 $GLOBALS['objPage'] = $pageModelBefore;
             }
-            $this->requestStack->pop();
         }
+
+        return $response;
+    }
+
+    public function renderForwardedAction(string $insertTag): Response
+    {
+        $response = new Response();
+        $response->headers->set('Content-Type', 'text/html');
+        $response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
+        $response->setPublic();
+        $response->setContent($this->insertTagParser->replaceInline($insertTag));
 
         return $response;
     }

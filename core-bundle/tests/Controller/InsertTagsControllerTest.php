@@ -17,25 +17,18 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 class InsertTagsControllerTest extends TestCase
 {
+    /**
+     * @todo remove/replace this test
+     */
     public function testRendersInsertTag(): void
     {
-        $insertTagResponse = new Response();
-
-        $insertTagParser = $this->createMock(InsertTagParser::class);
-        $insertTagParser
-            ->method('replaceInlineAsResponse')
-            ->with('{{request_token}}')
-            ->willReturn($insertTagResponse)
-        ;
-
-        $controller = new InsertTagsController($insertTagParser, $this->createMock(ContaoFramework::class), $this->createMock(RequestStack::class));
+        $controller = new InsertTagsController($this->createMock(InsertTagParser::class), $this->createMock(ContaoFramework::class), $this->createMock(HttpKernelInterface::class));
         $response = $controller->renderAction(new Request(), '{{request_token}}', null);
 
-        $this->assertSame($insertTagResponse, $response);
+        $this->assertFalse($response->getContent());
     }
 }

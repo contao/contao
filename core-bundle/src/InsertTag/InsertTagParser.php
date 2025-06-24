@@ -14,12 +14,13 @@ namespace Contao\CoreBundle\InsertTag;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\Environment;
 use Contao\InsertTags;
 use Contao\StringUtil;
 use Contao\System;
-use FOS\HttpCache\TagHeaderFormatter\TagHeaderFormatter;
+use FOS\HttpCache\ResponseTagger;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -84,7 +85,8 @@ class InsertTagParser implements ResetInterface
         private readonly FragmentHandler $fragmentHandler,
         private InsertTags|null $insertTags = null,
         array $allowedTags = ['*'],
-        private readonly TagHeaderFormatter|null $tagHeaderFormatter = null,
+        private readonly ResponseTagger|null $responseTagger = null,
+        private readonly SubrequestCacheSubscriber|null $subrequestCacheSubscriber = null,
     ) {
         $this->allowedTagsRegex = '('.implode(
             '|',
@@ -148,17 +150,9 @@ class InsertTagParser implements ResetInterface
             '',
             array_map(
                 static fn ($result) => OutputType::html !== $result->getOutputType() ? StringUtil::specialchars($result->getValue()) : $result->getValue(),
-                $this->executeReplace($input, true, OutputType::html),
+                $this->handleCaching($this->executeReplace($input, true, OutputType::html)),
             ),
         );
-    }
-
-    /**
-     * @return Response may include <esi> tags
-     */
-    public function replaceAsResponse(ParsedSequence|string $input): Response
-    {
-        return $this->executeAsResponse($input, true, OutputType::html);
     }
 
     /**
@@ -166,7 +160,7 @@ class InsertTagParser implements ResetInterface
      */
     public function replaceChunked(string $input): ChunkedText
     {
-        return $this->toChunkedText($this->executeReplace($input, true));
+        return $this->toChunkedText($this->handleCaching($this->executeReplace($input, true)));
     }
 
     /**
@@ -178,17 +172,9 @@ class InsertTagParser implements ResetInterface
             '',
             array_map(
                 static fn ($result) => OutputType::html !== $result->getOutputType() ? StringUtil::specialchars($result->getValue()) : $result->getValue(),
-                $this->executeReplace($input, false, OutputType::html),
+                $this->handleCaching($this->executeReplace($input, false, OutputType::html)),
             ),
         );
-    }
-
-    /**
-     * @return Response does not include <esi> tags
-     */
-    public function replaceInlineAsResponse(ParsedSequence|string $input): Response
-    {
-        return $this->executeAsResponse($input, false, OutputType::html);
     }
 
     /**
@@ -196,7 +182,7 @@ class InsertTagParser implements ResetInterface
      */
     public function replaceInlineChunked(string $input): ChunkedText
     {
-        return $this->toChunkedText($this->executeReplace($input, false));
+        return $this->toChunkedText($this->handleCaching($this->executeReplace($input, false)));
     }
 
     /**
@@ -362,47 +348,24 @@ class InsertTagParser implements ResetInterface
         return new ParsedSequence($result);
     }
 
-    private function executeAsResponse(ParsedSequence|string $input, bool $allowEsiTags, OutputType $sourceType = OutputType::text): Response
+    /**
+     * @param list<InsertTagResult> $replaced
+     *
+     * @return list<InsertTagResult>
+     */
+    private function handleCaching(array $replaced): array
     {
-        $response = new Response();
-        $response->headers->set('Content-Type', OutputType::html === $sourceType ? 'text/html' : 'text/plain');
-
-        $replaced = $this->executeReplace($input, $allowEsiTags, $sourceType);
-
-        $expiresAt = null;
-        $cacheTags = [];
-        $contents = [];
-
         foreach ($replaced as $result) {
-            if (OutputType::html === $result->getOutputType()) {
-                $contents[] = $result->getValue();
-            } else {
-                $contents[] = StringUtil::specialchars($result->getValue());
+            if ($result->getExpiresAt()) {
+                $this->subrequestCacheSubscriber?->addToCurrentStrategy(
+                    (new Response())->setSharedMaxAge($result->getExpiresAt()->getTimestamp() - (new \DateTimeImmutable())->getTimestamp()),
+                );
             }
 
-            if ($result->getExpiresAt() && (!$expiresAt || $expiresAt->diff($result->getExpiresAt())->invert)) {
-                $expiresAt = $result->getExpiresAt();
-            }
-
-            foreach ($result->getCacheTags() as $cacheTag) {
-                $cacheTags[] = $cacheTag;
-            }
+            $this->responseTagger?->addTags($result->getCacheTags());
         }
 
-        if ($expiresAt) {
-            $response->setSharedMaxAge($expiresAt->getTimestamp() - (new \DateTimeImmutable())->getTimestamp());
-        }
-
-        if ($cacheTags) {
-            $response->headers->set(
-                $this->tagHeaderFormatter?->getTagsHeaderName(),
-                $this->tagHeaderFormatter?->getTagsHeaderValue(array_unique($cacheTags)),
-            );
-        }
-
-        $response->setContent(implode('', $contents));
-
-        return $response;
+        return $replaced;
     }
 
     /**
