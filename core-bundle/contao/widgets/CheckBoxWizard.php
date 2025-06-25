@@ -166,10 +166,13 @@ class CheckBoxWizard extends Widget
 	 * @param string  $strButtons
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+	 *              use the checkbox_wizard.html.twig template instead.
 	 */
 	protected function generateCheckbox($arrOption, $i, $strButtons)
 	{
-		trigger_deprecation('contao/core-bundle', '5.6', '%s is deprecated, use the checkbox_wizard.html.twig instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the checkbox_wizard.html.twig template instead.', __METHOD__);
 
 		return \sprintf(
 			'<span><input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s data-action="focus->contao--scroll-offset#store"> %s<label for="opt_%s">%s</label></span>',

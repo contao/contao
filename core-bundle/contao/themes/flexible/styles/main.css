@@ -2333,7 +2333,8 @@ ul.sgallery li {
 	white-space: nowrap;
 }
 
-.tl_optionwizard .tl_text {
+.tl_optionwizard .tl_text,
+.tl_key_value_wizard .tl_text {
 	margin: 2px 0;
 }
 

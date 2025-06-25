@@ -40,6 +40,7 @@ export default class extends Controller {
             this._focus(row.nextElementSibling) ||
                 this._focus(row.previousElementSibling) ||
                 this._focus(this.bodyTarget);
+
             row.remove();
         } else {
             this._resetInputs(row);

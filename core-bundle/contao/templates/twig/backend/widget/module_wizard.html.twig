@@ -14,7 +14,6 @@
             <th></th>
         </tr>
     </thead>
-
     <tbody class="sortable" data-controller="contao--sortable" data-contao--sortable-handle-value=".drag-handle" data-action="contao--sortable:update->contao--row-wizard#updateSorting" data-contao--row-wizard-target="body">
         {% for row in rows %}
             <tr data-contao--row-wizard-target="row">
@@ -28,6 +27,7 @@
                     %}
                     <button{{ drag_handle_attributes}}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
                 </td>
+
                 {# Module/Content element #}
                 <td>
                     <div class="tl_select__wrapper" data-controller="contao--choices">
