@@ -37,7 +37,9 @@ export default class extends Controller {
         const row = this._getRow(event);
 
         if (this.bodyTarget.children.length > 1) {
-            this._focus(row.nextElementSibling) || this._focus(row.previousElementSibling) || this._focus(this.bodyTarget);
+            this._focus(row.nextElementSibling) ||
+                this._focus(row.previousElementSibling) ||
+                this._focus(this.bodyTarget);
             row.remove();
         } else {
             this._resetInputs(row);
@@ -109,7 +111,7 @@ export default class extends Controller {
         }
     }
 
-    _focus (el) {
+    _focus(el) {
         if (!el) {
             return false;
         }
