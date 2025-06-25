@@ -52,7 +52,7 @@ class BackupRestoreCommand extends AbstractBackupCommand
         $backups = $this->backupManager->listBackups();
 
         if ([] !== $backups) {
-            $question = new ChoiceQuestion('Select a Backup (press <return> to choose the latest one)', array_values($backups), 0);
+            $question = new ChoiceQuestion('Select a backup (press <return> to use the latest one)', array_values($backups), 0);
             $option = $this->io->askQuestion($question);
 
             $this->backupName = $option->getFilename();
