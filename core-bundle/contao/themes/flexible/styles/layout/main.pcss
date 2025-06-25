@@ -1,0 +1,27 @@
+/* Main */
+#main {
+    width: calc(100% - 220px);
+    display: flex;
+    flex-direction: column;
+}
+
+.popup #main {
+    float: none;
+    width: auto;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    display: initial;
+}
+
+#main .content {
+    margin: 0 15px 15px;
+    background: var(--content-bg);
+    border: 1px solid var(--content-border);
+}
+
+.popup #main .content {
+    margin: 0;
+    border: 0;
+}

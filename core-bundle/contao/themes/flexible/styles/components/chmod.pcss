@@ -1,0 +1,33 @@
+/* CHMOD table */
+.tl_chmod th {
+    height: 18px;
+    text-align: center;
+    font-weight: 400;
+    background: var(--tree-header);
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .tl_chmod th {
+        font-weight: 300;
+    }
+}
+
+.tl_chmod td {
+    text-align: center;
+    background: var(--table-header);
+}
+
+.tl_chmod th[scope="row"] {
+    text-align: left;
+}
+
+.tl_chmod th, .tl_chmod td {
+    width: 100px;
+    padding: 6px;
+    border: 1px solid var(--content-bg);
+}
+
+.tl_chmod tr th:first-child, .tl_chmod tr td:first-child {
+    width: auto;
+    min-width: 100px;
+}

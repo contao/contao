@@ -1,0 +1,16 @@
+/* Invisible elements */
+.clear {
+    clear: both;
+    height: 0.1px;
+    line-height: 0.1px;
+    font-size: 0.1px;
+}
+
+.cf:before, .cf:after {
+    content: " ";
+    display: table;
+}
+
+.cf:after {
+    clear: both;
+}

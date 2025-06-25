@@ -1,0 +1,119 @@
+/* Crawler */
+@keyframes crawl-progress-bar-stripes {
+    0% {
+        background-position-x: 1rem;
+    }
+}
+
+#tl_crawl .tl_message {
+    margin-bottom: 24px;
+}
+
+#tl_crawl .tl_message > p {
+    padding-top: 0;
+    padding-bottom: 0;
+    background-color: transparent;
+    background-position-y: center;
+}
+
+#tl_crawl .tl_tbox {
+    margin-top: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-left: 0;
+}
+
+#tl_crawl .tl_checkbox_container {
+    margin-top: 6px;
+}
+
+#tl_crawl .inner {
+    position: relative;
+    margin: 0 18px 18px;
+}
+
+#tl_crawl .progress {
+    display: flex;
+    height: 20px;
+    background-color: var(--tree-header);
+    border-radius: 2px;
+}
+
+#tl_crawl .progress-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    white-space: nowrap;
+    background-size: 10px 10px;
+}
+
+#tl_crawl .progress-bar.running {
+    background-color: var(--progress-running);
+    background-image: linear-gradient(45deg, rgba(255,255,255,.15) 25%, transparent 25%, transparent 50%, rgba(255,255,255,.15) 50%, rgba(255,255,255,.15) 75%, transparent 75%, transparent);
+    animation: crawl-progress-bar-stripes 1s linear infinite;
+}
+
+#tl_crawl .progress-bar.finished {
+    background-color: var(--progress-finished);
+}
+
+#tl_crawl .progress-count {
+    margin: 6px 0 24px;
+}
+
+#tl_crawl .results h3 {
+    font-size: .9rem;
+    margin: 18px 0 9px;
+}
+
+#tl_crawl .results p {
+    margin-bottom: 6px;
+}
+
+#tl_crawl .crawl-hint {
+    margin-top: -2px;
+    line-height: 1.3;
+}
+
+#tl_crawl .crawl-hint a {
+    text-decoration: underline;
+}
+
+#tl_crawl .subscriber-log {
+    display: none;
+    padding: 5px 0;
+    margin-bottom: 0;
+}
+
+#tl_crawl .wait {
+    margin-top: 9px;
+    color: var(--gray);
+}
+
+#tl_crawl .debug-log {
+    display: none;
+    margin-top: 11px;
+}
+
+#tl_crawl .results.running .show-when-finished, #tl_crawl .results.finished .show-when-running {
+    display: none;
+}
+
+#tl_crawl .results.running .show-when-running, #tl_crawl .results.finished .show-when-finished {
+    display: block;
+}
+
+#tl_crawl .result .summary.success {
+    color: var(--green);
+}
+
+#tl_crawl .result .summary.failure {
+    color: var(--red);
+}
+
+#tl_crawl .result .warning {
+    display: none;
+    color: var(--blue);
+}

@@ -1,0 +1,154 @@
+/* Filter */
+.tl_panel,
+.tl_version_panel {
+    padding: 8px 15px;
+    background: var(--panel-bg);
+    border-bottom: 1px solid var(--content-border);
+    text-align: right;
+    flex-wrap: wrap;
+}
+
+.tl_subpanel,
+.tl_panel {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 3px;
+}
+
+/* Limit, search and submit */
+.tl_panel:last-of-type {
+    column-gap: 10px;
+    min-width: 100px;
+}
+
+.tl_subpanel :is(select, input, button) {
+    height: 30px;
+}
+
+.tl_filter {
+    flex-wrap: wrap;
+    gap: 6px 3px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.tl_filter > * {
+    margin: 0;
+}
+
+.tl_version_panel {
+    padding: 8px 12px;
+}
+
+.tl_panel .tl_select {
+    text-align: left;
+}
+
+.tl_version_panel .tl_select {
+    max-width: 280px;
+}
+
+.tl_version_panel .tl_submit {
+    vertical-align: middle;
+}
+
+.tl_version_panel .tl_formbody {
+    position: relative;
+}
+
+.tl_limit {
+    width: 20%;
+}
+
+.tl_limit .tl_select_wrapper {
+    width: 57%;
+}
+
+.tl_search {
+    gap: 4px;
+    width: 100%;
+}
+
+.tl_search > .tl_select_wrapper {
+    width: 38%;
+}
+
+.tl_search > .tl_text {
+    width: 38%;
+}
+
+.tl_select_wrapper {
+    margin: 3px 0;
+}
+
+.tl_select_wrapper > * {
+    margin: 0;
+}
+
+.tl_img_submit {
+    white-space: nowrap;
+    background-color: var(--form-bg);
+    background-position: 6px 6px;
+    background-repeat: no-repeat;
+    margin: 0;
+    border: 1px solid var(--form-border);
+    border-radius: 2px;
+    box-sizing: border-box;
+    transition: background .2s ease;
+    width: 30px;
+    padding-left: 20px;
+    text-indent: 20px;
+    overflow: hidden;
+}
+
+.tl_img_submit:hover {
+    background-color: var(--form-bg-hover);
+}
+
+.filter_apply {
+    background-image: url("icons/filter-apply.svg");
+}
+
+.filter_reset {
+    background-image: url("icons/filter-reset.svg");
+    margin-left: 6px;
+}
+
+.filter_reset[disabled] {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.tl_subpanel {
+    letter-spacing: -.31em;
+}
+
+.tl_subpanel > * {
+    margin: 0;
+}
+
+.tl_subpanel * {
+    letter-spacing: normal;
+}
+
+.tl_subpanel strong, .tl_search span {
+    vertical-align: middle;
+}
+
+.tl_sorting {
+    width: 26%;
+}
+
+.tl_sorting .tl_select_wrapper {
+    width: 60%;
+    margin-left: 1%;
+}
+
+.tl_submit_panel {
+    min-width: 32px;
+}
+
+.tl_panel .active, .tl_panel_bottom .active, #search .active {
+    background-color: var(--active-bg);
+}
