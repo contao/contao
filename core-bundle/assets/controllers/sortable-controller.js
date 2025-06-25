@@ -9,12 +9,14 @@ export default class extends Controller {
         },
         requestToken: String,
         handle: String,
+        draggable: String,
     };
 
     connect() {
         this.sortable = new Sortable(this.element, {
             animation: 100,
             handle: this.handleValue,
+            draggable: this.draggableValue,
             onSort: (event) => {
                 this.dispatch('update', { target: event.item });
 
