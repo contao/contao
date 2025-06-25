@@ -18,6 +18,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
@@ -26,6 +27,10 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 )]
 class BackupRestoreCommand extends AbstractBackupCommand
 {
+    private SymfonyStyle $io;
+
+    private string|null $backupName = null;
+
     protected function configure(): void
     {
         parent::configure();
@@ -33,12 +38,38 @@ class BackupRestoreCommand extends AbstractBackupCommand
         $this->addOption('force', null, InputOption::VALUE_NONE, 'By default, this command only restores backup that have been generated with Contao. Use --force to bypass this check.');
     }
 
+    protected function initialize(InputInterface $input, OutputInterface $output): void
+    {
+        $this->io = new SymfonyStyle($input, $output);
+    }
+
+    protected function interact(InputInterface $input, OutputInterface $output): void
+    {
+        if ($this->backupName = $input->getArgument('name') ?? null) {
+            return;
+        }
+
+        $backups = $this->backupManager->listBackups();
+
+        if ([] !== $backups) {
+            $question = new ChoiceQuestion('Select a backup (press <return> to use the latest one)', array_values($backups), 0);
+            $option = $this->io->askQuestion($question);
+
+            $this->backupName = $option->getFilename();
+        }
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
-
         $config = $this->backupManager->createRestoreConfig();
-        $config = $this->handleCommonConfig($input, $config);
+
+        if (null !== $this->backupName) {
+            $config = $config->withFileName($this->backupName);
+        }
+
+        if ($tablesToIgnore = $input->getOption('ignore-tables')) {
+            $config = $config->withTablesToIgnore(explode(',', (string) $tablesToIgnore));
+        }
 
         if ($input->getOption('force')) {
             $config = $config->withIgnoreOriginCheck(true);
@@ -48,21 +79,21 @@ class BackupRestoreCommand extends AbstractBackupCommand
             $this->backupManager->restore($config);
         } catch (BackupManagerException $e) {
             if ($this->isJson($input)) {
-                $io->writeln(json_encode(['error' => $e->getMessage()], JSON_THROW_ON_ERROR));
+                $this->io->writeln(json_encode(['error' => $e->getMessage()], JSON_THROW_ON_ERROR));
             } else {
-                $io->error($e->getMessage());
+                $this->io->error($e->getMessage());
             }
 
             return Command::FAILURE;
         }
 
         if ($this->isJson($input)) {
-            $io->writeln(json_encode($config->getBackup()->toArray(), JSON_THROW_ON_ERROR));
+            $this->io->writeln(json_encode($config->getBackup()->toArray(), JSON_THROW_ON_ERROR));
 
             return Command::SUCCESS;
         }
 
-        $io->success(\sprintf('Successfully restored backup from "%s".', $config->getBackup()->getFilename()));
+        $this->io->success(\sprintf('Successfully restored backup from "%s".', $config->getBackup()->getFilename()));
 
         return Command::SUCCESS;
     }
