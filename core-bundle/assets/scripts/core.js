@@ -1083,6 +1083,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	listWizard: function(id) {
+		console.warn('Backend.listWizard() is deprecated. Please use the stimulus controller instead.');
+
 		var ul = $(id),
 			makeSortable = function(ul) {
 				new Sortables(ul, {
@@ -1385,6 +1387,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	optionsWizard: function(id) {
+		console.warn('Backend.optionsWizard() is deprecated. Please use the stimulus controller instead.');
+
 		var table = $(id),
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
@@ -1489,6 +1493,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	keyValueWizard: function(id) {
+		console.warn('Backend.keyValueWizard() is deprecated. Please use the stimulus controller instead.');
+
 		var table = $(id),
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
@@ -1586,6 +1592,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	checkboxWizard: function(id) {
+		console.warn('Backend.checkboxWizard() is deprecated. Please use the Stimulus controller instead.');
+
 		var container = $(id).getElement('.sortable'),
 			makeSortable = function(container) {
 				new Sortables(container, {

@@ -9,21 +9,26 @@ export default class extends Controller {
         },
         requestToken: String,
         handle: String,
+        draggable: String,
     };
 
     connect() {
-        this.sortable = new Sortable(this.element, {
+        const options = {
             animation: 100,
-            handle: this.handleValue,
             onSort: (event) => {
-                this.dispatch('update', { target: event.item });
-
-                if (this.parentModeValue) {
-                    this._updateWrapperLevel(event.item);
-                    this._updateParentSorting(event.item);
-                }
+                this._onSorted(event.item);
             },
-        });
+        };
+
+        if (this.hasHandleValue) {
+            options.handle = this.handleValue;
+        }
+
+        if (this.hasDraggableValue) {
+            options.draggable = this.draggableValue;
+        }
+
+        this.sortable = new Sortable(this.element, options);
 
         // Backwards compatibility for parent mode, will unhide the operation if no other drag handle is found
         for (const el of [...this.element.children]) {
@@ -40,14 +45,36 @@ export default class extends Controller {
         this.sortable = undefined;
     }
 
-    _updateWrapperLevel(el) {
-        const ul = el.closest('ul');
+    move(event) {
+        const item = this._getItem(event.target);
 
-        if (!ul) {
-            return;
+        if (event.code === 'ArrowUp' || event.keyCode === 38) {
+            event.preventDefault();
+
+            if (item.previousElementSibling) {
+                item.previousElementSibling.before(item);
+            } else {
+                this.element.append(item);
+            }
+
+            this._onSorted(item);
+            event.target.focus();
+        } else if (event.code === 'ArrowDown' || event.keyCode === 40) {
+            event.preventDefault();
+
+            if (item.nextElementSibling) {
+                item.nextElementSibling.after(item);
+            } else {
+                this.element.prepend(item);
+            }
+
+            this._onSorted(item);
+            event.target.focus();
         }
+    }
 
-        const divs = ul.querySelectorAll('li > div:first-child');
+    _updateWrapperLevel() {
+        const divs = this.element.querySelectorAll('li > div:first-child');
 
         if (!divs) {
             return;
@@ -95,12 +122,29 @@ export default class extends Controller {
             url.searchParams.set('pid', el.previousElementSibling.dataset.id);
             url.searchParams.set('mode', 1);
         } else {
-            url.searchParams.set('pid', el.closest('ul').dataset.id);
+            url.searchParams.set('pid', this.element.dataset.id);
             url.searchParams.set('mode', 2);
         }
 
         fetch(url, {
             redirect: 'manual',
         });
+    }
+
+    _getItem(el) {
+        if (!el.parentNode || el.parentNode === this.element) {
+            return el;
+        }
+
+        return this._getItem(el.parentNode);
+    }
+
+    _onSorted(item) {
+        this.dispatch('update', { target: item });
+
+        if (this.parentModeValue) {
+            this._updateWrapperLevel(item);
+            this._updateParentSorting(item);
+        }
     }
 }

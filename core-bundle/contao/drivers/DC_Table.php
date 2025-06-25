@@ -4608,7 +4608,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Drag handle
 						if ($blnIsSortable && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $row[$i])))
 						{
-							$operations->append(array('primary' => true, 'html'=>'<button type="button" class="drag-handle" style="display:none" aria-hidden="true">' . Image::getHtml('drag.svg', \sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '</button>'));
+							$operations->append(array('primary' => true, 'html'=>'<button type="button" class="drag-handle" data-action="keydown->contao--sortable#move" style="display:none">' . Image::getHtml('drag.svg', \sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '</button>'));
 						}
 					}
 
