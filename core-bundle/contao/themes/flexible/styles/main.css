@@ -2267,28 +2267,27 @@ ul.sgallery li {
 	margin: 2px 0;
 }
 
-.tl_modulewizard input.mw_enable + button, .js .tl_modulewizard input.mw_enable {
-	display: none;
-}
-
-.js .tl_modulewizard input.mw_enable + button {
-	display: inline;
+.js .tl_modulewizard input.mw_enable {
+	position: absolute;
+	opacity: 0;
 	width: 16px;
 	height: 16px;
+}
+
+.js .tl_modulewizard input.mw_enable + label {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	text-indent: -999em;
 	background: var(--icon-invisible) 0 0 no-repeat;
 }
 
-.js .tl_modulewizard input.mw_enable:checked + button {
+.js .tl_modulewizard input.mw_enable:focus + label {
+	outline: 5px auto -webkit-focus-ring-color;
+}
+
+.js .tl_modulewizard input.mw_enable:checked + label {
 	background-image: var(--icon-visible);
-}
-
-.tl_modulewizard img.mw_enable {
-	display: none;
-}
-
-.js .tl_modulewizard img.mw_enable {
-	display: inline;
-	margin-right: 1px;
 }
 
 /* Options and key/value wizard */

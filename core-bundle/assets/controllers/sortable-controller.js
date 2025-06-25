@@ -40,6 +40,34 @@ export default class extends Controller {
         this.sortable = undefined;
     }
 
+    move(event) {
+        const item = this._getItem(event.target);
+
+        if (event.code === 'ArrowUp' || event.keyCode === 38) {
+            event.preventDefault();
+
+            if (item.previousElementSibling) {
+                item.previousElementSibling.before(item);
+            } else {
+                this.element.append(item);
+            }
+
+            this.dispatch('update', { target: item });
+            event.target.focus();
+        } else if (event.code === 'ArrowDown' || event.keyCode === 40) {
+            event.preventDefault();
+
+            if (item.nextElementSibling) {
+                item.nextElementSibling.after(item);
+            } else {
+                this.element.prepend(item);
+            }
+
+            this.dispatch('update', { target: item });
+            event.target.focus();
+        }
+    }
+
     _updateWrapperLevel(el) {
         const ul = el.closest('ul');
 
@@ -102,5 +130,13 @@ export default class extends Controller {
         fetch(url, {
             redirect: 'manual',
         });
+    }
+
+    _getItem(el) {
+        if (!el.parentNode || el.parentNode === this.element) {
+            return el;
+        }
+
+        return this._getItem(el.parentNode);
     }
 }
