@@ -2655,7 +2655,8 @@ ul.sortable button[disabled]:hover {
 	opacity: 0.6;
 }
 
-.sortable-drag {
+.sortable-drag,
+.sortable-drag + * {
 	opacity: 0;
 }
 
