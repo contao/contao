@@ -13,19 +13,22 @@ export default class extends Controller {
     };
 
     connect() {
-        this.sortable = new Sortable(this.element, {
+        const options = {
             animation: 100,
-            handle: this.handleValue,
-            draggable: this.draggableValue,
             onSort: (event) => {
-                this.dispatch('update', { target: event.item });
-
-                if (this.parentModeValue) {
-                    this._updateWrapperLevel(event.item);
-                    this._updateParentSorting(event.item);
-                }
+                this._onSorted(event.item);
             },
-        });
+        };
+
+        if (this.hasHandleValue) {
+            options.handle = this.handleValue;
+        }
+
+        if (this.hasDraggableValue) {
+            options.draggable = this.draggableValue;
+        }
+
+        this.sortable = new Sortable(this.element, options);
 
         // Backwards compatibility for parent mode, will unhide the operation if no other drag handle is found
         for (const el of [...this.element.children]) {
@@ -54,7 +57,7 @@ export default class extends Controller {
                 this.element.append(item);
             }
 
-            this.dispatch('update', { target: item });
+            this._onSorted(item);
             event.target.focus();
         } else if (event.code === 'ArrowDown' || event.keyCode === 40) {
             event.preventDefault();
@@ -65,19 +68,13 @@ export default class extends Controller {
                 this.element.prepend(item);
             }
 
-            this.dispatch('update', { target: item });
+            this._onSorted(item);
             event.target.focus();
         }
     }
 
-    _updateWrapperLevel(el) {
-        const ul = el.closest('ul');
-
-        if (!ul) {
-            return;
-        }
-
-        const divs = ul.querySelectorAll('li > div:first-child');
+    _updateWrapperLevel() {
+        const divs = this.element.querySelectorAll('li > div:first-child');
 
         if (!divs) {
             return;
@@ -125,7 +122,7 @@ export default class extends Controller {
             url.searchParams.set('pid', el.previousElementSibling.dataset.id);
             url.searchParams.set('mode', 1);
         } else {
-            url.searchParams.set('pid', el.closest('ul').dataset.id);
+            url.searchParams.set('pid', this.element.dataset.id);
             url.searchParams.set('mode', 2);
         }
 
@@ -140,5 +137,14 @@ export default class extends Controller {
         }
 
         return this._getItem(el.parentNode);
+    }
+
+    _onSorted(item) {
+        this.dispatch('update', { target: item });
+
+        if (this.parentModeValue) {
+            this._updateWrapperLevel(item);
+            this._updateParentSorting(item);
+        }
     }
 }
