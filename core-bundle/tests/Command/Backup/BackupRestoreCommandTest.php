@@ -130,6 +130,14 @@ class BackupRestoreCommandTest extends TestCase
                 && false === $config->ignoreOriginCheck(),
             '{"createdAt":"2021-11-01T14:12:54+00:00","size":100,"name":"test__20211101141254.sql.gz"}',
         ];
+
+        yield 'No interaction' => [
+            ['--no-interaction'],
+            static fn (RestoreConfig $config) => [] === $config->getTablesToIgnore()
+                && 'test__20211101141254.sql.gz' === $config->getBackup()->getFilename()
+                && false === $config->ignoreOriginCheck(),
+            '[OK] Successfully restored backup from "test__20211101141254.sql.gz".',
+        ];
     }
 
     private function mockBackupManager(\Closure $expectedCreateConfig): BackupManager&MockObject
