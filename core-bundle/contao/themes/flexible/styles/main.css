@@ -2351,7 +2351,7 @@ ul.sgallery li {
 	max-width: none;
 }
 
-#ctrl_allowedAttributes td:first-child {
+#ctrl_allowedAttributes td:nth-child(2) {
 	width: 100px;
 }
 
