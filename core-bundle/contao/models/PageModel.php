@@ -345,22 +345,15 @@ class PageModel extends Model
 		self::$suffixes = null;
 	}
 
-  /**
-  * Return an object property
-  *
-  * @param string $strKey The property key
-  *
-  * @return mixed|null The property value or null
-  */
-  public function __get($strKey)
-  {
-    if ('noSearch' === $strKey)
-    {
-      return 'never_index' === $this->searchIndexer;
-    }
+	public function __get($strKey)
+	{
+		if ('noSearch' === $strKey)
+		{
+			return 'never_index' === $this->searchIndexer;
+		}
 
-    return parent::__get($strKey);
-  }
+		return parent::__get($strKey);
+	}
 
 	/**
 	 * Find a published page by its ID
