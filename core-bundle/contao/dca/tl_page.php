@@ -253,7 +253,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 			'inputType'               => 'select',
 			'options'                 => array('always_index', 'never_index'),
 			'eval'                    => array('maxlength'=>32, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'reference'               => &$GLOBALS['TL_LANG']['MSC']['searchIndexerOptions'],
+			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'redirect' => array

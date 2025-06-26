@@ -2276,10 +2276,10 @@
       <trans-unit id="MSC.searchIndexer.1">
         <source>Overrides the robots meta tag setting for the internal search index.</source>
       </trans-unit>
-      <trans-unit id="MSC.searchIndexerOptions.always_index">
+      <trans-unit id="MSC.always_index">
         <source>Always index</source>
       </trans-unit>
-      <trans-unit id="MSC.searchIndexerOptions.never_index">
+      <trans-unit id="MSC.never_index">
         <source>Never index</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
