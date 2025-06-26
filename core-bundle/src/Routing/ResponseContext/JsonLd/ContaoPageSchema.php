@@ -20,15 +20,16 @@ class ContaoPageSchema extends BaseType
     /**
      * @param array<int> $groups
      */
-    public function __construct(string $title, int $pageId, string $searchIndexer, bool $protected, array $groups, bool $fePreview, array $memberGroups = [])
+    public function __construct(string $title, int $pageId, bool $noSearch, bool $protected, array $groups, bool $fePreview, array $memberGroups = [], string $searchIndexer = '')
     {
         $this->setTitle($title);
         $this->setPageId($pageId);
-        $this->setSearchIndexer($searchIndexer);
+        $this->setNoSearch($noSearch);
         $this->setProtected($protected);
         $this->setGroups($groups);
         $this->setFePreview($fePreview);
         $this->setMemberGroups($memberGroups);
+        $this->setSearchIndexer($searchIndexer);
     }
 
     public function getContext(): string
@@ -65,14 +66,14 @@ class ContaoPageSchema extends BaseType
         return $this;
     }
 
-    public function getSearchIndexer(): string
+    public function isNoSearch(): bool
     {
-        return $this->properties['searchIndexer'];
+        return $this->properties['noSearch'];
     }
 
-    public function setSearchIndexer(string $searchIndexer): self
+    public function setNoSearch(bool $noSearch): self
     {
-        $this->properties['searchIndexer'] = $searchIndexer;
+        $this->properties['noSearch'] = $noSearch;
 
         return $this;
     }
@@ -121,6 +122,22 @@ class ContaoPageSchema extends BaseType
     public function setMemberGroups(array $memberGroups): self
     {
         $this->properties['memberGroups'] = array_map(\intval(...), $memberGroups);
+
+        return $this;
+    }
+
+    public function getSearchIndexer(): string
+    {
+        return $this->properties['searchIndexer'];
+    }
+
+    public function setSearchIndexer(string $searchIndexer): self
+    {
+        if ('never_index' === $searchIndexer) {
+            $this->setNoSearch(true);
+        }
+
+        $this->properties['searchIndexer'] = $searchIndexer;
 
         return $this;
     }
