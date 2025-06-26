@@ -44,8 +44,8 @@ class ContaoVariableTest extends TestCase
             $requestStack,
             $this->createMock(TokenChecker::class),
             $this->createMock(ContaoCsrfTokenManager::class),
-            $this->createMock(ContaoFramework::class),
             $this->createMock(Security::class),
+            $this->createMock(ContaoFramework::class),
         );
 
         $this->assertSame($page, $contaoVariable->getPage());
@@ -71,8 +71,8 @@ class ContaoVariableTest extends TestCase
             $requestStack,
             $this->createMock(TokenChecker::class),
             $this->createMock(ContaoCsrfTokenManager::class),
-            $this->createMock(ContaoFramework::class),
             $this->createMock(Security::class),
+            $this->createMock(ContaoFramework::class),
         );
 
         $this->assertSame($format, $contaoVariable->{$function}());
@@ -108,8 +108,8 @@ class ContaoVariableTest extends TestCase
             $requestStack,
             $this->createMock(TokenChecker::class),
             $this->createMock(ContaoCsrfTokenManager::class),
-            $contaoFramework,
             $this->createMock(Security::class),
+            $contaoFramework,
         );
 
         $this->assertSame($format, $contaoVariable->{$function}());
