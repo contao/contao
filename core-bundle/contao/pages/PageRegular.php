@@ -273,10 +273,7 @@ class PageRegular extends Frontend
 		$this->Template->class = trim($objLayout->cssClass . ' ' . $objPage->cssClass);
 
 		// Additional meta tags
-		$this->Template->metaTags = array_combine(
-			array_map(StringUtil::specialcharsAttribute(...), array_keys($headBag->getMetaTags())),
-			array_map(StringUtil::specialcharsAttribute(...), array_values($headBag->getMetaTags()))
-		);
+		$this->Template->metaTags = $headBag->getMetaTags();
 
 		// Execute AFTER the modules have been generated and create footer scripts first
 		$this->createFooterScripts($objPage, $objLayout);

@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag;
 
+use Contao\CoreBundle\String\HtmlAttributes;
 use Symfony\Component\HttpFoundation\Request;
 
 final class HtmlHeadBag
@@ -27,7 +28,7 @@ final class HtmlHeadBag
     private array $keepParamsForCanonical = [];
 
     /**
-     * @var array<string, string>
+     * @var list<HtmlAttributes>
      */
     private array $metaTags = [];
 
@@ -131,21 +132,16 @@ final class HtmlHeadBag
         return $this->metaTags;
     }
 
-    public function getMetaTag(string $name): string|null
+    public function setMetaTags(array $metaTags): self
     {
-        return $this->metaTags[$name] ?? null;
-    }
-
-    public function setMetaTag(string $name, string $content): self
-    {
-        $this->metaTags[$name] = $content;
+        $this->metaTags = $metaTags;
 
         return $this;
     }
 
-    public function removeMetaTag(string $name): self
+    public function addMetaTag(HtmlAttributes $metaTag): self
     {
-        unset($this->metaTags[$name]);
+        $this->metaTags[] = $metaTag;
 
         return $this;
     }

@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Routing\ResponseContext\HtmlHeadBag;
 
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\String\HtmlAttributes;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -79,14 +80,12 @@ class HtmlHeadBagTest extends TestCase
 
         $this->assertSame([], $manager->getMetaTags());
 
-        $manager->setMetaTag('foo', 'bar');
+        $manager->addMetaTag((new HtmlAttributes())->set('property', 'og:image')->set('content', 'https://example.com/o%20"g.png'));
 
-        $this->assertSame(['foo' => 'bar'], $manager->getMetaTags());
-        $this->assertSame('bar', $manager->getMetaTag('foo'));
+        $this->assertSame(' property="og:image" content="https://example.com/o%20&quot;g.png"', (string) $manager->getMetaTags()[0]);
 
-        $manager->removeMetaTag('foo');
+        $manager->setMetaTags([]);
 
         $this->assertSame([], $manager->getMetaTags());
-        $this->assertNull($manager->getMetaTag('foo'));
     }
 }
