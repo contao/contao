@@ -1,0 +1,58 @@
+{% trans_default_domain "contao_default" %}
+
+{% set fieldset_attributes = attrs()
+    .set('data-controller', 'contao--sortable contao--check-all')
+    .set('data-contao--sortable-handle-value', '.drag-handle')
+    .set('data-contao--sortable-draggable-value', 'span:not(.fixed)')
+    .addClass('tl_checkbox_container')
+    .addClass('tl_checkbox_wizard')
+    .addClass(class|default(''))
+%}
+
+<fieldset{{ fieldset_attributes }}>
+    <legend>
+        {% if mandatory %}<span class="invisible">{{ 'MSC.mandatory'|trans }} </span>{% endif %}
+        {{ label }}
+        {% if mandatory %}<span class="mandatory">*</span>{% endif %}
+        {{ xlabel|raw }}
+    </legend>
+    <input type="hidden" name="{{ name }}" value="">
+    {% if options is not empty %}
+        <span class="fixed">
+            <input type="checkbox" id="check_all_{{ id }}" class="tl_checkbox" data-contao--check-all-target="source" data-action="contao--check-all#update contao--scroll-offset#store">
+            <label for="check_all_{{ id }}" class="check-all"><em>{{ 'MSC.selectAll'|trans }}</em></label>
+        </span>
+        {% for option in options %}
+            <span>
+                {% set input_attributes = attrs()
+                    .set('type', 'checkbox')
+                    .set('name', "#{name}[]")
+                    .set('id', "opt_#{id}_#{loop.index0}")
+                    .addClass('tl_checkbox')
+                    .set('value', option.value|default)
+                    .set('checked', true, option.checked|default)
+                    .set('data-contao--check-all-target', 'input')
+                    .set('data-action', 'focus->contao--scroll-offset#store')
+                    .mergeWith(attributes)
+                %}
+                <input{{ input_attributes }}>
+
+                {# Drag row #}
+                {% set drag_handle_attributes = attrs()
+                    .set('type', 'button')
+                    .set('data-action', 'keydown->contao--sortable#move')
+                    .set('aria-hidden', 'true')
+                    .addClass('drag-handle')
+                %}
+                <button{{ drag_handle_attributes}}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
+
+                {% set label_attributes = attrs()
+                    .set('for', "opt_#{id}_#{loop.index0}")
+                %}
+                <label{{ label_attributes }}>{{ option.label|default }}</label>
+            </span>
+        {% endfor %}
+    {% else %}
+        <p class="tl_noopt">{{ 'MSC.noResult'|trans }}</p>
+    {% endif %}
+</fieldset>

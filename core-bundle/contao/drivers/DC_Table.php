@@ -229,18 +229,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$this->initRoots();
 
 		$request = $container->get('request_stack')->getCurrentRequest();
-		$route = $request->attributes->get('_route');
-
-		// Store the current referer
-		if (!empty($this->ctable) && !Input::get('ptable') && $route == 'contao_backend' && !Input::get('act') && !Input::get('key') && !Input::get('token') && !Environment::get('isAjaxRequest'))
-		{
-			$strKey = Input::get('popup') ? 'popupReferer' : 'referer';
-			$strRefererId = $request->attributes->get('_contao_referer_id');
-
-			$session = $objSession->get($strKey);
-			$session[$strRefererId][$this->strTable] = Environment::get('requestUri');
-			$objSession->set($strKey, $session);
-		}
 
 		if (!empty($arrClipboard[$this->strTable]) && $arrClipboard[$this->strTable]['mode'] != 'create')
 		{
@@ -2045,7 +2033,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				$return .= "\n\n" . '<fieldset class="' . $class . ($legend ? '' : ' nolegend') . '" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="' . $key . '" data-contao--toggle-fieldset-table-value="' . $this->strTable . '" data-contao--toggle-fieldset-collapsed-class="collapsed" data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open">' . $legend . "\n" . '<div class="widget-group">';
+				$return .= "\n\n" . '<fieldset id="pal_' . $key . '" class="' . $class . ($legend ? '' : ' nolegend') . '" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="' . $key . '" data-contao--toggle-fieldset-table-value="' . $this->strTable . '" data-contao--toggle-fieldset-collapsed-class="collapsed" data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open">' . $legend . "\n" . '<div class="widget-group">';
 				$thisId = '';
 
 				// Build rows of the current box
@@ -2304,12 +2292,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if ((string) $currentRecord['tstamp'] === '0')
 		{
 			$strBackUrl = preg_replace('/&(?:amp;)?revise=[^&]+|$/', '&amp;revise=' . $this->strTable . '.' . ((int) $this->intId), $strBackUrl, 1);
-
-			$return .= '
-<script>
-  history.pushState({}, "");
-  window.addEventListener("popstate", () => fetch(document.querySelector(".header_back").href).then(() => history.back()));
-</script>';
 		}
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
@@ -4172,6 +4154,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 	{
 		$table = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE_EXTENDED ? $this->ptable : $this->strTable;
 		$blnHasSorting = ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['fields'][0] ?? null) == 'sorting';
+		$blnIsSortable = $blnHasSorting && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null) && Input::get('act') != 'select';
 
 		$arrClipboard = System::getContainer()->get('contao.data_container.clipboard_manager')->get($this->strTable);
 		$blnClipboard = null !== $arrClipboard;
@@ -4502,9 +4485,11 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 			// Make items sortable
 			if ($blnHasSorting)
 			{
+				$requestToken = htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5);
+
 				$return .= '
 
-<ul id="ul_' . $this->intCurrentPid . '">';
+<ul' . ($blnIsSortable ? ' data-controller="contao--sortable" data-contao--sortable-handle-value=".drag-handle" data-contao--sortable-parent-mode-value="true" data-contao--sortable-request-token-value="' . $requestToken . '" data-id="' . $this->intCurrentPid . '"' : '') . '>';
 			}
 
 			for ($i=0, $c=\count($row); $i<$c; $i++)
@@ -4520,7 +4505,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 				if ($blnHasSorting)
 				{
 					$return .= '
-<li id="li_' . $row[$i]['id'] . '">';
+<li' . ($blnIsSortable ? ' data-id="' . $row[$i]['id'] . '"' : '') . '>';
 				}
 
 				// Add the group header
@@ -4620,9 +4605,9 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 						}
 
 						// Drag handle
-						if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $row[$i])))
+						if ($blnIsSortable && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $row[$i])))
 						{
-							$operations->append(array('primary' => true, 'html'=>'<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', \sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '</button>'));
+							$operations->append(array('primary' => true, 'html'=>'<button type="button" class="drag-handle" data-action="keydown->contao--sortable#move" style="display:none">' . Image::getHtml('drag.svg', \sprintf(\is_array($labelCut) ? $labelCut[1] : $labelCut, $row[$i]['id'])) . '</button>'));
 						}
 					}
 
@@ -4666,14 +4651,6 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 		{
 			$return .= '
 </ul>';
-
-			if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['notSortable'] ?? null) && Input::get('act') != 'select')
-			{
-				$return .= '
-<script>
-  Backend.makeParentViewSortable("ul_' . $this->intCurrentPid . '");
-</script>';
-			}
 		}
 
 		$return .= ($this->strPickerFieldType == 'radio' ? '
