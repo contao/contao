@@ -169,10 +169,6 @@
         <source>Delete theme ID %s</source>
         <target>Удалить тему ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.css">
-        <source>Edit the style sheets of theme ID %s</source>
-        <target>Редактировать таблицы стилей темы ID %s</target>
-      </trans-unit>
       <trans-unit id="tl_theme.modules">
         <source>Edit the front end modules of theme ID %s</source>
         <target>Редактировать модули внешнего интерфейса ID %s</target>
