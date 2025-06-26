@@ -29,6 +29,9 @@ $this->bodyAttributes = $this
       <meta name="robots" content="<?= $this->robots ?>">
       <meta name="description" content="<?= Contao\StringUtil::substr($this->description, 320) ?>">
       <meta name="generator" content="Contao Open Source CMS">
+      <?php foreach ($this->metaTags ?? [] as $name => $content): ?>
+        <meta name="<?= $name ?>" content="<?= $content ?>">
+      <?php endforeach; ?>
     <?php $this->endblock(); ?>
 
     <?php if ($this->canonical): ?>
