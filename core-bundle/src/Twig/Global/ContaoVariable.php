@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Global;
 
 use Contao\BackendUser;
+use Contao\Config;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\PageModel;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -17,6 +19,7 @@ class ContaoVariable
         private readonly RequestStack $requestStack,
         private readonly TokenChecker $tokenChecker,
         private readonly ContaoCsrfTokenManager $tokenManager,
+        private readonly ContaoFramework $framework,
         private readonly Security $security,
     ) {
     }
@@ -45,6 +48,21 @@ class ContaoVariable
     public function getRequest_token(): string
     {
         return $this->tokenManager->getDefaultTokenValue();
+    }
+
+    public function getDatim_format(): string|null
+    {
+        return $this->getPage()?->datimFormat ?: $this->framework->getAdapter(Config::class)->get('datimFormat');
+    }
+
+    public function getDate_format(): string|null
+    {
+        return $this->getPage()?->dateFormat ?: $this->framework->getAdapter(Config::class)->get('dateFormat');
+    }
+
+    public function getTime_format(): string|null
+    {
+        return $this->getPage()?->timeFormat ?: $this->framework->getAdapter(Config::class)->get('timeFormat');
     }
 
     public function backend_user(): BackendUser|null
