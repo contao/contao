@@ -172,7 +172,7 @@ class DcaLoader extends Controller
 		$strCachePath = $strCacheDir . '/contao/dca/' . $this->strTable . '.php';
 
 		// Try to load from cache
-		if (file_exists($strCachePath) && (!System::getContainer()->getParameter('kernel.debug') || isset(self::$freshPaths[$strCachePath])))
+		if ((!System::getContainer()->getParameter('kernel.debug') || isset(self::$freshPaths[$strCachePath])) && file_exists($strCachePath))
 		{
 			include $strCachePath;
 		}
