@@ -208,11 +208,11 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             return;
         }
 
-        $alwaysIndexHint = $crawlUri->hasTag(RobotsSubscriber::TAG_NOINDEX) && 'always_index' === $pageSearchIndexer ? 'Robots:noindex is ignored because of searchIndexer:always_index. ' : '';
-
         try {
             $this->indexer->index($document);
             ++$this->stats['ok'];
+
+            $alwaysIndexHint = $crawlUri->hasTag(RobotsSubscriber::TAG_NOINDEX) && 'always_index' === $pageSearchIndexer ? 'Robots:noindex is ignored because of searchIndexer:always_index. ' : '';
 
             $this->logWithCrawlUri(
                 $crawlUri,
