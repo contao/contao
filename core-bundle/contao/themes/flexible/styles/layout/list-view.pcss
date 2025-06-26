@@ -285,6 +285,13 @@
     margin: 0;
 }
 
+.operations a {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    white-space: nowrap;
+}
+
 .operations-menu-container {
     position: relative;
     align-items: center;
@@ -316,12 +323,13 @@
     display: block !important;
 }
 
-.operations-menu a {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    padding: 1px 0;
-    white-space: nowrap;
+.operations a:not(.no-icon) {
+    padding-top: 1px;
+    padding-bottom: 1px;
+}
+
+.operations-menu hr {
+    margin: 5px 0;
 }
 
 .operations-menu hr {

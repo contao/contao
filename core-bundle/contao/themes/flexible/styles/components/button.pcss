@@ -1,7 +1,32 @@
 #tl_buttons {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 8px 15px;
     margin: 0;
     padding: 9px 15px;
-    text-align: right;
+    list-style: none;
+}
+
+#tl_buttons li {
+    margin: 0;
+    padding: 0;
+}
+
+#tl_buttons li > * {
+    /* Reset left margin that is necessary in Contao < 5.6 */
+    margin-left: 0 !important;
+}
+
+#tl_buttons li button {
+    display: inline-block;
+    padding: 3px 0;
+    background: none;
+    border: none;
+}
+
+#tl_buttons li button:hover {
+    color: var(--contao);
 }
 
 .toggleWrap {
