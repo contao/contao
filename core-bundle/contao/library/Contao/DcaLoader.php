@@ -35,6 +35,13 @@ class DcaLoader extends Controller
 	protected static $arrLoaded = array();
 
 	/**
+	 * @todo Replace with a more performant implementation based on the symfony ConfigCache
+	 *
+	 * @var array<string, true>
+	 */
+	protected static $freshPaths = array();
+
+	/**
 	 * @var \WeakMap<Request, array{array, array}>
 	 */
 	protected static \WeakMap $dcaByRequest;
@@ -78,6 +85,7 @@ class DcaLoader extends Controller
 		self::$lastRequest = null;
 		self::$dcaByRequest = new \WeakMap();
 		self::$arrLoaded = array();
+		self::$freshPaths = array();
 
 		unset($GLOBALS['TL_DCA']);
 	}
@@ -164,7 +172,7 @@ class DcaLoader extends Controller
 		$strCachePath = $strCacheDir . '/contao/dca/' . $this->strTable . '.php';
 
 		// Try to load from cache
-		if (file_exists($strCachePath) && !System::getContainer()->getParameter('kernel.debug'))
+		if (file_exists($strCachePath) && (!System::getContainer()->getParameter('kernel.debug') || isset(self::$freshPaths[$strCachePath])))
 		{
 			include $strCachePath;
 		}
@@ -183,6 +191,7 @@ class DcaLoader extends Controller
 			{
 				$dumper = new CombinedFileDumper($filesystem, new PhpFileLoader(), Path::join($strCacheDir, 'contao/dca'));
 				$dumper->dump($files, $this->strTable . '.php', array('type' => 'namespaced'));
+				self::$freshPaths[$strCachePath] = true;
 
 				try
 				{
