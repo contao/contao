@@ -143,7 +143,7 @@ final class HtmlHeadBag
         return $this;
     }
 
-    public function unsetMetaTag(string $name): self
+    public function removeMetaTag(string $name): self
     {
         unset($this->metaTags[$name]);
 

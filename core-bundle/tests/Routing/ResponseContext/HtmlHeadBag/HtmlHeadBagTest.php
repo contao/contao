@@ -72,4 +72,21 @@ class HtmlHeadBagTest extends TestCase
 
         $this->assertSame('https://contao.org/foobar/page?foo=bar&page_42=12', $manager->getCanonicalUriForRequest($request));
     }
+
+    public function testMetaTagHandling(): void
+    {
+        $manager = new HtmlHeadBag();
+
+        $this->assertSame([], $manager->getMetaTags());
+
+        $manager->setMetaTag('foo', 'bar');
+
+        $this->assertSame(['foo' => 'bar'], $manager->getMetaTags());
+        $this->assertSame('bar', $manager->getMetaTag('foo'));
+
+        $manager->removeMetaTag('foo');
+
+        $this->assertSame([], $manager->getMetaTags());
+        $this->assertNull($manager->getMetaTag('foo'));
+    }
 }
