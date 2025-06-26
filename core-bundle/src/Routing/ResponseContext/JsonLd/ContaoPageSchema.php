@@ -133,10 +133,6 @@ class ContaoPageSchema extends BaseType
 
     public function setSearchIndexer(string $searchIndexer): self
     {
-        if ('never_index' === $searchIndexer) {
-            $this->setNoSearch(true);
-        }
-
         $this->properties['searchIndexer'] = $searchIndexer;
 
         return $this;

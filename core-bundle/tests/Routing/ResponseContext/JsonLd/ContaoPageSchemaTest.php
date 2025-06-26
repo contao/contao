@@ -49,18 +49,8 @@ class ContaoPageSchemaTest extends TestCase
         $schema->setFePreview(true);
         $this->assertTrue($schema->isFePreview());
 
-        $schema->setSearchIndexer('');
-        $schema->setNoSearch(false);
-        $this->assertSame('', $schema->getSearchIndexer());
-        $this->assertFalse($schema->isNoSearch());
-
         $schema->setSearchIndexer('always_index');
         $this->assertSame('always_index', $schema->getSearchIndexer());
-        $this->assertFalse($schema->isNoSearch());
-
-        $schema->setSearchIndexer('never_index');
-        $this->assertSame('never_index', $schema->getSearchIndexer());
-        $this->assertTrue($schema->isNoSearch());
     }
 
     public function testUpdateFromHtmlHeadBag(): void
