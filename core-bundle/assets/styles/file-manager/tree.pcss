@@ -10,7 +10,7 @@
             margin-left: 0.75em;
             border-left: thin solid var(--tree-line);
 
-            &:before {
+            &::before {
                 content: "";
                 width: 0.5em;
                 height: 0.75em;
@@ -22,7 +22,7 @@
             &:last-child {
                 border-left: none;
 
-                &:before {
+                &::before {
                     border-left: thin solid var(--tree-line);
                 }
             }

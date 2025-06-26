@@ -9,7 +9,6 @@
        listing area to be scrollable. */
     grid-template-rows: auto auto minmax(0, 1fr);
     min-height: 0;
-
     container-type: inline-size;
     background-color: var(--panel-bg);
 
@@ -40,7 +39,7 @@
     .container {
         overflow-y: auto;
         background-color: var(--panel-bg);
-        padding: 6px 12px 12px 12px;
+        padding: 6px 12px 12px;
 
         .list_item {
             line-height: 1.4;
@@ -68,7 +67,7 @@
                 text-overflow: ellipsis;
 
                 .extension {
-                    &:before {
+                    &::before {
                         content: ".";
                     }
                 }
@@ -129,7 +128,7 @@
 
                 img {
                     height: 100%;
-                    width: auto%;
+                    width: auto;
                 }
             }
         }
@@ -143,7 +142,6 @@
         .properties {
             grid-area: properties;
             white-space: nowrap;
-
             display: flex;
             gap: 12px;
         }
@@ -213,7 +211,6 @@
 /* Operations and controls */
 #file-manager--view-operations {
     grid-area: view-controls;
-
     background-color: var(--content-bg);
     padding: 12px;
 }
@@ -254,11 +251,10 @@
 
 #file-manager--element-controls {
     grid-area: element-controls;
-
     display: flex;
     justify-content: space-between;
     min-height: 58px;
-    padding: 12px 12px 6px 12px;
+    padding: 12px 12px 6px;
     border-bottom: 1px solid var(--border);
     position: relative;
 

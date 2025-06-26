@@ -1,5 +1,5 @@
-import { Controller } from '@hotwired/stimulus';
 import { Dropzone } from '@deltablot/dropzone';
+import { Controller } from '@hotwired/stimulus';
 import { TurboStreamConnection } from '../modules/turbo-stream-connection';
 
 export default class FileManagerController extends Controller {
@@ -80,7 +80,10 @@ export default class FileManagerController extends Controller {
             return;
         }
 
-        this._getSelectedElements().forEach((el) => (el.checked = false));
+        for (const el of this._getSelectedElements()) {
+            el.checked = false;
+        }
+
         this.updateSelection();
 
         if (event instanceof KeyboardEvent) {
@@ -104,7 +107,7 @@ export default class FileManagerController extends Controller {
         this._currentUploadUrl = TurboCable.buildURL(this.uploadOperationUrlValue, { path: input.dataset.path });
 
         if (input.files.length) {
-            for (let file of input.files) {
+            for (const file of input.files) {
                 this.dropzone.addFile(file);
             }
         }
@@ -195,8 +198,8 @@ export default class FileManagerController extends Controller {
             if (this._isAllowedToDrop(path)) {
                 this.actionStreamConnection.postForm(
                     this.moveOperationUrlValue,
-                    {paths: this._draggedPaths},
-                    {target: path}
+                    { paths: this._draggedPaths },
+                    { target: path },
                 );
             }
 

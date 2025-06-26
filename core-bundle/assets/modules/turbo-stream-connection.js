@@ -12,12 +12,7 @@ export class TurboStreamConnection {
      * @returns {Promise<TurboStreamResult>}
      */
     async get(url, queryParams = null, abortPending = false) {
-        return this._performRequestAndProcess(
-            {method: 'get'},
-            url,
-            queryParams,
-            abortPending
-        );
+        return this._performRequestAndProcess({ method: 'get' }, url, queryParams, abortPending);
     }
 
     /**
@@ -41,13 +36,13 @@ export class TurboStreamConnection {
             {
                 method: 'post',
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data',
                 },
-                body
+                body,
             },
             url,
             queryParams,
-            abortPending
+            abortPending,
         );
     }
 

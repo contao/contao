@@ -32,7 +32,7 @@ export default class OperationsMenuController extends Controller {
 
     menuTargetConnected() {
         // Allow menu targets to be added lazily
-        if(!this.$menu) {
+        if (!this.$menu) {
             this.connect();
         }
     }
