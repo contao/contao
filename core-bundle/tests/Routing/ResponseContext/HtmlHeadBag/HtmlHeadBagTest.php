@@ -81,8 +81,15 @@ class HtmlHeadBagTest extends TestCase
         $this->assertSame([], $manager->getMetaTags());
 
         $manager->addMetaTag((new HtmlAttributes())->set('property', 'og:image')->set('content', 'https://example.com/o%20"g.png'));
+        $manager->addMetaTag((new HtmlAttributes())->set('name', 'foo')->set('content', 'bar'));
 
-        $this->assertSame(' property="og:image" content="https://example.com/o%20&quot;g.png"', (string) $manager->getMetaTags()[0]);
+        $this->assertCount(2, $manager->getMetaTags());
+        $this->assertSame(' property="og:image" content="https://example.com/o%20&quot;g.png" name="foo" content="bar"', implode('', $manager->getMetaTags()));
+
+        $manager->removeMetaTag('property', 'og:image');
+
+        $this->assertCount(1, $manager->getMetaTags());
+        $this->assertSame(' name="foo" content="bar"', implode('', $manager->getMetaTags()));
 
         $manager->setMetaTags([]);
 

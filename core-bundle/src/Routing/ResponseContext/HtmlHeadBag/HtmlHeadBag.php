@@ -145,4 +145,11 @@ final class HtmlHeadBag
 
         return $this;
     }
+
+    public function removeMetaTag(string $key, string $value): self
+    {
+        $this->metaTags = array_filter($this->metaTags, static fn (HtmlAttributes $metaTag): bool => ($metaTag[$key] ?? null) !== $value);
+
+        return $this;
+    }
 }
