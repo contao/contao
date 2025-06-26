@@ -50,20 +50,36 @@ class Document
 
     public function __serialize(): array
     {
-        return [
-            'uri' => $this->uri,
+        $data = serialize([
+            'uri' => (string) $this->uri,
             'statusCode' => $this->statusCode,
             'headers' => $this->headers,
             'body' => $this->body,
+        ]);
+
+        return [
+            'compressed' => gzcompress($data),
         ];
     }
 
     public function __unserialize(array $data): void
     {
-        $this->uri = $data['uri'];
-        $this->statusCode = $data['statusCode'];
-        $this->headers = $data['headers'];
-        $this->body = $data['body'];
+        // BC for documents serialized before introducing compression
+        if (!isset($data['compressed'])) {
+            $this->uri = $data['uri'];
+            $this->statusCode = $data['statusCode'];
+            $this->headers = $data['headers'];
+            $this->body = $data['body'];
+
+            return;
+        }
+
+        $uncompressed = unserialize(gzuncompress($data['compressed']));
+
+        $this->uri = new Uri($uncompressed['uri']);
+        $this->statusCode = $uncompressed['statusCode'];
+        $this->headers = $uncompressed['headers'];
+        $this->body = $uncompressed['body'];
     }
 
     public function getUri(): UriInterface

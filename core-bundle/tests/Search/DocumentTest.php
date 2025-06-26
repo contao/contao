@@ -21,6 +21,31 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DocumentTest extends TestCase
 {
+    public function testSerializeAndUnserialize(): void
+    {
+        $html = file_get_contents(__DIR__.'/../Fixtures/Functional/Search/site.html');
+        $request = Request::create('https://example.com/foo?bar=baz');
+        $response = new Response($html, 200, ['content-type' => ['text/html']]);
+        $document = Document::createFromRequestResponse($request, $response);
+
+        $this->assertSame('https://example.com/foo?bar=baz', (string) $document->getUri());
+        $this->assertSame(200, $document->getStatusCode());
+        $this->assertArrayHasKey('content-type', $document->getHeaders());
+        $this->assertSame($html, $document->getBody());
+
+        $serialized = serialize($document);
+
+        // Assert compression
+        $this->assertTrue(\strlen($serialized) < \strlen($html));
+
+        $document = unserialize($serialized);
+
+        $this->assertSame('https://example.com/foo?bar=baz', (string) $document->getUri());
+        $this->assertSame(200, $document->getStatusCode());
+        $this->assertArrayHasKey('content-type', $document->getHeaders());
+        $this->assertSame($html, $document->getBody());
+    }
+
     #[DataProvider('searchableContentProvider')]
     public function testSearchableContent(string $fixture, string $expectedResult, bool $allowProtected = false): void
     {
