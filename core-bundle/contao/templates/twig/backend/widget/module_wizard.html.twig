@@ -20,7 +20,7 @@
                 <tr data-contao--row-wizard-target="row">
                     {# Module #}
                     <td>
-                        <div class="tl_select__wrapper" data-controller="contao--choices">
+                        <div class="tl_select_wrapper" data-controller="contao--choices">
                             {% set module_select_attributes = attrs()
                                 .set('name', "#{id}[#{loop.index0}][mod]")
                                 .set('data-action', 'focus->contao--scroll-offset#store contao--row-wizard#updateModuleWizardLink')
