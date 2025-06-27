@@ -8,9 +8,9 @@
         "/bundles/contaocore/backend.cc9cc547.js"
       ]
     },
-    "SimpleWebAuthnBrowser": {
+    "passkey_login": {
       "js": [
-        "/bundles/contaocore/SimpleWebAuthnBrowser.58214a7d.js"
+        "/bundles/contaocore/passkey_login.1bd3ff78.js"
       ]
     }
   }

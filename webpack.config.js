@@ -19,7 +19,7 @@ Encore
         };
     })
     .addEntry('backend', './core-bundle/assets/backend.js')
-    .addEntry('SimpleWebAuthnBrowser', './core-bundle/assets/SimpleWebAuthnBrowser.js')
+    .addEntry('passkey_login', './core-bundle/assets/passkey_login.js')
 ;
 
 const jsConfig = Encore.getWebpackConfig();

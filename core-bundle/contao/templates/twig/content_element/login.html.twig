@@ -1,8 +1,19 @@
 {% extends "@Contao/content_element/_base.html.twig" %}
 {% trans_default_domain 'contao_default' %}
 
+{% set passkeyConfig = {
+    unsupported: 'ERR.passkeysUnsupported'|trans,
+    assertionFailure: 'ERR.passkeyAssertionFailure'|trans,
+    optionsUrl: path('webauthn.controller.security.contao_frontend.request.options'),
+    resultUrl: path('webauthn.controller.security.contao_frontend.request.result'),
+    requestTokenScript: path('contao_frontend_request_token_script'),
+    redirect: redirect|default,
+} %}
+
 {% set attributes = attrs()
     .addClass(logout|default ? 'logout' : 'login')
+    .set('data-passkey-login')
+    .set('data-passkey-config', passkeyConfig|json_encode)
     .mergeWith(attributes|default)
 %}
 
@@ -65,8 +76,8 @@
                     <a href="{{ path('contao_frontend_logout') }}">{{ 'MSC.cancelBT'|trans }} ›</a>
                 {% endif %}
                 {% if not logout|default and not twoFactorEnabled|default %}
-                    <button type="button" class="passkey-login">{{ 'MSC.passkeyLogin'|trans }}</button>
-                    <p class="error passkey-error"></p>
+                    <button type="button" class="passkey-login" data-passkey-button>{{ 'MSC.passkeyLogin'|trans }}</button>
+                    <p class="error" data-passkey-error></p>
                 {% endif %}
             </div>
             {% if pwResetUrl|default %}
@@ -80,81 +91,8 @@
 
 {% block script %}
     {% if not as_editor_view %}
-        {% add "SimpleWebAuthnBrowser" to body %}
-            <script src="{{ asset('SimpleWebAuthnBrowser.js', 'contao_core') }}"></script>
-        {% endadd %}
-
-        {%  add "passkey_js" to body %}
-            {% set script_attributes = attrs()
-                .setIfExists('nonce', csp_nonce('script-src'))
-                .mergeWith(script_attributes|default)
-            %}
-            <script{{ script_attributes }}>
-                (function () {
-                    const { startAuthentication, browserSupportsWebAuthn } = SimpleWebAuthnBrowser;
-
-                    document.querySelectorAll('.content-{{ type|replace({'_': '-'}) }}').forEach((element) => {
-                        const button = element.querySelector('.passkey-login')
-                        const elemError = document.querySelector('.passkey-error');
-
-                        button.addEventListener('click', async () => {
-                            elemError.innerHTML = '';
-
-                            if (!browserSupportsWebAuthn()) {
-                                elemError.innerHTML = '{{ 'ERR.passkeysUnsupported'|trans }}';
-
-                                return;
-                            }
-
-                            const resp = await fetch('{{ path('webauthn.controller.security.contao_frontend.request.options') }}', {
-                                method: 'POST',
-                                headers: {'Content-Type': 'application/json'},
-                                body: JSON.stringify({}),
-                            });
-
-                            // Make sure we always have the correct request token and cookie
-                            const script = document.createElement('script');
-                            script.src = '{{ path('contao_frontend_request_token_script') }}';
-                            script.async = true;
-                            document.body.append(script);
-
-                            const optionsJSON = await resp.json();
-
-                            if ('error' === optionsJSON.status) {
-                                elemError.innerText = '{{ 'ERR.passkeyAssertionFailure'|trans }}';
-
-                                return;
-                            }
-
-                            let attResp;
-
-                            try {
-                                attResp = await startAuthentication({ optionsJSON });
-                            } catch (error) {
-                                elemError.innerText = '{{ 'ERR.passkeyAssertionFailure'|trans }}';
-
-                                throw error;
-                            }
-
-                            const verificationResp = await fetch('{{ path('webauthn.controller.security.contao_frontend.request.result') }}', {
-                                method: 'POST',
-                                headers: {'Content-Type': 'application/json'},
-                                body: JSON.stringify(attResp),
-                            });
-
-                            const verificationJSON = await verificationResp.json();
-
-                            if ('error' === optionsJSON.status) {
-                                elemError.innerText = '{{ 'ERR.passkeyAssertionFailure'|trans }}';
-
-                                return;
-                            }
-
-                            window.location = '{{ redirect|default }}' || window.location.href;
-                        });
-                    });
-                })();
-            </script>
+        {% add "passkey_login" to body %}
+            <script src="{{ asset('passkey_login.js', 'contao_core') }}"></script>
         {% endadd %}
     {% endif %}
 {% endblock %}

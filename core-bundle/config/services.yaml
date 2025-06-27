@@ -1340,7 +1340,6 @@ services:
             - '@request_stack'
             - '@contao.security.token_checker'
             - '@contao.csrf.token_manager'
-            - '@contao.framework'
             - '@security.helper'
             - '@contao.framework'
 
