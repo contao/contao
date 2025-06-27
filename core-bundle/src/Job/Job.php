@@ -216,7 +216,7 @@ final class Job
 
     public function withIsPublic(bool $isPublic): self
     {
-        if (Owner::SYSTEM !== $this->owner->getIdentifier()) {
+        if (!$this->owner->isSystem()) {
             throw new \InvalidArgumentException('Only system user jobs can be public or private.');
         }
 

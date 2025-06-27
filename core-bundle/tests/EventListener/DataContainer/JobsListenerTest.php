@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\DataContainer\JobsListener;
 use Contao\DataContainer;
+use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\User\UserInterface;
 
-class JobsListenerTest extends TestCase
+class JobsListenerTest extends ContaoTestCase
 {
     protected function tearDown(): void
     {
@@ -29,7 +29,7 @@ class JobsListenerTest extends TestCase
             $this->mockConnection(),
             $this->getRequestStack(),
         );
-        $listener();
+        $listener->onLoadCallback();
 
         $this->assertNull($GLOBALS['TL_DCA']['tl_job'] ?? null);
     }
@@ -41,7 +41,7 @@ class JobsListenerTest extends TestCase
             $this->mockConnection(),
             $this->getRequestStack(Request::create('/')),
         );
-        $listener();
+        $listener->onLoadCallback();
 
         $this->assertNull($GLOBALS['TL_DCA']['tl_job'] ?? null);
     }
@@ -49,18 +49,18 @@ class JobsListenerTest extends TestCase
     public function testRegularView(): void
     {
         $listener = new JobsListener(
-            $this->mockSecurity('username'),
+            $this->mockSecurity(42),
             $this->mockConnection(),
             $this->getRequestStack(Request::create('/contao?do=jobs')),
         );
-        $listener();
+        $listener->onLoadCallback();
 
         $this->assertSame(
             [
                 'list' => [
                     'sorting' => [
                         'filter' => [
-                            "pid = 0 AND (owner = 'username' OR (public = '1' AND owner = 'SYSTEM'))",
+                            "pid = 0 AND (owner = 42 OR (public = '1' AND owner = 0))",
                         ],
                     ],
                 ],
@@ -72,11 +72,11 @@ class JobsListenerTest extends TestCase
     public function testChildView(): void
     {
         $listener = new JobsListener(
-            $this->mockSecurity('username'),
+            $this->mockSecurity(42),
             $this->mockConnection(),
             $this->getRequestStack(Request::create('/contao?do=jobs&ptable=tl_job')),
         );
-        $listener();
+        $listener->onLoadCallback();
 
         $this->assertSame(
             [
@@ -84,7 +84,7 @@ class JobsListenerTest extends TestCase
                     'sorting' => [
                         'mode' => DataContainer::MODE_PARENT,
                         'filter' => [
-                            "pid != 0 AND (owner = 'username' OR (public = '1' AND owner = 'SYSTEM'))",
+                            "pid != 0 AND (owner = 42 OR (public = '1' AND owner = 0))",
                         ],
                     ],
                     'label' => [
@@ -111,20 +111,14 @@ class JobsListenerTest extends TestCase
         return $requestStack;
     }
 
-    private function mockSecurity(string|null $username = null): Security
+    private function mockSecurity(int|null $userId = null): Security
     {
-        $userMock = $this->createMock(UserInterface::class);
-        $userMock
-            ->expects($username ? $this->atLeastOnce() : $this->never())
-            ->method('getUserIdentifier')
-            ->willReturn($username ?? '') // Cannot return null because that's not allowed but $this->never() asserts that '' is never returned
-        ;
-
+        $userMock = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
         $security = $this->createMock(Security::class);
         $security
             ->expects($this->atLeastOnce())
             ->method('getUser')
-            ->willReturn($username ? $userMock : null)
+            ->willReturn($userId ? $userMock : null)
         ;
 
         return $security;

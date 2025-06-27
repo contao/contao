@@ -92,7 +92,8 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 		),
 		'owner' => array
 		(
-			'sql' => array('type' => 'string', 'length' => 255, 'notnull' => true),
+			'foreignKey' => 'tl_user.name',
+			'sql' => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
 		),
 		'status' => array
 		(

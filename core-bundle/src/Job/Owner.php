@@ -17,15 +17,20 @@ namespace Contao\CoreBundle\Job;
  */
 final class Owner
 {
-    public const SYSTEM = 'SYSTEM';
+    public const SYSTEM = 0;
 
-    public function __construct(private readonly string $identifier)
+    public function __construct(private readonly int $id)
     {
     }
 
-    public function getIdentifier(): string
+    public function isSystem(): bool
     {
-        return $this->identifier;
+        return self::SYSTEM === $this->id;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 
     public static function asSystem(): self

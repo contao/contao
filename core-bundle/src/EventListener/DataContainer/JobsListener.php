@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Job\Owner;
@@ -47,9 +48,9 @@ class JobsListener
     public function onLoadCallback(): void
     {
         $request = $this->requestStack->getCurrentRequest();
-        $userIdentifier = $this->security->getUser()?->getUserIdentifier();
+        $userId = $this->getContaoBackendUserId();
 
-        if (!$request || !$userIdentifier) {
+        if (!$request || 0 === $userId) {
             return;
         }
 
@@ -64,13 +65,27 @@ class JobsListener
             $pidFilter = 'pid = 0';
         }
 
-        $query = \sprintf('%s AND (owner = %s OR (public = %s AND owner = %s))',
+        $query = \sprintf('%s AND (owner = %d OR (public = %s AND owner = %d))',
             $pidFilter,
-            $this->connection->quote($userIdentifier),
+            $userId,
             $this->connection->quote(true, ParameterType::BOOLEAN),
-            $this->connection->quote(Owner::SYSTEM),
+            Owner::SYSTEM,
         );
 
         $GLOBALS['TL_DCA']['tl_job']['list']['sorting']['filter'][] = $query;
+    }
+
+    /**
+     * @return int 0 if no contao backend user was given
+     */
+    private function getContaoBackendUserId(): int
+    {
+        $user = $this->security->getUser();
+
+        if ($user instanceof BackendUser) {
+            return (int) $user->id;
+        }
+
+        return 0;
     }
 }

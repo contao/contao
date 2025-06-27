@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Job;
 
+use Contao\BackendUser;
 use Contao\StringUtil;
 use Doctrine\DBAL\ArrayParameterType;
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\ParameterType;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -24,9 +26,9 @@ class Jobs
 
     public function createJob(string $type): Job
     {
-        $userId = $this->security->getUser()?->getUserIdentifier();
+        $userId = $this->getContaoBackendUserId();
 
-        if (null === $userId) {
+        if (0 === $userId) {
             return $this->createSystemJob($type);
         }
 
@@ -38,11 +40,11 @@ class Jobs
         return $this->doCreateJob($type, Owner::asSystem(), $public);
     }
 
-    public function createUserJob(string $type, string|null $userId = null): Job
+    public function createUserJob(string $type, int|null $userId = null): Job
     {
-        $userId ??= $this->security->getUser()?->getUserIdentifier();
+        $userId ??= $this->getContaoBackendUserId();
 
-        if (null === $userId) {
+        if (0 === $userId) {
             throw new \LogicException('Cannot create a user job without having a user id.');
         }
 
@@ -89,7 +91,7 @@ class Jobs
                     'uuid' => $job->getUuid(), // No encoding needed, UUID
                     'type' => StringUtil::specialchars($job->getType()),
                     'status' => $job->getStatus()->value, // No encoding needed, enum
-                    'owner' => StringUtil::specialchars($job->getOwner()->getIdentifier()),
+                    'owner' => $job->getOwner()->getId(), // No encoding needed, integer
                     'tstamp' => (int) $job->getCreatedAt()->format('U'), // No encoding needed, integer
                     'public' => $job->isPublic(), // No encoding needed, boolean
                 ],
@@ -97,7 +99,7 @@ class Jobs
                     Types::STRING,
                     Types::STRING,
                     Types::STRING,
-                    Types::STRING,
+                    Types::INTEGER,
                     Types::INTEGER,
                     Types::BOOLEAN,
                 ],
@@ -150,11 +152,25 @@ class Jobs
         return $child;
     }
 
+    /**
+     * @return int 0 if no contao backend user was given
+     */
+    private function getContaoBackendUserId(): int
+    {
+        $user = $this->security->getUser();
+
+        if ($user instanceof BackendUser) {
+            return (int) $user->id;
+        }
+
+        return 0;
+    }
+
     private function doCreateJob(string $type, Owner $owner, bool $public = true): Job
     {
         $job = Job::new($type, $owner);
 
-        if (Owner::SYSTEM === $job->getOwner()->getIdentifier()) {
+        if ($job->getOwner()->isSystem()) {
             $job = $job->withIsPublic($public);
         }
 
@@ -170,9 +186,9 @@ class Jobs
             ->from('tl_job', 'j')
         ;
 
-        $userid = $this->security->getUser()?->getUserIdentifier();
+        $userid = $this->getContaoBackendUserId();
 
-        if (null === $userid) {
+        if (0 === $userid) {
             return null;
         }
 
@@ -188,8 +204,8 @@ class Jobs
                 ),
             ),
         );
-        $qb->setParameter('userOwner', $userid);
-        $qb->setParameter('systemOwner', Owner::SYSTEM);
+        $qb->setParameter('userOwner', $userid, ParameterType::INTEGER);
+        $qb->setParameter('systemOwner', Owner::SYSTEM, ParameterType::INTEGER);
         $qb->orderBy('j.tstamp', 'DESC');
 
         return $qb;
@@ -253,10 +269,10 @@ class Jobs
             \DateTimeImmutable::createFromFormat('U', (string) $row['tstamp']),
             Status::from($row['status']),
             StringUtil::decodeEntities($row['type']), // Decode because it's encoded for DC_Table
-            new Owner(StringUtil::decodeEntities($row['owner'])), // Decode because it's encoded for DC_Table
+            new Owner((int) $row['owner']),
         );
 
-        if (Owner::SYSTEM === $job->getOwner()->getIdentifier()) {
+        if ($job->getOwner()->isSystem()) {
             $job = $job->withIsPublic((bool) $row['public']);
         }
 

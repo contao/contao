@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Job;
 
+use Contao\BackendUser;
 use Contao\CoreBundle\Job\Job;
 use Contao\CoreBundle\Job\Jobs;
 use Contao\CoreBundle\Job\Owner;
 use Contao\CoreBundle\Job\Status;
-use Contao\CoreBundle\Tests\TestCase;
+use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\DriverManager;
@@ -20,9 +21,8 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Security\Core\User\UserInterface;
 
-class JobsTest extends TestCase
+class JobsTest extends ContaoTestCase
 {
     public static function createJobProvider(): \Generator
     {
@@ -34,10 +34,10 @@ class JobsTest extends TestCase
     #[DataProvider('createJobProvider')]
     public function testCreateJob(bool $userLoggedIn): void
     {
-        $jobs = $this->getJobs($this->mockSecurity($userLoggedIn ? 'foobar' : null));
+        $jobs = $this->getJobs($this->mockSecurity($userLoggedIn ? 42 : null));
         $job = $jobs->createJob('job-type');
 
-        $this->assertSame($userLoggedIn ? 'foobar' : Owner::SYSTEM, $job->getOwner()->getIdentifier());
+        $this->assertSame($userLoggedIn ? 42 : Owner::SYSTEM, $job->getOwner()->getId());
     }
 
     public function testCreateSystemJob(): void
@@ -45,7 +45,7 @@ class JobsTest extends TestCase
         $jobs = $this->getJobs();
         $job = $jobs->createSystemJob('my-type');
 
-        $this->assertSame(Owner::SYSTEM, $job->getOwner()->getIdentifier());
+        $this->assertSame(Owner::SYSTEM, $job->getOwner()->getId());
     }
 
     public function testCreateUserJobThrowsExceptionIfNoUser(): void
@@ -61,18 +61,17 @@ class JobsTest extends TestCase
     public function testEncodesAndDecodesDataCorrectlyForDCTable(): void
     {
         $jobs = $this->getJobs();
-        $job = $jobs->createUserJob('strange > type', "Kevin's Name is <bold>");
+        $job = $jobs->createUserJob('strange > type', 42);
 
         $job = $jobs->getByUuid($job->getUuid());
 
         $this->assertSame('strange > type', $job->getType());
-        $this->assertSame("Kevin's Name is <bold>", $job->getOwner()->getIdentifier());
     }
 
     public function testFindingMyNewOrPendingRestrictsCorrectly(): void
     {
-        $securityUser1 = $this->mockSecurity('user-1');
-        $securityUser2 = $this->mockSecurity('user-2');
+        $securityUser1 = $this->mockSecurity(1);
+        $securityUser2 = $this->mockSecurity(2);
 
         $jobsUser1 = $this->getJobs($securityUser1);
         $jobsUser2 = $this->getJobs($securityUser2);
@@ -95,7 +94,7 @@ class JobsTest extends TestCase
 
     public function testStatusOfChildrenUpdatesParentJobStatus(): void
     {
-        $jobs = $this->getJobs($this->mockSecurity('foobar'));
+        $jobs = $this->getJobs($this->mockSecurity(42));
         $parentJob = $jobs->createUserJob('my-type');
         $childJob1 = $jobs->createUserJob('my-type')->withMetadata(['child-1']);
         $childJob2 = $jobs->createUserJob('my-type')->withMetadata(['child-2']);
@@ -160,20 +159,14 @@ class JobsTest extends TestCase
         $this->assertSame(Status::finished, $jobs->getByUuid($childJob2->getUuid())->getStatus());
     }
 
-    private function mockSecurity(string|null $username = null): Security
+    private function mockSecurity(int|null $userId = null): Security
     {
-        $userMock = $this->createMock(UserInterface::class);
-        $userMock
-            ->expects($username ? $this->atLeastOnce() : $this->never())
-            ->method('getUserIdentifier')
-            ->willReturn($username ?? '') // Cannot return null because that's not allowed but $this->never() asserts that '' is never returned
-        ;
-
+        $userMock = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
         $security = $this->createMock(Security::class);
         $security
             ->expects($this->atLeastOnce())
             ->method('getUser')
-            ->willReturn($username ? $userMock : null)
+            ->willReturn($userId ? $userMock : null)
         ;
 
         return $security;

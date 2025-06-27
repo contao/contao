@@ -19,13 +19,15 @@ class OwnerTest extends TestCase
 {
     public function testCanRetrieveIdentifier(): void
     {
-        $owner = new Owner('user-42');
-        $this->assertSame('user-42', $owner->getIdentifier());
+        $owner = new Owner(42);
+        $this->assertSame(42, $owner->getId());
+        $this->assertFalse($owner->isSystem());
     }
 
     public function testAsSystemReturnsOwnerWithSystemIdentifier(): void
     {
         $owner = Owner::asSystem();
-        $this->assertSame(Owner::SYSTEM, $owner->getIdentifier());
+        $this->assertSame(Owner::SYSTEM, $owner->getId());
+        $this->assertTrue($owner->isSystem());
     }
 }

@@ -26,7 +26,7 @@ class JobTest extends TestCase
         $this->assertSame('9ad2f29c-671b-4a1a-9a15-dabda4fd6bad', $job->getUuid());
         $this->assertSame('2025-01-01 00:00:00', $job->getCreatedAt()->format('Y-m-d H:i:s'));
         $this->assertSame(Status::new, $job->getStatus());
-        $this->assertSame(Owner::asSystem()->getIdentifier(), $job->getOwner()->getIdentifier());
+        $this->assertSame(Owner::asSystem()->getId(), $job->getOwner()->getId());
         $this->assertSame(
             [
                 'uuid' => '9ad2f29c-671b-4a1a-9a15-dabda4fd6bad',
@@ -81,7 +81,7 @@ class JobTest extends TestCase
     {
         $this->expectException(\InvalidArgumentException::class);
 
-        (new Job(Uuid::v4()->toRfc4122(), new \DateTimeImmutable(), Status::new, 'job-type', new Owner('owner')))
+        (new Job(Uuid::v4()->toRfc4122(), new \DateTimeImmutable(), Status::new, 'job-type', new Owner(42)))
             ->withIsPublic(true)
         ;
     }
