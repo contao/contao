@@ -327,6 +327,12 @@ services:
         arguments:
             - '@request_stack'
 
+    contao.listener.dca_switch_request:
+        class: Contao\CoreBundle\EventListener\DcaSwitchRequestListener
+        arguments:
+            - '@request_stack'
+            - '@contao.framework'
+
     contao.listener.doctrine_schema:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
         arguments:
