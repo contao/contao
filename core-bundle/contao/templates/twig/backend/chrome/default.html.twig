@@ -1,0 +1,6 @@
+{% extends '@Contao/be_main.html5' %}
+
+{% block header %}
+    {{ parent() }}
+    {% include "@Contao/backend/component/message/_outlet.html.twig" %}
+{% endblock %}

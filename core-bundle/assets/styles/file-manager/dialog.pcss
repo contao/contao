@@ -1,0 +1,39 @@
+dialog[data-controller="contao--dialog"].file-manager {
+    .name_container {
+        .structure {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            gap: 2px;
+
+            input {
+                field-sizing: content;
+            }
+
+            .extension {
+                color: var(--gray);
+            }
+        }
+    }
+
+    #ctrl_start_with {
+        width: 5ch;
+    }
+
+    &.file-manager--legacy-proxy {
+        width: 95%;
+        max-width: 120ch;
+
+        .dialog_wrapper {
+            max-width: revert !important;
+        }
+
+        .header_wrapper {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .tl_tbox:not(:has(*)) {
+            display: none;
+        }
+    }
+}

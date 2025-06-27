@@ -1,0 +1,54 @@
+#file-manager--tree nav {
+    white-space: nowrap;
+    padding: 4px;
+
+    ol {
+        padding: 0;
+        margin: 0;
+
+        li {
+            margin-left: 0.75em;
+            border-left: thin solid var(--tree-line);
+
+            &::before {
+                content: "";
+                width: 0.5em;
+                height: 0.75em;
+                vertical-align: top;
+                border-bottom: thin solid var(--tree-line);
+                display: inline-block;
+            }
+
+            &:last-child {
+                border-left: none;
+
+                &::before {
+                    border-left: thin solid var(--tree-line);
+                }
+            }
+
+            > :not(ol) {
+                display: inline-flex;
+                align-items: center;
+            }
+        }
+
+        > .node {
+            margin-left: 4px;
+        }
+    }
+
+    button {
+        display: inline-flex;
+        gap: 2px;
+        background: none;
+        border: none;
+        padding: 2px 0;
+        color: var(--text);
+
+        &:hover {
+            color: var(--hover-color);
+            opacity: 1;
+        }
+    }
+}

@@ -1,0 +1,293 @@
+#file-manager--content {
+    display: grid;
+    grid-template-areas:
+        "view-controls"
+        "element-controls"
+        "listing";
+
+    /* Setting minmax(0, …) and a min-height on the container is needed for the
+       listing area to be scrollable. */
+    grid-template-rows: auto auto minmax(0, 1fr);
+    min-height: 0;
+    container-type: inline-size;
+    background-color: var(--panel-bg);
+
+    &,
+    * {
+        box-sizing: border-box;
+    }
+
+    > form,
+    .container {
+        height: 100%;
+    }
+
+    ul {
+        margin: 0;
+        padding: 0;
+
+        li {
+            list-style: none;
+        }
+    }
+}
+
+/* Generic content layout */
+#file-manager--content-listing {
+    grid-area: listing;
+
+    .container {
+        overflow-y: auto;
+        background-color: var(--panel-bg);
+        padding: 6px 12px 12px;
+
+        .list_item {
+            line-height: 1.4;
+        }
+
+        .element {
+            border: 2px solid transparent;
+            border-radius: 4px;
+            padding: 3px;
+            margin: 1px;
+
+            .visual {
+                display: grid;
+
+                > * {
+                    display: flex;
+                    grid-area: 1 / 1;
+                }
+            }
+
+            .name {
+                width: 100%;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+
+                .extension {
+                    &::before {
+                        content: ".";
+                    }
+                }
+            }
+
+            .properties {
+                opacity: 0.5;
+            }
+        }
+
+        .button--up {
+            border: none;
+            background: none;
+        }
+
+        .selector {
+            position: absolute;
+            appearance: none;
+        }
+
+        .selector:checked + .element,
+        .element:hover {
+            background-color: var(--info-bg);
+        }
+
+        .selector:focus-visible + .element {
+            border: 2px solid var(--text);
+        }
+    }
+}
+
+/* List-style content layout */
+.layout--list #file-manager--content-listing .container {
+    display: flex;
+    flex-direction: column;
+
+    @container (inline-size > 120ch) {
+        padding-right: calc(100cqi - 120ch);
+    }
+
+    .element {
+        width: 100%;
+        display: grid;
+        grid-template-areas: "visual name properties";
+        grid-template-columns: auto 1fr min-content;
+        gap: 4px;
+        line-height: 1.5;
+
+        .visual {
+            grid-area: visual;
+
+            .image {
+                display: none;
+            }
+
+            .fallback {
+                align-self: center;
+
+                img {
+                    height: 100%;
+                    width: auto;
+                }
+            }
+        }
+
+        .name {
+            grid-area: name;
+            justify-self: start;
+            text-align: left;
+        }
+
+        .properties {
+            grid-area: properties;
+            white-space: nowrap;
+            display: flex;
+            gap: 12px;
+        }
+    }
+}
+
+/* Grid-style content layout */
+.layout--grid #file-manager--content-listing .container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    grid-auto-rows: max-content;
+    gap: 12px;
+
+    .element {
+        width: 100%;
+        display: grid;
+        grid-template-areas: "visual" "name";
+        grid-template-rows: 120px auto;
+        gap: 2px;
+
+        .visual {
+            padding: 4px;
+
+            > * {
+                border-radius: 4px;
+                overflow: hidden;
+
+                img {
+                    width: 100%;
+                    height: auto;
+                }
+            }
+
+            .image {
+                border: 1px solid var(--content-border);
+
+                img {
+                    object-fit: cover;
+                }
+            }
+
+            .fallback img {
+                padding: 8px;
+            }
+        }
+
+        .name {
+            width: 100%;
+            text-align: center;
+        }
+
+        .properties {
+            display: none;
+        }
+    }
+
+    .selector:checked + .element {
+        box-shadow: 0 0 0 1px var(--blue);
+
+        .visual .image,
+        .visual .fallback {
+            transform: scale(1.02);
+        }
+    }
+}
+
+/* Operations and controls */
+#file-manager--view-operations {
+    grid-area: view-controls;
+    background-color: var(--content-bg);
+    padding: 12px;
+}
+
+#file-manager--elements-operations {
+    .element-count {
+        color: var(--gray);
+        font-size: 0.75em;
+        display: block;
+        padding-top: 2px;
+        text-align: right;
+    }
+}
+
+#file-manager--view-operations,
+#file-manager--elements-operations {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    gap: 2px;
+
+    .operations {
+        display: flex;
+        justify-content: end;
+        gap: 15px;
+    }
+
+    .operation {
+        border: none;
+        padding: 3px 0 3px 22px;
+        background: none no-repeat left center;
+
+        &:hover {
+            color: var(--contao);
+        }
+    }
+}
+
+#file-manager--element-controls {
+    grid-area: element-controls;
+    display: flex;
+    justify-content: space-between;
+    min-height: 58px;
+    padding: 12px 12px 6px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+
+    button {
+        background: var(--panel-bg);
+        border: 1px solid var(--content-border);
+    }
+
+    .display-layout {
+        display: flex;
+        margin-bottom: 5px;
+
+        button {
+            padding: 2px 8px;
+            color: var(--legend);
+
+            &:first-child {
+                border-radius: 3px 0 0 3px;
+            }
+
+            &:last-child {
+                border-radius: 0 3px 3px 0;
+            }
+
+            &:not(:first-child) {
+                border-left: none;
+            }
+        }
+    }
+}
+
+#file-manager--element-controls .display-layout button:hover,
+.layout--grid #file-manager--element-controls .display-layout .control--grid,
+.layout--list #file-manager--element-controls .display-layout .control--list {
+    background: var(--info-bg);
+}

@@ -1,6 +1,7 @@
 import { Application } from '@hotwired/stimulus';
 import { definitionForModuleAndIdentifier, identifierForContextKey } from '@hotwired/stimulus-webpack-helpers';
 import '@hotwired/turbo';
+import { StreamActions } from '@hotwired/turbo';
 import WebAuthn from '@web-auth/webauthn-stimulus';
 
 import './scripts/mootao.js';
@@ -103,3 +104,8 @@ document.documentElement.addEventListener('turbo:before-fetch-response', (event)
     const response = event.detail.fetchResponse;
     targetURLAfterRedirectedFetch = response.redirected ? response.response.url : null;
 });
+
+// Custom Turbo stream actions
+StreamActions.download = function () {
+    window.location = this.getAttribute('url');
+};

@@ -6,28 +6,62 @@ export class TurboStreamConnection {
      * Requests a stream response using GET and lets Turbo handle it.
      *
      * @param url The URL of the Symfony controller answering the stream request.
-     * @param query_params An object of query parameters. If the value is an array, a key "foo" will be named "foo[]" and appear multiple times.
+     * @param queryParams An object of query parameters. If the value is an array, a key "foo" will be named "foo[]" and appear multiple times.
      * @param abortPending If set to true, previous requests that are still pending will be aborted.
      *
      * @returns {Promise<TurboStreamResult>}
      */
-    async get(url, query_params = null, abortPending = false) {
+    async get(url, queryParams = null, abortPending = false) {
+        return this._performRequestAndProcess({ method: 'get' }, url, queryParams, abortPending);
+    }
+
+    /**
+     * Requests a stream response using POST with content type "multipart/form-data" and lets Turbo handle it.
+     *
+     * @param url The URL of the Symfony controller answering the stream request.
+     * @param queryParams An object of query parameters. If the value is an array, a key "foo" will be named "foo[]" and appear multiple times.
+     * @param formData An object of form data to include in the body.
+     * @param abortPending If set to true, previous requests that are still pending will be aborted.
+     *
+     * @returns {Promise<TurboStreamResult>}
+     */
+    async postForm(url, queryParams = null, formData = null, abortPending = false) {
+        const body = new FormData();
+
+        for (const [key, value] of Object.entries(formData)) {
+            body.append(key, value);
+        }
+
+        return this._performRequestAndProcess(
+            {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                body,
+            },
+            url,
+            queryParams,
+            abortPending,
+        );
+    }
+
+    async _performRequestAndProcess(params, url, queryParams, abortPending) {
         if (abortPending) {
             this.abortPending();
         }
 
-        const params = {
-            method: 'get',
+        Object.assign(params, {
             headers: {
                 Accept: 'text/vnd.turbo-stream.html',
             },
             signal: this._abortController.signal,
-        };
+        });
 
         let response;
 
         try {
-            response = await fetch(this.constructor.buildURL(url, query_params), params);
+            response = await fetch(this.constructor.buildURL(url, queryParams), params);
         } catch (e) {
             if (e !== this._abortSignal) {
                 if (window.console) {
@@ -65,14 +99,14 @@ export class TurboStreamConnection {
         this._abortController = new AbortController();
     }
 
-    static buildURL(url, query_params) {
-        if (query_params === null) {
+    static buildURL(url, queryParams) {
+        if (queryParams === null) {
             return url;
         }
 
         const pairs = [];
 
-        for (const [key, value] of Object.entries(query_params)) {
+        for (const [key, value] of Object.entries(queryParams)) {
             if (!Array.isArray(value)) {
                 pairs.push([key, value]);
                 continue;

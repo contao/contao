@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\DependencyInjection;
 
+use Contao\CoreBundle\Controller\BackendFileManagerController;
 use Contao\CoreBundle\Controller\BackendSearchController;
 use Contao\CoreBundle\Controller\BackendTemplateStudioController;
 use Contao\CoreBundle\Cron\CronJob;
@@ -783,6 +784,26 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertTrue($container->hasDefinition(BackendTemplateStudioController::class));
         $this->assertTrue($container->hasDefinition('contao.twig.studio.template_skeleton_factory'));
         $this->assertTrue($container->hasDefinition('contao.twig.studio.create_operation'));
+    }
+
+    public function testDoesNotRegisterFileManagerIfNotEnabled(): void
+    {
+        $container = $this->getContainerBuilder([
+            'contao' => [
+                'file_manager' => [
+                    'enabled' => false,
+                ],
+            ],
+        ]);
+
+        $this->assertFalse($container->hasDefinition(BackendFileManagerController::class));
+    }
+
+    public function testRegistersTheFileManagerRelatedServicesCorrectly(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        $this->assertTrue($container->hasDefinition(BackendFileManagerController::class));
     }
 
     public function testRegistersAsContentElementAttribute(): void

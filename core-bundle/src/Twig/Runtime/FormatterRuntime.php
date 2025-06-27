@@ -32,6 +32,8 @@ final class FormatterRuntime implements RuntimeExtensionInterface
     {
         $this->framework->initialize();
 
+        System::loadLanguageFile('default');
+
         return System::getReadableSize($bytes, $decimals);
     }
 }

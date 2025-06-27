@@ -1,0 +1,6 @@
+{% extends "@Contao/backend/component/dialog/show_modal.stream.html.twig" %}
+
+{% set dialog_attributes = attrs()
+    .addClass('file-manager')
+    .addClass('file-manager--legacy-proxy', legacyProxy|default)
+%}

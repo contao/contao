@@ -1,0 +1,15 @@
+{# Show a dialog #}
+{% embed "@Contao/backend/file_manager/show_modal.stream.html.twig" %}
+    {% trans_default_domain "contao_file_manager" %}
+
+    {% block title %}{{ 'dialog.elements_move.title'|trans([num_elements]) }}{% endblock %}
+
+    {% block content %}
+        <p class="description description--warning">TODO: Until the picker is implemented, use drag and drop to move files.</p>
+    {% endblock %}
+
+    {% block buttons %}
+        {{ parent() }}
+        <button class="confirm">{{ 'MSC.moveSelected'|trans(domain: 'contao_default') }}</button>
+    {% endblock %}
+{% endembed %}

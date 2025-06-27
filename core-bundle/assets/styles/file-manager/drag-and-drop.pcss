@@ -1,0 +1,13 @@
+#file-manager {
+    *[data-droppable].drag--over {
+        background-color: var(--drag-bg) !important;
+        box-shadow: 0 0 0 1px var(--hover-color) !important;
+        transition: background-color 0.25s;
+    }
+}
+
+/* Disable pointer events for children of drag-targets while dragging so that
+   they do not fire events */
+.drag--active #file-manager *[draggable="true"] * {
+    pointer-events: none;
+}

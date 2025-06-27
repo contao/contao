@@ -1,0 +1,18 @@
+{# Show a message #}
+{% embed "@Contao/backend/component/message/add_message.stream.html.twig" %}
+    {% trans_default_domain "contao_file_manager" %}
+
+    {% block content %}
+        {{ 'message.elements_delete.success'|trans([num_elements]) }}
+    {% endblock %}
+{% endembed %}
+
+{% if directories_affected %}
+    {# Reload navigation #}
+    {{ render(path('_contao_file_manager_navigation.stream', {path})) }}
+{% endif %}
+
+{% if current_view_affected %}
+    {# Reload content #}
+    {{ render(path('_contao_file_manager_list_content.stream', {path})) }}
+{% endif %}

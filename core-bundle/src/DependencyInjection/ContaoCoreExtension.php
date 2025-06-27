@@ -22,6 +22,8 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsFrontendModule;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsOperationForFileManagerElements;
+use Contao\CoreBundle\DependencyInjection\Attribute\AsOperationForFileManagerView;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsOperationForTemplateStudioElement;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPickerProvider;
@@ -160,6 +162,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleCspConfig($config, $container);
         $this->handleAltcha($config, $container);
         $this->handleTemplateStudioConfig($config, $container, $loader);
+        $this->handleFileManagerConfig($config, $container, $loader);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -642,6 +645,30 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         );
 
         $loader->load('template_studio.yaml');
+    }
+
+    private function handleFileManagerConfig(array $config, ContainerBuilder $container, LoaderInterface $loader): void
+    {
+        // Used to display/hide the menu entry in the back end
+        $container->setParameter('contao.file_manager.enabled', $config['file_manager']['enabled']);
+
+        if (!$config['file_manager']['enabled']) {
+            return;
+        }
+
+        $this->registerOperationAttribute(
+            AsOperationForFileManagerView::class,
+            'contao.operation.file_manager_view',
+            $container
+        );
+
+        $this->registerOperationAttribute(
+            AsOperationForFileManagerElements::class,
+            'contao.operation.file_manager_elements',
+            $container
+        );
+
+        $loader->load('file_manager.yaml');
     }
 
     /**

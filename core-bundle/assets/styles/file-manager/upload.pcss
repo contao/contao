@@ -1,0 +1,110 @@
+@keyframes upload-progress-bar-stripes {
+    0% {
+        background-position-x: 1rem;
+    }
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+#file-manager--upload {
+    transition: all 0.5s;
+    background-color: var(--content-bg);
+    padding: 12px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 12px;
+
+    .dz-preview {
+        display: grid;
+        grid-template-areas: "progress" "properties";
+        gap: 6px;
+        padding: 6px;
+        background-color: var(--panel-bg);
+        border: 1px solid var(--content-border);
+        border-radius: 4px;
+
+        .dz-image,
+        .dz-error-message,
+        .dz-success-mark,
+        .dz-error-mark {
+            display: none;
+        }
+
+        .dz-progress {
+            grid-area: progress;
+            width: 100%;
+            display: flex;
+            height: 4px;
+            border-radius: 2px;
+            background-color: var(--gray);
+
+            .dz-upload {
+                /* has dynamic width percentage [0-100] during upload */
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                color: white;
+                text-align: center;
+                white-space: nowrap;
+                background-size: 10px 10px;
+                transition: width 0.25s linear;
+                border-radius: 2px;
+            }
+        }
+
+        &.dz-processing .dz-progress .dz-upload {
+            background-color: var(--progress-running);
+            background-image: linear-gradient(
+                45deg,
+                rgb(255 255 255 / 15%) 25%,
+                transparent 25%,
+                transparent 50%,
+                rgb(255 255 255 / 15%) 50%,
+                rgb(255 255 255 / 15%) 75%,
+                transparent 75%,
+                transparent
+            );
+            animation: upload-progress-bar-stripes 1s linear infinite reverse;
+        }
+
+        &.dz-success .dz-progress .dz-upload {
+            background-color: var(--progress-finished);
+            background-image: none;
+            animation: none;
+        }
+
+        &.dz-complete {
+            animation: 0.5s fade-out forwards;
+            animation-delay: 2s;
+        }
+
+        .dz-details {
+            grid-area: properties;
+            overflow: hidden;
+
+            .dz-filename {
+                display: block;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                opacity: 0.5;
+
+                &::before {
+                    content: attr(data-dz-uploadprogress);
+                }
+            }
+
+            .dz-size {
+                display: none;
+            }
+        }
+    }
+}

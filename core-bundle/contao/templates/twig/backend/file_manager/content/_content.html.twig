@@ -1,0 +1,108 @@
+{% trans_default_domain "contao_file_manager" %}
+
+{# View-global operations #}
+<div id="file-manager--view-operations">
+    {% include "@Contao/backend/file_manager/content/_view_operations.html.twig" with {operations: view_operations} %}
+</div>
+
+<div id="file-manager--element-controls">
+    {# Layout controls #}
+    <div class="display-layout">
+        <button class="control--list" data-action="contao--file-manager#displayList"
+                title="{{ 'display-layout_list'|trans }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 12h.01"/>
+                <path d="M3 18h.01"/>
+                <path d="M3 6h.01"/>
+                <path d="M8 12h13"/>
+                <path d="M8 18h13"/>
+                <path d="M8 6h13"/>
+            </svg>
+        </button>
+        <button class="control--grid" data-action="contao--file-manager#displayGrid"
+                title="{{ 'display-layout_grid'|trans }}">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect width="7" height="7" x="3" y="3" rx="1"/>
+                <rect width="7" height="7" x="14" y="3" rx="1"/>
+                <rect width="7" height="7" x="14" y="14" rx="1"/>
+                <rect width="7" height="7" x="3" y="14" rx="1"/>
+            </svg>
+        </button>
+    </div>
+    {# Selection-dependent operations #}
+    <div id="file-manager--elements-operations" data-contao--file-manager-target="elementsOperations"></div>
+</div>
+
+<form id="file-manager--content-listing" method="get" data-turbo-stream>
+    {% set listing_attributes = attrs()
+        .set('data-contao--file-manager-target', 'listing')
+        .set('data-droppable')
+        .set('data-resource', path)
+        .addClass('container')
+    %}
+    <ul{{ listing_attributes }}>
+        {% for element in elements %}
+            {# @var \Contao\CoreBundle\Filesystem\FilesystemItem item #}
+            {% set item = element.filesystem_item %}
+            <li class="list_item">
+                {% set id = 'file-manager--selector_' ~ item.path %}
+                {% set selector_attributes = attrs()
+                    .set('type', 'checkbox')
+                    .set('id', id)
+                    .set('data-resource', item.path)
+                    .set('data-action', 'contao--file-manager#updateSelection keydown.enter->contao--file-manager#navigate')
+                    .set('data-navigate-url', 'todo', item.file)
+                    .set('data-navigate-url', path('_contao_file_manager_list_content.stream', {path: item.path}), not item.file)
+                    .addClass('selector')
+                %}
+                <input{{ selector_attributes }}>
+                {% set element_attributes = attrs()
+                    .set('for', id)
+                    .set('draggable', 'true')
+                    .set('data-action', 'dragstart->contao--file-manager#dragStart', item.file)
+                    .set('data-action', 'dragstart->contao--file-manager#dragStart dblclick->contao--file-manager#navigate mousedown->contao--file-manager#handleDblClickSelection', not item.file)
+                    .set('data-droppable', not item.file)
+                    .set('data-resource', item.path)
+                    .addClass('element')
+                %}
+                <label{{ element_attributes }}>
+                    <span class="visual">
+                        <span class="fallback">
+                            {{ backend_icon(item.file ? 'plain' : 'folderC') }}
+                        </span>
+                        {% if element.preview %}
+                            <span class="image">
+                            {% set img = element.preview.image.img %}
+                                {% set img_attributes = attrs()
+                                    .set('src', img.src)
+                                    .set('alt', '')
+                                    .setIfExists('width', img.width|default)
+                                    .setIfExists('height', img.height|default)
+                                    .set('loading', 'lazy')
+                                    .set('fetchpriority', 'low')
+                                %}
+                            <img{{ img_attributes }}>
+                    </span>
+                        {% endif %}
+                    </span>
+                    <span class="name">
+                        {{ item.name(true) }}{% if item.file %}<span class="extension">{{ item.extension }}</span>{% endif %}
+                    </span>
+                    <span class="properties">
+                        {% if item.file %}
+                            {% if item.image and item.extraMetadata.importantPart.width|default is not same as 0.0 %}
+                                <span class="property--important-part" title="{{ 'property.important_part'|trans }}">
+                                    {{ backend_icon('sizes--disabled.svg') }}
+                                </span>
+                            {% endif %}
+                            <span class="property--size">{{ item.fileSize|format_bytes }}</span>
+                        {% endif %}
+                        <span class="property--last-modified">{{ item.lastModified|date('d.m.y H:i') }}</span>
+                    </span>
+                </label>
+            </li>
+        {% endfor %}
+    </ul>
+</form>

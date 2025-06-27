@@ -30,11 +30,24 @@ export default class OperationsMenuController extends Controller {
         });
     }
 
+    menuTargetConnected() {
+        // Allow menu targets to be added lazily
+        if (!this.$menu) {
+            this.connect();
+        }
+    }
+
+    menuTargetDisconnected() {
+        // Destroy menu when the menu target was removed
+        this.disconnect();
+    }
+
     disconnect() {
         // Cleanup menu instance, otherwise we would leak memory
         for (const [key, value] of Object.entries(window.AccessibleMenu?.menus ?? {})) {
             if (value === this.$menu) {
                 delete window.AccessibleMenu.menus[key];
+                this.$menu = null;
             }
         }
     }

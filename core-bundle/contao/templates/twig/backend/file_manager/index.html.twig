@@ -1,0 +1,50 @@
+{% trans_default_domain "contao_file_manager" %}
+{% extends '@Contao/be_main.html5' %}
+
+{% block main %}
+    <main id="main"
+          aria-labelledby="main_headline"
+          data-controller="contao--file-manager"
+          data-contao--file-manager-list-elements-operations-url-value="{{ path('_contao_file_manager_elements_operations.stream') }}"
+          data-contao--file-manager-upload-operation-url-value="{{ path('_contao_file_manager_view_operation.stream', {operation: 'view_upload'}) }}"
+          data-contao--file-manager-move-operation-url-value="{{ path('_contao_file_manager_elements_operation.stream', {operation: 'elements_move'}) }}"
+          data-contao--file-manager-list-layout-class="layout--list"
+          data-contao--file-manager-grid-layout-class="layout--grid"
+          data-contao--file-manager-dragging-class="drag--active"
+          data-contao--file-manager-dropping-class="drag--over"
+          data-action="
+            dragenter->contao--file-manager#dragEnter:prevent
+            dragleave->contao--file-manager#dragLeave
+            dragover->contao--file-manager#dragOver:prevent
+            dragend->contao--file-manager#dragEnd
+            drop->contao--file-manager#dragDrop:prevent
+          "
+          class="layout--list" {# default layout #}
+    >
+        {# Headline #}
+        <h1 id="main_headline" data-action="click->contao--file-manager#test">{{ headline }}</h1>
+
+        <section id="file-manager" class="content chrome">
+            {# Navigation #}
+            <div id="file-manager--tree">
+                {{ include("@Contao/backend/file_manager/navigation/_tree.html.twig") }}
+            </div>
+            <div id="file-manager--breadcrumb">
+                {{ include("@Contao/backend/file_manager/navigation/_breadcrumb.html.twig") }}
+            </div>
+
+            {# Browser section showing files and directories #}
+            <div
+                id="file-manager--content"
+                data-controller="contao--operations-menu"
+                data-action="click->contao--file-manager#deselectAll:capture keydown.esc@document->contao--file-manager#deselectAll contextmenu->contao--operations-menu#open"
+            >
+                {{ include("@Contao/backend/file_manager/content/_content.html.twig") }}
+            </div>
+
+            {# Dynamic sections #}
+            <div id="file-manager--upload" data-contao--file-manager-target="dropzone"></div>
+            <div id="file-manager--info" data-panel></div>
+        </section>
+    </main>
+{% endblock %}

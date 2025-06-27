@@ -1,0 +1,39 @@
+{% trans_default_domain "contao_file_manager" %}
+
+<turbo-stream action="update" method="morph" target="file-manager--elements-operations">
+    <template>
+        {% if operations|length %}
+            {% set numElements = paths|length %}
+
+            <form method="post">
+                <ul class="operations">
+                    {% block operations %}
+                        {% for operation in operations %}
+                            {% set button_attributes = attrs()
+                                .set('formaction', path('_contao_file_manager_elements_operation.stream', {operation, paths}))
+                                .set('data-operation', operation)
+                                .set('title',  ('operation.' ~ operation ~ '.1')|trans([numElements]))
+                                .addClass('operation operation--' ~ operation)
+                                .mergeWith(default_button_attributes|default)
+                            %}
+                            <li>
+                                <button{{ button_attributes }}>{{ ('operation.' ~ operation ~ '.0')|trans }}</button>
+                            </li>
+                        {% endfor %}
+                    {% endblock %}
+                </ul>
+                <span class="element-count">{{ 'elements-operations-scope'|trans([numElements]) }}</span>
+
+                {# Context menu #}
+                <ul data-contao--operations-menu-target="menu">
+                    <li>
+                        <button class="hidden" data-contao--operations-menu-target="controller"></button>
+                        <ul class="operations-menu" data-contao--operations-menu-target="submenu">
+                            {{ block('operations') }}
+                        </ul>
+                    </li>
+                </ul>
+            </form>
+        {% endif %}
+    </template>
+</turbo-stream>

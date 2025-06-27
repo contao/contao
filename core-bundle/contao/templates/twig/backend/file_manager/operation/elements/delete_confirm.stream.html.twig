@@ -1,0 +1,24 @@
+{# Show a dialog #}
+{% embed "@Contao/backend/component/dialog/show_modal.stream.html.twig" %}
+    {% trans_default_domain "contao_file_manager" %}
+
+    {% block content %}
+        <div class="description description--warning">
+            <p>{{ 'dialog.elements_delete.confirm'|trans([items|length]) }}</p>
+
+            <ul>
+                {% for item in items %}
+                    <li>
+                        {{ backend_icon(item.file ? 'plain.svg' : 'folderC.svg') }}
+                        <span class="warning">{{ item.path }}</span>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endblock %}
+
+    {% block buttons %}
+        {{ parent() }}
+        <button class="confirm" name="confirm_delete">{{ 'MSC.deleteSelected'|trans(domain: 'contao_default') }}</button>
+    {% endblock %}
+{% endembed %}

@@ -1,0 +1,24 @@
+{% trans_default_domain "contao_file_manager" %}
+
+{% set isRoot = path == '' %}
+
+{% set button_attributes = attrs()
+    .set('formaction', path('_contao_file_manager_list_content.stream', {path}))
+    .set('aria-label', 'open_directory'|trans)
+    .addClass('root', isRoot)
+    .set('draggable', 'true')
+    .set('data-action', 'dragstart->contao--file-manager#dragStart')
+    .set('data-droppable')
+    .set('data-resource', path)
+    .mergeWith(button_attributes|default)
+%}
+<button{{ button_attributes }}>
+    {% block inner %}
+        {% if isRoot %}
+            {{ backend_icon('filemanager', attributes: attrs().set('title', 'root'|trans)) }}
+        {% else %}
+            {{ backend_icon('folderC.svg') }}
+            <span>{{ name }}</span>
+        {% endif %}
+    {% endblock %}
+</button>
