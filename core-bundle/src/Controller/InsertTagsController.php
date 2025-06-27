@@ -64,6 +64,11 @@ class InsertTagsController
         return $response;
     }
 
+    /**
+     * The main action forwards to this one with a modified request that has an empty
+     * request URI. This ensures that the internal fragment URL does not get used by
+     * any nested insert tags.
+     */
     public function renderForwardedAction(string $insertTag): Response
     {
         $response = new Response();
