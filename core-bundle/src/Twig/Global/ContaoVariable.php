@@ -50,19 +50,37 @@ class ContaoVariable
         return $this->tokenManager->getDefaultTokenValue();
     }
 
-    public function getDatim_format(): string|null
+    public function getDatim_format(): string
     {
-        return $this->getPage()?->datimFormat ?: $this->framework->getAdapter(Config::class)->get('datimFormat');
+        if ($pageFormat = $this->getPage()?->datimFormat) {
+            return $pageFormat;
+        }
+
+        $this->framework->initialize();
+
+        return $this->framework->getAdapter(Config::class)->get('datimFormat') ?? 'Y-m-d H:i';
     }
 
-    public function getDate_format(): string|null
+    public function getDate_format(): string
     {
-        return $this->getPage()?->dateFormat ?: $this->framework->getAdapter(Config::class)->get('dateFormat');
+        if ($pageFormat = $this->getPage()?->dateFormat) {
+            return $pageFormat;
+        }
+
+        $this->framework->initialize();
+
+        return $this->framework->getAdapter(Config::class)->get('dateFormat') ?? 'Y-m-d';
     }
 
-    public function getTime_format(): string|null
+    public function getTime_format(): string
     {
-        return $this->getPage()?->timeFormat ?: $this->framework->getAdapter(Config::class)->get('timeFormat');
+        if ($pageFormat = $this->getPage()?->timeFormat) {
+            return $pageFormat;
+        }
+
+        $this->framework->initialize();
+
+        return $this->framework->getAdapter(Config::class)->get('timeFormat') ?? 'H:i';
     }
 
     public function backend_user(): BackendUser|null
