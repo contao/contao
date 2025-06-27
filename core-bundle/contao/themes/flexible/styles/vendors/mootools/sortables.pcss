@@ -1,0 +1,54 @@
+/* ToDo: merge drag-handle with sortablesJS styles */
+.drag-handle {
+    cursor: move;
+}
+
+ul.sortable li {
+    cursor: move;
+    position: relative;
+}
+
+ul.sortable li .dirname {
+    display: none;
+}
+
+ul.sortable li:hover .dirname {
+    display: inline;
+}
+
+ul.sortable button {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 0;
+    border-radius: 2px;
+    background: var(--form-button);
+    margin: 0;
+    padding: 0 0 3px;
+    font-size: 22px;
+    line-height: 9px;
+    cursor: pointer;
+    transition: all .1s linear;
+}
+
+ul.sortable button:hover {
+    background: var(--form-button-hover);
+}
+
+ul.sortable button[disabled] {
+    color: var(--gray);
+    cursor: not-allowed;
+}
+
+ul.sortable button[disabled]:hover {
+    background: rgba(255,255,255,.7);
+}
+
+.sortable-chosen {
+    opacity: 0.6;
+}
+
+.sortable-drag,
+.sortable-drag + * {
+    opacity: 0;
+}

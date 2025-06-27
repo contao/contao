@@ -15,6 +15,7 @@ use Contao\CoreBundle\EventListener\Widget\CustomRgxpListener;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
@@ -544,9 +545,16 @@ class tl_form_field extends Backend
 
 		$objWidget = new $strClass($arrRow);
 		$key = $arrRow['invisible'] ? 'unpublished' : 'published';
+		$dragHandle = '';
+
+		if (!Input::get('act') && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_form_field', new UpdateAction('tl_form_field', $arrRow)))
+		{
+			$labelCut = $GLOBALS['TL_LANG']['tl_form_field']['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
+			$dragHandle = '<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $arrRow['id'])) . '</button>';
+		}
 
 		$strType = '
-<div class="cte_type ' . $key . '">' . $GLOBALS['TL_LANG']['FFL'][$arrRow['type']][0] . ($objWidget->submitInput() && $arrRow['name'] ? ' (' . $arrRow['name'] . ')' : '') . '</div>
+<div class="cte_type ' . $key . '">' . $dragHandle . $GLOBALS['TL_LANG']['FFL'][$arrRow['type']][0] . ($objWidget->submitInput() && $arrRow['name'] ? ' (' . $arrRow['name'] . ')' : '') . '</div>
 <div class="cte_preview">';
 
 		$strWidget = $objWidget->parse();
