@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Job\Owner;
 use Contao\DataContainer;
@@ -20,7 +21,6 @@ use Doctrine\DBAL\ParameterType;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 
-#[AsCallback(table: 'tl_job', target: 'config.onload')]
 class JobsListener
 {
     public function __construct(
@@ -30,7 +30,21 @@ class JobsListener
     ) {
     }
 
-    public function __invoke(): void
+    #[AsCallback(table: 'tl_job', target: 'list.operations.children.button')]
+    public function onChildrenCallback(DataContainerOperation $operation): void
+    {
+        $childCount = $this->connection->fetchOne(
+            'SELECT COUNT(*) FROM tl_job WHERE pid = ?',
+            [(string) $operation->getRecord()['id']],
+        );
+
+        if ($childCount < 1) {
+            $operation->disable();
+        }
+    }
+
+    #[AsCallback(table: 'tl_job', target: 'config.onload')]
+    public function onLoadCallback(): void
     {
         $request = $this->requestStack->getCurrentRequest();
         $userIdentifier = $this->security->getUser()?->getUserIdentifier();
