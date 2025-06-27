@@ -35,7 +35,7 @@ class DcaLoader extends Controller
 	protected static $arrLoaded = array();
 
 	/**
-	 * @todo Replace with a more performant implementation based on the symfony ConfigCache
+	 * @todo Replace with a more performant implementation based on the Symfony ConfigCache
 	 *
 	 * @var array<string, true>
 	 */
@@ -191,6 +191,7 @@ class DcaLoader extends Controller
 			{
 				$dumper = new CombinedFileDumper($filesystem, new PhpFileLoader(), Path::join($strCacheDir, 'contao/dca'));
 				$dumper->dump($files, $this->strTable . '.php', array('type' => 'namespaced'));
+
 				self::$freshPaths[$strCachePath] = true;
 
 				try
