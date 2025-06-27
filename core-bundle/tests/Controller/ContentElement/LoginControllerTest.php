@@ -85,19 +85,19 @@ class LoginControllerTest extends ContentElementTestCase
 
         $content = $response->getContent();
 
-        $this->assertTrue(str_contains($content, '<div class="content-login login">'));
-        $this->assertTrue(str_contains($content, '<form action id="tl_login_42" method="post">'));
-        $this->assertTrue(str_contains($content, '<input type="hidden" name="FORM_SUBMIT" value="tl_login_42">'));
-        $this->assertTrue(str_contains($content, '<input type="hidden" name="_target_path" value="aHR0cDovLzov">'));
-        $this->assertTrue(str_contains($content, '<label for="username">translated(contao_default:MSC.username)</label>'));
-        $this->assertTrue(str_contains($content, '<input type="text" name="username" id="username" class="text" value="" autocapitalize="off" autocomplete="username" required>'));
-        $this->assertTrue(str_contains($content, '<label for="password">translated(contao_default:MSC.password.0)</label>'));
-        $this->assertTrue(str_contains($content, '<input type="password" name="password" id="password" class="text password" value="" autocomplete="current-password" required>'));
-        $this->assertTrue(str_contains($content, '<button type="submit" class="submit">MSC.login</button>'));
-        $this->assertTrue(str_contains($content, '<button type="button" class="passkey-login">translated(contao_default:MSC.passkeyLogin)</button>'));
+        $this->assertStringContainsString('<div class="content-login login" data-passkey-login data-passkey-config="{&quot;unsupported&quot;:&quot;translated(contao_default:ERR.passkeysUnsupported)&quot;,&quot;assertionFailure&quot;:&quot;translated(contao_default:ERR.passkeyAssertionFailure)&quot;,&quot;optionsUrl&quot;:&quot;&quot;,&quot;resultUrl&quot;:&quot;&quot;,&quot;requestTokenScript&quot;:&quot;&quot;,&quot;redirect&quot;:&quot;http:\/\/:\/&quot;}">', $content);
+        $this->assertStringContainsString('<form action id="tl_login_42" method="post">', $content);
+        $this->assertStringContainsString('<input type="hidden" name="FORM_SUBMIT" value="tl_login_42">', $content);
+        $this->assertStringContainsString('<input type="hidden" name="_target_path" value="aHR0cDovLzov">', $content);
+        $this->assertStringContainsString('<label for="username">translated(contao_default:MSC.username)</label>', $content);
+        $this->assertStringContainsString('<input type="text" name="username" id="username" class="text" value="" autocapitalize="off" autocomplete="username" required>', $content);
+        $this->assertStringContainsString('<label for="password">translated(contao_default:MSC.password.0)</label>', $content);
+        $this->assertStringContainsString('<input type="password" name="password" id="password" class="text password" value="" autocomplete="current-password" required>', $content);
+        $this->assertStringContainsString('<button type="submit" class="submit">MSC.login</button>', $content);
+        $this->assertStringContainsString('<button type="button" class="passkey-login" data-passkey-button>translated(contao_default:MSC.passkeyLogin)</button>', $content);
 
-        $this->assertFalse(str_contains($content, 'translated(contao_default:MSC.lostPassword)'));
-        $this->assertFalse(str_contains($content, '<p class="login_info">'));
+        $this->assertStringNotContainsString('translated(contao_default:MSC.lostPassword)', $content);
+        $this->assertStringNotContainsString('<p class="login_info">', $content);
     }
 
     public function testUsesRedirectBackTargetPath(): void
@@ -131,7 +131,7 @@ class LoginControllerTest extends ContentElementTestCase
 
         $content = $response->getContent();
 
-        $this->assertTrue(str_contains($content, '<input type="hidden" name="_target_path" value="'.base64_encode('redirect_back').'">'));
+        $this->assertStringContainsString('<input type="hidden" name="_target_path" value="'.base64_encode('redirect_back').'">', $content);
     }
 
     public function testUsesRedirectPageTargetPath(): void
@@ -177,7 +177,7 @@ class LoginControllerTest extends ContentElementTestCase
 
         $content = $response->getContent();
 
-        $this->assertTrue(str_contains($content, '<input type="hidden" name="_target_path" value="'.base64_encode('https://example.com/foobar').'">'));
+        $this->assertStringContainsString('<input type="hidden" name="_target_path" value="'.base64_encode('https://example.com/foobar').'">', $content);
     }
 
     public function testUsesRedirectBackTargetPathFromPostRequest(): void
@@ -209,7 +209,7 @@ class LoginControllerTest extends ContentElementTestCase
 
         $content = $response->getContent();
 
-        $this->assertTrue(str_contains($content, '<input type="hidden" name="_target_path" value="'.base64_encode('post_target_path').'">'));
+        $this->assertStringContainsString('<input type="hidden" name="_target_path" value="'.base64_encode('post_target_path').'">', $content);
     }
 
     public function testUsesRedirectBackFromReferer(): void
@@ -242,7 +242,7 @@ class LoginControllerTest extends ContentElementTestCase
 
         $content = $response->getContent();
 
-        $this->assertTrue(str_contains($content, '<input type="hidden" name="_target_path" value="'.base64_encode('https://request-referrer-test.com/foobar').'">'));
+        $this->assertStringContainsString('<input type="hidden" name="_target_path" value="'.base64_encode('https://request-referrer-test.com/foobar').'">', $content);
     }
 
     public function testDoesNotUseRedirectBackFromRefererFromDifferentDomain(): void
@@ -275,7 +275,7 @@ class LoginControllerTest extends ContentElementTestCase
 
         $content = $response->getContent();
 
-        $this->assertTrue(str_contains($content, '<input type="hidden" name="_target_path" value="'.base64_encode('https://request-referrer-test.com/login').'">'));
+        $this->assertStringContainsString('<input type="hidden" name="_target_path" value="'.base64_encode('https://request-referrer-test.com/login').'">', $content);
     }
 
     public function testShowsPasswordResetLink(): void
@@ -321,7 +321,7 @@ class LoginControllerTest extends ContentElementTestCase
 
         $content = $response->getContent();
 
-        $this->assertTrue(str_contains($content, '<a href="https://example.com/pw-reset">translated(contao_default:MSC.lostPassword)</a>'));
+        $this->assertStringContainsString('<a href="https://example.com/pw-reset">translated(contao_default:MSC.lostPassword)</a>', $content);
     }
 
     #[DataProvider('getAuthenticationExceptions')]
@@ -365,7 +365,7 @@ class LoginControllerTest extends ContentElementTestCase
 
         $content = $response->getContent();
 
-        $this->assertTrue(str_contains($content, '<p class="error">'.$message.'</p>'));
+        $this->assertStringContainsString('<p class="error">'.$message.'</p>', $content);
         $this->assertSame($exception, $request->attributes->get(SecurityRequestAttributes::AUTHENTICATION_ERROR));
         $this->assertSame('foobar', $request->attributes->get(SecurityRequestAttributes::LAST_USERNAME));
     }
@@ -396,12 +396,12 @@ class LoginControllerTest extends ContentElementTestCase
 
         $content = $response->getContent();
 
-        $this->assertTrue(str_contains($content, '<div class="content-login logout">'));
-        $this->assertTrue(str_contains($content, '<form action id="tl_logout_" method="post">'));
-        $this->assertTrue(str_contains($content, '<input type="hidden" name="FORM_SUBMIT" value="tl_logout_">'));
-        $this->assertTrue(str_contains($content, '<input type="hidden" name="_target_path" value="http://:/">'));
-        $this->assertTrue(str_contains($content, '<p class="login_info">translated(contao_default:MSC.loggedInAs[])<br>January 1, 2032 01:01</p>'));
-        $this->assertTrue(str_contains($content, '<button type="submit" class="submit">MSC.logout</button>'));
+        $this->assertStringContainsString('<div class="content-login logout">', $content);
+        $this->assertStringContainsString('<form action id="tl_logout_" method="post">', $content);
+        $this->assertStringContainsString('<input type="hidden" name="FORM_SUBMIT" value="tl_logout_">', $content);
+        $this->assertStringContainsString('<input type="hidden" name="_target_path" value="http://:/">', $content);
+        $this->assertStringContainsString('<p class="login_info">translated(contao_default:MSC.loggedInAs[])<br>translated(contao_default:MSC.lastLogin.1[])</p>', $content);
+        $this->assertStringContainsString('<button type="submit" class="submit">MSC.logout</button>', $content);
     }
 
     public function testShowsTwoFactorCodeFormIfTowFactorInProgress(): void
@@ -423,10 +423,10 @@ class LoginControllerTest extends ContentElementTestCase
 
         $content = $response->getContent();
 
-        $this->assertTrue(str_contains($content, '<h3>translated(contao_default:MSC.twoFactorAuthentication)</h3>'));
-        $this->assertTrue(str_contains($content, '<label for="verify">translated(contao_default:MSC.twoFactorVerification)</label>'));
-        $this->assertTrue(str_contains($content, '<input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="one-time-code" required>'));
-        $this->assertTrue(str_contains($content, '<button type="submit" class="submit">MSC.continue</button>'));
+        $this->assertStringContainsString('<h3>translated(contao_default:MSC.twoFactorAuthentication)</h3>', $content);
+        $this->assertStringContainsString('<label for="verify">translated(contao_default:MSC.twoFactorVerification)</label>', $content);
+        $this->assertStringContainsString('<input type="text" name="verify" id="verify" class="text" value="" autocapitalize="off" autocomplete="one-time-code" required>', $content);
+        $this->assertStringContainsString('<button type="submit" class="submit">MSC.continue</button>', $content);
     }
 
     public function testUsesRedirectBackTargetPathForLogout(): void
@@ -460,12 +460,12 @@ class LoginControllerTest extends ContentElementTestCase
 
         $content = $response->getContent();
 
-        $this->assertTrue(str_contains($content, '<div class="content-login logout">'));
-        $this->assertTrue(str_contains($content, '<form action id="tl_logout_" method="post">'));
-        $this->assertTrue(str_contains($content, '<input type="hidden" name="FORM_SUBMIT" value="tl_logout_">'));
-        $this->assertTrue(str_contains($content, '<input type="hidden" name="_target_path" value="redirect_back">'));
-        $this->assertTrue(str_contains($content, '<p class="login_info">translated(contao_default:MSC.loggedInAs[])<br>January 1, 2032 01:01</p>'));
-        $this->assertTrue(str_contains($content, '<button type="submit" class="submit">MSC.logout</button>'));
+        $this->assertStringContainsString('<div class="content-login logout">', $content);
+        $this->assertStringContainsString('<form action id="tl_logout_" method="post">', $content);
+        $this->assertStringContainsString('<input type="hidden" name="FORM_SUBMIT" value="tl_logout_">', $content);
+        $this->assertStringContainsString('<input type="hidden" name="_target_path" value="redirect_back">', $content);
+        $this->assertStringContainsString('<p class="login_info">translated(contao_default:MSC.loggedInAs[])<br>translated(contao_default:MSC.lastLogin.1[])</p>', $content);
+        $this->assertStringContainsString('<button type="submit" class="submit">MSC.logout</button>', $content);
     }
 
     public function testUsesHomepageTargetPathForLogoutIfPageIsProtected(): void
@@ -494,12 +494,12 @@ class LoginControllerTest extends ContentElementTestCase
 
         $content = $response->getContent();
 
-        $this->assertTrue(str_contains($content, '<div class="content-login logout">'));
-        $this->assertTrue(str_contains($content, '<form action id="tl_logout_" method="post">'));
-        $this->assertTrue(str_contains($content, '<input type="hidden" name="FORM_SUBMIT" value="tl_logout_">'));
-        $this->assertTrue(str_contains($content, '<input type="hidden" name="_target_path" value="https://protected-target-path-test.com/">'));
-        $this->assertTrue(str_contains($content, '<p class="login_info">translated(contao_default:MSC.loggedInAs[])<br>January 1, 2032 01:01</p>'));
-        $this->assertTrue(str_contains($content, '<button type="submit" class="submit">MSC.logout</button>'));
+        $this->assertStringContainsString('<div class="content-login logout">', $content);
+        $this->assertStringContainsString('<form action id="tl_logout_" method="post">', $content);
+        $this->assertStringContainsString('<input type="hidden" name="FORM_SUBMIT" value="tl_logout_">', $content);
+        $this->assertStringContainsString('<input type="hidden" name="_target_path" value="https://protected-target-path-test.com/">', $content);
+        $this->assertStringContainsString('<p class="login_info">translated(contao_default:MSC.loggedInAs[])<br>translated(contao_default:MSC.lastLogin.1[])</p>', $content);
+        $this->assertStringContainsString('<button type="submit" class="submit">MSC.logout</button>', $content);
     }
 
     public function testShowsAuthenticateRemembered(): void
@@ -525,14 +525,14 @@ class LoginControllerTest extends ContentElementTestCase
 
         $content = $response->getContent();
 
-        $this->assertTrue(str_contains($content, '<div class="content-login login">'));
-        $this->assertTrue(str_contains($content, '<form action id="tl_login_" method="post">'));
-        $this->assertTrue(str_contains($content, '<input type="hidden" name="FORM_SUBMIT" value="tl_login_">'));
-        $this->assertTrue(str_contains($content, '<input type="hidden" name="_target_path" value="aHR0cDovLzov">'));
-        $this->assertTrue(str_contains($content, '<p class="login_info">translated(contao_default:MSC.loggedInAs[])<br>translated(contao_default:MSC.reauthenticate)</p>'));
-        $this->assertTrue(str_contains($content, '<label for="password">translated(contao_default:MSC.password.0)</label>'));
-        $this->assertTrue(str_contains($content, '<input type="password" name="password" id="password" class="text password" value="" autocomplete="current-password" required>'));
-        $this->assertTrue(str_contains($content, '<button type="submit" class="submit">MSC.verify</button>'));
+        $this->assertStringContainsString('<div class="content-login login" data-passkey-login data-passkey-config="{&quot;unsupported&quot;:&quot;translated(contao_default:ERR.passkeysUnsupported)&quot;,&quot;assertionFailure&quot;:&quot;translated(contao_default:ERR.passkeyAssertionFailure)&quot;,&quot;optionsUrl&quot;:&quot;&quot;,&quot;resultUrl&quot;:&quot;&quot;,&quot;requestTokenScript&quot;:&quot;&quot;,&quot;redirect&quot;:&quot;http:\/\/:\/&quot;}">', $content);
+        $this->assertStringContainsString('<form action id="tl_login_" method="post">', $content);
+        $this->assertStringContainsString('<input type="hidden" name="FORM_SUBMIT" value="tl_login_">', $content);
+        $this->assertStringContainsString('<input type="hidden" name="_target_path" value="aHR0cDovLzov">', $content);
+        $this->assertStringContainsString('<p class="login_info">translated(contao_default:MSC.loggedInAs[])<br>translated(contao_default:MSC.reauthenticate)</p>', $content);
+        $this->assertStringContainsString('<label for="password">translated(contao_default:MSC.password.0)</label>', $content);
+        $this->assertStringContainsString('<input type="password" name="password" id="password" class="text password" value="" autocomplete="current-password" required>', $content);
+        $this->assertStringContainsString('<button type="submit" class="submit">MSC.verify</button>', $content);
     }
 
     protected function getEnvironment(ContaoFilesystemLoader $contaoFilesystemLoader, ContaoFramework $framework): Environment

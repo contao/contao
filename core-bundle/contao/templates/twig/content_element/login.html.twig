@@ -12,8 +12,8 @@
 
 {% set attributes = attrs()
     .addClass(logout|default ? 'logout' : 'login')
-    .set('data-passkey-login')
-    .set('data-passkey-config', passkeyConfig|json_encode)
+    .set('data-passkey-login', not logout|default)
+    .set('data-passkey-config', passkeyConfig|json_encode, not logout|default)
     .mergeWith(attributes|default)
 %}
 
@@ -37,7 +37,7 @@
                 <input type="hidden" name="autologin" value="{{ autologin|default ? '1' }}">
             {% endif %}
             {% if logout|default %}
-                <p class="login_info">{{ 'MSC.loggedInAs'|trans([app.user.userIdentifier]) }}{% if app.user.lastLogin %}<br>{{ app.user.lastLogin|date(contao.datim_format) }}{% endif %}</p>
+                <p class="login_info">{{ 'MSC.loggedInAs'|trans([app.user.userIdentifier]) }}{% if app.user.lastLogin %}<br>{{ 'MSC.lastLogin.1'|trans([app.user.lastLogin|date(contao.datim_format)]) }}{% endif %}</p>
             {% elseif twoFactorEnabled|default %}
                 <h3>{{ 'MSC.twoFactorAuthentication'|trans }}</h3>
                 <div class="widget widget-text">
@@ -90,7 +90,7 @@
 {% endblock %}
 
 {% block script %}
-    {% if not as_editor_view %}
+    {% if not as_editor_view and not logout|default %}
         {% add "passkey_login" to body %}
             <script src="{{ asset('passkey_login.js', 'contao_core') }}"></script>
         {% endadd %}

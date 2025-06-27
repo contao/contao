@@ -9,7 +9,7 @@ const init = (element) => {
 
     initialized.set(element, true);
 
-    const button = element.querySelector('[data-passkey-button]')
+    const button = element.querySelector('[data-passkey-button]');
     const elemError = document.querySelector('[data-passkey-error]');
 
     if (!button || !elemError || !element.dataset.passkeyConfig) {
@@ -29,7 +29,7 @@ const init = (element) => {
 
         const resp = await fetch(config.optionsUrl, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({}),
         });
 
@@ -59,7 +59,7 @@ const init = (element) => {
 
         const verificationResp = await fetch(config.resultUrl, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(attResp),
         });
 
@@ -77,24 +77,28 @@ const init = (element) => {
 
 const selector = '[data-passkey-login]';
 
-new MutationObserver(function (mutationsList) {
+new MutationObserver((mutationsList) => {
     for (const mutation of mutationsList) {
         if (mutation.type === 'childList') {
-            mutation.addedNodes.forEach(function (element) {
-                if (element.matches && element.matches(selector)) {
-                    init(element);
+            for (const node of mutation.addedNodes) {
+                if (node.matches?.(selector)) {
+                    init(node);
                 }
 
-                if (element.querySelectorAll) {
-                    element.querySelectorAll(selector).forEach(element => init(element));
+                if (node.querySelectorAll) {
+                    for (const element of node.querySelectorAll(selector)) {
+                        init(element);
+                    }
                 }
-            })
+            }
         }
     }
 }).observe(document, {
     attributes: false,
     childList: true,
-    subtree: true
+    subtree: true,
 });
 
-document.querySelectorAll(selector).forEach(element => init(element));
+for (const element of document.querySelectorAll(selector)) {
+    init(element);
+}

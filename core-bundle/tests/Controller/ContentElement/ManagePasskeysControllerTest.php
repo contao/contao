@@ -136,8 +136,8 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
 
         $content = $response->getContent();
 
-        $this->assertStringContainsString('<div class="content-manage-passkeys">', $content);
-        $this->assertStringContainsString('<button type="button" class="create">translated(contao_default:MSC.addPasskey)</button>', $content);
+        $this->assertStringContainsString('<div class="content-manage-passkeys" data-passkey-create data-passkey-config="{&quot;unsupported&quot;:&quot;translated(contao_default:ERR.passkeysUnsupported)&quot;,&quot;attestationFailure&quot;:&quot;translated(contao_default:ERR.passkeyAttestationFailure)&quot;,&quot;requestUrl&quot;:&quot;&quot;,&quot;responseUrl&quot;:&quot;&quot;,&quot;redirect&quot;:&quot;&quot;}">', $content);
+        $this->assertStringContainsString('<button type="button" class="create" data-passkey-button>translated(contao_default:MSC.addPasskey)</button>', $content);
         $this->assertStringNotContainsString('<ul>', $content);
     }
 
