@@ -63,8 +63,8 @@
 
 {% block script %}
     {% if not as_editor_view %}
-        {% add "passkey_create" to body %}
-            <script src="{{ asset('passkey_create.js', 'contao_core') }}"></script>
+        {% add "passkey_create" to head %}
+            <script src="{{ asset('passkey_create.js', 'contao_core') }}" async></script>
         {% endadd %}
     {% endif %}
 {% endblock %}
