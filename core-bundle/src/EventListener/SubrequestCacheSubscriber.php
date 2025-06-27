@@ -51,6 +51,9 @@ class SubrequestCacheSubscriber implements EventSubscriberInterface, ResetInterf
      */
     private array $strategyStack = [];
 
+    /**
+     * @internal
+     */
     public function addToCurrentStrategy(Response $response): void
     {
         $this->currentStrategy?->add($response);
