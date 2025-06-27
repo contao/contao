@@ -19,8 +19,8 @@ class ContaoVariable
         private readonly RequestStack $requestStack,
         private readonly TokenChecker $tokenChecker,
         private readonly ContaoCsrfTokenManager $tokenManager,
-        private readonly ContaoFramework $framework,
         private readonly Security $security,
+        private readonly ContaoFramework $framework,
     ) {
     }
 
@@ -50,9 +50,37 @@ class ContaoVariable
         return $this->tokenManager->getDefaultTokenValue();
     }
 
-    public function getDatim_format(): string|null
+    public function getDatim_format(): string
     {
-        return $this->getPage()?->datimFormat ?: $this->framework->getAdapter(Config::class)->get('datimFormat');
+        if ($pageFormat = $this->getPage()?->datimFormat) {
+            return $pageFormat;
+        }
+
+        $this->framework->initialize();
+
+        return $this->framework->getAdapter(Config::class)->get('datimFormat') ?? 'Y-m-d H:i';
+    }
+
+    public function getDate_format(): string
+    {
+        if ($pageFormat = $this->getPage()?->dateFormat) {
+            return $pageFormat;
+        }
+
+        $this->framework->initialize();
+
+        return $this->framework->getAdapter(Config::class)->get('dateFormat') ?? 'Y-m-d';
+    }
+
+    public function getTime_format(): string
+    {
+        if ($pageFormat = $this->getPage()?->timeFormat) {
+            return $pageFormat;
+        }
+
+        $this->framework->initialize();
+
+        return $this->framework->getAdapter(Config::class)->get('timeFormat') ?? 'H:i';
     }
 
     public function backend_user(): BackendUser|null

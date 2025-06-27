@@ -19,6 +19,7 @@ use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\PageModel;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -43,17 +44,18 @@ class ContaoVariableTest extends TestCase
             $requestStack,
             $this->createMock(TokenChecker::class),
             $this->createMock(ContaoCsrfTokenManager::class),
-            $this->createMock(ContaoFramework::class),
             $this->createMock(Security::class),
+            $this->createMock(ContaoFramework::class),
         );
 
         $this->assertSame($page, $contaoVariable->getPage());
     }
 
-    public function testReturnsPageDatimFormat(): void
+    #[DataProvider('getDateFormats')]
+    public function testReturnsPageDatimFormat(string $variable, string $format, string $function): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class, ['datimFormat']);
-        $page->datimFormat = 'j. M Y, H:i';
+        $page = $this->mockClassWithProperties(PageModel::class, [$variable]);
+        $page->{$variable} = $format;
 
         $request = new Request();
         $request->attributes->set('pageModel', $page);
@@ -65,21 +67,28 @@ class ContaoVariableTest extends TestCase
             ->willReturn($request)
         ;
 
+        $contaoFramework = $this->mockContaoFramework();
+        $contaoFramework
+            ->expects($this->never())
+            ->method('initialize')
+        ;
+
         $contaoVariable = new ContaoVariable(
             $requestStack,
             $this->createMock(TokenChecker::class),
             $this->createMock(ContaoCsrfTokenManager::class),
-            $this->createMock(ContaoFramework::class),
             $this->createMock(Security::class),
+            $contaoFramework,
         );
 
-        $this->assertSame('j. M Y, H:i', $contaoVariable->getDatim_format());
+        $this->assertSame($format, $contaoVariable->{$function}());
     }
 
-    public function testReturnsGlobalDatimFormat(): void
+    #[DataProvider('getDateFormats')]
+    public function testReturnsGlobalDatimFormat(string $variable, string $format, string $function): void
     {
-        $page = $this->mockClassWithProperties(PageModel::class, ['datimFormat']);
-        $page->datimFormat = '';
+        $page = $this->mockClassWithProperties(PageModel::class, [$variable]);
+        $page->{$variable} = '';
 
         $request = new Request();
         $request->attributes->set('pageModel', $page);
@@ -95,20 +104,31 @@ class ContaoVariableTest extends TestCase
         $config
             ->expects($this->once())
             ->method('get')
-            ->with('datimFormat')
-            ->willReturn('Y-m-d H:i')
+            ->with($variable)
+            ->willReturn($format)
         ;
 
         $contaoFramework = $this->mockContaoFramework([Config::class => $config]);
+        $contaoFramework
+            ->expects($this->once())
+            ->method('initialize')
+        ;
 
         $contaoVariable = new ContaoVariable(
             $requestStack,
             $this->createMock(TokenChecker::class),
             $this->createMock(ContaoCsrfTokenManager::class),
-            $contaoFramework,
             $this->createMock(Security::class),
+            $contaoFramework,
         );
 
-        $this->assertSame('Y-m-d H:i', $contaoVariable->getDatim_format());
+        $this->assertSame($format, $contaoVariable->{$function}());
+    }
+
+    public static function getDateFormats(): iterable
+    {
+        yield ['datimFormat', 'j. M Y, H:i', 'getDatim_format'];
+        yield ['dateFormat', 'j. M Y', 'getDate_format'];
+        yield ['timeFormat', 'G:i', 'getTime_format'];
     }
 }

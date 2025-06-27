@@ -1342,6 +1342,7 @@ services:
             - '@contao.csrf.token_manager'
             - '@contao.framework'
             - '@security.helper'
+            - '@contao.framework'
 
     contao.twig.highlighter_runtime:
         class: Contao\CoreBundle\Twig\Runtime\HighlighterRuntime

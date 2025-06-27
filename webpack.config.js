@@ -9,7 +9,15 @@ Encore
     .disableSingleRuntimeChunk()
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
-    .enablePostCssLoader()
+    .enablePostCssLoader((options) => {
+        options.postcssOptions = {
+            plugins: {
+                'postcss-preset-env': {
+                    stage: 2,
+                }
+            }
+        };
+    })
     .addEntry('backend', './core-bundle/assets/backend.js')
     .addEntry('SimpleWebAuthnBrowser', './core-bundle/assets/SimpleWebAuthnBrowser.js')
 ;
@@ -26,21 +34,22 @@ Encore
     .disableSingleRuntimeChunk()
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
+    .enablePostCssLoader()
     .configureCssLoader(config => {
         config.url = false;
     })
     .cleanupOutputBeforeBuild(config => {
         config.keep = /(fonts|icons|styles)\//;
     })
-    .addStyleEntry('backend', './core-bundle/contao/themes/flexible/styles/main.css')
-    .addStyleEntry('confirm', './core-bundle/contao/themes/flexible/styles/confirm.css')
-    .addStyleEntry('conflict', './core-bundle/contao/themes/flexible/styles/conflict.css')
-    .addStyleEntry('diff', './core-bundle/contao/themes/flexible/styles/diff.css')
-    .addStyleEntry('help', './core-bundle/contao/themes/flexible/styles/help.css')
-    .addStyleEntry('login', './core-bundle/contao/themes/flexible/styles/login.css')
-    .addStyleEntry('popup', './core-bundle/contao/themes/flexible/styles/popup.css')
-    .addStyleEntry('tinymce', './core-bundle/contao/themes/flexible/styles/tinymce.css')
-    .addStyleEntry('tinymce-dark', './core-bundle/contao/themes/flexible/styles/tinymce-dark.css')
+    .addStyleEntry('backend', './core-bundle/contao/themes/flexible/styles/main.pcss')
+    .addStyleEntry('confirm', './core-bundle/contao/themes/flexible/styles/pages/confirm.pcss')
+    .addStyleEntry('conflict', './core-bundle/contao/themes/flexible/styles/pages/conflict.pcss')
+    .addStyleEntry('diff', './core-bundle/contao/themes/flexible/styles/pages/diff.pcss')
+    .addStyleEntry('help', './core-bundle/contao/themes/flexible/styles/pages/help.pcss')
+    .addStyleEntry('login', './core-bundle/contao/themes/flexible/styles/pages/login.pcss')
+    .addStyleEntry('popup', './core-bundle/contao/themes/flexible/styles/pages/popup.pcss')
+    .addStyleEntry('tinymce', './core-bundle/contao/themes/flexible/styles/vendors/tinymce/theme/light.pcss')
+    .addStyleEntry('tinymce-dark', './core-bundle/contao/themes/flexible/styles/vendors/tinymce/theme/dark.pcss')
 ;
 
 const themeConfig = Encore.getWebpackConfig();

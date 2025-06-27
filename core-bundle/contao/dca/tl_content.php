@@ -16,6 +16,7 @@ use Contao\ContentTable;
 use Contao\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
@@ -1033,8 +1034,16 @@ class tl_content extends Backend
 			$class .= ' empty';
 		}
 
+		$dragHandle = '';
+
+		if (!Input::get('act') && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_content', new UpdateAction('tl_content', $arrRow)))
+		{
+			$labelCut = $GLOBALS['TL_LANG']['tl_content']['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
+			$dragHandle = '<button type="button" class="drag-handle" data-action="keydown->contao--sortable#move">' . Image::getHtml('drag.svg', sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $arrRow['id'])) . '</button>';
+		}
+
 		return '
-<div class="cte_type ' . $key . '">' . $type . '</div>
+<div class="cte_type ' . $key . '">' . $dragHandle . $type . '</div>
 <div class="' . $class . '">' . $preview . '</div>';
 	}
 
