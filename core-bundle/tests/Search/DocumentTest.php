@@ -22,6 +22,40 @@ use Symfony\Component\HttpFoundation\Response;
 
 class DocumentTest extends TestCase
 {
+    public function testSerializeAndUnserialize(): void
+    {
+        $html = file_get_contents(__DIR__.'/../Fixtures/Functional/Search/site.html');
+        $request = Request::create('https://example.com/foo?bar=baz');
+        $response = new Response($html, 200, ['content-type' => ['text/html']]);
+        $document = Document::createFromRequestResponse($request, $response);
+
+        $this->assertSame('https://example.com/foo?bar=baz', (string) $document->getUri());
+        $this->assertSame(200, $document->getStatusCode());
+        $this->assertArrayHasKey('content-type', $document->getHeaders());
+        $this->assertSame($html, $document->getBody());
+
+        $serialized = serialize($document);
+
+        // Assert compression
+        $this->assertTrue(\strlen($serialized) < \strlen($html));
+
+        $document = unserialize($serialized);
+
+        $this->assertSame('https://example.com/foo?bar=baz', (string) $document->getUri());
+        $this->assertSame(200, $document->getStatusCode());
+        $this->assertArrayHasKey('content-type', $document->getHeaders());
+        $this->assertSame($html, $document->getBody());
+
+        // Test BC
+        $legacy = base64_decode('TzozMzoiQ29udGFvXENvcmVCdW5kbGVcU2VhcmNoXERvY3VtZW50Ijo0OntzOjM6InVyaSI7TzoxNToiTnlob2xtXFBzcjdcVXJpIjo3OntzOjIzOiIATnlob2xtXFBzcjdcVXJpAHNjaGVtZSI7czo1OiJodHRwcyI7czoyNToiAE55aG9sbVxQc3I3XFVyaQB1c2VySW5mbyI7czowOiIiO3M6MjE6IgBOeWhvbG1cUHNyN1xVcmkAaG9zdCI7czoxMToiZXhhbXBsZS5jb20iO3M6MjE6IgBOeWhvbG1cUHNyN1xVcmkAcG9ydCI7TjtzOjIxOiIATnlob2xtXFBzcjdcVXJpAHBhdGgiO3M6NDoiL2ZvbyI7czoyMjoiAE55aG9sbVxQc3I3XFVyaQBxdWVyeSI7czo3OiJiYXI9YmF6IjtzOjI1OiIATnlob2xtXFBzcjdcVXJpAGZyYWdtZW50IjtzOjA6IiI7fXM6MTA6InN0YXR1c0NvZGUiO2k6MjAwO3M6NzoiaGVhZGVycyI7YTozOntzOjEyOiJjb250ZW50LXR5cGUiO2E6MTp7aTowO3M6OToidGV4dC9odG1sIjt9czoxMzoiY2FjaGUtY29udHJvbCI7YToxOntpOjA7czoxNzoibm8tY2FjaGUsIHByaXZhdGUiO31zOjQ6ImRhdGUiO2E6MTp7aTowO3M6Mjk6IlRodSwgMjYgSnVuIDIwMjUgMTM6MzI6MTMgR01UIjt9fXM6NDoiYm9keSI7czo2OiI8aHRtbD4iO30', true);
+        $document = unserialize($legacy);
+
+        $this->assertSame('https://example.com/foo?bar=baz', (string) $document->getUri());
+        $this->assertSame(200, $document->getStatusCode());
+        $this->assertArrayHasKey('content-type', $document->getHeaders());
+        $this->assertSame('<html>', $document->getBody());
+    }
+
     #[DataProvider('searchableContentProvider')]
     public function testSearchableContent(string $fixture, string $expectedResult, bool $allowProtected = false): void
     {
