@@ -67,12 +67,18 @@ class ContaoVariableTest extends TestCase
             ->willReturn($request)
         ;
 
+        $contaoFramework = $this->mockContaoFramework();
+        $contaoFramework
+            ->expects($this->never())
+            ->method('initialize')
+        ;
+
         $contaoVariable = new ContaoVariable(
             $requestStack,
             $this->createMock(TokenChecker::class),
             $this->createMock(ContaoCsrfTokenManager::class),
             $this->createMock(Security::class),
-            $this->createMock(ContaoFramework::class),
+            $contaoFramework,
         );
 
         $this->assertSame($format, $contaoVariable->{$function}());
@@ -103,6 +109,10 @@ class ContaoVariableTest extends TestCase
         ;
 
         $contaoFramework = $this->mockContaoFramework([Config::class => $config]);
+        $contaoFramework
+            ->expects($this->once())
+            ->method('initialize')
+        ;
 
         $contaoVariable = new ContaoVariable(
             $requestStack,
