@@ -81,7 +81,7 @@ class ManagePasskeysController extends AbstractContentElementController
 
         $template->credentials = $this->credentialRepo->getAllForUser($user);
         $template->edit_passkey_id ??= $request->query->get('edit_passkey');
-        $template->success_redirect = $this->uriSigner->sign($this->generateContentUrl($page, ['edit_new_passkey' => 1], UrlGeneratorInterface::ABSOLUTE_URL));
+        $template->redirect = $this->uriSigner->sign($this->generateContentUrl($page, ['edit_new_passkey' => 1], UrlGeneratorInterface::ABSOLUTE_URL));
 
         return $template->getResponse();
     }

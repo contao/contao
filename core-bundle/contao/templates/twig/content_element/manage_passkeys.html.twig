@@ -2,6 +2,20 @@
 {% use "@Contao/component/_list.html.twig" %}
 {% trans_default_domain "contao_default" %}
 
+{% set passkeyConfig = {
+    unsupported: 'ERR.passkeysUnsupported'|trans,
+    attestationFailure: 'ERR.passkeyAttestationFailure'|trans,
+    requestUrl: path('webauthn.controller.creation.request.contao_frontend_add_authenticator'),
+    responseUrl: path('webauthn.controller.creation.response.contao_frontend_add_authenticator'),
+    redirect: redirect|default|raw,
+} %}
+
+{% set attributes = attrs()
+    .set('data-passkey-create')
+    .set('data-passkey-config', passkeyConfig|json_encode)
+    .mergeWith(attributes|default)
+%}
+
 {% block content %}
     {% block passkey_list %}
         {% if credentials|default %}
@@ -10,13 +24,8 @@
     {% endblock %}
 
     {% block passkey_add %}
-        {% set button_attributes = attrs()
-            .set('type', 'button')
-            .addClass('create')
-            .mergeWith(dialog_attributes|default)
-        %}
-        <button{{ button_attributes }}>{{ 'MSC.addPasskey'|trans }}</button>
-        <p class="error"></p>
+        <button type="button" class="create" data-passkey-button>{{ 'MSC.addPasskey'|trans }}</button>
+        <p class="error" data-passkey-error></p>
     {% endblock %}
 {% endblock %}
 
@@ -54,87 +63,8 @@
 
 {% block script %}
     {% if not as_editor_view %}
-        {% add "SimpleWebAuthnBrowser" to body %}
-            <script src="{{ asset('SimpleWebAuthnBrowser.js', 'contao_core') }}"></script>
-        {% endadd %}
-
-        {%  add "passkey_js" to body %}
-            {% set script_attributes = attrs()
-                .setIfExists('nonce', csp_nonce('script-src'))
-                .mergeWith(script_attributes|default)
-            %}
-            <script{{ script_attributes }}>
-                (function () {
-                    const { startRegistration, browserSupportsWebAuthn } = SimpleWebAuthnBrowser;
-
-                    document.querySelectorAll('.content-{{ type|replace({'_': '-'}) }}').forEach((element) => {
-                        const button = element.querySelector('.create')
-                        const elemError = document.querySelector('.error');
-
-                        button.addEventListener('click', async () => {
-                            elemError.innerHTML = '';
-
-                            if (!browserSupportsWebAuthn()) {
-                                elemError.innerHTML = '{{ 'ERR.passkeysUnsupported'|trans }}';
-
-                                return;
-                            }
-
-                            const resp = await fetch('{{ path('webauthn.controller.creation.request.contao_frontend_add_authenticator') }}', {
-                                method: 'POST',
-                                headers: {'Content-Type': 'application/json'},
-                                body: JSON.stringify({}),
-                            });
-
-                            const optionsJSON = await resp.json();
-
-                            if ('error' === optionsJSON.status) {
-                                elemError.innerText = '{{ 'ERR.passkeyAttestationFailure'|trans }}';
-
-                                return;
-                            }
-
-                            let attResp;
-
-                            try {
-                                attResp = await startRegistration({ optionsJSON });
-                            } catch (error) {
-                                if (error.name === 'InvalidStateError') {
-                                    elemError.innerText = '{{ 'ERR.passkeyInvalidStateError'|trans }}';
-                                } else {
-                                    elemError.innerText = error;
-                                }
-
-                                throw error;
-                            }
-
-                            const verificationResp = await fetch('{{ path('webauthn.controller.creation.response.contao_frontend_add_authenticator') }}', {
-                                method: 'POST',
-                                headers: {'Content-Type': 'application/json'},
-                                body: JSON.stringify(attResp),
-                            });
-
-                            const verificationJSON = await verificationResp.json();
-
-                            if ('error' === optionsJSON.status) {
-                                elemError.innerText = '{{ 'ERR.passkeyAttestationFailure'|trans }}';
-
-                                return;
-                            }
-
-                            window.location = '{{ success_redirect|raw }}';
-                        });
-
-                        // Set focus on name input, if available
-                        const edit = element.querySelector('input[name="passkey_name"]');
-
-                        if (edit) {
-                            edit.focus();
-                            edit.select();
-                        }
-                    });
-                })();
-            </script>
+        {% add "passkey_create" to body %}
+            <script src="{{ asset('passkey_create.js', 'contao_core') }}"></script>
         {% endadd %}
     {% endif %}
 {% endblock %}

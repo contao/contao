@@ -7,7 +7,7 @@
     optionsUrl: path('webauthn.controller.security.contao_frontend.request.options'),
     resultUrl: path('webauthn.controller.security.contao_frontend.request.result'),
     requestTokenScript: path('contao_frontend_request_token_script'),
-    redirect: redirect|default,
+    redirect: redirect|default|raw,
 } %}
 
 {% set attributes = attrs()
