@@ -223,7 +223,7 @@ abstract class ModuleNews extends Module
 				$objTemplate->primaryImage = System::getContainer()->get('contao.image.studio')
 					->createFigureBuilder()
 					->from($objArticle->singleSRC)
-					->setSize($primaryImageSize ?? [0, 0, 0])
+					->setSize('' !== ($primaryImageSize[2] ?? '') ? $primaryImageSize : [0, 0, 0])
 					->build();
 			}
 		}

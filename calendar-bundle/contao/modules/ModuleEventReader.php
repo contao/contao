@@ -330,7 +330,7 @@ class ModuleEventReader extends Events
 			$objTemplate->primaryImage = System::getContainer()->get('contao.image.studio')
 				->createFigureBuilder()
 				->from($objEvent->singleSRC)
-				->setSize($primaryImageSize ?? [0, 0, 0])
+				->setSize('' !== ($primaryImageSize[2] ?? '') ? $primaryImageSize : [0, 0, 0])
 				->buildIfResourceExists();
 		}
 
