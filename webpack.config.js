@@ -18,7 +18,7 @@ Encore
             }
         };
     })
-    .addEntry('backend', './core-bundle/assets/backend.js')
+    .addEntry('contao-backend', './core-bundle/assets/backend.js')
     .configureDevServerOptions((options) => Object.assign({}, options, {
         static: false,
         hot: true,
