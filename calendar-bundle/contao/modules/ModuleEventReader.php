@@ -321,6 +321,17 @@ class ModuleEventReader extends Events
 				->buildIfResourceExists();
 
 			$figure?->applyLegacyTemplateData($objTemplate, null, $objEvent->floating);
+
+			if (($layoutId = $objPage->layout) && ($layout = LayoutModel::findById($layoutId)))
+			{
+				$primaryImageSize = StringUtil::deserialize($layout->lightboxSize, true) + [0, 0, 0];
+			}
+
+			$objTemplate->primaryImage = System::getContainer()->get('contao.image.studio')
+				->createFigureBuilder()
+				->from($objEvent->singleSRC)
+				->setSize($primaryImageSize ?? [0, 0, 0])
+				->buildIfResourceExists();
 		}
 
 		$objTemplate->enclosure = array();

@@ -11,6 +11,7 @@
 namespace Contao;
 
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\LayoutModel;
 use Contao\Model\Collection;
 use Symfony\Component\Routing\Exception\ExceptionInterface;
 
@@ -213,6 +214,17 @@ abstract class ModuleNews extends Module
 				}
 
 				$figure->applyLegacyTemplateData($objTemplate, null, $objArticle->floating);
+
+				if (($layoutId = $objPage->layout) && ($layout = LayoutModel::findById($layoutId)))
+				{
+					$primaryImageSize = StringUtil::deserialize($layout->lightboxSize, true) + [0, 0, 0];
+				}
+
+				$objTemplate->primaryImage = System::getContainer()->get('contao.image.studio')
+					->createFigureBuilder()
+					->from($objArticle->singleSRC)
+					->setSize($primaryImageSize ?? [0, 0, 0])
+					->build();
 			}
 		}
 

@@ -53,10 +53,12 @@ if ($this->hasDetails) {
 
 $this->addSchemaOrg($schemaOrg);
 
-if ($this->figure) {
+if ($this->primaryImage) {
+    $this->primaryImage->getImage()->createIfDeferred();
+
     $primaryImage = [
         '@type' => 'WebPage',
-        'primaryImageOfPage' => $this->figure->getSchemaOrgData(),
+        'primaryImageOfPage' => $this->primaryImage->getSchemaOrgData(),
     ];
 
     $this->addSchemaOrg($primaryImage);
