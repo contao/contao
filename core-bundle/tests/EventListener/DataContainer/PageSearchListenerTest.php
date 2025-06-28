@@ -108,7 +108,7 @@ class PageSearchListenerTest extends TestCase
             'robots', 'index,follow', ['robots' => 'noindex,follow', 'searchIndexer' => ''], false,
         ];
 
-        yield 'Test robots (3) change to index should not purge the search entry if searchIndexer is set to blank.' => [
+        yield 'Test robots (3) change to index should not purge the search entry if searchIndexer is set to always_index.' => [
             'robots', 'index,follow', ['robots' => 'noindex,follow', 'searchIndexer' => 'always_index'], false,
         ];
 
