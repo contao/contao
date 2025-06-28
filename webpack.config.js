@@ -20,7 +20,16 @@ Encore
     })
     .addEntry('contao-backend', './core-bundle/assets/backend.js')
     .configureDevServerOptions((options) => Object.assign({}, options, {
-        static: false,
+        static: [
+            {
+                directory: 'core-bundle/contao/themes/flexible/icons',
+                publicPath: '/icons',
+            },
+            {
+                directory: 'core-bundle/contao/themes/flexible/fonts',
+                publicPath: '/fonts',
+            },
+        ],
         hot: true,
         liveReload: true,
         allowedHosts: 'all',
