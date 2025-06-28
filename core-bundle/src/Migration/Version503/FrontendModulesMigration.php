@@ -45,18 +45,11 @@ class FrontendModulesMigration extends AbstractMigration
     {
         $this->framework->initialize();
 
-        $this->connection->executeStatement('
-            ALTER TABLE
-                tl_user_group
-            ADD
-                frontendModules BLOB DEFAULT NULL
-        ');
+        $this->connection->executeStatement('ALTER TABLE tl_user_group ADD frontendModules BLOB DEFAULT NULL');
 
         $this->connection->executeStatement(
             'UPDATE tl_user_group SET frontendModules = :frontendModules',
-            [
-                'frontendModules' => serialize(array_keys(array_merge(...array_values($GLOBALS['FE_MOD'])))),
-            ],
+            ['frontendModules' => serialize(array_keys(array_merge(...array_values($GLOBALS['FE_MOD']))))],
         );
 
         return $this->createResult(true);

@@ -89,12 +89,17 @@ class DataContainerOperationsBuilder implements \Stringable
         $builder = $this->initialize($record['id'] ?? null);
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
-            return $this;
+            return $builder;
         }
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
+            if ('-' === $v) {
+                $builder->addSeparator();
+                continue;
+            }
+
             $v = \is_array($v) ? $v : [$v];
-            $operation = $this->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
+            $operation = $builder->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
 
             if ($operation) {
                 $builder->append($operation);
@@ -109,7 +114,7 @@ class DataContainerOperationsBuilder implements \Stringable
         $builder = $this->initialize($record['id'] ?? null);
 
         if (!\is_array($GLOBALS['TL_DCA'][$table]['list']['operations'] ?? null)) {
-            return $this;
+            return $builder;
         }
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
@@ -131,7 +136,7 @@ class DataContainerOperationsBuilder implements \Stringable
                 $v['href'] = 'table='.$table;
             }
 
-            $operation = $this->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
+            $operation = $builder->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
 
             if ($operation) {
                 $builder->append($operation);
@@ -171,6 +176,15 @@ class DataContainerOperationsBuilder implements \Stringable
         return $this;
     }
 
+    public function addSeparator(): self
+    {
+        $this->append([
+            'separator' => true,
+        ]);
+
+        return $this;
+    }
+
     /**
      * Generate multiple operations if the given operation is using HTML.
      */
@@ -183,6 +197,7 @@ class DataContainerOperationsBuilder implements \Stringable
         $xml = new \DOMDocument();
         $xml->preserveWhiteSpace = false;
         $xml->loadHTML('<?xml encoding="UTF-8">'.$operation['html']);
+
         $body = $xml->getElementsByTagName('body')[0];
 
         if ($body->childNodes->length < 2) {

@@ -29,7 +29,7 @@ abstract class AbstractBackendController extends AbstractController
     {
         $services = parent::getSubscribedServices();
 
-        $services['request_stack'] = RequestStack::class;
+        $services['request_stack'] = '?'.RequestStack::class;
 
         return $services;
     }
@@ -82,7 +82,15 @@ abstract class AbstractBackendController extends AbstractController
             $parameters = [...$getBackendContext(), ...$parameters];
         }
 
-        return parent::render($view, $parameters, $response);
+        $response = parent::render($view, $parameters, $response);
+
+        // Set the status code to 422 if a widget did not validate, so that Turbo can
+        // handle form errors.
+        if (200 === $response->getStatusCode() && $this->container->get('request_stack')->getMainRequest()->attributes->has('_contao_widget_error')) {
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return $response;
     }
 
     protected function getBackendSessionBag(): AttributeBagInterface|null

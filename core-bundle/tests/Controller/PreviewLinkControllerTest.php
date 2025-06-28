@@ -17,6 +17,7 @@ use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Contao\CoreBundle\Tests\TestCase;
 use Doctrine\DBAL\Connection;
+use Nyholm\Psr7\Uri;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Constraint\IsType;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -39,12 +40,12 @@ class PreviewLinkControllerTest extends TestCase
 
         $response = $listener($request, 42);
 
-        $this->assertSame($url, $response->getTargetUrl());
+        $this->assertSame((string) (new Uri($url)), $response->getTargetUrl());
     }
 
     public static function authenticateGuestProvider(): iterable
     {
-        yield 'show unpublished' => ['/foo/bar', true];
+        yield 'show unpublished' => ['/foo/bär', true];
         yield 'hide unpublished' => ['/foo/baz', false];
     }
 
@@ -111,7 +112,7 @@ class PreviewLinkControllerTest extends TestCase
             ->expects(null === $link ? $this->never() : $this->once())
             ->method('fetchAssociative')
             ->with(
-                'SELECT * FROM tl_preview_link WHERE id=? AND published=1 AND expiresAt>UNIX_TIMESTAMP()',
+                'SELECT * FROM tl_preview_link WHERE id = ? AND published = 1 AND expiresAt > UNIX_TIMESTAMP()',
                 new IsType('array'),
             )
             ->willReturn($link)

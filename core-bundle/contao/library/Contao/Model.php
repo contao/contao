@@ -577,7 +577,7 @@ abstract class Model
 			}
 
 			// Update the row
-			$objDatabase->prepare("UPDATE " . static::$strTable . " %s WHERE " . Database::quoteIdentifier(static::$strPk) . "=?")
+			$objDatabase->prepare("UPDATE " . static::$strTable . " %s WHERE " . Database::quoteIdentifier(static::$strPk) . " = ?")
 						->set($arrSet)
 						->execute($intPk);
 
@@ -662,7 +662,7 @@ abstract class Model
 		$intPk = $this->arrModified[static::$strPk] ?? $this->{static::$strPk};
 
 		// Delete the row
-		$intAffected = Database::getInstance()->prepare("DELETE FROM " . static::$strTable . " WHERE " . Database::quoteIdentifier(static::$strPk) . "=?")
+		$intAffected = Database::getInstance()->prepare("DELETE FROM " . static::$strTable . " WHERE " . Database::quoteIdentifier(static::$strPk) . " = ?")
 											   ->execute($intPk)
 											   ->affectedRows;
 
@@ -793,7 +793,7 @@ abstract class Model
 		$intPk = $this->arrModified[static::$strPk] ?? $this->{static::$strPk};
 
 		// Reload the database record
-		$res = Database::getInstance()->prepare("SELECT * FROM " . static::$strTable . " WHERE " . Database::quoteIdentifier(static::$strPk) . "=?")
+		$res = Database::getInstance()->prepare("SELECT * FROM " . static::$strTable . " WHERE " . Database::quoteIdentifier(static::$strPk) . " = ?")
 									   ->execute($intPk);
 
 		$this->setRow($res->row());
@@ -980,7 +980,7 @@ abstract class Model
 			array
 			(
 				'limit'  => 1,
-				'column' => $isAlias ? array("CAST($t.alias AS BINARY)=?") : array("$t.id=?"),
+				'column' => $isAlias ? array("CAST($t.alias AS BINARY) = ?") : array("$t.id = ?"),
 				'value'  => $varId,
 				'return' => 'Model'
 			),

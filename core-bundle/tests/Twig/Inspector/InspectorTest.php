@@ -20,8 +20,8 @@ use Contao\CoreBundle\Twig\Inspector\BlockType;
 use Contao\CoreBundle\Twig\Inspector\InspectionException;
 use Contao\CoreBundle\Twig\Inspector\Inspector;
 use Contao\CoreBundle\Twig\Inspector\InspectorNodeVisitor;
+use Contao\CoreBundle\Twig\Inspector\Storage;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
-use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Twig\Environment;
@@ -247,7 +247,7 @@ class InspectorTest extends TestCase
             new ArrayLoader($symfonyTemplates),
         ]));
 
-        $cacheAdapter = new ArrayAdapter();
+        $storage = new Storage(new ArrayAdapter());
 
         $environment->addExtension(
             new ContaoExtension(
@@ -255,11 +255,11 @@ class InspectorTest extends TestCase
                 $contaoFilesystemLoader,
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor($cacheAdapter, $environment),
+                new InspectorNodeVisitor($storage, $environment),
             ),
         );
 
-        $inspector = new Inspector($environment, $cacheAdapter, $contaoFilesystemLoader);
+        $inspector = new Inspector($environment, $storage, $contaoFilesystemLoader);
 
         $templateAInformation = $inspector->inspectTemplate('@Contao_A/foo.twig');
 
@@ -292,7 +292,7 @@ class InspectorTest extends TestCase
 
     public function testThrowsErrorIfCacheWasNotBuilt(): void
     {
-        $inspector = $this->getInspector(['foo.html.twig' => '…'], new NullAdapter());
+        $inspector = $this->getInspector(['foo.html.twig' => '…'], new Storage(new NullAdapter()));
 
         $this->expectException(InspectionException::class);
         $this->expectExceptionMessage('Could not inspect template "foo.html.twig". No recorded information was found. Please clear the Twig template cache to make sure templates are recompiled.');
@@ -307,11 +307,11 @@ class InspectorTest extends TestCase
         $this->assertSame('@Contao_specific/foo.html.twig', $information->getName());
     }
 
-    private function getInspector(array $templates = [], AdapterInterface|null $cacheAdapter = null): Inspector
+    private function getInspector(array $templates = [], Storage|null $storage = null): Inspector
     {
         $filesystemLoader = $this->getContaoFilesystemLoader($templates);
         $environment = new Environment($filesystemLoader);
-        $cacheAdapter ??= new ArrayAdapter();
+        $storage ??= new Storage(new ArrayAdapter());
 
         $environment->addExtension(
             new ContaoExtension(
@@ -319,11 +319,11 @@ class InspectorTest extends TestCase
                 $filesystemLoader,
                 $this->createMock(ContaoCsrfTokenManager::class),
                 $this->createMock(ContaoVariable::class),
-                new InspectorNodeVisitor($cacheAdapter, $environment),
+                new InspectorNodeVisitor($storage, $environment),
             ),
         );
 
-        return new Inspector($environment, $cacheAdapter, $filesystemLoader);
+        return new Inspector($environment, $storage, $filesystemLoader);
     }
 
     private function getContaoFilesystemLoader(array $templates): ContaoFilesystemLoader

@@ -118,6 +118,10 @@ class ServiceArgumentsTest extends FunctionalTestCase
                         $this->assertContainsInstanceOf(PsrContainerInterface::class, $typeNames, \sprintf('Argument %s of %s should be %s but found %s.', $i, $serviceId, PsrContainerInterface::class, implode('|', $typeNames)));
                         break;
 
+                    case 'abstract':
+                        // noop
+                        break;
+
                     default:
                         $this->fail(\sprintf('Unknown tagged type "%s" for argument %s ($%s) of service %s.', $parameter->getType(), $i, $parameter->getName(), $serviceId));
                 }

@@ -90,6 +90,7 @@ $GLOBALS['TL_DCA']['tl_page'] = array
 		),
 		'operations' => array
 		(
+			'-',
 			'articles' => array
 			(
 				'href'                => 'do=article',

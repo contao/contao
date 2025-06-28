@@ -77,7 +77,7 @@ class PreviewLinkListener
         $userId = $user instanceof BackendUser ? (int) $user->id : 0;
 
         if (!$this->security->isGranted('ROLE_ADMIN')) {
-            $GLOBALS['TL_DCA']['tl_preview_link']['list']['sorting']['filter'][] = ['createdBy=?', $userId];
+            $GLOBALS['TL_DCA']['tl_preview_link']['list']['sorting']['filter'][] = ['createdBy = ?', $userId];
 
             // Check the current action
             switch ((string) $input->get('act')) {
@@ -91,7 +91,7 @@ class PreviewLinkListener
                 case 'deleteAll':
                 case 'overrideAll':
                     $allowedIds = $this->connection->fetchFirstColumn(
-                        'SELECT id FROM tl_preview_link WHERE createdBy=?',
+                        'SELECT id FROM tl_preview_link WHERE createdBy = ?',
                         [$userId],
                     );
 
@@ -106,7 +106,7 @@ class PreviewLinkListener
                 case 'toggle':
                 case 'delete':
                 default:
-                    $createdBy = (int) $this->connection->fetchOne('SELECT createdBy FROM tl_preview_link WHERE id=?', [$dc->id]);
+                    $createdBy = (int) $this->connection->fetchOne('SELECT createdBy FROM tl_preview_link WHERE id = ?', [$dc->id]);
 
                     if ($createdBy !== $userId) {
                         throw new AccessDeniedException(\sprintf('Preview link ID %s was not created by user ID %s', $dc->id, $userId));
@@ -144,7 +144,7 @@ class PreviewLinkListener
             return;
         }
 
-        $row = $this->connection->fetchAssociative('SELECT * FROM tl_preview_link WHERE id=?', [$dc->id]);
+        $row = $this->connection->fetchAssociative('SELECT * FROM tl_preview_link WHERE id = ?', [$dc->id]);
 
         if ($row['expiresAt'] < $this->clock->now()->getTimestamp()) {
             $message->addError($this->translator->trans('tl_preview_link.hintExpired', [], 'contao_tl_preview_link'));

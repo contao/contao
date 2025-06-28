@@ -70,6 +70,11 @@ class DefaultOperationsListener
         }
 
         foreach ($dca as $k => $v) {
+            if ('-' === $v) {
+                $operations[$k] = $v;
+                continue;
+            }
+
             if (\is_string($v) && ($key = ltrim($v, '!')) && isset($defaults[$key])) {
                 $operations[$key] = $defaults[$key];
 
@@ -238,7 +243,7 @@ class DefaultOperationsListener
             }
 
             $childCount = $this->connection->fetchOne(
-                "SELECT COUNT(*) FROM $table WHERE pid=?",
+                "SELECT COUNT(*) FROM $table WHERE pid = ?",
                 [(string) $operation->getRecord()['id']],
             );
 

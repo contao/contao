@@ -11,15 +11,15 @@ export default class OperationsMenuController extends Controller {
 
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,
-            menuLinkSelector: 'a,button,img',
+            menuLinkSelector: 'a,button,img,hr',
         });
 
         this.controllerTarget?.addEventListener('accessibleMenuExpand', () => {
-            Object.values(window.AccessibleMenu.menus).forEach((menu) => {
+            for (const menu of Object.values(window.AccessibleMenu.menus)) {
                 if (menu !== this.$menu && menu.elements.submenuToggles[0].isOpen) {
                     menu.elements.submenuToggles[0].close();
                 }
-            });
+            }
 
             this.setFixedPosition();
             this.element.classList.add('hover');
@@ -68,9 +68,9 @@ export default class OperationsMenuController extends Controller {
 
     setFixedPosition(event) {
         const rect = this.submenuTarget.getBoundingClientRect();
-        let x,
-            y,
-            offset = 0;
+        let x;
+        let y;
+        let offset = 0;
 
         if (event) {
             x = event.clientX;

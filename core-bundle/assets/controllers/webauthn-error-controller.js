@@ -40,8 +40,6 @@ export default class extends Controller {
     }
 
     renderMessage(message, type) {
-        type = type ?? 'error';
-
-        return `<p class="tl_${type}">${message}</p>`;
+        return `<p class="tl_${type ?? 'error'}">${message}</p>`;
     }
 }

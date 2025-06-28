@@ -6,7 +6,7 @@ export default class extends Controller {
     };
 
     write() {
-        if (navigator.clipboard && navigator.clipboard.writeText) {
+        if (navigator.clipboard?.writeText) {
             navigator.clipboard.writeText(this.contentValue).catch(this.clipboardFallback.bind(this));
         } else {
             this.clipboardFallback();

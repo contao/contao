@@ -25,7 +25,7 @@ export default class extends Controller {
         };
 
         const migrateLegacy = () => {
-            document.querySelectorAll('legend[data-toggle-fieldset]').forEach(function (el) {
+            for (const el of document.querySelectorAll('legend[data-toggle-fieldset]')) {
                 if (window.console) {
                     console.warn(
                         `Using the "data-toggle-fieldset" attribute on fieldset legends is deprecated and will be removed in Contao 6. Apply the "${identifier}" Stimulus controller instead.`,
@@ -34,7 +34,7 @@ export default class extends Controller {
 
                 const { id, table } = JSON.parse(el.getAttribute('data-toggle-fieldset'));
                 addController(el, id, table);
-            });
+            }
 
             AjaxRequest.toggleFieldset = (el, id, table) => {
                 const fs = el.parentNode;
@@ -123,7 +123,7 @@ export default class extends Controller {
         }
 
         if (!collapse) {
-            if (typeof form.checkValidity == 'function') {
+            if (typeof form.checkValidity === 'function') {
                 form.querySelector('button[type="submit"]').click();
             }
         } else {
