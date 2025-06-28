@@ -1,7 +1,7 @@
 body.navigation-open {
     overflow: hidden;
 
-    .nav-toggle {
+    .nav-burger {
         color: #fff;
     }
 
@@ -11,9 +11,9 @@ body.navigation-open {
     }
 }
 
-@media (max-width: 1023.98px) {
+@media (width < 1024px) {
 
-    .nav-main {
+    .navigation-main {
         position: fixed;
         inset: 0;
         overflow: hidden auto;
@@ -40,7 +40,6 @@ body.navigation-open {
 
             &:is(.active) {
                 --nav-clr: var(--nav-mobile-active-clr);
-                box-shadow: inset 3px 0 0 0 var(--nav-mobile-active-bdr);
             }
         }
 
@@ -112,9 +111,9 @@ body.navigation-open {
     }
 }
 
-@media (min-width: 1024px) {
+@media (width >= 1024px) {
 
-    .nav-main {
+    .navigation-main {
 
         :is(a, strong) {
             font-size: 20px;

@@ -13,7 +13,7 @@ $this->wrapperAttributes = $this
 
 $this->navAttributes = $this
     ->attr()
-    ->addClass(['nav-main'])
+    ->addClass(['navigation-main'])
     ->setIfExists('aria-label', $this->ariaLabel)
     ->mergeWith($this->navAttributes)
 ;
@@ -21,9 +21,9 @@ $this->navAttributes = $this
 ?>
 
 <!-- indexer::stop -->
-<div <?= $this->wrapperAttributes ?>>
-  <button class="nav-toggle" title="<?= $this->trans("MSC.ariaMenuToggle") ?>" aria-haspopup="menu" aria-expanded="false">
-    <span class="nav-toggle__icon">
+<div<?= $this->wrapperAttributes ?>>
+  <button class="nav-burger" title="<?= $this->trans("MSC.ariaMenuToggle") ?>" aria-haspopup="menu" aria-expanded="false">
+    <span class="nav-burger__inner">
       <span class="icon-line"></span>
     </span>
   </button>
@@ -44,8 +44,8 @@ $this->navAttributes = $this
 <script>
   window.addEventListener('load', () => {
     new AccessibilityNavigation({
-      selector: 'header .nav-main',
-      toggle: 'header .nav-toggle',
+      selector: 'header .navigation-main',
+      toggle: 'header .nav-burger',
       minWidth: 1024,
       classes: {
         submenuButton: 'btn-toggle-submenu',
