@@ -3,7 +3,7 @@ const Encore = require('@symfony/webpack-encore');
 // Core bundle assets
 Encore
     .setOutputPath('core-bundle/public/')
-    .setPublicPath('/bundles/contaocore')
+    .setPublicPath(Encore.isDevServer() ? '/' : '/bundles/contaocore')
     .setManifestKeyPrefix('')
     .cleanupOutputBeforeBuild()
     .disableSingleRuntimeChunk()
@@ -19,6 +19,19 @@ Encore
         };
     })
     .addEntry('backend', './core-bundle/assets/backend.js')
+    .configureDevServerOptions((options) => Object.assign({}, options, {
+        static: false,
+        hot: true,
+        liveReload: true,
+        allowedHosts: 'all',
+        watchFiles: [
+            'core-bundle/assets/styles/*',
+            'core-bundle/contao/themes/flexible/styles/*'
+        ],
+        client: {
+            overlay: false
+        }
+    }))
 ;
 
 const jsConfig = Encore.getWebpackConfig();
@@ -28,7 +41,7 @@ Encore.reset();
 // Back end theme "flexible"
 Encore
     .setOutputPath('core-bundle/contao/themes/flexible')
-    .setPublicPath('/system/themes/flexible')
+    .setPublicPath(Encore.isDevServer() ? '/' : '/system/themes/flexible')
     .setManifestKeyPrefix('')
     .disableSingleRuntimeChunk()
     .enableSourceMaps(!Encore.isProduction())
@@ -52,5 +65,7 @@ Encore
 ;
 
 const themeConfig = Encore.getWebpackConfig();
+
+delete themeConfig.devServer;
 
 module.exports = [jsConfig, themeConfig];
