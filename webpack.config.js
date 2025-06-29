@@ -34,8 +34,8 @@ Encore
         liveReload: true,
         allowedHosts: 'all',
         watchFiles: [
-            'core-bundle/assets/styles/*',
-            'core-bundle/contao/themes/flexible/styles/*'
+            'core-bundle/assets/styles/**/*',
+            'core-bundle/contao/themes/flexible/styles/**/*'
         ],
         client: {
             overlay: false
