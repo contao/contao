@@ -76,7 +76,7 @@ class ModuleNavigation extends Module
 			$host = $objRootPage->domain;
 		}
 
-		$this->Template->ariaLabel = StringUtil::specialchars($this->ariaLabel);
+		$this->Template->ariaLabel = System::getContainer()->get('contao.insert_tag.parser')->replaceInline(StringUtil::specialchars($this->ariaLabel));
 		$this->Template->request = StringUtil::ampersand(Environment::get('requestUri'));
 		$this->Template->skipId = 'skipNavigation' . $this->id;
 		$this->Template->skipNavigation = StringUtil::specialchars($GLOBALS['TL_LANG']['MSC']['skipNavigation']);
