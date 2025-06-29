@@ -93,6 +93,11 @@ class DataContainerOperationsBuilder implements \Stringable
         }
 
         foreach ($GLOBALS['TL_DCA'][$table]['list']['operations'] as $k => $v) {
+            if ('-' === $v) {
+                $builder->addSeparator();
+                continue;
+            }
+
             $v = \is_array($v) ? $v : [$v];
             $operation = $builder->generateOperation($k, $v, $table, $record, $dataContainer, $legacyCallback);
 
@@ -171,6 +176,15 @@ class DataContainerOperationsBuilder implements \Stringable
         return $this;
     }
 
+    public function addSeparator(): self
+    {
+        $this->append([
+            'separator' => true,
+        ]);
+
+        return $this;
+    }
+
     /**
      * Generate multiple operations if the given operation is using HTML.
      */
@@ -183,6 +197,7 @@ class DataContainerOperationsBuilder implements \Stringable
         $xml = new \DOMDocument();
         $xml->preserveWhiteSpace = false;
         $xml->loadHTML('<?xml encoding="UTF-8">'.$operation['html']);
+
         $body = $xml->getElementsByTagName('body')[0];
 
         if ($body->childNodes->length < 2) {

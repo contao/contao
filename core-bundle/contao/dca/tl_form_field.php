@@ -15,6 +15,7 @@ use Contao\CoreBundle\EventListener\Widget\CustomRgxpListener;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
@@ -110,18 +111,18 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		'fieldsetStart'               => '{type_legend},type;{fconfig_legend},label;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'fieldsetStop'                => '{type_legend},type;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'html'                        => '{type_legend},type;{text_legend},html;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'text'                        => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'textdigit'                   => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minval,maxval,step,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'textcustom'                  => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp,customRgxp,errorMsg;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'password'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'passwordcustom'              => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp,customRgxp,errorMsg;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'textarea'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp;{size_legend},size;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'textareacustom'              => '{type_legend},type,name,label;{fconfig_legend},mandatory,autocomplete,placeholder;{rgxp_legend},rgxp,customRgxp,errorMsg;{size_legend},size;{expert_legend:hide},class,value,minlength,maxlength,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'select'                      => '{type_legend},type,name,label;{fconfig_legend},mandatory,multiple;{options_legend},options;{expert_legend:hide},class,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'radio'                       => '{type_legend},type,name,label;{fconfig_legend},mandatory;{options_legend},options;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'checkbox'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory;{options_legend},options;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'upload'                      => '{type_legend},type,name,label;{fconfig_legend},mandatory,extensions,maxlength,maxImageWidth,maxImageHeight;{store_legend:hide},storeFile;{expert_legend:hide},class,accesskey,fSize;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
-		'range'                       => '{type_legend},type,name,label;{fconfig_legend},mandatory;{expert_legend:hide},class,value,minval,maxval,step,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'text'                        => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'textdigit'                   => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minval,maxval,step,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'textcustom'                  => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp,customRgxp,errorMsg;{expert_legend:hide},class,value,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'password'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp;{expert_legend:hide},class,value,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'passwordcustom'              => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp,customRgxp,errorMsg;{expert_legend:hide},class,value,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'textarea'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp;{size_legend},size;{expert_legend:hide},class,value,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'textareacustom'              => '{type_legend},type,name,label;{fconfig_legend},mandatory,placeholder,help;{rgxp_legend},rgxp,customRgxp,errorMsg;{size_legend},size;{expert_legend:hide},class,value,minlength,maxlength,autocomplete,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'select'                      => '{type_legend},type,name,label;{fconfig_legend},mandatory,multiple,help;{options_legend},options;{expert_legend:hide},class,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'radio'                       => '{type_legend},type,name,label;{fconfig_legend},mandatory,help;{options_legend},options;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'checkbox'                    => '{type_legend},type,name,label;{fconfig_legend},mandatory,help;{options_legend},options;{expert_legend:hide},class;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'upload'                      => '{type_legend},type,name,label;{fconfig_legend},mandatory,extensions,maxlength,maxImageWidth,maxImageHeight,help;{store_legend:hide},storeFile;{expert_legend:hide},class,accesskey,fSize;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
+		'range'                       => '{type_legend},type,name,label;{fconfig_legend},mandatory,help;{expert_legend:hide},class,value,minval,maxval,step,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'hidden'                      => '{type_legend},type,name,value;{fconfig_legend},mandatory,rgxp;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'hiddencustom'                => '{type_legend},type,name,value;{fconfig_legend},mandatory,rgxp,customRgxp;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
 		'captcha'                     => '{type_legend},type,label;{fconfig_legend},placeholder;{expert_legend:hide},class,accesskey;{template_legend:hide},customTpl;{invisible_legend:hide},invisible',
@@ -221,6 +222,13 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'placeholder' => array
+		(
+			'search'                  => true,
+			'inputType'               => 'text',
+			'eval'                    => array('decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
+		'help' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
@@ -408,7 +416,7 @@ $GLOBALS['TL_DCA']['tl_form_field'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('helpwizard'=>true, 'maxlength'=>255, 'tl_class'=>'w25'),
 			'explanation'             => 'autocomplete',
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
@@ -537,9 +545,16 @@ class tl_form_field extends Backend
 
 		$objWidget = new $strClass($arrRow);
 		$key = $arrRow['invisible'] ? 'unpublished' : 'published';
+		$dragHandle = '';
+
+		if (!Input::get('act') && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_form_field', new UpdateAction('tl_form_field', $arrRow)))
+		{
+			$labelCut = $GLOBALS['TL_LANG']['tl_form_field']['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
+			$dragHandle = '<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $arrRow['id'])) . '</button>';
+		}
 
 		$strType = '
-<div class="cte_type ' . $key . '">' . $GLOBALS['TL_LANG']['FFL'][$arrRow['type']][0] . ($objWidget->submitInput() && $arrRow['name'] ? ' (' . $arrRow['name'] . ')' : '') . '</div>
+<div class="cte_type ' . $key . '">' . $dragHandle . $GLOBALS['TL_LANG']['FFL'][$arrRow['type']][0] . ($objWidget->submitInput() && $arrRow['name'] ? ' (' . $arrRow['name'] . ')' : '') . '</div>
 <div class="cte_preview">';
 
 		$strWidget = $objWidget->parse();

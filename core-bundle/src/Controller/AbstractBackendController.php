@@ -29,7 +29,7 @@ abstract class AbstractBackendController extends AbstractController
     {
         $services = parent::getSubscribedServices();
 
-        $services['request_stack'] = RequestStack::class;
+        $services['request_stack'] = '?'.RequestStack::class;
 
         return $services;
     }
