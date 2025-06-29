@@ -42,7 +42,7 @@ services:
         class: Contao\NewsBundle\EventListener\DataContainer\PageListener
         arguments:
             - '@database_connection'
-            - '@security.helper'
+            - '@security.authorization_checker'
 
     contao_news.listener.data_container.start_stop_validation:
         class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
