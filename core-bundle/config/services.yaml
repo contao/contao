@@ -942,6 +942,7 @@ services:
             - '@contao.insert_tag.parser'
             - '@contao.routing.response_context.csp_handler_factory'
             - '@router'
+            - '@security.helper'
 
     contao.routing.route_404_provider:
         class: Contao\CoreBundle\Routing\Route404Provider
@@ -1335,6 +1336,7 @@ services:
             - '@contao.security.token_checker'
             - '@contao.csrf.token_manager'
             - '@security.helper'
+            - '@contao.framework'
 
     contao.twig.highlighter_runtime:
         class: Contao\CoreBundle\Twig\Runtime\HighlighterRuntime

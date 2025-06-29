@@ -64,6 +64,18 @@ class BackupRestoreCommandTest extends TestCase
         $this->assertSame(1, $code);
     }
 
+    public function testBackupSelection(): void
+    {
+        $command = new BackupRestoreCommand($this->mockBackupManagerWithBackups());
+
+        $commandTester = new CommandTester($command);
+        $commandTester->setInputs([1]);
+
+        $code = $commandTester->execute([]);
+
+        $this->assertSame(0, $code);
+    }
+
     public static function unsuccessfulCommandRunProvider(): iterable
     {
         yield 'Text format' => [
@@ -118,6 +130,14 @@ class BackupRestoreCommandTest extends TestCase
                 && false === $config->ignoreOriginCheck(),
             '{"createdAt":"2021-11-01T14:12:54+00:00","size":100,"name":"test__20211101141254.sql.gz"}',
         ];
+
+        yield 'No interaction' => [
+            ['--no-interaction'],
+            static fn (RestoreConfig $config) => [] === $config->getTablesToIgnore()
+                && 'test__20211101141254.sql.gz' === $config->getBackup()->getFilename()
+                && false === $config->ignoreOriginCheck(),
+            '[OK] Successfully restored backup from "test__20211101141254.sql.gz".',
+        ];
     }
 
     private function mockBackupManager(\Closure $expectedCreateConfig): BackupManager&MockObject
@@ -139,5 +159,30 @@ class BackupRestoreCommandTest extends TestCase
         ;
 
         return $backupManager;
+    }
+
+    private function mockBackupManagerWithBackups(): BackupManager&MockObject
+    {
+        $backups = [
+            $this->createBackup('foo__20250000000000.sql.gz', 50000),
+            $this->createBackup('bar__20250000000000.sql.gz', 6005000),
+        ];
+
+        $backupManager = $this->createMock(BackupManager::class);
+        $backupManager
+            ->expects($this->once())
+            ->method('listBackups')
+            ->willReturn($backups)
+        ;
+
+        return $backupManager;
+    }
+
+    private function createBackup(string $filename, int $size): Backup
+    {
+        $backup = new Backup($filename);
+        $backup->setSize($size);
+
+        return $backup;
     }
 }

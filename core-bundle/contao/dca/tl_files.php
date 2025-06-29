@@ -100,6 +100,13 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 				'primary'             => true,
 				'button_callback'     => array('tl_files', 'editFile')
 			),
+			'source' => array
+			(
+				'href'                => 'act=source',
+				'icon'                => 'editor.svg',
+				'primary'             => true,
+				'button_callback'     => array('tl_files', 'editSource')
+			),
 			'copy' => array
 			(
 				'href'                => 'act=paste&amp;mode=copy',
@@ -127,13 +134,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 				'icon'                => 'show.svg',
 				'button_callback'     => array('tl_files', 'showFile')
 			),
-			'source' => array
-			(
-				'href'                => 'act=source',
-				'icon'                => 'editor.svg',
-				'primary'             => true,
-				'button_callback'     => array('tl_files', 'editSource')
-			),
+			'-',
 			'upload' => array
 			(
 				'href'                => 'act=move&amp;mode=2',
