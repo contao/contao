@@ -386,6 +386,24 @@
       <trans-unit id="tl_page.cspReportLog.1">
         <source>Log CSP violations to the Contao system log.</source>
       </trans-unit>
+      <trans-unit id="tl_page.feedFormat.0">
+        <source>Feed format</source>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFormat.1">
+        <source>Please choose a feed format.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.maxFeedItems.0">
+        <source>Maximum number of items</source>
+      </trans-unit>
+      <trans-unit id="tl_page.maxFeedItems.1">
+        <source>Here you can limit the number of feed items. Set to 0 to export all.</source>
+      </trans-unit>
+      <trans-unit id="tl_page.feedDescription.0">
+        <source>Feed description</source>
+      </trans-unit>
+      <trans-unit id="tl_page.feedDescription.1">
+        <source>Here you can enter a short description of the feed.</source>
+      </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
       </trans-unit>
@@ -448,6 +466,12 @@
       </trans-unit>
       <trans-unit id="tl_page.csp_legend">
         <source>Content Security Policy</source>
+      </trans-unit>
+      <trans-unit id="tl_page.feed_legend">
+        <source>Feed settings</source>
+      </trans-unit>
+      <trans-unit id="tl_page.image_legend">
+        <source>Image settings</source>
       </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>

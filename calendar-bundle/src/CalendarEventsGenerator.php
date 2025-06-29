@@ -39,7 +39,7 @@ class CalendarEventsGenerator
      * Returns the generated events including recurrences as a multidimensional array,
      * grouped by day and timestamp.
      */
-    public function getAllEvents(array $calendars, int $start, int $end, bool|null $featured = null, bool $noSpan = false, int|null $recurrenceLimit = null): array
+    public function getAllEvents(array $calendars, \DateTime $rangeStart, \DateTime $rangeEnd, bool|null $featured = null, bool $noSpan = false, int|null $recurrenceLimit = null): array
     {
         if ([] === $calendars) {
             return [];
@@ -48,22 +48,22 @@ class CalendarEventsGenerator
         $events = [];
 
         // Include all events of the day, expired events will be filtered out later
-        $start = strtotime(date('Y-m-d', $start).' 00:00:00');
+        $rangeStart->setTime(0, 0);
 
         $calendarEventsModel = $this->contaoFramework->getAdapter(CalendarEventsModel::class);
 
         foreach ($calendars as $id) {
             // Get the events of the current period
-            $eventModels = $calendarEventsModel->findCurrentByPid($id, $start, $end, ['showFeatured' => $featured]);
+            $eventModels = $calendarEventsModel->findCurrentByPid($id, $rangeStart->getTimestamp(), $rangeEnd->getTimestamp(), ['showFeatured' => $featured]);
 
-            if (null === $eventModels) {
+            if (!$eventModels) {
                 continue;
             }
 
             foreach ($eventModels as $eventModel) {
                 $eventModel = $eventModels->current();
 
-                $this->addEvent($events, $eventModel, $eventModel->startTime, $eventModel->endTime, $end, $id, $noSpan);
+                $this->addEvent($events, $eventModel, $eventModel->startTime, $eventModel->endTime, $rangeEnd->getTimestamp(), $id, $noSpan);
 
                 // Recurring events
                 if ($eventModel->recurring) {
@@ -74,29 +74,26 @@ class CalendarEventsGenerator
                     }
 
                     $count = 0;
-                    $startTime = $eventModel->startTime;
-                    $endTime = $eventModel->endTime;
-                    $strtotime = '+ '.$repeat['value'].' '.$repeat['unit'];
+                    $eventStartTime = (new \DateTime())->setTimestamp($eventModel->startTime);
+                    $eventEndTime = (new \DateTime())->setTimestamp($eventModel->endTime);
+                    $modifier = '+ '.$repeat['value'].' '.$repeat['unit'];
 
-                    while ($endTime < $end) {
-                        if ($eventModel->recurrences > 0 && ($count++ >= $eventModel->recurrences || (null !== $recurrenceLimit && $count > $recurrenceLimit))) {
+                    while ($eventEndTime < $rangeEnd) {
+                        ++$count;
+
+                        if (($eventModel->recurrences > 0 && $count > $eventModel->recurrences) || (null !== $recurrenceLimit && $count > $recurrenceLimit)) {
                             break;
                         }
 
-                        $startTime = strtotime($strtotime, $startTime);
-                        $endTime = strtotime($strtotime, $endTime);
-
-                        // Stop if the upper boundary is reached (see #8445)
-                        if (false === $startTime || false === $endTime) {
-                            break;
-                        }
+                        $eventStartTime->modify($modifier);
+                        $eventEndTime->modify($modifier);
 
                         // Skip events outside the scope
-                        if ($endTime < $start || $startTime > $end) {
+                        if ($eventEndTime < $rangeStart || $eventStartTime > $rangeEnd) {
                             continue;
                         }
 
-                        $this->addEvent($events, $eventModel, $startTime, $endTime, $end, $id, $noSpan);
+                        $this->addEvent($events, $eventModel, $eventStartTime->getTimestamp(), $eventEndTime->getTimestamp(), $rangeEnd->getTimestamp(), $id, $noSpan);
                     }
                 }
             }
@@ -110,14 +107,14 @@ class CalendarEventsGenerator
         // HOOK: modify the result set
         if (isset($GLOBALS['TL_HOOKS']['getAllEvents']) && \is_array($GLOBALS['TL_HOOKS']['getAllEvents'])) {
             foreach ($GLOBALS['TL_HOOKS']['getAllEvents'] as $callback) {
-                $events = System::importStatic($callback[0])->{$callback[1]}($events, $calendars, $start, $end, $this);
+                $events = System::importStatic($callback[0])->{$callback[1]}($events, $calendars, $rangeStart->getTimestamp(), $rangeEnd->getTimestamp(), $this);
             }
         }
 
         return $events;
     }
 
-    private function addEvent(array &$events, CalendarEventsModel $eventModel, int $start, int $end, int $limit, int $calendar, bool $noSpan): void
+    private function addEvent(array &$events, CalendarEventsModel $eventModel, int $start, int $end, int $rangeEnd, int $calendar, bool $noSpan): void
     {
         $page = $this->pageFinder->getCurrentPage();
 
@@ -282,7 +279,7 @@ class CalendarEventsGenerator
 
             $timestamp = strtotime('+1 day', $timestamp);
 
-            if ($timestamp > $limit) {
+            if ($timestamp > $rangeEnd) {
                 break;
             }
 

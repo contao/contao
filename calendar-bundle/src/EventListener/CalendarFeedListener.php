@@ -51,17 +51,17 @@ class CalendarFeedListener
         private readonly ImageFactoryInterface $imageFactory,
         private readonly ContentUrlGenerator $urlGenerator,
         private readonly InsertTagParser $insertTags,
-        private readonly string $projectDir,
         private readonly CacheTagManager $cacheTags,
-        private readonly string $charset,
         private readonly AuthorizationCheckerInterface $authorizationChecker,
+        private readonly string $projectDir,
+        private readonly string $charset,
     ) {
     }
 
     #[AsEventListener]
-    public function onFetchEventsForFeed(FetchEventsForFeedEvent $event): void
+    public function onFetchEventsForFeed(FetchEventsForFeedEvent $systemEvent): void
     {
-        $pageModel = $event->getPageModel();
+        $pageModel = $systemEvent->getPageModel();
         $calendars = $this->sortOutProtected(StringUtil::deserialize($pageModel->eventCalendars, true));
 
         $featured = match ($pageModel->feedFeatured) {
@@ -70,9 +70,9 @@ class CalendarFeedListener
             default => null,
         };
 
-        $events = $this->calendarEventsGenerator->getAllEvents($calendars, time(), PHP_INT_MAX, $featured, true, (int) $pageModel->feedRecurrenceLimit);
+        $calendarEvents = $this->calendarEventsGenerator->getAllEvents($calendars, new \DateTime(), (new \DateTime())->setTimestamp(PHP_INT_MAX), $featured, true, (int) $pageModel->feedRecurrenceLimit);
 
-        $event->setEvents($events);
+        $systemEvent->setEvents($calendarEvents);
     }
 
     #[AsEventListener]
@@ -82,13 +82,13 @@ class CalendarFeedListener
 
         $item = new Item();
         $item->setTitle(html_entity_decode($calendarEvent['title'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $this->charset));
-        $item->setLastModified((new \DateTime())->setTimestamp($calendarEvent['startTime']));
+        $item->setLastModified((new \DateTime())->setTimestamp($calendarEvent['begin']));
         $item->setLink($this->urlGenerator->generate($calendarEvent['model'], [], UrlGeneratorInterface::ABSOLUTE_URL));
         $item->setContent($this->getContent($calendarEvent, $item, $systemEvent));
 
         // Create a unique ID due to recurrences
         $namespace = Uuid::fromString(Uuid::NAMESPACE_OID);
-        $item->setPublicId(Uuid::v5($namespace, $item->getLink().'#'.$calendarEvent['startTime'])->toRfc4122());
+        $item->setPublicId(Uuid::v5($namespace, $item->getLink().'#'.$calendarEvent['begin'])->toRfc4122());
 
         if ($author = $this->getAuthor($calendarEvent)) {
             $item->setAuthor($author);
@@ -111,7 +111,7 @@ class CalendarFeedListener
         $controller = $this->framework->getAdapter(Controller::class);
         $contentModel = $this->framework->getAdapter(ContentModel::class);
 
-        $description = $event['teaser'] ?? '';
+        $description = $calendarEvent['teaser'] ?? '';
 
         // Prepare the description
         if ('source_text' === $pageModel->feedSource) {
@@ -138,9 +138,9 @@ class CalendarFeedListener
         return $controller->convertRelativeUrls($description, $item->getLink());
     }
 
-    private function getAuthor(array $event): AuthorInterface|null
+    private function getAuthor(array $calendarEvent): AuthorInterface|null
     {
-        if ($authorModel = $this->framework->getAdapter(UserModel::class)->findById($event['author'])) {
+        if ($authorModel = $this->framework->getAdapter(UserModel::class)->findById($calendarEvent['author'])) {
             return (new Author())->setName($authorModel->name);
         }
 
@@ -211,10 +211,10 @@ class CalendarFeedListener
      */
     private function sortOutProtected(array $calendarIds): array
     {
-        $newsArchiveModel = $this->framework->getAdapter(CalendarModel::class);
+        $calendarModel = $this->framework->getAdapter(CalendarModel::class);
         $allowedIds = [];
 
-        foreach ($newsArchiveModel->findMultipleByIds($calendarIds) ?? [] as $calendar) {
+        foreach ($calendarModel->findMultipleByIds($calendarIds) ?? [] as $calendar) {
             if ($calendar->protected && !$this->authorizationChecker->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $calendar->groups)) {
                 continue;
             }
