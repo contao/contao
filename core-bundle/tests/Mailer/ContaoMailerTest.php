@@ -86,7 +86,7 @@ class ContaoMailerTest extends TestCase
         $email = new Email(new Headers(new UnstructuredHeader('X-Transport', 'foobar')));
         $email->from('Foo Bar <foobar@example.com>');
 
-        $contaoMailer = new ContaoMailer($mailer, $availableTransports, new RequestStack());
+        $contaoMailer = new ContaoMailer($mailer, $availableTransports, new RequestStack(), 'Override From <override@example.com>');
         $contaoMailer->send($email);
 
         $from = $email->getFrom();
