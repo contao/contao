@@ -78,11 +78,11 @@ final class ContaoMailer implements MailerInterface
     }
 
     /**
-     * Overrides the from address according to the transport.
+     * Overrides the from address according to config.
      */
     private function setFrom(Email $message): void
     {
-        if ($this->overrideFrom) {
+        if (null !== $this->overrideFrom) {
             $this->doSetFrom($message, $this->overrideFrom);
         }
 
