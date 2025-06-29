@@ -63,7 +63,7 @@ class ToplinkControllerTest extends ContentElementTestCase
 
         yield 'user defined value' => [
             'All the way up!',
-            '<a href="#top" data-toplink title="All the way up!">All the way up!</a>',
+            '<a href="#top" data-toplink>All the way up!</a>',
         ];
     }
 
