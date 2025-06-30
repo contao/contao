@@ -74,11 +74,7 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
         $rangeStart = new \DateTimeImmutable('2025-06-30 12:00:00');
         $rangeEnd = new \DateTimeImmutable('9999-12-31 23:59:59');
 
-        $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class);
-
-        foreach ($record as $k => $v) {
-            $eventModel->{$k} = $v;
-        }
+        $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class, [$record]);
 
         $collection = new Collection([$eventModel], CalendarEventsModel::getTable());
 
