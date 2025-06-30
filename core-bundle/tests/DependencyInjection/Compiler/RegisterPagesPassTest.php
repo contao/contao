@@ -180,7 +180,7 @@ class RegisterPagesPassTest extends TestCase
                         $definition = $arguments[1];
                         $this->assertInstanceOf(Definition::class, $definition);
 
-                        return 'test.controller:action' === $definition->getArgument(5)['_controller'];
+                        return 'test.controller::action' === $definition->getArgument(5)['_controller'];
                     },
                 ),
             )
