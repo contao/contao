@@ -96,9 +96,9 @@ class DcaLoader extends Controller
 	 *
 	 * @internal
 	 */
-	public static function switchToCurrentRequest(): void
+	public static function switchToCurrentRequest(Request|null $request = null): void
 	{
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$request ??= System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		if (self::$lastRequest === $request)
 		{
