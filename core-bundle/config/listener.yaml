@@ -512,6 +512,8 @@ services:
         class: Contao\CoreBundle\EventListener\PreviewUrlCreateListener
         arguments:
             - '@contao.framework'
+            - '@contao.data_container.dca_url_analyzer'
+            - '@database_connection'
 
     contao.listener.referer_id:
         class: Contao\CoreBundle\EventListener\RefererIdListener
