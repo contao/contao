@@ -102,11 +102,21 @@ class NewsFeedControllerTest extends ContaoTestCase
             'feedDescription' => 'Get latest news',
             'feedFormat' => 'rss',
             'language' => 'en',
+            'newsArchives' => serialize([8472]),
         ]);
 
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
         $container->set('event_dispatcher', $this->createMock(EventDispatcher::class));
+
+        $entityCacheTags = $this->createMock(EntityCacheTags::class);
+        $entityCacheTags
+            ->expects($this->once())
+            ->method('tagWith')
+            ->with(['contao.db.tl_news_archive.8472'])
+        ;
+
+        $container->set('contao.cache.entity_tags', $entityCacheTags);
 
         $controller = $this->getController();
         $controller->setContainer($container);
@@ -134,6 +144,15 @@ class NewsFeedControllerTest extends ContaoTestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.framework', $this->mockContaoFramework());
         $container->set('event_dispatcher', $this->createMock(EventDispatcher::class));
+
+        $entityCacheTags = $this->createMock(EntityCacheTags::class);
+        $entityCacheTags
+            ->expects($this->once())
+            ->method('tagWith')
+            ->with([])
+        ;
+
+        $container->set('contao.cache.entity_tags', $entityCacheTags);
 
         $controller = $this->getController();
         $controller->setContainer($container);

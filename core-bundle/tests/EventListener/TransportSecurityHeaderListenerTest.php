@@ -49,6 +49,7 @@ class TransportSecurityHeaderListenerTest extends TestCase
     {
         $response = new Response();
         $response->headers->set('Strict-Transport-Security', 'max-age=500; includeSubDomains; preload');
+
         $request = Request::create('https://contao.org');
 
         $listener = new TransportSecurityHeaderListener($this->createScopeMatcher(true), 31536000);

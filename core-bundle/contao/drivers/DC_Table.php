@@ -234,18 +234,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$this->initRoots();
 
 		$request = $container->get('request_stack')->getCurrentRequest();
-		$route = $request->attributes->get('_route');
-
-		// Store the current referer
-		if (!empty($this->ctable) && !Input::get('ptable') && $route == 'contao_backend' && !Input::get('act') && !Input::get('key') && !Input::get('token') && !Environment::get('isAjaxRequest'))
-		{
-			$strKey = Input::get('popup') ? 'popupReferer' : 'referer';
-			$strRefererId = $request->attributes->get('_contao_referer_id');
-
-			$session = $objSession->get($strKey);
-			$session[$strRefererId][$this->strTable] = Environment::get('requestUri');
-			$objSession->set($strKey, $session);
-		}
 
 		if (!empty($arrClipboard[$this->strTable]) && $arrClipboard[$this->strTable]['mode'] != 'create')
 		{
@@ -1140,7 +1128,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Switch to edit mode
 					if (!$blnDoNotRedirect)
 					{
-						$this->redirect($this->switchToEdit($insertID));
+						// User cannot edit record, redirect back to the list view (see #6674)
+						if (($GLOBALS['TL_DCA'][$this->strTable]['config']['notEditable'] ?? null) || !System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new UpdateAction($this->strTable, $currentRecord)))
+						{
+							$this->redirect($this->getReferer());
+						}
+						else
+						{
+							$this->redirect($this->switchToEdit($insertID));
+						}
 					}
 
 					return $insertID;
@@ -2134,7 +2130,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					}
 				}
 
-				$return .= "\n\n" . '<fieldset class="' . $class . ($legend ? '' : ' nolegend') . '" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="' . $key . '" data-contao--toggle-fieldset-table-value="' . $this->strTable . '" data-contao--toggle-fieldset-collapsed-class="collapsed" data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open">' . $legend;
+				$return .= "\n\n" . '<fieldset id="pal_' . $key . '" class="' . $class . ($legend ? '' : ' nolegend') . '" data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-id-value="' . $key . '" data-contao--toggle-fieldset-table-value="' . $this->strTable . '" data-contao--toggle-fieldset-collapsed-class="collapsed" data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="' . ($GLOBALS['TL_LANG'][$this->strTable][$key] ?? $key) . '" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open">' . $legend;
 				$thisId = '';
 
 				// Build rows of the current box
@@ -2447,12 +2443,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if ((string) $currentRecord['tstamp'] === '0')
 		{
 			$strBackUrl = preg_replace('/&(?:amp;)?revise=[^&]+|$/', '&amp;revise=' . $this->strTable . '.' . ((int) $this->intId), $strBackUrl, 1);
-
-			$return .= '
-<script>
-  history.pushState({}, "");
-  window.addEventListener("popstate", () => fetch(document.querySelector(".header_back").href).then(() => history.back()));
-</script>';
 		}
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)

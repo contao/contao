@@ -13,7 +13,10 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\EventListener;
 
 use Contao\CoreBundle\EventListener\DataContainerCallbackListener;
+use Contao\CoreBundle\Fixtures\EventListener\TestListener;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DataContainer;
+use Contao\System;
 
 class DataContainerCallbackListenerTest extends TestCase
 {
@@ -23,7 +26,9 @@ class DataContainerCallbackListenerTest extends TestCase
     {
         parent::setUp();
 
-        $this->listener = new DataContainerCallbackListener();
+        $framework = $this->mockContaoFramework([System::class => $this->mockAdapter(['importStatic'])]);
+
+        $this->listener = new DataContainerCallbackListener($framework);
     }
 
     protected function tearDown(): void
@@ -41,7 +46,12 @@ class DataContainerCallbackListenerTest extends TestCase
             [
                 'tl_page' => [
                     'config.onload_callback' => [[
-                        ['Test\CallbackListener', 'onLoadCallback'],
+                        [
+                            'service' => 'Test\CallbackListener',
+                            'method' => 'onLoadCallback',
+                            'closure' => null,
+                            'singleton' => null,
+                        ],
                     ]],
                 ],
             ],
@@ -73,10 +83,20 @@ class DataContainerCallbackListenerTest extends TestCase
             [
                 'tl_page' => [
                     'config.onload_callback' => [[
-                        ['Test\CallbackListener', 'loadConfigCallback'],
+                        [
+                            'service' => 'Test\CallbackListener',
+                            'method' => 'loadConfigCallback',
+                            'closure' => null,
+                            'singleton' => null,
+                        ],
                     ]],
                     'fields.title.load_callback' => [[
-                        ['Test\CallbackListener', 'loadFieldCallback'],
+                        [
+                            'service' => 'Test\CallbackListener',
+                            'method' => 'loadFieldCallback',
+                            'closure' => null,
+                            'singleton' => null,
+                        ],
                     ]],
                 ],
             ],
@@ -107,36 +127,175 @@ class DataContainerCallbackListenerTest extends TestCase
         );
     }
 
-    public function testRegistersSingletonCallbacks(): void
+    /**
+     * @dataProvider singletonProvider
+     */
+    public function testRegistersSingletonCallbacks(array $callbacks, array $expected): void
     {
         $GLOBALS['TL_DCA']['tl_page'] = [];
 
-        $this->listener->setCallbacks(
-            [
-                'tl_page' => [
-                    'list.sorting.child_record_callback' => [[
-                        ['Test\CallbackListener', 'onLoadCallback'],
-                    ]],
-                ],
-            ],
-        );
+        $this->listener->setCallbacks(['tl_page' => $callbacks]);
 
         $this->assertEmpty($GLOBALS['TL_DCA']['tl_page']);
 
         $this->listener->onLoadDataContainer('tl_page');
 
         $this->assertNotEmpty($GLOBALS['TL_DCA']['tl_page']);
+        $this->assertSame($expected, $GLOBALS['TL_DCA']['tl_page']);
+    }
 
-        $this->assertSame(
+    public static function singletonProvider(): iterable
+    {
+        yield 'handles child_record_callback' => [
+            ['list.sorting.child_record_callback' => [[
+                [
+                    'service' => 'Test\CallbackListener',
+                    'method' => 'firstCallback',
+                    'closure' => null,
+                    'singleton' => null,
+                ],
+                [
+                    'service' => 'Test\CallbackListener',
+                    'method' => 'secondCallback',
+                    'closure' => null,
+                    'singleton' => null,
+                ],
+            ]]],
             [
                 'list' => [
                     'sorting' => [
-                        'child_record_callback' => ['Test\CallbackListener', 'onLoadCallback'],
+                        'child_record_callback' => ['Test\CallbackListener', 'firstCallback'],
                     ],
                 ],
             ],
-            $GLOBALS['TL_DCA']['tl_page'],
+        ];
+
+        yield 'uses singleton if attribute is true' => [
+            ['fields.foo.barCallback' => [[
+                [
+                    'service' => 'Test\CallbackListener',
+                    'method' => 'firstCallback',
+                    'closure' => null,
+                    'singleton' => true,
+                ],
+                [
+                    'service' => 'Test\CallbackListener',
+                    'method' => 'secondCallback',
+                    'closure' => null,
+                    'singleton' => null,
+                ],
+            ]]],
+            [
+                'fields' => [
+                    'foo' => [
+                        'barCallback' => ['Test\CallbackListener', 'firstCallback'],
+                    ],
+                ],
+            ],
+        ];
+
+        yield 'does not use singleton if attribute is false' => [
+            ['list.sorting.child_record_callback' => [[
+                [
+                    'service' => 'Test\CallbackListener',
+                    'method' => 'firstCallback',
+                    'closure' => null,
+                    'singleton' => false,
+                ],
+                [
+                    'service' => 'Test\CallbackListener',
+                    'method' => 'secondCallback',
+                    'closure' => null,
+                    'singleton' => false,
+                ],
+            ]]],
+            [
+                'list' => [
+                    'sorting' => [
+                        'child_record_callback' => [
+                            ['Test\CallbackListener', 'firstCallback'],
+                            ['Test\CallbackListener', 'secondCallback'],
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider registersClosureProvider
+     */
+    public function testRegistersClosures(string $key, bool|null $closure, bool $expected): void
+    {
+        $GLOBALS['TL_DCA']['tl_article'] = [];
+
+        $testListener = $this->createMock(TestListener::class);
+        $testListener
+            ->expects($expected ? $this->once() : $this->never())
+            ->method('onClosure')
+            ->with($this->isInstanceOf(DataContainer::class))
+            ->willReturn('foo')
+        ;
+
+        $systemAdapter = $this->mockAdapter(['importStatic']);
+        $systemAdapter
+            ->expects($expected ? $this->once() : $this->never())
+            ->method('importStatic')
+            ->willReturn($testListener)
+        ;
+
+        $framework = $this->mockContaoFramework([System::class => $systemAdapter]);
+
+        $listener = new DataContainerCallbackListener($framework);
+
+        $listener->setCallbacks(
+            [
+                'tl_article' => [
+                    'fields.article.'.$key => [[
+                        [
+                            'service' => TestListener::class,
+                            'method' => 'onClosure',
+                            'closure' => $closure,
+                            'singleton' => true,
+                        ],
+                    ]],
+                ],
+            ],
         );
+
+        $this->assertEmpty($GLOBALS['TL_DCA']['tl_article']);
+
+        $listener->onLoadDataContainer('tl_article');
+
+        $this->assertNotEmpty($GLOBALS['TL_DCA']['tl_article']);
+
+        if ($expected) {
+            $this->assertIsCallable($GLOBALS['TL_DCA']['tl_article']['fields']['article'][$key]);
+            $this->assertSame('foo', $GLOBALS['TL_DCA']['tl_article']['fields']['article'][$key]($this->createMock(DataContainer::class)));
+        } else {
+            $this->assertSame([TestListener::class, 'onClosure'], $GLOBALS['TL_DCA']['tl_article']['fields']['article'][$key]);
+        }
+    }
+
+    public static function registersClosureProvider(): iterable
+    {
+        yield 'detects default callback' => [
+            'default',
+            null,
+            true,
+        ];
+
+        yield 'closure is true' => [
+            'fooCallback',
+            true,
+            true,
+        ];
+
+        yield 'closure is false' => [
+            'default',
+            false,
+            false,
+        ];
     }
 
     public function testPanelLayoutCallbacks(): void
@@ -147,7 +306,12 @@ class DataContainerCallbackListenerTest extends TestCase
             [
                 'tl_page' => [
                     'list.sorting.panel_callback.foobar' => [[
-                        ['Test\CallbackListener', 'onFoobarCallback'],
+                        [
+                            'service' => 'Test\CallbackListener',
+                            'method' => 'onFoobarCallback',
+                            'closure' => null,
+                            'singleton' => null,
+                        ],
                     ]],
                 ],
             ],
@@ -182,16 +346,36 @@ class DataContainerCallbackListenerTest extends TestCase
                 'tl_page' => [
                     'config.onload_callback' => [
                         100 => [
-                            ['Test\CallbackListener', 'priority100Callback'],
+                            [
+                                'service' => 'Test\CallbackListener',
+                                'method' => 'priority100Callback',
+                                'closure' => null,
+                                'singleton' => null,
+                            ],
                         ],
                         0 => [
-                            ['Test\CallbackListener', 'priority0Callback'],
+                            [
+                                'service' => 'Test\CallbackListener',
+                                'method' => 'priority0Callback',
+                                'closure' => null,
+                                'singleton' => null,
+                            ],
                         ],
                         10 => [
-                            ['Test\CallbackListener', 'priority10Callback'],
+                            [
+                                'service' => 'Test\CallbackListener',
+                                'method' => 'priority10Callback',
+                                'closure' => null,
+                                'singleton' => null,
+                            ],
                         ],
                         -10 => [
-                            ['Test\CallbackListener', 'priorityMinus10Callback'],
+                            [
+                                'service' => 'Test\CallbackListener',
+                                'method' => 'priorityMinus10Callback',
+                                'closure' => null,
+                                'singleton' => null,
+                            ],
                         ],
                     ],
                 ],
@@ -235,10 +419,20 @@ class DataContainerCallbackListenerTest extends TestCase
                 'tl_page' => [
                     'config.onload_callback' => [
                         10 => [
-                            ['Test\CallbackListener', 'priority10Callback'],
+                            [
+                                'service' => 'Test\CallbackListener',
+                                'method' => 'priority10Callback',
+                                'closure' => null,
+                                'singleton' => null,
+                            ],
                         ],
                         -10 => [
-                            ['Test\CallbackListener', 'priorityMinus10Callback'],
+                            [
+                                'service' => 'Test\CallbackListener',
+                                'method' => 'priorityMinus10Callback',
+                                'closure' => null,
+                                'singleton' => null,
+                            ],
                         ],
                     ],
                 ],
@@ -280,7 +474,12 @@ class DataContainerCallbackListenerTest extends TestCase
             [
                 'tl_page' => [
                     'config.onload_callback' => [[
-                        ['Test\CallbackListener', 'newCallback'],
+                        [
+                            'service' => 'Test\CallbackListener',
+                            'method' => 'newCallback',
+                            'closure' => null,
+                            'singleton' => null,
+                        ],
                     ]],
                 ],
             ],
@@ -314,13 +513,28 @@ class DataContainerCallbackListenerTest extends TestCase
                 'tl_page' => [
                     'list.sorting.child_record_callback' => [
                         0 => [
-                            ['Test\CallbackListener', 'priority0Callback'],
+                            [
+                                'service' => 'Test\CallbackListener',
+                                'method' => 'priority0Callback',
+                                'closure' => null,
+                                'singleton' => null,
+                            ],
                         ],
                         10 => [
-                            ['Test\CallbackListener', 'priority10Callback'],
+                            [
+                                'service' => 'Test\CallbackListener',
+                                'method' => 'priority10Callback',
+                                'closure' => null,
+                                'singleton' => null,
+                            ],
                         ],
                         -10 => [
-                            ['Test\CallbackListener', 'priorityMinus10Callback'],
+                            [
+                                'service' => 'Test\CallbackListener',
+                                'method' => 'priorityMinus10Callback',
+                                'closure' => null,
+                                'singleton' => null,
+                            ],
                         ],
                     ],
                 ],
@@ -357,7 +571,12 @@ class DataContainerCallbackListenerTest extends TestCase
             [
                 'tl_page' => [
                     'list.sorting.child_record_callback' => [[
-                        ['Test\CallbackListener', 'newCallback'],
+                        [
+                            'service' => 'Test\CallbackListener',
+                            'method' => 'newCallback',
+                            'closure' => null,
+                            'singleton' => null,
+                        ],
                     ]],
                 ],
             ],
@@ -394,7 +613,12 @@ class DataContainerCallbackListenerTest extends TestCase
                 'tl_page' => [
                     'list.sorting.child_record_callback' => [
                         -1 => [
-                            ['Test\CallbackListener', 'newCallback'],
+                            [
+                                'service' => 'Test\CallbackListener',
+                                'method' => 'newCallback',
+                                'closure' => null,
+                                'singleton' => null,
+                            ],
                         ],
                     ],
                 ],
@@ -425,7 +649,12 @@ class DataContainerCallbackListenerTest extends TestCase
             [
                 'tl_content' => [
                     'config.onload_callback' => [[
-                        ['Test\CallbackListener', 'onLoadCallback'],
+                        [
+                            'service' => 'Test\CallbackListener',
+                            'method' => 'onLoadCallback',
+                            'closure' => null,
+                            'singleton' => null,
+                        ],
                     ]],
                 ],
             ],
@@ -444,7 +673,12 @@ class DataContainerCallbackListenerTest extends TestCase
             [
                 'tl_page' => [
                     'config.onload_callback' => [[
-                        ['Test\CallbackListener', 'onLoadCallback'],
+                        [
+                            'service' => 'Test\CallbackListener',
+                            'method' => 'onLoadCallback',
+                            'closure' => null,
+                            'singleton' => null,
+                        ],
                     ]],
                 ],
             ],
