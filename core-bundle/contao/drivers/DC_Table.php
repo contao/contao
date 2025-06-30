@@ -3508,11 +3508,11 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 		{
 			$operations->addClearClipboardButton();
 		}
-		elseif (($buttons = $this->generateGlobalButtons($operations)) !== null)
+		elseif (null !== ($buttons = $this->generateGlobalButtons($operations)))
 		{
 			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 6.');
 
-			$operations->append(['html' => $buttons], true);
+			$operations->append(array('html' => $buttons), true);
 		}
 
 		$return = Message::generate() . $operations;
@@ -4194,11 +4194,11 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 		{
 			$operations->addClearClipboardButton();
 		}
-		elseif (($buttons = $this->generateGlobalButtons($operations)) !== null)
+		elseif (null !== ($buttons = $this->generateGlobalButtons($operations)))
 		{
 			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 6.');
 
-			$operations->append(['html' => $buttons], true);
+			$operations->append(array('html' => $buttons), true);
 		}
 
 		$return = Message::generate() . (string) $operations;
@@ -4841,14 +4841,14 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 			$operations->addNewButton($this->ptable ? $this->addToUrl('act=create' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) < self::MODE_PARENT) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create'));
 		}
 
-		if (($buttons = $this->generateGlobalButtons($operations)) !== null)
+		if (null !== ($buttons = $this->generateGlobalButtons($operations)))
 		{
 			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 6.');
 
-			$operations->append(['html' => $buttons], true);
+			$operations->append(array('html' => $buttons), true);
 		}
 
-		$return = Message::generate() . (string) $operations;
+		$return = Message::generate() . $operations;
 
 		// Return "no records found" message
 		if ($objRow->numRows < 1)

@@ -66,6 +66,14 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 		'operations' => array
 		(
 			'edit',
+			'source' => array
+			(
+				'label'               => &$GLOBALS['TL_LANG']['tl_files']['source'],
+				'href'                => 'act=source',
+				'icon'                => 'editor.svg',
+				'primary'             => true,
+				'button_callback'     => array('tl_templates', 'editSource')
+			),
 			'copy' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['copy'],
@@ -85,14 +93,6 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 			),
 			'delete',
 			'-',
-			'source' => array
-			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_files']['source'],
-				'href'                => 'act=source',
-				'icon'                => 'editor.svg',
-				'primary'             => true,
-				'button_callback'     => array('tl_templates', 'editSource')
-			),
 			'compare' => array
 			(
 				'href'                => 'key=compare',

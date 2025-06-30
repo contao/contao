@@ -484,7 +484,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			$operations->addClearClipboardButton();
 		}
-		elseif (($buttons = $this->generateGlobalButtons($operations)) !== null)
+		elseif (null !== ($buttons = $this->generateGlobalButtons($operations)))
 		{
 			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 6.');
 
@@ -492,7 +492,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		// Build the tree
-		$return = $this->panel() . Message::generate() . ((string) $operations) . ((Input::get('act') == 'select') ? '
+		$return = $this->panel() . Message::generate() . $operations . ((Input::get('act') == 'select') ? '
 <form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">

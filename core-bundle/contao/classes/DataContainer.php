@@ -944,7 +944,7 @@ abstract class DataContainer extends Backend
 			return null;
 		}
 
-		trigger_deprecation('contao/core-bundle', '5.6', 'Calling DataContainer::generateGlobalButtons without the DataContainerGlobalOperationsBuilder is deprecated and will no longer work in Contao 6.');
+		trigger_deprecation('contao/core-bundle', '5.6', 'Calling DataContainer::generateGlobalButtons without a DataContainerGlobalOperationsBuilder object is deprecated and will no longer work in Contao 6.');
 
 		$operations = System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable);
 		$operations->addGlobalButtons($this, $legacyCallback);
