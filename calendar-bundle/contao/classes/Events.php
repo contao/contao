@@ -106,9 +106,14 @@ abstract class Events extends Module
 	 * @param integer             $intBegin
 	 * @param integer             $intLimit
 	 * @param integer             $intCalendar
+	 *
+     * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+	 *             Use the "addEvent" method of the "contao_calendar.calendar_events_generator" service instead.
 	 */
 	protected function addEvent($objEvents, $intStart, $intEnd, $intBegin, $intLimit, $intCalendar)
 	{
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "addEvent" method of the "contao_calendar.calendar_events_generator" service instead.', __METHOD__);
+
 		global $objPage;
 
 		$intDate = $intStart;

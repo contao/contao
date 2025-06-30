@@ -18,6 +18,7 @@ use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Controller\Page\AbstractFeedPageController;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
 use Contao\PageModel;
+use Contao\StringUtil;
 use FeedIo\Feed;
 use FeedIo\Specification;
 use Symfony\Component\HttpFoundation\Request;
@@ -64,8 +65,7 @@ class CalendarFeedController extends AbstractFeedPageController
 
                     $feed->add($item);
 
-                    $this->tagResponse($event['model']);
-                    $this->tagResponse('contao.db.tl_calendar.'.$event['pid']);
+                    $this->tagResponse($event['model'] ?? null);
                 }
             }
         }
@@ -76,6 +76,10 @@ class CalendarFeedController extends AbstractFeedPageController
         $response->headers->set('Content-Type', self::$contentTypes[$pageModel->feedFormat]);
 
         $this->setCacheHeaders($response, $pageModel);
+
+        // Always add the response tags for the selected calendars
+        $archiveIds = StringUtil::deserialize($pageModel->eventCalendars, true);
+        $this->tagResponse(array_map(static fn ($id): string => 'contao.db.tl_calendar.'.$id, $archiveIds));
 
         return $response;
     }

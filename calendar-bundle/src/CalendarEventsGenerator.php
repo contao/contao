@@ -112,7 +112,7 @@ class CalendarEventsGenerator
         return $events;
     }
 
-    private function addEvent(array &$events, CalendarEventsModel $eventModel, int $start, int $end, int $rangeEnd, int $calendar, bool $noSpan): void
+    public function addEvent(array &$events, CalendarEventsModel $eventModel, int $start, int $end, int $rangeEnd, int $calendar, bool $noSpan): void
     {
         $page = $this->pageFinder->getCurrentPage();
 

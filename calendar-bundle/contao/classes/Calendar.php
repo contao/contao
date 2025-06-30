@@ -335,6 +335,8 @@ class Calendar extends Frontend
 	 * @param integer             $intEnd
 	 * @param PageModel           $objParent
 	 * @param boolean             $isRepeated
+	 *
+	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6
 	 */
 	private function addEvent($objEvent, $intStart, $intEnd, $objParent, $isRepeated=false)
 	{
