@@ -158,6 +158,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
 
             return [
                 'html' => $html,
+                'primary' => $config['primary'] ?? ('all' === $name ? true : null),
             ];
         }
 
