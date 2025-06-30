@@ -55,7 +55,7 @@ trait DynamicPtableTrait
         // If we have more than 1 but less than 10 results, the last result in our array
         // must be the first nested element, and its parent is what we are looking for.
         $record = $connection->fetchAssociative(
-            "SELECT id, pid, ptable FROM $table WHERE id=?",
+            "SELECT id, pid, ptable FROM $table WHERE id = ?",
             [$record['pid']],
         );
 
