@@ -5,7 +5,7 @@
     .addClass([class, 'nav-wrapper', 'block'])
     .setIfExists('style', style)
     .setIfExists('aria-label', ariaLabel)
-    .mergeWith(wrapperAttributes|default)
+    .mergeWith(wrapper_attributes|default)
 %}
 
 {% set button_attributes = attrs()
@@ -13,13 +13,20 @@
     .set('title', 'MSC.ariaMenuToggle'|trans)
     .set('aria-haspopup', 'menu')
     .set('aria-expanded', 'false')
+    .mergeWith(button_attributes|default)
 %}
 
 {% set nav_attributes = attrs()
     .addClass('navigation-main')
     .setIfExists('style', style)
     .setIfExists('aria-label', ariaLabel)
-    .mergeWith(wrapperAttributes|default)
+    .mergeWith(nav_attributes|default)
+%}
+
+{% set skiplink_attributes = attrs()
+    .set('href', request ~ '#' ~ skipId)
+    .addClass(['invisible', 'skip-link'])
+    .mergeWith(skiplink_attributes|default)
 %}
 
 {% block content %}
@@ -41,7 +48,7 @@
                 {% endif %}
 
 
-                <a href="{{ request ~ '#' ~ skipId }}" class="invisible">{{ skipNavigation }}</a>
+                <a{{ skiplink_attributes }}>{{ skipNavigation }}</a>
 
                 {{ items|join|raw }}
 
