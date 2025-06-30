@@ -1,12 +1,12 @@
 .navigation-main {
-    .invisible {
+    .skip-link {
         visibility: hidden;
     }
 }
 
 @media (width >= 1024px) {
     .navigation-main {
-        .invisible {
+        .skip-link {
             visibility: visible;
 
             opacity: 0;
@@ -17,16 +17,18 @@
             top: -100px;
             text-align: center;
             overflow: hidden;
-            background: var(--skip-bg);
-            color: var(--skip-clr);
+            background: var(--skip-background);
+            color: var(--skip-color);
             transition: top 0.15s ease-in-out;
             z-index: 6;
 
-            &:focus {
+            text-decoration: none;
+
+            &:focus-visible {
                 width: auto;
                 height: auto;
                 outline-offset: 0;
-                outline: 2px solid var(--skip-focus-bdr);
+                outline: 2px solid var(--skip-focus-border-color);
                 padding: 6px 12px;
                 top: 0;
                 opacity: 1;
