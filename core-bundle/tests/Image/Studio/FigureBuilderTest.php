@@ -1258,7 +1258,24 @@ class FigureBuilderTest extends TestCase
         ];
 
         yield 'absolute file path with special URL chars to an non-existing resource' => [
-            __DIR__.'/../../Fixtures/files/public/foo%20(bar).jpg', [], false,
+            __DIR__.'/../../Fixtures/files/public/does%20not%20exist(bar).jpg', [], false,
+        ];
+
+        yield 'absolute file path returned by the {{files::*}} insert tag' => [
+            '/files/public/foo%20%28bar%29.jpg',
+            [
+                Path::canonicalize(__DIR__.'/../../Fixtures/files/public/foo (bar).jpg'),
+                null,
+            ],
+        ];
+
+        yield 'path referencing file in the public dir' => [
+            '/images/dummy_public.jpg',
+            [
+                null,
+                '/images/dummy_public.jpg',
+                null,
+            ],
         ];
     }
 

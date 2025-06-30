@@ -42,7 +42,7 @@ services:
         class: Contao\NewsBundle\EventListener\DataContainer\PageListener
         arguments:
             - '@database_connection'
-            - '@security.helper'
+            - '@security.authorization_checker'
 
     contao_news.listener.data_container.start_stop_validation:
         class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
@@ -77,8 +77,9 @@ services:
     contao_news.listener.preview_url_create:
         class: Contao\NewsBundle\EventListener\PreviewUrlCreateListener
         arguments:
-            - '@request_stack'
             - '@contao.framework'
+            - '@contao.data_container.dca_url_analyzer'
+            - '@database_connection'
 
     contao_news.listener.sitemap:
         class: Contao\NewsBundle\EventListener\SitemapListener
