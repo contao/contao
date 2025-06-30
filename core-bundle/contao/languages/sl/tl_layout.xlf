@@ -424,10 +424,6 @@
         <source>HTML</source>
         <target>HTML</target>
       </trans-unit>
-      <trans-unit id="tl_layout.edit_styles">
-        <source>Edit the style sheets</source>
-        <target>Uredite slogovne predloge</target>
-      </trans-unit>
       <trans-unit id="tl_layout.edit_module">
         <source>Edit the module</source>
         <target>Uredite module</target>

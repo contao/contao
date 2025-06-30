@@ -169,10 +169,6 @@
         <source>Delete theme ID %s</source>
         <target>Smazat vzhled ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.css">
-        <source>Edit the style sheets of theme ID %s</source>
-        <target>Úprava kaskádovitých stylů vzhledu ID %s</target>
-      </trans-unit>
       <trans-unit id="tl_theme.modules">
         <source>Edit the front end modules of theme ID %s</source>
         <target>Úprava frontendových modulů vzhledu ID %s</target>

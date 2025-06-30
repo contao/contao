@@ -18,7 +18,6 @@ use Contao\CoreBundle\HttpKernel\Bundle\ContaoModuleBundle;
 use Contao\FaqBundle\ContaoFaqBundle;
 use Contao\NewsBundle\ContaoNewsBundle;
 use Contao\TestCase\ContaoTestCase;
-use PHPUnit\Framework\Attributes\DataProvider;
 
 class AddCommentFieldsListenerTest extends ContaoTestCase
 {
