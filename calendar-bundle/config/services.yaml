@@ -46,8 +46,9 @@ services:
     contao_calendar.listener.preview_url_create:
         class: Contao\CalendarBundle\EventListener\PreviewUrlCreateListener
         arguments:
-            - '@request_stack'
             - '@contao.framework'
+            - '@contao.data_container.dca_url_analyzer'
+            - '@database_connection'
 
     contao_calendar.listener.sitemap:
         class: Contao\CalendarBundle\EventListener\SitemapListener
