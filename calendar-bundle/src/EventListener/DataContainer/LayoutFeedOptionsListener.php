@@ -17,7 +17,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\PageModel;
 
-#[AsCallback('tl_layout', target: 'fields.newsfeeds.options')]
+#[AsCallback('tl_layout', target: 'fields.calendarfeeds.options')]
 class LayoutFeedOptionsListener
 {
     public function __construct(private readonly ContaoFramework $framework)

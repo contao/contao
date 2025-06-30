@@ -8,7 +8,6 @@
  * @license LGPL-3.0-or-later
  */
 
-use Contao\Calendar;
 use Contao\CalendarEventsModel;
 use Contao\CalendarFeedModel;
 use Contao\CalendarModel;
@@ -23,7 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 // Back end modules
 $GLOBALS['BE_MOD']['content']['calendar'] = array
 (
-	'tables'      => array('tl_calendar', 'tl_calendar_events', 'tl_calendar_feed', 'tl_content'),
+	'tables'      => array('tl_calendar', 'tl_calendar_events', 'tl_content'),
 	'table'       => array(BackendCsvImportController::class, 'importTableWizardAction'),
 	'list'        => array(BackendCsvImportController::class, 'importListWizardAction')
 );

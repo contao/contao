@@ -20,9 +20,9 @@ PaletteManipulator::create()
 // Extend fields
 $GLOBALS['TL_DCA']['tl_layout']['fields']['calendarfeeds'] = array
 (
-	'inputType'         => 'checkbox',
-	'foreignKey'        => 'tl_calendar_feed.title',
-	'eval'              => array('multiple'=>true),
-	'sql'               => "blob NULL",
-	'relation'          => array('type'=>'hasMany', 'load'=>'lazy')
+	'inputType'       => 'checkbox',
+	'foreignKey'      => 'tl_page.title',
+	'eval'            => array('multiple'=>true),
+	'sql'             => "blob NULL",
+	'relation'        => array('type'=>'hasMany', 'load'=>'lazy')
 );

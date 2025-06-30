@@ -10,7 +10,6 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
-use Contao\Calendar;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\DC_Table;
@@ -31,7 +30,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		'onload_callback' => array
 		(
 			array('tl_calendar', 'adjustDca'),
-			array('tl_calendar', 'generateFeed')
 		),
 		'oncreate_callback' => array
 		(
@@ -40,10 +38,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		'oncopy_callback' => array
 		(
 			array('tl_calendar', 'adjustPermissions')
-		),
-		'onsubmit_callback' => array
-		(
-			array('tl_calendar', 'scheduleUpdate')
 		),
 		'oninvalidate_cache_tags_callback' => array
 		(
@@ -74,15 +68,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		(
 			'fields'                  => array('title'),
 			'format'                  => '%s'
-		),
-		'global_operations' => array
-		(
-			'feeds' => array
-			(
-				'href'                => 'table=tl_calendar_feed',
-				'class'               => 'header_rss',
-				'button_callback'     => array('tl_calendar', 'manageFeeds')
-			),
 		)
 	),
 
@@ -145,8 +130,6 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
- *
- * @property Calendar $Calendar
  *
  * @internal
  */
@@ -262,84 +245,6 @@ class tl_calendar extends Backend
 			$root[] = $insertId;
 			$user->calendars = $root;
 		}
-	}
-
-	/**
-	 * Check for modified calendar feeds and update the XML files if necessary
-	 */
-	public function generateFeed()
-	{
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-		$session = $objSession->get('calendar_feed_updater');
-
-		if (empty($session) || !is_array($session))
-		{
-			return;
-		}
-
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($request)
-		{
-			$origScope = $request->attributes->get('_scope');
-			$request->attributes->set('_scope', 'frontend');
-		}
-
-		$calendar = new Calendar();
-
-		foreach ($session as $id)
-		{
-			$calendar->generateFeedsByCalendar($id);
-		}
-
-		if ($request)
-		{
-			$request->attributes->set('_scope', $origScope);
-		}
-
-		$objSession->set('calendar_feed_updater', null);
-	}
-
-	/**
-	 * Schedule a calendar feed update
-	 *
-	 * This method is triggered when a single calendar or multiple calendars
-	 * are modified (edit/editAll).
-	 *
-	 * @param DataContainer $dc
-	 */
-	public function scheduleUpdate(DataContainer $dc)
-	{
-		// Return if there is no ID
-		if (!$dc->id)
-		{
-			return;
-		}
-
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		// Store the ID in the session
-		$session = $objSession->get('calendar_feed_updater');
-		$session[] = $dc->id;
-		$objSession->set('calendar_feed_updater', array_unique($session));
-	}
-
-	/**
-	 * Return the manage feeds button
-	 *
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $class
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function manageFeeds($href, $label, $title, $class, $attributes)
-	{
-		$user = BackendUser::getInstance();
-
-		return ($user->isAdmin || !empty($user->calendarfeeds) || !empty($user->calendarfeedp)) ? '<a href="' . $this->addToUrl($href) . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : '';
 	}
 
 	/**
