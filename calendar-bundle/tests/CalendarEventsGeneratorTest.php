@@ -38,15 +38,15 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
             $this->createMock(TranslatorInterface::class),
         );
 
-        $events = $generator->getAllEvents([], new \DateTime(), new \DateTime('9999-12-31 23:59:59'));
+        $events = $generator->getAllEvents([], new \DateTime('now', new \DateTimeZone('UTC')), new \DateTime('9999-12-31 23:59:59', new \DateTimeZone('UTC')));
 
         $this->assertSame([], $events);
     }
 
     public function testReturnsEmptyIfNoCalendarFound(): void
     {
-        $rangeStart = new \DateTimeImmutable();
-        $rangeEnd = new \DateTimeImmutable('9999-12-31 23:59:59');
+        $rangeStart = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+        $rangeEnd = new \DateTimeImmutable('9999-12-31 23:59:59', new \DateTimeZone('UTC'));
 
         $calendarEventsAdapter = $this->mockAdapter(['findCurrentByPid']);
         $calendarEventsAdapter
@@ -71,8 +71,8 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
     #[DataProvider('getEvent')]
     public function testProcessesEvent(array $record, array $expected): void
     {
-        $rangeStart = new \DateTimeImmutable('2025-06-30 12:00:00');
-        $rangeEnd = new \DateTimeImmutable('9999-12-31 23:59:59');
+        $rangeStart = new \DateTimeImmutable('2025-06-30 12:00:00', new \DateTimeZone('UTC'));
+        $rangeEnd = new \DateTimeImmutable('9999-12-31 23:59:59', new \DateTimeZone('UTC'));
 
         $eventModel = $this->mockClassWithProperties(CalendarEventsModel::class, $record);
 
@@ -427,7 +427,7 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
                     'hasTeaser' => false,
                     'details' => true,
                     'hasDetails' => true,
-                    'recurring' => 'translated(contao_default:MSC.cal_repeat[translated(contao_default:MSC.cal_single_day),  translated(contao_default:MSC.cal_until[2025-07-02]), 2025-07-01T20:00:00+01:00, 2025-07-01 20:00])',
+                    'recurring' => 'translated(contao_default:MSC.cal_repeat[translated(contao_default:MSC.cal_single_day),  translated(contao_default:MSC.cal_until[2025-07-02]), 2025-07-01T20:00:00+00:00, 2025-07-01 20:00])',
                     'day' => 'translated(contao_default:DAYS.2)',
                     'month' => 'translated(contao_default:MONTHS.6)',
                     'until' => ' translated(contao_default:MSC.cal_until[2025-07-02])',
