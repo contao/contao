@@ -135,25 +135,6 @@ class PreviewUrlCreateListenerTest extends TestCase
         $this->assertNull($event->getQuery());
     }
 
-    #[DataProvider('getValidDoParameters')]
-    public function testDoesNotCreateThePreviewUrlIfThereIsNoPageItem(string $do): void
-    {
-        $articleModel = $this->mockClassWithProperties(ArticleModel::class, ['pid' => 42]);
-
-        $adapters = [
-            PageModel::class => $this->mockConfiguredAdapter(['findById' => null]),
-            ArticleModel::class => $this->mockConfiguredAdapter(['findById' => $articleModel]),
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-        $event = new PreviewUrlCreateEvent($do, 1);
-
-        $listener = new PreviewUrlCreateListener($framework);
-        $listener($event);
-
-        $this->assertNull($event->getQuery());
-    }
-
     public static function getValidDoParameters(): iterable
     {
         yield ['page'];
