@@ -1,4 +1,4 @@
-import {Navigation} from './scripts/frontend/navigation';
+import { Navigation } from './scripts/frontend/navigation';
 
 window.AccessibilityNavigation = Navigation;
 

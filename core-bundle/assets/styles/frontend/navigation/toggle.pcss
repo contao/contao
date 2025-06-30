@@ -1,17 +1,13 @@
 .btn-toggle-submenu {
     all: revert;
-
     position: absolute;
     top: 5px;
     right: 0;
-
     width: 44px;
     height: 44px;
-
     border: none;
     background: none !important;
-    color: currentColor !important;
-
+    color: currentcolor !important;
     cursor: pointer;
     z-index: 1;
 
@@ -34,7 +30,7 @@
         top: 9px;
         right: -6px;
 
-        &:after {
+        &::after {
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"> <path d="M9 18l6-6-6-6"/></svg>') no-repeat center;
         }
     }
@@ -44,12 +40,10 @@
     padding: 0;
     border: none;
     background: transparent;
-
     line-height: 1.5;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-
     position: relative;
     z-index: 7;
 
@@ -75,7 +69,7 @@
         left: 50%;
         height: 0.25rem;
         width: 2.25rem;
-        background: hsl(30, 100%, 48%);
+        background: hsl(30deg 100% 48%);
         border-radius: 3rem;
         transform: translateX(-50%);
     }
@@ -133,7 +127,7 @@
             .icon-line {
                 border: 0 none;
 
-                &:after {
+                &::after {
                     bottom: -1px;
                 }
             }
@@ -141,6 +135,6 @@
     }
 
     .nav-burger__inner {
-        color: currentColor;
+        color: currentcolor;
     }
 }
