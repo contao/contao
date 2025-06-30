@@ -12,12 +12,12 @@ declare(strict_types=1);
 
 namespace Contao\CalendarBundle\Tests\EventListener;
 
+use Contao\CalendarBundle\EventListener\GeneratePageListener;
 use Contao\CoreBundle\Framework\Adapter;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\Environment;
 use Contao\LayoutModel;
 use Contao\Model\Collection;
-use Contao\CalendarBundle\EventListener\GeneratePageListener;
 use Contao\PageModel;
 use Contao\Template;
 use Contao\TestCase\ContaoTestCase;

@@ -45,8 +45,6 @@ if (System::getContainer()->get('contao.routing.scope_matcher')->isBackendReques
 // Add permissions
 $GLOBALS['TL_PERMISSIONS'][] = 'calendars';
 $GLOBALS['TL_PERMISSIONS'][] = 'calendarp';
-$GLOBALS['TL_PERMISSIONS'][] = 'calendarfeeds';
-$GLOBALS['TL_PERMISSIONS'][] = 'calendarfeedp';
 
 // Models
 $GLOBALS['TL_MODELS']['tl_calendar_events'] = CalendarEventsModel::class;
