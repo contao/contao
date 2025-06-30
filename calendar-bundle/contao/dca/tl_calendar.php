@@ -77,12 +77,11 @@ $GLOBALS['TL_DCA']['tl_calendar'] = array
 		),
 		'global_operations' => array
 		(
-			'all',
-			'-',
 			'feeds' => array
 			(
 				'href'                => 'table=tl_calendar_feed',
 				'class'               => 'header_rss',
+				'primary'             => true,
 				'button_callback'     => array('tl_calendar', 'manageFeeds')
 			),
 		)
