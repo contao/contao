@@ -19,7 +19,6 @@ use Contao\ManagerBundle\ContaoManagerBundle;
 use Contao\ManagerPlugin\Bundle\Parser\DelegatingParser;
 use Contao\ManagerPlugin\Bundle\Parser\ParserInterface;
 use Contao\ManagerPlugin\Config\ContainerBuilder as PluginContainerBuilder;
-use Contao\ManagerPlugin\Dependency\DependentPluginInterface;
 use Contao\ManagerPlugin\PluginLoader;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
@@ -72,7 +71,6 @@ class PluginTest extends ContaoTestCase
     {
         $plugin = new Plugin();
 
-        $this->assertInstanceOf(DependentPluginInterface::class, $plugin);
         $this->assertSame(['contao/core-bundle'], $plugin->getPackageDependencies());
     }
 
