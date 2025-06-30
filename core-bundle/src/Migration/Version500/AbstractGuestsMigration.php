@@ -76,7 +76,7 @@ abstract class AbstractGuestsMigration extends AbstractMigration
                 continue;
             }
 
-            $values = $this->connection->fetchAllKeyValue(
+            $values = $this->connection->fetchAllAssociative(
                 <<<SQL
                     SELECT
                         id,

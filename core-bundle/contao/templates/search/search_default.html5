@@ -5,7 +5,7 @@
     <?php $this->insert('image', (array) $this->image) ?>
   <?php endif; ?>
 
-  <h3><a href="<?= $this->href ?>" title="<?= $this->title ?>"><?= $this->link ?></a></h3>
+  <h3><a href="<?= $this->href ?>"><?= $this->link ?></a></h3>
 
   <?php if ($this->context): ?>
     <p class="context"><?= $this->context ?></p>
