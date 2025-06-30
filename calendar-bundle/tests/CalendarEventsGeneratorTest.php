@@ -320,16 +320,16 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
             ],
         ];
 
-        $time1 = strtotime('2025-06-30 20:00:00');
-        $time2 = strtotime('2025-07-01 20:00:00');
-        $time3 = strtotime('2025-07-02 20:00:00');
+        $time1 = new \DateTimeImmutable('2025-06-30 20:00:00');
+        $time2 = new \DateTimeImmutable('2025-07-01 20:00:00');
+        $time3 = new \DateTimeImmutable('2025-07-02 20:00:00');
 
         yield 'Recurring event' => [
             [
                 'title' => 'Lorem Ipsum',
-                'startTime' => $time1,
-                'endTime' => $time1,
-                'repeatEnd' => $time3,
+                'startTime' => $time1->getTimestamp(),
+                'endTime' => $time1->getTimestamp(),
+                'repeatEnd' => $time3->getTimestamp(),
                 'teaser' => '',
                 'featured' => 0,
                 'source' => 'default',
@@ -339,12 +339,12 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
             ],
             [
                 [
-                    'date' => date('Y-m-d', $time1),
-                    'datetime' => date('Y-m-d', $time1),
+                    'date' => $time1->format('Y-m-d'),
+                    'datetime' => $time1->format('Y-m-d'),
                     'class' => ' current',
-                    'begin' => $time1,
-                    'end' => $time1,
-                    'effectiveEndTime' => $time1,
+                    'begin' => $time1->getTimestamp(),
+                    'end' => $time1->getTimestamp(),
+                    'effectiveEndTime' => $time1->getTimestamp(),
                     'hasTeaser' => false,
                     'details' => true,
                     'hasDetails' => true,
@@ -354,12 +354,12 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
                     'until' => ' translated(contao_default:MSC.cal_until[2025-07-02])',
                 ],
                 [
-                    'date' => date('Y-m-d', $time2),
-                    'datetime' => date('Y-m-d', $time2),
+                    'date' => $time2->format('Y-m-d'),
+                    'datetime' => $time2->format('Y-m-d'),
                     'class' => ' upcoming',
-                    'begin' => $time2,
-                    'end' => $time2,
-                    'effectiveEndTime' => $time2,
+                    'begin' => $time2->getTimestamp(),
+                    'end' => $time2->getTimestamp(),
+                    'effectiveEndTime' => $time2->getTimestamp(),
                     'hasTeaser' => false,
                     'details' => true,
                     'hasDetails' => true,
@@ -369,12 +369,12 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
                     'until' => ' translated(contao_default:MSC.cal_until[2025-07-02])',
                 ],
                 [
-                    'date' => date('Y-m-d', $time3),
-                    'datetime' => date('Y-m-d', $time3),
+                    'date' => $time3->format('Y-m-d'),
+                    'datetime' => $time3->format('Y-m-d'),
                     'class' => ' upcoming',
-                    'begin' => $time3,
-                    'end' => $time3,
-                    'effectiveEndTime' => $time3,
+                    'begin' => $time3->getTimestamp(),
+                    'end' => $time3->getTimestamp(),
+                    'effectiveEndTime' => $time3->getTimestamp(),
                     'hasTeaser' => false,
                     'details' => true,
                     'hasDetails' => true,
@@ -382,6 +382,56 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
                     'day' => 'translated(contao_default:DAYS.3)',
                     'month' => 'translated(contao_default:MONTHS.6)',
                     'until' => ' translated(contao_default:MSC.cal_until[2025-07-02])',
+                ],
+            ],
+        ];
+
+        yield 'Recurring event with added time' => [
+            [
+                'title' => 'Lorem Ipsum',
+                'startTime' => $time1->getTimestamp(),
+                'endTime' => $time1->getTimestamp(),
+                'repeatEnd' => $time3->getTimestamp(),
+                'teaser' => '',
+                'featured' => 0,
+                'source' => 'default',
+                'recurring' => true,
+                'repeatEach' => serialize(['unit' => 'day', 'value' => 1]),
+                'recurrences' => 1,
+                'addTime' => true,
+            ],
+            [
+                [
+                    'date' => $time1->format('Y-m-d'),
+                    'datetime' => $time1->format('c'),
+                    'class' => ' current',
+                    'begin' => $time1->getTimestamp(),
+                    'end' => $time1->getTimestamp(),
+                    'effectiveEndTime' => $time1->setTime(23, 59, 59)->getTimestamp(),
+                    'hasTeaser' => false,
+                    'details' => true,
+                    'hasDetails' => true,
+                    'recurring' => 'translated(contao_default:MSC.cal_repeat_ended[translated(contao_default:MSC.cal_single_day),  translated(contao_default:MSC.cal_until[2025-07-02])])',
+                    'day' => 'translated(contao_default:DAYS.1)',
+                    'month' => 'translated(contao_default:MONTHS.5)',
+                    'until' => ' translated(contao_default:MSC.cal_until[2025-07-02])',
+                    'time' => '20:00',
+                ],
+                [
+                    'date' => $time2->format('Y-m-d'),
+                    'datetime' => $time2->format('c'),
+                    'class' => ' upcoming',
+                    'begin' => $time2->getTimestamp(),
+                    'end' => $time2->getTimestamp(),
+                    'effectiveEndTime' => $time2->setTime(23, 59, 59)->getTimestamp(),
+                    'hasTeaser' => false,
+                    'details' => true,
+                    'hasDetails' => true,
+                    'recurring' => 'translated(contao_default:MSC.cal_repeat[translated(contao_default:MSC.cal_single_day),  translated(contao_default:MSC.cal_until[2025-07-02]), 2025-07-01T20:00:00+01:00, 2025-07-01 20:00])',
+                    'day' => 'translated(contao_default:DAYS.2)',
+                    'month' => 'translated(contao_default:MONTHS.6)',
+                    'until' => ' translated(contao_default:MSC.cal_until[2025-07-02])',
+                    'time' => '20:00',
                 ],
             ],
         ];

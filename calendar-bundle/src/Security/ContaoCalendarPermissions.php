@@ -26,13 +26,13 @@ final class ContaoCalendarPermissions
 
     /**
      * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
-     *             use USER_CAN_ACCESS_PAGE_TYPE instead
+     *             use ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE instead
      */
     public const USER_CAN_CREATE_FEEDS = 'contao_user.calendarfeedp.create';
 
     /**
      * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
-     *             use USER_CAN_DELETE_PAGE instead
+     *             use ContaoCorePermissions::USER_CAN_DELETE_PAGE instead
      */
     public const USER_CAN_DELETE_FEEDS = 'contao_user.calendarfeedp.delete';
 }
