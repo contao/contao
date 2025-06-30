@@ -12,13 +12,11 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
-use Contao\ArticleModel;
 use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\EventListener\PreviewUrlCreateListener;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Tests\TestCase;
-use Contao\PageModel;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 
