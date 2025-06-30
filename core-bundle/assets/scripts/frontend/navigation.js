@@ -68,7 +68,7 @@ export class Navigation {
     _initFocusTrapTargets() {
         const nodes = [this.navigation.closest('#header')?.querySelector('a[href].logo'), ...this.navigation.querySelectorAll('a[href]:not([disabled]), button:not([disabled])')];
 
-        this.firstFocus = nodes[0] ?? [];
+        this.firstFocus = nodes[0] ?? this.toggle;
         this.lastFocus = nodes[nodes.length - 1] ?? [];
     }
 
