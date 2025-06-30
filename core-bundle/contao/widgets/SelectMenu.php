@@ -187,24 +187,18 @@ class SelectMenu extends Widget
 			}
 		}
 
-		$strBuffer = \sprintf(
-			'%s<select name="%s" id="ctrl_%s" class="%s%s"%s data-action="focus->contao--scroll-offset#store">%s</select>%s',
+		return \sprintf(
+			'%s%s<select name="%s" id="ctrl_%s" class="%s%s"%s data-action="focus->contao--scroll-offset#store">%s</select>%s%s',
 			$this->multiple ? '<input type="hidden" name="' . (str_ends_with($this->strName, '[]') ? substr($this->strName, 0, -2) : $this->strName) . '" value="">' : '',
+			$this->chosen ? '<div class="tl_select_wrapper" data-controller="contao--choices">' : '',
 			$this->strName,
 			$this->strId,
 			$strClass,
 			$this->strClass ? ' ' . $this->strClass : '',
 			$this->getAttributes(),
 			implode('', $arrOptions),
+			$this->chosen ? '</div>' : '',
 			$this->wizard
 		);
-
-		// Chosen
-		if ($this->chosen)
-		{
-			$strBuffer = '<div class="tl_select_wrapper" data-controller="contao--choices">' . $strBuffer . '</div>';
-		}
-
-		return $strBuffer;
 	}
 }
