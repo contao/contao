@@ -21,7 +21,6 @@ use Contao\CalendarModel;
 use Contao\ContentModel;
 use Contao\Controller;
 use Contao\CoreBundle\Cache\CacheTagManager;
-use Contao\CoreBundle\Cache\EntityCacheTags;
 use Contao\CoreBundle\Image\ImageFactoryInterface;
 use Contao\CoreBundle\InsertTag\InsertTagParser;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
