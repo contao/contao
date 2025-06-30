@@ -31,7 +31,7 @@ class CalendarEventsGenerator
         private readonly PageFinder $pageFinder,
         private readonly ContentUrlGenerator $contentUrlGenerator,
         private readonly TranslatorInterface $translator,
-        private readonly ResponseTagger|null $responseTagger,
+        private readonly ResponseTagger|null $responseTagger = null,
     ) {
     }
 
@@ -39,7 +39,7 @@ class CalendarEventsGenerator
      * Returns the generated events including recurrences as a multidimensional array,
      * grouped by day and timestamp.
      */
-    public function getAllEvents(array $calendars, \DateTime $rangeStart, \DateTime $rangeEnd, bool|null $featured = null, bool $noSpan = false, int|null $recurrenceLimit = null): array
+    public function getAllEvents(array $calendars, \DateTimeInterface $rangeStart, \DateTimeInterface $rangeEnd, bool|null $featured = null, bool $noSpan = false, int|null $recurrenceLimit = null): array
     {
         if ([] === $calendars) {
             return [];
@@ -48,7 +48,7 @@ class CalendarEventsGenerator
         $events = [];
 
         // Include all events of the day, expired events will be filtered out later
-        $rangeStart->setTime(0, 0);
+        $rangeStart = \DateTime::createFromInterface($rangeStart)->setTime(0, 0);
 
         $calendarEventsModel = $this->contaoFramework->getAdapter(CalendarEventsModel::class);
 
@@ -61,8 +61,6 @@ class CalendarEventsGenerator
             }
 
             foreach ($eventModels as $eventModel) {
-                $eventModel = $eventModels->current();
-
                 $this->addEvent($events, $eventModel, $eventModel->startTime, $eventModel->endTime, $rangeEnd->getTimestamp(), $id, $noSpan);
 
                 // Recurring events
@@ -203,13 +201,13 @@ class CalendarEventsGenerator
         $event['until'] = $until;
         $event['begin'] = $start;
         $event['end'] = $end;
-        $event['effectiveEndTime'] = $event['endTime'];
+        $event['effectiveEndTime'] = $end;
         $event['details'] = '';
         $event['hasTeaser'] = false;
 
         // Set open-end events to 23:59:59, so they run until the end of the day (see #4476)
         if ($start === $end && $eventModel->addTime) {
-            $event['effectiveEndTime'] = strtotime(date('Y-m-d', $event['endTime']).' 23:59:59');
+            $event['effectiveEndTime'] = strtotime(date('Y-m-d', $end).' 23:59:59');
         }
 
         // Override the link target

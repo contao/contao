@@ -70,7 +70,7 @@ class CalendarFeedListener
             default => null,
         };
 
-        $calendarEvents = $this->calendarEventsGenerator->getAllEvents($calendars, new \DateTime(), (new \DateTime())->setTimestamp(PHP_INT_MAX), $featured, true, (int) $pageModel->feedRecurrenceLimit);
+        $calendarEvents = $this->calendarEventsGenerator->getAllEvents($calendars, new \DateTime(), new \DateTime('9999-12-31 23:59:59'), $featured, true, (int) $pageModel->feedRecurrenceLimit);
 
         $systemEvent->setEvents($calendarEvents);
     }
