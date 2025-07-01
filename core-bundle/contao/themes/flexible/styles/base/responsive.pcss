@@ -1,3 +1,41 @@
+/* Tablet */
+@media (max-width: 991px) {
+    #container {
+        overflow-x: clip;
+        width: auto;
+    }
+
+    #main {
+        width: 100%;
+        flex-shrink: 0;
+        position: relative;
+        transition: transform .2s ease;
+        will-change: transform;
+    }
+
+    .show-navigation #main {
+        transform: translateX(240px);
+    }
+
+    #left {
+        visibility: hidden;
+        width: 240px;
+        flex-shrink: 0;
+        margin-left: -240px;
+        transition: transform .2s ease, visibility .2s ease;
+        will-change: transform, visibility;
+    }
+
+    .show-navigation #left {
+        visibility: visible;
+        transform: translateX(240px);
+    }
+
+    #tmenu .burger {
+        display: inline;
+    }
+}
+
 /* Handheld */
 @media (max-width: 767px) {
     #header h1 a {
