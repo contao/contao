@@ -110,6 +110,7 @@ class JsonLdManagerTest extends TestCase
                             "noSearch": false,
                             "pageId": 42,
                             "protected": false,
+                            "searchIndexer": "",
                             "title": "title"
                         }
                     ]
