@@ -336,7 +336,7 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
             ],
         ];
 
-        $time1 = new \DateTimeImmutable()->modify('- 1 minute');
+        $time1 = (new \DateTimeImmutable())->modify('- 1 minute');
         $time2 = $time1->modify('+ 1 day');
         $time3 = $time2->modify('+ 1 day');
 
