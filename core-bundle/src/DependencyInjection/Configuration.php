@@ -592,15 +592,15 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('countries')
-                    ->info('Adds, removes or overwrites the list of ISO 3166-1 alpha-2 country codes.')
+                    ->info('Adds, removes or overwrites the list of ISO 3166-1 alpha-2 country and ISO 3166-2 subdivision codes. Labels can be provided via the translator by setting "CNT.de" for "DE" and "CNT.at9" for "AT-9" for example.')
                     ->prototype('scalar')->end()
                     ->defaultValue([])
-                    ->example(['+DE', '-AT', 'CH'])
+                    ->example(['+DE', '-AT', '+AT-9', 'CH'])
                     ->validate()
                         ->ifTrue(
                             static function (array $countries): bool {
                                 foreach ($countries as $country) {
-                                    if (!preg_match('/^[+-]?[A-Z][A-Z0-9]$/', $country)) {
+                                    if (!preg_match('/^[+-]?[A-Z][A-Z0-9](?:-[A-Z0-9]{1,3})?$/', $country)) {
                                         return true;
                                     }
                                 }
@@ -608,7 +608,7 @@ class Configuration implements ConfigurationInterface
                                 return false;
                             },
                         )
-                        ->thenInvalid('All provided countries must be two uppercase letters and optionally start with +/- to add/remove the country to/from the default list.')
+                        ->thenInvalid('All provided countries must be two uppercase letters optionally followed by a dash and a subdivision code and optionally start with +/- to add/remove the country to/from the default list.')
                     ->end()
                 ->end()
             ->end()
