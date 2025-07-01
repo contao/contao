@@ -20,7 +20,7 @@ class ContaoPageSchema extends BaseType
     /**
      * @param array<int> $groups
      */
-    public function __construct(string $title, int $pageId, bool $noSearch, bool $protected, array $groups, bool $fePreview, array $memberGroups = [])
+    public function __construct(string $title, int $pageId, bool $noSearch, bool $protected, array $groups, bool $fePreview, array $memberGroups = [], string $searchIndexer = '')
     {
         $this->setTitle($title);
         $this->setPageId($pageId);
@@ -29,6 +29,7 @@ class ContaoPageSchema extends BaseType
         $this->setGroups($groups);
         $this->setFePreview($fePreview);
         $this->setMemberGroups($memberGroups);
+        $this->setSearchIndexer($searchIndexer);
     }
 
     public function getContext(): string
@@ -121,6 +122,18 @@ class ContaoPageSchema extends BaseType
     public function setMemberGroups(array $memberGroups): self
     {
         $this->properties['memberGroups'] = array_map(\intval(...), $memberGroups);
+
+        return $this;
+    }
+
+    public function getSearchIndexer(): string
+    {
+        return $this->properties['searchIndexer'];
+    }
+
+    public function setSearchIndexer(string $searchIndexer): self
+    {
+        $this->properties['searchIndexer'] = $searchIndexer;
 
         return $this;
     }

@@ -329,7 +329,7 @@ abstract class DataContainer extends Backend
 		switch ($strKey)
 		{
 			case 'activeRecord':
-				trigger_deprecation('contao/core-bundle', '5.0', 'Setting the active record has been deprecated and will be removed in Contao 6.');
+				trigger_deprecation('contao/core-bundle', '5.0', 'Setting the active record is deprecated and will be removed in Contao 6.');
 				$this->objActiveRecord = $varValue;
 				break;
 
@@ -350,7 +350,7 @@ abstract class DataContainer extends Backend
 				break;
 
 			default:
-				trigger_deprecation('contao/core-bundle', '5.0', 'Accessing protected properties or adding dynamic ones has been deprecated and will no longer work in Contao 6.');
+				trigger_deprecation('contao/core-bundle', '5.0', 'Accessing protected properties or adding dynamic ones is deprecated and will no longer work in Contao 6.');
 				$this->$strKey = $varValue;
 				break;
 		}
@@ -386,7 +386,7 @@ abstract class DataContainer extends Backend
 				return $this->strPalette;
 
 			case 'activeRecord':
-				trigger_deprecation('contao/core-bundle', '5.0', 'The active record has been deprecated and will be removed in Contao 6. Use DataContainer::getCurrentRecord() or DC_Table::getActiveRecord() instead.');
+				trigger_deprecation('contao/core-bundle', '5.0', 'The active record is deprecated and will be removed in Contao 6. Use DataContainer::getCurrentRecord() or DC_Table::getActiveRecord() instead.');
 
 				return $this->objActiveRecord;
 
@@ -817,7 +817,7 @@ abstract class DataContainer extends Backend
 	 */
 	protected function combiner($names)
 	{
-		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "contao.data_container.palette_builder" service instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "contao.data_container.palette_builder" service instead.', __METHOD__);
 
 		return System::getContainer()
 			->get('contao.data_container.palette_builder')
