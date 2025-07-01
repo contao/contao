@@ -24,6 +24,8 @@ use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\RateLimiter\Storage\InMemoryStorage;
 
 class SearchIndexListenerTest extends TestCase
 {
@@ -50,6 +52,56 @@ class SearchIndexListenerTest extends TestCase
         $event = new TerminateEvent($this->createMock(HttpKernelInterface::class), $request, $response);
 
         $listener = new SearchIndexListener($messenger, '_fragment', '/contao', $features);
+        $listener($event);
+    }
+
+    public function testRateLimitingOnIndex(): void
+    {
+        $request = Request::create('/foobar');
+        $response = new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>');
+
+        $messenger = $this->createMock(MessageBusInterface::class);
+        $messenger
+            ->expects($this->exactly(3))
+            ->method('dispatch')
+            ->with($this->callback(
+                function (SearchIndexMessage $message) {
+                    $this->assertTrue($message->shouldIndex());
+                    $this->assertFalse($message->shouldDelete());
+
+                    return true;
+                },
+            ))
+            ->willReturnCallback(static fn (SearchIndexMessage $message) => new Envelope($message))
+        ;
+
+        $event = new TerminateEvent($this->createMock(HttpKernelInterface::class), $request, $response);
+        $listener = new SearchIndexListener($messenger, '_fragment', '/contao', SearchIndexListener::FEATURE_INDEX);
+
+        // Should index (total expected count: 1)
+        $listener($event);
+
+        // Should index because no rate limiter configured (total expected count: 2)
+        $listener($event);
+
+        // Now configure the listener with the rate limiter
+        $rateLimiter = new RateLimiterFactory(
+            [
+                'id' => 'contao.listener.search_index.default_rate_limiter',
+                'policy' => 'fixed_window',
+                'limit' => 1,
+                'interval' => '5 minutes',
+            ],
+            new InMemoryStorage(),
+        );
+
+        $listener = new SearchIndexListener($messenger, '_fragment', '/contao', SearchIndexListener::FEATURE_INDEX, $rateLimiter);
+
+        // Should index because the rate limiter sees this response for the first time
+        // (total expected count: 3)
+        $listener($event);
+
+        // Should NOT index because the rate limiter limits (total expected count: 3)
         $listener($event);
     }
 
