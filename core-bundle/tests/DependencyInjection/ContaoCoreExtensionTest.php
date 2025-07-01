@@ -465,9 +465,16 @@ class ContaoCoreExtensionTest extends TestCase
         $this->assertFalse($container->hasDefinition('contao.messenger.web_worker'));
     }
 
-    public function testSetsTheCorrectFeatureFlagOnTheSearchIndexListener(): void
+    public function testConfiguresTheSearchIndexListenerCorrectly(): void
     {
-        $container = $this->getContainerBuilder();
+        $container = new ContainerBuilder(
+            new ParameterBag([
+                'kernel.project_dir' => Path::normalize($this->getTempDir()),
+                'kernel.charset' => 'UTF-8',
+            ]),
+        );
+
+        $container->setDefinition('cache.app', new Definition());
 
         $extension = new ContaoCoreExtension();
         $extension->load(
@@ -484,6 +491,18 @@ class ContaoCoreExtensionTest extends TestCase
         );
 
         $definition = $container->getDefinition('contao.listener.search_index');
+        $this->assertEquals(new Reference('contao.listener.search_index.default_rate_limiter'), $definition->getArgument('$rateLimiterFactory'));
+
+        $rateLimiterDefinition = $container->getDefinition('contao.listener.search_index.default_rate_limiter');
+        $this->assertSame(
+            [
+                'id' => 'contao.listener.search_index.default_rate_limiter',
+                'policy' => 'fixed_window',
+                'limit' => 1,
+                'interval' => '5 minutes',
+            ],
+            $rateLimiterDefinition->getArgument(0),
+        );
 
         $this->assertSame(SearchIndexListener::class, $definition->getClass());
         $this->assertSame(SearchIndexListener::FEATURE_INDEX, $definition->getArgument('$enabledFeatures'));
