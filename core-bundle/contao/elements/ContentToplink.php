@@ -12,7 +12,7 @@ namespace Contao;
 
 use Contao\CoreBundle\Controller\ContentElement\ToplinkController;
 
-trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class has been deprecated and will no longer work in Contao 6. Use the "%s" class instead.', ContentToplink::class, ToplinkController::class);
+trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprecated and will no longer work in Contao 6. Use the "%s" class instead.', ContentToplink::class, ToplinkController::class);
 
 /**
  * Front end content element "toplink".

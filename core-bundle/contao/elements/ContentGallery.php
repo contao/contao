@@ -15,7 +15,7 @@ use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\Model\Collection;
 use Symfony\Component\Filesystem\Path;
 
-trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class has been deprecated and will no longer work in Contao 6. Use the "%s" class instead.', ContentGallery::class, ImagesController::class);
+trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprecated and will no longer work in Contao 6. Use the "%s" class instead.', ContentGallery::class, ImagesController::class);
 
 /**
  * Front end content element "gallery".
