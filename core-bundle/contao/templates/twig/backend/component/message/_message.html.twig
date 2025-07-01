@@ -11,7 +11,7 @@
         .set('aria-live', 'polite', success)
         .set('aria-alert', 'true', not success)
         .set('data-contao--message-outlet-target', 'message')
-        .set('data-contao--message-outlet-autoclose', 5000)
+        .set('data-contao--message-outlet-autoclose', 5000, autoclose)
         .set('data-turbo-temporary')
         .mergeWith(message_attributes|default)
     %}
