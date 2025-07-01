@@ -30,7 +30,7 @@
 
                 {# Module/Content element #}
                 <td>
-                    <div class="tl_select__wrapper" data-controller="contao--choices">
+                    <div class="tl_select_wrapper" data-controller="contao--choices">
                         {% set module_select_attributes = attrs()
                             .set('name', "#{id}[#{loop.index0}][mod]")
                             .set('data-action', 'focus->contao--scroll-offset#store contao--row-wizard#updateModuleWizardLink')
@@ -61,7 +61,7 @@
 
                 {# Layout #}
                 <td>
-                    <div class="tl_select__wrapper" data-controller="contao--choices">
+                    <div class="tl_select_wrapper" data-controller="contao--choices">
                         {% set layout_select_attributes = attrs()
                             .set('name', "#{id}[#{loop.index0}][col]")
                             .set('data-action', 'focus->contao--scroll-offset#store')
