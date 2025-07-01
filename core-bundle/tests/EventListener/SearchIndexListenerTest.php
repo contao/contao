@@ -59,8 +59,8 @@ class SearchIndexListenerTest extends TestCase
     {
         $request = Request::create('/foobar');
         $response = new Response('<html><body><script type="application/ld+json">{"@context":"https:\/\/contao.org\/","@type":"Page","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>');
-        $messenger = $this->createMock(MessageBusInterface::class);
 
+        $messenger = $this->createMock(MessageBusInterface::class);
         $messenger
             ->expects($this->exactly(3))
             ->method('dispatch')
@@ -76,7 +76,6 @@ class SearchIndexListenerTest extends TestCase
         ;
 
         $event = new TerminateEvent($this->createMock(HttpKernelInterface::class), $request, $response);
-
         $listener = new SearchIndexListener($messenger, '_fragment', '/contao', SearchIndexListener::FEATURE_INDEX);
 
         // Should index (total expected count: 1)

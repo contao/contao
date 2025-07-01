@@ -320,13 +320,13 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         }
 
         $searchIndexListenerDefinition = $container->getDefinition('contao.listener.search_index');
-
         $rateLimiterServiceId = null;
 
         if ($config['search']['listener']['rate_limiter']) {
             $rateLimiterServiceId = 'limiter.'.$config['search']['listener']['rate_limiter'];
         } elseif ($container->has('cache.app')) {
             $rateLimiterServiceId = 'contao.listener.search_index.default_rate_limiter';
+
             $factoryDefinition = new Definition(RateLimiterFactory::class);
             $factoryDefinition->setArguments([
                 [
@@ -339,6 +339,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
                     new Reference('cache.app'),
                 ]),
             ]);
+
             $container->setDefinition($rateLimiterServiceId, $factoryDefinition);
         }
 

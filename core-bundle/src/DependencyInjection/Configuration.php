@@ -674,7 +674,7 @@ class Configuration implements ConfigurationInterface
                             ->defaultTrue()
                         ->end()
                         ->scalarNode('rate_limiter')
-                            ->info('Rate limiter name to use when handling requests. By default, there will be a rate limiter set to 5 minutes, you can override it with this configuration.')
+                            ->info('The name of the rate limiter for handling requests. By default, there will be a rate limiter set to 5 minutes.')
                             ->defaultNull()
                         ->end()
                     ->end()

@@ -473,6 +473,7 @@ class ContaoCoreExtensionTest extends TestCase
                 'kernel.charset' => 'UTF-8',
             ]),
         );
+
         $container->setDefinition('cache.app', new Definition());
 
         $extension = new ContaoCoreExtension();
