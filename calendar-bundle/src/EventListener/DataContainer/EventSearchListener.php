@@ -49,17 +49,23 @@ class EventSearchListener
     #[AsCallback(table: 'tl_calendar_events', target: 'fields.searchIndexer.save')]
     public function onSaveSearchIndexer(string $value, DataContainer $dc): string
     {
-        if (($dc->getCurrentRecord()['searchIndexer'] ?? null) === $value || 'always_index' === $value) {
+        if ('always_index' === $value || ($dc->getCurrentRecord()['searchIndexer'] ?? null) === $value) {
             return $value;
         }
 
         if (!$value) {
-            // Get robots and searchIndexer of the reader page (linked in calendar)
+            // Get the "robots" and "searchIndexer" config of the reader page (linked in calendar)
             $readerPageSettings = $this->connection->fetchAssociative(
                 <<<'SQL'
-                    SELECT p.robots, p.searchIndexer
-                    FROM tl_page AS p, tl_calendar AS c
-                    WHERE c.id = ? AND c.jumpTo = p.id
+                    SELECT
+                        p.robots,
+                        p.searchIndexer
+                    FROM
+                        tl_page AS p,
+                        tl_calendar AS c
+                    WHERE
+                        c.id = ?
+                        AND c.jumpTo = p.id
                     SQL,
                 [$dc->getCurrentRecord()['pid']],
             );
@@ -86,12 +92,18 @@ class EventSearchListener
         }
 
         if (!$dc->getCurrentRecord()['searchIndexer']) {
-            // Get robots and searchIndexer of the reader page (linked in calendar)
+            // Get the "robots" and "searchIndexer" config of the reader page (linked in calendar)
             $readerPageSettings = $this->connection->fetchAssociative(
                 <<<'SQL'
-                    SELECT p.robots, p.searchIndexer
-                    FROM tl_page AS p, tl_calendar AS c
-                    WHERE c.id = ? AND c.jumpTo = p.id
+                    SELECT
+                        p.robots,
+                        p.searchIndexer
+                    FROM
+                        tl_page AS p,
+                        tl_calendar AS c
+                    WHERE
+                        c.id = ?
+                        AND c.jumpTo = p.id
                     SQL,
                 [$dc->getCurrentRecord()['pid']],
             );

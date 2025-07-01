@@ -13,8 +13,8 @@ namespace Contao;
 use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
-use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 
 /**
  * Class ModuleFaqReader
@@ -123,7 +123,7 @@ class ModuleFaqReader extends Module
 			}
 		}
 
-		// Update json ld searchIndexer setting
+		// Update the JSON+LD "searchIndexer" setting
 		$pageSchema = $responseContext->get(JsonLdManager::class)->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
 
 		if ($objFaq->searchIndexer)

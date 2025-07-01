@@ -17,7 +17,7 @@ use Contao\CoreBundle\Migration\MigrationResult;
 use Doctrine\DBAL\Connection;
 
 /**
- *  Converts the value of the old field 'noSearch' to the new field 'searchIndexer'.
+ *  Converts the value of the old field "noSearch" to the new field "searchIndexer".
  *  The new field is introduced to be able to always or never index a page
  *  despite the robots tag setting (the robots tag setting is used as default).
  */
@@ -42,17 +42,8 @@ class SearchIndexerSettingsMigration extends AbstractMigration
 
     public function run(): MigrationResult
     {
-        $this->connection->executeStatement('
-            ALTER TABLE tl_page
-            ADD searchIndexer varchar(32) NOT NULL default ""
-        ');
-
-        // Migrate the setting from the old 'noSearch' field
-        $this->connection->executeStatement('
-            UPDATE tl_page
-            SET searchIndexer = "never_index"
-            WHERE noSearch = 1
-        ');
+        $this->connection->executeStatement("ALTER TABLE tl_page ADD searchIndexer varchar(32) NOT NULL default ''");
+        $this->connection->executeStatement("UPDATE tl_page SET searchIndexer = 'never_index' WHERE noSearch = 1");
 
         return $this->createResult(true);
     }

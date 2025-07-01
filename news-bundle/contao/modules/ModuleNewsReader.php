@@ -14,10 +14,10 @@ use Contao\CoreBundle\Exception\InternalServerErrorException;
 use Contao\CoreBundle\Exception\PageNotFoundException;
 use Contao\CoreBundle\Exception\RedirectResponseException;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
+use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Util\UrlUtil;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
-use Contao\CoreBundle\Routing\ResponseContext\JsonLd\ContaoPageSchema;
 
 /**
  * Front end module "newsreader".
@@ -166,7 +166,7 @@ class ModuleNewsReader extends ModuleNews
 			}
 		}
 
-		// Update json ld searchIndexer setting
+		// Update the JSON+LD "searchIndexer" setting
 		$pageSchema = $responseContext->get(JsonLdManager::class)->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class);
 
 		if ($objArticle->searchIndexer)

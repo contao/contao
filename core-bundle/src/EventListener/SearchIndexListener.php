@@ -156,7 +156,7 @@ class SearchIndexListener
             return true;
         }
 
-        // searchIndexer setting has priority over robots tag
+        // The "searchIndexer" setting has priority over robots tag
         $pageJsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
         $pageSearchIndexer = $pageJsonLds[0]['searchIndexer'] ?? null;
 

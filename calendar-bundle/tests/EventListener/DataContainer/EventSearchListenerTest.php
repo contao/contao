@@ -42,6 +42,7 @@ class EventSearchListenerTest extends TestCase
         ]);
 
         $connection = $this->createMock(Connection::class);
+
         if (null !== $readerPageSettings) {
             $connection
                 ->expects($this->once())

@@ -70,7 +70,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addImage', 'addEnclosure', 'overwriteMeta'),
-		'default'                     => '{title_legend},question,alias,author;{meta_legend},pageTitle,description,serpPreview,robots,searchIndexer;{answer_legend},answer;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{publish_legend},published'
+		'default'                     => '{title_legend},question,alias,author;{meta_legend},pageTitle,robots,description,serpPreview;{answer_legend},answer;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},searchIndexer;{publish_legend},published'
 	),
 
 	// Sub-palettes
@@ -170,16 +170,6 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'eval'                    => array('titleFields'=>array('pageTitle', 'question'), 'descriptionFields'=>array('description', 'answer')),
 			'sql'                     => null
 		),
-		'searchIndexer' => array
-		(
-			'filter'                  => true,
-			'label'                   => &$GLOBALS['TL_LANG']['MSC']['searchIndexer'],
-			'inputType'               => 'select',
-			'options'                 => array('always_index', 'never_index'),
-			'eval'                    => array('maxlength'=>32, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
-			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
-			'sql'                     => "varchar(32) NOT NULL default ''"
-		),
 		'addImage' => array
 		(
 			'filter'                  => true,
@@ -273,6 +263,16 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Config::get('allowedDownload'), 'mandatory'=>true, 'isSortable'=>true),
 			'sql'                     => "blob NULL"
 		),
+		'searchIndexer' => array
+		(
+			'search'                  => true,
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['searchIndexer'],
+			'inputType'               => 'select',
+			'options'                 => array('always_index', 'never_index'),
+			'eval'                    => array('maxlength'=>32, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
+			'sql'                     => "varchar(32) NOT NULL default ''"
+		),
 		'published' => array
 		(
 			'toggle'                  => true,
@@ -306,7 +306,8 @@ class tl_faq extends Backend
 		if (!$objFaqCategory->jumpTo)
 		{
 			PaletteManipulator::create()
-				->removeField(array('pageTitle', 'robots', 'description', 'serpPreview', 'searchIndexer'), 'meta_legend')
+				->removeField(array('searchIndexer'), 'expert_legend')
+				->removeField(array('pageTitle', 'robots', 'description', 'serpPreview'), 'meta_legend')
 				->applyToPalette('default', 'tl_faq');
 		}
 	}

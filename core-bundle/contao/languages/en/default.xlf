@@ -2274,7 +2274,7 @@
         <source>Search indexer</source>
       </trans-unit>
       <trans-unit id="MSC.searchIndexer.1">
-        <source>Overrides the robots meta tag setting for the internal search index.</source>
+        <source>Here you can override the robots meta tag setting for the internal search index.</source>
       </trans-unit>
       <trans-unit id="MSC.always_index">
         <source>Always index</source>

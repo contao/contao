@@ -49,7 +49,7 @@ class NewsSearchListener
     #[AsCallback(table: 'tl_news', target: 'fields.searchIndexer.save')]
     public function onSaveSearchIndexer(string $value, DataContainer $dc): string
     {
-        if (($dc->getCurrentRecord()['searchIndexer'] ?? null) === $value || 'always_index' === $value) {
+        if ('always_index' === $value || ($dc->getCurrentRecord()['searchIndexer'] ?? null) === $value) {
             return $value;
         }
 
@@ -57,9 +57,15 @@ class NewsSearchListener
             // Get robots and searchIndexer of the reader page (linked in calendar)
             $readerPageSettings = $this->connection->fetchAssociative(
                 <<<'SQL'
-                    SELECT p.robots, p.searchIndexer
-                    FROM tl_page AS p, tl_news_archive AS c
-                    WHERE c.id = ? AND c.jumpTo = p.id
+                    SELECT
+                        p.robots,
+                        p.searchIndexer
+                    FROM
+                        tl_page AS p,
+                        tl_news_archive AS c
+                    WHERE
+                        c.id = ?
+                        AND c.jumpTo = p.id
                     SQL,
                 [$dc->getCurrentRecord()['pid']],
             );
@@ -89,9 +95,15 @@ class NewsSearchListener
             // Get robots and searchIndexer of the reader page (linked in calendar)
             $readerPageSettings = $this->connection->fetchAssociative(
                 <<<'SQL'
-                    SELECT p.robots, p.searchIndexer
-                    FROM tl_page AS p, tl_news_archive AS c
-                    WHERE c.id = ? AND c.jumpTo = p.id
+                    SELECT
+                        p.robots,
+                        p.searchIndexer
+                    FROM
+                        tl_page AS p,
+                        tl_news_archive AS c
+                    WHERE
+                        c.id = ?
+                        AND c.jumpTo = p.id
                     SQL,
                 [$dc->getCurrentRecord()['pid']],
             );

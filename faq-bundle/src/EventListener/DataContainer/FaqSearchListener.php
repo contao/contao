@@ -49,7 +49,7 @@ class FaqSearchListener
     #[AsCallback(table: 'tl_faq', target: 'fields.searchIndexer.save')]
     public function onSaveSearchIndexer(string $value, DataContainer $dc): string
     {
-        if (($dc->getCurrentRecord()['searchIndexer'] ?? null) === $value || 'always_index' === $value) {
+        if ('always_index' === $value || ($dc->getCurrentRecord()['searchIndexer'] ?? null) === $value) {
             return $value;
         }
 
@@ -57,9 +57,15 @@ class FaqSearchListener
             // Get robots and searchIndexer of the reader page (linked in calendar)
             $readerPageSettings = $this->connection->fetchAssociative(
                 <<<'SQL'
-                    SELECT p.robots, p.searchIndexer
-                    FROM tl_page AS p, tl_faq_category AS c
-                    WHERE c.id = ? AND c.jumpTo = p.id
+                    SELECT
+                        p.robots,
+                        p.searchIndexer
+                    FROM
+                        tl_page AS p,
+                        tl_faq_category AS c
+                    WHERE
+                        c.id = ?
+                        AND c.jumpTo = p.id
                     SQL,
                 [$dc->getCurrentRecord()['pid']],
             );
@@ -89,9 +95,15 @@ class FaqSearchListener
             // Get robots and searchIndexer of the reader page (linked in calendar)
             $readerPageSettings = $this->connection->fetchAssociative(
                 <<<'SQL'
-                    SELECT p.robots, p.searchIndexer
-                    FROM tl_page AS p, tl_faq_category AS c
-                    WHERE c.id = ? AND c.jumpTo = p.id
+                    SELECT
+                        p.robots,
+                        p.searchIndexer
+                    FROM
+                        tl_page AS p,
+                        tl_faq_category AS c
+                    WHERE
+                        c.id = ?
+                        AND c.jumpTo = p.id
                     SQL,
                 [$dc->getCurrentRecord()['pid']],
             );

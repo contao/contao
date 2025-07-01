@@ -44,7 +44,7 @@ class PageSearchListener
     #[AsCallback(table: 'tl_page', target: 'fields.searchIndexer.save')]
     public function onSaveSearchIndexer(string $value, DataContainer $dc): string
     {
-        if ($value === ($dc->getCurrentRecord()['searchIndexer'] ?? null) || 'always_index' === $value || (!$value && str_starts_with((string) ($dc->getCurrentRecord()['robots'] ?? null), 'index'))) {
+        if ('always_index' === $value || ($dc->getCurrentRecord()['searchIndexer'] ?? null) === $value || (!$value && str_starts_with((string) ($dc->getCurrentRecord()['robots'] ?? null), 'index'))) {
             return $value;
         }
 
@@ -56,7 +56,7 @@ class PageSearchListener
     #[AsCallback(table: 'tl_page', target: 'fields.robots.save')]
     public function onSaveRobots(string $value, DataContainer $dc): string
     {
-        if ($value === ($dc->getCurrentRecord()['robots'] ?? null) || str_starts_with($value, 'index') || (str_starts_with($value, 'noindex') && str_starts_with((string) ($dc->getCurrentRecord()['searchIndexer'] ?? null), 'always'))) {
+        if (str_starts_with($value, 'index') || ($dc->getCurrentRecord()['robots'] ?? null) === $value || (str_starts_with($value, 'noindex') && str_starts_with((string) ($dc->getCurrentRecord()['searchIndexer'] ?? null), 'always'))) {
             return $value;
         }
 
