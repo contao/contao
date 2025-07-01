@@ -145,9 +145,11 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                 if ('CNT' === $keys[0] && 2 === \count($keys)) {
                     try {
                         $countryCode = strtoupper($keys[1]);
+
                         if (\strlen($countryCode) > 2) {
                             $countryCode = substr($countryCode, 0, 2).'-'.substr($countryCode, 2);
                         }
+
                         $result = $this->container->get('contao.intl.countries')->getCountries()[$countryCode] ?? '';
                         break;
                     } catch (\Throwable) {

@@ -57,6 +57,7 @@ class Countries
                 $countries[$countryCode] = $this->translator->trans($langKeyShort, [], 'contao_countries', $displayLocale)." ($countryCode)";
             } else {
                 $countries[$countryCode] = \Locale::getDisplayRegion('_'.$country, $displayLocale ?? $this->defaultLocale);
+
                 if ($subdivision) {
                     $countries[$countryCode] .= " ($countryCode)";
                 }
