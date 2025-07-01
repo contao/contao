@@ -74,7 +74,7 @@ class BackendTemplate extends Template
 			foreach (array_unique($GLOBALS['TL_CSS']) as $stylesheet)
 			{
 				$options = StringUtil::resolveFlaggedUrl($stylesheet);
-				$strStyleSheets .= Template::generateStyleTag($this->addStaticUrlTo($stylesheet), $options->media, $options->mtime);
+				$strStyleSheets .= preg_replace('/>$/', ' data-turbo-track="dynamic">', Template::generateStyleTag($this->addStaticUrlTo($stylesheet), $options->media, $options->mtime));
 			}
 
 			$this->stylesheets .= $strStyleSheets;
@@ -88,7 +88,7 @@ class BackendTemplate extends Template
 			foreach (array_unique($GLOBALS['TL_JAVASCRIPT']) as $javascript)
 			{
 				$options = StringUtil::resolveFlaggedUrl($javascript);
-				$strJavaScripts .= Template::generateScriptTag($this->addStaticUrlTo($javascript), $options->async, $options->mtime);
+				$strJavaScripts .= preg_replace('/>$/', ' data-turbo-track="dynamic">', Template::generateScriptTag($this->addStaticUrlTo($javascript), $options->async, $options->mtime));
 			}
 
 			$this->javascripts .= $strJavaScripts;

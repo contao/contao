@@ -55,9 +55,6 @@ $this->bodyAttributes = $this
     <script><?= $this->getDateString() ?></script>
     <?= $this->javascripts ?>
   <?php $this->endblock(); ?>
-
-  <?php /* If the following hash changes, Turbo will reload the entire page instead of merging contents. */ ?>
-  <meta data-turbo-track="reload" content="<?= md5($this->stylesheets."\0".$this->javascripts); ?>">
 </head>
 <body<?= $this->bodyAttributes ?>>
   <a class="invisible show-on-focus" href="#main" data-turbo="false"><?= $this->trans('MSC.skipToContent') ?></a>
