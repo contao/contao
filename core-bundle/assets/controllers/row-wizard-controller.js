@@ -1,73 +1,50 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static targets = ['body', 'rowTemplate', 'row'];
-
-    rowSnapshots = new Map();
-
-    rowTemplateTargetConnected(template) {
-        // We need to queue a micro task here, so that Stimulus will fire
-        // rowTargetConnected().
-        queueMicrotask(() => {
-            this._unwrap(template);
-        });
-    }
+    static targets = ['body', 'row'];
 
     rowTargetConnected() {
-        this._makeSortable();
+        this.updateSorting();
     }
 
-    rowTargetDisconnected(row) {
-        this.rowSnapshots.delete(row);
-        this._makeSortable();
+    rowTargetDisconnected() {
+        this.updateSorting();
     }
 
     copy(event) {
         const row = this._getRow(event);
-        const snapshot = this.rowSnapshots.get(row);
+        const previous = row.previousElementSibling;
 
-        row.insertAdjacentHTML('afterend', snapshot);
-        const newRow = row.nextElementSibling;
-        this.rowSnapshots.set(newRow, snapshot);
+        // Cause Choices and similar controllers to be disconnected
+        row.remove();
 
-        this._syncInputs(row, newRow);
+        // Wait until Stimulus controllers are disconnected
+        queueMicrotask(() => {
+            const newRow = row.cloneNode(true);
+
+            // Re-insert the previous and new row
+            if (previous) {
+                previous.after(row, newRow);
+            } else {
+                this.bodyTarget.prepend(row, newRow);
+            }
+
+            this._focus(newRow);
+        });
     }
 
     delete(event) {
-        if (this.bodyTarget.children.length > 1) {
-            this._getRow(event).remove();
-        } else {
-            this._resetInputs(this._getRow(event));
-        }
-    }
-
-    enable(event) {
-        event.target.previousElementSibling.checked ^= 1;
-    }
-
-    move(event) {
         const row = this._getRow(event);
 
-        if (event.code === 'ArrowUp' || event.keyCode === 38) {
-            event.preventDefault();
+        if (this.bodyTarget.children.length > 1) {
+            this._focus(row.nextElementSibling) ||
+                this._focus(row.previousElementSibling) ||
+                this._focus(this.bodyTarget);
 
-            if (row.previousElementSibling) {
-                row.previousElementSibling.insertAdjacentElement('beforebegin', row);
-            } else {
-                this.bodyTarget.insertAdjacentElement('beforeend', row);
-            }
-
-            event.target.focus();
-        } else if (event.code === 'ArrowDown' || event.keyCode === 40) {
-            event.preventDefault();
-
-            if (row.nextElementSibling) {
-                row.nextElementSibling.insertAdjacentElement('afterend', row);
-            } else {
-                this.bodyTarget.insertAdjacentElement('afterbegin', row);
-            }
-
-            event.target.focus();
+            row.remove();
+        } else {
+            this._resetInputs(row);
+            this._focus(row);
         }
     }
 
@@ -103,44 +80,26 @@ export default class extends Controller {
         }
     }
 
-    beforeCache() {
-        // Restore the original HTML with template tags before Turbo caches the
-        // page. They will get unwrapped again at the restored page.
-        for (const row of this.rowTargets) {
-            this._wrap(row);
-        }
-    }
+    updateSorting() {
+        Array.from(this.bodyTarget.children).forEach((tr, i) => {
+            for (const el of tr.querySelectorAll('label, input, select')) {
+                if (el.name) {
+                    el.name = el.name.replace(/\[[0-9]+]/g, `[${i}]`);
+                }
 
-    _unwrap(template) {
-        this.rowSnapshots.set(
-            template.content.querySelector('*[data-contao--row-wizard-target="row"]'),
-            template.innerHTML,
-        );
+                if (el.id) {
+                    el.id = el.id.replace(/_[0-9]+(_|$)/g, `_${i}$1`);
+                }
 
-        template.replaceWith(template.content);
-    }
-
-    _wrap(row) {
-        const template = document.createElement('template');
-        template.setAttribute('data-contao--row-wizard-target', 'rowTemplate');
-        template.innerHTML = this.rowSnapshots.get(row);
-
-        this._syncInputs(row, template.content.querySelector('tr'));
-
-        row.replaceWith(template);
+                if (el.getAttribute('for')) {
+                    el.setAttribute('for', el.getAttribute('for').replace(/_[0-9]+(_|$)/g, `_${i}$1`));
+                }
+            }
+        });
     }
 
     _getRow(event) {
         return event.target.closest('*[data-contao--row-wizard-target="row"]');
-    }
-
-    _syncInputs(rowFrom, rowTo) {
-        const selectsFrom = rowFrom.querySelectorAll('input:not(.choices__input--cloned), select');
-        const selectsTo = rowTo.querySelectorAll('input, select');
-
-        for (let i = 0; i < selectsFrom.length; i++) {
-            selectsTo[i].value = selectsFrom[i].value;
-        }
     }
 
     _resetInputs(row) {
@@ -153,21 +112,13 @@ export default class extends Controller {
         }
     }
 
-    _makeSortable() {
-        Array.from(this.bodyTarget.children).forEach((tr, i) => {
-            for (const el of tr.querySelectorAll('input, select')) {
-                el.name = el.name.replace(/\[[0-9]+]/g, `[${i}]`);
-            }
-        });
+    _focus(el) {
+        if (!el) {
+            return false;
+        }
 
-        // TODO: replace this with a vanilla JS solution
-        new Sortables(this.bodyTarget, {
-            constrain: true,
-            opacity: 0.6,
-            handle: '.drag-handle',
-            onComplete: () => {
-                this._makeSortable(this.bodyTarget);
-            },
-        });
+        el.querySelector('input, select:not(.choices__input), .tl_select.choices')?.focus();
+
+        return true;
     }
 }
