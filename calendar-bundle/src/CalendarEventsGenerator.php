@@ -22,9 +22,9 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CalendarEventsGenerator
 {
-    private int|null $todayBegin = null;
+    private \DateTimeImmutable|null $todayBegin = null;
 
-    private int|null $todayEnd = null;
+    private \DateTimeImmutable|null $todayEnd = null;
 
     public function __construct(
         private readonly ContaoFramework $contaoFramework,
@@ -250,13 +250,13 @@ class CalendarEventsGenerator
         }
 
         // Get today's start and end timestamp
-        $this->todayBegin ??= strtotime('00:00:00');
-        $this->todayEnd ??= strtotime('23:59:59');
+        $this->todayBegin ??= (new \DateTimeImmutable())->setTime(0, 0);
+        $this->todayEnd ??= (new \DateTimeImmutable())->setTime(23, 59, 59);
 
         // Mark past and upcoming events (see #3692)
-        if ($end < $this->todayBegin) {
+        if ($end < $this->todayBegin->getTimestamp()) {
             $event['class'] .= ' bygone';
-        } elseif ($start > $this->todayEnd) {
+        } elseif ($start > $this->todayEnd->getTimestamp()) {
             $event['class'] .= ' upcoming';
         } else {
             $event['class'] .= ' current';
