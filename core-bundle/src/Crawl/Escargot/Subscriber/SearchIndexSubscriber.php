@@ -174,8 +174,31 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
 
     public function onLastChunk(CrawlUri $crawlUri, ResponseInterface $response, ChunkInterface $chunk): void
     {
-        // At this point, we know about the <meta name="robots"> tag
-        if ($crawlUri->hasTag(RobotsSubscriber::TAG_NOINDEX)) {
+        $document = new Document(
+            $crawlUri->getUri(),
+            $response->getStatusCode(),
+            $response->getHeaders(),
+            $response->getContent(),
+        );
+
+        // Do not index if the page setting is explicitly set to "never_index"
+        $pageJsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
+        $pageSearchIndexer = $pageJsonLds[0]['searchIndexer'] ?? null;
+
+        if ('never_index' === $pageSearchIndexer) {
+            $this->logWithCrawlUri(
+                $crawlUri,
+                LogLevel::DEBUG,
+                'Do not request because it was marked "never_index" in the page setting "searchIndexer".',
+            );
+
+            return;
+        }
+
+        // At this point, we know about the <meta name="robots"> tag. Do not index if the
+        // meta robots tag contains "noindex" and page setting "searchIndexer" is not set
+        // to "always_index".
+        if ($crawlUri->hasTag(RobotsSubscriber::TAG_NOINDEX) && 'always_index' !== $pageSearchIndexer) {
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::DEBUG,
@@ -185,21 +208,16 @@ class SearchIndexSubscriber implements EscargotSubscriberInterface, EscargotAwar
             return;
         }
 
-        $document = new Document(
-            $crawlUri->getUri(),
-            $response->getStatusCode(),
-            $response->getHeaders(),
-            $response->getContent(),
-        );
-
         try {
             $this->indexer->index($document);
             ++$this->stats['ok'];
 
+            $alwaysIndexHint = $crawlUri->hasTag(RobotsSubscriber::TAG_NOINDEX) && 'always_index' === $pageSearchIndexer ? 'Robots:noindex is ignored because of searchIndexer:always_index. ' : '';
+
             $this->logWithCrawlUri(
                 $crawlUri,
                 LogLevel::INFO,
-                'Forwarded to the search indexer. Was indexed successfully.',
+                $alwaysIndexHint.'Forwarded to the search indexer. Was indexed successfully.',
             );
         } catch (IndexerException $e) {
             if ($e->isOnlyWarning()) {

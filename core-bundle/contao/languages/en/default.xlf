@@ -2270,6 +2270,18 @@
       <trans-unit id="MSC.skipToContent">
         <source>Skip to content</source>
       </trans-unit>
+      <trans-unit id="MSC.searchIndexer.0">
+        <source>Search indexer</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchIndexer.1">
+        <source>Here you can override the robots meta tag setting for the internal search index.</source>
+      </trans-unit>
+      <trans-unit id="MSC.always_index">
+        <source>Always index</source>
+      </trans-unit>
+      <trans-unit id="MSC.never_index">
+        <source>Never index</source>
+      </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
       </trans-unit>

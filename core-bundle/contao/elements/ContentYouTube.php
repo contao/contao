@@ -10,6 +10,10 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\ContentElement\VideoController;
+
+trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprecated and will no longer work in Contao 6. Use the "%s" class instead.', ContentYouTube::class, VideoController::class);
+
 /**
  * Content element "YouTube".
  */
