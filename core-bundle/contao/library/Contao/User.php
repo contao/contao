@@ -293,7 +293,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	 */
 	public function isMemberOf($ids)
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "ContaoCorePermissions::MEMBER_IN_GROUPS" permission instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "ContaoCorePermissions::MEMBER_IN_GROUPS" permission instead.', __METHOD__);
 
 		// Filter non-numeric values
 		$ids = array_filter((array) $ids, static function ($val) { return (string) (int) $val === (string) $val; });
