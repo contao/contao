@@ -2360,7 +2360,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Add fields
 		$fields = $session['CURRENT'][$this->strTable] ?? array();
 
-		$blnAddJumpTarget = \count($ids) < min(Config::get('resultsPerPage') ?? 50, 50);
+		$blnAddJumpTarget = \count($ids) < min(Config::get('resultsPerPage') ?? 30, 50);
 
 		if (!empty($fields) && \is_array($fields) && Input::get('fields'))
 		{
