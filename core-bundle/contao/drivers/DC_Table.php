@@ -4859,7 +4859,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 		{
 			if ($this->ptable)
 			{
-				$operations->addNewButton(((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) < self::MODE_PARENT) ? $operations::CREATE_PASTE_INTO : $operations::CREATE_NEW), $this->intId);
+				$operations->addNewButton(($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) < self::MODE_PARENT ? $operations::CREATE_PASTE_INTO : $operations::CREATE_NEW, $this->intId);
 			}
 			else
 			{
