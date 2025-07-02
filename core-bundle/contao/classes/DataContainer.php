@@ -847,20 +847,10 @@ abstract class DataContainer extends Backend
 	 */
 	protected function switchToEdit($id)
 	{
-		$arrKeys = array();
+		$strRequest = (Input::get('table') ? 'table=' . Input::get('table') . '&amp;' : '') . 'act=edit&amp;id=' . rawurlencode($id);
 		$arrUnset = array('act', 'key', 'id', 'table', 'mode', 'pid', 'data');
 
-		foreach (Input::getKeys() as $strKey)
-		{
-			if (!\in_array($strKey, $arrUnset))
-			{
-				$arrKeys[$strKey] = $strKey . '=' . Input::get($strKey);
-			}
-		}
-
-		$strUrl = System::getContainer()->get('router')->generate('contao_backend') . '?' . implode('&', $arrKeys);
-
-		return $strUrl . (!empty($arrKeys) ? '&' : '') . (Input::get('table') ? 'table=' . Input::get('table') . '&amp;' : '') . 'act=edit&amp;id=' . rawurlencode($id);
+		return Backend::addToUrl($strRequest, true, $arrUnset);
 	}
 
 	/**
