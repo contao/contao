@@ -21,6 +21,11 @@ use Contao\System;
  */
 abstract class AbstractDataContainerOperationsBuilder implements \Stringable
 {
+    public const CREATE_NEW = 'create';
+    public const CREATE_PASTE = 'paste';
+    public const CREATE_PASTE_AFTER = 'paste_after';
+    public const CREATE_PASTE_INTO = 'paste_into';
+
     /**
      * @var list<array{html: string, primary?: bool}|array{separator: true}|array{
      *     href: string,

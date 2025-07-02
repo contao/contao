@@ -3502,7 +3502,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $this->intCurrentPid, 'sorting' => 0))))
 		{
-			$operations->addNewButton($this->addToUrl('act=paste&amp;mode=create'));
+			$operations->addNewButton($operations::CREATE_PASTE);
 		}
 
 		if ($blnClipboard)
@@ -4188,7 +4188,14 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))))
 		{
-			$operations->addNewButton($this->addToUrl($blnHasSorting ? 'act=paste&amp;mode=create' : 'act=create&amp;mode=2&amp;pid=' . $this->intId));
+			if ($blnHasSorting)
+			{
+				$operations->addNewButton($operations::CREATE_PASTE);
+			}
+			else
+			{
+				$operations->addNewButton($operations::CREATE_PASTE_INTO, $this->intId);
+			}
 		}
 
 		if ($blnClipboard)
@@ -4839,7 +4846,14 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 		if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable)))
 		{
-			$operations->addNewButton($this->ptable ? $this->addToUrl('act=create' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) < self::MODE_PARENT) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create'));
+			if ($this->ptable)
+			{
+				$operations->addNewButton(((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) < self::MODE_PARENT) ? $operations::CREATE_PASTE_INTO : $operations::CREATE_NEW), $this->intId);
+			}
+			else
+			{
+				$operations->addNewButton($operations::CREATE_NEW);
+			}
 		}
 
 		if (null !== ($buttons = $this->generateGlobalButtons($operations)))

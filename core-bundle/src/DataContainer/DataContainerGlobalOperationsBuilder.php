@@ -90,26 +90,43 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         $this->ensureInitialized();
 
         $this->append([
-            'href' => $this->framework->getAdapter(Backend::class)->addToUrl('clipboard=1'),
+            'href' => $this->framework->getAdapter(Backend::class)->addToUrl('clipboard=1', addRequestToken: false),
             'label' => $this->translator->trans('MSC.clearClipboard', [], 'contao_default'),
             'attributes' => (new HtmlAttributes())->addClass('header_clipboard')->set('accesskey', 'x'),
+            'method' => 'POST',
             'primary' => true,
         ]);
 
         return $this;
     }
 
-    public function addNewButton(string $href): self
+    /**
+     * @param self::CREATE_* $mode
+     */
+    public function addNewButton(string $mode, int|null $pid = null): self
     {
         $this->ensureInitialized();
 
+        $url = match ($mode) {
+            'create' => 'act=create',
+            'paste' => 'act=paste&amp;mode=create',
+            'paste_after' => 'act=create&amp;mode=1',
+            'paste_into' => 'act=create&amp;mode=2',
+        };
+
+        if (null !== $pid) {
+            $url .= '&amp;pid='.$pid;
+        }
+
         $labelNew = $GLOBALS['TL_LANG'][$this->table]['new'] ?? $GLOBALS['TL_LANG']['DCA']['new'];
+        $href = Backend::addToUrl($url, addRequestToken: false);
 
         $this->append([
             'href' => $href,
             'label' => $labelNew[0] ?? 'new',
             'title' => $labelNew[1] ?? null,
             'attributes' => (new HtmlAttributes())->addClass('header_new')->set('accesskey', 'n')->set('data-action', 'contao--scroll-offset#store'),
+            'method' => 'POST',
             'primary' => true,
         ]);
 
