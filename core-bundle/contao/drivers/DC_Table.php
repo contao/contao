@@ -168,15 +168,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if (Input::post('edit') !== null)
 			{
-				$this->redirect(str_replace('act=select', 'act=editAll', Environment::get('requestUri')));
+				$this->redirect(Backend::addToUrl('act=editAll'));
 			}
 			elseif (Input::post('delete') !== null)
 			{
-				$this->redirect(str_replace('act=select', 'act=deleteAll', Environment::get('requestUri')));
+				$this->redirect(Backend::addToUrl('act=deleteAll'));
 			}
 			elseif (Input::post('override') !== null)
 			{
-				$this->redirect(str_replace('act=select', 'act=overrideAll', Environment::get('requestUri')));
+				$this->redirect(Backend::addToUrl('act=overrideAll'));
 			}
 			elseif (Input::post('cut') !== null || Input::post('copy') !== null || Input::post('copyMultiple') !== null)
 			{
@@ -196,7 +196,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Support copyAll in the list view (see #7499)
 					if ((Input::post('copy') !== null || Input::post('copyMultiple') !== null) && ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? 0) < self::MODE_PARENT)
 					{
-						$this->redirect(str_replace('act=select', 'act=copyAll', Environment::get('requestUri')));
+						$this->redirect(Backend::addToUrl('act=copyAll'));
 					}
 				}
 
