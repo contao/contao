@@ -41,11 +41,11 @@
         <li{% if menu and not operation.title|default %} data-contao--operations-menu-target="title"{% endif %}>
             {% set operation_attributes = attrs(operation.attributes|default)
                 .set('href', operation.href)
+                .set('title', operation.title|default, ((menu or showLabels) and operation.title|default != operation.label|default))
                 .addClass('has-icon', operation.icon|default)
-                .setIfExists('title', operation.icon|default and not (menu or showLabels) ? null : operation.title|default)
             %}
             <a{{ operation_attributes|raw }}>
-                {% if operation.icon|default %}{{ backend_icon(operation.icon, (menu or showLabels) ? '' : operation.title|default, operation.iconAttributes|default(null)) }}{% endif %}
+                {% if operation.icon|default %}{{ backend_icon(operation.icon, (menu or showLabels or operation.title|default == operation.label|default) ? '' : operation.title|default, operation.iconAttributes|default(null)) }}{% endif %}
                 {% if menu or showLabels %}{{ operation.label|default }}{% endif %}
             </a>
         </li>
