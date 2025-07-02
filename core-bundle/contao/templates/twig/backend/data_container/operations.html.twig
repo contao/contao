@@ -2,25 +2,29 @@
 {% set has_submenu = false %}
 {% set show_button = false %}
 
-<div class="operations">
-    <ul id="operations{{ id }}" data-contao--operations-menu-target="menu">
+<div class="operations"{% if globalOperations %} data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"{% endif %}>
+    <ul id="{{ id is defined ? 'operations'~id : 'tl_buttons' }}" data-contao--operations-menu-target="menu">
         {% for operation in operations %}
             {% set isLink = operation.href|default or (operation.html is defined and '<a ' in operation.html) %}
             {% set has_submenu = has_submenu or isLink %}
             {% if has_primary and not operation.primary|default(false) %}
                 {% set show_button = true %}
             {% else %}
-                {{ _self.operation(operation) }}
+                {{ _self.operation(operation, false, globalOperations) }}
             {% endif %}
         {% endfor %}
         {% if has_submenu %}
-            <li class="operations-menu-container">
-                <button type="button" data-contao--operations-menu-target="controller"{% if not show_button %} style="display:none"{% endif %}>
-                    {{ backend_icon('more.svg', 'DCA.operations'|trans([id])) }}
+            <li class="operations-menu-container{% if not show_button %} invisible{% endif %}">
+                <button type="button" class="has-icon" data-contao--operations-menu-target="controller"{% if not show_button %} style="display:none"{% endif %}>
+                    {% if globalOperations %}
+                        {{ backend_icon('more.svg', 'DCA.global_operations'|trans) }}
+                    {% else %}
+                        {{ backend_icon('more.svg', 'DCA.operations'|trans([id|default])) }}
+                    {% endif %}
                 </button>
                 <ul class="operations-menu" data-contao--operations-menu-target="submenu">
                     {% for operation in operations %}
-                        {{ _self.operation(operation, true) }}
+                        {{ _self.operation(operation, true, globalOperations) }}
                     {% endfor %}
                 </ul>
             </li>
@@ -28,23 +32,27 @@
     </ul>
 </div>
 
-{% macro operation(operation, menu = false) %}
+{% macro operation(operation, menu = false, showLabels = false) %}
     {% if operation.separator|default %}
         <li><hr></li>
     {% elseif operation.html is defined and (not menu or '<a ' in operation.html) %}
-        {% if operation.html|trim is not empty %}<li{% if menu %} data-contao--operations-menu-target="title"{% endif %}>{{ operation.html|raw }}</li>{% endif %}
+        <li{% if menu and not showLabels %} data-contao--operations-menu-target="title"{% endif %}>{{ operation.html|raw }}</li>
     {% elseif operation.href|default %}
         <li{% if menu and not operation.title|default %} data-contao--operations-menu-target="title"{% endif %}>
-            <a
-                href="{{ operation.href }}"
-                {% if operation.popup|default %}onclick="Backend.openModalIframe({title:'{{ operation.label|default|replace({"'": "\'"}) }}', url:this.href});return false"{% endif%}
-                {{ operation.attributes|default|raw }}
-            >
-                {{ operation.icon|raw }}
-                {% if menu %}{{ operation.title|default }}{% endif %}
+            {% set operation_attributes = attrs(operation.attributes|default)
+                .set('href', operation.href)
+                .set('title', operation.title|default, ((menu or showLabels) and operation.title|default != operation.label|default))
+                .addClass('has-icon', operation.icon|default)
+            %}
+            <a{{ operation_attributes|raw }}>
+                {% if operation.icon|default %}{{ backend_icon(operation.icon, (menu or showLabels) ? '' : operation.title|default, operation.iconAttributes|default(null)) }}{% endif %}
+                {% if menu or showLabels %}{{ operation.label|default }}{% endif %}
             </a>
         </li>
     {% elseif operation.icon|default and not menu %}
-        <li>{{ operation.icon|raw }}</li>
+        <li>
+            {{ backend_icon(operation.icon, operation.title|default, operation.iconAttributes|default(null)) }}
+            {% if menu or showLabels %}{{ operation.label|default }}{% endif %}
+        </li>
     {% endif %}
 {% endmacro %}

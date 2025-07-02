@@ -10,6 +10,7 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\DataContainer\DataContainerGlobalOperationsBuilder;
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
 use Contao\CoreBundle\Exception\AccessDeniedException;
@@ -916,85 +917,39 @@ abstract class DataContainer extends Backend
 	/**
 	 * Compile global buttons from the table configuration array and return them as HTML
 	 *
-	 * @return string
+	 * @return string|null
 	 */
-	protected function generateGlobalButtons()
+	protected function generateGlobalButtons(/* DataContainerGlobalOperationsBuilder $operations */)
 	{
-		if (!\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['global_operations'] ?? null))
+		$legacyCallback = function (DataContainerOperation $config) {
+			trigger_deprecation('contao/core-bundle', '5.6', 'Using a button_callback without DataContainerOperation object is deprecated and will no longer work in Contao 6.');
+
+			if (\is_array($config['button_callback'] ?? null))
+			{
+				$callback = System::importStatic($config['button_callback'][0]);
+				$config->setHtml($callback->{$config['button_callback'][1]}($config['href'] ?? null, $config['label'], $config['title'], $config['class'] ?? null, (string) $config['attributes'], $this->strTable, $this->root));
+			}
+			elseif (\is_callable($config['button_callback'] ?? null))
+			{
+				$config->setHtml($config['button_callback']($config['href'] ?? null, $config['label'], $config['title'], $config['class'] ?? null, $config['attributes'], $this->strTable, $this->root));
+			}
+		};
+
+		$operations = func_get_arg(0);
+
+		if ($operations instanceof DataContainerGlobalOperationsBuilder)
 		{
-			return '';
+			$operations->addGlobalButtons($this, $legacyCallback);
+
+			return null;
 		}
 
-		$return = '';
+		trigger_deprecation('contao/core-bundle', '5.6', 'Calling DataContainer::generateGlobalButtons without a DataContainerGlobalOperationsBuilder object is deprecated and will no longer work in Contao 6.');
 
-		foreach ($GLOBALS['TL_DCA'][$this->strTable]['list']['global_operations'] as $k=>$v)
-		{
-			if (!($v['showOnSelect'] ?? null) && Input::get('act') == 'select')
-			{
-				continue;
-			}
+		$operations = System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable);
+		$operations->addGlobalButtons($this, $legacyCallback);
 
-			$v = \is_array($v) ? $v : array($v);
-			$title = $label = $k;
-
-			if (isset($v['label']))
-			{
-				$label = \is_array($v['label']) ? $v['label'][0] : $v['label'];
-				$title = \is_array($v['label']) ? ($v['label'][1] ?? null) : $v['label'];
-			}
-
-			$attributes = !empty($v['attributes']) ? ' ' . ltrim($v['attributes']) : '';
-
-			// Custom icon (see #5541)
-			if ($v['icon'] ?? null)
-			{
-				$v['class'] = trim(($v['class'] ?? '') . ' header_icon');
-
-				// Add the theme path if only the file name is given
-				if (!str_contains($v['icon'], '/'))
-				{
-					$v['icon'] = Image::getPath($v['icon']);
-				}
-
-				$attributes = \sprintf(' style="background-image:url(\'%s\')"', Controller::addAssetsUrlTo($v['icon'])) . $attributes;
-			}
-
-			if (!$label)
-			{
-				$label = $k;
-			}
-
-			if (!$title)
-			{
-				$title = $label;
-			}
-
-			// Call a custom function instead of using the default button
-			if (\is_array($v['button_callback'] ?? null))
-			{
-				$return .= System::importStatic($v['button_callback'][0])->{$v['button_callback'][1]}($v['href'] ?? null, $label, $title, $v['class'] ?? null, $attributes, $this->strTable, $this->root);
-				continue;
-			}
-
-			if (\is_callable($v['button_callback'] ?? null))
-			{
-				$return .= $v['button_callback']($v['href'] ?? null, $label, $title, $v['class'] ?? null, $attributes, $this->strTable, $this->root);
-				continue;
-			}
-
-			if (!empty($v['route']))
-			{
-				$href = System::getContainer()->get('router')->generate($v['route']);
-			}
-			else
-			{
-				$href = $this->addToUrl($v['href'] ?? '');
-			}
-
-			$return .= '<a href="' . $href . '"' . (isset($v['class']) ? ' class="' . $v['class'] . '"' : '') . ' title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ';
-		}
-
-		return $return;
+		return (string) $operations;
 	}
 
 	/**
