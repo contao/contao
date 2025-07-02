@@ -200,11 +200,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			if (Input::post('edit') !== null)
 			{
-				$this->redirect(str_replace('act=select', 'act=editAll', Environment::get('requestUri')));
+				$this->redirect(Backend::addToUrl('act=editAll'));
 			}
 			elseif (Input::post('delete') !== null)
 			{
-				$this->redirect(str_replace('act=select', 'act=deleteAll', Environment::get('requestUri')));
+				$this->redirect(Backend::addToUrl('act=deleteAll'));
 			}
 			elseif (Input::post('cut') !== null || Input::post('copy') !== null || Input::post('copyMultiple') !== null)
 			{
