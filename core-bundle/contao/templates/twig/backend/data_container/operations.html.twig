@@ -36,7 +36,7 @@
     {% if operation.separator|default %}
         <li><hr></li>
     {% elseif operation.html is defined and (not menu or '<a ' in operation.html) %}
-        {% if operation.html|trim is not empty %}<li{% if menu and not showLabels %} data-contao--operations-menu-target="title"{% endif %}>{{ operation.html|raw }}</li>{% endif %}
+        <li{% if menu and not showLabels %} data-contao--operations-menu-target="title"{% endif %}>{{ operation.html|raw }}</li>
     {% elseif operation.href|default %}
         <li{% if menu and not operation.title|default %} data-contao--operations-menu-target="title"{% endif %}>
             {% set operation_attributes = attrs(operation.attributes|default)

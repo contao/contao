@@ -41,14 +41,16 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
 
     public function __toString(): string
     {
-        if (!$this->operations) {
+        $operations = $this->cleanOperations();
+
+        if (!$operations) {
             return '';
         }
 
         return $this->twig->render('@Contao/backend/data_container/operations.html.twig', [
             'id' => $this->id,
-            'operations' => $this->operations,
-            'has_primary' => [] !== array_filter(array_column($this->operations, 'primary'), static fn ($v) => null !== $v),
+            'operations' => $operations,
+            'has_primary' => [] !== array_filter(array_column($operations, 'primary'), static fn ($v) => null !== $v),
             'globalOperations' => false,
         ]);
     }
@@ -236,7 +238,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         if (isset($config['titleDisabled'])) {
             $titleDisabled = $config['titleDisabled'];
         } else {
-            $titleDisabled = \is_array($operation['label']) && isset($operation['label'][2]) ? \sprintf($operation['label'][2], $record['id']) : $config['title'];
+            $titleDisabled = \is_array($operation['label'] ?? null) && isset($operation['label'][2]) ? \sprintf($operation['label'][2], $record['id']) : $config['title'];
         }
 
         $iconAttributes = (new HtmlAttributes())

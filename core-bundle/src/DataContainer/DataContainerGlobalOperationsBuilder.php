@@ -40,13 +40,15 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
 
     public function __toString(): string
     {
-        if (!$this->operations) {
+        $operations = $this->cleanOperations();
+
+        if (!$operations) {
             return '';
         }
 
         return $this->twig->render('@Contao/backend/data_container/operations.html.twig', [
-            'operations' => $this->operations,
-            'has_primary' => [] !== array_filter(array_column($this->operations, 'primary'), static fn ($v) => null !== $v),
+            'operations' => $operations,
+            'has_primary' => [] !== array_filter(array_column($operations, 'primary'), static fn ($v) => null !== $v),
             'globalOperations' => true,
         ]);
     }

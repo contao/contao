@@ -95,6 +95,32 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
         return $this;
     }
 
+    protected function cleanOperations(): array
+    {
+        $hasSeparator = false;
+        $operations = $this->operations;
+
+        foreach ($operations as $k => $v) {
+            if (isset($v['html']) && '' === trim($v['html'])) {
+                unset($operations[$k]);
+                continue;
+            }
+
+            if ($v['separator'] ?? false) {
+                if ($hasSeparator) {
+                    unset($operations[$k]);
+                    continue;
+                }
+
+                $hasSeparator = true;
+            } else {
+                $hasSeparator = false;
+            }
+        }
+
+        return array_values($operations);
+    }
+
     /**
      * Generate multiple operations if the given operation is using HTML.
      */
