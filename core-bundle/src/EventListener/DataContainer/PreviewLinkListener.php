@@ -189,14 +189,13 @@ class PreviewLinkListener
         $url = $this->uriSigner->sign($url);
 
         $title ??= $this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link');
-        $message = $this->translator->trans('MSC.clipboardCopy', [], 'contao_default');
 
         return \sprintf(
             '<a href="%s" target="_blank" title="%s" data-controller="contao--clipboard" data-contao--clipboard-content-value="%s" data-contao--clipboard-message-value="%s" data-action="contao--clipboard#write:prevent">%s</a> ',
             StringUtil::specialcharsUrl($url),
             StringUtil::specialchars($title),
             StringUtil::specialcharsUrl($url),
-            $message,
+            $this->translator->trans('MSC.clipboardCopy', [], 'contao_default'),
             $label ?? $url,
         );
     }

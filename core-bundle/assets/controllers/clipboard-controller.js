@@ -6,14 +6,14 @@ export default class extends Controller {
         content: String,
         message: {
             type: String,
-            default: 'Copied to clipboard!',
+            default: 'Copied to clipboard.',
         },
     };
 
     async write() {
         if (!navigator.clipboard) {
             if (window.console) {
-                console.error('The clipboard API is not available - make sure you are using a secure context (https).');
+                console.error('The clipboard API is not available. Make sure you use a secure context (https).');
             }
 
             return;

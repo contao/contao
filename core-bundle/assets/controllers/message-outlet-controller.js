@@ -26,7 +26,7 @@ export default class extends Controller {
         }
 
         if (window.console) {
-            console.error(`Did not find any message prototypes for type "${type}".`);
+            console.error(`Could not find any message prototypes for type "${type}".`);
         }
     }
 
