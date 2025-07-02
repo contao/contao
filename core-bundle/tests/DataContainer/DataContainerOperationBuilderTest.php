@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DataContainer;
 
 use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -107,7 +108,7 @@ class DataContainerOperationBuilderTest extends TestCase
 
     public function testRemovesEmptyHtml(): void
     {
-        $expected = [['href' => 'foo', 'label' => 'foo']];
+        $expected = [['href' => 'foo', 'label' => 'foo', 'attributes' => new HtmlAttributes()]];
 
         $twig = $this->createMock(Environment::class);
         $twig
@@ -128,7 +129,7 @@ class DataContainerOperationBuilderTest extends TestCase
         );
 
         $builder = $builder->initialize();
-        $builder->append(['href' => 'foo', 'label' => 'foo']);
+        $builder->append($expected[0]);
         $builder->append(['html' => ''], true);
 
         $this->assertSame('success', (string) $builder);
@@ -136,7 +137,11 @@ class DataContainerOperationBuilderTest extends TestCase
 
     public function testRemovesDuplicateSeparators(): void
     {
-        $expected = [['href' => 'foo', 'label' => 'foo'], ['separator' => true], ['href' => 'bar', 'label' => 'bar']];
+        $expected = [
+            ['href' => 'foo', 'label' => 'foo', 'attributes' => new HtmlAttributes()],
+            ['separator' => true],
+            ['href' => 'bar', 'label' => 'bar', 'attributes' => new HtmlAttributes()]
+        ];
 
         $twig = $this->createMock(Environment::class);
         $twig
@@ -157,11 +162,11 @@ class DataContainerOperationBuilderTest extends TestCase
         );
 
         $builder = $builder->initialize();
-        $builder->append(['href' => 'foo']);
+        $builder->append($expected[0]);
         $builder->addSeparator();
         $builder->append(['html' => ''], true);
         $builder->addSeparator();
-        $builder->append(['href' => 'bar', 'label' => 'bar']);
+        $builder->append($expected[2]);
 
         $this->assertSame('success', (string) $builder);
     }
