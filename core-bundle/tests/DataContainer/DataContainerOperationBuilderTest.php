@@ -140,7 +140,7 @@ class DataContainerOperationBuilderTest extends TestCase
         $expected = [
             ['href' => 'foo', 'label' => 'foo', 'attributes' => new HtmlAttributes()],
             ['separator' => true],
-            ['href' => 'bar', 'label' => 'bar', 'attributes' => new HtmlAttributes()]
+            ['href' => 'bar', 'label' => 'bar', 'attributes' => new HtmlAttributes()],
         ];
 
         $twig = $this->createMock(Environment::class);
