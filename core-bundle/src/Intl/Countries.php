@@ -46,12 +46,21 @@ class Countries
         $countries = [];
 
         foreach ($this->countries as $countryCode) {
-            $langKey = 'CNT.'.strtolower($countryCode);
+            [$country, $subdivision] = explode('-', $countryCode, 2) + [null, null];
+
+            $langKey = 'CNT.'.strtolower($country.$subdivision);
+            $langKeyShort = 'CNT.'.strtolower($country);
 
             if ($this->translator->getCatalogue($displayLocale)->has($langKey, 'contao_countries')) {
                 $countries[$countryCode] = $this->translator->trans($langKey, [], 'contao_countries', $displayLocale);
+            } elseif ($subdivision && $this->translator->getCatalogue($displayLocale)->has($langKeyShort, 'contao_countries')) {
+                $countries[$countryCode] = $this->translator->trans($langKeyShort, [], 'contao_countries', $displayLocale)." ($countryCode)";
             } else {
-                $countries[$countryCode] = \Locale::getDisplayRegion('_'.$countryCode, $displayLocale ?? $this->defaultLocale);
+                $countries[$countryCode] = \Locale::getDisplayRegion('_'.$country, $displayLocale ?? $this->defaultLocale);
+
+                if ($subdivision) {
+                    $countries[$countryCode] .= " ($countryCode)";
+                }
             }
         }
 

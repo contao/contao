@@ -136,7 +136,7 @@ class Email
 		}
 		elseif ($this->objMailer instanceof \Swift_Mailer)
 		{
-			trigger_deprecation('contao/core-bundle', '5.3', 'Passing a Swift_Mailer instance has been deprecated and will no longer work in Contao 6.');
+			trigger_deprecation('contao/core-bundle', '5.3', 'Passing a Swift_Mailer instance is deprecated and will no longer work in Contao 6.');
 
 			$this->objMessage = new \Swift_Message();
 		}

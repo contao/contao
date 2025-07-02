@@ -185,7 +185,7 @@ class InsertTagParser implements ResetInterface
      */
     public function render(string $input): string
     {
-        trigger_deprecation('contao/core-bundle', '5.1', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "%s::renderTag()" instead.', __METHOD__, self::class);
+        trigger_deprecation('contao/core-bundle', '5.1', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use "%s::renderTag()" instead.', __METHOD__, self::class);
 
         return $this->renderTag($input)->getValue();
     }
@@ -280,13 +280,13 @@ class InsertTagParser implements ResetInterface
         }
 
         if (strtolower($name) !== $name) {
-            trigger_deprecation('contao/core-bundle', '5.0', 'Insert tags with uppercase letters ("%s") have been deprecated and will no longer work in Contao 6.', $name);
+            trigger_deprecation('contao/core-bundle', '5.0', 'Insert tags with uppercase letters ("%s") are deprecated and will no longer work in Contao 6.', $name);
             $name = strtolower($name);
         }
 
         foreach ($flags as $flag) {
             if (strtolower($flag) !== $flag) {
-                trigger_deprecation('contao/core-bundle', '5.0', 'Insert tag flags with uppercase letters ("%s") have been deprecated and will no longer work in Contao 6.', $flag);
+                trigger_deprecation('contao/core-bundle', '5.0', 'Insert tag flags with uppercase letters ("%s") are deprecated and will no longer work in Contao 6.', $flag);
             }
         }
 
@@ -609,7 +609,7 @@ class InsertTagParser implements ResetInterface
             return $result;
         }
 
-        trigger_deprecation('contao/core-bundle', '5.2', 'Using the "insertTagFlags" hook has been deprecated and will no longer work in Contao 6. Use the "%s" attribute instead.', AsInsertTagFlag::class);
+        trigger_deprecation('contao/core-bundle', '5.2', 'Using the "insertTagFlags" hook is deprecated and will no longer work in Contao 6. Use the "%s" attribute instead.', AsInsertTagFlag::class);
 
         // Set up as variables as they may be used by reference in the hooks
         $flagName = $flag->getName();
