@@ -284,11 +284,18 @@
     margin: 0;
 }
 
-.operations a {
+.operations a,
+.operations button {
     display: flex;
     gap: 6px;
     align-items: center;
     white-space: nowrap;
+    background-color: transparent;
+    border: none;
+}
+
+.operations button:hover {
+    color: var(--contao);
 }
 
 .operations-menu-container {
