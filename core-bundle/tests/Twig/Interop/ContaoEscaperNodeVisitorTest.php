@@ -136,7 +136,7 @@ class ContaoEscaperNodeVisitorTest extends TestCase
 
     public function testHtmlAttrFilter(): void
     {
-        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook is deprecated/');
 
         HookHelper::registerHook('replaceInsertTags', static fn (string $tag) => 'flavor' === $tag ? 'vanilla' : false);
 

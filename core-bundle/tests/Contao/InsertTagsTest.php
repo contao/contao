@@ -68,7 +68,7 @@ class InsertTagsTest extends TestCase
     public function testInsertTags(string $source, string $expected, bool $expectUserDeprecationMessage = true): void
     {
         if ($expectUserDeprecationMessage) {
-            $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook has been deprecated/');
+            $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook is deprecated/');
         }
 
         InsertTags::reset();
@@ -997,7 +997,7 @@ class InsertTagsTest extends TestCase
 
     public function testInfiniteNestedInsertTag(): void
     {
-        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook is deprecated/');
 
         InsertTags::reset();
 
@@ -1013,7 +1013,7 @@ class InsertTagsTest extends TestCase
 
     public function testInfiniteRecursionInsertTag(): void
     {
-        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook is deprecated/');
 
         InsertTags::reset();
 
@@ -1027,7 +1027,7 @@ class InsertTagsTest extends TestCase
 
     public function testInfiniteRecursionWithCatchInsertTag(): void
     {
-        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook is deprecated/');
 
         InsertTags::reset();
 
@@ -1039,7 +1039,7 @@ class InsertTagsTest extends TestCase
 
     public function testInfiniteRecursionWithCatchAndRetryInsertTag(): void
     {
-        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook is deprecated/');
 
         InsertTags::reset();
 
@@ -1053,7 +1053,7 @@ class InsertTagsTest extends TestCase
 
     public function testPcreBacktrackLimit(): void
     {
-        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Using the "replaceInsertTags" hook is deprecated/');
 
         InsertTags::reset();
 

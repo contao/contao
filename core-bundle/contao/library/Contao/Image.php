@@ -98,11 +98,11 @@ class Image
 
 		if (\in_array($filename, self::$deprecated))
 		{
-			trigger_deprecation('contao/core-bundle', '5.2', 'Using the "%s" icon has been deprecated and will no longer work in Contao 6.');
+			trigger_deprecation('contao/core-bundle', '5.2', 'Using the "%s" icon is deprecated and will no longer work in Contao 6.');
 		}
 		elseif (\in_array($filename, self::$disabled))
 		{
-			trigger_deprecation('contao/core-bundle', '5.2', 'Using the "%s" icon has been deprecated and will no longer work in Contao 6. Use the "%s--disabled" icon instead.', $filename, substr($filename, 0, -1));
+			trigger_deprecation('contao/core-bundle', '5.2', 'Using the "%s" icon is deprecated and will no longer work in Contao 6. Use the "%s--disabled" icon instead.', $filename, substr($filename, 0, -1));
 		}
 
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');

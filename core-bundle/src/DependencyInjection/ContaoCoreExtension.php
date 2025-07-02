@@ -162,6 +162,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleCspConfig($config, $container);
         $this->handleAltcha($config, $container);
         $this->handleTemplateStudioConfig($config, $container, $loader);
+        $this->handleMailerConfig($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -672,6 +673,18 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         );
 
         $loader->load('template_studio.yaml');
+    }
+
+    private function handleMailerConfig(array $config, ContainerBuilder $container): void
+    {
+        if (null === $config['mailer']['override_from'] || !$container->hasDefinition('contao.mailer')) {
+            return;
+        }
+
+        $container
+            ->getDefinition('contao.mailer')
+            ->setArgument('$overrideFrom', $config['mailer']['override_from'])
+        ;
     }
 
     /**

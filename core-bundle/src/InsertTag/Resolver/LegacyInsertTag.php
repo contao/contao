@@ -627,7 +627,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                     break;
                 }
 
-                trigger_deprecation('contao/core-bundle', '5.0', 'Using the file insert tag to include templates has been deprecated and will no longer work in Contao 6. Use the "Template" content element instead.');
+                trigger_deprecation('contao/core-bundle', '5.0', 'Using the file insert tag to include templates is deprecated and will no longer work in Contao 6. Use the "Template" content element instead.');
 
                 $requestStack = $this->container->get('request_stack');
                 $subRequest = null;
