@@ -45,7 +45,7 @@
                 .addClass('has-icon', operation.icon|default)
             %}
             <a{{ operation_attributes|raw }}>
-                {% if operation.icon|default %}{{ backend_icon(operation.icon, (menu or showLabels or operation.title|default == operation.label|default) ? '' : operation.title|default, operation.iconAttributes|default(null)) }}{% endif %}
+                {% if operation.icon|default %}{{ backend_icon(operation.icon, (menu or showLabels) ? '' : operation.title|default, operation.iconAttributes|default(null)) }}{% endif %}
                 {% if menu or showLabels %}{{ operation.label|default }}{% endif %}
             </a>
         </li>
