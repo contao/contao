@@ -48,6 +48,7 @@ use Contao\Model\MetadataTrait;
  * @property string         $url
  * @property boolean        $target
  * @property string         $cssClass
+ * @property string         $searchIndexer
  * @property boolean        $noComments
  * @property boolean        $featured
  * @property boolean        $published
@@ -90,6 +91,7 @@ use Contao\Model\MetadataTrait;
  * @method static NewsModel|null findOneByUrl($val, array $opt=array())
  * @method static NewsModel|null findOneByTarget($val, array $opt=array())
  * @method static NewsModel|null findOneByCssClass($val, array $opt=array())
+ * @method static NewsModel|null findOneBySearchIndexer($val, array $opt=array())
  * @method static NewsModel|null findOneByNoComments($val, array $opt=array())
  * @method static NewsModel|null findOneByFeatured($val, array $opt=array())
  * @method static NewsModel|null findOneByPublished($val, array $opt=array())
@@ -126,6 +128,7 @@ use Contao\Model\MetadataTrait;
  * @method static Collection<NewsModel>|null findByUrl($val, array $opt=array())
  * @method static Collection<NewsModel>|null findByTarget($val, array $opt=array())
  * @method static Collection<NewsModel>|null findByCssClass($val, array $opt=array())
+ * @method static Collection<NewsModel>|null findBySearchIndexer($val, array $opt=array())
  * @method static Collection<NewsModel>|null findByNoComments($val, array $opt=array())
  * @method static Collection<NewsModel>|null findByFeatured($val, array $opt=array())
  * @method static Collection<NewsModel>|null findByPublished($val, array $opt=array())
@@ -167,6 +170,7 @@ use Contao\Model\MetadataTrait;
  * @method static integer countByUrl($val, array $opt=array())
  * @method static integer countByTarget($val, array $opt=array())
  * @method static integer countByCssClass($val, array $opt=array())
+ * @method static integer countBySearchIndexer($val, array $opt=array())
  * @method static integer countByNoComments($val, array $opt=array())
  * @method static integer countByFeatured($val, array $opt=array())
  * @method static integer countByPublished($val, array $opt=array())

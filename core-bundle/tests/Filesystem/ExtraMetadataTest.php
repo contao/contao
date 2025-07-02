@@ -61,7 +61,7 @@ class ExtraMetadataTest extends TestCase
     {
         $localizedMetadata = new MetadataBag([]);
 
-        $this->expectUserDeprecationMessageMatches('/Using the key "metadata" to set localized metadata has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Using the key "metadata" to set localized metadata is deprecated/');
 
         $extraMetadata = new ExtraMetadata([
             'metadata' => $localizedMetadata,
@@ -78,7 +78,7 @@ class ExtraMetadataTest extends TestCase
             'localized' => $localizedMetadata,
         ]);
 
-        $this->expectUserDeprecationMessageMatches('/Using the key "metadata" to get localized metadata has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Using the key "metadata" to get localized metadata is deprecated/');
 
         $this->assertSame($localizedMetadata, $extraMetadata->get('metadata'));
     }

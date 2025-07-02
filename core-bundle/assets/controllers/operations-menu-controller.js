@@ -11,7 +11,7 @@ export default class OperationsMenuController extends Controller {
 
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,
-            menuLinkSelector: 'a,button,img',
+            menuLinkSelector: 'a,button,img,hr',
         });
 
         this.controllerTarget?.addEventListener('accessibleMenuExpand', () => {
@@ -59,8 +59,16 @@ export default class OperationsMenuController extends Controller {
             return;
         }
 
+        if (this.$menu.elements.submenuToggles[0].isOpen) {
+            this.$menu.elements.submenuToggles[0].close();
+            return;
+        }
+
         event.preventDefault();
         event.stopPropagation();
+
+        // Prevent accessible-menu from handling pointerup and closing the menu again (see #8065)
+        this.element.addEventListener('pointerup', (e) => e.stopPropagation(), { once: true });
 
         this.$menu.elements.submenuToggles[0].open();
         this.setFixedPosition(event);

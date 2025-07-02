@@ -12,32 +12,27 @@ declare(strict_types=1);
 
 namespace Contao\NewsBundle\Tests\EventListener;
 
+use Contao\CoreBundle\DataContainer\DcaUrlAnalyzer;
 use Contao\CoreBundle\Event\PreviewUrlCreateEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\NewsBundle\EventListener\PreviewUrlCreateListener;
-use Contao\NewsModel;
 use Contao\TestCase\ContaoTestCase;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RequestStack;
+use Doctrine\DBAL\Connection;
 
 class PreviewUrlCreateListenerTest extends ContaoTestCase
 {
     public function testCreatesThePreviewUrl(): void
     {
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
+        $dcaUrlAnalyzer = $this->createMock(DcaUrlAnalyzer::class);
+        $dcaUrlAnalyzer
+            ->expects($this->once())
+            ->method('getCurrentTableId')
+            ->willReturn(['tl_news', 1])
+        ;
 
         $event = new PreviewUrlCreateEvent('news', 1);
 
-        $newsModel = $this->mockClassWithProperties(NewsModel::class);
-        $newsModel->id = 1;
-
-        $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-        $listener = new PreviewUrlCreateListener($requestStack, $framework);
+        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $this->createMock(Connection::class));
         $listener($event);
 
         $this->assertSame('news=1', $event->getQuery());
@@ -53,7 +48,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
 
         $event = new PreviewUrlCreateEvent('news', 1);
 
-        $listener = new PreviewUrlCreateListener(new RequestStack(), $framework);
+        $listener = new PreviewUrlCreateListener($framework, $this->createMock(DcaUrlAnalyzer::class), $this->createMock(Connection::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
@@ -64,7 +59,7 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
         $framework = $this->mockContaoFramework();
         $event = new PreviewUrlCreateEvent('calendar', 1);
 
-        $listener = new PreviewUrlCreateListener(new RequestStack(), $framework);
+        $listener = new PreviewUrlCreateListener($framework, $this->createMock(DcaUrlAnalyzer::class), $this->createMock(Connection::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
@@ -72,62 +67,76 @@ class PreviewUrlCreateListenerTest extends ContaoTestCase
 
     public function testDoesNotCreateThePreviewUrlOnTheArchiveListPage(): void
     {
-        $request = new Request();
-        $request->query->set('table', 'tl_news');
+        $dcaUrlAnalyzer = $this->createMock(DcaUrlAnalyzer::class);
+        $dcaUrlAnalyzer
+            ->expects($this->once())
+            ->method('getCurrentTableId')
+            ->willReturn(['tl_news_archive', null])
+        ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $framework = $this->mockContaoFramework();
         $event = new PreviewUrlCreateEvent('news', 1);
 
-        $listener = new PreviewUrlCreateListener($requestStack, $framework);
+        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $this->createMock(Connection::class));
         $listener($event);
 
         $this->assertNull($event->getQuery());
     }
 
-    public function testOverwritesTheIdIfTheArchiveSettingsAreEdited(): void
+    public function testDoesNotCreateThePreviewUrlOnTheArchiveEditPage(): void
     {
-        $request = new Request();
-        $request->query->set('act', 'edit');
-        $request->query->set('table', 'tl_news');
-        $request->query->set('id', 2);
+        $dcaUrlAnalyzer = $this->createMock(DcaUrlAnalyzer::class);
+        $dcaUrlAnalyzer
+            ->expects($this->once())
+            ->method('getCurrentTableId')
+            ->willReturn(['tl_news_archive', 1])
+        ;
 
-        $requestStack = new RequestStack();
-        $requestStack->push($request);
-
-        $newsModel = $this->mockClassWithProperties(NewsModel::class);
-        $newsModel->id = 2;
-
-        $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
         $event = new PreviewUrlCreateEvent('news', 1);
 
-        $listener = new PreviewUrlCreateListener($requestStack, $framework);
+        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $this->createMock(Connection::class));
+        $listener($event);
+
+        $this->assertNull($event->getQuery());
+    }
+
+    public function testCreatesThePreviewUrlForNews(): void
+    {
+        $dcaUrlAnalyzer = $this->createMock(DcaUrlAnalyzer::class);
+        $dcaUrlAnalyzer
+            ->expects($this->once())
+            ->method('getCurrentTableId')
+            ->willReturn(['tl_news', 2])
+        ;
+
+        $event = new PreviewUrlCreateEvent('news', 1);
+
+        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $this->createMock(Connection::class));
         $listener($event);
 
         $this->assertSame('news=2', $event->getQuery());
     }
 
-    public function testDoesNotCreateThePreviewUrlIfThereIsNoNewsItem(): void
+    public function testCreatesThePreviewUrlForContentElements(): void
     {
-        $requestStack = new RequestStack();
-        $requestStack->push(new Request());
+        $dcaUrlAnalyzer = $this->createMock(DcaUrlAnalyzer::class);
+        $dcaUrlAnalyzer
+            ->expects($this->once())
+            ->method('getCurrentTableId')
+            ->willReturn(['tl_content', 18])
+        ;
 
-        $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => null]),
-        ];
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->expects($this->once())
+            ->method('fetchAllAssociative')
+            ->willReturn([['pid' => 2, 'ptable' => 'tl_news']])
+        ;
 
-        $framework = $this->mockContaoFramework($adapters);
-        $event = new PreviewUrlCreateEvent('news', 0);
+        $event = new PreviewUrlCreateEvent('news', 18);
 
-        $listener = new PreviewUrlCreateListener($requestStack, $framework);
+        $listener = new PreviewUrlCreateListener($this->mockContaoFramework(), $dcaUrlAnalyzer, $connection);
         $listener($event);
 
-        $this->assertNull($event->getQuery());
+        $this->assertSame('news=2', $event->getQuery());
     }
 }

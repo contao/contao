@@ -272,6 +272,9 @@ class PageRegular extends Frontend
 		$this->Template->onload = trim($objLayout->onload);
 		$this->Template->class = trim($objLayout->cssClass . ' ' . $objPage->cssClass);
 
+		// Additional meta tags
+		$this->Template->metaTags = $headBag->getMetaTags();
+
 		// Execute AFTER the modules have been generated and create footer scripts first
 		$this->createFooterScripts($objPage, $objLayout);
 		$this->createHeaderScripts($objPage, $objLayout);
