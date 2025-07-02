@@ -1,5 +1,5 @@
 .tl_info a[data-controller="contao--clipboard"] {
-    &:before {
+    &::before {
         display: inline-block;
         content: "";
         width: 16px;
@@ -11,7 +11,7 @@
         filter: grayscale(100);
     }
 
-    &:hover:before {
+    &:hover::before {
         filter: grayscale(0);
     }
 }
