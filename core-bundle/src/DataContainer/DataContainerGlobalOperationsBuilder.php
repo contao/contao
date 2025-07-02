@@ -90,7 +90,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         $this->ensureInitialized();
 
         $this->append([
-            'href' => $this->framework->getAdapter(Backend::class)->addToUrl('clipboard=1', addRequestToken: false),
+            'href' => $this->framework->getAdapter(Backend::class)->addToUrl('clipboard=1', true, [], false),
             'label' => $this->translator->trans('MSC.clearClipboard', [], 'contao_default'),
             'attributes' => (new HtmlAttributes())->addClass('header_clipboard')->set('accesskey', 'x'),
             'method' => 'POST',
@@ -119,7 +119,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         }
 
         $labelNew = $GLOBALS['TL_LANG'][$this->table]['new'] ?? $GLOBALS['TL_LANG']['DCA']['new'];
-        $href = Backend::addToUrl($url, addRequestToken: false);
+        $href = $this->framework->getAdapter(Backend::class)->addToUrl($url, true, [], false);
 
         $this->append([
             'href' => $href,
