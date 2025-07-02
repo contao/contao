@@ -65,11 +65,6 @@ class DataContainerOperationBuilderTest extends TestCase
     public static function parsesOperationsHtmlProvider(): iterable
     {
         yield [
-            '',
-            [''],
-        ];
-
-        yield [
             '<a href="#">foo</a>',
             ['<a href="#">foo</a>'],
         ];
@@ -108,5 +103,66 @@ class DataContainerOperationBuilderTest extends TestCase
             '<a href="#"><img src="pasteinto.svg" alt="Einfügen">foo</a> <img src="pasteafter.svg" alt="Danach einfügen"> ',
             ['<a href="#"><img src="pasteinto.svg" alt="Einfügen">foo</a>', '<img src="pasteafter.svg" alt="Danach einfügen">'],
         ];
+    }
+
+    public function testRemovesEmptyHtml(): void
+    {
+        $expected = [['href' => 'foo']];
+
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with(
+                '@Contao/backend/data_container/operations.html.twig',
+                $this->callback(static fn (array $data) => $data['operations'] === $expected),
+            )
+            ->willReturn('success')
+        ;
+
+        $builder = new DataContainerOperationsBuilder(
+            $this->mockContaoFramework(),
+            $twig,
+            $this->createMock(Security::class),
+            $this->createMock(UrlGeneratorInterface::class),
+        );
+
+        $builder = $builder->initialize();
+        $builder->append(['href' => 'foo']);
+        $builder->append(['html' => ''], true);
+
+        $this->assertSame('success', (string) $builder);
+    }
+
+    public function testRemovesDuplicateSeparators(): void
+    {
+        $expected = [['href' => 'foo'], ['separator' => true], ['href' => 'bar']];
+
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with(
+                '@Contao/backend/data_container/operations.html.twig',
+                $this->callback(static fn (array $data) => $data['operations'] === $expected),
+            )
+            ->willReturn('success')
+        ;
+
+        $builder = new DataContainerOperationsBuilder(
+            $this->mockContaoFramework(),
+            $twig,
+            $this->createMock(Security::class),
+            $this->createMock(UrlGeneratorInterface::class),
+        );
+
+        $builder = $builder->initialize();
+        $builder->append(['href' => 'foo']);
+        $builder->addSeparator();
+        $builder->append(['html' => ''], true);
+        $builder->addSeparator();
+        $builder->append(['href' => 'bar']);
+
+        $this->assertSame('success', (string) $builder);
     }
 }
