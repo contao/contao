@@ -107,7 +107,7 @@ class DataContainerOperationBuilderTest extends TestCase
 
     public function testRemovesEmptyHtml(): void
     {
-        $expected = [['href' => 'foo']];
+        $expected = [['href' => 'foo', 'label' => 'foo']];
 
         $twig = $this->createMock(Environment::class);
         $twig
@@ -128,7 +128,7 @@ class DataContainerOperationBuilderTest extends TestCase
         );
 
         $builder = $builder->initialize();
-        $builder->append(['href' => 'foo']);
+        $builder->append(['href' => 'foo', 'label' => 'foo']);
         $builder->append(['html' => ''], true);
 
         $this->assertSame('success', (string) $builder);
@@ -136,7 +136,7 @@ class DataContainerOperationBuilderTest extends TestCase
 
     public function testRemovesDuplicateSeparators(): void
     {
-        $expected = [['href' => 'foo'], ['separator' => true], ['href' => 'bar']];
+        $expected = [['href' => 'foo', 'label' => 'foo'], ['separator' => true], ['href' => 'bar', 'label' => 'bar']];
 
         $twig = $this->createMock(Environment::class);
         $twig
@@ -161,7 +161,7 @@ class DataContainerOperationBuilderTest extends TestCase
         $builder->addSeparator();
         $builder->append(['html' => ''], true);
         $builder->addSeparator();
-        $builder->append(['href' => 'bar']);
+        $builder->append(['href' => 'bar', 'label' => 'bar']);
 
         $this->assertSame('success', (string) $builder);
     }
