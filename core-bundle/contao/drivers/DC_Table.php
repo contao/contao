@@ -2529,7 +2529,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					$return .= Message::generateUnwrapped() . \sprintf(
 						'<fieldset data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-collapsed-class="collapsed"%s class="%s cf"><legend><button type="button" data-action="contao--toggle-fieldset#toggle">%s</button></legend>%s</fieldset>',
-						$blnAddJumpTarget ? ('data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="'. $label .'" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open"') : '',
+						$blnAddJumpTarget ? ('data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="' . $label . '" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open"') : '',
 						$class,
 						$label,
 						$box
@@ -4212,7 +4212,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 			$operations->append(array('html' => $buttons), true);
 		}
 
-		$return = Message::generate() . (string) $operations;
+		$return = Message::generate() . $operations;
 
 		// Get all details of the parent record
 		$objParent = $db

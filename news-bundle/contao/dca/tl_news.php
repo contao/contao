@@ -589,7 +589,7 @@ class tl_news extends Backend
 	}
 
 	/**
-	 * Adjust start end end time of the event based on date, span, startTime and endTime
+	 * Adjust the start and end time of the event based on date, span, startTime and endTime
 	 *
 	 * @param DataContainer $dc
 	 */
