@@ -56,18 +56,18 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		),
 		'global_operations' => array
 		(
+			'all',
+			'-',
 			'importTheme' => array
 			(
 				'href'                => 'key=importTheme',
 				'class'               => 'header_theme_import',
-				'primary'             => true,
 				'button_callback'     => array('tl_theme', 'importTheme')
 			),
 			'store' => array
 			(
 				'href'                => 'key=themeStore',
 				'class'               => 'header_store',
-				'primary'             => true,
 				'button_callback'     => array('tl_theme', 'themeStore')
 			),
 		),
