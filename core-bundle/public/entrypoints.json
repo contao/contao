@@ -2,10 +2,10 @@
   "entrypoints": {
     "backend": {
       "css": [
-        "/bundles/contaocore/backend.c66e4c9a.css"
+        "/bundles/contaocore/backend.0afc2b79.css"
       ],
       "js": [
-        "/bundles/contaocore/backend.da5ada3d.js"
+        "/bundles/contaocore/backend.3654361b.js"
       ]
     }
   }

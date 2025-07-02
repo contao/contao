@@ -2270,6 +2270,9 @@
       <trans-unit id="MSC.skipToContent">
         <source>Skip to content</source>
       </trans-unit>
+      <trans-unit id="MSC.clipboardCopy">
+        <source>Copied to clipboard.</source>
+      </trans-unit>
       <trans-unit id="MSC.searchIndexer.0">
         <source>Search indexer</source>
       </trans-unit>
