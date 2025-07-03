@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 
 use Contao\CoreBundle\EventListener\DataContainer\DisableAppConfiguredSettingsListener;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\DataContainer;
 use Contao\Image;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\DocParser;
@@ -36,7 +37,8 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
         $before = $GLOBALS['TL_DCA']['tl_settings'];
 
         $listener = $this->createListener();
-        $listener->onLoadCallback();
+        $dataContainer = $this->mockClassWithProperties(DataContainer::class, ['table' => 'tl_settings']);
+        $listener->onLoadCallback($dataContainer);
 
         $this->assertSame($before, $GLOBALS['TL_DCA']['tl_settings']);
     }
@@ -72,7 +74,8 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                 'fooBar' => false,
             ],
         );
-        $listener->onLoadCallback();
+        $dataContainer = $this->mockClassWithProperties(DataContainer::class, ['table' => 'tl_settings']);
+        $listener->onLoadCallback($dataContainer);
 
         $this->assertSame(
             [
