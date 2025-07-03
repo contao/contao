@@ -129,25 +129,25 @@
         <source>Delete theme ID %s</source>
       </trans-unit>
       <trans-unit id="tl_theme.modules.0">
-        <source>Edit front end modules</source>
+        <source>Front end modules</source>
       </trans-unit>
       <trans-unit id="tl_theme.modules.1">
         <source>Edit the front end modules of theme ID %s</source>
       </trans-unit>
       <trans-unit id="tl_theme.elements.0">
-        <source>Edit content elements</source>
+        <source>Content elements</source>
       </trans-unit>
       <trans-unit id="tl_theme.elements.1">
         <source>Edit the content elements of theme ID %s</source>
       </trans-unit>
       <trans-unit id="tl_theme.layout.0">
-        <source>Edit page layouts</source>
+        <source>Page layouts</source>
       </trans-unit>
       <trans-unit id="tl_theme.layout.1">
         <source>Edit the page layouts of theme ID %s</source>
       </trans-unit>
       <trans-unit id="tl_theme.imageSizes.0">
-        <source>Edit image sizes</source>
+        <source>Image sizes</source>
       </trans-unit>
       <trans-unit id="tl_theme.imageSizes.1">
         <source>Edit the image sizes of theme ID %s</source>
