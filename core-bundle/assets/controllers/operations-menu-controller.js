@@ -76,19 +76,18 @@ export default class OperationsMenuController extends Controller {
 
     setFixedPosition(event) {
         const rect = this.submenuTarget.getBoundingClientRect();
-        let x;
-        let y;
-        let offset = 0;
 
-        if (event) {
-            x = event.clientX;
-            y = event.clientY;
-        } else {
+        if (event === undefined) {
             const r = this.controllerTarget.getBoundingClientRect();
-            x = r.right;
-            y = r.bottom;
-            offset = 2;
+            this.submenuTarget.style.position = 'absolute';
+            this.submenuTarget.style.top = `100%`;
+            this.submenuTarget.style.left = `-${ rect.width - r.width - 2}px`;
+
+            return;
         }
+
+        const x = event.clientX;
+        const y = event.clientY;
 
         this.submenuTarget.style.position = 'fixed';
         this.submenuTarget.style.right = 'auto';
@@ -96,13 +95,13 @@ export default class OperationsMenuController extends Controller {
         if (window.innerHeight < y + rect.height) {
             this.submenuTarget.style.top = `${y - rect.height}px`;
         } else {
-            this.submenuTarget.style.top = `${y + offset}px`;
+            this.submenuTarget.style.top = `${y}px`;
         }
 
         if (window.innerWidth < x + rect.width) {
-            this.submenuTarget.style.left = `${x - rect.width + offset}px`;
+            this.submenuTarget.style.left = `${x - rect.width}px`;
         } else {
-            this.submenuTarget.style.left = `${x + offset}px`;
+            this.submenuTarget.style.left = `${x}px`;
         }
     }
 
