@@ -80,8 +80,8 @@ export default class OperationsMenuController extends Controller {
         if (event === undefined) {
             const r = this.controllerTarget.getBoundingClientRect();
             this.submenuTarget.style.position = 'absolute';
-            this.submenuTarget.style.top = `100%`;
-            this.submenuTarget.style.left = `-${ rect.width - r.width - 2}px`;
+            this.submenuTarget.style.top = '100%';
+            this.submenuTarget.style.left = `-${rect.width - r.width - 2}px`;
 
             return;
         }
