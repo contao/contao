@@ -30,7 +30,7 @@ class LegacyHookCommentsVoter extends AbstractCommentsVoter
 
     protected function hasAccess(TokenInterface $token, string $source, int $parent): bool
     {
-        if (!isset($GLOBALS['TL_HOOKS']['isAllowedToEditComment']) || !is_array($GLOBALS['TL_HOOKS']['isAllowedToEditComment'])) {
+        if (!isset($GLOBALS['TL_HOOKS']['isAllowedToEditComment']) || !\is_array($GLOBALS['TL_HOOKS']['isAllowedToEditComment'])) {
             return false;
         }
 

@@ -18,31 +18,23 @@ services:
         arguments:
             - '@database_connection'
             - '@security.access.decision_manager'
-        tags:
-            - { name: security.voter }
 
     contao_comments.security.comments_access_voter:
         class: Contao\CommentsBundle\Security\Voter\CommentsAccessVoter
         arguments:
             - '@security.access.decision_manager'
-        tags:
-            - { name: security.voter }
 
     contao_comments.security.content_comments_voter:
         class: Contao\CommentsBundle\Security\Voter\ContentCommentsVoter
         arguments:
             - '@database_connection'
             - '@security.access.decision_manager'
-        tags:
-            - { name: security.voter }
 
     contao_comments.security.faq_comments_voter:
         class: Contao\CommentsBundle\Security\Voter\FaqCommentsVoter
         arguments:
             - '@database_connection'
             - '@security.access.decision_manager'
-        tags:
-            - { name: security.voter }
 
     contao_comments.security.legacy_hook_comments_voter:
         class: Contao\CommentsBundle\Security\Voter\LegacyHookCommentsVoter
@@ -56,13 +48,9 @@ services:
         arguments:
             - '@database_connection'
             - '@security.access.decision_manager'
-        tags:
-            - { name: security.voter }
 
     contao_comments.security.page_comments_voter:
         class: Contao\CommentsBundle\Security\Voter\PageCommentsVoter
         arguments:
             - '@database_connection'
             - '@security.access.decision_manager'
-        tags:
-            - { name: security.voter }

@@ -10,7 +10,6 @@
 
 use Contao\Backend;
 use Contao\BackendUser;
-use Contao\CalendarBundle\Security\ContaoCalendarPermissions;
 use Contao\Comments;
 use Contao\CommentsBundle\Security\ContaoCommentsPermissions;
 use Contao\CommentsModel;
@@ -18,8 +17,6 @@ use Contao\CommentsNotifyModel;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\EventListener\Widget\HttpUrlListener;
-use Contao\CoreBundle\Exception\AccessDeniedException;
-use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Util\UrlUtil;
 use Contao\Database;
 use Contao\DataContainer;
@@ -28,9 +25,7 @@ use Contao\DC_Table;
 use Contao\Email;
 use Contao\Environment;
 use Contao\Idna;
-use Contao\Image;
 use Contao\Input;
-use Contao\NewsBundle\Security\ContaoNewsPermissions;
 use Contao\StringUtil;
 use Contao\System;
 
@@ -268,7 +263,7 @@ class tl_comments extends Backend
 	{
 		trigger_deprecation('contao/comments-bundle', '5.6', '%s is deprecated and will be removed in Contao 6. Vote on the %s::USER_CAN_ACCESS_COMMENT security attribute instead.', __METHOD__, ContaoCommentsPermissions::class);
 
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT, ['source' => $strSource, 'parent' => $intParent]);
+		return System::getContainer()->get('security.helper')->isGranted(ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT, array('source' => $strSource, 'parent' => $intParent));
 	}
 
 	/**

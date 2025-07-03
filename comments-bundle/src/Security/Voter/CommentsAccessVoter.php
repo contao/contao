@@ -44,7 +44,7 @@ class CommentsAccessVoter extends AbstractDataContainerVoter
         $comment = match (true) {
             $action instanceof CreateAction => $action->getNew() ?? [],
             $action instanceof DeleteAction => $action->getCurrent() ?? [],
-            $action instanceof UpdateAction => array_merge($action->getCurrent() ?? [], $action->getNew() ?? [])
+            $action instanceof UpdateAction => array_merge($action->getCurrent() ?? [], $action->getNew() ?? []),
         };
 
         return $this->accessDecisionManager->decide($token, [ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT], $comment);

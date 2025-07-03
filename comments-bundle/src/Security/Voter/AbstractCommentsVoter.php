@@ -24,7 +24,7 @@ abstract class AbstractCommentsVoter implements VoterInterface, CacheableVoterIn
 {
     private array $cache = [];
 
-    public function reset()
+    public function reset(): void
     {
         $this->cache = [];
     }
