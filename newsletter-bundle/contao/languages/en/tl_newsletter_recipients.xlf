@@ -9,7 +9,7 @@
         <source>Please enter the recipient's e-mail address.</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.0">
-        <source>Activate recipient</source>
+        <source>Activate</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.1">
         <source>Recipients are usually activated automatically (double-opt-in).</source>
@@ -84,10 +84,10 @@
         <source>Activate recipient ID %s</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.toggle.3">
-        <source>Activate recipient</source>
+        <source>Activate</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.toggle.4">
-        <source>Deactivate recipient</source>
+        <source>Deactivate</source>
       </trans-unit>
     </body>
   </file>

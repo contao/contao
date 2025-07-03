@@ -197,6 +197,9 @@
       <trans-unit id="tl_form.edit.1">
         <source>Edit form ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_form.children.0">
+        <source>Form fields</source>
+      </trans-unit>
       <trans-unit id="tl_form.children.1">
         <source>Edit the form fields of form ID %s</source>
       </trans-unit>

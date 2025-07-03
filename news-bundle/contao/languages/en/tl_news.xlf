@@ -218,6 +218,9 @@
       <trans-unit id="tl_news.edit.1">
         <source>Edit news item ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_news.children.0">
+        <source>Content elements</source>
+      </trans-unit>
       <trans-unit id="tl_news.children.1">
         <source>Edit the content elements of news item ID %s</source>
       </trans-unit>

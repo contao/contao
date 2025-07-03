@@ -41,6 +41,9 @@
       <trans-unit id="tl_faq_category.edit.1">
         <source>Edit category ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_faq_category.children.0">
+        <source>Questions</source>
+      </trans-unit>
       <trans-unit id="tl_faq_category.children.1">
         <source>Edit the questions of category ID %s</source>
       </trans-unit>

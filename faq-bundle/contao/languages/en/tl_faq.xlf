@@ -92,7 +92,7 @@
       <trans-unit id="tl_faq.new.1">
         <source>Create a new question</source>
       </trans-unit>
-      <trans-unit id="tl_faq.show">
+      <trans-unit id="tl_faq.show.1">
         <source>Show the details of question ID %s</source>
       </trans-unit>
       <trans-unit id="tl_faq.edit.1">

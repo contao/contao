@@ -507,7 +507,7 @@
         <source>Paste after page ID %s</source>
       </trans-unit>
       <trans-unit id="tl_page.articles.0">
-        <source>Edit articles</source>
+        <source>Articles</source>
       </trans-unit>
       <trans-unit id="tl_page.articles.1">
         <source>Edit the articles of page ID %s</source>

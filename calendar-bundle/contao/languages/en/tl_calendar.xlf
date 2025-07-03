@@ -74,6 +74,9 @@
       <trans-unit id="tl_calendar.edit.1">
         <source>Edit calendar ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_calendar.children.0">
+        <source>Events</source>
+      </trans-unit>
       <trans-unit id="tl_calendar.children.1">
         <source>Edit the events of calendar ID %s</source>
       </trans-unit>

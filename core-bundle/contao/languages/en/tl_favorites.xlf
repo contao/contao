@@ -17,7 +17,7 @@
       <trans-unit id="tl_favorites.url_legend">
         <source>Title and URL</source>
       </trans-unit>
-      <trans-unit id="tl_favorites.show">
+      <trans-unit id="tl_favorites.show.1">
         <source>Show the details of favorite ID %s</source>
       </trans-unit>
       <trans-unit id="tl_favorites.edit.1">

@@ -2406,7 +2406,7 @@
         <source>Create a new element</source>
       </trans-unit>
       <trans-unit id="DCA.show.0">
-        <source>Show details</source>
+        <source>Details</source>
       </trans-unit>
       <trans-unit id="DCA.show.1">
         <source>Show the details of element ID %s</source>
@@ -2451,7 +2451,7 @@
         <source>Show operations for element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.children.0">
-        <source>Edit children</source>
+        <source>Child elements</source>
       </trans-unit>
       <trans-unit id="DCA.children.1">
         <source>Edit the child elements of element ID %s</source>
@@ -2490,13 +2490,13 @@
         <source>Paste after element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.pastenewtop.0">
-        <source>Create new element</source>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="DCA.pastenewtop.1">
         <source>Create a new element after element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.pastenewafter.0">
-        <source>Create new element</source>
+        <source>New</source>
       </trans-unit>
       <trans-unit id="DCA.pastenewafter.1">
         <source>Create a new element after element ID %s</source>

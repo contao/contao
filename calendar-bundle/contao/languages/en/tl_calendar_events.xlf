@@ -278,6 +278,9 @@
       <trans-unit id="tl_calendar_events.edit.1">
         <source>Edit event ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_calendar_events.children.0">
+        <source>Content elements</source>
+      </trans-unit>
       <trans-unit id="tl_calendar_events.children.1">
         <source>Edit the content elements of event ID %s</source>
       </trans-unit>

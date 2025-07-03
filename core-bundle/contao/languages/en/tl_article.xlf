@@ -141,7 +141,7 @@
         <source>Create a new article</source>
       </trans-unit>
       <trans-unit id="tl_article.show.0">
-        <source>Show details</source>
+        <source>Details</source>
       </trans-unit>
       <trans-unit id="tl_article.show.1">
         <source>Show the details of article ID %s</source>
@@ -150,7 +150,7 @@
         <source>Edit article ID %s</source>
       </trans-unit>
       <trans-unit id="tl_article.children.0">
-        <source>Edit content elements</source>
+        <source>Content elements</source>
       </trans-unit>
       <trans-unit id="tl_article.children.1">
         <source>Edit the content elements of article ID %s</source>

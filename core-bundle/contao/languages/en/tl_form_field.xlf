@@ -356,7 +356,7 @@
       <trans-unit id="tl_form_field.new.1">
         <source>Create a new form field</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.show">
+      <trans-unit id="tl_form_field.show.1">
         <source>Show the details of form field ID %s</source>
       </trans-unit>
       <trans-unit id="tl_form_field.edit.1">
