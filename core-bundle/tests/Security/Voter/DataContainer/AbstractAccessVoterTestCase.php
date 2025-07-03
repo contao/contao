@@ -58,7 +58,7 @@ abstract class AbstractAccessVoterTestCase extends TestCase
     }
 
     #[DataProvider('votesProvider')]
-    public function testVotes(array $current, array $decisions, bool $accessGranted): void
+    public function testVotes(array $current, array $decisions, bool $accessGranted, string $actionClass = ReadAction::class): void
     {
         $token = $this->createMock(TokenInterface::class);
 
@@ -75,14 +75,14 @@ abstract class AbstractAccessVoterTestCase extends TestCase
             ->willReturnMap($decisions)
         ;
 
-        $class = $this->getVoterClass();
-        $voter = new $class($accessDecisionManager);
+        $voterClass = $this->getVoterClass();
+        $voter = new $voterClass($accessDecisionManager);
 
         $this->assertSame(
             $accessGranted ? VoterInterface::ACCESS_ABSTAIN : VoterInterface::ACCESS_DENIED,
             $voter->vote(
                 $token,
-                new ReadAction($this->getTable(), $current),
+                new $actionClass($this->getTable(), $current),
                 [ContaoCorePermissions::DC_PREFIX.$this->getTable()],
             ),
         );

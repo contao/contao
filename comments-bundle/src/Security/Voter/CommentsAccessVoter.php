@@ -37,7 +37,7 @@ class CommentsAccessVoter extends AbstractDataContainerVoter
 
     protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
-        if ($action instanceof ReadAction || $action instanceof CreateAction) {
+        if ($action instanceof ReadAction) {
             return true;
         }
 
