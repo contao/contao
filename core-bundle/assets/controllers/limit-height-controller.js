@@ -149,7 +149,6 @@ export default class extends Controller {
                 operationTarget.title = this.expandAllTitleValue;
             }
         }
-
     }
 
     hasExpanded() {

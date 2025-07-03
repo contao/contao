@@ -138,12 +138,12 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
      */
     public function addPasteButton(string $type, string|null $href): self
     {
-        $icon = match($type) {
+        $icon = match ($type) {
             'pastetop' => 'pasteafter',
             'pasteroot' => 'pasteinto',
             'pastenewtop' => 'new',
             'pastenewafter' => 'new',
-            default => $type
+            default => $type,
         };
 
         if (null === $href) {
@@ -304,7 +304,8 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             ->set('data-title', $config['title'])
             ->set('data-title-disabled', $titleDisabled)
             ->set('data-action', 'contao--scroll-offset#store')
-            ->set('onclick', 'return AjaxRequest.toggleField(this,'.('visible.svg' === $icon ? 'true' : 'false').')');
+            ->set('onclick', 'return AjaxRequest.toggleField(this,'.('visible.svg' === $icon ? 'true' : 'false').')')
+        ;
 
         $iconAttributes = (new HtmlAttributes())
             ->set('data-icon', $icon)
@@ -340,7 +341,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             $label = [null, $label];
         }
 
-        $label[1] = sprintf($label[1], $this->id);
+        $label[1] = \sprintf($label[1], $this->id);
 
         if (!isset($label[0])) {
             $label[0] = $GLOBALS['TL_LANG']['DCA'][$key][0] ?? $label[1];
