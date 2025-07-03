@@ -146,8 +146,11 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             default => $type,
         };
 
+        [$label, $title] = $this->getLabelAndTitle($type);
+
         if (null === $href) {
             $this->append([
+                'label' => $label,
                 'icon' => $icon.'--disabled.svg',
                 'primary' => true,
             ]);
@@ -155,14 +158,12 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             return $this;
         }
 
-        [$label, $title] = $this->getLabelAndTitle($type);
-
         $this->append([
-            'href' => $href,
             'label' => $label,
             'title' => $title,
-            'attributes' => 'data-action="contao--scroll-offset#store"',
+            'attributes' => new HtmlAttributes('data-action="contao--scroll-offset#store"'),
             'icon' => $icon.'.svg',
+            'href' => $href,
             'primary' => !str_starts_with($type, 'pastenew'),
         ]);
 
@@ -208,11 +209,11 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         }
 
         return [
-            'href' => $href,
             'label' => $config['label'],
             'title' => $config['title'],
             'attributes' => $config['attributes'],
             'icon' => $config['icon'],
+            'href' => $href,
             'method' => strtoupper($config['method'] ?? 'GET'),
             'primary' => $config['primary'] ?? null,
         ];
