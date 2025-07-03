@@ -183,22 +183,28 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
                 '@Contao/backend/data_container/operations.html.twig',
                 $this->callback(static fn (array $parameters) => isset($parameters['operations'])
                     && 1 === \count($parameters['operations'])
-                    && 'foo=bar' === $parameters['operations'][0]['href']
+                    && 'act=create' === $parameters['operations'][0]['href']
                     && ' class="header_new" accesskey="n" data-action="contao--scroll-offset#store"' === (string) $parameters['operations'][0]['attributes'],
                 ),
             )
             ->willReturn('')
         ;
 
+        $backendAdapter = $this->mockAdapter(['addToUrl']);
+        $backendAdapter
+            ->method('addToUrl')
+            ->willReturnArgument(0)
+        ;
+
         $builder = new DataContainerGlobalOperationsBuilder(
-            $this->mockContaoFramework(),
+            $this->mockContaoFramework([Backend::class => $backendAdapter]),
             $twig,
             $this->createMock(UrlGeneratorInterface::class),
             $this->createMock(TranslatorInterface::class),
         );
 
         $builder = $builder->initialize('tl_foo');
-        $builder->addNewButton('foo=bar');
+        $builder->addNewButton($builder::CREATE_NEW);
 
         $this->assertSame('', (string) $builder);
 
