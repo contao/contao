@@ -56,8 +56,8 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('type', 'rows', 'cols', 'addJQuery', 'addMooTools', 'static'),
-		'default'                     => '{title_legend},type,name;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections;{image_legend:hide},lightboxSize,defaultImageDensities;{style_legend},framework,external,combineScripts;{modules_legend},modules;{script_legend},scripts,analytics,externalJs,script;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{static_legend:hide},static;{expert_legend:hide},template,minifyMarkup,viewport,titleTag,cssClass,onload,head',
-		'modern'                      => '{title_legend},type,name;{image_legend:hide},lightboxSize,defaultImageDensities;{modules_legend},template,modules'
+		'default'                     => '{title_legend},name,type;{header_legend},rows;{column_legend},cols;{sections_legend:hide},sections;{image_legend:hide},lightboxSize,defaultImageDensities;{style_legend},framework,external,combineScripts;{modules_legend},modules;{script_legend},scripts,analytics,externalJs,script;{jquery_legend:hide},addJQuery;{mootools_legend:hide},addMooTools;{static_legend:hide},static;{expert_legend:hide},template,minifyMarkup,viewport,titleTag,cssClass,onload,head',
+		'modern'                      => '{title_legend},name,type;{image_legend:hide},lightboxSize,defaultImageDensities;{modules_legend},template,modules'
 	),
 
 	// Sub-palettes
@@ -91,6 +91,15 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		(
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
+		'name' => array
+		(
+			'inputType'               => 'text',
+			'sorting'                 => true,
+			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
+			'search'                  => true,
+			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'sql'                     => "varchar(255) NOT NULL default ''"
+		),
 		'type' => array
 		(
 			'inputType'               => 'select',
@@ -99,15 +108,6 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 			'eval'                    => array('tl_class'=>'w50', 'submitOnChange'=>true),
 			'default'                 => 'modern',
 			'sql'                     => array('type'=>'string', 'length'=>7, 'default'=>'default')
-		),
-		'name' => array
-		(
-			'inputType'               => 'text',
-			'sorting'                 => true,
-			'flag'                    => DataContainer::SORT_INITIAL_LETTER_ASC,
-			'search'                  => true,
-			'eval'                    => array('mandatory'=>true, 'maxlength'=>255, 'tl_class'=>'w50 clr'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'rows' => array
 		(

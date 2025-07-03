@@ -117,9 +117,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$container = System::getContainer();
 		$objSession = $container->get('request_stack')->getSession();
+		$request = $container->get('request_stack')->getCurrentRequest();
 
 		// Check the request token (see #4007)
-		if (!\in_array(Input::get('act'), array(null, 'edit', 'show', 'select'), true) && (Input::get('rt') === null || !$container->get('contao.csrf.token_manager')->isTokenValid(new CsrfToken($container->getParameter('contao.csrf_token_name'), Input::get('rt')))))
+		if ((!$request || $request->isMethodSafe()) && !\in_array(Input::get('act'), array(null, 'edit', 'show', 'select'), true) && (Input::get('rt') === null || !$container->get('contao.csrf.token_manager')->isTokenValid(new CsrfToken($container->getParameter('contao.csrf_token_name'), Input::get('rt')))))
 		{
 			$objSession->set('INVALID_TOKEN_URL', Environment::get('requestUri'));
 			$this->redirect($container->get('router')->generate('contao_backend_confirm'));
@@ -2529,7 +2530,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					$return .= Message::generateUnwrapped() . \sprintf(
 						'<fieldset data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-collapsed-class="collapsed"%s class="%s cf"><legend><button type="button" data-action="contao--toggle-fieldset#toggle">%s</button></legend>%s</fieldset>',
-						$blnAddJumpTarget ? ('data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="'. $label .'" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open"') : '',
+						$blnAddJumpTarget ? ('data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="' . $label . '" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open"') : '',
 						$class,
 						$label,
 						$box
@@ -3512,7 +3513,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $this->intCurrentPid, 'sorting' => 0))))
 		{
-			$operations->addNewButton($this->addToUrl('act=paste&amp;mode=create'));
+			$operations->addNewButton($operations::CREATE_PASTE);
 		}
 
 		if ($blnClipboard)
@@ -4198,7 +4199,14 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))))
 		{
-			$operations->addNewButton($this->addToUrl($blnHasSorting ? 'act=paste&amp;mode=create' : 'act=create&amp;mode=2&amp;pid=' . $this->intId));
+			if ($blnHasSorting)
+			{
+				$operations->addNewButton($operations::CREATE_PASTE);
+			}
+			else
+			{
+				$operations->addNewButton($operations::CREATE_PASTE_INTO, $this->intId);
+			}
 		}
 
 		if ($blnClipboard)
@@ -4212,7 +4220,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 			$operations->append(array('html' => $buttons), true);
 		}
 
-		$return = Message::generate() . (string) $operations;
+		$return = Message::generate() . $operations;
 
 		// Get all details of the parent record
 		$objParent = $db
@@ -4849,7 +4857,14 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 		if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable)))
 		{
-			$operations->addNewButton($this->ptable ? $this->addToUrl('act=create' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) < self::MODE_PARENT) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create'));
+			if ($this->ptable)
+			{
+				$operations->addNewButton(($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) < self::MODE_PARENT ? $operations::CREATE_PASTE_INTO : $operations::CREATE_NEW, $this->intId);
+			}
+			else
+			{
+				$operations->addNewButton($operations::CREATE_NEW);
+			}
 		}
 
 		if (null !== ($buttons = $this->generateGlobalButtons($operations)))

@@ -159,12 +159,17 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             );
         }
 
+        if (null !== ($config['prefetch'] ?? null)) {
+            $config['attributes'] = (new HtmlAttributes($config['attributes']))->set('data-turbo-prefetch', $config['prefetch'] ? 'true' : 'false');
+        }
+
         return [
             'href' => $href,
             'label' => $config['label'],
             'title' => $config['title'],
             'attributes' => $config['attributes'],
             'icon' => $config['icon'],
+            'method' => strtoupper($config['method'] ?? 'GET'),
             'primary' => $config['primary'] ?? null,
         ];
     }
@@ -186,7 +191,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         }
 
         if (isset($config['href'])) {
-            return Backend::addToUrl($config['href'].'&amp;id='.$record['id'].(Input::get('nb') ? '&amp;nc=1' : '').($isPopup ? '&amp;popup=1' : ''), addRequestToken: !($config['prefetch'] ?? false));
+            return Backend::addToUrl($config['href'].'&amp;id='.$record['id'].(Input::get('nb') ? '&amp;nc=1' : '').($isPopup ? '&amp;popup=1' : ''), addRequestToken: !($config['prefetch'] ?? false) && null === ($config['method'] ?? null));
         }
 
         return null;
