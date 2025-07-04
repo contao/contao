@@ -1030,6 +1030,11 @@ services:
             - '@security.access.decision_manager'
             - '@database_connection'
 
+    contao.security.data_container.content_alias_delete_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\ContentAliasDeleteVoter
+        arguments:
+            - '@database_connection'
+
     contao.security.data_container.content_composition_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ContentCompositionVoter
         arguments:
