@@ -84,10 +84,10 @@
         <source>Activate recipient ID %s</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.toggle.3">
-        <source>Activate</source>
+        <source>Deactivate</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.toggle.4">
-        <source>Deactivate</source>
+        <source>Activate</source>
       </trans-unit>
     </body>
   </file>

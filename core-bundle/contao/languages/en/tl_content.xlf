@@ -731,6 +731,12 @@
       <trans-unit id="tl_content.toggle.2">
         <source>Unhide content element ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_content.toggle.3">
+        <source>Hide</source>
+      </trans-unit>
+      <trans-unit id="tl_content.toggle.4">
+        <source>Unhide</source>
+      </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>
       </trans-unit>

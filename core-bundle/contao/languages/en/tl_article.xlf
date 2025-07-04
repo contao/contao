@@ -134,14 +134,8 @@
       <trans-unit id="tl_article.twitter">
         <source>Share on X (formerly Twitter)</source>
       </trans-unit>
-      <trans-unit id="tl_article.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_article.new.1">
         <source>Create a new article</source>
-      </trans-unit>
-      <trans-unit id="tl_article.show.0">
-        <source>Details</source>
       </trans-unit>
       <trans-unit id="tl_article.show.1">
         <source>Show the details of article ID %s</source>
