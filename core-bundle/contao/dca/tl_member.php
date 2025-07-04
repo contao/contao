@@ -65,6 +65,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 		),
 		'operations' => array
 		(
+			'-',
 			'su' => array
 			(
 				'href'                => 'key=su',
@@ -178,7 +179,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			'inputType'               => 'select',
 			'eval'                    => array('includeBlankOption'=>true, 'chosen'=>true, 'feEditable'=>true, 'feGroup'=>'address', 'tl_class'=>'w50'),
 			'options_callback'        => static fn () => System::getContainer()->get('contao.intl.countries')->getCountries(),
-			'sql'                     => "varchar(2) NOT NULL default ''"
+			'sql'                     => "varchar(6) NOT NULL default ''"
 		),
 		'phone' => array
 		(

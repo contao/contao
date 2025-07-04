@@ -491,7 +491,7 @@ class PictureFactoryTest extends TestCase
             )
         ;
 
-        $this->expectUserDeprecationMessageMatches('/legacy resize mode "left_top" has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/legacy resize mode "left_top" is deprecated/');
 
         $pictureFactory = $this->getPictureFactory($pictureGenerator, $imageFactory);
         $picture = $pictureFactory->create($path, [100, 200, 'left_top']);

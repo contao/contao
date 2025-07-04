@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Controller;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Security\Authentication\FrontendPreviewAuthenticator;
 use Doctrine\DBAL\Connection;
+use Nyholm\Psr7\Uri;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\UriSigner;
@@ -52,6 +53,7 @@ class PreviewLinkController
 
         $this->previewAuthenticator->authenticateFrontendGuest((bool) $link['showUnpublished'], $id);
 
-        return new RedirectResponse($link['url']);
+        // Parse URL to automatically encode non-ASCII characters
+        return new RedirectResponse((string) (new Uri($link['url'])));
     }
 }

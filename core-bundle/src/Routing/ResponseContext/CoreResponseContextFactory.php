@@ -21,8 +21,11 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\String\HtmlDecoder;
 use Contao\CoreBundle\Util\UrlUtil;
+use Contao\FrontendUser;
 use Contao\PageModel;
+use Contao\StringUtil;
 use Spatie\SchemaOrg\WebPage;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -39,6 +42,7 @@ class CoreResponseContextFactory
         private readonly InsertTagParser $insertTagParser,
         private readonly CspHandlerFactory $cspHandlerFactory,
         private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly Security $security,
     ) {
     }
 
@@ -111,10 +115,12 @@ class CoreResponseContextFactory
                 new ContaoPageSchema(
                     $title ?: '',
                     $pageModel->id,
-                    $pageModel->noSearch,
+                    $pageModel->noSearch ?? false,
                     $pageModel->protected,
                     array_map(\intval(...), array_filter((array) $pageModel->groups)),
                     $this->tokenChecker->isPreviewMode(),
+                    $this->getMemberGroups(),
+                    $pageModel->searchIndexer,
                 ),
             )
         ;
@@ -152,5 +158,19 @@ class CoreResponseContextFactory
         }
 
         $context->add($cspHandler);
+    }
+
+    /**
+     * @return array<int>
+     */
+    private function getMemberGroups(): array
+    {
+        $user = $this->security->getUser();
+
+        if (!$user instanceof FrontendUser) {
+            return [];
+        }
+
+        return array_map(\intval(...), array_filter((array) StringUtil::deserialize($user->groups, true)));
     }
 }

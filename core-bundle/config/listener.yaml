@@ -107,6 +107,9 @@ services:
     contao.listener.data_container.default_global_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\DefaultGlobalOperationsListener
 
+    contao.listener.data_container.default_labels:
+        class: Contao\CoreBundle\EventListener\DataContainer\DefaultLabelsListener
+
     contao.listener.data_container.default_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\DefaultOperationsListener
         arguments:
@@ -132,6 +135,11 @@ services:
         arguments:
             - '@contao.framework'
             - '@translator'
+
+    contao.listener.data_container.dynamic_ptable:
+        class: Contao\CoreBundle\EventListener\DataContainer\DynamicPtableListener
+        arguments:
+            - '@contao.framework'
 
     contao.listener.data_container.enum_options:
         class: Contao\CoreBundle\EventListener\DataContainer\EnumOptionsListener
@@ -311,11 +319,19 @@ services:
 
     contao.listener.data_container_callback:
         class: Contao\CoreBundle\EventListener\DataContainerCallbackListener
+        arguments:
+            - '@contao.framework'
 
     contao.listener.dbafs_metadata:
         class: Contao\CoreBundle\EventListener\DbafsMetadataSubscriber
         arguments:
             - '@request_stack'
+
+    contao.listener.dca_switch_request:
+        class: Contao\CoreBundle\EventListener\DcaSwitchRequestListener
+        arguments:
+            - '@request_stack'
+            - '@contao.framework'
 
     contao.listener.doctrine_schema:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
@@ -502,6 +518,8 @@ services:
         class: Contao\CoreBundle\EventListener\PreviewUrlCreateListener
         arguments:
             - '@contao.framework'
+            - '@contao.data_container.dca_url_analyzer'
+            - '@database_connection'
 
     contao.listener.referer_id:
         class: Contao\CoreBundle\EventListener\RefererIdListener

@@ -25,7 +25,7 @@ export default class extends Controller {
 
     nodeTargetConnected(node) {
         const style = window.getComputedStyle(node, null);
-        const padding = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+        const padding = Number.parseFloat(style.paddingTop) + Number.parseFloat(style.paddingBottom);
         const height = node.clientHeight - padding;
 
         // Resize the element if it is higher than the maximum height
@@ -109,13 +109,13 @@ export default class extends Controller {
         event.preventDefault();
         const isExpanded = this.hasExpanded() ^ event.altKey;
 
-        this.nodeTargets.forEach((node) => {
+        for (const node of this.nodeTargets) {
             if (isExpanded) {
                 this.collapse(node);
             } else {
                 this.expand(node);
             }
-        });
+        }
 
         this.updateOperation(event);
     }
@@ -135,6 +135,10 @@ export default class extends Controller {
         this.operationTarget.style.display = hasTogglers ? '' : 'none';
         this.operationTarget.setAttribute('aria-controls', this.nodeTargets.map((el) => el.id).join(' '));
         this.operationTarget.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+
+        if (this.operationTarget.closest('#tl_buttons')) {
+            this.operationTarget.parentNode.style.display = hasTogglers ? '' : 'none';
+        }
 
         if (expanded ^ (event ? event.altKey : false)) {
             this.operationTarget.innerText = this.collapseAllValue;

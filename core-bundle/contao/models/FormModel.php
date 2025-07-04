@@ -34,6 +34,7 @@ use Contao\Model\Collection;
  * @property string  $attributes
  * @property string  $formID
  * @property boolean $allowTags
+ * @property boolean $storeSession
  *
  * @method static FormModel|null findById($id, array $opt=array())
  * @method static FormModel|null findByPk($id, array $opt=array())
@@ -57,6 +58,7 @@ use Contao\Model\Collection;
  * @method static FormModel|null findOneByAttributes($val, array $opt=array())
  * @method static FormModel|null findOneByFormID($val, array $opt=array())
  * @method static FormModel|null findOneByAllowTags($val, array $opt=array())
+ * @method static FormModel|null findOneByStoreSession($val, array $opt=array())
  *
  * @method static Collection<FormModel>|null findByTstamp($val, array $opt=array())
  * @method static Collection<FormModel>|null findByTitle($val, array $opt=array())
@@ -76,6 +78,7 @@ use Contao\Model\Collection;
  * @method static Collection<FormModel>|null findByAttributes($val, array $opt=array())
  * @method static Collection<FormModel>|null findByFormID($val, array $opt=array())
  * @method static Collection<FormModel>|null findByAllowTags($val, array $opt=array())
+ * @method static Collection<FormModel>|null findByStoreSession($val, array $opt=array())
  * @method static Collection<FormModel>|null findMultipleByIds($val, array $opt=array())
  * @method static Collection<FormModel>|null findBy($col, $val, array $opt=array())
  * @method static Collection<FormModel>|null findAll(array $opt=array())
@@ -99,6 +102,7 @@ use Contao\Model\Collection;
  * @method static integer countByAttributes($val, array $opt=array())
  * @method static integer countByFormID($val, array $opt=array())
  * @method static integer countByAllowTags($val, array $opt=array())
+ * @method static integer countByStoreSession($val, array $opt=array())
  */
 class FormModel extends Model
 {

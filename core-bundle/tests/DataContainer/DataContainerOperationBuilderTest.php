@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\DataContainer;
 
 use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Tests\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -50,6 +51,7 @@ class DataContainerOperationBuilderTest extends TestCase
         ;
 
         $builder = new DataContainerOperationsBuilder(
+            $this->mockContaoFramework(),
             $twig,
             $this->createMock(Security::class),
             $this->createMock(UrlGeneratorInterface::class),
@@ -63,11 +65,6 @@ class DataContainerOperationBuilderTest extends TestCase
 
     public static function parsesOperationsHtmlProvider(): iterable
     {
-        yield [
-            '',
-            [''],
-        ];
-
         yield [
             '<a href="#">foo</a>',
             ['<a href="#">foo</a>'],
@@ -107,5 +104,70 @@ class DataContainerOperationBuilderTest extends TestCase
             '<a href="#"><img src="pasteinto.svg" alt="Einfügen">foo</a> <img src="pasteafter.svg" alt="Danach einfügen"> ',
             ['<a href="#"><img src="pasteinto.svg" alt="Einfügen">foo</a>', '<img src="pasteafter.svg" alt="Danach einfügen">'],
         ];
+    }
+
+    public function testRemovesEmptyHtml(): void
+    {
+        $expected = [['href' => 'foo', 'label' => 'foo', 'attributes' => new HtmlAttributes()]];
+
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with(
+                '@Contao/backend/data_container/operations.html.twig',
+                $this->callback(static fn (array $data) => $data['operations'] === $expected),
+            )
+            ->willReturn('success')
+        ;
+
+        $builder = new DataContainerOperationsBuilder(
+            $this->mockContaoFramework(),
+            $twig,
+            $this->createMock(Security::class),
+            $this->createMock(UrlGeneratorInterface::class),
+        );
+
+        $builder = $builder->initialize();
+        $builder->append($expected[0]);
+        $builder->append(['html' => ''], true);
+
+        $this->assertSame('success', (string) $builder);
+    }
+
+    public function testRemovesDuplicateSeparators(): void
+    {
+        $expected = [
+            ['href' => 'foo', 'label' => 'foo', 'attributes' => new HtmlAttributes()],
+            ['separator' => true],
+            ['href' => 'bar', 'label' => 'bar', 'attributes' => new HtmlAttributes()],
+        ];
+
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with(
+                '@Contao/backend/data_container/operations.html.twig',
+                $this->callback(static fn (array $data) => $data['operations'] === $expected),
+            )
+            ->willReturn('success')
+        ;
+
+        $builder = new DataContainerOperationsBuilder(
+            $this->mockContaoFramework(),
+            $twig,
+            $this->createMock(Security::class),
+            $this->createMock(UrlGeneratorInterface::class),
+        );
+
+        $builder = $builder->initialize();
+        $builder->append($expected[0]);
+        $builder->addSeparator();
+        $builder->append(['html' => ''], true);
+        $builder->addSeparator();
+        $builder->append($expected[2]);
+
+        $this->assertSame('success', (string) $builder);
     }
 }

@@ -2,23 +2,17 @@
 <xliff version="1.1">
   <file datatype="php" original="contao/languages/en/tl_layout.php" source-language="en">
     <body>
-      <trans-unit id="tl_layout.type.0">
-        <source>Type</source>
-      </trans-unit>
-      <trans-unit id="tl_layout.type.1">
-        <source>Here you can select the page layout type.</source>
-      </trans-unit>
-      <trans-unit id="tl_layout.modern">
-        <source>Twig layout with slots</source>
-      </trans-unit>
-      <trans-unit id="tl_layout.default">
-        <source>Legacy HTML5 layout</source>
-      </trans-unit>
       <trans-unit id="tl_layout.name.0">
         <source>Title</source>
       </trans-unit>
       <trans-unit id="tl_layout.name.1">
         <source>Please enter the layout title.</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.type.0">
+        <source>Layout type</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.type.1">
+        <source>Here you can select the layout type.</source>
       </trans-unit>
       <trans-unit id="tl_layout.fallback.0">
         <source>Default layout</source>
@@ -183,7 +177,7 @@
         <source>Here you can define the default pixel densities, e.g. &lt;em&gt;1x, 1.5x, 2x&lt;/em&gt;.</source>
       </trans-unit>
       <trans-unit id="tl_layout.modules.0">
-        <source>Includes</source>
+        <source>Included elements</source>
       </trans-unit>
       <trans-unit id="tl_layout.modules.1">
         <source>Here you can assign front end modules and content elements to the layout.</source>
@@ -297,7 +291,7 @@
         <source>Please select the alignment of the page.</source>
       </trans-unit>
       <trans-unit id="tl_layout.title_legend">
-        <source>Title</source>
+        <source>Title and type</source>
       </trans-unit>
       <trans-unit id="tl_layout.header_legend">
         <source>Rows</source>
@@ -318,7 +312,7 @@
         <source>Feeds</source>
       </trans-unit>
       <trans-unit id="tl_layout.modules_legend">
-        <source>Includes</source>
+        <source>Include settings</source>
       </trans-unit>
       <trans-unit id="tl_layout.expert_legend">
         <source>Expert settings</source>
@@ -335,11 +329,14 @@
       <trans-unit id="tl_layout.mootools_legend">
         <source>MooTools</source>
       </trans-unit>
+      <trans-unit id="tl_layout.modern">
+        <source>Twig layout with slots</source>
+      </trans-unit>
+      <trans-unit id="tl_layout.default">
+        <source>Legacy HTML5 layout</source>
+      </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
-      </trans-unit>
-      <trans-unit id="tl_layout.edit_styles">
-        <source>Edit the style sheets</source>
       </trans-unit>
       <trans-unit id="tl_layout.edit_module">
         <source>Edit the module</source>

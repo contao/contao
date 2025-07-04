@@ -10,6 +10,12 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
+use App\Entity\FooEntity;
+use App\EventListener\InvalidListener;
+use App\EventListener\ValidListener;
+use App\FrontendModule\LegacyModule;
+use App\Messenger\UnionTypeMessage;
+use App\Model\FooModel;
 use AppBundle\AppBundle;
 use ShipMonk\ComposerDependencyAnalyser\Config\Configuration;
 use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
@@ -17,13 +23,19 @@ use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 return (new Configuration())
     ->ignoreUnknownClasses([
         AppBundle::class,
-        'Imagick',
+        FooEntity::class,
+        FooModel::class,
         'Gmagick',
+        'Imagick',
+        InvalidListener::class,
+        LegacyModule::class,
         'SensitiveParameter',
         'Swift_Attachment',
         'Swift_EmbeddedFile',
         'Swift_Mailer',
         'Swift_Message',
+        UnionTypeMessage::class,
+        ValidListener::class,
     ])
     ->disableExtensionsAnalysis()
     ->disableReportingUnmatchedIgnores()
@@ -53,7 +65,7 @@ return (new Configuration())
     // managed edition.
     ->ignoreErrorsOnPackage('contao/manager-plugin', [ErrorType::DEV_DEPENDENCY_IN_PROD])
 
-    // This packages provides the trigger_deprecation() function.
+    // This package provides the trigger_deprecation() function.
     ->ignoreErrorsOnPackage('symfony/deprecation-contracts', [ErrorType::UNUSED_DEPENDENCY])
 
     // This package provides the "sanitize_html" Twig filter.

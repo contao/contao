@@ -414,7 +414,12 @@ abstract class Controller extends System
 		// Disable indexing if protected
 		if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			$groups = StringUtil::deserialize($objModule->groups, true);
+
+			if (\count($groups) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true))
+			{
+				$strBuffer = "\n<!-- indexer::stop --><!-- indexer::protected -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			}
 		}
 
 		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
@@ -490,7 +495,12 @@ abstract class Controller extends System
 		// Disable indexing if protected
 		if ($objArticle->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			$groups = StringUtil::deserialize($objArticle->groups, true);
+
+			if (\count($groups) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true))
+			{
+				$strBuffer = "\n<!-- indexer::stop --><!-- indexer::protected -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			}
 		}
 
 		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
@@ -619,7 +629,12 @@ abstract class Controller extends System
 		// Disable indexing if protected
 		if ($objElement->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			$groups = StringUtil::deserialize($objElement->groups, true);
+
+			if (\count($groups) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true))
+			{
+				$strBuffer = "\n<!-- indexer::stop --><!-- indexer::protected -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			}
 		}
 
 		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
@@ -1160,7 +1175,7 @@ abstract class Controller extends System
 	 */
 	public static function sendFileToBrowser($strFile, $inline=false)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the Symfony BinaryFileResponse instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the Symfony BinaryFileResponse instead.', __METHOD__);
 
 		// Make sure there are no attempts to hack the file system
 		if (preg_match('@^\.+@', $strFile) || preg_match('@\.+/@', $strFile) || preg_match('@(://)+@', $strFile))
@@ -1240,7 +1255,7 @@ abstract class Controller extends System
 	 */
 	protected function redirectToFrontendPage($intPage, $strArticle=null, $blnReturn=false)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the contao_backend_preview route instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the contao_backend_preview route instead.', __METHOD__);
 
 		if (($intPage = (int) $intPage) <= 0)
 		{

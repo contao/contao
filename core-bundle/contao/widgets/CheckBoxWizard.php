@@ -123,6 +123,7 @@ class CheckBoxWizard extends Widget
 			{
 				if (($intPos = array_search($arrOption['value'] ?? null, $this->varValue)) !== false)
 				{
+					$arrOption['checked'] = true;
 					$arrOptions[$intPos] = $arrOption;
 					unset($arrTemp[$i]);
 				}
@@ -145,33 +146,16 @@ class CheckBoxWizard extends Widget
 			}
 		}
 
-		// Generate options and add buttons
-		foreach ($arrAllOptions as $i=>$arrOption)
-		{
-			$arrOptions[] = $this->generateCheckbox($arrOption, $i, '<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', $GLOBALS['TL_LANG']['MSC']['move']) . '</button> ');
-		}
-
-		// Add a "no entries found" message if there are no options
-		if (empty($arrOptions))
-		{
-			$arrOptions[] = '<p class="tl_noopt">' . $GLOBALS['TL_LANG']['MSC']['noResult'] . '</p>';
-			$blnCheckAll = false;
-		}
-
-		return \sprintf(
-			'<fieldset id="ctrl_%s" class="tl_checkbox_container tl_checkbox_wizard%s"><legend>%s%s%s%s</legend><input type="hidden" name="%s" value="">%s<div class="sortable">%s</div></fieldset>%s<script>Backend.checkboxWizard("ctrl_%s")</script>',
-			$this->strId,
-			$this->strClass ? ' ' . $this->strClass : '',
-			$this->mandatory ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : '',
-			$this->strLabel,
-			$this->mandatory ? '<span class="mandatory">*</span>' : '',
-			$this->xlabel,
-			$this->strName,
-			$blnCheckAll ? '<span class="fixed"><input type="checkbox" id="check_all_' . $this->strId . '" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this,\'ctrl_' . $this->strId . '\')"> <label for="check_all_' . $this->strId . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label></span>' : '',
-			implode('', $arrOptions),
-			$this->wizard,
-			$this->strId
-		);
+		return System::getContainer()->get('twig')->render('@Contao/backend/widget/checkbox_wizard.html.twig', array(
+			'id' => $this->strId,
+			'class' => $this->strClass,
+			'mandatory' => $this->mandatory,
+			'label' => $this->strLabel,
+			'xlabel' => $this->xlabel,
+			'name' => $this->strName,
+			'options' => $arrAllOptions,
+			'attributes' => $this->getAttributes(),
+		));
 	}
 
 	/**
@@ -182,9 +166,14 @@ class CheckBoxWizard extends Widget
 	 * @param string  $strButtons
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+	 *              use the checkbox_wizard.html.twig template instead.
 	 */
 	protected function generateCheckbox($arrOption, $i, $strButtons)
 	{
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the checkbox_wizard.html.twig template instead.', __METHOD__);
+
 		return \sprintf(
 			'<span><input type="checkbox" name="%s" id="opt_%s" class="tl_checkbox" value="%s"%s%s data-action="focus->contao--scroll-offset#store"> %s<label for="opt_%s">%s</label></span>',
 			$this->strName . ($this->multiple ? '[]' : ''),

@@ -1,0 +1,34 @@
+/* Account for the jump links bar */
+html {
+    scroll-padding-top: 36px;
+    scroll-behavior: smooth;
+}
+
+@media screen and (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+}
+
+/* Skip link */
+.show-on-focus:focus {
+    clip: unset;
+    height: auto;
+    width: auto;
+    margin: 4px;
+    padding: 9px;
+    position: absolute;
+    z-index: 999;
+    background-color: var(--content-bg);
+    border-radius: 2px;
+}
+
+/* Body */
+body {
+    background: var(--body-bg);
+    overflow-y: scroll;
+}
+
+body.popup {
+    background: var(--content-bg);
+}
