@@ -67,7 +67,7 @@
         "doctrine/collections": "^2.1",
         "doctrine/dbal": "^3.6.2",
         "doctrine/doctrine-bundle": "^2.8",
-        "doctrine/orm": "^2.20 || ^3.4",
+        "doctrine/orm": "^2.17 || ^3.4",
         "doctrine/persistence": "^3.2",
         "dragonmantank/cron-expression": "^3.1",
         "debril/feed-io": "^6.0",
