@@ -29,19 +29,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class CalendarEventsGeneratorTest extends ContaoTestCase
 {
-    private static string|null $defaultTimezone = null;
-
-    public static function setUpBeforeClass(): void
-    {
-        self::$defaultTimezone ??= date_default_timezone_get();
-        date_default_timezone_set('UTC');
-    }
-
-    public static function tearDownAfterClass(): void
-    {
-        date_default_timezone_set(self::$defaultTimezone);
-    }
-
     public function testReturnsEmptyIfNoCalendars(): void
     {
         $generator = new CalendarEventsGenerator(
@@ -193,9 +180,6 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
 
     public static function getEvent(): iterable
     {
-        self::$defaultTimezone ??= date_default_timezone_get();
-        date_default_timezone_set('UTC');
-
         $time = (new \DateTimeImmutable())->modify('+7 days');
 
         yield 'Basic event' => [
