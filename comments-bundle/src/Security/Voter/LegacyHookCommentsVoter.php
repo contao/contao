@@ -27,7 +27,6 @@ class LegacyHookCommentsVoter implements VoterInterface, CacheableVoterInterface
     ) {
     }
 
-
     public function supportsAttribute(string $attribute): bool
     {
         return ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT === $attribute;

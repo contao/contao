@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CommentsBundle\Security\Voter;
 
-use Contao\BackendUser;
 use Contao\CommentsBundle\Security\ContaoCommentsPermissions;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
