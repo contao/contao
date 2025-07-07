@@ -3,8 +3,6 @@
 
 {% set wrapper_attributes = attrs()
     .addClass([class, 'nav-wrapper', 'block'])
-    .setIfExists('style', style)
-    .setIfExists('aria-label', ariaLabel)
     .mergeWith(wrapper_attributes|default)
 %}
 
@@ -19,7 +17,7 @@
 {% set nav_attributes = attrs()
     .addClass('navigation-main')
     .setIfExists('style', style)
-    .setIfExists('aria-label', ariaLabel)
+    .setIfExists('aria-label', ariaLabel|default)
     .mergeWith(nav_attributes|default)
 %}
 
