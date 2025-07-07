@@ -21,9 +21,6 @@ use Contao\CoreBundle\Security\Voter\DataContainer\AbstractDataContainerVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 
-/**
- * @internal
- */
 class CommentsAccessVoter extends AbstractDataContainerVoter
 {
     public function __construct(private readonly AccessDecisionManagerInterface $accessDecisionManager)
