@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import * as Message from '../modules/message';
 import { TurboStreamConnection } from '../modules/turbo-stream-connection';
 
 export default class extends Controller {
@@ -10,6 +11,7 @@ export default class extends Controller {
         defaultInterval: Number,
         maximumInterval: Number,
         enabled: Boolean,
+        allJobsProcessedMessage: String,
     };
 
     static targets = ['count', 'list'];
@@ -36,8 +38,9 @@ export default class extends Controller {
             this.countTarget.innerText = '';
 
             if (this._runningJobs) {
+                // ALl pending jobs have been processed
                 this._runningJobs = false;
-                this._allJobsProcessed();
+                Message.info(this.allJobsProcessedMessageValue);
             }
 
             // Continuously increase interval if there are no results
@@ -50,11 +53,6 @@ export default class extends Controller {
         }
 
         this._waitAndPoll();
-    }
-
-    _allJobsProcessed() {
-        // todo: replace with flash message once the functionality from #8204 has been merged
-        console.log('All jobs have been processed.');
     }
 
     _waitAndPoll() {

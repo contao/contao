@@ -26,6 +26,9 @@
       <trans-unit id="tl_job.typeLabel.contao_backend_search_reindex">
         <source>Build backend search index</source>
       </trans-unit>
+      <trans-unit id="tl_job.all_jobs_processed">
+        <source>All jobs have been processed.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

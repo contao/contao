@@ -6,6 +6,7 @@
     .set('data-contao--jobs-default-interval-value', 1000)
     .set('data-contao--jobs-maximum-interval-value', 60000)
     .set('data-contao--jobs-enabled-value', has_pending_jobs)
+    .set('data-contao--jobs-all-jobs-processed-message-value', 'tl_job.all_jobs_processed'|trans({}, 'contao_tl_job'))
     .set('data-action', 'contao--watch-pending-jobs@document->contao--jobs#enable')
     .mergeWith(controller_attributes|default)
 %}
