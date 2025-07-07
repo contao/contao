@@ -15,8 +15,10 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 use Contao\BackendUser;
 use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
+use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Job\Owner;
 use Contao\DataContainer;
+use Contao\System;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\ParameterType;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -28,6 +30,7 @@ class JobsListener
         private readonly Security $security,
         private readonly Connection $connection,
         private readonly RequestStack $requestStack,
+        private readonly ContaoFramework $contaoFramework,
     ) {
     }
 
@@ -53,6 +56,8 @@ class JobsListener
         if (!$request || 0 === $userId) {
             return;
         }
+
+        $this->contaoFramework->getAdapter(System::class)->loadLanguageFile('jobs');
 
         // Job children view
         if ($request->query->has('ptable')) {

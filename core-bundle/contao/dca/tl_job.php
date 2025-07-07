@@ -81,22 +81,26 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 		),
 		'tstamp' => array
 		(
+			'label' => &$GLOBALS['TL_LANG']['jobs']['tstamp'],
 			'flag' => DataContainer::SORT_DAY_DESC,
 			'sql' => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
 		),
 		'type' => array
 		(
+			'label' => &$GLOBALS['TL_LANG']['jobs']['type'],
 			'inputType' => 'select',
 			'reference' => &$GLOBALS['TL_LANG']['tl_job']['typeLabel'],
 			'sql' => array('type' => 'string', 'length' => 255, 'notnull' => true),
 		),
 		'owner' => array
 		(
+			'label' => &$GLOBALS['TL_LANG']['jobs']['owner'],
 			'foreignKey' => 'tl_user.name',
 			'sql' => array('type' => 'integer', 'unsigned' => true, 'default' => 0),
 		),
 		'status' => array
 		(
+			'label' => &$GLOBALS['TL_LANG']['jobs']['status'],
 			'inputType' => 'select',
 			'enum' => Status::class,
 			'sql' => array('type' => 'string', 'length' => 255, 'notnull' => true),

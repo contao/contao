@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.1">
-  <file datatype="php" original="contao/languages/en/tl_job.php" source-language="en">
+  <file datatype="php" original="contao/languages/en/jobs.php" source-language="en">
     <body>
-      <trans-unit id="tl_job.tstamp.0">
+      <trans-unit id="jobs.tstamp.0">
         <source>Created at</source>
       </trans-unit>
-      <trans-unit id="tl_job.status.0">
+      <trans-unit id="jobs.status.0">
         <source>Status</source>
       </trans-unit>
-      <trans-unit id="tl_job.owner.0">
+      <trans-unit id="jobs.owner.0">
         <source>Initiated by</source>
       </trans-unit>
-      <trans-unit id="tl_job.type.0">
+      <trans-unit id="jobs.type.0">
         <source>Type</source>
       </trans-unit>
-      <trans-unit id="tl_job.statusLabel.new">
+      <trans-unit id="jobs.statusLabel.new">
         <source>New</source>
       </trans-unit>
-      <trans-unit id="tl_job.statusLabel.pending">
+      <trans-unit id="jobs.statusLabel.pending">
         <source>Pending</source>
       </trans-unit>
-      <trans-unit id="tl_job.statusLabel.finished">
+      <trans-unit id="jobs.statusLabel.finished">
         <source>Finished</source>
       </trans-unit>
-      <trans-unit id="tl_job.typeLabel.contao_backend_search_reindex">
+      <trans-unit id="jobs.typeLabel.contao_backend_search_reindex">
         <source>Build backend search index</source>
       </trans-unit>
-      <trans-unit id="tl_job.all_jobs_processed">
+      <trans-unit id="jobs.all_jobs_processed">
         <source>All jobs have been processed.</source>
       </trans-unit>
     </body>

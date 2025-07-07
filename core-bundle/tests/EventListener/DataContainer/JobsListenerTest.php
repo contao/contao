@@ -7,6 +7,7 @@ namespace Contao\CoreBundle\Tests\EventListener\DataContainer;
 use Contao\BackendUser;
 use Contao\CoreBundle\EventListener\DataContainer\JobsListener;
 use Contao\DataContainer;
+use Contao\System;
 use Contao\TestCase\ContaoTestCase;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -28,6 +29,7 @@ class JobsListenerTest extends ContaoTestCase
             $this->createMock(Security::class),
             $this->mockConnection(),
             $this->getRequestStack(),
+            $this->mockContaoFramework(),
         );
         $listener->onLoadCallback();
 
@@ -40,6 +42,7 @@ class JobsListenerTest extends ContaoTestCase
             $this->mockSecurity(),
             $this->mockConnection(),
             $this->getRequestStack(Request::create('/')),
+            $this->mockContaoFramework(),
         );
         $listener->onLoadCallback();
 
@@ -48,10 +51,13 @@ class JobsListenerTest extends ContaoTestCase
 
     public function testRegularView(): void
     {
+        $framework = $this->mockContaoFramework([System::class => $this->mockAdapter(['loadLanguageFile'])]);
+
         $listener = new JobsListener(
             $this->mockSecurity(42),
             $this->mockConnection(),
             $this->getRequestStack(Request::create('/contao?do=jobs')),
+            $framework,
         );
         $listener->onLoadCallback();
 
@@ -71,10 +77,13 @@ class JobsListenerTest extends ContaoTestCase
 
     public function testChildView(): void
     {
+        $framework = $this->mockContaoFramework([System::class => $this->mockAdapter(['loadLanguageFile'])]);
+
         $listener = new JobsListener(
             $this->mockSecurity(42),
             $this->mockConnection(),
             $this->getRequestStack(Request::create('/contao?do=jobs&ptable=tl_job')),
+            $framework,
         );
         $listener->onLoadCallback();
 

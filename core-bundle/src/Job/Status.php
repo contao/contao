@@ -23,7 +23,7 @@ enum Status: string implements TranslatableLabelInterface
 
     public function label(): TranslatableMessage
     {
-        return new TranslatableMessage('tl_job.statusLabel.'.$this->getTranslationKey(), [], 'contao_tl_job');
+        return new TranslatableMessage('jobs.statusLabel.'.$this->getTranslationKey(), [], 'contao_jobs');
     }
 
     private function getTranslationKey(): string
