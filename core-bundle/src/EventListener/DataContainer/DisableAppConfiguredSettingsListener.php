@@ -30,7 +30,7 @@ class DisableAppConfiguredSettingsListener
 
     public function onLoadCallback(DataContainer|null $dc = null): void
     {
-        // return if there is no table
+        // Return if there is no table
         if (!$table = $dc?->table) {
             return;
         }
