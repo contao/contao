@@ -92,7 +92,7 @@
 
 {% block style %}
     {% add "accessible_navigation_css" to stylesheets %}
-        {% with {file: swiper_css_file|default(asset('navigation.css', 'contao_core'))} %}
+        {% with {file: navigation_css_file|default(asset('navigation.css', 'contao_core'))} %}
             {{ block('stylesheet_component') }}
         {% endwith %}
     {% endadd %}
