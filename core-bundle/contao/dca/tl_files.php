@@ -86,6 +86,7 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 			(
 				'href'                => 'act=sync',
 				'class'               => 'header_sync',
+				'primary'             => true,
 				'button_callback'     => array('tl_files', 'syncFiles')
 			),
 		),

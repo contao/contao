@@ -95,9 +95,9 @@ an array representation. If you are just using array access, nothing needs to be
 To ease accessing metadata and lightbox results in a chained manner or in templates, the `getMetadata()` and
 `getLightbox()` methods will now return `null` instead of throwing an exception if no data is available.
 
-The `contao_figure` Twig function has been deprecated and replaced with the `figure` Twig function. The new function
-returns a `Figure` object instead of a pre-rendered string which allows a more versatile application. To update existing
-usages, render the `component/_figure.html.twig` template yourself by including or embedding it with the object:
+The `contao_figure` Twig function is deprecated and replaced with the `figure` Twig function. The new function returns
+a `Figure` object instead of a pre-rendered string which allows a more versatile application. To update existing usages,
+render the `component/_figure.html.twig` template yourself by including or embedding it with the object:
 
 ```twig
 {# before #}

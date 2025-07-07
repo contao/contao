@@ -10,8 +10,11 @@
 
 namespace Contao;
 
+use Contao\CoreBundle\Controller\ContentElement\PlayerController;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\Model\Collection;
+
+trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprecated and will no longer work in Contao 6. Use the "%s" class instead.', ContentPlayer::class, PlayerController::class);
 
 /**
  * Content element "player".

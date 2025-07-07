@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Messenger\Message;
 
-trigger_deprecation('contao/core-bundle', '5.6', "Using the LowPriorityMessageInterface has been deprecated and will no longer work in Contao 6. Use the #[AsMessage('contao_prio_low')] attribute instead.");
+trigger_deprecation('contao/core-bundle', '5.6', "Using the LowPriorityMessageInterface is deprecated and will no longer work in Contao 6. Use the #[AsMessage('contao_prio_low')] attribute instead.");
 
 /**
  * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;

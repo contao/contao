@@ -28,6 +28,7 @@ class ContaoPageSchemaTest extends TestCase
         $this->assertFalse($schema->isProtected());
         $this->assertSame([1, 2, 3], $schema->getGroups());
         $this->assertSame([2], $schema->getMemberGroups());
+        $this->assertSame('', $schema->getSearchIndexer());
         $this->assertFalse($schema->isFePreview());
 
         $schema->setTitle('Foobar');
@@ -47,6 +48,9 @@ class ContaoPageSchemaTest extends TestCase
 
         $schema->setFePreview(true);
         $this->assertTrue($schema->isFePreview());
+
+        $schema->setSearchIndexer('always_index');
+        $this->assertSame('always_index', $schema->getSearchIndexer());
     }
 
     public function testUpdateFromHtmlHeadBag(): void

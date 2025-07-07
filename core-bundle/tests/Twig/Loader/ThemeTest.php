@@ -42,7 +42,7 @@ class ThemeTest extends TestCase
     {
         $themeNamespace = new ThemeNamespace();
 
-        $this->expectUserDeprecationMessageMatches('/Using paths outside of the template directory are deprecated and will no longer work in Contao 6\./');
+        $this->expectUserDeprecationMessageMatches('/Using paths outside of the template directory is deprecated and will no longer work in Contao 6\./');
 
         $this->assertSame($expectedSlug, $themeNamespace->generateSlug($path));
     }

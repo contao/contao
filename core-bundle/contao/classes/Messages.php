@@ -10,7 +10,7 @@
 
 namespace Contao;
 
-trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class has been deprecated and will no longer work in Contao 6.', Messages::class);
+trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprecated and will no longer work in Contao 6.', Messages::class);
 
 /**
  * Add system messages to the welcome screen.

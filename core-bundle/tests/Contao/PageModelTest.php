@@ -435,7 +435,7 @@ class PageModelTest extends TestCase
 
     public function testUsesAbsolutePathReferenceForFrontendUrl(): void
     {
-        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getFrontendUrl\(\)" has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getFrontendUrl\(\)" is deprecated/');
 
         $page = new PageModel();
         $page->pid = 42;
@@ -456,7 +456,7 @@ class PageModelTest extends TestCase
 
     public function testUsesAbsoluteUrlReferenceForFrontendUrlOnOtherDomain(): void
     {
-        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getFrontendUrl\(\)" has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getFrontendUrl\(\)" is deprecated/');
 
         $page = new PageModel();
         $page->pid = 42;
@@ -479,7 +479,7 @@ class PageModelTest extends TestCase
 
     public function testUsesAbsoluteUrlReferenceForAbsoluteUrl(): void
     {
-        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getAbsoluteUrl\(\)" has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getAbsoluteUrl\(\)" is deprecated/');
 
         $page = new PageModel();
         $page->pid = 42;
