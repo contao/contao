@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CalendarBundle\Tests\Migration;
+namespace Contao\CalendarBundle\Tests;
 
 use Contao\CalendarBundle\CalendarEventsGenerator;
 use Contao\CalendarEventsModel;
@@ -280,7 +280,7 @@ class CalendarEventsGeneratorTest extends ContaoTestCase
             ],
         ];
 
-        $time = (new \DateTimeImmutable())->setTime(0, 0, 0);
+        $time = (new \DateTimeImmutable())->setTime(0, 0);
 
         yield 'Ongoing event' => [
             [

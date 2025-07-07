@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\NewsBundle\Tests\EventListener;
+namespace Contao\CalendarBundle\Tests\EventListener;
 
 use Contao\CalendarBundle\CalendarEventsGenerator;
 use Contao\CalendarBundle\Event\FetchEventsForFeedEvent;

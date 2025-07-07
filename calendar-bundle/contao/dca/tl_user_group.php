@@ -38,9 +38,7 @@ $GLOBALS['TL_DCA']['tl_user_group']['fields']['calendarp'] = array
 	'sql'                     => "blob NULL"
 );
 
-/**
- * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6
- */
+// Backwards compatibility
 $GLOBALS['TL_DCA']['tl_user_group']['fields']['calendarfeeds'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_user']['calendarfeeds'],
@@ -51,9 +49,7 @@ $GLOBALS['TL_DCA']['tl_user_group']['fields']['calendarfeeds'] = array
 	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
 
-/**
- * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6
- */
+// Backwards compatibility
 $GLOBALS['TL_DCA']['tl_user_group']['fields']['calendarfeedp'] = array
 (
 	'label'                   => &$GLOBALS['TL_LANG']['tl_user']['calendarfeedp'],

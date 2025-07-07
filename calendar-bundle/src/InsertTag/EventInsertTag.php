@@ -45,7 +45,7 @@ class EventInsertTag implements InsertTagResolverNestedResolvedInterface
     public function __invoke(ResolvedInsertTag $insertTag): InsertTagResult
     {
         if ('calendar_feed' === $insertTag->getName()) {
-            trigger_deprecation('contao/core-bundle', '5.6', 'Using the "calendar_feed" insert tag has been deprecated and will no longer work in Contao 6. Use the "link_url" insert tag instead.', __METHOD__);
+            trigger_deprecation('contao/core-bundle', '5.6', 'Using the "calendar_feed" insert tag is deprecated and will no longer work in Contao 6. Use the "link_url" insert tag instead.', __METHOD__);
 
             return $this->replaceCalendarFeedInsertTag($insertTag->getParameters()->get(0));
         }

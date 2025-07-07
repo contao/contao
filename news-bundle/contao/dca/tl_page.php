@@ -27,7 +27,6 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['feedSource'] = array(
 	'sql' => "varchar(32) COLLATE ascii_bin NOT NULL default 'source_teaser'"
 );
 
-
 $GLOBALS['TL_DCA']['tl_page']['fields']['feedFeatured'] = array(
 	'exclude' => true,
 	'inputType' => 'select',

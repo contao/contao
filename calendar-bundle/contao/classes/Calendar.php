@@ -37,10 +37,13 @@ class Calendar extends Frontend
 	 * Update a particular RSS feed
 	 *
 	 * @param integer $intId
+	 *
+	 * @deprecated Deprecated sind Contao 5.6, to be removed in Contao 6;
+	 *             use the "calendar_feed" page instead
 	 */
 	public function generateFeed($intId)
 	{
-		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "calendar_feed" page instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "calendar_feed" page instead.', __METHOD__);
 
 		$objCalendar = CalendarFeedModel::findById($intId);
 
@@ -70,10 +73,13 @@ class Calendar extends Frontend
 
 	/**
 	 * Delete old files and generate all feeds
+	 *
+	 * @deprecated Deprecated sind Contao 5.6, to be removed in Contao 6;
+	 *             use the "calendar_feed" page instead
 	 */
 	public function generateFeeds()
 	{
-		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "calendar_feed" page instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "calendar_feed" page instead.', __METHOD__);
 
 		(new Automator())->purgeXmlFiles();
 
@@ -95,10 +101,13 @@ class Calendar extends Frontend
 	 * Generate all feeds including a certain calendar
 	 *
 	 * @param integer $intId
+	 *
+	 * @deprecated Deprecated sind Contao 5.6, to be removed in Contao 6;
+	 *             use the "calendar_feed" page instead
 	 */
 	public function generateFeedsByCalendar($intId)
 	{
-		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "calendar_feed" page instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "calendar_feed" page instead.', __METHOD__);
 
 		$objFeed = CalendarFeedModel::findByCalendar($intId);
 
@@ -486,10 +495,13 @@ class Calendar extends Frontend
 	 * Return the names of the existing feeds, so they are not removed
 	 *
 	 * @return array
+	 *
+	 * @deprecated Deprecated sind Contao 5.6, to be removed in Contao 6;
+	 *             use the "calendar_feed" page instead
 	 */
 	public function purgeOldFeeds()
 	{
-		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "calendar_feed" page instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "calendar_feed" page instead.', __METHOD__);
 
 		$arrFeeds = array();
 		$objFeeds = CalendarFeedModel::findAll();

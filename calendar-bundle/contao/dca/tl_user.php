@@ -37,9 +37,7 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['calendarp'] = array
 	'sql'                     => "blob NULL"
 );
 
-/**
- * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6
- */
+// Backwards compatibility
 $GLOBALS['TL_DCA']['tl_user']['fields']['calendarfeeds'] = array
 (
 	'inputType'               => 'checkbox',
@@ -49,9 +47,7 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['calendarfeeds'] = array
 	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
 
-/**
- * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6
- */
+// Backwards compatibility
 $GLOBALS['TL_DCA']['tl_user']['fields']['calendarfeedp'] = array
 (
 	'inputType'               => 'checkbox',

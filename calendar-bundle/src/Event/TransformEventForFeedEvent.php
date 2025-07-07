@@ -22,8 +22,10 @@ class TransformEventForFeedEvent extends Event
 {
     private ItemInterface|null $item = null;
 
+    /**
+     * @param array<string, mixed> $event
+     */
     public function __construct(
-        /** @var array<string, mixed> $event */
         private readonly array $event,
         private readonly FeedInterface $feed,
         private readonly PageModel $pageModel,

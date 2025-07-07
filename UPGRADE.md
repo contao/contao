@@ -519,6 +519,6 @@ converted when a record is saved in the back end.
 ### Calendar feeds
 
 Calendar feeds are now implemented as page controllers. You can add new RSS, Atom and JSON feeds in the "pages" back end
-module. The `{{calendar_feed:id}}` insert tag has been deprecated. You can use `{{link_url::id}}` instead.
+module. The `{{calendar_feed:id}}` insert tag is deprecated. You can use `{{link_url::id}}` instead.
 
 [1]: https://docs.contao.org/manual/en/article-management/insert-tags/#basic-entities

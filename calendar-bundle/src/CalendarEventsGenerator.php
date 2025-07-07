@@ -234,7 +234,7 @@ class CalendarEventsGenerator
             $template = $this->contaoFramework->getAdapter(Template::class);
 
             $event['details'] = $template->once(
-                static function () use ($contentModel, $controller, $id): string {
+                static function () use ($contentModel, $id, $controller): string {
                     $details = '';
                     $elements = $contentModel->findPublishedByPidAndTable($id, 'tl_calendar_events');
 

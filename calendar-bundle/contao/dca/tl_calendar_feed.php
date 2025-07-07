@@ -25,9 +25,7 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 
-/**
- * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6
- */
+// Backwards compatibility
 $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 (
 	// Config

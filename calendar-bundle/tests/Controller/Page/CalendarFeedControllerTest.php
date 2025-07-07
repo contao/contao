@@ -233,16 +233,10 @@ class CalendarFeedControllerTest extends ContaoTestCase
 
     private function getEvents(): array
     {
-        return [
-            [
-                [
-                    [
-                        'id' => 1,
-                        'pid' => 1,
-                        'title' => 'Example title',
-                    ],
-                ],
-            ],
-        ];
+        return [[[[
+            'id' => 1,
+            'pid' => 1,
+            'title' => 'Example title',
+        ]]]];
     }
 }

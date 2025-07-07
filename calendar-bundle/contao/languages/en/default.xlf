@@ -72,7 +72,7 @@
         <source>Calendar feed</source>
       </trans-unit>
       <trans-unit id="PTY.calendar_feed.1">
-        <source>Create an RSS, Atom or JSON feed from your event calendars.</source>
+        <source>Create an RSS, Atom or JSON feed from your calendars.</source>
       </trans-unit>
     </body>
   </file>
