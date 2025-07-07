@@ -58,7 +58,7 @@ class Configuration implements ConfigurationInterface
                             static function (array $options): array {
                                 foreach (array_keys($options) as $option) {
                                     if ($newKey = Config::getNewKey($option)) {
-                                        trigger_deprecation('contao/core-bundle', '5.0', 'Setting "contao.localconfig.%s" has been deprecated. Use "%s" instead.', $option, $newKey);
+                                        trigger_deprecation('contao/core-bundle', '5.0', 'Setting "contao.localconfig.%s" is deprecated and will no longer work in Contao 6. Use "%s" instead.', $option, $newKey);
                                     }
                                 }
 
@@ -741,6 +741,10 @@ class Configuration implements ConfigurationInterface
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
+                ->scalarNode('override_from')
+                    ->info('Overrides the "From" address for any e-mails sent by the mailer, if not otherwise specified by a transport.')
+                    ->defaultNull()
+                ->end()
                 ->arrayNode('transports')
                     ->info('Specifies the mailer transports available for selection within Contao.')
                     ->useAttributeAsKey('name')

@@ -341,7 +341,7 @@ abstract class Events extends Module
 	 */
 	public static function generateEventUrl($objEvent, $blnAbsolute=false)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the content URL generator instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the content URL generator instead.', __METHOD__);
 
 		try
 		{
