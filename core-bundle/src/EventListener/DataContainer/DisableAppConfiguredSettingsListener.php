@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener\DataContainer;
 
 use Contao\CoreBundle\DependencyInjection\Attribute\AsCallback;
 use Contao\CoreBundle\Framework\ContaoFramework;
+use Contao\DataContainer;
 use Contao\Image;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -27,21 +28,26 @@ class DisableAppConfiguredSettingsListener
     ) {
     }
 
-    public function onLoadCallback(): void
+    public function onLoadCallback(DataContainer|null $dc = null): void
     {
+        // Return if there is no table
+        if (!$table = $dc?->table) {
+            return;
+        }
+
         foreach (array_keys($this->localConfig) as $field) {
-            if (!isset($GLOBALS['TL_DCA']['tl_settings']['fields'][$field])) {
+            if (!isset($GLOBALS['TL_DCA'][$table]['fields'][$field])) {
                 continue;
             }
 
-            $GLOBALS['TL_DCA']['tl_settings']['fields'][$field]['xlabel'][] = [
+            $GLOBALS['TL_DCA'][$table]['fields'][$field]['xlabel'][] = [
                 'contao.listener.data_container.disable_app_configured_settings',
                 'renderHelpIcon',
             ];
 
-            $GLOBALS['TL_DCA']['tl_settings']['fields'][$field]['eval']['disabled'] = true;
-            $GLOBALS['TL_DCA']['tl_settings']['fields'][$field]['eval']['helpwizard'] = false;
-            $GLOBALS['TL_DCA']['tl_settings']['fields'][$field]['eval']['chosen'] = false;
+            $GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['disabled'] = true;
+            $GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['helpwizard'] = false;
+            $GLOBALS['TL_DCA'][$table]['fields'][$field]['eval']['chosen'] = false;
         }
     }
 
