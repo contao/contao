@@ -89,7 +89,7 @@ $GLOBALS['TL_DCA']['tl_job'] = array
 		(
 			'label' => &$GLOBALS['TL_LANG']['jobs']['type'],
 			'inputType' => 'select',
-			'reference' => &$GLOBALS['TL_LANG']['tl_job']['typeLabel'],
+			'reference' => &$GLOBALS['TL_LANG']['jobs']['typeLabel'],
 			'sql' => array('type' => 'string', 'length' => 255, 'notnull' => true),
 		),
 		'owner' => array
