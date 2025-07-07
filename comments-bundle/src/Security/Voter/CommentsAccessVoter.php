@@ -13,37 +13,57 @@ declare(strict_types=1);
 namespace Contao\CommentsBundle\Security\Voter;
 
 use Contao\CommentsBundle\Security\ContaoCommentsPermissions;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
-use Contao\CoreBundle\Security\Voter\DataContainer\AbstractDataContainerVoter;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-class CommentsAccessVoter extends AbstractDataContainerVoter
+class CommentsAccessVoter implements VoterInterface, CacheableVoterInterface
 {
     public function __construct(private readonly AccessDecisionManagerInterface $accessDecisionManager)
     {
     }
 
-    protected function getTable(): string
+    public function supportsAttribute(string $attribute): bool
     {
-        return 'tl_comments';
+        return $attribute === ContaoCorePermissions::DC_PREFIX.'tl_comments';
     }
 
-    protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
+    public function supportsType(string $subjectType): bool
     {
-        if ($action instanceof ReadAction) {
-            return true;
+        return \in_array($subjectType, [CreateAction::class, UpdateAction::class, DeleteAction::class], true);
+    }
+
+    public function vote(TokenInterface $token, $subject, array $attributes, Vote|null $vote = null): int
+    {
+        if (!array_filter($attributes, $this->supportsAttribute(...))) {
+            return self::ACCESS_ABSTAIN;
         }
 
-        $comment = match (true) {
-            $action instanceof CreateAction => $action->getNew() ?? [],
-            $action instanceof DeleteAction => $action->getCurrent() ?? [],
-            $action instanceof UpdateAction => array_merge($action->getCurrent() ?? [], $action->getNew() ?? []),
-        };
+        foreach ($attributes as $attribute) {
+            if (!$this->supportsAttribute($attribute)) {
+                continue;
+            }
 
-        return $this->accessDecisionManager->decide($token, [ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT], $comment);
+            $isGranted = match (true) {
+                $subject instanceof CreateAction,
+                $subject instanceof UpdateAction,
+                $subject instanceof DeleteAction => $this->accessDecisionManager->decide($token, [ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT], $subject),
+                default => null,
+            };
+
+            if (true === $isGranted) {
+                return self::ACCESS_GRANTED;
+            }
+        }
+
+        // TODO: in Contao 6, this should default to ACCESS_GRANTED if no voter denied
+        return self::ACCESS_DENIED;
     }
 }

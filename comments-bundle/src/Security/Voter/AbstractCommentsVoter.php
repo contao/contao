@@ -15,6 +15,7 @@ namespace Contao\CommentsBundle\Security\Voter;
 use Contao\BackendUser;
 use Contao\CommentsBundle\Security\ContaoCommentsPermissions;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -23,6 +24,10 @@ use Symfony\Contracts\Service\ResetInterface;
 abstract class AbstractCommentsVoter implements VoterInterface, CacheableVoterInterface, ResetInterface
 {
     private array $cache = [];
+
+    public function __construct(private readonly AccessDecisionManagerInterface $accessDecisionManager)
+    {
+    }
 
     public function reset(): void
     {
@@ -50,14 +55,8 @@ abstract class AbstractCommentsVoter implements VoterInterface, CacheableVoterIn
             return self::ACCESS_ABSTAIN;
         }
 
-        $user = $token->getUser();
-
-        if (!$user instanceof BackendUser) {
+        if ($this->accessDecisionManager->decide($token, ['ROLE_ADMIN'])) {
             return self::ACCESS_ABSTAIN;
-        }
-
-        if ($user->isAdmin) {
-            return self::ACCESS_GRANTED;
         }
 
         $cacheKey = $subject['source'].'.'.$subject['parent'];
@@ -66,7 +65,7 @@ abstract class AbstractCommentsVoter implements VoterInterface, CacheableVoterIn
             $this->cache[$cacheKey] = $this->hasAccess($token, $subject['source'], (int) $subject['parent']);
         }
 
-        return $this->cache[$cacheKey] ? self::ACCESS_GRANTED : self::ACCESS_DENIED;
+        return $this->cache[$cacheKey] ? self::ACCESS_ABSTAIN : self::ACCESS_DENIED;
     }
 
     abstract protected function supportsSource(string $source): bool;
