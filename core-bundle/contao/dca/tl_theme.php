@@ -56,6 +56,8 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 		),
 		'global_operations' => array
 		(
+			'all',
+			'-',
 			'importTheme' => array
 			(
 				'href'                => 'key=importTheme',

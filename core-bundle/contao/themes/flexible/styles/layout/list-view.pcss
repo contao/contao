@@ -262,7 +262,6 @@
     margin: 0;
     padding: 0;
     border: 0;
-    height: 16px;
     background: none;
 }
 
@@ -285,12 +284,28 @@
     margin: 0;
 }
 
+.operations a,
+.operations button {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    line-height: 16px;
+    white-space: nowrap;
+    background-color: transparent;
+    border: none;
+}
+
+.operations button:hover {
+    color: var(--contao);
+}
+
 .operations-menu-container {
     position: relative;
     align-items: center;
 }
 
 .operations-menu {
+    min-width: 120px;
     position: fixed;
     right: 0;
     z-index: 10;
@@ -316,16 +331,14 @@
     display: block !important;
 }
 
-.operations-menu a {
-    display: flex;
-    gap: 6px;
-    align-items: center;
-    padding: 1px 0;
-    white-space: nowrap;
-}
-
 .operations-menu hr {
     margin: 5px 0;
+}
+
+.operations-menu a,
+.operations-menu button {
+    padding-top: 1px;
+    padding-bottom: 1px;
 }
 
 .operations-menu li:last-child:has(hr) {

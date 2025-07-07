@@ -296,12 +296,6 @@
       <trans-unit id="tl_page.chmod.1">
         <source>Please assign the access rights for the page and its subpages.</source>
       </trans-unit>
-      <trans-unit id="tl_page.noSearch.0">
-        <source>Do not search</source>
-      </trans-unit>
-      <trans-unit id="tl_page.noSearch.1">
-        <source>Exclude the page from the search index.</source>
-      </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
       </trans-unit>

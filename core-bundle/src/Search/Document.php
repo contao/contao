@@ -31,7 +31,15 @@ class Document
 
     private array|null $jsonLds = null;
 
+    /**
+     * @var array<bool, string>
+     */
     private array $searchableContents = [];
+
+    /**
+     * @var array<bool, string>
+     */
+    private array $searchableContentHashes = [];
 
     /**
      * The key is the header name in lowercase letters and the value is again an array
@@ -214,6 +222,16 @@ class Document
             $response->headers->all(),
             (string) $response->getContent(),
         );
+    }
+
+    public function getGlobalSearchableContentHash(): string
+    {
+        return $this->getSearchableContentHash().'-'.$this->getSearchableContentHash(true);
+    }
+
+    public function getSearchableContentHash(bool $allowProtected = false): string
+    {
+        return $this->searchableContentHashes[$allowProtected] ?? ($this->searchableContentHashes[$allowProtected] = hash('xxh3', $this->getSearchableContent($allowProtected)));
     }
 
     public function getSearchableContent(bool $allowProtected = false): string

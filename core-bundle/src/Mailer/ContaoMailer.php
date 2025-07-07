@@ -26,6 +26,7 @@ final class ContaoMailer implements MailerInterface
         private readonly MailerInterface $mailer,
         private readonly AvailableTransports $transports,
         private readonly RequestStack $requestStack,
+        private readonly string|null $overrideFrom = null,
     ) {
     }
 
@@ -77,10 +78,14 @@ final class ContaoMailer implements MailerInterface
     }
 
     /**
-     * Overrides the from address according to the transport.
+     * Overrides the from address according to config.
      */
     private function setFrom(Email $message): void
     {
+        if (null !== $this->overrideFrom) {
+            $this->doSetFrom($message, $this->overrideFrom);
+        }
+
         if (!$message->getHeaders()->has('X-Transport')) {
             return;
         }
@@ -97,6 +102,11 @@ final class ContaoMailer implements MailerInterface
             return;
         }
 
+        $this->doSetFrom($message, $from);
+    }
+
+    private function doSetFrom(Email $message, string $from): void
+    {
         $message->from($from);
 
         // Also override "Return-Path" and "Sender" if set (see #4712)

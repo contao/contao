@@ -96,9 +96,9 @@ class DcaLoader extends Controller
 	 *
 	 * @internal
 	 */
-	public static function switchToCurrentRequest(): void
+	public static function switchToCurrentRequest(Request|null $request = null): void
 	{
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$request ??= System::getContainer()->get('request_stack')->getCurrentRequest();
 
 		if (self::$lastRequest === $request)
 		{
@@ -158,7 +158,7 @@ class DcaLoader extends Controller
 
 		if (!isset($GLOBALS['TL_DCA'][$this->strTable]))
 		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Loading a non-existent DCA "%s" has has been deprecated and will throw an exception in Contao 6.', $this->strTable);
+			trigger_deprecation('contao/core-bundle', '5.0', 'Loading a non-existent DCA "%s" is deprecated and will no longer work in Contao 6.', $this->strTable);
 		}
 	}
 

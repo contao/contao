@@ -35,7 +35,15 @@ Encore
     .disableSingleRuntimeChunk()
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
-    .enablePostCssLoader()
+    .enablePostCssLoader((options) => {
+        options.postcssOptions = {
+            plugins: {
+                'postcss-preset-env': {
+                    stage: 2,
+                }
+            }
+        };
+    })
     .configureCssLoader(config => {
         config.url = false;
     })
