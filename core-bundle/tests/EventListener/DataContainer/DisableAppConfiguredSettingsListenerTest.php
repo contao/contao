@@ -36,8 +36,9 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
         $GLOBALS['TL_DCA']['tl_settings'] = [];
         $before = $GLOBALS['TL_DCA']['tl_settings'];
 
-        $listener = $this->createListener();
         $dataContainer = $this->mockClassWithProperties(DataContainer::class, ['table' => 'tl_settings']);
+
+        $listener = $this->createListener();
         $listener->onLoadCallback($dataContainer);
 
         $this->assertSame($before, $GLOBALS['TL_DCA']['tl_settings']);
@@ -67,6 +68,8 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
             ],
         ];
 
+        $dataContainer = $this->mockClassWithProperties(DataContainer::class, ['table' => 'tl_settings']);
+
         $listener = $this->createListener(
             [
                 'adminEmail' => 'admin@example.org',
@@ -74,7 +77,7 @@ class DisableAppConfiguredSettingsListenerTest extends TestCase
                 'fooBar' => false,
             ],
         );
-        $dataContainer = $this->mockClassWithProperties(DataContainer::class, ['table' => 'tl_settings']);
+
         $listener->onLoadCallback($dataContainer);
 
         $this->assertSame(
