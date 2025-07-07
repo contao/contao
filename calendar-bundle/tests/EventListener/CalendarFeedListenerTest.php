@@ -86,13 +86,21 @@ class CalendarFeedListenerTest extends ContaoTestCase
             'eventCalendars' => serialize([1, 2]),
             'feedFeatured' => $feedFeatured,
             'maxFeedItems' => 0,
+            'feedRecurrenceLimit' => 10,
         ]);
 
         $calendarEventsGenerator = $this->createMock(CalendarEventsGenerator::class);
         $calendarEventsGenerator
             ->expects($this->once())
             ->method('getAllEvents')
-            ->with([1])
+            ->with(
+                $this->equalTo([1]),
+                $this->anything(),
+                $this->anything(),
+                $featuredOnly,
+                $this->equalTo(true),
+                $this->equalTo(10),
+            )
             ->willReturn([$eventModel])
         ;
 
