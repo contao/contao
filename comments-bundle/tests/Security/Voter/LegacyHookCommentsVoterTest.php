@@ -26,7 +26,9 @@ class LegacyHookCommentsVoterTest extends TestCase
 {
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_HOOKS']['isAllowedToEditComment']);
+        unset($GLOBALS['TL_HOOKS']);
+
+        parent::tearDown();
     }
 
     public function testSupportsAttributesAndTypes(): void
@@ -58,7 +60,7 @@ class LegacyHookCommentsVoterTest extends TestCase
             'isAllowedToEditComment',
             function (): void {
                 $this->fail('This hook should never be called.');
-            }
+            },
         );
 
         $token = $this->createMock(TokenInterface::class);
