@@ -37,7 +37,7 @@ final class PickerProvider implements ServiceTagInterface
 
     public function getName(): string
     {
-        trigger_deprecation('contao/core-bundle', '5.4', 'Using the @PickerProvider annotation has been deprecated and will no longer work in Contao 6. Use the #[AsPickerProvider] attribute instead.');
+        trigger_deprecation('contao/core-bundle', '5.4', 'Using the @PickerProvider annotation is deprecated and will no longer work in Contao 6. Use the #[AsPickerProvider] attribute instead.');
 
         return 'contao.picker_provider';
     }

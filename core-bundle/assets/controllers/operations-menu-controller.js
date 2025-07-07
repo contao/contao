@@ -59,8 +59,16 @@ export default class OperationsMenuController extends Controller {
             return;
         }
 
+        if (this.$menu.elements.submenuToggles[0].isOpen) {
+            this.$menu.elements.submenuToggles[0].close();
+            return;
+        }
+
         event.preventDefault();
         event.stopPropagation();
+
+        // Prevent accessible-menu from handling pointerup and closing the menu again (see #8065)
+        this.element.addEventListener('pointerup', (e) => e.stopPropagation(), { once: true });
 
         this.$menu.elements.submenuToggles[0].open();
         this.setFixedPosition(event);
@@ -77,9 +85,9 @@ export default class OperationsMenuController extends Controller {
             y = event.clientY;
         } else {
             const r = this.controllerTarget.getBoundingClientRect();
-            x = r.x;
-            y = r.y;
-            offset = 20;
+            x = r.right;
+            y = r.bottom;
+            offset = 2;
         }
 
         this.submenuTarget.style.position = 'fixed';

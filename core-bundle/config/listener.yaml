@@ -334,6 +334,12 @@ services:
         arguments:
             - '@request_stack'
 
+    contao.listener.dca_switch_request:
+        class: Contao\CoreBundle\EventListener\DcaSwitchRequestListener
+        arguments:
+            - '@request_stack'
+            - '@contao.framework'
+
     contao.listener.doctrine_schema:
         class: Contao\CoreBundle\EventListener\DoctrineSchemaListener
         arguments:
@@ -528,6 +534,8 @@ services:
         class: Contao\CoreBundle\EventListener\PreviewUrlCreateListener
         arguments:
             - '@contao.framework'
+            - '@contao.data_container.dca_url_analyzer'
+            - '@database_connection'
 
     contao.listener.referer_id:
         class: Contao\CoreBundle\EventListener\RefererIdListener

@@ -38,7 +38,7 @@ final class FrontendModule extends AbstractFragmentAnnotation
 {
     public function getName(): string
     {
-        trigger_deprecation('contao/core-bundle', '5.4', 'Using the @FrontendModule annotation has been deprecated and will no longer work in Contao 6. Use the #[AsFrontendModule] attribute instead.');
+        trigger_deprecation('contao/core-bundle', '5.4', 'Using the @FrontendModule annotation is deprecated and will no longer work in Contao 6. Use the #[AsFrontendModule] attribute instead.');
 
         return FrontendModuleReference::TAG_NAME;
     }
