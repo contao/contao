@@ -49,6 +49,18 @@ class DataContainerOperationTest extends TestCase
         $this->assertSame('edit--disabled.svg', $operation['icon']);
     }
 
+    public function testHidesOperation(): void
+    {
+        $config = ['href' => '#foo', 'route' => 'bar', 'icon' => 'edit.svg'];
+
+        $operation = new DataContainerOperation('test', $config, ['id' => 1], $this->createMock(DataContainer::class));
+        $operation->setHtml('<a href="#">foobar</a>');
+
+        $this->assertSame('<a href="#">foobar</a>', $operation->getHtml());
+        $operation->hide();
+        $this->assertSame('', $operation->getHtml());
+    }
+
     public function testHandlesHtmlAttributes(): void
     {
         $config = ['href' => '#foo', 'route' => 'bar', 'icon' => 'edit.svg'];
