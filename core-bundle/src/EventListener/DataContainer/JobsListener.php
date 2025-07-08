@@ -43,7 +43,7 @@ class JobsListener
         );
 
         if ($childCount < 1) {
-            $operation->disable();
+            $operation->hide();
         }
     }
 
