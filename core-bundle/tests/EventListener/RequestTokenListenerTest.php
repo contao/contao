@@ -342,13 +342,6 @@ class RequestTokenListenerTest extends TestCase
         $this->assertTrue(RequestTokenListener::isSimpleCorsRequest($request));
     }
 
-    public function testSimpleCorsRequestHandlesMissingContentTypeHeader(): void
-    {
-        $request = new Request();
-
-        $this->assertFalse(RequestTokenListener::isSimpleCorsRequest($request));
-    }
-
     public static function simpleCorsRequestContentTypeProvider(): array
     {
         return [
@@ -365,6 +358,11 @@ class RequestTokenListenerTest extends TestCase
             'text plain UTF-8 flowed' => ['text/plain; charset=UTF-8; format=flowed'],
             'text plain uppercase' => ['TEXT/PLAIN'],
         ];
+    }
+
+    public function testSimpleCorsRequestHandlesMissingContentTypeHeader(): void
+    {
+        $this->assertFalse(RequestTokenListener::isSimpleCorsRequest(new Request()));
     }
 
     private function validateRequestTokenForRequest(Request $request, bool $shouldValidate = true): void
