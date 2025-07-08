@@ -2,7 +2,15 @@
     #running-jobs {
         display: none;
     }
-    
+
+    sup {
+        pointer-events: none;
+
+        &:empty {
+            display: none;
+        }
+    }
+
     &:has([data-contao--jobs-target="count"]:empty) #running-jobs {
         display: none;
     }
