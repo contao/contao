@@ -342,6 +342,13 @@ class RequestTokenListenerTest extends TestCase
         $this->assertTrue(RequestTokenListener::isSimpleCorsRequest($request));
     }
 
+    public function testSimpleCorsRequestHandlesMissingContentTypeHeader(): void
+    {
+        $request = new Request();
+
+        $this->assertFalse(RequestTokenListener::isSimpleCorsRequest($request));
+    }
+
     public static function simpleCorsRequestContentTypeProvider(): array
     {
         return [
