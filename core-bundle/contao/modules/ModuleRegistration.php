@@ -447,6 +447,7 @@ class ModuleRegistration extends Module
 	{
 		$container = System::getContainer();
 		$optIn = $container->get('contao.opt_in');
+		$optIn->setRemoveOn('+' . ($container->getParameter('contao.registration.expiration') + 48) . ' hours');
 		$optInToken = $optIn->create('reg', $arrData['email'], array('tl_member'=>array($arrData['id'])));
 
 		// Prepare the simple token data
