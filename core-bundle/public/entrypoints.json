@@ -10,10 +10,10 @@
     },
     "navigation": {
       "css": [
-        "/bundles/contaocore/navigation.b6ed9bbc.css"
+        "/bundles/contaocore/navigation.e96fadee.css"
       ],
       "js": [
-        "/bundles/contaocore/navigation.ade82baf.js"
+        "/bundles/contaocore/navigation.9e00d242.js"
       ]
     }
   }

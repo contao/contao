@@ -9,6 +9,7 @@ export class Navigation {
                 expand: 'nav-expanded',
                 active: 'is-active',
                 bodyOpen: 'navigation-open',
+                left: 'is-left'
             },
             ariaLabels: {
                 'menu': 'Menu',
@@ -28,12 +29,21 @@ export class Navigation {
 
         this.dropdowns = [];
         this.active = [];
+        this.listeners = new WeakMap();
 
         this._init();
 
-        this.dropdowns.forEach(dropdown => {
-            this._initDropdown(dropdown);
-        })
+        for (const dropdown of this.dropdowns) {
+            this._addSubMenuButton(dropdown);
+        }
+
+        new ResizeObserver(() => {
+            const minWidth = window.innerWidth >= this.options.minWidth;
+
+            for (const dropdown of this.dropdowns) {
+                minWidth ? this._registerDropdownEvents(dropdown) : this._unregisterDropdownEvents(dropdown);
+            }
+        }).observe(document.body);
     }
 
     /**
@@ -175,7 +185,7 @@ export class Navigation {
      * @private
      */
     _collapseSubmenu(dropdown) {
-        dropdown.classList.remove(this.options.classes.expand);
+        dropdown.classList.remove(this.options.classes.expand, this.options.classes.left);
         this._updateAriaState(dropdown, false);
     }
 
@@ -223,6 +233,13 @@ export class Navigation {
         this._hideDropdown(dropdown);
 
         dropdown.classList.add(this.options.classes.expand);
+
+        const submenuLevelThree = dropdown.querySelector(':scope > .level_3');
+
+        if (submenuLevelThree && submenuLevelThree.getBoundingClientRect().right > window.innerWidth) {
+            dropdown.classList.add(this.options.classes.left);
+        }
+
         this._updateAriaState(dropdown, true);
 
         if (!this.active.includes(dropdown)) {
@@ -305,17 +322,44 @@ export class Navigation {
     }
 
     /**
-     * Initializes the dropdown
+     * Registers the mouse dropdown events
      *
      * @private
      */
-    _initDropdown(dropdown) {
-        this._addSubMenuButton(dropdown);
+    _registerDropdownEvents(dropdown) {
+        if (this.listeners.has(dropdown)) {
+            return;
+        }
 
-        const minWidth = window.innerWidth >= this.options.minWidth;
+        const events = {
+            mouseenter: (e) => this._mouseEnter(e, dropdown),
+            mouseleave: (e) => this._mouseLeave(e, dropdown),
+            focusout: (e) => this._focusOut(e, dropdown),
+        }
 
-        dropdown.addEventListener('mouseenter', e => { minWidth && this._mouseEnter(e, dropdown) });
-        dropdown.addEventListener('mouseleave', e => { minWidth && this._mouseLeave(e, dropdown) });
-        dropdown.addEventListener('focusout', e => { minWidth && this._focusOut(e, dropdown) });
+        for(const [type, event] of Object.entries(events)) {
+            dropdown.addEventListener(type, event);
+        }
+
+        this.listeners.set(dropdown, events);
+    }
+
+    /**
+     * Removes the mouse dropdown events
+     *
+     * @private
+     */
+    _unregisterDropdownEvents(dropdown) {
+        const events = this.listeners.get(dropdown);
+
+        if (!events) {
+            return;
+        }
+
+        for (const [type, event] of Object.entries(events)) {
+            dropdown.removeEventListener(type, event);
+        }
+
+        this.listeners.delete(dropdown);
     }
 }
