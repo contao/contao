@@ -88,8 +88,7 @@ export class Navigation {
      * @private
      */
     _focusTrapEvent(event) {
-        if (!(event.key === 'Tab' || event.keyCode === 9))
-        {
+        if (!(event.key === 'Tab' || event.keyCode === 9)) {
             return;
         }
 
