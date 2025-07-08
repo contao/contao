@@ -6,32 +6,19 @@
     .mergeWith(wrapper_attributes|default)
 %}
 
-{% set button_attributes = attrs()
-    .addClass('nav-burger')
-    .set('title', 'MSC.ariaMenuToggle'|trans)
-    .set('aria-haspopup', 'menu')
-    .set('aria-expanded', 'false')
-    .mergeWith(button_attributes|default)
-%}
-
-{% set nav_attributes = attrs()
-    .addClass('navigation-main')
-    .setIfExists('style', style)
-    .setIfExists('aria-label', ariaLabel|default)
-    .mergeWith(nav_attributes|default)
-%}
-
-{% set skiplink_attributes = attrs()
-    .set('href', request ~ '#' ~ skipId)
-    .addClass(['invisible', 'skip-link'])
-    .mergeWith(skiplink_attributes|default)
-%}
-
 {% block content %}
     <!-- indexer::stop -->
     <div{{ cssID|default|replace({'"':''}) }}{{ wrapper_attributes }}>
 
         {% block toggle %}
+            {% set button_attributes = attrs()
+                .addClass('nav-burger')
+                .set('title', 'MSC.ariaMenuToggle'|trans)
+                .set('aria-haspopup', 'menu')
+                .set('aria-expanded', 'false')
+                .mergeWith(button_attributes|default)
+            %}
+
             <button{{ button_attributes }}>
                 <span class="nav-burger__inner">
                     <span class="icon-line"></span>
@@ -40,13 +27,27 @@
         {% endblock %}
 
         {% block navigation %}
+            {% set nav_attributes = attrs()
+                .addClass('navigation-main')
+                .setIfExists('style', style)
+                .setIfExists('aria-label', ariaLabel|default)
+                .mergeWith(nav_attributes|default)
+            %}
+
             <nav{{ nav_attributes }}>
                 {% if headline|default %}
                     <{{ hl }}>{{ headline }}</{{ hl }}>
                 {% endif %}
 
+                {% block skip_link %}
+                    {% set skiplink_attributes = attrs()
+                        .set('href', request ~ '#' ~ skipId)
+                        .addClass(['invisible', 'skip-link'])
+                        .mergeWith(skiplink_attributes|default)
+                    %}
 
-                <a{{ skiplink_attributes }}>{{ skipNavigation }}</a>
+                    <a{{ skiplink_attributes }}>{{ skipNavigation }}</a>
+                {% endblock %}
 
                 {{ items|join|raw }}
 
