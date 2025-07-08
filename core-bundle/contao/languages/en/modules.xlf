@@ -122,6 +122,12 @@
       <trans-unit id="MOD.undo.1">
         <source>Restore deleted records</source>
       </trans-unit>
+      <trans-unit id="MOD.jobs.0">
+        <source>Jobs</source>
+      </trans-unit>
+      <trans-unit id="MOD.jobs.1">
+        <source>Overview of the system jobs</source>
+      </trans-unit>
       <trans-unit id="MOD.login.0">
         <source>User profile</source>
       </trans-unit>

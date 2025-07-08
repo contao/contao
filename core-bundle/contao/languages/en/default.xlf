@@ -2180,6 +2180,9 @@
       <trans-unit id="MSC.manual">
         <source>Manual</source>
       </trans-unit>
+      <trans-unit id="MSC.jobs">
+        <source>Job overview</source>
+      </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
       </trans-unit>
@@ -2269,6 +2272,21 @@
       </trans-unit>
       <trans-unit id="MSC.skipToContent">
         <source>Skip to content</source>
+      </trans-unit>
+      <trans-unit id="MSC.clipboardCopy">
+        <source>Copied to clipboard.</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchIndexer.0">
+        <source>Search indexer</source>
+      </trans-unit>
+      <trans-unit id="MSC.searchIndexer.1">
+        <source>Here you can override the robots meta tag setting for the internal search index.</source>
+      </trans-unit>
+      <trans-unit id="MSC.always_index">
+        <source>Always index</source>
+      </trans-unit>
+      <trans-unit id="MSC.never_index">
+        <source>Never index</source>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2407,6 +2425,9 @@
       </trans-unit>
       <trans-unit id="DCA.drag">
         <source>Drag element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.global_operations">
+        <source>Show all global operations</source>
       </trans-unit>
       <trans-unit id="DCA.operations">
         <source>Show operations for element ID %s</source>

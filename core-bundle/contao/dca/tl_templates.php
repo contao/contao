@@ -53,17 +53,27 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 			'new' => array
 			(
 				'href'                => 'act=paste&amp;mode=create',
-				'class'               => 'header_new_folder'
+				'class'               => 'header_new_folder',
+				'primary'             => true,
 			),
 			'new_tpl' => array
 			(
 				'href'                => 'key=new_tpl',
-				'class'               => 'header_new'
+				'class'               => 'header_new',
+				'primary'             => true,
 			),
 		),
 		'operations' => array
 		(
 			'edit',
+			'source' => array
+			(
+				'label'               => &$GLOBALS['TL_LANG']['tl_files']['source'],
+				'href'                => 'act=source',
+				'icon'                => 'editor.svg',
+				'primary'             => true,
+				'button_callback'     => array('tl_templates', 'editSource')
+			),
 			'copy' => array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['copy'],
@@ -82,14 +92,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 				'button_callback'     => array('tl_templates', 'cut')
 			),
 			'delete',
-			'source' => array
-			(
-				'label'               => &$GLOBALS['TL_LANG']['tl_files']['source'],
-				'href'                => 'act=source',
-				'icon'                => 'editor.svg',
-				'primary'             => true,
-				'button_callback'     => array('tl_templates', 'editSource')
-			),
+			'-',
 			'compare' => array
 			(
 				'href'                => 'key=compare',

@@ -19,37 +19,46 @@ use Contao\NewsBundle\EventListener\DataContainer\NewsSearchListener;
 use Contao\NewsModel;
 use Contao\Search;
 use Doctrine\DBAL\Connection;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class NewsSearchListenerTest extends TestCase
 {
-    public function testPurgesTheSearchIndexOnAliasChange(): void
+    #[DataProvider('purgeSearchEntryProvider')]
+    public function testNewsChanges(string $field, string $newValue, array $recordData, array|null $readerPageSettings, bool $shouldRemoveSearchEntry): void
     {
         $newsModel = $this->createMock(NewsModel::class);
 
         $search = $this->mockAdapter(['removeEntry']);
         $search
-            ->expects($this->once())
+            ->expects($shouldRemoveSearchEntry ? $this->once() : $this->never())
             ->method('removeEntry')
             ->with('uri')
         ;
 
-        $adapters = [
+        $framework = $this->mockContaoFramework([
             NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
             Search::class => $search,
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
+        ]);
 
         $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
+
+        if (null !== $readerPageSettings) {
+            $connection
+                ->expects($this->once())
+                ->method('fetchAssociative')
+                ->willReturn($readerPageSettings)
+            ;
+        } else {
+            $connection
+                ->expects($this->never())
+                ->method($this->anything())
+            ;
+        }
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
-            ->expects($this->once())
+            ->expects($shouldRemoveSearchEntry ? $this->once() : $this->never())
             ->method('generate')
             ->with($newsModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('uri')
@@ -58,173 +67,155 @@ class NewsSearchListenerTest extends TestCase
         $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
         $dc
             ->method('getCurrentRecord')
-            ->willReturn(['alias' => 'foo'])
+            ->willReturn($recordData)
         ;
 
-        $listener = new NewsSearchListener(
-            $framework,
-            $connection,
-            $urlGenerator,
-        );
+        $listener = new NewsSearchListener($framework, $connection, $urlGenerator);
 
-        $listener->onSaveAlias('bar', $dc);
+        switch ($field) {
+            case 'alias':
+                $listener->onSaveAlias($newValue, $dc);
+                break;
+            case 'searchIndexer':
+                $listener->onSaveSearchIndexer($newValue, $dc);
+                break;
+            case 'robots':
+                $listener->onSaveRobots($newValue, $dc);
+                break;
+        }
     }
 
-    public function testDoesNotPurgeTheSearchIndexWithUnchangedAlias(): void
+    public static function purgeSearchEntryProvider(): iterable
     {
-        $newsModel = $this->createMock(NewsModel::class);
-
-        $search = $this->mockAdapter(['removeEntry']);
-        $search
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
-            Search::class => $search,
+        yield 'Test alias (1) unchanged should not purge the search entry' => [
+            'alias', 'foo', ['alias' => 'foo'], null, false,
         ];
 
-        $framework = $this->mockContaoFramework($adapters);
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $urlGenerator
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn(['alias' => 'foo'])
-        ;
-
-        $listener = new NewsSearchListener(
-            $framework,
-            $connection,
-            $urlGenerator,
-        );
-
-        $listener->onSaveAlias('foo', $dc);
-    }
-
-    public function testDoesNotPurgeTheSearchIndexWithUnchangedRobots(): void
-    {
-        $newsModel = $this->createMock(NewsModel::class);
-
-        $search = $this->mockAdapter(['removeEntry']);
-        $search
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
-            Search::class => $search,
+        yield 'Test alias (2) change should purge the search entry' => [
+            'alias', 'bar', ['alias' => 'foo'], null, true,
         ];
 
-        $framework = $this->mockContaoFramework($adapters);
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $urlGenerator
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn([
-                'robots' => 'index,follow',
-                'pid' => 5,
-            ])
-        ;
-
-        $listener = new NewsSearchListener(
-            $framework,
-            $connection,
-            $urlGenerator,
-        );
-
-        $listener->onSaveRobots('index,follow', $dc);
-    }
-
-    public function testDoesNotPurgeTheSearchIndexOnRobotsChangeToIndex(): void
-    {
-        $newsModel = $this->createMock(NewsModel::class);
-
-        $search = $this->mockAdapter(['removeEntry']);
-        $search
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
-            Search::class => $search,
+        yield 'Test searchIndexer (1) unchanged should not purge the search entry.' => [
+            'searchIndexer', 'always_index', ['searchIndexer' => 'always_index'], null, false,
         ];
 
-        $framework = $this->mockContaoFramework($adapters);
+        yield 'Test searchIndexer (2) change to always_index should not purge the search entry.' => [
+            'searchIndexer', 'always_index', ['searchIndexer' => ''], null, false,
+        ];
 
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
+        yield 'Test searchIndexer (3) change to never_index should purge the search entry.' => [
+            'searchIndexer', 'never_index', ['searchIndexer' => ''], null, true,
+        ];
 
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $urlGenerator
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
+        yield 'Test searchIndexer (4) change to blank should not purge the search entry if the reader page has searchIndexer:always_index.' => [
+            'searchIndexer', '', ['searchIndexer' => 'always_index', 'pid' => 5], ['searchIndexer' => 'always_index'], false,
+        ];
 
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn([
-                'robots' => 'noindex,follow',
-                'pid' => 5,
-            ])
-        ;
+        yield 'Test searchIndexer (5) change to blank should purge the search entry if the reader page has searchIndexer:never_index.' => [
+            'searchIndexer', '', ['searchIndexer' => 'always_index', 'pid' => 5], ['searchIndexer' => 'never_index'], true,
+        ];
 
-        $listener = new NewsSearchListener(
-            $framework,
-            $connection,
-            $urlGenerator,
-        );
+        yield 'Test searchIndexer (6) change to blank should not purge the search entry if robots is set to index the reader page has searchIndexer:blank.' => [
+            'searchIndexer', '', ['robots' => 'index,follow', 'searchIndexer' => 'always_index', 'pid' => 5], ['searchIndexer' => ''], false,
+        ];
 
-        $listener->onSaveRobots('index,follow', $dc);
+        yield 'Test searchIndexer (7) change to blank should purge the search entry if robots is set to noindex and the reader page has searchIndexer:blank.' => [
+            'searchIndexer', '', ['robots' => 'noindex,follow', 'searchIndexer' => 'always_index', 'pid' => 5], ['searchIndexer' => ''], true,
+        ];
+
+        yield 'Test searchIndexer (8) change to blank should not purge the search entry if robots is not set and the reader page has searchIndexer:blank and robots:index.' => [
+            'searchIndexer', '', ['searchIndexer' => 'always_index', 'pid' => 5], ['searchIndexer' => '', 'robots' => 'index,follow'], false,
+        ];
+
+        yield 'Test searchIndexer (9) change to blank should purge the search entry if robots is not set and the reader page has searchIndexer:blank and robots:noindex.' => [
+            'searchIndexer', '', ['searchIndexer' => 'always_index', 'pid' => 5], ['searchIndexer' => '', 'robots' => 'noindex,follow'], true,
+        ];
+
+        yield 'Test robots (1) unchanged should not purge the search entry.' => [
+            'robots', 'index,follow', ['robots' => 'index,follow'], null, false,
+        ];
+
+        yield 'Test robots (2) change to index should not purge the search entry if searchIndexer is set to always_index.' => [
+            'robots', 'index,follow', ['robots' => '', 'searchIndexer' => 'always_index'], null, false,
+        ];
+
+        yield 'Test robots (3) change to index should purge the search entry if searchIndexer is set to never_index' => [
+            'robots', 'index,follow', ['robots' => '', 'searchIndexer' => 'never_index'], null, true,
+        ];
+
+        yield 'Test robots (4) change to blank should not purge the search entry if searchIndexer is set to always_index' => [
+            'robots', '', ['robots' => 'index,follow', 'searchIndexer' => 'always_index'], null, false,
+        ];
+
+        yield 'Test robots (5) change to blank should purge the search entry if searchIndexer is set to never_index' => [
+            'robots', '', ['robots' => 'index,follow', 'searchIndexer' => 'never_index'], null, true,
+        ];
+
+        yield 'Test robots (6) change to noindex should not purge the search entry if searchIndexer is set to always_index' => [
+            'robots', 'noindex,follow', ['robots' => 'index,follow', 'searchIndexer' => 'always_index'], null, false,
+        ];
+
+        yield 'Test robots (7) change to noindex should purge the search entry if searchIndexer is set to never_index' => [
+            'robots', 'noindex,follow', ['robots' => 'index,follow', 'searchIndexer' => 'never_index'], null, true,
+        ];
+
+        yield 'Test robots (8) change to index should not purge the search entry if searchIndexer is blank and the reader page has searchIndexer:blank' => [
+            'robots', 'index,follow', ['robots' => '', 'searchIndexer' => '', 'pid' => 5], ['searchIndexer' => ''], false,
+        ];
+
+        yield 'Test robots (9) change to index should not purge the search entry if searchIndexer is blank and the reader page has searchIndexer:always_index' => [
+            'robots', 'index,follow', ['robots' => '', 'searchIndexer' => '', 'pid' => 5], ['searchIndexer' => 'always_index'], false,
+        ];
+
+        yield 'Test robots (10) change to index should purge the search entry if searchIndexer is blank and the reader page has searchIndexer:never_index' => [
+            'robots', 'index,follow', ['robots' => '', 'searchIndexer' => '', 'pid' => 5], ['searchIndexer' => 'never_index'], true,
+        ];
+
+        yield 'Test robots (11) change to noindex should purge the search entry if searchIndexer is blank and the reader page has searchIndexer:blank' => [
+            'robots', 'noindex,follow', ['robots' => '', 'searchIndexer' => '', 'pid' => 5], ['searchIndexer' => ''], true,
+        ];
+
+        yield 'Test robots (12) change to noindex should not purge the search entry if searchIndexer is blank and the reader page has searchIndexer:always_index' => [
+            'robots', 'noindex,follow', ['robots' => '', 'searchIndexer' => '', 'pid' => 5], ['searchIndexer' => 'always_index'], false,
+        ];
+
+        yield 'Test robots (13) change to noindex should purge the search entry if searchIndexer is blank and the reader page has searchIndexer:never_index' => [
+            'robots', 'noindex,follow', ['robots' => '', 'searchIndexer' => '', 'pid' => 5], ['searchIndexer' => 'never_index'], true,
+        ];
+
+        yield 'Test robots (14) change to blank should not purge the search entry if searchIndexer is blank and the reader page has searchIndexer:blank and robots:index' => [
+            'robots', '', ['robots' => 'index,follow', 'searchIndexer' => '', 'pid' => 5], ['searchIndexer' => '', 'robots' => 'index,follow'], false,
+        ];
+
+        yield 'Test robots (15) change to blank should not purge the search entry if searchIndexer is blank and the reader page has searchIndexer:always_index' => [
+            'robots', '', ['robots' => 'index,follow', 'searchIndexer' => '', 'pid' => 5], ['searchIndexer' => 'always_index'], false,
+        ];
+
+        yield 'Test robots (16) change to blank should purge the search entry if searchIndexer is blank and the reader page has searchIndexer:never_index' => [
+            'robots', '', ['robots' => 'index,follow', 'searchIndexer' => '', 'pid' => 5], ['searchIndexer' => 'never_index'], true,
+        ];
+
+        yield 'Test robots (17) change to blank should purge the search entry if searchIndexer is blank and the reader page has searchIndexer:blank and robots:noindex' => [
+            'robots', '', ['robots' => 'index,follow', 'searchIndexer' => '', 'pid' => 5], ['searchIndexer' => '', 'robots' => 'noindex,follow'], true,
+        ];
     }
 
-    public function testPurgesTheSearchIndexOnRobotsChangeToNoindex(): void
+    #[DataProvider('deleteProvider')]
+    public function testOnDelete(array $recordData, bool $shouldRemoveSearchEntry): void
     {
         $newsModel = $this->createMock(NewsModel::class);
 
         $search = $this->mockAdapter(['removeEntry']);
         $search
-            ->expects($this->once())
+            ->expects($shouldRemoveSearchEntry ? $this->once() : $this->never())
             ->method('removeEntry')
             ->with('uri')
         ;
 
-        $adapters = [
+        $framework = $this->mockContaoFramework([
             NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
             Search::class => $search,
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
+        ]);
 
         $connection = $this->createMock(Connection::class);
         $connection
@@ -234,209 +225,30 @@ class NewsSearchListenerTest extends TestCase
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
-            ->expects($this->once())
+            ->expects($shouldRemoveSearchEntry ? $this->once() : $this->never())
             ->method('generate')
             ->with($newsModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
             ->willReturn('uri')
         ;
 
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
+        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => $recordData['id']]);
         $dc
             ->method('getCurrentRecord')
-            ->willReturn([
-                'robots' => 'index,follow',
-                'pid' => 5,
-            ])
+            ->willReturn($recordData)
         ;
 
-        $listener = new NewsSearchListener(
-            $framework,
-            $connection,
-            $urlGenerator,
-        );
-
-        $listener->onSaveRobots('noindex,follow', $dc);
-    }
-
-    public function testDoesNotPurgeTheSearchIndexOnRobotsChangeFromIndexToBlankAndTheReaderPageHasRobotsIndex(): void
-    {
-        $newsModel = $this->createMock(NewsModel::class);
-
-        $search = $this->mockAdapter(['removeEntry']);
-        $search
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
-            Search::class => $search,
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('fetchOne')
-            ->willReturn('index,follow')
-        ;
-
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $urlGenerator
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn([
-                'robots' => 'index,follow',
-                'pid' => 5,
-            ])
-        ;
-
-        $listener = new NewsSearchListener(
-            $framework,
-            $connection,
-            $urlGenerator,
-        );
-
-        $listener->onSaveRobots('', $dc);
-    }
-
-    public function testPurgesTheSearchIndexOnRobotsChangeFromIndexToBlankAndTheReaderPageHasRobotsNoindex(): void
-    {
-        $newsModel = $this->createMock(NewsModel::class);
-
-        $search = $this->mockAdapter(['removeEntry']);
-        $search
-            ->expects($this->once())
-            ->method('removeEntry')
-            ->with('uri')
-        ;
-
-        $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
-            Search::class => $search,
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->once())
-            ->method('fetchOne')
-            ->willReturn('noindex,follow')
-        ;
-
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $urlGenerator
-            ->expects($this->once())
-            ->method('generate')
-            ->with($newsModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
-            ->willReturn('uri')
-        ;
-
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
-        $dc
-            ->method('getCurrentRecord')
-            ->willReturn([
-                'robots' => 'index,follow',
-                'pid' => 5,
-            ])
-        ;
-
-        $listener = new NewsSearchListener(
-            $framework,
-            $connection,
-            $urlGenerator,
-        );
-
-        $listener->onSaveRobots('', $dc);
-    }
-
-    public function testPurgesTheSearchIndexOnDelete(): void
-    {
-        $newsModel = $this->createMock(NewsModel::class);
-
-        $search = $this->mockAdapter(['removeEntry']);
-        $search
-            ->expects($this->once())
-            ->method('removeEntry')
-            ->with('uri')
-        ;
-
-        $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
-            Search::class => $search,
-        ];
-
-        $framework = $this->mockContaoFramework($adapters);
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $urlGenerator
-            ->expects($this->once())
-            ->method('generate')
-            ->with($newsModel, [], UrlGeneratorInterface::ABSOLUTE_URL)
-            ->willReturn('uri')
-        ;
-
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => 17]);
-
-        $listener = new NewsSearchListener(
-            $framework,
-            $connection,
-            $urlGenerator,
-        );
-
+        $listener = new NewsSearchListener($framework, $connection, $urlGenerator);
         $listener->onDelete($dc);
     }
 
-    public function testDoesNotPurgeTheSearchIndexWithoutId(): void
+    public static function deleteProvider(): iterable
     {
-        $newsModel = $this->createMock(NewsModel::class);
-
-        $search = $this->mockAdapter(['removeEntry']);
-        $search
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $adapters = [
-            NewsModel::class => $this->mockConfiguredAdapter(['findById' => $newsModel]),
-            Search::class => $search,
+        yield 'Test purges the search entry on delete when id is present' => [
+            ['id' => 17], true,
         ];
 
-        $framework = $this->mockContaoFramework($adapters);
-
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $urlGenerator = $this->createMock(ContentUrlGenerator::class);
-        $urlGenerator
-            ->expects($this->never())
-            ->method($this->anything())
-        ;
-
-        $dc = $this->mockClassWithProperties(DataContainer::class, ['id' => null]);
-
-        $listener = new NewsSearchListener(
-            $framework,
-            $connection,
-            $urlGenerator,
-        );
-
-        $listener->onDelete($dc);
+        yield 'Test does not purge the search entry without id' => [
+            ['id' => null], false,
+        ];
     }
 }

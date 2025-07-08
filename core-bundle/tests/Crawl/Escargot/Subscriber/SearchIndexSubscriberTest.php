@@ -226,7 +226,7 @@ class SearchIndexSubscriberTest extends TestCase
     }
 
     #[DataProvider('onLastChunkProvider')]
-    public function testOnLastChunk(IndexerException|null $indexerException, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = [], CrawlUri|null $crawlUri = null): void
+    public function testOnLastChunk(IndexerException|null $indexerException, string $expectedLogLevel, string $expectedLogMessage, array $expectedStats, array $previousStats = [], CrawlUri|null $crawlUri = null, string|null $searchIndexerJson = null): void
     {
         $logger = $this->createMock(LoggerInterface::class);
         $logger
@@ -270,7 +270,7 @@ class SearchIndexSubscriberTest extends TestCase
 
         $subscriber->onLastChunk(
             $crawlUri ?? new CrawlUri(new Uri('https://contao.org'), 0),
-            $this->mockResponse(true),
+            $this->mockResponse(true, 200, 'https://contao.org', $searchIndexerJson),
             $this->createMock(ChunkInterface::class),
         );
 
@@ -287,13 +287,33 @@ class SearchIndexSubscriberTest extends TestCase
 
     public static function onLastChunkProvider(): iterable
     {
-        yield 'Test skips URIs where the "X-Robots-Tag" header contains "noindex"' => [
+        yield 'Test skips URIs where the JSON "searchIndexer" contains "never_index"' => [
+            null,
+            LogLevel::DEBUG,
+            'Do not request because it was marked "never_index" in the page setting "searchIndexer".',
+            ['ok' => 0, 'warning' => 0, 'error' => 0],
+            [],
+            new CrawlUri(new Uri('https://contao.org'), 0),
+            'never_index',
+        ];
+
+        yield 'Test skips URIs where the header robots tag contains "noindex" and JSON "searchIndexer" is not set to "always_index"' => [
             null,
             LogLevel::DEBUG,
             'Do not request because it was marked "noindex" in the <meta name="robots"> HTML tag.',
             ['ok' => 0, 'warning' => 0, 'error' => 0],
             [],
             (new CrawlUri(new Uri('https://contao.org'), 0))->addTag(RobotsSubscriber::TAG_NOINDEX),
+        ];
+
+        yield 'Test index URIs where the header robots tag contains "noindex" and JSON "searchIndexer" is set to "always_index"' => [
+            null,
+            LogLevel::INFO,
+            'Robots:noindex is ignored because of searchIndexer:always_index. Forwarded to the search indexer. Was indexed successfully.',
+            ['ok' => 1, 'warning' => 0, 'error' => 0],
+            [],
+            (new CrawlUri(new Uri('https://contao.org'), 0))->addTag(RobotsSubscriber::TAG_NOINDEX),
+            'always_index',
         ];
 
         yield 'Successful index' => [
@@ -482,7 +502,7 @@ class SearchIndexSubscriberTest extends TestCase
         ];
     }
 
-    private function mockResponse(bool $asHtml, int $statusCode = 200, string $url = 'https://contao.org'): ResponseInterface
+    private function mockResponse(bool $asHtml, int $statusCode = 200, string $url = 'https://contao.org', string|null $searchIndexerJson = null): ResponseInterface
     {
         $headers = $asHtml ? ['content-type' => ['text/html']] : [];
 
@@ -508,6 +528,13 @@ class SearchIndexSubscriberTest extends TestCase
                 },
             )
         ;
+
+        if ($searchIndexerJson) {
+            $response
+                ->method('getContent')
+                ->willReturn('<script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@graph":[{"@type":"Page","pageId":2,"searchIndexer":"'.$searchIndexerJson.'","protected":false,"groups":[],"fePreview":false}]}</script>')
+            ;
+        }
 
         return $response;
     }

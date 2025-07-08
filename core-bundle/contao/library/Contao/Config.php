@@ -312,7 +312,7 @@ class Config
 	 */
 	public static function isComplete()
 	{
-		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s" has been deprecated an will no longer work in Contao 6.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s" is deprecated an will no longer work in Contao 6.', __METHOD__);
 
 		return true;
 	}
@@ -374,12 +374,12 @@ class Config
 	{
 		if ($newKey = self::getNewKey($strKey))
 		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s(\'%s\')" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, $newKey);
+			trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s(\'%s\')" is deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, $newKey);
 		}
 
 		if (isset(self::$arrToBeRemoved[$strKey]))
 		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s(\'%s\')" has been deprecated.', __METHOD__, $strKey, self::$arrToBeRemoved[$strKey]);
+			trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s(\'%s\')" is deprecated.', __METHOD__, $strKey, self::$arrToBeRemoved[$strKey]);
 		}
 
 		return $GLOBALS['TL_CONFIG'][$strKey] ?? null;
@@ -395,12 +395,12 @@ class Config
 	{
 		if ($newKey = self::getNewKey($strKey))
 		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s(\'%s\', …)" has been deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, $newKey);
+			trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s(\'%s\', …)" is deprecated. Use the "%s" parameter instead.', __METHOD__, $strKey, $newKey);
 		}
 
 		if (isset(self::$arrToBeRemoved[$strKey]))
 		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s(\'%s\')" has been deprecated.', __METHOD__, $strKey, self::$arrToBeRemoved[$strKey]);
+			trigger_deprecation('contao/core-bundle', '5.0', 'Using "%s(\'%s\')" is deprecated.', __METHOD__, $strKey, self::$arrToBeRemoved[$strKey]);
 		}
 
 		$GLOBALS['TL_CONFIG'][$strKey] = $varValue;

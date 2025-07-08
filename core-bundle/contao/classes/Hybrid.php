@@ -153,7 +153,7 @@ abstract class Hybrid extends Frontend
 
 		if ($this->typePrefix = $objElement->typePrefix)
 		{
-			trigger_deprecation('contao/core-bundle', '5.6', 'Passing the "typePrefix" via the model has been deprecated and will no longer work in Contao 6. Pass the prefix via the constructor instead.');
+			trigger_deprecation('contao/core-bundle', '5.6', 'Passing the "typePrefix" via the model is deprecated and will no longer work in Contao 6. Pass the prefix via the constructor instead.');
 		}
 		else
 		{
