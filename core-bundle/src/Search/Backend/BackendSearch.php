@@ -135,7 +135,7 @@ class BackendSearch
 
         $this->engine->reindex([$this->reindexProvider], SealUtil::internalReindexConfigToSealReindexConfig($config));
 
-        // Mark job as pending finished
+        // Mark job as completed
         $this->jobs->persist($job->markCompleted());
 
         return $config->getJobId();

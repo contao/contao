@@ -50,7 +50,7 @@ class JobTest extends TestCase
         $this->assertSame(Status::pending, $job->getStatus());
     }
 
-    public function testMarkFinishedChangesStatus(): void
+    public function testMarkCompletedChangesStatus(): void
     {
         $job = $this->getJob()->markCompleted();
         $this->assertSame(Status::completed, $job->getStatus());
