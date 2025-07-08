@@ -13,7 +13,7 @@
         {% block toggle %}
             {% set button_attributes = attrs()
                 .addClass('nav-burger')
-                .set('title', 'MSC.ariaMenuToggle'|trans)
+                .setIfExists('aria-label', ariaLabel|default)
                 .set('aria-haspopup', 'menu')
                 .set('aria-expanded', 'false')
                 .mergeWith(button_attributes|default)
