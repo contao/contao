@@ -78,12 +78,12 @@ export default class OperationsMenuController extends Controller {
         const offset = 2; // border-width that is excluded from getBoundingClientRect
 
         const submenuRect = this.submenuTarget.getBoundingClientRect();
-        const buttonRect = this.controllerTarget.getBoundingClientRect();
+        const parentRect = this.controllerTarget.offsetParent.getBoundingClientRect();
 
         if (event === undefined) {
             this.submenuTarget.style.top = '100%';
             this.submenuTarget.style.right = 'auto';
-            this.submenuTarget.style.left = `-${submenuRect.width - buttonRect.width - offset}px`;
+            this.submenuTarget.style.left = `-${submenuRect.width - parentRect.width - offset}px`;
 
             return;
         }
@@ -91,10 +91,10 @@ export default class OperationsMenuController extends Controller {
         const { innerWidth, innerHeight } = window;
         const rowRect = this.element.getBoundingClientRect();
 
-        const x = innerWidth - event.clientX - (innerWidth - buttonRect.left);
-        const y = event.clientY - rowRect.top - (buttonRect.top - rowRect.top);
+        const x = innerWidth - event.clientX - (innerWidth - parentRect.left);
+        const y = event.clientY - rowRect.top - (parentRect.top - rowRect.top);
 
-        const overflowRight = innerWidth < event.clientX + submenuRect.width + buttonRect.width;
+        const overflowRight = innerWidth < event.clientX + submenuRect.width + parentRect.width;
         const overflowBottom = innerHeight < event.clientY + submenuRect.height;
 
         this.submenuTarget.style.left = overflowRight ? `-${x + submenuRect.width - offset}px` : `-${x}px`;
