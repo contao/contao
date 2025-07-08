@@ -12,7 +12,6 @@ export class Navigation {
                 left: 'is-left'
             },
             ariaLabels: {
-                'menu': 'Menu',
                 'expand': 'Expand menu: ',
                 'collapse': 'Collapse menu: ',
             }
@@ -139,10 +138,6 @@ export class Navigation {
     _init() {
         this._createSubMenuButton();
         this._initMobileToggleEvents()
-
-        if (!this.navigation.ariaLabel) {
-            this.navigation.ariaLabel = this.options.ariaLabels.menu;
-        }
 
         this.navigation.querySelectorAll('li').forEach(item => {
 
