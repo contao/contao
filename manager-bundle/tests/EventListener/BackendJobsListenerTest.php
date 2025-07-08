@@ -61,6 +61,7 @@ class BackendJobsListenerTest extends ContaoTestCase
             ->method('getUser')
             ->willReturn($this->createMock(BackendUser::class))
         ;
+
         $twig = $this->createMock(Environment::class);
         $twig
             ->expects($this->once())
@@ -74,6 +75,7 @@ class BackendJobsListenerTest extends ContaoTestCase
             )
             ->willReturn('<twig html>')
         ;
+
         $jobs = $this->createMock(Jobs::class);
 
         $listener = new BackendJobsListener($security, $twig, $router, $requestStack, $jobs);

@@ -14,7 +14,7 @@ final class Job
 {
     public const ERROR_REQUIRES_CLI = 'error_requires_cli';
 
-    private Job|null $parent = null;
+    private self|null $parent = null;
 
     /**
      * Errors can be any string, but it's recommended to use translation identifiers
@@ -39,8 +39,6 @@ final class Job
 
     /**
      * Can be anything but must be serializable data.
-     *
-     * @var array<mixed>
      */
     private array $metadata = [];
 
@@ -55,11 +53,11 @@ final class Job
     private array $children = [];
 
     public function __construct(
-        private string $uuid,
-        private \DateTimeInterface $createdAt,
+        private readonly string $uuid,
+        private readonly \DateTimeInterface $createdAt,
         private Status $status,
-        private string $type,
-        private Owner $owner,
+        private readonly string $type,
+        private readonly Owner $owner,
     ) {
         if (!UuidV4::isValid($uuid)) {
             throw new \InvalidArgumentException(\sprintf('"%s" is not a valid UUID v4 format', $uuid));
@@ -190,16 +188,13 @@ final class Job
         return $this->progress;
     }
 
-    /**
-     * @return array<mixed>
-     */
     public function getMetadata(): array
     {
         return $this->metadata;
     }
 
     /**
-     * @param array<mixed> $metadata can be anything but must be serializable data
+     * @param array $metadata can be anything but must be serializable data
      */
     public function withMetadata(array $metadata): self
     {

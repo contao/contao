@@ -24,7 +24,7 @@
         <source>Finished</source>
       </trans-unit>
       <trans-unit id="jobs.typeLabel.contao_backend_search_reindex">
-        <source>Build backend search index</source>
+        <source>Rebuild the back end search index</source>
       </trans-unit>
       <trans-unit id="jobs.all_jobs_processed">
         <source>All jobs have been processed.</source>

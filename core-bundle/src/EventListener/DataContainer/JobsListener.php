@@ -81,7 +81,7 @@ class JobsListener
     }
 
     /**
-     * @return int 0 if no contao backend user was given
+     * @return int 0 if no Contao back end user was given
      */
     private function getContaoBackendUserId(): int
     {

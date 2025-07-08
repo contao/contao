@@ -106,6 +106,7 @@ class BackendSearchTest extends TestCase
             Status::pending,
             Status::finished,
         ];
+
         $jobs
             ->expects($this->exactly(2))
             ->method('persist')

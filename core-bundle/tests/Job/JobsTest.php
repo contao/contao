@@ -24,13 +24,6 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class JobsTest extends ContaoTestCase
 {
-    public static function createJobProvider(): \Generator
-    {
-        yield 'No logged in user' => [false];
-
-        yield 'Logged in back end user' => [true];
-    }
-
     #[DataProvider('createJobProvider')]
     public function testCreateJob(bool $userLoggedIn): void
     {
@@ -38,6 +31,13 @@ class JobsTest extends ContaoTestCase
         $job = $jobs->createJob('job-type');
 
         $this->assertSame($userLoggedIn ? 42 : Owner::SYSTEM, $job->getOwner()->getId());
+    }
+
+    public static function createJobProvider(): \Generator
+    {
+        yield 'No logged in user' => [false];
+
+        yield 'Logged in back end user' => [true];
     }
 
     public function testCreateSystemJob(): void
@@ -51,10 +51,9 @@ class JobsTest extends ContaoTestCase
     public function testCreateUserJobThrowsExceptionIfNoUser(): void
     {
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Cannot create a user job without having a user id.');
+        $this->expectExceptionMessage('Cannot create a user job without having a user ID.');
 
         $jobs = $this->getJobs($this->mockSecurity());
-
         $jobs->createUserJob('job-type');
     }
 
@@ -62,7 +61,6 @@ class JobsTest extends ContaoTestCase
     {
         $jobs = $this->getJobs();
         $job = $jobs->createUserJob('strange > type', 42);
-
         $job = $jobs->getByUuid($job->getUuid());
 
         $this->assertSame('strange > type', $job->getType());

@@ -31,6 +31,7 @@ class JobsListenerTest extends ContaoTestCase
             $this->getRequestStack(),
             $this->mockContaoFramework(),
         );
+
         $listener->onLoadCallback();
 
         $this->assertNull($GLOBALS['TL_DCA']['tl_job'] ?? null);
@@ -44,6 +45,7 @@ class JobsListenerTest extends ContaoTestCase
             $this->getRequestStack(Request::create('/')),
             $this->mockContaoFramework(),
         );
+
         $listener->onLoadCallback();
 
         $this->assertNull($GLOBALS['TL_DCA']['tl_job'] ?? null);
@@ -59,6 +61,7 @@ class JobsListenerTest extends ContaoTestCase
             $this->getRequestStack(Request::create('/contao?do=jobs')),
             $framework,
         );
+
         $listener->onLoadCallback();
 
         $this->assertSame(
@@ -85,6 +88,7 @@ class JobsListenerTest extends ContaoTestCase
             $this->getRequestStack(Request::create('/contao?do=jobs&ptable=tl_job')),
             $framework,
         );
+
         $listener->onLoadCallback();
 
         $this->assertSame(
@@ -123,6 +127,7 @@ class JobsListenerTest extends ContaoTestCase
     private function mockSecurity(int|null $userId = null): Security
     {
         $userMock = $this->mockClassWithProperties(BackendUser::class, ['id' => $userId]);
+
         $security = $this->createMock(Security::class);
         $security
             ->expects($this->atLeastOnce())

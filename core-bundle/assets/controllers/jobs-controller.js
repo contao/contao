@@ -34,7 +34,7 @@ export default class extends Controller {
         // Clear timer in case the target was added manually
         clearTimeout(this._timer);
 
-        if (el.dataset.jobs === '0') {
+        if ('0' === el.dataset.jobs) {
             this.countTarget.innerText = '';
 
             if (this._runningJobs) {

@@ -45,7 +45,7 @@ class Jobs
         $userId ??= $this->getContaoBackendUserId();
 
         if (0 === $userId) {
-            throw new \LogicException('Cannot create a user job without having a user id.');
+            throw new \LogicException('Cannot create a user job without having a user ID.');
         }
 
         return $this->doCreateJob($type, new Owner($userId));
@@ -110,6 +110,7 @@ class Jobs
         $row = [];
         $row['pid'] = 0; // No encoding needed, integer
         $row['status'] = $job->getStatus()->value; // No encoding needed, enum
+
         $row['jobData'] = json_encode(
             [
                 'metadata' => $job->getMetadata(),

@@ -23,10 +23,12 @@ class JobTest extends TestCase
     public function testBasicGetters(): void
     {
         $job = $this->getJob();
+
         $this->assertSame('9ad2f29c-671b-4a1a-9a15-dabda4fd6bad', $job->getUuid());
         $this->assertSame('2025-01-01 00:00:00', $job->getCreatedAt()->format('Y-m-d H:i:s'));
         $this->assertSame(Status::new, $job->getStatus());
         $this->assertSame(Owner::asSystem()->getId(), $job->getOwner()->getId());
+
         $this->assertSame(
             [
                 'uuid' => '9ad2f29c-671b-4a1a-9a15-dabda4fd6bad',
@@ -58,7 +60,9 @@ class JobTest extends TestCase
     {
         $job = $this->getJob();
         $this->assertFalse($job->hasWarnings());
+
         $warnings = ['warning-1', 'warning-2'];
+
         $job = $job->withWarnings($warnings);
         $this->assertSame($warnings, $job->getWarnings());
         $this->assertTrue($job->hasWarnings());
@@ -73,6 +77,7 @@ class JobTest extends TestCase
     public function testWithMetadataStoresData(): void
     {
         $metadata = ['key' => 'value'];
+
         $job = $this->getJob()->withMetadata($metadata);
         $this->assertSame($metadata, $job->getMetadata());
     }

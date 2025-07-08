@@ -34,7 +34,9 @@ class ReindexMessageHandler
     {
         // Cannot run in a web request.
         if (ScopeAwareMessageInterface::SCOPE_CLI !== $message->getScope()) {
-            if ($message->getReindexConfig()->getJobId() && ($job = $this->jobs->getByUuid($message->getReindexConfig()->getJobId()))) {
+            $jobId = $message->getReindexConfig()->getJobId();
+
+            if ($jobId && ($job = $this->jobs->getByUuid($jobId))) {
                 $this->jobs->persist($job->markFailedBecauseRequiresCLI());
             }
 

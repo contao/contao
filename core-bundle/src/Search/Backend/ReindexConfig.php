@@ -76,9 +76,11 @@ final class ReindexConfig
     public static function fromArray(array $array): self
     {
         $config = new self();
+
         if (isset($array['updatedSince'])) {
             $config = $config->limitToDocumentsNewerThan(new \DateTimeImmutable($array['updatedSince']));
         }
+
         if (isset($array['jobId'])) {
             $config = $config->withJobId($array['jobId']);
         }
