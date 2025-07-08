@@ -1,8 +1,8 @@
 export class Navigation {
     constructor(options) {
         this.options = this._merge({
-            selector: 'header .nav-main',
-            toggle: 'header .nav-toggle',
+            selector: '.navigation-main',
+            toggle: '.nav-burger',
             minWidth: 1024,
             classes: {
                 submenuButton: 'btn-toggle-submenu',
