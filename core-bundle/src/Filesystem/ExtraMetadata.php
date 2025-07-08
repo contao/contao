@@ -27,7 +27,7 @@ class ExtraMetadata implements \ArrayAccess
         $localizedMetadata = $extraMetadata['metadata'] ?? null;
 
         if ($localizedMetadata instanceof MetadataBag) {
-            trigger_deprecation('contao/core-bundle', '5.5', 'Using the key "metadata" to set localized metadata has been deprecated and will no longer work in Contao 6. Use the key "localized" instead.');
+            trigger_deprecation('contao/core-bundle', '5.5', 'Using the key "metadata" to set localized metadata is deprecated and will no longer work in Contao 6. Use the key "localized" instead.');
 
             $this->extraMetadata['localized'] = $localizedMetadata;
             unset($this->extraMetadata['metadata']);
@@ -121,7 +121,7 @@ class ExtraMetadata implements \ArrayAccess
     private function handleDeprecatedMetadataKey(string &$key): void
     {
         if ('metadata' === $key) {
-            trigger_deprecation('contao/core-bundle', '5.5', 'Using the key "metadata" to get localized metadata has been deprecated and will no longer work in Contao 6. Use the key "localized" instead.');
+            trigger_deprecation('contao/core-bundle', '5.5', 'Using the key "metadata" to get localized metadata is deprecated and will no longer work in Contao 6. Use the key "localized" instead.');
 
             $key = 'localized';
         }

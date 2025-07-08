@@ -157,6 +157,14 @@ services:
             - '@security.helper'
             - '@database_connection'
 
+    contao.listener.data_container.jobs:
+        class: Contao\CoreBundle\EventListener\DataContainer\JobsListener
+        arguments:
+            - '@security.helper'
+            - '@database_connection'
+            - '@request_stack'
+            - '@contao.framework'
+
     contao.listener.data_container.layout_options:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
         arguments:
@@ -422,6 +430,15 @@ services:
             - '@request_stack'
             - '@translator'
             - '@contao.framework'
+
+    contao.listener.menu.backend_jobs:
+        class: Contao\CoreBundle\EventListener\Menu\BackendJobsListener
+        arguments:
+            - '@security.helper'
+            - '@twig'
+            - '@router'
+            - '@request_stack'
+            - '@contao.job.jobs'
 
     contao.listener.menu.backend_login:
         class: Contao\CoreBundle\EventListener\Menu\BackendLoginListener

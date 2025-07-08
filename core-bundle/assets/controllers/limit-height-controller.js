@@ -136,6 +136,10 @@ export default class extends Controller {
         this.operationTarget.setAttribute('aria-controls', this.nodeTargets.map((el) => el.id).join(' '));
         this.operationTarget.setAttribute('aria-expanded', expanded ? 'true' : 'false');
 
+        if (this.operationTarget.closest('#tl_buttons')) {
+            this.operationTarget.parentNode.style.display = hasTogglers ? '' : 'none';
+        }
+
         if (expanded ^ (event ? event.altKey : false)) {
             this.operationTarget.innerText = this.collapseAllValue;
             this.operationTarget.title = this.collapseAllTitleValue;

@@ -40,7 +40,7 @@ final class Hook implements ServiceTagInterface
 
     public function getName(): string
     {
-        trigger_deprecation('contao/core-bundle', '5.4', 'Using the @Hook annotation has been deprecated and will no longer work in Contao 6. Use the #[AsHook] attribute instead.');
+        trigger_deprecation('contao/core-bundle', '5.4', 'Using the @Hook annotation is deprecated and will no longer work in Contao 6. Use the #[AsHook] attribute instead.');
 
         return 'contao.hook';
     }

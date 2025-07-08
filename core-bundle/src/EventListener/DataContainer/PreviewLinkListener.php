@@ -191,10 +191,11 @@ class PreviewLinkListener
         $title ??= $this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link');
 
         return \sprintf(
-            '<a href="%s" target="_blank" title="%s" data-controller="contao--clipboard" data-contao--clipboard-content-value="%s" data-action="contao--clipboard#write:prevent">%s</a> ',
+            '<a href="%s" target="_blank" title="%s" data-controller="contao--clipboard" data-contao--clipboard-content-value="%s" data-contao--clipboard-message-value="%s" data-action="contao--clipboard#write:prevent">%s</a> ',
             StringUtil::specialcharsUrl($url),
             StringUtil::specialchars($title),
             StringUtil::specialcharsUrl($url),
+            $this->translator->trans('MSC.clipboardCopy', [], 'contao_default'),
             $label ?? $url,
         );
     }

@@ -85,9 +85,9 @@ export default class OperationsMenuController extends Controller {
             y = event.clientY;
         } else {
             const r = this.controllerTarget.getBoundingClientRect();
-            x = r.x;
-            y = r.y;
-            offset = 20;
+            x = r.right;
+            y = r.bottom;
+            offset = 2;
         }
 
         this.submenuTarget.style.position = 'fixed';
