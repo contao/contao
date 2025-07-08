@@ -52,8 +52,8 @@ class JobTest extends TestCase
 
     public function testMarkFinishedChangesStatus(): void
     {
-        $job = $this->getJob()->markFinished();
-        $this->assertSame(Status::finished, $job->getStatus());
+        $job = $this->getJob()->markCompleted();
+        $this->assertSame(Status::completed, $job->getStatus());
     }
 
     public function testCanAddWarnings(): void

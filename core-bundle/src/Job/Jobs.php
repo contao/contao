@@ -237,7 +237,7 @@ class Jobs
         $children = $this->connection->fetchAllAssociative('SELECT * FROM tl_job WHERE pid=?', [$id], [Types::INTEGER]);
 
         $onePending = false;
-        $allFinished = true;
+        $allCompleted = true;
 
         foreach ($children as $childRow) {
             $childJob = $this->databaseRowToDto($childRow);
@@ -247,8 +247,8 @@ class Jobs
                 break;
             }
 
-            if (Status::finished !== $childJob->getStatus()) {
-                $allFinished = false;
+            if (Status::completed !== $childJob->getStatus()) {
+                $allCompleted = false;
             }
         }
 
@@ -258,8 +258,8 @@ class Jobs
             return;
         }
 
-        if ($allFinished) {
-            $this->persist($job->markFinished());
+        if ($allCompleted) {
+            $this->persist($job->markCompleted());
         }
     }
 

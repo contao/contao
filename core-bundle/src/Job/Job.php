@@ -101,10 +101,10 @@ final class Job
         return $clone;
     }
 
-    public function markFinished(): self
+    public function markCompleted(): self
     {
         $clone = clone $this;
-        $clone->status = Status::finished;
+        $clone->status = Status::completed;
 
         return $clone;
     }
@@ -307,7 +307,7 @@ final class Job
         $clone = clone $this;
 
         return $clone
-            ->markFinished()
+            ->markCompleted()
             ->withErrors($errors)
         ;
     }

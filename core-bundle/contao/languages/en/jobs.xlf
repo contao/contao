@@ -20,8 +20,8 @@
       <trans-unit id="jobs.statusLabel.pending">
         <source>Pending</source>
       </trans-unit>
-      <trans-unit id="jobs.statusLabel.finished">
-        <source>Finished</source>
+      <trans-unit id="jobs.statusLabel.completed">
+        <source>Completed</source>
       </trans-unit>
       <trans-unit id="jobs.typeLabel.contao_backend_search_reindex">
         <source>Rebuild the back end search index</source>

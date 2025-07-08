@@ -123,7 +123,7 @@ class JobsTest extends ContaoTestCase
         $this->assertSame(Status::new, $jobs->getByUuid($childJob1->getUuid())->getStatus());
         $this->assertSame(Status::pending, $jobs->getByUuid($childJob2->getUuid())->getStatus());
 
-        $childJob2 = $childJob2->markFinished();
+        $childJob2 = $childJob2->markCompleted();
         $jobs->persist($childJob2);
 
         $parentJob = $jobs->getByUuid($parentJob->getUuid());
@@ -132,7 +132,7 @@ class JobsTest extends ContaoTestCase
 
         $this->assertSame(Status::pending, $jobs->getByUuid($parentJob->getUuid())->getStatus());
         $this->assertSame(Status::new, $jobs->getByUuid($childJob1->getUuid())->getStatus());
-        $this->assertSame(Status::finished, $jobs->getByUuid($childJob2->getUuid())->getStatus());
+        $this->assertSame(Status::completed, $jobs->getByUuid($childJob2->getUuid())->getStatus());
 
         $childJob1 = $childJob1->markPending();
         $jobs->persist($childJob1);
@@ -143,18 +143,18 @@ class JobsTest extends ContaoTestCase
 
         $this->assertSame(Status::pending, $jobs->getByUuid($parentJob->getUuid())->getStatus());
         $this->assertSame(Status::pending, $jobs->getByUuid($childJob1->getUuid())->getStatus());
-        $this->assertSame(Status::finished, $jobs->getByUuid($childJob2->getUuid())->getStatus());
+        $this->assertSame(Status::completed, $jobs->getByUuid($childJob2->getUuid())->getStatus());
 
-        $childJob1 = $childJob1->markFinished();
+        $childJob1 = $childJob1->markCompleted();
         $jobs->persist($childJob1);
 
         $parentJob = $jobs->getByUuid($parentJob->getUuid());
         $childJob1 = $jobs->getByUuid($childJob1->getUuid());
         $childJob2 = $jobs->getByUuid($childJob2->getUuid());
 
-        $this->assertSame(Status::finished, $jobs->getByUuid($parentJob->getUuid())->getStatus());
-        $this->assertSame(Status::finished, $jobs->getByUuid($childJob1->getUuid())->getStatus());
-        $this->assertSame(Status::finished, $jobs->getByUuid($childJob2->getUuid())->getStatus());
+        $this->assertSame(Status::completed, $jobs->getByUuid($parentJob->getUuid())->getStatus());
+        $this->assertSame(Status::completed, $jobs->getByUuid($childJob1->getUuid())->getStatus());
+        $this->assertSame(Status::completed, $jobs->getByUuid($childJob2->getUuid())->getStatus());
     }
 
     private function mockSecurity(int|null $userId = null): Security

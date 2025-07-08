@@ -104,7 +104,7 @@ class BackendSearchTest extends TestCase
 
         $expected = [
             Status::pending,
-            Status::finished,
+            Status::completed,
         ];
 
         $jobs

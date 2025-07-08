@@ -19,7 +19,7 @@ enum Status: string implements TranslatableLabelInterface
 {
     case new = 'new';
     case pending = 'pending';
-    case finished = 'finished';
+    case completed = 'completed';
 
     public function label(): TranslatableMessage
     {
@@ -31,7 +31,7 @@ enum Status: string implements TranslatableLabelInterface
         return match ($this) {
             self::new => 'new',
             self::pending => 'pending',
-            self::finished => 'finished',
+            self::completed => 'completed',
         };
     }
 }
