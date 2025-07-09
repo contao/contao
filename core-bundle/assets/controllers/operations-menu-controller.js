@@ -99,7 +99,6 @@ export default class OperationsMenuController extends Controller {
 
         this.submenuTarget.style.left = overflowRight ? `-${x + submenuRect.width - offset}px` : `-${x}px`;
         this.submenuTarget.style.top = overflowBottom ? `${y - submenuRect.height}px` : `${y}px`;
-
         this.submenuTarget.style.right = 'auto';
     }
 
