@@ -68,7 +68,7 @@ class CommentsAccessVoterTest extends TestCase
         $accessDecisionManager
             ->expects($this->once())
             ->method('decide')
-            ->with($token, [ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT], $subject)
+            ->with($token, [ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT], $subject->getCurrent())
             ->willReturn($accessGranted)
         ;
 
