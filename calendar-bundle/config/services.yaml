@@ -8,7 +8,7 @@ services:
                 - [setFramework, ['@contao.framework']]
 
     contao_calendar.calendar_events_generator:
-        class: Contao\CalendarBundle\CalendarEventsGenerator
+        class: Contao\CalendarBundle\Generator\CalendarEventsGenerator
         public: true
         arguments:
             - '@contao.framework'
@@ -140,4 +140,4 @@ services:
             - '@security.access.decision_manager'
 
     # Autowiring aliases
-    Contao\CalendarBundle\CalendarEventsGenerator: '@contao_calendar.calendar_events_generator'
+    Contao\CalendarBundle\Generator\CalendarEventsGenerator: '@contao_calendar.calendar_events_generator'

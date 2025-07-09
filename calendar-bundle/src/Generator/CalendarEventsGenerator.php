@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Contao\CalendarBundle;
+namespace Contao\CalendarBundle\Generator;
 
 use Contao\Calendar;
 use Contao\CalendarEventsModel;

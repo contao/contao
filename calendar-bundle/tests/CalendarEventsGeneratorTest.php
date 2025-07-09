@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CalendarBundle\Tests;
 
-use Contao\CalendarBundle\CalendarEventsGenerator;
+use Contao\CalendarBundle\Generator\CalendarEventsGenerator;
 use Contao\CalendarEventsModel;
 use Contao\CalendarModel;
 use Contao\ContentModel;

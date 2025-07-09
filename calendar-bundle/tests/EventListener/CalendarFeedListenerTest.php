@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CalendarBundle\Tests\EventListener;
 
-use Contao\CalendarBundle\CalendarEventsGenerator;
+use Contao\CalendarBundle\Generator\CalendarEventsGenerator;
 use Contao\CalendarBundle\Event\FetchEventsForFeedEvent;
 use Contao\CalendarBundle\Event\TransformEventForFeedEvent;
 use Contao\CalendarBundle\EventListener\CalendarFeedListener;
