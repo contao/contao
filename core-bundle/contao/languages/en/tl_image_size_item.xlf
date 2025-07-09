@@ -35,19 +35,19 @@
       <trans-unit id="tl_image_size_item.new.1">
         <source>Create a new media query</source>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.show">
+      <trans-unit id="tl_image_size_item.show.1">
         <source>Show the details of media query ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.edit">
+      <trans-unit id="tl_image_size_item.edit.1">
         <source>Edit media query ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.cut">
+      <trans-unit id="tl_image_size_item.cut.1">
         <source>Move media query ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.copy">
+      <trans-unit id="tl_image_size_item.copy.1">
         <source>Duplicate media query ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.delete">
+      <trans-unit id="tl_image_size_item.delete.1">
         <source>Delete media query ID %s</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.toggle.0">
