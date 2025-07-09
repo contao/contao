@@ -120,7 +120,6 @@ class DefaultOperationsListener
                     'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
                     'primary' => true,
                     'showInHeader' => true,
-                    'showIfDisabled' => true,
                 ],
             ];
         }
@@ -137,7 +136,6 @@ class DefaultOperationsListener
                         'attributes' => 'data-contao--deeplink-target="secondary"',
                         'button_callback' => $this->accessChildrenCallback($ctable, $table),
                         'primary' => true,
-                        'showIfDisabled' => true,
                     ],
                 ];
             }
@@ -189,7 +187,6 @@ class DefaultOperationsListener
                 'icon' => 'delete.svg',
                 'attributes' => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false"',
                 'button_callback' => $this->isGrantedCallback(DeleteAction::class, $table),
-                'showIfDisabled' => true,
             ];
         }
 

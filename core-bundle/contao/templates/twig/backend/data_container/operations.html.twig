@@ -62,9 +62,9 @@
                 </a>
             {% endif %}
         </li>
-    {% elseif operation.icon|default and (not menu or operation.showIfDisabled|default) %}
+    {% elseif operation.icon|default and (not menu or operation.title|default) %}
         <li>
-            <span class="disabled"{% if operation.title|default %} title="{{ operation.title }}"{% endif %}>
+            <span class="disabled" title="{{ operation.title }}">
                 {{ backend_icon(operation.icon, operation.title|default, operation.iconAttributes|default(null)) }}
                 {% if menu or showLabels %}{{ operation.label|default }}{% endif %}
             </span>
