@@ -4509,7 +4509,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 				$return .= '
 <div class="tl_content' . ($blnWrapperStart ? ' wrapper_start' : '') . ($blnWrapperSeparator ? ' wrapper_separator' : '') . ($blnWrapperStop ? ' wrapper_stop' : '') . ($blnIndent ? ' indent indent_' . $intWrapLevel : '') . ($blnIndentFirst ? ' indent_first' : '') . ($blnIndentLast ? ' indent_last' : '') . ((string) $row[$i]['tstamp'] === '0' ? ' draft' : '') . (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class']) ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '') . ' toggle_select" data-turbo="false">
-<div class="inside hover-div"' . ($limitHeight && !$blnWrapperStart && !$blnWrapperStop && !$blnWrapperSeparator ? ' data-contao--limit-height-target="node"' : '') . ' data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
+<div class="inside hover-div"' . ' data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
 <div class="tl_content_right" data-turbo="true">';
 
 				// Opening wrappers
