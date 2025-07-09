@@ -141,8 +141,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         $icon = match ($type) {
             'pastetop' => 'pasteafter',
             'pasteroot' => 'pasteinto',
-            'pastenewtop' => 'new',
-            'pastenewafter' => 'new',
+            'pastenewtop', 'pastenewafter' => 'new',
             default => $type,
         };
 

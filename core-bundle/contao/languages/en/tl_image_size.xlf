@@ -149,6 +149,9 @@
       <trans-unit id="tl_image_size.edit.1">
         <source>Edit image size ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_image_size.children.0">
+        <source>Media queries</source>
+      </trans-unit>
       <trans-unit id="tl_image_size.children.1">
         <source>Edit the media queries of image size ID %s</source>
       </trans-unit>

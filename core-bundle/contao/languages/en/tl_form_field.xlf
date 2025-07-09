@@ -380,6 +380,12 @@
       <trans-unit id="tl_form_field.toggle.2">
         <source>Unhide form field ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_form_field.toggle.3">
+        <source>Hide</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle.4">
+        <source>Unhide</source>
+      </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.1">
         <source>Paste after form field ID %s</source>
       </trans-unit>

@@ -116,6 +116,12 @@
       <trans-unit id="tl_faq.toggle.2">
         <source>Publish question ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_faq.toggle.3">
+        <source>Unpublish</source>
+      </trans-unit>
+      <trans-unit id="tl_faq.toggle.4">
+        <source>Publish</source>
+      </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>
       </trans-unit>
