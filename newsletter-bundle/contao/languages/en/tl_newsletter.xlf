@@ -162,7 +162,7 @@
         <source>Do you really want to send the newsletter?</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.send.0">
-        <source>Send newsletter</source>
+        <source>Send</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.send.1">
         <source>Send newsletter ID %s</source>
@@ -173,19 +173,19 @@
       <trans-unit id="tl_newsletter.new.1">
         <source>Create a new newsletter</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter.show">
+      <trans-unit id="tl_newsletter.show.1">
         <source>Show the details of newsletter ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter.edit">
+      <trans-unit id="tl_newsletter.edit.1">
         <source>Edit newsletter ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter.copy">
+      <trans-unit id="tl_newsletter.copy.1">
         <source>Duplicate newsletter ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter.cut">
+      <trans-unit id="tl_newsletter.cut.1">
         <source>Move newsletter ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter.delete">
+      <trans-unit id="tl_newsletter.delete.1">
         <source>Delete newsletter ID %s</source>
       </trans-unit>
       <trans-unit id="tl_newsletter.pasteafter.0">

@@ -293,16 +293,16 @@
       <trans-unit id="tl_user.new.1">
         <source>Create a new user</source>
       </trans-unit>
-      <trans-unit id="tl_user.show">
+      <trans-unit id="tl_user.show.1">
         <source>Show the details of user ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_user.edit">
+      <trans-unit id="tl_user.edit.1">
         <source>Edit user ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_user.copy">
+      <trans-unit id="tl_user.copy.1">
         <source>Duplicate user ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_user.delete">
+      <trans-unit id="tl_user.delete.1">
         <source>Delete user ID %s</source>
       </trans-unit>
       <trans-unit id="tl_user.toggle.0">
@@ -314,7 +314,16 @@
       <trans-unit id="tl_user.toggle.2">
         <source>Activate user ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_user.su">
+      <trans-unit id="tl_user.toggle.3">
+        <source>Deactivate</source>
+      </trans-unit>
+      <trans-unit id="tl_user.toggle.4">
+        <source>Activate</source>
+      </trans-unit>
+      <trans-unit id="tl_user.su.0">
+        <source>Switch to user</source>
+      </trans-unit>
+      <trans-unit id="tl_user.su.1">
         <source>Switch to user ID %s</source>
       </trans-unit>
     </body>
