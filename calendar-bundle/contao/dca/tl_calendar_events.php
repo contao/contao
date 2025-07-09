@@ -19,7 +19,6 @@ use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
-use Contao\Input;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\StringUtil;
@@ -38,22 +37,9 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 		'switchToEdit'                => true,
 		'enableVersioning'            => true,
 		'markAsCopy'                  => 'title',
-		'onload_callback' => array
-		(
-			array('tl_calendar_events', 'generateFeed')
-		),
-		'oncut_callback' => array
-		(
-			array('tl_calendar_events', 'scheduleUpdate')
-		),
-		'ondelete_callback' => array
-		(
-			array('tl_calendar_events', 'scheduleUpdate')
-		),
 		'onsubmit_callback' => array
 		(
 			array('tl_calendar_events', 'adjustTime'),
-			array('tl_calendar_events', 'scheduleUpdate')
 		),
 		'oninvalidate_cache_tags_callback' => array
 		(
@@ -492,8 +478,6 @@ $GLOBALS['TL_DCA']['tl_calendar_events'] = array
 /**
  * Provide miscellaneous methods that are used by the data configuration array.
  *
- * @property Calendar $Calendar
- *
  * @internal
  */
 class tl_calendar_events extends Backend
@@ -784,68 +768,6 @@ class tl_calendar_events extends Backend
 		}
 
 		Database::getInstance()->prepare("UPDATE tl_calendar_events %s WHERE id=?")->set($arrSet)->execute($dc->id);
-	}
-
-	/**
-	 * Check for modified calendar feeds and update the XML files if necessary
-	 */
-	public function generateFeed()
-	{
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-		$session = $objSession->get('calendar_feed_updater');
-
-		if (empty($session) || !is_array($session))
-		{
-			return;
-		}
-
-		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
-
-		if ($request)
-		{
-			$origScope = $request->attributes->get('_scope');
-			$request->attributes->set('_scope', 'frontend');
-		}
-
-		$calendar = new Calendar();
-
-		foreach ($session as $id)
-		{
-			$calendar->generateFeedsByCalendar($id);
-		}
-
-		if ($request)
-		{
-			$request->attributes->set('_scope', $origScope);
-		}
-
-		$objSession->set('calendar_feed_updater', null);
-	}
-
-	/**
-	 * Schedule a calendar feed update
-	 *
-	 * This method is triggered when a single event or multiple events are
-	 * modified (edit/editAll), moved (cut/cutAll) or deleted (delete/deleteAll).
-	 * Since duplicated events are unpublished by default, it is not necessary
-	 * to schedule updates on copyAll as well.
-	 *
-	 * @param DataContainer $dc
-	 */
-	public function scheduleUpdate(DataContainer $dc)
-	{
-		// Return if there is no ID
-		if (!$dc->activeRecord?->pid || Input::get('act') == 'copy')
-		{
-			return;
-		}
-
-		$objSession = System::getContainer()->get('request_stack')->getSession();
-
-		// Store the ID in the session
-		$session = $objSession->get('calendar_feed_updater');
-		$session[] = $dc->activeRecord->pid;
-		$objSession->set('calendar_feed_updater', array_unique($session));
 	}
 
 	/**

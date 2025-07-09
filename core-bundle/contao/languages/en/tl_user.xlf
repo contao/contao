@@ -321,7 +321,7 @@
         <source>Activate</source>
       </trans-unit>
       <trans-unit id="tl_user.su.0">
-        <source>Switch to user</source>
+        <source>Switch user</source>
       </trans-unit>
       <trans-unit id="tl_user.su.1">
         <source>Switch to user ID %s</source>

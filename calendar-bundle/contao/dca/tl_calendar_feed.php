@@ -25,6 +25,7 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 
+// Backwards compatibility
 $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 (
 	// Config
