@@ -311,6 +311,15 @@
       <trans-unit id="ERR.usedInAliasElement">
         <source>Element ID %d cannot be deleted because it is referenced in alias element ID %s.</source>
       </trans-unit>
+      <trans-unit id="ERR.noContentComposition">
+        <source>This page type does not support content composition.</source>
+      </trans-unit>
+      <trans-unit id="ERR.noArticleInLayout">
+        <source>The layout for this page does not contain any articles.</source>
+      </trans-unit>
+      <trans-unit id="ERR.noUndoPermission">
+        <source>Permission denied to restore the record in table "%s".</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
       </trans-unit>

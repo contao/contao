@@ -18,14 +18,17 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\StringUtil;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
  */
 class UndoOperationListener
 {
-    public function __construct(private readonly Security $security)
-    {
+    public function __construct(
+        private readonly Security $security,
+        private readonly TranslatorInterface $translator,
+    ) {
     }
 
     #[AsCallback(table: 'tl_undo', target: 'list.operations.undo.button')]
@@ -45,6 +48,6 @@ class UndoOperationListener
             return;
         }
 
-        $operation->disable();
+        $operation->disable($this->translator->trans('ERR.noUndoPermission', [$table], 'contao_default'));
     }
 }
