@@ -24,7 +24,9 @@
                 </button>
                 <ul class="operations-menu" data-contao--operations-menu-target="submenu">
                     {% for operation in operations %}
-                        {{ _self.operation(operation, true, globalOperations) }}
+                        {% if operation.showInMenu|default != false %}
+                            {{ _self.operation(operation, true, globalOperations) }}
+                        {% endif %}
                     {% endfor %}
                 </ul>
             </li>

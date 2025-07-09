@@ -179,6 +179,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             return [
                 'html' => $html,
                 'primary' => $config['primary'] ?? ('all' === $name ? true : null),
+                'showInMenu' => $config['showInMenu'] ?? true,
             ];
         }
 
@@ -195,6 +196,7 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             'attributes' => $config['attributes'],
             'icon' => $config['icon'] ?? null,
             'primary' => $config['primary'] ?? ('all' === $name ? true : null),
+            'showInMenu' => $config['showInMenu'] ?? true,
         ];
     }
 

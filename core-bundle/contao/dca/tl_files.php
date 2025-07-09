@@ -148,7 +148,8 @@ $GLOBALS['TL_DCA']['tl_files'] = array
 				'icon'                => 'drag.svg',
 				'attributes'          => 'class="drag-handle" aria-hidden="true"',
 				'primary'             => true,
-				'button_callback'     => array('tl_files', 'dragFile')
+				'showInMenu'          => false,
+				'button_callback'     => array('tl_files', 'dragFile'),
 			)
 		)
 	),

@@ -183,6 +183,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             return [
                 'html' => $html,
                 'primary' => $config['primary'] ?? null,
+                'showInMenu' => $config['showInMenu'] ?? true,
             ];
         }
 
@@ -215,6 +216,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             'href' => $href,
             'method' => strtoupper($config['method'] ?? 'GET'),
             'primary' => $config['primary'] ?? null,
+            'showInMenu' => $config['showInMenu'] ?? true,
         ];
     }
 
@@ -323,6 +325,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             'icon' => $state ? $icon : $_icon,
             'iconAttributes' => $iconAttributes,
             'primary' => $config['primary'] ?? null,
+            'showInMenu' => $config['showInMenu'] ?? true,
         ];
     }
 }
