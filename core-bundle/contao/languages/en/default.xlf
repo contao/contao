@@ -305,9 +305,6 @@
       <trans-unit id="ERR.passkeyAttestationFailure">
         <source>Passkey could not be created.</source>
       </trans-unit>
-      <trans-unit id="ERR.passkeyInvalidStateError">
-        <source>Authenticator was already registered by user.</source>
-      </trans-unit>
       <trans-unit id="ERR.copyUnique">
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
       </trans-unit>
