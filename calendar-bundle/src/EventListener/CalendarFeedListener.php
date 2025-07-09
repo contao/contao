@@ -12,9 +12,9 @@ declare(strict_types=1);
 
 namespace Contao\CalendarBundle\EventListener;
 
-use Contao\CalendarBundle\Generator\CalendarEventsGenerator;
 use Contao\CalendarBundle\Event\FetchEventsForFeedEvent;
 use Contao\CalendarBundle\Event\TransformEventForFeedEvent;
+use Contao\CalendarBundle\Generator\CalendarEventsGenerator;
 use Contao\CalendarModel;
 use Contao\ContentModel;
 use Contao\Controller;
