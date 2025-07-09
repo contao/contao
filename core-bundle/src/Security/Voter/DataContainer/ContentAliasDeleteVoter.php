@@ -27,9 +27,8 @@ class ContentAliasDeleteVoter extends AbstractDataContainerVoter implements Rese
 {
     private array|null $cache = null;
 
-    public function __construct(
-        private readonly Connection $connection,
-    ) {
+    public function __construct(private readonly Connection $connection)
+    {
     }
 
     public function reset(): void
