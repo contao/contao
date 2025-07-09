@@ -30,7 +30,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
     public const CREATE_PASTE_INTO = 'paste_into';
 
     /**
-     * @var list<array{html: string, primary?: bool, showInMenu?: bool}|array{separator: true}|array{
+     * @var list<array{html: string, primary?: bool}|array{separator: true}|array{
      *     label: string,
      *     title?: string,
      *     attributes?: HtmlAttributes,
@@ -39,7 +39,6 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
      *     href?: string,
      *     method?: string,
      *     primary?: bool|null,
-     *     showInMenu?: bool,
      * }>
      */
     protected array|null $operations = null;
@@ -49,7 +48,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
     }
 
     /**
-     * @param array{html: string, primary?: bool, showInMenu?: bool}|array{separator: true}|array{
+     * @param array{html: string, primary?: bool}|array{separator: true}|array{
      *     label: string,
      *     title?: string,
      *     attributes?: HtmlAttributes,
@@ -57,8 +56,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
      *     iconAttributes?: HtmlAttributes,
      *     href?: string,
      *     method?: string,
-     *     primary?: bool|null,
-     *     showInMenu?: bool,
+     *     primary?: bool|null
      * } $operation
      */
     public function prepend(array $operation, bool $parseHtml = false): self
@@ -75,7 +73,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
     }
 
     /**
-     * @param array{html: string, primary?: bool, showInMenu?: bool}|array{separator: true}|array{
+     * @param array{html: string, primary?: bool}|array{separator: true}|array{
      *     label: string,
      *     title?: string,
      *     attributes?: HtmlAttributes,
@@ -83,8 +81,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
      *     iconAttributes?: HtmlAttributes,
      *     href?: string,
      *     method?: string,
-     *     primary?: bool|null,
-     *     showInMenu?: bool,
+     *     primary?: bool|null
      * } $operation
      */
     public function append(array $operation, bool $parseHtml = false): self
