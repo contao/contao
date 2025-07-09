@@ -2262,13 +2262,13 @@
         <source>Add passkey</source>
       </trans-unit>
       <trans-unit id="MSC.editPasskey">
-        <source>Edit passkey "%s"</source>
+        <source>Edit passkey &quot;%s&quot;</source>
       </trans-unit>
       <trans-unit id="MSC.savePasskey">
-        <source>Save passkey "%s"</source>
+        <source>Save passkey &quot;%s&quot;</source>
       </trans-unit>
       <trans-unit id="MSC.deletePasskey">
-        <source>Delete passkey "%s"</source>
+        <source>Delete passkey &quot;%s&quot;</source>
       </trans-unit>
       <trans-unit id="MSC.searchResultsPlaceholder">
         <source>Type to start searching</source>
