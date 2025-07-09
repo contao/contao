@@ -148,4 +148,9 @@ class DataContainerOperation implements \ArrayAccess
             $this['icon'] = str_replace('.svg', '--disabled.svg', $this['icon']);
         }
     }
+
+    public function hide(): void
+    {
+        $this->setHtml('');
+    }
 }

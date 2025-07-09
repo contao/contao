@@ -621,6 +621,13 @@ services:
             - '%contao.intl.enabled_locales%'
             - '%kernel.default_locale%'
 
+    contao.job.jobs:
+        class: Contao\CoreBundle\Job\Jobs
+        public: true
+        arguments:
+            - '@database_connection'
+            - '@security.helper'
+
     contao.mailer:
         class: Contao\CoreBundle\Mailer\ContaoMailer
         decorates: mailer.mailer
@@ -761,6 +768,11 @@ services:
 
     contao.repository.cron_job:
         class: Contao\CoreBundle\Repository\CronJobRepository
+        arguments:
+            - '@doctrine'
+
+    contao.repository.job:
+        class: Contao\CoreBundle\Repository\JobRepository
         arguments:
             - '@doctrine'
 
@@ -1028,6 +1040,11 @@ services:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ArticleContentVoter
         arguments:
             - '@security.access.decision_manager'
+            - '@database_connection'
+
+    contao.security.data_container.content_alias_delete_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\ContentAliasDeleteVoter
+        arguments:
             - '@database_connection'
 
     contao.security.data_container.content_composition_voter:
@@ -1345,7 +1362,6 @@ services:
             - '@request_stack'
             - '@contao.security.token_checker'
             - '@contao.csrf.token_manager'
-            - '@security.helper'
             - '@contao.framework'
 
     contao.twig.highlighter_runtime:

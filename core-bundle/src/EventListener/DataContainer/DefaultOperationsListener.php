@@ -232,7 +232,7 @@ class DefaultOperationsListener
 
             if (!$this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$ctable, $subject)) {
                 if ($ctable === $table) {
-                    $operation->setHtml('');
+                    $operation->hide();
                 } else {
                     $operation->disable();
                 }

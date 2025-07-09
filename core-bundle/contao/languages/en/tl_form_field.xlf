@@ -356,19 +356,19 @@
       <trans-unit id="tl_form_field.new.1">
         <source>Create a new form field</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.show">
+      <trans-unit id="tl_form_field.show.1">
         <source>Show the details of form field ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.edit">
+      <trans-unit id="tl_form_field.edit.1">
         <source>Edit form field ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.cut">
+      <trans-unit id="tl_form_field.cut.1">
         <source>Move form field ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.copy">
+      <trans-unit id="tl_form_field.copy.1">
         <source>Duplicate form field ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.delete">
+      <trans-unit id="tl_form_field.delete.1">
         <source>Delete form field ID %s</source>
       </trans-unit>
       <trans-unit id="tl_form_field.toggle.0">
@@ -380,16 +380,19 @@
       <trans-unit id="tl_form_field.toggle.2">
         <source>Unhide form field ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.pasteafter.0">
-        <source>Paste at the top</source>
+      <trans-unit id="tl_form_field.toggle.3">
+        <source>Hide</source>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle.4">
+        <source>Unhide</source>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.1">
         <source>Paste after form field ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.pastenew.0">
+      <trans-unit id="tl_form_field.pastenewtop.1">
         <source>Create a new form field at the top</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.pastenew.1">
+      <trans-unit id="tl_form_field.pastenewafter.1">
         <source>Create a new form field after form field ID %s</source>
       </trans-unit>
       <trans-unit id="tl_form_field.option.1">
