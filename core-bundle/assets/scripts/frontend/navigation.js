@@ -9,7 +9,8 @@ export class Navigation {
                 expand: 'nav-expanded',
                 active: 'is-active',
                 bodyOpen: 'navigation-open',
-                left: 'is-left'
+                boundsRight: 'bounds-right',
+                boundsLeft: 'bounds-left'
             },
             ariaLabels: {
                 'expand': 'Expand menu: ',
@@ -37,10 +38,8 @@ export class Navigation {
         }
 
         new ResizeObserver(() => {
-            const minWidth = window.innerWidth >= this.options.minWidth;
-
             for (const dropdown of this.dropdowns) {
-                minWidth ? this._registerDropdownEvents(dropdown) : this._unregisterDropdownEvents(dropdown);
+                this._isDesktop() ? this._registerDropdownEvents(dropdown) : this._unregisterDropdownEvents(dropdown);
             }
         }).observe(document.body);
     }
@@ -179,7 +178,12 @@ export class Navigation {
      * @private
      */
     _collapseSubmenu(dropdown) {
-        dropdown.classList.remove(this.options.classes.expand, this.options.classes.left);
+        dropdown.classList.remove(this.options.classes.expand);
+        dropdown.querySelector(':scope > ul')?.classList.remove(
+            this.options.classes.boundsLeft,
+            this.options.classes.boundsRight,
+        )
+
         this._updateAriaState(dropdown, false);
     }
 
@@ -218,6 +222,20 @@ export class Navigation {
         }
     }
 
+    _setDropdownPosition(dropdown) {
+        const submenu = dropdown.querySelector(':scope > ul');
+
+        if (null === submenu) {
+            return;
+        }
+
+        if (submenu.getBoundingClientRect().right >= window.innerWidth) {
+            submenu.classList.add(this.options.classes.boundsRight);
+        } else if (submenu.getBoundingClientRect().left < 0) {
+            submenu.classList.add(this.options.classes.boundsLeft);
+        }
+    }
+
     /**
      * Shows the dropdown
      *
@@ -228,10 +246,8 @@ export class Navigation {
 
         dropdown.classList.add(this.options.classes.expand);
 
-        const submenuLevelThree = dropdown.querySelector(':scope > .level_3');
-
-        if (submenuLevelThree && submenuLevelThree.getBoundingClientRect().right > window.innerWidth) {
-            dropdown.classList.add(this.options.classes.left);
+        if (this._isDesktop()) {
+            this._setDropdownPosition(dropdown)
         }
 
         this._updateAriaState(dropdown, true);
@@ -301,12 +317,16 @@ export class Navigation {
         }
     }
 
+    _isDesktop() {
+        return window.innerWidth >= this.options.minWidth
+    }
+
     _initMobileToggleEvents() {
         this._initFocusTrapTargets();
         this._focusTrapEvent = this._focusTrapEvent.bind(this);
 
         this.toggle?.addEventListener('click', () => {
-            if (window.innerWidth >= this.options.minWidth) {
+            if (this._isDesktop()) {
                 return;
             }
 
