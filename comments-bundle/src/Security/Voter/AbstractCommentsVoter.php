@@ -55,7 +55,7 @@ abstract class AbstractCommentsVoter implements VoterInterface, CacheableVoterIn
         }
 
         if ($this->accessDecisionManager->decide($token, ['ROLE_ADMIN'])) {
-            return self::ACCESS_ABSTAIN;
+            return self::ACCESS_GRANTED;
         }
 
         $cacheKey = $subject['source'].'.'.$subject['parent'];
@@ -64,7 +64,7 @@ abstract class AbstractCommentsVoter implements VoterInterface, CacheableVoterIn
             $this->cache[$cacheKey] = $this->hasAccess($token, $subject['source'], (int) $subject['parent']);
         }
 
-        return $this->cache[$cacheKey] ? self::ACCESS_ABSTAIN : self::ACCESS_DENIED;
+        return $this->cache[$cacheKey] ? self::ACCESS_GRANTED : self::ACCESS_DENIED;
     }
 
     abstract protected function supportsSource(string $source): bool;

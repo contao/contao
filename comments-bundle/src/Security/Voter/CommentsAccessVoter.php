@@ -51,9 +51,9 @@ class CommentsAccessVoter implements VoterInterface, CacheableVoterInterface
             }
 
             $isGranted = match (true) {
-                $subject instanceof CreateAction,
-                $subject instanceof UpdateAction,
-                $subject instanceof DeleteAction => $this->accessDecisionManager->decide($token, [ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT], $subject),
+                $subject instanceof CreateAction => $this->accessDecisionManager->decide($token, [ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT], $subject->getNew()),
+                $subject instanceof UpdateAction => $this->accessDecisionManager->decide($token, [ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT], array_merge($subject->getCurrent() ?? [], $subject->getNew() ?? [])),
+                $subject instanceof DeleteAction => $this->accessDecisionManager->decide($token, [ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT], $subject->getCurrent()),
                 default => null,
             };
 
@@ -62,7 +62,7 @@ class CommentsAccessVoter implements VoterInterface, CacheableVoterInterface
             }
         }
 
-        // TODO: in Contao 6, this should default to ACCESS_GRANTED if no voter denied
+        // TODO: in Contao 6, this should default to ACCESS_ABSTAIN if no voter denied
         return self::ACCESS_DENIED;
     }
 }
