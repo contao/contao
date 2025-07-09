@@ -30,7 +30,6 @@ class SwitchMemberOperationListener
 
     public function __invoke(DataContainerOperation $operation): void
     {
-        $row = $operation->getRecord();
         $user = $this->security->getUser();
         $blnCanSwitchUser = $user instanceof BackendUser && ($user->isAdmin || (!empty($user->amg) && \is_array($user->amg)));
 
@@ -39,6 +38,8 @@ class SwitchMemberOperationListener
 
             return;
         }
+
+        $row = $operation->getRecord();
 
         if (
             !$row['login']

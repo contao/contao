@@ -68,7 +68,7 @@ $GLOBALS['TL_DCA']['tl_member'] = array
 			(
 				'href'                => 'key=su',
 				'icon'                => 'su.svg',
-				'primary'             => true,
+				'primary'             => true
 			)
 		)
 	),
