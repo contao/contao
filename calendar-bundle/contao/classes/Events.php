@@ -92,7 +92,7 @@ abstract class Events extends Module
 	 */
 	protected function getAllEvents($arrCalendars, $intStart, $intEnd, $blnFeatured = null)
 	{
-		$calendarEventsGenerator = System::getContainer()->get('contao_calendar.calendar_events_generator');
+		$calendarEventsGenerator = System::getContainer()->get('contao_calendar.generator.calendar_events');
 
 		return $this->arrEvents = $calendarEventsGenerator->getAllEvents($arrCalendars, (new \DateTime())->setTimestamp($intStart), (new \DateTime())->setTimestamp($intEnd), $blnFeatured, (bool) $this->cal_noSpan);
 	}
@@ -108,11 +108,11 @@ abstract class Events extends Module
 	 * @param integer             $intCalendar
 	 *
 	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
-	 *             use the "addEvent" method of the "contao_calendar.calendar_events_generator" service instead.
+	 *             use the "addEvent" method of the "contao_calendar.generator.calendar_events" service instead.
 	 */
 	protected function addEvent($objEvents, $intStart, $intEnd, $intBegin, $intLimit, $intCalendar)
 	{
-		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "addEvent" method of the "contao_calendar.calendar_events_generator" service instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "addEvent" method of the "contao_calendar.generator.calendar_events" service instead.', __METHOD__);
 
 		global $objPage;
 

@@ -7,16 +7,6 @@ services:
             calls:
                 - [setFramework, ['@contao.framework']]
 
-    contao_calendar.calendar_events_generator:
-        class: Contao\CalendarBundle\Generator\CalendarEventsGenerator
-        public: true
-        arguments:
-            - '@contao.framework'
-            - '@contao.routing.page_finder'
-            - '@contao.routing.content_url_generator'
-            - '@translator'
-            - '@?fos_http_cache.http.symfony_response_tagger'
-
     contao_calendar.controller.page.calendar_feed:
         class: Contao\CalendarBundle\Controller\Page\CalendarFeedController
         arguments:
@@ -29,6 +19,16 @@ services:
         arguments:
             - '@logger'
 
+    contao_calendar.generator.calendar_events:
+        class: Contao\CalendarBundle\Generator\CalendarEventsGenerator
+        public: true
+        arguments:
+            - '@contao.framework'
+            - '@contao.routing.page_finder'
+            - '@contao.routing.content_url_generator'
+            - '@translator'
+            - '@?fos_http_cache.http.symfony_response_tagger'
+
     contao_calendar.insert_tag.event:
         class: Contao\CalendarBundle\InsertTag\EventInsertTag
         arguments:
@@ -38,7 +38,7 @@ services:
     contao_calendar.listener.calendar_feed:
         class: Contao\CalendarBundle\EventListener\CalendarFeedListener
         arguments:
-            - '@contao_calendar.calendar_events_generator'
+            - '@contao_calendar.generator.calendar_events'
             - '@contao.framework'
             - '@contao.image.factory'
             - '@contao.routing.content_url_generator'
@@ -140,4 +140,4 @@ services:
             - '@security.access.decision_manager'
 
     # Autowiring aliases
-    Contao\CalendarBundle\Generator\CalendarEventsGenerator: '@contao_calendar.calendar_events_generator'
+    Contao\CalendarBundle\Generator\CalendarEventsGenerator: '@contao_calendar.generator.calendar_events'
