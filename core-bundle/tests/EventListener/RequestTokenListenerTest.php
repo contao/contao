@@ -360,6 +360,11 @@ class RequestTokenListenerTest extends TestCase
         ];
     }
 
+    public function testSimpleCorsRequestHandlesMissingContentTypeHeader(): void
+    {
+        $this->assertFalse(RequestTokenListener::isSimpleCorsRequest(new Request()));
+    }
+
     private function validateRequestTokenForRequest(Request $request, bool $shouldValidate = true): void
     {
         $scopeMatcher = $this->createMock(ScopeMatcher::class);

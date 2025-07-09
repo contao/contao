@@ -1347,7 +1347,7 @@
         <source>Cancel</source>
       </trans-unit>
       <trans-unit id="MSC.confirmTitle">
-          <source>Are you sure?</source>
+        <source>Are you sure?</source>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete element ID %s?</source>
@@ -2180,6 +2180,9 @@
       <trans-unit id="MSC.manual">
         <source>Manual</source>
       </trans-unit>
+      <trans-unit id="MSC.jobs">
+        <source>Job overview</source>
+      </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
       </trans-unit>
@@ -2405,19 +2408,40 @@
       <trans-unit id="DCA.new.1">
         <source>Create a new element</source>
       </trans-unit>
-      <trans-unit id="DCA.show">
+      <trans-unit id="DCA.show.0">
+        <source>Details</source>
+      </trans-unit>
+      <trans-unit id="DCA.show.1">
         <source>Show the details of element ID %s</source>
       </trans-unit>
-      <trans-unit id="DCA.edit">
+      <trans-unit id="DCA.edit.0">
+        <source>Edit</source>
+      </trans-unit>
+      <trans-unit id="DCA.edit.1">
         <source>Edit element ID %s</source>
       </trans-unit>
-      <trans-unit id="DCA.cut">
+      <trans-unit id="DCA.cut.0">
+        <source>Move</source>
+      </trans-unit>
+      <trans-unit id="DCA.cut.1">
         <source>Move element ID %s</source>
       </trans-unit>
-      <trans-unit id="DCA.copy">
+      <trans-unit id="DCA.copy.0">
+        <source>Duplicate</source>
+      </trans-unit>
+      <trans-unit id="DCA.copy.1">
         <source>Duplicate element ID %s</source>
       </trans-unit>
-      <trans-unit id="DCA.delete">
+      <trans-unit id="DCA.copyChildren.0">
+        <source>Duplicate recursively</source>
+      </trans-unit>
+      <trans-unit id="DCA.copyChildren.1">
+        <source>Duplicate element ID %s with child nodes</source>
+      </trans-unit>
+      <trans-unit id="DCA.delete.0">
+        <source>Delete</source>
+      </trans-unit>
+      <trans-unit id="DCA.delete.1">
         <source>Delete element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.drag">
@@ -2429,7 +2453,10 @@
       <trans-unit id="DCA.operations">
         <source>Show operations for element ID %s</source>
       </trans-unit>
-      <trans-unit id="DCA.children">
+      <trans-unit id="DCA.children.0">
+        <source>Child elements</source>
+      </trans-unit>
+      <trans-unit id="DCA.children.1">
         <source>Edit the child elements of element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.toggle.0">
@@ -2441,22 +2468,40 @@
       <trans-unit id="DCA.toggle.2">
         <source>Publish element ID %s</source>
       </trans-unit>
-      <trans-unit id="DCA.pasteinto.0">
+      <trans-unit id="DCA.toggle.3">
+        <source>Unpublish</source>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.4">
+        <source>Publish</source>
+      </trans-unit>
+      <trans-unit id="DCA.pastetop">
         <source>Paste at the top</source>
+      </trans-unit>
+      <trans-unit id="DCA.pasteroot">
+        <source>Paste at the top</source>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.0">
+        <source>Paste into</source>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.1">
         <source>Paste into element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.pasteafter.0">
-        <source>Paste at the top</source>
+        <source>Paste after</source>
       </trans-unit>
       <trans-unit id="DCA.pasteafter.1">
         <source>Paste after element ID %s</source>
       </trans-unit>
-      <trans-unit id="DCA.pastenew.0">
-        <source>Create a new element at the top</source>
+      <trans-unit id="DCA.pastenewtop.0">
+        <source>New</source>
       </trans-unit>
-      <trans-unit id="DCA.pastenew.1">
+      <trans-unit id="DCA.pastenewtop.1">
+        <source>Create a new element after element ID %s</source>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewafter.0">
+        <source>New</source>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewafter.1">
         <source>Create a new element after element ID %s</source>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">

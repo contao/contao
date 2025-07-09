@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\EventListener\DataContainer;
 
+use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\DataContainer;
 use Contao\DC_Folder;
@@ -111,7 +112,7 @@ class DefaultGlobalOperationsListener
         } elseif ($hasLimitHeight) {
             $operations += [
                 'toggleNodes' => [
-                    'button_callback' => static fn () => '<button class="header_toggle" data-contao--limit-height-target="operation" data-action="contao--limit-height#toggleAll keydown@window->contao--limit-height#keypress keyup@window->contao--limit-height#keypress" style="display:none">'.$GLOBALS['TL_LANG']['DCA']['toggleNodes'][0].'</button> ',
+                    'button_callback' => static fn (DataContainerOperation $operation) => $operation->setHtml('<button class="header_toggle" data-contao--limit-height-target="operation" data-action="contao--limit-height#toggleAll keydown@window->contao--limit-height#keypress keyup@window->contao--limit-height#keypress" style="display:none">'.$GLOBALS['TL_LANG']['DCA']['toggleNodes'][0].'</button>'),
                     'showOnSelect' => true,
                     'primary' => true,
                 ],

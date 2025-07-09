@@ -307,6 +307,7 @@
 .operations-menu {
     min-width: 120px;
     position: fixed;
+    top: 100%;
     right: 0;
     z-index: 10;
     display: flex;
@@ -320,6 +321,10 @@
     list-style: none;
     visibility: hidden;
     pointer-events: none;
+
+    &.show {
+        position: absolute;
+    }
 }
 
 .operations-menu.show {
@@ -533,9 +538,16 @@
 }
 
 .as-grid .cte_preview {
+    padding: 10px 10px 6px;
+}
+
+.cte_content {
+    box-sizing: border-box;
+}
+
+.as-grid .cte_content {
     order: 3;
     grid-column: 1 / span 2;
-    padding: 10px 10px 6px;
     border-top: 1px solid var(--border);
 }
 
@@ -550,10 +562,6 @@
 
 [data-contao--limit-height-target][style*="max-height"] .limit_toggler {
     background: linear-gradient(transparent, var(--content-bg) 60%);
-}
-
-:is(.hover-div, .hover-row):hover [data-contao--limit-height-target][style*="max-height"] .limit_toggler {
-    background: linear-gradient(transparent, var(--hover-row) 60%);
 }
 
 .limit_toggler {
