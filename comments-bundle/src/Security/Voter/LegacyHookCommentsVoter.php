@@ -22,9 +22,8 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 class LegacyHookCommentsVoter implements VoterInterface, CacheableVoterInterface
 {
-    public function __construct(
-        private readonly ContaoFramework $framework,
-    ) {
+    public function __construct(private readonly ContaoFramework $framework)
+    {
     }
 
     public function supportsAttribute(string $attribute): bool
@@ -49,7 +48,7 @@ class LegacyHookCommentsVoter implements VoterInterface, CacheableVoterInterface
             return VoterInterface::ACCESS_ABSTAIN;
         }
 
-        trigger_deprecation('contao/comments-bundle', '5.6', 'The isAllowedToEditComment hook is deprecated and will be removed in Contao 6. Implement a security voters based on AbstractCommentsVoter instead.');
+        trigger_deprecation('contao/comments-bundle', '5.6', 'The "isAllowedToEditComment" hook is deprecated and will no longer work in Contao 6. Implement a security voter based on the "%s" class instead.', AbstractCommentsVoter::class);
 
         $systemAdapter = $this->framework->getAdapter(System::class);
 

@@ -257,11 +257,12 @@ class tl_comments extends Backend
 	 *
 	 * @return boolean
 	 *
-	 * @deprecated Deprecated in Contao 5.6, to be removed in Contao 6. Vote on the %s::USER_CAN_ACCESS_COMMENT security attribute instead.
+	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+	 *             vote on the ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT security attribute instead
 	 */
 	protected function isAllowedToEditComment($intParent, $strSource)
 	{
-		trigger_deprecation('contao/comments-bundle', '5.6', '%s is deprecated and will be removed in Contao 6. Vote on the %s::USER_CAN_ACCESS_COMMENT security attribute instead.', __METHOD__, ContaoCommentsPermissions::class);
+		trigger_deprecation('contao/comments-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 6. Vote on the %s::USER_CAN_ACCESS_COMMENT security attribute instead.', __METHOD__, ContaoCommentsPermissions::class);
 
 		return System::getContainer()->get('security.helper')->isGranted(ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT, array('source' => $strSource, 'parent' => $intParent));
 	}

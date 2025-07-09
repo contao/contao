@@ -33,7 +33,6 @@ services:
     contao_comments.security.faq_comments_voter:
         class: Contao\CommentsBundle\Security\Voter\FaqCommentsVoter
         arguments:
-            - '@database_connection'
             - '@security.access.decision_manager'
 
     contao_comments.security.legacy_hook_comments_voter:
