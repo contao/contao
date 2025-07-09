@@ -36,6 +36,12 @@ export default class extends Controller {
 
             if (handles.length === 1) {
                 handles[0].style.display = '';
+            } else {
+                for (const handle of handles) {
+                    if (handle.style.display === 'none' && handle.parentNode.localName === 'li') {
+                        handle.parentNode.style = 'display: none !important';
+                    }
+                }
             }
         }
     }
