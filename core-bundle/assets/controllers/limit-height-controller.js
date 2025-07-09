@@ -132,20 +132,22 @@ export default class extends Controller {
         const hasTogglers = !!this.nodeTargets.find((el) => this.togglerMap.has(el));
         const expanded = this.hasExpanded();
 
-        this.operationTarget.style.display = hasTogglers ? '' : 'none';
-        this.operationTarget.setAttribute('aria-controls', this.nodeTargets.map((el) => el.id).join(' '));
-        this.operationTarget.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+        for (const operationTarget of this.operationTargets) {
+            operationTarget.style.display = hasTogglers ? '' : 'none';
+            operationTarget.setAttribute('aria-controls', this.nodeTargets.map((el) => el.id).join(' '));
+            operationTarget.setAttribute('aria-expanded', expanded ? 'true' : 'false');
 
-        if (this.operationTarget.closest('#tl_buttons')) {
-            this.operationTarget.parentNode.style.display = hasTogglers ? '' : 'none';
-        }
+            if (operationTarget.closest('#tl_buttons')) {
+                operationTarget.parentNode.style.display = hasTogglers ? '' : 'none';
+            }
 
-        if (expanded ^ (event ? event.altKey : false)) {
-            this.operationTarget.innerText = this.collapseAllValue;
-            this.operationTarget.title = this.collapseAllTitleValue;
-        } else {
-            this.operationTarget.innerText = this.expandAllValue;
-            this.operationTarget.title = this.expandAllTitleValue;
+            if (expanded ^ (event ? event.altKey : false)) {
+                operationTarget.innerText = this.collapseAllValue;
+                operationTarget.title = this.collapseAllTitleValue;
+            } else {
+                operationTarget.innerText = this.expandAllValue;
+                operationTarget.title = this.expandAllTitleValue;
+            }
         }
     }
 

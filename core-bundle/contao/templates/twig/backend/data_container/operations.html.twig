@@ -5,7 +5,7 @@
 <div class="operations"{% if globalOperations %} data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"{% endif %}>
     <ul id="{{ id is defined ? 'operations'~id : 'tl_buttons' }}" data-contao--operations-menu-target="menu">
         {% for operation in operations %}
-            {% set isLink = operation.href|default or (operation.html is defined and '<a ' in operation.html) %}
+            {% set isLink = operation.href|default or (operation.html is defined and ('<a ' in operation.html or '<button ' in operation.html)) %}
             {% set has_submenu = has_submenu or isLink %}
             {% if has_primary and not operation.primary|default(false) %}
                 {% set show_button = true %}
@@ -35,7 +35,7 @@
 {% macro operation(operation, menu = false, showLabels = false) %}
     {% if operation.separator|default %}
         <li><hr></li>
-    {% elseif operation.html is defined and (not menu or '<a ' in operation.html) %}
+    {% elseif operation.html is defined and (not menu or '<a ' in operation.html or '<button ' in operation.html) %}
         <li{% if menu and not showLabels %} data-contao--operations-menu-target="title"{% endif %}>{{ operation.html|raw }}</li>
     {% elseif operation.href|default %}
         <li{% if menu and not operation.title|default %} data-contao--operations-menu-target="title"{% endif %}>

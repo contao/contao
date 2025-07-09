@@ -212,22 +212,25 @@
       <trans-unit id="tl_news.new.1">
         <source>Create a new news item</source>
       </trans-unit>
-      <trans-unit id="tl_news.show">
+      <trans-unit id="tl_news.show.1">
         <source>Show the details of news item ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_news.edit">
+      <trans-unit id="tl_news.edit.1">
         <source>Edit news item ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_news.children">
+      <trans-unit id="tl_news.children.0">
+        <source>Content elements</source>
+      </trans-unit>
+      <trans-unit id="tl_news.children.1">
         <source>Edit the content elements of news item ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_news.copy">
+      <trans-unit id="tl_news.copy.1">
         <source>Duplicate news item ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_news.cut">
+      <trans-unit id="tl_news.cut.1">
         <source>Move news item ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_news.delete">
+      <trans-unit id="tl_news.delete.1">
         <source>Delete news item ID %s</source>
       </trans-unit>
       <trans-unit id="tl_news.toggle.0">
@@ -239,6 +242,12 @@
       <trans-unit id="tl_news.toggle.2">
         <source>Publish news item ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_news.toggle.3">
+        <source>Publish</source>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.4">
+        <source>Unpublish</source>
+      </trans-unit>
       <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
       </trans-unit>
@@ -247,6 +256,12 @@
       </trans-unit>
       <trans-unit id="tl_news.feature.2">
         <source>Feature news item ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.3">
+        <source>Unfeature</source>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.4">
+        <source>Feature</source>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>

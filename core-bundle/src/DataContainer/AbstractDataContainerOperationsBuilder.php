@@ -31,12 +31,12 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
 
     /**
      * @var list<array{html: string, primary?: bool}|array{separator: true}|array{
-     *     href: string,
      *     label: string,
      *     title?: string,
-     *     attributes: HtmlAttributes,
+     *     attributes?: HtmlAttributes,
      *     icon?: string,
      *     iconAttributes?: HtmlAttributes,
+     *     href?: string,
      *     method?: string,
      *     primary?: bool|null,
      * }>
@@ -49,12 +49,12 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
 
     /**
      * @param array{html: string, primary?: bool}|array{separator: true}|array{
-     *     href: string,
      *     label: string,
      *     title?: string,
-     *     attributes: HtmlAttributes,
+     *     attributes?: HtmlAttributes,
      *     icon?: string,
      *     iconAttributes?: HtmlAttributes,
+     *     href?: string,
      *     method?: string,
      *     primary?: bool|null
      * } $operation
@@ -74,12 +74,12 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
 
     /**
      * @param array{html: string, primary?: bool}|array{separator: true}|array{
-     *     href: string,
      *     label: string,
      *     title?: string,
-     *     attributes: HtmlAttributes,
+     *     attributes?: HtmlAttributes,
      *     icon?: string,
      *     iconAttributes?: HtmlAttributes,
+     *     href?: string,
      *     method?: string,
      *     primary?: bool|null
      * } $operation

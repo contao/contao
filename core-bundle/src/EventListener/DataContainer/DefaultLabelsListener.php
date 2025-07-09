@@ -31,14 +31,20 @@ class DefaultLabelsListener
             }
 
             foreach ($GLOBALS['TL_DCA'][$table]['list'][$key] as $k => &$v) {
-                if (!\is_array($v) || \array_key_exists('label', $v)) {
+                if (!\is_array($v)) {
                     continue;
                 }
 
-                if (isset($GLOBALS['TL_LANG'][$table][$k]) || !isset($GLOBALS['TL_LANG']['DCA'][$k])) {
-                    $v['label'] = &$GLOBALS['TL_LANG'][$table][$k];
-                } else {
-                    $v['label'] = &$GLOBALS['TL_LANG']['DCA'][$k];
+                if (!\array_key_exists('label', $v)) {
+                    if (isset($GLOBALS['TL_LANG'][$table][$k]) || !isset($GLOBALS['TL_LANG']['DCA'][$k])) {
+                        $v['label'] = &$GLOBALS['TL_LANG'][$table][$k];
+                    } else {
+                        $v['label'] = &$GLOBALS['TL_LANG']['DCA'][$k];
+                    }
+                }
+
+                if (\is_array($v['label']) && !isset($v['label'][0]) && \is_array($GLOBALS['TL_LANG']['DCA'][$k] ?? null)) {
+                    $v['label'][0] = &$GLOBALS['TL_LANG']['DCA'][$k][0];
                 }
             }
 
