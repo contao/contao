@@ -274,6 +274,7 @@ $GLOBALS['TL_CTE'] = array
 	'links' => array(),
 	'files' => array(),
 	'media' => array(),
+	'user' => array(),
 	'miscellaneous' => array(),
 	'includes' => array
 	(

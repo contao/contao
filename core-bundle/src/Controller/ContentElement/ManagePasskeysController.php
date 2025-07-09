@@ -36,7 +36,9 @@ class ManagePasskeysController extends AbstractContentElementController
 
     protected function getResponse(FragmentTemplate $template, ContentModel $model, Request $request): Response
     {
-        if (!($user = $this->getUser()) instanceof FrontendUser || !$page = $this->getPageModel()) {
+        $user = $this->getUser();
+
+        if (!$user instanceof FrontendUser || !$page = $this->getPageModel()) {
             return new Response(status: Response::HTTP_NO_CONTENT);
         }
 

@@ -83,7 +83,6 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
                 'type' => 'manage_passkeys',
             ],
             adjustedContainer: $this->getAdjustedContainer($this->createMock(FrontendUser::class)),
-            page: null,
         );
 
         $this->assertSame('', $response->getContent());
@@ -441,7 +440,7 @@ class ManagePasskeysControllerTest extends ContentElementTestCase
         $authChecker
             ->method('isGranted')
             ->willReturnCallback(
-                static function (string $attribute, mixed $subject) use ($isFullyAuthenticated, $credential): bool {
+                static function (string $attribute) use ($isFullyAuthenticated, $credential): bool {
                     if ('IS_AUTHENTICATED_FULLY' === $attribute && null !== $isFullyAuthenticated) {
                         return $isFullyAuthenticated;
                     }

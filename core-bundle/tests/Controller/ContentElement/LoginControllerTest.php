@@ -519,7 +519,7 @@ class LoginControllerTest extends ContentElementTestCase
             [
                 'type' => 'login',
             ],
-            adjustedContainer: $this->getAdjustedContainer($this->createMock(FrontendUser::class), true, false),
+            adjustedContainer: $this->getAdjustedContainer($this->createMock(FrontendUser::class), true),
             page: $page,
         );
 

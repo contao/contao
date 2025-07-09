@@ -72,7 +72,7 @@ const init = (element) => {
         window.location = config.redirect || window.location.href;
     });
 
-    // Set focus on name input, if available
+    // Set focus on name input if available
     const edit = element.querySelector('input[name="passkey_name"]');
 
     if (edit) {

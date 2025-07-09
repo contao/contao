@@ -1,8 +1,9 @@
 {
-  "backend.css": "/bundles/contaocore/backend.c66e4c9a.css",
-  "backend.js": "/bundles/contaocore/backend.cc9cc547.js",
+  "backend.css": "/bundles/contaocore/backend.7040c497.css",
+  "backend.js": "/bundles/contaocore/backend.d44585d4.js",
   "passkey_login.js": "/bundles/contaocore/passkey_login.6dc9446a.js",
   "passkey_create.js": "/bundles/contaocore/passkey_create.1d33d033.js",
+  "images/share.svg": "/bundles/contaocore/images/share.4529fc18.svg",
   "images/editor.svg": "/bundles/contaocore/images/editor.38debe02.svg",
   "images/copy.svg": "/bundles/contaocore/images/copy.88a433e6.svg",
   "images/delete.svg": "/bundles/contaocore/images/delete.12e37bc4.svg",
