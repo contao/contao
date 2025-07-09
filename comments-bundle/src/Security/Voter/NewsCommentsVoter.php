@@ -23,6 +23,7 @@ class NewsCommentsVoter extends AbstractCommentsVoter
         private readonly Connection $connection,
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
     ) {
+        parent::__construct($this->accessDecisionManager);
     }
 
     protected function supportsSource(string $source): bool
