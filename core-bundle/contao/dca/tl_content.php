@@ -1016,7 +1016,7 @@ class tl_content extends Backend
 
 		return '
 <div class="cte_type ' . $key . '">' . $dragHandle . $type . '</div>
-<div class="' . $class . '">' . $preview . '</div>';
+<div class="cte_content" data-contao--limit-height-target="node"><div class="' . $class . '">' . $preview . '</div></div>';
 	}
 
 	/**
