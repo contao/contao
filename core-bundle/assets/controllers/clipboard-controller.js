@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { Message } from '../modules/message';
+import * as Message from '../modules/message';
 
 export default class extends Controller {
     static values = {

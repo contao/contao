@@ -21,7 +21,7 @@ export default class OperationsMenuController extends Controller {
                 }
             }
 
-            this.setFixedPosition();
+            this.setPosition();
             this.element.classList.add('hover');
         });
 
@@ -71,39 +71,35 @@ export default class OperationsMenuController extends Controller {
         this.element.addEventListener('pointerup', (e) => e.stopPropagation(), { once: true });
 
         this.$menu.elements.submenuToggles[0].open();
-        this.setFixedPosition(event);
+        this.setPosition(event);
     }
 
-    setFixedPosition(event) {
-        const rect = this.submenuTarget.getBoundingClientRect();
-        let x;
-        let y;
-        let offset = 0;
+    setPosition(event) {
+        const offset = 2; // border-width that is excluded from getBoundingClientRect
 
-        if (event) {
-            x = event.clientX;
-            y = event.clientY;
-        } else {
-            const r = this.controllerTarget.getBoundingClientRect();
-            x = r.right;
-            y = r.bottom;
-            offset = 2;
+        const submenuRect = this.submenuTarget.getBoundingClientRect();
+        const parentRect = this.controllerTarget.offsetParent.getBoundingClientRect();
+
+        if (event === undefined) {
+            this.submenuTarget.style.top = '100%';
+            this.submenuTarget.style.right = 'auto';
+            this.submenuTarget.style.left = `-${submenuRect.width - parentRect.width - offset}px`;
+
+            return;
         }
 
-        this.submenuTarget.style.position = 'fixed';
+        const { innerWidth, innerHeight } = window;
+        const rowRect = this.element.getBoundingClientRect();
+
+        const x = innerWidth - event.clientX - (innerWidth - parentRect.left);
+        const y = event.clientY - rowRect.top - (parentRect.top - rowRect.top);
+
+        const overflowRight = innerWidth < event.clientX + submenuRect.width + parentRect.width;
+        const overflowBottom = innerHeight < event.clientY + submenuRect.height;
+
+        this.submenuTarget.style.left = overflowRight ? `-${x + submenuRect.width - offset}px` : `-${x}px`;
+        this.submenuTarget.style.top = overflowBottom ? `${y - submenuRect.height}px` : `${y}px`;
         this.submenuTarget.style.right = 'auto';
-
-        if (window.innerHeight < y + rect.height) {
-            this.submenuTarget.style.top = `${y - rect.height}px`;
-        } else {
-            this.submenuTarget.style.top = `${y + offset}px`;
-        }
-
-        if (window.innerWidth < x + rect.width) {
-            this.submenuTarget.style.left = `${x - rect.width + offset}px`;
-        } else {
-            this.submenuTarget.style.left = `${x + offset}px`;
-        }
     }
 
     isInteractive(el) {

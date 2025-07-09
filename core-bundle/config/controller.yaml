@@ -45,6 +45,12 @@ services:
             - '@translator'
             - '%kernel.project_dir%'
 
+    Contao\CoreBundle\Controller\BackendJobsController:
+        arguments:
+            - '@contao.job.jobs'
+        tags:
+            - controller.service_arguments
+
     Contao\CoreBundle\Controller\BackendPreviewController:
         arguments:
             - '%contao.preview_script%'

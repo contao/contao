@@ -57,7 +57,7 @@ class DataContainerOperationBuilderTest extends TestCase
             $this->createMock(UrlGeneratorInterface::class),
         );
 
-        $builder = $builder->initialize();
+        $builder = $builder->initialize('tl_foo');
         $builder->append(['html' => $html], true);
 
         $this->assertSame('success', (string) $builder);
@@ -128,7 +128,7 @@ class DataContainerOperationBuilderTest extends TestCase
             $this->createMock(UrlGeneratorInterface::class),
         );
 
-        $builder = $builder->initialize();
+        $builder = $builder->initialize('tl_foo');
         $builder->append($expected[0]);
         $builder->append(['html' => ''], true);
 
@@ -161,7 +161,7 @@ class DataContainerOperationBuilderTest extends TestCase
             $this->createMock(UrlGeneratorInterface::class),
         );
 
-        $builder = $builder->initialize();
+        $builder = $builder->initialize('tl_foo');
         $builder->append($expected[0]);
         $builder->addSeparator();
         $builder->append(['html' => ''], true);

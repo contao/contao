@@ -4,8 +4,8 @@ export default class extends Controller {
     static targets = ['message', 'messagePrototype'];
 
     messageTargetConnected(el) {
-        if (!el.querySelector('button.close')) {
-            setTimeout(() => this._hide(el), 5000);
+        if (el.hasAttribute(`data-${this.identifier}-autoclose`)) {
+            setTimeout(() => this._hide(el), el.getAttribute(`data-${this.identifier}-autoclose`));
         }
     }
 
