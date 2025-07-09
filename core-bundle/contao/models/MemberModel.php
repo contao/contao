@@ -291,6 +291,6 @@ class MemberModel extends Model
 	 */
 	private static function getRegistrationExpirationTime(): string
 	{
-		return strtotime('-' . System::getContainer()->getParameter('contao.registration.expiration') . ' hours');
+		return strtotime('-' . System::getContainer()->getParameter('contao.registration.expiration') . ' days');
 	}
 }
