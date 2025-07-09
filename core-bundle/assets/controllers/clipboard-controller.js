@@ -1,25 +1,26 @@
 import { Controller } from '@hotwired/stimulus';
+import * as Message from '../modules/message';
 
 export default class extends Controller {
     static values = {
         content: String,
+        message: {
+            type: String,
+            default: 'Copied to clipboard.',
+        },
     };
 
-    write() {
-        if (navigator.clipboard?.writeText) {
-            navigator.clipboard.writeText(this.contentValue).catch(this.clipboardFallback.bind(this));
-        } else {
-            this.clipboardFallback();
-        }
-    }
+    async write() {
+        if (!navigator.clipboard) {
+            if (window.console) {
+                console.error('The clipboard API is not available. Make sure you use a secure context (https).');
+            }
 
-    clipboardFallback() {
-        const input = document.createElement('input');
-        input.value = this.contentValue;
-        document.body.appendChild(input);
-        input.select();
-        input.setSelectionRange(0, 99999);
-        document.execCommand('copy');
-        document.body.removeChild(input);
+            return;
+        }
+
+        await navigator.clipboard.writeText(this.contentValue);
+
+        Message.info(this.messageValue);
     }
 }

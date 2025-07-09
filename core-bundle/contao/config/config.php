@@ -221,6 +221,12 @@ $GLOBALS['BE_MOD'] = array
 		(
 			'tables'                  => array('tl_undo'),
 			'disablePermissionChecks' => true
+		),
+		'jobs' => array
+		(
+			'tables'                  => array('tl_job'),
+			'disablePermissionChecks' => true,
+			'hideInNavigation' 		  => true,
 		)
 	)
 );

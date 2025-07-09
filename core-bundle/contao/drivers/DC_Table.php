@@ -117,9 +117,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$container = System::getContainer();
 		$objSession = $container->get('request_stack')->getSession();
+		$request = $container->get('request_stack')->getCurrentRequest();
 
 		// Check the request token (see #4007)
-		if (!\in_array(Input::get('act'), array(null, 'edit', 'show', 'select'), true) && (Input::get('rt') === null || !$container->get('contao.csrf.token_manager')->isTokenValid(new CsrfToken($container->getParameter('contao.csrf_token_name'), Input::get('rt')))))
+		if ((!$request || $request->isMethodSafe()) && !\in_array(Input::get('act'), array(null, 'edit', 'show', 'select'), true) && (Input::get('rt') === null || !$container->get('contao.csrf.token_manager')->isTokenValid(new CsrfToken($container->getParameter('contao.csrf_token_name'), Input::get('rt')))))
 		{
 			$objSession->set('INVALID_TOKEN_URL', Environment::get('requestUri'));
 			$this->redirect($container->get('router')->generate('contao_backend_confirm'));
@@ -168,15 +169,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 			if (Input::post('edit') !== null)
 			{
-				$this->redirect(str_replace('act=select', 'act=editAll', Environment::get('requestUri')));
+				$this->redirect(Backend::addToUrl('act=editAll'));
 			}
 			elseif (Input::post('delete') !== null)
 			{
-				$this->redirect(str_replace('act=select', 'act=deleteAll', Environment::get('requestUri')));
+				$this->redirect(Backend::addToUrl('act=deleteAll'));
 			}
 			elseif (Input::post('override') !== null)
 			{
-				$this->redirect(str_replace('act=select', 'act=overrideAll', Environment::get('requestUri')));
+				$this->redirect(Backend::addToUrl('act=overrideAll'));
 			}
 			elseif (Input::post('cut') !== null || Input::post('copy') !== null || Input::post('copyMultiple') !== null)
 			{
@@ -196,7 +197,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 					// Support copyAll in the list view (see #7499)
 					if ((Input::post('copy') !== null || Input::post('copyMultiple') !== null) && ($GLOBALS['TL_DCA'][$strTable]['list']['sorting']['mode'] ?? 0) < self::MODE_PARENT)
 					{
-						$this->redirect(str_replace('act=select', 'act=copyAll', Environment::get('requestUri')));
+						$this->redirect(Backend::addToUrl('act=copyAll'));
 					}
 				}
 
@@ -415,7 +416,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			// Backwards compatibility
 			if (Input::get('childs') !== null)
 			{
-				trigger_deprecation('contao/core-bundle', '5.3', 'Using the "childs" query parameter has been deprecated and will no longer work in Contao 6. Use the "children" parameter instead.');
+				trigger_deprecation('contao/core-bundle', '5.3', 'Using the "childs" query parameter is deprecated and will no longer work in Contao 6. Use the "children" parameter instead.');
 				$children = Input::get('childs');
 			}
 
@@ -1126,7 +1127,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function copyChilds($table, $insertID, $id, $parentId)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "copyChildren()" instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use "copyChildren()" instead.', __METHOD__);
 		$this->copyChildren($table, $insertID, $id, $parentId);
 	}
 
@@ -1150,7 +1151,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Backwards compatibility
 		if (Input::get('childs') !== null)
 		{
-			trigger_deprecation('contao/core-bundle', '5.3', 'Using the "childs" query parameter has been deprecated and will no longer work in Contao 6. Use the "children" parameter instead.');
+			trigger_deprecation('contao/core-bundle', '5.3', 'Using the "childs" query parameter is deprecated and will no longer work in Contao 6. Use the "children" parameter instead.');
 			$children = Input::get('childs');
 		}
 
@@ -1804,7 +1805,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 	 */
 	protected function deleteChilds($table, $id, &$delete)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "deleteChildren()" instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use "deleteChildren()" instead.', __METHOD__);
 		$this->deleteChildren($table, $id, $delete);
 	}
 
@@ -2296,10 +2297,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
 		$return = $version . Message::generate() . ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . (Input::get('nb') ? '' : '
-<div id="tl_buttons">
-' . DataContainerOperationsBuilder::generateBackButton($strBackUrl) . '
-</div>') . '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . (Input::get('nb') ? '' : System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable)->addBackButton($strBackUrl)) . '
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post" enctype="' . ($this->blnUploadable ? 'multipart/form-data' : 'application/x-www-form-urlencoded') . '"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
@@ -2359,6 +2357,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		// Add fields
 		$fields = $session['CURRENT'][$this->strTable] ?? array();
+
+		$blnAddJumpTarget = \count($ids) < min(Config::get('resultsPerPage') ?? 30, 50);
 
 		if (!empty($fields) && \is_array($fields) && Input::get('fields'))
 		{
@@ -2526,10 +2526,13 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						continue;
 					}
 
+					$label = StringUtil::specialchars(System::getContainer()->get('contao.data_container.record_labeler')->getLabel('contao.db.' . $this->strTable . '.' . $currentRecord['id'], $currentRecord));
+
 					$return .= Message::generateUnwrapped() . \sprintf(
-						'<fieldset data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-collapsed-class="collapsed" class="%s cf"><legend><button type="button" data-action="contao--toggle-fieldset#toggle">%s</button></legend>%s</fieldset>',
+						'<fieldset data-controller="contao--toggle-fieldset" data-contao--toggle-fieldset-collapsed-class="collapsed"%s class="%s cf"><legend><button type="button" data-action="contao--toggle-fieldset#toggle">%s</button></legend>%s</fieldset>',
+						$blnAddJumpTarget ? ('data-contao--jump-targets-target="section" data-contao--jump-targets-label-value="' . $label . '" data-action="contao--jump-targets:scrollto->contao--toggle-fieldset#open"') : '',
 						$class,
-						StringUtil::specialchars(System::getContainer()->get('contao.data_container.record_labeler')->getLabel('contao.db.' . $this->strTable . '.' . $currentRecord['id'], $currentRecord)),
+						$label,
 						$box
 					);
 
@@ -2648,11 +2651,15 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		}
 
 		// Return
-		return ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
-<div id="tl_buttons">
-' . DataContainerOperationsBuilder::generateBackButton() . '
-</div>' . $return;
+		$return = ($this->noReload ? '
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') .
+System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable)->addBackButton() . $return;
+
+		return $blnAddJumpTarget ? '
+<div data-controller="contao--jump-targets">
+	<div class="jump-targets"><div class="inner" data-contao--jump-targets-target="navigation"></div></div>
+	' . $return . '
+</div>' : $return;
 	}
 
 	/**
@@ -2975,10 +2982,8 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		// Return
 		return Message::generate() . ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
-<div id="tl_buttons">
-' . DataContainerOperationsBuilder::generateBackButton() . '
-</div>' . $return;
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') .
+System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable)->addBackButton() . $return;
 	}
 
 	/**
@@ -3495,32 +3500,34 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$security = System::getContainer()->get('security.helper');
 
 		// Begin buttons container
-		$buttons = '';
+		$operations = System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable);
 
 		if (Input::get('act') == 'select')
 		{
-			$buttons .= DataContainerOperationsBuilder::generateBackButton();
+			$operations->addBackButton();
 		}
 		elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 		{
-			$buttons .= DataContainerOperationsBuilder::generateBackButton((!str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '=') || str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '?') ? '' : System::getContainer()->get('router')->generate('contao_backend') . '?') . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+			$operations->addBackButton($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
 		}
 
 		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $this->intCurrentPid, 'sorting' => 0))))
 		{
-			$buttons .= DataContainerOperationsBuilder::generateNewButton($this->strTable, $this->addToUrl('act=paste&amp;mode=create'));
+			$operations->addNewButton($operations::CREATE_PASTE);
 		}
 
 		if ($blnClipboard)
 		{
-			$buttons .= DataContainerOperationsBuilder::generateClearClipboardButton();
+			$operations->addClearClipboardButton();
 		}
-		else
+		elseif (null !== ($buttons = $this->generateGlobalButtons($operations)))
 		{
-			$buttons .= $this->generateGlobalButtons();
+			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 6.');
+
+			$operations->append(array('html' => $buttons), true);
 		}
 
-		$return = Message::generate() . ($buttons ? '<div id="tl_buttons">' . $buttons . '</div>' : '');
+		$return = Message::generate() . $operations;
 
 		$tree = '';
 		$blnHasSorting = $db->fieldExists('sorting', $table);
@@ -3643,7 +3650,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		// Show paste button only if there are no root records specified
 		if ($blnClipboard && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $this->rootPaste && Input::get('act') != 'select')
 		{
-			$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize();
+			$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
 
 			// Call paste_button_callback (&$dc, $row, $table, $cr, $children, $previous, $next)
 			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
@@ -3659,20 +3666,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 			elseif (!$this->canPasteClipboard($arrClipboard, array('pid'=>0, 'sorting'=>0)))
 			{
-				$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteinto--disabled.svg')));
+				$operations->addPasteButton('pasteroot', null);
 			}
 			else
 			{
-				$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
-				$imagePasteInto = Image::getHtml('pasteinto.svg', $labelPasteInto[0]);
-
-				$operations->append(array(
-					'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=0' . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')),
-					'title' => $labelPasteInto[0],
-					'attributes' => 'data-action="contao--scroll-offset#store"',
-					'icon' => $imagePasteInto,
-					'primary' => true,
-				));
+				$operations->addPasteButton('pasteroot', $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=0' . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')));
 			}
 
 			$_buttons .= $operations;
@@ -3709,7 +3707,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				data-contao--toggle-nodes-expand-all-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][0] . '"
 				data-contao--toggle-nodes-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
 				data-contao--toggle-nodes-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
-				data-contao--toggle-nodes-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
+				data-contao--toggle-nodes-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][1] . '"
 			>' . $return . '</div>';
 	}
 
@@ -3967,7 +3965,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			}
 			else
 			{
-				$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize();
+				$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable, $this->intId);
 			}
 
 			// Paste buttons (not for root trails)
@@ -3987,12 +3985,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				}
 				else
 				{
-					$labelPasteAfter = $GLOBALS['TL_LANG'][$this->strTable]['pasteafter'] ?? $GLOBALS['TL_LANG']['DCA']['pasteafter'];
-					$imagePasteAfter = Image::getHtml('pasteafter.svg', \sprintf($labelPasteAfter[1], $id));
-
-					$labelPasteInto = $GLOBALS['TL_LANG'][$this->strTable]['pasteinto'] ?? $GLOBALS['TL_LANG']['DCA']['pasteinto'];
-					$imagePasteInto = Image::getHtml('pasteinto.svg', \sprintf($labelPasteInto[1], $id));
-
 					// Regular tree
 					if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 					{
@@ -4001,39 +3993,27 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						// Disable buttons of the page and all its children on cut to avoid circular references
 						if ($clipboardManager->isCutMode($this->strTable) && ($blnCircularReference || !$clipboardManager->canPasteAfterOrInto($this->strTable, $id)))
 						{
-							$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
-							$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteinto--disabled.svg')));
+							$operations->addPasteButton('pasteafter', null);
+							$operations->addPasteButton('pasteinto', null);
 						}
 						else
 						{
 							if ((!$this->rootPaste && \in_array($id, $this->root)) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1)))
 							{
-								$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
+								$operations->addPasteButton('pasteafter', null);
 							}
 							else
 							{
-								$operations->append(array(
-									'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')),
-									'title' => \sprintf($labelPasteAfter[1], $id),
-									'attributes' => 'data-action="contao--scroll-offset#store"',
-									'icon' => $imagePasteAfter,
-									'primary' => true,
-								));
+								$operations->addPasteButton('pasteafter', $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')));
 							}
 
 							if (!$this->canPasteClipboard($arrClipboard, array('pid' => $id, 'sorting' => 0)))
 							{
-								$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteinto--disabled.svg')));
+								$operations->addPasteButton('pasteinto', null);
 							}
 							else
 							{
-								$operations->append(array(
-									'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')),
-									'title' => \sprintf($labelPasteInto[1], $id),
-									'attributes' => 'data-action="contao--scroll-offset#store"',
-									'icon' => $imagePasteInto,
-									'primary' => true,
-								));
+								$operations->addPasteButton('pasteinto', $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')));
 							}
 						}
 					}
@@ -4048,17 +4028,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 							if ($clipboardManager->isCutMode($this->strTable) && ($blnCircularReference || !$clipboardManager->canPasteAfterOrInto($this->strTable, $id) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
 							{
-								$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
+								$operations->addPasteButton('pasteafter', null);
 							}
 							else
 							{
-								$operations->append(array(
-									'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')),
-									'title' => \sprintf($labelPasteAfter[1], $id),
-									'attributes' => 'data-action="contao--scroll-offset#store"',
-									'icon' => $imagePasteAfter,
-									'primary' => true,
-								));
+								$operations->addPasteButton('pasteafter', $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')));
 							}
 						}
 
@@ -4067,17 +4041,11 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						{
 							if (!$this->canPasteClipboard($arrClipboard, array('pid' => $id, 'sorting' => 0)))
 							{
-								$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteinto--disabled.svg')));
+								$operations->addPasteButton('pasteinto', null);
 							}
 							else
 							{
-								$operations->append(array(
-									'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')),
-									'title' => \sprintf($labelPasteInto[1], $id),
-									'attributes' => 'data-action="contao--scroll-offset#store"',
-									'icon' => $imagePasteInto,
-									'primary' => true,
-								));
+								$operations->addPasteButton('pasteinto', $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $id . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')));
 							}
 						}
 					}
@@ -4169,41 +4137,48 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$this->loadDataContainer($this->ptable);
 
 		$labelCut = $GLOBALS['TL_LANG'][$this->strTable]['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
-		$labelPasteNew = $GLOBALS['TL_LANG'][$this->strTable]['pastenew'] ?? $GLOBALS['TL_LANG']['DCA']['pastenew'];
-		$labelPasteAfter = $GLOBALS['TL_LANG'][$this->strTable]['pasteafter'] ?? $GLOBALS['TL_LANG']['DCA']['pasteafter'];
 		$limitHeight = BackendUser::getInstance()->doNotCollapse ? false : (int) ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['limitHeight'] ?? 0);
 
 		$db = Database::getInstance();
 		$security = System::getContainer()->get('security.helper');
-		$buttons = '';
+		$operations = System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable);
 
 		if (!Input::get('nb'))
 		{
 			if ($this->ptable)
 			{
-				$buttons .= DataContainerOperationsBuilder::generateBackButton($this->getReferer(true, $this->ptable));
+				$operations->addBackButton($this->getReferer(true, $this->ptable));
 			}
 			elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 			{
-				$buttons .= DataContainerOperationsBuilder::generateBackButton((!str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '=') || str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '?') ? '' : System::getContainer()->get('router')->generate('contao_backend') . '?') . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+				$operations->addBackButton($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
 			}
 		}
 
 		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $this->intCurrentPid)))))
 		{
-			$buttons .= DataContainerOperationsBuilder::generateNewButton($this->strTable, $this->addToUrl($blnHasSorting ? 'act=paste&amp;mode=create' : 'act=create&amp;mode=2&amp;pid=' . $this->intId));
+			if ($blnHasSorting)
+			{
+				$operations->addNewButton($operations::CREATE_PASTE);
+			}
+			else
+			{
+				$operations->addNewButton($operations::CREATE_PASTE_INTO, $this->intId);
+			}
 		}
 
 		if ($blnClipboard)
 		{
-			$buttons .= DataContainerOperationsBuilder::generateClearClipboardButton();
+			$operations->addClearClipboardButton();
 		}
-		else
+		elseif (null !== ($buttons = $this->generateGlobalButtons($operations)))
 		{
-			$buttons .= $this->generateGlobalButtons();
+			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 6.');
+
+			$operations->append(array('html' => $buttons), true);
 		}
 
-		$return = Message::generate() . ($buttons ? '<div id="tl_buttons">' . $buttons . '</div>' : '');
+		$return = Message::generate() . $operations;
 
 		// Get all details of the parent record
 		$objParent = $db
@@ -4232,8 +4207,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		if (\in_array(Input::get('act'), array('select', null)))
 		{
 			// Header
-			$imagePasteNew = Image::getHtml('new.svg', $labelPasteNew[0]);
-			$imagePasteAfter = Image::getHtml('pasteafter.svg', $labelPasteAfter[0]);
 			$security = System::getContainer()->get('security.helper');
 
 			$return .= '
@@ -4248,8 +4221,10 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 			{
 				if ($blnClipboard)
 				{
-					$return .= '
-<a href="' . $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $objParent->id . (!$blnMultiboard ? '&amp;id=' . $arrClipboard['id'] : '')) . '" data-action="contao--scroll-offset#store">' . $imagePasteAfter . '</a>';
+					$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
+					$operations->addPasteButton('pastetop', $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=' . $objParent->id . (!$blnMultiboard ? '&amp;id=' . $arrClipboard['id'] : '')));
+
+					$return .= $operations;
 				}
 				else
 				{
@@ -4257,11 +4232,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 					if ($blnHasSorting && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $objParent->id, 'sorting' => 0)))))
 					{
-						$operations->append(array(
-							'href' => $this->addToUrl('act=create&amp;mode=2&amp;pid=' . $objParent->id . '&amp;id=' . $this->intId),
-							'title' => $labelPasteNew[0],
-							'icon' => $imagePasteNew,
-						));
+						$operations->addPasteButton('pastenewtop', $this->addToUrl('act=create&amp;mode=2&amp;pid=' . $objParent->id . '&amp;id=' . $this->intId), false);
 					}
 
 					$return .= $operations;
@@ -4502,8 +4473,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				$this->denyAccessUnlessGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new ReadAction($this->strTable, $row[$i]));
 
 				$this->current[] = $row[$i]['id'];
-				$imagePasteAfter = Image::getHtml('pasteafter.svg', \sprintf($labelPasteAfter[1] ?? $labelPasteAfter[0], $row[$i]['id']));
-				$imagePasteNew = Image::getHtml('new.svg', \sprintf($labelPasteNew[1] ?? $labelPasteNew[0], $row[$i]['id']));
 
 				// Make items sortable
 				if ($blnHasSorting)
@@ -4540,7 +4509,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 				$return .= '
 <div class="tl_content' . ($blnWrapperStart ? ' wrapper_start' : '') . ($blnWrapperSeparator ? ' wrapper_separator' : '') . ($blnWrapperStop ? ' wrapper_stop' : '') . ($blnIndent ? ' indent indent_' . $intWrapLevel : '') . ($blnIndentFirst ? ' indent_first' : '') . ($blnIndentLast ? ' indent_last' : '') . ((string) $row[$i]['tstamp'] === '0' ? ' draft' : '') . (!empty($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class']) ? ' ' . $GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['child_record_class'] : '') . ' toggle_select" data-turbo="false">
-<div class="inside hover-div"' . ($limitHeight && !$blnWrapperStart && !$blnWrapperStop && !$blnWrapperSeparator ? ' data-contao--limit-height-target="node"' : '') . ' data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
+<div class="inside hover-div"' . ' data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open">
 <div class="tl_content_right" data-turbo="true">';
 
 				// Opening wrappers
@@ -4567,42 +4536,25 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 						if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $row[$i]['pid'], 'sorting' => $row[$i]['sorting'] + 1)))))
 						{
 							$operations->addSeparator();
-
-							$operations->append(array(
-								'href' => $this->addToUrl('act=create&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $objParent->id . (Input::get('nb') ? '&amp;nc=1' : '')),
-								'title' => \sprintf($labelPasteNew[1], $row[$i]['id']),
-								'icon' => $imagePasteNew,
-							));
+							$operations->addPasteButton('pastenewafter', $this->addToUrl('act=create&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $objParent->id . (Input::get('nb') ? '&amp;nc=1' : '')));
 						}
 
 						// Prevent circular references
 						if ($blnClipboard && !System::getContainer()->get('contao.data_container.clipboard_manager')->canPasteAfterOrInto($this->strTable, $row[$i]['id']))
 						{
-							$operations->append(array('primary' => true, 'icon'=>Image::getHtml('pasteafter--disabled.svg')));
+							$operations->addPasteButton('pasteafter', null);
 						}
 
 						// Copy/move multiple
 						elseif ($blnMultiboard)
 						{
-							$operations->append(array(
-								'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id']),
-								'title' => \sprintf($labelPasteAfter[1], $row[$i]['id']),
-								'attributes' => 'data-action="contao--scroll-offset#store"',
-								'icon' => $imagePasteAfter,
-								'primary' => true,
-							));
+							$operations->addPasteButton('pasteafter', $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id']));
 						}
 
 						// Paste buttons
 						elseif ($blnClipboard)
 						{
-							$operations->append(array(
-								'href' => $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $arrClipboard['id']),
-								'title' => \sprintf($labelPasteAfter[1], $row[$i]['id']),
-								'attributes' => 'data-action="contao--scroll-offset#store"',
-								'icon' => $imagePasteAfter,
-								'primary' => true,
-							));
+							$operations->addPasteButton('pasteafter', $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=1&amp;pid=' . $row[$i]['id'] . '&amp;id=' . $arrClipboard['id']));
 						}
 
 						// Drag handle
@@ -4687,7 +4639,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				data-contao--limit-height-expand-all-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][0] . '"
 				data-contao--limit-height-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
 				data-contao--limit-height-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
-				data-contao--limit-height-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
+				data-contao--limit-height-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][1] . '"
 			>' . $return . '</div>';
 		}
 
@@ -4826,24 +4778,37 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 		$security = System::getContainer()->get('security.helper');
 
 		// Display buttons
-		$buttons = '';
+		$operations = System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable);
 
 		if (Input::get('act') == 'select' || $this->ptable)
 		{
-			$buttons .= DataContainerOperationsBuilder::generateBackButton($this->getReferer(true, $this->ptable));
+			$operations->addBackButton($this->getReferer(true, $this->ptable));
 		}
 		elseif (isset($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']))
 		{
-			$buttons .= DataContainerOperationsBuilder::generateBackButton((!str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '=') || str_contains($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink'], '?') ? '' : System::getContainer()->get('router')->generate('contao_backend') . '?') . $GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
+			$operations->addBackButton($GLOBALS['TL_DCA'][$this->strTable]['config']['backlink']);
 		}
 
 		if (Input::get('act') != 'select' && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable)))
 		{
-			$buttons .= DataContainerOperationsBuilder::generateNewButton($this->strTable, $this->ptable ? $this->addToUrl('act=create' . ((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) < self::MODE_PARENT) ? '&amp;mode=2' : '') . '&amp;pid=' . $this->intId) : $this->addToUrl('act=create'));
+			if ($this->ptable)
+			{
+				$operations->addNewButton(($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) < self::MODE_PARENT ? $operations::CREATE_PASTE_INTO : $operations::CREATE_NEW, $this->intId);
+			}
+			else
+			{
+				$operations->addNewButton($operations::CREATE_NEW);
+			}
 		}
 
-		$buttons .= $this->generateGlobalButtons();
-		$return = Message::generate() . ($buttons ? '<div id="tl_buttons">' . $buttons . '</div>' : '');
+		if (null !== ($buttons = $this->generateGlobalButtons($operations)))
+		{
+			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 6.');
+
+			$operations->append(array('html' => $buttons), true);
+		}
+
+		$return = Message::generate() . $operations;
 
 		// Return "no records found" message
 		if ($objRow->numRows < 1)
@@ -5037,7 +5002,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 				data-contao--limit-height-expand-all-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][0] . '"
 				data-contao--limit-height-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
 				data-contao--limit-height-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
-				data-contao--limit-height-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
+				data-contao--limit-height-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][1] . '"
 			>' . $return . '</div>';
 		}
 

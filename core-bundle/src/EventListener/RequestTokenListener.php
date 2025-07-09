@@ -78,7 +78,7 @@ class RequestTokenListener
 
     public static function isSimpleCorsRequest(Request $request): bool
     {
-        $contentType = HeaderUtils::split($request->headers->get('content-type'), ';')[0] ?? '';
+        $contentType = HeaderUtils::split($request->headers->get('content-type', ''), ';')[0] ?? '';
 
         return \in_array(
             strtolower($contentType),

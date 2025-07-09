@@ -46,25 +46,72 @@ class NewsSearchListener
         return $value;
     }
 
-    #[AsCallback(table: 'tl_news', target: 'fields.robots.save')]
-    public function onSaveRobots(string $value, DataContainer $dc): string
+    #[AsCallback(table: 'tl_news', target: 'fields.searchIndexer.save')]
+    public function onSaveSearchIndexer(string $value, DataContainer $dc): string
     {
-        if (($dc->getCurrentRecord()['robots'] ?? null) === $value || str_starts_with($value, 'index')) {
+        if ('always_index' === $value || ($dc->getCurrentRecord()['searchIndexer'] ?? null) === $value) {
             return $value;
         }
 
-        if ('' === $value && str_starts_with($dc->getCurrentRecord()['robots'] ?? '', 'index')) {
-            // Get the robots tag of the reader page (linked in news archive)
-            $readerPageRobots = $this->connection->fetchOne(
+        if (!$value) {
+            // Get robots and searchIndexer of the reader page (linked in calendar)
+            $readerPageSettings = $this->connection->fetchAssociative(
                 <<<'SQL'
-                    SELECT p.robots
-                    FROM tl_page AS p, tl_news_archive AS c
-                    WHERE c.id = ? AND c.jumpTo = p.id
+                    SELECT
+                        p.robots,
+                        p.searchIndexer
+                    FROM
+                        tl_page AS p,
+                        tl_news_archive AS c
+                    WHERE
+                        c.id = ?
+                        AND c.jumpTo = p.id
                     SQL,
                 [$dc->getCurrentRecord()['pid']],
             );
 
-            if (str_starts_with((string) $readerPageRobots, 'index')) {
+            $readerSearchIndexer = (string) ($readerPageSettings['searchIndexer'] ?? null);
+            $readerRobots = (string) ($readerPageSettings['robots'] ?? null);
+            $entryRobots = (string) ($dc->getCurrentRecord()['robots'] ?? null);
+
+            if ('always_index' === $readerSearchIndexer || (!$readerSearchIndexer && (str_starts_with($entryRobots, 'index') || (!$entryRobots && str_starts_with($readerRobots, 'index'))))) {
+                return $value;
+            }
+        }
+
+        $this->purgeSearchIndex((int) $dc->id);
+
+        return $value;
+    }
+
+    #[AsCallback(table: 'tl_news', target: 'fields.robots.save')]
+    public function onSaveRobots(string $value, DataContainer $dc): string
+    {
+        if (($dc->getCurrentRecord()['robots'] ?? null) === $value || 'always_index' === $dc->getCurrentRecord()['searchIndexer']) {
+            return $value;
+        }
+
+        if (!$dc->getCurrentRecord()['searchIndexer']) {
+            // Get robots and searchIndexer of the reader page (linked in calendar)
+            $readerPageSettings = $this->connection->fetchAssociative(
+                <<<'SQL'
+                    SELECT
+                        p.robots,
+                        p.searchIndexer
+                    FROM
+                        tl_page AS p,
+                        tl_news_archive AS c
+                    WHERE
+                        c.id = ?
+                        AND c.jumpTo = p.id
+                    SQL,
+                [$dc->getCurrentRecord()['pid']],
+            );
+
+            $readerSearchIndexer = (string) ($readerPageSettings['searchIndexer'] ?? null);
+            $readerRobots = (string) ($readerPageSettings['robots'] ?? null);
+
+            if ('always_index' === $readerSearchIndexer || (!$readerSearchIndexer && (str_starts_with($value, 'index') || (!$value && str_starts_with($readerRobots, 'index'))))) {
                 return $value;
             }
         }

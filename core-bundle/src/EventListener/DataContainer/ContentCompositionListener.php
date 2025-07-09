@@ -42,15 +42,15 @@ class ContentCompositionListener
     #[AsCallback(table: 'tl_page', target: 'list.operations.articles.button')]
     public function renderPageArticlesOperation(DataContainerOperation $operation): void
     {
-        // Disable the articles link in the modal window
+        // Hide the articles link in the modal window
         if ($this->requestStack->getCurrentRequest()?->query->get('popup')) {
-            $operation->setHtml('');
+            $operation->hide();
 
             return;
         }
 
         if (!$this->security->isGranted(ContaoCorePermissions::USER_CAN_ACCESS_MODULE, 'article')) {
-            $operation->setHtml('');
+            $operation->hide();
 
             return;
         }

@@ -185,28 +185,28 @@
       <trans-unit id="tl_files.metadata">
         <source>Metadata</source>
       </trans-unit>
-      <trans-unit id="tl_files.show">
+      <trans-unit id="tl_files.show.1">
         <source>Show the details of file or folder "%s"</source>
       </trans-unit>
-      <trans-unit id="tl_files.cut">
+      <trans-unit id="tl_files.cut.1">
         <source>Move file or folder "%s"</source>
       </trans-unit>
-      <trans-unit id="tl_files.copy">
+      <trans-unit id="tl_files.copy.1">
         <source>Duplicate file or folder "%s"</source>
       </trans-unit>
-      <trans-unit id="tl_files.edit">
+      <trans-unit id="tl_files.edit.1">
         <source>Edit file or folder "%s"</source>
       </trans-unit>
-      <trans-unit id="tl_files.delete">
+      <trans-unit id="tl_files.delete.1">
         <source>Delete file or folder "%s"</source>
       </trans-unit>
-      <trans-unit id="tl_files.drag">
+      <trans-unit id="tl_files.drag.1">
         <source>Drag file or folder "%s"</source>
       </trans-unit>
-      <trans-unit id="tl_files.source">
+      <trans-unit id="tl_files.source.1">
         <source>Edit the source text of file "%s"</source>
       </trans-unit>
-      <trans-unit id="tl_files.upload">
+      <trans-unit id="tl_files.upload.1">
         <source>Upload files to folder "%s"</source>
       </trans-unit>
       <trans-unit id="tl_files.protect">

@@ -58,7 +58,7 @@ class Configuration implements ConfigurationInterface
                             static function (array $options): array {
                                 foreach (array_keys($options) as $option) {
                                     if ($newKey = Config::getNewKey($option)) {
-                                        trigger_deprecation('contao/core-bundle', '5.0', 'Setting "contao.localconfig.%s" has been deprecated. Use "%s" instead.', $option, $newKey);
+                                        trigger_deprecation('contao/core-bundle', '5.0', 'Setting "contao.localconfig.%s" is deprecated and will no longer work in Contao 6. Use "%s" instead.', $option, $newKey);
                                     }
                                 }
 
@@ -592,15 +592,15 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('countries')
-                    ->info('Adds, removes or overwrites the list of ISO 3166-1 alpha-2 country codes.')
+                    ->info('Adds, removes or overwrites the list of ISO 3166-1 alpha-2 country and ISO 3166-2 subdivision codes. Labels can be provided via the translator by setting "CNT.de" for "DE" and "CNT.at9" for "AT-9" for example.')
                     ->prototype('scalar')->end()
                     ->defaultValue([])
-                    ->example(['+DE', '-AT', 'CH'])
+                    ->example(['+DE', '-AT', '+AT-9', 'CH'])
                     ->validate()
                         ->ifTrue(
                             static function (array $countries): bool {
                                 foreach ($countries as $country) {
-                                    if (!preg_match('/^[+-]?[A-Z][A-Z0-9]$/', $country)) {
+                                    if (!preg_match('/^[+-]?[A-Z][A-Z0-9](?:-[A-Z0-9]{1,3})?$/', $country)) {
                                         return true;
                                     }
                                 }
@@ -608,7 +608,7 @@ class Configuration implements ConfigurationInterface
                                 return false;
                             },
                         )
-                        ->thenInvalid('All provided countries must be two uppercase letters and optionally start with +/- to add/remove the country to/from the default list.')
+                        ->thenInvalid('All provided countries must be two uppercase letters optionally followed by a dash and a subdivision code and optionally start with +/- to add/remove the country to/from the default list.')
                     ->end()
                 ->end()
             ->end()
@@ -672,6 +672,10 @@ class Configuration implements ConfigurationInterface
                         ->booleanNode('delete')
                             ->info('Enables deleting unsuccessful responses from the index.')
                             ->defaultTrue()
+                        ->end()
+                        ->scalarNode('rate_limiter')
+                            ->info('The name of the rate limiter for handling requests. By default, there will be a rate limiter set to 5 minutes.')
+                            ->defaultNull()
                         ->end()
                     ->end()
                 ->end()
@@ -737,6 +741,10 @@ class Configuration implements ConfigurationInterface
             ->getRootNode()
             ->addDefaultsIfNotSet()
             ->children()
+                ->scalarNode('override_from')
+                    ->info('Overrides the "From" address for any e-mails sent by the mailer, if not otherwise specified by a transport.')
+                    ->defaultNull()
+                ->end()
                 ->arrayNode('transports')
                     ->info('Specifies the mailer transports available for selection within Contao.')
                     ->useAttributeAsKey('name')

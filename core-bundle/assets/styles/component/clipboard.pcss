@@ -1,0 +1,17 @@
+.tl_info a[data-controller="contao--clipboard"] {
+    &::before {
+        display: inline-block;
+        content: "";
+        width: 16px;
+        height: 16px;
+        margin: 0 3px;
+        vertical-align: -3px;
+        background: url("../../../contao/themes/flexible/icons/share.svg") no-repeat center center;
+        background-size: contain;
+        filter: grayscale(100);
+    }
+
+    &:hover::before {
+        filter: grayscale(0);
+    }
+}
