@@ -10,13 +10,13 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\NewsBundle\Controller\Page;
+namespace Contao\CalendarBundle\Controller\Page;
 
+use Contao\CalendarBundle\Event\FetchEventsForFeedEvent;
+use Contao\CalendarBundle\Event\TransformEventForFeedEvent;
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Controller\Page\AbstractFeedPageController;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
-use Contao\NewsBundle\Event\FetchArticlesForFeedEvent;
-use Contao\NewsBundle\Event\TransformArticleForFeedEvent;
 use Contao\PageModel;
 use Contao\StringUtil;
 use FeedIo\Feed;
@@ -25,9 +25,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 #[AsPage(path: '', contentComposition: false)]
-class NewsFeedController extends AbstractFeedPageController
+class CalendarFeedController extends AbstractFeedPageController
 {
-    final public const TYPE = 'news_feed';
+    final public const TYPE = 'calendar_feed';
 
     public function __construct(
         private readonly ContaoContext $contaoContext,
@@ -48,21 +48,26 @@ class NewsFeedController extends AbstractFeedPageController
         $feed->setDescription(html_entity_decode($pageModel->feedDescription ?? '', ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $this->charset));
         $feed->setLanguage($pageModel->language);
 
-        $event = new FetchArticlesForFeedEvent($feed, $request, $pageModel);
+        $event = new FetchEventsForFeedEvent($feed, $request, $pageModel);
 
         $dispatcher = $this->container->get('event_dispatcher');
         $dispatcher->dispatch($event);
 
-        foreach ($event->getArticles() ?? [] as $article) {
-            $event = new TransformArticleForFeedEvent($article, $feed, $pageModel, $request, $baseUrl);
-            $dispatcher->dispatch($event);
+        foreach ($event->getEvents() ?? [] as $v) {
+            foreach ($v as $vv) {
+                foreach ($vv as $event) {
+                    $systemEvent = new TransformEventForFeedEvent($event, $feed, $pageModel, $request, $baseUrl);
+                    $dispatcher->dispatch($systemEvent);
 
-            if (!$item = $event->getItem()) {
-                continue;
+                    if (!$item = $systemEvent->getItem()) {
+                        continue;
+                    }
+
+                    $feed->add($item);
+
+                    $this->tagResponse($event['model'] ?? null);
+                }
             }
-
-            $feed->add($item);
-            $this->tagResponse($article);
         }
 
         $formatter = $this->specification->getStandard($pageModel->feedFormat)->getFormatter();
@@ -72,9 +77,9 @@ class NewsFeedController extends AbstractFeedPageController
 
         $this->setCacheHeaders($response, $pageModel);
 
-        // Always add the response tags for the selected archives
-        $archiveIds = StringUtil::deserialize($pageModel->newsArchives, true);
-        $this->tagResponse(array_map(static fn ($id): string => 'contao.db.tl_news_archive.'.$id, $archiveIds));
+        // Always add the response tags for the selected calendars
+        $archiveIds = StringUtil::deserialize($pageModel->eventCalendars, true);
+        $this->tagResponse(array_map(static fn ($id): string => 'contao.db.tl_calendar.'.$id, $archiveIds));
 
         return $response;
     }
