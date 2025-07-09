@@ -96,14 +96,6 @@ services:
         arguments:
             - '@contao.csp.parser'
 
-    contao.listener.data_container.cte_alias:
-        class: Contao\CoreBundle\EventListener\DataContainer\CteAliasListener
-        arguments:
-            - '@request_stack'
-            - '@security.helper'
-            - '@database_connection'
-            - '@contao.framework'
-
     contao.listener.data_container.default_global_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\DefaultGlobalOperationsListener
 
@@ -264,6 +256,18 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
         arguments:
             - '@translator'
+
+    contao.listener.data_container.switch_member_operation:
+        class: Contao\CoreBundle\EventListener\DataContainer\SwitchMemberOperationListener
+        arguments:
+            - '@security.helper'
+            - '@router'
+
+    contao.listener.data_container.switch_user_operation:
+        class: Contao\CoreBundle\EventListener\DataContainer\SwitchUserOperationListener
+        arguments:
+            - '@security.helper'
+            - '@router'
 
     contao.listener.data_container.template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener

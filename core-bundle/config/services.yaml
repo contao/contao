@@ -1042,6 +1042,11 @@ services:
             - '@security.access.decision_manager'
             - '@database_connection'
 
+    contao.security.data_container.content_alias_delete_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\ContentAliasDeleteVoter
+        arguments:
+            - '@database_connection'
+
     contao.security.data_container.content_composition_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ContentCompositionVoter
         arguments:
@@ -1357,7 +1362,6 @@ services:
             - '@request_stack'
             - '@contao.security.token_checker'
             - '@contao.csrf.token_manager'
-            - '@security.helper'
             - '@contao.framework'
 
     contao.twig.highlighter_runtime:

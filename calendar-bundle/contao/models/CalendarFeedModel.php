@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\Model\Collection;
 
+trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprecated and will no longer work in Contao 6.', CalendarFeedModel::class);
+
 /**
  * Reads and writes calendar feeds
  *

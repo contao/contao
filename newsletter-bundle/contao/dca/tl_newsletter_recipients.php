@@ -56,6 +56,8 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 		),
 		'global_operations' => array
 		(
+			'all',
+			'-',
 			'import' => array
 			(
 				'href'                => 'key=import',

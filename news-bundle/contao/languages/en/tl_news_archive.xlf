@@ -50,19 +50,22 @@
       <trans-unit id="tl_news_archive.new.1">
         <source>Create a new news archive</source>
       </trans-unit>
-      <trans-unit id="tl_news_archive.show">
+      <trans-unit id="tl_news_archive.show.1">
         <source>Show the details of news archive ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_news_archive.edit">
+      <trans-unit id="tl_news_archive.edit.1">
         <source>Edit news archive ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_news_archive.children">
+      <trans-unit id="tl_news_archive.children.0">
+        <source>News items</source>
+      </trans-unit>
+      <trans-unit id="tl_news_archive.children.1">
         <source>Edit the news items of news archive ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_news_archive.copy">
+      <trans-unit id="tl_news_archive.copy.1">
         <source>Duplicate news archive ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_news_archive.delete">
+      <trans-unit id="tl_news_archive.delete.1">
         <source>Delete news archive ID %s</source>
       </trans-unit>
     </body>
