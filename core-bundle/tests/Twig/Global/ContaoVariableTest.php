@@ -20,7 +20,6 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\PageModel;
 use PHPUnit\Framework\Attributes\DataProvider;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -44,7 +43,6 @@ class ContaoVariableTest extends TestCase
             $requestStack,
             $this->createMock(TokenChecker::class),
             $this->createMock(ContaoCsrfTokenManager::class),
-            $this->createMock(Security::class),
             $this->createMock(ContaoFramework::class),
         );
 
@@ -77,7 +75,6 @@ class ContaoVariableTest extends TestCase
             $requestStack,
             $this->createMock(TokenChecker::class),
             $this->createMock(ContaoCsrfTokenManager::class),
-            $this->createMock(Security::class),
             $contaoFramework,
         );
 
@@ -118,7 +115,6 @@ class ContaoVariableTest extends TestCase
             $requestStack,
             $this->createMock(TokenChecker::class),
             $this->createMock(ContaoCsrfTokenManager::class),
-            $this->createMock(Security::class),
             $contaoFramework,
         );
 
