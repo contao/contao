@@ -140,9 +140,11 @@ class DataContainerOperation implements \ArrayAccess
         return $this;
     }
 
-    public function disable(): void
+    public function disable(string $reason = ''): void
     {
         unset($this['route'], $this['href']);
+
+        $this['title'] = $reason;
 
         if (isset($this['icon'])) {
             $this['icon'] = str_replace('.svg', '--disabled.svg', $this['icon']);

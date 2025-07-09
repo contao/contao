@@ -1046,6 +1046,7 @@ services:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ContentAliasDeleteVoter
         arguments:
             - '@database_connection'
+            - '@translator'
 
     contao.security.data_container.content_composition_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ContentCompositionVoter

@@ -23,7 +23,9 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
-use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Authorization\AccessDecision;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
  * @internal
@@ -33,7 +35,7 @@ class DefaultOperationsListener
 {
     public function __construct(
         private readonly ContaoFramework $framework,
-        private readonly Security $security,
+        private readonly AuthorizationCheckerInterface $authorizationChecker,
         private readonly Connection $connection,
     ) {
     }
@@ -118,6 +120,7 @@ class DefaultOperationsListener
                     'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
                     'primary' => true,
                     'showInHeader' => true,
+                    'showIfDisabled' => true,
                 ],
             ];
         }
@@ -134,6 +137,7 @@ class DefaultOperationsListener
                         'attributes' => 'data-contao--deeplink-target="secondary"',
                         'button_callback' => $this->accessChildrenCallback($ctable, $table),
                         'primary' => true,
+                        'showIfDisabled' => true,
                     ],
                 ];
             }
@@ -185,6 +189,7 @@ class DefaultOperationsListener
                 'icon' => 'delete.svg',
                 'attributes' => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false"',
                 'button_callback' => $this->isGrantedCallback(DeleteAction::class, $table),
+                'showIfDisabled' => true,
             ];
         }
 
@@ -211,8 +216,13 @@ class DefaultOperationsListener
     private function isGrantedCallback(string $actionClass, string $table, array|null $new = null): \Closure
     {
         return function (DataContainerOperation $operation) use ($actionClass, $table, $new): void {
-            if (!$this->isGranted($actionClass, $table, $operation, $new)) {
-                $operation->disable();
+            $accessDecision = $this->isGranted($actionClass, $table, $operation, $new);
+
+            if (
+                false === $accessDecision
+                || ($accessDecision instanceof AccessDecision && !$accessDecision->isGranted)
+            ) {
+                $operation->disable($this->getAccessDeniedMessage($accessDecision));
             }
         };
     }
@@ -229,12 +239,13 @@ class DefaultOperationsListener
             }
 
             $subject = new ReadAction($ctable, $data);
+            $accessDecision = class_exists(AccessDecision::class) ? new AccessDecision() : null;
 
-            if (!$this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$ctable, $subject)) {
+            if (!$this->authorizationChecker->isGranted(ContaoCorePermissions::DC_PREFIX.$ctable, $subject, $accessDecision)) {
                 if ($ctable === $table) {
                     $operation->hide();
                 } else {
-                    $operation->disable();
+                    $operation->disable($this->getAccessDeniedMessage($accessDecision));
                 }
             }
         };
@@ -243,8 +254,10 @@ class DefaultOperationsListener
     private function copyChildrenCallback(string $table): \Closure
     {
         return function (DataContainerOperation $operation) use ($table): void {
-            if (!$this->isGranted(CreateAction::class, $table, $operation, ['sorting' => null])) {
-                $operation->disable();
+            $accessDecision = $this->isGranted(CreateAction::class, $table, $operation, ['sorting' => null]);
+
+            if (false === $accessDecision || ($accessDecision instanceof AccessDecision && !$accessDecision->isGranted)) {
+                $operation->disable($this->getAccessDeniedMessage($accessDecision));
 
                 return;
             }
@@ -255,7 +268,7 @@ class DefaultOperationsListener
             );
 
             if ($childCount < 1) {
-                $operation->disable();
+                $operation->disable($this->getAccessDeniedMessage($accessDecision));
             }
         };
     }
@@ -264,11 +277,13 @@ class DefaultOperationsListener
     {
         return function (DataContainerOperation $operation) use ($toggleField, $table): void {
             $new = [$toggleField => !($operation['record'][$toggleField] ?? false)];
+            $accessDecision = $this->isGranted(UpdateAction::class, $table, $operation, $new);
 
-            if (!$this->isGranted(UpdateAction::class, $table, $operation, $new)) {
+            if (false === $accessDecision || ($accessDecision instanceof AccessDecision && !$accessDecision->isGranted)) {
                 // Do not use DataContainerOperation::disable() because it would not show the
                 // actual state
                 unset($operation['route'], $operation['href']);
+                $operation['title'] = $this->getAccessDeniedMessage($accessDecision);
             }
         };
     }
@@ -297,7 +312,7 @@ class DefaultOperationsListener
         return $field;
     }
 
-    private function isGranted(string $actionClass, string $table, DataContainerOperation $operation, array|null $new = null): bool
+    private function isGranted(string $actionClass, string $table, DataContainerOperation $operation, array|null $new = null): AccessDecision|bool
     {
         $subject = match ($actionClass) {
             CreateAction::class => new CreateAction($table, array_replace($operation->getRecord(), (array) $new)),
@@ -306,6 +321,37 @@ class DefaultOperationsListener
             default => throw new \InvalidArgumentException(\sprintf('Invalid action class "%s".', $actionClass)),
         };
 
-        return $this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$table, $subject);
+        // TODO: class always exists when we require at least Symfony 7.3+
+        $accessDecision = class_exists(AccessDecision::class) ? new AccessDecision() : null;
+
+        $isGranted = $this->authorizationChecker->isGranted(ContaoCorePermissions::DC_PREFIX.$table, $subject, $accessDecision);
+
+        return $accessDecision ?? $isGranted;
+    }
+
+    /**
+     * Same as AccessDecision::getMessage() but without the non-translated prefix.
+     */
+    private function getAccessDeniedMessage(AccessDecision|bool|null $accessDecision): string
+    {
+        if (!$accessDecision instanceof AccessDecision || $accessDecision->isGranted) {
+            return '';
+        }
+
+        $message = '';
+
+        if ($accessDecision->votes) {
+            foreach ($accessDecision->votes as $vote) {
+                if (VoterInterface::ACCESS_DENIED !== $vote->result) {
+                    continue;
+                }
+
+                foreach ($vote->reasons as $reason) {
+                    $message .= ' '.$reason;
+                }
+            }
+        }
+
+        return trim($message);
     }
 }

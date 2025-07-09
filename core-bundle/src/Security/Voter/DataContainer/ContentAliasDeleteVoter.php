@@ -18,7 +18,9 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Contracts\Service\ResetInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @internal
@@ -27,8 +29,10 @@ class ContentAliasDeleteVoter extends AbstractDataContainerVoter implements Rese
 {
     private array|null $cache = null;
 
-    public function __construct(private readonly Connection $connection)
-    {
+    public function __construct(
+        private readonly Connection $connection,
+        private readonly TranslatorInterface $translator,
+    ) {
     }
 
     public function reset(): void
@@ -46,16 +50,24 @@ class ContentAliasDeleteVoter extends AbstractDataContainerVoter implements Rese
         return 'tl_content';
     }
 
-    protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
+    protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action, Vote|null $vote = null): bool
     {
         if (!$action instanceof DeleteAction) {
             return true;
         }
 
         if (null === $this->cache) {
-            $this->cache = $this->connection->fetchAllKeyValue("SELECT cteAlias, TRUE FROM tl_content WHERE type = 'alias' GROUP BY cteAlias");
+            $this->cache = $this->connection->fetchAllKeyValue("SELECT id, cteAlias, TRUE FROM tl_content WHERE type = 'alias'");
         }
 
-        return !isset($this->cache[(int) $action->getCurrentId()]);
+        $currentId = (int) $action->getCurrentId();
+
+        if (false !== ($aliasId = array_search($currentId, $this->cache, true))) {
+            $vote?->addReason($this->translator->trans('ERR.usedInAliasElement', [$currentId, $aliasId], 'contao_default'));
+
+            return false;
+        }
+
+        return true;
     }
 }

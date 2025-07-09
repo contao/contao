@@ -308,6 +308,9 @@
       <trans-unit id="ERR.copyUnique">
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
       </trans-unit>
+      <trans-unit id="ERR.usedInAliasElement">
+        <source>Element ID %d cannot be deleted because it is referenced in alias element ID %s.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
       </trans-unit>
