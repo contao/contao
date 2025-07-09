@@ -285,7 +285,7 @@
         <source>Edit the content elements of event ID %s</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.copy.1">
-        <source>Duplicate event ID %s</source>
+        <source>Copy event ID %s</source>
       </trans-unit>
       <trans-unit id="tl_calendar_events.cut.1">
         <source>Move event ID %s</source>

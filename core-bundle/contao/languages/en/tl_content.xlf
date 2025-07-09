@@ -714,7 +714,7 @@
         <source>Move content element ID %s</source>
       </trans-unit>
       <trans-unit id="tl_content.copy.1">
-        <source>Duplicate content element ID %s</source>
+        <source>Copy content element ID %s</source>
       </trans-unit>
       <trans-unit id="tl_content.delete.1">
         <source>Delete content element ID %s</source>

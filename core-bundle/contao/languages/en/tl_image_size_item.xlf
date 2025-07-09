@@ -45,7 +45,7 @@
         <source>Move media query ID %s</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.copy.1">
-        <source>Duplicate media query ID %s</source>
+        <source>Copy media query ID %s</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.delete.1">
         <source>Delete media query ID %s</source>

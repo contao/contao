@@ -47,6 +47,9 @@
       <trans-unit id="tl_faq_category.children.1">
         <source>Edit the questions of category ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_faq_category.copy.0">
+        <source>Duplicate</source>
+      </trans-unit>
       <trans-unit id="tl_faq_category.copy.1">
         <source>Duplicate category ID %s</source>
       </trans-unit>
