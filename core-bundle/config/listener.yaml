@@ -265,6 +265,18 @@ services:
         arguments:
             - '@translator'
 
+    contao.listener.data_container.switch_member_operation:
+        class: Contao\CoreBundle\EventListener\DataContainer\SwitchMemberOperationListener
+        arguments:
+            - '@security.helper'
+            - '@router'
+
+    contao.listener.data_container.switch_user_operation:
+        class: Contao\CoreBundle\EventListener\DataContainer\SwitchUserOperationListener
+        arguments:
+            - '@security.helper'
+            - '@router'
+
     contao.listener.data_container.template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
         arguments:
