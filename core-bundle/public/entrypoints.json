@@ -7,6 +7,14 @@
       "js": [
         "/bundles/contaocore/backend.926b9b31.js"
       ]
+    },
+    "navigation": {
+      "css": [
+        "/bundles/contaocore/navigation.d70c49d9.css"
+      ],
+      "js": [
+        "/bundles/contaocore/navigation.8dd3e8d5.js"
+      ]
     }
   }
 }

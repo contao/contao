@@ -1,6 +1,8 @@
 {
   "backend.css": "/bundles/contaocore/backend.7040c497.css",
   "backend.js": "/bundles/contaocore/backend.926b9b31.js",
+  "navigation.css": "/bundles/contaocore/navigation.d70c49d9.css",
+  "navigation.js": "/bundles/contaocore/navigation.8dd3e8d5.js",
   "images/share.svg": "/bundles/contaocore/images/share.4529fc18.svg",
   "images/editor.svg": "/bundles/contaocore/images/editor.38debe02.svg",
   "images/copy.svg": "/bundles/contaocore/images/copy.88a433e6.svg",
