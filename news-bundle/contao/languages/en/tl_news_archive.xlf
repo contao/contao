@@ -59,6 +59,9 @@
       <trans-unit id="tl_news_archive.children.1">
         <source>Edit the news items of news archive ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_news_archive.copy.0">
+        <source>Duplicate</source>
+      </trans-unit>
       <trans-unit id="tl_news_archive.copy.1">
         <source>Duplicate news archive ID %s</source>
       </trans-unit>

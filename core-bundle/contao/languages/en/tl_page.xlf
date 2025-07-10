@@ -498,10 +498,10 @@
         <source>Move page ID %s</source>
       </trans-unit>
       <trans-unit id="tl_page.copy.1">
-        <source>Duplicate page ID %s</source>
+        <source>Copy page ID %s</source>
       </trans-unit>
       <trans-unit id="tl_page.copyChildren.1">
-        <source>Duplicate page ID %s with its subpages</source>
+        <source>Copy page ID %s with its subpages</source>
       </trans-unit>
       <trans-unit id="tl_page.delete.1">
         <source>Delete page ID %s</source>

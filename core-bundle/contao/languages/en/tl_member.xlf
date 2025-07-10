@@ -194,6 +194,9 @@
       <trans-unit id="tl_member.edit.1">
         <source>Edit member ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_member.copy.0">
+        <source>Duplicate</source>
+      </trans-unit>
       <trans-unit id="tl_member.copy.1">
         <source>Duplicate member ID %s</source>
       </trans-unit>

@@ -200,6 +200,9 @@
       <trans-unit id="tl_form.children.1">
         <source>Edit the form fields of form ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_form.copy.0">
+        <source>Duplicate</source>
+      </trans-unit>
       <trans-unit id="tl_form.copy.1">
         <source>Duplicate form ID %s</source>
       </trans-unit>

@@ -357,7 +357,7 @@
         <source>Edit page layout ID %s</source>
       </trans-unit>
       <trans-unit id="tl_layout.copy.1">
-        <source>Duplicate page layout ID %s</source>
+        <source>Copy page layout ID %s</source>
       </trans-unit>
       <trans-unit id="tl_layout.cut.1">
         <source>Move page layout ID %s</source>

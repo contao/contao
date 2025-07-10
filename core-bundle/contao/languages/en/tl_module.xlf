@@ -496,7 +496,7 @@ If you did not request this e-mail, please contact the website administrator.
         <source>Edit module ID %s</source>
       </trans-unit>
       <trans-unit id="tl_module.copy.1">
-        <source>Duplicate module ID %s</source>
+        <source>Copy module ID %s</source>
       </trans-unit>
       <trans-unit id="tl_module.cut.1">
         <source>Move module ID %s</source>

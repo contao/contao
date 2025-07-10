@@ -77,6 +77,9 @@
       <trans-unit id="tl_calendar.children.1">
         <source>Edit the events of calendar ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_calendar.copy.0">
+        <source>Duplicate</source>
+      </trans-unit>
       <trans-unit id="tl_calendar.copy.1">
         <source>Duplicate calendar ID %s</source>
       </trans-unit>

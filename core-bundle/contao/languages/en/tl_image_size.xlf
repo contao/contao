@@ -156,7 +156,7 @@
         <source>Move image size ID %s</source>
       </trans-unit>
       <trans-unit id="tl_image_size.copy.1">
-        <source>Duplicate image size ID %s</source>
+        <source>Copy image size ID %s</source>
       </trans-unit>
       <trans-unit id="tl_image_size.delete.1">
         <source>Delete image size ID %s</source>

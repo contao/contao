@@ -150,7 +150,7 @@
         <source>Edit the content elements of article ID %s</source>
       </trans-unit>
       <trans-unit id="tl_article.copy.1">
-        <source>Duplicate article ID %s</source>
+        <source>Copy article ID %s</source>
       </trans-unit>
       <trans-unit id="tl_article.cut.1">
         <source>Move article ID %s</source>

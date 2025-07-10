@@ -56,6 +56,9 @@
       <trans-unit id="tl_member_group.edit.1">
         <source>Edit member group ID %s</source>
       </trans-unit>
+      <trans-unit id="tl_member_group.copy.0">
+        <source>Duplicate</source>
+      </trans-unit>
       <trans-unit id="tl_member_group.copy.1">
         <source>Duplicate member group ID %s</source>
       </trans-unit>
