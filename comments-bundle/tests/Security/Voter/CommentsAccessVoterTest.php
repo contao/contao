@@ -84,7 +84,7 @@ class CommentsAccessVoterTest extends TestCase
         );
     }
 
-    public static function votesProvider(): \Generator
+    public static function votesProvider(): iterable
     {
         yield [
             ['source' => 'tl_foo', 'parent' => 42],
