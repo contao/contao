@@ -148,7 +148,7 @@ class DirectoryFilterVirtualFilesystemTest extends TestCase
         $filterStorage->$operation(...$arguments);
     }
 
-    public static function provideIllegalOperations(): \Generator
+    public static function provideIllegalOperations(): iterable
     {
         yield 'create file in root' => [
             'write', ['file', ''],

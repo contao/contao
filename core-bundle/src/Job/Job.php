@@ -297,7 +297,7 @@ final class Job
             $array['parent'] = $this->getParent()?->toArray();
         }
 
-        $array['children'] = array_map(static fn (Job $child) => $child->toArray(false), $this->getChildren());
+        $array['children'] = array_map(static fn (self $child) => $child->toArray(false), $this->getChildren());
 
         return $array;
     }

@@ -112,7 +112,7 @@ class DataContainerGlobalOperationBuilderTest extends TestCase
         $this->assertSame('', (string) $builder);
     }
 
-    public static function backButtonHrefProvider(): \Generator
+    public static function backButtonHrefProvider(): iterable
     {
         yield 'Use referer for back link' => [
             null,

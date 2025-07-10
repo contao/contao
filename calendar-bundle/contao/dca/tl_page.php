@@ -8,7 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_page']['palettes']['calendar_feed'] = '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{calendars_legend},eventCalendars;{feed_legend},feedFormat,feedSource,maxFeedItems,feedRecurrenceLimit,feedFeatured,feedDescription;{image_legend},imgSize;{cache_legend:hide},includeCache;{expert_legend:hide},cssClass,sitemap,hide;{publish_legend},published,start,stop';
 
@@ -17,7 +17,7 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['eventCalendars'] = array(
 	'search' => true,
 	'inputType' => 'checkbox',
 	'eval' => array('multiple' => true, 'mandatory' => true),
-	'sql' => array('type' => 'blob', 'length' => MySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false),
+	'sql' => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, 'notnull' => false),
 );
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['feedSource'] = array(
