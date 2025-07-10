@@ -266,9 +266,6 @@
       <trans-unit id="tl_calendar_events.years">
         <source>year(s)</source>
       </trans-unit>
-      <trans-unit id="tl_calendar_events.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_calendar_events.new.1">
         <source>Create a new event</source>
       </trans-unit>

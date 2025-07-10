@@ -53,9 +53,6 @@
       <trans-unit id="tl_newsletter_channel.sender_legend">
         <source>Sender settings</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter_channel.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_newsletter_channel.new.1">
         <source>Create a new channel</source>
       </trans-unit>

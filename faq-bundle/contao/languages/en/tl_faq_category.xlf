@@ -29,9 +29,6 @@
       <trans-unit id="tl_faq_category.title_legend">
         <source>Title and redirect</source>
       </trans-unit>
-      <trans-unit id="tl_faq_category.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_faq_category.new.1">
         <source>Create a new category</source>
       </trans-unit>

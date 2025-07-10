@@ -137,9 +137,6 @@
       <trans-unit id="tl_image_size.preserveMetadataOptions.delete">
         <source>Remove all metadata fields</source>
       </trans-unit>
-      <trans-unit id="tl_image_size.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_image_size.new.1">
         <source>Create a new image size</source>
       </trans-unit>
