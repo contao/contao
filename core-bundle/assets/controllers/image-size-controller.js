@@ -48,20 +48,21 @@ export default class extends Controller {
         const value = select.value;
 
         if (value === '' || value.indexOf('_') === 0 || value.toInt().toString() === value) {
-            this.widthTarget.readOnly = true;
-            this.heightTarget.readOnly = true;
             let dimensions = select.options[select.selectedIndex].text;
             dimensions = dimensions.split('(');
             dimensions = dimensions.length > 1 ? dimensions.getLast().split(')')[0].split('x') : ['', ''];
+
+            this.widthTarget.readOnly = true;
+            this.heightTarget.readOnly = true;
             this.widthTarget.value = '';
             this.heightTarget.value = '';
             this.widthTarget.setAttribute('placeholder', dimensions[0] * 1 || '');
             this.heightTarget.setAttribute('placeholder', dimensions[1] * 1 || '');
         } else {
-            this.widthTarget.removeAttribute('placeholder');
-            this.heightTarget.removeAttribute('placeholder');
             this.widthTarget.readOnly = false;
             this.heightTarget.readOnly = false;
+            this.widthTarget.removeAttribute('placeholder');
+            this.heightTarget.removeAttribute('placeholder');
         }
     }
 
