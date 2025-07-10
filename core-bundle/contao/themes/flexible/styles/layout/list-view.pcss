@@ -334,11 +334,22 @@
 }
 
 .operations-menu li {
-    display: block !important;
+    display: block;
 }
 
-.operations-menu hr {
+.operations-menu .operation-separator {
+    border-bottom: 1px solid var(--border);
+    color: var(--border);
     margin: 5px 0;
+
+    + .operation-separator {
+        display: none;
+    }
+
+    &:first-child,
+    &:last-child {
+        display: none;
+    }
 }
 
 .operations-menu a,
