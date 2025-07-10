@@ -50,6 +50,13 @@ type = XLIFF
 source_lang = en
 resource_name = v5_6-tl_module
 
+[o:contao:p:calendar-bundle:r:v5_6-tl_page]
+file_filter = contao/languages/<lang>/tl_page.xlf
+source_file = contao/languages/en/tl_page.xlf
+type = XLIFF
+source_lang = en
+resource_name = v5_6-tl_page
+
 [o:contao:p:calendar-bundle:r:v5_6-tl_user]
 file_filter = contao/languages/<lang>/tl_user.xlf
 source_file = contao/languages/en/tl_user.xlf

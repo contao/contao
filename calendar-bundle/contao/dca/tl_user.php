@@ -13,7 +13,7 @@ use Contao\CoreBundle\DataContainer\PaletteManipulator;
 // Extend the default palettes
 PaletteManipulator::create()
 	->addLegend('calendars_legend', 'amg_legend', PaletteManipulator::POSITION_BEFORE)
-	->addField(array('calendars', 'calendarp', 'calendarfeeds', 'calendarfeedp'), 'calendars_legend', PaletteManipulator::POSITION_APPEND)
+	->addField(array('calendars', 'calendarp'), 'calendars_legend', PaletteManipulator::POSITION_APPEND)
 	->applyToPalette('extend', 'tl_user')
 	->applyToPalette('custom', 'tl_user')
 ;
@@ -37,6 +37,7 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['calendarp'] = array
 	'sql'                     => "blob NULL"
 );
 
+// Backwards compatibility
 $GLOBALS['TL_DCA']['tl_user']['fields']['calendarfeeds'] = array
 (
 	'inputType'               => 'checkbox',
@@ -46,6 +47,7 @@ $GLOBALS['TL_DCA']['tl_user']['fields']['calendarfeeds'] = array
 	'relation'                => array('type'=>'hasMany', 'load'=>'lazy')
 );
 
+// Backwards compatibility
 $GLOBALS['TL_DCA']['tl_user']['fields']['calendarfeedp'] = array
 (
 	'inputType'               => 'checkbox',

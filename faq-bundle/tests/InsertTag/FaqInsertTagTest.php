@@ -66,7 +66,7 @@ class FaqInsertTagTest extends ContaoTestCase
         $this->assertSame($expectedOutputType, $result->getOutputType());
     }
 
-    public static function replacesTheFaqTagsProvider(): \Generator
+    public static function replacesTheFaqTagsProvider(): iterable
     {
         yield [
             'faq',

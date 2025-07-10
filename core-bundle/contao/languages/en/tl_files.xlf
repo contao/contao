@@ -192,7 +192,7 @@
         <source>Move file or folder "%s"</source>
       </trans-unit>
       <trans-unit id="tl_files.copy.1">
-        <source>Duplicate file or folder "%s"</source>
+        <source>Copy file or folder "%s"</source>
       </trans-unit>
       <trans-unit id="tl_files.edit.1">
         <source>Edit file or folder "%s"</source>

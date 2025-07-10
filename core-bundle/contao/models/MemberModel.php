@@ -213,7 +213,7 @@ class MemberModel extends Model
 
 		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn>? AND o.confirmedOn=0 AND o.token LIKE 'reg-%')")
 								 ->limit(1)
-								 ->execute($strEmail, strtotime('-24 hours'));
+								 ->execute($strEmail, self::getRegistrationExpirationTime());
 
 		if ($objResult->numRows < 1)
 		{
@@ -243,7 +243,7 @@ class MemberModel extends Model
 		$objDatabase = Database::getInstance();
 
 		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0 AND o.token LIKE 'reg-%')")
-								 ->execute(strtotime('-24 hours'));
+								 ->execute(self::getRegistrationExpirationTime());
 
 		if ($objResult->numRows < 1)
 		{
@@ -267,7 +267,7 @@ class MemberModel extends Model
 
 		$objResult = $objDatabase->prepare("SELECT * FROM $t WHERE email=? AND disable=1 AND EXISTS (SELECT * FROM tl_opt_in_related r LEFT JOIN tl_opt_in o ON r.pid=o.id WHERE r.relTable='$t' AND r.relId=$t.id AND o.createdOn<=? AND o.confirmedOn=0 AND o.token LIKE 'reg-%')")
 								 ->limit(1)
-								 ->execute($strEmail, strtotime('-24 hours'));
+								 ->execute($strEmail, self::getRegistrationExpirationTime());
 
 		if ($objResult->numRows < 1)
 		{
@@ -282,5 +282,15 @@ class MemberModel extends Model
 		}
 
 		return new static($objResult);
+	}
+
+	/**
+	 * Return the expiration time for registrations
+	 *
+	 * @return string
+	 */
+	private static function getRegistrationExpirationTime(): string
+	{
+		return strtotime('-' . System::getContainer()->getParameter('contao.registration.expiration') . ' days');
 	}
 }

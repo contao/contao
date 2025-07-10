@@ -2286,7 +2286,6 @@ window.addEvent('domready', function() {
 	}
 
 	Backend.tableWizardSetWidth();
-	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
 
 	Theme.stopClickPropagation();
@@ -2302,7 +2301,6 @@ window.addEvent('resize', function() {
 
 // Re-apply certain changes upon ajax_change
 window.addEvent('ajax_change', function() {
-	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
 
 	Theme.stopClickPropagation();

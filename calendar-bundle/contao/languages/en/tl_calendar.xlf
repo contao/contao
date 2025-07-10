@@ -62,9 +62,6 @@
       <trans-unit id="tl_calendar.feeds.1">
         <source>Manage calendar feeds</source>
       </trans-unit>
-      <trans-unit id="tl_calendar.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_calendar.new.1">
         <source>Create a new calendar</source>
       </trans-unit>
@@ -79,6 +76,9 @@
       </trans-unit>
       <trans-unit id="tl_calendar.children.1">
         <source>Edit the events of calendar ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_calendar.copy.0">
+        <source>Duplicate</source>
       </trans-unit>
       <trans-unit id="tl_calendar.copy.1">
         <source>Duplicate calendar ID %s</source>

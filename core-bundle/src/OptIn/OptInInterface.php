@@ -30,4 +30,9 @@ interface OptInInterface
      * Purges expired tokens.
      */
     public function purgeTokens(): void;
+
+    /**
+     * Allow setting the remove time.
+     */
+    public function setRemoveOn(string $removeOn): void;
 }

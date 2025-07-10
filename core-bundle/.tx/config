@@ -22,12 +22,26 @@ type = XLIFF
 source_lang = en
 resource_name = v5_6-explain
 
+[o:contao:p:core-bundle:r:v5_6-jobs]
+file_filter = contao/languages/<lang>/jobs.xlf
+source_file = contao/languages/en/jobs.xlf
+type = XLIFF
+source_lang = en
+resource_name = v5_6-jobs
+
 [o:contao:p:core-bundle:r:v5_6-modules]
 file_filter = contao/languages/<lang>/modules.xlf
 source_file = contao/languages/en/modules.xlf
 type = XLIFF
 source_lang = en
 resource_name = v5_6-modules
+
+[o:contao:p:core-bundle:r:v5_6-template_studio]
+file_filter = contao/languages/<lang>/template_studio.xlf
+source_file = contao/languages/en/template_studio.xlf
+type = XLIFF
+source_lang = en
+resource_name = v5_6-template_studio
 
 [o:contao:p:core-bundle:r:v5_6-tl_article]
 file_filter = contao/languages/<lang>/tl_article.xlf

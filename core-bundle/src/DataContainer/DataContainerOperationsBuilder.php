@@ -145,7 +145,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             default => $type,
         };
 
-        [$label, $title] = $this->getLabelAndTitle($type);
+        [$label, $title] = $this->getLabelAndTitle($this->table, $type, $this->id);
 
         if (null === $href) {
             $this->append([
@@ -324,29 +324,5 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
             'iconAttributes' => $iconAttributes,
             'primary' => $config['primary'] ?? null,
         ];
-    }
-
-    /**
-     * @return array{0: string, 1: string}
-     */
-    private function getLabelAndTitle(string $key): array
-    {
-        $label = $GLOBALS['TL_LANG'][$this->table][$key] ?? $GLOBALS['TL_LANG']['DCA'][$key] ?? null;
-
-        if (null === $label) {
-            return [$key, ''];
-        }
-
-        if (\is_string($label)) {
-            $label = [null, $label];
-        }
-
-        $label[1] = \sprintf($label[1], $this->id);
-
-        if (!isset($label[0])) {
-            $label[0] = $GLOBALS['TL_LANG']['DCA'][$key][0] ?? $label[1];
-        }
-
-        return $label;
     }
 }

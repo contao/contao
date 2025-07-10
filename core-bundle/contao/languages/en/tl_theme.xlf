@@ -113,9 +113,6 @@
       <trans-unit id="tl_theme.editmeta">
         <source>Edit the theme settings</source>
       </trans-unit>
-      <trans-unit id="tl_theme.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_theme.new.1">
         <source>Create a new theme</source>
       </trans-unit>

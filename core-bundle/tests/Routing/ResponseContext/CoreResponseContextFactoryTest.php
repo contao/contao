@@ -116,7 +116,7 @@ class CoreResponseContextFactoryTest extends TestCase
         $this->assertTrue($responseContext->isInitialized(JsonLdManager::class));
     }
 
-    public static function contaoWebpageResponseContext(): \Generator
+    public static function contaoWebpageResponseContext(): iterable
     {
         yield 'Unprotected page' => [
             [],
