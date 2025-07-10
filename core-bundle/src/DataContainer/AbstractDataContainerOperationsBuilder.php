@@ -49,15 +49,15 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
 
     /**
      * @param array{html: string, primary?: bool}|array{separator: true}|array{
-     *      label: string,
-     *      title?: string,
-     *      attributes?: HtmlAttributes,
-     *      icon?: string,
-     *      iconAttributes?: HtmlAttributes,
-     *      href?: string,
-     *      method?: string,
-     *      primary?: bool|null,
-     *  } $operation
+     *     label: string,
+     *     title?: string,
+     *     attributes?: HtmlAttributes,
+     *     icon?: string,
+     *     iconAttributes?: HtmlAttributes,
+     *     href?: string,
+     *     method?: string,
+     *     primary?: bool|null
+     * } $operation
      */
     public function prepend(array $operation, bool $parseHtml = false): self
     {
@@ -74,15 +74,15 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
 
     /**
      * @param array{html: string, primary?: bool}|array{separator: true}|array{
-     *      label: string,
-     *      title?: string,
-     *      attributes?: HtmlAttributes,
-     *      icon?: string,
-     *      iconAttributes?: HtmlAttributes,
-     *      href?: string,
-     *      method?: string,
-     *      primary?: bool|null,
-     *  } $operation
+     *     label: string,
+     *     title?: string,
+     *     attributes?: HtmlAttributes,
+     *     icon?: string,
+     *     iconAttributes?: HtmlAttributes,
+     *     href?: string,
+     *     method?: string,
+     *     primary?: bool|null
+     * } $operation
      */
     public function append(array $operation, bool $parseHtml = false): self
     {

@@ -61,8 +61,9 @@ class ContentAliasDeleteVoter extends AbstractDataContainerVoter implements Rese
         }
 
         $currentId = (int) $action->getCurrentId();
+        $aliasId = array_search($currentId, $this->cache, true);
 
-        if (false !== ($aliasId = array_search($currentId, $this->cache, true))) {
+        if (false !== $aliasId) {
             $vote?->addReason($this->translator->trans('ERR.usedInAliasElement', [$currentId, $aliasId], 'contao_default'));
 
             return false;

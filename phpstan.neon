@@ -60,16 +60,6 @@ parameters:
         # Ignore missing generated class names
         - message: '#setMockClassName\(\) expects class-string, string given#'
 
-        # Ignore error on forward-compatible argument
-        # TODO: remove this once we require Symfony 7.3
-        - identifier: arguments.count
-          path: core-bundle/src/Security/Voter/DataContainer/AbstractDataContainerVoter.php
-
-        # Ignore error on forward-compatible argument
-        # TODO: remove this once we require Symfony 7.3
-        - identifier: arguments.count
-          path: core-bundle/src/EventListener/DataContainer/DefaultOperationsListener.php
-
     treatPhpDocTypesAsCertain: false
     rememberPossiblyImpureFunctionValues: false
 

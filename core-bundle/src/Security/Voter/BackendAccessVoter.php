@@ -86,11 +86,9 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
         if ('can_edit_fields' === $field) {
             if (!$this->canEditFieldsOf($subject, $user)) {
-                $vote?->addReason($this->translator->trans(
-                    'ERR.noFieldsOfTablePermission',
-                    \is_string($subject) ? [$subject] : [],
-                    'contao_default',
-                ));
+                $vote?->addReason(
+                    $this->translator->trans('ERR.noFieldsOfTablePermission', \is_string($subject) ? [$subject] : [], 'contao_default'),
+                );
 
                 return false;
             }
@@ -100,11 +98,9 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
         if (isset(self::PAGE_PERMISSIONS[$field])) {
             if (!$this->isAllowed($subject, self::PAGE_PERMISSIONS[$field], $user)) {
-                $vote?->addReason($this->translator->trans(
-                    'ERR.userAccessDenied.'.$field,
-                    \is_array($subject) && isset($subject['id']) ? [$subject['id']] : [],
-                    'contao_default',
-                ));
+                $vote?->addReason(
+                    $this->translator->trans('ERR.userAccessDenied.'.$field, \is_array($subject) && isset($subject['id']) ? [$subject['id']] : [], 'contao_default'),
+                );
 
                 return false;
             }

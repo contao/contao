@@ -242,6 +242,7 @@ class DefaultOperationsListener implements ResetInterface
             $subject = new ReadAction($ctable, $data);
             $accessDecision = class_exists(AccessDecision::class) ? new AccessDecision() : null;
 
+            /** @phpstan-ignore arguments.count */
             if (!$this->authorizationChecker->isGranted(ContaoCorePermissions::DC_PREFIX.$ctable, $subject, $accessDecision)) {
                 if ($ctable === $table) {
                     $operation->hide();
@@ -326,6 +327,7 @@ class DefaultOperationsListener implements ResetInterface
         // TODO: class always exists when we require at least Symfony 7.3+
         $accessDecision = class_exists(AccessDecision::class) ? new AccessDecision() : null;
 
+        /** @phpstan-ignore arguments.count */
         $isGranted = $this->authorizationChecker->isGranted(ContaoCorePermissions::DC_PREFIX.$table, $subject, $accessDecision);
 
         return $accessDecision ?? $isGranted;

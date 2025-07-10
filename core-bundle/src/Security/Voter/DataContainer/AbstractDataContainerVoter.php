@@ -45,6 +45,7 @@ abstract class AbstractDataContainerVoter implements VoterInterface, CacheableVo
                 $subject instanceof CreateAction,
                 $subject instanceof ReadAction,
                 $subject instanceof UpdateAction,
+                /** @phpstan-ignore arguments.count */
                 $subject instanceof DeleteAction => $this->hasAccess($token, $subject, $vote),
                 default => null,
             };
