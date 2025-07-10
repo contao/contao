@@ -167,9 +167,6 @@
       <trans-unit id="tl_newsletter.send.1">
         <source>Send newsletter ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_newsletter.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_newsletter.new.1">
         <source>Create a new newsletter</source>
       </trans-unit>

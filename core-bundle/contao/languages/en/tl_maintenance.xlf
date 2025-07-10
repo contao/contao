@@ -150,7 +150,7 @@
         <source>Rebuild index</source>
       </trans-unit>
       <trans-unit id="tl_maintenance.backend_search.confirmation">
-        <source>Rebuilding is in progress. Check the jobs interface for updates on the process.</source>
+        <source>Rebuilding is in progress. Check the jobs overview for updates on the process.</source>
       </trans-unit>
     </body>
   </file>

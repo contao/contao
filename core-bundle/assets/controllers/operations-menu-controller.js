@@ -78,7 +78,7 @@ export default class OperationsMenuController extends Controller {
         const offset = 2; // border-width that is excluded from getBoundingClientRect
 
         const submenuRect = this.submenuTarget.getBoundingClientRect();
-        const parentRect = this.controllerTarget.offsetParent.getBoundingClientRect();
+        const parentRect = this.menuTarget.querySelector('.operations-menu-container').getBoundingClientRect();
 
         if (event === undefined) {
             this.submenuTarget.style.top = '100%';

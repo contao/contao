@@ -118,13 +118,14 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             $url .= '&amp;pid='.$pid;
         }
 
-        $labelNew = $GLOBALS['TL_LANG'][$this->table]['new'] ?? $GLOBALS['TL_LANG']['DCA']['new'];
+        [$label, $title] = $this->getLabelAndTitle($this->table, 'new');
+
         $href = $this->framework->getAdapter(Backend::class)->addToUrl($url, true, [], false);
 
         $this->append([
             'href' => $href,
-            'label' => $labelNew[0] ?? 'new',
-            'title' => $labelNew[1] ?? null,
+            'label' => $label,
+            'title' => $title,
             'attributes' => (new HtmlAttributes())->addClass('header_new')->set('accesskey', 'n')->set('data-action', 'contao--scroll-offset#store'),
             'method' => 'POST',
             'primary' => true,
