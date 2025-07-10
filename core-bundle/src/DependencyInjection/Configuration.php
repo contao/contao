@@ -108,7 +108,7 @@ class Configuration implements ConfigurationInterface
                         ->integerNode('expiration')
                             ->min(1)
                             ->defaultValue(14)
-                            ->info('Time in days to invalidate registrations.')
+                            ->info('The number of days after which unconfirmed registrations expire.')
                         ->end()
                     ->end()
                 ->end()

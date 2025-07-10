@@ -28,6 +28,11 @@ class OptIn implements OptInInterface
     {
     }
 
+    public function setRemoveOn(string $removeOn): void
+    {
+        $this->removeOn = $removeOn;
+    }
+
     public function create(string $prefix, string $email, array $related): OptInTokenInterface
     {
         if ($prefix) {
@@ -50,9 +55,6 @@ class OptIn implements OptInInterface
         $optIn->tstamp = time();
         $optIn->token = $token;
         $optIn->createdOn = time();
-
-        // The token is required to remove unconfirmed subscriptions after 24 hours, so
-        // keep it for 3 days to make sure it is not purged before the subscription
         $optIn->removeOn = strtotime($this->removeOn);
         $optIn->email = $email;
         $optIn->save();
@@ -116,10 +118,5 @@ class OptIn implements OptInInterface
                 $token->save();
             }
         }
-    }
-
-    public function setRemoveOn(string $removeOn): void
-    {
-        $this->removeOn = $removeOn;
     }
 }

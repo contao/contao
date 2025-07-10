@@ -285,7 +285,7 @@ class MemberModel extends Model
 	}
 
 	/**
-	 * Expiration time for registrations. Defaults to 24 hours if not set otherwise.
+	 * Return the expiration time for registrations
 	 *
 	 * @return string
 	 */
