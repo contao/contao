@@ -134,7 +134,7 @@ class Document
             return new Crawler($this->originalDocument->cloneNode(true));
         }
 
-        // Somehow cannot use the existing document, let's re-parse
+        // Somehow cannot use the existing document, let's parse again.
         return new Crawler($this->body);
     }
 

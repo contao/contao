@@ -414,11 +414,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 class tl_user extends Backend
 {
 	/**
-	 * @var int
-	 */
-	private static $origUserId;
-
-	/**
 	 * Handle the profile page.
 	 *
 	 * @param DataContainer $dc
