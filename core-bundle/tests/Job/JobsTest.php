@@ -33,7 +33,7 @@ class JobsTest extends ContaoTestCase
         $this->assertSame($userLoggedIn ? 42 : Owner::SYSTEM, $job->getOwner()->getId());
     }
 
-    public static function createJobProvider(): \Generator
+    public static function createJobProvider(): iterable
     {
         yield 'No logged in user' => [false];
 

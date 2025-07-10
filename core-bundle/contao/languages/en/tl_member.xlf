@@ -185,9 +185,6 @@
       <trans-unit id="tl_member.captchaDetails">
         <source>Verification</source>
       </trans-unit>
-      <trans-unit id="tl_member.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_member.new.1">
         <source>Create a new member</source>
       </trans-unit>
@@ -196,6 +193,9 @@
       </trans-unit>
       <trans-unit id="tl_member.edit.1">
         <source>Edit member ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_member.copy.0">
+        <source>Duplicate</source>
       </trans-unit>
       <trans-unit id="tl_member.copy.1">
         <source>Duplicate member ID %s</source>

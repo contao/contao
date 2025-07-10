@@ -347,9 +347,6 @@
       <trans-unit id="tl_layout.analytics_matomo">
         <source>Matomo</source>
       </trans-unit>
-      <trans-unit id="tl_layout.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_layout.new.1">
         <source>Create a new page layout</source>
       </trans-unit>
@@ -360,7 +357,7 @@
         <source>Edit page layout ID %s</source>
       </trans-unit>
       <trans-unit id="tl_layout.copy.1">
-        <source>Duplicate page layout ID %s</source>
+        <source>Copy page layout ID %s</source>
       </trans-unit>
       <trans-unit id="tl_layout.cut.1">
         <source>Move page layout ID %s</source>

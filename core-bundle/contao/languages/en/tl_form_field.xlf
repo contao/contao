@@ -350,9 +350,6 @@
       <trans-unit id="tl_form_field.invisible_legend">
         <source>Visibility</source>
       </trans-unit>
-      <trans-unit id="tl_form_field.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_form_field.new.1">
         <source>Create a new form field</source>
       </trans-unit>
@@ -366,7 +363,7 @@
         <source>Move form field ID %s</source>
       </trans-unit>
       <trans-unit id="tl_form_field.copy.1">
-        <source>Duplicate form field ID %s</source>
+        <source>Copy form field ID %s</source>
       </trans-unit>
       <trans-unit id="tl_form_field.delete.1">
         <source>Delete form field ID %s</source>

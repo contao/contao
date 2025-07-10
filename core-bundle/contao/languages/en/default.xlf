@@ -566,6 +566,21 @@
       <trans-unit id="CTE.legacy">
         <source>Legacy elements</source>
       </trans-unit>
+      <trans-unit id="CTE.user">
+        <source>User</source>
+      </trans-unit>
+      <trans-unit id="CTE.manage_passkeys.0">
+        <source>Manage passkeys</source>
+      </trans-unit>
+      <trans-unit id="CTE.manage_passkeys.1">
+        <source>Allows to manage the passkeys of a member.</source>
+      </trans-unit>
+      <trans-unit id="CTE.login.0">
+        <source>Login form</source>
+      </trans-unit>
+      <trans-unit id="CTE.login.1">
+        <source>Generates a login form.</source>
+      </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
       </trans-unit>
@@ -2279,6 +2294,15 @@
       <trans-unit id="MSC.addPasskey">
         <source>Add passkey</source>
       </trans-unit>
+      <trans-unit id="MSC.editPasskey">
+        <source>Edit passkey &quot;%s&quot;</source>
+      </trans-unit>
+      <trans-unit id="MSC.savePasskey">
+        <source>Save passkey &quot;%s&quot;</source>
+      </trans-unit>
+      <trans-unit id="MSC.deletePasskey">
+        <source>Delete passkey &quot;%s&quot;</source>
+      </trans-unit>
       <trans-unit id="MSC.searchResultsPlaceholder">
         <source>Type to start searching</source>
       </trans-unit>
@@ -2302,6 +2326,12 @@
       </trans-unit>
       <trans-unit id="MSC.removeItem">
         <source>Remove item</source>
+      </trans-unit>
+      <trans-unit id="MSC.ariaMenuExpand">
+        <source>Expand menu: </source>
+      </trans-unit>
+      <trans-unit id="MSC.ariaMenuCollapse">
+        <source>Collapse menu: </source>
       </trans-unit>
       <trans-unit id="MSC.skipToContent">
         <source>Skip to content</source>
@@ -2460,16 +2490,16 @@
         <source>Move element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.copy.0">
-        <source>Duplicate</source>
+        <source>Copy</source>
       </trans-unit>
       <trans-unit id="DCA.copy.1">
-        <source>Duplicate element ID %s</source>
+        <source>Copy element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.copyChildren.0">
-        <source>Duplicate recursively</source>
+        <source>Copy recursively</source>
       </trans-unit>
       <trans-unit id="DCA.copyChildren.1">
-        <source>Duplicate element ID %s with child nodes</source>
+        <source>Copy element ID %s with child nodes</source>
       </trans-unit>
       <trans-unit id="DCA.delete.0">
         <source>Delete</source>

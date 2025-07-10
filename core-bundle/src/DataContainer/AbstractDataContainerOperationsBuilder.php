@@ -228,4 +228,30 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
             throw new \RuntimeException(static::class.' has already been initialized.');
         }
     }
+
+    /**
+     * @return array{0: string, 1: string}
+     */
+    protected function getLabelAndTitle(string $table, string $key, int|string|null $id = null): array
+    {
+        $label = $GLOBALS['TL_LANG'][$table][$key] ?? $GLOBALS['TL_LANG']['DCA'][$key] ?? null;
+
+        if (null === $label) {
+            return [$key, ''];
+        }
+
+        if (\is_string($label)) {
+            $label = [null, $label];
+        }
+
+        if (null !== $id) {
+            $label[1] = \sprintf($label[1], $id);
+        }
+
+        if (!isset($label[0])) {
+            $label[0] = $GLOBALS['TL_LANG']['DCA'][$key][0] ?? $label[1];
+        }
+
+        return $label;
+    }
 }

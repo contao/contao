@@ -14,7 +14,7 @@
             {% endif %}
         {% endfor %}
         {% if has_submenu %}
-            <li class="operations-menu-container{% if not show_button %} invisible{% endif %}">
+            <li class="operations-menu-container">
                 <button type="button" class="has-icon" data-contao--operations-menu-target="controller"{% if not show_button %} style="display:none"{% endif %}>
                     {% if globalOperations %}
                         {{ backend_icon('more.svg', 'DCA.global_operations'|trans) }}

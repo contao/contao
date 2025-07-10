@@ -62,9 +62,6 @@
       <trans-unit id="tl_user_group.account_legend">
         <source>Group settings</source>
       </trans-unit>
-      <trans-unit id="tl_user_group.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_user_group.new.1">
         <source>Create a new user group</source>
       </trans-unit>
@@ -73,6 +70,9 @@
       </trans-unit>
       <trans-unit id="tl_user_group.edit.1">
         <source>Edit user group ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_user_group.copy.0">
+        <source>Duplicate</source>
       </trans-unit>
       <trans-unit id="tl_user_group.copy.1">
         <source>Duplicate user group ID %s</source>

@@ -76,8 +76,7 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 			(
 				'href'                => 'key=su',
 				'icon'                => 'su.svg',
-				'primary'             => true,
-				'button_callback'     => array('tl_user', 'switchUser')
+				'primary'             => true
 			)
 		)
 	),
@@ -415,11 +414,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 class tl_user extends Backend
 {
 	/**
-	 * @var int
-	 */
-	private static $origUserId;
-
-	/**
 	 * Handle the profile page.
 	 *
 	 * @param DataContainer $dc
@@ -522,64 +516,6 @@ class tl_user extends Backend
 		);
 
 		return $args;
-	}
-
-	/**
-	 * Generate a "switch account" button and return it as string
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 *
-	 * @return string
-	 *
-	 * @throws Exception
-	 */
-	public function switchUser($row, $href, $label, $title, $icon)
-	{
-		$security = System::getContainer()->get('security.helper');
-
-		if (!$security->isGranted('ROLE_ALLOWED_TO_SWITCH'))
-		{
-			return '';
-		}
-
-		$disabled = false;
-
-		if (BackendUser::getInstance()->id == $row['id'])
-		{
-			$disabled = true;
-		}
-		elseif ($security->isGranted('ROLE_PREVIOUS_ADMIN'))
-		{
-			if (self::$origUserId === null)
-			{
-				$origToken = $security->getToken()->getOriginalToken();
-				$origUser = $origToken->getUser();
-
-				if ($origUser instanceof BackendUser)
-				{
-					self::$origUserId = $origUser->id;
-				}
-			}
-
-			if (self::$origUserId == $row['id'])
-			{
-				$disabled = true;
-			}
-		}
-
-		if ($disabled)
-		{
-			return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-		}
-
-		$router = System::getContainer()->get('router');
-		$url = $router->generate('contao_backend', array('_switch_user'=>$row['username']));
-
-		return '<a href="' . $url . '" data-turbo-prefetch="false">' . Image::getHtml($icon, $title) . '</a> ';
 	}
 
 	/**

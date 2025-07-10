@@ -43,7 +43,7 @@ class ContentAliasDeleteVoterTest extends TestCase
         $this->assertSame($granted ? VoterInterface::ACCESS_ABSTAIN : VoterInterface::ACCESS_DENIED, $result);
     }
 
-    public static function voteProvider(): \Generator
+    public static function voteProvider(): iterable
     {
         yield 'Abstains if dataSource is not tl_content' => [
             [],

@@ -74,9 +74,6 @@
       <trans-unit id="tl_calendar_feed.source_text">
         <source>Full articles</source>
       </trans-unit>
-      <trans-unit id="tl_calendar_feed.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_calendar_feed.new.1">
         <source>Create a new feed</source>
       </trans-unit>

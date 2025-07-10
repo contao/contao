@@ -342,7 +342,7 @@ class RequestTokenListenerTest extends TestCase
         $this->assertTrue(RequestTokenListener::isSimpleCorsRequest($request));
     }
 
-    public static function simpleCorsRequestContentTypeProvider(): array
+    public static function simpleCorsRequestContentTypeProvider(): iterable
     {
         return [
             'urlencoded basic' => ['application/x-www-form-urlencoded'],
