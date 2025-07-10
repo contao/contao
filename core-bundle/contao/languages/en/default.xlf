@@ -2427,16 +2427,16 @@
         <source>Move element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.copy.0">
-        <source>Duplicate</source>
+        <source>Copy</source>
       </trans-unit>
       <trans-unit id="DCA.copy.1">
-        <source>Duplicate element ID %s</source>
+        <source>Copy element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.copyChildren.0">
-        <source>Duplicate recursively</source>
+        <source>Copy recursively</source>
       </trans-unit>
       <trans-unit id="DCA.copyChildren.1">
-        <source>Duplicate element ID %s with child nodes</source>
+        <source>Copy element ID %s with child nodes</source>
       </trans-unit>
       <trans-unit id="DCA.delete.0">
         <source>Delete</source>
