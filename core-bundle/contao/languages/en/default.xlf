@@ -323,6 +323,24 @@
       <trans-unit id="ERR.noFieldsOfTablePermission">
         <source>You do not have permission to edit the fields of table "%s".</source>
       </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.can_edit_page">
+        <source>No permission to edit page ID %s.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.can_edit_page_hierarchy">
+        <source>No permission to change hierarchy of page ID %s.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.can_delete_page">
+        <source>No permission to delete page ID %s.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.can_edit_articles">
+        <source>No permission to edit article ID %s.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.can_edit_article_hierarchy">
+        <source>No permission to change hierarchy of article ID %s.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.can_delete_articles">
+        <source>No permission to delete article ID %s.</source>
+      </trans-unit>
       <trans-unit id="ERR.userAccessDenied.alpty.root">
         <source>You do not have permission to edit root pages.</source>
       </trans-unit>

@@ -26,13 +26,16 @@ use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\Authorization\AccessDecision;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * @internal
  */
 #[AsHook('loadDataContainer', priority: 200)]
-class DefaultOperationsListener
+class DefaultOperationsListener implements ResetInterface
 {
+    private array $childrenCache = [];
+
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly AuthorizationCheckerInterface $authorizationChecker,
@@ -48,6 +51,11 @@ class DefaultOperationsListener
         }
 
         $GLOBALS['TL_DCA'][$table]['list']['operations'] = $this->getForTable($table);
+    }
+
+    public function reset(): void
+    {
+        $this->childrenCache = [];
     }
 
     private function getForTable(string $table): array
@@ -111,16 +119,14 @@ class DefaultOperationsListener
         $canDelete = !($GLOBALS['TL_DCA'][$table]['config']['notDeletable'] ?? false);
 
         if ($canEdit) {
-            $operations += [
-                'edit' => [
-                    'href' => 'act=edit',
-                    'icon' => 'edit.svg',
-                    'prefetch' => true,
-                    'attributes' => 'data-contao--deeplink-target="primary"',
-                    'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
-                    'primary' => true,
-                    'showInHeader' => true,
-                ],
+            $operations['edit'] = [
+                'href' => 'act=edit',
+                'icon' => 'edit.svg',
+                'prefetch' => true,
+                'attributes' => 'data-contao--deeplink-target="primary"',
+                'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
+                'primary' => true,
+                'showInHeader' => true,
             ];
         }
 
@@ -128,15 +134,13 @@ class DefaultOperationsListener
             $this->framework->getAdapter(Controller::class)->loadDataContainer($ctable);
 
             if (DataContainer::MODE_TREE_EXTENDED !== ($GLOBALS['TL_DCA'][$ctable]['list']['sorting']['mode'] ?? null)) {
-                $operations += [
-                    'children' => [
-                        'href' => 'table='.$ctable.($ctable === $table ? '&amp;ptable='.$table : ''),
-                        'icon' => 'children.svg',
-                        'prefetch' => true,
-                        'attributes' => 'data-contao--deeplink-target="secondary"',
-                        'button_callback' => $this->accessChildrenCallback($ctable, $table),
-                        'primary' => true,
-                    ],
+                $operations['children'] = [
+                    'href' => 'table='.$ctable.($ctable === $table ? '&amp;ptable='.$table : ''),
+                    'icon' => 'children.svg',
+                    'prefetch' => true,
+                    'attributes' => 'data-contao--deeplink-target="secondary"',
+                    'button_callback' => $this->accessChildrenCallback($ctable, $table),
+                    'primary' => true,
                 ];
             }
         }
@@ -200,14 +204,14 @@ class DefaultOperationsListener
             ];
         }
 
-        return $operations + [
-            'show' => [
-                'href' => 'act=show',
-                'icon' => 'show.svg',
-                'method' => 'GET',
-                'prefetch' => false,
-            ],
+        $operations['show'] = [
+            'href' => 'act=show',
+            'icon' => 'show.svg',
+            'method' => 'GET',
+            'prefetch' => false,
         ];
+
+        return $operations;
     }
 
     private function isGrantedCallback(string $actionClass, string $table, array|null $new = null): \Closure
@@ -251,20 +255,21 @@ class DefaultOperationsListener
     private function copyChildrenCallback(string $table): \Closure
     {
         return function (DataContainerOperation $operation) use ($table): void {
-            $accessDecision = $this->isGranted(CreateAction::class, $table, $operation, ['sorting' => null]);
+            if (!isset($this->childrenCache[$table])) {
+                $this->childrenCache[$table] = $this->connection->fetchAllKeyValue(
+                    "SELECT pid, COUNT(*) AS total FROM $table GROUP BY pid HAVING total > 1",
+                );
+            }
 
-            if (false === $accessDecision || ($accessDecision instanceof AccessDecision && !$accessDecision->isGranted)) {
-                $operation->disable($this->getAccessDeniedMessage($accessDecision));
+            if (!isset($this->childrenCache[$table])) {
+                $operation->disable();
 
                 return;
             }
 
-            $childCount = $this->connection->fetchOne(
-                "SELECT COUNT(*) FROM $table WHERE pid = ?",
-                [(string) $operation->getRecord()['id']],
-            );
+            $accessDecision = $this->isGranted(CreateAction::class, $table, $operation, ['sorting' => null]);
 
-            if ($childCount < 1) {
+            if (false === $accessDecision || ($accessDecision instanceof AccessDecision && !$accessDecision->isGranted)) {
                 $operation->disable($this->getAccessDeniedMessage($accessDecision));
             }
         };
