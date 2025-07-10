@@ -620,7 +620,7 @@ class DefaultOperationsListenerTest extends TestCase
                     }
 
                     return true;
-                }
+                },
             )
         ;
 
