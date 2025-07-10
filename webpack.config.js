@@ -19,6 +19,7 @@ Encore
         };
     })
     .addEntry('backend', './core-bundle/assets/backend.js')
+    .addEntry('navigation', './core-bundle/assets/navigation.js')
     .addEntry('passkey_login', './core-bundle/assets/passkey_login.js')
     .addEntry('passkey_create', './core-bundle/assets/passkey_create.js')
 ;

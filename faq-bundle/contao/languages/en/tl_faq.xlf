@@ -86,9 +86,6 @@
       <trans-unit id="tl_faq.publish_legend">
         <source>Publish settings</source>
       </trans-unit>
-      <trans-unit id="tl_faq.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_faq.new.1">
         <source>Create a new question</source>
       </trans-unit>
