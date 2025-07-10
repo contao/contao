@@ -19,6 +19,7 @@ Encore
         };
     })
     .addEntry('backend', './core-bundle/assets/backend.js')
+    .addEntry('navigation', './core-bundle/assets/navigation.js')
 ;
 
 const jsConfig = Encore.getWebpackConfig();

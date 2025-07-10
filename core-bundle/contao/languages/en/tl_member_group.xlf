@@ -47,9 +47,6 @@
       <trans-unit id="tl_member_group.account_legend">
         <source>Group settings</source>
       </trans-unit>
-      <trans-unit id="tl_member_group.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_member_group.new.1">
         <source>Create a new member group</source>
       </trans-unit>
@@ -58,6 +55,9 @@
       </trans-unit>
       <trans-unit id="tl_member_group.edit.1">
         <source>Edit member group ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_member_group.copy.0">
+        <source>Duplicate</source>
       </trans-unit>
       <trans-unit id="tl_member_group.copy.1">
         <source>Duplicate member group ID %s</source>

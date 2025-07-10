@@ -206,9 +206,6 @@
       <trans-unit id="tl_news.publish_legend">
         <source>Publish settings</source>
       </trans-unit>
-      <trans-unit id="tl_news.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_news.new.1">
         <source>Create a new news item</source>
       </trans-unit>

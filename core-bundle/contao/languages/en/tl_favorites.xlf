@@ -26,9 +26,6 @@
       <trans-unit id="tl_favorites.cut.1">
         <source>Move favorite ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_favorites.copy.1">
-        <source>Duplicate favorite ID %s</source>
-      </trans-unit>
       <trans-unit id="tl_favorites.delete.1">
         <source>Delete favorite ID %s</source>
       </trans-unit>
