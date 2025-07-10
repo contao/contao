@@ -26,6 +26,7 @@ use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Authorization\AccessDecision;
 
 class DefaultOperationsListenerTest extends TestCase
 {
@@ -612,7 +613,13 @@ class DefaultOperationsListenerTest extends TestCase
                     },
                 ),
             )
-            ->willReturn(true)
+            ->willReturnCallback(function (string $attribute, object $subject, AccessDecision|null $accessDecision = null) {
+                if ($accessDecision) {
+                    $accessDecision->isGranted = true;
+                }
+
+                return true;
+            })
         ;
 
         $config = new DataContainerOperation($name, $operation, $record, $this->createMock(DataContainer::class));
