@@ -613,13 +613,15 @@ class DefaultOperationsListenerTest extends TestCase
                     },
                 ),
             )
-            ->willReturnCallback(function (string $attribute, object $subject, AccessDecision|null $accessDecision = null) {
-                if ($accessDecision) {
-                    $accessDecision->isGranted = true;
-                }
+            ->willReturnCallback(
+                static function (string $attribute, object $subject, AccessDecision|null $accessDecision = null) {
+                    if ($accessDecision) {
+                        $accessDecision->isGranted = true;
+                    }
 
-                return true;
-            })
+                    return true;
+                }
+            )
         ;
 
         $config = new DataContainerOperation($name, $operation, $record, $this->createMock(DataContainer::class));
