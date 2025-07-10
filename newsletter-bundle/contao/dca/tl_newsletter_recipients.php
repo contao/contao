@@ -56,6 +56,8 @@ $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 		),
 		'global_operations' => array
 		(
+			'all',
+			'-',
 			'import' => array
 			(
 				'href'                => 'key=import',
@@ -208,7 +210,7 @@ class tl_newsletter_recipients extends Backend
 		}
 
 		$icon = Image::getPath('member');
-		$icond = Image::getPath('member_');
+		$icond = Image::getPath('member--disabled');
 
 		return sprintf(
 			'<div class="tl_content_left"><div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div></div>' . "\n",

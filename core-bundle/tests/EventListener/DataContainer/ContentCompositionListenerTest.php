@@ -82,8 +82,7 @@ class ContentCompositionListenerTest extends TestCase
         $operation = $this->createMock(DataContainerOperation::class);
         $operation
             ->expects($this->once())
-            ->method('setHtml')
-            ->with('')
+            ->method('hide')
         ;
 
         $listener = $this->getListener();

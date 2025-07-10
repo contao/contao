@@ -45,6 +45,12 @@ services:
             - '@translator'
             - '%kernel.project_dir%'
 
+    Contao\CoreBundle\Controller\BackendJobsController:
+        arguments:
+            - '@contao.job.jobs'
+        tags:
+            - controller.service_arguments
+
     Contao\CoreBundle\Controller\BackendPreviewController:
         arguments:
             - '%contao.preview_script%'
@@ -114,6 +120,22 @@ services:
             - '%contao.image.valid_extensions%'
 
     Contao\CoreBundle\Controller\ContentElement\ListController: ~
+
+    Contao\CoreBundle\Controller\ContentElement\LoginController:
+        arguments:
+            - '@uri_signer'
+            - '@security.logout_url_generator'
+            - '@security.authentication_utils'
+            - '@translator'
+            - '@event_dispatcher'
+            - '@contao.framework'
+
+    Contao\CoreBundle\Controller\ContentElement\ManagePasskeysController:
+        arguments:
+            - '@contao.repository.webauthn_credential'
+            - '@uri_signer'
+        tags:
+            - controller.service_arguments
 
     Contao\CoreBundle\Controller\ContentElement\MarkdownController: ~
 

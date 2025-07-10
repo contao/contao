@@ -47,22 +47,22 @@
       <trans-unit id="tl_member_group.account_legend">
         <source>Group settings</source>
       </trans-unit>
-      <trans-unit id="tl_member_group.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_member_group.new.1">
         <source>Create a new member group</source>
       </trans-unit>
-      <trans-unit id="tl_member_group.show">
+      <trans-unit id="tl_member_group.show.1">
         <source>Show the details of member group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_member_group.edit">
+      <trans-unit id="tl_member_group.edit.1">
         <source>Edit member group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_member_group.copy">
+      <trans-unit id="tl_member_group.copy.0">
+        <source>Duplicate</source>
+      </trans-unit>
+      <trans-unit id="tl_member_group.copy.1">
         <source>Duplicate member group ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_member_group.delete">
+      <trans-unit id="tl_member_group.delete.1">
         <source>Delete member group ID %s</source>
       </trans-unit>
       <trans-unit id="tl_member_group.toggle.0">
@@ -73,6 +73,12 @@
       </trans-unit>
       <trans-unit id="tl_member_group.toggle.2">
         <source>Activate member group ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_member_group.toggle.3">
+        <source>Deactivate</source>
+      </trans-unit>
+      <trans-unit id="tl_member_group.toggle.4">
+        <source>Activate</source>
       </trans-unit>
     </body>
   </file>

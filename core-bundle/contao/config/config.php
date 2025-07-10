@@ -221,6 +221,12 @@ $GLOBALS['BE_MOD'] = array
 		(
 			'tables'                  => array('tl_undo'),
 			'disablePermissionChecks' => true
+		),
+		'jobs' => array
+		(
+			'tables'                  => array('tl_job'),
+			'disablePermissionChecks' => true,
+			'hideInNavigation' 		  => true,
 		)
 	)
 );
@@ -268,6 +274,7 @@ $GLOBALS['TL_CTE'] = array
 	'links' => array(),
 	'files' => array(),
 	'media' => array(),
+	'user' => array(),
 	'miscellaneous' => array(),
 	'includes' => array
 	(

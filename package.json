@@ -4,6 +4,7 @@
         "@hotwired/stimulus": "^3.2",
         "@hotwired/stimulus-webpack-helpers": "^1.0",
         "@hotwired/turbo": "^8.0",
+        "@simplewebauthn/browser": "^13.1",
         "@stimulus-components/color-picker": "^2.0",
         "@symfony/webpack-encore": "^5.1",
         "@web-auth/webauthn-stimulus": "file:vendor/web-auth/webauthn-stimulus/assets",
@@ -13,6 +14,7 @@
         "postcss": "^8.5",
         "postcss-loader": "^8.1",
         "postcss-preset-env": "^10.1",
+        "sortablejs": "^1.15",
         "stylelint": "^16.20",
         "stylelint-config-standard": "^38.0"
     },

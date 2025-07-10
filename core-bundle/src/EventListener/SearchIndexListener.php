@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 
 /**
  * @internal
@@ -36,6 +37,7 @@ class SearchIndexListener
         private readonly string $fragmentPath = '_fragment',
         private readonly string $contaoBackendRoutePrefix = '/contao',
         private readonly int $enabledFeatures = self::FEATURE_INDEX | self::FEATURE_DELETE,
+        private readonly RateLimiterFactory|null $rateLimiterFactory = null,
     ) {
     }
 
@@ -97,6 +99,31 @@ class SearchIndexListener
             return false;
         }
 
+        // The "searchIndexer" setting has priority over robots tag
+        $pageJsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
+        $pageSearchIndexer = $pageJsonLds[0]['searchIndexer'] ?? null;
+
+        if ('always_index' === $pageSearchIndexer) {
+            return true;
+        }
+
+        if ('never_index' === $pageSearchIndexer) {
+            return false;
+        }
+
+        // Cheap tests have been done at this stage. Now check the rate limiter if provided
+        // which should be cheaper than extracting information from the document itself.
+        if ($this->rateLimiterFactory) {
+            // Hash over the canonical URI (or the URI as fallback) and the contents
+            $hash = hash('xxh3', ($document->extractCanonicalUri() ?? $document->getUri()).'-'.$document->getGlobalSearchableContentHash());
+
+            $limiter = $this->rateLimiterFactory->create('contao-search-index-listener-'.$hash);
+
+            if (!$limiter->consume()->isAccepted()) {
+                return false;
+            }
+        }
+
         try {
             $robots = $document->getContentCrawler()->filterXPath('//head/meta[@name="robots"]')->first()->attr('content');
 
@@ -126,6 +153,18 @@ class SearchIndexListener
 
         // Delete if the X-Robots-Tag header contains "noindex"
         if (str_contains($response->headers->get('X-Robots-Tag', ''), 'noindex')) {
+            return true;
+        }
+
+        // The "searchIndexer" setting has priority over robots tag
+        $pageJsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
+        $pageSearchIndexer = $pageJsonLds[0]['searchIndexer'] ?? null;
+
+        if ('always_index' === $pageSearchIndexer) {
+            return false;
+        }
+
+        if ('never_index' === $pageSearchIndexer) {
             return true;
         }
 

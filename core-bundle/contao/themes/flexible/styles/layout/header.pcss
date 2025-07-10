@@ -1,0 +1,222 @@
+#header {
+    min-height: 40px;
+    text-align: left;
+    background: var(--header-bg);
+}
+
+#header h1 {
+    position: absolute;
+}
+
+#header h1 a {
+    display: block;
+    height: 16px;
+    padding: 12px 12px 12px 42px;
+    background: var(--icon-logo) no-repeat 10px center;
+    font-weight: 400;
+}
+
+#header h1 a .app-title {
+    font-size: 17px;
+    color: var(--header-text);
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    #header h1 a {
+        font-weight: 300;
+    }
+}
+
+#tmenu {
+    display: flex;
+    justify-content: flex-end;
+}
+
+#tmenu li {
+    position: relative;
+}
+
+#tmenu a, #tmenu .profile button {
+    margin: 0;
+    padding: 13px 12px;
+    display: inline-block;
+}
+
+#tmenu sup {
+    position: absolute;
+    top: 5px;
+    left: 20px;
+    font-size: .6rem;
+    color: var(--header-bg);
+    background: var(--header-text);
+    padding: 2px;
+    border-radius: 2px;
+    text-indent: 0;
+    font-weight: 400;
+}
+
+#tmenu .burger {
+    display: none;
+}
+
+#tmenu .burger button {
+    padding: 8px 10px 9px;
+    background: none;
+    border: 0;
+}
+
+#tmenu .burger svg {
+    margin-bottom: -1px;
+    vertical-align: middle;
+}
+
+#tmenu .profile button {
+    position: relative;
+    cursor: pointer;
+    font-size: .875rem;
+    font-weight: 400;
+    border: none;
+    padding-right: 26px;
+    background: url("icons/chevron-down.svg") right 9px top 14px no-repeat;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    #tmenu .profile button {
+        font-weight: 300;
+    }
+}
+
+#tmenu a, #tmenu .profile button, #tmenu .burger button {
+    color: var(--header-text);
+    transition: background-color .3s ease;
+}
+
+#tmenu a:hover, #tmenu a.hover, #tmenu li:hover .profile button, #tmenu .active .profile button, #tmenu .burger button:hover {
+    background-color: var(--header-bg-hover);
+}
+
+#tmenu ul.menu_level_1 {
+    min-width: 150px;
+    position: absolute;
+    right: 6px;
+    margin-top: 5px;
+    background: var(--content-bg);
+    border: 1px solid var(--content-border);
+    box-shadow: 0 1px 6px rgba(0,0,0,.2);
+    z-index: 4; /* Above .jump-targets */
+    color: var(--text);
+    text-align: left;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .3s ease, visibility .3s ease;
+}
+
+#tmenu .active ul.menu_level_1 {
+    opacity: 1;
+    visibility: visible;
+}
+
+#tmenu ul.menu_level_1 li a {
+    display: block;
+    color: inherit;
+    padding: 6px 20px 6px 40px;
+    white-space: nowrap;
+}
+
+#tmenu ul.menu_level_1 li a:hover {
+    background-color: var(--nav-hover-bg);
+}
+
+#tmenu ul.menu_level_1 .info {
+    color: var(--info);
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border);
+    line-height: 1.4;
+    margin-bottom: 9px;
+    white-space: nowrap;
+}
+
+#tmenu ul.menu_level_1 strong {
+    color: var(--text);
+    display: block;
+}
+
+#tmenu ul.menu_level_1:before {
+    content: "";
+    display: block;
+    width: 0;
+    height: 0;
+    position: absolute;
+    right: 9px;
+    top: -14px;
+    border: 7px solid transparent;
+    border-bottom-color: var(--content-bg);
+}
+
+#tmenu ul.menu_level_1:after {
+    content: "";
+    display: block;
+    width: 9px;
+    height: 9px;
+    position: absolute;
+    top: -6px;
+    right: 11px;
+    border-top: 1px solid var(--content-border);
+    border-right: 1px solid var(--content-border);
+    transform: rotateZ(-45deg);
+}
+
+#tmenu ul.menu_level_1 .logout {
+    margin-top: 9px;
+    padding: 6px 0;
+    border-top: 1px solid var(--border);
+}
+
+#tmenu .icon-alert, #tmenu .icon-favorite, #tmenu .icon-manual, #tmenu .icon-color-scheme, #tmenu .icon-jobs {
+    width: 16px;
+    margin-bottom: -2px;
+    position: relative;
+    overflow: hidden;
+    white-space: nowrap;
+    text-indent: 28px; /* 16px width + 12px padding */
+}
+
+#tmenu .icon-alert {
+    background: var(--icon-alert) center center no-repeat;
+}
+
+#tmenu .icon-favorite {
+    background: var(--icon-favorite) center center no-repeat;
+}
+
+#tmenu .icon-favorite--active {
+    background: var(--icon-favorite--active) center center no-repeat;
+}
+
+#tmenu .icon-manual {
+    background: var(--icon-manual) center center no-repeat;
+}
+
+#tmenu .icon-jobs {
+    background: var(--icon-jobs) center center no-repeat;
+}
+
+#tmenu .icon-color-scheme {
+    background: var(--icon-color-scheme) center center no-repeat;
+}
+
+#tmenu .icon-profile {
+    background: var(--icon-profile) 20px center no-repeat;
+}
+
+#tmenu .icon-security {
+    background: var(--icon-security) 20px center no-repeat;
+}
+
+#tmenu .icon-favorites {
+    background: var(--icon-favorites) 20px center no-repeat;
+}
+
+#tmenu .icon-logout {
+    background: var(--icon-logout) 20px center no-repeat;
+}

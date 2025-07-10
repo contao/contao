@@ -13,10 +13,8 @@ declare(strict_types=1);
 namespace Contao\NewsBundle\Controller\Page;
 
 use Contao\CoreBundle\Asset\ContaoContext;
-use Contao\CoreBundle\Controller\AbstractController;
+use Contao\CoreBundle\Controller\Page\AbstractFeedPageController;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsPage;
-use Contao\CoreBundle\Routing\Page\DynamicRouteInterface;
-use Contao\CoreBundle\Routing\Page\PageRoute;
 use Contao\NewsBundle\Event\FetchArticlesForFeedEvent;
 use Contao\NewsBundle\Event\TransformArticleForFeedEvent;
 use Contao\PageModel;
@@ -27,21 +25,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 #[AsPage(path: '', contentComposition: false)]
-class NewsFeedController extends AbstractController implements DynamicRouteInterface
+class NewsFeedController extends AbstractFeedPageController
 {
     final public const TYPE = 'news_feed';
-
-    public static array $contentTypes = [
-        'atom' => 'application/atom+xml',
-        'json' => 'application/feed+json',
-        'rss' => 'application/rss+xml',
-    ];
-
-    private array $urlSuffixes = [
-        'atom' => '.xml',
-        'json' => '.json',
-        'rss' => '.xml',
-    ];
 
     public function __construct(
         private readonly ContaoContext $contaoContext,
@@ -91,21 +77,5 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
         $this->tagResponse(array_map(static fn ($id): string => 'contao.db.tl_news_archive.'.$id, $archiveIds));
 
         return $response;
-    }
-
-    public function configurePageRoute(PageRoute $route): void
-    {
-        $format = $route->getPageModel()->feedFormat;
-
-        if (!isset($this->urlSuffixes[$format])) {
-            throw new \RuntimeException(\sprintf('%s is not a valid format. Must be one of: %s', $format, implode(',', array_keys($this->urlSuffixes))));
-        }
-
-        $route->setUrlSuffix($this->urlSuffixes[$format]);
-    }
-
-    public function getUrlSuffixes(): array
-    {
-        return array_unique(array_values($this->urlSuffixes));
     }
 }

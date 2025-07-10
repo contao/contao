@@ -88,7 +88,7 @@ abstract class AbstractAccessVoterTestCase extends TestCase
         );
     }
 
-    abstract public static function votesProvider(): \Generator;
+    abstract public static function votesProvider(): iterable;
 
     abstract protected function getVoterClass(): string;
 
