@@ -21,7 +21,9 @@ use Contao\StringUtil;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Service\ResetInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @extends Voter<string, mixed>
@@ -41,8 +43,10 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
     private array $pagemountsCache = [];
 
-    public function __construct(private readonly ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly TranslatorInterface&TranslatorBagInterface $translator,
+    ) {
     }
 
     public function reset(): void
@@ -81,14 +85,42 @@ class BackendAccessVoter extends Voter implements ResetInterface
         }
 
         if ('can_edit_fields' === $field) {
-            return $this->canEditFieldsOf($subject, $user);
+            if (!$this->canEditFieldsOf($subject, $user)) {
+                $vote?->addReason($this->translator->trans(
+                    'ERR.noFieldsOfTablePermission',
+                    \is_string($subject) ? [$subject] : [],
+                    'contao_default',
+                ));
+
+                return false;
+            }
+
+            return true;
         }
 
         if (isset(self::PAGE_PERMISSIONS[$field])) {
-            return $this->isAllowed($subject, self::PAGE_PERMISSIONS[$field], $user);
+            if (!$this->isAllowed($subject, self::PAGE_PERMISSIONS[$field], $user)) {
+                $vote?->addReason($this->translator->trans(
+                    'ERR.userAccessDenied.'.$field,
+                    \is_array($subject) && isset($subject['id']) ? [$subject['id']] : [],
+                    'contao_default',
+                ));
+
+                return false;
+            }
+
+            return true;
         }
 
-        return $this->hasAccess($subject, $field, $user);
+        $isGranted = $this->hasAccess($subject, $field, $user);
+        $translationKey = 'ERR.userAccessDenied.'.$field.(\is_string($subject) ? '.'.$subject : '');
+        $translationParams = \is_string($subject) ? [] : (array) $subject;
+
+        if (!$isGranted && $vote && $this->translator->getCatalogue()->has($translationKey, 'contao_default')) {
+            $vote->addReason($this->translator->trans($translationKey, $translationParams, 'contao_default'));
+        }
+
+        return $isGranted;
     }
 
     /**
@@ -139,7 +171,7 @@ class BackendAccessVoter extends Voter implements ResetInterface
     /**
      * Checks if the user has access to a given page (tl_page.includeChmod et al.).
      */
-    private function isAllowed(mixed $subject, int $flag, BackendUser $user): bool
+    private function isAllowed(mixed &$subject, int $flag, BackendUser $user): bool
     {
         if ($subject instanceof PageModel) {
             $subject = $subject->row();

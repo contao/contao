@@ -2,6 +2,15 @@
 <xliff version="1.1">
   <file datatype="php" original="contao/languages/en/default.php" source-language="en">
     <body>
+      <trans-unit id="ERR.userAccessDenied.newp.create">
+        <source>No permission to create news archives.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.newp.delete">
+        <source>No permission to delete news archives.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.alpty.news_feed">
+        <source>No access to news feed pages.</source>
+      </trans-unit>
       <trans-unit id="MSC.open">
         <source>Read more on %s</source>
       </trans-unit>

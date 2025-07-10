@@ -320,6 +320,27 @@
       <trans-unit id="ERR.noUndoPermission">
         <source>Permission denied to restore the record in table "%s".</source>
       </trans-unit>
+      <trans-unit id="ERR.noFieldsOfTablePermission">
+        <source>Access denied to field of table "%s".</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.alpty.root">
+        <source>No access to root pages.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.alpty.error_403">
+        <source>No access to 404 error pages.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.alpty.error_404">
+        <source>No access to 404 error pages.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.alpty.regular">
+        <source>No access to regular pages.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.alpty.redirect">
+        <source>No access to redirect pages.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.alpty.forward">
+        <source>No access to forward pages.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
       </trans-unit>

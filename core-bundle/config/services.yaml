@@ -1029,6 +1029,7 @@ services:
         class: Contao\CoreBundle\Security\Voter\BackendAccessVoter
         arguments:
             - '@contao.framework'
+            - '@translator'
 
     contao.security.backend_user_provider:
         class: Contao\CoreBundle\Security\User\ContaoUserProvider
