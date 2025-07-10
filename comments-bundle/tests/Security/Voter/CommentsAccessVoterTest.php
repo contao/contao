@@ -10,8 +10,10 @@ declare(strict_types=1);
  * @license LGPL-3.0-or-later
  */
 
-namespace Contao\CoreBundle\Tests\Security\Voter\DataContainer;
+namespace Security\Voter;
 
+use Contao\CommentsBundle\Security\ContaoCommentsPermissions;
+use Contao\CommentsBundle\Security\Voter\CommentsAccessVoter;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
@@ -23,7 +25,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
-abstract class AbstractAccessVoterTestCase extends TestCase
+class CommentsAccessVoterTest extends TestCase
 {
     public function testSupportsAttributesAndTypes(): void
     {
@@ -35,62 +37,63 @@ abstract class AbstractAccessVoterTestCase extends TestCase
             ->method('decide')
         ;
 
-        $class = $this->getVoterClass();
-        $voter = new $class($accessDecisionManager);
+        $voter = new CommentsAccessVoter($accessDecisionManager);
 
-        $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.$this->getTable()));
+        $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_comments'));
         $this->assertFalse($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_foobar'));
         $this->assertTrue($voter->supportsType(CreateAction::class));
-        $this->assertTrue($voter->supportsType(ReadAction::class));
+        $this->assertFalse($voter->supportsType(ReadAction::class));
         $this->assertTrue($voter->supportsType(UpdateAction::class));
         $this->assertTrue($voter->supportsType(DeleteAction::class));
-        $this->assertFalse($voter->supportsType($class));
+        $this->assertFalse($voter->supportsType(CommentsAccessVoter::class));
 
         // Unsupported attribute
         $this->assertSame(
             VoterInterface::ACCESS_ABSTAIN,
             $voter->vote(
                 $token,
-                new ReadAction($this->getTable(), ['id' => 42]),
+                new UpdateAction('tl_comments', ['id' => 42]),
                 ['whatever'],
             ),
         );
     }
 
     #[DataProvider('votesProvider')]
-    public function testVotes(array $current, array $decisions, bool $accessGranted, string $actionClass = ReadAction::class): void
+    public function testVotes(array $current, bool $accessGranted): void
     {
         $token = $this->createMock(TokenInterface::class);
-
-        foreach ($decisions as &$decision) {
-            array_unshift($decision, $token);
-        }
-
-        unset($decision);
+        $subject = new UpdateAction('tl_comments', $current);
 
         $accessDecisionManager = $this->createMock(AccessDecisionManagerInterface::class);
         $accessDecisionManager
-            ->expects($this->exactly(\count($decisions)))
+            ->expects($this->once())
             ->method('decide')
-            ->willReturnMap($decisions)
+            ->with($token, [ContaoCommentsPermissions::USER_CAN_ACCESS_COMMENT], $subject->getCurrent())
+            ->willReturn($accessGranted)
         ;
 
-        $voterClass = $this->getVoterClass();
-        $voter = new $voterClass($accessDecisionManager);
+        $voter = new CommentsAccessVoter($accessDecisionManager);
 
         $this->assertSame(
-            $accessGranted ? VoterInterface::ACCESS_ABSTAIN : VoterInterface::ACCESS_DENIED,
+            $accessGranted ? VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED,
             $voter->vote(
                 $token,
-                new $actionClass($this->getTable(), $current),
-                [ContaoCorePermissions::DC_PREFIX.$this->getTable()],
+                $subject,
+                [ContaoCorePermissions::DC_PREFIX.'tl_comments'],
             ),
         );
     }
 
-    abstract public static function votesProvider(): iterable;
+    public static function votesProvider(): iterable
+    {
+        yield [
+            ['source' => 'tl_foo', 'parent' => 42],
+            true,
+        ];
 
-    abstract protected function getVoterClass(): string;
-
-    abstract protected function getTable(): string;
+        yield [
+            ['source' => 'tl_foo', 'parent' => 42],
+            false,
+        ];
+    }
 }
