@@ -344,6 +344,11 @@ class DefaultOperationsListener
                 }
 
                 foreach ($vote->reasons as $reason) {
+                    // Ignore role checks (e.g. if user is admin), these are not translated.
+                    if (str_contains($reason, 'ROLE_')) {
+                        continue;
+                    }
+
                     $message .= ' '.$reason;
                 }
             }
