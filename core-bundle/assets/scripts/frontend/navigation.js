@@ -10,13 +10,13 @@ export class Navigation {
                 active: 'is-active',
                 bodyOpen: 'navigation-open',
                 boundsRight: 'bounds-right',
-                boundsLeft: 'bounds-left'
+                boundsLeft: 'bounds-left',
             },
             ariaLabels: {
                 'expand': 'Expand menu: ',
                 'collapse': 'Collapse menu: ',
             }
-        }, options || {})
+        }, options || {});
 
         this.navigation = document.querySelector(this.options.selector);
         this.toggle = document.querySelector(this.options.toggle);
@@ -52,7 +52,7 @@ export class Navigation {
     _merge(a, b) {
         return [...new Set([...Object.keys(a), ...Object.keys(b)])].reduce((result, key) => ({
             ...result,
-            [key]: "object" === typeof (a[key]) ? Object.assign({}, a[key], b[key]) : !b[key] ? a[key] : b[key]
+            [key]: "object" === typeof (a[key]) ? Object.assign({}, a[key], b[key]) : !b[key] ? a[key] : b[key],
         }), {});
     }
 
@@ -136,7 +136,7 @@ export class Navigation {
      */
     _init() {
         this._createSubMenuButton();
-        this._initMobileToggleEvents()
+        this._initMobileToggleEvents();
 
         this.navigation.querySelectorAll('li').forEach(item => {
 
@@ -144,7 +144,7 @@ export class Navigation {
                 this.dropdowns.push(item);
             }
 
-            const navItem = item.firstElementChild
+            const navItem = item.firstElementChild;
 
             if (navItem.classList.contains('active')) {
                 navItem.ariaCurrent = 'page';
@@ -154,12 +154,12 @@ export class Navigation {
                 navItem.ariaLabel = navItem.title;
                 navItem.removeAttribute('title');
             }
-        })
+        });
 
         // Hide the active navigation on escape
         document.addEventListener('keyup', (e) => {
             e.key === 'Escape' && this._hideDropdown();
-        })
+        });
     }
 
     /**
@@ -179,10 +179,11 @@ export class Navigation {
      */
     _collapseSubmenu(dropdown) {
         dropdown.classList.remove(this.options.classes.expand);
+
         dropdown.querySelector(':scope > ul')?.classList.remove(
             this.options.classes.boundsLeft,
             this.options.classes.boundsRight,
-        )
+        );
 
         this._updateAriaState(dropdown, false);
     }
@@ -194,7 +195,7 @@ export class Navigation {
      */
     _hideDropdown(dropdown = null) {
         if (0 === this.active.length) {
-            return
+            return;
         }
 
         // Case 1: Leaving the previous dropdown (e.g. focus left)
@@ -218,7 +219,7 @@ export class Navigation {
 
                 this._collapseSubmenu(node);
                 return false;
-            })
+            });
         }
     }
 
@@ -247,7 +248,7 @@ export class Navigation {
         dropdown.classList.add(this.options.classes.expand);
 
         if (this._isDesktop()) {
-            this._setDropdownPosition(dropdown)
+            this._setDropdownPosition(dropdown);
         }
 
         this._updateAriaState(dropdown, true);
@@ -283,7 +284,7 @@ export class Navigation {
         btn.addEventListener('click', () => {
             const show = btn.ariaExpanded === 'false' ?? true;
             this._toggleDropdownState(dropdown, show);
-        })
+        });
 
         item.after(btn);
     }
@@ -318,7 +319,7 @@ export class Navigation {
     }
 
     _isDesktop() {
-        return window.innerWidth >= this.options.minWidth
+        return window.innerWidth >= this.options.minWidth;
     }
 
     _initMobileToggleEvents() {
@@ -332,7 +333,7 @@ export class Navigation {
 
             this._toggleMenuState();
             this._focusMenu();
-        })
+        });
     }
 
     /**
