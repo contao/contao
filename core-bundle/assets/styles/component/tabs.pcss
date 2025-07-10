@@ -16,11 +16,10 @@
         > li {
             display: inline-flex;
             align-items: center;
-            font-size: .75rem;
+            font-size: 0.75rem;
             padding: 4px 8px;
             gap: 4px;
             background: var(--body-bg);
-
             border-right: 1px solid var(--border);
             border-top: 1px solid var(--border);
             border-bottom: 1px solid var(--border);
@@ -43,7 +42,10 @@
                     border-radius: 50%;
                     padding: 0;
                     width: 17px;
-                    opacity: .5;
+                    opacity: 0.5;
+                    font-family:
+                        -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue",
+                        sans-serif;
 
                     &:hover {
                         opacity: 1;
@@ -68,7 +70,7 @@
         position: relative;
         background-color: var(--panel-bg);
 
-        &+.initial {
+        & + .initial {
             position: absolute;
             inset: 0;
             display: flex;

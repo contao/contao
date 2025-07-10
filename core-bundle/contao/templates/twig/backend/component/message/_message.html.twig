@@ -1,0 +1,34 @@
+{% trans_default_domain "contao_default" %}
+
+{% block message_component %}
+    {% set success = success is defined ? success : true %}
+    {% set autoclose = success and (constant('class', app.user) != 'Contao\BackendUser' or app.user.doNotHideMessages|default(false)) %}
+
+    {% set message_attributes = attrs()
+        .addClass('message')
+        .addClass('message--info', success)
+        .addClass('message--error', not success)
+        .set('aria-live', 'polite', success)
+        .set('aria-alert', 'true', not success)
+        .set('data-contao--message-outlet-target', 'message')
+        .set('data-contao--message-outlet-autoclose', 5000, autoclose)
+        .set('data-turbo-temporary')
+        .mergeWith(message_attributes|default)
+    %}
+    <div{{ message_attributes }}>
+        <div class="inner">
+            {% set close_button_attributes = attrs()
+                .addClass('close')
+                .set('type', 'button')
+                .set('data-action', 'contao--message-outlet#close')
+                .set('aria-label', 'MSC.cancelBT'|trans)
+                .mergeWith(close_button_attributes|default)
+            %}
+            <button{{ close_button_attributes }}>×</button>
+
+            <div class="content">
+                {% block content %}{{ content }}{% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

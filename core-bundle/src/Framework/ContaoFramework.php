@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Framework;
 use Contao\Config;
 use Contao\Controller;
 use Contao\CoreBundle\Util\LocaleUtil;
+use Contao\DcaLoader;
 use Contao\Environment;
 use Contao\Input;
 use Contao\InsertTags;
@@ -28,9 +29,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ResetInterface;
 
-/**
- * @internal Do not use this class in your code; use the "contao.framework" service instead
- */
 class ContaoFramework implements ResetInterface
 {
     private static bool $initialized = false;
@@ -45,6 +43,9 @@ class ContaoFramework implements ResetInterface
 
     private array $hookListeners = [];
 
+    /**
+     * @internal Do not use this class in your code; use the "contao.framework" service instead
+     */
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly string $projectDir,
@@ -62,6 +63,7 @@ class ContaoFramework implements ResetInterface
         }
 
         Controller::resetControllerCache();
+        DcaLoader::reset();
         Environment::reset();
         Input::setUnusedRouteParameters([]);
         InsertTags::reset();

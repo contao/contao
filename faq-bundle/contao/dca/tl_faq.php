@@ -12,11 +12,15 @@ use Contao\Backend;
 use Contao\BackendUser;
 use Contao\Config;
 use Contao\CoreBundle\DataContainer\PaletteManipulator;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\Date;
 use Contao\DC_Table;
 use Contao\FaqCategoryModel;
+use Contao\Image;
+use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 
@@ -66,7 +70,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 	'palettes' => array
 	(
 		'__selector__'                => array('addImage', 'addEnclosure', 'overwriteMeta'),
-		'default'                     => '{title_legend},question,alias,author;{meta_legend},pageTitle,robots,description,serpPreview;{answer_legend},answer;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{publish_legend},published'
+		'default'                     => '{title_legend},question,alias,author;{meta_legend},pageTitle,robots,description,serpPreview;{answer_legend},answer;{image_legend},addImage;{enclosure_legend:hide},addEnclosure;{expert_legend:hide},searchIndexer;{publish_legend},published'
 	),
 
 	// Sub-palettes
@@ -193,7 +197,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'imageTitle' => array
 		(
@@ -201,7 +205,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'size' => array
 		(
@@ -220,7 +224,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('rgxp'=>'url', 'decodeEntities'=>true, 'maxlength'=>2048, 'dcaPicker'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(2048) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'fullsize' => array
 		(
@@ -235,7 +239,7 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('maxlength'=>255, 'allowHtml'=>true, 'tl_class'=>'w50'),
-			'sql'                     => "varchar(255) NOT NULL default ''"
+			'sql'                     => "text NULL"
 		),
 		'floating' => array
 		(
@@ -258,6 +262,16 @@ $GLOBALS['TL_DCA']['tl_faq'] = array
 			'inputType'               => 'fileTree',
 			'eval'                    => array('multiple'=>true, 'fieldType'=>'checkbox', 'filesOnly'=>true, 'isDownloads'=>true, 'extensions'=>Config::get('allowedDownload'), 'mandatory'=>true, 'isSortable'=>true),
 			'sql'                     => "blob NULL"
+		),
+		'searchIndexer' => array
+		(
+			'search'                  => true,
+			'label'                   => &$GLOBALS['TL_LANG']['MSC']['searchIndexer'],
+			'inputType'               => 'select',
+			'options'                 => array('always_index', 'never_index'),
+			'eval'                    => array('maxlength'=>32, 'includeBlankOption'=>true, 'tl_class'=>'w50'),
+			'reference'               => &$GLOBALS['TL_LANG']['MSC'],
+			'sql'                     => "varchar(32) NOT NULL default ''"
 		),
 		'published' => array
 		(
@@ -292,6 +306,7 @@ class tl_faq extends Backend
 		if (!$objFaqCategory->jumpTo)
 		{
 			PaletteManipulator::create()
+				->removeField(array('searchIndexer'), 'expert_legend')
 				->removeField(array('pageTitle', 'robots', 'description', 'serpPreview'), 'meta_legend')
 				->applyToPalette('default', 'tl_faq');
 		}
@@ -345,9 +360,16 @@ class tl_faq extends Backend
 	{
 		$key = $arrRow['published'] ? 'published' : 'unpublished';
 		$date = Date::parse(Config::get('datimFormat'), $arrRow['tstamp']);
+		$dragHandle = '';
+
+		if (!Input::get('act') && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_faq', new UpdateAction('tl_faq', $arrRow)))
+		{
+			$labelCut = $GLOBALS['TL_LANG']['tl_faq']['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
+			$dragHandle = '<button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $arrRow['id'])) . '</button>';
+		}
 
 		return '
-<div class="cte_type ' . $key . '">' . $date . '</div>
+<div class="cte_type ' . $key . '">' . $dragHandle . $date . '</div>
 <div class="cte_preview">
 <h2>' . $arrRow['question'] . '</h2>
 ' . StringUtil::insertTagToSrc($arrRow['answer']) . '

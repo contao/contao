@@ -14,8 +14,12 @@ export default class extends Controller {
     _connect() {
         if (!this.element.tinymceConfig) {
             if (window.console) {
-                console.error('No TinyMCE config was attached to the DOM element, expected an expando property called "tinymceConfig".', this.element);
+                console.error(
+                    'No TinyMCE config was attached to the DOM element, expected an expando property called "tinymceConfig".',
+                    this.element,
+                );
             }
+
             return;
         }
 
@@ -23,10 +27,22 @@ export default class extends Controller {
         config.target = this.element;
 
         tinymce?.init(config).then((editors) => {
-            this.editorId = editors[0]?.id;
+            const editor = editors[0] ?? null;
+            this.editorId = editor?.id;
+
+            // Allow others to listen on the input event of the underlying textarea
+            editor?.on('keyup', () => {
+                const before = this.element.innerText;
+                const after = editor.getContent();
+
+                if (before !== after) {
+                    this.element.innerText = editor.getContent();
+                    this.element.dispatchEvent(new Event('input'));
+                }
+            });
 
             // Fire a custom event when the editor finished initializing.
-            this.dispatch('editor-loaded', { detail: { content: editors[0] ?? null } });
+            this.dispatch('editor-loaded', { detail: { content: editor } });
         });
     }
 
@@ -45,9 +61,9 @@ export default class extends Controller {
     }
 
     leave(event) {
-        const editor = tinymce?.get(this.editorId)
+        const editor = tinymce?.get(this.editorId);
 
-        if (!editor || !editor.plugins.hasOwnProperty('autosave') || editor.isNotDirty) {
+        if (!editor || !editor.plugins.hasOwn('autosave') || editor.isNotDirty) {
             return;
         }
 

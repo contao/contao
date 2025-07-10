@@ -5,38 +5,38 @@ export default class extends Controller {
 
     static values = {
         config: Object,
-    }
+    };
 
-    connect () {
+    connect() {
         this.updateWizard();
     }
 
-    updateWizard () {
+    updateWizard() {
         if (this.canEdit()) {
             this.buttonTarget.title = this.configValue.title;
             this.buttonTarget.disabled = false;
 
-            this.imageTargets.forEach((img) => {
+            for (const img of this.imageTargets) {
                 img.src = this.configValue.icon;
-            });
+            }
         } else {
             this.buttonTarget.title = '';
             this.buttonTarget.disabled = true;
 
-            this.imageTargets.forEach((img) => {
+            for (const img of this.imageTargets) {
                 img.src = this.configValue.iconDisabled;
-            });
+            }
         }
     }
 
-    openModal () {
+    openModal() {
         Backend.openModalIframe({
             title: this.configValue.title,
-            url: `${ this.configValue.href }&id=${ this.selectTarget.value }`
+            url: `${this.configValue.href}&id=${this.selectTarget.value}`,
         });
     }
 
-    canEdit () {
+    canEdit() {
         return this.configValue.ids.includes(Number(this.selectTarget.value));
     }
 }

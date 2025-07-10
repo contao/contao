@@ -10,7 +10,6 @@
 
 namespace Contao;
 
-use Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder;
 use Contao\CoreBundle\EventListener\BackendRebuildCacheMessageListener;
 use Contao\CoreBundle\Exception\AccessDeniedException;
 use Contao\CoreBundle\Exception\BadRequestException;
@@ -25,12 +24,14 @@ use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Util\SymlinkUtil;
 use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\Exception\DriverException;
+use enshrined\svgSanitize\Sanitizer;
 use Imagine\Exception\RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -141,9 +142,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		$container = System::getContainer();
 		$objSession = $container->get('request_stack')->getSession();
+		$request = $container->get('request_stack')->getCurrentRequest();
 
 		// Check the request token (see #4007)
-		if (!\in_array(Input::get('act'), array(null, 'edit', 'source', 'show', 'select'), true) && (Input::get('rt') === null || !$container->get('contao.csrf.token_manager')->isTokenValid(new CsrfToken($container->getParameter('contao.csrf_token_name'), Input::get('rt')))))
+		if ((!$request || $request->isMethodSafe()) && !\in_array(Input::get('act'), array(null, 'edit', 'source', 'show', 'select'), true) && (Input::get('rt') === null || !$container->get('contao.csrf.token_manager')->isTokenValid(new CsrfToken($container->getParameter('contao.csrf_token_name'), Input::get('rt')))))
 		{
 			$objSession->set('INVALID_TOKEN_URL', Environment::get('requestUri'));
 			$this->redirect($container->get('router')->generate('contao_backend_confirm'));
@@ -199,11 +201,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 			if (Input::post('edit') !== null)
 			{
-				$this->redirect(str_replace('act=select', 'act=editAll', Environment::get('requestUri')));
+				$this->redirect(Backend::addToUrl('act=editAll'));
 			}
 			elseif (Input::post('delete') !== null)
 			{
-				$this->redirect(str_replace('act=select', 'act=deleteAll', Environment::get('requestUri')));
+				$this->redirect(Backend::addToUrl('act=deleteAll'));
 			}
 			elseif (Input::post('cut') !== null || Input::post('copy') !== null || Input::post('copyMultiple') !== null)
 			{
@@ -303,7 +305,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Backwards compatibility
 			if (Input::get('childs') !== null)
 			{
-				trigger_deprecation('contao/core-bundle', '5.3', 'Using the "childs" query parameter has been deprecated and will no longer work in Contao 6. Use the "children" parameter instead.');
+				trigger_deprecation('contao/core-bundle', '5.3', 'Using the "childs" query parameter is deprecated and will no longer work in Contao 6. Use the "children" parameter instead.');
 				$children = Input::get('childs');
 			}
 
@@ -453,32 +455,45 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$strRefererId = System::getContainer()->get('request_stack')->getCurrentRequest()->attributes->get('_contao_referer_id');
 
 		$security = System::getContainer()->get('security.helper');
-		$buttons = '';
+		$operations = System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable);
 
 		if (Input::get('act') == 'select')
 		{
-			$buttons .= DataContainerOperationsBuilder::generateBackButton();
+			$operations->addBackButton();
 		}
 
 		if (Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable)))
 		{
-			$buttons .= '
-<a href="' . $this->addToUrl($hrfNew) . '" class="' . $clsNew . '" title="' . StringUtil::specialchars($ttlNew) . '" accesskey="n" data-action="contao--scroll-offset#store">' . $lblNew . '</a>
-<a href="' . $this->addToUrl('&amp;act=paste&amp;mode=move') . '" class="header_new" title="' . StringUtil::specialchars($GLOBALS['TL_LANG'][$this->strTable]['move'][1]) . '" data-action="contao--scroll-offset#store">' . $GLOBALS['TL_LANG'][$this->strTable]['move'][0] . '</a>  ';
+			$operations->append(array(
+				'href' => $this->addToUrl($hrfNew),
+				'label' => $lblNew,
+				'title' => $ttlNew,
+				'attributes' => (new HtmlAttributes())->addClass($clsNew)->set('accesskey', 'n')->set('data-action', 'contao--scroll-offset#store'),
+				'primary' => true,
+			));
+
+			$operations->append(array(
+				'href' => $this->addToUrl('&amp;act=paste&amp;mode=move'),
+				'label' => $GLOBALS['TL_LANG'][$this->strTable]['move'][0],
+				'title' => $GLOBALS['TL_LANG'][$this->strTable]['move'][1],
+				'attributes' => (new HtmlAttributes())->addClass('header_new')->set('data-action', 'contao--scroll-offset#store'),
+				'primary' => true,
+			));
 		}
 
 		if ($blnClipboard)
 		{
-			$buttons .= DataContainerOperationsBuilder::generateClearClipboardButton();
+			$operations->addClearClipboardButton();
 		}
-		else
+		elseif (null !== ($buttons = $this->generateGlobalButtons($operations)))
 		{
-			$buttons .= $this->generateGlobalButtons();
+			trigger_deprecation('contao/core-bundle', '5.6', 'Overriding DataContainer::generateGlobalButtons() is deprecated and will no longer work in Contao 6.');
+
+			$operations->append(array('html' => $buttons), true);
 		}
 
 		// Build the tree
-		$return = $this->panel() . Message::generate() . ($buttons ? '
-<div id="tl_buttons">' . $buttons . '</div>' : '') . ((Input::get('act') == 'select') ? '
+		$return = $this->panel() . Message::generate() . $operations . ((Input::get('act') == 'select') ? '
 <form id="tl_select" class="tl_form' . ((Input::get('act') == 'select') ? ' unselectable' : '') . '" method="post" novalidate>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_select">
@@ -511,9 +526,6 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		if (!($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && Input::get('act') != 'select')
 		{
-			$GLOBALS['TL_CSS'][] = 'assets/dropzone/css/dropzone.min.css';
-			$GLOBALS['TL_JAVASCRIPT'][] = 'assets/dropzone/js/dropzone.min.js';
-
 			$strAccepted = implode(',', array_map(static function ($a) { return '.' . $a; }, StringUtil::trimsplit(',', strtolower(Config::get('uploadTypes')))));
 			$intMaxSize = round(FileUpload::getMaxUploadSize() / 1024 / 1024);
 
@@ -549,7 +561,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				data-contao--toggle-nodes-expand-all-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][0] . '"
 				data-contao--toggle-nodes-expand-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['expandNodes'][1] . '"
 				data-contao--toggle-nodes-collapse-all-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
-				data-contao--toggle-nodes-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][0] . '"
+				data-contao--toggle-nodes-collapse-all-title-value="' . $GLOBALS['TL_LANG']['DCA']['collapseNodes'][1] . '"
 			>' . $return . '</div>';
 	}
 
@@ -1161,10 +1173,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateUploadButtons($this->strTable, $this);
 
 		// Display the upload form
-		return Message::generate() . '
-<div id="tl_buttons">
-' . DataContainerOperationsBuilder::generateBackButton() . '
-</div>
+		return Message::generate() . System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable)->addBackButton() . '
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . ' enctype="multipart/form-data">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_upload">
@@ -1248,44 +1257,21 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			$GLOBALS['TL_DCA'][$this->strTable]['fields'] = array_intersect_key($GLOBALS['TL_DCA'][$this->strTable]['fields'] ?? array(), array('name' => true, 'protected' => true, 'syncExclude' => true));
 		}
 
-		$security = System::getContainer()->get('security.helper');
-
-		// Build an array from boxes and rows (do not show excluded fields)
 		$this->strPalette = $this->getPalette();
-		$boxes = StringUtil::trimsplit(';', $this->strPalette);
+		$boxes = System::getContainer()->get('contao.data_container.palette_builder')->getBoxes($this->strPalette, $this->strTable);
 
 		if (!empty($boxes))
 		{
-			// Get fields
-			foreach ($boxes as $k=>$v)
-			{
-				$boxes[$k] = StringUtil::trimsplit(',', $v);
-
-				foreach ($boxes[$k] as $kk=>$vv)
-				{
-					if (!isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$vv]) || (DataContainer::isFieldExcluded($this->strTable, $vv) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $vv)))
-					{
-						unset($boxes[$k][$kk]);
-					}
-				}
-
-				// Unset a box if it does not contain any fields
-				if (empty($boxes[$k]))
-				{
-					unset($boxes[$k]);
-				}
-			}
-
 			// Render boxes
 			$class = 'tl_tbox';
 
-			foreach ($boxes as $v)
+			foreach ($boxes as $box)
 			{
 				$return .= '
 <div class="' . $class . ' cf">';
 
 				// Build rows of the current box
-				foreach ($v as $vv)
+				foreach ($box['fields'] as $vv)
 				{
 					$this->strField = $vv;
 					$this->strInputName = $vv;
@@ -1369,10 +1355,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 		// Begin the form (-> DO NOT CHANGE THIS ORDER -> this way the onsubmit attribute of the form can be changed by a field)
 		$return = $version . Message::generate() . ($this->noReload ? '
-<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . '
-<div id="tl_buttons">
-' . DataContainerOperationsBuilder::generateBackButton() . '
-</div>
+<p class="tl_error">' . $GLOBALS['TL_LANG']['ERR']['submit'] . '</p>' : '') . System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable)->addBackButton() . '
 <form id="' . $this->strTable . '" class="tl_form tl_edit_form" method="post"' . (!empty($this->onsubmit) ? ' onsubmit="' . implode(' ', $this->onsubmit) . '"' : '') . '>
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="' . $this->strTable . '">
@@ -1490,7 +1473,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 
 				$this->intId = $id;
 				$this->initialId = $id;
-				$this->strPalette = StringUtil::trimsplit('[;,]', $this->getPalette());
+				$this->strPalette = $this->getPalette();
+
+				$boxes = System::getContainer()->get('contao.data_container.palette_builder')->getBoxes($this->strPalette, $this->strTable);
+				$paletteFields = array_merge(...array_column($boxes, 'fields'));
 
 				$objModel = null;
 				$objVersions = null;
@@ -1516,7 +1502,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				else
 				{
 					// Unset the database fields
-					$this->strPalette = array_filter($this->strPalette, static function ($val) { return $val == 'name' || $val == 'protected'; });
+					$paletteFields = array_filter($paletteFields, static function ($val) { return $val == 'name' || $val == 'protected'; });
 				}
 
 				$return .= '
@@ -1525,15 +1511,9 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 				$class = 'tl_box';
 				$strHash = md5($id);
 
-				foreach ($this->strPalette as $v)
+				foreach ($paletteFields as $v)
 				{
 					if (!\in_array($v, $fields))
-					{
-						continue;
-					}
-
-					// Check whether field is excluded
-					if (DataContainer::isFieldExcluded($this->strTable, $v) && !$security->isGranted(ContaoCorePermissions::USER_CAN_EDIT_FIELD_OF_TABLE, $this->strTable . '::' . $v))
 					{
 						continue;
 					}
@@ -1701,10 +1681,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		}
 
 		// Return
-		return '
-<div id="tl_buttons">
-' . DataContainerOperationsBuilder::generateBackButton() . '
-</div>' . $return;
+		return System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable)->addBackButton() . $return;
 	}
 
 	/**
@@ -1796,6 +1773,17 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Save the file
 			if (md5($strContent) != md5($strSource))
 			{
+				if ($objFile->extension == 'svg' || $objFile->extension == 'svgz')
+				{
+					$sanitizer = new Sanitizer();
+					$strSource = $sanitizer->sanitize($strSource);
+
+					if (!$strSource)
+					{
+						throw new \Exception(\sprintf($GLOBALS['TL_LANG']['ERR']['invalidFile'], $this->intId));
+					}
+				}
+
 				if ($objFile->extension == 'svgz')
 				{
 					$strSource = gzencode($strSource);
@@ -1851,10 +1839,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$strButtons = System::getContainer()->get('contao.data_container.buttons_builder')->generateEditButtons($this->strTable, false, false, false, $this);
 
 		// Add the form
-		return $version . Message::generate() . '
-<div id="tl_buttons">
-' . DataContainerOperationsBuilder::generateBackButton() . '
-</div>
+		return $version . Message::generate() . System::getContainer()->get('contao.data_container.global_operations_builder')->initialize($this->strTable)->addBackButton() . '
 <form id="tl_files" class="tl_form tl_edit_form" method="post">
 <div class="tl_formbody_edit">
 <input type="hidden" name="FORM_SUBMIT" value="tl_files">
@@ -1960,7 +1945,15 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Check the full path to see if the file extension has changed, because if
 			// $this->strExtension is empty, a new extension could otherwise be added to
 			// $varValue and change the file type!
-			if (Path::getExtension($varValue . $this->strExtension) !== Path::getExtension($this->varValue . $this->strExtension))
+			if (!is_dir(Path::join($this->strRootDir, $this->strPath, $this->varValue, $this->strExtension)) && Path::getExtension($varValue . $this->strExtension) !== Path::getExtension($this->varValue . $this->strExtension))
+			{
+				throw new \Exception($GLOBALS['TL_LANG']['ERR']['invalidName']);
+			}
+
+			// Disallow renaming folders and files to a name starting with a dot, as they
+			// will be treated as hidden files in Unix and the file manager will not display
+			// them in any case.
+			if (str_starts_with($varValue, '.'))
 			{
 				throw new \Exception($GLOBALS['TL_LANG']['ERR']['invalidName']);
 			}
@@ -2192,25 +2185,10 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 	 */
 	public function getPalette()
 	{
-		$strPalette = $GLOBALS['TL_DCA'][$this->strTable]['palettes']['default'];
-
-		// Call onpalette_callback
-		if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] ?? null))
-		{
-			foreach ($GLOBALS['TL_DCA'][$this->strTable]['config']['onpalette_callback'] as $callback)
-			{
-				if (\is_array($callback))
-				{
-					$strPalette = System::importStatic($callback[0])->{$callback[1]}($strPalette, $this);
-				}
-				elseif (\is_callable($callback))
-				{
-					$strPalette = $callback($strPalette, $this);
-				}
-			}
-		}
-
-		return $strPalette;
+		return System::getContainer()
+			->get('contao.data_container.palette_builder')
+			->getPalette($this->strTable, (int) $this->intId, $this)
+		;
 	}
 
 	/**
@@ -2595,9 +2573,11 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		return '
     <div class="tl_search tl_subpanel">
       <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
-      <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '" data-controller="contao--choices">
-        <option value="name">' . ($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['label'][0] ?: (\is_array($GLOBALS['TL_LANG']['MSC']['name'] ?? null) ? $GLOBALS['TL_LANG']['MSC']['name'][0] : ($GLOBALS['TL_LANG']['MSC']['name'] ?? null))) . '</option>
-      </select>
+      <div class="tl_select_wrapper" data-controller="contao--choices">
+          <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
+            <option value="name">' . ($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['label'][0] ?: (\is_array($GLOBALS['TL_LANG']['MSC']['name'] ?? null) ? $GLOBALS['TL_LANG']['MSC']['name'][0] : ($GLOBALS['TL_LANG']['MSC']['name'] ?? null))) . '</option>
+          </select>
+      </div>
       <span>=</span>
       <input type="search" name="tl_value" class="tl_text' . ($active ? ' active' : '') . '" value="' . StringUtil::specialchars($session['search'][$this->strTable]['value'] ?? '') . '">
     </div>';

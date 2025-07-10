@@ -181,7 +181,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
                 }
 
                 if ($container->fileExists(Path::join($this->getProjectDir(), 'src'), false)) {
-                    $loader->load(__DIR__.'/../../skeleton/config/services.php');
+                    $loader->load(Path::join(__DIR__, '../../skeleton/config/services.php'));
                 }
             },
         );
@@ -313,7 +313,7 @@ class ContaoKernel extends Kernel implements HttpCacheProvider
         }
 
         if ($container->fileExists($path = Path::join($projectDir, 'config', $file.'.yml'))) {
-            trigger_deprecation('contao/manager-bundle', '5.0', 'Using a %s.yml file has been deprecated and will no longer work in Contao 6. Use a %s.yaml file instead', $file, $file);
+            trigger_deprecation('contao/manager-bundle', '5.0', 'Using a %s.yml file is deprecated and will no longer work in Contao 6. Use a %s.yaml file instead', $file, $file);
             $exists[] = $path;
         }
 

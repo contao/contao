@@ -12,8 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Twig\Inspector;
 
+use Contao\CoreBundle\Twig\ContaoTwigUtil;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
-use Psr\Cache\CacheItemPoolInterface;
 use Twig\Environment;
 use Twig\Error\LoaderError;
 use Twig\Error\RuntimeError;
@@ -27,13 +27,11 @@ class Inspector
     /**
      * @internal
      */
-    public const CACHE_KEY = 'contao.twig.inspector';
-
     private array $pathByTemplateName = [];
 
     public function __construct(
         private readonly Environment $twig,
-        private readonly CacheItemPoolInterface $cachePool,
+        private readonly Storage $storage,
         private readonly ContaoFilesystemLoader $filesystemLoader,
     ) {
     }
@@ -163,8 +161,10 @@ class Inspector
     {
         yield $data;
 
-        if ($data['parent'] ?? false) {
-            yield from $this->getDataFromAll($this->getData($data['parent']));
+        $parent = $data['parent'] ?? '';
+
+        if (null !== ContaoTwigUtil::parseContaoName($parent)) {
+            yield from $this->getDataFromAll($this->getData($parent));
         }
     }
 
@@ -176,9 +176,7 @@ class Inspector
         } catch (LoaderError|RuntimeError|SyntaxError) {
         }
 
-        $cache = $this->cachePool->getItem(self::CACHE_KEY)->get();
-
-        return $cache[$this->getPathByTemplateName($templateName)] ??
+        return $this->storage->get($this->getPathByTemplateName($templateName)) ??
             throw new InspectionException($templateName, reason: 'No recorded information was found. Please clear the Twig template cache to make sure templates are recompiled.');
     }
 

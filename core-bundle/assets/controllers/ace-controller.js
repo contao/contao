@@ -4,17 +4,17 @@ export default class extends Controller {
     static values = {
         type: String,
         readOnly: Boolean,
-    }
+    };
 
     connect() {
         // Create a div to apply the editor to
         this.container = document.createElement('div');
-        this.container.id = this.element.id + '_div';
+        this.container.id = `${this.element.id}_div`;
         this.container.className = this.element.className;
         this.element.parentNode.insertBefore(this.container, this.element.nextSibling);
 
         // Hide the textarea
-        this.element.style['display'] = 'none';
+        this.element.style.display = 'none';
 
         // Instantiate the editor
         this.editor = ace.edit(this.container);
@@ -54,6 +54,9 @@ export default class extends Controller {
     }
 
     setMaxLines() {
-        this.editor.setOption('maxLines', Math.floor((window.innerHeight - 320) / Math.floor(12 * this.editor.container.style.lineHeight)));
+        this.editor.setOption(
+            'maxLines',
+            Math.floor((window.innerHeight - 320) / Math.floor(12 * this.editor.container.style.lineHeight)),
+        );
     }
 }

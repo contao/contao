@@ -19,23 +19,22 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Attribute\Route;
-use Twig\Environment;
 
 /**
  * @experimental
  */
 #[Route(
     '%contao.backend.route_prefix%/search',
-    name: 'contao_backend_search',
+    name: '_contao_backend_search.stream',
     defaults: ['_scope' => 'backend', '_store_referrer' => false],
     methods: ['GET'],
+    condition: "'text/vnd.turbo-stream.html' in request.getAcceptableContentTypes()",
 )]
-class BackendSearchController
+class BackendSearchController extends AbstractBackendController
 {
     public function __construct(
         private readonly Security $security,
         private readonly BackendSearch $backendSearch,
-        private readonly Environment $twig,
     ) {
     }
 
@@ -54,8 +53,8 @@ class BackendSearchController
 
         $result = $this->backendSearch->search($query);
 
-        return new Response($this->twig->render('@Contao/backend/search/result.html.twig', [
+        return $this->render('@Contao/backend/search/show_results.stream.html.twig', [
             'hits' => $result->getHits(),
-        ]));
+        ]);
     }
 }

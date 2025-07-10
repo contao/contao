@@ -55,7 +55,7 @@ class SendNewsletterEvent extends Event
 
     public function getText(): string
     {
-        return $this->text ?? '';
+        return $this->text;
     }
 
     public function setText(string $text): self
@@ -67,7 +67,7 @@ class SendNewsletterEvent extends Event
 
     public function getHtml(): string
     {
-        return $this->html ?? '';
+        return $this->html;
     }
 
     public function setHtml(string $html): self

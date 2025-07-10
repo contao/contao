@@ -7,7 +7,8 @@ services:
         arguments:
             - '@security.helper'
             - '@contao.search.backend'
-            - '@twig'
+        calls:
+            - [setContainer, ['@Psr\Container\ContainerInterface']]
 
     contao.messenger.backend_search.delete_documents_message_handler:
         class: Contao\CoreBundle\Messenger\MessageHandler\BackendSearch\DeleteDocumentsMessageHandler
@@ -18,6 +19,7 @@ services:
         class: Contao\CoreBundle\Messenger\MessageHandler\BackendSearch\ReindexMessageHandler
         arguments:
             - '@contao.search.backend'
+            - '@contao.job.jobs'
 
     contao.search.backend:
         class: Contao\CoreBundle\Search\Backend\BackendSearch
@@ -28,6 +30,7 @@ services:
             - '@contao.search_backend.engine'
             - '@event_dispatcher'
             - '@messenger.bus.default'
+            - '@contao.job.jobs'
             - '@contao.messenger.web_worker'
             - '@contao.search.backend.seal_reindex_provider'
 
@@ -39,6 +42,9 @@ services:
             - '@contao.image.studio'
             - '@router'
             - '%contao.upload_path%'
+
+    contao.search.backend.format_binary_uuid_results_listener:
+        class: Contao\CoreBundle\Search\Backend\EventListener\FormatBinaryUuidSearchResultsListener
 
     contao.search.backend.format_core_widget_results_listener:
         class: Contao\CoreBundle\Search\Backend\EventListener\FormatCoreWidgetSearchResultsListener

@@ -35,7 +35,7 @@ class ThemeNamespace
         $path = Path::normalize($relativePath);
 
         if (str_contains($path, '..')) {
-            trigger_deprecation('contao/core-bundle', '5.5', 'Using paths outside of the template directory are deprecated and will no longer work in Contao 6. Use the VFS to mount them in the user templates storage instead.');
+            trigger_deprecation('contao/core-bundle', '5.5', 'Using paths outside of the template directory is deprecated and will no longer work in Contao 6. Use the VFS to mount them in the user templates storage instead.');
         }
 
         $invalidCharacters = [];

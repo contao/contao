@@ -1,9 +1,0 @@
-{% set message_attributes = attrs()
-    .addClass('message')
-    .addClass('message--info', success)
-    .addClass('message--error', not success)
-    .set('data-turbo-temporary')
-%}
-<div{{ message_attributes }}>
-    {% block content %}{{ content }}{% endblock %}
-</div>

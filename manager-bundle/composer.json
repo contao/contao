@@ -29,7 +29,7 @@
     "require": {
         "php": "^8.2",
         "ext-json": "*",
-        "cmsig/seal-loupe-adapter": "^0.6",
+        "cmsig/seal-loupe-adapter": "^0.9",
         "contao/core-bundle": "self.version",
         "contao/manager-plugin": "^2.4",
         "doctrine/dbal": "^3.6",

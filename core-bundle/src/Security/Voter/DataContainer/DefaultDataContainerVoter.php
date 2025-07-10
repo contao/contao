@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Security\Voter\DataContainer;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 
 /**
  * By default, the Contao back end is fully accessible unless a developer wants to
@@ -34,7 +35,7 @@ class DefaultDataContainerVoter implements CacheableVoterInterface
         return true;
     }
 
-    public function vote(TokenInterface $token, $subject, array $attributes): int
+    public function vote(TokenInterface $token, $subject, array $attributes, Vote|null $vote = null): int
     {
         foreach ($attributes as $attribute) {
             if ($this->supportsAttribute($attribute)) {

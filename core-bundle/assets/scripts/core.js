@@ -318,7 +318,7 @@ window.AjaxRequest =
 		var img = null,
 			images = $(el).getElements('img'),
 			published = (images[0].get('data-state') == 1),
-			div, next, pa, title;
+			div, next, pa, label;
 
 		if (rowIcon && !iconOnly) {
 			// Find the icon depending on the view (tree view, list view, parent view)
@@ -385,20 +385,26 @@ window.AjaxRequest =
 		images.forEach(function(image) {
 			const newSrc = !published ? image.get('data-icon') : image.get('data-icon-disabled');
 			image.src = (image.src.includes('/') && !newSrc.includes('/')) ? image.src.slice(0, image.src.lastIndexOf('/') + 1) + newSrc : newSrc;
-			image.alt = title = !published ? image.get('data-alt') : image.get('data-alt-disabled');
+			image.alt = label = !published ? image.get('data-alt') : image.get('data-alt-disabled');
 			image.set('data-state', !published ? 1 : 0);
 		});
 
 		if (!published && $(el).get('data-title')) {
-			el.title = title = $(el).get('data-title');
+			el.title = label = $(el).get('data-title');
 		} else if (published && $(el).get('data-title-disabled')) {
-			el.title = title = $(el).get('data-title-disabled');
+			el.title = label = $(el).get('data-title-disabled');
 		}
 
-		if (title) {
+		if (!published && $(el).get('data-label')) {
+			label = $(el).get('data-label');
+		} else if (published && $(el).get('data-label-disabled')) {
+			label = $(el).get('data-label-disabled');
+		}
+
+		if (label) {
 			el.childNodes.forEach((child) => {
 				if (child instanceof Text && child.nodeValue.trim()) {
-					child.replaceWith(new Text(title));
+					child.replaceWith(new Text(label));
 				}
 			});
 		}
@@ -615,8 +621,14 @@ window.Backend =
 			'draggable': false,
 			'overlayOpacity': .7,
 			'overlayClick': false,
-			'onShow': function() { document.body.setStyle('overflow', 'hidden'); },
-			'onHide': function() { document.body.setStyle('overflow', 'auto'); }
+			'onShow': function() {
+				document.body.setStyle('overflow', 'hidden');
+				document.dispatchEvent(new CustomEvent('contao--simple-modal:show'));
+			},
+			'onHide': function() {
+				document.body.setStyle('overflow', 'auto');
+				document.dispatchEvent(new CustomEvent('contao--simple-modal:hide'));
+			}
 		});
 		M.addButton(Contao.lang.cancel, 'btn', function() {
 			if (this.buttons[0].hasClass('btn-disabled')) {
@@ -700,7 +712,8 @@ window.Backend =
 
 		var form = $(el) || el;
 		hidden.inject(form, 'bottom');
-		form.submit();
+		form.noValidate = true;
+		form.requestSubmit();
 	},
 
 	/**
@@ -790,6 +803,8 @@ window.Backend =
 	 * @author Martin Auswöger
 	 */
 	makeParentViewSortable: function(ul) {
+		console.warn('Backend.makeParentViewSortable() is deprecated. Please use the stimulus controllers instead.');
+
 		var ds = new Scroller(document.getElement('body'), {
 			onChange: function(x, y) {
 				this.element.scrollTo(this.element.getScroll().x, y);
@@ -884,6 +899,8 @@ window.Backend =
 	 * @param {string} val The value field
 	 */
 	makeMultiSrcSortable: function(id, oid, val) {
+		console.warn('Backend.makeMultiSrcSortable() is deprecated. Please use the stimulus controllers instead.');
+
 		var list = new Sortables($(id), {
 			constrain: true,
 			opacity: 0.6
@@ -1074,6 +1091,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	listWizard: function(id) {
+		console.warn('Backend.listWizard() is deprecated. Please use the stimulus controller instead.');
+
 		var ul = $(id),
 			makeSortable = function(ul) {
 				new Sortables(ul, {
@@ -1376,6 +1395,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	optionsWizard: function(id) {
+		console.warn('Backend.optionsWizard() is deprecated. Please use the stimulus controller instead.');
+
 		var table = $(id),
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
@@ -1480,6 +1501,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	keyValueWizard: function(id) {
+		console.warn('Backend.keyValueWizard() is deprecated. Please use the stimulus controller instead.');
+
 		var table = $(id),
 			tbody = table.getElement('tbody'),
 			makeSortable = function(tbody) {
@@ -1577,6 +1600,8 @@ window.Backend =
 	 * @param {string} id The ID of the target element
 	 */
 	checkboxWizard: function(id) {
+		console.warn('Backend.checkboxWizard() is deprecated. Please use the Stimulus controller instead.');
+
 		var container = $(id).getElement('.sortable'),
 			makeSortable = function(container) {
 				new Sortables(container, {
@@ -1670,7 +1695,7 @@ window.Backend =
 				}
 			},
 			clickEvent = function(e) {
-				if (e.target instanceof HTMLImageElement || e.target instanceof HTMLAnchorElement || e.target instanceof HTMLButtonElement) {
+				if (e.target instanceof HTMLAnchorElement || e.target instanceof HTMLButtonElement || e.target instanceof HTMLInputElement || e.target?.closest('a, button, input, .operations')) {
 					return;
 				}
 

@@ -39,6 +39,7 @@ use Symfony\Component\HttpKernel\KernelInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Twig\Environment;
 use Twig\Error\Error;
+use Twig\Loader\LoaderInterface;
 
 class PrettyErrorScreenListenerTest extends TestCase
 {
@@ -52,6 +53,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $this->assertTrue($event->hasResponse());
         $this->assertSame(500, $event->getResponse()->getStatusCode());
+        $this->assertSame('template: @Contao/error/backend.html.twig', $event->getResponse()->getContent());
     }
 
     public function testChecksIsGrantedBeforeRenderingBackEndExceptions(): void
@@ -82,6 +84,11 @@ class PrettyErrorScreenListenerTest extends TestCase
     public function testCatchesAuthenticationCredentialsNotFoundExceptionWhenRenderingBackEndExceptions(): void
     {
         $twig = $this->createMock(Environment::class);
+        $twig
+            ->method('render')
+            ->willReturnCallback(static fn (string $template) => "template: $template")
+        ;
+
         $framework = $this->mockContaoFramework();
         $pageRegistry = $this->createMock(PageRegistry::class);
         $httpKernel = $this->createMock(HttpKernelInterface::class);
@@ -101,6 +108,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $this->assertTrue($event->hasResponse());
         $this->assertSame(500, $event->getResponse()->getStatusCode());
+        $this->assertSame('template: @Contao/error/general.html.twig', $event->getResponse()->getContent());
     }
 
     #[DataProvider('getErrorTypes')]
@@ -211,6 +219,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $this->assertTrue($event->hasResponse());
         $this->assertSame(503, $event->getResponse()->getStatusCode());
+        $this->assertSame('template: @Contao/error/service_unavailable.html.twig', $event->getResponse()->getContent());
     }
 
     public function testDoesNotRenderExceptionsIfDisabled(): void
@@ -270,6 +279,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $this->assertTrue($event->hasResponse());
         $this->assertSame(409, $event->getResponse()->getStatusCode());
+        $this->assertSame('template: @Contao/error/general.html.twig', $event->getResponse()->getContent());
     }
 
     public function testRendersTheErrorScreen(): void
@@ -282,12 +292,12 @@ class PrettyErrorScreenListenerTest extends TestCase
         $twig
             ->method('render')
             ->willReturnCallback(
-                static function () use (&$count): string {
+                static function (string $template) use (&$count): string {
                     if (0 === $count++) {
                         throw new Error('foo');
                     }
 
-                    return '';
+                    return "template: $template";
                 },
             )
         ;
@@ -297,6 +307,7 @@ class PrettyErrorScreenListenerTest extends TestCase
 
         $this->assertTrue($event->hasResponse());
         $this->assertSame(500, $event->getResponse()->getStatusCode());
+        $this->assertSame('template: @Contao/error/general.html.twig', $event->getResponse()->getContent());
     }
 
     public function testDoesNothingIfTheFormatIsNotHtml(): void
@@ -373,9 +384,46 @@ class PrettyErrorScreenListenerTest extends TestCase
         $this->assertSame(500, $event->getResponse()->getStatusCode());
     }
 
+    public function testRendersBCTemplateIfExists(): void
+    {
+        $exception = new InternalServerErrorHttpException('', new InternalServerErrorException());
+        $event = $this->getResponseEvent($exception);
+
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->expects($this->once())
+            ->method('exists')
+            ->with('@ContaoCore/Error/backend.html.twig')
+            ->willReturn(true)
+        ;
+
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->method('getLoader')
+            ->willReturn($loader)
+        ;
+
+        $twig
+            ->method('render')
+            ->willReturnCallback(static fn (string $template) => "template: $template")
+        ;
+
+        $listener = $this->getListener(true, $twig);
+        $listener($event);
+
+        $this->assertSame('template: @ContaoCore/Error/backend.html.twig', $event->getResponse()->getContent());
+    }
+
     private function getListener(bool $isBackendUser = false, Environment|null $twig = null, PageModel|null $errorPage = null, HttpKernelInterface|null $httpKernel = null): PrettyErrorScreenListener
     {
-        $twig ??= $this->createMock(Environment::class);
+        if (!$twig) {
+            $twig = $this->createMock(Environment::class);
+            $twig
+                ->method('render')
+                ->willReturnCallback(static fn (string $template) => "template: $template")
+            ;
+        }
+
         $httpKernel ??= $this->createMock(HttpKernelInterface::class);
 
         $pageFinder = $this->createMock(PageFinder::class);

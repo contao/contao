@@ -20,6 +20,7 @@ use Contao\DC_File;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 
 /**
  * @internal
@@ -47,7 +48,7 @@ class TableAccessVoter implements CacheableVoterInterface
     /**
      * @param CreateAction|UpdateAction $subject
      */
-    public function vote(TokenInterface $token, $subject, array $attributes): int
+    public function vote(TokenInterface $token, $subject, array $attributes, Vote|null $vote = null): int
     {
         foreach ($attributes as $attribute) {
             if (!$this->supportsAttribute($attribute) || DC_File::class === DataContainer::getDriverForTable($subject->getDataSource())) {

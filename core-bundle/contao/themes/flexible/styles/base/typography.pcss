@@ -1,0 +1,73 @@
+/* Font */
+body {
+    font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-weight: 400;
+    font-size: .875rem;
+    line-height: 1;
+    color: var(--text);
+}
+
+h1, h2, h3, h4, h5, h6, strong, b, th {
+    font-weight: 600;
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    body {
+        font-weight: 300;
+    }
+
+    h1, h2, h3, h4, h5, h6, strong, b, th {
+        font-weight: 500;
+    }
+}
+
+pre, code, .tl_textarea.monospace {
+    font: 300 .75rem/1.25 SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-size: 1rem;
+}
+
+input, textarea, select, button {
+    font: inherit;
+    color: inherit;
+    line-height: inherit;
+}
+
+input, select {
+    line-height: 17px; /* see #501 and #79 */
+}
+
+@supports (display:-ms-grid) {
+    input, select {
+        line-height: 1.1;
+    }
+}
+
+.upper {
+    text-transform: uppercase;
+}
+
+/* Basic elements */
+a {
+    color: var(--text);
+    text-decoration: none;
+}
+
+a:hover, a:active {
+    color: var(--contao);
+}
+
+hr {
+    height: 1px;
+    margin: 18px 0;
+    border: 0;
+    background: var(--border);
+    color: var(--border);
+}
+
+p {
+    margin-bottom: 1em;
+    padding: 0;
+}

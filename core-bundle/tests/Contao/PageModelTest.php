@@ -140,7 +140,7 @@ class PageModelTest extends TestCase
         $database
             ->expects($this->once())
             ->method('execute')
-            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type='root'")
+            ->with("SELECT urlPrefix, urlSuffix FROM tl_page WHERE type = 'root'")
             ->willReturn(new Result($rootData, ''))
         ;
 
@@ -155,7 +155,7 @@ class PageModelTest extends TestCase
         $database
             ->expects($this->once())
             ->method('prepare')
-            ->with('SELECT * FROM tl_page WHERE tl_page.alias LIKE ? AND tl_page.id!=?')
+            ->with('SELECT * FROM tl_page WHERE tl_page.alias LIKE ? AND tl_page.id != ?')
             ->willReturn($aliasStatement)
         ;
 
@@ -435,7 +435,7 @@ class PageModelTest extends TestCase
 
     public function testUsesAbsolutePathReferenceForFrontendUrl(): void
     {
-        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getFrontendUrl\(\)" has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getFrontendUrl\(\)" is deprecated/');
 
         $page = new PageModel();
         $page->pid = 42;
@@ -456,7 +456,7 @@ class PageModelTest extends TestCase
 
     public function testUsesAbsoluteUrlReferenceForFrontendUrlOnOtherDomain(): void
     {
-        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getFrontendUrl\(\)" has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getFrontendUrl\(\)" is deprecated/');
 
         $page = new PageModel();
         $page->pid = 42;
@@ -479,7 +479,7 @@ class PageModelTest extends TestCase
 
     public function testUsesAbsoluteUrlReferenceForAbsoluteUrl(): void
     {
-        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getAbsoluteUrl\(\)" has been deprecated/');
+        $this->expectUserDeprecationMessageMatches('/Using "Contao\\\\PageModel::getAbsoluteUrl\(\)" is deprecated/');
 
         $page = new PageModel();
         $page->pid = 42;

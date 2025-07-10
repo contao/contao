@@ -4,7 +4,7 @@ import { Icon } from '../modules/icon';
 export default class TabsController extends Controller {
     static values = {
         closeLabel: String,
-    }
+    };
 
     static targets = ['navigation', 'panel'];
 
@@ -24,36 +24,32 @@ export default class TabsController extends Controller {
         const selectButton = isRestore
             ? this.navigationTarget.querySelector(`button.select[aria-controls="${panelReference}"]`)
             : (() => {
-                const button = document.createElement('button');
-                button.id = controlReference;
-                button.className = 'select';
-                button.innerText = panel.dataset.label;
-                button.setAttribute('type', 'button');
-                button.setAttribute('role', 'tab');
-                button.setAttribute('aria-controls', panelReference);
+                  const button = document.createElement('button');
+                  button.id = controlReference;
+                  button.className = 'select';
+                  button.innerText = panel.dataset.label;
+                  button.setAttribute('type', 'button');
+                  button.setAttribute('role', 'tab');
+                  button.setAttribute('aria-controls', panelReference);
 
-                return button;
-            })()
-        ;
-
+                  return button;
+              })();
         selectButton.addEventListener('click', () => {
             this.selectTab(panel);
-        })
+        });
 
         const closeButton = isRestore
             ? this.navigationTarget.querySelector(`button.close[aria-controls="${panelReference}"]`)
             : (() => {
-                const button = document.createElement('button');
-                button.className = 'close';
-                button.append(Icon.getTemplate('close', {'aria-hidden': true, width: 12, height: 12}).content);
-                button.setAttribute('type', 'button');
-                button.setAttribute('aria-controls', panelReference);
-                button.setAttribute('aria-label', this.closeLabelValue);
+                  const button = document.createElement('button');
+                  button.className = 'close';
+                  button.append(Icon.getTemplate('close', {'aria-hidden': true, width: 12, height: 12}).content);
+                  button.setAttribute('type', 'button');
+                  button.setAttribute('aria-controls', panelReference);
+                  button.setAttribute('aria-label', this.closeLabelValue);
 
-                return button;
-            })()
-        ;
-
+                  return button;
+              })();
         closeButton.addEventListener('click', () => {
             // Remove the panel and let the disconnect handler do the rest
             panel.remove();
@@ -94,7 +90,7 @@ export default class TabsController extends Controller {
     }
 
     selectTab(panel) {
-        this.panelTargets.forEach((el) => {
+        for (const el of this.panelTargets) {
             const isTarget = el === panel;
 
             el.toggleAttribute('aria-selected', isTarget);
@@ -103,21 +99,21 @@ export default class TabsController extends Controller {
 
             // Re-enable/disable the button access keys
             if (isTarget) {
-                el.querySelectorAll('button[data-disabled-accesskey]').forEach(button => {
+                for (const button of el.querySelectorAll('button[data-disabled-accesskey]')) {
                     button.setAttribute('accesskey', button.getAttribute('data-disabled-accesskey'));
                     button.removeAttribute('data-disabled-accesskey');
-                })
+                }
             } else {
-                el.querySelectorAll('button[accesskey]').forEach(button => {
+                for (const button of el.querySelectorAll('button[accesskey]')) {
                     button.setAttribute('data-disabled-accesskey', button.getAttribute('accesskey'));
                     button.removeAttribute('accesskey');
-                })
+                }
             }
 
             const selectButton = document.getElementById(el.getAttribute('aria-labelledby'));
             selectButton?.toggleAttribute('aria-selected', isTarget);
             selectButton?.parentElement.toggleAttribute('data-active', isTarget);
-        });
+        }
 
         this.activeTab = panel;
     }

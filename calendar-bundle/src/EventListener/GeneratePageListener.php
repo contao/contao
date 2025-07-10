@@ -12,14 +12,15 @@ declare(strict_types=1);
 
 namespace Contao\CalendarBundle\EventListener;
 
-use Contao\CalendarFeedModel;
+use Contao\CalendarBundle\Controller\Page\CalendarFeedController;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsHook;
 use Contao\CoreBundle\Framework\ContaoFramework;
-use Contao\Environment;
+use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\StringUtil;
-use Contao\Template;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @internal
@@ -27,8 +28,10 @@ use Contao\Template;
 #[AsHook('generatePage')]
 class GeneratePageListener
 {
-    public function __construct(private readonly ContaoFramework $framework)
-    {
+    public function __construct(
+        private readonly ContaoFramework $framework,
+        private readonly ContentUrlGenerator $urlGenerator,
+    ) {
     }
 
     /**
@@ -44,21 +47,27 @@ class GeneratePageListener
 
         $this->framework->initialize();
 
-        $adapter = $this->framework->getAdapter(CalendarFeedModel::class);
+        $adapter = $this->framework->getAdapter(PageModel::class);
 
-        if (!$feeds = $adapter->findByIds($calendarfeeds)) {
+        if (!$feeds = $adapter->findMultipleByIds($calendarfeeds)) {
             return;
         }
 
-        $template = $this->framework->getAdapter(Template::class);
-        $environment = $this->framework->getAdapter(Environment::class);
-
         foreach ($feeds as $feed) {
-            $GLOBALS['TL_HEAD'][] = $template->generateFeedTag(
-                \sprintf('%sshare/%s.xml', $feed->feedBase ?: $environment->get('base'), $feed->alias),
-                $feed->format,
-                $feed->title,
-            );
+            if (CalendarFeedController::TYPE !== $feed->type) {
+                continue;
+            }
+
+            try {
+                // TODO: Use ResponseContext, once it supports appending to <head>
+                $GLOBALS['TL_HEAD'][] = $this->generateFeedTag($this->urlGenerator->generate($feed, [], UrlGeneratorInterface::ABSOLUTE_URL), $feed->feedFormat, $feed->title);
+            } catch (ExceptionInterface) {
+            }
         }
+    }
+
+    private function generateFeedTag(string $href, string $format, string $title): string
+    {
+        return \sprintf('<link type="%s" rel="alternate" href="%s" title="%s">', CalendarFeedController::$contentTypes[$format], $href, StringUtil::specialchars($title));
     }
 }
