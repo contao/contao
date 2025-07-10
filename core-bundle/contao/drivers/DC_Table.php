@@ -4028,7 +4028,6 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 						}
 						else
 						{
-
 							if ((!$this->rootPaste && \in_array($id, $this->root)) || !$this->canPasteClipboard($arrClipboard, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1)))
 							{
 								$operations->addPasteButton('pasteafter', null);
