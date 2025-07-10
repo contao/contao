@@ -15,6 +15,16 @@
       "js": [
         "/bundles/contaocore/navigation.8dd3e8d5.js"
       ]
+    },
+    "passkey_login": {
+      "js": [
+        "/bundles/contaocore/passkey_login.6dc9446a.js"
+      ]
+    },
+    "passkey_create": {
+      "js": [
+        "/bundles/contaocore/passkey_create.1d33d033.js"
+      ]
     }
   }
 }

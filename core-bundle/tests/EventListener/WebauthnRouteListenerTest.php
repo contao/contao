@@ -22,8 +22,8 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class WebauthnRouteListenerTest extends TestCase
 {
-    #[DataProvider('routeProvider')]
-    public function testSetsTheCorrectScope(string $requestRoute, string|null $resultingScope): void
+    #[DataProvider('backendRouteProvider')]
+    public function testSetsTheBackendScope(string $requestRoute, string|null $resultingScope): void
     {
         $request = new Request();
         $request->attributes->set('_route', $requestRoute);
@@ -38,17 +38,47 @@ class WebauthnRouteListenerTest extends TestCase
             'webauthn.controller.security.contao_backend.request.result',
         ];
 
-        (new WebauthnRouteListener($routes))($event);
+        (new WebauthnRouteListener($routes, 'backend'))($event);
 
         $this->assertSame($resultingScope, $request->attributes->get('_scope'));
     }
 
-    public static function routeProvider(): iterable
+    public static function backendRouteProvider(): iterable
     {
         yield ['webauthn.controller.creation.request.contao_backend_add_authenticator', 'backend'];
         yield ['webauthn.controller.creation.response.contao_backend_add_authenticator', 'backend'];
         yield ['webauthn.controller.security.contao_backend.request.options', 'backend'];
         yield ['webauthn.controller.security.contao_backend.request.result', 'backend'];
+        yield ['contao_frontend', null];
+    }
+
+    #[DataProvider('frontendRouteProvider')]
+    public function testSetsTheFrontendScope(string $requestRoute, string|null $resultingScope): void
+    {
+        $request = new Request();
+        $request->attributes->set('_route', $requestRoute);
+
+        $kernel = $this->createMock(KernelInterface::class);
+        $event = new RequestEvent($kernel, $request, HttpKernelInterface::MAIN_REQUEST);
+
+        $routes = [
+            'webauthn.controller.creation.request.contao_frontend_add_authenticator',
+            'webauthn.controller.creation.response.contao_frontend_add_authenticator',
+            'webauthn.controller.security.contao_frontend.request.options',
+            'webauthn.controller.security.contao_frontend.request.result',
+        ];
+
+        (new WebauthnRouteListener($routes, 'frontend'))($event);
+
+        $this->assertSame($resultingScope, $request->attributes->get('_scope'));
+    }
+
+    public static function frontendRouteProvider(): iterable
+    {
+        yield ['webauthn.controller.creation.request.contao_frontend_add_authenticator', 'frontend'];
+        yield ['webauthn.controller.creation.response.contao_frontend_add_authenticator', 'frontend'];
+        yield ['webauthn.controller.security.contao_frontend.request.options', 'frontend'];
+        yield ['webauthn.controller.security.contao_frontend.request.result', 'frontend'];
         yield ['contao_frontend', null];
     }
 }

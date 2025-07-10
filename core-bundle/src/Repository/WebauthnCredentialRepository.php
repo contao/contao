@@ -23,7 +23,7 @@ use Webauthn\PublicKeyCredentialSource;
  *
  * @internal
  */
-final class WebauthnCredentialRepository extends DoctrineCredentialSourceRepository
+class WebauthnCredentialRepository extends DoctrineCredentialSourceRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
