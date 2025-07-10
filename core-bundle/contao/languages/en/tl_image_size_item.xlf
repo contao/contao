@@ -29,9 +29,6 @@
       <trans-unit id="tl_image_size_item.visibility_legend">
         <source>Visibility</source>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_image_size_item.new.1">
         <source>Create a new media query</source>
       </trans-unit>

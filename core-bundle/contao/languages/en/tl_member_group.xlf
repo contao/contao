@@ -47,9 +47,6 @@
       <trans-unit id="tl_member_group.account_legend">
         <source>Group settings</source>
       </trans-unit>
-      <trans-unit id="tl_member_group.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_member_group.new.1">
         <source>Create a new member group</source>
       </trans-unit>

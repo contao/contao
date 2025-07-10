@@ -347,9 +347,6 @@
       <trans-unit id="tl_layout.analytics_matomo">
         <source>Matomo</source>
       </trans-unit>
-      <trans-unit id="tl_layout.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_layout.new.1">
         <source>Create a new page layout</source>
       </trans-unit>

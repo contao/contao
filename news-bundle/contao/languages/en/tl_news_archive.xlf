@@ -44,9 +44,6 @@
       <trans-unit id="tl_news_archive.feeds.1">
         <source>Manage news feeds</source>
       </trans-unit>
-      <trans-unit id="tl_news_archive.new.0">
-        <source>New</source>
-      </trans-unit>
       <trans-unit id="tl_news_archive.new.1">
         <source>Create a new news archive</source>
       </trans-unit>
