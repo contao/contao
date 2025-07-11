@@ -200,7 +200,7 @@ class Jobs
             $expr->or(
                 $expr->eq('j.owner', ':userOwner'),
                 $expr->and(
-                    $expr->eq('j.public', true),
+                    $expr->eq('j.public', '1'),
                     $expr->eq('j.owner', ':systemOwner'),
                 ),
             ),
