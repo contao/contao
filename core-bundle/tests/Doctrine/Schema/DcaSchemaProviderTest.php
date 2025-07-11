@@ -630,6 +630,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         ];
 
         $entityMetadata = new ClassMetadata(\stdClass::class);
+        $entityMetadata->setIdentifier(['id']);
 
         (new ClassMetadataBuilder($entityMetadata))
             ->setTable('tl_page')
