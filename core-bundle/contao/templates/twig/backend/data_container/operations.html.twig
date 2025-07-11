@@ -23,8 +23,15 @@
                     {% endif %}
                 </button>
                 <ul class="operations-menu" data-contao--operations-menu-target="submenu">
+                    {% set isSeparator = false %}
                     {% for operation in operations %}
-                        {{ _self.operation(operation, true, globalOperations) }}
+                        {% if not isSeparator or not operation.separator|default %}
+                            {% set output = _self.operation(operation, true, globalOperations)|trim %}
+                            {% if output is not empty %}
+                                {{ output }}
+                                {% set isSeparator = operation.separator|default(false) %}
+                            {% endif %}
+                        {% endif %}
                     {% endfor %}
                 </ul>
             </li>
