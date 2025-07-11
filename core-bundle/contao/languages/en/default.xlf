@@ -2523,19 +2523,19 @@
         <source>Paste after element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.pastenewtop.0">
-        <source>New</source>
+        <source>New at the top</source>
       </trans-unit>
       <trans-unit id="DCA.pastenewtop.1">
         <source>Create a new element at the top</source>
       </trans-unit>
       <trans-unit id="DCA.pastenewafter.0">
-        <source>New</source>
+        <source>New after</source>
       </trans-unit>
       <trans-unit id="DCA.pastenewafter.1">
         <source>Create a new element after element ID %s</source>
       </trans-unit>
       <trans-unit id="DCA.pastenewinto.0">
-        <source>New</source>
+        <source>New inside</source>
       </trans-unit>
       <trans-unit id="DCA.pastenewinto.1">
         <source>Create a new element inside element ID %s</source>
