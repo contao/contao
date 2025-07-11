@@ -378,8 +378,7 @@ class DumperTest extends ContaoTestCase
                 $result = new ArrayResult($results);
             }
 
-            $calls[] = [$query];
-            $returns[] = new Result($result, $connection);
+            $calls[] = [$query, [], [], null, new Result($result, $connection)];
         }
 
         $connection
