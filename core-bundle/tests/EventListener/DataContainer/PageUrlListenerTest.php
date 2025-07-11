@@ -1075,7 +1075,15 @@ class PageUrlListenerTest extends TestCase
             ->expects($this->once())
             ->method('fetchOne')
             ->with(
-                "SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'",
+                <<<'SQL'
+                    SELECT COUNT(*)
+                    FROM tl_page
+                    WHERE
+                        urlPrefix = :urlPrefix
+                        AND dns = :dns
+                        AND id != :rootId
+                        AND type = 'root'
+                    SQL,
                 ['urlPrefix' => 'en', 'dns' => 'www.example.com', 'rootId' => 1],
             )
             ->willReturn(1)
@@ -1698,7 +1706,17 @@ class PageUrlListenerTest extends TestCase
             $connection
                 ->expects($this->once())
                 ->method('fetchOne')
-                ->with("SELECT COUNT(*) FROM tl_page WHERE urlPrefix=:urlPrefix AND dns=:dns AND id!=:rootId AND type='root'")
+                ->with(
+                    <<<'SQL'
+                        SELECT COUNT(*)
+                        FROM tl_page
+                        WHERE
+                            urlPrefix = :urlPrefix
+                            AND dns = :dns
+                            AND id != :rootId
+                            AND type = 'root'
+                        SQL,
+                )
                 ->willReturn(0)
             ;
         }

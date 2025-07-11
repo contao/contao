@@ -11,13 +11,15 @@
         transform: translateX(1ch);
         opacity: 0;
     }
+
     25% {
         transform: translateX(-1ch);
-        opacity: .75;
+        opacity: 0.75;
     }
+
     100% {
         transform: translateX(-1ch);
-        opacity: .75;
+        opacity: 0.75;
     }
 }
 
@@ -26,7 +28,6 @@
 
     height: calc(100vh - 7rem);
     overflow: hidden;
-
     display: grid;
     grid-template-areas: "nav tabs info";
     grid-template-columns: auto 1fr min-content;
@@ -47,7 +48,6 @@
         resize: horizontal;
         min-width: 100px;
         max-width: max-content;
-
         display: flex;
         flex-direction: column;
     }
@@ -58,7 +58,7 @@
         max-width: 300px;
 
         label > span {
-            font-size: .8em;
+            font-size: 0.8em;
             margin-left: 4px;
             color: var(--info);
         }
@@ -99,11 +99,11 @@
         overflow-y: auto;
         min-width: 220px;
 
-        @media (min-width: 1540px) {
+        @media (width >= 1540px) {
             min-width: 320px;
         }
 
-        @media (min-width: 1640px) {
+        @media (width >= 1640px) {
             min-width: 420px;
         }
 

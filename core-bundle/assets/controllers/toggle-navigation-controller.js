@@ -1,16 +1,16 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static classes = ['collapsed']
+    static classes = ['collapsed'];
 
     static values = {
         url: String,
         requestToken: String,
         expandTitle: String,
         collapseTitle: String,
-    }
+    };
 
-    toggle ({ currentTarget, params: { category }}) {
+    toggle({ currentTarget, params: { category } }) {
         const el = currentTarget.parentNode;
         const collapsed = el.classList.toggle(this.collapsedClass);
 
@@ -20,18 +20,18 @@ export default class extends Controller {
         this.sendRequest(category, collapsed);
     }
 
-    sendRequest (category, collapsed) {
+    sendRequest(category, collapsed) {
         fetch(this.urlValue, {
             method: 'POST',
             headers: {
-                'X-Requested-With': 'XMLHttpRequest'
+                'X-Requested-With': 'XMLHttpRequest',
             },
             body: new URLSearchParams({
                 action: 'toggleNavigation',
                 id: category,
                 state: collapsed ? 0 : 1,
-                REQUEST_TOKEN: this.requestTokenValue
-            })
+                REQUEST_TOKEN: this.requestTokenValue,
+            }),
         });
     }
 }

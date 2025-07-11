@@ -159,13 +159,18 @@ class BackendController extends AbstractController
     #[Route('/{parameters}', name: 'contao_backend_fallback', requirements: ['parameters' => '.*'], defaults: ['_store_referrer' => false], priority: -1000)]
     public function backendFallback(): Response
     {
+        // Backwards compatibility: render the legacy bundle template if it exists
+        $template = $this->container->get('twig')->getLoader()->exists('@ContaoCore/Error/backend.html.twig')
+            ? '@ContaoCore/Error/backend.html.twig'
+            : '@Contao/error/backend.html.twig';
+
         return $this->render(
-            '@ContaoCore/Error/backend.html.twig',
+            $template,
             [
                 'language' => 'en',
                 'statusName' => 'Page Not Found',
                 'exception' => 'The requested page does not exist.',
-                'template' => '@ContaoCore/Error/backend.html.twig',
+                'template' => $template,
             ],
             new Response('', 404),
         );

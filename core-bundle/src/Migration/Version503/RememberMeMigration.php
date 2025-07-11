@@ -65,18 +65,19 @@ class RememberMeMigration extends AbstractMigration
         // existing tokens can be migrated. Otherwise, it is a Contao 4 database and the
         // tokens would not work anyway and therefore do not need to be migrated.
         if (isset($schemaManager->listTableColumns('tl_remember_me')['useridentifier'])) {
-            $this->connection->executeStatement(<<<'SQL'
-                INSERT INTO rememberme_token (
-                    SELECT
-                        TRIM(TRAILING CHAR(0) FROM CAST(series AS char)),
-                        TRIM(TRAILING CHAR(0) FROM CAST(value AS char)),
-                        lastUsed,
-                        class,
-                        userIdentifier
-                    FROM tl_remember_me
-                    WHERE userIdentifier != ''
-                )
-                SQL,
+            $this->connection->executeStatement(
+                <<<'SQL'
+                    INSERT INTO rememberme_token (
+                        SELECT
+                            TRIM(TRAILING CHAR(0) FROM CAST(series AS char)),
+                            TRIM(TRAILING CHAR(0) FROM CAST(value AS char)),
+                            lastUsed,
+                            class,
+                            userIdentifier
+                        FROM tl_remember_me
+                        WHERE userIdentifier != ''
+                    )
+                    SQL,
             );
         }
 

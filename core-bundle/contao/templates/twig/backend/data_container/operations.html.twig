@@ -1,24 +1,30 @@
 {% trans_default_domain 'contao_default' %}
 {% set has_submenu = false %}
+{% set show_button = false %}
 
-<div class="operations">
-    <ul id="operations{{ id }}" data-contao--operations-menu-target="menu">
+<div class="operations"{% if globalOperations %} data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"{% endif %}>
+    <ul id="{{ id is defined ? 'operations'~id : 'tl_buttons' }}" data-contao--operations-menu-target="menu">
         {% for operation in operations %}
-            {% set isLink = operation.href|default or (operation.html is defined and '<a ' in operation.html) %}
+            {% set isLink = operation.href|default or (operation.html is defined and ('<a ' in operation.html or '<button ' in operation.html)) %}
+            {% set has_submenu = has_submenu or isLink %}
             {% if has_primary and not operation.primary|default(false) %}
-                {% set has_submenu = has_submenu or isLink %}
+                {% set show_button = true %}
             {% else %}
-                {{ _self.operation(operation) }}
+                {{ _self.operation(operation, false, globalOperations) }}
             {% endif %}
         {% endfor %}
-        {% if has_submenu or not has_primary %}
+        {% if has_submenu %}
             <li class="operations-menu-container">
-                <button type="button" data-contao--operations-menu-target="controller"{% if not has_primary %} style="display:none"{% endif %}>
-                    {{ backend_icon('more.svg', 'DCA.operations'|trans([id])) }}
+                <button type="button" class="has-icon" data-contao--operations-menu-target="controller"{% if not show_button %} style="display:none"{% endif %}>
+                    {% if globalOperations %}
+                        {{ backend_icon('more.svg', 'DCA.global_operations'|trans) }}
+                    {% else %}
+                        {{ backend_icon('more.svg', 'DCA.operations'|trans([id|default])) }}
+                    {% endif %}
                 </button>
                 <ul class="operations-menu" data-contao--operations-menu-target="submenu">
                     {% for operation in operations %}
-                        {{ _self.operation(operation, true) }}
+                        {{ _self.operation(operation, true, globalOperations) }}
                     {% endfor %}
                 </ul>
             </li>
@@ -26,21 +32,40 @@
     </ul>
 </div>
 
-{% macro operation(operation, menu = false) %}
-    {% if operation.html is defined and (not menu or '<a ' in operation.html) %}
-        {% if operation.html|trim is not empty %}<li{% if menu %} data-contao--operations-menu-target="title"{% endif %}>{{ operation.html|raw }}</li>{% endif %}
+{% macro operation(operation, menu = false, showLabels = false) %}
+    {% if operation.separator|default %}
+        <li><hr></li>
+    {% elseif operation.html is defined and (not menu or '<a ' in operation.html or '<button ' in operation.html) %}
+        <li{% if menu and not showLabels %} data-contao--operations-menu-target="title"{% endif %}>{{ operation.html|raw }}</li>
     {% elseif operation.href|default %}
         <li{% if menu and not operation.title|default %} data-contao--operations-menu-target="title"{% endif %}>
-            <a
-                href="{{ operation.href }}"
-                {% if operation.popup|default %}onclick="Backend.openModalIframe({title:'{{ operation.label|default|replace({"'": "\'"}) }}', url:this.href});return false"{% endif%}
-                {{ operation.attributes|default|raw }}
-            >
-                {{ operation.icon|raw }}
-                {% if menu %}{{ operation.title|default }}{% endif %}
-            </a>
+            {% set operation_attributes = attrs(operation.attributes|default)
+                .set('title', operation.title|default, ((menu or showLabels) and operation.title|default != operation.label|default))
+                .addClass('has-icon', operation.icon|default)
+            %}
+            {% if operation.method|default('GET') != 'GET' %}
+                <form action="{{ operation.href }}" method="POST">
+                    {% if operation.method != 'POST' %}<input type="hidden" name="_method" value="{{ operation.method }}">{% endif %}
+                    <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+                    <button type="submit"{{ operation_attributes }}>
+                        {% if operation.icon|default %}{{ backend_icon(operation.icon, (menu or showLabels) ? '' : operation.title|default, operation.iconAttributes|default(null)) }}{% endif %}
+                        {% if menu or showLabels %}{{ operation.label|default }}{% endif %}
+                    </button>
+                </form>
+            {% else %}
+                {% set operation_attributes = operation_attributes
+                    .set('href', operation.href)
+                %}
+                <a{{ operation_attributes }}>
+                    {% if operation.icon|default %}{{ backend_icon(operation.icon, (menu or showLabels) ? '' : operation.title|default, operation.iconAttributes|default(null)) }}{% endif %}
+                    {% if menu or showLabels %}{{ operation.label|default }}{% endif %}
+                </a>
+            {% endif %}
         </li>
     {% elseif operation.icon|default and not menu %}
-        <li>{{ operation.icon|raw }}</li>
+        <li>
+            {{ backend_icon(operation.icon, operation.title|default, operation.iconAttributes|default(null)) }}
+            {% if menu or showLabels %}{{ operation.label|default }}{% endif %}
+        </li>
     {% endif %}
 {% endmacro %}

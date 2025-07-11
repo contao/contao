@@ -96,8 +96,13 @@ class BackendPreviewSwitchController
             ]);
         }
 
+        // Backwards compatibility: render the legacy bundle template if it exists
+        $template = $this->twig->getLoader()->exists('@ContaoCore/Frontend/preview_toolbar_base.html.twig')
+            ? '@ContaoCore/Frontend/preview_toolbar_base.html.twig'
+            : '@Contao/frontend_preview/toolbar.html.twig';
+
         try {
-            return $this->twig->render('@ContaoCore/Frontend/preview_toolbar_base.html.twig', [
+            return $this->twig->render($template, [
                 'request_token' => $this->tokenManager->getDefaultTokenValue(),
                 'action' => $this->router->generate('contao_backend_switch'),
                 'canSwitchUser' => $canSwitchUser,
@@ -157,20 +162,18 @@ class BackendPreviewSwitchController
         $time = Date::floorToMinute();
 
         // Get the active front end users
-        $query = "
-            SELECT
-                username
-            FROM
-                tl_member
+        $query = <<<SQL
+            SELECT username
+            FROM tl_member
             WHERE
-                username LIKE ? $andWhereGroups
-                AND login=1
-                AND disable=0
-                AND (start='' OR start<=$time)
-                AND (stop='' OR stop>$time)
-            ORDER BY
-                username
-        ";
+                username LIKE ?
+                $andWhereGroups
+                AND login = 1
+                AND disable = 0
+                AND (start = '' OR start <= $time)
+                AND (stop = '' OR stop > $time)
+            ORDER BY username
+            SQL;
 
         $query = $this->connection->getDatabasePlatform()->modifyLimitQuery($query, 20);
 

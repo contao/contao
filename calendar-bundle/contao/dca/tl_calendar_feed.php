@@ -25,6 +25,7 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\System;
 
+// Backwards compatibility
 $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 (
 	// Config
@@ -176,7 +177,7 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('trailingSlash'=>true, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
+			'eval'                    => array('trailingSlash'=>true, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50', 'alwaysSave'=>true),
 			'load_callback' => array
 			(
 				array('tl_calendar_feed', 'addFeedBase')

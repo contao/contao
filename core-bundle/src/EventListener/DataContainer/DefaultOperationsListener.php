@@ -70,6 +70,11 @@ class DefaultOperationsListener
         }
 
         foreach ($dca as $k => $v) {
+            if ('-' === $v) {
+                $operations[$k] = $v;
+                continue;
+            }
+
             if (\is_string($v) && ($key = ltrim($v, '!')) && isset($defaults[$key])) {
                 $operations[$key] = $defaults[$key];
 
@@ -138,6 +143,7 @@ class DefaultOperationsListener
             if ($canCopy) {
                 $operations['copy'] = [
                     'href' => 'act=paste&amp;mode=copy',
+                    'method' => 'POST',
                     'icon' => 'copy.svg',
                     'attributes' => 'data-action="contao--scroll-offset#store"',
                     'button_callback' => $this->isGrantedCallback(CreateAction::class, $table, ['sorting' => null]),
@@ -146,6 +152,7 @@ class DefaultOperationsListener
                 if ($isTreeMode) {
                     $operations['copyChildren'] = [
                         'href' => 'act=paste&amp;mode=copy&amp;children=1',
+                        'method' => 'POST',
                         'icon' => 'copychildren.svg',
                         'attributes' => 'data-action="contao--scroll-offset#store"',
                         'button_callback' => $this->copyChildrenCallback($table),
@@ -156,6 +163,7 @@ class DefaultOperationsListener
             if ($canSort) {
                 $operations['cut'] = [
                     'href' => 'act=paste&amp;mode=cut',
+                    'method' => 'POST',
                     'icon' => 'cut.svg',
                     'attributes' => 'data-action="contao--scroll-offset#store"',
                     'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table, ['sorting' => null]),
@@ -164,6 +172,7 @@ class DefaultOperationsListener
         } elseif ($canCopy) {
             $operations['copy'] = [
                 'href' => 'act=copy',
+                'method' => 'POST',
                 'icon' => 'copy.svg',
                 'button_callback' => $this->isGrantedCallback(CreateAction::class, $table),
             ];
@@ -172,6 +181,7 @@ class DefaultOperationsListener
         if ($canDelete) {
             $operations['delete'] = [
                 'href' => 'act=delete',
+                'method' => 'DELETE',
                 'icon' => 'delete.svg',
                 'attributes' => 'data-action="contao--scroll-offset#store" onclick="if(!confirm(\''.($GLOBALS['TL_LANG']['MSC']['deleteConfirm'] ?? null).'\'))return false"',
                 'button_callback' => $this->isGrantedCallback(DeleteAction::class, $table),
@@ -192,6 +202,8 @@ class DefaultOperationsListener
             'show' => [
                 'href' => 'act=show',
                 'icon' => 'show.svg',
+                'method' => 'GET',
+                'prefetch' => false,
             ],
         ];
     }
@@ -220,7 +232,7 @@ class DefaultOperationsListener
 
             if (!$this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$ctable, $subject)) {
                 if ($ctable === $table) {
-                    $operation->setHtml('');
+                    $operation->hide();
                 } else {
                     $operation->disable();
                 }
@@ -238,7 +250,7 @@ class DefaultOperationsListener
             }
 
             $childCount = $this->connection->fetchOne(
-                "SELECT COUNT(*) FROM $table WHERE pid=?",
+                "SELECT COUNT(*) FROM $table WHERE pid = ?",
                 [(string) $operation->getRecord()['id']],
             );
 

@@ -414,7 +414,12 @@ abstract class Controller extends System
 		// Disable indexing if protected
 		if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			$groups = StringUtil::deserialize($objModule->groups, true);
+
+			if (\count($groups) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true))
+			{
+				$strBuffer = "\n<!-- indexer::stop --><!-- indexer::protected -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			}
 		}
 
 		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
@@ -490,7 +495,12 @@ abstract class Controller extends System
 		// Disable indexing if protected
 		if ($objArticle->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			$groups = StringUtil::deserialize($objArticle->groups, true);
+
+			if (\count($groups) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true))
+			{
+				$strBuffer = "\n<!-- indexer::stop --><!-- indexer::protected -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			}
 		}
 
 		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
@@ -561,7 +571,6 @@ abstract class Controller extends System
 			return '';
 		}
 
-		$objRow = $objRow->cloneDetached();
 		$strStopWatchId = 'contao.content_element.' . $objRow->type . ' (ID ' . $objRow->id . ')';
 
 		if ($objRow->type != 'module' && System::getContainer()->getParameter('kernel.debug') && System::getContainer()->has('debug.stopwatch'))
@@ -573,20 +582,31 @@ abstract class Controller extends System
 		$isContentProxy = is_a($strClass, ContentProxy::class, true);
 		$compositor = System::getContainer()->get('contao.fragment.compositor');
 
-		if ($isContentProxy && $contentElementReference)
+		if ($isContentProxy)
 		{
-			$objElement = new $strClass($contentElementReference, $strColumn);
-		}
-		elseif ($isContentProxy && $objRow->id && $compositor->supportsNesting(ContentElementReference::TAG_NAME . '.' . $objRow->type))
-		{
-			$objElement = new $strClass(
-				$objRow,
-				$strColumn,
-				$compositor->getNestedFragments(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->origId ?: $objRow->id)
-			);
+			if ($contentElementReference)
+			{
+				$objElement = new $strClass($contentElementReference, $strColumn);
+			}
+			elseif ($objRow->id && $compositor->supportsNesting(ContentElementReference::TAG_NAME . '.' . $objRow->type))
+			{
+				$objElement = new $strClass(
+					$objRow,
+					$strColumn,
+					$compositor->getNestedFragments(ContentElementReference::TAG_NAME . '.' . $objRow->type, $objRow->origId ?: $objRow->id)
+				);
+			}
+			else
+			{
+				$objElement = new $strClass($objRow, $strColumn);
+			}
 		}
 		else
 		{
+			// TODO: only cloneDetached() in Contao 5.6 if classes are not empty
+			$objRow = $objRow->cloneDetached();
+			$objRow->typePrefix = 'ce_';
+
 			if (\is_array($contentElementReference?->attributes['classes'] ?? null))
 			{
 				$objRow->classes = array_merge($objRow->classes ?? array(), $contentElementReference->attributes['classes']);
@@ -609,7 +629,12 @@ abstract class Controller extends System
 		// Disable indexing if protected
 		if ($objElement->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			$groups = StringUtil::deserialize($objElement->groups, true);
+
+			if (\count($groups) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true))
+			{
+				$strBuffer = "\n<!-- indexer::stop --><!-- indexer::protected -->" . $strBuffer . "<!-- indexer::continue -->\n";
+			}
 		}
 
 		if (isset($objStopwatch) && $objStopwatch->isStarted($strStopWatchId))
@@ -1150,7 +1175,7 @@ abstract class Controller extends System
 	 */
 	public static function sendFileToBrowser($strFile, $inline=false)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the Symfony BinaryFileResponse instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the Symfony BinaryFileResponse instead.', __METHOD__);
 
 		// Make sure there are no attempts to hack the file system
 		if (preg_match('@^\.+@', $strFile) || preg_match('@\.+/@', $strFile) || preg_match('@(://)+@', $strFile))
@@ -1230,7 +1255,7 @@ abstract class Controller extends System
 	 */
 	protected function redirectToFrontendPage($intPage, $strArticle=null, $blnReturn=false)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the contao_backend_preview route instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the contao_backend_preview route instead.', __METHOD__);
 
 		if (($intPage = (int) $intPage) <= 0)
 		{

@@ -136,7 +136,7 @@ class Email
 		}
 		elseif ($this->objMailer instanceof \Swift_Mailer)
 		{
-			trigger_deprecation('contao/core-bundle', '5.3', 'Passing a Swift_Mailer instance has been deprecated and will no longer work in Contao 6.');
+			trigger_deprecation('contao/core-bundle', '5.3', 'Passing a Swift_Mailer instance is deprecated and will no longer work in Contao 6.');
 
 			$this->objMessage = new \Swift_Message();
 		}
@@ -460,7 +460,7 @@ class Email
 				$strBase = Environment::get('base');
 
 				// Thanks to @ofriedrich and @aschempp (see #4562)
-				preg_match_all('/<[a-z][a-z0-9]*\b[^>]*((src=|background=|url\()["\']??)(.+\.(jpe?g|png|gif|bmp|tiff?|swf))(["\' ]??(\)??))[^>]*>/Ui', $this->strHtml, $arrMatches);
+				preg_match_all('/<[a-z][a-z0-9]*\b[^>]*((src=|background=|url\()["\']??)(.+\.(jpe?g|png|gif|bmp|tiff?|swf|svg))(["\' ]??(\)??))[^>]*>/Ui', $this->strHtml, $arrMatches);
 
 				// Check for internal images
 				if (!empty($arrMatches) && isset($arrMatches[0]))

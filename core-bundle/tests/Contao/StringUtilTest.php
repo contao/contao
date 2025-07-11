@@ -225,6 +225,12 @@ class StringUtilTest extends TestCase
         StringUtil::stripRootDir($this->getFixturesDir());
     }
 
+    public function testDecodesEntities(): void
+    {
+        $this->assertSame("10\u{a0}€", StringUtil::decodeEntities('10&nbsp;€'));
+        $this->assertSame(['sum' => "10\u{a0}€"], StringUtil::decodeEntities(['sum' => '10&nbsp;€']));
+    }
+
     public function testHandlesFalseyValuesWhenDecodingEntities(): void
     {
         $this->assertSame('0', StringUtil::decodeEntities(0));
@@ -605,5 +611,77 @@ class StringUtilTest extends TestCase
             'Foo <img src="{{file::##simple-token##|urlattr}}" /> Bar',
             StringUtil::insertTagToSrc('Foo <img src="{{file::##simple-token##|urlattr}}" /> Bar'),
         );
+    }
+
+    #[DataProvider('basicEntitiesProvider')]
+    public function testConvertsBasicEntities(array|string $htmlEntities, array|string $basicEntities): void
+    {
+        $this->assertSame($basicEntities, StringUtil::convertBasicEntities($htmlEntities));
+        $this->assertSame($htmlEntities, StringUtil::restoreBasicEntities($basicEntities));
+    }
+
+    public static function basicEntitiesProvider(): iterable
+    {
+        yield 'String value' => [
+            'foo&amp;bar',
+            'foo[&]bar',
+        ];
+
+        yield 'InputUnit field' => [
+            [
+                'unit' => 'h2',
+                'value' => '&lt;strong&gt;',
+            ],
+            [
+                'unit' => 'h2',
+                'value' => '[lt]strong[gt]',
+            ],
+        ];
+
+        yield 'KeyValue wizard' => [
+            [
+                [
+                    'key' => 'sum',
+                    'value' => '10&nbsp;€',
+                ],
+                [
+                    'key' => 'name',
+                    'value' => 'Con&shy;tao',
+                ],
+            ],
+            [
+                [
+                    'key' => 'sum',
+                    'value' => '10[nbsp]€',
+                ],
+                [
+                    'key' => 'name',
+                    'value' => 'Con[-]tao',
+                ],
+            ],
+        ];
+
+        yield 'Non-string values' => [
+            [
+                [
+                    'key' => 'sum',
+                    'value' => 42,
+                ],
+                [
+                    'key' => 'name',
+                    'value' => true,
+                ],
+            ],
+            [
+                [
+                    'key' => 'sum',
+                    'value' => 42,
+                ],
+                [
+                    'key' => 'name',
+                    'value' => true,
+                ],
+            ],
+        ];
     }
 }

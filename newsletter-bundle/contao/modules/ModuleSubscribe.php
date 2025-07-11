@@ -94,10 +94,19 @@ class ModuleSubscribe extends Module
 				'name' => 'subscribe_' . $this->id,
 				'label' => $GLOBALS['TL_LANG']['MSC']['securityQuestion'],
 				'inputType' => 'captcha',
-				'eval' => array('mandatory'=>true)
+				'eval' => array('mandatory'=>true, 'required'=>true)
 			);
 
-			$objWidget = new FormCaptcha(FormCaptcha::getAttributesFromDca($arrField, $arrField['name']));
+			/** @var class-string<FormCaptcha> $strClass */
+			$strClass = $GLOBALS['TL_FFL']['captcha'] ?? null;
+
+			// Fallback to default if the class is not defined
+			if (!class_exists($strClass))
+			{
+				$strClass = FormCaptcha::class;
+			}
+
+			$objWidget = new $strClass($strClass::getAttributesFromDca($arrField, $arrField['name']));
 		}
 
 		$strFormId = 'tl_subscribe_' . $this->id;
@@ -126,9 +135,9 @@ class ModuleSubscribe extends Module
 		{
 			$flashBag = $session->getFlashBag();
 
-			if ($flashBag->has('nl_confirm'))
+			if ($flashBag->has('nl_confirm_' . $this->id))
 			{
-				$arrMessages = $flashBag->get('nl_confirm');
+				$arrMessages = $flashBag->get('nl_confirm_' . $this->id);
 
 				$this->Template->mclass = 'confirm';
 				$this->Template->message = $arrMessages[0];
@@ -383,7 +392,7 @@ class ModuleSubscribe extends Module
 			}
 		}
 
-		System::getContainer()->get('request_stack')->getSession()->getFlashBag()->set('nl_confirm', $GLOBALS['TL_LANG']['MSC']['nl_confirm']);
+		System::getContainer()->get('request_stack')->getSession()->getFlashBag()->set('nl_confirm_' . $this->id, $GLOBALS['TL_LANG']['MSC']['nl_confirm']);
 
 		$this->reload();
 	}

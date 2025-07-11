@@ -16,11 +16,14 @@ use Contao\CoreBundle\Controller\BackendController;
 use Contao\CoreBundle\Picker\PickerBuilderInterface;
 use Contao\CoreBundle\Picker\PickerInterface;
 use Contao\CoreBundle\Tests\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Twig\Environment;
+use Twig\Loader\LoaderInterface;
 
 class BackendControllerTest extends TestCase
 {
@@ -143,5 +146,55 @@ class BackendControllerTest extends TestCase
         $this->expectExceptionMessage('Unsupported picker context');
 
         $controller->pickerAction($request);
+    }
+
+    #[DataProvider('provideErrorTemplateScenarios')]
+    public function testRendersFallbackRoute(bool $legacyTemplateExists, string $expectedTemplate): void
+    {
+        $loader = $this->createMock(LoaderInterface::class);
+        $loader
+            ->method('exists')
+            ->with('@ContaoCore/Error/backend.html.twig')
+            ->willReturn($legacyTemplateExists)
+        ;
+
+        $twig = $this->createMock(Environment::class);
+        $twig
+            ->method('getLoader')
+            ->willReturn($loader)
+        ;
+
+        $twig
+            ->expects($this->once())
+            ->method('render')
+            ->with(
+                $expectedTemplate,
+                [
+                    'language' => 'en',
+                    'statusName' => 'Page Not Found',
+                    'exception' => 'The requested page does not exist.',
+                    'template' => $expectedTemplate,
+                ],
+            )
+            ->willReturn('<error-template>')
+        ;
+
+        $container = $this->getContainerWithContaoConfiguration();
+        $container->set('twig', $twig);
+
+        $controller = new BackendController();
+        $controller->setContainer($container);
+
+        $response = $controller->backendFallback();
+
+        $this->assertSame(404, $response->getStatusCode());
+        $this->assertSame('<error-template>', $response->getContent());
+    }
+
+    public static function provideErrorTemplateScenarios(): iterable
+    {
+        yield 'legacy template' => [true, '@ContaoCore/Error/backend.html.twig'];
+
+        yield 'modern template' => [false, '@Contao/error/backend.html.twig'];
     }
 }

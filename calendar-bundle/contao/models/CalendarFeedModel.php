@@ -12,6 +12,8 @@ namespace Contao;
 
 use Contao\Model\Collection;
 
+trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprecated and will no longer work in Contao 6.', CalendarFeedModel::class);
+
 /**
  * Reads and writes calendar feeds
  *
@@ -46,18 +48,18 @@ use Contao\Model\Collection;
  * @method static CalendarFeedModel|null findOneByFeedBase($val, array $opt=array())
  * @method static CalendarFeedModel|null findOneByDescription($val, array $opt=array())
  *
- * @method static Collection<CalendarFeedModel>|CalendarFeedModel[]|null findByTstamp($val, array $opt=array())
- * @method static Collection<CalendarFeedModel>|CalendarFeedModel[]|null findByTitle($val, array $opt=array())
- * @method static Collection<CalendarFeedModel>|CalendarFeedModel[]|null findByLanguage($val, array $opt=array())
- * @method static Collection<CalendarFeedModel>|CalendarFeedModel[]|null findByCalendars($val, array $opt=array())
- * @method static Collection<CalendarFeedModel>|CalendarFeedModel[]|null findByFormat($val, array $opt=array())
- * @method static Collection<CalendarFeedModel>|CalendarFeedModel[]|null findBySource($val, array $opt=array())
- * @method static Collection<CalendarFeedModel>|CalendarFeedModel[]|null findByMaxItems($val, array $opt=array())
- * @method static Collection<CalendarFeedModel>|CalendarFeedModel[]|null findByFeedBase($val, array $opt=array())
- * @method static Collection<CalendarFeedModel>|CalendarFeedModel[]|null findByDescription($val, array $opt=array())
- * @method static Collection<CalendarFeedModel>|CalendarFeedModel[]|null findMultipleByIds($val, array $opt=array())
- * @method static Collection<CalendarFeedModel>|CalendarFeedModel[]|null findBy($col, $val, array $opt=array())
- * @method static Collection<CalendarFeedModel>|CalendarFeedModel[]|null findAll(array $opt=array())
+ * @method static Collection<CalendarFeedModel>|null findByTstamp($val, array $opt=array())
+ * @method static Collection<CalendarFeedModel>|null findByTitle($val, array $opt=array())
+ * @method static Collection<CalendarFeedModel>|null findByLanguage($val, array $opt=array())
+ * @method static Collection<CalendarFeedModel>|null findByCalendars($val, array $opt=array())
+ * @method static Collection<CalendarFeedModel>|null findByFormat($val, array $opt=array())
+ * @method static Collection<CalendarFeedModel>|null findBySource($val, array $opt=array())
+ * @method static Collection<CalendarFeedModel>|null findByMaxItems($val, array $opt=array())
+ * @method static Collection<CalendarFeedModel>|null findByFeedBase($val, array $opt=array())
+ * @method static Collection<CalendarFeedModel>|null findByDescription($val, array $opt=array())
+ * @method static Collection<CalendarFeedModel>|null findMultipleByIds($val, array $opt=array())
+ * @method static Collection<CalendarFeedModel>|null findBy($col, $val, array $opt=array())
+ * @method static Collection<CalendarFeedModel>|null findAll(array $opt=array())
  *
  * @method static integer countById($id, array $opt=array())
  * @method static integer countByTstamp($val, array $opt=array())
@@ -85,7 +87,7 @@ class CalendarFeedModel extends Model
 	 * @param integer $intId      The calendar ID
 	 * @param array   $arrOptions An optional options array
 	 *
-	 * @return Collection<CalendarFeedModel>|CalendarFeedModel[]|null A collection of models or null if the calendar is not part of a feed
+	 * @return Collection<CalendarFeedModel>|null A collection of models or null if the calendar is not part of a feed
 	 */
 	public static function findByCalendar($intId, array $arrOptions=array())
 	{
@@ -100,7 +102,7 @@ class CalendarFeedModel extends Model
 	 * @param array $arrIds     An array of calendar feed IDs
 	 * @param array $arrOptions An optional options array
 	 *
-	 * @return Collection<CalendarFeedModel>|CalendarFeedModel[]|null A collection of models or null if there are no feeds
+	 * @return Collection<CalendarFeedModel>|null A collection of models or null if there are no feeds
 	 */
 	public static function findByIds($arrIds, array $arrOptions=array())
 	{

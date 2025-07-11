@@ -448,7 +448,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function loadRecordByUuid(string $uuid): void
     {
         $row = $this->connection->fetchAssociative(
-            \sprintf('SELECT * FROM %s WHERE uuid=?', $this->connection->quoteIdentifier($this->table)),
+            \sprintf('SELECT * FROM %s WHERE uuid = ?', $this->connection->quoteIdentifier($this->table)),
             [$uuid],
         );
 
@@ -464,7 +464,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function loadRecordById(int $id): void
     {
         $row = $this->connection->fetchAssociative(
-            \sprintf('SELECT * FROM %s WHERE id=?', $this->connection->quoteIdentifier($this->table)),
+            \sprintf('SELECT * FROM %s WHERE id = ?', $this->connection->quoteIdentifier($this->table)),
             [$id],
         );
 
@@ -480,7 +480,7 @@ class Dbafs implements DbafsInterface, ResetInterface
     private function loadRecordByPath(string $path): void
     {
         $row = $this->connection->fetchAssociative(
-            \sprintf('SELECT * FROM %s WHERE path=?', $this->connection->quoteIdentifier($this->table)),
+            \sprintf('SELECT * FROM %s WHERE path = ?', $this->connection->quoteIdentifier($this->table)),
             [$this->convertToDatabasePath($path)],
         );
 
@@ -683,7 +683,7 @@ class Dbafs implements DbafsInterface, ResetInterface
 
         $items = $this->connection->fetchAllNumeric(
             \sprintf(
-                "SELECT path, uuid, hash, IF(type='folder', 1, 0), %s FROM %s",
+                "SELECT path, uuid, hash, IF(type = 'folder', 1, 0), %s FROM %s",
                 $this->useLastModified ? 'lastModified' : 'NULL',
                 $this->connection->quoteIdentifier($this->table),
             ),

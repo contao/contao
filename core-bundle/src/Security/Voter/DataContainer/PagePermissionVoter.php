@@ -23,6 +23,7 @@ use Contao\Database;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Contracts\Service\ResetInterface;
 
@@ -54,7 +55,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         $this->pagemountsCache = [];
     }
 
-    public function vote(TokenInterface $token, $subject, array $attributes): int
+    public function vote(TokenInterface $token, $subject, array $attributes, Vote|null $vote = null): int
     {
         if ($this->accessDecisionManager->decide($token, ['ROLE_ADMIN'])) {
             return self::ACCESS_ABSTAIN;

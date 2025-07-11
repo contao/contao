@@ -22,7 +22,7 @@ use Contao\Input;
 use Contao\Message;
 use Contao\StringUtil;
 use Contao\System;
-use Doctrine\DBAL\Platforms\MySQLPlatform;
+use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 
 $GLOBALS['TL_DCA']['tl_user'] = array
 (
@@ -71,12 +71,12 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		),
 		'operations' => array
 		(
+			'-',
 			'su' => array
 			(
 				'href'                => 'key=su',
 				'icon'                => 'su.svg',
-				'primary'             => true,
-				'button_callback'     => array('tl_user', 'switchUser')
+				'primary'             => true
 			)
 		)
 	),
@@ -357,8 +357,9 @@ $GLOBALS['TL_DCA']['tl_user'] = array
 		'session' => array
 		(
 			'input_field_callback'    => array('tl_user', 'sessionField'),
+			'options'                 => array('purge_session', 'purge_images', 'purge_previews', 'purge_pages'),
 			'eval'                    => array('doNotShow'=>true, 'doNotCopy'=>true),
-			'sql'                     => array('type' => 'blob', 'length' => MySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull' => false)
+			'sql'                     => array('type' => 'blob', 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, 'notnull' => false)
 		),
 		'dateAdded' => array
 		(
@@ -412,11 +413,6 @@ $GLOBALS['TL_DCA']['tl_user'] = array
  */
 class tl_user extends Backend
 {
-	/**
-	 * @var int
-	 */
-	private static $origUserId;
-
 	/**
 	 * Handle the profile page.
 	 *
@@ -523,64 +519,6 @@ class tl_user extends Backend
 	}
 
 	/**
-	 * Generate a "switch account" button and return it as string
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 *
-	 * @return string
-	 *
-	 * @throws Exception
-	 */
-	public function switchUser($row, $href, $label, $title, $icon)
-	{
-		$security = System::getContainer()->get('security.helper');
-
-		if (!$security->isGranted('ROLE_ALLOWED_TO_SWITCH'))
-		{
-			return '';
-		}
-
-		$disabled = false;
-
-		if (BackendUser::getInstance()->id == $row['id'])
-		{
-			$disabled = true;
-		}
-		elseif ($security->isGranted('ROLE_PREVIOUS_ADMIN'))
-		{
-			if (self::$origUserId === null)
-			{
-				$origToken = $security->getToken()->getOriginalToken();
-				$origUser = $origToken->getUser();
-
-				if ($origUser instanceof BackendUser)
-				{
-					self::$origUserId = $origUser->id;
-				}
-			}
-
-			if (self::$origUserId == $row['id'])
-			{
-				$disabled = true;
-			}
-		}
-
-		if ($disabled)
-		{
-			return Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
-		}
-
-		$router = System::getContainer()->get('router');
-		$url = $router->generate('contao_backend', array('_switch_user'=>$row['username']));
-
-		return '<a href="' . $url . '" data-turbo-prefetch="false">' . Image::getHtml($icon, $title) . '</a> ';
-	}
-
-	/**
 	 * Return a checkbox to delete session data
 	 *
 	 * @param DataContainer $dc
@@ -589,6 +527,8 @@ class tl_user extends Backend
 	 */
 	public function sessionField(DataContainer $dc)
 	{
+		$allowedOptions = $GLOBALS['TL_DCA']['tl_user']['fields']['session']['options'] ?? array();
+
 		if (Input::post('FORM_SUBMIT') == 'tl_user')
 		{
 			$arrPurge = Input::post('purge');
@@ -596,6 +536,7 @@ class tl_user extends Backend
 			if (is_array($arrPurge))
 			{
 				$automator = new Automator();
+				$arrPurge = array_values(array_intersect($arrPurge, $allowedOptions));
 
 				if (in_array('purge_session', $arrPurge))
 				{
@@ -626,15 +567,32 @@ class tl_user extends Backend
 			}
 		}
 
+		$options = array();
+
+		$labels = array(
+			'purge_session' => $GLOBALS['TL_LANG']['tl_user']['sessionLabel'],
+			'purge_images' => $GLOBALS['TL_LANG']['tl_user']['htmlLabel'],
+			'purge_previews' => $GLOBALS['TL_LANG']['tl_user']['previewLabel'],
+			'purge_pages' => $GLOBALS['TL_LANG']['tl_user']['tempLabel'],
+		);
+
+		foreach ($allowedOptions as $i => $operation)
+		{
+			$options[] = sprintf(
+				'<span><input type="checkbox" name="purge[]" id="opt_purge_%d" class="tl_checkbox" value="%s" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_%d">%s</label></span>',
+				$i,
+				$operation,
+				$i,
+				$labels[$operation]
+			);
+		}
+
 		return '
 <div class="widget">
   <fieldset class="tl_checkbox_container">
     <legend>' . $GLOBALS['TL_LANG']['tl_user']['session'][0] . '</legend>
     <span><input type="checkbox" id="check_all_purge" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this, \'ctrl_purge\')"> <label for="check_all_purge" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label></span>
-    <span><input type="checkbox" name="purge[]" id="opt_purge_0" class="tl_checkbox" value="purge_session" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_0">' . $GLOBALS['TL_LANG']['tl_user']['sessionLabel'] . '</label></span>
-    <span><input type="checkbox" name="purge[]" id="opt_purge_1" class="tl_checkbox" value="purge_images" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_1">' . $GLOBALS['TL_LANG']['tl_user']['htmlLabel'] . '</label></span>
-    <span><input type="checkbox" name="purge[]" id="opt_purge_2" class="tl_checkbox" value="purge_previews" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_2">' . $GLOBALS['TL_LANG']['tl_user']['previewLabel'] . '</label></span>
-    <span><input type="checkbox" name="purge[]" id="opt_purge_3" class="tl_checkbox" value="purge_pages" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_3">' . $GLOBALS['TL_LANG']['tl_user']['tempLabel'] . '</label></span>
+    ' . implode("\n", $options) . '
   </fieldset>' . $dc->help() . '
 </div>';
 	}

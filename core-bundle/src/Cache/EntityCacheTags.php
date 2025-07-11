@@ -27,7 +27,7 @@ class EntityCacheTags
 {
     public function __construct(private readonly CacheTagManager $cacheTagManager)
     {
-        trigger_deprecation('contao/core-bundle', '5.5', 'Using the EntityCacheTags service has been deprecated and will no longer work in Contao 6. Use the CacheTagManager instead.');
+        trigger_deprecation('contao/core-bundle', '5.5', 'Using the EntityCacheTags service is deprecated and will no longer work in Contao 6. Use the CacheTagManager instead.');
     }
 
     /**

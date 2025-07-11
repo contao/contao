@@ -22,9 +22,9 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class SessionFactory implements SessionFactoryInterface
 {
     public function __construct(
-        readonly private SessionFactoryInterface $inner,
-        readonly private RequestStack $requestStack,
-        readonly private ScopeMatcher $scopeMatcher,
+        private readonly SessionFactoryInterface $inner,
+        private readonly RequestStack $requestStack,
+        private readonly ScopeMatcher $scopeMatcher,
     ) {
     }
 

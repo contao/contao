@@ -96,7 +96,7 @@ class SaveOperationTest extends AbstractOperationTestCase
 
         $twig = $this->mockTwigEnvironment();
 
-        $operation = $this->getSaveOperation(storage: $storage, twig: $twig);
+        $operation = $this->getSaveOperation($storage, $twig);
         $context = $this->getOperationContext('content_element/existing_user_template');
 
         $this->expectException(\LogicException::class);

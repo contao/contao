@@ -5,9 +5,11 @@
         opacity: 0;
         margin-bottom: 0;
     }
+
     10% {
         grid-template-rows: 1fr;
     }
+
     100% {
         transform: translateY(0);
         opacity: 1;
@@ -21,6 +23,7 @@
         opacity: 1;
         margin-bottom: 1em;
     }
+
     100% {
         grid-template-rows: 0fr;
         opacity: 0;
@@ -33,68 +36,65 @@
     top: 3.75em;
     left: 0;
     right: 0;
-
     display: flex;
     flex-direction: column;
     justify-content: center;
     z-index: 110;
-
     pointer-events: none;
 
     .message {
         /* We use grid-template-rows to animate from 0 to auto */
         display: grid;
-        animation: toast forwards .5s;
+        animation: toast forwards 0.5s;
         margin: 0 auto;
         max-width: 80ch;
 
         &[hidden] {
-            animation: untoast forwards .5s;
+            animation: untoast forwards 0.5s;
         }
 
         .inner {
             pointer-events: auto;
-
             grid-row: 1 / span 2;
             overflow: hidden;
-
             max-width: 80ch;
             overflow-wrap: anywhere;
             line-height: 1.3;
             box-sizing: border-box;
             border-radius: 6px;
-            box-shadow: rgba(0, 0, 0, .2) 3px 3px 10px, 0 0 1px var(--border) inset;
-
+            box-shadow:
+                rgb(0 0 0 / 20%) 3px 3px 10px,
+                0 0 1px var(--border) inset;
             background-repeat: no-repeat;
-            background-position: .8em center;
+            background-position: 0.8em center;
             background-color: var(--content-bg);
             position: relative;
 
             button.close {
                 overflow: hidden;
-
                 position: absolute;
-                top: 4px;
-                right: 4px;
+                top: 3px;
+                right: 3px;
                 width: 16px;
                 height: 16px;
-                background: var(--content-border);
+                background: rgb(0 0 0 / 15%);
                 color: var(--text);
-
-                font-size: .75rem;
+                font-size: 0.75rem;
+                line-height: 1;
                 display: grid;
                 border: none;
                 place-items: center;
                 border-radius: 50%;
                 padding: 0;
-                opacity: .5;
-                font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+                opacity: 0.5;
+                font-family:
+                    -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue",
+                    sans-serif;
 
                 &:hover {
-                    opacity: 1;
-                    background: var(--gray);
+                    opacity: 0.75;
+                    background: rgb(0 0 0 / 20%);
                 }
-
             }
 
             .content {
@@ -107,9 +107,9 @@
                 }
             }
 
-            &:before {
+            &::before {
                 display: block;
-                content: '';
+                content: "";
                 position: absolute;
                 inset: 0;
             }
@@ -119,7 +119,7 @@
             background-image: url("../../../contao/themes/flexible/icons/ok.svg");
             color: var(--green);
 
-            &:before {
+            &::before {
                 background: var(--confirm-bg);
             }
         }
@@ -128,7 +128,7 @@
             background-image: url("../../../contao/themes/flexible/icons/error.svg");
             color: var(--red);
 
-            &:before {
+            &::before {
                 background: var(--error-bg);
             }
         }

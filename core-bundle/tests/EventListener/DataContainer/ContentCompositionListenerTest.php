@@ -82,8 +82,7 @@ class ContentCompositionListenerTest extends TestCase
         $operation = $this->createMock(DataContainerOperation::class);
         $operation
             ->expects($this->once())
-            ->method('setHtml')
-            ->with('')
+            ->method('hide')
         ;
 
         $listener = $this->getListener();
@@ -938,7 +937,7 @@ class ContentCompositionListenerTest extends TestCase
         $this->connection
             ->expects($this->once())
             ->method('fetchOne')
-            ->with('SELECT COUNT(*) FROM tl_article WHERE pid=:pid')
+            ->with('SELECT COUNT(*) FROM tl_article WHERE pid = :pid')
             ->willReturn($count)
         ;
     }

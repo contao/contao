@@ -148,7 +148,7 @@ class BackendUser extends User
 	 */
 	public function hasAccess($field, $array)
 	{
-		trigger_deprecation('contao/core-bundle', '5.2', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "ContaoCorePermissions::USER_CAN_ACCESS_*" permissions instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.2', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "ContaoCorePermissions::USER_CAN_ACCESS_*" permissions instead.', __METHOD__);
 
 		if ($this->isAdmin)
 		{
@@ -227,7 +227,6 @@ class BackendUser extends User
 		Config::set('useRTE', $this->useRTE);
 		Config::set('useCE', $this->useCE);
 		Config::set('doNotCollapse', $this->doNotCollapse);
-		Config::set('doNotHideMessages', $this->doNotHideMessages);
 		Config::set('thumbnails', $this->thumbnails);
 		Config::set('backendTheme', $this->backendTheme);
 

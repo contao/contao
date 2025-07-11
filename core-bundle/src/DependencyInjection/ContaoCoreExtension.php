@@ -52,6 +52,8 @@ use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
+use Symfony\Component\RateLimiter\Storage\CacheStorage;
 use Toflar\CronjobSupervisor\Supervisor;
 
 class ContaoCoreExtension extends Extension implements PrependExtensionInterface, ConfigureFilesystemInterface
@@ -144,6 +146,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.intl.countries', $config['intl']['countries']);
         $container->setParameter('contao.insert_tags.allowed_tags', $config['insert_tags']['allowed_tags']);
         $container->setParameter('contao.sanitizer.allowed_url_protocols', $config['sanitizer']['allowed_url_protocols']);
+        $container->setParameter('contao.registration.expiration', $config['registration']['expiration']);
 
         $this->handleMessengerConfig($config, $container);
         $this->handleSearchConfig($config, $container);
@@ -160,6 +163,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleCspConfig($config, $container);
         $this->handleAltcha($config, $container);
         $this->handleTemplateStudioConfig($config, $container, $loader);
+        $this->handleMailerConfig($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -285,8 +289,8 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             $supervisor->addArgument('%kernel.cache_dir%/worker-supervisor');
 
             $command = $container->getDefinition('contao.command.supervise_workers');
-            $command->setArgument(2, $supervisor);
-            $command->setArgument(3, $config['messenger']['workers']);
+            $command->setArgument('$supervisor', $supervisor);
+            $command->setArgument('$workers', $config['messenger']['workers']);
         }
 
         // No workers defined -> remove our cron job and the command
@@ -317,6 +321,34 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             $defaultIndexer->setArgument(2, $config['search']['index_protected']);
         }
 
+        $searchIndexListenerDefinition = $container->getDefinition('contao.listener.search_index');
+        $rateLimiterServiceId = null;
+
+        if ($config['search']['listener']['rate_limiter']) {
+            $rateLimiterServiceId = 'limiter.'.$config['search']['listener']['rate_limiter'];
+        } elseif ($container->has('cache.app')) {
+            $rateLimiterServiceId = 'contao.listener.search_index.default_rate_limiter';
+
+            $factoryDefinition = new Definition(RateLimiterFactory::class);
+            $factoryDefinition->setArguments([
+                [
+                    'id' => $rateLimiterServiceId,
+                    'policy' => 'fixed_window',
+                    'limit' => 1,
+                    'interval' => '5 minutes',
+                ],
+                new Definition(CacheStorage::class, [
+                    new Reference('cache.app'),
+                ]),
+            ]);
+
+            $container->setDefinition($rateLimiterServiceId, $factoryDefinition);
+        }
+
+        if ($rateLimiterServiceId) {
+            $searchIndexListenerDefinition->setArgument('$rateLimiterFactory', new Reference($rateLimiterServiceId));
+        }
+
         $features = SearchIndexListener::FEATURE_INDEX | SearchIndexListener::FEATURE_DELETE;
 
         if (!$config['search']['listener']['index']) {
@@ -332,7 +364,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
             $container->removeDefinition('contao.listener.search_index');
         } else {
             // Configure the search index listener
-            $container->getDefinition('contao.listener.search_index')->setArgument('$enabledFeatures', $features);
+            $searchIndexListenerDefinition->setArgument('$enabledFeatures', $features);
         }
     }
 
@@ -642,6 +674,18 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         );
 
         $loader->load('template_studio.yaml');
+    }
+
+    private function handleMailerConfig(array $config, ContainerBuilder $container): void
+    {
+        if (null === $config['mailer']['override_from'] || !$container->hasDefinition('contao.mailer')) {
+            return;
+        }
+
+        $container
+            ->getDefinition('contao.mailer')
+            ->setArgument('$overrideFrom', $config['mailer']['override_from'])
+        ;
     }
 
     /**

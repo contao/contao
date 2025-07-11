@@ -56,11 +56,7 @@ $GLOBALS['TL_DCA']['tl_newsletter'] = array
 		),
 		'operations' => array
 		(
-			'edit',
-			'copy',
-			'cut',
-			'delete',
-			'show',
+			'-',
 			'send' => array
 			(
 				'href'                => 'key=send',

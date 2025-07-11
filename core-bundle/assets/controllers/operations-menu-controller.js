@@ -4,24 +4,24 @@ import AccessibleMenu from 'accessible-menu';
 export default class OperationsMenuController extends Controller {
     static targets = ['menu', 'submenu', 'controller', 'title'];
 
-    connect () {
+    connect() {
         if (!this.hasControllerTarget || !this.hasMenuTarget) {
             return;
         }
 
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,
-            menuLinkSelector: 'a,button,img',
+            menuLinkSelector: 'a,button,img,hr',
         });
 
         this.controllerTarget?.addEventListener('accessibleMenuExpand', () => {
-            Object.values(window.AccessibleMenu.menus).forEach((menu) => {
+            for (const menu of Object.values(window.AccessibleMenu.menus)) {
                 if (menu !== this.$menu && menu.elements.submenuToggles[0].isOpen) {
                     menu.elements.submenuToggles[0].close();
                 }
-            })
+            }
 
-            this.setFixedPosition();
+            this.setPosition();
             this.element.classList.add('hover');
         });
 
@@ -32,14 +32,14 @@ export default class OperationsMenuController extends Controller {
 
     disconnect() {
         // Cleanup menu instance, otherwise we would leak memory
-        for (const [key, value] of Object.entries(window.AccessibleMenu.menus)) {
+        for (const [key, value] of Object.entries(window.AccessibleMenu?.menus ?? {})) {
             if (value === this.$menu) {
                 delete window.AccessibleMenu.menus[key];
             }
         }
     }
 
-    titleTargetConnected (el) {
+    titleTargetConnected(el) {
         el.removeAttribute(`data-${this.identifier}-target`);
 
         const link = el.querySelector('a[title]');
@@ -54,56 +54,60 @@ export default class OperationsMenuController extends Controller {
         }
     }
 
-    open (event) {
+    open(event) {
         if (!this.hasControllerTarget || !this.hasMenuTarget || this.isInteractive(event.target)) {
+            return;
+        }
+
+        if (this.$menu.elements.submenuToggles[0].isOpen) {
+            this.$menu.elements.submenuToggles[0].close();
             return;
         }
 
         event.preventDefault();
         event.stopPropagation();
 
+        // Prevent accessible-menu from handling pointerup and closing the menu again (see #8065)
+        this.element.addEventListener('pointerup', (e) => e.stopPropagation(), { once: true });
+
         this.$menu.elements.submenuToggles[0].open();
-        this.setFixedPosition(event);
+        this.setPosition(event);
     }
 
-    setFixedPosition (event) {
-        const rect = this.submenuTarget.getBoundingClientRect();
-        let x, y, offset = 0;
+    setPosition(event) {
+        const offset = 2; // border-width that is excluded from getBoundingClientRect
 
-        if (event) {
-            x = event.clientX;
-            y = event.clientY;
-        } else {
-            const r = this.controllerTarget.getBoundingClientRect();
-            x = r.x;
-            y = r.y;
-            offset = 20;
+        const submenuRect = this.submenuTarget.getBoundingClientRect();
+        const parentRect = this.menuTarget.querySelector('.operations-menu-container').getBoundingClientRect();
+
+        if (event === undefined) {
+            this.submenuTarget.style.top = '100%';
+            this.submenuTarget.style.right = 'auto';
+            this.submenuTarget.style.left = `-${submenuRect.width - parentRect.width - offset}px`;
+
+            return;
         }
 
-        this.submenuTarget.style.position = 'fixed';
+        const { innerWidth, innerHeight } = window;
+        const rowRect = this.element.getBoundingClientRect();
+
+        const x = innerWidth - event.clientX - (innerWidth - parentRect.left);
+        const y = event.clientY - rowRect.top - (parentRect.top - rowRect.top);
+
+        const overflowRight = innerWidth < event.clientX + submenuRect.width + parentRect.width;
+        const overflowBottom = innerHeight < event.clientY + submenuRect.height;
+
+        this.submenuTarget.style.left = overflowRight ? `-${x + submenuRect.width - offset}px` : `-${x}px`;
+        this.submenuTarget.style.top = overflowBottom ? `${y - submenuRect.height}px` : `${y}px`;
         this.submenuTarget.style.right = 'auto';
-
-        if (window.innerHeight < y + rect.height) {
-            this.submenuTarget.style.top = `${y - rect.height}px`;
-        } else {
-            this.submenuTarget.style.top = `${y + offset}px`;
-        }
-
-        if (window.innerWidth < x + rect.width) {
-            this.submenuTarget.style.left = `${x - rect.width + offset}px`;
-        } else {
-            this.submenuTarget.style.left = `${x + offset}px`;
-        }
     }
 
-    isInteractive (el) {
-        if (el instanceof HTMLImageElement || el instanceof HTMLAnchorElement || el instanceof HTMLButtonElement) {
-            return true;
-        }
-
-        // Also check the parent element if el is not interactive
-        const parent = el.parentElement;
-
-        return parent instanceof HTMLImageElement || parent instanceof HTMLAnchorElement || parent instanceof HTMLButtonElement;
+    isInteractive(el) {
+        return (
+            el instanceof HTMLAnchorElement ||
+            el instanceof HTMLButtonElement ||
+            el instanceof HTMLInputElement ||
+            el?.closest('a, button, input')
+        );
     }
 }

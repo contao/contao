@@ -3,22 +3,22 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     static targets = ['navigation', 'section'];
 
-    sectionTargetConnected () {
+    sectionTargetConnected() {
         this.rebuildNavigation();
     }
 
-    sectionTargetDisconnected () {
+    sectionTargetDisconnected() {
         this.rebuildNavigation();
     }
 
-    rebuildNavigation () {
+    rebuildNavigation() {
         if (!this.hasNavigationTarget) {
             return;
         }
 
         const links = document.createElement('ul');
 
-        this.sectionTargets.forEach((el) => {
+        for (const el of this.sectionTargets) {
             const action = document.createElement('button');
             action.innerText = el.getAttribute(`data-${this.identifier}-label-value`);
 
@@ -32,7 +32,7 @@ export default class extends Controller {
             li.append(action);
 
             links.append(li);
-        });
+        }
 
         this.navigationTarget.replaceChildren(links);
     }
