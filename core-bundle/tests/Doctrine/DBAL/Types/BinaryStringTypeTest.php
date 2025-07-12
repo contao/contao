@@ -94,6 +94,6 @@ class BinaryStringTypeTest extends TestCase
         }
 
         /** @phpstan-ignore method.notFound */
-        $this->assertTrue($this->type->requiresSQLCommentHint($this->getMockForAbstractClass(AbstractPlatform::class)));
+        $this->assertTrue($this->type->requiresSQLCommentHint($this->createMock(MySQLPlatform::class)));
     }
 }

@@ -46,10 +46,6 @@ class MigrateCommandTest extends TestCase
 
     public function testAbortsEarlyIfThereAreNoMigrations(): void
     {
-        if (interface_exists(ServerInfoAwareConnection::class)) {
-            $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
-        }
-
         $backupManager = $this->createBackupManager(false);
 
         $command = $this->getCommand([], [], null, $backupManager);
@@ -64,10 +60,6 @@ class MigrateCommandTest extends TestCase
 
     public function testAbortsEarlyIfNonInteractiveAndThereAreOnlyDropMigrations(): void
     {
-        if (interface_exists(ServerInfoAwareConnection::class)) {
-            $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
-        }
-
         $backupManager = $this->createBackupManager(false);
 
         $commandCompiler = $this->createMock(CommandCompiler::class);
@@ -91,10 +83,6 @@ class MigrateCommandTest extends TestCase
 
     public function testExecutesBackupIfPendingSchemaDiff(): void
     {
-        if (interface_exists(ServerInfoAwareConnection::class)) {
-            $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
-        }
-
         $backupManager = $this->createBackupManager(true);
 
         $commandCompiler = $this->createMock(CommandCompiler::class);
@@ -141,10 +129,6 @@ class MigrateCommandTest extends TestCase
     #[DataProvider('getOutputFormats')]
     public function testExecutesWithoutPendingMigrations(string $format): void
     {
-        if (interface_exists(ServerInfoAwareConnection::class)) {
-            $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
-        }
-
         $command = $this->getCommand();
         $tester = new CommandTester($command);
         $code = $tester->execute(['--format' => $format, '--no-backup' => true], ['interactive' => 'ndjson' !== $format]);
@@ -169,10 +153,6 @@ class MigrateCommandTest extends TestCase
     #[DataProvider('getOutputFormatsAndBackup')]
     public function testExecutesPendingMigrations(string $format, bool $backupsEnabled): void
     {
-        if (interface_exists(ServerInfoAwareConnection::class)) {
-            $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
-        }
-
         $command = $this->getCommand(
             [['Migration 1', 'Migration 2']],
             [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]],
@@ -223,10 +203,6 @@ class MigrateCommandTest extends TestCase
     #[DataProvider('getOutputFormats')]
     public function testExecutesSchemaDiff(string $format): void
     {
-        if (interface_exists(ServerInfoAwareConnection::class)) {
-            $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
-        }
-
         $returnedCommands = [
             [
                 'First call QUERY 1',
@@ -306,10 +282,6 @@ class MigrateCommandTest extends TestCase
     #[DataProvider('getOutputFormats')]
     public function testDoesNotExecuteWithDryRun(string $format): void
     {
-        if (interface_exists(ServerInfoAwareConnection::class)) {
-            $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
-        }
-
         $commandCompiler = $this->createMock(CommandCompiler::class);
         $commandCompiler
             ->expects($this->once())
@@ -376,10 +348,6 @@ class MigrateCommandTest extends TestCase
 
     public function testAbortsIfAnswerIsNo(): void
     {
-        if (interface_exists(ServerInfoAwareConnection::class)) {
-            $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
-        }
-
         $command = $this->getCommand(
             [['Migration 1', 'Migration 2']],
             [[new MigrationResult(true, 'Result 1'), new MigrationResult(true, 'Result 2')]],
@@ -402,10 +370,6 @@ class MigrateCommandTest extends TestCase
     #[DataProvider('getOutputFormats')]
     public function testDoesNotAbortIfMigrationFails(string $format): void
     {
-        if (interface_exists(ServerInfoAwareConnection::class)) {
-            $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
-        }
-
         $command = $this->getCommand(
             [['Migration 1', 'Migration 2']],
             [[new MigrationResult(false, 'Result 1'), new MigrationResult(true, 'Result 2')]],
@@ -444,10 +408,6 @@ class MigrateCommandTest extends TestCase
     #[DataProvider('getOutputFormats')]
     public function testAbortsOnFatalError(string $format): void
     {
-        if (interface_exists(ServerInfoAwareConnection::class)) {
-            $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
-        }
-
         $commandCompiler = $this->createMock(CommandCompiler::class);
         $commandCompiler
             ->expects($this->atLeastOnce())
@@ -479,8 +439,6 @@ class MigrateCommandTest extends TestCase
         $connection = $this->createDefaultConnection();
 
         if (interface_exists(ServerInfoAwareConnection::class)) {
-            $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
-
             /** @phpstan-ignore class.notFound */
             $driverConnection = $this->createMock(ServerInfoAwareConnection::class);
             /** @phpstan-ignore class.notFound, phpunit.mockMethod */
@@ -538,10 +496,6 @@ class MigrateCommandTest extends TestCase
     #[DataProvider('provideInvalidSqlModes')]
     public function testOutputsWarningIfNotRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
     {
-        if (interface_exists(ServerInfoAwareConnection::class)) {
-            $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
-        }
-
         $connection = $this->createDefaultConnection($sqlMode, $driver);
         $command = $this->getCommand(connection: $connection);
 
@@ -737,10 +691,6 @@ class MigrateCommandTest extends TestCase
     #[DataProvider('provideInvalidSqlModes')]
     public function testEmitsWarningMessageIfNotRunningInStrictMode(string $sqlMode, AbstractMySQLDriver $driver, int $expectedOptionKey): void
     {
-        if (interface_exists(ServerInfoAwareConnection::class)) {
-            $this->expectDeprecation('%sgetWrappedConnection method is deprecated%s');
-        }
-
         $connection = $this->createDefaultConnection($sqlMode, $driver);
         $command = $this->getCommand(connection: $connection);
 
