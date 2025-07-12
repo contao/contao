@@ -211,6 +211,7 @@ class ResultTest extends TestCase
      */
     private function createResults(array $data): array
     {
+        /** @phpstan-ignore classConstant.internalClass */
         $reflection = new \ReflectionClass(ArrayResult::class);
 
         if (\count($reflection->getConstructor()->getParameters()) > 1) {

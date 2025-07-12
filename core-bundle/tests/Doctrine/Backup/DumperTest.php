@@ -367,6 +367,7 @@ class DumperTest extends ContaoTestCase
 
         $calls = [];
 
+        /** @phpstan-ignore classConstant.internalClass */
         $reflection = new \ReflectionClass(ArrayResult::class);
         $dbal41 = \count($reflection->getConstructor()->getParameters()) > 1;
 
