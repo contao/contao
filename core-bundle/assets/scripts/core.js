@@ -3,7 +3,7 @@
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-import {Icon} from "../modules/icon";
+import * as Icon from "../modules/icon";
 
 window.AjaxRequest =
 {
