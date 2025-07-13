@@ -156,14 +156,16 @@ class Image
 	 */
 	public static function getHtml($src, $alt='', $attributes='')
 	{
-		$template = self::getHtmlTemplate($src);
+		list($template, $defaultSize) = self::getHtmlTemplateAndDefaultSize($src);
 
-		$search = array('{alt}', '{attributes}');
-		$replace = array(StringUtil::specialchars($alt), $attributes ? ' ' . $attributes : '');
+		$attributesObject = new HtmlAttributes($attributes);
+
+		$search = array('{width}', '{height}', '{alt}', '{attributes}');
+		$replace = array($attributesObject['width'] ?? $defaultSize['width'], $attributesObject['height'] ??  $defaultSize['height'], StringUtil::specialchars($alt), $attributes ? ' ' . $attributes : '');
 
 		if (str_contains($template, '{darkAttributes}'))
 		{
-			$darkAttributes = new HtmlAttributes($attributes);
+			$darkAttributes = new HtmlAttributes($attributesObject);
 
 			foreach (array('data-icon', 'data-icon-disabled') as $icon)
 			{
@@ -181,17 +183,17 @@ class Image
 		if (str_contains($template, '{lightAttributes}'))
 		{
 			$search[] = '{lightAttributes}';
-			$replace[] = (new HtmlAttributes($attributes))->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'))->toString();
+			$replace[] = (new HtmlAttributes($attributesObject))->mergeWith(array('class' => 'color-scheme--light', 'loading' => 'lazy'))->toString();
 		}
 
 		return str_replace($search, $replace, $template);
 	}
 
-	private static function getHtmlTemplate($src): string
+	private static function getHtmlTemplateAndDefaultSize($src): array
 	{
 		if (!$src)
 		{
-			return '';
+			return array('', array('width' => 0, 'height' => 0));
 		}
 
 		$cacheKey = $src;
@@ -202,13 +204,13 @@ class Image
 		}
 
 		/** @param string|list{string, string} $sources */
-		$getImageMarkup = static function (array|string $sources, int $width, int $height, string $attributesType = 'attributes') use (&$getImageMarkup) {
+		$getImageMarkup = static function (array|string $sources, string $attributesType = 'attributes') use (&$getImageMarkup) {
 			if (\is_array($sources))
 			{
-				return $getImageMarkup($sources[0], $width, $height, 'darkAttributes') . $getImageMarkup($sources[1], $width, $height, 'lightAttributes');
+				return $getImageMarkup($sources[0], 'darkAttributes') . $getImageMarkup($sources[1], 'lightAttributes');
 			}
 
-			return \sprintf('<img src="%s" width="%d" height="%d" alt="{alt}"{%s}>', $sources, $width, $height, $attributesType);
+			return \sprintf('<img src="%s" width="{width}" height="{height}" alt="{alt}"{%s}>', $sources, $attributesType);
 		};
 
 		$icons = System::getContainer()->getParameter('contao.backend.icons');
@@ -219,14 +221,17 @@ class Image
 
 			$sources = (null !== ($darkIcon = ($icons[$darkVariant] ?? null))) ? array($darkIcon['path'], $icon['path']) : $icon['path'];
 
-			return self::$htmlTemplateCache[$cacheKey] = $getImageMarkup($sources, $icon['width'], $icon['height']);
+			return self::$htmlTemplateCache[$cacheKey] = array(
+				$getImageMarkup($sources),
+				array('width' => $icon['width'], 'height' => $icon['height'])
+			);
 		}
 
 		$src = static::getPath($src);
 
 		if (!$src)
 		{
-			return self::$htmlTemplateCache[$cacheKey] = '';
+			return self::$htmlTemplateCache[$cacheKey] = array('', array('width' => 0, 'height' => 0));
 		}
 
 		$container = System::getContainer();
@@ -251,7 +256,7 @@ class Image
 			}
 			elseif (!$deferredImage instanceof DeferredImageInterface)
 			{
-				return self::$htmlTemplateCache[$cacheKey] = '';
+				return self::$htmlTemplateCache[$cacheKey] = array('', array('width' => 0, 'height' => 0));
 			}
 		}
 
@@ -274,9 +279,15 @@ class Image
 				$darkSrc = substr($darkSrc, \strlen($webDir) + 1);
 			}
 
-			return self::$htmlTemplateCache[$cacheKey] = $getImageMarkup(array(self::getUrl($darkSrc), self::getUrl($src)), $objFile->width, $objFile->height);
+			return self::$htmlTemplateCache[$cacheKey] = array(
+				$getImageMarkup(array(self::getUrl($darkSrc), self::getUrl($src))),
+				array('width' => $objFile->width, 'height' => $objFile->height)
+			);
 		}
 
-		return self::$htmlTemplateCache[$cacheKey] = $getImageMarkup(self::getUrl($src), $objFile->width, $objFile->height);
+		return self::$htmlTemplateCache[$cacheKey] = array(
+			$getImageMarkup(self::getUrl($src)),
+			array('width' => $objFile->width, 'height' => $objFile->height)
+		);
 	}
 }
