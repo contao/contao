@@ -626,18 +626,13 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $icons = [];
 
         foreach ($manifest as $name => $publicPath) {
-            $content = file_get_contents(Path::join($basePath, $name));
-            $width = $height = 16;
-
-            if (1 === preg_match('/^<svg [^>]* width="(\d+)" height="(\d+)"[^>]>/', $content, $matches)) {
-                $width = (int) $matches[1];
-                $height = (int) $matches[2];
-            }
+            $svg = new \DOMDocument();
+            $svg->loadXML(file_get_contents(Path::join($basePath, $name)));
 
             $icons[$name] = [
                 'path' => $publicPath,
-                'width' => $width,
-                'height' => $height,
+                'width' => $svg->documentElement->getAttribute('width'),
+                'height' => $svg->documentElement->getAttribute('height'),
             ];
         }
 
