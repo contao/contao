@@ -16,6 +16,7 @@ use Contao\CoreBundle\Tests\Doctrine\DoctrineTestCase;
 use Doctrine\DBAL\Connection;
 use Doctrine\DBAL\Platforms\AbstractMySQLPlatform;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -27,27 +28,28 @@ class DcaSchemaProviderTest extends DoctrineTestCase
     public function testAppendToSchema(array $dca = []): void
     {
         $schema = $this->getSchema();
+        $typeRegistry = Type::getTypeRegistry();
         $this->getDcaSchemaProvider($dca)->appendToSchema($schema);
         $table = $schema->getTable('tl_member');
 
         $this->assertTrue($table->hasColumn('id'));
-        $this->assertSame('integer', $table->getColumn('id')->getType()->getName());
+        $this->assertSame('integer', $typeRegistry->lookupName($table->getColumn('id')->getType()));
         $this->assertTrue($table->getColumn('id')->getNotnull());
         $this->assertFalse($table->getColumn('id')->getFixed());
 
         $idDefault = $table->getColumn('id')->getDefault();
 
         if (null !== $idDefault) {
-            $this->assertSame(0, $idDefault);
+            $this->assertSame('0', (string) $idDefault);
         }
 
         $this->assertTrue($table->hasColumn('pid'));
-        $this->assertSame('integer', $table->getColumn('pid')->getType()->getName());
+        $this->assertSame('integer', $typeRegistry->lookupName($table->getColumn('pid')->getType()));
         $this->assertFalse($table->getColumn('pid')->getNotnull());
         $this->assertFalse($table->getColumn('pid')->getFixed());
 
         $this->assertTrue($table->hasColumn('title'));
-        $this->assertSame('string', $table->getColumn('title')->getType()->getName());
+        $this->assertSame('string', $typeRegistry->lookupName($table->getColumn('title')->getType()));
         $this->assertTrue($table->getColumn('title')->getNotnull());
         $this->assertFalse($table->getColumn('title')->getFixed());
         $this->assertSame(128, $table->getColumn('title')->getLength());
@@ -60,32 +62,32 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         }
 
         $this->assertTrue($table->hasColumn('uppercase'));
-        $this->assertSame('string', $table->getColumn('uppercase')->getType()->getName());
+        $this->assertSame('string', $typeRegistry->lookupName($table->getColumn('uppercase')->getType()));
         $this->assertTrue($table->getColumn('uppercase')->getNotnull());
         $this->assertFalse($table->getColumn('uppercase')->getFixed());
         $this->assertSame(64, $table->getColumn('uppercase')->getLength());
         $this->assertSame('1.00', $table->getColumn('uppercase')->getDefault());
 
         $this->assertTrue($table->hasColumn('teaser'));
-        $this->assertSame('text', $table->getColumn('teaser')->getType()->getName());
+        $this->assertSame('text', $typeRegistry->lookupName($table->getColumn('teaser')->getType()));
         $this->assertFalse($table->getColumn('teaser')->getNotnull());
         $this->assertFalse($table->getColumn('teaser')->getFixed());
         $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT, $table->getColumn('teaser')->getLength());
 
         $this->assertTrue($table->hasColumn('description'));
-        $this->assertSame('text', $table->getColumn('description')->getType()->getName());
+        $this->assertSame('text', $typeRegistry->lookupName($table->getColumn('description')->getType()));
         $this->assertFalse($table->getColumn('description')->getNotnull());
         $this->assertFalse($table->getColumn('description')->getFixed());
         $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_TEXT, $table->getColumn('description')->getLength());
 
         $this->assertTrue($table->hasColumn('content'));
-        $this->assertSame('text', $table->getColumn('content')->getType()->getName());
+        $this->assertSame('text', $typeRegistry->lookupName($table->getColumn('content')->getType()));
         $this->assertFalse($table->getColumn('content')->getNotnull());
         $this->assertFalse($table->getColumn('content')->getFixed());
         $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, $table->getColumn('content')->getLength());
 
         $this->assertTrue($table->hasColumn('price'));
-        $this->assertSame('decimal', $table->getColumn('price')->getType()->getName());
+        $this->assertSame('decimal', $typeRegistry->lookupName($table->getColumn('price')->getType()));
         $this->assertTrue($table->getColumn('price')->getNotnull());
         $this->assertFalse($table->getColumn('price')->getFixed());
         $this->assertSame(6, $table->getColumn('price')->getPrecision());
@@ -94,29 +96,29 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $priceDefault = $table->getColumn('price')->getDefault();
 
         if (null !== $priceDefault) {
-            $this->assertSame(1.99, $priceDefault);
+            $this->assertSame('1.99', (string) $priceDefault);
         }
 
         $this->assertTrue($table->hasColumn('thumb'));
-        $this->assertSame('blob', $table->getColumn('thumb')->getType()->getName());
+        $this->assertSame('blob', $typeRegistry->lookupName($table->getColumn('thumb')->getType()));
         $this->assertFalse($table->getColumn('thumb')->getNotnull());
         $this->assertFalse($table->getColumn('thumb')->getFixed());
         $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_TINYBLOB, $table->getColumn('thumb')->getLength());
 
         $this->assertTrue($table->hasColumn('image'));
-        $this->assertSame('blob', $table->getColumn('image')->getType()->getName());
+        $this->assertSame('blob', $typeRegistry->lookupName($table->getColumn('image')->getType()));
         $this->assertFalse($table->getColumn('image')->getNotnull());
         $this->assertFalse($table->getColumn('image')->getFixed());
         $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_BLOB, $table->getColumn('image')->getLength());
 
         $this->assertTrue($table->hasColumn('attachment'));
-        $this->assertSame('blob', $table->getColumn('attachment')->getType()->getName());
+        $this->assertSame('blob', $typeRegistry->lookupName($table->getColumn('attachment')->getType()));
         $this->assertFalse($table->getColumn('attachment')->getNotnull());
         $this->assertFalse($table->getColumn('attachment')->getFixed());
         $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMBLOB, $table->getColumn('attachment')->getLength());
 
         $this->assertTrue($table->hasColumn('published'));
-        $this->assertSame('string', $table->getColumn('published')->getType()->getName());
+        $this->assertSame('string', $typeRegistry->lookupName($table->getColumn('published')->getType()));
         $this->assertTrue($table->getColumn('published')->getNotnull());
         $this->assertTrue($table->getColumn('published')->getFixed());
 
@@ -156,7 +158,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
                     'SCHEMA_FIELDS' => [
                         ['name' => 'id', 'type' => 'integer'],
                         ['name' => 'pid', 'type' => 'integer', 'notnull' => false],
-                        ['name' => 'title', 'type' => 'string', 'length' => 128, 'customSchemaOptions' => ['case_sensitive' => true]],
+                        ['name' => 'title', 'type' => 'string', 'length' => 128, 'platformOptions' => ['case_sensitive' => true]],
                         ['name' => 'uppercase', 'type' => 'string', 'length' => 64, 'default' => '1.00'],
                         ['name' => 'teaser', 'type' => 'text', 'notnull' => false, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TINYTEXT],
                         ['name' => 'description', 'type' => 'text', 'notnull' => false, 'length' => AbstractMySQLPlatform::LENGTH_LIMIT_TEXT],
@@ -187,7 +189,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $table = $schema->getTable('tl_member');
 
         $this->assertTrue($table->hasColumn('id'));
-        $this->assertSame('integer', $table->getColumn('id')->getType()->getName());
+        $this->assertSame('integer', Type::getTypeRegistry()->lookupName($table->getColumn('id')->getType()));
         $this->assertFalse($table->getColumn('id')->getNotnull());
         $this->assertFalse($table->getColumn('id')->getFixed());
     }
@@ -322,7 +324,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $table = $schema->getTable('tl_files');
 
         $this->assertTrue($table->hasColumn('name'));
-        $this->assertSame('string', $table->getColumn('name')->getType()->getName());
+        $this->assertSame('string', Type::getTypeRegistry()->lookupName($table->getColumn('name')->getType()));
         $this->assertSame(255, $table->getColumn('name')->getLength());
 
         $this->assertTrue($table->hasIndex('name'));
@@ -511,7 +513,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
 
         for ($i = 1; $i <= 3; ++$i) {
             $this->assertTrue($table->hasColumn('col'.$i));
-            $this->assertSame('string', $table->getColumn('col'.$i)->getType()->getName());
+            $this->assertSame('string', Type::getTypeRegistry()->lookupName($table->getColumn('col'.$i)->getType()));
             $this->assertSame(255, $table->getColumn('col'.$i)->getLength());
         }
 
@@ -558,7 +560,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $table = $schema->getTable('tl_search');
 
         $this->assertTrue($table->hasColumn('text'));
-        $this->assertSame('text', $table->getColumn('text')->getType()->getName());
+        $this->assertSame('text', Type::getTypeRegistry()->lookupName($table->getColumn('text')->getType()));
         $this->assertFalse($table->getColumn('text')->getNotnull());
         $this->assertFalse($table->getColumn('text')->getFixed());
         $this->assertSame(AbstractMySQLPlatform::LENGTH_LIMIT_MEDIUMTEXT, $table->getColumn('text')->getLength());
@@ -628,6 +630,7 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         ];
 
         $entityMetadata = new ClassMetadata(\stdClass::class);
+        $entityMetadata->setIdentifier(['id']);
 
         (new ClassMetadataBuilder($entityMetadata))
             ->setTable('tl_page')
@@ -643,12 +646,13 @@ class DcaSchemaProviderTest extends DoctrineTestCase
         $provider = $this->getDcaSchemaProvider($dcaMetadata);
         $provider->appendToSchema($schema);
 
-        $columns = $schema->getTable('tl_page')->getColumns();
+        $table = $schema->getTable('tl_page');
+        $typeRegistry = Type::getTypeRegistry();
 
-        $this->assertCount(4, $columns);
-        $this->assertSame('integer', $columns['id']->getType()->getName());
-        $this->assertSame('boolean', $columns['published']->getType()->getName());
-        $this->assertSame('string', $columns['bar']->getType()->getName());
-        $this->assertSame('string', $columns['title']->getType()->getName());
+        $this->assertCount(4, $table->getColumns());
+        $this->assertSame('integer', $typeRegistry->lookupName($table->getColumn('id')->getType()));
+        $this->assertSame('boolean', $typeRegistry->lookupName($table->getColumn('published')->getType()));
+        $this->assertSame('string', $typeRegistry->lookupName($table->getColumn('bar')->getType()));
+        $this->assertSame('string', $typeRegistry->lookupName($table->getColumn('title')->getType()));
     }
 }

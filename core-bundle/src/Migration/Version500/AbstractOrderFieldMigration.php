@@ -28,7 +28,7 @@ abstract class AbstractOrderFieldMigration extends AbstractMigration
         $schemaManager = $this->connection->createSchemaManager();
 
         foreach ($this->getTableFields() as $table => $fields) {
-            if (!$schemaManager->tablesExist($table)) {
+            if (!$schemaManager->tablesExist([$table])) {
                 continue;
             }
 
@@ -49,7 +49,7 @@ abstract class AbstractOrderFieldMigration extends AbstractMigration
         $schemaManager = $this->connection->createSchemaManager();
 
         foreach ($this->getTableFields() as $table => $fields) {
-            if (!$schemaManager->tablesExist($table)) {
+            if (!$schemaManager->tablesExist([$table])) {
                 continue;
             }
 
