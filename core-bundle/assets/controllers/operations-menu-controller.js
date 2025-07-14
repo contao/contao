@@ -15,6 +15,7 @@ export default class OperationsMenuController extends Controller {
             menuElement: this.menuTarget,
             menuLinkSelector: 'a,button,img',
         });
+
         menus.push(this.$menu);
 
         this.controllerTarget?.addEventListener('accessibleMenuExpand', () => {
@@ -97,7 +98,7 @@ export default class OperationsMenuController extends Controller {
         const x = innerWidth - clientX - (innerWidth - parentRect.left);
         let y = clientY - rowRect.top - (parentRect.top - rowRect.top);
 
-        // If not a context menu and bottom overflow, position at the top of the … more handle.
+        // If not a context menu and bottom overflow, position at the top of the "more" handle.
         if (event === undefined && overflowBottom) {
             y = y - clientY + rect.top - offset;
         }

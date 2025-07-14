@@ -3967,7 +3967,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 			{
 				$operations = $this->generateButtons($currentRecord, $table, $this->root, $blnCircularReference, $children, $previous, $next);
 
-				if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
+				if (self::MODE_TREE == ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null))
 				{
 					$operations->addSeparator();
 

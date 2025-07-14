@@ -186,10 +186,13 @@
         <source>Paste into page ID %s</source>
       </trans-unit>
       <trans-unit id="tl_article.pastenewafter.1">
-        <source>New article after article ID %s</source>
+        <source>Add a new article after article ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_article.pastenewinto.0">
+        <source>New at the top</source>
       </trans-unit>
       <trans-unit id="tl_article.pastenewinto.1">
-        <source>New article in page ID %s</source>
+        <source>Add a new article in page ID %s</source>
       </trans-unit>
     </body>
   </file>
