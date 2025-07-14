@@ -229,8 +229,6 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 		$this->initRoots();
 
-		$request = $container->get('request_stack')->getCurrentRequest();
-
 		if (!empty($arrClipboard[$this->strTable]) && $arrClipboard[$this->strTable]['mode'] != 'create')
 		{
 			if (\is_array($arrClipboard[$this->strTable]['id']))
@@ -3650,7 +3648,6 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 		// Show paste button only if there are no root records specified
 		if ($blnClipboard && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $this->rootPaste && Input::get('act') != 'select')
 		{
-
 			// Call paste_button_callback (&$dc, $row, $table, $cr, $children, $previous, $next)
 			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
 			{
@@ -3879,8 +3876,6 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 		{
 			if ($this->strTable != $table || ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 			{
-				$allowedChildIds = array();
-
 				$objChildren = $db
 					->prepare("SELECT id FROM " . $table . " WHERE pid=?" . ($blnHasSorting ? " ORDER BY sorting, id" : ''))
 					->execute($id);
@@ -3973,18 +3968,18 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 					if (!$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
 					{
-						$operations->addNewButton('pastenewafter', Backend::addToUrl('act=create&mode=2&pid='.$currentRecord['id']));
+						$operations->addNewButton('pastenewafter', Backend::addToUrl('act=create&mode=2&pid=' . $currentRecord['id']));
 					}
 
 					if (!$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['id'], 'sorting' => 0))))
 					{
-						$operations->addNewButton('pastenewinto', Backend::addToUrl('act=create&mode=1&pid='.$currentRecord['id']));
+						$operations->addNewButton('pastenewinto', Backend::addToUrl('act=create&mode=1&pid=' . $currentRecord['id']));
 					}
 				}
 				elseif (!$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
 				{
 					$operations->addSeparator();
-					$operations->addNewButton('pastenewafter', Backend::addToUrl('act=create&mode=1&pid='.$currentRecord['id']));
+					$operations->addNewButton('pastenewafter', Backend::addToUrl('act=create&mode=1&pid=' . $currentRecord['id']));
 				}
 			}
 			else
@@ -3993,7 +3988,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 				if (!$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['id'], 'sorting' => 0))))
 				{
-					$operations->addNewButton('pastenewinto', Backend::addToUrl('act=create&mode=2&pid='.$currentRecord['id']));
+					$operations->addNewButton('pastenewinto', Backend::addToUrl('act=create&mode=2&pid=' . $currentRecord['id']));
 				}
 			}
 
@@ -5612,7 +5607,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 		}
 
 		// Add sorting options
-		foreach ($sortingFields as $cnt=>$field)
+		foreach ($sortingFields as $field)
 		{
 			$arrValues = array();
 			$arrProcedure = array();
