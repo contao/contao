@@ -1,6 +1,8 @@
 import { Controller } from '@hotwired/stimulus';
 import AccessibleMenu from 'accessible-menu';
 
+const menus = [];
+
 export default class OperationsMenuController extends Controller {
     static targets = ['menu', 'submenu', 'controller', 'title'];
 
@@ -11,22 +13,18 @@ export default class OperationsMenuController extends Controller {
 
         this.$menu = new AccessibleMenu.DisclosureMenu({
             menuElement: this.menuTarget,
-            menuLinkSelector: 'a,button,img,hr',
+            menuLinkSelector: 'a,button,img',
         });
+        menus.push(this.$menu);
 
         this.controllerTarget?.addEventListener('accessibleMenuExpand', () => {
-            for (const menu of Object.values(window.AccessibleMenu.menus)) {
+            for (const menu of menus) {
                 if (menu !== this.$menu && menu.elements.submenuToggles[0].isOpen) {
                     menu.elements.submenuToggles[0].close();
                 }
             }
 
             this.setPosition();
-            this.element.classList.add('hover');
-        });
-
-        this.controllerTarget?.addEventListener('accessibleMenuCollapse', () => {
-            this.element.classList.remove('hover');
         });
     }
 
@@ -37,6 +35,8 @@ export default class OperationsMenuController extends Controller {
                 delete window.AccessibleMenu.menus[key];
             }
         }
+
+        delete menus[menus.findIndex((menu) => menu === this.$menu)];
     }
 
     titleTargetConnected(el) {
@@ -65,10 +65,6 @@ export default class OperationsMenuController extends Controller {
         }
 
         event.preventDefault();
-        event.stopPropagation();
-
-        // Prevent accessible-menu from handling pointerup and closing the menu again (see #8065)
-        this.element.addEventListener('pointerup', (e) => e.stopPropagation(), { once: true });
 
         this.$menu.elements.submenuToggles[0].open();
         this.setPosition(event);
@@ -80,25 +76,33 @@ export default class OperationsMenuController extends Controller {
         const submenuRect = this.submenuTarget.getBoundingClientRect();
         const parentRect = this.menuTarget.querySelector('.operations-menu-container').getBoundingClientRect();
 
-        if (event === undefined) {
-            this.submenuTarget.style.top = '100%';
-            this.submenuTarget.style.right = 'auto';
-            this.submenuTarget.style.left = `-${submenuRect.width - parentRect.width - offset}px`;
+        const rect = this.controllerTarget.getBoundingClientRect();
+        let clientX, clientY;
 
-            return;
+        if (event === undefined) {
+            clientX = rect.right;
+            clientY = rect.bottom;
+        } else {
+            clientX = event.clientX;
+            clientY = event.clientY;
         }
 
         const { innerWidth, innerHeight } = window;
         const rowRect = this.element.getBoundingClientRect();
 
-        const x = innerWidth - event.clientX - (innerWidth - parentRect.left);
-        const y = event.clientY - rowRect.top - (parentRect.top - rowRect.top);
+        const overflowRight = innerWidth < clientX + submenuRect.width + parentRect.width;
+        const overflowBottom = innerHeight < clientY + submenuRect.height;
 
-        const overflowRight = innerWidth < event.clientX + submenuRect.width + parentRect.width;
-        const overflowBottom = innerHeight < event.clientY + submenuRect.height;
+        const x = innerWidth - clientX - (innerWidth - parentRect.left);
+        let y = clientY - rowRect.top - (parentRect.top - rowRect.top);
+
+        // If not a context menu and bottom overflow, position at the top of the … more handle.
+        if (event === undefined && overflowBottom) {
+            y = y - clientY + rect.top - offset;
+        }
 
         this.submenuTarget.style.left = overflowRight ? `-${x + submenuRect.width - offset}px` : `-${x}px`;
-        this.submenuTarget.style.top = overflowBottom ? `${y - submenuRect.height}px` : `${y}px`;
+        this.submenuTarget.style.top = overflowBottom ? `${y - submenuRect.height + offset}px` : `${y}px`;
         this.submenuTarget.style.right = 'auto';
     }
 
