@@ -71,7 +71,7 @@ class DcaSchemaProvider
                     $options = $conf;
 
                     if (isset($options['customSchemaOptions'])) {
-                        trigger_deprecation('contao/core-bundle', '5.3', 'Using the "customSchemaOptions" option has been deprecated and will no longer work in Contao 6. Use the "platformOptions" option instead.');
+                        trigger_deprecation('contao/core-bundle', '5.3', 'Using the "customSchemaOptions" option is deprecated and will no longer work in Contao 6. Use the "platformOptions" option instead.');
 
                         $options['platformOptions'] = [...($options['platformOptions'] ?? []), ...$options['customSchemaOptions']];
 

@@ -27,23 +27,23 @@ use ShipMonk\ComposerDependencyAnalyser\Config\ErrorType;
 return (new Configuration())
     ->ignoreUnknownClasses([
         AppBundle::class,
-        SchemaAlterTableRenameColumnEventArgs::class,
-        MySQL57Platform::class,
-        ServerInfoAwareConnection::class,
-        VersionAwarePlatformDriver::class,
         FooEntity::class,
         FooModel::class,
         'Gmagick',
         'Imagick',
         InvalidListener::class,
         LegacyModule::class,
+        MySQL57Platform::class,
+        SchemaAlterTableRenameColumnEventArgs::class,
         'SensitiveParameter',
+        ServerInfoAwareConnection::class,
         'Swift_Attachment',
         'Swift_EmbeddedFile',
         'Swift_Mailer',
         'Swift_Message',
         UnionTypeMessage::class,
         ValidListener::class,
+        VersionAwarePlatformDriver::class,
     ])
     ->disableExtensionsAnalysis()
     ->disableReportingUnmatchedIgnores()

@@ -27,7 +27,7 @@ class JobsListenerTest extends ContaoTestCase
     {
         $listener = new JobsListener(
             $this->createMock(Security::class),
-            $this->mockConnection(),
+            $this->createMock(Connection::class),
             $this->getRequestStack(),
             $this->mockContaoFramework(),
         );
@@ -41,7 +41,7 @@ class JobsListenerTest extends ContaoTestCase
     {
         $listener = new JobsListener(
             $this->mockSecurity(),
-            $this->mockConnection(),
+            $this->createMock(Connection::class),
             $this->getRequestStack(Request::create('/')),
             $this->mockContaoFramework(),
         );
@@ -57,7 +57,7 @@ class JobsListenerTest extends ContaoTestCase
 
         $listener = new JobsListener(
             $this->mockSecurity(42),
-            $this->mockConnection(),
+            $this->createMock(Connection::class),
             $this->getRequestStack(Request::create('/contao?do=jobs')),
             $framework,
         );
@@ -84,7 +84,7 @@ class JobsListenerTest extends ContaoTestCase
 
         $listener = new JobsListener(
             $this->mockSecurity(42),
-            $this->mockConnection(),
+            $this->createMock(Connection::class),
             $this->getRequestStack(Request::create('/contao?do=jobs&ptable=tl_job')),
             $framework,
         );
@@ -136,10 +136,5 @@ class JobsListenerTest extends ContaoTestCase
         ;
 
         return $security;
-    }
-
-    private function mockConnection(): Connection
-    {
-        return $this->createMock(Connection::class);
     }
 }

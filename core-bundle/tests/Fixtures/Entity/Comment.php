@@ -18,8 +18,8 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 
-#[Table(name: 'tl_comment')]
 #[Entity]
+#[Table(name: 'tl_comment')]
 class Comment
 {
     #[Id]

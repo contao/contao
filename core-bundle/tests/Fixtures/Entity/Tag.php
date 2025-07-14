@@ -21,8 +21,8 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\Table;
 
-#[Table(name: 'tl_tag')]
 #[Entity]
+#[Table(name: 'tl_tag')]
 class Tag
 {
     #[Id]

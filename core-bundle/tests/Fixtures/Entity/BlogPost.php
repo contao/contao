@@ -25,8 +25,8 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
 
-#[Table(name: 'tl_blog_post')]
 #[Entity]
+#[Table(name: 'tl_blog_post')]
 class BlogPost
 {
     #[Id]

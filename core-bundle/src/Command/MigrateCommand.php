@@ -726,6 +726,7 @@ class MigrateCommand extends Command
 
             /** @phpstan-ignore class.notFound */
             $version = $driverConnection->getServerVersion();
+
             /** @phpstan-ignore class.notFound */
             $correctPlatform = $driver->createDatabasePlatformForVersion($version);
         } else {

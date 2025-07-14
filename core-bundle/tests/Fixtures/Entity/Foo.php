@@ -18,8 +18,8 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Table;
 
-#[Table(name: 'foo')]
 #[Entity]
+#[Table(name: 'foo')]
 class Foo
 {
     #[Id]
