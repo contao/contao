@@ -422,13 +422,15 @@ class FileTree extends Widget
 			$buffer = Image::getHtml('placeholder.svg', $strInfo, 'data-contao--tooltips-target="tooltip"');
 		}
 
+		$closeIcon = Image::getHtml('close');
+
 		if ($blnRemovable)
 		{
-			$buffer .= '<button type="button" class="tl_red" data-action="contao--input-map#removeElement" data-contao--input-map-closest-param="li">&times;</button>';
+			$buffer .= \sprintf('<button type="button" class="tl_red" data-action="contao--input-map#removeElement" data-contao--input-map-closest-param="li">%s</button>', $closeIcon);
 		}
 		else
 		{
-			$buffer .= '<button type="button" disabled>&times;</button>';
+			$buffer .= \sprintf('<button type="button" disabled>%s</button>', $closeIcon);
 		}
 
 		return $buffer;

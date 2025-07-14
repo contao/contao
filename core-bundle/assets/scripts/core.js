@@ -1,3 +1,5 @@
+import * as Icon from "../modules/icon";
+
 /**
  * Provide methods to handle Ajax requests.
  *
@@ -922,7 +924,7 @@ window.Backend =
 			if (el.hasClass('removable')) {
 				new Element('button', {
 					type: 'button',
-					html: '&times;',
+					html: Icon.getTemplate('delete', {'aria-hidden': true}).getHTML(),
 					'class': 'tl_red'
 				}).addEvent('click', function() {
 					var li = el.getParent('li'),
@@ -934,7 +936,7 @@ window.Backend =
 			} else {
 				new Element('button', {
 					type: 'button',
-					html: '&times',
+					html: Icon.getTemplate('delete', {'aria-hidden': true}).getHTML(),
 					disabled: true
 				}).inject(el, 'after');
 			}
@@ -2286,7 +2288,6 @@ window.addEvent('domready', function() {
 	}
 
 	Backend.tableWizardSetWidth();
-	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
 
 	Theme.stopClickPropagation();
@@ -2302,7 +2303,6 @@ window.addEvent('resize', function() {
 
 // Re-apply certain changes upon ajax_change
 window.addEvent('ajax_change', function() {
-	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
 
 	Theme.stopClickPropagation();
