@@ -34,11 +34,16 @@ class CronJob
     protected string $name;
 
     #[Column(type: 'datetime', nullable: false)]
-    protected \DateTimeInterface $lastRun;
+    protected \DateTime $lastRun;
 
     public function __construct(string $name, \DateTimeInterface|null $lastRun = null)
     {
         $this->name = $name;
+
+        if ($lastRun && !$lastRun instanceof \DateTime) {
+            $lastRun = \DateTime::createFromInterface($lastRun);
+        }
+
         $this->lastRun = $lastRun ?? new \DateTime();
     }
 
@@ -49,6 +54,10 @@ class CronJob
 
     public function setLastRun(\DateTimeInterface $lastRun): self
     {
+        if (!$lastRun instanceof \DateTime) {
+            $lastRun = \DateTime::createFromInterface($lastRun);
+        }
+
         $this->lastRun = $lastRun;
 
         return $this;

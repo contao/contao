@@ -939,7 +939,7 @@ class DbafsTest extends TestCase
             ->expects($this->exactly(3))
             ->method('update')
             ->willReturnCallback(
-                function (string $table, array $update, array $criteria): void {
+                function (string $table, array $update, array $criteria): int {
                     $this->assertSame('tl_files', $table);
 
                     $file = $criteria['path'] ?? null;
@@ -949,19 +949,19 @@ class DbafsTest extends TestCase
                         $this->assertSame('file1', $criteria['path']);
                         $this->assertSame('txt', $update['extension']);
 
-                        return;
+                        return 1;
                     }
 
                     if ('file1' === $file) {
                         $this->assertSame('file2.txt', $update['path']);
 
-                        return;
+                        return 1;
                     }
 
                     if ('new.txt' === $file) {
                         $this->assertSame(201, $update['lastModified']);
 
-                        return;
+                        return 1;
                     }
 
                     $this->fail();
@@ -1119,13 +1119,13 @@ class DbafsTest extends TestCase
             ->expects($this->exactly(3))
             ->method('update')
             ->willReturnCallback(
-                function (string $table, array $updates, array $criteria) use (&$invokedUpdate): void {
+                function (string $table, array $updates, array $criteria) use (&$invokedUpdate): int {
                     if (isset($criteria['type'])) {
                         $this->assertSame('file', $criteria['type']);
                         $this->assertSame('files/baz', $criteria['path']);
                         $this->assertSame('', $updates['extension']);
 
-                        return;
+                        return 1;
                     }
 
                     $this->assertSame('tl_files', $table);
@@ -1140,6 +1140,8 @@ class DbafsTest extends TestCase
                     }
 
                     ++$invokedUpdate;
+
+                    return 1;
                 },
             )
         ;
@@ -1210,13 +1212,13 @@ class DbafsTest extends TestCase
             ->expects($this->exactly(4))
             ->method('update')
             ->willReturnCallback(
-                function (string $table, array $updates, array $criteria) use (&$expected): void {
+                function (string $table, array $updates, array $criteria) use (&$expected): int {
                     if (isset($criteria['type'])) {
                         $this->assertSame('file', $criteria['type']);
                         $this->assertSame('a/file', $criteria['path']);
                         $this->assertSame('', $updates['extension']);
 
-                        return;
+                        return 1;
                     }
 
                     $this->assertSame('tl_files', $table);
@@ -1228,6 +1230,8 @@ class DbafsTest extends TestCase
 
                     $this->assertSame($expectedCriteria, $criteria);
                     $this->assertSame($expectedUpdates, $updates);
+
+                    return 1;
                 },
             )
         ;
