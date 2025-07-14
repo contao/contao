@@ -65,6 +65,14 @@
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
         <target>Šeit jūs varat pievienot pielāgotu meta aprakstu, lai pārrakstītu noklusējuma lapas aprakstu.</target>
       </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.0">
+        <source>Canonical URL</source>
+        <target>Kanoniskais URL</target>
+      </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.1">
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>Šeit varat iestatīt pielāgotu kanonisko URL, piemēram, https://example.com/.</target>
+      </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
         <target>Apakšvirsraksts</target>
@@ -185,14 +193,6 @@
         <source>Here you can enter one or more classes.</source>
         <target>Šeit jūs varat ievadīt vienu vai vairākas klases.</target>
       </trans-unit>
-      <trans-unit id="tl_news.noComments.0">
-        <source>Disable comments</source>
-        <target>Atspējot komentārus</target>
-      </trans-unit>
-      <trans-unit id="tl_news.noComments.1">
-        <source>Do not allow comments for this particular news item.</source>
-        <target>Neļaut komentārus šim jaunumu vienumam.</target>
-      </trans-unit>
       <trans-unit id="tl_news.featured.0">
         <source>Feature item</source>
         <target>Iezīmēt vienumu</target>
@@ -273,46 +273,55 @@
         <source>Publish settings</source>
         <target>Publicēšanas iestatījumi</target>
       </trans-unit>
-      <trans-unit id="tl_news.new.0">
-        <source>New</source>
-        <target>Jauns</target>
-      </trans-unit>
       <trans-unit id="tl_news.new.1">
         <source>Create a new news item</source>
         <target>Izveidot jaunu jaunumu vienumu</target>
       </trans-unit>
-      <trans-unit id="tl_news.show">
+      <trans-unit id="tl_news.show.1">
         <source>Show the details of news item ID %s</source>
         <target>Rādīt jaunumu vienuma ID %s detaļas</target>
       </trans-unit>
-      <trans-unit id="tl_news.edit">
+      <trans-unit id="tl_news.edit.1">
         <source>Edit news item ID %s</source>
         <target>Rediģēt jaunumu vienumu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.children">
+      <trans-unit id="tl_news.children.0">
+        <source>Content elements</source>
+        <target>Satura elementi</target>
+      </trans-unit>
+      <trans-unit id="tl_news.children.1">
         <source>Edit the content elements of news item ID %s</source>
         <target>Rediģēt jaunuma ID %s satura elementus</target>
       </trans-unit>
-      <trans-unit id="tl_news.copy">
+      <trans-unit id="tl_news.copy.1">
         <source>Duplicate news item ID %s</source>
         <target>Dublēt jaunumu vienumu ID %s </target>
       </trans-unit>
-      <trans-unit id="tl_news.cut">
+      <trans-unit id="tl_news.cut.1">
         <source>Move news item ID %s</source>
         <target>Pārvietot jaunumu vienumu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_news.delete">
+      <trans-unit id="tl_news.delete.1">
         <source>Delete news item ID %s</source>
         <target>Dzēst jaunumu vienumu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.0">
         <source>Publish/unpublish news item</source>
+        <target>Publicēt/nepublicēt jaunumu vienumu</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.1">
         <source>Unpublish news item ID %s</source>
+        <target>Nepublicēt jaunumu vienumu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.2">
         <source>Publish news item ID %s</source>
+        <target>Publicēt jaunumu vienumu ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.3">
+        <source>Publish</source>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.4">
+        <source>Unpublish</source>
       </trans-unit>
       <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
@@ -320,9 +329,17 @@
       </trans-unit>
       <trans-unit id="tl_news.feature.1">
         <source>Unfeature news item ID %s</source>
+        <target>Neiezīmēt jaunumu vienumu ID %s</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.2">
         <source>Feature news item ID %s</source>
+        <target>Iezīmēt jaunumu vienumu ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.3">
+        <source>Unfeature</source>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.4">
+        <source>Feature</source>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>

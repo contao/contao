@@ -209,35 +209,70 @@
         <source>Synchronize the file system and the database</source>
         <target>Dosya sistemini ve veri tabanını eşitle</target>
       </trans-unit>
-      <trans-unit id="tl_files.show">
+      <trans-unit id="tl_files.textTrackLanguage.0">
+        <source>Language</source>
+        <target>Dil</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackLanguage.1">
+        <source>Please select the language of the file.</source>
+        <target>Lütfen sayfanın dilini seçin.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackType.0">
+        <source>Track type</source>
+        <target>İz türü</target>
+      </trans-unit>
+      <trans-unit id="tl_files.textTrackType.1">
+        <source>Here you can select the type of text track.</source>
+        <target>Buradan metin izinin türünü seçebilirsiniz.</target>
+      </trans-unit>
+      <trans-unit id="tl_files.captions">
+        <source>Closed captions</source>
+        <target>Alt yazılar</target>
+      </trans-unit>
+      <trans-unit id="tl_files.descriptions">
+        <source>Audio descriptions</source>
+        <target>Sesli açıklamalar</target>
+      </trans-unit>
+      <trans-unit id="tl_files.subtitles">
+        <source>Subtitles</source>
+        <target>Alt yazılar</target>
+      </trans-unit>
+      <trans-unit id="tl_files.chapters">
+        <source>Chapters</source>
+        <target>Bölümler</target>
+      </trans-unit>
+      <trans-unit id="tl_files.metadata">
+        <source>Metadata</source>
+        <target>Üst veriler</target>
+      </trans-unit>
+      <trans-unit id="tl_files.show.1">
         <source>Show the details of file or folder &quot;%s&quot;</source>
         <target>&quot;%s&quot; dosya ya da klasörünün ayrıntılarını görüntüle</target>
       </trans-unit>
-      <trans-unit id="tl_files.cut">
+      <trans-unit id="tl_files.cut.1">
         <source>Move file or folder &quot;%s&quot;</source>
         <target>&quot;%s&quot; dosya ya da klasörünü taşı</target>
       </trans-unit>
-      <trans-unit id="tl_files.copy">
-        <source>Duplicate file or folder &quot;%s&quot;</source>
-        <target>&quot;%s&quot; dosya ya da klasörünü kopyala</target>
+      <trans-unit id="tl_files.copy.1">
+        <source>Copy file or folder &quot;%s&quot;</source>
       </trans-unit>
-      <trans-unit id="tl_files.edit">
+      <trans-unit id="tl_files.edit.1">
         <source>Edit file or folder &quot;%s&quot;</source>
         <target>&quot;%s&quot; dosya ya da klasörünü düzenle</target>
       </trans-unit>
-      <trans-unit id="tl_files.delete">
+      <trans-unit id="tl_files.delete.1">
         <source>Delete file or folder &quot;%s&quot;</source>
         <target>&quot;%s&quot; dosya ya da klasörünü sil</target>
       </trans-unit>
-      <trans-unit id="tl_files.drag">
+      <trans-unit id="tl_files.drag.1">
         <source>Drag file or folder &quot;%s&quot;</source>
         <target>&quot;%s&quot; dosya ya da klasörünü sürükle</target>
       </trans-unit>
-      <trans-unit id="tl_files.source">
+      <trans-unit id="tl_files.source.1">
         <source>Edit the source text of file &quot;%s&quot;</source>
         <target>&quot;%s&quot; dosyasının kaynak metnini düzenle</target>
       </trans-unit>
-      <trans-unit id="tl_files.upload">
+      <trans-unit id="tl_files.upload.1">
         <source>Upload files to folder &quot;%s&quot;</source>
         <target>Dosyaları &quot;%s&quot; klasörüne yükle</target>
       </trans-unit>

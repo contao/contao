@@ -41,6 +41,13 @@
         <source>Set up the pages of your website(s)</source>
         <target>Nastavte stránky svého webu (webů)</target>
       </trans-unit>
+      <trans-unit id="MOD.template_studio.0">
+        <source>Template Studio</source>
+      </trans-unit>
+      <trans-unit id="MOD.template_studio.1">
+        <source>Add or edit Twig templates</source>
+        <target>Přidat nebo upravit předlohy Twigu</target>
+      </trans-unit>
       <trans-unit id="MOD.tpl_editor.0">
         <source>Templates</source>
         <target>Předlohy</target>
@@ -153,6 +160,12 @@
       <trans-unit id="MOD.undo.1">
         <source>Restore deleted records</source>
         <target>Obnovení smazaných záznamů.</target>
+      </trans-unit>
+      <trans-unit id="MOD.jobs.0">
+        <source>Jobs</source>
+      </trans-unit>
+      <trans-unit id="MOD.jobs.1">
+        <source>Overview of the system jobs</source>
       </trans-unit>
       <trans-unit id="MOD.login.0">
         <source>User profile</source>

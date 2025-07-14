@@ -17,6 +17,14 @@
         <source>The newsletter alias is a unique reference to the newsletter which can be called instead of its numeric ID.</source>
         <target>ニュースレターのエイリアスは、その数値のIDの代わりにニュースレターを参照できる、重複しない名前です。</target>
       </trans-unit>
+      <trans-unit id="tl_newsletter.preheader.0">
+        <source>Preheader text</source>
+        <target>前見出しのテキスト</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter.preheader.1">
+        <source>Here you can enter a preheader text. A preheader text should be between 40-130 characters long.</source>
+        <target>前見出しのテキストを入力できます。前見出しのテキストは40から130文字の長さにする必要があります。</target>
+      </trans-unit>
       <trans-unit id="tl_newsletter.content.0">
         <source>HTML content</source>
         <target>HTMLの内容</target>
@@ -169,7 +177,7 @@
         <source>Not sent yet</source>
         <target>未送信</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.mailingDate">
+      <trans-unit id="tl_newsletter.date">
         <source>Mailing date</source>
         <target>メールした日</target>
       </trans-unit>
@@ -206,38 +214,34 @@
         <target>ニュースレターを本当に送信済みしますか?</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.send.0">
-        <source>Send newsletter</source>
-        <target>ニュースレターを送信</target>
+        <source>Send</source>
+        <target>送信</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.send.1">
         <source>Send newsletter ID %s</source>
         <target>ID %sのニュースレターを送信</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.new.0">
-        <source>New</source>
-        <target>新規作成</target>
-      </trans-unit>
       <trans-unit id="tl_newsletter.new.1">
         <source>Create a new newsletter</source>
         <target>新しいニュースレターを作成</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.show">
+      <trans-unit id="tl_newsletter.show.1">
         <source>Show the details of newsletter ID %s</source>
         <target>ID %sのニュースレターの詳細を表示</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.edit">
+      <trans-unit id="tl_newsletter.edit.1">
         <source>Edit newsletter ID %s</source>
         <target>ID %sのニュースレターを編集</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.copy">
+      <trans-unit id="tl_newsletter.copy.1">
         <source>Duplicate newsletter ID %s</source>
         <target>ID %sのニュースレターを複製</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.cut">
+      <trans-unit id="tl_newsletter.cut.1">
         <source>Move newsletter ID %s</source>
         <target>ID %sのニュースレターを移動</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter.delete">
+      <trans-unit id="tl_newsletter.delete.1">
         <source>Delete newsletter ID %s</source>
         <target>ID %sのニュースレターを削除</target>
       </trans-unit>

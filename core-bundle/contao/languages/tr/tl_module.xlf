@@ -25,6 +25,14 @@
         <source>Please choose the type of module.</source>
         <target>Lütfen modülün türünü seçin.</target>
       </trans-unit>
+      <trans-unit id="tl_module.ariaLabel.0">
+        <source>ARIA label</source>
+        <target>ARIA etiketi</target>
+      </trans-unit>
+      <trans-unit id="tl_module.ariaLabel.1">
+        <source>If there is more than one navigation element on the page, each should have a unique label.</source>
+        <target>Sayfada birden fazla gezinme ögesi varsa, her birinin benzersiz bir etiketi olmalıdır.</target>
+      </trans-unit>
       <trans-unit id="tl_module.levelOffset.0">
         <source>Start level</source>
         <target>Başlangıç düzeyi</target>
@@ -129,6 +137,14 @@
         <source>Please choose the page to which visitors will be redirected when clicking a link or submitting a form.</source>
         <target>Lütfen ziyaretçilerinizin bir bağlantıya tıkladığında ya da bir form gönderdiğinde yönlendirileceği sayfayı seçin.</target>
       </trans-unit>
+      <trans-unit id="tl_module.pwResetPage.0">
+        <source>Reset password page</source>
+        <target>Parola sıfırlama sayfası</target>
+      </trans-unit>
+      <trans-unit id="tl_module.pwResetPage.1">
+        <source>Here you can choose a page to which visitors will be redirected when clicking the &lt;em&gt;Forgot your password?&lt;/em&gt; link.</source>
+        <target>Buradan ziyaretçiler &lt;em&gt;Parolamı unuttum&lt;/em&gt; bağlantısına tıkladığında yönlendirilecekleri sayfayı seçebilirsiniz.</target>
+      </trans-unit>
       <trans-unit id="tl_module.overviewPage.0">
         <source>Overview page</source>
         <target>Özet sayfası</target>
@@ -168,6 +184,14 @@
       <trans-unit id="tl_module.editable.1">
         <source>Show these fields in the front end form.</source>
         <target>Bu alanlar ön yüzdeki formda görüntülenir.</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reqFullAuth.0">
+        <source>Require full authentication</source>
+        <target>Tam kimlik doğrulaması istensin</target>
+      </trans-unit>
+      <trans-unit id="tl_module.reqFullAuth.1">
+        <source>Users with only a &quot;remember me&quot; cookie must verify their identity in order to access the module.</source>
+        <target>Yalnızca &quot;beni hatırla&quot; çerezi olan kullanıcıların, modüle erişebilmeleri için kimliklerini doğrulamaları gerekir.</target>
       </trans-unit>
       <trans-unit id="tl_module.memberTpl.0">
         <source>Form template</source>
@@ -259,11 +283,11 @@
       </trans-unit>
       <trans-unit id="tl_module.searchType.0">
         <source>Search form layout</source>
-        <target>Arama formu düzeni</target>
+        <target>Arama formu yerleşimi</target>
       </trans-unit>
       <trans-unit id="tl_module.searchType.1">
         <source>Here you can select the search form layout.</source>
-        <target>Buradan arama formu düzenini seçebilirsiniz.</target>
+        <target>Buradan arama formu yerleşimini seçebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_module.searchTpl.0">
         <source>Search results template</source>
@@ -275,11 +299,11 @@
       </trans-unit>
       <trans-unit id="tl_module.inColumn.0">
         <source>Layout section</source>
-        <target>Düzen bölümü</target>
+        <target>Yerleşim bölümü</target>
       </trans-unit>
       <trans-unit id="tl_module.inColumn.1">
         <source>Please choose the layout section whose articles you want to list.</source>
-        <target>Makalenin listelenmesini istediğiniz düzen bölümünü seçin.</target>
+        <target>Makalenin görüntülenmesini istediğiniz yerleşim bölümünü seçin.</target>
       </trans-unit>
       <trans-unit id="tl_module.skipFirst.0">
         <source>Skip items</source>
@@ -311,7 +335,7 @@
       </trans-unit>
       <trans-unit id="tl_module.fullsize.1">
         <source>Open the full-size image in a lightbox or the link in a new browser window.</source>
-        <target>Tam boyutlu görüntüyü bir lightbox içinde ya da bağlantıyı yeni bir tarayıcı penceresinde açar.</target>
+        <target>Tam boyutlu görüntüyü bir Lightbox içinde ya da bağlantıyı yeni bir tarayıcı penceresinde açar.</target>
       </trans-unit>
       <trans-unit id="tl_module.useCaption.0">
         <source>Show caption</source>
@@ -506,8 +530,8 @@
         <target>Lütfen her site kök sayfası için bir modül seçin.</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
-        <source>Choose module for &quot;%s&quot;</source>
-        <target>&quot;%s&quot; için bir modül seçin</target>
+        <source>Choose module for &quot;%s&quot; [%s]</source>
+        <target>&quot;%s&quot; [%s] için bir modül seçin</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>
@@ -633,31 +657,26 @@ Böyle bir istekte bulunmadıysanız, lütfen site yöneticisi ile görüşün.
         <source>Irrevocably delete account</source>
         <target>Hesabı geri alınamayacak şekilde sil</target>
       </trans-unit>
-      <trans-unit id="tl_module.new.0">
-        <source>New</source>
-        <target>Yeni</target>
-      </trans-unit>
       <trans-unit id="tl_module.new.1">
         <source>Create a new module</source>
         <target>Yeni bir modül ekle</target>
       </trans-unit>
-      <trans-unit id="tl_module.show">
+      <trans-unit id="tl_module.show.1">
         <source>Show the details of module ID %s</source>
         <target>%s kimlikli modülün ayrıntılarını görüntüle</target>
       </trans-unit>
-      <trans-unit id="tl_module.edit">
+      <trans-unit id="tl_module.edit.1">
         <source>Edit module ID %s</source>
         <target>%s kimlikli modülü düzenle</target>
       </trans-unit>
-      <trans-unit id="tl_module.copy">
-        <source>Duplicate module ID %s</source>
-        <target>%s kimlikli modülü kopyala</target>
+      <trans-unit id="tl_module.copy.1">
+        <source>Copy module ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_module.cut">
+      <trans-unit id="tl_module.cut.1">
         <source>Move module ID %s</source>
         <target>%s kimlikli modülü taşı</target>
       </trans-unit>
-      <trans-unit id="tl_module.delete">
+      <trans-unit id="tl_module.delete.1">
         <source>Delete module ID %s</source>
         <target>%s kimlikli modülü sil</target>
       </trans-unit>

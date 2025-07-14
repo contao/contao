@@ -170,6 +170,14 @@
         <source>Show this text as long as the field is empty (requires HTML5).</source>
         <target>Показать этот текст пока поле остается пустым (требует HTML5).</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.help.0">
+        <source>Help text</source>
+        <target>Текст справки</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.help.1">
+        <source>Here you can enter a help text that is associated with the field.</source>
+        <target>Вы можете ввести текст справки, связанный с полем.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.customRgxp.0">
         <source>Custom regular expression</source>
         <target>Пользовательское регулярное выражение</target>
@@ -370,6 +378,38 @@
         <source>Please select an image from the files directory.</source>
         <target>Выберите изображение из каталога.</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.altchaAuto.0">
+        <source>Auto verification</source>
+        <target>Автоматическая проверка</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaAuto.1">
+        <source>Automatically verify without user interaction.</source>
+        <target>Автоматическая проверка без взаимодействия с пользователем.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaHideLogo.0">
+        <source>Hide logo</source>
+        <target>Скрыть логотип</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaHideLogo.1">
+        <source>Hide the ALTCHA logo.</source>
+        <target>Скрыть логотип ALTCHA.</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaHideFooter.0">
+        <source>Hide footer</source>
+        <target>Скрыть нижний колонтитул</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.altchaHideFooter.1">
+        <source>Hide the footer (ALTCHA link).</source>
+        <target>Скрыть нижний колонтитул (с ссылкой на ALTCHA).</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.autocomplete.0">
+        <source>Autocomplete attributes</source>
+        <target>Атрибуты автозаполнения</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.autocomplete.1">
+        <source>Here you can enter autocomplete attributes so that the browser knows how to pre-populate the form field with user-preferred values.</source>
+        <target>Вы можете ввести атрибуты автозаполнения, чтобы браузер знал, как предварительно заполнить поле формы предпочитаемыми пользователем значениями.</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.invisible.0">
         <source>Invisible</source>
         <target>Невидимый</target>
@@ -406,6 +446,10 @@
         <source>Rows and columns</source>
         <target>Строки и колонки</target>
       </trans-unit>
+      <trans-unit id="tl_form_field.rgxp_legend">
+        <source>Validation settings</source>
+        <target>Настройки проверки</target>
+      </trans-unit>
       <trans-unit id="tl_form_field.template_legend">
         <source>Template settings</source>
         <target>Настройки шаблона</target>
@@ -422,31 +466,27 @@
         <source>Visibility</source>
         <target>Видимость</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.new.0">
-        <source>New</source>
-        <target>Новый</target>
-      </trans-unit>
       <trans-unit id="tl_form_field.new.1">
         <source>Create a new form field</source>
         <target>Создать новое поле формы</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.show">
+      <trans-unit id="tl_form_field.show.1">
         <source>Show the details of form field ID %s</source>
         <target>Показать детали поля формы ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.edit">
+      <trans-unit id="tl_form_field.edit.1">
         <source>Edit form field ID %s</source>
         <target>Редактировать поле формы ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.cut">
+      <trans-unit id="tl_form_field.cut.1">
         <source>Move form field ID %s</source>
         <target>Переместить поле формы ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.copy">
-        <source>Duplicate form field ID %s</source>
-        <target>Дублировать поле формы ID %s</target>
+      <trans-unit id="tl_form_field.copy.1">
+        <source>Copy form field ID %s</source>
+        <target>Копировать поле формы ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.delete">
+      <trans-unit id="tl_form_field.delete.1">
         <source>Delete form field ID %s</source>
         <target>Удалить поле формы ID %s</target>
       </trans-unit>
@@ -462,19 +502,23 @@
         <source>Unhide form field ID %s</source>
         <target>Показать поле формы ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>Вставить после</target>
+      <trans-unit id="tl_form_field.toggle.3">
+        <source>Hide</source>
+        <target>Скрыть</target>
+      </trans-unit>
+      <trans-unit id="tl_form_field.toggle.4">
+        <source>Unhide</source>
+        <target>Отменить скрытие</target>
       </trans-unit>
       <trans-unit id="tl_form_field.pasteafter.1">
         <source>Paste after form field ID %s</source>
         <target>Вставить после поле формы ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.pastenew.0">
+      <trans-unit id="tl_form_field.pastenewtop.1">
         <source>Create a new form field at the top</source>
         <target>Создать новое поле формы вверху</target>
       </trans-unit>
-      <trans-unit id="tl_form_field.pastenew.1">
+      <trans-unit id="tl_form_field.pastenewafter.1">
         <source>Create a new form field after form field ID %s</source>
         <target>Добавить новое поле формы после поля ID %s</target>
       </trans-unit>

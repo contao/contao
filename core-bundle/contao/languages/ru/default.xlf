@@ -373,6 +373,42 @@
         <source>There is no administrator e-mail address set, please contact the site administrator.</source>
         <target>Адрес электронной почты администратора не указан, обратитесь к администратору сайта.</target>
       </trans-unit>
+      <trans-unit id="ERR.altchaJavaScriptRequired">
+        <source>JavaScript is currently disabled or blocked. Without JavaScript, the anti-spam verification will fail. Please enable JavaScript temporarily for form submission.</source>
+        <target>JavaScript в данный момент отключен или заблокирован. Без JavaScript проверка на спам не будет выполнена. Пожалуйста, временно включите JavaScript для отправки формы.</target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaVerificationFailed">
+        <source>Anti-spam verification failed. Are you a human or a robot?</source>
+        <target>Проверка на спам не пройдена. Вы человек или робот?</target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaWidgetError">
+        <source>Verification failed. Try again later.</source>
+        <target>Верификация не удалась. Попробуйте позже.</target>
+      </trans-unit>
+      <trans-unit id="ERR.altchaInsecureConnection">
+        <source>ALTCHA is not available without a secure HTTPS connection. If your production website does not use HTTPS (not recommended), please use the security question instead.</source>
+        <target>ALTCHA не доступен без безопасного HTTPS-соединения. Если ваш производственный сайт не использует HTTPS (не рекомендуется), пожалуйста, используйте вместо этого секретный вопрос.</target>
+      </trans-unit>
+      <trans-unit id="ERR.personalDataPassword">
+        <source>There is at least one &quot;personal data&quot; module that allows the password to be changed. This is a security weakness and will no longer work in Contao 6. Use the &quot;change password&quot; module instead.</source>
+        <target>Существует как минимум один модуль &quot;личных данных&quot;, позволяющий изменить пароль. Это уязвимость безопасности, которая больше не будет работать в Contao 6. Вместо этого используйте модуль &quot;изменить пароль&quot;.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeysUnsupported">
+        <source>Passkeys are not supported on this device.</source>
+        <target>Ключ доступа (passkey) не поддерживается на этом устройстве.</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAssertionFailure">
+        <source>Login with passkey failed.</source>
+        <target>Не удалось войти с помощью ключа доступа (passkey).</target>
+      </trans-unit>
+      <trans-unit id="ERR.passkeyAttestationFailure">
+        <source>Passkey could not be created.</source>
+        <target>Ключ доступа (passkey) не может быть создан.</target>
+      </trans-unit>
+      <trans-unit id="ERR.copyUnique">
+        <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>Элемент ID %d не может быть вставлен сюда, так как он конфликтует с существующим элементом.</target>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
         <target>Пожалуйста, прибавьте %d к %d.</target>
@@ -433,6 +469,14 @@
         <source>Generates an ordered or unordered list.</source>
         <target>Создает отсортированный или неупорядоченный список.</target>
       </trans-unit>
+      <trans-unit id="CTE.description_list.0">
+        <source>Description list</source>
+        <target>Список описаний</target>
+      </trans-unit>
+      <trans-unit id="CTE.description_list.1">
+        <source>Generates a description list with terms and details.</source>
+        <target>Создает список описаний с терминами и деталями.</target>
+      </trans-unit>
       <trans-unit id="CTE.table.0">
         <source>Table</source>
         <target>Таблица</target>
@@ -441,29 +485,41 @@
         <source>Generates an optionally sortable table.</source>
         <target>Создает таблицу с поддержкой сортировки.</target>
       </trans-unit>
-      <trans-unit id="CTE.accordion">
+      <trans-unit id="CTE.accordion.0">
         <source>Accordion</source>
         <target>Раздвижная панель (Accordion)</target>
       </trans-unit>
+      <trans-unit id="CTE.accordion.1">
+        <source>Generates an accordion.</source>
+        <target>Создает раздвижную панель.</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.0">
+        <source>Element group</source>
+        <target>Группа элементов</target>
+      </trans-unit>
+      <trans-unit id="CTE.element_group.1">
+        <source>Generates a group of nested elements.</source>
+        <target>Создает группу вложенных элементов.</target>
+      </trans-unit>
       <trans-unit id="CTE.accordionStart.0">
-        <source>Wrapper start</source>
-        <target>Начало wrapper (обёртки)</target>
+        <source>Accordion wrapper start</source>
+        <target>Начало wrapper (обёртки) раздвижной панели</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStart.1">
         <source>Generates the opening part of the accordion wrapper.</source>
         <target>Открывает раздвижную панель.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.0">
-        <source>Wrapper stop</source>
-        <target>Конец wrapper (обёртки)</target>
+        <source>Accordion wrapper stop</source>
+        <target>Конец wrapper (обёртки) раздвижной панели</target>
       </trans-unit>
       <trans-unit id="CTE.accordionStop.1">
         <source>Generates the closing part of the accordion wrapper.</source>
         <target>Закрывает раздвижную панель.</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.0">
-        <source>Single element</source>
-        <target>Единичный элемент</target>
+        <source>Accordion single element</source>
+        <target>Одиночный элемент раздвижной панели</target>
       </trans-unit>
       <trans-unit id="CTE.accordionSingle.1">
         <source>Generates a single accordion element.</source>
@@ -493,21 +549,29 @@
         <source>Generates an element to insert a custom template.</source>
         <target>Создает элемент для вставки пользовательского шаблона. </target>
       </trans-unit>
+      <trans-unit id="CTE.swiper.0">
+        <source>Content slider</source>
+        <target>Слайдер контента</target>
+      </trans-unit>
+      <trans-unit id="CTE.swiper.1">
+        <source>Generates a content slider element.</source>
+        <target>Создает элемент слайдера контента.</target>
+      </trans-unit>
       <trans-unit id="CTE.slider">
         <source>Content slider</source>
         <target>Слайдер контента</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.0">
-        <source>Wrapper start</source>
-        <target>Начало wrapper (обёртки)</target>
+        <source>Slider wrapper start</source>
+        <target>Начало wrapper (обёртки) слайдера</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStart.1">
         <source>Generates the opening part of the slider wrapper.</source>
         <target>Открывает слайдер.</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.0">
-        <source>Wrapper stop</source>
-        <target>Конец wrapper (обёртки)</target>
+        <source>Slider wrapper stop</source>
+        <target>Конец wrapper (обёртки) слайдера</target>
       </trans-unit>
       <trans-unit id="CTE.sliderStop.1">
         <source>Generates the closing part of the slider wrapper.</source>
@@ -641,6 +705,30 @@
         <source>Displays the teaser text of an article.</source>
         <target>Позволяет показать текст анонса определённой статьи.</target>
       </trans-unit>
+      <trans-unit id="CTE.legacy">
+        <source>Legacy elements</source>
+        <target>Устаревшие элементы</target>
+      </trans-unit>
+      <trans-unit id="CTE.user">
+        <source>User</source>
+        <target>Пользователь</target>
+      </trans-unit>
+      <trans-unit id="CTE.manage_passkeys.0">
+        <source>Manage passkeys</source>
+        <target>Управление ключами доступа (passkey)</target>
+      </trans-unit>
+      <trans-unit id="CTE.manage_passkeys.1">
+        <source>Allows to manage the passkeys of a member.</source>
+        <target>Позволяет управлять ключами доступа (passkey) участника.</target>
+      </trans-unit>
+      <trans-unit id="CTE.login.0">
+        <source>Login form</source>
+        <target>Форма авторизации</target>
+      </trans-unit>
+      <trans-unit id="CTE.login.1">
+        <source>Generates a login form.</source>
+        <target>Генерирует форму входа.</target>
+      </trans-unit>
       <trans-unit id="FFL.explanation.0">
         <source>Explanation</source>
         <target>Пояснение</target>
@@ -744,6 +832,14 @@
       <trans-unit id="FFL.hidden.1">
         <source>A single-line input field that is not visible in the form.</source>
         <target>Однострочное поле, которое невидимо в форме.</target>
+      </trans-unit>
+      <trans-unit id="FFL.altcha.0">
+        <source>ALTCHA antispam</source>
+        <target>ALTCHA антиспам</target>
+      </trans-unit>
+      <trans-unit id="FFL.altcha.1">
+        <source>Provides an ALTCHA antispam form field to verify that the form is submitted by a human (CAPTCHA).</source>
+        <target>Предоставляет поле формы ALTCHA антиспам для проверки того, что форма отправлена человеком (CAPTCHA).</target>
       </trans-unit>
       <trans-unit id="FFL.captcha.0">
         <source>Security question</source>
@@ -1141,6 +1237,10 @@
         <source>Open the link in a new browser window.</source>
         <target>Открыть ссылку в новом окне браузера.</target>
       </trans-unit>
+      <trans-unit id="MSC.openTab">
+        <source>Open in a new tab</source>
+        <target>Открыть в новой вкладке</target>
+      </trans-unit>
       <trans-unit id="MSC.decimalSeparator">
         <source>.</source>
         <target>.</target>
@@ -1322,16 +1422,24 @@
         <target>Удалить строку</target>
       </trans-unit>
       <trans-unit id="MSC.mw_module">
-        <source>Module</source>
-        <target>Модуль</target>
+        <source>Module or content element</source>
+        <target>Модуль или элемент контента</target>
       </trans-unit>
       <trans-unit id="MSC.mw_column">
         <source>Layout section</source>
         <target>Секция макета</target>
       </trans-unit>
       <trans-unit id="MSC.mw_enable">
-        <source>Enable/disable the module</source>
-        <target>Включить/отключить модуль</target>
+        <source>Enable/disable the module or content element</source>
+        <target>Включить/отключить модуль или элемент контента</target>
+      </trans-unit>
+      <trans-unit id="MSC.mw_modules">
+        <source>Front end modules</source>
+        <target>Модули внешнего интерфейса</target>
+      </trans-unit>
+      <trans-unit id="MSC.mw_elements">
+        <source>Content elements</source>
+        <target>Элементы контента</target>
       </trans-unit>
       <trans-unit id="MSC.aw_title">
         <source>Title</source>
@@ -1602,8 +1710,8 @@
         <target>Комбинации клавиш панели управления</target>
       </trans-unit>
       <trans-unit id="MSC.shortcuts.1">
-        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
-        <target>Узнайте больше об ускорении рабочего процесса с помощью &lt;a href=&quot;https://to.contao.org/shortcuts&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;комбинаций клавиш&lt;/a&gt;.</target>
+        <source>Learn more about speeding up your workflow by using &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;keyboard shortcuts&lt;/a&gt;.</source>
+        <target>Узнайте больше об ускорении рабочего процесса с помощью &lt;a href=&quot;%s&quot; target=&quot;_blank&quot; rel=&quot;noreferrer noopener&quot;&gt;комбинаций клавиш&lt;/a&gt;.</target>
       </trans-unit>
       <trans-unit id="MSC.toggleAll.0">
         <source>Toggle all</source>
@@ -1704,6 +1812,10 @@
       <trans-unit id="MSC.cancelBT">
         <source>Cancel</source>
         <target>Отмена</target>
+      </trans-unit>
+      <trans-unit id="MSC.confirmTitle">
+        <source>Are you sure?</source>
+        <target>Вы уверены?</target>
       </trans-unit>
       <trans-unit id="MSC.deleteConfirm">
         <source>Do you really want to delete element ID %s?</source>
@@ -2325,6 +2437,10 @@
         <source>Quick link</source>
         <target>Быстрая ссылка</target>
       </trans-unit>
+      <trans-unit id="MSC.lostPassword">
+        <source>Forgot your password?</source>
+        <target>Забыли пароль?</target>
+      </trans-unit>
       <trans-unit id="MSC.username">
         <source>Username</source>
         <target>Имя пользователя</target>
@@ -2344,6 +2460,14 @@
       <trans-unit id="MSC.emptyField">
         <source>Please enter your username and password!</source>
         <target>Введите имя пользователя и пароль!</target>
+      </trans-unit>
+      <trans-unit id="MSC.reauthenticate">
+        <source>Please enter your password to verify your identity.</source>
+        <target>Введите пароль, чтобы подтвердить свою личность.</target>
+      </trans-unit>
+      <trans-unit id="MSC.verify">
+        <source>Verify</source>
+        <target>Проверить</target>
       </trans-unit>
       <trans-unit id="MSC.confirmation">
         <source>Confirmation</source>
@@ -2449,17 +2573,13 @@
         <source>Print this page</source>
         <target>Печать страницы</target>
       </trans-unit>
-      <trans-unit id="MSC.printAsPdf">
-        <source>Save article as PDF</source>
-        <target>Сохранить в PDF</target>
-      </trans-unit>
       <trans-unit id="MSC.facebookShare">
         <source>Share on Facebook</source>
         <target>Поделиться в Facebook</target>
       </trans-unit>
       <trans-unit id="MSC.twitterShare">
-        <source>Share on Twitter</source>
-        <target>Добавить в Twitter</target>
+        <source>Share on X (formerly Twitter)</source>
+        <target>Поделиться в X (ранее Twitter)</target>
       </trans-unit>
       <trans-unit id="MSC.pleaseWait">
         <source>Please wait</source>
@@ -2492,6 +2612,10 @@
       <trans-unit id="MSC.list_perPage">
         <source>Results per page</source>
         <target>Результатов на странице</target>
+      </trans-unit>
+      <trans-unit id="MSC.or">
+        <source>or</source>
+        <target>или</target>
       </trans-unit>
       <trans-unit id="MSC.published">
         <source>Published</source>
@@ -2541,6 +2665,10 @@
         <source>The link you were trying to open could not be verified. If you have clicked the link yourself or have received it by a trustworthy person, you can confirm the process below.</source>
         <target>Ссылка, которую вы пытались открыть не может быть проверена. Если вы нажали на ссылку самостоятельно или получили её от доверенного лица, можете подтвердить процесс ниже.</target>
       </trans-unit>
+      <trans-unit id="MSC.tooManyPasswordResetAttempts">
+        <source>You have tried to reset your password too many times. Please try again in 15 minutes.</source>
+        <target>Вы превысили количество попыток сброса пароля. Повторите попытку через 15 минут.</target>
+      </trans-unit>
       <trans-unit id="MSC.versionConflict">
         <source>Version conflict</source>
         <target>Конфликт версий</target>
@@ -2574,20 +2702,20 @@
         <target>Необходимо добавить корневую страницу веб-сайта для ввода метаданных файла.</target>
       </trans-unit>
       <trans-unit id="MSC.breadcrumbMenu">
-        <source>Breadcrumb menu</source>
-        <target>Меню с историей посещения разделов</target>
+        <source>Breadcrumb</source>
+        <target>Навигационная цепочка</target>
       </trans-unit>
       <trans-unit id="MSC.mainNavigation">
-        <source>Main navigation</source>
-        <target>Основная навигация</target>
+        <source>Main</source>
+        <target>Главная</target>
       </trans-unit>
       <trans-unit id="MSC.headerNavigation">
-        <source>Header navigation</source>
-        <target>Навигация по верхнему колонтитулу</target>
+        <source>Header</source>
+        <target>Верхний колонтитул</target>
       </trans-unit>
       <trans-unit id="MSC.pagination">
-        <source>Pagination menu</source>
-        <target>Меню разбиения на страницы</target>
+        <source>Pagination</source>
+        <target>Разбивка на страницы</target>
       </trans-unit>
       <trans-unit id="MSC.validCharacters.unicodeLowercase">
         <source>Unicode numbers and lowercase letters</source>
@@ -2721,6 +2849,10 @@
         <source>Disable</source>
         <target>Отключить</target>
       </trans-unit>
+      <trans-unit id="MSC.edit">
+        <source>Edit</source>
+        <target>Редактировать</target>
+      </trans-unit>
       <trans-unit id="MSC.serpPreview.0">
         <source>Google search results preview</source>
         <target>Предпросмотр результатов поиска Google</target>
@@ -2793,6 +2925,10 @@
         <source>Manual</source>
         <target>Руководство</target>
       </trans-unit>
+      <trans-unit id="MSC.jobs">
+        <source>Job overview</source>
+        <target>Обзор заданий</target>
+      </trans-unit>
       <trans-unit id="MSC.splashScreen">
         <source>Please click to load the video.</source>
         <target>Нажмите, чтобы загрузить видео.</target>
@@ -2828,6 +2964,130 @@
       <trans-unit id="MSC.lightMode">
         <source>Light mode</source>
         <target>Светлый режим</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaFooter">
+        <source>Protected by &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</source>
+        <target>Защищено &lt;a href=&quot;https://altcha.org/&quot; target=&quot;_blank&quot;&gt;ALTCHA&lt;/a&gt;</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaLabel">
+        <source>I'm not a robot</source>
+        <target>Я не робот</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaVerified">
+        <source>I'm human</source>
+        <target>Я человек</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaVerifying">
+        <source>Verifying …</source>
+        <target>Проверка...</target>
+      </trans-unit>
+      <trans-unit id="MSC.altchaWaitAlert">
+        <source>Verifying … please wait.</source>
+        <target>Проверка... пожалуйста, подождите.</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeys">
+        <source>Passkeys</source>
+        <target>Ключи доступа (passkey)</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysDescription">
+        <source>Passkeys allow you to log in securely and easily without the need for a password and two-factor token.</source>
+        <target>Ключ доступа (passkey) обеспечивает безопасный и простой вход в систему без необходимости ввода пароля и двухфакторного токена.</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyLogin">
+        <source>Sign in with a passkey</source>
+        <target>Войти с помощью ключа доступа (passkey)</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysName">
+        <source>Name/ID</source>
+        <target>Имя/ID</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeyNameInput">
+        <source>Name this passkey …</source>
+        <target>Назовите этот ключ доступа (passkey)…</target>
+      </trans-unit>
+      <trans-unit id="MSC.passkeysCreatedAt">
+        <source>Created at</source>
+        <target>Создано</target>
+      </trans-unit>
+      <trans-unit id="MSC.addPasskey">
+        <source>Add passkey</source>
+        <target>Добавить ключ доступа (passkey)</target>
+      </trans-unit>
+      <trans-unit id="MSC.editPasskey">
+        <source>Edit passkey &quot;%s&quot;</source>
+        <target>Редактировать ключ доступа (passkey) &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="MSC.savePasskey">
+        <source>Save passkey &quot;%s&quot;</source>
+        <target>Сохранить ключ доступа (passkey) &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="MSC.deletePasskey">
+        <source>Delete passkey &quot;%s&quot;</source>
+        <target>Удалить ключ доступа (passkey) &quot;%s&quot;</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsPlaceholder">
+        <source>Type to start searching</source>
+        <target>Введите текст, чтобы начать поиск</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsMin">
+        <source>Please enter at least %s characters</source>
+        <target>Введите не менее %s символов</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchResultsLoading">
+        <source>Loading results...</source>
+        <target>Загрузка результатов...</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitView">
+        <source>View %s</source>
+        <target>Просмотр %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchHitEdit">
+        <source>Edit %s</source>
+        <target>Редактировать %s</target>
+      </trans-unit>
+      <trans-unit id="MSC.noResults">
+        <source>No results found.</source>
+        <target>Ничего не найдено.</target>
+      </trans-unit>
+      <trans-unit id="MSC.noOptions">
+        <source>No options to choose from.</source>
+        <target>Нет вариантов для выбора.</target>
+      </trans-unit>
+      <trans-unit id="MSC.removeItem">
+        <source>Remove item</source>
+        <target>Удалить элемент</target>
+      </trans-unit>
+      <trans-unit id="MSC.ariaMenuExpand">
+        <source>Expand menu: </source>
+        <target>Развернуть меню:</target>
+      </trans-unit>
+      <trans-unit id="MSC.ariaMenuCollapse">
+        <source>Collapse menu: </source>
+        <target>Свернуть меню:</target>
+      </trans-unit>
+      <trans-unit id="MSC.skipToContent">
+        <source>Skip to content</source>
+        <target>Перейти к содержанию</target>
+      </trans-unit>
+      <trans-unit id="MSC.clipboardCopy">
+        <source>Copied to clipboard.</source>
+        <target>Скопировано в буфер обмена.</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchIndexer.0">
+        <source>Search indexer</source>
+        <target>Поисковый индексатор</target>
+      </trans-unit>
+      <trans-unit id="MSC.searchIndexer.1">
+        <source>Here you can override the robots meta tag setting for the internal search index.</source>
+        <target>Вы можете переопределить настройки метатега robots для внутреннего поискового индекса.</target>
+      </trans-unit>
+      <trans-unit id="MSC.always_index">
+        <source>Always index</source>
+        <target>Всегда индексировать</target>
+      </trans-unit>
+      <trans-unit id="MSC.never_index">
+        <source>Never index</source>
+        <target>Никогда не индексировать</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -2989,23 +3249,51 @@
         <source>Create a new element</source>
         <target>Создать новый элемент</target>
       </trans-unit>
-      <trans-unit id="DCA.show">
+      <trans-unit id="DCA.show.0">
+        <source>Details</source>
+        <target>Детали</target>
+      </trans-unit>
+      <trans-unit id="DCA.show.1">
         <source>Show the details of element ID %s</source>
         <target>Показать детали элемента ID %s</target>
       </trans-unit>
-      <trans-unit id="DCA.edit">
+      <trans-unit id="DCA.edit.0">
+        <source>Edit</source>
+        <target>Редактировать</target>
+      </trans-unit>
+      <trans-unit id="DCA.edit.1">
         <source>Edit element ID %s</source>
         <target>Редактировать элемент ID %s</target>
       </trans-unit>
-      <trans-unit id="DCA.cut">
+      <trans-unit id="DCA.cut.0">
+        <source>Move</source>
+        <target>Переместить</target>
+      </trans-unit>
+      <trans-unit id="DCA.cut.1">
         <source>Move element ID %s</source>
         <target>Переместить элемент ID %s</target>
       </trans-unit>
-      <trans-unit id="DCA.copy">
-        <source>Duplicate element ID %s</source>
-        <target>Дублировать элемент ID %s</target>
+      <trans-unit id="DCA.copy.0">
+        <source>Copy</source>
+        <target>Копировать</target>
       </trans-unit>
-      <trans-unit id="DCA.delete">
+      <trans-unit id="DCA.copy.1">
+        <source>Copy element ID %s</source>
+        <target>Копировать элемент ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.copyChildren.0">
+        <source>Copy recursively</source>
+        <target>Копировать рекурсивно</target>
+      </trans-unit>
+      <trans-unit id="DCA.copyChildren.1">
+        <source>Copy element ID %s with child nodes</source>
+        <target>Копировать элемент ID %s с дочерними узлами</target>
+      </trans-unit>
+      <trans-unit id="DCA.delete.0">
+        <source>Delete</source>
+        <target>Удалить</target>
+      </trans-unit>
+      <trans-unit id="DCA.delete.1">
         <source>Delete element ID %s</source>
         <target>Удалить элемент ID %s</target>
       </trans-unit>
@@ -3013,7 +3301,19 @@
         <source>Drag element ID %s</source>
         <target>Перетащить элемент ID %s</target>
       </trans-unit>
-      <trans-unit id="DCA.children">
+      <trans-unit id="DCA.global_operations">
+        <source>Show all global operations</source>
+        <target>Показать все глобальные операции</target>
+      </trans-unit>
+      <trans-unit id="DCA.operations">
+        <source>Show operations for element ID %s</source>
+        <target>Показать операции элемента ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.children.0">
+        <source>Child elements</source>
+        <target>Дочерние элементы</target>
+      </trans-unit>
+      <trans-unit id="DCA.children.1">
         <source>Edit the child elements of element ID %s</source>
         <target>Редактировать дочерние элементы у элемента ID %s</target>
       </trans-unit>
@@ -3029,29 +3329,57 @@
         <source>Publish element ID %s</source>
         <target>Опубликовать элемент ID %s</target>
       </trans-unit>
-      <trans-unit id="DCA.pasteinto.0">
+      <trans-unit id="DCA.toggle.3">
+        <source>Unpublish</source>
+        <target>Снять с публикации</target>
+      </trans-unit>
+      <trans-unit id="DCA.toggle.4">
+        <source>Publish</source>
+        <target>Опубликовать</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastetop">
         <source>Paste at the top</source>
         <target>Вставить после</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteroot">
+        <source>Paste at the top</source>
+        <target>Вставить после</target>
+      </trans-unit>
+      <trans-unit id="DCA.pasteinto.0">
+        <source>Paste into</source>
+        <target>Вставить в</target>
       </trans-unit>
       <trans-unit id="DCA.pasteinto.1">
         <source>Paste into element ID %s</source>
         <target>Вставить в элемент ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.pasteafter.0">
-        <source>Paste at the top</source>
+        <source>Paste after</source>
         <target>Вставить после</target>
       </trans-unit>
       <trans-unit id="DCA.pasteafter.1">
         <source>Paste after element ID %s</source>
         <target>Вставить после элемента ID %s</target>
       </trans-unit>
-      <trans-unit id="DCA.pastenew.0">
+      <trans-unit id="DCA.pastenewtop.0">
+        <source>New at the top</source>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewtop.1">
         <source>Create a new element at the top</source>
         <target>Создать новый элемент вверху</target>
       </trans-unit>
-      <trans-unit id="DCA.pastenew.1">
+      <trans-unit id="DCA.pastenewafter.0">
+        <source>New after</source>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewafter.1">
         <source>Create a new element after element ID %s</source>
         <target>Создать новый элемент после элемента ID %s</target>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewinto.0">
+        <source>New inside</source>
+      </trans-unit>
+      <trans-unit id="DCA.pastenewinto.1">
+        <source>Create a new element inside element ID %s</source>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>

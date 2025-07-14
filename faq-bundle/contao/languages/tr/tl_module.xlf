@@ -7,7 +7,7 @@
       </trans-unit>
       <trans-unit id="tl_module.faq_categories.1">
         <source>Please select one or more FAQ categories.</source>
-        <target>Lütfen bir yada bir kaç SSS kategorisi seçin.</target>
+        <target>Lütfen bir ya da birkaç SSS kategorisi seçin.</target>
       </trans-unit>
       <trans-unit id="tl_module.faq_readerModule.0">
         <source>FAQ reader module</source>
