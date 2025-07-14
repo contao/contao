@@ -169,6 +169,29 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         return $this;
     }
 
+    /**
+     * @param "pastenewinto"|"pastenewafter" $type
+     */
+    public function addNewButton(string $type, string $href): self
+    {
+        if (null === $this->operations) {
+            throw new \RuntimeException(self::class.' has not been initialized yet.');
+        }
+
+        [$label, $title] = $this->getLabelAndTitle($this->table, $type, $this->id);
+
+        $this->append([
+            'href' => $href,
+            'label' => $label,
+            'title' => $title,
+            'attributes' => (new HtmlAttributes())->set('data-action', 'contao--scroll-offset#discard'),
+            'icon' => 'new.svg',
+            'primary' => false,
+        ]);
+
+        return $this;
+    }
+
     private function generateOperation(string $name, array $operation, array $record, DataContainer $dataContainer, callable|null $legacyCallback = null): array|null
     {
         $config = new DataContainerOperation($name, $operation, $record, $dataContainer);

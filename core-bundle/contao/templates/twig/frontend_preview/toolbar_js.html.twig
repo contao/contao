@@ -55,21 +55,21 @@
     }
 
     .cto-toolbar__close {
+        border: none;
         border-left: 1px solid #ccc;
+        padding: 3px 8px;
+        background: none;
+        display: flex;
+        align-items: center;
     }
 
-    .cto-toolbar__close a {
-        font-weight: 600;
-        font-size: 29px;
-        color: #444;
-        text-decoration: none;
-        display: block;
-        padding: 3px 8px 7px 9px;
-    }
-
-    .cto-toolbar__close a:hover {
+    .cto-toolbar__close:hover {
         color: #666;
         background: rgba(0, 0, 0, 0.03);
+    }
+
+    .cto-toolbar__close .color-scheme--dark {
+        display: none;
     }
 
     .cto-toolbar__clear {

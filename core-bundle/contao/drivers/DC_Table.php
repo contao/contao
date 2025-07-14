@@ -3643,14 +3643,13 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 <label for="tl_select_trigger" class="tl_select_label">' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</label> <input type="checkbox" id="tl_select_trigger" onclick="Backend.toggleCheckboxes(this)" class="tl_tree_checkbox">
 </div>' : '') . '
 <ul class="tl_listing ' . $treeClass . ($this->strPickerFieldType ? ' picker unselectable' : '') . '">
-  <li class="tl_folder_top cf"><div class="tl_left"></div> <div class="tl_right">';
+  <li class="tl_folder_top cf" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"><div class="tl_left"></div> <div class="tl_right">';
 
-		$_buttons = '';
+		$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
 
 		// Show paste button only if there are no root records specified
 		if ($blnClipboard && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && $this->rootPaste && Input::get('act') != 'select')
 		{
-			$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
 
 			// Call paste_button_callback (&$dc, $row, $table, $cr, $children, $previous, $next)
 			if (\is_array($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['paste_button_callback'] ?? null))
@@ -3672,12 +3671,14 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 			{
 				$operations->addPasteButton('pasteroot', $this->addToUrl('act=' . $arrClipboard['mode'] . '&amp;mode=2&amp;pid=0' . (!\is_array($arrClipboard['id']) ? '&amp;id=' . $arrClipboard['id'] : '')));
 			}
-
-			$_buttons .= $operations;
+		}
+		elseif (!$blnModeTreeExtended && Input::get('act') != 'select' && !$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => 0, 'sorting' => 0))))
+		{
+			$operations->addNewButton('pastenewtop', Backend::addToUrl('act=create&mode=1&pid=0'));
 		}
 
 		// End table
-		$return .= $_buttons . '</div></li>' . $tree . '
+		$return .= $operations . '</div></li>' . $tree . '
 </ul>' . ($this->strPickerFieldType == 'radio' ? '
 <div class="tl_radio_reset">
 <label for="tl_radio_reset" class="tl_radio_label">' . $GLOBALS['TL_LANG']['MSC']['resetSelected'] . '</label> <input type="radio" name="picker" id="tl_radio_reset" value="" class="tl_tree_radio">
@@ -3912,7 +3913,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 			$mouseover = ' hover-div';
 		}
 
-		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && ($currentRecord['type'] ?? null) == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ((string) ($currentRecord['tstamp'] ?? null) === '0' ? ' draft' : '') . $mouseover . ' cf" data-controller="contao--deeplink contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($children) ? 16 : 0)) . 'px">';
+		$return .= "\n  " . '<li class="' . (((($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE && ($currentRecord['type'] ?? null) == 'root') || $table != $this->strTable) ? 'tl_folder' : 'tl_file') . ((string) ($currentRecord['tstamp'] ?? null) === '0' ? ' draft' : '') . $mouseover . ' cf" data-controller="' . ($table == $this->strTable ? 'contao--deeplink ' : '') . 'contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"><div class="tl_left" style="padding-left:' . ($intMargin + $intSpacing + (empty($children) ? 16 : 0)) . 'px">';
 
 		// Calculate label and add a toggle button
 		$level = $intMargin / $intSpacing + 1;
@@ -3954,6 +3955,9 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 		if (!$isVisibleRootTrailPage)
 		{
+			$blnClipboard = false !== $arrClipboard;
+			$security = System::getContainer()->get('security.helper');
+
 			if (Input::get('act') == 'select')
 			{
 				$operations = $this->strTable == $table ? '<input type="checkbox" name="IDS[]" id="ids_' . $id . '" class="tl_tree_checkbox" value="' . $id . '">' : '';
@@ -3962,10 +3966,35 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 			elseif ($this->strTable == $table)
 			{
 				$operations = $this->generateButtons($currentRecord, $table, $this->root, $blnCircularReference, $children, $previous, $next);
+
+				if (self::MODE_TREE == ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null))
+				{
+					$operations->addSeparator();
+
+					if (!$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
+					{
+						$operations->addNewButton('pastenewafter', Backend::addToUrl('act=create&mode=2&pid='.$currentRecord['id']));
+					}
+
+					if (!$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['id'], 'sorting' => 0))))
+					{
+						$operations->addNewButton('pastenewinto', Backend::addToUrl('act=create&mode=1&pid='.$currentRecord['id']));
+					}
+				}
+				elseif (!$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['pid'], 'sorting' => $currentRecord['sorting'] + 1))))
+				{
+					$operations->addSeparator();
+					$operations->addNewButton('pastenewafter', Backend::addToUrl('act=create&mode=1&pid='.$currentRecord['id']));
+				}
 			}
 			else
 			{
-				$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable, $this->intId);
+				$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable, $currentRecord['id']);
+
+				if (!$blnClipboard && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, array('pid' => $currentRecord['id'], 'sorting' => 0))))
+				{
+					$operations->addNewButton('pastenewinto', Backend::addToUrl('act=create&mode=2&pid='.$currentRecord['id']));
+				}
 			}
 
 			// Paste buttons (not for root trails)
@@ -3989,6 +4018,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 					if (($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_TREE)
 					{
 						$clipboardManager = System::getContainer()->get('contao.data_container.clipboard_manager');
+						$operations->addSeparator();
 
 						// Disable buttons of the page and all its children on cut to avoid circular references
 						if ($clipboardManager->isCutMode($this->strTable) && ($blnCircularReference || !$clipboardManager->canPasteAfterOrInto($this->strTable, $id)))
@@ -4021,6 +4051,8 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 					// Extended tree
 					else
 					{
+						$operations->addSeparator();
+
 						// Paste after the selected record (e.g. paste article after article X)
 						if ($this->strTable == $table)
 						{
@@ -4232,6 +4264,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 					if ($blnHasSorting && !($GLOBALS['TL_DCA'][$this->strTable]['config']['closed'] ?? null) && !($GLOBALS['TL_DCA'][$this->strTable]['config']['notCreatable'] ?? null) && $security->isGranted(ContaoCorePermissions::DC_PREFIX . $this->strTable, new CreateAction($this->strTable, $this->addDynamicPtable(array('pid' => $objParent->id, 'sorting' => 0)))))
 					{
+						$operations->addSeparator();
 						$operations->addPasteButton('pastenewtop', $this->addToUrl('act=create&amp;mode=2&amp;pid=' . $objParent->id . '&amp;id=' . $this->intId));
 					}
 

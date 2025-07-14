@@ -20,7 +20,6 @@ use Contao\CoreBundle\Job\Owner;
 use Contao\DataContainer;
 use Contao\System;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\ParameterType;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -70,10 +69,9 @@ class JobsListener
             $pidFilter = 'pid = 0';
         }
 
-        $query = \sprintf('%s AND (owner = %d OR (public = %s AND owner = %d))',
+        $query = \sprintf('%s AND (owner = %d OR (public = 1 AND owner = %d))',
             $pidFilter,
             $userId,
-            $this->connection->quote(true, ParameterType::BOOLEAN),
             Owner::SYSTEM,
         );
 
