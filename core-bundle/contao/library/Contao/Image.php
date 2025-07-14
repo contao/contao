@@ -112,10 +112,10 @@ class Image
 			return ltrim($icons["$filename.svg"]['path'], '/');
 		}
 
-		// Prefer SVG icons
 		$theme = Backend::getTheme();
 		$projectDir = System::getContainer()->getParameter('kernel.project_dir');
 
+		// Prefer SVG icons
 		if (file_exists($projectDir . '/system/themes/' . $theme . '/icons/' . $filename . '.svg'))
 		{
 			return 'system/themes/' . $theme . '/icons/' . $filename . '.svg';
@@ -244,7 +244,7 @@ class Image
 			{
 				$deferredImage = $container->get('contao.image.factory')->create($projectDir . '/' . $src);
 			}
-			catch (\Exception $e)
+			catch (\Exception)
 			{
 				$deferredImage = null;
 			}

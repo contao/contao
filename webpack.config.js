@@ -103,8 +103,7 @@ Encore
         pattern: /\.svg$/,
     })
     .configureWatchOptions(watchOptions => {
-        // Since we are overwriting the sources, we need to prevent the watcher
-        // from entering an endless loop.
+        // Since we overwrite the sources, we need to prevent an endless loop.
         watchOptions.ignored = [path.resolve('./core-bundle/contao/themes/flexible/icons')];
     })
 ;

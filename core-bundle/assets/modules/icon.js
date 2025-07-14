@@ -24,7 +24,6 @@ export function getTemplate(name, attributes = {}) {
     }
 
     const sourceDark = getSource(name, true);
-
     const template = document.createElement('template');
 
     if (sourceDark) {

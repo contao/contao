@@ -1,10 +1,10 @@
+import * as Icon from "../modules/icon";
+
 /**
  * Provide methods to handle Ajax requests.
  *
  * @author Leo Feyer <https://github.com/leofeyer>
  */
-import * as Icon from "../modules/icon";
-
 window.AjaxRequest =
 {
 	/**
