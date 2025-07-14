@@ -1,4 +1,6 @@
 const Encore = require('@symfony/webpack-encore');
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
+const path = require('node:path');
 
 // Core bundle assets
 Encore
@@ -64,4 +66,48 @@ Encore
 
 const themeConfig = Encore.getWebpackConfig();
 
-module.exports = [jsConfig, themeConfig];
+Encore.reset();
+
+// Back end icons
+Encore
+    .setOutputPath('core-bundle/contao/themes/flexible/icons')
+    .setPublicPath('/system/themes/flexible/icons')
+    .setManifestKeyPrefix('')
+    .disableSingleRuntimeChunk()
+    .addPlugin(new ImageMinimizerPlugin({
+        minimizer: {
+            implementation: ImageMinimizerPlugin.svgoMinify,
+            options: {
+                encodeOptions: {
+                    multipass: true,
+                    plugins: [{
+                        name: 'preset-default',
+                        params: {
+                            overrides: {
+                                inlineStyles: {
+                                    onlyMatchedOnce: false,
+                                },
+                                convertPathData: {
+                                    noSpaceAfterFlags: true,
+                                },
+                            },
+                        },
+                    }],
+                },
+            },
+        },
+    }))
+    .copyFiles({
+        from: './core-bundle/contao/themes/flexible/icons',
+        to: '[name].[ext]',
+        pattern: /\.svg$/,
+    })
+    .configureWatchOptions(watchOptions => {
+        // Since we overwrite the sources, we need to prevent an endless loop.
+        watchOptions.ignored = [path.resolve('./core-bundle/contao/themes/flexible/icons')];
+    })
+;
+
+const iconConfig = Encore.getWebpackConfig();
+
+module.exports = [jsConfig, themeConfig, iconConfig];

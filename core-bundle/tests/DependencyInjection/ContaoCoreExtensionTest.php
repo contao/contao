@@ -565,6 +565,20 @@ class ContaoCoreExtensionTest extends TestCase
         ];
     }
 
+    public function testReadsTheIconManifestJson(): void
+    {
+        $container = $this->getContainerBuilder();
+
+        (new ContaoCoreExtension())->load([], $container);
+
+        $icons = $container->getParameter('contao.backend.icons');
+
+        $this->assertArrayHasKey('save.svg', $icons);
+        $this->assertSame('/system/themes/flexible/icons/help.svg', $icons['help.svg']['path']);
+        $this->assertSame(16, $icons['help.svg']['width']);
+        $this->assertSame(16, $icons['help.svg']['height']);
+    }
+
     public function testPrependsMonologConfigurationWithActionChannels(): void
     {
         $channels = [
