@@ -77,7 +77,8 @@ export default class OperationsMenuController extends Controller {
         const parentRect = this.menuTarget.querySelector('.operations-menu-container').getBoundingClientRect();
 
         const rect = this.controllerTarget.getBoundingClientRect();
-        let clientX, clientY;
+        let clientX;
+        let clientY;
 
         if (event === undefined) {
             clientX = rect.right;
