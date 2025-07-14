@@ -973,8 +973,8 @@ window.Backend =
 				currentHover, currentHoverTime, expandLink;
 
 			clone.setPosition({
-				x: cloneBase.getPosition().x,
-				y: cloneBase.getPosition().y
+				x: event.page.x - cloneBase.getOffsetParent().getPosition().x - clone.getSize().x,
+				y: cloneBase.getPosition(cloneBase.getOffsetParent()).y
 			}).setStyle('display', 'none');
 
 			var move = new Drag.Move(clone, {
