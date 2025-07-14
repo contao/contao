@@ -24,7 +24,9 @@
                 .set('aria-label', 'MSC.cancelBT'|trans)
                 .mergeWith(close_button_attributes|default)
             %}
-            <button{{ close_button_attributes }}>{{ backend_icon('close', attributes: attrs().set('width', 12).set('height', 12)) }}</button>
+            <button{{ close_button_attributes }}>
+                {{ backend_icon('close', attributes: attrs().set('width', 12).set('height', 12)) }}
+            </button>
 
             <div class="content">
                 {% block content %}{{ content }}{% endblock %}
