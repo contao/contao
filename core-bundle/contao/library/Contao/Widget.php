@@ -1405,7 +1405,7 @@ abstract class Widget extends Controller
 
 			if (!isset($arrAttributes['unique']) && (isset($arrAttributes['sql']['customSchemaOptions']['unique']) || isset($arrAttributes['sql']['platformOptions']['unique'])))
 			{
-				$arrAttributes['unique'] = $arrAttributes['sql']['customSchemaOptions']['unique'] ?? $arrAttributes['sql']['platformOptions']['unique'];
+				$arrAttributes['unique'] = $arrAttributes['sql']['platformOptions']['unique'] ?? $arrAttributes['sql']['customSchemaOptions']['unique'];
 			}
 		}
 
