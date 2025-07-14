@@ -27,7 +27,7 @@ class JobsListenerTest extends ContaoTestCase
     {
         $listener = new JobsListener(
             $this->createMock(Security::class),
-            $this->mockConnection(),
+            $this->createMock(Connection::class),
             $this->getRequestStack(),
             $this->mockContaoFramework(),
         );
@@ -41,7 +41,7 @@ class JobsListenerTest extends ContaoTestCase
     {
         $listener = new JobsListener(
             $this->mockSecurity(),
-            $this->mockConnection(),
+            $this->createMock(Connection::class),
             $this->getRequestStack(Request::create('/')),
             $this->mockContaoFramework(),
         );
@@ -57,7 +57,7 @@ class JobsListenerTest extends ContaoTestCase
 
         $listener = new JobsListener(
             $this->mockSecurity(42),
-            $this->mockConnection(),
+            $this->createMock(Connection::class),
             $this->getRequestStack(Request::create('/contao?do=jobs')),
             $framework,
         );
@@ -69,7 +69,7 @@ class JobsListenerTest extends ContaoTestCase
                 'list' => [
                     'sorting' => [
                         'filter' => [
-                            "pid = 0 AND (owner = 42 OR (public = '1' AND owner = 0))",
+                            'pid = 0 AND (owner = 42 OR (public = 1 AND owner = 0))',
                         ],
                     ],
                 ],
@@ -84,7 +84,7 @@ class JobsListenerTest extends ContaoTestCase
 
         $listener = new JobsListener(
             $this->mockSecurity(42),
-            $this->mockConnection(),
+            $this->createMock(Connection::class),
             $this->getRequestStack(Request::create('/contao?do=jobs&ptable=tl_job')),
             $framework,
         );
@@ -97,7 +97,7 @@ class JobsListenerTest extends ContaoTestCase
                     'sorting' => [
                         'mode' => DataContainer::MODE_PARENT,
                         'filter' => [
-                            "pid != 0 AND (owner = 42 OR (public = '1' AND owner = 0))",
+                            'pid != 0 AND (owner = 42 OR (public = 1 AND owner = 0))',
                         ],
                     ],
                     'label' => [
@@ -136,16 +136,5 @@ class JobsListenerTest extends ContaoTestCase
         ;
 
         return $security;
-    }
-
-    private function mockConnection(): Connection
-    {
-        $connection = $this->createMock(Connection::class);
-        $connection
-            ->method('quote')
-            ->willReturnCallback(static fn ($value): string => "'".$value."'")
-        ;
-
-        return $connection;
     }
 }

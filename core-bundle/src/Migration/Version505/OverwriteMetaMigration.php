@@ -32,7 +32,7 @@ class OverwriteMetaMigration extends AbstractMigration
     {
         $schemaManager = $this->connection->createSchemaManager();
 
-        if (!$schemaManager->tablesExist(static::TABLE_NAME)) {
+        if (!$schemaManager->tablesExist([static::TABLE_NAME])) {
             return false;
         }
 
