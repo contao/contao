@@ -407,8 +407,6 @@ abstract class Backend extends Controller
 			}
 
 			$container = System::getContainer();
-			$request = $container->get('request_stack')->getCurrentRequest();
-			$trail = array();
 
 			$this->Template->headline = '';
 

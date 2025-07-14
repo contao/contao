@@ -298,16 +298,16 @@
         },
         {
             "name": "contao/easy-coding-standard",
-            "version": "6.13.3",
+            "version": "6.13.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/contao/easy-coding-standard.git",
-                "reference": "f251af7e5e34917f5ed9ab912ad18ce2f10b1799"
+                "reference": "b15634f00dbd3eff44381d748cf6cb10f7f4323c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/contao/easy-coding-standard/zipball/f251af7e5e34917f5ed9ab912ad18ce2f10b1799",
-                "reference": "f251af7e5e34917f5ed9ab912ad18ce2f10b1799",
+                "url": "https://api.github.com/repos/contao/easy-coding-standard/zipball/b15634f00dbd3eff44381d748cf6cb10f7f4323c",
+                "reference": "b15634f00dbd3eff44381d748cf6cb10f7f4323c",
                 "shasum": ""
             },
             "require": {
@@ -339,7 +339,7 @@
             "description": "EasyCodingStandard configurations for Contao",
             "support": {
                 "issues": "https://github.com/contao/easy-coding-standard/issues",
-                "source": "https://github.com/contao/easy-coding-standard/tree/6.13.3"
+                "source": "https://github.com/contao/easy-coding-standard/tree/6.13.4"
             },
             "funding": [
                 {
@@ -347,7 +347,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2025-06-02T15:17:08+00:00"
+            "time": "2025-07-14T14:01:21+00:00"
         },
         {
             "name": "dealerdirect/phpcodesniffer-composer-installer",
@@ -660,16 +660,16 @@
         },
         {
             "name": "kubawerlos/php-cs-fixer-custom-fixers",
-            "version": "v3.30.0",
+            "version": "v3.30.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers.git",
-                "reference": "0cf921cf9aee50ac3091839325f5cf38ab189b97"
+                "reference": "636bbba1f5d6356dd3b75b9b4f77e7a14190dbda"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kubawerlos/php-cs-fixer-custom-fixers/zipball/0cf921cf9aee50ac3091839325f5cf38ab189b97",
-                "reference": "0cf921cf9aee50ac3091839325f5cf38ab189b97",
+                "url": "https://api.github.com/repos/kubawerlos/php-cs-fixer-custom-fixers/zipball/636bbba1f5d6356dd3b75b9b4f77e7a14190dbda",
+                "reference": "636bbba1f5d6356dd3b75b9b4f77e7a14190dbda",
                 "shasum": ""
             },
             "require": {
@@ -700,7 +700,7 @@
             "description": "A set of custom fixers for PHP CS Fixer",
             "support": {
                 "issues": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers/issues",
-                "source": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers/tree/v3.30.0"
+                "source": "https://github.com/kubawerlos/php-cs-fixer-custom-fixers/tree/v3.30.1"
             },
             "funding": [
                 {
@@ -708,20 +708,20 @@
                     "type": "github"
                 }
             ],
-            "time": "2025-07-07T22:51:31+00:00"
+            "time": "2025-07-12T06:37:38+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "2.1.0",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "9b30d6fd026b2c132b3985ce6b23bec09ab3aa68"
+                "reference": "b9e61a61e39e02dd90944e9115241c7f7e76bfd8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/9b30d6fd026b2c132b3985ce6b23bec09ab3aa68",
-                "reference": "9b30d6fd026b2c132b3985ce6b23bec09ab3aa68",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/b9e61a61e39e02dd90944e9115241c7f7e76bfd8",
+                "reference": "b9e61a61e39e02dd90944e9115241c7f7e76bfd8",
                 "shasum": ""
             },
             "require": {
@@ -753,9 +753,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/2.1.0"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/2.2.0"
             },
-            "time": "2025-02-19T13:28:12+00:00"
+            "time": "2025-07-13T07:04:09+00:00"
         },
         {
             "name": "psr/container",

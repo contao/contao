@@ -130,7 +130,6 @@ class InsertTags extends Controller
 		}
 
 		$arrBuffer = array();
-		$blnFeUserLoggedIn = $container->get('contao.security.token_checker')->hasFrontendUser();
 		$request = $container->get('request_stack')->getCurrentRequest();
 
 		if (static::$strAllowedTagsRegex === null)

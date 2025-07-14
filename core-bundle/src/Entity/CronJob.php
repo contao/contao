@@ -22,7 +22,7 @@ use Doctrine\ORM\Mapping\Table;
 
 #[Table(name: 'tl_cron_job')]
 #[Entity(repositoryClass: CronJobRepository::class)]
-#[Index(columns: ['name'], name: 'name')]
+#[Index(name: 'name', columns: ['name'])]
 class CronJob
 {
     #[Id]
