@@ -18,6 +18,7 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class UndoOperationListenerTest extends TestCase
 {
@@ -46,7 +47,7 @@ class UndoOperationListenerTest extends TestCase
             ->willReturn(true)
         ;
 
-        $listener = new UndoOperationListener($security);
+        $listener = new UndoOperationListener($security, $this->createMock(TranslatorInterface::class));
         $listener($operation);
     }
 
@@ -75,7 +76,7 @@ class UndoOperationListenerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $listener = new UndoOperationListener($security);
+        $listener = new UndoOperationListener($security, $this->createMock(TranslatorInterface::class));
         $listener($operation);
     }
 
@@ -99,7 +100,7 @@ class UndoOperationListenerTest extends TestCase
             ->method('isGranted')
         ;
 
-        $listener = new UndoOperationListener($security);
+        $listener = new UndoOperationListener($security, $this->createMock(TranslatorInterface::class));
         $listener($operation);
     }
 }

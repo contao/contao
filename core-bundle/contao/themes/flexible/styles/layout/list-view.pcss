@@ -285,7 +285,8 @@
 }
 
 .operations a,
-.operations button {
+.operations button,
+.operations span.disabled {
     display: flex;
     gap: 6px;
     align-items: center;
@@ -297,6 +298,11 @@
 
 .operations button:hover {
     color: var(--contao);
+}
+
+.operations span.disabled {
+    color: var(--disabled);
+    cursor: not-allowed;
 }
 
 .operations-menu-container {

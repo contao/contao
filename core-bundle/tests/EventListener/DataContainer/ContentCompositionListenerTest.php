@@ -32,6 +32,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Attribute\AttributeBagInterface;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ContentCompositionListenerTest extends TestCase
 {
@@ -946,6 +947,6 @@ class ContentCompositionListenerTest extends TestCase
     {
         $framework ??= $this->mockContaoFramework([PageModel::class => $this->mockAdapter(['findById'])]);
 
-        return new ContentCompositionListener($framework, $this->security, $this->pageRegistry, $this->connection, $this->requestStack);
+        return new ContentCompositionListener($framework, $this->security, $this->pageRegistry, $this->connection, $this->requestStack, $this->createMock(TranslatorInterface::class));
     }
 }

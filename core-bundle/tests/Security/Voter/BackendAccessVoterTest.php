@@ -19,6 +19,7 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
 use Contao\PageModel;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Bundle\FrameworkBundle\Translation\Translator;
 use Symfony\Component\ExpressionLanguage\Expression;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -31,7 +32,7 @@ class BackendAccessVoterTest extends TestCase
     {
         parent::setUp();
 
-        $this->voter = new BackendAccessVoter($this->mockContaoFramework());
+        $this->voter = new BackendAccessVoter($this->mockContaoFramework(), $this->createMock(Translator::class));
     }
 
     public function testAbstainsIfTheAttributeIsContaoUser(): void
@@ -145,7 +146,7 @@ class BackendAccessVoterTest extends TestCase
             ->willReturn([])
         ;
 
-        $voter = new BackendAccessVoter($this->mockContaoFramework([], [Database::class => $database]));
+        $voter = new BackendAccessVoter($this->mockContaoFramework([], [Database::class => $database]), $this->createMock(Translator::class));
 
         $this->assertSame(VoterInterface::ACCESS_DENIED, $voter->vote($token, $subject, [$attribute]));
     }
@@ -230,7 +231,7 @@ class BackendAccessVoterTest extends TestCase
             ->willReturn([4, 5, 6])
         ;
 
-        $voter = new BackendAccessVoter($this->mockContaoFramework([], [Database::class => $database]));
+        $voter = new BackendAccessVoter($this->mockContaoFramework([], [Database::class => $database]), $this->createMock(Translator::class));
 
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $voter->vote($token, 5, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE]));
     }
@@ -404,7 +405,7 @@ class BackendAccessVoterTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
-        $voter = new BackendAccessVoter($framework);
+        $voter = new BackendAccessVoter($framework, $this->createMock(Translator::class));
 
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $voter->vote($token, 1, [ContaoCorePermissions::USER_CAN_EDIT_PAGE]));
     }
@@ -441,7 +442,7 @@ class BackendAccessVoterTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
-        $voter = new BackendAccessVoter($framework);
+        $voter = new BackendAccessVoter($framework, $this->createMock(Translator::class));
 
         $this->assertSame(VoterInterface::ACCESS_GRANTED, $voter->vote($token, null, [ContaoCorePermissions::USER_CAN_EDIT_PAGE.'.1']));
     }
@@ -466,7 +467,7 @@ class BackendAccessVoterTest extends TestCase
         ;
 
         $framework = $this->mockContaoFramework([PageModel::class => $pageAdapter]);
-        $voter = new BackendAccessVoter($framework);
+        $voter = new BackendAccessVoter($framework, $this->createMock(Translator::class));
 
         $this->assertSame(VoterInterface::ACCESS_DENIED, $voter->vote($token, 1, [ContaoCorePermissions::USER_CAN_EDIT_PAGE]));
     }

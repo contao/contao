@@ -23,17 +23,22 @@ use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Doctrine\DBAL\Connection;
-use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Security\Core\Authorization\AccessDecision;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Symfony\Contracts\Service\ResetInterface;
 
 /**
  * @internal
  */
 #[AsHook('loadDataContainer', priority: 200)]
-class DefaultOperationsListener
+class DefaultOperationsListener implements ResetInterface
 {
+    private array $childrenCache = [];
+
     public function __construct(
         private readonly ContaoFramework $framework,
-        private readonly Security $security,
+        private readonly AuthorizationCheckerInterface $authorizationChecker,
         private readonly Connection $connection,
     ) {
     }
@@ -46,6 +51,11 @@ class DefaultOperationsListener
         }
 
         $GLOBALS['TL_DCA'][$table]['list']['operations'] = $this->getForTable($table);
+    }
+
+    public function reset(): void
+    {
+        $this->childrenCache = [];
     }
 
     private function getForTable(string $table): array
@@ -109,16 +119,14 @@ class DefaultOperationsListener
         $canDelete = !($GLOBALS['TL_DCA'][$table]['config']['notDeletable'] ?? false);
 
         if ($canEdit) {
-            $operations += [
-                'edit' => [
-                    'href' => 'act=edit',
-                    'icon' => 'edit.svg',
-                    'prefetch' => true,
-                    'attributes' => 'data-contao--deeplink-target="primary"',
-                    'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
-                    'primary' => true,
-                    'showInHeader' => true,
-                ],
+            $operations['edit'] = [
+                'href' => 'act=edit',
+                'icon' => 'edit.svg',
+                'prefetch' => true,
+                'attributes' => 'data-contao--deeplink-target="primary"',
+                'button_callback' => $this->isGrantedCallback(UpdateAction::class, $table),
+                'primary' => true,
+                'showInHeader' => true,
             ];
         }
 
@@ -126,15 +134,13 @@ class DefaultOperationsListener
             $this->framework->getAdapter(Controller::class)->loadDataContainer($ctable);
 
             if (DataContainer::MODE_TREE_EXTENDED !== ($GLOBALS['TL_DCA'][$ctable]['list']['sorting']['mode'] ?? null)) {
-                $operations += [
-                    'children' => [
-                        'href' => 'table='.$ctable.($ctable === $table ? '&amp;ptable='.$table : ''),
-                        'icon' => 'children.svg',
-                        'prefetch' => true,
-                        'attributes' => 'data-contao--deeplink-target="secondary"',
-                        'button_callback' => $this->accessChildrenCallback($ctable, $table),
-                        'primary' => true,
-                    ],
+                $operations['children'] = [
+                    'href' => 'table='.$ctable.($ctable === $table ? '&amp;ptable='.$table : ''),
+                    'icon' => 'children.svg',
+                    'prefetch' => true,
+                    'attributes' => 'data-contao--deeplink-target="secondary"',
+                    'button_callback' => $this->accessChildrenCallback($ctable, $table),
+                    'primary' => true,
                 ];
             }
         }
@@ -198,21 +204,26 @@ class DefaultOperationsListener
             ];
         }
 
-        return $operations + [
-            'show' => [
-                'href' => 'act=show',
-                'icon' => 'show.svg',
-                'method' => 'GET',
-                'prefetch' => false,
-            ],
+        $operations['show'] = [
+            'href' => 'act=show',
+            'icon' => 'show.svg',
+            'method' => 'GET',
+            'prefetch' => false,
         ];
+
+        return $operations;
     }
 
     private function isGrantedCallback(string $actionClass, string $table, array|null $new = null): \Closure
     {
         return function (DataContainerOperation $operation) use ($actionClass, $table, $new): void {
-            if (!$this->isGranted($actionClass, $table, $operation, $new)) {
-                $operation->disable();
+            $accessDecision = $this->isGranted($actionClass, $table, $operation, $new);
+
+            if (
+                false === $accessDecision
+                || ($accessDecision instanceof AccessDecision && !$accessDecision->isGranted)
+            ) {
+                $operation->disable($this->getAccessDeniedMessage($accessDecision));
             }
         };
     }
@@ -229,12 +240,14 @@ class DefaultOperationsListener
             }
 
             $subject = new ReadAction($ctable, $data);
+            $accessDecision = class_exists(AccessDecision::class) ? new AccessDecision() : null;
 
-            if (!$this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$ctable, $subject)) {
+            /** @phpstan-ignore arguments.count */
+            if (!$this->authorizationChecker->isGranted(ContaoCorePermissions::DC_PREFIX.$ctable, $subject, $accessDecision)) {
                 if ($ctable === $table) {
                     $operation->hide();
                 } else {
-                    $operation->disable();
+                    $operation->disable($this->getAccessDeniedMessage($accessDecision));
                 }
             }
         };
@@ -243,19 +256,22 @@ class DefaultOperationsListener
     private function copyChildrenCallback(string $table): \Closure
     {
         return function (DataContainerOperation $operation) use ($table): void {
-            if (!$this->isGranted(CreateAction::class, $table, $operation, ['sorting' => null])) {
+            if (!isset($this->childrenCache[$table])) {
+                $this->childrenCache[$table] = $this->connection->fetchAllKeyValue(
+                    "SELECT pid, COUNT(*) AS total FROM $table GROUP BY pid HAVING total > 1",
+                );
+            }
+
+            if (!isset($this->childrenCache[$table])) {
                 $operation->disable();
 
                 return;
             }
 
-            $childCount = $this->connection->fetchOne(
-                "SELECT COUNT(*) FROM $table WHERE pid = ?",
-                [(string) $operation->getRecord()['id']],
-            );
+            $accessDecision = $this->isGranted(CreateAction::class, $table, $operation, ['sorting' => null]);
 
-            if ($childCount < 1) {
-                $operation->disable();
+            if (false === $accessDecision || ($accessDecision instanceof AccessDecision && !$accessDecision->isGranted)) {
+                $operation->disable($this->getAccessDeniedMessage($accessDecision));
             }
         };
     }
@@ -264,11 +280,13 @@ class DefaultOperationsListener
     {
         return function (DataContainerOperation $operation) use ($toggleField, $table): void {
             $new = [$toggleField => !($operation['record'][$toggleField] ?? false)];
+            $accessDecision = $this->isGranted(UpdateAction::class, $table, $operation, $new);
 
-            if (!$this->isGranted(UpdateAction::class, $table, $operation, $new)) {
+            if (false === $accessDecision || ($accessDecision instanceof AccessDecision && !$accessDecision->isGranted)) {
                 // Do not use DataContainerOperation::disable() because it would not show the
                 // actual state
                 unset($operation['route'], $operation['href']);
+                $operation['title'] = $this->getAccessDeniedMessage($accessDecision);
             }
         };
     }
@@ -297,7 +315,7 @@ class DefaultOperationsListener
         return $field;
     }
 
-    private function isGranted(string $actionClass, string $table, DataContainerOperation $operation, array|null $new = null): bool
+    private function isGranted(string $actionClass, string $table, DataContainerOperation $operation, array|null $new = null): AccessDecision|bool
     {
         $subject = match ($actionClass) {
             CreateAction::class => new CreateAction($table, array_replace($operation->getRecord(), (array) $new)),
@@ -306,6 +324,43 @@ class DefaultOperationsListener
             default => throw new \InvalidArgumentException(\sprintf('Invalid action class "%s".', $actionClass)),
         };
 
-        return $this->security->isGranted(ContaoCorePermissions::DC_PREFIX.$table, $subject);
+        // TODO: class always exists when we require at least Symfony 7.3+
+        $accessDecision = class_exists(AccessDecision::class) ? new AccessDecision() : null;
+
+        /** @phpstan-ignore arguments.count */
+        $isGranted = $this->authorizationChecker->isGranted(ContaoCorePermissions::DC_PREFIX.$table, $subject, $accessDecision);
+
+        return $accessDecision ?? $isGranted;
+    }
+
+    /**
+     * Same as AccessDecision::getMessage() but without the non-translated prefix.
+     */
+    private function getAccessDeniedMessage(AccessDecision|bool|null $accessDecision): string
+    {
+        if (!$accessDecision instanceof AccessDecision || $accessDecision->isGranted) {
+            return '';
+        }
+
+        $message = '';
+
+        if ($accessDecision->votes) {
+            foreach ($accessDecision->votes as $vote) {
+                if (VoterInterface::ACCESS_DENIED !== $vote->result) {
+                    continue;
+                }
+
+                foreach ($vote->reasons as $reason) {
+                    // Ignore role checks (e.g. if user is admin), these are not translated.
+                    if (str_contains($reason, 'ROLE_')) {
+                        continue;
+                    }
+
+                    $message .= ' '.$reason;
+                }
+            }
+        }
+
+        return trim($message);
     }
 }

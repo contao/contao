@@ -2,6 +2,12 @@
 <xliff version="1.1">
   <file datatype="php" original="contao/languages/en/default.php" source-language="en">
     <body>
+      <trans-unit id="ERR.userAccessDenied.calendarp.create">
+        <source>You do not have permission to create calendars.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.calendarp.delete">
+        <source>You do not have permission to delete calendars.</source>
+      </trans-unit>
       <trans-unit id="MSC.cal_events">
         <source>%d event(s)</source>
       </trans-unit>

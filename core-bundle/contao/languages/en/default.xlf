@@ -308,6 +308,57 @@
       <trans-unit id="ERR.copyUnique">
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
       </trans-unit>
+      <trans-unit id="ERR.usedInAliasElement">
+        <source>Element ID %d cannot be deleted because it is referenced in alias element ID %s.</source>
+      </trans-unit>
+      <trans-unit id="ERR.noContentComposition">
+        <source>This page type does not support content composition.</source>
+      </trans-unit>
+      <trans-unit id="ERR.noArticleInLayout">
+        <source>The layout for this page does not contain an article module or slot.</source>
+      </trans-unit>
+      <trans-unit id="ERR.noUndoPermission">
+        <source>You do not have permission to restore the record in table "%s".</source>
+      </trans-unit>
+      <trans-unit id="ERR.noFieldsOfTablePermission">
+        <source>You do not have permission to edit the fields of table "%s".</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.can_edit_page">
+        <source>You do not have permission to edit page ID %s.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.can_edit_page_hierarchy">
+        <source>You do not have permission to change the hierarchy of page ID %s.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.can_delete_page">
+        <source>You do not have permission to delete page ID %s.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.can_edit_articles">
+        <source>You do not have permission to edit article ID %s.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.can_edit_article_hierarchy">
+        <source>You do not have permission to change the hierarchy of article ID %s.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.can_delete_articles">
+        <source>You do not have permission to delete article ID %s.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.alpty.root">
+        <source>You do not have permission to edit root pages.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.alpty.error_403">
+        <source>You do not have permission to edit 403 error pages.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.alpty.error_404">
+        <source>You do not have permission to edit 404 error pages.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.alpty.regular">
+        <source>You do not have permission to edit regular pages.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.alpty.redirect">
+        <source>You do not have permission to edit redirect pages.</source>
+      </trans-unit>
+      <trans-unit id="ERR.userAccessDenied.alpty.forward">
+        <source>You do not have permission to edit forward pages.</source>
+      </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
       </trans-unit>
