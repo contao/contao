@@ -575,8 +575,8 @@ class ContaoCoreExtensionTest extends TestCase
 
         $this->assertArrayHasKey('save.svg', $icons);
         $this->assertSame('/system/themes/flexible/icons/help.svg', $icons['help.svg']['path']);
-        $this->assertSame(14, $icons['help.svg']['width']);
-        $this->assertSame(14, $icons['help.svg']['height']);
+        $this->assertSame('14', $icons['help.svg']['width']);
+        $this->assertSame('14', $icons['help.svg']['height']);
     }
 
     public function testPrependsMonologConfigurationWithActionChannels(): void
