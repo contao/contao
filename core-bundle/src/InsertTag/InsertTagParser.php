@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\InsertTag;
 
-use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTagFlag;
 use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Framework\ContaoFramework;
@@ -100,7 +99,7 @@ class InsertTagParser implements ResetInterface
     public function addSubscription(InsertTagSubscription $subscription): void
     {
         if ($subscription->asFragment) {
-            trigger_deprecation('contao/core-bundle', '5.3', 'Using $asFragment = true in the attribute "%s" does not have an effect anymore and will fail in Contao 6. Directly render the desired ESI tag instead or use the fragment insert tag.', AsInsertTag::class);
+            trigger_deprecation('contao/core-bundle', '5.3', 'Using "asFragment: true" in the #[AsInsertTag] attribute is no longer effective and will fail in Contao 6. Render the desired ESI tag directly or use the fragment insert tag instead.');
         }
 
         if (1 !== preg_match($this->allowedTagsRegex, $subscription->name)) {

@@ -39,6 +39,7 @@ class InsertTagsController
     public function renderAction(Request $request, string $insertTag, PageModel|null $pageModel): Response
     {
         $this->framework->initialize();
+
         $pageModelBefore = $GLOBALS['objPage'] ?? null;
         $GLOBALS['objPage'] = $pageModel;
 
