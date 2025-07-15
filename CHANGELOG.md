@@ -2,6 +2,39 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.34] (2025-06-30)
+
+**Fixed issues:**
+
+- [#8499] Remove `noSearch` from `news_feed` and use permission for `newsArchives` options ([fritzmg])
+- [#8373] Correctly resolve the preview URL inside content elements ([aschempp])
+- [#8379] Fix absolute path URLs not enabling the lightbox ([fritzmg])
+- [#8463] Use `::` to reference controller methods (Symfony 6+ compatibility) ([dmolineus])
+- [#8455] Fix side-effects in `Document::getContentCrawler()` ([Toflar])
+- [#8457] Catch parse errors in the auto service registration ([Toflar])
+- [#8405] Fix multiple issues with referrers in the back end ([Toflar])
+- [#8419] Encode URLs in the preview link controller ([fritzmg])
+- [#8439] Remove the `title` attribute from the breadcrumb elements ([fritzmg])
+- [#8436] Remove the `popstate` listener for table revision ([fritzmg])
+- [#8433] Do not override `error_reporting` in `contao-api` ([fritzmg])
+- [#8416] Correctly check if the core modules are installed for comments ([aschempp])
+- [#8420] Do not show the Swiper buttons in the back end preview ([fritzmg])
+- [#8417] Add the fieldset legend IDs again ([aschempp])
+- [#8361] Correctly support the default callback on tagged services ([aschempp])
+- [#8409] Remove leftover language strings from the CSS editor ([aschempp])
+- [#8407] Prevent deep merging of `contao.messenger.web_worker.transports` ([md-netdesign])
+- [#8406] Fix the permission check when copying elements ([aschempp])
+- [#8389] Handle empty news feed items in the news feed controller ([fritzmg])
+- [#8392] Always tag the news archives in the news feed controller ([fritzmg])
+- [#8388] Check if articles exist in the `FetchArticlesForFeedEvent` listener ([fritzmg])
+- [#8385] Also embed SVG images in emails ([fritzmg])
+- [#8381] Add the missing autowiring alias for the `DcaUrlAnalyzer` ([aschempp])
+- [#8376] Use `Path::join` instead of `Path::makeAbsolute` ([fritzmg])
+- [#8363] Check the member groups before excluding content from indexing ([aschempp])
+- [#8365] Drop the `guests` column after migration ([aschempp])
+- [#8367] Handle union and intersection types when autoloading app services ([aschempp])
+- [#8295] Exclude folders from valid file name check ([fritzmg])
+
 ## [5.3.33] (2025-05-14)
 
 **Fixed issues:**
@@ -683,6 +716,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.34]: https://github.com/contao/contao/releases/tag/5.3.34
 [5.3.33]: https://github.com/contao/contao/releases/tag/5.3.33
 [5.3.32]: https://github.com/contao/contao/releases/tag/5.3.32
 [5.3.31]: https://github.com/contao/contao/releases/tag/5.3.31
@@ -736,6 +770,7 @@ This project adheres to [Semantic Versioning].
 [christianbarkowsky]: https://github.com/christianbarkowsky
 [CMSworker]: https://github.com/CMSworker
 [de-es]: https://github.com/de-es
+[dmolineus]: https://github.com/dmolineus
 [falkgeist]: https://github.com/falkgeist
 [fritzmg]: https://github.com/fritzmg
 [kllmanu]: https://github.com/kllmanu
@@ -1207,6 +1242,7 @@ This project adheres to [Semantic Versioning].
 [#8274]: https://github.com/contao/contao/pull/8274
 [#8275]: https://github.com/contao/contao/pull/8275
 [#8286]: https://github.com/contao/contao/pull/8286
+[#8295]: https://github.com/contao/contao/pull/8295
 [#8304]: https://github.com/contao/contao/pull/8304
 [#8307]: https://github.com/contao/contao/pull/8307
 [#8309]: https://github.com/contao/contao/pull/8309
@@ -1221,3 +1257,30 @@ This project adheres to [Semantic Versioning].
 [#8341]: https://github.com/contao/contao/pull/8341
 [#8342]: https://github.com/contao/contao/pull/8342
 [#8344]: https://github.com/contao/contao/pull/8344
+[#8361]: https://github.com/contao/contao/pull/8361
+[#8363]: https://github.com/contao/contao/pull/8363
+[#8365]: https://github.com/contao/contao/pull/8365
+[#8367]: https://github.com/contao/contao/pull/8367
+[#8373]: https://github.com/contao/contao/pull/8373
+[#8376]: https://github.com/contao/contao/pull/8376
+[#8379]: https://github.com/contao/contao/pull/8379
+[#8381]: https://github.com/contao/contao/pull/8381
+[#8385]: https://github.com/contao/contao/pull/8385
+[#8388]: https://github.com/contao/contao/pull/8388
+[#8389]: https://github.com/contao/contao/pull/8389
+[#8392]: https://github.com/contao/contao/pull/8392
+[#8405]: https://github.com/contao/contao/pull/8405
+[#8406]: https://github.com/contao/contao/pull/8406
+[#8407]: https://github.com/contao/contao/pull/8407
+[#8409]: https://github.com/contao/contao/pull/8409
+[#8416]: https://github.com/contao/contao/pull/8416
+[#8417]: https://github.com/contao/contao/pull/8417
+[#8419]: https://github.com/contao/contao/pull/8419
+[#8420]: https://github.com/contao/contao/pull/8420
+[#8433]: https://github.com/contao/contao/pull/8433
+[#8436]: https://github.com/contao/contao/pull/8436
+[#8439]: https://github.com/contao/contao/pull/8439
+[#8455]: https://github.com/contao/contao/pull/8455
+[#8457]: https://github.com/contao/contao/pull/8457
+[#8463]: https://github.com/contao/contao/pull/8463
+[#8499]: https://github.com/contao/contao/pull/8499

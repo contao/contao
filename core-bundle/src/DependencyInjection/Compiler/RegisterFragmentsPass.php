@@ -164,7 +164,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
         // Support a specific method on the controller
         if (isset($attributes['method'])) {
-            $controller .= ':'.$attributes['method'];
+            $controller .= '::'.$attributes['method'];
         }
 
         return $controller;
