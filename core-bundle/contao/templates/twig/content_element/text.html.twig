@@ -31,7 +31,7 @@
             .mergeWith(text_attributes|default)
         %}
         <div{% block text_attributes %}{{ text_attributes }}{% endblock %}>
-            {{ text|csp_inline_styles|insert_tag|encode_email|raw }}
+            {{ text|csp_inline_styles|insert_tag_raw|encode_email|raw }}
         </div>
     {% endblock %}
 
