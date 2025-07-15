@@ -49,7 +49,6 @@ class FormatDateInsertTagTest extends TestCase
             $this->createMock(ContaoFramework::class),
             $this->createMock(LoggerInterface::class),
             $this->createMock(FragmentHandler::class),
-            $this->createMock(RequestStack::class),
             (new \ReflectionClass(InsertTags::class))->newInstanceWithoutConstructor(),
         );
 
