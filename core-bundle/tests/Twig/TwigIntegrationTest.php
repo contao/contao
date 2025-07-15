@@ -185,7 +185,7 @@ class TwigIntegrationTest extends TestCase
         $container->set('twig', $environment);
         $container->set(ContextFactory::class, new ContextFactory());
 
-        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class));
+        $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
         $insertTagParser->addSubscription(new InsertTagSubscription(new LegacyInsertTag($container), '__invoke', 'br', null, true, false));
 
         $container->set('contao.insert_tag.parser', $insertTagParser);

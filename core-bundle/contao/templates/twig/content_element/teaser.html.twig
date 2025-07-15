@@ -6,7 +6,7 @@
 
 {% block content %}
     {% block teaser %}
-        {{ article.teaser|default|insert_tag|raw }}
+        {{ article.teaser|default|insert_tag_raw|raw }}
     {% endblock %}
 
     {% block link %}
