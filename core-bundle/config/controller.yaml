@@ -212,7 +212,8 @@ services:
     Contao\CoreBundle\Controller\InsertTagsController:
         arguments:
             - '@contao.insert_tag.parser'
-            - '@?fos_http_cache.http.symfony_response_tagger'
+            - '@contao.framework'
+            - '@kernel'
         tags:
             - controller.service_arguments
 

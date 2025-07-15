@@ -142,7 +142,7 @@ class PreviewLinkListenerTest extends TestCase
         $this->assertSame($url, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['url']['default']);
         $this->assertSame($showUnpublished, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['showUnpublished']['default']);
         $this->assertSame($clock->now()->getTimestamp(), $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdAt']['default']);
-        $this->assertSame(strtotime($clock->now()->getTimestamp().' +1 day'), $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default']);
+        $this->assertSame(strtotime('+1 day', $clock->now()->getTimestamp()), $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default']);
         $this->assertSame($userId, $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdBy']['default']);
     }
 

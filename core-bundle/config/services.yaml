@@ -540,9 +540,10 @@ services:
             - '@contao.framework'
             - '@monolog.logger.contao.error'
             - '@fragment.handler'
-            - '@request_stack'
             - ~
             - '%contao.insert_tags.allowed_tags%'
+            - '@?fos_http_cache.http.symfony_response_tagger'
+            - '@contao.listener.subrequest_cache'
 
     contao.insert_tag.php_function_flag:
         class: Contao\CoreBundle\InsertTag\Flag\PhpFunctionFlag
@@ -573,6 +574,9 @@ services:
 
     contao.insert_tag.resolver.fragment:
         class: Contao\CoreBundle\InsertTag\Resolver\FragmentInsertTag
+        arguments:
+            - '@request_stack'
+            - '@fragment.handler'
 
     contao.insert_tag.resolver.if_language:
         class: Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag
