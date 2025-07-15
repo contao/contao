@@ -27,7 +27,6 @@ use Contao\PageModel;
 use Contao\System;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -247,7 +246,6 @@ class LinkInsertTagTest extends TestCase
             $this->createMock(ContaoFramework::class),
             $this->createMock(LoggerInterface::class),
             $this->createMock(FragmentHandler::class),
-            $this->createMock(RequestStack::class),
             (new \ReflectionClass(InsertTags::class))->newInstanceWithoutConstructor(),
         );
     }

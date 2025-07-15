@@ -111,7 +111,7 @@ class RegisterFragmentsPassTest extends TestCase
 
         $arguments = $container->getDefinition((string) $methodCalls[0][1][1])->getArguments();
 
-        $this->assertSame('contao.fragment._contao.content_element.foo:bar', $arguments[0]);
+        $this->assertSame('contao.fragment._contao.content_element.foo::bar', $arguments[0]);
         $this->assertSame('esi', $arguments[1]);
     }
 
