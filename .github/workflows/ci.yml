@@ -279,14 +279,14 @@ jobs:
               run: vendor/bin/phpunit --order-by=reverse --extension Contao\\CoreBundle\\Tests\\PhpunitExtension\\GlobalStateWatcher
 
     nightly:
-        name: PHP 8.5
+        name: PHP nightly
         runs-on: ubuntu-latest
         continue-on-error: true
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.5
+                  php-version: nightly
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
                   coverage: none
 
