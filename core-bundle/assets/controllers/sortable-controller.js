@@ -34,7 +34,7 @@ export default class extends Controller {
         for (const el of [...this.element.children]) {
             const handles = el.querySelectorAll('.drag-handle');
 
-            // There will always be 2 handles: one for light and one for dark mode
+            // There will always be at least 2 handles: one for light and one for dark mode
             if (handles.length === 2) {
                 handles[0].style.display = '';
             } else {
