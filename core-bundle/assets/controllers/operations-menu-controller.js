@@ -21,7 +21,6 @@ export default class OperationsMenuController extends Controller {
         this.controllerTarget?.addEventListener('accessibleMenuExpand', () => {
             for (const menu of menus) {
                 if (menu !== this.$menu && menu.elements.submenuToggles[0].isOpen) {
-                    console.debug('close');
                     menu.elements.submenuToggles[0].close();
                 }
             }
