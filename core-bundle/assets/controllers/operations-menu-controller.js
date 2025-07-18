@@ -21,6 +21,7 @@ export default class OperationsMenuController extends Controller {
         this.controllerTarget?.addEventListener('accessibleMenuExpand', () => {
             for (const menu of menus) {
                 if (menu !== this.$menu && menu.elements.submenuToggles[0].isOpen) {
+                    console.debug('close');
                     menu.elements.submenuToggles[0].close();
                 }
             }
@@ -66,6 +67,9 @@ export default class OperationsMenuController extends Controller {
         }
 
         event.preventDefault();
+
+        // Prevent accessible-menu from handling pointerup and closing the menu again (see #8065, #8567)
+        this.element.addEventListener('pointerup', (e) => e.stopPropagation(), { once: true });
 
         this.$menu.elements.submenuToggles[0].open();
         this.setPosition(event);
