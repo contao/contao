@@ -16,6 +16,7 @@ use Contao\Date;
 use Contao\DC_Table;
 use Contao\Idna;
 use Contao\Image;
+use Contao\MemberModel;
 
 $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 (
@@ -209,6 +210,21 @@ class tl_newsletter_recipients extends Backend
 
 		$icon = Image::getPath('member');
 		$icond = Image::getPath('member_');
+
+		// Change icon according to start/stop of associated member (#951)
+		if ($member = MemberModel::findOneByEmail($row['email']))
+		{
+			$time = Date::floorToMinute();
+
+			if ($member->start && $time < $member->start)
+			{
+				$icon = $icond;
+			}
+			elseif ($member->stop && $time >= $member->stop)
+			{
+				$icon = $icond;
+			}
+		}
 
 		return sprintf(
 			'<div class="tl_content_left"><div class="list_icon" style="background-image:url(\'%s\')" data-icon="%s" data-icon-disabled="%s">%s</div></div>' . "\n",
