@@ -58,23 +58,17 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_hideChannels'] = array
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_subscribe'] = array
 (
+	'default'                 => static fn(): string => $GLOBALS['TL_LANG']['tl_module']['text_subscribe'][1],
 	'inputType'               => 'textarea',
-	'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true, 'alwaysSave'=>true),
-	'load_callback' => array
-	(
-		array('tl_module_newsletter', 'getSubscribeDefault')
-	),
+	'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true),
 	'sql'                     => "text NULL"
 );
 
 $GLOBALS['TL_DCA']['tl_module']['fields']['nl_unsubscribe'] = array
 (
+	'default'                 => static fn(): string => $GLOBALS['TL_LANG']['tl_module']['text_unsubscribe'][1],
 	'inputType'               => 'textarea',
-	'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true, 'alwaysSave'=>true),
-	'load_callback' => array
-	(
-		array('tl_module_newsletter', 'getUnsubscribeDefault')
-	),
+	'eval'                    => array('style'=>'height:120px', 'decodeEntities'=>true),
 	'sql'                     => "text NULL"
 );
 
