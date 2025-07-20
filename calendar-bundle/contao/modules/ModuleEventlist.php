@@ -345,9 +345,9 @@ class ModuleEventlist extends Events
 			self::$groupCounts[$groupIndex] = (self::$groupCounts[$groupIndex] ?? 0) + 1;
 
 			$objTemplate->groupIndex = $eventIndex++;
-			$objTemplate->groupCount = Template::once(static function () use ($groupIndex): int {
+			$objTemplate->groupCount = static function () use ($groupIndex): int {
 				return self::$groupCounts[$groupIndex];
-			});
+			};
 
 			// Show the teaser text of redirect events (see #6315)
 			if (\is_bool($event['details']) && $event['source'] == 'default')
