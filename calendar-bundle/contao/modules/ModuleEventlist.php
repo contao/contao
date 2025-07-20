@@ -43,7 +43,7 @@ class ModuleEventlist extends Events
 	/**
 	 * @var array<int, int>
 	 */
-	private static $groupCounts = array();
+	private static array $groupCounts = array();
 
 	/**
 	 * Display a wildcard in the back end
