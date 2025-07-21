@@ -43,7 +43,7 @@ class BackendHelperRuntimeTest extends TestCase
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('regular.svg', 'alt', 'foo="bar"')
+            ->with('plain.svg', 'alt', 'foo="bar"')
             ->willReturn('icon HTML')
         ;
 
@@ -88,7 +88,7 @@ class BackendHelperRuntimeTest extends TestCase
         $imageAdapter
             ->expects($this->once())
             ->method('getHtml')
-            ->with('regular.svg', 'alt', 'foo="bar"')
+            ->with('plain.svg', 'alt', 'foo="bar"')
             ->willReturn('icon HTML')
         ;
 

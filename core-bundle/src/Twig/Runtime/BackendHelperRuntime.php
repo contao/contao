@@ -29,7 +29,7 @@ class BackendHelperRuntime implements RuntimeExtensionInterface
     public function file_icon(FilesystemItem $item, string $alt = '', HtmlAttributes|null $attributes = null): string
     {
         if (!$mimeType = $item->getMimeType()) {
-            return $this->icon('regular.svg', $alt, $attributes);
+            return $this->icon('plain.svg', $alt, $attributes);
         }
 
         $this->framework->initialize();
@@ -40,6 +40,6 @@ class BackendHelperRuntime implements RuntimeExtensionInterface
             }
         }
 
-        return $this->icon('regular.svg', $alt, $attributes);
+        return $this->icon('plain.svg', $alt, $attributes);
     }
 }
