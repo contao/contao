@@ -577,6 +577,7 @@ services:
         arguments:
             - '@request_stack'
             - '@fragment.handler'
+            - '@contao.routing.page_finder'
 
     contao.insert_tag.resolver.if_language:
         class: Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag
