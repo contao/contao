@@ -34,7 +34,8 @@ export default class extends Controller {
         for (const el of [...this.element.children]) {
             const handles = el.querySelectorAll('.drag-handle');
 
-            if (handles.length === 1) {
+            // There will always be at least 2 handles: one for the operations list and one for the operations menu (which is hidden)
+            if (handles.length === 2) {
                 handles[0].style.display = '';
             } else {
                 for (const handle of handles) {
