@@ -26,7 +26,7 @@ span.mandatory {
 /* Row highlighting */
 .hover-div:hover, .hover-row:hover td,
 .hover-div.hover, .hover-row.hover td,
-.hover-div:has(input[class^="tl_tree"]:checked),
-.hover-row:has(input[class^="tl_tree"]:checked) td {
+.hover-div:has(input.tl_tree_checkbox:checked, input.tl_tree_radio:checked),
+.hover-row:has(input.tl_tree_checkbox:checked, input.tl_tree_radio:checked) td {
     background-color: var(--hover-row) !important;
 }
