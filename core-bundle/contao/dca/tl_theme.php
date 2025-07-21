@@ -16,7 +16,6 @@ use Contao\DC_Table;
 use Contao\FilesModel;
 use Contao\Folder;
 use Contao\Image;
-use Contao\StringUtil;
 use Contao\System;
 
 $GLOBALS['TL_DCA']['tl_theme'] = array
@@ -245,7 +244,8 @@ class tl_theme extends Backend
 	 */
 	public function importTheme(DataContainerOperation $operation)
 	{
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_IMPORT_THEMES)) {
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_IMPORT_THEMES))
+		{
 			$operation->hide();
 		}
 	}
@@ -255,7 +255,8 @@ class tl_theme extends Backend
 	 */
 	public function exportTheme(DataContainerOperation $operation)
 	{
-		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EXPORT_THEMES)) {
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EXPORT_THEMES))
+		{
 			$operation->hide();
 		}
 	}
