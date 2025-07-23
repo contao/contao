@@ -17,7 +17,7 @@ use Contao\CoreBundle\DependencyInjection\Attribute\AsInsertTag;
 use Contao\CoreBundle\InsertTag\InsertTagResult;
 use Contao\CoreBundle\InsertTag\OutputType;
 use Contao\CoreBundle\InsertTag\ParsedInsertTag;
-use Contao\PageModel;
+use Contao\CoreBundle\Routing\PageFinder;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\Controller\ControllerReference;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
@@ -28,6 +28,7 @@ class FragmentInsertTag implements InsertTagResolverNestedParsedInterface
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly FragmentHandler $fragmentHandler,
+        private readonly PageFinder $pageFinder,
     ) {
     }
 
@@ -40,8 +41,8 @@ class FragmentInsertTag implements InsertTagResolverNestedParsedInterface
         }
 
         // Pass the root page ID to the insert tags controller to have the right context
-        // when replacing the nested insert tags while maintaining good cachability
-        if ($pageId = $this->getPageModel()?->rootId) {
+        // when replacing the nested insert tags while maintaining good cacheability
+        if ($pageId = $this->pageFinder->getCurrentPage()?->rootId) {
             $attributes['pageModel'] = $pageId;
         }
 
@@ -52,20 +53,5 @@ class FragmentInsertTag implements InsertTagResolverNestedParsedInterface
         );
 
         return new InsertTagResult($esiTag, OutputType::html);
-    }
-
-    private function getPageModel(): PageModel|null
-    {
-        if (!$request = $this->requestStack->getCurrentRequest()) {
-            return null;
-        }
-
-        $pageModel = $request->attributes->get('pageModel');
-
-        if ($pageModel instanceof PageModel) {
-            return $pageModel;
-        }
-
-        return null;
     }
 }
