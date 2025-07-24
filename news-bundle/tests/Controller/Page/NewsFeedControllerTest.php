@@ -221,13 +221,13 @@ class NewsFeedControllerTest extends ContaoTestCase
 
     public static function getXMLFeedFormats(): iterable
     {
-        yield 'RSS' => ['rss', '.xml', 'https://example.org/latest-news.xml', 'application/rss+xml'];
-        yield 'Atom' => ['atom', '.xml', 'https://example.org/latest-news.xml', 'application/atom+xml'];
+        yield 'RSS' => ['rss', '.xml', 'https://example.org/latest-news.xml', 'application/xml'];
+        yield 'Atom' => ['atom', '.xml', 'https://example.org/latest-news.xml', 'application/xml'];
     }
 
     public static function getJSONFeedFormats(): iterable
     {
-        yield 'JSON' => ['json', '.json', 'https://example.org/latest-news.json', 'application/feed+json'];
+        yield 'JSON' => ['json', '.json', 'https://example.org/latest-news.json', 'application/json'];
     }
 
     private function getController(): NewsFeedController

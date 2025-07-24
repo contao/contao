@@ -32,9 +32,9 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
     final public const TYPE = 'news_feed';
 
     public static array $contentTypes = [
-        'atom' => 'application/xml',
-        'json' => 'application/json',
-        'rss' => 'application/xml',
+        'atom' => 'application/atom+xml',
+        'json' => 'application/feed+json',
+        'rss' => 'application/rss+xml',
     ];
 
     private array $urlSuffixes = [
@@ -82,7 +82,10 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
         $formatter = $this->specification->getStandard($pageModel->feedFormat)->getFormatter();
 
         $response = new Response($formatter->toString($feed));
-        $response->headers->set('Content-Type', self::$contentTypes[$pageModel->feedFormat]);
+
+        // Use a more generic Content-Type for the response header (see #8589)
+        $contentType = preg_replace('~/[a-z]+\+~', '/', self::$contentTypes[$pageModel->feedFormat]);
+        $response->headers->set('Content-Type', $contentType);
 
         $this->setCacheHeaders($response, $pageModel);
 
