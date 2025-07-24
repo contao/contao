@@ -32,9 +32,9 @@ class NewsFeedController extends AbstractController implements DynamicRouteInter
     final public const TYPE = 'news_feed';
 
     public static array $contentTypes = [
-        'atom' => 'application/atom+xml',
-        'json' => 'application/feed+json',
-        'rss' => 'application/rss+xml',
+        'atom' => 'application/xml',
+        'json' => 'application/json',
+        'rss' => 'application/xml',
     ];
 
     private array $urlSuffixes = [
