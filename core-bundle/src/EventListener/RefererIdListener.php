@@ -46,7 +46,7 @@ class RefererIdListener
         $request = $event->getRequest();
 
         if (null === $this->token) {
-            if ($request->isXmlHttpRequest() && $request->query->has('ref')) {
+            if (($request->isXmlHttpRequest() || $request->headers->has('x-turbo-request-id')) && $request->query->has('ref')) {
                 $this->token = $request->query->get('ref');
             } else {
                 $this->token = $this->tokenGenerator->generateToken();
