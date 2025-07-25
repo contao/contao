@@ -12,6 +12,8 @@ namespace Contao;
 
 use Symfony\Component\Filesystem\Path;
 
+trigger_deprecation('contao/core-bundle', '5.6', 'Using the "%s" class is deprecated and will no longer work in Contao 6.', FeedItem::class);
+
 /**
  * Creates items to be appended to RSS or Atom feeds
  *

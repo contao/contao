@@ -252,6 +252,8 @@ class CalendarFeedListenerTest extends ContaoTestCase
         $eventData = $eventModel->row();
         $eventData['model'] = $eventModel;
         $eventData['begin'] = $eventModel->startTime;
+        $eventData['date'] = date('Y-m-d', $eventModel->startTime);
+        $eventData['time'] = '';
 
         $event = new TransformEventForFeedEvent($eventData, $feed, $pageModel, $request, $baseUrl);
 
@@ -266,7 +268,7 @@ class CalendarFeedListenerTest extends ContaoTestCase
 
         $item = $event->getItem();
 
-        $this->assertSame($title[1], $item->getTitle());
+        $this->assertSame(date('Y-m-d', $eventModel->startTime).' '.$title[1], $item->getTitle());
         $this->assertSame(1656578758, $item->getLastModified()->getTimestamp());
         $this->assertSame('https://example.org/news/example-title', $item->getLink());
         $this->assertSame('1cfcaaf3-79b2-515d-89aa-819773585f11', $item->getPublicId());
