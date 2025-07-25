@@ -75,6 +75,7 @@ class CalendarFeedListener
 
         // Create a faux Module instance, so that the getAllEvents hook can be executed
         $moduleModel = $this->framework->createInstance(ModuleModel::class);
+        $moduleModel->type = 'eventlist';
         $moduleModel->cal_calendar = $calendars;
         $moduleModel->cal_noSpan = true;
         $moduleModel->cal_format = 'next_all';
