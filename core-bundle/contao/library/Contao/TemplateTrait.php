@@ -132,8 +132,21 @@ trait TemplateTrait
 
 	/**
 	 * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
+	 *
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use attrs() instead.
 	 */
 	public function attr(HtmlAttributes|iterable|string|null $attributes = null): HtmlAttributes
+	{
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "attrs()" instead.', __METHOD__);
+
+		return $this->attrs($attributes);
+	}
+
+	/**
+	 * @param iterable<string, string|int|bool|\Stringable|null>|string|self|null $attributes
+	 */
+	public function attrs(HtmlAttributes|iterable|string|null $attributes = null): HtmlAttributes
 	{
 		return new HtmlAttributes($attributes);
 	}
