@@ -2,6 +2,23 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.6.0-RC2] (2025-07-25)
+
+**Fixed issues:**
+
+- [#8586] Remove the close button from non-gallery `fileTree` widgets ([fritzmg])
+- [#8583] Use the page finder in the fragment insert tag ([leofeyer])
+- [#8594] Add the event dates to the calendar feed titles again ([fritzmg])
+- [#8590] Deprecate `Contao\Feed` and `Contao\FeedItem` ([fritzmg])
+- [#8593] Switch to `php-feed-io/feed-io` ([fritzmg])
+- [#8566] Highlight the selected row in the single source picker ([de-es])
+- [#8575] Show the drag handle in `MODE_PARENT` again ([fritzmg])
+- [#8560] Properly reassign the active item in the accessible navigation ([zoglo])
+- [#8576] Simplify the theme operations ([aschempp])
+- [#8574] Fix a JS error in the operations menu controller after Turbo navigation ([aschempp])
+- [#8573] Fix the separator spacing in the global context menu ([aschempp])
+- [#8556] Fix the infinite loop on `encore dev --watch` ([zoglo])
+
 ## [5.6.0-RC1] (2025-07-14)
 
 **New features:**
@@ -104,6 +121,7 @@ This project adheres to [Semantic Versioning].
 - [#8071] Fix the "overwrite metadata fields" migration ([ausi])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.6.0-RC2]: https://github.com/contao/contao/releases/tag/5.6.0-RC2
 [5.6.0-RC1]: https://github.com/contao/contao/releases/tag/5.6.0-RC1
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
@@ -209,3 +227,15 @@ This project adheres to [Semantic Versioning].
 [#8544]: https://github.com/contao/contao/pull/8544
 [#8549]: https://github.com/contao/contao/pull/8549
 [#8550]: https://github.com/contao/contao/pull/8550
+[#8556]: https://github.com/contao/contao/pull/8556
+[#8560]: https://github.com/contao/contao/pull/8560
+[#8566]: https://github.com/contao/contao/pull/8566
+[#8573]: https://github.com/contao/contao/pull/8573
+[#8574]: https://github.com/contao/contao/pull/8574
+[#8575]: https://github.com/contao/contao/pull/8575
+[#8576]: https://github.com/contao/contao/pull/8576
+[#8583]: https://github.com/contao/contao/pull/8583
+[#8586]: https://github.com/contao/contao/pull/8586
+[#8590]: https://github.com/contao/contao/pull/8590
+[#8593]: https://github.com/contao/contao/pull/8593
+[#8594]: https://github.com/contao/contao/pull/8594
