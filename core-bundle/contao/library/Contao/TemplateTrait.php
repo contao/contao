@@ -138,7 +138,7 @@ trait TemplateTrait
 	 */
 	public function attr(HtmlAttributes|iterable|string|null $attributes = null): HtmlAttributes
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use "attrs()" instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "$this->attr()" in templates is deprecated and will no longer work in Contao 6. Use "$this->attrs()" instead.');
 
 		return $this->attrs($attributes);
 	}
