@@ -345,6 +345,14 @@ class PageModel extends Model
 		self::$suffixes = null;
 	}
 
+	public function setRow(array $arrData)
+	{
+		// Reset $blnDetailsLoaded (#8516)
+		$this->blnDetailsLoaded = false;
+
+		return parent::setRow($arrData);
+	}
+
 	/**
 	 * Find a published page by its ID
 	 *
