@@ -8,10 +8,40 @@ export default class extends Controller {
         // up the initialization of the editor. To prevent this, we delay the
         // execution until the call stack has been cleared and all microtasks,
         // i.e. disconnect() calls, have been executed.
-        queueMicrotask(() => this._connect());
+        queueMicrotask(() => this.#doConnect());
     }
 
-    _connect() {
+    disconnect() {
+        tinymce?.get(this.editorId)?.remove();
+    }
+
+    beforeCache() {
+        // Destroy TinyMCE before Turbo caches the page. It will be recreated
+        // when the connect() call happens on the restored page.
+        this.disconnect();
+
+        // Remove the controller attribute. They will be re-added in the init
+        // script of the be_tinyMCE.html5 template.
+        this.element.removeAttribute('data-controller');
+    }
+
+    leave(event) {
+        const editor = tinymce?.get(this.editorId);
+
+        if (!editor || !editor.plugins.hasOwn('autosave') || editor.isNotDirty) {
+            return;
+        }
+
+        // Trigger a beforeunload event like when navigating away to capture the TinyMCE autosave message
+        const delegate = document.createEvent('BeforeUnloadEvent');
+        delegate.initEvent('beforeunload', false, true);
+
+        if (!window.dispatchEvent(delegate) && !confirm(delegate.returnValue)) {
+            event.preventDefault();
+        }
+    }
+
+    #doConnect() {
         if (!this.element.tinymceConfig) {
             if (window.console) {
                 console.error(
@@ -44,35 +74,5 @@ export default class extends Controller {
             // Fire a custom event when the editor finished initializing.
             this.dispatch('editor-loaded', { detail: { content: editor } });
         });
-    }
-
-    disconnect() {
-        tinymce?.get(this.editorId)?.remove();
-    }
-
-    beforeCache() {
-        // Destroy TinyMCE before Turbo caches the page. It will be recreated
-        // when the connect() call happens on the restored page.
-        this.disconnect();
-
-        // Remove the controller attribute. They will be re-added in the init
-        // script of the be_tinyMCE.html5 template.
-        this.element.removeAttribute('data-controller');
-    }
-
-    leave(event) {
-        const editor = tinymce?.get(this.editorId);
-
-        if (!editor || !editor.plugins.hasOwn('autosave') || editor.isNotDirty) {
-            return;
-        }
-
-        // Trigger a beforeunload event like when navigating away to capture the TinyMCE autosave message
-        const delegate = document.createEvent('BeforeUnloadEvent');
-        delegate.initEvent('beforeunload', false, true);
-
-        if (!window.dispatchEvent(delegate) && !confirm(delegate.returnValue)) {
-            event.preventDefault();
-        }
     }
 }
