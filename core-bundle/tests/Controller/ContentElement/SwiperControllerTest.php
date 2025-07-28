@@ -49,7 +49,7 @@ class SwiperControllerTest extends ContentElementTestCase
 
         $expectedJson = htmlspecialchars(json_encode([
             'speed' => 300,
-            'offset' => 0,
+            'initialSlide' => 0,
             'loop' => true,
             'autoplay' => [
                 'delay' => 1000,
