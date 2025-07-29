@@ -424,11 +424,7 @@ class FileTree extends Widget
 
 		if ($blnRemovable)
 		{
-			$buffer .= '<button type="button" class="tl_red" data-action="contao--input-map#removeElement" data-contao--input-map-closest-param="li">&times;</button>';
-		}
-		else
-		{
-			$buffer .= '<button type="button" disabled>&times;</button>';
+			$buffer .= \sprintf('<button type="button" class="tl_red" data-action="contao--input-map#removeElement" data-contao--input-map-closest-param="li">%s</button>', Image::getHtml('close'));
 		}
 
 		return $buffer;

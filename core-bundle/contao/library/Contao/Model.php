@@ -16,6 +16,7 @@ use Contao\Model\Collection;
 use Contao\Model\QueryBuilder;
 use Contao\Model\Registry;
 use Doctrine\DBAL\Schema\Schema;
+use Doctrine\DBAL\Types\Type;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Filesystem\Path;
 
@@ -262,7 +263,7 @@ abstract class Model
 
 		if ($varValue !== ($varNewValue = static::convertToPhpValue($strKey, $varValue)))
 		{
-			trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s has been deprecated and will no longer work in Contao 6. Use type "%s" instead.', static::class, $strKey, get_debug_type($varValue), get_debug_type($varNewValue));
+			trigger_deprecation('contao/core-bundle', '5.0', 'Setting "%s::$%s" to type %s is deprecated and will no longer work in Contao 6. Use type "%s" instead.', static::class, $strKey, get_debug_type($varValue), get_debug_type($varNewValue));
 		}
 	}
 
@@ -449,7 +450,7 @@ abstract class Model
 		{
 			foreach ($table->getColumns() as $column)
 			{
-				$type = strtolower($column->getType()->getName());
+				$type = strtolower(Type::getTypeRegistry()->lookupName($column->getType()));
 
 				if (\in_array($type, array(Types::INTEGER, Types::SMALLINT, Types::FLOAT, Types::BOOLEAN), true))
 				{
@@ -1263,7 +1264,7 @@ abstract class Model
 		{
 			if (($arrOptions['return'] ?? null) == 'Array')
 			{
-				trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries has been deprecated and will no longer work in Contao 6. Use the "getModels()" method instead.');
+				trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries is deprecated and will no longer work in Contao 6. Use the "getModels()" method instead.');
 
 				return array();
 			}
@@ -1288,7 +1289,7 @@ abstract class Model
 
 		if (($arrOptions['return'] ?? null) == 'Array')
 		{
-			trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries has been deprecated and will no longer work in Contao 6. Use the "getModels()" method instead.');
+			trigger_deprecation('contao/core-bundle', '5.2', 'Using "Array" as return type for model queries is deprecated and will no longer work in Contao 6. Use the "getModels()" method instead.');
 
 			return static::createCollectionFromDbResult($objResult, static::$strTable)->getModels();
 		}

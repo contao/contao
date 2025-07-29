@@ -69,6 +69,7 @@ use Highlight\Highlighter;
 use Nyholm\Psr7\Uri;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
+use Symfony\Bridge\Twig\Extension\RoutingExtension;
 use Symfony\Bridge\Twig\Extension\TranslationExtension;
 use Symfony\Component\Asset\Packages;
 use Symfony\Component\Cache\Adapter\NullAdapter;
@@ -77,6 +78,7 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Fragment\FragmentHandler;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use Twig\Environment;
@@ -128,7 +130,7 @@ abstract class ContentElementTestCase extends TestCase
      *
      * @param-out array $responseContextData
      */
-    protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null, ContainerBuilder|null $adjustedContainer = null, array $nestedFragments = []): Response
+    protected function renderWithModelData(AbstractContentElementController $controller, array $modelData, string|null $template = null, bool $asEditorView = false, array|null &$responseContextData = null, ContainerBuilder|null $adjustedContainer = null, array $nestedFragments = [], PageModel|null $page = null, Request|null $request = null): Response
     {
         $framework = $this->getDefaultFramework($nestedFragments);
 
@@ -143,6 +145,12 @@ abstract class ContentElementTestCase extends TestCase
             ->willReturn($asEditorView)
         ;
 
+        $pageFinder = $this->createMock(PageFinder::class);
+        $pageFinder
+            ->method('getCurrentPage')
+            ->willReturn($page)
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('contao.cache.tag_manager', $this->createMock(CacheTagManager::class));
         $container->set('contao.routing.content_url_generator', $this->createMock(ContentUrlGenerator::class));
@@ -154,6 +162,7 @@ abstract class ContentElementTestCase extends TestCase
         $container->set('contao.framework', $framework);
         $container->set('monolog.logger.contao.error', $this->createMock(LoggerInterface::class));
         $container->set('fragment.handler', $this->createMock(FragmentHandler::class));
+        $container->set('contao.routing.page_finder', $pageFinder);
 
         if ($adjustedContainer) {
             $container->merge($adjustedContainer);
@@ -204,7 +213,7 @@ abstract class ContentElementTestCase extends TestCase
             'type' => $modelData['type'],
         ]);
 
-        $request = new Request();
+        $request ??= new Request();
         $request->attributes->set('nestedFragments', $nestedFragments);
 
         $response = $controller($request, $model, 'main');
@@ -312,6 +321,7 @@ abstract class ContentElementTestCase extends TestCase
         $environment = new Environment($contaoFilesystemLoader);
         $environment->addExtension(new TranslationExtension($translator));
         $environment->addExtension(new AssetExtension($packages));
+        $environment->addExtension(new RoutingExtension($this->createMock(UrlGeneratorInterface::class)));
 
         $environment->addExtension(
             new ContaoExtension(

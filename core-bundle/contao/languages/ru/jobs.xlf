@@ -1,0 +1,42 @@
+<?xml version="1.0" ?><xliff version="1.1">
+  <file datatype="php" original="contao/languages/en/jobs.php" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="jobs.tstamp.0">
+        <source>Created at</source>
+        <target>Создано</target>
+      </trans-unit>
+      <trans-unit id="jobs.status.0">
+        <source>Status</source>
+        <target>Статус</target>
+      </trans-unit>
+      <trans-unit id="jobs.owner.0">
+        <source>Initiated by</source>
+        <target>Инициировано</target>
+      </trans-unit>
+      <trans-unit id="jobs.type.0">
+        <source>Type</source>
+        <target>Тип</target>
+      </trans-unit>
+      <trans-unit id="jobs.statusLabel.new">
+        <source>New</source>
+        <target>Новый</target>
+      </trans-unit>
+      <trans-unit id="jobs.statusLabel.pending">
+        <source>Pending</source>
+        <target>Ожидает</target>
+      </trans-unit>
+      <trans-unit id="jobs.statusLabel.completed">
+        <source>Completed</source>
+        <target>Завершено</target>
+      </trans-unit>
+      <trans-unit id="jobs.typeLabel.contao_backend_search_reindex">
+        <source>Rebuild the back end search index</source>
+        <target>Перестроить поисковый индекс панели управления</target>
+      </trans-unit>
+      <trans-unit id="jobs.all_jobs_processed">
+        <source>All jobs have been processed.</source>
+        <target>Все задачи выполнены.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

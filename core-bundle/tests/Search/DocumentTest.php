@@ -303,14 +303,14 @@ class DocumentTest extends TestCase
         ];
 
         yield 'Test with no context filter provided' => [
-            '<html><body><script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@type":"Page","title":"Welcome to the official Contao Demo Site","pageId":2,"noSearch":false,"protected":false,"groups":[],"fePreview":false}</script></body></html>',
+            '<html><body><script type="application/ld+json">{"@context":"https:\/\/schema.contao.org\/","@type":"Page","title":"Welcome to the official Contao Demo Site","pageId":2,"searchIndexer":"","protected":false,"groups":[],"fePreview":false}</script></body></html>',
             [
                 [
                     '@context' => 'https://schema.contao.org/',
                     '@type' => 'https://schema.contao.org/Page',
                     'https://schema.contao.org/title' => 'Welcome to the official Contao Demo Site',
                     'https://schema.contao.org/pageId' => 2,
-                    'https://schema.contao.org/noSearch' => false,
+                    'https://schema.contao.org/searchIndexer' => '',
                     'https://schema.contao.org/protected' => false,
                     'https://schema.contao.org/groups' => [],
                     'https://schema.contao.org/fePreview' => false,
@@ -320,7 +320,7 @@ class DocumentTest extends TestCase
         ];
 
         yield 'Test with no context filter provided prefix context' => [
-            '<html><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:title":"Welcome to the official Contao Demo Site","contao:pageId":2,"contao:noSearch":false,"contao:protected":false,"contao:groups":[],"contao:fePreview":false}</script></body></html>',
+            '<html><body><script type="application/ld+json">{"@context":{"contao":"https:\/\/schema.contao.org\/"},"@type":"contao:Page","contao:title":"Welcome to the official Contao Demo Site","contao:pageId":2,"contao:searchIndexer":"","contao:protected":false,"contao:groups":[],"contao:fePreview":false}</script></body></html>',
             [
                 [
                     '@context' => [
@@ -329,7 +329,7 @@ class DocumentTest extends TestCase
                     '@type' => 'https://schema.contao.org/Page',
                     'https://schema.contao.org/title' => 'Welcome to the official Contao Demo Site',
                     'https://schema.contao.org/pageId' => 2,
-                    'https://schema.contao.org/noSearch' => false,
+                    'https://schema.contao.org/searchIndexer' => '',
                     'https://schema.contao.org/protected' => false,
                     'https://schema.contao.org/groups' => [],
                     'https://schema.contao.org/fePreview' => false,

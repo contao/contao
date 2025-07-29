@@ -446,7 +446,10 @@ class ModuleRegistration extends Module
 	protected function sendActivationMail($arrData)
 	{
 		$container = System::getContainer();
+
 		$optIn = $container->get('contao.opt_in');
+		$optIn->setRemoveOn('+' . ($container->getParameter('contao.registration.expiration') + 2) . ' days');
+
 		$optInToken = $optIn->create('reg', $arrData['email'], array('tl_member'=>array($arrData['id'])));
 
 		// Prepare the simple token data

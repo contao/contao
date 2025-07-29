@@ -92,91 +92,9 @@ abstract class Events extends Module
 	 */
 	protected function getAllEvents($arrCalendars, $intStart, $intEnd, $blnFeatured = null)
 	{
-		if (!\is_array($arrCalendars))
-		{
-			return array();
-		}
+		$calendarEventsGenerator = System::getContainer()->get('contao_calendar.generator.calendar_events');
 
-		// Include all events of the day, expired events will be filtered out later
-		$intStart = strtotime(date('Y-m-d', $intStart) . ' 00:00:00');
-
-		$this->arrEvents = array();
-
-		foreach ($arrCalendars as $id)
-		{
-			// Get the events of the current period
-			$objEvents = CalendarEventsModel::findCurrentByPid($id, $intStart, $intEnd, array('showFeatured' => $blnFeatured));
-
-			if ($objEvents === null)
-			{
-				continue;
-			}
-
-			while ($objEvents->next())
-			{
-				$objEvent = $objEvents->current();
-
-				$this->addEvent($objEvent, $objEvent->startTime, $objEvent->endTime, $intStart, $intEnd, $id);
-
-				// Recurring events
-				if ($objEvent->recurring)
-				{
-					$arrRepeat = StringUtil::deserialize($objEvent->repeatEach);
-
-					if (!isset($arrRepeat['unit'], $arrRepeat['value']) || $arrRepeat['value'] < 1)
-					{
-						continue;
-					}
-
-					$count = 0;
-					$intStartTime = $objEvent->startTime;
-					$intEndTime = $objEvent->endTime;
-					$strtotime = '+ ' . $arrRepeat['value'] . ' ' . $arrRepeat['unit'];
-
-					while ($intEndTime < $intEnd)
-					{
-						if ($objEvent->recurrences > 0 && $count++ >= $objEvent->recurrences)
-						{
-							break;
-						}
-
-						$intStartTime = strtotime($strtotime, $intStartTime);
-						$intEndTime = strtotime($strtotime, $intEndTime);
-
-						// Stop if the upper boundary is reached (see #8445)
-						if ($intStartTime === false || $intEndTime === false)
-						{
-							break;
-						}
-
-						// Skip events outside the scope
-						if ($intEndTime < $intStart || $intStartTime > $intEnd)
-						{
-							continue;
-						}
-
-						$this->addEvent($objEvent, $intStartTime, $intEndTime, $intStart, $intEnd, $id);
-					}
-				}
-			}
-		}
-
-		// Sort the array
-		foreach (array_keys($this->arrEvents) as $key)
-		{
-			ksort($this->arrEvents[$key]);
-		}
-
-		// HOOK: modify the result set
-		if (isset($GLOBALS['TL_HOOKS']['getAllEvents']) && \is_array($GLOBALS['TL_HOOKS']['getAllEvents']))
-		{
-			foreach ($GLOBALS['TL_HOOKS']['getAllEvents'] as $callback)
-			{
-				$this->arrEvents = System::importStatic($callback[0])->{$callback[1]}($this->arrEvents, $arrCalendars, $intStart, $intEnd, $this);
-			}
-		}
-
-		return $this->arrEvents;
+		return $this->arrEvents = $calendarEventsGenerator->getAllEvents($arrCalendars, (new \DateTime())->setTimestamp($intStart), (new \DateTime())->setTimestamp($intEnd), $blnFeatured, $this->cal_noSpan);
 	}
 
 	/**
@@ -188,9 +106,14 @@ abstract class Events extends Module
 	 * @param integer             $intBegin
 	 * @param integer             $intLimit
 	 * @param integer             $intCalendar
+	 *
+	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+	 *             use the "addEvent" method of the "contao_calendar.generator.calendar_events" service instead.
 	 */
 	protected function addEvent($objEvents, $intStart, $intEnd, $intBegin, $intLimit, $intCalendar)
 	{
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "addEvent" method of the "contao_calendar.generator.calendar_events" service instead.', __METHOD__);
+
 		global $objPage;
 
 		$intDate = $intStart;
@@ -418,7 +341,7 @@ abstract class Events extends Module
 	 */
 	public static function generateEventUrl($objEvent, $blnAbsolute=false)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the content URL generator instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the content URL generator instead.', __METHOD__);
 
 		try
 		{

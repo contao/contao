@@ -436,17 +436,29 @@ class MigrateCommandTest extends TestCase
     #[DataProvider('getOutputFormats')]
     public function testAbortsOnWrongServerVersion(string $format): void
     {
-        $driverConnection = $this->createMock(ServerInfoAwareConnection::class);
-        $driverConnection
-            ->method('getServerVersion')
-            ->willReturn('8.0.29')
-        ;
-
         $connection = $this->createDefaultConnection();
-        $connection
-            ->method('getDatabasePlatform')
-            ->willReturn(new MySQLPlatform())
-        ;
+
+        if (interface_exists(ServerInfoAwareConnection::class)) {
+            /** @phpstan-ignore class.notFound */
+            $driverConnection = $this->createMock(ServerInfoAwareConnection::class);
+
+            /** @phpstan-ignore class.notFound, phpunit.mockMethod */
+            $driverConnection
+                ->method('getServerVersion')
+                ->willReturn('8.0.29')
+            ;
+
+            /** @phpstan-ignore phpunit.mockMethod */
+            $connection
+                ->method('getWrappedConnection')
+                ->willReturn($driverConnection)
+            ;
+        } else {
+            $connection
+                ->method('getServerVersion')
+                ->willReturn('8.0.29')
+            ;
+        }
 
         $connection
             ->method('getDriver')
@@ -454,8 +466,8 @@ class MigrateCommandTest extends TestCase
         ;
 
         $connection
-            ->method('getWrappedConnection')
-            ->willReturn($driverConnection)
+            ->method('getDatabasePlatform')
+            ->willReturn(new MySQLPlatform())
         ;
 
         $connection

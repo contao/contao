@@ -65,6 +65,14 @@
         <source>Here you can add a custom meta description to overwrite the default page description.</source>
         <target>独自のメタデスクリプションを追加して、ページの説明の初期値を上書きできます。</target>
       </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.0">
+        <source>Canonical URL</source>
+        <target>基準のURL</target>
+      </trans-unit>
+      <trans-unit id="tl_news.canonicalLink.1">
+        <source>Here you can set a custom canonical URL like https://example.com/.</source>
+        <target>https://example.com/ の様な独自の標準のURLを設定できます。</target>
+      </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
         <target>小見出し</target>
@@ -185,14 +193,6 @@
         <source>Here you can enter one or more classes.</source>
         <target>1つ以上のclassを入力できます。</target>
       </trans-unit>
-      <trans-unit id="tl_news.noComments.0">
-        <source>Disable comments</source>
-        <target>コメントを不使用</target>
-      </trans-unit>
-      <trans-unit id="tl_news.noComments.1">
-        <source>Do not allow comments for this particular news item.</source>
-        <target>この特定のニュース項目にコメントを許可しません。</target>
-      </trans-unit>
       <trans-unit id="tl_news.featured.0">
         <source>Feature item</source>
         <target>特別な項目</target>
@@ -273,35 +273,35 @@
         <source>Publish settings</source>
         <target>公開の設定</target>
       </trans-unit>
-      <trans-unit id="tl_news.new.0">
-        <source>New</source>
-        <target>新規作成</target>
-      </trans-unit>
       <trans-unit id="tl_news.new.1">
         <source>Create a new news item</source>
         <target>新しいニュース項目を作成</target>
       </trans-unit>
-      <trans-unit id="tl_news.show">
+      <trans-unit id="tl_news.show.1">
         <source>Show the details of news item ID %s</source>
         <target>ID %sのニュース項目の詳細を表示</target>
       </trans-unit>
-      <trans-unit id="tl_news.edit">
+      <trans-unit id="tl_news.edit.1">
         <source>Edit news item ID %s</source>
         <target>ID %sのニュース項目を編集</target>
       </trans-unit>
-      <trans-unit id="tl_news.children">
+      <trans-unit id="tl_news.children.0">
+        <source>Content elements</source>
+        <target>コンテント要素</target>
+      </trans-unit>
+      <trans-unit id="tl_news.children.1">
         <source>Edit the content elements of news item ID %s</source>
         <target>ID %sのニュース項目のコンテント要素を編集</target>
       </trans-unit>
-      <trans-unit id="tl_news.copy">
+      <trans-unit id="tl_news.copy.1">
         <source>Duplicate news item ID %s</source>
         <target>ID %sのニュース項目を複製</target>
       </trans-unit>
-      <trans-unit id="tl_news.cut">
+      <trans-unit id="tl_news.cut.1">
         <source>Move news item ID %s</source>
         <target>ID %sのニュース項目を移動</target>
       </trans-unit>
-      <trans-unit id="tl_news.delete">
+      <trans-unit id="tl_news.delete.1">
         <source>Delete news item ID %s</source>
         <target>ID %sのニュース項目を削除</target>
       </trans-unit>
@@ -317,6 +317,14 @@
         <source>Publish news item ID %s</source>
         <target>ID %sのニュース項目を公開</target>
       </trans-unit>
+      <trans-unit id="tl_news.toggle.3">
+        <source>Publish</source>
+        <target>公開</target>
+      </trans-unit>
+      <trans-unit id="tl_news.toggle.4">
+        <source>Unpublish</source>
+        <target>非公開</target>
+      </trans-unit>
       <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
         <target>ID %sのニュース項目を特別または通常に設定</target>
@@ -328,6 +336,14 @@
       <trans-unit id="tl_news.feature.2">
         <source>Feature news item ID %s</source>
         <target>ID %sのニュース項目を特別に設定</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.3">
+        <source>Unfeature</source>
+        <target>通常</target>
+      </trans-unit>
+      <trans-unit id="tl_news.feature.4">
+        <source>Feature</source>
+        <target>特別</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>

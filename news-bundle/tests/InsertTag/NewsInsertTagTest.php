@@ -51,7 +51,7 @@ class NewsInsertTagTest extends ContaoTestCase
         $this->assertSame($expectedOutputType, $result->getOutputType());
     }
 
-    public static function replacesNewsTagsProvider(): \Generator
+    public static function replacesNewsTagsProvider(): iterable
     {
         yield [
             'news',

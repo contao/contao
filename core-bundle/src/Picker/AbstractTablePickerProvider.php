@@ -215,7 +215,7 @@ abstract class AbstractTablePickerProvider implements PickerProviderInterface, D
 
         if ($id) {
             $qb = $this->connection->createQueryBuilder();
-            $qb->select(['id'])->from($table)->where($qb->expr()->eq('id', $id));
+            $qb->select('id')->from($table)->where($qb->expr()->eq('id', (string) $id));
 
             if ($ptable || $dynamicPtable) {
                 $qb->addSelect('pid');

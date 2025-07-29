@@ -1,0 +1,70 @@
+{% extends "@Contao/content_element/_base.html.twig" %}
+{% use "@Contao/component/_list.html.twig" %}
+{% trans_default_domain "contao_default" %}
+
+{% set passkeyConfig = {
+    unsupported: 'ERR.passkeysUnsupported'|trans,
+    attestationFailure: 'ERR.passkeyAttestationFailure'|trans,
+    requestUrl: path('webauthn.controller.creation.request.contao_frontend_add_authenticator'),
+    responseUrl: path('webauthn.controller.creation.response.contao_frontend_add_authenticator'),
+    redirect: redirect|default|raw,
+} %}
+
+{% set attributes = attrs()
+    .set('data-passkey-create')
+    .set('data-passkey-config', passkeyConfig|json_encode)
+    .mergeWith(attributes|default)
+%}
+
+{% block content %}
+    {% block passkey_list %}
+        {% if credentials|default %}
+            {% with {items: credentials} %}{{ block('list_component') }}{% endwith %}
+        {% endif %}
+    {% endblock %}
+
+    {% block passkey_add %}
+        <button type="button" class="create" data-passkey-button>{{ 'MSC.addPasskey'|trans }}</button>
+        <p class="error" data-passkey-error></p>
+    {% endblock %}
+{% endblock %}
+
+{% block list_item_attributes %}
+    {{- attrs(list.item_attributes|default).addClass('passkey') -}}
+{% endblock %}
+
+{% block list_item %}
+    <div class="name">
+        {%- if edit_passkey_id|default == item.id -%}
+            <form method="post" id="form-edit-passkey-{{ data.id }}-{{ item.id }}">
+                <input type="hidden" name="FORM_SUBMIT" value="passkeys_credentials_edit_{{ data.id }}">
+                <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+                <input type="hidden" name="credential_id" value="{{ item.id }}">
+                <input type="text" name="passkey_name" value="{{ item.name }}" placeholder="{{ 'MSC.passkeyNameInput'|trans }}" aria-label="{{ 'MSC.passkeyNameInput'|trans }}">
+            </form>
+        {%- else -%}
+            {{- item.name|default(item.id) -}}
+        {%- endif -%}
+    </div>
+    <div class="created"><span class="label">{{ 'MSC.passkeysCreatedAt'|trans }}</span> <span class="date">{{ item.createdAt|date(contao.datim_format|default('j. F Y, H:i')) }}</span></div>
+    <div class="actions">
+        <form method="post">
+            <input type="hidden" name="FORM_SUBMIT" value="passkeys_credentials_actions_{{ data.id }}">
+            <input type="hidden" name="REQUEST_TOKEN" value="{{ contao.request_token }}">
+            {% if edit_passkey_id|default == item.id -%}
+                <button type="submit" name="save_passkey" form="form-edit-passkey-{{ data.id }}-{{ item.id }}" value="{{ item.id }}" aria-label="{{ 'MSC.savePasskey'|trans([item.name|default(_key + 1)]) }}">{{ 'MSC.save'|trans }}</button>
+            {%- else -%}
+                <button type="submit" name="edit_passkey" value="{{ item.id }}" aria-label="{{ 'MSC.editPasskey'|trans([item.name|default(_key + 1)]) }}">{{ 'MSC.edit'|trans }}</button>
+            {%- endif %}
+            <button type="submit" name="delete_passkey" value="{{ item.id }}" onclick="if(!confirm('{{ 'MSC.deleteConfirm'|trans([item.name|default(_key + 1)]) }}'))return false" aria-label="{{ 'MSC.deletePasskey'|trans([item.name|default(item.id)]) }}">{{ 'MSC.delete'|trans }}</button>
+        </form>
+    </div>
+{% endblock %}
+
+{% block script %}
+    {% if not as_editor_view %}
+        {% add "passkey_create" to head %}
+            <script src="{{ asset('passkey_create.js', 'contao_core') }}" async></script>
+        {% endadd %}
+    {% endif %}
+{% endblock %}

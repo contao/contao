@@ -10,8 +10,8 @@
         <target>宛先の電子メールアドレスを入力してください。</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.0">
-        <source>Activate recipient</source>
-        <target>宛先を有効</target>
+        <source>Activate</source>
+        <target>有効化</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.1">
         <source>Recipients are usually activated automatically (double-opt-in).</source>
@@ -69,31 +69,27 @@
         <source>Import recipients from a CSV file</source>
         <target>宛先をCSVファイルからインポート</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_recipients.new.0">
-        <source>New</source>
-        <target>新規作成</target>
-      </trans-unit>
       <trans-unit id="tl_newsletter_recipients.new.1">
         <source>Create a new recipient</source>
         <target>新しい宛先を作成</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_recipients.show">
+      <trans-unit id="tl_newsletter_recipients.show.1">
         <source>Show the details of recipient ID %s</source>
         <target>ID %sの宛先の詳細を表示</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_recipients.edit">
+      <trans-unit id="tl_newsletter_recipients.edit.1">
         <source>Edit recipient ID %s</source>
         <target>ID %sの宛先を変更</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_recipients.cut">
+      <trans-unit id="tl_newsletter_recipients.cut.1">
         <source>Move recipient ID %s</source>
         <target>ID %sの宛先を移動</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_recipients.copy">
+      <trans-unit id="tl_newsletter_recipients.copy.1">
         <source>Duplicate recipient ID %s</source>
         <target>ID %sの宛先を複製</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_recipients.delete">
+      <trans-unit id="tl_newsletter_recipients.delete.1">
         <source>Delete recipient ID %s</source>
         <target>ID %sの宛先を削除</target>
       </trans-unit>
@@ -108,6 +104,14 @@
       <trans-unit id="tl_newsletter_recipients.toggle.2">
         <source>Activate recipient ID %s</source>
         <target>ID %sの宛先を有効化</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.toggle.3">
+        <source>Deactivate</source>
+        <target>停止</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.toggle.4">
+        <source>Activate</source>
+        <target>有効化</target>
       </trans-unit>
     </body>
   </file>

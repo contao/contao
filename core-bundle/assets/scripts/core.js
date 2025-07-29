@@ -1,3 +1,5 @@
+import * as Icon from "../modules/icon";
+
 /**
  * Provide methods to handle Ajax requests.
  *
@@ -316,7 +318,7 @@ window.AjaxRequest =
 		var img = null,
 			images = $(el).getElements('img'),
 			published = (images[0].get('data-state') == 1),
-			div, next, pa, title;
+			div, next, pa, label;
 
 		if (rowIcon && !iconOnly) {
 			// Find the icon depending on the view (tree view, list view, parent view)
@@ -383,20 +385,26 @@ window.AjaxRequest =
 		images.forEach(function(image) {
 			const newSrc = !published ? image.get('data-icon') : image.get('data-icon-disabled');
 			image.src = (image.src.includes('/') && !newSrc.includes('/')) ? image.src.slice(0, image.src.lastIndexOf('/') + 1) + newSrc : newSrc;
-			image.alt = title = !published ? image.get('data-alt') : image.get('data-alt-disabled');
+			image.alt = label = !published ? image.get('data-alt') : image.get('data-alt-disabled');
 			image.set('data-state', !published ? 1 : 0);
 		});
 
 		if (!published && $(el).get('data-title')) {
-			el.title = title = $(el).get('data-title');
+			el.title = label = $(el).get('data-title');
 		} else if (published && $(el).get('data-title-disabled')) {
-			el.title = title = $(el).get('data-title-disabled');
+			el.title = label = $(el).get('data-title-disabled');
 		}
 
-		if (title) {
+		if (!published && $(el).get('data-label')) {
+			label = $(el).get('data-label');
+		} else if (published && $(el).get('data-label-disabled')) {
+			label = $(el).get('data-label-disabled');
+		}
+
+		if (label) {
 			el.childNodes.forEach((child) => {
 				if (child instanceof Text && child.nodeValue.trim()) {
-					child.replaceWith(new Text(title));
+					child.replaceWith(new Text(label));
 				}
 			});
 		}
@@ -916,7 +924,7 @@ window.Backend =
 			if (el.hasClass('removable')) {
 				new Element('button', {
 					type: 'button',
-					html: '&times;',
+					html: Icon.getTemplate('delete', {'aria-hidden': true}).getHTML(),
 					'class': 'tl_red'
 				}).addEvent('click', function() {
 					var li = el.getParent('li'),
@@ -928,7 +936,7 @@ window.Backend =
 			} else {
 				new Element('button', {
 					type: 'button',
-					html: '&times',
+					html: Icon.getTemplate('delete', {'aria-hidden': true}).getHTML(),
 					disabled: true
 				}).inject(el, 'after');
 			}
@@ -2280,7 +2288,6 @@ window.addEvent('domready', function() {
 	}
 
 	Backend.tableWizardSetWidth();
-	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
 
 	Theme.stopClickPropagation();
@@ -2296,7 +2303,6 @@ window.addEvent('resize', function() {
 
 // Re-apply certain changes upon ajax_change
 window.addEvent('ajax_change', function() {
-	Backend.enableImageSizeWidgets();
 	Backend.enableToggleSelect();
 
 	Theme.stopClickPropagation();

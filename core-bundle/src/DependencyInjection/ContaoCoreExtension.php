@@ -141,11 +141,13 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $container->setParameter('contao.backend.badge_title', $config['backend']['badge_title']);
         $container->setParameter('contao.backend.route_prefix', $config['backend']['route_prefix']);
         $container->setParameter('contao.backend.crawl_concurrency', $config['backend']['crawl_concurrency']);
+        $container->setParameter('contao.backend.icons', $this->getBackendIcons());
         $container->setParameter('contao.intl.locales', $config['intl']['locales']);
         $container->setParameter('contao.intl.enabled_locales', $config['intl']['enabled_locales']);
         $container->setParameter('contao.intl.countries', $config['intl']['countries']);
         $container->setParameter('contao.insert_tags.allowed_tags', $config['insert_tags']['allowed_tags']);
         $container->setParameter('contao.sanitizer.allowed_url_protocols', $config['sanitizer']['allowed_url_protocols']);
+        $container->setParameter('contao.registration.expiration', $config['registration']['expiration']);
 
         $this->handleMessengerConfig($config, $container);
         $this->handleSearchConfig($config, $container);
@@ -162,6 +164,7 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         $this->handleCspConfig($config, $container);
         $this->handleAltcha($config, $container);
         $this->handleTemplateStudioConfig($config, $container, $loader);
+        $this->handleMailerConfig($config, $container);
 
         $container
             ->registerForAutoconfiguration(PickerProviderInterface::class)
@@ -615,6 +618,29 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         return Path::join($projectDir, $publicDir);
     }
 
+    private function getBackendIcons(): array
+    {
+        $basePath = Path::canonicalize(__DIR__.'/../../contao/themes/flexible/icons');
+        $manifest = json_decode(file_get_contents(Path::join($basePath, 'manifest.json')), true, 2, JSON_THROW_ON_ERROR);
+
+        $icons = [];
+
+        foreach ($manifest as $name => $publicPath) {
+            $svg = new \DOMDocument();
+            $svg->loadXML(file_get_contents(Path::join($basePath, $name)));
+
+            $icons[$name] = [
+                'path' => $publicPath,
+                'width' => $svg->documentElement->getAttribute('width'),
+                'height' => $svg->documentElement->getAttribute('height'),
+            ];
+        }
+
+        ksort($icons);
+
+        return $icons;
+    }
+
     private function handleSecurityConfig(array $config, ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('contao.listener.transport_security_header')) {
@@ -672,6 +698,18 @@ class ContaoCoreExtension extends Extension implements PrependExtensionInterface
         );
 
         $loader->load('template_studio.yaml');
+    }
+
+    private function handleMailerConfig(array $config, ContainerBuilder $container): void
+    {
+        if (null === $config['mailer']['override_from'] || !$container->hasDefinition('contao.mailer')) {
+            return;
+        }
+
+        $container
+            ->getDefinition('contao.mailer')
+            ->setArgument('$overrideFrom', $config['mailer']['override_from'])
+        ;
     }
 
     /**

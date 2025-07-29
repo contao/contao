@@ -56,6 +56,7 @@ use Contao\Model\MetadataTrait;
  * @property string            $url
  * @property boolean           $target
  * @property string            $cssClass
+ * @property string            $searchIndexer
  * @property boolean           $noComments
  * @property boolean           $featured
  * @property boolean           $published
@@ -106,6 +107,7 @@ use Contao\Model\MetadataTrait;
  * @method static CalendarEventsModel|null findOneByUrl($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByTarget($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByCssClass($val, array $opt=array())
+ * @method static CalendarEventsModel|null findOneBySearchIndexer($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByNoComments($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByFeatured($val, array $opt=array())
  * @method static CalendarEventsModel|null findOneByPublished($val, array $opt=array())
@@ -150,6 +152,7 @@ use Contao\Model\MetadataTrait;
  * @method static Collection<CalendarEventsModel>|null findByUrl($val, array $opt=array())
  * @method static Collection<CalendarEventsModel>|null findByTarget($val, array $opt=array())
  * @method static Collection<CalendarEventsModel>|null findByCssClass($val, array $opt=array())
+ * @method static Collection<CalendarEventsModel>|null findBySearchIndexer($val, array $opt=array())
  * @method static Collection<CalendarEventsModel>|null findByNoComments($val, array $opt=array())
  * @method static Collection<CalendarEventsModel>|null findByFeatured($val, array $opt=array())
  * @method static Collection<CalendarEventsModel>|null findByPublished($val, array $opt=array())
@@ -199,6 +202,7 @@ use Contao\Model\MetadataTrait;
  * @method static integer countByUrl($val, array $opt=array())
  * @method static integer countByTarget($val, array $opt=array())
  * @method static integer countByCssClass($val, array $opt=array())
+ * @method static integer countBySearchIndexer($val, array $opt=array())
  * @method static integer countByNoComments($val, array $opt=array())
  * @method static integer countByFeatured($val, array $opt=array())
  * @method static integer countByPublished($val, array $opt=array())

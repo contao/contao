@@ -99,6 +99,18 @@ class SearchIndexListener
             return false;
         }
 
+        // The "searchIndexer" setting has priority over robots tag
+        $pageJsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
+        $pageSearchIndexer = $pageJsonLds[0]['searchIndexer'] ?? null;
+
+        if ('always_index' === $pageSearchIndexer) {
+            return true;
+        }
+
+        if ('never_index' === $pageSearchIndexer) {
+            return false;
+        }
+
         // Cheap tests have been done at this stage. Now check the rate limiter if provided
         // which should be cheaper than extracting information from the document itself.
         if ($this->rateLimiterFactory) {
@@ -141,6 +153,18 @@ class SearchIndexListener
 
         // Delete if the X-Robots-Tag header contains "noindex"
         if (str_contains($response->headers->get('X-Robots-Tag', ''), 'noindex')) {
+            return true;
+        }
+
+        // The "searchIndexer" setting has priority over robots tag
+        $pageJsonLds = $document->extractJsonLdScripts('https://schema.contao.org/', 'Page');
+        $pageSearchIndexer = $pageJsonLds[0]['searchIndexer'] ?? null;
+
+        if ('always_index' === $pageSearchIndexer) {
+            return false;
+        }
+
+        if ('never_index' === $pageSearchIndexer) {
             return true;
         }
 

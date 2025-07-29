@@ -29,7 +29,7 @@ class FormStoreSessionMigration extends AbstractMigration
     {
         $schemaManager = $this->connection->createSchemaManager();
 
-        if (!$schemaManager->tablesExist('tl_form')) {
+        if (!$schemaManager->tablesExist(['tl_form'])) {
             return false;
         }
 

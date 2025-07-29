@@ -96,14 +96,6 @@ services:
         arguments:
             - '@contao.csp.parser'
 
-    contao.listener.data_container.cte_alias:
-        class: Contao\CoreBundle\EventListener\DataContainer\CteAliasListener
-        arguments:
-            - '@request_stack'
-            - '@security.helper'
-            - '@database_connection'
-            - '@contao.framework'
-
     contao.listener.data_container.default_global_operations:
         class: Contao\CoreBundle\EventListener\DataContainer\DefaultGlobalOperationsListener
 
@@ -156,6 +148,14 @@ services:
         arguments:
             - '@security.helper'
             - '@database_connection'
+
+    contao.listener.data_container.jobs:
+        class: Contao\CoreBundle\EventListener\DataContainer\JobsListener
+        arguments:
+            - '@security.helper'
+            - '@database_connection'
+            - '@request_stack'
+            - '@contao.framework'
 
     contao.listener.data_container.layout_options:
         class: Contao\CoreBundle\EventListener\DataContainer\LayoutOptionsListener
@@ -256,6 +256,18 @@ services:
         class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
         arguments:
             - '@translator'
+
+    contao.listener.data_container.switch_member_operation:
+        class: Contao\CoreBundle\EventListener\DataContainer\SwitchMemberOperationListener
+        arguments:
+            - '@security.helper'
+            - '@router'
+
+    contao.listener.data_container.switch_user_operation:
+        class: Contao\CoreBundle\EventListener\DataContainer\SwitchUserOperationListener
+        arguments:
+            - '@security.helper'
+            - '@router'
 
     contao.listener.data_container.template_options:
         class: Contao\CoreBundle\EventListener\DataContainer\TemplateOptionsListener
@@ -422,6 +434,15 @@ services:
             - '@request_stack'
             - '@translator'
             - '@contao.framework'
+
+    contao.listener.menu.backend_jobs:
+        class: Contao\CoreBundle\EventListener\Menu\BackendJobsListener
+        arguments:
+            - '@security.helper'
+            - '@twig'
+            - '@router'
+            - '@request_stack'
+            - '@contao.job.jobs'
 
     contao.listener.menu.backend_login:
         class: Contao\CoreBundle\EventListener\Menu\BackendLoginListener
@@ -608,7 +629,7 @@ services:
             - '@contao.routing.scope_matcher'
             - '@event_dispatcher'
 
-    contao.listener.webauthn_route:
+    contao.listener.webauthn_route_backend:
         class: Contao\CoreBundle\EventListener\WebauthnRouteListener
         arguments:
             -
@@ -617,6 +638,16 @@ services:
                 - webauthn.controller.security.contao_backend.request.options
                 - webauthn.controller.security.contao_backend.request.result
             - backend
+
+    contao.listener.webauthn_route_frontend:
+        class: Contao\CoreBundle\EventListener\WebauthnRouteListener
+        arguments:
+            -
+                - webauthn.controller.creation.request.contao_frontend_add_authenticator
+                - webauthn.controller.creation.response.contao_frontend_add_authenticator
+                - webauthn.controller.security.contao_frontend.request.options
+                - webauthn.controller.security.contao_frontend.request.result
+            - frontend
 
     contao.listener.widget.custom_rgxp:
         class: Contao\CoreBundle\EventListener\Widget\CustomRgxpListener

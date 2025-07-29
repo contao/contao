@@ -1,4 +1,5 @@
 const Encore = require('@symfony/webpack-encore');
+const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 
 // Core bundle assets
 Encore
@@ -19,6 +20,9 @@ Encore
         };
     })
     .addEntry('contao-backend', './core-bundle/assets/backend.js')
+    .addEntry('navigation', './core-bundle/assets/navigation.js')
+    .addEntry('passkey_login', './core-bundle/assets/passkey_login.js')
+    .addEntry('passkey_create', './core-bundle/assets/passkey_create.js')
     .configureDevServerOptions((options) => Object.assign({}, options, {
         static: [
             {
@@ -55,7 +59,15 @@ Encore
     .disableSingleRuntimeChunk()
     .enableSourceMaps(!Encore.isProduction())
     .enableVersioning(Encore.isProduction())
-    .enablePostCssLoader()
+    .enablePostCssLoader((options) => {
+        options.postcssOptions = {
+            plugins: {
+                'postcss-preset-env': {
+                    stage: 2,
+                }
+            }
+        };
+    })
     .configureCssLoader(config => {
         config.url = false;
     })
@@ -75,6 +87,51 @@ Encore
 
 const themeConfig = Encore.getWebpackConfig();
 
-delete themeConfig.devServer;
+Encore.reset();
 
-module.exports = [jsConfig, themeConfig];
+// Back end icons
+Encore
+    .setOutputPath('core-bundle/contao/themes/flexible/icons')
+    .setPublicPath('/system/themes/flexible/icons')
+    .setManifestKeyPrefix('')
+    .disableSingleRuntimeChunk()
+    .addPlugin(new ImageMinimizerPlugin({
+        minimizer: {
+            implementation: ImageMinimizerPlugin.svgoMinify,
+            options: {
+                encodeOptions: {
+                    multipass: true,
+                    plugins: [{
+                        name: 'preset-default',
+                        params: {
+                            overrides: {
+                                inlineStyles: {
+                                    onlyMatchedOnce: false,
+                                },
+                                convertPathData: {
+                                    noSpaceAfterFlags: true,
+                                },
+                            },
+                        },
+                    }],
+                },
+            },
+        },
+    }))
+    .copyFiles({
+        from: './core-bundle/contao/themes/flexible/icons',
+        to: '[name].[ext]',
+        pattern: /\.svg$/,
+    })
+    .configureWatchOptions(watchOptions => {
+        // Since we overwrite the sources, we need to prevent an endless loop.
+        watchOptions.ignored = ['**/core-bundle/contao/themes/flexible/icons'];
+    })
+;
+
+const iconConfig = Encore.getWebpackConfig();
+
+delete themeConfig.devServer;
+delete iconConfig.devServer;
+
+module.exports = [jsConfig, themeConfig, iconConfig];

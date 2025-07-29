@@ -93,7 +93,7 @@ class PaletteBuilderTest extends TestCase
         unset($GLOBALS['TL_DCA']);
     }
 
-    public static function getGetPaletteValues(): \Generator
+    public static function getGetPaletteValues(): iterable
     {
         yield 'Use default palette without a selector' => [
             'foo',

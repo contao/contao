@@ -172,13 +172,13 @@
     border-top: 1px solid var(--border);
 }
 
-#tmenu .icon-alert, #tmenu .icon-favorite, #tmenu .icon-manual, #tmenu .icon-color-scheme {
+#tmenu .icon-alert, #tmenu .icon-favorite, #tmenu .icon-manual, #tmenu .icon-color-scheme, #tmenu .icon-jobs {
     width: 16px;
     margin-bottom: -2px;
     position: relative;
     overflow: hidden;
     white-space: nowrap;
-    text-indent: 28px; /* 16px width + 12px padding */
+    text-indent: 38px; /* 16px width + 12px padding + 10px extra (see #8550) */
 }
 
 #tmenu .icon-alert {
@@ -195,6 +195,10 @@
 
 #tmenu .icon-manual {
     background: var(--icon-manual) center center no-repeat;
+}
+
+#tmenu .icon-jobs {
+    background: var(--icon-jobs) center center no-repeat;
 }
 
 #tmenu .icon-color-scheme {

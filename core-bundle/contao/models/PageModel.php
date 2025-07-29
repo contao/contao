@@ -74,7 +74,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @property integer           $cuser
  * @property integer           $cgroup
  * @property string            $chmod
- * @property boolean           $noSearch
+ * @property string            $searchIndexer
  * @property boolean           $requireItem
  * @property string            $cssClass
  * @property string            $sitemap
@@ -171,7 +171,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static PageModel|null findOneByCuser($val, array $opt=array())
  * @method static PageModel|null findOneByCgroup($val, array $opt=array())
  * @method static PageModel|null findOneByChmod($val, array $opt=array())
- * @method static PageModel|null findOneByNoSearch($val, array $opt=array())
+ * @method static PageModel|null findOneBySearchIndexer($val, array $opt=array())
  * @method static PageModel|null findOneByCssClass($val, array $opt=array())
  * @method static PageModel|null findOneBySitemap($val, array $opt=array())
  * @method static PageModel|null findOneByHide($val, array $opt=array())
@@ -236,7 +236,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static Collection<PageModel>|null findByCuser($val, array $opt=array())
  * @method static Collection<PageModel>|null findByCgroup($val, array $opt=array())
  * @method static Collection<PageModel>|null findByChmod($val, array $opt=array())
- * @method static Collection<PageModel>|null findByNoSearch($val, array $opt=array())
+ * @method static Collection<PageModel>|null findBySearchIndexer($val, array $opt=array())
  * @method static Collection<PageModel>|null findByCssClass($val, array $opt=array())
  * @method static Collection<PageModel>|null findBySitemap($val, array $opt=array())
  * @method static Collection<PageModel>|null findByHide($val, array $opt=array())
@@ -305,7 +305,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  * @method static integer countByCuser($val, array $opt=array())
  * @method static integer countByCgroup($val, array $opt=array())
  * @method static integer countByChmod($val, array $opt=array())
- * @method static integer countByNoSearch($val, array $opt=array())
+ * @method static integer countBySearchIndexer($val, array $opt=array())
  * @method static integer countByCssClass($val, array $opt=array())
  * @method static integer countBySitemap($val, array $opt=array())
  * @method static integer countByHide($val, array $opt=array())
@@ -343,6 +343,24 @@ class PageModel extends Model
 	{
 		self::$prefixes = null;
 		self::$suffixes = null;
+	}
+
+	public function __get($strKey)
+	{
+		if ('noSearch' === $strKey)
+		{
+			return 'never_index' === $this->searchIndexer;
+		}
+
+		return parent::__get($strKey);
+	}
+
+	public function setRow(array $arrData)
+	{
+		// Reset $blnDetailsLoaded (#8516)
+		$this->blnDetailsLoaded = false;
+
+		return parent::setRow($arrData);
 	}
 
 	/**
@@ -485,7 +503,7 @@ class PageModel extends Model
 	 */
 	public static function find401ByPid($intPid, array $arrOptions=array())
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "contao.routing.page_finder" service instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "contao.routing.page_finder" service instead.', __METHOD__);
 
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type='error_401'");
@@ -517,7 +535,7 @@ class PageModel extends Model
 	 */
 	public static function find403ByPid($intPid, array $arrOptions=array())
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "contao.routing.page_finder" service instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "contao.routing.page_finder" service instead.', __METHOD__);
 
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type='error_403'");
@@ -549,7 +567,7 @@ class PageModel extends Model
 	 */
 	public static function find404ByPid($intPid, array $arrOptions=array())
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the "contao.routing.page_finder" service instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the "contao.routing.page_finder" service instead.', __METHOD__);
 
 		$t = static::$strTable;
 		$arrColumns = array("$t.pid=? AND $t.type='error_404'");
@@ -1125,7 +1143,7 @@ class PageModel extends Model
 	 */
 	public function getFrontendUrl($strParams=null)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the content URL generator instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the content URL generator instead.', __METHOD__);
 
 		$this->loadDetails();
 
@@ -1174,7 +1192,7 @@ class PageModel extends Model
 	 */
 	public function getAbsoluteUrl($strParams=null)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the content URL generator instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the content URL generator instead.', __METHOD__);
 
 		$this->loadDetails();
 
@@ -1223,7 +1241,7 @@ class PageModel extends Model
 	 */
 	public function getPreviewUrl($strParams=null)
 	{
-		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" has been deprecated and will no longer work in Contao 6. Use the contao_backend_preview route instead.', __METHOD__);
+		trigger_deprecation('contao/core-bundle', '5.3', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the contao_backend_preview route instead.', __METHOD__);
 
 		$container = System::getContainer();
 

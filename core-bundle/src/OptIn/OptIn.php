@@ -19,11 +19,18 @@ use Contao\OptInModel;
 
 class OptIn implements OptInInterface
 {
+    private string $removeOn = '+3 days';
+
     /**
      * @internal
      */
     public function __construct(private readonly ContaoFramework $framework)
     {
+    }
+
+    public function setRemoveOn(string $removeOn): void
+    {
+        $this->removeOn = $removeOn;
     }
 
     public function create(string $prefix, string $email, array $related): OptInTokenInterface
@@ -48,10 +55,7 @@ class OptIn implements OptInInterface
         $optIn->tstamp = time();
         $optIn->token = $token;
         $optIn->createdOn = time();
-
-        // The token is required to remove unconfirmed subscriptions after 24 hours, so
-        // keep it for 3 days to make sure it is not purged before the subscription
-        $optIn->removeOn = strtotime('+3 days');
+        $optIn->removeOn = strtotime($this->removeOn);
         $optIn->email = $email;
         $optIn->save();
 

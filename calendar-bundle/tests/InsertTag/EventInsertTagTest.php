@@ -71,7 +71,7 @@ class EventInsertTagTest extends ContaoTestCase
         $this->assertSame($expectedOutputType, $result->getOutputType());
     }
 
-    public static function replacesTheEventTagsProvider(): \Generator
+    public static function replacesTheEventTagsProvider(): iterable
     {
         yield [
             'event',

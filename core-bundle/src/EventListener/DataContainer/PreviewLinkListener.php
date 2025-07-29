@@ -127,7 +127,7 @@ class PreviewLinkListener
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['url']['default'] = (string) $input->get('url');
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['showUnpublished']['default'] = (bool) $input->get('showUnpublished');
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdAt']['default'] = $now->getTimestamp();
-        $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default'] = strtotime($now->getTimestamp().'+1 day');
+        $GLOBALS['TL_DCA']['tl_preview_link']['fields']['expiresAt']['default'] = strtotime('+1 day', $now->getTimestamp());
         $GLOBALS['TL_DCA']['tl_preview_link']['fields']['createdBy']['default'] = $userId;
     }
 
@@ -191,10 +191,11 @@ class PreviewLinkListener
         $title ??= $this->translator->trans('tl_preview_link.share.0', [], 'contao_tl_preview_link');
 
         return \sprintf(
-            '<a href="%s" target="_blank" title="%s" data-controller="contao--clipboard" data-contao--clipboard-content-value="%s" data-action="contao--clipboard#write:prevent">%s</a> ',
+            '<a href="%s" target="_blank" title="%s" data-controller="contao--clipboard" data-contao--clipboard-content-value="%s" data-contao--clipboard-message-value="%s" data-action="contao--clipboard#write:prevent">%s</a> ',
             StringUtil::specialcharsUrl($url),
             StringUtil::specialchars($title),
             StringUtil::specialcharsUrl($url),
+            $this->translator->trans('MSC.clipboardCopy', [], 'contao_default'),
             $label ?? $url,
         );
     }

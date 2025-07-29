@@ -2,7 +2,7 @@
 
 {% block message_component %}
     {% set success = success is defined ? success : true %}
-    {% set show_close_button = show_close_button is defined ? show_close_button : not success %}
+    {% set autoclose = success and (constant('class', app.user) != 'Contao\BackendUser' or app.user.doNotHideMessages|default(false)) %}
 
     {% set message_attributes = attrs()
         .addClass('message')
@@ -11,21 +11,22 @@
         .set('aria-live', 'polite', success)
         .set('aria-alert', 'true', not success)
         .set('data-contao--message-outlet-target', 'message')
+        .set('data-contao--message-outlet-autoclose', 5000, autoclose)
         .set('data-turbo-temporary')
         .mergeWith(message_attributes|default)
     %}
     <div{{ message_attributes }}>
         <div class="inner">
-            {% if show_close_button or contao.backend_user.doNotHideMessages|default(false) %}
-                {% set close_button_attributes = attrs()
-                    .addClass('close')
-                    .set('type', 'button')
-                    .set('data-action', 'contao--message-outlet#close')
-                    .set('aria-label', 'MSC.cancelBT'|trans)
-                    .mergeWith(close_button_attributes|default)
-                %}
-                <button{{ close_button_attributes }}>x</button>
-            {% endif %}
+            {% set close_button_attributes = attrs()
+                .addClass('close')
+                .set('type', 'button')
+                .set('data-action', 'contao--message-outlet#close')
+                .set('aria-label', 'MSC.cancelBT'|trans)
+                .mergeWith(close_button_attributes|default)
+            %}
+            <button{{ close_button_attributes }}>
+                {{ backend_icon('close', attributes: attrs().set('width', 12).set('height', 12)) }}
+            </button>
 
             <div class="content">
                 {% block content %}{{ content }}{% endblock %}

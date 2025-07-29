@@ -116,7 +116,7 @@ class CoreResponseContextFactoryTest extends TestCase
         $this->assertTrue($responseContext->isInitialized(JsonLdManager::class));
     }
 
-    public static function contaoWebpageResponseContext(): \Generator
+    public static function contaoWebpageResponseContext(): iterable
     {
         yield 'Unprotected page' => [
             [],
@@ -179,7 +179,7 @@ class CoreResponseContextFactoryTest extends TestCase
         $pageModel->robots = 'noindex,nofollow';
         $pageModel->enableCanonical = true;
         $pageModel->canonicalLink = '{{link_url::42}}';
-        $pageModel->noSearch = false;
+        $pageModel->searchIndexer = '';
         $pageModel->protected = [] !== $groups;
         $pageModel->groups = $groups;
         $pageModel->enableCsp = true;
@@ -225,6 +225,7 @@ class CoreResponseContextFactoryTest extends TestCase
                 'groups' => $groups,
                 'fePreview' => false,
                 'memberGroups' => $memberGroups,
+                'searchIndexer' => '',
             ],
             $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray(),
         );
@@ -263,7 +264,7 @@ class CoreResponseContextFactoryTest extends TestCase
         $pageModel->id = 0;
         $pageModel->enableCanonical = true;
         $pageModel->canonicalLink = '{{link_url::42}}';
-        $pageModel->noSearch = false;
+        $pageModel->searchIndexer = '';
         $pageModel->protected = false;
 
         $factory = new CoreResponseContextFactory(
@@ -296,7 +297,7 @@ class CoreResponseContextFactoryTest extends TestCase
     public function testDecodingAndCleanupOnContaoResponseContext(): void
     {
         $container = $this->getContainerWithContaoConfiguration();
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class)));
 
         System::setContainer($container);
 
@@ -304,7 +305,7 @@ class CoreResponseContextFactoryTest extends TestCase
         $pageModel->id = 0;
         $pageModel->title = 'We went from Alpha &#62; Omega';
         $pageModel->description = 'My description <strong>contains</strong> HTML<br>.';
-        $pageModel->noSearch = false;
+        $pageModel->searchIndexer = '';
         $pageModel->protected = false;
 
         $insertTagsParser = $this->createMock(InsertTagParser::class);
@@ -347,6 +348,7 @@ class CoreResponseContextFactoryTest extends TestCase
                 'groups' => [],
                 'fePreview' => false,
                 'memberGroups' => [],
+                'searchIndexer' => '',
             ],
             $jsonLdManager->getGraphForSchema(JsonLdManager::SCHEMA_CONTAO)->get(ContaoPageSchema::class)->toArray(),
         );

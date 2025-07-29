@@ -46,8 +46,8 @@
         <target>Zdroj souborů</target>
       </trans-unit>
       <trans-unit id="tl_theme.source.1">
-        <source>Here you can upload one or more .cto or .sql files to be imported.</source>
-        <target>Zvolte prosím jeden nebo více souborů končících na &quot;.cto&quot; nebo &quot;.sql&quot;.</target>
+        <source>Here you can upload one or more .cto, .zip or .sql files to be imported.</source>
+        <target>Můžete importovat jeden nebo více souborů končících na .cto, .zip nebo .sql.</target>
       </trans-unit>
       <trans-unit id="tl_theme.tstamp.0">
         <source>Revision date</source>
@@ -149,43 +149,57 @@
         <source>Edit the theme settings</source>
         <target>Upravit nastavení vzhledu</target>
       </trans-unit>
-      <trans-unit id="tl_theme.new.0">
-        <source>New</source>
-        <target>Nové</target>
-      </trans-unit>
       <trans-unit id="tl_theme.new.1">
         <source>Create a new theme</source>
         <target>Vytvořit nový vzhled</target>
       </trans-unit>
-      <trans-unit id="tl_theme.show">
+      <trans-unit id="tl_theme.show.1">
         <source>Show the details of theme ID %s</source>
         <target>Zobrazit podrobnosti k vzhledu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.edit">
+      <trans-unit id="tl_theme.edit.1">
         <source>Edit theme ID %s</source>
         <target>Úprava vzhledu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.delete">
+      <trans-unit id="tl_theme.delete.1">
         <source>Delete theme ID %s</source>
         <target>Smazat vzhled ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.css">
-        <source>Edit the style sheets of theme ID %s</source>
-        <target>Úprava kaskádovitých stylů vzhledu ID %s</target>
+      <trans-unit id="tl_theme.modules.0">
+        <source>Front end modules</source>
+        <target>Muduly frontendu</target>
       </trans-unit>
-      <trans-unit id="tl_theme.modules">
+      <trans-unit id="tl_theme.modules.1">
         <source>Edit the front end modules of theme ID %s</source>
         <target>Úprava frontendových modulů vzhledu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.layout">
+      <trans-unit id="tl_theme.elements.0">
+        <source>Content elements</source>
+        <target>Elementy pro vytváření obsahu</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.elements.1">
+        <source>Edit the content elements of theme ID %s</source>
+      </trans-unit>
+      <trans-unit id="tl_theme.layout.0">
+        <source>Page layouts</source>
+        <target>Vzhledy stránky</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.layout.1">
         <source>Edit the page layouts of theme ID %s</source>
         <target>Úprava rozvržení stránek vzhledu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.imageSizes">
+      <trans-unit id="tl_theme.imageSizes.0">
+        <source>Image sizes</source>
+        <target>Obrázkové rozměry</target>
+      </trans-unit>
+      <trans-unit id="tl_theme.imageSizes.1">
         <source>Edit the image sizes of theme ID %s</source>
         <target>Upravit obrázkové rozměry vzhledu ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_theme.exportTheme">
+      <trans-unit id="tl_theme.exportTheme.0">
+        <source>Export theme</source>
+      </trans-unit>
+      <trans-unit id="tl_theme.exportTheme.1">
         <source>Export theme ID %s</source>
         <target>Exportovat vzhled ID %s</target>
       </trans-unit>

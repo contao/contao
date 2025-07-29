@@ -224,10 +224,20 @@ services:
             - '@contao.data_container.record_labeler'
             - '@contao.data_container.dca_request_switcher'
 
+    contao.data_container.global_operations_builder:
+        class: Contao\CoreBundle\DataContainer\DataContainerGlobalOperationsBuilder
+        public: true
+        arguments:
+            - '@contao.framework'
+            - '@twig'
+            - '@router'
+            - '@translator'
+
     contao.data_container.operations_builder:
         class: Contao\CoreBundle\DataContainer\DataContainerOperationsBuilder
         public: true
         arguments:
+            - '@contao.framework'
             - '@twig'
             - '@security.helper'
             - '@router'
@@ -530,9 +540,10 @@ services:
             - '@contao.framework'
             - '@monolog.logger.contao.error'
             - '@fragment.handler'
-            - '@request_stack'
             - ~
             - '%contao.insert_tags.allowed_tags%'
+            - '@?fos_http_cache.http.symfony_response_tagger'
+            - '@contao.listener.subrequest_cache'
 
     contao.insert_tag.php_function_flag:
         class: Contao\CoreBundle\InsertTag\Flag\PhpFunctionFlag
@@ -563,6 +574,10 @@ services:
 
     contao.insert_tag.resolver.fragment:
         class: Contao\CoreBundle\InsertTag\Resolver\FragmentInsertTag
+        arguments:
+            - '@request_stack'
+            - '@fragment.handler'
+            - '@contao.routing.page_finder'
 
     contao.insert_tag.resolver.if_language:
         class: Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag
@@ -610,6 +625,13 @@ services:
             - '%contao.intl.locales%'
             - '%contao.intl.enabled_locales%'
             - '%kernel.default_locale%'
+
+    contao.job.jobs:
+        class: Contao\CoreBundle\Job\Jobs
+        public: true
+        arguments:
+            - '@database_connection'
+            - '@security.helper'
 
     contao.mailer:
         class: Contao\CoreBundle\Mailer\ContaoMailer
@@ -754,6 +776,11 @@ services:
         arguments:
             - '@doctrine'
 
+    contao.repository.job:
+        class: Contao\CoreBundle\Repository\JobRepository
+        arguments:
+            - '@doctrine'
+
     contao.repository.webauthn_credential:
         class: Contao\CoreBundle\Repository\WebauthnCredentialRepository
         public: true
@@ -765,6 +792,8 @@ services:
         class: Contao\CoreBundle\Repository\WebauthnUserEntityRepository
         arguments:
             - '@contao.security.backend_user_provider'
+            - '@contao.security.frontend_user_provider'
+            - '@contao.routing.scope_matcher'
 
     contao.resource_finder:
         class: Contao\CoreBundle\Config\ResourceFinder
@@ -1020,6 +1049,11 @@ services:
             - '@security.access.decision_manager'
             - '@database_connection'
 
+    contao.security.data_container.content_alias_delete_voter:
+        class: Contao\CoreBundle\Security\Voter\DataContainer\ContentAliasDeleteVoter
+        arguments:
+            - '@database_connection'
+
     contao.security.data_container.content_composition_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\ContentCompositionVoter
         arguments:
@@ -1185,6 +1219,9 @@ services:
         arguments:
             - '@contao.framework'
 
+    contao.security.webauthn_credential_voter:
+        class: Contao\CoreBundle\Security\Voter\WebauthnCredentialVoter
+
     contao.session.factory:
         class: Contao\CoreBundle\Session\SessionFactory
         decorates: session.factory
@@ -1335,7 +1372,6 @@ services:
             - '@request_stack'
             - '@contao.security.token_checker'
             - '@contao.csrf.token_manager'
-            - '@security.helper'
             - '@contao.framework'
 
     contao.twig.highlighter_runtime:
@@ -1408,6 +1444,12 @@ services:
         arguments:
             - '@request_stack'
 
+    contao.webauthn.user_entity_guesser:
+        class: Webauthn\Bundle\Security\Guesser\CurrentUserEntityGuesser
+        arguments:
+            - '@security.token_storage'
+            - '@contao.repository.webauthn_user_entity'
+
     # Autowiring aliases
     Contao\CoreBundle\Cache\EntityCacheTags: '@contao.cache.entity_tags'
     Contao\CoreBundle\Cache\CacheTagManager: '@contao.cache.tag_manager'
@@ -1416,6 +1458,7 @@ services:
     Contao\CoreBundle\Csrf\ContaoCsrfTokenManager: '@contao.csrf.token_manager'
     Contao\CoreBundle\DataContainer\DcaUrlAnalyzer: '@contao.data_container.dca_url_analyzer'
     Contao\CoreBundle\Doctrine\Backup\DumperInterface: '@contao.doctrine.backup.dumper'
+    Contao\CoreBundle\Filesystem\FileDownloadHelper: '@contao.filesystem.file_download_helper'
     Contao\CoreBundle\Framework\ContaoFramework: '@contao.framework'
     Contao\CoreBundle\Image\ImageFactoryInterface: '@contao.image.factory'
     Contao\CoreBundle\Image\ImageSizes: '@contao.image.sizes'

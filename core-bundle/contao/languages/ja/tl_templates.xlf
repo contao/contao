@@ -69,9 +69,13 @@
         <source>Paste into folder &quot;%s&quot;</source>
         <target>&quot;%s&quot;というフォルダーの中に貼り付け</target>
       </trans-unit>
-      <trans-unit id="tl_templates.compare">
+      <trans-unit id="tl_templates.compare.1">
         <source>Compare &quot;%s&quot; with another template</source>
         <target>&quot;%s&quot;というテンプレートを別のテンプレートと比較</target>
+      </trans-unit>
+      <trans-unit id="tl_templates.twig_studio_hint">
+        <source>If you want to create or edit Twig templates, use the %s instead.</source>
+        <target>Twigのテンプレートを作成や編集をしたい場合は、 代わりに%sを使用してください。</target>
       </trans-unit>
     </body>
   </file>

@@ -70,8 +70,8 @@
         <target>Robots-Tag</target>
       </trans-unit>
       <trans-unit id="tl_page.robots.1">
-        <source>Here you can define how search engines handle the page.</source>
-        <target>Hier legen Sie fest, wie Suchmaschinen die Seite behandeln.</target>
+        <source>Here you can define how search engines handle the page. The setting also determines whether the page appears in the &lt;code&gt;sitemap.xml&lt;/code&gt; file or not.</source>
+        <target>Hier legen Sie fest, wie Suchmaschinen die Seite behandeln. Die Einstellung bestimmt auch, ob die Seite in der &lt;code&gt;sitemap.xml&lt;/code&gt;-Datei erscheint oder nicht.</target>
       </trans-unit>
       <trans-unit id="tl_page.maintenanceMode.0">
         <source>Maintenance mode</source>
@@ -135,7 +135,7 @@
       </trans-unit>
       <trans-unit id="tl_page.disableLanguageRedirect.1">
         <source>Do not redirect visitors to this website root based on their preferred browser language.</source>
-        <target>Besucher nicht auf Basis ihrer bevorzugten Browser-Sprache zu dieser Website-Startseite weiterleiten.</target>
+        <target>Besucher nicht auf Basis ihrer bevorzugten Browser-Sprache zu diesem Website-Startpunkt weiterleiten.</target>
       </trans-unit>
       <trans-unit id="tl_page.favicon.0">
         <source>Favicon</source>
@@ -263,7 +263,7 @@
       </trans-unit>
       <trans-unit id="tl_page.urlPrefix.1">
         <source>Enter a URL prefix (e.g. the language) that will be prepended to all page aliases below this website root page.</source>
-        <target>Geben Sie ein URL-Präfix (z. B. die Sprache) ein, das allen Seitenaliasen unterhalb dieser Website-Startseite vorangestellt wird.</target>
+        <target>Geben Sie ein URL-Präfix (z. B. die Sprache) ein, das allen Seitenaliasen unterhalb dieses Website-Startpunkts vorangestellt wird.</target>
       </trans-unit>
       <trans-unit id="tl_page.urlSuffix.0">
         <source>URL suffix</source>
@@ -393,14 +393,6 @@
         <source>Please assign the access rights for the page and its subpages.</source>
         <target>Bitte legen Sie die Zugriffsrechte der Seite und ihrer Unterseiten fest.</target>
       </trans-unit>
-      <trans-unit id="tl_page.noSearch.0">
-        <source>Do not search</source>
-        <target>Nicht durchsuchen</target>
-      </trans-unit>
-      <trans-unit id="tl_page.noSearch.1">
-        <source>Exclude the page from the search index.</source>
-        <target>Diese Seite nicht in den Suchindex aufnehmen.</target>
-      </trans-unit>
       <trans-unit id="tl_page.cssClass.0">
         <source>CSS class</source>
         <target>CSS-Klasse</target>
@@ -424,6 +416,14 @@
       <trans-unit id="tl_page.hide.1">
         <source>Hide the page in the navigation menu.</source>
         <target>Diese Seite in der Navigation nicht anzeigen.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.guests.0">
+        <source>Hide if logged in</source>
+        <target>Verstecken, wenn angemeldet</target>
+      </trans-unit>
+      <trans-unit id="tl_page.guests.1">
+        <source>Hide the page in the navigation menu if a member is logged in.</source>
+        <target>Diese Seite in der Navigation nicht anzeigen, wenn ein Mitglied angemeldet ist.</target>
       </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
@@ -472,6 +472,62 @@
       <trans-unit id="tl_page.twoFactorJumpTo.1">
         <source>Please choose the page to which members will be redirected to set up two-factor authentication.</source>
         <target>Bitte wählen Sie die Seite aus, zu der Mitglieder weitergeleitet werden, um die Zwei-Faktor-Authentifizierung einzurichten.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCsp.0">
+        <source>Enable CSP</source>
+        <target>CSP aktivieren</target>
+      </trans-unit>
+      <trans-unit id="tl_page.enableCsp.1">
+        <source>Enable Content Security Policy for this website.</source>
+        <target>Content-Security-Policy für diese Website aktivieren.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.0">
+        <source>Content Security Policy</source>
+        <target>Content-Security-Policy</target>
+      </trans-unit>
+      <trans-unit id="tl_page.csp.1">
+        <source>Here you can enter custom Content Security Policy directives.</source>
+        <target>Hier können Sie benutzerdefinierte Content-Security-Policy-Direktiven eingeben.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.0">
+        <source>Reporting only</source>
+        <target>Nur-Bericht-Modus</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportOnly.1">
+        <source>Only report policy violations without enforcing them.</source>
+        <target>Richtlinienverstöße nur melden, ohne sie durchzusetzen.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.0">
+        <source>Enable report logging</source>
+        <target>Protokollierung aktivieren</target>
+      </trans-unit>
+      <trans-unit id="tl_page.cspReportLog.1">
+        <source>Log CSP violations to the Contao system log.</source>
+        <target>CSP-Verstöße im Contao-Systemlog protokollieren.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFormat.0">
+        <source>Feed format</source>
+        <target>Feed-Format</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedFormat.1">
+        <source>Please choose a feed format.</source>
+        <target>Bitte wählen Sie ein Format.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maxFeedItems.0">
+        <source>Maximum number of items</source>
+        <target>Maximale Anzahl an Beiträgen</target>
+      </trans-unit>
+      <trans-unit id="tl_page.maxFeedItems.1">
+        <source>Here you can limit the number of feed items. Set to 0 to export all.</source>
+        <target>Hier können Sie die Anzahl der Beiträge limitieren. Geben Sie 0 ein, um alle zu exportieren.</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedDescription.0">
+        <source>Feed description</source>
+        <target>Feed-Beschreibung</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feedDescription.1">
+        <source>Here you can enter a short description of the feed.</source>
+        <target>Hier können Sie eine kurze Beschreibung des Feeds eingeben.</target>
       </trans-unit>
       <trans-unit id="tl_page.title_legend">
         <source>Name and type</source>
@@ -553,6 +609,18 @@
         <source>Two-factor authentication</source>
         <target>Zwei-Faktor-Authentifizierung</target>
       </trans-unit>
+      <trans-unit id="tl_page.csp_legend">
+        <source>Content Security Policy</source>
+        <target>Content-Security-Policy</target>
+      </trans-unit>
+      <trans-unit id="tl_page.feed_legend">
+        <source>Feed settings</source>
+        <target>Feed-Einstellungen</target>
+      </trans-unit>
+      <trans-unit id="tl_page.image_legend">
+        <source>Image settings</source>
+        <target>Bildeinstellungen</target>
+      </trans-unit>
       <trans-unit id="tl_page.permanent">
         <source>301 Permanent redirect</source>
         <target>301 Permanente Weiterleitung</target>
@@ -577,35 +645,31 @@
         <source>Inherit page layout</source>
         <target>Seitenlayout vererben</target>
       </trans-unit>
-      <trans-unit id="tl_page.new.0">
-        <source>New</source>
-        <target>Neu</target>
-      </trans-unit>
       <trans-unit id="tl_page.new.1">
         <source>Create a new page</source>
         <target>Eine neue Seite anlegen</target>
       </trans-unit>
-      <trans-unit id="tl_page.show">
+      <trans-unit id="tl_page.show.1">
         <source>Show the details of page ID %s</source>
         <target>Details der Seite ID %s anzeigen</target>
       </trans-unit>
-      <trans-unit id="tl_page.edit">
+      <trans-unit id="tl_page.edit.1">
         <source>Edit page ID %s</source>
         <target>Seite ID %s bearbeiten</target>
       </trans-unit>
-      <trans-unit id="tl_page.cut">
+      <trans-unit id="tl_page.cut.1">
         <source>Move page ID %s</source>
         <target>Seite ID %s verschieben</target>
       </trans-unit>
-      <trans-unit id="tl_page.copy">
-        <source>Duplicate page ID %s</source>
-        <target>Seite ID %s duplizieren</target>
+      <trans-unit id="tl_page.copy.1">
+        <source>Copy page ID %s</source>
+        <target>Seite ID %s kopieren</target>
       </trans-unit>
-      <trans-unit id="tl_page.copyChilds">
-        <source>Duplicate page ID %s with its subpages</source>
-        <target>Seite ID %s inklusive Unterseiten duplizieren</target>
+      <trans-unit id="tl_page.copyChildren.1">
+        <source>Copy page ID %s with its subpages</source>
+        <target>Seite ID %s inklusive Unterseiten kopieren</target>
       </trans-unit>
-      <trans-unit id="tl_page.delete">
+      <trans-unit id="tl_page.delete.1">
         <source>Delete page ID %s</source>
         <target>Seite ID %s löschen</target>
       </trans-unit>
@@ -621,9 +685,13 @@
         <source>Publish page ID %s</source>
         <target>Seite ID %s veröffentlichen</target>
       </trans-unit>
-      <trans-unit id="tl_page.pasteinto.0">
-        <source>Paste at the top</source>
-        <target>Oben einfügen</target>
+      <trans-unit id="tl_page.toggle.3">
+        <source>Unpublish</source>
+        <target>Unveröffentlichen</target>
+      </trans-unit>
+      <trans-unit id="tl_page.toggle.4">
+        <source>Publish</source>
+        <target>Veröffentlichen</target>
       </trans-unit>
       <trans-unit id="tl_page.pasteinto.1">
         <source>Paste into page ID %s</source>
@@ -633,7 +701,23 @@
         <source>Paste after page ID %s</source>
         <target>Nach der Seite ID %s einfügen</target>
       </trans-unit>
-      <trans-unit id="tl_page.articles">
+      <trans-unit id="tl_page.pastenewtop.1">
+        <source>Add a new page at the top</source>
+        <target>Neue Seite oben einfügen</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pastenewafter.1">
+        <source>Add a new page after page ID %s</source>
+        <target>Neue Seite nach der Seite ID %s einfügen</target>
+      </trans-unit>
+      <trans-unit id="tl_page.pastenewinto.1">
+        <source>Add a new page inside page ID %s</source>
+        <target>Neue Seite in die Seite ID %s einfügen</target>
+      </trans-unit>
+      <trans-unit id="tl_page.articles.0">
+        <source>Articles</source>
+        <target>Artikel</target>
+      </trans-unit>
+      <trans-unit id="tl_page.articles.1">
         <source>Edit the articles of page ID %s</source>
         <target>Artikel der Seite ID %s bearbeiten</target>
       </trans-unit>
@@ -647,7 +731,7 @@
       </trans-unit>
       <trans-unit id="tl_page.relCanonical">
         <source>Enable canonical URLs in the website root page to enable this configuration.</source>
-        <target>Aktivieren Sie kanonische URLs in der Website-Startseite, um diese Konfiguration zu aktivieren.</target>
+        <target>Aktivieren Sie kanonische URLs im Website-Startpunkt, um diese Konfiguration zu aktivieren.</target>
       </trans-unit>
       <trans-unit id="CACHE.0">
         <source>0 (do not cache)</source>

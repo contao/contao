@@ -10,8 +10,7 @@
         <target>Zadejte prosím mailovou adresu příjemce.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.0">
-        <source>Activate recipient</source>
-        <target>Aktivovat odběratele</target>
+        <source>Activate</source>
       </trans-unit>
       <trans-unit id="tl_newsletter_recipients.active.1">
         <source>Recipients are usually activated automatically (double-opt-in).</source>
@@ -69,31 +68,27 @@
         <source>Import recipients from a CSV file</source>
         <target>Import odběratelů ze souboru CSV</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_recipients.new.0">
-        <source>New</source>
-        <target>Nové</target>
-      </trans-unit>
       <trans-unit id="tl_newsletter_recipients.new.1">
         <source>Create a new recipient</source>
         <target>Vytvořit nového příjemce</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_recipients.show">
+      <trans-unit id="tl_newsletter_recipients.show.1">
         <source>Show the details of recipient ID %s</source>
         <target>Zobrazit podrobnosti k odběrateli ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_recipients.edit">
+      <trans-unit id="tl_newsletter_recipients.edit.1">
         <source>Edit recipient ID %s</source>
         <target>Upravit odběratele ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_recipients.cut">
+      <trans-unit id="tl_newsletter_recipients.cut.1">
         <source>Move recipient ID %s</source>
         <target>Přemístit odběratele ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_recipients.copy">
+      <trans-unit id="tl_newsletter_recipients.copy.1">
         <source>Duplicate recipient ID %s</source>
         <target>Duplikovat odběratele ID %s</target>
       </trans-unit>
-      <trans-unit id="tl_newsletter_recipients.delete">
+      <trans-unit id="tl_newsletter_recipients.delete.1">
         <source>Delete recipient ID %s</source>
         <target>Smazat odběratele ID %s</target>
       </trans-unit>
@@ -108,6 +103,13 @@
       <trans-unit id="tl_newsletter_recipients.toggle.2">
         <source>Activate recipient ID %s</source>
         <target>Aktivovat odběratele ID %s</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.toggle.3">
+        <source>Deactivate</source>
+        <target>Deaktivovat</target>
+      </trans-unit>
+      <trans-unit id="tl_newsletter_recipients.toggle.4">
+        <source>Activate</source>
       </trans-unit>
     </body>
   </file>

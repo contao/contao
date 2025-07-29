@@ -22,8 +22,8 @@ use Doctrine\ORM\Mapping\Table;
 
 #[Table(name: 'altcha_challenges')]
 #[Entity(repositoryClass: AltchaRepository::class)]
-#[Index(columns: ['challenge'], name: 'challenge')]
-#[Index(columns: ['expires'], name: 'expires')]
+#[Index(name: 'challenge', columns: ['challenge'])]
+#[Index(name: 'expires', columns: ['expires'])]
 class Altcha
 {
     #[Id]
