@@ -6812,7 +6812,7 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 	protected function getClipboardPermission(string $mode, int $id, array|null $new = null): array
 	{
-		if (ClipboardManager::MODE_CREATE === $mode)
+		if ('create' === $mode)
 		{
 			$parent = array('pid' => $id);
 
