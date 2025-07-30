@@ -67,7 +67,7 @@ export default class TooltipsController extends Controller {
 
     touchStart(e) {
         [...this.#activeTargets].filter((el) => !el.contains(e.target)).forEach(this.#hideTooltip.bind(this));
-    };
+    }
 
     #createTipContainer() {
         const tooltip = document.createElement('div');
