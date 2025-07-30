@@ -279,9 +279,7 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 3px;
     list-style: none;
-    margin: 0;
 }
 
 .operations a,
@@ -289,10 +287,21 @@
     display: flex;
     gap: 6px;
     align-items: center;
-    line-height: 16px;
+    line-height: 24px;
     white-space: nowrap;
     background-color: transparent;
     border: none;
+}
+
+.tl_right .operations {
+    margin: -4px 0;
+}
+
+.tl_right .operations > ul > li > a,
+.tl_right .operations > ul > li > button {
+    justify-content: center;
+    min-width: 24px;
+    padding: 4px 0;
 }
 
 .operations button:hover {
@@ -318,9 +327,9 @@
     z-index: 10;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 1px;
     margin: 0;
-    padding: 10px !important;
+    padding: 6px 10px !important;
     text-align: left;
     background: var(--content-bg) !important;
     border: 1px solid var(--content-border);
@@ -343,19 +352,13 @@
 }
 
 .operations-menu li.separator {
-    margin-top: 4px;
-    padding-top: 8px;
+    margin-top: 5px;
+    padding-top: 5px;
     border-top: 1px solid var(--border);
-}
-
-.operations-menu hr {
-    margin: 5px 0;
 }
 
 .operations-menu a,
 .operations-menu button {
-    padding-top: 1px;
-    padding-bottom: 1px;
     width: 100%;
     box-sizing: border-box;
 }
