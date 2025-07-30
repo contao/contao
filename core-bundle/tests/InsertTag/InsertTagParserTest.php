@@ -22,6 +22,7 @@ use Contao\CoreBundle\InsertTag\ResolvedInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\FragmentInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\IfLanguageInsertTag;
 use Contao\CoreBundle\InsertTag\Resolver\LegacyInsertTag;
+use Contao\CoreBundle\Routing\PageFinder;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\Fixtures\Helper\HookHelper;
 use Contao\CoreBundle\Tests\TestCase;
@@ -175,7 +176,7 @@ class InsertTagParserTest extends TestCase
 
         System::getContainer()->set('fragment.handler', $handler);
 
-        $parser->addSubscription(new InsertTagSubscription(new FragmentInsertTag($this->createMock(RequestStack::class), $handler), '__invoke', 'fragment', null, false, false));
+        $parser->addSubscription(new InsertTagSubscription(new FragmentInsertTag($this->createMock(RequestStack::class), $handler, $this->createMock(PageFinder::class)), '__invoke', 'fragment', null, false, false));
         $parser->addSubscription(new InsertTagSubscription(new LegacyInsertTag(System::getContainer()), '__invoke', 'br', null, true, false));
 
         $this->assertSame('<esi:include src="%7B%7Bbr%7D%7D" />', $parser->replace('{{fragment::{{br}}}}'));

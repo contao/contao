@@ -95,6 +95,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.copy.0">
         <source>Duplicate</source>
+        <target>Çoğalt</target>
       </trans-unit>
       <trans-unit id="tl_user_group.copy.1">
         <source>Duplicate user group ID %s</source>
@@ -122,6 +123,7 @@
       </trans-unit>
       <trans-unit id="tl_user_group.toggle.4">
         <source>Activate</source>
+        <target>Etkinleştir</target>
       </trans-unit>
     </body>
   </file>

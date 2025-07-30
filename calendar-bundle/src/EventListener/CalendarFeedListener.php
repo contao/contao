@@ -80,8 +80,14 @@ class CalendarFeedListener
     {
         $calendarEvent = $systemEvent->getEvent();
 
+        if ($calendarEvent['time']) {
+            $title = \sprintf('%s (%s) %s', $calendarEvent['date'], $calendarEvent['time'], $calendarEvent['title']);
+        } else {
+            $title = \sprintf('%s %s', $calendarEvent['date'], $calendarEvent['title']);
+        }
+
         $item = new Item();
-        $item->setTitle(html_entity_decode($calendarEvent['title'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $this->charset));
+        $item->setTitle(html_entity_decode($title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $this->charset));
         $item->setLastModified((new \DateTime())->setTimestamp($calendarEvent['begin']));
         $item->setLink($this->urlGenerator->generate($calendarEvent['model'], [], UrlGeneratorInterface::ABSOLUTE_URL));
         $item->setContent($this->getContent($calendarEvent, $item, $systemEvent));

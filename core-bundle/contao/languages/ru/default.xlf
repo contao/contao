@@ -3363,6 +3363,7 @@
       </trans-unit>
       <trans-unit id="DCA.pastenewtop.0">
         <source>New at the top</source>
+        <target>Новый вверху</target>
       </trans-unit>
       <trans-unit id="DCA.pastenewtop.1">
         <source>Create a new element at the top</source>
@@ -3370,6 +3371,7 @@
       </trans-unit>
       <trans-unit id="DCA.pastenewafter.0">
         <source>New after</source>
+        <target>Новый после</target>
       </trans-unit>
       <trans-unit id="DCA.pastenewafter.1">
         <source>Create a new element after element ID %s</source>
@@ -3377,9 +3379,11 @@
       </trans-unit>
       <trans-unit id="DCA.pastenewinto.0">
         <source>New inside</source>
+        <target>Новый внутри</target>
       </trans-unit>
       <trans-unit id="DCA.pastenewinto.1">
         <source>Create a new element inside element ID %s</source>
+        <target>Создать новый элемент внутри элемента ID %s</target>
       </trans-unit>
       <trans-unit id="CRAWL.searchIndex.summary">
         <source>Indexed %d URI(s) successfully. %d failed.</source>

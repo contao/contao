@@ -67,11 +67,11 @@
       </trans-unit>
       <trans-unit id="tl_news.canonicalLink.0">
         <source>Canonical URL</source>
-        <target>Kanonik adres</target>
+        <target>Örtüşen adres</target>
       </trans-unit>
       <trans-unit id="tl_news.canonicalLink.1">
         <source>Here you can set a custom canonical URL like https://example.com/.</source>
-        <target>Buradan bir özel kanonik adres ayarlayabilirsiniz. Örnek: https://sitem.com/.</target>
+        <target>Buradan bir özel örtüşen adres ayarlayabilirsiniz. Örnek: https://sitem.com/.</target>
       </trans-unit>
       <trans-unit id="tl_news.subheadline.0">
         <source>Subheadline</source>
@@ -91,11 +91,11 @@
       </trans-unit>
       <trans-unit id="tl_news.text.0">
         <source>News text</source>
-        <target>Haber metni</target>
+        <target>Haber yazısı</target>
       </trans-unit>
       <trans-unit id="tl_news.text.1">
         <source>Here you can enter the news text.</source>
-        <target>Buraya haber metnini yazabilirsiniz.</target>
+        <target>Buraya haber yazısını yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_news.addImage.0">
         <source>Add an image</source>
@@ -163,11 +163,11 @@
       </trans-unit>
       <trans-unit id="tl_news.linkText.0">
         <source>Link text</source>
-        <target>Bağlantı metni</target>
+        <target>Bağlantı yazısı</target>
       </trans-unit>
       <trans-unit id="tl_news.linkText.1">
         <source>Here you can override the default &quot;read more…&quot; link text.</source>
-        <target>Buradan varsayılan &quot;Devamını oku…&quot; metnini değiştirebilirsiniz.</target>
+        <target>Buradan varsayılan &quot;Devamını oku…&quot; yazısını değiştirebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_news.jumpTo.0">
         <source>Redirect page</source>
@@ -247,7 +247,7 @@
       </trans-unit>
       <trans-unit id="tl_news.text_legend">
         <source>News text</source>
-        <target>Haber metni</target>
+        <target>Haber yazısı</target>
       </trans-unit>
       <trans-unit id="tl_news.image_legend">
         <source>Image settings</source>
@@ -319,9 +319,11 @@
       </trans-unit>
       <trans-unit id="tl_news.toggle.3">
         <source>Publish</source>
+        <target>Yayınla</target>
       </trans-unit>
       <trans-unit id="tl_news.toggle.4">
         <source>Unpublish</source>
+        <target>Yayından kaldır</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.0">
         <source>Feature/unfeature news item ID %s</source>
@@ -337,9 +339,11 @@
       </trans-unit>
       <trans-unit id="tl_news.feature.3">
         <source>Unfeature</source>
+        <target>Öne çıkarılmışlardan kaldır</target>
       </trans-unit>
       <trans-unit id="tl_news.feature.4">
         <source>Feature</source>
+        <target>Öne çıkarılmışlara ekle</target>
       </trans-unit>
       <trans-unit id="tl_news.pasteafter.0">
         <source>Paste into this news archive</source>
