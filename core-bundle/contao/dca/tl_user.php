@@ -579,7 +579,7 @@ class tl_user extends Backend
 		foreach ($allowedOptions as $i => $operation)
 		{
 			$options[] = sprintf(
-				'<span><input type="checkbox" name="purge[]" id="opt_purge_%d" class="tl_checkbox" value="%s" data-action="focus->contao--scroll-offset#store"> <label for="opt_purge_%d">%s</label></span>',
+				'<span><input type="checkbox" name="purge[]" id="opt_purge_%d" class="tl_checkbox" value="%s" data-action="focus->contao--scroll-offset#store" data-contao--check-all-target="input"> <label for="opt_purge_%d">%s</label></span>',
 				$i,
 				$operation,
 				$i,
@@ -589,9 +589,9 @@ class tl_user extends Backend
 
 		return '
 <div class="widget">
-  <fieldset class="tl_checkbox_container">
+  <fieldset class="tl_checkbox_container" data-controller="contao--check-all">
     <legend>' . $GLOBALS['TL_LANG']['tl_user']['session'][0] . '</legend>
-    <span><input type="checkbox" id="check_all_purge" class="tl_checkbox" onclick="Backend.toggleCheckboxGroup(this, \'ctrl_purge\')"> <label for="check_all_purge" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label></span>
+    <span><input type="checkbox" id="check_all_purge" class="tl_checkbox" data-contao--check-all-target="source" data-action="contao--check-all#update"> <label for="check_all_purge" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label></span>
     ' . implode("\n", $options) . '
   </fieldset>' . $dc->help() . '
 </div>';
