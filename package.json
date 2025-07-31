@@ -1,5 +1,7 @@
 {
     "devDependencies": {
+        "@babel/core": "^7.26",
+        "@babel/preset-env": "^7.26",
         "@biomejs/biome": "^1.9",
         "@hotwired/stimulus": "^3.2",
         "@hotwired/stimulus-webpack-helpers": "^1.0",
@@ -19,7 +21,9 @@
         "sortablejs": "^1.15",
         "stylelint": "^16.20",
         "stylelint-config-standard": "^38.0",
-        "svgo": "^3.3.2"
+        "svgo": "^3.3.2",
+        "webpack": "^5.1",
+        "webpack-cli": "^5.1"
     },
     "browserslist": [
         "defaults"
