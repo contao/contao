@@ -1684,6 +1684,8 @@ window.Backend =
 	 * @author Kamil Kuzminski
 	 */
 	enableToggleSelect: function() {
+		console.warn('Backend.enableToggleSelect() is deprecated. Please use the stimulus controllers instead.');
+
 		var container = $('tl_listing'),
 			shiftToggle = function(el) {
 				thisIndex = checkboxes.indexOf(el);
