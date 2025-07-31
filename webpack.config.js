@@ -39,7 +39,7 @@ Encore
         allowedHosts: 'all',
         watchFiles: [
             'core-bundle/assets/styles/**/*',
-            'core-bundle/contao/themes/flexible/styles/**/*'
+            'core-bundle/contao/**/*',
         ],
         client: {
             overlay: false
