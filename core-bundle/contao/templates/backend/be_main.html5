@@ -38,7 +38,7 @@ $this->bodyAttributes = $this
     <link rel="stylesheet" href="<?= $this->asset('css/datepicker.min.css', 'contao-components/datepicker') ?>">
     <link rel="stylesheet" href="<?= $this->asset('css/dropzone.min.css', 'contao-components/dropzone') ?>">
     <link rel="stylesheet" href="<?= $this->asset('backend.css', 'system/themes/'.$this->theme) ?>">
-    <link rel="stylesheet" href="<?= $this->asset('backend.css', 'contao_core') ?>">
+    <link rel="stylesheet" href="<?= $this->asset('contao-backend.css', 'contao_core') ?>">
     <?= $this->stylesheets ?>
 
     <script><?= $this->getLocaleString() ?></script>
@@ -51,7 +51,7 @@ $this->bodyAttributes = $this
     <script src="<?= $this->asset('js/ext-language_tools.js', 'contao-components/ace') ?>"></script>
     <script src="<?= $this->asset('js/ext-whitespace.js', 'contao-components/ace') ?>"></script>
     <script src="<?= $this->asset('js/dropzone.min.js', 'contao-components/dropzone') ?>"></script>
-    <script src="<?= $this->asset('backend.js', 'contao_core') ?>"></script>
+    <script src="<?= $this->asset('contao-backend.js', 'contao_core') ?>"></script>
     <script><?= $this->getDateString() ?></script>
     <?= $this->javascripts ?>
   <?php $this->endblock(); ?>

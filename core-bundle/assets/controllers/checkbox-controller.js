@@ -1,20 +1,14 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static targets = ['input'];
+    static targets = ['checkAll', 'input'];
 
     static values = {
         rowGuards: {
             type: Array,
-            default: [
-                'input',
-                'label',
-                'button',
-                'a',
-                '.operations',
-            ]
+            default: ['input', 'label', 'button', 'a', '.operations'],
         },
-    }
+    };
 
     initialize() {
         this.start = null;
@@ -34,7 +28,7 @@ export default class extends Controller {
             }
 
             if (this.start && event.shiftKey) {
-                this.#shiftToggle(target)
+                this.#shiftToggle(target);
                 continue;
             }
 
@@ -51,6 +45,14 @@ export default class extends Controller {
         }
 
         this.start = input;
+    }
+
+    toggleAll() {
+        const checked = this.checkAllTarget.checked;
+
+        for (const el of this.inputTargets) {
+            el.checked = checked;
+        }
     }
 
     #shiftToggle(el) {
