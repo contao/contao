@@ -20,7 +20,7 @@ export default class extends Controller {
                     secondary.setAttribute(`data-${identifier}-target`, 'secondary');
                 }
 
-                el.dataset.controller = `${el.dataset.controller || ''} ${identifier}`;
+                el.dataset.controller = el.dataset.controller ? `${el.dataset.controller} ${identifier}` : `${identifier}`;
             }
         };
 
