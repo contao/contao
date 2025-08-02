@@ -126,10 +126,11 @@ class BackendHeaderListenerTest extends TestCase
         );
 
         // Submenu
-        $this->assertSame('<button type="button" data-contao--profile-target="button" data-action="contao--profile#toggle:prevent">MSC.user foo</button>', $children['submenu']->getLabel());
-        $this->assertSame(['class' => 'submenu', 'data-controller' => 'contao--profile', 'data-contao--profile-target' => 'menu', 'data-action' => 'click@document->contao--profile#documentClick'], $children['submenu']->getAttributes());
+        $this->assertSame('<button type="button" data-contao--dropdown-target="button" data-action="contao--dropdown#toggle:prevent">MSC.user foo</button>', $children['submenu']->getLabel());
+        $this->assertSame(['class' => 'submenu', 'data-controller' => 'contao--dropdown', 'data-contao--dropdown-name-value' => 'tmenu__profile', 'data-action' => 'click@document->contao--dropdown#documentClick keydown.esc@document->contao--dropdown#close'], $children['submenu']->getAttributes());
         $this->assertSame(['class' => 'profile'], $children['submenu']->getLabelAttributes());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['submenu']->getExtras());
+        $this->assertSame(['data-contao--dropdown-target' => 'dropdown'], $children['submenu']->getChildrenAttributes());
 
         $grandChildren = $children['submenu']->getChildren();
 

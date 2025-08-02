@@ -109,14 +109,15 @@ class BackendHeaderListener
 
         $submenu = $factory
             ->createItem('submenu')
-            ->setLabel('<button type="button" data-contao--profile-target="button" data-action="contao--profile#toggle:prevent">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
+            ->setLabel('<button type="button" data-contao--dropdown-target="button" data-action="contao--dropdown#toggle:prevent">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
             ->setAttribute('class', 'submenu')
-            ->setAttribute('data-controller', 'contao--profile')
-            ->setAttribute('data-contao--profile-target', 'menu')
-            ->setAttribute('data-action', 'click@document->contao--profile#documentClick')
+            ->setAttribute('data-controller', 'contao--dropdown')
+            ->setAttribute('data-contao--dropdown-name-value', 'tmenu__profile')
+            ->setAttribute('data-action', 'click@document->contao--dropdown#documentClick keydown.esc@document->contao--dropdown#close')
             ->setExtra('safe_label', true)
             ->setLabelAttribute('class', 'profile')
             ->setExtra('translation_domain', false)
+            ->setChildrenAttribute('data-contao--dropdown-target', 'dropdown')
         ;
 
         $tree->addChild($submenu);
