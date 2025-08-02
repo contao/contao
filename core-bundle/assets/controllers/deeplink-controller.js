@@ -21,8 +21,8 @@ export default class extends Controller {
                 }
 
                 el.dataset.controller = el.dataset.controller
-                                    ? `${el.dataset.controller} ${identifier}`
-                                    : `${identifier}`;
+                    ? `${el.dataset.controller} ${identifier}`
+                    : `${identifier}`;
             }
         };
 
