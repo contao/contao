@@ -29,7 +29,7 @@
       </thead>
       <tbody>
         <?php foreach ($this->versions as $version): ?>
-          <tr class="click2edit hover-row">
+          <tr class="hover-row" data-controller="contao--deeplink">
             <td><?= $version['date'] ?></td>
             <td><?= $version['username'] ?: '-' ?></td>
             <td><?= $version['shortTable'] ?></td>
@@ -41,7 +41,7 @@
                 <a href="<?= $this->route('contao_backend', ['do' => 'undo']) ?>"><?= Contao\Image::getHtml('undo.svg', $this->trans('MSC.restore'), 'class="undo"') ?></a>
               <?php else: ?>
                 <?php if ($version['editUrl']): ?>
-                  <a href="<?= $version['editUrl'] ?>" class="edit"><?= Contao\Image::getHtml('edit.svg', $this->editElement, 'style="padding:0 2px"') ?></a>
+                  <a href="<?= $version['editUrl'] ?>" class="edit" data-contao--deeplink-target="primary"><?= Contao\Image::getHtml('edit.svg', $this->editElement, 'style="padding:0 2px"') ?></a>
                 <?php else: ?>
                   <?= Contao\Image::getHtml('edit--disabled.svg', '', 'style="padding:0 2px"') ?>
                 <?php endif; ?>
