@@ -73,7 +73,7 @@ export default class extends Controller {
     }
 
     close() {
-        this.#toggleState(false)
+        this.#toggleState(false);
     }
 
     event(e) {
