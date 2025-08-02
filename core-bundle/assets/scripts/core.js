@@ -2234,6 +2234,10 @@ window.Theme =
 	 * Set up the split button toggle
 	 */
 	setupSplitButtonToggle: function() {
+		if (window.console) {
+			console.warn('Theme.setupSplitButtonToggle() is deprecated. Please use the stimulus controller instead.');
+		}
+
 		var toggle = $('sbtog');
 		if (!toggle) return;
 

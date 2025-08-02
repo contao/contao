@@ -4,10 +4,22 @@
             {{ buttons|join(' ')|raw }}
         {% else %}
             {{ buttons[0]|raw }}
-            <div class="split-button">
+            {% set button_wrapper_attributes = attrs()
+                .addClass('split-button')
+                .set('data-controller', 'contao--dropdown')
+                .set('data-action', 'click@document->contao--dropdown#documentClick keydown.esc@document->contao--dropdown#close')
+                .set('data-contao--dropdown-name-value', 'split_button')
+            %}
+            <div{{ button_wrapper_attributes }}>
                 {{ buttons[1]|raw }}
-                <button type="button" id="sbtog">{{ backend_icon('navcol.svg') }}</button>
-                <ul class="invisible">
+                {% set button_attributes = attrs()
+                    .addClass('d-xl-none')
+                    .set('type', 'button')
+                    .set('data-contao--dropdown-target', 'button')
+                    .set('data-action', 'contao--dropdown#toggle:prevent')
+                %}
+                <button{{ button_attributes }}>{{ backend_icon('navcol.svg') }}</button>
+                <ul class="invisible" data-contao--dropdown-target="dropdown">
                     {% for button in buttons|slice(2) %}
                         <li>{{ button|raw }}</li>
                     {% endfor %}
