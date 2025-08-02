@@ -92,6 +92,6 @@ export default class extends Controller {
             return;
         }
 
-        this.#toggleState(false)
+        this.#toggleState(false);
     }
 }
