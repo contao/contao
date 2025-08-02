@@ -2239,7 +2239,6 @@ window.Theme =
 		}
 
 		var toggle = $('sbtog');
-		if (!toggle) return;
 
 		var ul = toggle.getParent('.split-button').getElement('ul'),
 			tab, timer;
@@ -2297,7 +2296,10 @@ window.addEvent('domready', function() {
 	Theme.stopClickPropagation();
 	Theme.setupTextareaResizing();
 	Theme.setupMenuToggle();
-	Theme.setupSplitButtonToggle();
+
+	if ($('sbtog')) {
+		Theme.setupSplitButtonToggle();
+	}
 });
 
 // Resize the table wizard
