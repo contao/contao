@@ -5,35 +5,86 @@ export default class extends Controller {
 
     static values = {
         name: String,
+        activeClass: {
+            type: String,
+            default: 'active',
+        },
         buttonActiveClass: {
             type: String,
             default: 'active',
         },
-        dropdownActiveClass: {
+        invisibleClass: {
             type: String,
-            default: 'active',
+            default: 'invisible',
+        },
+        invisibleMode: {
+            type: Boolean,
+            default: false,
         },
     };
 
     connect() {
         this.element.setAttribute('id', this.nameValue);
+        this.blurTimeout = null;
     }
 
     buttonTargetConnected(button) {
         button.setAttribute('aria-controls', this.nameValue);
         button.setAttribute('aria-expanded', 'false');
+
+        if (this.invisibleModeValue) {
+            button.setAttribute('tabIndex', -1);
+        }
     }
 
-    toggle(event) {
-        this.dropdownTarget.classList.toggle(this.dropdownActiveClassValue);
-        this.buttonTarget.classList.toggle(this.buttonActiveClassValue);
-        this.buttonTarget.setAttribute('aria-expanded', this.element.classList.contains(this.dropdownActiveClassValue));
+    dropdownTargetConnected(dropdown) {
+        if (!this.invisibleModeValue) {
+            return;
+        }
+
+        dropdown.classList.add('invisible');
+
+        const focusable = this.dropdownTarget.querySelectorAll('a[href], button');
+
+        for (const element of focusable) {
+            element.dataset.action = 'blur->contao--dropdown#event focus->contao--dropdown#event';
+        }
+    }
+
+    #toggleState(state) {
+        this.buttonTarget.classList.toggle(this.buttonActiveClassValue, state);
+        this.buttonTarget.setAttribute('aria-expanded', state);
+
+        if (this.invisibleModeValue) {
+            this.dropdownTarget.classList.toggle(this.invisibleClassValue, !state);
+        } else {
+            this.dropdownTarget.classList.toggle(this.activeClassValue, state);
+        }
+    }
+
+    toggle() {
+        const isOpen = this.buttonTarget.ariaExpanded === 'true';
+
+        this.#toggleState(!isOpen);
+    }
+
+    open() {
+        this.#toggleState(true);
     }
 
     close() {
-        this.dropdownTarget.classList.remove(this.dropdownActiveClassValue);
-        this.buttonTarget.classList.remove(this.buttonActiveClassValue);
-        this.buttonTarget.setAttribute('aria-expanded', 'false');
+        this.#toggleState(false)
+    }
+
+    event(e) {
+        if (e.type === 'blur') {
+            this.blurTimeout = setTimeout(() => this.#toggleState(false), 100);
+            return;
+        }
+
+        this.#toggleState(true);
+
+        clearTimeout(this.blurTimeout);
     }
 
     documentClick(event) {
@@ -41,6 +92,6 @@ export default class extends Controller {
             return;
         }
 
-        this.close();
+        this.#toggleState(false)
     }
 }
