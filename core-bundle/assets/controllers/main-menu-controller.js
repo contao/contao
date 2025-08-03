@@ -7,7 +7,7 @@ export default class extends DropdownController {
             type: String,
             default: 'show-navigation',
         },
-    }
+    };
 
     toggle() {
         const isOpen = this.buttonTarget.ariaExpanded === 'true';

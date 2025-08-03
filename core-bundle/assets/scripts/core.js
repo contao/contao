@@ -2299,7 +2299,6 @@ window.addEvent('domready', function() {
 
 	Theme.stopClickPropagation();
 	Theme.setupTextareaResizing();
-	//Theme.setupMenuToggle();
 
 	if ($('sbtog')) {
 		Theme.setupSplitButtonToggle();
