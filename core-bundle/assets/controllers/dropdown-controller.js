@@ -24,6 +24,7 @@ export default class extends Controller {
     };
 
     connect() {
+        this.element.setAttribute('id', this.nameValue);
         this.blurTimeout = null;
     }
 
@@ -37,8 +38,6 @@ export default class extends Controller {
     }
 
     dropdownTargetConnected(dropdown) {
-        this.dropdownTarget.setAttribute('id', this.nameValue);
-
         if (!this.invisibleModeValue) {
             return;
         }
