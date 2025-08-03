@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import DropdownController from "./dropdown-controller";
+import DropdownController from './dropdown-controller';
 
 export default class extends DropdownController {
     static values = {
