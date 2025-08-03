@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
-export default class extends Controller {
+export default class DropdownController extends Controller {
     static targets = ['button', 'dropdown'];
 
     static values = {
@@ -51,7 +51,7 @@ export default class extends Controller {
         }
     }
 
-    #toggleState(state) {
+    toggleState(state) {
         this.buttonTarget.classList.toggle(this.buttonActiveClassValue, state);
         this.buttonTarget.setAttribute('aria-expanded', state);
 
@@ -65,24 +65,24 @@ export default class extends Controller {
     toggle() {
         const isOpen = this.buttonTarget.ariaExpanded === 'true';
 
-        this.#toggleState(!isOpen);
+        this.toggleState(!isOpen);
     }
 
     open() {
-        this.#toggleState(true);
+        this.toggleState(true);
     }
 
     close() {
-        this.#toggleState(false);
+        this.toggleState(false);
     }
 
     event(e) {
         if (e.type === 'blur') {
-            this.blurTimeout = setTimeout(() => this.#toggleState(false), 100);
+            this.blurTimeout = setTimeout(() => this.toggleState(false), 100);
             return;
         }
 
-        this.#toggleState(true);
+        this.toggleState(true);
 
         clearTimeout(this.blurTimeout);
     }
@@ -92,6 +92,6 @@ export default class extends Controller {
             return;
         }
 
-        this.#toggleState(false);
+        this.toggleState(false);
     }
 }

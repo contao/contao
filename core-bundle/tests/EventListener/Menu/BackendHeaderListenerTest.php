@@ -161,8 +161,8 @@ class BackendHeaderListenerTest extends TestCase
         $this->assertSame(['translation_domain' => 'contao_default'], $grandChildren['favorites']->getExtras());
 
         // Burger
-        $this->assertSame('<button type="button" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', $children['burger']->getLabel());
-        $this->assertSame(['class' => 'burger'], $children['burger']->getAttributes());
+        $this->assertSame('<button type="button" data-contao--main-menu-target="button" data-action="contao--main-menu#toggle:prevent" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', $children['burger']->getLabel());
+        $this->assertSame(['class' => 'burger', 'data-contao--main-menu-name-value' => 'tmenu__burger'], $children['burger']->getAttributes());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['burger']->getExtras());
     }
 

@@ -13,7 +13,7 @@ $this->bodyAttributes = $this
     ->set('id', 'top')
     ->addClass('be_main')
     ->addClass('popup', $this->isPopup)
-    ->set('data-controller', 'contao--tooltips')
+    ->set('data-controller', 'contao--tooltips contao--main-menu')
     ->set('data-action', '"touchstart@document->contao--tooltips#touchStart')
     ->mergeWith($this->bodyAttributes)
 ;
@@ -90,7 +90,7 @@ $this->bodyAttributes = $this
 
       <?php $this->block('left'); ?>
         <?php if (!$this->isPopup): ?>
-          <aside id="left">
+          <aside id="left" data-contao--main-menu-target="dropdown">
             <?= $this->menu ?>
             <div class="version">
               <?php $this->block('version'); ?>

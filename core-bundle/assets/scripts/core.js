@@ -2160,6 +2160,10 @@ window.Theme =
 	 * Set up the menu toggle
 	 */
 	setupMenuToggle: function() {
+		if (window.console) {
+			console.warn('Theme.setupMenuToggle() is deprecated. Please use the stimulus controller instead.');
+		}
+
 		var burger = $('burger');
 		if (!burger) return;
 
@@ -2295,7 +2299,7 @@ window.addEvent('domready', function() {
 
 	Theme.stopClickPropagation();
 	Theme.setupTextareaResizing();
-	Theme.setupMenuToggle();
+	//Theme.setupMenuToggle();
 
 	if ($('sbtog')) {
 		Theme.setupSplitButtonToggle();
