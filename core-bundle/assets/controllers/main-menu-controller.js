@@ -16,4 +16,10 @@ export default class extends DropdownController {
 
         super.toggleState(!isOpen);
     }
+
+    close() {
+        document.body.classList.toggle(this.bodyClassValue, false);
+
+        super.toggleState(false);
+    }
 }
