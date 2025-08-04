@@ -17,11 +17,11 @@
                 {% set button_attributes = attrs()
                     .addClass('d-xl-none')
                     .set('type', 'button')
-                    .set('data-contao--toggle-state-target', 'button')
+                    .set('data-contao--toggle-state-target', 'controller')
                     .set('data-action', 'contao--toggle-state#toggle:prevent')
                 %}
                 <button{{ button_attributes }}>{{ backend_icon('navcol.svg') }}</button>
-                <ul class="invisible" data-contao--toggle-state-target="dropdown">
+                <ul class="invisible" data-contao--toggle-state-target="controls">
                     {% for button in buttons|slice(2) %}
                         <li>{{ button|raw }}</li>
                     {% endfor %}

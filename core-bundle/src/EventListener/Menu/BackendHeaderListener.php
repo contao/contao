@@ -109,7 +109,7 @@ class BackendHeaderListener
 
         $submenu = $factory
             ->createItem('submenu')
-            ->setLabel('<button type="button" data-contao--toggle-state-target="button" data-action="contao--toggle-state#toggle:prevent">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
+            ->setLabel('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">'.$this->translator->trans('MSC.user', [], 'contao_default').' '.$user->username.'</button>')
             ->setAttribute('class', 'submenu')
             ->setAttribute('data-controller', 'contao--toggle-state')
             ->setAttribute('data-contao--toggle-state-name-value', 'tmenu__profile')
@@ -117,7 +117,7 @@ class BackendHeaderListener
             ->setExtra('safe_label', true)
             ->setLabelAttribute('class', 'profile')
             ->setExtra('translation_domain', false)
-            ->setChildrenAttribute('data-contao--toggle-state-target', 'dropdown')
+            ->setChildrenAttribute('data-contao--toggle-state-target', 'controls')
         ;
 
         $tree->addChild($submenu);
@@ -164,7 +164,7 @@ class BackendHeaderListener
 
         $burger = $factory
             ->createItem('burger')
-            ->setLabel('<button type="button" data-contao--toggle-state-target="button" data-action="contao--toggle-state#toggle:prevent" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
+            ->setLabel('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>')
             ->setAttribute('class', 'burger')
             ->setAttribute('data-contao--toggle-state-name-value', 'tmenu__burger')
             ->setExtra('safe_label', true)

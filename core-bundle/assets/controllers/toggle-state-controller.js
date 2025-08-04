@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static targets = ['button', 'dropdown'];
+    static targets = ['controller', 'controls'];
 
     static values = {
         name: String,
@@ -24,23 +24,23 @@ export default class extends Controller {
         this.blurTimeout = null;
     }
 
-    buttonTargetConnected(button) {
-        button.setAttribute('aria-controls', this.nameValue);
-        button.setAttribute('aria-expanded', 'false');
+    controllerTargetConnected(controller) {
+        controller.setAttribute('aria-controls', this.nameValue);
+        controller.setAttribute('aria-expanded', 'false');
 
         if (this.inverseModeValue) {
-            button.setAttribute('tabIndex', -1);
+            controller.setAttribute('tabIndex', -1);
         }
     }
 
-    dropdownTargetConnected(dropdown) {
+    controlsTargetConnected(controls) {
         if (!this.inverseModeValue) {
             return;
         }
 
-        dropdown.classList.add('invisible');
+        controls.classList.add('invisible');
 
-        const focusable = this.dropdownTarget.querySelectorAll('a[href], button');
+        const focusable = this.controlsTarget.querySelectorAll('a[href], button');
 
         for (const element of focusable) {
             element.dataset.action = 'blur->contao--toggle-state#event focus->contao--toggle-state#event';
@@ -48,13 +48,13 @@ export default class extends Controller {
     }
 
     toggleState(state) {
-        this.buttonTarget.classList.toggle(this.controllerClassValue, state);
-        this.buttonTarget.setAttribute('aria-expanded', state);
-        this.dropdownTarget.classList.toggle(this.controlsClassValue, this.inverseModeValue ? !state : state);
+        this.controllerTarget.classList.toggle(this.controllerClassValue, state);
+        this.controllerTarget.setAttribute('aria-expanded', state);
+        this.controlsTarget.classList.toggle(this.controlsClassValue, this.inverseModeValue ? !state : state);
     }
 
     toggle() {
-        const isOpen = this.buttonTarget.ariaExpanded === 'true';
+        const isOpen = this.controllerTarget.ariaExpanded === 'true';
 
         this.toggleState(!isOpen);
     }
@@ -79,7 +79,7 @@ export default class extends Controller {
     }
 
     documentClick(event) {
-        if (this.buttonTarget.contains(event.target)) {
+        if (this.controllerTarget.contains(event.target)) {
             return;
         }
 

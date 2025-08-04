@@ -90,7 +90,7 @@ $this->bodyAttributes = $this
 
       <?php $this->block('left'); ?>
         <?php if (!$this->isPopup): ?>
-          <aside id="left" data-contao--toggle-state-target="dropdown">
+          <aside id="left" data-contao--toggle-state-target="controls">
             <?= $this->menu ?>
             <div class="version">
               <?php $this->block('version'); ?>
