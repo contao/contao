@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 
-export default class DropdownController extends Controller {
+export default class extends Controller {
     static targets = ['button', 'dropdown'];
 
     static values = {
