@@ -14,21 +14,23 @@ export default class extends Controller {
         this.start = null;
     }
 
-    rowClick(event) {
+    toggleRow(event) {
         if (event.target.closest(this.rowGuardsValue)) {
             return;
         }
 
+        const target = event.currentTarget.querySelector('[data-contao--check-all-target="input"]');
+
         if (this.start && event.shiftKey) {
-            this.#shiftToggle(this.inputTarget);
+            this.#shiftToggle(target);
             return;
         }
 
-        this.inputTarget.checked ^= 1;
-        this.start = this.inputTarget;
+        target.checked ^= 1;
+        this.start = target;
     }
 
-    inputClick(event) {
+    toggleInput(event) {
         const input = event.target;
 
         if (event.shiftKey && null !== this.start) {

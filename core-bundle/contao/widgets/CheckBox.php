@@ -210,7 +210,7 @@ class CheckBox extends Widget
 				$this->mandatory ? '<span class="mandatory">*</span>' : '',
 				$this->xlabel,
 				$this->strName,
-				$blnCheckAll ? '<span><input type="checkbox" id="check_all_' . $this->strId . '" class="tl_checkbox" data-action="focus->contao--scroll-offset#store" data-contao--check-all-target="input"' . ($this->onclick ? ' onclick="' . $this->onclick . '"' : '') . '"> <label for="check_all_' . $this->strId . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label></span>' : '',
+				$blnCheckAll ? '<span><input type="checkbox" id="check_all_' . $this->strId . '" class="tl_checkbox" data-contao--check-all-target="source" data-action="focus->contao--scroll-offset#store contao--check-all#toggleAll"' . ($this->onclick ? ' onclick="' . $this->onclick . '"' : '') . '> <label for="check_all_' . $this->strId . '" class="check-all"><em>' . $GLOBALS['TL_LANG']['MSC']['selectAll'] . '</em></label></span>' : '',
 				implode(' ', $arrOptions),
 				$this->wizard
 			);
@@ -243,7 +243,7 @@ class CheckBox extends Widget
 			$this->multiple ? self::specialcharsValue($arrOption['value']) : 1,
 			$this->isChecked($arrOption),
 			$this->getAttributes(),
-			$this->multiple ? ' data-action="focus->contao--scroll-offset#store click->contao--check-all#inputClick" data-contao--check-all-target="input"' : '',
+			$this->multiple ? ' data-action="focus->contao--scroll-offset#store click->contao--check-all#toggleInput" data-contao--check-all-target="input"' : '',
 			$this->strId . '_' . $i,
 			$this->mandatory && !$this->multiple ? '<span class="invisible">' . $GLOBALS['TL_LANG']['MSC']['mandatory'] . ' </span>' : '',
 			$arrOption['label'] ?? null,
