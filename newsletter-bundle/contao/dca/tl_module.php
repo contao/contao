@@ -107,23 +107,6 @@ class tl_module_newsletter extends Backend
 	}
 
 	/**
-	 * Load the default unsubscribe text
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return mixed
-	 */
-	public function getUnsubscribeDefault($varValue)
-	{
-		if (trim($varValue) === '')
-		{
-			$varValue = $GLOBALS['TL_LANG']['tl_module']['text_unsubscribe'][1];
-		}
-
-		return $varValue;
-	}
-
-	/**
 	 * Get all channels and return them as array
 	 *
 	 * @return array
