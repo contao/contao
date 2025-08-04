@@ -90,23 +90,6 @@ $GLOBALS['TL_DCA']['tl_module']['fields']['nl_template'] = array
 class tl_module_newsletter extends Backend
 {
 	/**
-	 * Load the default subscribe text
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return mixed
-	 */
-	public function getSubscribeDefault($varValue)
-	{
-		if (trim($varValue) === '')
-		{
-			$varValue = $GLOBALS['TL_LANG']['tl_module']['text_subscribe'][1];
-		}
-
-		return $varValue;
-	}
-
-	/**
 	 * Get all channels and return them as array
 	 *
 	 * @return array
