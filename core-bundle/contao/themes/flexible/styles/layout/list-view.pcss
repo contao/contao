@@ -280,6 +280,7 @@
     justify-content: flex-end;
     align-items: center;
     list-style: none;
+    margin: 0;
 }
 
 .operations a,
@@ -293,15 +294,20 @@
     border: none;
 }
 
-.tl_right .operations {
-    margin: -4px 0;
+.tl_content_right,
+.tl_right_nowrap,
+.tl_right {
+    .operations {
+        margin: -4px 0;
+    }
 }
 
-.tl_right .operations > ul > li > a,
-.tl_right .operations > ul > li > button {
-    justify-content: center;
-    min-width: 24px;
-    padding: 4px 0;
+.operations img {
+    padding: 4px;
+}
+
+.operations-menu img {
+    padding: 0;
 }
 
 .operations button:hover {
