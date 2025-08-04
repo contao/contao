@@ -182,13 +182,7 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
      */
     public function addNewButton(string $mode, string $table, int $pid, int|null $id = null): self
     {
-        $labelKey = match ($mode) {
-            self::CREATE_TOP => 'pastenewtop',
-            self::CREATE_INTO => 'pastenewinto',
-            self::CREATE_AFTER => 'pastenewafter',
-        };
-
-        [$label, $title] = $this->getLabelAndTitle($table, $labelKey, $pid);
+        [$label, $title] = $this->getLabelAndTitle($table, 'pastenew'.$mode, $pid);
 
         $this->append([
             'label' => $label,
