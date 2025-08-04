@@ -19,22 +19,13 @@ export default class extends Controller {
             return;
         }
 
-        const clickTargets = event.currentTarget.querySelectorAll('input[type=checkbox],input[type=radio]');
-
-        for (const target of clickTargets) {
-            if ('radio' === target.type) {
-                target.checked = true;
-                continue;
-            }
-
-            if (this.start && event.shiftKey) {
-                this.#shiftToggle(target);
-                continue;
-            }
-
-            target.checked ^= 1;
-            this.start = target;
+        if (this.start && event.shiftKey) {
+            this.#shiftToggle(this.inputTarget);
+            return;
         }
+
+        target.checked ^= 1;
+        this.start = target;
     }
 
     inputClick(event) {
