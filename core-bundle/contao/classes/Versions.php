@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Doctrine\DBAL\Types\BinaryType;
 use Doctrine\DBAL\Types\BlobType;
 use Doctrine\DBAL\Types\Types;
@@ -692,6 +693,8 @@ class Versions extends Controller
 
 		$security = System::getContainer()->get('security.helper');
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$urlGenerator = System::getContainer()->get('router');
+		$translator = System::getContainer()->get('translator');
 
 		while ($objVersions->next())
 		{
@@ -719,6 +722,31 @@ class Versions extends Controller
 				}
 
 				$arrRow['editUrl'] = $request->getBasePath() . '/' . preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&amp;rt=' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5)), StringUtil::ampersand(ltrim($arrRow['editUrl'], '/')));
+			}
+
+
+			$arrRow['operations'] = System::getContainer()->get('contao.data_container.operations_builder')->initialize('tl_version');
+
+			if ($arrRow['deleted'] ?? null) {
+				$arrRow['operations']->append([
+					'label' => $translator->trans('MSC.restore', [], 'contao_default'),
+					'href' => $urlGenerator->generate('contao_backend', ['do' => 'undo']),
+					'icon' => 'undo.svg',
+					'attribtues' => new HtmlAttributes('data-contao--deeplink-target="primary"'),
+				]);
+			} else {
+				$arrRow['operations']->append([
+					'label' => $translator->trans('MSC.editElement', [], 'contao_default'),
+					'href' => $arrRow['editUrl'] ?? null,
+					'icon' => ($arrRow['editUrl'] ?? null) ? 'edit.svg' : 'edit--disabled.svg',
+				]);
+
+				$arrRow['operations']->append([
+					'label' => $translator->trans('MSC.showDifferences', [], 'contao_default'),
+					'href' => $arrRow['to'] > 1 ? $arrRow['editUrl'].'&amp;from='.$arrRow['from'].'&amp;to='.$arrRow['to'].'&amp;versions=1' ?? null : null,
+					'icon' => $arrRow['to'] > 1 ? 'diff.svg' : 'diff--disabled.svg',
+					'attributes' => (new HtmlAttributes())->set('onclick', "Backend.openModalIframe({title:'".$translator->trans('MSC.recordOfTable', [$arrRow['pid'], $arrRow['fromTable']], 'contao_default')."',url:`this.href&amp;popup=1`});return false"),
+				]);
 			}
 
 			$arrVersions[] = $arrRow;
