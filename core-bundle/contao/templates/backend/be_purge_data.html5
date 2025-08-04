@@ -18,7 +18,7 @@
           <table class="with-border with-padding">
           <thead>
             <tr>
-              <th><input type="checkbox" id="check_all" class="tl_checkbox" data-contao--check-all-target="checkAll" data-action="contao--check-all#toggleAll"></th>
+              <th><input type="checkbox" id="check_all" class="tl_checkbox" data-contao--check-all-target="source" data-action="contao--check-all#toggleAll"></th>
               <th><?= $this->job ?></th>
               <th><?= $this->description ?></th>
             </tr>

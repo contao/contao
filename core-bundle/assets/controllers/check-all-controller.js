@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static targets = ['checkAll', 'input'];
+    static targets = ['source', 'input'];
 
     static values = {
         rowGuards: {
@@ -48,7 +48,7 @@ export default class extends Controller {
     }
 
     toggleAll() {
-        const checked = this.checkAllTarget.checked;
+        const checked = this.sourceTarget.checked;
 
         for (const el of this.inputTargets) {
             el.checked = checked;
