@@ -43,7 +43,7 @@ export default class extends Controller {
         const focusable = this.dropdownTarget.querySelectorAll('a[href], button');
 
         for (const element of focusable) {
-            element.dataset.action = 'blur->contao--dropdown#event focus->contao--dropdown#event';
+            element.dataset.action = 'blur->contao--toggle-state#event focus->contao--toggle-state#event';
         }
     }
 
