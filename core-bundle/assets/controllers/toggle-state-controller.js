@@ -4,7 +4,6 @@ export default class extends Controller {
     static targets = ['controller', 'controls'];
 
     static values = {
-        name: String,
         controllerClass: {
             type: String,
             default: 'active',
@@ -20,12 +19,15 @@ export default class extends Controller {
     };
 
     connect() {
-        this.element.setAttribute('id', this.nameValue);
+        this.element.setAttribute('id', this.id);
         this.blurTimeout = null;
     }
 
     controllerTargetConnected(controller) {
-        controller.setAttribute('aria-controls', this.nameValue);
+        // The target connect lifecycle callback fires before connect() so we apply the id here
+        this.id = !!this.element.id ? this.element.id : (Math.random() + 1).toString(36).substring(7);
+
+        controller.setAttribute('aria-controls', this.id);
         controller.setAttribute('aria-expanded', 'false');
 
         if (this.inverseModeValue) {

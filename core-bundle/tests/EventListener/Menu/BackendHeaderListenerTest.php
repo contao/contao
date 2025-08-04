@@ -127,7 +127,7 @@ class BackendHeaderListenerTest extends TestCase
 
         // Submenu
         $this->assertSame('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent">MSC.user foo</button>', $children['submenu']->getLabel());
-        $this->assertSame(['class' => 'submenu', 'data-controller' => 'contao--toggle-state', 'data-contao--toggle-state-name-value' => 'tmenu__profile', 'data-action' => 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close'], $children['submenu']->getAttributes());
+        $this->assertSame(['class' => 'submenu', 'data-controller' => 'contao--toggle-state', 'data-action' => 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close'], $children['submenu']->getAttributes());
         $this->assertSame(['class' => 'profile'], $children['submenu']->getLabelAttributes());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['submenu']->getExtras());
         $this->assertSame(['data-contao--toggle-state-target' => 'controls'], $children['submenu']->getChildrenAttributes());
@@ -162,7 +162,7 @@ class BackendHeaderListenerTest extends TestCase
 
         // Burger
         $this->assertSame('<button type="button" data-contao--toggle-state-target="controller" data-action="contao--toggle-state#toggle:prevent" id="burger"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg></button>', $children['burger']->getLabel());
-        $this->assertSame(['class' => 'burger', 'data-contao--toggle-state-name-value' => 'tmenu__burger'], $children['burger']->getAttributes());
+        $this->assertSame(['class' => 'burger'], $children['burger']->getAttributes());
         $this->assertSame(['safe_label' => true, 'translation_domain' => false], $children['burger']->getExtras());
     }
 
