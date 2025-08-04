@@ -79,7 +79,7 @@ export default class extends Controller {
     }
 
     documentClick(event) {
-        if (this.controllerTarget.contains(event.target)) {
+        if (this.controllerTarget.contains(event.target) || this.controlsTarget.contains(event.target)) {
             return;
         }
 
