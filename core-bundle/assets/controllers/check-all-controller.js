@@ -24,8 +24,8 @@ export default class extends Controller {
             return;
         }
 
-        target.checked ^= 1;
-        this.start = target;
+        this.inputTarget.checked ^= 1;
+        this.start = this.inputTarget;
     }
 
     inputClick(event) {
