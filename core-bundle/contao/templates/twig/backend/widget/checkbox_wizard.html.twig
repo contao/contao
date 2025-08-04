@@ -1,7 +1,7 @@
 {% trans_default_domain "contao_default" %}
 
 {% set fieldset_attributes = attrs()
-    .set('data-controller', 'contao--sortable contao--checkbox')
+    .set('data-controller', 'contao--sortable contao--check-all')
     .set('data-contao--sortable-handle-value', '.drag-handle')
     .set('data-contao--sortable-draggable-value', 'span:not(.fixed)')
     .addClass('tl_checkbox_container')
@@ -19,7 +19,7 @@
     <input type="hidden" name="{{ name }}" value="">
     {% if options is not empty %}
         <span class="fixed">
-            <input type="checkbox" id="check_all_{{ id }}" class="tl_checkbox" data-contao--checkbox-target="checkAll" data-action="contao--checkbox#toggleAll contao--scroll-offset#store">
+            <input type="checkbox" id="check_all_{{ id }}" class="tl_checkbox" data-contao--check-all-target="checkAll" data-action="contao--check-all#toggleAll contao--scroll-offset#store">
             <label for="check_all_{{ id }}" class="check-all"><em>{{ 'MSC.selectAll'|trans }}</em></label>
         </span>
         {% for option in options %}
@@ -31,7 +31,7 @@
                     .addClass('tl_checkbox')
                     .set('value', option.value|default)
                     .set('checked', true, option.checked|default)
-                    .set('data-contao--checkbox-target', 'input')
+                    .set('data-contao--check-all-target', 'input')
                     .set('data-action', 'focus->contao--scroll-offset#store')
                     .mergeWith(attributes)
                 %}
