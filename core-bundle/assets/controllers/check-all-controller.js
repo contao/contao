@@ -14,6 +14,19 @@ export default class extends Controller {
         this.start = null;
     }
 
+    #shiftToggle(el) {
+        const thisIndex = this.inputTargets.indexOf(el);
+        const startIndex = this.inputTargets.indexOf(this.start);
+
+        const from = Math.min(thisIndex, startIndex);
+        const to = Math.max(thisIndex, startIndex);
+        const status = this.start.checked;
+
+        for (let i = from; i <= to; i++) {
+            this.inputTargets[i].checked = status;
+        }
+    }
+
     toggleRow(event) {
         if (event.target.closest(this.rowGuardsValue)) {
             return;
@@ -45,19 +58,6 @@ export default class extends Controller {
 
         for (const el of this.inputTargets) {
             el.checked = checked;
-        }
-    }
-
-    #shiftToggle(el) {
-        const thisIndex = this.inputTargets.indexOf(el);
-        const startIndex = this.inputTargets.indexOf(this.start);
-
-        const from = Math.min(thisIndex, startIndex);
-        const to = Math.max(thisIndex, startIndex);
-        const status = this.start.checked;
-
-        for (let i = from; i <= to; i++) {
-            this.inputTargets[i].checked = status;
         }
     }
 }
