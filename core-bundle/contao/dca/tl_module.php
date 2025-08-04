@@ -685,23 +685,6 @@ class tl_module extends Backend
 	}
 
 	/**
-	 * Load the default password text
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return mixed
-	 */
-	public function getPasswordDefault($varValue)
-	{
-		if (trim($varValue) === '')
-		{
-			$varValue = is_array($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null) ? $GLOBALS['TL_LANG']['tl_module']['passwordText'][1] : ($GLOBALS['TL_LANG']['tl_module']['passwordText'] ?? null);
-		}
-
-		return $varValue;
-	}
-
-	/**
 	 * List a front end module
 	 *
 	 * @param array $row
