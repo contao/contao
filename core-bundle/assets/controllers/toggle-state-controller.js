@@ -20,7 +20,7 @@ export default class extends Controller {
     }
 
     controllerTargetConnected(controller) {
-        // The target connect lifecycle callback fires before connect() so we apply the id here
+        // The "Target connect lifecycle callback" fires before connect() so we apply the id here
         this.id = this.element.id ? this.element.id : (Math.random() + 1).toString(36).substring(7);
 
         controller.setAttribute('aria-controls', this.id);
