@@ -5,19 +5,15 @@ export default class extends Controller {
 
     static values = {
         name: String,
-        activeClass: {
+        controllerClass: {
             type: String,
             default: 'active',
         },
-        buttonActiveClass: {
+        controlsClass: {
             type: String,
             default: 'active',
         },
-        invisibleClass: {
-            type: String,
-            default: 'invisible',
-        },
-        invisibleMode: {
+        inverseMode: {
             type: Boolean,
             default: false,
         },
@@ -32,13 +28,13 @@ export default class extends Controller {
         button.setAttribute('aria-controls', this.nameValue);
         button.setAttribute('aria-expanded', 'false');
 
-        if (this.invisibleModeValue) {
+        if (this.inverseModeValue) {
             button.setAttribute('tabIndex', -1);
         }
     }
 
     dropdownTargetConnected(dropdown) {
-        if (!this.invisibleModeValue) {
+        if (!this.inverseModeValue) {
             return;
         }
 
@@ -52,14 +48,9 @@ export default class extends Controller {
     }
 
     toggleState(state) {
-        this.buttonTarget.classList.toggle(this.buttonActiveClassValue, state);
+        this.buttonTarget.classList.toggle(this.controllerClassValue, state);
         this.buttonTarget.setAttribute('aria-expanded', state);
-
-        if (this.invisibleModeValue) {
-            this.dropdownTarget.classList.toggle(this.invisibleClassValue, !state);
-        } else {
-            this.dropdownTarget.classList.toggle(this.activeClassValue, state);
-        }
+        this.dropdownTarget.classList.toggle(this.controlsClassValue, this.inverseModeValue ? !state : state);
     }
 
     toggle() {

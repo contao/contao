@@ -9,7 +9,8 @@
                 .set('data-controller', 'contao--dropdown')
                 .set('data-action', 'click@document->contao--dropdown#documentClick keydown.esc@document->contao--dropdown#close')
                 .set('data-contao--dropdown-name-value', 'split_button')
-                .set('data-contao--dropdown-invisible-mode-value', true)
+                .set('data-contao--dropdown-controls-class-value', 'invisible')
+                .set('data-contao--dropdown-inverse-mode-value', true)
             %}
             <div{{ button_wrapper_attributes }}>
                 {{ buttons[1]|raw }}
