@@ -49,7 +49,7 @@ export default class extends Controller {
         }
     }
 
-    toggleState(state) {
+    #toggleState(state) {
         this.controllerTarget.classList.toggle(this.controllerClassValue, state);
         this.controllerTarget.setAttribute('aria-expanded', state);
         this.controlsTarget.classList.toggle(this.controlsClassValue, this.inverseModeValue ? !state : state);
@@ -58,24 +58,24 @@ export default class extends Controller {
     toggle() {
         const isOpen = this.controllerTarget.ariaExpanded === 'true';
 
-        this.toggleState(!isOpen);
+        this.#toggleState(!isOpen);
     }
 
     open() {
-        this.toggleState(true);
+        this.#toggleState(true);
     }
 
     close() {
-        this.toggleState(false);
+        this.#toggleState(false);
     }
 
     event(e) {
         if (e.type === 'blur') {
-            this.blurTimeout = setTimeout(() => this.toggleState(false), 100);
+            this.blurTimeout = setTimeout(() => this.#toggleState(false), 100);
             return;
         }
 
-        this.toggleState(true);
+        this.#toggleState(true);
 
         clearTimeout(this.blurTimeout);
     }
@@ -85,6 +85,6 @@ export default class extends Controller {
             return;
         }
 
-        this.toggleState(false);
+        this.#toggleState(false);
     }
 }
