@@ -28,11 +28,15 @@ export default class extends Controller {
     }
 
     toggleRow(event) {
-        if (event.target.closest(this.rowGuardsValue)) {
+        if (event.target.closest(this.rowGuardsValue.join(','))) {
             return;
         }
 
         const target = event.currentTarget.querySelector('[data-contao--check-all-target="input"]');
+
+        if (target === null) {
+            return;
+        }
 
         if (this.start && event.shiftKey) {
             this.#shiftToggle(target);
