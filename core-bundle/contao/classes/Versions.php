@@ -724,31 +724,6 @@ class Versions extends Controller
 				$arrRow['editUrl'] = $request->getBasePath() . '/' . preg_replace(array('/&(amp;)?popup=1/', '/&(amp;)?rt=[^&]+/'), array('', '&amp;rt=' . htmlspecialchars(System::getContainer()->get('contao.csrf.token_manager')->getDefaultTokenValue(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5)), StringUtil::ampersand(ltrim($arrRow['editUrl'], '/')));
 			}
 
-
-			$arrRow['operations'] = System::getContainer()->get('contao.data_container.operations_builder')->initialize('tl_version');
-
-			if ($arrRow['deleted'] ?? null) {
-				$arrRow['operations']->append([
-					'label' => $translator->trans('MSC.restore', [], 'contao_default'),
-					'href' => $urlGenerator->generate('contao_backend', ['do' => 'undo']),
-					'icon' => 'undo.svg',
-					'attribtues' => new HtmlAttributes('data-contao--deeplink-target="primary"'),
-				]);
-			} else {
-				$arrRow['operations']->append([
-					'label' => $translator->trans('MSC.editElement', [], 'contao_default'),
-					'href' => $arrRow['editUrl'] ?? null,
-					'icon' => ($arrRow['editUrl'] ?? null) ? 'edit.svg' : 'edit--disabled.svg',
-				]);
-
-				$arrRow['operations']->append([
-					'label' => $translator->trans('MSC.showDifferences', [], 'contao_default'),
-					'href' => $arrRow['to'] > 1 ? $arrRow['editUrl'].'&amp;from='.$arrRow['from'].'&amp;to='.$arrRow['to'].'&amp;versions=1' ?? null : null,
-					'icon' => $arrRow['to'] > 1 ? 'diff.svg' : 'diff--disabled.svg',
-					'attributes' => (new HtmlAttributes())->set('onclick', "Backend.openModalIframe({title:'".$translator->trans('MSC.recordOfTable', [$arrRow['pid'], $arrRow['fromTable']], 'contao_default')."',url:`this.href&amp;popup=1`});return false"),
-				]);
-			}
-
 			$arrVersions[] = $arrRow;
 		}
 
@@ -768,13 +743,41 @@ class Versions extends Controller
 			{
 				// Probably a disabled module
 				unset($arrVersions[$k]);
+				continue;
 			}
 
 			// Skip deleted files (see #8480)
 			if (($v['fromTable'] ?? null) == 'tl_files' && ($arrVersions[$k]['deleted'] ?? null))
 			{
 				unset($arrVersions[$k]);
+				continue;
 			}
+
+			$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize('tl_version');
+
+			if ($arrVersions[$k]['deleted'] ?? null) {
+				$operations->append([
+					'label' => $translator->trans('MSC.restore', [], 'contao_default'),
+					'href' => $urlGenerator->generate('contao_backend', ['do' => 'undo']),
+					'icon' => 'undo.svg',
+					'attribtues' => new HtmlAttributes('data-contao--deeplink-target="primary"'),
+				]);
+			} else {
+				$operations->append([
+					'label' => $translator->trans('MSC.editElement', [], 'contao_default'),
+					'href' => $v['editUrl'] ?? null,
+					'icon' => ($v['editUrl'] ?? null) ? 'edit.svg' : 'edit--disabled.svg',
+				]);
+
+				$operations->append([
+					'label' => $translator->trans('MSC.showDifferences', [], 'contao_default'),
+					'href' => $v['to'] > 1 ? $v['editUrl'].'&amp;from='.$v['from'].'&amp;to='.$v['to'].'&amp;versions=1' ?? null : null,
+					'icon' => $v['to'] > 1 ? 'diff.svg' : 'diff--disabled.svg',
+					'attributes' => (new HtmlAttributes())->set('onclick', "Backend.openModalIframe({title:'".$translator->trans('MSC.recordOfTable', [$v['pid'], $v['fromTable']], 'contao_default')."',url:`this.href&amp;popup=1`});return false"),
+				]);
+			}
+
+			$arrVersions[$k]['operations'] = $operations;
 		}
 
 		$objTemplate->versions = $arrVersions;
