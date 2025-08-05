@@ -12,7 +12,7 @@ export default class extends Controller {
             return;
         }
 
-        const target = event.currentTarget.querySelector('[data-contao--check-all-target="input"]');
+        const target = event.currentTarget.querySelector(`[data-${this.identifier}-target="input"]`);
 
         if (target === null) {
             return;
