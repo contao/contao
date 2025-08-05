@@ -3,13 +3,6 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     static targets = ['source', 'input'];
 
-    static values = {
-        rowGuards: {
-            type: Array,
-            default: ['input', 'label', 'button', 'a', '.operations'],
-        },
-    };
-
     initialize() {
         this.start = null;
     }
@@ -28,7 +21,7 @@ export default class extends Controller {
     }
 
     toggleRow(event) {
-        if (event.target.closest(this.rowGuardsValue.join(','))) {
+        if (event.target.closest('input, label, button, a, .operations')) {
             return;
         }
 
