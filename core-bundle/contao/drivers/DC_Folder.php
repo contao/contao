@@ -343,21 +343,37 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		{
 			$db = Database::getInstance();
 
-			try
+			if (isset($session['search'][$this->strTable]['field']) && 'uuid' === $session['search'][$this->strTable]['field'] && Validator::isUuid($for))
 			{
-				$db->prepare("SELECT '' REGEXP ?")->execute($for);
+				$uuid = $for;
+
+				if (Validator::isStringUuid($uuid))
+				{
+					$uuid = StringUtil::uuidToBin($uuid);
+				}
+
+				$objRoot = $db
+					->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE uuid=?")
+					->execute($uuid);
 			}
-			catch (DriverException $exception)
+			else
 			{
-				// Quote search string if it is not a valid regular expression
-				$for = preg_quote($for, null);
+				try
+				{
+					$db->prepare("SELECT '' REGEXP ?")->execute($for);
+				}
+				catch (DriverException $exception)
+				{
+					// Quote search string if it is not a valid regular expression
+					$for = preg_quote($for, null);
+				}
+
+				$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
+
+				$objRoot = $db
+					->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
+					->execute($for);
 			}
-
-			$strPattern = "LOWER(CAST(name AS CHAR)) REGEXP LOWER(?)";
-
-			$objRoot = $db
-				->prepare("SELECT path, type, extension FROM " . $this->strTable . " WHERE " . $strPattern)
-				->execute($for);
 
 			if ($objRoot->numRows < 1)
 			{
@@ -2555,15 +2571,42 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 		$objSessionBag = System::getContainer()->get('request_stack')->getSession()->getBag('contao_backend');
 
 		$session = $objSessionBag->all();
+		$searchFields = array('name', 'uuid');
 
 		// Store search value in the current session
 		if (Input::post('FORM_SUBMIT') == 'tl_filters')
 		{
+			$strField = Input::post('tl_field', true);
 			$strKeyword = ltrim(Input::postRaw('tl_value'), '*');
 
+			if ($strField && !\in_array($strField, $searchFields, true))
+			{
+				$strField = '';
+				$strKeyword = '';
+			}
+
+			$session['search'][$this->strTable]['field'] = $strField;
 			$session['search'][$this->strTable]['value'] = $strKeyword;
 
 			$objSessionBag->replace($session);
+		}
+
+		$options = array();
+
+		foreach ($searchFields as $field)
+		{
+			$option_label = $field;
+
+			if (isset($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label']))
+			{
+				$option_label = \is_array($GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label']) ? $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'][0] : $GLOBALS['TL_DCA'][$this->strTable]['fields'][$field]['label'];
+			}
+			elseif (isset($GLOBALS['TL_LANG']['MSC'][$field]))
+			{
+				$option_label = \is_array($GLOBALS['TL_LANG']['MSC'][$field]) ? $GLOBALS['TL_LANG']['MSC'][$field][0] : $GLOBALS['TL_LANG']['MSC'][$field];
+			}
+
+			$options[] = '  <option value="' . StringUtil::specialchars($field) . '"' . ((($session['search'][$this->strTable]['field'] ?? null) === $field) ? ' selected="selected"' : '') . '>' . $option_label . '</option>';
 		}
 
 		$active = isset($session['search'][$this->strTable]['value']) && (string) $session['search'][$this->strTable]['value'] !== '';
@@ -2575,7 +2618,7 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
       <strong>' . $GLOBALS['TL_LANG']['MSC']['search'] . ':</strong>
       <div class="tl_select_wrapper" data-controller="contao--choices">
           <select name="tl_field" class="tl_select' . ($active ? ' active' : '') . '">
-            <option value="name">' . ($GLOBALS['TL_DCA'][$this->strTable]['fields']['name']['label'][0] ?: (\is_array($GLOBALS['TL_LANG']['MSC']['name'] ?? null) ? $GLOBALS['TL_LANG']['MSC']['name'][0] : ($GLOBALS['TL_LANG']['MSC']['name'] ?? null))) . '</option>
+			' . implode("\n", $options) . '
           </select>
       </div>
       <span>=</span>
