@@ -919,9 +919,9 @@ abstract class DataContainer extends Backend
 				return;
 			}
 
-			if ($config['icon'])
+			if ($config['icon'] ?? null)
 			{
-				$icon = Controller::addAssetsUrlTo($config['icon']);
+				$icon = Controller::addAssetsUrlTo(Image::getPath($config['icon']));
 				$config['attributes']->addStyle("background-image: url('$icon')");
 				$config['class'] = trim($config['class'].' header_icon');
 			}
