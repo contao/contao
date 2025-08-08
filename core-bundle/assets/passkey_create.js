@@ -91,7 +91,7 @@ new MutationObserver((mutationsList) => {
                     init(node);
                 }
 
-                if (element.querySelectorAll) {
+                if (node.querySelectorAll) {
                     for (const element of node.querySelectorAll(selector)) {
                         init(element);
                     }
