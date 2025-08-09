@@ -108,16 +108,24 @@ abstract class AbstractLayoutPageController extends AbstractController
 
             public function __get(string $key): mixed
             {
-                if ($this->data instanceof \Closure) {
-                    $this->data = ($this->data)();
-                }
-
-                return $this->data[$key] ?? null;
+                return $this->toArray()[$key] ?? null;
             }
 
             public function __isset(string $key): bool
             {
                 return null !== $this->__get($key);
+            }
+
+            /**
+             * @interal
+             */
+            public function toArray(): array
+            {
+                if ($this->data instanceof \Closure) {
+                    $this->data = ($this->data)();
+                }
+
+                return $this->data;
             }
         });
 
@@ -158,7 +166,9 @@ abstract class AbstractLayoutPageController extends AbstractController
     {
         return [
             'head' => $responseContext->get(HtmlHeadBag::class),
-            'jsonLdScripts' => $responseContext->isInitialized(JsonLdManager::class)
+            'end_of_head' => [...$GLOBALS['TL_STYLE_SHEETS'] ?? [], ...$GLOBALS['TL_HEAD'] ?? []],
+            'end_of_body' => $GLOBALS['TL_BODY'] ?? [],
+            'json_ld_scripts' => $responseContext->isInitialized(JsonLdManager::class)
                 ? $responseContext->get(JsonLdManager::class)->collectFinalScriptFromGraphs()
                 : null,
         ];

@@ -23,8 +23,27 @@ use Symfony\Component\HttpFoundation\Response;
 #[AsPage]
 class LayoutPageController extends AbstractLayoutPageController
 {
+    /**
+     * @template T
+     *
+     * @param class-string<T> $serviceId
+     *
+     * @return T
+     */
+    public function getResponseContextService(string $serviceId)
+    {
+        $page = $this->container->get('contao.routing.page_finder')->getCurrentPage();
+
+        return parent::getResponseContext($page)->get($serviceId);
+    }
+
     protected function getResponse(LayoutTemplate $template, LayoutModel $model, Request $request): Response
     {
-        return new JsonResponse([...$template->getData(), 'templateName' => $template->getName()]);
+        $data = $template->getData();
+
+        // The response context is evaluated lazily on access
+        $data['response_context'] = $template->getData()['response_context']->toArray();
+
+        return new JsonResponse([...$data, 'templateName' => $template->getName()]);
     }
 }

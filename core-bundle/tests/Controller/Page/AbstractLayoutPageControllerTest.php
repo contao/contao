@@ -25,6 +25,8 @@ use Contao\CoreBundle\Tests\TestCase;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\System;
+use Spatie\SchemaOrg\Graph;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
@@ -34,7 +36,13 @@ class AbstractLayoutPageControllerTest extends TestCase
 {
     protected function tearDown(): void
     {
-        unset($GLOBALS['TL_LANG'], $GLOBALS['TL_MIME']);
+        unset(
+            $GLOBALS['TL_LANG'],
+            $GLOBALS['TL_MIME'],
+            $GLOBALS['TL_HEAD'],
+            $GLOBALS['TL_BODY'],
+            $GLOBALS['TL_STYLE_SHEETS'],
+        );
 
         $this->resetStaticProperties([System::class]);
 
@@ -43,7 +51,23 @@ class AbstractLayoutPageControllerTest extends TestCase
 
     public function testCreateAndRenderLayoutTemplate(): void
     {
-        $layoutPageController = $this->getLayoutPageController();
+        $container = $this->getContainerWithDefaultConfiguration();
+        System::setContainer($container);
+
+        $layoutPageController = new LayoutPageController();
+        $layoutPageController->setContainer($container);
+
+        // Add response context elements
+        $jsonLdManager = $layoutPageController->getResponseContextService(JsonLdManager::class);
+        $jsonLdManager
+            ->getGraphForSchema(JsonLdManager::SCHEMA_ORG)
+            ->set($jsonLdManager->createSchemaOrgTypeFromArray(['@type' => 'ImageObject', 'name' => 'Name']), Graph::IDENTIFIER_DEFAULT)
+        ;
+
+        $GLOBALS['TL_HEAD'][] = '<meta content="additional-tag">';
+        $GLOBALS['TL_BODY'][] = '<script>/* additional script */</script>';
+        $GLOBALS['TL_STYLE_SHEETS'][] = '<link rel="stylesheet" href="additional_stylesheet.css">';
+
         $response = $layoutPageController(new Request());
 
         $data = json_decode($response->getContent(), true, 512, JSON_THROW_ON_ERROR);
@@ -63,7 +87,29 @@ class AbstractLayoutPageControllerTest extends TestCase
                 'preview_mode' => false,
                 'locale' => 'en',
                 'rtl' => false,
-                'response_context' => [],
+                'response_context' => [
+                    'head' => [],
+                    'end_of_head' => [
+                        '<link rel="stylesheet" href="additional_stylesheet.css">',
+                        '<meta content="additional-tag">',
+                    ],
+                    'end_of_body' => [
+                        '<script>/* additional script */</script>',
+                    ],
+                    'json_ld_scripts' => <<<'EOF'
+                        <script type="application/ld+json">
+                        {
+                            "@context": "https:\/\/schema.org",
+                            "@graph": [
+                                {
+                                    "@type": "ImageObject",
+                                    "name": "Name"
+                                }
+                            ]
+                        }
+                        </script>
+                        EOF,
+                ],
                 'modules' => [],
                 'templateName' => 'foo_template',
             ],
@@ -71,7 +117,7 @@ class AbstractLayoutPageControllerTest extends TestCase
         );
     }
 
-    private function getLayoutPageController(): LayoutPageController
+    private function getContainerWithDefaultConfiguration(): ContainerInterface
     {
         $twig = $this->createMock(Environment::class);
         $twig
@@ -154,11 +200,6 @@ class AbstractLayoutPageControllerTest extends TestCase
         $container->set('contao.security.token_checker', $tokenChecker);
         $container->set('contao.framework', $framework);
 
-        $layoutPageController = new LayoutPageController();
-        $layoutPageController->setContainer($container);
-
-        System::setContainer($container);
-
-        return $layoutPageController;
+        return $container;
     }
 }
