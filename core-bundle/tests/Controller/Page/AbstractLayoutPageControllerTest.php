@@ -42,6 +42,7 @@ class AbstractLayoutPageControllerTest extends TestCase
             $GLOBALS['TL_HEAD'],
             $GLOBALS['TL_BODY'],
             $GLOBALS['TL_STYLE_SHEETS'],
+            $GLOBALS['TL_CSS'],
         );
 
         $this->resetStaticProperties([System::class]);
@@ -67,6 +68,7 @@ class AbstractLayoutPageControllerTest extends TestCase
         $GLOBALS['TL_HEAD'][] = '<meta content="additional-tag">';
         $GLOBALS['TL_BODY'][] = '<script>/* additional script */</script>';
         $GLOBALS['TL_STYLE_SHEETS'][] = '<link rel="stylesheet" href="additional_stylesheet.css">';
+        $GLOBALS['TL_CSS'][] = 'additional_stylesheet_filename.css|123';
 
         $response = $layoutPageController(new Request());
 
@@ -90,6 +92,7 @@ class AbstractLayoutPageControllerTest extends TestCase
                 'response_context' => [
                     'head' => [],
                     'end_of_head' => [
+                        '<link rel="stylesheet" href="/additional_stylesheet_filename.css?v=202cb962">',
                         '<link rel="stylesheet" href="additional_stylesheet.css">',
                         '<meta content="additional-tag">',
                     ],

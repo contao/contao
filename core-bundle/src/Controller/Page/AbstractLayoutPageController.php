@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Controller\Page;
 
+use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Controller\AbstractController;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
@@ -19,6 +20,8 @@ use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Contao\Template;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -65,6 +68,7 @@ abstract class AbstractLayoutPageController extends AbstractController
         $services['contao.security.token_checker'] = '?'.TokenChecker::class;
         $services['contao.image.picture_factory'] = '?'.PictureFactoryInterface::class;
         $services['contao.image.preview_factory'] = '?'.PreviewFactory::class;
+        $services['contao.assets.assets_context'] = '?'.ContaoContext::class;
 
         return $services;
     }
@@ -178,7 +182,22 @@ abstract class AbstractLayoutPageController extends AbstractController
     {
         return [
             'head' => static fn () => $responseContext->get(HtmlHeadBag::class),
-            'end_of_head' => static fn () => [...$GLOBALS['TL_STYLE_SHEETS'] ?? [], ...$GLOBALS['TL_HEAD'] ?? []],
+            'end_of_head' => fn () => [
+                ...array_map(
+                    function (string $url): string {
+                        $options = StringUtil::resolveFlaggedUrl($url);
+
+                        if (!Path::isAbsolute($url) && $staticUrl = $this->container->get('contao.assets.assets_context')->getStaticUrl()) {
+                            $url = Path::join($staticUrl, $url);
+                        }
+
+                        return Template::generateStyleTag($url, $options->media, $options->mtime);
+                    },
+                    array_unique($GLOBALS['TL_CSS'] ?? []),
+                ),
+                ...$GLOBALS['TL_STYLE_SHEETS'] ?? [],
+                ...$GLOBALS['TL_HEAD'] ?? [],
+            ],
             'end_of_body' => static fn () => $GLOBALS['TL_BODY'] ?? [],
             'json_ld_scripts' => static fn () => $responseContext->isInitialized(JsonLdManager::class)
                 ? $responseContext->get(JsonLdManager::class)->collectFinalScriptFromGraphs()
