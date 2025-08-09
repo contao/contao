@@ -1,6 +1,6 @@
 import TextareaAutogrow from 'stimulus-textarea-autogrow';
 
-export default class extends TextareaAutogrow  {
+export default class extends TextareaAutogrow {
     initialize() {
         if (this.#containsNoResizeClass) {
             return;
@@ -14,7 +14,7 @@ export default class extends TextareaAutogrow  {
             return;
         }
 
-        super.connect()
+        super.connect();
     }
 
     #containsNoResizeClass() {
