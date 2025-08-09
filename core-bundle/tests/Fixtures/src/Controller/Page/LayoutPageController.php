@@ -42,7 +42,7 @@ class LayoutPageController extends AbstractLayoutPageController
         $data = $template->getData();
 
         // The response context is evaluated lazily on access
-        $data['response_context'] = $template->getData()['response_context']->toArray();
+        $data['response_context'] = iterator_to_array($template->getData()['response_context']->all());
 
         return new JsonResponse([...$data, 'templateName' => $template->getName()]);
     }

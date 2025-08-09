@@ -101,14 +101,25 @@ abstract class AbstractLayoutPageController extends AbstractController
         $template->set('rtl', $isRtl);
 
         // Response context
-        $template->set('response_context', new class(fn () => $this->getResponseContextData($responseContext)) {
-            public function __construct(private \Closure|array $data)
+        $template->set('response_context', new class($this->getResponseContextData($responseContext)) {
+            /**
+             * @param array<string, \Closure():mixed|mixed> $data
+             */
+            public function __construct(private array $data)
             {
             }
 
             public function __get(string $key): mixed
             {
-                return $this->toArray()[$key] ?? null;
+                if (!\array_key_exists($key, $this->data)) {
+                    return null;
+                }
+
+                if ($this->data[$key] instanceof \Closure) {
+                    $this->data[$key] = ($this->data[$key])();
+                }
+
+                return $this->data[$key] ?? null;
             }
 
             public function __isset(string $key): bool
@@ -119,13 +130,11 @@ abstract class AbstractLayoutPageController extends AbstractController
             /**
              * @interal
              */
-            public function toArray(): array
+            public function all(): \Generator
             {
-                if ($this->data instanceof \Closure) {
-                    $this->data = ($this->data)();
+                foreach (array_keys($this->data) as $key) {
+                    yield $key => $this->__get($key);
                 }
-
-                return $this->data;
             }
         });
 
@@ -162,13 +171,16 @@ abstract class AbstractLayoutPageController extends AbstractController
         }
     }
 
+    /**
+     * @return array<string, \Closure():mixed|mixed>
+     */
     protected function getResponseContextData(ResponseContext $responseContext): array
     {
         return [
-            'head' => $responseContext->get(HtmlHeadBag::class),
-            'end_of_head' => [...$GLOBALS['TL_STYLE_SHEETS'] ?? [], ...$GLOBALS['TL_HEAD'] ?? []],
-            'end_of_body' => $GLOBALS['TL_BODY'] ?? [],
-            'json_ld_scripts' => $responseContext->isInitialized(JsonLdManager::class)
+            'head' => static fn () => $responseContext->get(HtmlHeadBag::class),
+            'end_of_head' => static fn () => [...$GLOBALS['TL_STYLE_SHEETS'] ?? [], ...$GLOBALS['TL_HEAD'] ?? []],
+            'end_of_body' => static fn () => $GLOBALS['TL_BODY'] ?? [],
+            'json_ld_scripts' => static fn () => $responseContext->isInitialized(JsonLdManager::class)
                 ? $responseContext->get(JsonLdManager::class)->collectFinalScriptFromGraphs()
                 : null,
         ];
