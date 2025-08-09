@@ -2112,6 +2112,10 @@ window.Theme =
 	 * Set up the textarea resizing
 	 */
 	setupTextareaResizing: function() {
+		if (window.console) {
+			console.warn('Theme.setupTextareaResizing() is deprecated. Please use the Stimulus controller instead.');
+		}
+
 		$$('.tl_textarea').each(function(el) {
 			if (Browser.ie6 || Browser.ie7 || Browser.ie8) return;
 			if (el.hasClass('noresize') || el.retrieve('autogrow')) return;
@@ -2291,7 +2295,7 @@ window.addEvent('domready', function() {
 	Backend.enableToggleSelect();
 
 	Theme.stopClickPropagation();
-	Theme.setupTextareaResizing();
+	//Theme.setupTextareaResizing();
 	Theme.setupMenuToggle();
 	Theme.setupSplitButtonToggle();
 });
@@ -2306,5 +2310,5 @@ window.addEvent('ajax_change', function() {
 	Backend.enableToggleSelect();
 
 	Theme.stopClickPropagation();
-	Theme.setupTextareaResizing();
+	//Theme.setupTextareaResizing();
 });
