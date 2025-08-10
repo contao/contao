@@ -34,7 +34,7 @@ export default class extends Controller {
             return;
         }
 
-        controls.classList.add('invisible');
+        controls.classList.add(this.controlsClass);
 
         const focusable = this.controlsTarget.querySelectorAll('a[href], button');
         const events = 'blur->contao--toggle-state#event focus->contao--toggle-state#event';
