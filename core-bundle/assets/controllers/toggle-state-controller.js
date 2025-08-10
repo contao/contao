@@ -37,9 +37,10 @@ export default class extends Controller {
         controls.classList.add('invisible');
 
         const focusable = this.controlsTarget.querySelectorAll('a[href], button');
+        const events = 'blur->contao--toggle-state#event focus->contao--toggle-state#event';
 
         for (const element of focusable) {
-            element.dataset.action = 'blur->contao--toggle-state#event focus->contao--toggle-state#event';
+            element.dataset.action = element.dataset.action ? `${element.dataset.action} ${events}` : `${events}`;
         }
     }
 
