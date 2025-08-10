@@ -4,15 +4,13 @@ export default class extends Controller {
     static targets = ['controller', 'controls'];
 
     static values = {
-        controlsClass: {
-            type: String,
-            default: 'active',
-        },
         inverseMode: {
             type: Boolean,
             default: false,
         },
     };
+
+    static classes = ['controls'];
 
     connect() {
         this.element.setAttribute('id', this.id);
@@ -48,7 +46,7 @@ export default class extends Controller {
     #toggleState(state) {
         this.controllerTarget.classList.toggle('active', state);
         this.controllerTarget.setAttribute('aria-expanded', state);
-        this.controlsTarget.classList.toggle(this.controlsClassValue, this.inverseModeValue ? !state : state);
+        this.controlsTarget.classList.toggle(this.controlsClass, this.inverseModeValue ? !state : state);
     }
 
     toggle() {
