@@ -575,7 +575,7 @@
       </trans-unit>
       <trans-unit id="tl_module.html_legend">
         <source>Text/HTML</source>
-        <target>Metin/HTML</target>
+        <target>Yazı/HTML</target>
       </trans-unit>
       <trans-unit id="tl_module.protected_legend">
         <source>Access protection</source>
@@ -671,6 +671,7 @@ Böyle bir istekte bulunmadıysanız, lütfen site yöneticisi ile görüşün.
       </trans-unit>
       <trans-unit id="tl_module.copy.1">
         <source>Copy module ID %s</source>
+        <target>%s kimlikli modülü kopyala</target>
       </trans-unit>
       <trans-unit id="tl_module.cut.1">
         <source>Move module ID %s</source>

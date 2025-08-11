@@ -6308,6 +6308,18 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 	protected function getClipboardPermission(string $mode, int $id, array|null $new = null): array
 	{
+		if (ClipboardManager::MODE_CREATE === $mode)
+		{
+			$parent = array('pid' => $id);
+
+			if (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) && $this->ptable)
+			{
+				$parent['ptable'] = $this->ptable;
+			}
+
+			$new = array_replace($parent, (array) $new);
+		}
+
 		$action = match ($mode)
 		{
 			ClipboardManager::MODE_CREATE => new CreateAction($this->strTable, $new),

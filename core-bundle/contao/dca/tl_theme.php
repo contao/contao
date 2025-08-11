@@ -9,13 +9,13 @@
  */
 
 use Contao\Backend;
+use Contao\CoreBundle\DataContainer\DataContainerOperation;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\DataContainer;
 use Contao\DC_Table;
 use Contao\FilesModel;
 use Contao\Folder;
 use Contao\Image;
-use Contao\StringUtil;
 use Contao\System;
 
 $GLOBALS['TL_DCA']['tl_theme'] = array
@@ -62,13 +62,14 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			(
 				'href'                => 'key=importTheme',
 				'class'               => 'header_theme_import',
-				'button_callback'     => array('tl_theme', 'importTheme')
+				'button_callback'     => array('tl_theme', 'importTheme'),
+				'prefetch'            => true,
 			),
 			'store' => array
 			(
-				'href'                => 'key=themeStore',
-				'class'               => 'header_store',
-				'button_callback'     => array('tl_theme', 'themeStore')
+				'href'                => 'https://themes.contao.org',
+				'icon'                => 'store.svg',
+				'attributes'          => 'target="_blank" rel="noreferrer noopener"'
 			),
 		),
 		'operations' => array
@@ -109,9 +110,11 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'exportTheme' => array
 			(
 				'href'                => 'key=exportTheme',
+				'method'              => 'GET',
 				'icon'                => 'theme_export.svg',
 				'button_callback'     => array('tl_theme', 'exportTheme'),
-				'attributes'          => 'data-turbo="false"'
+				'attributes'          => 'data-turbo="false"',
+				'prefetch'            => false,
 			)
 		)
 	),
@@ -240,45 +243,24 @@ class tl_theme extends Backend
 	}
 
 	/**
-	 * Return the "import theme" link
-	 *
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $class
-	 * @param string $attributes
-	 *
-	 * @return string
+	 * Check permissions on the "import theme" link.
 	 */
-	public function importTheme($href, $label, $title, $class, $attributes)
+	public function importTheme(DataContainerOperation $operation)
 	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_IMPORT_THEMES) ? '<a href="' . $this->addToUrl($href) . '" class="' . $class . '" title="' . StringUtil::specialchars($title) . '"' . $attributes . '>' . $label . '</a> ' : '';
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_IMPORT_THEMES))
+		{
+			$operation->hide();
+		}
 	}
 
 	/**
-	 * Return the theme store link
-	 *
-	 * @return string
+	 * Check permissions on the "export theme" button.
 	 */
-	public function themeStore()
+	public function exportTheme(DataContainerOperation $operation)
 	{
-		return '<a href="https://themes.contao.org" title="' . StringUtil::specialchars($GLOBALS['TL_LANG']['tl_theme']['store'][1]) . '" class="header_store" target="_blank" rel="noreferrer noopener">' . $GLOBALS['TL_LANG']['tl_theme']['store'][0] . '</a>';
-	}
-
-	/**
-	 * Return the "export theme" button
-	 *
-	 * @param array  $row
-	 * @param string $href
-	 * @param string $label
-	 * @param string $title
-	 * @param string $icon
-	 * @param string $attributes
-	 *
-	 * @return string
-	 */
-	public function exportTheme($row, $href, $label, $title, $icon, $attributes)
-	{
-		return System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EXPORT_THEMES) ? '<a href="' . $this->addToUrl($href . '&amp;id=' . $row['id']) . '"' . $attributes . '>' . Image::getHtml($icon, $title) . '</a> ' : Image::getHtml(str_replace('.svg', '--disabled.svg', $icon)) . ' ';
+		if (!System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::USER_CAN_EXPORT_THEMES))
+		{
+			$operation->hide();
+		}
 	}
 }

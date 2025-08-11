@@ -355,6 +355,14 @@ class PageModel extends Model
 		return parent::__get($strKey);
 	}
 
+	public function setRow(array $arrData)
+	{
+		// Reset $blnDetailsLoaded (#8516)
+		$this->blnDetailsLoaded = false;
+
+		return parent::setRow($arrData);
+	}
+
 	/**
 	 * Find a published page by its ID
 	 *

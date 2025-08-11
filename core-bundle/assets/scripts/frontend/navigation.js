@@ -212,7 +212,7 @@ export class Navigation {
 
         // Case 3: Down the drain with everything that ain't a parent node :)
         else {
-            this.active.filter(node => {
+            this.active = this.active.filter(node => {
                 if (node.contains(dropdown)) {
                     return true;
                 }
