@@ -914,6 +914,18 @@ abstract class DataContainer extends Backend
 		$legacyCallback = function (DataContainerOperation $config) {
 			trigger_deprecation('contao/core-bundle', '5.6', 'Using a button_callback without DataContainerOperation object is deprecated and will no longer work in Contao 6.');
 
+			if (!\is_array($config['button_callback'] ?? null) && !\is_callable($config['button_callback'] ?? null))
+			{
+				return;
+			}
+
+			if ($config['icon'] ?? null)
+			{
+				$icon = Controller::addAssetsUrlTo(Image::getPath($config['icon']));
+				$config['attributes']->addStyle("background-image: url('$icon')");
+				$config['class'] = trim($config['class'].' header_icon');
+			}
+
 			if (\is_array($config['button_callback'] ?? null))
 			{
 				$callback = System::importStatic($config['button_callback'][0]);
