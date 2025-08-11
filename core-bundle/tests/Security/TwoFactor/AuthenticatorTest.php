@@ -21,8 +21,11 @@ use BaconQrCode\Renderer\RendererStyle\Fill;
 use Contao\BackendUser;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Tests\TestCase;
+use OTPHP\OTPInterface;
 use OTPHP\TOTP;
+use OTPHP\TOTPInterface;
 use ParagonIE\ConstantTime\Base32;
+use Symfony\Component\Clock\MockClock;
 use Symfony\Component\HttpFoundation\Request;
 
 class AuthenticatorTest extends TestCase
@@ -36,13 +39,22 @@ class AuthenticatorTest extends TestCase
 
     public function testValidatesTheCode(): void
     {
+        $clock = new MockClock();
         $secret = $this->generateSecret(1);
-        $totp = TOTP::create(Base32::encodeUpperUnpadded($secret));
+        $totp = TOTP::create(
+            Base32::encodeUpperUnpadded($secret),
+            TOTPInterface::DEFAULT_PERIOD,
+            OTPInterface::DEFAULT_DIGEST,
+            OTPInterface::DEFAULT_DIGITS,
+            TOTPInterface::DEFAULT_EPOCH,
+            $clock,
+        );
 
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->secret = $secret;
 
         $authenticator = new Authenticator();
+        $authenticator->setClock($clock);
 
         $this->assertTrue($authenticator->validateCode($user, $totp->now()));
         $this->assertFalse($authenticator->validateCode($user, 'foobar'));
@@ -50,19 +62,30 @@ class AuthenticatorTest extends TestCase
 
     public function testValidatesTheCodeOfPreviousWindow(): void
     {
+        $clock = new MockClock();
         $secret = $this->generateSecret(2);
-        $now = 1586161036;
-        $fourtySecondsAgo = $now - 40;
+        $now = $clock->now()->getTimestamp();
+        $beforeNow = $clock->now()->modify('-5 seconds')->getTimestamp();
+        $afterNow = $clock->now()->modify('+5 seconds')->getTimestamp();
 
-        $totp = TOTP::create(Base32::encodeUpperUnpadded($secret));
+        $totp = TOTP::create(
+            Base32::encodeUpperUnpadded($secret),
+            TOTPInterface::DEFAULT_PERIOD,
+            OTPInterface::DEFAULT_DIGEST,
+            OTPInterface::DEFAULT_DIGITS,
+            TOTPInterface::DEFAULT_EPOCH,
+            $clock,
+        );
 
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->secret = $secret;
 
         $authenticator = new Authenticator();
+        $authenticator->setClock($clock);
 
         $this->assertTrue($authenticator->validateCode($user, $totp->at($now), $now));
-        $this->assertTrue($authenticator->validateCode($user, $totp->at($fourtySecondsAgo), $now));
+        $this->assertTrue($authenticator->validateCode($user, $totp->at($beforeNow), $now));
+        $this->assertTrue($authenticator->validateCode($user, $totp->at($afterNow), $now));
         $this->assertFalse($authenticator->validateCode($user, 'foobar', $now));
     }
 
