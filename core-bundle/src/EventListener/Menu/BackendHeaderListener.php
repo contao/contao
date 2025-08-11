@@ -113,7 +113,7 @@ class BackendHeaderListener
             ->setAttribute('class', 'submenu')
             ->setAttribute('data-controller', 'contao--toggle-state')
             ->setAttribute('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
-            ->setAttribute('data-contao--toggle-state-controls-class', 'active')
+            ->setAttribute('data-contao--toggle-state-active-class', 'active')
             ->setExtra('safe_label', true)
             ->setLabelAttribute('class', 'profile')
             ->setExtra('translation_domain', false)

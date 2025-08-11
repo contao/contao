@@ -8,8 +8,7 @@
                 .addClass('split-button')
                 .set('data-controller', 'contao--toggle-state')
                 .set('data-action', 'click@document->contao--toggle-state#documentClick keydown.esc@document->contao--toggle-state#close')
-                .set('data-contao--toggle-state-controls-class', 'invisible')
-                .set('data-contao--toggle-state-inverse-mode-value', true)
+                .set('data-contao--toggle-state-inactive-class', 'invisible')
             %}
             <div{{ button_wrapper_attributes }}>
                 {{ buttons[1]|raw }}
@@ -19,8 +18,13 @@
                     .set('data-contao--toggle-state-target', 'controller')
                     .set('data-action', 'contao--toggle-state#toggle:prevent')
                 %}
-                <button{{ button_attributes }}>{{ backend_icon('navcol.svg') }}</button>
-                <ul class="invisible" data-contao--toggle-state-target="controls">
+                <button{{ button_attributes }} tabindex="-1">{{ backend_icon('navcol.svg') }}</button>
+                <ul
+                    class="invisible"
+                    data-contao--toggle-state-target="controls"
+                    data-action="focusin->contao--toggle-state#open focusout->contao--toggle-state#close"
+                    data-contao--toggle-state-close-delay-param="300"
+                >
                     {% for button in buttons|slice(2) %}
                         <li>{{ button|raw }}</li>
                     {% endfor %}

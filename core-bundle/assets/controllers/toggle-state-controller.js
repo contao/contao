@@ -2,52 +2,17 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     static targets = ['controller', 'controls'];
+    static classes = ['active', 'inactive'];
 
-    static values = {
-        inverseMode: {
-            type: Boolean,
-            default: false,
-        },
-    };
-
-    static classes = ['controls'];
+    #id = null;
+    #closeDelay = null;
 
     connect() {
-        this.element.setAttribute('id', this.id);
-        this.blurTimeout = null;
-    }
+        this.#id = this.controlsTarget.id || (Math.random() + 1).toString(36).substring(7);
+        this.controlsTarget.setAttribute('id', this.#id);
 
-    controllerTargetConnected(controller) {
-        // The "Target connect lifecycle callback" fires before connect() so we apply the id here
-        this.id = this.element.id ? this.element.id : (Math.random() + 1).toString(36).substring(7);
-
-        controller.setAttribute('aria-controls', this.id);
-        controller.setAttribute('aria-expanded', 'false');
-
-        if (this.inverseModeValue) {
-            controller.setAttribute('tabIndex', -1);
-        }
-    }
-
-    controlsTargetConnected(controls) {
-        if (!this.inverseModeValue) {
-            return;
-        }
-
-        controls.classList.add(this.controlsClass);
-
-        const focusable = this.controlsTarget.querySelectorAll('a[href], button');
-        const events = 'blur->contao--toggle-state#event focus->contao--toggle-state#event';
-
-        for (const element of focusable) {
-            element.dataset.action = element.dataset.action ? `${element.dataset.action} ${events}` : `${events}`;
-        }
-    }
-
-    #toggleState(state) {
-        this.controllerTarget.classList.toggle('active', state);
-        this.controllerTarget.setAttribute('aria-expanded', state);
-        this.controlsTarget.classList.toggle(this.controlsClass, this.inverseModeValue ? !state : state);
+        this.controllerTarget.setAttribute('aria-controls', this.#id);
+        this.controllerTarget.setAttribute('aria-expanded', 'false');
     }
 
     toggle() {
@@ -60,19 +25,14 @@ export default class extends Controller {
         this.#toggleState(true);
     }
 
-    close() {
-        this.#toggleState(false);
-    }
-
-    event(e) {
-        if (e.type === 'blur') {
-            this.blurTimeout = setTimeout(() => this.#toggleState(false), 100);
+    close(event) {
+        if (event?.params.closeDelay) {
+            clearTimeout(this.#closeDelay);
+            this.#closeDelay = setTimeout(() => this.#toggleState(false), event.params.closeDelay);
             return;
         }
 
-        this.#toggleState(true);
-
-        clearTimeout(this.blurTimeout);
+        this.#toggleState(false);
     }
 
     documentClick(event) {
@@ -81,5 +41,20 @@ export default class extends Controller {
         }
 
         this.#toggleState(false);
+    }
+
+    #toggleState(state) {
+        clearTimeout(this.#closeDelay);
+
+        this.controllerTarget.classList.toggle('active', state);
+        this.controllerTarget.setAttribute('aria-expanded', state);
+
+        if (this.hasActiveClass) {
+            this.controlsTarget.classList.toggle(this.activeClass, state);
+        }
+
+        if (this.hasInactiveClass) {
+            this.controlsTarget.classList.toggle(this.inactiveClass, !state);
+        }
     }
 }
