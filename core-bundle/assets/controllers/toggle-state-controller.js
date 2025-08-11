@@ -4,14 +4,14 @@ export default class extends Controller {
     static targets = ['controller', 'controls'];
     static classes = ['active', 'inactive'];
 
-    #id = null;
     #closeDelay = null;
 
     connect() {
-        this.#id = this.controlsTarget.id || (Math.random() + 1).toString(36).substring(7);
-        this.controlsTarget.setAttribute('id', this.#id);
+        if (!this.controlsTarget.id) {
+            this.controlsTarget.setAttribute('id', (Math.random() + 1).toString(36).substring(7));
+        }
 
-        this.controllerTarget.setAttribute('aria-controls', this.#id);
+        this.controllerTarget.setAttribute('aria-controls', this.controlsTarget.id);
         this.controllerTarget.setAttribute('aria-expanded', 'false');
     }
 
