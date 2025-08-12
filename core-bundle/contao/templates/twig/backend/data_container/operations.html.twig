@@ -2,8 +2,8 @@
 {% set has_submenu = false %}
 {% set show_button = false %}
 
-<div class="operations"{% if globalOperations %} data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"{% endif %}>
-    <ul id="{{ id is defined ? 'operations'~id : 'tl_buttons' }}" data-contao--operations-menu-target="menu">
+<div class="operations"{% if globalOperations %} id="tl_buttons" data-controller="contao--operations-menu" data-action="contextmenu->contao--operations-menu#open"{% endif %}>
+    <ul data-contao--operations-menu-target="menu">
         {% for operation in operations %}
             {% set isLink = operation.href|default or (operation.html is defined and ('<a ' in operation.html or '<button ' in operation.html)) %}
             {% set has_submenu = has_submenu or isLink %}
