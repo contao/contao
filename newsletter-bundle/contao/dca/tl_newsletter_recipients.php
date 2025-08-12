@@ -17,7 +17,6 @@ use Contao\DC_Table;
 use Contao\Idna;
 use Contao\Image;
 use Contao\System;
-use Doctrine\DBAL\Connection;
 
 $GLOBALS['TL_DCA']['tl_newsletter_recipients'] = array
 (
@@ -134,7 +133,7 @@ class tl_newsletter_recipients extends Backend
 	 *
 	 * @var array<int, array<string, array<string, string>>
 	 */
-	private static $subscribedMembers = array();
+	private static array $subscribedMembers = array();
 
 	/**
 	 * Set the recipient status to "added manually" if they are moved to another channel
@@ -219,15 +218,15 @@ class tl_newsletter_recipients extends Backend
 		$icon = Image::getPath('member');
 		$icond = Image::getPath('member_');
 
-		// Change icon according to start/stop of associated member (#951)
+		// Change icon according to start/stop of the associated member (#951)
 		if (!isset(self::$subscribedMembers[$row['pid']]))
 		{
-			/** @var Connection $db */
-			$db = System::getContainer()->get('database_connection');
-			self::$subscribedMembers[$row['pid']] = $db->fetchAllAssociativeIndexed('SELECT r.email, m.start, m.stop FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON r.email=m.email WHERE r.pid=?', array($row['pid']));
+			self::$subscribedMembers[$row['pid']] = System::getContainer()
+				->get('database_connection')
+				->fetchAllAssociativeIndexed('SELECT r.email, m.start, m.stop FROM tl_newsletter_recipients r LEFT JOIN tl_member m ON r.email=m.email WHERE r.pid=?', array($row['pid']));
 		}
 
-		if ($member = (self::$subscribedMembers[$row['pid']][$row['email']] ?? null))
+		if ($member = self::$subscribedMembers[$row['pid']][$row['email']] ?? null)
 		{
 			$time = Date::floorToMinute();
 
