@@ -16,7 +16,7 @@
 <!-- indexer::continue -->
 
 <?php if ($this->ajax): ?>
-  <script<?= $this->attr()->setIfExists('nonce', $this->nonce('script-src')) ?>>
+  <script<?= $this->attrs()->setIfExists('nonce', $this->nonce('script-src')) ?>>
     window.addEventListener('DOMContentLoaded', () => {
       const el = document.querySelector('[data-ajax-form="<?= $this->id ?>"]');
 
@@ -88,7 +88,7 @@
     });
   </script>
 <?php else: ?>
-  <script<?= $this->attr()->setIfExists('nonce', $this->nonce('script-src')) ?>>
+  <script<?= $this->attrs()->setIfExists('nonce', $this->nonce('script-src')) ?>>
     document.currentScript.previousElementSibling.querySelector('form')?.addEventListener('submit', e => {
       // Prevent double form submission
       if (e.submitter) {

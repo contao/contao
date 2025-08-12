@@ -39,7 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_comments.email.1">
         <source>The e-mail address will not be published.</source>
-        <target>Geef een e-mailadres van de auteur (wordt niet gepubliceerd).</target>
+        <target>Het e-mailadres wordt niet gepubliceerd.</target>
       </trans-unit>
       <trans-unit id="tl_comments.website.0">
         <source>Website</source>
