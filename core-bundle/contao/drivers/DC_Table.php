@@ -6812,6 +6812,18 @@ class DC_Table extends DataContainer implements ListableDataContainerInterface, 
 
 	protected function getClipboardPermission(string $mode, int $id, array|null $new = null): array
 	{
+		if ('create' === $mode)
+		{
+			$parent = array('pid' => $id);
+
+			if (($GLOBALS['TL_DCA'][$this->strTable]['config']['dynamicPtable'] ?? null) && $this->ptable)
+			{
+				$parent['ptable'] = $this->ptable;
+			}
+
+			$new = array_replace($parent, (array) $new);
+		}
+
 		$action = match ($mode)
 		{
 			'create' => new CreateAction($this->strTable, $new),
