@@ -13,6 +13,7 @@ namespace Contao;
 use Contao\CoreBundle\Doctrine\DBAL\Types\BinaryStringType;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\String\HtmlAttributes;
 use Doctrine\DBAL\Types\BinaryType;
 use Doctrine\DBAL\Types\BlobType;
 use Doctrine\DBAL\Types\Types;
@@ -692,6 +693,8 @@ class Versions extends Controller
 
 		$security = System::getContainer()->get('security.helper');
 		$request = System::getContainer()->get('request_stack')->getCurrentRequest();
+		$urlGenerator = System::getContainer()->get('router');
+		$translator = System::getContainer()->get('translator');
 
 		while ($objVersions->next())
 		{
@@ -740,13 +743,41 @@ class Versions extends Controller
 			{
 				// Probably a disabled module
 				unset($arrVersions[$k]);
+				continue;
 			}
 
 			// Skip deleted files (see #8480)
 			if (($v['fromTable'] ?? null) == 'tl_files' && ($arrVersions[$k]['deleted'] ?? null))
 			{
 				unset($arrVersions[$k]);
+				continue;
 			}
+
+			$operations = System::getContainer()->get('contao.data_container.operations_builder')->initialize('tl_version');
+
+			if ($arrVersions[$k]['deleted'] ?? null) {
+				$operations->append([
+					'label' => $translator->trans('MSC.restore', [], 'contao_default'),
+					'href' => $urlGenerator->generate('contao_backend', ['do' => 'undo']),
+					'icon' => 'undo.svg',
+					'attribtues' => new HtmlAttributes('data-contao--deeplink-target="primary"'),
+				]);
+			} else {
+				$operations->append([
+					'label' => $translator->trans('MSC.editElement', [], 'contao_default'),
+					'href' => $v['editUrl'] ?? null,
+					'icon' => ($v['editUrl'] ?? null) ? 'edit.svg' : 'edit--disabled.svg',
+				]);
+
+				$operations->append([
+					'label' => $translator->trans('MSC.showDifferences', [], 'contao_default'),
+					'href' => $v['to'] > 1 ? $v['editUrl'].'&amp;from='.$v['from'].'&amp;to='.$v['to'].'&amp;versions=1' ?? null : null,
+					'icon' => $v['to'] > 1 ? 'diff.svg' : 'diff--disabled.svg',
+					'attributes' => (new HtmlAttributes())->set('onclick', "Backend.openModalIframe({title:'".$translator->trans('MSC.recordOfTable', [$v['pid'], $v['fromTable']], 'contao_default')."',url:`\${this.href}&amp;popup=1`});return false"),
+				]);
+			}
+
+			$arrVersions[$k]['operations'] = $operations;
 		}
 
 		$objTemplate->versions = $arrVersions;
