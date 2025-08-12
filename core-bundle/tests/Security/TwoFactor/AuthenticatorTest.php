@@ -21,9 +21,7 @@ use BaconQrCode\Renderer\RendererStyle\Fill;
 use Contao\BackendUser;
 use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Tests\TestCase;
-use OTPHP\OTPInterface;
 use OTPHP\TOTP;
-use OTPHP\TOTPInterface;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\Clock\MockClock;
 use Symfony\Component\HttpFoundation\Request;
@@ -41,14 +39,7 @@ class AuthenticatorTest extends TestCase
     {
         $clock = new MockClock('2025-08-12 08:24:00');
         $secret = $this->generateSecret(1);
-        $totp = TOTP::create(
-            Base32::encodeUpperUnpadded($secret),
-            TOTPInterface::DEFAULT_PERIOD,
-            OTPInterface::DEFAULT_DIGEST,
-            OTPInterface::DEFAULT_DIGITS,
-            TOTPInterface::DEFAULT_EPOCH,
-            $clock,
-        );
+        $totp = TOTP::create(secret: Base32::encodeUpperUnpadded($secret), clock: $clock);
 
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->secret = $secret;
@@ -68,14 +59,7 @@ class AuthenticatorTest extends TestCase
         $beforeNow = $clock->now()->modify('-30 seconds')->getTimestamp();
         $afterNow = $clock->now()->modify('+29 seconds')->getTimestamp();
 
-        $totp = TOTP::create(
-            Base32::encodeUpperUnpadded($secret),
-            TOTPInterface::DEFAULT_PERIOD,
-            OTPInterface::DEFAULT_DIGEST,
-            OTPInterface::DEFAULT_DIGITS,
-            TOTPInterface::DEFAULT_EPOCH,
-            $clock,
-        );
+        $totp = TOTP::create(secret: Base32::encodeUpperUnpadded($secret), clock: $clock);
 
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->secret = $secret;

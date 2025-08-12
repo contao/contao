@@ -17,9 +17,7 @@ use BaconQrCode\Renderer\ImageRenderer;
 use BaconQrCode\Renderer\RendererStyle\RendererStyle;
 use BaconQrCode\Writer;
 use Contao\User;
-use OTPHP\OTPInterface;
 use OTPHP\TOTP;
-use OTPHP\TOTPInterface;
 use ParagonIE\ConstantTime\Base32;
 use Symfony\Component\Clock\ClockAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,14 +31,7 @@ class Authenticator
      */
     public function validateCode(User $user, string $code, int|null $timestamp = null): bool
     {
-        $totp = TOTP::create(
-            $this->getUpperUnpaddedSecretForUser($user),
-            TOTPInterface::DEFAULT_PERIOD,
-            OTPInterface::DEFAULT_DIGEST,
-            OTPInterface::DEFAULT_DIGITS,
-            TOTPInterface::DEFAULT_EPOCH,
-            $this->clock,
-        );
+        $totp = TOTP::create(secret: $this->getUpperUnpaddedSecretForUser($user), clock: $this->clock);
 
         return $totp->verify($code, $timestamp, 1);
     }
