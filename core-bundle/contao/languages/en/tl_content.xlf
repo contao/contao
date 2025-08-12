@@ -738,10 +738,10 @@
         <source>Paste after content element ID %s</source>
       </trans-unit>
       <trans-unit id="tl_content.pastenewtop.1">
-        <source>Add a new content element at the top</source>
+        <source>Create a new content element at the top</source>
       </trans-unit>
       <trans-unit id="tl_content.pastenewafter.1">
-        <source>Add a new content element after content element ID %s</source>
+        <source>Create a new content element after content element ID %s</source>
       </trans-unit>
       <trans-unit id="tl_content.editalias">
         <source>Edit the source element ID %s</source>
