@@ -114,7 +114,7 @@ class TextArea extends Widget
 	 */
 	public function generate()
 	{
-		$disableAutogrow = $this->rte || str_contains($this->strClass, 'noresize') || (isset($this->arrConfiguration['autogrow']) && $this->arrConfiguration['autogrow']);
+		$disableAutogrow = $this->rte || str_contains($this->strClass, 'noresize') || false === ($this->arrConfiguration['autogrow'] ?? true);
 
 		return \sprintf(
 			'<textarea name="%s" id="ctrl_%s" class="tl_textarea%s" rows="%s" cols="%s"%s%s data-action="focus->contao--scroll-offset#store" data-contao--scroll-offset-target="autoFocus">%s</textarea>%s',
