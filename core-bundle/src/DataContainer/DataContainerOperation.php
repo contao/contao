@@ -52,20 +52,11 @@ class DataContainerOperation implements \ArrayAccess
             $operation['label'] = $operation['title'] = $name;
         }
 
-        $attributes = $operation['attributes'] ?? new HtmlAttributes();
+        $operation['attributes'] ??= new HtmlAttributes();
 
-        if (\is_string($attributes)) {
-            $attributes = new HtmlAttributes(null !== $id ? \sprintf($attributes, $id, $id) : $attributes);
+        if (\is_string($operation['attributes'])) {
+            $operation['attributes'] = new HtmlAttributes(null !== $id ? \sprintf($operation['attributes'], $id, $id) : $operation['attributes']);
         }
-
-        if (isset($operation['class'])) {
-            $attributes->addClass($operation['class']);
-        }
-
-        // Add the key as CSS class
-        $attributes->addClass($name);
-
-        $operation['attributes'] = $attributes;
 
         $this->operation = $operation;
     }
