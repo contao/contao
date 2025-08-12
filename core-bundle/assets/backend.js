@@ -1,8 +1,8 @@
 import { Application } from '@hotwired/stimulus';
 import { definitionForModuleAndIdentifier, identifierForContextKey } from '@hotwired/stimulus-webpack-helpers';
 import '@hotwired/turbo';
-import WebAuthn from '@web-auth/webauthn-stimulus';
 import PasswordVisibility from '@stimulus-components/password-visibility';
+import WebAuthn from '@web-auth/webauthn-stimulus';
 
 import './scripts/mootao.js';
 import './scripts/core.js';
