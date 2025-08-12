@@ -978,19 +978,15 @@
         <source>Unhide</source>
         <target>表示</target>
       </trans-unit>
-      <trans-unit id="tl_content.pasteafter.0">
-        <source>Paste at the top</source>
-        <target>先頭に貼り付け</target>
-      </trans-unit>
       <trans-unit id="tl_content.pasteafter.1">
         <source>Paste after content element ID %s</source>
         <target>ID %sのコンテント要素の後に貼り付け</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenew.0">
+      <trans-unit id="tl_content.pastenewtop.1">
         <source>Create a new content element at the top</source>
         <target>先頭に新しいコンテント要素を作成</target>
       </trans-unit>
-      <trans-unit id="tl_content.pastenew.1">
+      <trans-unit id="tl_content.pastenewafter.1">
         <source>Create a new content element after content element ID %s</source>
         <target>ID %sのコンテント要素の後ろに新しいコンテント要素を作成</target>
       </trans-unit>
