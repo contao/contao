@@ -25,7 +25,7 @@ class SwiperController extends AbstractContentElementController
     {
         $sliderSettings = [
             'speed' => (float) $model->sliderSpeed,
-            'offset' => $model->sliderStartSlide,
+            'initialSlide' => $model->sliderStartSlide,
             'loop' => $model->sliderContinuous,
         ];
 

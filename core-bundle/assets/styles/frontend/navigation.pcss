@@ -13,6 +13,8 @@
     --nav-mobile-font-size: 18px;
     --nav-mobile-backdrop-height: 80px;
     --nav-submenu-background: #fff;
+    --nav-burger-color: #fff;
+    --nav-burger-line-color: hsl(30deg 100% 48%);
     --skip-background: #172b3b;
     --skip-color: #d3d6da;
     --skip-focus-border-color: #f47c00;
@@ -22,7 +24,7 @@ body.navigation-open {
     overflow: hidden;
 
     .nav-burger {
-        color: #fff;
+        color: var(--nav-burger-color);
     }
 
     header .logo {
@@ -104,7 +106,7 @@ body.navigation-open {
         left: 50%;
         height: 0.25rem;
         width: 2.25rem;
-        background: hsl(30deg 100% 48%);
+        background: var(--nav-burger-line-color);
         border-radius: 3rem;
         transform: translateX(-50%);
     }
