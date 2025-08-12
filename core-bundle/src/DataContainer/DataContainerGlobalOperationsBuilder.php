@@ -180,6 +180,9 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
             $config['attributes']->addClass($config['class']);
         }
 
+        // Add the key as CSS class
+        $config['attributes']->addClass($name);
+
         return [
             'href' => $href,
             'label' => $config['label'],

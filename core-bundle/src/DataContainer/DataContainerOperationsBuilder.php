@@ -232,8 +232,15 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
         }
 
         if (null !== ($config['prefetch'] ?? null)) {
-            $config['attributes'] = (new HtmlAttributes($config['attributes']))->set('data-turbo-prefetch', $config['prefetch'] ? 'true' : 'false');
+            $config['attributes']->set('data-turbo-prefetch', $config['prefetch'] ? 'true' : 'false');
         }
+
+        if ($config['class'] ?? null) {
+            $config['attributes']->addClass($config['class']);
+        }
+
+        // Add the key as CSS class
+        $config['attributes']->addClass($name);
 
         return [
             'label' => $config['label'],
