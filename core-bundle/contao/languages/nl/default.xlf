@@ -407,6 +407,7 @@
       </trans-unit>
       <trans-unit id="ERR.copyUnique">
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
+        <target>Element-ID %d kan hier niet worden ingevoegd omdat het in conflict is met een bestaand element.</target>
       </trans-unit>
       <trans-unit id="SEC.question1">
         <source>Please add %d and %d.</source>
@@ -2586,6 +2587,7 @@
       </trans-unit>
       <trans-unit id="MSC.or">
         <source>or</source>
+        <target>of</target>
       </trans-unit>
       <trans-unit id="MSC.published">
         <source>Published</source>
@@ -2981,27 +2983,35 @@
       </trans-unit>
       <trans-unit id="MSC.searchResultsPlaceholder">
         <source>Type to start searching</source>
+        <target>Typ om te beginnen met zoeken</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsMin">
         <source>Please enter at least %s characters</source>
+        <target>Voer minimaal %s tekens in</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsLoading">
         <source>Loading results...</source>
+        <target>Resultaten laden...</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitView">
         <source>View %s</source>
+        <target>Weergave %s</target>
       </trans-unit>
       <trans-unit id="MSC.searchHitEdit">
         <source>Edit %s</source>
+        <target>Bewerk %s</target>
       </trans-unit>
       <trans-unit id="MSC.noResults">
         <source>No results found.</source>
+        <target>Geen resultaten gevonden.</target>
       </trans-unit>
       <trans-unit id="MSC.noOptions">
         <source>No options to choose from.</source>
+        <target>Geen opties om uit te kiezen.</target>
       </trans-unit>
       <trans-unit id="MSC.removeItem">
         <source>Remove item</source>
+        <target>Item verwijderen</target>
       </trans-unit>
       <trans-unit id="UNITS.0">
         <source>Byte</source>
@@ -3189,6 +3199,7 @@
       </trans-unit>
       <trans-unit id="DCA.operations">
         <source>Show operations for element ID %s</source>
+        <target>Toon bewerkingen voor element-ID %s</target>
       </trans-unit>
       <trans-unit id="DCA.children">
         <source>Edit the child elements of element ID %s</source>

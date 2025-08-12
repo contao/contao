@@ -395,15 +395,15 @@
       </trans-unit>
       <trans-unit id="ERR.passkeysUnsupported">
         <source>Passkeys are not supported on this device.</source>
-        <target>Passkey не поддерживается на этом устройстве.</target>
+        <target>Ключ доступа (passkey) не поддерживается на этом устройстве.</target>
       </trans-unit>
       <trans-unit id="ERR.passkeyAssertionFailure">
         <source>Login with passkey failed.</source>
-        <target>Не удалось войти с помощью passkey.</target>
+        <target>Не удалось войти с помощью ключа доступа (passkey).</target>
       </trans-unit>
       <trans-unit id="ERR.passkeyAttestationFailure">
         <source>Passkey could not be created.</source>
-        <target>Passkey не может быть создан.</target>
+        <target>Ключ доступа (passkey) не может быть создан.</target>
       </trans-unit>
       <trans-unit id="ERR.copyUnique">
         <source>Element ID %d cannot be inserted here because it conflicts with an existing element.</source>
@@ -2955,15 +2955,15 @@
       </trans-unit>
       <trans-unit id="MSC.passkeys">
         <source>Passkeys</source>
-        <target>Passkeys</target>
+        <target>Ключи доступа (passkey)</target>
       </trans-unit>
       <trans-unit id="MSC.passkeysDescription">
         <source>Passkeys allow you to log in securely and easily without the need for a password and two-factor token.</source>
-        <target>Passkey обеспечивает безопасный и простой вход в систему без необходимости ввода пароля и двухфакторного токена.</target>
+        <target>Ключ доступа (passkey) обеспечивает безопасный и простой вход в систему без необходимости ввода пароля и двухфакторного токена.</target>
       </trans-unit>
       <trans-unit id="MSC.passkeyLogin">
         <source>Sign in with a passkey</source>
-        <target>Войти с помощью passkey</target>
+        <target>Войти с помощью ключа доступа (passkey)</target>
       </trans-unit>
       <trans-unit id="MSC.passkeysName">
         <source>Name/ID</source>
@@ -2971,7 +2971,7 @@
       </trans-unit>
       <trans-unit id="MSC.passkeyNameInput">
         <source>Name this passkey …</source>
-        <target>Назовите этот passkey…</target>
+        <target>Назовите этот ключ доступа (passkey)…</target>
       </trans-unit>
       <trans-unit id="MSC.passkeysCreatedAt">
         <source>Created at</source>
@@ -2979,7 +2979,7 @@
       </trans-unit>
       <trans-unit id="MSC.addPasskey">
         <source>Add passkey</source>
-        <target>Добавить passkey</target>
+        <target>Добавить ключ доступа (passkey)</target>
       </trans-unit>
       <trans-unit id="MSC.searchResultsPlaceholder">
         <source>Type to start searching</source>

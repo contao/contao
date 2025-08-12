@@ -2,6 +2,18 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.5.13] (2025-08-12)
+
+**Fixed issues:**
+
+- [#8607] Fix a wrong Swiper option ([FlowinBeatz])
+- [#8535] Fix the `alt` attribute of the "save passkey" button ([fritzmg])
+- [#8502] Remove `searchResultLimit` from Choices.js  ([fritzmg])
+- [#8485] Correctly add the select wrapper ([leofeyer])
+- [#8464] Remove the `title` attribute from the search results ([lukasbableck])
+- [#8475] Correctly keep the context menu open ([aschempp])
+- [#8460] Always add the `DropZone` assets in the back end ([fritzmg])
+
 ## [5.5.12] (2025-06-23)
 
 **Fixed issues:**
@@ -275,6 +287,7 @@ This project adheres to [Semantic Versioning].
 - [#7582] Add PostCSS as described in Symfony Encore ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.5.13]: https://github.com/contao/contao/releases/tag/5.5.13
 [5.5.12]: https://github.com/contao/contao/releases/tag/5.5.12
 [5.5.11]: https://github.com/contao/contao/releases/tag/5.5.11
 [5.5.10]: https://github.com/contao/contao/releases/tag/5.5.10
@@ -297,8 +310,10 @@ This project adheres to [Semantic Versioning].
 [ausi]: https://github.com/ausi
 [de-es]: https://github.com/de-es
 [delirius]: https://github.com/delirius
+[FlowinBeatz]: https://github.com/FlowinBeatz
 [fritzmg]: https://github.com/fritzmg
 [leofeyer]: https://github.com/leofeyer
+[lukasbableck]: https://github.com/lukasbableck
 [m-vo]: https://github.com/m-vo
 [Toflar]: https://github.com/Toflar
 [zoglo]: https://github.com/zoglo
@@ -484,3 +499,10 @@ This project adheres to [Semantic Versioning].
 [#8428]: https://github.com/contao/contao/pull/8428
 [#8431]: https://github.com/contao/contao/pull/8431
 [#8444]: https://github.com/contao/contao/pull/8444
+[#8460]: https://github.com/contao/contao/pull/8460
+[#8464]: https://github.com/contao/contao/pull/8464
+[#8475]: https://github.com/contao/contao/pull/8475
+[#8485]: https://github.com/contao/contao/pull/8485
+[#8502]: https://github.com/contao/contao/pull/8502
+[#8535]: https://github.com/contao/contao/pull/8535
+[#8607]: https://github.com/contao/contao/pull/8607

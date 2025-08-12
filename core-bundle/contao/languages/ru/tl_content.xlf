@@ -639,7 +639,7 @@
       </trans-unit>
       <trans-unit id="tl_content.protected.1">
         <source>Show the content element to certain member groups only.</source>
-        <target>Показывать содержание элемента только для членов группы.</target>
+        <target>Показывать содержание элемента контента только для членов группы.</target>
       </trans-unit>
       <trans-unit id="tl_content.groups.0">
         <source>Allowed member groups</source>
@@ -923,7 +923,7 @@
       </trans-unit>
       <trans-unit id="tl_content.vimeo_dnt">
         <source>Prevent session data tracking</source>
-        <target>Запретить отслеживание данных сеанса</target>
+        <target>Запретить отслеживание данных сессии</target>
       </trans-unit>
       <trans-unit id="tl_content.new.0">
         <source>New</source>
@@ -931,27 +931,27 @@
       </trans-unit>
       <trans-unit id="tl_content.new.1">
         <source>Add a new content element</source>
-        <target>Создать новый элемент</target>
+        <target>Создать новый элемент контента</target>
       </trans-unit>
       <trans-unit id="tl_content.show">
         <source>Show the details of content element ID %s</source>
-        <target>Показать детали элемента ID %s</target>
+        <target>Показать детали элемента контента ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.cut">
         <source>Move content element ID %s</source>
-        <target>Переместить элемент ID %s</target>
+        <target>Переместить элемент контента ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.copy">
         <source>Duplicate content element ID %s</source>
-        <target>Дублировать элемент ID %s</target>
+        <target>Дублировать элемент контента ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.delete">
         <source>Delete content element ID %s</source>
-        <target>Удалить элемент ID %s</target>
+        <target>Удалить элемент контента ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.edit">
         <source>Edit content element ID %s</source>
-        <target>Редактировать элемент ID %s</target>
+        <target>Редактировать элемент контента ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.toggle.0">
         <source>Hide/unhide content element</source>

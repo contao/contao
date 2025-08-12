@@ -575,7 +575,7 @@
       </trans-unit>
       <trans-unit id="tl_module.html_legend">
         <source>Text/HTML</source>
-        <target>Metin/HTML</target>
+        <target>Yazı/HTML</target>
       </trans-unit>
       <trans-unit id="tl_module.protected_legend">
         <source>Access protection</source>

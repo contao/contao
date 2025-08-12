@@ -79,7 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_form.raw.1">
         <source>The form data will be sent as plain text message with each field in a new line.</source>
-        <target>Form verileri düz metin iletisi olarak gönderilir. Her alan ayrı bir satırda yer alır.</target>
+        <target>Form verileri düz yazı iletisi olarak gönderilir. Her alan ayrı bir satırda yer alır.</target>
       </trans-unit>
       <trans-unit id="tl_form.xml.0">
         <source>XML file</source>

@@ -223,7 +223,7 @@
       </trans-unit>
       <trans-unit id="tl_files.textTrackType.1">
         <source>Here you can select the type of text track.</source>
-        <target>Buradan metin izinin türünü seçebilirsiniz.</target>
+        <target>Buradan yazı izinin türünü seçebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_files.captions">
         <source>Closed captions</source>
@@ -271,7 +271,7 @@
       </trans-unit>
       <trans-unit id="tl_files.source">
         <source>Edit the source text of file &quot;%s&quot;</source>
-        <target>&quot;%s&quot; dosyasının kaynak metnini düzenle</target>
+        <target>&quot;%s&quot; dosyasının kaynak yazısını düzenle</target>
       </trans-unit>
       <trans-unit id="tl_files.upload">
         <source>Upload files to folder &quot;%s&quot;</source>

@@ -423,7 +423,7 @@
       </trans-unit>
       <trans-unit id="CTE.texts">
         <source>Text elements</source>
-        <target>Metin bileşenleri</target>
+        <target>Yazı bileşenleri</target>
       </trans-unit>
       <trans-unit id="CTE.headline.0">
         <source>Headline</source>
@@ -439,11 +439,11 @@
       </trans-unit>
       <trans-unit id="CTE.text.0">
         <source>Text</source>
-        <target>Metin</target>
+        <target>Yazı</target>
       </trans-unit>
       <trans-unit id="CTE.text.1">
         <source>Generates a rich text element.</source>
-        <target>Bir zengin metin ögesi oluşturur.</target>
+        <target>Bir zengin yazı ögesi oluşturur.</target>
       </trans-unit>
       <trans-unit id="CTE.html.0">
         <source>HTML</source>
@@ -539,7 +539,7 @@
       </trans-unit>
       <trans-unit id="CTE.markdown.1">
         <source>Generates HTML code from a Markdown text.</source>
-        <target>Bir Markdown metninden HTML kodu oluşturur.</target>
+        <target>Bir markdown yazısından HTML kodu oluşturur.</target>
       </trans-unit>
       <trans-unit id="CTE.template.0">
         <source>Custom template</source>
@@ -703,7 +703,7 @@
       </trans-unit>
       <trans-unit id="CTE.teaser.1">
         <source>Displays the teaser text of an article.</source>
-        <target>Bir makalenin tanıtım metnini görüntüler.</target>
+        <target>Bir makalenin tanıtım yazısını görüntüler.</target>
       </trans-unit>
       <trans-unit id="CTE.legacy">
         <source>Legacy elements</source>
@@ -715,7 +715,7 @@
       </trans-unit>
       <trans-unit id="FFL.explanation.1">
         <source>A custom field to insert an explanation text.</source>
-        <target>Bir açıklama metni eklemek için özel bir alan.</target>
+        <target>Bir açıklama yazısı eklemek için özel bir alan.</target>
       </trans-unit>
       <trans-unit id="FFL.html.0">
         <source>HTML code</source>
@@ -743,11 +743,11 @@
       </trans-unit>
       <trans-unit id="FFL.text.0">
         <source>Text field</source>
-        <target>Metin alanı</target>
+        <target>Yazı alanı</target>
       </trans-unit>
       <trans-unit id="FFL.text.1">
         <source>A single-line input field for a short or medium text.</source>
-        <target>Kısa ya da orta boyda bir metin için tek satırlı bir giriş alanı.</target>
+        <target>Kısa ya da orta boyda bir yazı için tek satırlı bir giriş alanı.</target>
       </trans-unit>
       <trans-unit id="FFL.password.0">
         <source>Password field</source>
@@ -763,7 +763,7 @@
       </trans-unit>
       <trans-unit id="FFL.textarea.1">
         <source>A multi-line input field for a medium or long text.</source>
-        <target>Orta ya da uzun boyda bir metin için çok satırlı bir giriş alanı.</target>
+        <target>Orta ya da uzun boyda bir yazı için çok satırlı bir giriş alanı.</target>
       </trans-unit>
       <trans-unit id="FFL.select.0">
         <source>Select menu</source>
@@ -1419,7 +1419,7 @@
       </trans-unit>
       <trans-unit id="MSC.aw_alt">
         <source>Alternate text</source>
-        <target>Alternatif metin</target>
+        <target>Alternatif yazı</target>
       </trans-unit>
       <trans-unit id="MSC.aw_link">
         <source>Link</source>
@@ -2831,7 +2831,7 @@
       </trans-unit>
       <trans-unit id="MSC.serpPreview.1">
         <source>Here you can preview the metadata in the Google search results. Other search engines might show longer texts or crop at a different position.</source>
-        <target>Buradan, Google arama sonuçlarındaki üst verileri ön izleyebilirsiniz. Diğer arama motorları üst verileri daha uzun metinler olarak görüntüleyebilir ya da farklı bir konumdan kırpabilir.</target>
+        <target>Buradan, Google arama sonuçlarındaki üst verileri ön izleyebilirsiniz. Diğer arama motorları üst verileri daha uzun yazılar olarak görüntüleyebilir ya da farklı bir konumdan kırpabilir.</target>
       </trans-unit>
       <trans-unit id="MSC.numberOfItems.0">
         <source>Number of items</source>
