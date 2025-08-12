@@ -39,7 +39,7 @@ class AuthenticatorTest extends TestCase
 
     public function testValidatesTheCode(): void
     {
-        $clock = new MockClock();
+        $clock = new MockClock('2025-08-12 08:24:00');
         $secret = $this->generateSecret(1);
         $totp = TOTP::create(
             Base32::encodeUpperUnpadded($secret),
@@ -62,11 +62,11 @@ class AuthenticatorTest extends TestCase
 
     public function testValidatesTheCodeOfPreviousWindow(): void
     {
-        $clock = new MockClock();
+        $clock = new MockClock('2025-08-12 08:24:00');
         $secret = $this->generateSecret(2);
         $now = $clock->now()->getTimestamp();
-        $beforeNow = $clock->now()->modify('-5 seconds')->getTimestamp();
-        $afterNow = $clock->now()->modify('+5 seconds')->getTimestamp();
+        $beforeNow = $clock->now()->modify('-30 seconds')->getTimestamp();
+        $afterNow = $clock->now()->modify('+29 seconds')->getTimestamp();
 
         $totp = TOTP::create(
             Base32::encodeUpperUnpadded($secret),
