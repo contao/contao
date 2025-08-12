@@ -773,7 +773,7 @@ class Versions extends Controller
 					'label' => $translator->trans('MSC.showDifferences', [], 'contao_default'),
 					'href' => $v['to'] > 1 ? $v['editUrl'].'&amp;from='.$v['from'].'&amp;to='.$v['to'].'&amp;versions=1' ?? null : null,
 					'icon' => $v['to'] > 1 ? 'diff.svg' : 'diff--disabled.svg',
-					'attributes' => (new HtmlAttributes())->set('onclick', "Backend.openModalIframe({title:'".$translator->trans('MSC.recordOfTable', [$v['pid'], $v['fromTable']], 'contao_default')."',url:`this.href&amp;popup=1`});return false"),
+					'attributes' => (new HtmlAttributes())->set('onclick', "Backend.openModalIframe({title:'".$translator->trans('MSC.recordOfTable', [$v['pid'], $v['fromTable']], 'contao_default')."',url:`\${this.href}&amp;popup=1`});return false"),
 				]);
 			}
 
