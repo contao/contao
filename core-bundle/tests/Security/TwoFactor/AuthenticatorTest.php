@@ -39,7 +39,7 @@ class AuthenticatorTest extends TestCase
     {
         $clock = new MockClock('2025-08-12 08:24:00');
         $secret = $this->generateSecret(1);
-        $totp = TOTP::create(secret: Base32::encodeUpperUnpadded($secret), clock: $clock);
+        $totp = TOTP::create(Base32::encodeUpperUnpadded($secret), clock: $clock);
 
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->secret = $secret;
@@ -59,7 +59,7 @@ class AuthenticatorTest extends TestCase
         $beforeNow = $clock->now()->modify('-30 seconds')->getTimestamp();
         $afterNow = $clock->now()->modify('+29 seconds')->getTimestamp();
 
-        $totp = TOTP::create(secret: Base32::encodeUpperUnpadded($secret), clock: $clock);
+        $totp = TOTP::create(Base32::encodeUpperUnpadded($secret), clock: $clock);
 
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->secret = $secret;
