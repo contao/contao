@@ -12,8 +12,10 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\DataContainer;
 
+use Contao\Backend;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\String\HtmlAttributes;
+use Contao\Input;
 use Contao\System;
 
 /**
@@ -25,9 +27,11 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
 
     public const CREATE_PASTE = 'paste';
 
-    public const CREATE_PASTE_AFTER = 'paste_after';
+    public const CREATE_AFTER = 'after';
 
-    public const CREATE_PASTE_INTO = 'paste_into';
+    public const CREATE_INTO = 'into';
+
+    public const CREATE_TOP = 'top';
 
     /**
      * @var list<array{html: string, primary?: bool}|array{separator: true}|array{
@@ -108,7 +112,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
 
     protected function cleanOperations(): array
     {
-        $hasSeparator = false;
+        $hasSeparator = true;
         $operations = $this->operations;
 
         foreach ($operations as $k => $v) {
@@ -253,5 +257,33 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
         }
 
         return $label;
+    }
+
+    /**
+     * @param self::CREATE_* $mode
+     */
+    protected function getNewHref(string $mode, int|null $pid = null, int|null $id = null): string
+    {
+        $url = match ($mode) {
+            self::CREATE_NEW => 'act=create',
+            self::CREATE_PASTE => 'act=paste&amp;mode=create',
+            self::CREATE_AFTER => 'act=create&amp;mode=1',
+            self::CREATE_TOP,
+            self::CREATE_INTO => 'act=create&amp;mode=2',
+        };
+
+        if (null !== $pid) {
+            $url .= '&amp;pid='.$pid;
+        }
+
+        if (null !== $id) {
+            $url .= '&amp;id='.$id;
+        }
+
+        if ($this->framework->getAdapter(Input::class)->get('nb')) {
+            $url .= '&amp;nc=1';
+        }
+
+        return $this->framework->getAdapter(Backend::class)->addToUrl($url, true, [], false);
     }
 }

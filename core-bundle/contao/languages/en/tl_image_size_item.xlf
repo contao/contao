@@ -56,16 +56,19 @@
       <trans-unit id="tl_image_size_item.toggle.2">
         <source>Activate media query ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pasteafter.0">
-        <source>Paste at the top</source>
+      <trans-unit id="tl_image_size_item.toggle.3">
+        <source>Deactivate</source>
+      </trans-unit>
+      <trans-unit id="tl_image_size_item.toggle.4">
+        <source>Activate</source>
       </trans-unit>
       <trans-unit id="tl_image_size_item.pasteafter.1">
         <source>Paste after media query ID %s</source>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pastenew.0">
+      <trans-unit id="tl_image_size_item.pastenewtop.1">
         <source>Create a new media query at the top</source>
       </trans-unit>
-      <trans-unit id="tl_image_size_item.pastenew.1">
+      <trans-unit id="tl_image_size_item.pastenewafter.1">
         <source>Create a new media query after media query ID %s</source>
       </trans-unit>
     </body>
