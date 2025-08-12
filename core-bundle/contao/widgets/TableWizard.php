@@ -130,7 +130,7 @@ class TableWizard extends Widget
 			{
 				if ($button == 'rdrag')
 				{
-					$return .= ' <button type="button" class="drag-handle" aria-hidden="true">' . Image::getHtml('drag.svg', $GLOBALS['TL_LANG']['MSC']['move']) . '</button>';
+					$return .= ' <button type="button" class="drag-handle">' . Image::getHtml('drag.svg', $GLOBALS['TL_LANG']['MSC']['move']) . '</button>';
 				}
 				else
 				{

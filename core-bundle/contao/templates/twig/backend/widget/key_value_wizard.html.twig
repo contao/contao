@@ -22,7 +22,6 @@
                     {% set drag_handle_attributes = attrs()
                         .set('type', 'button')
                         .set('data-action', 'keydown->contao--sortable#move')
-                        .set('aria-hidden', 'true')
                         .addClass('drag-handle')
                     %}
                     <button{{ drag_handle_attributes}}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
