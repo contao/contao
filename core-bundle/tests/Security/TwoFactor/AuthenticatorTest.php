@@ -44,8 +44,7 @@ class AuthenticatorTest extends TestCase
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->secret = $secret;
 
-        $authenticator = new Authenticator();
-        $authenticator->setClock($clock);
+        $authenticator = new Authenticator($clock);
 
         $this->assertTrue($authenticator->validateCode($user, $totp->now()));
         $this->assertFalse($authenticator->validateCode($user, 'foobar'));
@@ -64,8 +63,7 @@ class AuthenticatorTest extends TestCase
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->secret = $secret;
 
-        $authenticator = new Authenticator();
-        $authenticator->setClock($clock);
+        $authenticator = new Authenticator($clock);
 
         $this->assertTrue($authenticator->validateCode($user, $totp->at($now), $now));
         $this->assertTrue($authenticator->validateCode($user, $totp->at($beforeNow), $now));
@@ -75,6 +73,7 @@ class AuthenticatorTest extends TestCase
 
     public function testGeneratesTheProvisionUri(): void
     {
+        $clock = new MockClock('2025-08-12 08:24:00');
         $secret = $this->generateSecret(3);
 
         $user = $this->mockClassWithProperties(BackendUser::class);
@@ -93,7 +92,7 @@ class AuthenticatorTest extends TestCase
             ->willReturn('example.com')
         ;
 
-        $authenticator = new Authenticator();
+        $authenticator = new Authenticator($clock);
 
         $this->assertSame(
             \sprintf(
@@ -119,6 +118,7 @@ class AuthenticatorTest extends TestCase
             <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="180" height="180" viewBox="0 0 180 180"><rect x="0" y="0" width="180" height="180" fill="#fefefe"/>
             SVG;
 
+        $clock = new MockClock('2025-08-12 08:24:00');
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->secret = 'foobar';
 
@@ -135,7 +135,7 @@ class AuthenticatorTest extends TestCase
             ->willReturn('example.com')
         ;
 
-        $authenticator = new Authenticator();
+        $authenticator = new Authenticator($clock);
         $svg = $authenticator->getQrCode($user, $request);
 
         $this->assertSame(5897, \strlen($svg));
