@@ -2,6 +2,8 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.5.14] (2025-08-13)
+
 ## [5.5.13] (2025-08-12)
 
 **Fixed issues:**
@@ -287,6 +289,7 @@ This project adheres to [Semantic Versioning].
 - [#7582] Add PostCSS as described in Symfony Encore ([leofeyer])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.5.14]: https://github.com/contao/contao/releases/tag/5.5.14
 [5.5.13]: https://github.com/contao/contao/releases/tag/5.5.13
 [5.5.12]: https://github.com/contao/contao/releases/tag/5.5.12
 [5.5.11]: https://github.com/contao/contao/releases/tag/5.5.11
