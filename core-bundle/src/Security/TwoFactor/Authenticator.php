@@ -31,6 +31,8 @@ class Authenticator
      */
     public function validateCode(User $user, string $code, int|null $timestamp = null): bool
     {
+        $this->now();
+
         $totp = TOTP::create($this->getUpperUnpaddedSecretForUser($user), clock: $this->clock);
 
         return $totp->verify($code, $timestamp, 1);
