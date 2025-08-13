@@ -14,12 +14,6 @@
       <trans-unit id="tl_layout.type.1">
         <source>Here you can select the layout type.</source>
       </trans-unit>
-      <trans-unit id="tl_layout.fallback.0">
-        <source>Default layout</source>
-      </trans-unit>
-      <trans-unit id="tl_layout.fallback.1">
-        <source>Make the layout the default layout.</source>
-      </trans-unit>
       <trans-unit id="tl_layout.rows.0">
         <source>Rows</source>
       </trans-unit>
