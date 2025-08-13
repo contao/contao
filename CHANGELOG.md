@@ -2,11 +2,17 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.55] (2025-08-13)
+
+**Fixed issues:**
+
+- [#8662] Update `enshrined/svg-sanitize` to version 0.22 ([zoglo])
+
 ## [4.13.54] (2025-03-18)
 
 **Security fixes:**
 
-- [CVE-2025-29790]: Cross site scripting through SVG uploads
+- [CVE-2025-29790]: Cross-site scripting through SVG uploads
 
 ## [4.13.53] (2025-02-18)
 
@@ -184,7 +190,7 @@ This project adheres to [Semantic Versioning].
 **Security fixes:**
 
 - [CVE-2024-28235]: Session cookie disclosure in the crawler
-- [CVE-2024-28190]: Cross site scripting in the file manager
+- [CVE-2024-28190]: Cross-site scripting in the file manager
 - [CVE-2024-28191]: Insert tag injection via the form generator
 - [CVE-2024-30262]: Remember-me tokens are not cleared after a password change
 - [CVE-2024-28234]: Insufficient BBCode sanitization
@@ -368,7 +374,7 @@ This project adheres to [Semantic Versioning].
 
 **Security fixes:**
 
-- [CVE-2023-36806]: Cross site scripting in widgets with units
+- [CVE-2023-36806]: Cross-site scripting in widgets with units
 
 ## [4.13.27] (2023-07-21)
 
@@ -797,6 +803,12 @@ This project adheres to [Semantic Versioning].
 
 ## [4.13.4] (2022-05-05)
 
+## [4.13.3] (2022-05-05)
+
+**Security fixes:**
+
+- [CVE-2022-24899]: Cross-site scripting via canonical URL
+
 **New features:**
 
 - [#4329] Deprecated Cache lib ([Toflar])
@@ -829,12 +841,6 @@ This project adheres to [Semantic Versioning].
 - [#4451] Quote all schema names, same as we do for inserts ([ausi])
 - [#4448] Skip row size calculation for MyISAM ([ausi])
 - [#4447] Fix simple token parser default value for unknown variables ([m-vo])
-
-## [4.13.3] (2022-05-05)
-
-**Security fixes:**
-
-- [CVE-2022-24899]: Cross site scripting via canonical URL
 
 ## [4.13.2] (2022-03-31)
 
@@ -1133,6 +1139,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.55]: https://github.com/contao/contao/releases/tag/4.13.55
 [4.13.54]: https://github.com/contao/contao/releases/tag/4.13.54
 [4.13.53]: https://github.com/contao/contao/releases/tag/4.13.53
 [4.13.52]: https://github.com/contao/contao/releases/tag/4.13.52
@@ -2053,3 +2060,4 @@ This project adheres to [Semantic Versioning].
 [#7929]: https://github.com/contao/contao/pull/7929
 [#8055]: https://github.com/contao/contao/pull/8055
 [#8056]: https://github.com/contao/contao/pull/8056
+[#8662]: https://github.com/contao/contao/pull/8662
