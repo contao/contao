@@ -839,9 +839,14 @@ abstract class Backend extends Controller
 	 * @param string $inputName
 	 *
 	 * @return string
+	 *
+	 * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+	 *              use the stimulus controller instead.
 	 */
 	public static function getTogglePasswordWizard($inputName)
 	{
+		trigger_deprecation('contao/core-bundle', '5.6', 'Using "%s()" is deprecated and will no longer work in Contao 6. Use the stimulus controller instead.', __METHOD__);
+
 		return ' <button type="button" class="image-button" id="pw_' . $inputName . '">' . Image::getHtml('visible.svg', $GLOBALS['TL_LANG']['MSC']['showPassword']) . '</button>
   <script>
     $("pw_' . $inputName . '").addEvent("click", function(e) {

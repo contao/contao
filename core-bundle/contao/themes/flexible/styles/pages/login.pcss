@@ -151,7 +151,7 @@ label[for="username"] {
 	z-index: 1;
 }
 
-label[for="password"], label[for="password_confirm"] {
+label[for="password"], label[for="password"] {
 	position: absolute;
 	top: 10px;
 	right: 7px;
@@ -163,8 +163,12 @@ label[for="password"], label[for="password_confirm"] {
 	z-index: 1;
 }
 
-.widget-password.wizard label[for="password"] {
-	right: 31px;
+.wizard {
+    position: relative;
+
+    label[for="password"] {
+        right: 31px;
+    }
 }
 
 label[for="verify"] {

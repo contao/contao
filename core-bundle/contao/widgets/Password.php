@@ -152,7 +152,8 @@ class Password extends Widget
 			'value' => $this->varValue ? '*****' : '',
 			'name' => $this->strName,
 			'attributes' => $this->getAttributes(),
-			'description' => ($this->description && Config::get('showHelp') && !$this->hasErrors()) ? $this->description : ''
+			'description' => ($this->description && Config::get('showHelp') && !$this->hasErrors()) ? $this->description : '',
+			'prependLabel' => $this->prependLabel ?? false
 		));
 	}
 }
