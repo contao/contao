@@ -19,16 +19,19 @@ use BaconQrCode\Writer;
 use Contao\User;
 use OTPHP\TOTP;
 use ParagonIE\ConstantTime\Base32;
+use Symfony\Component\Clock\ClockAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
 class Authenticator
 {
+    use ClockAwareTrait;
+
     /**
      * Validates the code which was entered by the user.
      */
     public function validateCode(User $user, string $code, int|null $timestamp = null): bool
     {
-        $totp = TOTP::create($this->getUpperUnpaddedSecretForUser($user));
+        $totp = TOTP::create($this->getUpperUnpaddedSecretForUser($user), clock: $this->clock);
 
         return $totp->verify($code, $timestamp, 1);
     }
