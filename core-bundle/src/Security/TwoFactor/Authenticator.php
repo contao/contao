@@ -19,12 +19,12 @@ use BaconQrCode\Writer;
 use Contao\User;
 use OTPHP\TOTP;
 use ParagonIE\ConstantTime\Base32;
-use Symfony\Component\Clock\Clock;
+use Symfony\Component\Clock\ClockInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 class Authenticator
 {
-    public function __construct(private readonly Clock $clock)
+    public function __construct(private readonly ClockInterface $clock)
     {
     }
 
