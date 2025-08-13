@@ -23,6 +23,7 @@ use Contao\CoreBundle\Security\TwoFactor\Authenticator;
 use Contao\CoreBundle\Tests\TestCase;
 use OTPHP\TOTP;
 use ParagonIE\ConstantTime\Base32;
+use Symfony\Component\Clock\MockClock;
 use Symfony\Component\HttpFoundation\Request;
 
 class AuthenticatorTest extends TestCase
@@ -36,13 +37,15 @@ class AuthenticatorTest extends TestCase
 
     public function testValidatesTheCode(): void
     {
+        $clock = new MockClock('2025-08-12 08:24:00');
         $secret = $this->generateSecret(1);
-        $totp = TOTP::create(Base32::encodeUpperUnpadded($secret));
+        $totp = TOTP::create(Base32::encodeUpperUnpadded($secret), clock: $clock);
 
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->secret = $secret;
 
         $authenticator = new Authenticator();
+        $authenticator->setClock($clock);
 
         $this->assertTrue($authenticator->validateCode($user, $totp->now()));
         $this->assertFalse($authenticator->validateCode($user, 'foobar'));
@@ -50,19 +53,23 @@ class AuthenticatorTest extends TestCase
 
     public function testValidatesTheCodeOfPreviousWindow(): void
     {
+        $clock = new MockClock('2025-08-12 08:24:00');
         $secret = $this->generateSecret(2);
-        $now = 1586161036;
-        $fourtySecondsAgo = $now - 40;
+        $now = $clock->now()->getTimestamp();
+        $beforeNow = $clock->now()->modify('-30 seconds')->getTimestamp();
+        $afterNow = $clock->now()->modify('+29 seconds')->getTimestamp();
 
-        $totp = TOTP::create(Base32::encodeUpperUnpadded($secret));
+        $totp = TOTP::create(Base32::encodeUpperUnpadded($secret), clock: $clock);
 
         $user = $this->mockClassWithProperties(BackendUser::class);
         $user->secret = $secret;
 
         $authenticator = new Authenticator();
+        $authenticator->setClock($clock);
 
         $this->assertTrue($authenticator->validateCode($user, $totp->at($now), $now));
-        $this->assertTrue($authenticator->validateCode($user, $totp->at($fourtySecondsAgo), $now));
+        $this->assertTrue($authenticator->validateCode($user, $totp->at($beforeNow), $now));
+        $this->assertTrue($authenticator->validateCode($user, $totp->at($afterNow), $now));
         $this->assertFalse($authenticator->validateCode($user, 'foobar', $now));
     }
 
