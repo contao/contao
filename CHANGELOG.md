@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.36] (2025-08-13)
+
+**Fixed issues:**
+
+- [#8660] Update `enshrined/svg-sanitize` to version 0.22 ([bytehead])
+- [#8652] Update `spomky-labs/otphp` to version 11 ([bytehead])
+
 ## [5.3.35] (2025-08-12)
 
 **Fixed issues:**
@@ -739,6 +746,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.36]: https://github.com/contao/contao/releases/tag/5.3.36
 [5.3.35]: https://github.com/contao/contao/releases/tag/5.3.35
 [5.3.34]: https://github.com/contao/contao/releases/tag/5.3.34
 [5.3.33]: https://github.com/contao/contao/releases/tag/5.3.33
@@ -1325,4 +1333,6 @@ This project adheres to [Semantic Versioning].
 [#8622]: https://github.com/contao/contao/pull/8622
 [#8627]: https://github.com/contao/contao/pull/8627
 [#8648]: https://github.com/contao/contao/pull/8648
+[#8652]: https://github.com/contao/contao/pull/8652
 [#8654]: https://github.com/contao/contao/pull/8654
+[#8660]: https://github.com/contao/contao/pull/8660
