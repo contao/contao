@@ -146,7 +146,7 @@ abstract class AbstractLayoutPageController extends AbstractController
         $moduleIdsBySlot = [];
 
         foreach (StringUtil::deserialize($layout->modules, true) as $definition) {
-            if ($definition['enable']) {
+            if ($definition['enable'] ?? null) {
                 $moduleIdsBySlot[$definition['col']][] = (int) $definition['mod'];
             }
         }
