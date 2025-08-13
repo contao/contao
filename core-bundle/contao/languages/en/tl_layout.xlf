@@ -333,7 +333,7 @@
         <source>Twig layout with slots</source>
       </trans-unit>
       <trans-unit id="tl_layout.default">
-        <source>Legacy HTML5 layout</source>
+        <source>Default layout</source>
       </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
