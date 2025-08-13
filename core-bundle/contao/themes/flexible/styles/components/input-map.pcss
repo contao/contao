@@ -1,0 +1,17 @@
+[data-action="contao--input-map#removeElement"] {
+    position: absolute;
+    inset: auto 3px 3px auto;
+    opacity: 0;
+
+    &:focus-visible {
+        opacity: 1;
+    }
+}
+
+[data-contao--input-map-target="source"] {
+    position: relative;
+
+    &:hover [data-action="contao--input-map#removeElement"] {
+        opacity: 1;
+    }
+}
