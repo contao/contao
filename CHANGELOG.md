@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.37] (2025-08-13)
+
+**Fixed issues:**
+
+- [#8665] Initialize the clock in the 2FA authenticator ([zoglo])
+
 ## [5.3.36] (2025-08-13)
 
 **Fixed issues:**
@@ -746,6 +752,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.37]: https://github.com/contao/contao/releases/tag/5.3.37
 [5.3.36]: https://github.com/contao/contao/releases/tag/5.3.36
 [5.3.35]: https://github.com/contao/contao/releases/tag/5.3.35
 [5.3.34]: https://github.com/contao/contao/releases/tag/5.3.34
@@ -1336,3 +1343,4 @@ This project adheres to [Semantic Versioning].
 [#8652]: https://github.com/contao/contao/pull/8652
 [#8654]: https://github.com/contao/contao/pull/8654
 [#8660]: https://github.com/contao/contao/pull/8660
+[#8665]: https://github.com/contao/contao/pull/8665
