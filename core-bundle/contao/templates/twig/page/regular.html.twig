@@ -8,6 +8,7 @@
 
 {% set body_attributes = attrs()
     .set('id', 'top')
+    .addClass(contao.page.cssClass)
     .mergeWith(body_attributes|default)
 %}
 
