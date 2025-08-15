@@ -19,6 +19,8 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 #[AsEventListener]
 class ForceTurboPrivateCacheListener
 {
+    private int $turboMaxAge = 5;
+
     public function __construct(private readonly ScopeMatcher $scopeMatcher)
     {
     }
@@ -31,8 +33,9 @@ class ForceTurboPrivateCacheListener
 
         $request = $event->getRequest();
 
-        if ($request->headers->get('x-turbo-request-id')) {
-            $event->getResponse()->headers->set('Cache-Control', 'private, max-age=5, must-revalidate');
+        if ($request->headers->has('x-turbo-request-id')) {
+            $event->getResponse()->headers->set('Cache-Control', 'private, max-age=' . $this->turboMaxAge .', must-revalidate');
+
             return;
         }
 
