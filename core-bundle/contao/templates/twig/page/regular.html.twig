@@ -12,6 +12,12 @@
     .mergeWith(body_attributes|default)
 %}
 
+{% block title %}
+    {% if head.title|default %}
+        <title>{{ head.title }}{% if contao.page.rootPageTitle|default %} - {{ contao.page.rootPageTitle }}{% endif %}</title>
+    {% endif %}
+{% endblock %}
+
 {% block body %}
     {% block body_content %}
         {% slot header %}
