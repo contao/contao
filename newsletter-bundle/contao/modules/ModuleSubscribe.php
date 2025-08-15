@@ -212,6 +212,12 @@ class ModuleSubscribe extends Module
 				$arrAdd[] = $objRecipient->id;
 				$arrCids[] = $objRecipient->pid;
 
+				// Remove the deny list entry (see #4999)
+				if (($objDenyList = NewsletterDenyListModel::findByHashAndPid(md5($objRecipient->email), $objRecipient->pid)) !== null)
+				{
+					$objDenyList->delete();
+				}
+
 				$objRecipient->tstamp = $time;
 				$objRecipient->active = true;
 				$objRecipient->save();
@@ -341,12 +347,6 @@ class ModuleSubscribe extends Module
 			$objRecipient->active = false;
 			$objRecipient->addedOn = $time;
 			$objRecipient->save();
-
-			// Remove the deny list entry (see #4999)
-			if (($objDenyList = NewsletterDenyListModel::findByHashAndPid(md5($strEmail), $id)) !== null)
-			{
-				$objDenyList->delete();
-			}
 
 			$arrRelated['tl_newsletter_recipients'][] = $objRecipient->id;
 		}
