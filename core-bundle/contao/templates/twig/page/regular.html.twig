@@ -13,9 +13,11 @@
 %}
 
 {% block title %}
-    {% if head.title|default %}
-        <title>{{ head.title }}{% if contao.page.rootPageTitle|default %} - {{ contao.page.rootPageTitle }}{% endif %}</title>
+    {% set title = head.title|default %}
+    {% if title and contao.page.rootPageTitle|default %}
+        {% set title = title ~ ' - ' ~ contao.page.rootPageTitle %}
     {% endif %}
+    {{ parent() }}
 {% endblock %}
 
 {% block body %}
