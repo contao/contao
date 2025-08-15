@@ -21,7 +21,7 @@ class MakeBackendResponseUncacheableListener
 {
     public function __construct(
         private readonly ScopeMatcher $scopeMatcher,
-        private readonly int $turboMaxAge = 5,
+        private readonly int $turboMaxAge = 3,
     ) {
     }
 
