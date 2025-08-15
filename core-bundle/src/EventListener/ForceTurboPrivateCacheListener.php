@@ -32,7 +32,7 @@ class ForceTurboPrivateCacheListener
         $request = $event->getRequest();
 
         if ($request->headers->has('x-turbo-request-id')) {
-            $event->getResponse()->headers->set('Cache-Control', 'private, max-age=' . $this->turboMaxAge .', must-revalidate');
+            $event->getResponse()->headers->set('Cache-Control', 'private, max-age='.$this->turboMaxAge.', must-revalidate');
 
             return;
         }
