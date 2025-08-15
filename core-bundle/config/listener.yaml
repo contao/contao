@@ -354,6 +354,11 @@ services:
     contao.listener.exception_converter:
         class: Contao\CoreBundle\EventListener\ExceptionConverterListener
 
+    contao.listener.force_turbo_private_cache:
+        class: Contao\CoreBundle\EventListener\ForceTurboPrivateCacheListener
+        arguments:
+            - '@contao.routing.scope_matcher'
+
     contao.listener.image_size_options:
         class: Contao\CoreBundle\EventListener\ImageSizeOptionsListener
         arguments:
@@ -405,11 +410,6 @@ services:
         arguments:
             - '@monolog.logger.contao.email'
             - '@monolog.logger.contao.error'
-
-    contao.listener.make_backend_response_uncacheable:
-        class: Contao\CoreBundle\EventListener\MakeBackendResponseUncacheableListener
-        arguments:
-            - '@contao.routing.scope_matcher'
 
     contao.listener.make_response_private:
         class: Contao\CoreBundle\EventListener\MakeResponsePrivateListener
