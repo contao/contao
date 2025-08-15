@@ -35,7 +35,7 @@ class MakeBackendResponseUncacheableListener
         $request = $event->getRequest();
 
         if (
-            $request->isMethod(Request::METHOD_GET)
+            in_array($request->getMethod(), [Request::METHOD_GET, Request::METHOD_HEAD])
             && $request->headers->has('x-turbo-request-id')
         ) {
             $event->getResponse()->headers->set('Cache-Control', 'private, max-age='.$this->turboMaxAge.', must-revalidate');
