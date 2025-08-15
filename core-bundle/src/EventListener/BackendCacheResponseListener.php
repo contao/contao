@@ -14,11 +14,10 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 #[AsEventListener]
-class MakeBackendResponseUncacheableListener
+class BackendCacheResponseListener
 {
     public function __construct(
         private readonly ScopeMatcher $scopeMatcher,
@@ -36,7 +35,7 @@ class MakeBackendResponseUncacheableListener
 
         if (
             $request->headers->has('x-turbo-request-id')
-            && \in_array($request->getMethod(), [Request::METHOD_GET, Request::METHOD_HEAD], true)
+            && $request->isMethodCacheable()
         ) {
             $event->getResponse()->headers->set('Cache-Control', 'private, max-age='.$this->turboMaxAge.', must-revalidate');
 
