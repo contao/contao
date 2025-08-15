@@ -17,7 +17,7 @@ use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 #[AsEventListener]
-class ForceTurboPrivateCacheListener
+class MakeBackendResponseUncacheableListener
 {
     public function __construct(
         private readonly ScopeMatcher $scopeMatcher,
