@@ -71,11 +71,12 @@ class MakeBackendResponseUncacheableListenerTest extends TestCase
         $this->assertTrue($response->headers->hasCacheControlDirective('no-store'));
     }
 
-    public function testMakesResponseCacheableForTurboRequest(): void
+    public function testMakesResponseCacheableForTurboGetRequest(): void
     {
         $response = new Response();
 
         $request = new Request();
+        $request->setMethod(Request::METHOD_GET);
         $request->headers->set('x-turbo-request-id', 'foobar');
 
         $event = new ResponseEvent(
@@ -88,6 +89,26 @@ class MakeBackendResponseUncacheableListenerTest extends TestCase
         (new MakeBackendResponseUncacheableListener($this->createScopeMatcher(true)))($event);
 
         $this->assertTrue($response->headers->hasCacheControlDirective('max-age'));
+    }
+
+    public function testMakesResponseNotCacheableForTurboPostRequest(): void
+    {
+        $response = new Response();
+
+        $request = new Request();
+        $request->setMethod(Request::METHOD_POST);
+        $request->headers->set('x-turbo-request-id', 'foobar');
+
+        $event = new ResponseEvent(
+            $this->createMock(KernelInterface::class),
+            $request,
+            HttpKernelInterface::MAIN_REQUEST,
+            $response,
+        );
+
+        (new MakeBackendResponseUncacheableListener($this->createScopeMatcher(true)))($event);
+
+        $this->assertTrue($response->headers->hasCacheControlDirective('no-store'));
     }
 
     private function createScopeMatcher(bool $isBackendMainRequest): ScopeMatcher
