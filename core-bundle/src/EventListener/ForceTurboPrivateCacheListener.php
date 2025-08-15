@@ -19,8 +19,10 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 #[AsEventListener]
 class ForceTurboPrivateCacheListener
 {
-    public function __construct(private readonly ScopeMatcher $scopeMatcher, private readonly int $turboMaxAge = 5)
-    {
+    public function __construct(
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly int $turboMaxAge = 5,
+    ) {
     }
 
     public function __invoke(ResponseEvent $event): void
