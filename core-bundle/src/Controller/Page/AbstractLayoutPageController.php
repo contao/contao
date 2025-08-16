@@ -20,6 +20,7 @@ use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\LayoutModel;
 use Contao\PageModel;
 use Contao\StringUtil;
+use Contao\System;
 use Contao\Template;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
@@ -43,6 +44,12 @@ abstract class AbstractLayoutPageController extends AbstractController
         if (!$layout = $this->getContaoAdapter(LayoutModel::class)->findById($page->layout)) {
             throw $this->createNotFoundException();
         }
+
+        // Deprecated since Contao 4.0, to be removed in Contao 6.0
+        $GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($request->getLocale());
+
+        // Load contao_default translations (#8690)
+        $this->getContaoAdapter(System::class)->loadLanguageFile('default', $request->getLocale());
 
         // Set the context
         $this->container->get('contao.image.picture_factory')->setDefaultDensities($layout->defaultImageDensities);
@@ -75,6 +82,10 @@ abstract class AbstractLayoutPageController extends AbstractController
 
     protected function getResponseContext(PageModel $page): ResponseContext
     {
+        if ($responseContext = $this->container->get('contao.routing.response_context_accessor')->getResponseContext()) {
+            return $responseContext;
+        }
+
         return $this->container
             ->get('contao.routing.response_context_factory')
             ->createContaoWebpageResponseContext($page)
