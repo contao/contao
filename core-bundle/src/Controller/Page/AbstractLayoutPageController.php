@@ -46,6 +46,7 @@ abstract class AbstractLayoutPageController extends AbstractController
             throw $this->createNotFoundException();
         }
 
+        // Override the locale based on the page's language
         $locale = LocaleUtil::formatAsLocale($page->language);
         $this->container->get('translator')->setLocale($locale);
         $request->setLocale($locale);
