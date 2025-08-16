@@ -30,6 +30,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
+use Symfony\Component\Translation\Translator;
 use Twig\Environment;
 
 class AbstractLayoutPageControllerTest extends TestCase
@@ -78,7 +79,7 @@ class AbstractLayoutPageControllerTest extends TestCase
             [
                 'page' => [
                     'layout' => 42,
-                    'language' => 'en',
+                    'language' => 'de',
                 ],
                 'layout' => [
                     'modules' => 'a:0:{}',
@@ -87,7 +88,7 @@ class AbstractLayoutPageControllerTest extends TestCase
                 ],
                 'head' => [],
                 'preview_mode' => false,
-                'locale' => 'en',
+                'locale' => 'de',
                 'rtl' => false,
                 'response_context' => [
                     'head' => [],
@@ -142,13 +143,21 @@ class AbstractLayoutPageControllerTest extends TestCase
             ->willReturn($layoutModel)
         ;
 
+        $systemAdapter = $this->mockAdapter(['loadLanguageFile']);
+        $systemAdapter
+            ->expects($this->once())
+            ->method('loadLanguageFile')
+            ->with('default', 'de')
+        ;
+
         $framework = $this->mockContaoFramework([
             LayoutModel::class => $layoutAdapter,
+            System::class => $systemAdapter,
         ]);
 
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->layout = 42;
-        $page->language = 'en';
+        $page->language = 'de';
 
         $request = Request::create('https://localhost');
         $request->attributes->set('pageModel', $page);
@@ -194,6 +203,13 @@ class AbstractLayoutPageControllerTest extends TestCase
             ->willReturn(false)
         ;
 
+        $translator = $this->createMock(Translator::class);
+        $translator
+            ->expects($this->once())
+            ->method('setLocale')
+            ->with('de')
+        ;
+
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('twig', $twig);
         $container->set('contao.routing.page_finder', $pageFinder);
@@ -202,6 +218,7 @@ class AbstractLayoutPageControllerTest extends TestCase
         $container->set('contao.image.preview_factory', $previewFactory);
         $container->set('contao.security.token_checker', $tokenChecker);
         $container->set('contao.framework', $framework);
+        $container->set('translator', $translator);
 
         return $container;
     }
