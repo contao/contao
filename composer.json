@@ -203,6 +203,7 @@
         "doctrine/annotations": "<1.9",
         "doctrine/cache": "<1.10",
         "nikic/php-parser": "4.7.0",
+        "php-feed-io/feed-io": "6.1.1",
         "terminal42/contao-ce-access": "<3.0",
         "thecodingmachine/safe": "<1.2",
         "zendframework/zend-code": "<3.3.1"
