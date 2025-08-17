@@ -214,7 +214,7 @@ class ImageSize extends Widget
 					$arrValues[] = $arrOptgroup['value'] ?? '';
 				}
 
-				$arrOptions[] = \sprintf('<optgroup label="%s">%s</optgroup>', StringUtil::specialchars($strKey), implode('', $arrOptgroups));
+				$arrOptions[] = \sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strKey), implode('', $arrOptgroups));
 			}
 		}
 
