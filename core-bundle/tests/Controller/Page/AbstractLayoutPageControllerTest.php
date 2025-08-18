@@ -44,6 +44,7 @@ class AbstractLayoutPageControllerTest extends TestCase
             $GLOBALS['TL_BODY'],
             $GLOBALS['TL_STYLE_SHEETS'],
             $GLOBALS['TL_CSS'],
+            $GLOBALS['TL_LANGUAGE'],
         );
 
         $this->resetStaticProperties([System::class]);
