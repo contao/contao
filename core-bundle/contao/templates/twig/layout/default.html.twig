@@ -1,69 +1,68 @@
-{% set html_attributes = attrs()
+{%- set html_attributes = attrs()
     .set('lang', locale)
     .set('dir', 'rtl', rtl)
     .mergeWith(html_attributes|default)
-%}
+-%}
 
-{% set body_attributes = attrs()
+{%- set body_attributes = attrs()
     .set('id', 'top')
     .addClass(contao.page.cssClass)
     .mergeWith(body_attributes|default)
-%}
+-%}
 
 <!DOCTYPE html>
 <html{{ html_attributes|default }}>
 <head>
-    {% block head %}
-        <meta charset="UTF-8">
-        <meta name="generator" content="Contao Open Source CMS">
-        {% block title %}
-            {% set title = head.title|default %}
-            {% if title and contao.page.rootPageTitle|default %}
-                {% set title = title ~ ' - ' ~ contao.page.rootPageTitle %}
-            {% endif %}
-            <title>{{ title }}</title>
-        {% endblock %}
-
-        {# @var \Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag head_bag #}
-        {% set head_bag = response_context.head %}
-
-        <meta name="robots" content="{{ head_bag.metaRobots }}">
-        <meta name="description" content="{{ head_bag.metaDescription|u.truncate(320, '…') }}">
-
-        {% if page['enableCanonical'] %}
-            <link rel="canonical" href="{{ head_bag.canonicalUriForRequest(app.request) }}">
+{% block head %}
+    <meta charset="UTF-8">
+    <meta name="generator" content="Contao Open Source CMS">
+    {%- block title %}
+        {% set title = head.title|default %}
+        {% if title and contao.page.rootPageTitle|default %}
+            {% set title = title ~ ' - ' ~ contao.page.rootPageTitle %}
         {% endif %}
+         <title>{{ title }}</title>
+    {%- endblock -%}
 
-        {% block end_of_head %}
-            {% for element in response_context.end_of_head %}
-                {{ element|raw }}
-            {% endfor %}
-        {% endblock %}
-    {% endblock %}
+    {# @var \Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag head_bag #}
+    {% set head_bag = response_context.head %}
+
+    <meta name="robots" content="{{ head_bag.metaRobots }}">
+    <meta name="description" content="{{ head_bag.metaDescription|u.truncate(320, '…') }}">
+    {% if page['enableCanonical'] -%}
+        <link rel="canonical" href="{{ head_bag.canonicalUriForRequest(app.request) }}">
+    {% endif %}
+
+    {%- block end_of_head -%}
+        {% for element in response_context.end_of_head %}
+            {{ element|raw }}
+        {% endfor %}
+    {%- endblock -%}
+{%- endblock -%}
 </head>
 <body{{ body_attributes|default }}>
-    {% block body %}
-        {% block body_content %}
-            {% slot header %}
-                <header>{{ slot() }}</header>
-            {% endslot %}
+{% block body %}
+    {% block body_content %}
+        {% slot header %}
+            <header>{{ slot() }}</header>
+        {% endslot %}
 
-            {% slot main %}
-                <main>{{ slot() }}</main>
-            {% endslot %}
+        {% slot main %}
+            <main>{{ slot() }}</main>
+        {% endslot %}
 
-            {% slot footer %}
-                <footer>{{ slot() }}</footer>
-            {% endslot %}
-        {% endblock %}
-
-        {% block end_of_body %}
-            {% for element in response_context.end_of_body %}
-                {{ element|raw }}
-            {% endfor %}
-
-            {{ response_context.json_ld_scripts|default|raw }}
-        {% endblock %}
+        {% slot footer %}
+            <footer>{{ slot() }}</footer>
+        {% endslot %}
     {% endblock %}
+
+    {% block end_of_body %}
+        {% for element in response_context.end_of_body %}
+            {{ element|raw }}
+        {% endfor %}
+
+        {{ response_context.json_ld_scripts|default|raw }}
+    {% endblock %}
+{% endblock %}
 </body>
 </html>
