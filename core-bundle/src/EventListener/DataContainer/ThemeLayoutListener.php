@@ -33,7 +33,7 @@ class ThemeLayoutListener
 
         return $this->finderFactory
             ->create()
-            ->identifierRegex('%^page/%')
+            ->identifierRegex('%^layout/%')
             ->extension('html.twig')
             ->withVariants()
             ->excludePartials()

@@ -11,6 +11,11 @@ services:
             - '@request_stack'
             - '@security.helper'
 
+    contao.listener.backend_cache_response:
+        class: Contao\CoreBundle\EventListener\BackendCacheResponseListener
+        arguments:
+            - '@contao.routing.scope_matcher'
+
     contao.listener.backend_locale:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:
@@ -405,11 +410,6 @@ services:
         arguments:
             - '@monolog.logger.contao.email'
             - '@monolog.logger.contao.error'
-
-    contao.listener.make_backend_response_uncacheable:
-        class: Contao\CoreBundle\EventListener\MakeBackendResponseUncacheableListener
-        arguments:
-            - '@contao.routing.scope_matcher'
 
     contao.listener.make_response_private:
         class: Contao\CoreBundle\EventListener\MakeResponsePrivateListener
