@@ -48,8 +48,8 @@ trait DynamicPtableTrait
             return $this->getParentTableAndId($connection, $table, (int) $record['pid']);
         }
 
-        // The nesting query always has ptable==$table, but we are looking for
-        // first the parent element that where ptable!=$table.
+        // The nesting query always has ptable==$table, but we are looking for first the
+        // parent element that where ptable!=$table.
         $record = $connection->fetchAssociative(
             "SELECT id, pid, ptable FROM $table WHERE id=?",
             [$record['pid']],
