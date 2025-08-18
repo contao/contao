@@ -21,10 +21,10 @@ class LayoutTemplateTest extends TestCase
     public function testSetAndGetValues(): void
     {
         $template = $this->getLayoutTemplate();
-        $this->assertSame('page/regular', $template->getName());
+        $this->assertSame('layout/default', $template->getName());
 
-        $template->setName('page/foobar');
-        $this->assertSame('page/foobar', $template->getName());
+        $template->setName('layout/foobar');
+        $this->assertSame('layout/foobar', $template->getName());
 
         $template->setData(['foobar' => 'foobar']);
         $template->set('foo', 'f');
@@ -58,7 +58,7 @@ class LayoutTemplateTest extends TestCase
         $preBuiltResponse = new Response();
 
         $callback = function (LayoutTemplate $reference, Response|null $response) use ($preBuiltResponse, $returnedResponse): Response {
-            $this->assertSame('page/regular', $reference->getName());
+            $this->assertSame('layout/default', $reference->getName());
             $this->assertSame($preBuiltResponse, $response);
 
             return $returnedResponse;
@@ -72,6 +72,6 @@ class LayoutTemplateTest extends TestCase
     {
         $callback ??= static fn () => new Response();
 
-        return new LayoutTemplate('page/regular', $callback);
+        return new LayoutTemplate('layout/default', $callback);
     }
 }

@@ -126,7 +126,7 @@ class AbstractLayoutPageControllerTest extends TestCase
         $twig = $this->createMock(Environment::class);
         $twig
             ->method('render')
-            ->with('@Contao/page/regular.html.twig', ['some' => 'data'])
+            ->with('@Contao/layout/default.html.twig', ['some' => 'data'])
             ->willReturn('rendered page content')
         ;
 
