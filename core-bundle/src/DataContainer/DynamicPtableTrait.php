@@ -30,16 +30,25 @@ trait DynamicPtableTrait
     {
         // Limit to a nesting level of 10
         $records = $connection->fetchAllAssociative(
-            "SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=:id AND ptable = :ptable".str_repeat(" UNION SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=@pid AND ptable=:ptable", 9),
+            "SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=:id".str_repeat(" UNION SELECT id, @pid:=pid AS pid, ptable FROM $table WHERE id=@pid AND ptable=:ptable", 9),
             ['id' => $id, 'ptable' => $table],
         );
 
-        // If we have no results, the given $id is the child of a record where ptable!=$table
-        // (e.g. only one element nested). Use this to find the parent below.
         if (!$records) {
-            $record = ['ptable' => $table, 'pid' => $id];
-        } else {
-            $record = end($records);
+            throw new \RuntimeException(\sprintf('Parent record of %s.%s not found', $table, $id));
+        }
+
+        // The current record has a different ptable than $table, we already have a result.
+        if ($records[0]['ptable'] !== $table) {
+            return [$records[0]['ptable'], (int) $records[0]['pid']];
+        }
+
+        $record = end($records);
+
+        // If the given $id is the child of a record where ptable!=$table (e.g. only one
+        // element nested), $records will only have one result, and we can directly use it.
+        if ($record['ptable'] !== $table) {
+            return [$record['ptable'], (int) $record['pid']];
         }
 
         // Trigger recursion in case our query returned exactly 10 records in which case
@@ -48,8 +57,8 @@ trait DynamicPtableTrait
             return $this->getParentTableAndId($connection, $table, (int) $record['pid']);
         }
 
-        // The nesting query always has ptable==$table, but we are looking for first the
-        // parent element that where ptable!=$table.
+        // If we have more than 1 but less than 10 results, the last result in our array
+        // must be the first nested element, and its parent is what we are looking for.
         $record = $connection->fetchAssociative(
             "SELECT id, pid, ptable FROM $table WHERE id=?",
             [$record['pid']],
