@@ -165,7 +165,7 @@ class tl_image_size_item extends Backend
 		}
 
 		$html = '<div class="tl_content_left">';
-		$html .= $dragHandle.$row['media'];
+		$html .= $dragHandle . $row['media'];
 
 		if ($row['width'] || $row['height'])
 		{
