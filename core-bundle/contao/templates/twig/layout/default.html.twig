@@ -24,13 +24,10 @@
          <title>{{ title }}</title>
     {%- endblock -%}
 
-    {# @var \Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag head_bag #}
-    {% set head_bag = response_context.head %}
-
-    <meta name="robots" content="{{ head_bag.metaRobots }}">
-    <meta name="description" content="{{ head_bag.metaDescription|u.truncate(320, '…') }}">
+    <meta name="robots" content="{{ head.metaRobots }}">
+    <meta name="description" content="{{ head.metaDescription|u.truncate(320, '…') }}">
     {% if page['enableCanonical'] -%}
-        <link rel="canonical" href="{{ head_bag.canonicalUriForRequest(app.request) }}">
+        <link rel="canonical" href="{{ head.canonicalUriForRequest(app.request) }}">
     {% endif %}
 
     {%- block end_of_head -%}
