@@ -89,9 +89,12 @@ jobs:
               with:
                   working-directory: vendor-bin/ecs
 
-            - name: Run ECS
+            - name: Run ECS legacy
               run: |
                   vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/legacy.php --no-progress-bar
+
+            - name: Run ECS template
+              run: |
                   vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/template.php --no-progress-bar
 
     phpstan:
