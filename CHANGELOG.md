@@ -2,6 +2,21 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.6.0] (2025-08-18)
+
+**Fixed issues:**
+
+- [#8697] Rename the layout template ([aschempp])
+- [#8696] Enable the `appendGroupInSearch` option for Choices ([zoglo])
+- [#8695] Remove the debug markup from the Combiner ([ausi])
+- [#8684] Show the context menu even if all operations are primary ([zoglo])
+- [#8678] Adjust the `Cache-Control` for Turbo requests in the back end ([zoglo])
+- [#8682] Fix the title tag in Twig layouts ([fritzmg])
+- [#8666] Add the page class to the body element ([aschempp])
+- [#8636] Fix the record fallback label ([aschempp])
+- [#8664] Fix an undefined array key warning in the `AbstractLayoutPageController` ([zoglo])
+- [#8663] Do not make the new Twig layouts the default ([leofeyer])
+
 ## [5.6.0-RC3] (2025-08-12)
 
 **Fixed issues:**
@@ -143,6 +158,7 @@ This project adheres to [Semantic Versioning].
 - [#8071] Fix the "overwrite metadata fields" migration ([ausi])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.6.0]: https://github.com/contao/contao/releases/tag/5.6.0
 [5.6.0-RC3]: https://github.com/contao/contao/releases/tag/5.6.0-RC3
 [5.6.0-RC2]: https://github.com/contao/contao/releases/tag/5.6.0-RC2
 [5.6.0-RC1]: https://github.com/contao/contao/releases/tag/5.6.0-RC1
@@ -277,6 +293,16 @@ This project adheres to [Semantic Versioning].
 [#8625]: https://github.com/contao/contao/pull/8625
 [#8626]: https://github.com/contao/contao/pull/8626
 [#8634]: https://github.com/contao/contao/pull/8634
+[#8636]: https://github.com/contao/contao/pull/8636
 [#8643]: https://github.com/contao/contao/pull/8643
 [#8645]: https://github.com/contao/contao/pull/8645
 [#8653]: https://github.com/contao/contao/pull/8653
+[#8663]: https://github.com/contao/contao/pull/8663
+[#8664]: https://github.com/contao/contao/pull/8664
+[#8666]: https://github.com/contao/contao/pull/8666
+[#8678]: https://github.com/contao/contao/pull/8678
+[#8682]: https://github.com/contao/contao/pull/8682
+[#8684]: https://github.com/contao/contao/pull/8684
+[#8695]: https://github.com/contao/contao/pull/8695
+[#8696]: https://github.com/contao/contao/pull/8696
+[#8697]: https://github.com/contao/contao/pull/8697
