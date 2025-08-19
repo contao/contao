@@ -47,7 +47,7 @@ class OverwriteMetaMigration extends AbstractMigration
             return false;
         }
 
-        // BooleanFieldsMigration needs to run first
+        // BooleanFieldsMigration needs to run first (#8707)
         if ($this->connection->fetchOne(\sprintf("SELECT TRUE FROM %s WHERE `overwriteMeta` = '' LIMIT 1", self::TABLE_NAME))) {
             return false;
         }
