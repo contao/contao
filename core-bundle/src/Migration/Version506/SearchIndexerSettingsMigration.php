@@ -43,7 +43,7 @@ class SearchIndexerSettingsMigration extends AbstractMigration
     public function run(): MigrationResult
     {
         $this->connection->executeStatement("ALTER TABLE tl_page ADD searchIndexer varchar(32) NOT NULL default ''");
-        $this->connection->executeStatement("UPDATE tl_page SET searchIndexer = 'never_index' WHERE noSearch = 1");
+        $this->connection->executeStatement("UPDATE tl_page SET searchIndexer = 'never_index' WHERE noSearch = '1'");
 
         return $this->createResult(true);
     }
