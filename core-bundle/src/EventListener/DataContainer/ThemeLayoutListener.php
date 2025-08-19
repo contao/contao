@@ -55,16 +55,17 @@ class ThemeLayoutListener
         return $value;
     }
 
-    #[AsCallback(table: 'tl_layout', target: 'fields.type.load')]
-    public function adjustFieldsForLegacyType(string $value, DataContainer $dc): string
+    #[AsCallback(table: 'tl_layout', target: 'fields.template.attributes')]
+    public function adjustFieldsForLegacyType(array $attributes, DataContainer $dc): array
     {
+        unset($attributes['unknownOption']);
+
         if ($this->isLegacy($dc)) {
-            $templateField = &$GLOBALS['TL_DCA']['tl_layout']['fields']['template'];
-            $templateField['eval']['mandatory'] = false;
-            $templateField['eval']['submitOnChange'] = false;
+            $attributes['mandatory'] = false;
+            $attributes['submitOnChange'] = false;
         }
 
-        return $value;
+        return $attributes;
     }
 
     private function isLegacy(DataContainer $dc): bool
