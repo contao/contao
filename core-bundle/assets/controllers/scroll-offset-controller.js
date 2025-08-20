@@ -1,6 +1,8 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
+    #autoFocus = false;
+
     static targets = ['scrollTo', 'autoFocus', 'widgetError'];
 
     static values = {
@@ -15,10 +17,6 @@ export default class extends Controller {
         block: {
             type: String,
             default: 'center',
-        },
-        autoFocus: {
-            type: Boolean,
-            default: false,
         },
     };
 
@@ -110,7 +108,7 @@ export default class extends Controller {
     }
 
     autoFocusTargetConnected() {
-        if (this.offset || this.autoFocusValue) return;
+        if (this.offset || this.#autoFocus) return;
 
         const input = this.autoFocusTarget;
 
@@ -125,12 +123,12 @@ export default class extends Controller {
             return;
         }
 
-        this.autoFocusValue = true;
+        this.#autoFocus = true;
         input.focus();
     }
 
     autoFocusTargetDisconnected() {
-        this.autoFocusValue = false;
+        this.#autoFocus = false;
     }
 
     widgetErrorTargetConnected() {
