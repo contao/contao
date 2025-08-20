@@ -89,7 +89,7 @@ class BackendCacheResponseListenerTest extends TestCase
 
         (new BackendCacheResponseListener($this->createScopeMatcher(true)))($event);
 
-        $this->assertFalse($response->headers->hasCacheControlDirective('no-store'));
+        $this->assertTrue($response->headers->hasCacheControlDirective('max-age'));
     }
 
     public function testIgnoresNonHttp200OKRequestsForTurboGetRequest(): void
