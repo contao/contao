@@ -27,6 +27,8 @@ use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\Environment;
 use Contao\File;
 use Contao\FilesModel;
+use Contao\ModuleEventlist;
+use Contao\ModuleModel;
 use Contao\StringUtil;
 use Contao\UserModel;
 use FeedIo\Feed\Item;
@@ -36,6 +38,7 @@ use FeedIo\Feed\Item\Media;
 use FeedIo\Feed\ItemInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Routing\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Uid\Uuid;
@@ -70,7 +73,25 @@ class CalendarFeedListener
             default => null,
         };
 
-        $calendarEvents = $this->calendarEventsGenerator->getAllEvents($calendars, new \DateTime(), new \DateTime('9999-12-31 23:59:59'), $featured, true, (int) $pageModel->feedRecurrenceLimit);
+        // Create a faux Module instance, so that the getAllEvents hook can be executed
+        $moduleModel = $this->framework->createInstance(ModuleModel::class);
+        $moduleModel->type = 'eventlist';
+        $moduleModel->cal_calendar = $calendars;
+        $moduleModel->cal_noSpan = true;
+        $moduleModel->cal_format = 'next_all';
+        $moduleModel->cal_order = 'ascending';
+        $moduleModel->cal_featured = $pageModel->feedFeatured;
+        $moduleModel->preventSaving(false);
+
+        $calendarEvents = $this->calendarEventsGenerator->getAllEvents(
+            $calendars,
+            new \DateTime(),
+            new \DateTime('9999-12-31 23:59:59'),
+            $featured,
+            true,
+            (int) $pageModel->feedRecurrenceLimit,
+            $this->framework->createInstance(ModuleEventlist::class, [$moduleModel]),
+        );
 
         $systemEvent->setEvents($calendarEvents);
     }
@@ -89,7 +110,13 @@ class CalendarFeedListener
         $item = new Item();
         $item->setTitle(html_entity_decode($title, ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5, $this->charset));
         $item->setLastModified((new \DateTime())->setTimestamp($calendarEvent['begin']));
-        $item->setLink($this->urlGenerator->generate($calendarEvent['model'], [], UrlGeneratorInterface::ABSOLUTE_URL));
+
+        try {
+            $item->setLink($this->urlGenerator->generate($calendarEvent['model'], [], UrlGeneratorInterface::ABSOLUTE_URL));
+        } catch (ExceptionInterface) {
+            // noop
+        }
+
         $item->setContent($this->getContent($calendarEvent, $item, $systemEvent));
 
         // Create a unique ID due to recurrences

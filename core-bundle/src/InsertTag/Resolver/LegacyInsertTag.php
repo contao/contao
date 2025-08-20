@@ -432,7 +432,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
             case 'page':
                 $property = $insertTag->getParameters()->get(0);
 
-                if ($GLOBALS['objPage']) {
+                if ($GLOBALS['objPage'] ?? null) {
                     if (!$GLOBALS['objPage']->parentPageTitle && 'parentPageTitle' === $property) {
                         $property = 'parentTitle';
                     } elseif (!$GLOBALS['objPage']->mainPageTitle && 'mainPageTitle' === $property) {
@@ -449,7 +449,7 @@ class LegacyInsertTag implements InsertTagResolverNestedResolvedInterface
                         'pageTitle' => htmlspecialchars($htmlHeadBag->getTitle(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
                         'description' => htmlspecialchars($htmlHeadBag->getMetaDescription(), ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML5),
                     };
-                } elseif ($GLOBALS['objPage']) {
+                } elseif ($GLOBALS['objPage'] ?? null) {
                     // Do not use StringUtil::specialchars() here (see #4687)
                     if (!\in_array($property, ['title', 'parentTitle', 'mainTitle', 'rootTitle', 'pageTitle', 'parentPageTitle', 'mainPageTitle', 'rootPageTitle'], true)) {
                         $outputType = OutputType::text;
