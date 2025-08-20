@@ -13,6 +13,7 @@ use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Routing\PageFinder;
 use Contao\Date;
+use Contao\Module;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Template;
@@ -39,7 +40,7 @@ class CalendarEventsGenerator
      * Returns the generated events including recurrences as a multidimensional array,
      * grouped by day and timestamp.
      */
-    public function getAllEvents(array $calendars, \DateTimeInterface $rangeStart, \DateTimeInterface $rangeEnd, bool|null $featured = null, bool $noSpan = false, int|null $recurrenceLimit = null): array
+    public function getAllEvents(array $calendars, \DateTimeInterface $rangeStart, \DateTimeInterface $rangeEnd, bool|null $featured = null, bool $noSpan = false, int|null $recurrenceLimit = null, Module|null $module = null): array
     {
         if ([] === $calendars) {
             return [];
@@ -103,9 +104,9 @@ class CalendarEventsGenerator
         }
 
         // HOOK: modify the result set
-        if (isset($GLOBALS['TL_HOOKS']['getAllEvents']) && \is_array($GLOBALS['TL_HOOKS']['getAllEvents'])) {
+        if ($module && isset($GLOBALS['TL_HOOKS']['getAllEvents']) && \is_array($GLOBALS['TL_HOOKS']['getAllEvents'])) {
             foreach ($GLOBALS['TL_HOOKS']['getAllEvents'] as $callback) {
-                $events = System::importStatic($callback[0])->{$callback[1]}($events, $calendars, $rangeStart->getTimestamp(), $rangeEnd->getTimestamp(), $this);
+                $events = System::importStatic($callback[0])->{$callback[1]}($events, $calendars, $rangeStart->getTimestamp(), $rangeEnd->getTimestamp(), $module);
             }
         }
 

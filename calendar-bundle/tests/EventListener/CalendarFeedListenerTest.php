@@ -29,6 +29,8 @@ use Contao\Files;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
 use Contao\Model\Collection;
+use Contao\ModuleEventlist;
+use Contao\ModuleModel;
 use Contao\PageModel;
 use Contao\System;
 use Contao\TestCase\ContaoTestCase;
@@ -70,7 +72,16 @@ class CalendarFeedListenerTest extends ContaoTestCase
             ->willReturn(new Collection([$normalCalendar, $protectedCalendar], 'tl_calendar'))
         ;
 
-        $framework = $this->mockContaoFramework([CalendarModel::class => $calendarAdapter]);
+        $framework = $this->mockContaoFramework(
+            [
+                CalendarModel::class => $calendarAdapter,
+            ],
+            [
+                ModuleModel::class => $this->createMock(ModuleModel::class),
+                ModuleEventlist::class => $this->createMock(ModuleEventlist::class),
+            ],
+        );
+
         $feed = $this->createMock(Feed::class);
         $request = $this->createMock(Request::class);
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
