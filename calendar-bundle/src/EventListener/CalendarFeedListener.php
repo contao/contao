@@ -83,9 +83,15 @@ class CalendarFeedListener
         $moduleModel->cal_featured = $pageModel->feedFeatured;
         $moduleModel->preventSaving(false);
 
-        $module = $this->framework->createInstance(ModuleEventlist::class, [$moduleModel]);
-
-        $calendarEvents = $this->calendarEventsGenerator->getAllEvents($calendars, new \DateTime(), new \DateTime('9999-12-31 23:59:59'), $featured, true, (int) $pageModel->feedRecurrenceLimit, $module);
+        $calendarEvents = $this->calendarEventsGenerator->getAllEvents(
+            $calendars,
+            new \DateTime(),
+            new \DateTime('9999-12-31 23:59:59'),
+            $featured,
+            true,
+            (int) $pageModel->feedRecurrenceLimit,
+            $this->framework->createInstance(ModuleEventlist::class, [$moduleModel]),
+        );
 
         $systemEvent->setEvents($calendarEvents);
     }
