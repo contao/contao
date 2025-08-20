@@ -16,6 +16,10 @@ export default class extends Controller {
             type: String,
             default: 'center',
         },
+        autoFocus: {
+            type: Boolean,
+            default: false,
+        }
     };
 
     // Backwards compatibility: automatically register the Stimulus controller if the legacy methods are used
@@ -106,7 +110,7 @@ export default class extends Controller {
     }
 
     autoFocusTargetConnected() {
-        if (this.offset || this.autoFocus) return;
+        if (this.offset || this.autoFocusValue) return;
 
         const input = this.autoFocusTarget;
 
@@ -121,8 +125,12 @@ export default class extends Controller {
             return;
         }
 
-        this.autoFocus = true;
+        this.autoFocusValue = true;
         input.focus();
+    }
+
+    autoFocusTargetDisconnected() {
+        this.autoFocusValue = false;
     }
 
     widgetErrorTargetConnected() {
