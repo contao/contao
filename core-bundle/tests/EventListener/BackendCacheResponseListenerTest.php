@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\EventListener;
 use Contao\CoreBundle\EventListener\BackendCacheResponseListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -88,7 +89,27 @@ class BackendCacheResponseListenerTest extends TestCase
 
         (new BackendCacheResponseListener($this->createScopeMatcher(true)))($event);
 
-        $this->assertTrue($response->headers->hasCacheControlDirective('max-age'));
+        $this->assertFalse($response->headers->hasCacheControlDirective('no-store'));
+    }
+
+    public function testIgnoresNonHttp200OKRequestsForTurboGetRequest(): void
+    {
+        $response = new RedirectResponse('https://go-elsewhere.com', Response::HTTP_TEMPORARY_REDIRECT);
+
+        $request = new Request();
+        $request->setMethod(Request::METHOD_GET);
+        $request->headers->set('x-turbo-request-id', 'foobar');
+
+        $event = new ResponseEvent(
+            $this->createMock(KernelInterface::class),
+            $request,
+            HttpKernelInterface::MAIN_REQUEST,
+            $response,
+        );
+
+        (new BackendCacheResponseListener($this->createScopeMatcher(true)))($event);
+
+        $this->assertTrue($response->headers->hasCacheControlDirective('no-store'));
     }
 
     public function testMakesResponseNotCacheableForTurboPostRequest(): void
