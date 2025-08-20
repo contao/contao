@@ -2,6 +2,43 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.6.0] (2025-08-18)
+
+**Fixed issues:**
+
+- [#8697] Rename the layout template ([aschempp])
+- [#8696] Enable the `appendGroupInSearch` option for Choices ([zoglo])
+- [#8695] Remove the debug markup from the Combiner ([ausi])
+- [#8684] Show the context menu even if all operations are primary ([zoglo])
+- [#8678] Adjust the `Cache-Control` for Turbo requests in the back end ([zoglo])
+- [#8682] Fix the title tag in Twig layouts ([fritzmg])
+- [#8666] Add the page class to the body element ([aschempp])
+- [#8636] Fix the record fallback label ([aschempp])
+- [#8664] Fix an undefined array key warning in the `AbstractLayoutPageController` ([zoglo])
+- [#8663] Do not make the new Twig layouts the default ([leofeyer])
+
+## [5.6.0-RC3] (2025-08-12)
+
+**Fixed issues:**
+
+- [#8513] Use `data-turbo-track="dynamic"` instead of reloading ([fritzmg])
+- [#8634] Move the `tl_buttons` ID to the top element ([aschempp])
+- [#8625] Use the operations builder for the versions view ([aschempp])
+- [#8620] Fix the new buttons and allow to override the configuration ([aschempp])
+- [#8653] Make the navigation burger color adjustable  ([zoglo])
+- [#8623] Do not add a CSS class to the operation attributes ([aschempp])
+- [#8626] Fall back to the label if an operation has no title ([aschempp])
+- [#8643] Use `node` instead of `element` in the passkey mutation observer ([zoglo])
+- [#8645] Output the global data for additional head/body content in layout pages ([m-vo])
+- [#8578] Open the browser context menu on the second right-click again ([fritzmg])
+- [#8621] Fix the drag handle of the image size items ([aschempp])
+- [#8619] Always hide the parent node of invisible drag handles ([aschempp])
+- [#8624] Optimize the theme import/export operations ([aschempp])
+- [#8617] Do not add a leading white space in the `deeplink-controller` migration ([zoglo])
+- [#8614] Remove `aria-hidden` on drag handles ([aschempp])
+- [#8612] Remove a superfluous `"` in the `data-action` attribute of the `be_main` template ([lukasbableck])
+- [#8570] Use a security voter to check the form field type access ([aschempp])
+
 ## [5.6.0-RC2] (2025-07-25)
 
 **Fixed issues:**
@@ -121,6 +158,8 @@ This project adheres to [Semantic Versioning].
 - [#8071] Fix the "overwrite metadata fields" migration ([ausi])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.6.0]: https://github.com/contao/contao/releases/tag/5.6.0
+[5.6.0-RC3]: https://github.com/contao/contao/releases/tag/5.6.0-RC3
 [5.6.0-RC2]: https://github.com/contao/contao/releases/tag/5.6.0-RC2
 [5.6.0-RC1]: https://github.com/contao/contao/releases/tag/5.6.0-RC1
 [aschempp]: https://github.com/aschempp
@@ -130,6 +169,7 @@ This project adheres to [Semantic Versioning].
 [de-es]: https://github.com/de-es
 [fritzmg]: https://github.com/fritzmg
 [leofeyer]: https://github.com/leofeyer
+[lukasbableck]: https://github.com/lukasbableck
 [m-vo]: https://github.com/m-vo
 [Tastaturberuf]: https://github.com/Tastaturberuf
 [Toflar]: https://github.com/Toflar
@@ -211,6 +251,7 @@ This project adheres to [Semantic Versioning].
 [#8509]: https://github.com/contao/contao/pull/8509
 [#8510]: https://github.com/contao/contao/pull/8510
 [#8511]: https://github.com/contao/contao/pull/8511
+[#8513]: https://github.com/contao/contao/pull/8513
 [#8517]: https://github.com/contao/contao/pull/8517
 [#8518]: https://github.com/contao/contao/pull/8518
 [#8519]: https://github.com/contao/contao/pull/8519
@@ -230,12 +271,38 @@ This project adheres to [Semantic Versioning].
 [#8556]: https://github.com/contao/contao/pull/8556
 [#8560]: https://github.com/contao/contao/pull/8560
 [#8566]: https://github.com/contao/contao/pull/8566
+[#8570]: https://github.com/contao/contao/pull/8570
 [#8573]: https://github.com/contao/contao/pull/8573
 [#8574]: https://github.com/contao/contao/pull/8574
 [#8575]: https://github.com/contao/contao/pull/8575
 [#8576]: https://github.com/contao/contao/pull/8576
+[#8578]: https://github.com/contao/contao/pull/8578
 [#8583]: https://github.com/contao/contao/pull/8583
 [#8586]: https://github.com/contao/contao/pull/8586
 [#8590]: https://github.com/contao/contao/pull/8590
 [#8593]: https://github.com/contao/contao/pull/8593
 [#8594]: https://github.com/contao/contao/pull/8594
+[#8612]: https://github.com/contao/contao/pull/8612
+[#8614]: https://github.com/contao/contao/pull/8614
+[#8617]: https://github.com/contao/contao/pull/8617
+[#8619]: https://github.com/contao/contao/pull/8619
+[#8620]: https://github.com/contao/contao/pull/8620
+[#8621]: https://github.com/contao/contao/pull/8621
+[#8623]: https://github.com/contao/contao/pull/8623
+[#8624]: https://github.com/contao/contao/pull/8624
+[#8625]: https://github.com/contao/contao/pull/8625
+[#8626]: https://github.com/contao/contao/pull/8626
+[#8634]: https://github.com/contao/contao/pull/8634
+[#8636]: https://github.com/contao/contao/pull/8636
+[#8643]: https://github.com/contao/contao/pull/8643
+[#8645]: https://github.com/contao/contao/pull/8645
+[#8653]: https://github.com/contao/contao/pull/8653
+[#8663]: https://github.com/contao/contao/pull/8663
+[#8664]: https://github.com/contao/contao/pull/8664
+[#8666]: https://github.com/contao/contao/pull/8666
+[#8678]: https://github.com/contao/contao/pull/8678
+[#8682]: https://github.com/contao/contao/pull/8682
+[#8684]: https://github.com/contao/contao/pull/8684
+[#8695]: https://github.com/contao/contao/pull/8695
+[#8696]: https://github.com/contao/contao/pull/8696
+[#8697]: https://github.com/contao/contao/pull/8697

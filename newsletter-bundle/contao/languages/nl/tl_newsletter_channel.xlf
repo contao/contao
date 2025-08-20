@@ -91,6 +91,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.copy.0">
         <source>Duplicate</source>
+        <target>Kopie</target>
       </trans-unit>
       <trans-unit id="tl_newsletter_channel.copy.1">
         <source>Duplicate channel ID %s</source>

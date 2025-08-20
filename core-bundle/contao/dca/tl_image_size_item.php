@@ -9,8 +9,12 @@
  */
 
 use Contao\Backend;
+use Contao\CoreBundle\Security\ContaoCorePermissions;
+use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\DataContainer;
 use Contao\DC_Table;
+use Contao\Image;
+use Contao\Input;
 use Contao\System;
 
 System::loadLanguageFile('tl_image_size');
@@ -152,8 +156,16 @@ class tl_image_size_item extends Backend
 	 */
 	public function listImageSizeItem($row)
 	{
+		$dragHandle = '';
+
+		if (!Input::get('act') && System::getContainer()->get('security.helper')->isGranted(ContaoCorePermissions::DC_PREFIX . 'tl_image_size', new UpdateAction('tl_image_size', $row)))
+		{
+			$labelCut = $GLOBALS['TL_LANG']['tl_content']['cut'] ?? $GLOBALS['TL_LANG']['DCA']['cut'];
+			$dragHandle = '<button type="button" class="drag-handle" data-action="keydown->contao--sortable#move">' . Image::getHtml('drag.svg', sprintf(is_array($labelCut) ? $labelCut[1] : $labelCut, $row['id'])) . '</button>';
+		}
+
 		$html = '<div class="tl_content_left">';
-		$html .= $row['media'];
+		$html .= $dragHandle . $row['media'];
 
 		if ($row['width'] || $row['height'])
 		{

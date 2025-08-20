@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\EventListener;
 
-use Contao\CoreBundle\EventListener\MakeBackendResponseUncacheableListener;
+use Contao\CoreBundle\EventListener\BackendCacheResponseListener;
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\CoreBundle\Tests\TestCase;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-class MakeBackendResponseUncacheableListenerTest extends TestCase
+class BackendCacheResponseListenerTest extends TestCase
 {
     public function testIgnoresNonMainRequests(): void
     {
@@ -34,7 +34,7 @@ class MakeBackendResponseUncacheableListenerTest extends TestCase
             $response,
         );
 
-        (new MakeBackendResponseUncacheableListener($this->createScopeMatcher(false)))($event);
+        (new BackendCacheResponseListener($this->createScopeMatcher(false)))($event);
 
         $this->assertFalse($response->headers->hasCacheControlDirective('no-store'));
     }
@@ -50,7 +50,7 @@ class MakeBackendResponseUncacheableListenerTest extends TestCase
             $response,
         );
 
-        (new MakeBackendResponseUncacheableListener($this->createScopeMatcher(false)))($event);
+        (new BackendCacheResponseListener($this->createScopeMatcher(false)))($event);
 
         $this->assertFalse($response->headers->hasCacheControlDirective('no-store'));
     }
@@ -66,7 +66,47 @@ class MakeBackendResponseUncacheableListenerTest extends TestCase
             $response,
         );
 
-        (new MakeBackendResponseUncacheableListener($this->createScopeMatcher(true)))($event);
+        (new BackendCacheResponseListener($this->createScopeMatcher(true)))($event);
+
+        $this->assertTrue($response->headers->hasCacheControlDirective('no-store'));
+    }
+
+    public function testMakesResponseCacheableForTurboGetRequest(): void
+    {
+        $response = new Response();
+
+        $request = new Request();
+        $request->setMethod(Request::METHOD_GET);
+        $request->headers->set('x-turbo-request-id', 'foobar');
+
+        $event = new ResponseEvent(
+            $this->createMock(KernelInterface::class),
+            $request,
+            HttpKernelInterface::MAIN_REQUEST,
+            $response,
+        );
+
+        (new BackendCacheResponseListener($this->createScopeMatcher(true)))($event);
+
+        $this->assertTrue($response->headers->hasCacheControlDirective('max-age'));
+    }
+
+    public function testMakesResponseNotCacheableForTurboPostRequest(): void
+    {
+        $response = new Response();
+
+        $request = new Request();
+        $request->setMethod(Request::METHOD_POST);
+        $request->headers->set('x-turbo-request-id', 'foobar');
+
+        $event = new ResponseEvent(
+            $this->createMock(KernelInterface::class),
+            $request,
+            HttpKernelInterface::MAIN_REQUEST,
+            $response,
+        );
+
+        (new BackendCacheResponseListener($this->createScopeMatcher(true)))($event);
 
         $this->assertTrue($response->headers->hasCacheControlDirective('no-store'));
     }

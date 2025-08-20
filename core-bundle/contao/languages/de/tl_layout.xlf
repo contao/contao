@@ -17,14 +17,6 @@
         <source>Here you can select the layout type.</source>
         <target>Hier können Sie die Art des Layouts auswählen.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.fallback.0">
-        <source>Default layout</source>
-        <target>Standardlayout</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.fallback.1">
-        <source>Make the layout the default layout.</source>
-        <target>Das Layout als Standardlayout verwenden.</target>
-      </trans-unit>
       <trans-unit id="tl_layout.rows.0">
         <source>Rows</source>
         <target>Zeilen</target>
@@ -442,8 +434,8 @@
         <target>Twig-Layout mit Slots</target>
       </trans-unit>
       <trans-unit id="tl_layout.default">
-        <source>Legacy HTML5 layout</source>
-        <target>Veraltetes HTML5-Layout</target>
+        <source>Default layout</source>
+        <target>Standardlayout</target>
       </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>

@@ -34,7 +34,7 @@ class ArticleColumnListenerTest extends TestCase
         $inspector = $this->createMock(Inspector::class);
         $inspector
             ->method('inspectTemplate')
-            ->with('@Contao/page/foo.html.twig')
+            ->with('@Contao/layout/foo.html.twig')
             ->willReturn($templateInformation)
         ;
 
@@ -63,7 +63,7 @@ class ArticleColumnListenerTest extends TestCase
 
         $layoutModel = $this->mockClassWithProperties(LayoutModel::class);
         $layoutModel->type = 'modern';
-        $layoutModel->template = 'page/foo';
+        $layoutModel->template = 'layout/foo';
 
         $layoutAdapter = $this->mockAdapter(['findById']);
         $layoutAdapter

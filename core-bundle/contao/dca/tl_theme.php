@@ -62,7 +62,8 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			(
 				'href'                => 'key=importTheme',
 				'class'               => 'header_theme_import',
-				'button_callback'     => array('tl_theme', 'importTheme')
+				'button_callback'     => array('tl_theme', 'importTheme'),
+				'prefetch'            => true,
 			),
 			'store' => array
 			(
@@ -109,9 +110,11 @@ $GLOBALS['TL_DCA']['tl_theme'] = array
 			'exportTheme' => array
 			(
 				'href'                => 'key=exportTheme',
+				'method'              => 'GET',
 				'icon'                => 'theme_export.svg',
 				'button_callback'     => array('tl_theme', 'exportTheme'),
-				'attributes'          => 'data-turbo="false"'
+				'attributes'          => 'data-turbo="false"',
+				'prefetch'            => false,
 			)
 		)
 	),

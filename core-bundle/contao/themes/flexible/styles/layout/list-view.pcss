@@ -302,6 +302,12 @@
 .operations-menu-container {
     position: relative;
     align-items: center;
+
+    &.is--hidden {
+        visibility: hidden;
+        width: 0;
+        margin-left: -3px;
+    }
 }
 
 .operations-menu {
@@ -400,7 +406,8 @@
     color: var(--gray);
 }
 
-.cte_type .drag-handle {
+.cte_type .drag-handle,
+.tl_content_left .drag-handle {
     padding-block: 0;
     margin-left: -10px;
     background: none;

@@ -103,10 +103,9 @@ $GLOBALS['TL_DCA']['tl_layout'] = array
 		'type' => array
 		(
 			'inputType'               => 'select',
-			'options'                 => array('modern', 'default'),
+			'options'                 => array('default', 'modern'),
 			'reference'               => &$GLOBALS['TL_LANG']['tl_layout'],
 			'eval'                    => array('tl_class'=>'w50', 'submitOnChange'=>true),
-			'default'                 => 'modern',
 			'sql'                     => array('type'=>'string', 'length'=>7, 'default'=>'default')
 		),
 		'rows' => array

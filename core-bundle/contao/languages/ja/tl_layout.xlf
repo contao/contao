@@ -17,14 +17,6 @@
         <source>Here you can select the layout type.</source>
         <target>レイアウトの種類を選択できます。</target>
       </trans-unit>
-      <trans-unit id="tl_layout.fallback.0">
-        <source>Default layout</source>
-        <target>既定のレイアウト</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.fallback.1">
-        <source>Make the layout the default layout.</source>
-        <target>このレイアウトを既定のレイアウトにします。</target>
-      </trans-unit>
       <trans-unit id="tl_layout.rows.0">
         <source>Rows</source>
         <target>行</target>
@@ -442,8 +434,8 @@
         <target>スロットのあるTwigレイアウト</target>
       </trans-unit>
       <trans-unit id="tl_layout.default">
-        <source>Legacy HTML5 layout</source>
-        <target>旧来のHTML5レイアウト</target>
+        <source>Default layout</source>
+        <target>既定のレイアウト</target>
       </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>

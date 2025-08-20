@@ -17,14 +17,6 @@
         <source>Here you can select the layout type.</source>
         <target>Buradan yerleşim türünü seçebilirsiniz.</target>
       </trans-unit>
-      <trans-unit id="tl_layout.fallback.0">
-        <source>Default layout</source>
-        <target>Varsayılan yerleşim</target>
-      </trans-unit>
-      <trans-unit id="tl_layout.fallback.1">
-        <source>Make the layout the default layout.</source>
-        <target>Bu yerleşimi varsayılan yapar.</target>
-      </trans-unit>
       <trans-unit id="tl_layout.rows.0">
         <source>Rows</source>
         <target>Sütun sayısı</target>
@@ -442,8 +434,8 @@
         <target>Yerleşim aralıklarla dallandırılsın</target>
       </trans-unit>
       <trans-unit id="tl_layout.default">
-        <source>Legacy HTML5 layout</source>
-        <target>Eski HTML5 yerleşimi</target>
+        <source>Default layout</source>
+        <target>Varsayılan yerleşim</target>
       </trans-unit>
       <trans-unit id="tl_layout.html5">
         <source>HTML</source>
