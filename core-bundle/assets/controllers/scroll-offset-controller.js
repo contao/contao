@@ -19,7 +19,7 @@ export default class extends Controller {
         autoFocus: {
             type: Boolean,
             default: false,
-        }
+        },
     };
 
     // Backwards compatibility: automatically register the Stimulus controller if the legacy methods are used
