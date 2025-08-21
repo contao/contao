@@ -29,7 +29,7 @@ class BackendLocaleListener
 {
     public function __construct(
         private readonly Security $security,
-        private readonly LocaleAwareInterface $translator,
+        private readonly LocaleAwareInterface $localeSwitcher,
     ) {
     }
 
@@ -44,12 +44,6 @@ class BackendLocaleListener
             return;
         }
 
-        $request = $event->getRequest();
-        $request->setLocale($user->language);
-
-        $this->translator->setLocale($user->language);
-
-        // Deprecated since Contao 4.0, to be removed in Contao 6.0
-        $GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($user->language);
+        $this->localeSwitcher->setLocale($user->language);
     }
 }

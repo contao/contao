@@ -20,7 +20,7 @@ services:
         class: Contao\CoreBundle\EventListener\BackendLocaleListener
         arguments:
             - '@security.helper'
-            - '@translator'
+            - '@translation.locale_switcher'
 
     contao.listener.backend_noindex:
         class: Contao\CoreBundle\EventListener\BackendNoindexListener
@@ -401,7 +401,6 @@ services:
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleSubscriber
         arguments:
-            - '@translator'
             - '@contao.routing.scope_matcher'
             - '@contao.intl.locales'
 

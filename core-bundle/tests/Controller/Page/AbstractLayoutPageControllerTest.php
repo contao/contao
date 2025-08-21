@@ -82,7 +82,7 @@ class AbstractLayoutPageControllerTest extends TestCase
             [
                 'page' => [
                     'layout' => 42,
-                    'language' => 'de',
+                    'language' => 'en',
                 ],
                 'layout' => [
                     'modules' => 'a:0:{}',
@@ -91,7 +91,7 @@ class AbstractLayoutPageControllerTest extends TestCase
                 ],
                 'head' => [],
                 'preview_mode' => false,
-                'locale' => 'de',
+                'locale' => 'en',
                 'rtl' => false,
                 'response_context' => [
                     'head' => [],
@@ -150,7 +150,7 @@ class AbstractLayoutPageControllerTest extends TestCase
         $systemAdapter
             ->expects($this->once())
             ->method('loadLanguageFile')
-            ->with('default', 'de')
+            ->with('default', 'en')
         ;
 
         $framework = $this->mockContaoFramework([
@@ -160,7 +160,7 @@ class AbstractLayoutPageControllerTest extends TestCase
 
         $page = $this->mockClassWithProperties(PageModel::class);
         $page->layout = 42;
-        $page->language = 'de';
+        $page->language = 'en';
 
         $request = Request::create('https://localhost');
         $request->attributes->set('pageModel', $page);
@@ -206,13 +206,6 @@ class AbstractLayoutPageControllerTest extends TestCase
             ->willReturn(false)
         ;
 
-        $translator = $this->createMock(Translator::class);
-        $translator
-            ->expects($this->once())
-            ->method('setLocale')
-            ->with('de')
-        ;
-
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('twig', $twig);
         $container->set('contao.routing.page_finder', $pageFinder);
@@ -221,7 +214,6 @@ class AbstractLayoutPageControllerTest extends TestCase
         $container->set('contao.image.preview_factory', $previewFactory);
         $container->set('contao.security.token_checker', $tokenChecker);
         $container->set('contao.framework', $framework);
-        $container->set('translator', $translator);
 
         return $container;
     }

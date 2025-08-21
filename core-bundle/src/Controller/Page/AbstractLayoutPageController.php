@@ -46,16 +46,8 @@ abstract class AbstractLayoutPageController extends AbstractController
             throw $this->createNotFoundException();
         }
 
-        // Override the locale based on the page's language
-        $locale = LocaleUtil::formatAsLocale($page->language);
-        $this->container->get('translator')->setLocale($locale);
-        $request->setLocale($locale);
-
-        // Deprecated since Contao 4.0, to be removed in Contao 6.0
-        $GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($locale);
-
         // Load contao_default translations (#8690)
-        $this->getContaoAdapter(System::class)->loadLanguageFile('default', $locale);
+        $this->getContaoAdapter(System::class)->loadLanguageFile('default', $request->getLocale());
 
         // Set the context
         $this->container->get('contao.image.picture_factory')->setDefaultDensities($layout->defaultImageDensities);
@@ -82,7 +74,6 @@ abstract class AbstractLayoutPageController extends AbstractController
         $services['contao.image.picture_factory'] = '?'.PictureFactoryInterface::class;
         $services['contao.image.preview_factory'] = '?'.PreviewFactory::class;
         $services['contao.assets.assets_context'] = '?'.ContaoContext::class;
-        $services['translator'] = '?'.TranslatorInterface::class;
 
         return $services;
     }
