@@ -839,7 +839,7 @@ abstract class Controller extends System
 		global $objPage;
 
 		$objLayout = ($objPage !== null) ? LayoutModel::findById($objPage->layoutId) : null;
-		$blnCombineScripts = $objLayout !== null && $objLayout->combineScripts;
+		$blnCombineScripts = $objLayout !== null && $objLayout->combineScripts && !System::getContainer()->getParameter('kernel.debug');
 
 		$arrReplace["[[TL_BODY_$nonce]]"] = $strScripts;
 		$strScripts = '';

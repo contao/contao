@@ -17,15 +17,25 @@ use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 #[AsEventListener]
-class MakeBackendResponseUncacheableListener
+class BackendCacheResponseListener
 {
-    public function __construct(private readonly ScopeMatcher $scopeMatcher)
-    {
+    public function __construct(
+        private readonly ScopeMatcher $scopeMatcher,
+        private readonly int $turboMaxAge = 3,
+    ) {
     }
 
     public function __invoke(ResponseEvent $event): void
     {
         if (!$this->scopeMatcher->isBackendMainRequest($event)) {
+            return;
+        }
+
+        $request = $event->getRequest();
+
+        if ($request->headers->has('x-turbo-request-id') && $request->isMethodCacheable()) {
+            $event->getResponse()->headers->set('Cache-Control', 'private, max-age='.$this->turboMaxAge.', must-revalidate');
+
             return;
         }
 
