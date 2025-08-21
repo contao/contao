@@ -48,8 +48,6 @@ class AbstractLayoutPageControllerTest extends TestCase
 
         $this->resetStaticProperties([System::class]);
 
-        ini_restore('intl.default_locale');
-
         parent::tearDown();
     }
 
