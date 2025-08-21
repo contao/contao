@@ -30,7 +30,6 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Matcher\RequestMatcherInterface;
-use Symfony\Component\Translation\Translator;
 use Twig\Environment;
 
 class AbstractLayoutPageControllerTest extends TestCase
