@@ -41,11 +41,6 @@ class ModuleEventlist extends Events
 	protected $strTemplate = 'mod_eventlist';
 
 	/**
-	 * @var array<int, int>
-	 */
-	private static array $groupCounts = array();
-
-	/**
 	 * Display a wildcard in the back end
 	 *
 	 * @return string
@@ -316,6 +311,9 @@ class ModuleEventlist extends Events
 		// Track group index and group count (#6402)
 		$groupIndex = -1;
 		$eventIndex = 0;
+		/** @var array<int, int> */
+		$groupCounts = array();
+		/** @var list<string> */
 		$templates = array();
 
 		// Parse events
@@ -342,11 +340,11 @@ class ModuleEventlist extends Events
 				++$groupIndex;
 			}
 
-			self::$groupCounts[$groupIndex] = (self::$groupCounts[$groupIndex] ?? 0) + 1;
+			$groupCounts[$groupIndex] = ($groupCounts[$groupIndex] ?? 0) + 1;
 
 			$objTemplate->groupIndex = $eventIndex++;
-			$objTemplate->groupCount = static function () use ($groupIndex): int {
-				return self::$groupCounts[$groupIndex];
+			$objTemplate->groupCount = static function () use ($groupIndex, &$groupCounts): int {
+				return $groupCounts[$groupIndex];
 			};
 
 			// Show the teaser text of redirect events (see #6315)
