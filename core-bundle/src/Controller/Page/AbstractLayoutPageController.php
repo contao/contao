@@ -25,7 +25,6 @@ use Contao\Template;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 abstract class AbstractLayoutPageController extends AbstractController
 {
