@@ -151,8 +151,10 @@ class ContaoFramework implements ResetInterface, LocaleAwareInterface
 
     public function setLocale(string $locale)
     {
-        // Deprecated since Contao 4.0, to be removed in Contao 6.0
-        $GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($locale);
+        if ($this->isInitialized()) {
+            // Deprecated since Contao 4.0, to be removed in Contao 6.0
+            $GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($locale);
+        }
     }
 
     public function getLocale(): string
