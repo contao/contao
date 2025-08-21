@@ -401,6 +401,7 @@ services:
     contao.listener.locale:
         class: Contao\CoreBundle\EventListener\LocaleSubscriber
         arguments:
+            - '@translator'
             - '@contao.routing.scope_matcher'
             - '@contao.intl.locales'
 

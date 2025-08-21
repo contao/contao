@@ -147,6 +147,33 @@ class LocaleSubscriberTest extends TestCase
         $listener->onKernelRequest($event);
     }
 
+    public function testSetsTheTranslatorLocale(): void
+    {
+        $request = $this->createMock(Request::class);
+        $request
+            ->expects($this->once())
+            ->method('getPreferredLanguage')
+            ->with(['en', 'de'])
+            ->willReturn('de')
+        ;
+
+        $event = new RequestEvent(
+            $this->createMock(KernelInterface::class),
+            $request,
+            HttpKernelInterface::MAIN_REQUEST,
+        );
+
+        $translator = $this->createMock(LocaleAwareInterface::class);
+        $translator
+            ->expects($this->once())
+            ->method('setLocale')
+            ->with('de')
+        ;
+
+        $listener = new LocaleSubscriber($translator, $this->mockScopeMatcher(), $this->mockLocales(['en', 'de']));
+        $listener->setTranslatorLocale($event);
+    }
+
     private function mockLocales(array $locales): Locales&MockObject
     {
         $localesService = $this->createMock(Locales::class);

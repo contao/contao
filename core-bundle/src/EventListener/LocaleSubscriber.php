@@ -29,6 +29,7 @@ class LocaleSubscriber implements EventSubscriberInterface
     private readonly array $availableLocales;
 
     public function __construct(
+        private readonly LocaleAwareInterface $translator,
         private readonly ScopeMatcher $scopeMatcher,
         Locales $locales,
     ) {
@@ -48,6 +49,14 @@ class LocaleSubscriber implements EventSubscriberInterface
         $request->attributes->set('_locale', $this->getLocale($request));
     }
 
+    /**
+     * Sets the translator locale to the preferred browser language.
+     */
+    public function setTranslatorLocale(RequestEvent $event): void
+    {
+        $this->translator->setLocale($event->getRequest()->getPreferredLanguage($this->availableLocales));
+    }
+
     public static function getSubscribedEvents(): array
     {
         return [
@@ -55,6 +64,7 @@ class LocaleSubscriber implements EventSubscriberInterface
                 // The priority must be lower than the one of the Symfony route listener
                 // (defaults to 32) and higher than the Symfony locale listener (defaults to 16)
                 ['onKernelRequest', 20],
+                ['setTranslatorLocale', 100],
             ],
         ];
     }
