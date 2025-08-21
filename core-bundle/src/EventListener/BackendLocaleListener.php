@@ -13,7 +13,6 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\EventListener;
 
 use Contao\BackendUser;
-use Contao\CoreBundle\Util\LocaleUtil;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -43,6 +42,9 @@ class BackendLocaleListener
         if (!$user instanceof BackendUser || !$user->language) {
             return;
         }
+
+        $request = $event->getRequest();
+        $request->setLocale($user->language);
 
         $this->localeSwitcher->setLocale($user->language);
     }
