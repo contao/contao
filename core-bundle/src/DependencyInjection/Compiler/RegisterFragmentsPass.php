@@ -36,6 +36,11 @@ class RegisterFragmentsPass implements CompilerPassInterface
 {
     use PriorityTaggedServiceTrait;
 
+    /**
+     * @var array<int, string>
+     */
+    private array $seenTagAndTypes = [];
+
     public function __construct(
         private readonly string|null $tag,
         private readonly string|null $globalsKey = null,
@@ -79,23 +84,36 @@ class RegisterFragmentsPass implements CompilerPassInterface
 
             $definition = $container->findDefinition((string) $reference);
             $tags = $definition->getTag($tag);
-            $definition->clearTag($tag);
+            $createChildDefinition = \count($tags) > 1;
+
+            // When creating child definitions, we clear the tag on the original service
+            if ($createChildDefinition) {
+                $definition->clearTag($tag);
+            }
 
             foreach ($tags as $attributes) {
                 $attributes['type'] = $this->getFragmentType($definition, $attributes);
                 $attributes['debugController'] = $this->getControllerName(new Reference($definition->getClass()), $attributes);
-
                 $identifier = \sprintf('%s.%s', $tag, $attributes['type']);
-                $serviceId = 'contao.fragment._'.$identifier;
 
-                // Skip redefinition of services that already exist
-                if ($container->has($serviceId)) {
+                if ($createChildDefinition) {
+                    $serviceId = 'contao.fragment._'.$identifier;
+                    $controllerDefinition = new ChildDefinition((string) $reference);
+                    $controllerDefinition->setTags($definition->getTags());
+                } else {
+                    $serviceId = (string) $reference;
+                    $controllerDefinition = $definition;
+                }
+
+                // Can only have one service per tag and type (highest priority wins)
+                if (\in_array($identifier, $this->seenTagAndTypes, true)) {
+                    $controllerDefinition->clearTag($tag);
                     continue;
                 }
 
-                $childDefinition = new ChildDefinition((string) $reference);
-                $childDefinition->setPublic(true);
+                $this->seenTagAndTypes[] = $identifier;
 
+                $controllerDefinition->setPublic(true);
                 $config = $this->getFragmentConfig($container, new Reference($serviceId), $attributes);
 
                 $attributes['priority'] ??= 0;
@@ -107,11 +125,11 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 }
 
                 if (is_a($definition->getClass(), FragmentOptionsAwareInterface::class, true)) {
-                    $childDefinition->addMethodCall('setFragmentOptions', [$attributes]);
+                    $controllerDefinition->addMethodCall('setFragmentOptions', [$attributes]);
                 }
 
-                if (!$childDefinition->hasMethodCall('setContainer') && is_a($definition->getClass(), AbstractController::class, true)) {
-                    $childDefinition->addMethodCall('setContainer', [new Reference(ContainerInterface::class)]);
+                if (!$controllerDefinition->hasMethodCall('setContainer') && is_a($definition->getClass(), AbstractController::class, true)) {
+                    $controllerDefinition->addMethodCall('setContainer', [new Reference(ContainerInterface::class)]);
                 }
 
                 $registry->addMethodCall('add', [$identifier, $config]);
@@ -120,8 +138,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
                     $compositor->addMethodCall('add', [$identifier, $attributes['nestedFragments']]);
                 }
 
-                $childDefinition->setTags($definition->getTags());
-                $container->setDefinition($serviceId, $childDefinition);
+                $container->setDefinition($serviceId, $controllerDefinition);
 
                 if ($this->globalsKey && $this->proxyClass) {
                     if (!isset($attributes['category'])) {
