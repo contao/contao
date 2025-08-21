@@ -38,6 +38,11 @@ trait DynamicPtableTrait
             throw new \RuntimeException(\sprintf('Parent record of %s.%s not found', $table, $id));
         }
 
+        // The current record has a different ptable than $table, we already have a result.
+        if ($records[0]['ptable'] !== $table) {
+            return [$records[0]['ptable'], (int) $records[0]['pid']];
+        }
+
         $record = end($records);
 
         // If the given $id is the child of a record where ptable!=$table (e.g. only one
