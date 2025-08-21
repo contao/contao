@@ -55,7 +55,7 @@ abstract class AbstractBackendController extends AbstractController
                     $this->objAjax->executePreActions();
                 }
 
-                $this->Template->setData($this->compileTemplateData($this->Template->getData()));
+                $this->Template->setData($this->compideleteleTemplateData($this->Template->getData()));
 
                 // Make sure the compile function is executed that adds additional context (see #4224)
                 $this->Template->getResponse();
