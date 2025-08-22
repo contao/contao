@@ -3,6 +3,10 @@ ul.sortable li,
 [data-contao--input-map-target="source"] {
     position: relative;
     cursor: move;
+
+    &:has([data-action="contao--input-map#removeElement"]) {
+        display: inline-flex; /* Due to inline-width for single images and positioning within galleries */
+    }
 }
 
 ul.sortable button,
