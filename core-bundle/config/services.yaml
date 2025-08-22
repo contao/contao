@@ -1059,6 +1059,8 @@ services:
     contao.security.two_factor.authenticator:
         class: Contao\CoreBundle\Security\TwoFactor\Authenticator
         public: true
+        arguments:
+            - '@clock'
 
     contao.security.two_factor.backup_code_manager:
         class: Contao\CoreBundle\Security\TwoFactor\BackupCodeManager

@@ -427,9 +427,11 @@
       </trans-unit>
       <trans-unit id="tl_page.guests.0">
         <source>Hide if logged in</source>
+        <target>Ocultar si ha iniciado sesión</target>
       </trans-unit>
       <trans-unit id="tl_page.guests.1">
         <source>Hide the page in the navigation menu if a member is logged in.</source>
+        <target>Ocultar la página en el menú de navegación si un miembro está conectado.</target>
       </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>

@@ -2,6 +2,42 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.37] (2025-08-13)
+
+**Fixed issues:**
+
+- [#8665] Initialize the clock in the 2FA authenticator ([zoglo])
+
+## [5.3.36] (2025-08-13)
+
+**Fixed issues:**
+
+- [#8660] Update `enshrined/svg-sanitize` to version 0.22 ([bytehead])
+- [#8652] Update `spomky-labs/otphp` to version 11 ([bytehead])
+
+## [5.3.35] (2025-08-12)
+
+**Fixed issues:**
+
+- [#8654] Allow version 2 of `guzzlehttp/promises` ([bytehead])
+- [#8582] Change the newsletter recipient icon according to the start/stop date ([fritzmg])
+- [#8622] Do not use load callbacks to set default values ([fritzmg])
+- [#8627] Improve the root page error message ([aschempp])
+- [#8358] Fix an undefined index error for `href` in the news menu template ([Tastaturberuf])
+- [#8602] Rename the `attr()` function to `attrs()` ([zoglo])
+- [#8609] Remove the `ClipboardManager` class constant ([aschempp])
+- [#8648] Fix an SQL error when disabling subscribed members ([fritzmg])
+- [#8600] Add `aria-current="page"` to the active navigation item ([zoglo])
+- [#8597] Add the missing autowiring alias for `FileDownloadHelper` ([fritzmg])
+- [#8592] Switch to `php-feed-io/feed-io` ([fritzmg])
+- [#8579] Reset `$blnDetailsLoaded` in `PageModel` when setting a new row ([fritzmg])
+- [#8572] Correctly check permissions to create a new clipboard ([aschempp])
+- [#8032] Disable the `asFragment` option of the `#[AsInsertTag]` attribute ([ausi])
+- [#8527] Add a PROCESS_CONSUMER_NAME env variable to all initiated subprocesses ([richardhj])
+- [#8526] Add number format validation for slider settings ([de-es])
+- [#8466] Use `::` to reference fragment methods  ([dmolineus])
+- [#8515] Use `Backend::addToUrl()` for `DataContainer::switchToEdit()` ([aschempp])
+
 ## [5.3.34] (2025-06-30)
 
 **Fixed issues:**
@@ -716,6 +752,9 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.37]: https://github.com/contao/contao/releases/tag/5.3.37
+[5.3.36]: https://github.com/contao/contao/releases/tag/5.3.36
+[5.3.35]: https://github.com/contao/contao/releases/tag/5.3.35
 [5.3.34]: https://github.com/contao/contao/releases/tag/5.3.34
 [5.3.33]: https://github.com/contao/contao/releases/tag/5.3.33
 [5.3.32]: https://github.com/contao/contao/releases/tag/5.3.32
@@ -1192,6 +1231,7 @@ This project adheres to [Semantic Versioning].
 [#8016]: https://github.com/contao/contao/pull/8016
 [#8022]: https://github.com/contao/contao/pull/8022
 [#8026]: https://github.com/contao/contao/pull/8026
+[#8032]: https://github.com/contao/contao/pull/8032
 [#8036]: https://github.com/contao/contao/pull/8036
 [#8053]: https://github.com/contao/contao/pull/8053
 [#8068]: https://github.com/contao/contao/pull/8068
@@ -1257,6 +1297,7 @@ This project adheres to [Semantic Versioning].
 [#8341]: https://github.com/contao/contao/pull/8341
 [#8342]: https://github.com/contao/contao/pull/8342
 [#8344]: https://github.com/contao/contao/pull/8344
+[#8358]: https://github.com/contao/contao/pull/8358
 [#8361]: https://github.com/contao/contao/pull/8361
 [#8363]: https://github.com/contao/contao/pull/8363
 [#8365]: https://github.com/contao/contao/pull/8365
@@ -1283,4 +1324,23 @@ This project adheres to [Semantic Versioning].
 [#8455]: https://github.com/contao/contao/pull/8455
 [#8457]: https://github.com/contao/contao/pull/8457
 [#8463]: https://github.com/contao/contao/pull/8463
+[#8466]: https://github.com/contao/contao/pull/8466
 [#8499]: https://github.com/contao/contao/pull/8499
+[#8515]: https://github.com/contao/contao/pull/8515
+[#8526]: https://github.com/contao/contao/pull/8526
+[#8527]: https://github.com/contao/contao/pull/8527
+[#8572]: https://github.com/contao/contao/pull/8572
+[#8579]: https://github.com/contao/contao/pull/8579
+[#8582]: https://github.com/contao/contao/pull/8582
+[#8592]: https://github.com/contao/contao/pull/8592
+[#8597]: https://github.com/contao/contao/pull/8597
+[#8600]: https://github.com/contao/contao/pull/8600
+[#8602]: https://github.com/contao/contao/pull/8602
+[#8609]: https://github.com/contao/contao/pull/8609
+[#8622]: https://github.com/contao/contao/pull/8622
+[#8627]: https://github.com/contao/contao/pull/8627
+[#8648]: https://github.com/contao/contao/pull/8648
+[#8652]: https://github.com/contao/contao/pull/8652
+[#8654]: https://github.com/contao/contao/pull/8654
+[#8660]: https://github.com/contao/contao/pull/8660
+[#8665]: https://github.com/contao/contao/pull/8665

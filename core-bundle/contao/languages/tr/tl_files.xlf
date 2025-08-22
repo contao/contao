@@ -235,7 +235,7 @@
       </trans-unit>
       <trans-unit id="tl_files.source">
         <source>Edit the source text of file &quot;%s&quot;</source>
-        <target>&quot;%s&quot; dosyasının kaynak metnini düzenle</target>
+        <target>&quot;%s&quot; dosyasının kaynak yazısını düzenle</target>
       </trans-unit>
       <trans-unit id="tl_files.upload">
         <source>Upload files to folder &quot;%s&quot;</source>

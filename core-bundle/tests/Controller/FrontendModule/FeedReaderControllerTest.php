@@ -77,7 +77,7 @@ class FeedReaderControllerTest extends TestCase
             ->expects($this->once())
             ->method('read')
             ->with($feedUrl, new Feed())
-            ->willReturn(new Result($this->createMock(Document::class), $feed, new \DateTime(), $this->createMock(ResponseInterface::class), $feedUrl))
+            ->willReturn(new Result($this->createMock(Document::class), $feed, modifiedSince: new \DateTime(), response: $this->createMock(ResponseInterface::class), url: $feedUrl))
         ;
 
         $cache = new NullAdapter();
@@ -197,7 +197,7 @@ class FeedReaderControllerTest extends TestCase
             ->expects($this->once())
             ->method('read')
             ->with($feedUrl, new Feed())
-            ->willReturn(new Result($this->createMock(Document::class), $feed, new \DateTime(), $this->createMock(ResponseInterface::class), $feedUrl))
+            ->willReturn(new Result($this->createMock(Document::class), $feed, modifiedSince: new \DateTime(), response: $this->createMock(ResponseInterface::class), url: $feedUrl))
         ;
 
         $cache = new NullAdapter();
@@ -253,7 +253,7 @@ class FeedReaderControllerTest extends TestCase
             ->expects($this->once())
             ->method('read')
             ->with($feedUrl, new Feed())
-            ->willReturn(new Result($this->createMock(Document::class), $feed, new \DateTime(), $this->createMock(ResponseInterface::class), $feedUrl))
+            ->willReturn(new Result($this->createMock(Document::class), $feed, modifiedSince: new \DateTime(), response: $this->createMock(ResponseInterface::class), url: $feedUrl))
         ;
 
         $cache = new NullAdapter();
