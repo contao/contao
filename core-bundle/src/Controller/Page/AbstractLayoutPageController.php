@@ -79,10 +79,6 @@ abstract class AbstractLayoutPageController extends AbstractController
 
     protected function getResponseContext(PageModel $page): ResponseContext
     {
-        if ($responseContext = $this->container->get('contao.routing.response_context_accessor')->getResponseContext()) {
-            return $responseContext;
-        }
-
         return $this->container
             ->get('contao.routing.response_context_factory')
             ->createContaoWebpageResponseContext($page)
