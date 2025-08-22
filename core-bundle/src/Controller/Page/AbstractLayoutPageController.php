@@ -46,7 +46,7 @@ abstract class AbstractLayoutPageController extends AbstractController
         }
 
         // Load contao_default translations (#8690)
-        $this->getContaoAdapter(System::class)->loadLanguageFile('default', $request->getLocale());
+        $this->getContaoAdapter(System::class)->loadLanguageFile('default');
 
         // Set the context
         $this->container->get('contao.image.picture_factory')->setDefaultDensities($layout->defaultImageDensities);
