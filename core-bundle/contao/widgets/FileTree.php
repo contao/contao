@@ -385,7 +385,7 @@ class FileTree extends Widget
 	 *
 	 * @return string
 	 */
-	protected function getPreviewImage(File $objFile, $strInfo, $strClass='gimage')
+	protected function getPreviewImage(File $objFile, $strInfo, $strClass='preview-image gimage')
 	{
 		if ($previewPath = $this->getFilePreviewPath($objFile->path))
 		{
