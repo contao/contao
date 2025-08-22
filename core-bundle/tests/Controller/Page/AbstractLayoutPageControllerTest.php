@@ -129,7 +129,7 @@ class AbstractLayoutPageControllerTest extends TestCase
         $layoutPageController = new LayoutPageController();
         $layoutPageController->setContainer($container);
 
-        $response = $layoutPageController(new Request());
+        $layoutPageController(new Request());
     }
 
     private function getContainerWithDefaultConfiguration(bool $existingResponseContext = false): ContainerInterface
