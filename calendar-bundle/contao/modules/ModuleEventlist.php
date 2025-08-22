@@ -311,9 +311,11 @@ class ModuleEventlist extends Events
 		// Track group index and group count (#6402)
 		$groupIndex = -1;
 		$eventIndex = 0;
-		/** @var array<int, int> */
+
+		/** @var array<int, int> $groupCounts */
 		$groupCounts = array();
-		/** @var list<string> */
+
+		/** @var list<string> $templates */
 		$templates = array();
 
 		// Parse events
@@ -343,7 +345,8 @@ class ModuleEventlist extends Events
 			$groupCounts[$groupIndex] = ($groupCounts[$groupIndex] ?? 0) + 1;
 
 			$objTemplate->groupIndex = $eventIndex++;
-			$objTemplate->groupCount = static function () use ($groupIndex, &$groupCounts): int {
+
+			$objTemplate->groupCount = static function () use (&$groupCounts, $groupIndex): int {
 				return $groupCounts[$groupIndex];
 			};
 
