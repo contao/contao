@@ -146,7 +146,7 @@ class AbstractLayoutPageControllerTest extends TestCase
         $systemAdapter
             ->expects($this->once())
             ->method('loadLanguageFile')
-            ->with('default', 'en')
+            ->with('default')
         ;
 
         $framework = $this->mockContaoFramework([
