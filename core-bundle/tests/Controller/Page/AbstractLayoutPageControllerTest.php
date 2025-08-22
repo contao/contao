@@ -20,6 +20,7 @@ use Contao\CoreBundle\Routing\ResponseContext\CoreResponseContextFactory;
 use Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag;
 use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
+use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\LayoutModel;
@@ -120,7 +121,18 @@ class AbstractLayoutPageControllerTest extends TestCase
         );
     }
 
-    private function getContainerWithDefaultConfiguration(): ContainerInterface
+    public function testDoesNotCreateResponseContext(): void
+    {
+        $container = $this->getContainerWithDefaultConfiguration(true);
+        System::setContainer($container);
+
+        $layoutPageController = new LayoutPageController();
+        $layoutPageController->setContainer($container);
+
+        $response = $layoutPageController(new Request());
+    }
+
+    private function getContainerWithDefaultConfiguration(bool $existingResponseContext = false): ContainerInterface
     {
         $twig = $this->createMock(Environment::class);
         $twig
@@ -167,12 +179,33 @@ class AbstractLayoutPageControllerTest extends TestCase
         $responseContext->add($jsonLdManager);
         $responseContext->add(new HtmlHeadBag());
 
-        $responseContextFactory = $this->createMock(CoreResponseContextFactory::class);
-        $responseContextFactory
-            ->method('createContaoWebpageResponseContext')
-            ->with($page)
-            ->willReturn($responseContext)
+        $responseContextAccessor = $this->createMock(ResponseContextAccessor::class);
+        $responseContextAccessor
+            ->expects($this->once())
+            ->method('finalizeCurrentContext')
         ;
+
+        $responseContextFactory = $this->createMock(CoreResponseContextFactory::class);
+
+        if ($existingResponseContext) {
+            $responseContextAccessor
+                ->expects($this->once())
+                ->method('getResponseContext')
+                ->willReturn($responseContext)
+            ;
+
+            $responseContextFactory
+                ->expects($this->never())
+                ->method('createContaoWebpageResponseContext')
+            ;
+        } else {
+            $responseContextFactory
+                ->expects($this->exactly(2))
+                ->method('createContaoWebpageResponseContext')
+                ->with($page)
+                ->willReturn($responseContext)
+            ;
+        }
 
         $pictureFactory = $this->createMock(PictureFactory::class);
         $pictureFactory
@@ -197,6 +230,7 @@ class AbstractLayoutPageControllerTest extends TestCase
         $container = $this->getContainerWithContaoConfiguration();
         $container->set('twig', $twig);
         $container->set('contao.routing.page_finder', $pageFinder);
+        $container->set('contao.routing.response_context_accessor', $responseContextAccessor);
         $container->set('contao.routing.response_context_factory', $responseContextFactory);
         $container->set('contao.image.picture_factory', $pictureFactory);
         $container->set('contao.image.preview_factory', $previewFactory);
