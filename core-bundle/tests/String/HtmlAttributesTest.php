@@ -575,6 +575,31 @@ class HtmlAttributesTest extends TestCase
         $attributes->removeStyle(['d'], condition: '1');
 
         $this->assertSame([], iterator_to_array($attributes));
+
+        $attributes->addStyleIfExists('foo:');
+        $attributes->addStyleIfExists('foo:;');
+        $attributes->addStyleIfExists('foo: ;');
+        $attributes->addStyleIfExists(['foo' => null]);
+        $attributes->addStyleIfExists(['foo' => false]);
+        $attributes->addStyleIfExists(['foo' => '']);
+        $attributes->addStyleIfExists(['foo' => ';']);
+
+        $this->assertSame([], iterator_to_array($attributes));
+
+        $attributes->addStyle('foo:');
+        $attributes->addStyleIfExists('foo:');
+
+        $this->assertSame(['style' => 'foo: ;'], iterator_to_array($attributes));
+
+        $attributes->addStyleIfExists('a: 0;');
+        $attributes->addStyleIfExists('b: "";');
+        $attributes->addStyleIfExists('c: false;');
+        $attributes->addStyleIfExists(['d' => true]);
+        $attributes->addStyleIfExists(['e' => 0]);
+        $attributes->addStyleIfExists(['f' => '""']);
+        $attributes->addStyleIfExists(['f' => null]);
+
+        $this->assertSame(['style' => 'foo: ; a: 0; b: ""; c: false; d: 1; e: 0; f: "";'], iterator_to_array($attributes));
     }
 
     public function testDoesNotOutputEmptyStyleAttribute(): void
@@ -598,9 +623,11 @@ class HtmlAttributesTest extends TestCase
             ->removeClass('foo')
             ->set('style', 'color: red;')
             ->setIfExists('data-foo', null)
+            ->addStyle('color: blue;')
+            ->addStyleIfExists(['color' => null])
         ;
 
-        $this->assertSame(' class="block headline" style="color: red;"', (string) $attributes);
+        $this->assertSame(' class="block headline" style="color: blue;"', (string) $attributes);
     }
 
     public function testEscapesAttributesWhenRenderingAsString(): void
