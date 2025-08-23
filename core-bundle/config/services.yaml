@@ -518,17 +518,14 @@ services:
         public: true
         arguments:
             - '@translator'
-            - '@request_stack'
             - []
             - '%contao.intl.countries%'
-            - '%kernel.default_locale%'
 
     contao.intl.locales:
         class: Contao\CoreBundle\Intl\Locales
         public: true
         arguments:
             - '@translator'
-            - '@request_stack'
             - []
             - []
             - '%contao.intl.locales%'
