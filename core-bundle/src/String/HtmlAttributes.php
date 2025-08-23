@@ -222,7 +222,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
      *
      * If a falsy $condition is specified, the method is a no-op.
      *
-     * @param string|array<int|string, string> $styles
+     * @param string|list<string>|array<string, string|int|float|bool|null> $styles
      */
     public function addStyle(array|string $styles, mixed $condition = true): self
     {
@@ -230,43 +230,28 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
             return $this;
         }
 
+        $stylesToRemove = [];
+
         if (\is_array($styles)) {
             foreach ($styles as $prop => $value) {
                 if (\is_string($prop)) {
-                    $styles[$prop] = "$prop:$value";
+                    if ('' === (string) $value) {
+                        $stylesToRemove[] = $prop;
+                        unset($styles[$prop]);
+                    } else {
+                        $styles[$prop] = "$prop:$value";
+                    }
                 }
             }
 
             $styles = implode(';', $styles);
+        }
+
+        if ($stylesToRemove) {
+            $this->removeStyle($stylesToRemove);
         }
 
         $mergedStyles = [...$this->parseStyles($this->attributes['style'] ?? ''), ...$this->parseStyles($styles)];
-
-        $this->attributes['style'] = $this->serializeStyles($mergedStyles);
-
-        if (empty($this->attributes['style'])) {
-            unset($this->attributes['style']);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Adds the style if the styles value is truthy.
-     */
-    public function addStyleIfExists(array|string $styles): self
-    {
-        if (\is_array($styles)) {
-            foreach ($styles as $prop => $value) {
-                if (\is_string($prop)) {
-                    $styles[$prop] = "$prop:$value";
-                }
-            }
-
-            $styles = implode(';', $styles);
-        }
-
-        $mergedStyles = [...$this->parseStyles($this->attributes['style'] ?? ''), ...$this->parseStyles($styles, true)];
 
         $this->attributes['style'] = $this->serializeStyles($mergedStyles);
 
@@ -475,7 +460,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     /**
      * @return array<string, list<string>>
      */
-    private function parseStyles(string $styles, bool $skipEmpty = false): array
+    private function parseStyles(string $styles): array
     {
         // Regular expression to match declarations according to
         // https://www.w3.org/TR/css-syntax-3/#declaration-list-diagram
@@ -529,9 +514,11 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
                 // Spacing according to https://www.w3.org/TR/cssom-1/#serialize-a-css-declaration
                 $property = trim(substr($match[0], 0, -1), " \n\r\t\v\f");
                 $value = trim(substr($declaration, \strlen($match[0])), " \n\r\t\v\f");
-                if (!$skipEmpty || '' !== $value) {
-                    $result[$this->decodeStyleProperty($match[1])][] = "$property: $value;";
-                }
+                $propertyDecoded = $this->decodeStyleProperty($match[1]);
+                $result[$propertyDecoded][] = match (true) {
+                    '' === $value && !str_starts_with($propertyDecoded, '--') => '',
+                    default => "$property: $value;",
+                };
             }
         }
 
@@ -564,6 +551,6 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
     {
         // Serialize styles according to
         // https://www.w3.org/TR/cssom-1/#serialize-a-css-declaration-block
-        return implode(' ', array_merge(...array_values($styles)));
+        return implode(' ', array_filter(array_merge(...array_values($styles))));
     }
 }
