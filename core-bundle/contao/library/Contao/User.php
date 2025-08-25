@@ -131,7 +131,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * Cookie name
 	 * @var string
-	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.0.
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	protected $strCookie;
 
