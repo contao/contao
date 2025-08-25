@@ -36,11 +36,6 @@ class RegisterFragmentsPass implements CompilerPassInterface
 {
     use PriorityTaggedServiceTrait;
 
-    /**
-     * @var array<int, string>
-     */
-    private array $seenTagAndTypes = [];
-
     public function __construct(
         private readonly string|null $tag,
         private readonly string|null $globalsKey = null,
@@ -72,6 +67,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
         $templates = [];
         $registry = $container->findDefinition('contao.fragment.registry');
         $compositor = $container->findDefinition('contao.fragment.compositor');
+        $seenTagAndTypes = [];
 
         foreach ($this->findAndSortTaggedServices($tag, $container) as $reference) {
             // If a controller has multiple methods for different fragment types (e.g. a
@@ -106,12 +102,12 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 }
 
                 // Can only have one service per tag and type (highest priority wins)
-                if (\in_array($identifier, $this->seenTagAndTypes, true)) {
+                if (\in_array($identifier, $seenTagAndTypes, true)) {
                     $controllerDefinition->clearTag($tag);
                     continue;
                 }
 
-                $this->seenTagAndTypes[] = $identifier;
+                $seenTagAndTypes[] = $identifier;
 
                 $controllerDefinition->setPublic(true);
                 $config = $this->getFragmentConfig($container, new Reference($serviceId), $attributes);
