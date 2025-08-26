@@ -51,7 +51,7 @@ class CronJob
             return $result;
         }
     
-        throw new \RuntimeException(sprintf(
+        throw new \UnexpectedValueException(sprintf(
             'Invalid return value from "%s": expected null or PromiseInterface, got %s',
             $this->name,
             get_debug_type($result)
