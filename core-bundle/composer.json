@@ -180,8 +180,7 @@
         "contao/manager-bundle": "^4.5 <4.5.2",
         "contao/manager-plugin": "<2.0 || >=3.0",
         "doctrine/cache": "<1.10",
-        "terminal42/contao-ce-access": "<3.0",
-        "thecodingmachine/safe": "<1.2"
+        "terminal42/contao-ce-access": "<3.0"
     },
     "autoload": {
         "psr-4": {
