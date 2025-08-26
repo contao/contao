@@ -937,7 +937,7 @@ abstract class DataContainer extends Backend
 			}
 		};
 
-		$operations = func_get_arg(0);
+		$operations = func_num_args() ? func_get_arg(0) : null;
 
 		if ($operations instanceof DataContainerGlobalOperationsBuilder)
 		{
