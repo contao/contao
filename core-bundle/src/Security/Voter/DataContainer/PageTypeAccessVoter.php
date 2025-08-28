@@ -54,18 +54,8 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter implements ResetInt
 
     protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
-        return $this->validateAccessToPageType($token, $action)
-            && $this->validateFirstLevelType($action)
+        return $this->validateFirstLevelType($action)
             && $this->validateRootType($action);
-    }
-
-    private function validateAccessToPageType(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
-    {
-        if ($action instanceof ReadAction) {
-            return true;
-        }
-
-        return $this->hasAccessToType($token, ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $action);
     }
 
     private function validateFirstLevelType(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool

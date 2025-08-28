@@ -22,7 +22,10 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface
  */
 class ArticleContentVoter extends AbstractDynamicPtableVoter
 {
-    private array $pageIds = [];
+    /**
+     * @var array<int, array{id: int, type: string}>
+     */
+    private array $pageMap = [];
 
     public function __construct(
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
@@ -35,7 +38,7 @@ class ArticleContentVoter extends AbstractDynamicPtableVoter
     {
         parent::reset();
 
-        $this->pageIds = [];
+        $this->pageMap = [];
     }
 
     protected function getTable(): string
@@ -53,20 +56,24 @@ class ArticleContentVoter extends AbstractDynamicPtableVoter
             return false;
         }
 
-        $pageId = $this->getPageId($id);
+        $page = $this->getPage($id);
 
-        return $pageId
-            && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE], $pageId)
-            && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], $pageId);
+        return $page
+            && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE], $page['id'])
+            && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], $page['id'])
+            && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], $page['type']);
     }
 
-    private function getPageId(int $articleId): int|null
+    /**
+     * @return array{id: int, type: string}|null
+     */
+    private function getPage(int $articleId): array|null
     {
-        if (!\array_key_exists($articleId, $this->pageIds)) {
-            $pid = $this->connection->fetchOne('SELECT pid FROM tl_article WHERE id=?', [$articleId]);
-            $this->pageIds[$articleId] = false !== $pid ? (int) $pid : null;
+        if (!\array_key_exists($articleId, $this->pageMap)) {
+            $record = $this->connection->fetchAssociative('SELECT id, type FROM tl_page WHERE id=(SELECT pid FROM tl_article WHERE id=?)', [$articleId]);
+            $this->pageMap[$articleId] = false !== $record ? $record : null;
         }
 
-        return $this->pageIds[$articleId];
+        return $this->pageMap[$articleId];
     }
 }

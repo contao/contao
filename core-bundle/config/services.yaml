@@ -975,6 +975,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@security.access.decision_manager'
+            - '@database_connection'
 
     contao.security.data_container.page_type_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\PageTypeAccessVoter
