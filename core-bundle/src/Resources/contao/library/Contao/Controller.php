@@ -451,7 +451,7 @@ abstract class Controller extends System
 		}
 
 		// Disable indexing if protected
-		if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
+		if ($objRow->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
 			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
 		}
@@ -632,7 +632,7 @@ abstract class Controller extends System
 		}
 
 		// Disable indexing if protected
-		if ($objElement->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
+		if ($objRow->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
 			$strBuffer = "\n<!-- indexer::stop -->" . $strBuffer . "<!-- indexer::continue -->\n";
 		}
