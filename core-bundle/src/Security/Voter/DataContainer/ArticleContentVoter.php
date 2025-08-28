@@ -70,8 +70,13 @@ class ArticleContentVoter extends AbstractDynamicPtableVoter
     private function getPage(int $articleId): array|null
     {
         if (!\array_key_exists($articleId, $this->pageMap)) {
+            $this->pageMap[$articleId] = null;
+
             $record = $this->connection->fetchAssociative('SELECT id, type FROM tl_page WHERE id=(SELECT pid FROM tl_article WHERE id=?)', [$articleId]);
-            $this->pageMap[$articleId] = false !== $record ? $record : null;
+
+            if (false !== $record) {
+                $this->pageMap[$articleId] = $record;
+            }
         }
 
         return $this->pageMap[$articleId];

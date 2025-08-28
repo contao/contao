@@ -23,6 +23,7 @@ use Contao\CoreBundle\Security\Voter\DataContainer\FormFieldAccessVoter;
 use Contao\CoreBundle\Security\Voter\DataContainer\PagePermissionVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
+use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
@@ -35,6 +36,7 @@ class PagePermissionVoterTest extends TestCase
         $voter = new PagePermissionVoter(
             $this->mockContaoFramework(),
             $this->createMock(AccessDecisionManagerInterface::class),
+            $this->createMock(Connection::class),
         );
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_page'));
@@ -59,7 +61,7 @@ class PagePermissionVoterTest extends TestCase
             ->willReturn(true)
         ;
 
-        $voter = new PagePermissionVoter($this->mockContaoFramework(), $decisionManager);
+        $voter = new PagePermissionVoter($this->mockContaoFramework(), $decisionManager, $this->createMock(Connection::class));
         $result = $voter->vote($token, new CreateAction('tl_page'), [ContaoCorePermissions::DC_PREFIX.'tl_page']);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $result);
@@ -75,7 +77,7 @@ class PagePermissionVoterTest extends TestCase
         $framework = $this->mockContaoFrameworkWithDatabase($pagemounts);
         $decisionManager = $this->mockAccessDecisionManager($token, $decisions);
 
-        $voter = new PagePermissionVoter($framework, $decisionManager);
+        $voter = new PagePermissionVoter($framework, $decisionManager, $this->createMock(Connection::class));
         $result = $voter->vote($token, $subject, [ContaoCorePermissions::DC_PREFIX.$subject->getDataSource()]);
 
         $this->assertSame($accessGranted ? VoterInterface::ACCESS_ABSTAIN : VoterInterface::ACCESS_DENIED, $result);
