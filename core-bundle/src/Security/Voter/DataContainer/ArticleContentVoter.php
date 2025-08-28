@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface
 class ArticleContentVoter extends AbstractDynamicPtableVoter
 {
     /**
-     * @var array<int, array{id: int, type: string}>
+     * @var array<int, array{id: int, type: string}|null>
      */
     private array $pageMap = [];
 
@@ -70,13 +70,8 @@ class ArticleContentVoter extends AbstractDynamicPtableVoter
     private function getPage(int $articleId): array|null
     {
         if (!\array_key_exists($articleId, $this->pageMap)) {
-            $this->pageMap[$articleId] = null;
-
             $record = $this->connection->fetchAssociative('SELECT id, type FROM tl_page WHERE id=(SELECT pid FROM tl_article WHERE id=?)', [$articleId]);
-
-            if (false !== $record) {
-                $this->pageMap[$articleId] = $record;
-            }
+            $this->pageMap[$articleId] = false !== $record ? $record : null;
         }
 
         return $this->pageMap[$articleId];
