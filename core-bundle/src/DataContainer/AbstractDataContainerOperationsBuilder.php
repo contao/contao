@@ -253,7 +253,7 @@ abstract class AbstractDataContainerOperationsBuilder implements \Stringable
         }
 
         if (!isset($label[0])) {
-            if (\is_array($GLOBALS['TL_LANG']['DCA'][$key]) && isset($GLOBALS['TL_LANG']['DCA'][$key][0])) {
+            if (\is_array($GLOBALS['TL_LANG']['DCA'][$key] ?? null) && isset($GLOBALS['TL_LANG']['DCA'][$key][0])) {
                 $label[0] = $GLOBALS['TL_LANG']['DCA'][$key][0];
             } else {
                 $label[0] = $label[1];
