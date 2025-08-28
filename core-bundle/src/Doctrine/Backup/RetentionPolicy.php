@@ -73,7 +73,13 @@ final class RetentionPolicy implements RetentionPolicyInterface
         $intervalsNew = [];
 
         foreach ($keepIntervals as $interval) {
-            $intervalsNew[$interval] = new \DateInterval('P'.$interval);
+            $prefix = 'P';
+
+            if (\in_array(substr($interval, -1), ['H', 'M', 'S'], true) && !str_starts_with($interval, 'T')) {
+                $prefix .= 'T';
+            }
+
+            $intervalsNew[$interval] = new \DateInterval($prefix.$interval);
         }
 
         uasort($intervalsNew, static fn (\DateInterval $a, \DateInterval $b) => self::compareDateIntervals($a, $b));
