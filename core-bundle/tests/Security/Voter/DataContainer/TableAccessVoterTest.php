@@ -40,14 +40,14 @@ class TableAccessVoterTest extends TestCase
         $this->voter = new TableAccessVoter($this->accessDecisionManager);
         $this->token = $this->createMock(TokenInterface::class);
 
-        unset($GLOBALS['TL_DCA']);
+        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_MOD']);
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
 
-        unset($GLOBALS['TL_DCA']);
+        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_MOD']);
     }
 
     public function testSupportsDCAttribute(): void
@@ -56,12 +56,12 @@ class TableAccessVoterTest extends TestCase
         $this->assertFalse($this->voter->supportsAttribute('foobar'));
     }
 
-    public function testSupportsCreateAndUpdateActionSubject(): void
+    public function testSupportsCRUDActionSubject(): void
     {
         $this->assertTrue($this->voter->supportsType(CreateAction::class));
         $this->assertTrue($this->voter->supportsType(UpdateAction::class));
-        $this->assertFalse($this->voter->supportsType(ReadAction::class));
-        $this->assertFalse($this->voter->supportsType(DeleteAction::class));
+        $this->assertTrue($this->voter->supportsType(ReadAction::class));
+        $this->assertTrue($this->voter->supportsType(DeleteAction::class));
         $this->assertFalse($this->voter->supportsType('foobar'));
     }
 
@@ -78,51 +78,28 @@ class TableAccessVoterTest extends TestCase
         );
     }
 
-    public function testAbstainsIfExcludedFieldAccessIsGranted(): void
+    public function testDeniesIfTableIsNotInAllowedModule(): void
     {
-        $GLOBALS['TL_DCA']['tl_foobar']['fields'] = [
-            'foo' => [
-                'inputType' => 'text',
-                'exclude' => true,
-            ],
-        ];
+        $GLOBALS['BE_MOD']['content']['article']['tables'] = ['tl_foobar'];
 
         $this->accessDecisionManager
             ->expects($this->once())
             ->method('decide')
-            ->with($this->token, [ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE], 'tl_foobar')
-            ->willReturn(true)
+            ->with($this->token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'article')
+            ->willReturn(false)
         ;
 
         $this->assertSame(
-            VoterInterface::ACCESS_ABSTAIN,
+            VoterInterface::ACCESS_DENIED,
             $this->voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
         );
     }
 
-    public function testAbstainsIfDefaultExcludedFieldAccessIsGranted(): void
+    public function testAbstainsIfTableIsAllowedInSecondaryModule(): void
     {
-        $GLOBALS['TL_DCA']['tl_foobar']['fields'] = [
-            'foo' => [
-                'inputType' => 'text',
-            ],
-        ];
+        $GLOBALS['BE_MOD']['content']['article']['tables'] = ['tl_foobar'];
+        $GLOBALS['BE_MOD']['foo']['bar']['tables'] = ['tl_foobar'];
 
-        $this->accessDecisionManager
-            ->expects($this->once())
-            ->method('decide')
-            ->with($this->token, [ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE], 'tl_foobar')
-            ->willReturn(true)
-        ;
-
-        $this->assertSame(
-            VoterInterface::ACCESS_ABSTAIN,
-            $this->voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
-        );
-    }
-
-    public function testAbstainsIfAtLeastOneFieldIsNotExcluded(): void
-    {
         $GLOBALS['TL_DCA']['tl_foobar']['fields'] = [
             'foo' => [
                 'inputType' => 'text',
@@ -135,8 +112,91 @@ class TableAccessVoterTest extends TestCase
         ];
 
         $this->accessDecisionManager
-            ->expects($this->never())
+            ->expects($this->exactly(2))
             ->method('decide')
+            ->willReturnMap([
+                [$this->token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'article', false],
+                [$this->token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'bar', true],
+            ])
+        ;
+
+        $this->assertSame(
+            VoterInterface::ACCESS_ABSTAIN,
+            $this->voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
+        );
+    }
+
+    public function testAbstainsIfExcludedFieldAccessIsGranted(): void
+    {
+        $GLOBALS['BE_MOD']['content']['article']['tables'] = ['tl_foobar'];
+
+        $GLOBALS['TL_DCA']['tl_foobar']['fields'] = [
+            'foo' => [
+                'inputType' => 'text',
+                'exclude' => true,
+            ],
+        ];
+
+        $this->accessDecisionManager
+            ->expects($this->exactly(2))
+            ->method('decide')
+            ->willReturnMap([
+                [$this->token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'article', true],
+                [$this->token, [ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE], 'tl_foobar', true],
+            ])
+        ;
+
+        $this->assertSame(
+            VoterInterface::ACCESS_ABSTAIN,
+            $this->voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
+        );
+    }
+
+    public function testAbstainsIfDefaultExcludedFieldAccessIsGranted(): void
+    {
+        $GLOBALS['BE_MOD']['content']['article']['tables'] = ['tl_foobar'];
+
+        $GLOBALS['TL_DCA']['tl_foobar']['fields'] = [
+            'foo' => [
+                'inputType' => 'text',
+            ],
+        ];
+
+        $this->accessDecisionManager
+            ->expects($this->exactly(2))
+            ->method('decide')
+            ->willReturnMap([
+                [$this->token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'article', true],
+                [$this->token, [ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE], 'tl_foobar', true],
+            ])
+        ;
+
+        $this->assertSame(
+            VoterInterface::ACCESS_ABSTAIN,
+            $this->voter->vote($this->token, new CreateAction('tl_foobar'), [ContaoCorePermissions::DC_PREFIX.'tl_foobar']),
+        );
+    }
+
+    public function testAbstainsIfAtLeastOneFieldIsNotExcluded(): void
+    {
+        $GLOBALS['BE_MOD']['content']['article']['tables'] = ['tl_foobar'];
+
+        $GLOBALS['TL_DCA']['tl_foobar']['fields'] = [
+            'foo' => [
+                'inputType' => 'text',
+                'exclude' => true,
+            ],
+            'bar' => [
+                'inputType' => 'text',
+                'exclude' => false,
+            ],
+        ];
+
+        $this->accessDecisionManager
+            ->expects($this->once())
+            ->method('decide')
+            ->with($this->token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'article')
+            ->willReturn(true)
         ;
 
         $this->assertSame(
@@ -147,6 +207,8 @@ class TableAccessVoterTest extends TestCase
 
     public function testDeniesAccessIfFieldIsExcluded(): void
     {
+        $GLOBALS['BE_MOD']['content']['article']['tables'] = ['tl_foobar'];
+
         $GLOBALS['TL_DCA']['tl_foobar']['fields'] = [
             'foo' => [
                 'inputType' => 'text',
@@ -159,10 +221,12 @@ class TableAccessVoterTest extends TestCase
         ];
 
         $this->accessDecisionManager
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('decide')
-            ->with($this->token, [ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE], 'tl_foobar')
-            ->willReturn(false)
+            ->willReturnMap([
+                [$this->token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'article', true],
+                [$this->token, [ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE], 'tl_foobar', false],
+            ])
         ;
 
         $this->assertSame(
@@ -173,6 +237,8 @@ class TableAccessVoterTest extends TestCase
 
     public function testDeniesAccessIfFieldIsDefaultExcluded(): void
     {
+        $GLOBALS['BE_MOD']['content']['article']['tables'] = ['tl_foobar'];
+
         $GLOBALS['TL_DCA']['tl_foobar']['fields'] = [
             'foo' => [
                 'inputType' => 'text',
@@ -184,10 +250,12 @@ class TableAccessVoterTest extends TestCase
         ];
 
         $this->accessDecisionManager
-            ->expects($this->once())
+            ->expects($this->exactly(2))
             ->method('decide')
-            ->with($this->token, [ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE], 'tl_foobar')
-            ->willReturn(false)
+            ->willReturnMap([
+                [$this->token, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE], 'article', true],
+                [$this->token, [ContaoCorePermissions::USER_CAN_EDIT_FIELDS_OF_TABLE], 'tl_foobar', false],
+            ])
         ;
 
         $this->assertSame(
