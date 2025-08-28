@@ -803,7 +803,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue(5)
                 ->end()
                 ->arrayNode('keep_intervals')
-                    ->info('The latest backup plus the oldest of every configured interval will be kept. Intervals have to be specified as documented in https://www.php.net/manual/en/dateinterval.construct.php without the P prefix.')
+                    ->info('The latest backup plus the oldest of every configured interval will be kept. Intervals have to be specified as documented in https://www.php.net/manual/en/dateinterval.construct.php without the P or T prefix.')
                     ->defaultValue(['1D', '7D', '14D', '1M'])
                     ->validate()
                         ->ifTrue(
