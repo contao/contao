@@ -67,6 +67,7 @@ services:
             - '%kernel.project_dir%'
             - '@contao.cache.entity_tags'
             - '%kernel.charset%'
+            - '@security.helper'
 
     contao_news.listener.preview_url_convert:
         class: Contao\NewsBundle\EventListener\PreviewUrlConvertListener
