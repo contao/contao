@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning].
 
+## [4.13.56] (2025-08-28)
+
+**Security fixes:**
+
+- [CVE-2025-57756]: Information disclosure in the front end search index
+
 ## [4.13.55] (2025-08-13)
 
 **Fixed issues:**
@@ -1139,6 +1145,7 @@ This project adheres to [Semantic Versioning].
 - [#3596] Fix the visible root trail check in the extended tree view ([Toflar])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[4.13.56]: https://github.com/contao/contao/releases/tag/4.13.56
 [4.13.55]: https://github.com/contao/contao/releases/tag/4.13.55
 [4.13.54]: https://github.com/contao/contao/releases/tag/4.13.54
 [4.13.53]: https://github.com/contao/contao/releases/tag/4.13.53
@@ -1198,6 +1205,7 @@ This project adheres to [Semantic Versioning].
 [4.13.0-RC3]: https://github.com/contao/contao/releases/tag/4.13.0-RC3
 [4.13.0-RC2]: https://github.com/contao/contao/releases/tag/4.13.0-RC2
 [4.13.0-RC1]: https://github.com/contao/contao/releases/tag/4.13.0-RC1
+[CVE-2025-57756]: https://github.com/contao/contao/security/advisories/GHSA-2xmj-8wmq-7475
 [CVE-2025-29790]: https://github.com/contao/contao/security/advisories/GHSA-vqqr-fgmh-f626
 [CVE-2024-45604]: https://github.com/contao/contao/security/advisories/GHSA-4p75-5p53-65m9
 [CVE-2024-45398]: https://github.com/contao/contao/security/advisories/GHSA-vm6r-j788-hjh5
