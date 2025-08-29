@@ -28,9 +28,8 @@ use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Contracts\Service\ResetInterface;
-use Symfony\Contracts\Translation\LocaleAwareInterface;
 
-class ContaoFramework implements ResetInterface, LocaleAwareInterface
+class ContaoFramework implements ResetInterface
 {
     private static bool $initialized = false;
 
@@ -147,19 +146,6 @@ class ContaoFramework implements ResetInterface, LocaleAwareInterface
         }
 
         return self::$nonce;
-    }
-
-    public function setLocale(string $locale): void
-    {
-        if ($this->isInitialized()) {
-            // Deprecated since Contao 4.0, to be removed in Contao 6.0
-            $GLOBALS['TL_LANGUAGE'] = LocaleUtil::formatAsLanguageTag($locale);
-        }
-    }
-
-    public function getLocale(): string
-    {
-        throw new \RuntimeException('Not implemented');
     }
 
     private function initializeFramework(): void
