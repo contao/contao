@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Security\Voter\DataContainer;
 
+use Contao\CoreBundle\Security\ContaoCorePermissions;
 use Contao\CoreBundle\Security\DataContainer\CreateAction;
 use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
@@ -53,8 +54,18 @@ class PageTypeAccessVoter extends AbstractDataContainerVoter implements ResetInt
 
     protected function hasAccess(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
     {
-        return $this->validateFirstLevelType($action)
+        return $this->validateAccessToPageType($token, $action)
+            && $this->validateFirstLevelType($action)
             && $this->validateRootType($action);
+    }
+
+    private function validateAccessToPageType(TokenInterface $token, CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool
+    {
+        if ($action instanceof ReadAction) {
+            return true;
+        }
+
+        return $this->hasAccessToType($token, ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE, $action);
     }
 
     private function validateFirstLevelType(CreateAction|DeleteAction|ReadAction|UpdateAction $action): bool

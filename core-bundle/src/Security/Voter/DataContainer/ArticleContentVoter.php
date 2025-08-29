@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface
 class ArticleContentVoter extends AbstractDynamicPtableVoter
 {
     /**
-     * @var array<int, array{id: int, type: string}>
+     * @var array<int, array{id: int, type: string}|null>
      */
     private array $pageMap = [];
 
@@ -59,8 +59,8 @@ class ArticleContentVoter extends AbstractDynamicPtableVoter
         $page = $this->getPage($id);
 
         return $page
-            && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE], $page['id'])
-            && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], $page['id'])
+            && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE], (int) $page['id'])
+            && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], (int) $page['id'])
             && $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], $page['type']);
     }
 
