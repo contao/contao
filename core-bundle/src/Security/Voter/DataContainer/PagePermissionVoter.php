@@ -20,6 +20,8 @@ use Contao\CoreBundle\Security\DataContainer\DeleteAction;
 use Contao\CoreBundle\Security\DataContainer\ReadAction;
 use Contao\CoreBundle\Security\DataContainer\UpdateAction;
 use Contao\Database;
+use Doctrine\DBAL\ArrayParameterType;
+use Doctrine\DBAL\Connection;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AccessDecisionManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\CacheableVoterInterface;
@@ -34,9 +36,15 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
 {
     private array $pagemountsCache = [];
 
+    /**
+     * @var array<int, string|false>
+     */
+    private array $pageTypeCache = [];
+
     public function __construct(
         private readonly ContaoFramework $framework,
         private readonly AccessDecisionManagerInterface $accessDecisionManager,
+        private readonly Connection $connection,
     ) {
     }
 
@@ -53,6 +61,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
     public function reset(): void
     {
         $this->pagemountsCache = [];
+        $this->pageTypeCache = [];
     }
 
     public function vote(TokenInterface $token, $subject, array $attributes, Vote|null $vote = null): int
@@ -100,6 +109,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         // Check access to any page for the "new" operation.
         if (null === $action->getNewPid()) {
             $pageIds = $this->getPagemounts($token);
+            $this->preloadPageTypes($pageIds);
         } else {
             $pageIds = [(int) $action->getNewPid()];
         }
@@ -120,7 +130,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
 
     private function canRead(ReadAction $action, TokenInterface $token): bool
     {
-        return $this->canAccessPage($token, $this->getCurrentPageId($action));
+        return $this->canAccessPage($token, $this->getCurrentPageId($action), false);
     }
 
     private function canUpdate(UpdateAction $action, TokenInterface $token): bool
@@ -157,7 +167,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         unset($newRecord['pid'], $newRecord['sorting'], $newRecord['tstamp']);
 
         // Record was possibly only moved (pid, sorting), no need to check edit permissions
-        if ([] === array_diff($newRecord, $action->getCurrent())) {
+        if ([] === array_diff_assoc($newRecord, $action->getCurrent())) {
             return true;
         }
 
@@ -174,7 +184,7 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
             default => throw new \UnexpectedValueException('Unsupported data source "'.$action->getDataSource().'"'),
         };
 
-        return $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE], $pageId)
+        return $this->canAccessPage($token, $pageId)
             && $this->accessDecisionManager->decide($token, [$permission], $pageId);
     }
 
@@ -226,8 +236,44 @@ class PagePermissionVoter implements VoterInterface, CacheableVoterInterface, Re
         return $this->accessDecisionManager->decide($token, $attributes, $pageId);
     }
 
-    private function canAccessPage(TokenInterface $token, int $pageId): bool
+    private function canAccessPage(TokenInterface $token, int $pageId, bool $checkType = true): bool
     {
-        return $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE], $pageId);
+        if (!$this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE], $pageId)) {
+            return false;
+        }
+
+        if (!$checkType) {
+            return true;
+        }
+
+        return $this->accessDecisionManager->decide($token, [ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], $this->getPageType($pageId));
+    }
+
+    private function getPageType(int $id): string
+    {
+        if (!isset($this->pageTypeCache[$id])) {
+            $this->pageTypeCache[$id] = $this->connection->fetchOne('SELECT type FROM tl_page WHERE id=?', [$id]);
+        }
+
+        if (false === $this->pageTypeCache[$id]) {
+            throw new \UnexpectedValueException('Page ID "'.$id.'" not found');
+        }
+
+        return $this->pageTypeCache[$id];
+    }
+
+    private function preloadPageTypes(array $pageIds): void
+    {
+        $pageIds = array_values(array_flip(array_diff_key(array_flip($pageIds), $this->pageTypeCache)));
+
+        if ([] === $pageIds) {
+            return;
+        }
+
+        $this->pageTypeCache += $this->connection->fetchAllKeyValue(
+            'SELECT id, type FROM tl_page WHERE id IN (?)',
+            [$pageIds],
+            [ArrayParameterType::INTEGER],
+        );
     }
 }

@@ -31,6 +31,7 @@
       </trans-unit>
       <trans-unit id="tl_page.source_teaser">
         <source>Teasers only</source>
+        <target>Tikai tīzeri</target>
       </trans-unit>
       <trans-unit id="tl_page.source_text">
         <source>Full stories</source>

@@ -2,6 +2,29 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.6.1] (2025-08-28)
+
+**Security fixes:**
+
+- [CVE-2025-57759]: Improper privilege management for page and article fields
+- [CVE-2025-57758]: Improper access control in the back end voters
+- [CVE-2025-57757]: Information disclosure in the news module
+- [CVE-2025-57756]: Information disclosure in the front end search index
+
+**Fixed issues:**
+
+- [#8747] Correctly handle non-array DCA operation labels ([aschempp])
+- [#8743] Check if there are arguments before using `func_get_arg()` ([leofeyer])
+- [#8736] Fix moving multiple items via the clipboard ([aschempp])
+- [#8720] Do not create a response context if one already exists ([fritzmg])
+- [#8667] Update the `input-map` CSS to match the previous `MooTools Sortables` ([zoglo])
+- [#8710] Only apply the Turbo request cache to 200 OK responses ([Toflar])
+- [#8707] Fix the search indexer migration when migrating from Contao 4.13 to 5.6 ([fritzmg])
+- [#8715] Restore the previous `autoFocus` when navigating with Turbo Drive ([zoglo])
+- [#8603] Fix the `getAllEvents` hook ([fritzmg])
+- [#8700] A completed job must always be set to 100% progress ([Toflar])
+- [#8689] Update to SEAL 0.12 ([Toflar])
+
 ## [5.6.0] (2025-08-18)
 
 **Fixed issues:**
@@ -158,10 +181,15 @@ This project adheres to [Semantic Versioning].
 - [#8071] Fix the "overwrite metadata fields" migration ([ausi])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.6.1]: https://github.com/contao/contao/releases/tag/5.6.1
 [5.6.0]: https://github.com/contao/contao/releases/tag/5.6.0
 [5.6.0-RC3]: https://github.com/contao/contao/releases/tag/5.6.0-RC3
 [5.6.0-RC2]: https://github.com/contao/contao/releases/tag/5.6.0-RC2
 [5.6.0-RC1]: https://github.com/contao/contao/releases/tag/5.6.0-RC1
+[CVE-2025-57759]: https://github.com/contao/contao/security/advisories/GHSA-qqfq-7cpp-hcqj
+[CVE-2025-57758]: https://github.com/contao/contao/security/advisories/GHSA-7m47-r75r-cx8v
+[CVE-2025-57757]: https://github.com/contao/contao/security/advisories/GHSA-w53m-gxvg-vx7p
+[CVE-2025-57756]: https://github.com/contao/contao/security/advisories/GHSA-2xmj-8wmq-7475
 [aschempp]: https://github.com/aschempp
 [ausi]: https://github.com/ausi
 [bytehead]: https://github.com/bytehead
@@ -282,6 +310,7 @@ This project adheres to [Semantic Versioning].
 [#8590]: https://github.com/contao/contao/pull/8590
 [#8593]: https://github.com/contao/contao/pull/8593
 [#8594]: https://github.com/contao/contao/pull/8594
+[#8603]: https://github.com/contao/contao/pull/8603
 [#8612]: https://github.com/contao/contao/pull/8612
 [#8614]: https://github.com/contao/contao/pull/8614
 [#8617]: https://github.com/contao/contao/pull/8617
@@ -300,9 +329,19 @@ This project adheres to [Semantic Versioning].
 [#8663]: https://github.com/contao/contao/pull/8663
 [#8664]: https://github.com/contao/contao/pull/8664
 [#8666]: https://github.com/contao/contao/pull/8666
+[#8667]: https://github.com/contao/contao/pull/8667
 [#8678]: https://github.com/contao/contao/pull/8678
 [#8682]: https://github.com/contao/contao/pull/8682
 [#8684]: https://github.com/contao/contao/pull/8684
+[#8689]: https://github.com/contao/contao/pull/8689
 [#8695]: https://github.com/contao/contao/pull/8695
 [#8696]: https://github.com/contao/contao/pull/8696
 [#8697]: https://github.com/contao/contao/pull/8697
+[#8700]: https://github.com/contao/contao/pull/8700
+[#8707]: https://github.com/contao/contao/pull/8707
+[#8710]: https://github.com/contao/contao/pull/8710
+[#8715]: https://github.com/contao/contao/pull/8715
+[#8720]: https://github.com/contao/contao/pull/8720
+[#8736]: https://github.com/contao/contao/pull/8736
+[#8743]: https://github.com/contao/contao/pull/8743
+[#8747]: https://github.com/contao/contao/pull/8747
