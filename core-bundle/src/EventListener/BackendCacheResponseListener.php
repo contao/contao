@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\EventListener;
 
 use Contao\CoreBundle\Routing\ScopeMatcher;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 
 #[AsEventListener]
@@ -32,13 +33,14 @@ class BackendCacheResponseListener
         }
 
         $request = $event->getRequest();
+        $response = $event->getResponse();
 
-        if ($request->headers->has('x-turbo-request-id') && $request->isMethodCacheable()) {
+        if ($request->headers->has('x-turbo-request-id') && $request->isMethodCacheable() && Response::HTTP_OK === $response->getStatusCode()) {
             $event->getResponse()->headers->set('Cache-Control', 'private, max-age='.$this->turboMaxAge.', must-revalidate');
 
             return;
         }
 
-        $event->getResponse()->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate');
+        $response->headers->set('Cache-Control', 'no-cache, no-store, must-revalidate');
     }
 }

@@ -1,0 +1,59 @@
+/* TODO: remove `ul.sortable` when Moo_Sortable is gone */
+ul.sortable li,
+[data-contao--input-map-target="source"] {
+    position: relative;
+    cursor: move;
+}
+
+ul.sortable button,
+[data-action="contao--input-map#removeElement"] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    border: 0;
+    border-radius: 2px;
+    background: var(--form-button);
+    margin: 0;
+    padding: 0;
+    font-size: 22px;
+    line-height: 9px;
+    cursor: pointer;
+    transition: all .1s linear;
+
+    &:hover {
+        background: var(--form-button-hover);
+    }
+
+    &[disabled] {
+        color: var(--gray);
+        cursor: not-allowed;
+
+        &:hover {
+            background: rgba(255,255,255,.7);
+        }
+    }
+}
+
+.drag-handle {
+    cursor: move;
+}
+
+/* TODO: remove once moo_sortables has been removed */
+ul.sortable li {
+    .dirname {
+        display: none;
+    }
+
+    &:hover .dirname {
+        display: inline;
+    }
+}
+
+.sortable-chosen {
+    opacity: 0.6;
+}
+
+.sortable-drag,
+.sortable-drag + * {
+    opacity: 0;
+}

@@ -27,9 +27,11 @@
       </trans-unit>
       <trans-unit id="tl_page.feedRecurrenceLimit.0">
         <source>Maximum number of recurrences</source>
+        <target>Maksimālais atkārtojumu skaits</target>
       </trans-unit>
       <trans-unit id="tl_page.feedRecurrenceLimit.1">
         <source>Define the maximum number of recurrences for repeated events.</source>
+        <target>Noteikt maksimālo atkārtojumu skaitu atkārtotiem notikumiem.</target>
       </trans-unit>
       <trans-unit id="tl_page.archives_legend">
         <source>Calendars</source>
@@ -37,6 +39,7 @@
       </trans-unit>
       <trans-unit id="tl_page.source_teaser">
         <source>Teasers only</source>
+        <target>Tikai tīzeri</target>
       </trans-unit>
       <trans-unit id="tl_page.source_text">
         <source>Full stories</source>

@@ -308,6 +308,16 @@ class ModuleEventlist extends Events
 		// Preload all images in one query, so they are loaded into the model registry
 		FilesModel::findMultipleByUuids($uuids);
 
+		// Track group index and group count (#6402)
+		$groupIndex = -1;
+		$eventIndex = 0;
+
+		/** @var array<int, int> $groupCounts */
+		$groupCounts = array();
+
+		/** @var list<string> $templates */
+		$templates = array();
+
 		// Parse events
 		for ($i=$offset; $i<$limit; $i++)
 		{
@@ -328,7 +338,17 @@ class ModuleEventlist extends Events
 			{
 				$objTemplate->header = true;
 				$strDate = $event['firstDate'];
+				$eventIndex = 0;
+				++$groupIndex;
 			}
+
+			$groupCounts[$groupIndex] = ($groupCounts[$groupIndex] ?? 0) + 1;
+
+			$objTemplate->groupIndex = $eventIndex++;
+
+			$objTemplate->groupCount = static function () use (&$groupCounts, $groupIndex): int {
+				return $groupCounts[$groupIndex];
+			};
 
 			// Show the teaser text of redirect events (see #6315)
 			if (\is_bool($event['details']) && $event['source'] == 'default')
@@ -421,7 +441,7 @@ class ModuleEventlist extends Events
 				return $jsonLd;
 			};
 
-			$strEvents .= $objTemplate->parse();
+			$templates[] = $objTemplate;
 
 			++$eventCount;
 		}
@@ -434,7 +454,7 @@ class ModuleEventlist extends Events
 
 		// See #3672
 		$this->Template->headline = $this->headline;
-		$this->Template->events = $strEvents;
+		$this->Template->events = implode('', array_map(static fn (FrontendTemplate $template): string => $template->parse(), $templates));
 		$this->Template->eventCount = $eventCount;
 
 		// Clear the $_GET array (see #2445)
