@@ -40,14 +40,14 @@ class TableAccessVoterTest extends TestCase
         $this->voter = new TableAccessVoter($this->accessDecisionManager);
         $this->token = $this->createMock(TokenInterface::class);
 
-        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_MOD']);
+        unset($GLOBALS['TL_DCA'], $GLOBALS['BE_MOD']);
     }
 
     protected function tearDown(): void
     {
         parent::tearDown();
 
-        unset($GLOBALS['TL_DCA'], $GLOBALS['TL_MOD']);
+        unset($GLOBALS['TL_DCA'], $GLOBALS['BE_MOD']);
     }
 
     public function testSupportsDCAttribute(): void
