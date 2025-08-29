@@ -50,7 +50,7 @@ class LocaleSubscriber implements EventSubscriberInterface
     }
 
     /**
-     * Sets the locale to the preferred browser language.
+     * Sets the translator locale to the preferred browser language.
      */
     public function setTranslatorLocale(RequestEvent $event): void
     {
