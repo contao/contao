@@ -131,23 +131,13 @@ class BackendAccessVoter extends Voter implements ResetInterface
 
         // Additionally check for 'disablePermissionChecks' flag for modules
         if ('modules' === $field) {
-            $moduleAccess = null;
-
             foreach ($subject as $module) {
                 foreach ($GLOBALS['BE_MOD'] as $modules) {
-                    foreach ($modules as $name => $config) {
-                        if ($name === $module) {
-                            $moduleAccess = ($config['disablePermissionChecks'] ?? false) || \in_array($module, $user->$field, true);
-                        }
-
-                        if (false === $moduleAccess) {
-                            return false;
-                        }
+                    if ($modules[$module]['disablePermissionChecks'] ?? false) {
+                        return true;
                     }
                 }
             }
-
-            return (bool) $moduleAccess;
         }
 
         return false;
