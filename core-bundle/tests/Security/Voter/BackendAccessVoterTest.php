@@ -34,6 +34,13 @@ class BackendAccessVoterTest extends TestCase
         $this->voter = new BackendAccessVoter($this->mockContaoFramework());
     }
 
+    protected function tearDown(): void
+    {
+        unset($GLOBALS['BE_MOD']);
+
+        parent::tearDown();
+    }
+
     public function testAbstainsIfTheAttributeIsContaoUser(): void
     {
         $token = $this->createMock(TokenInterface::class);
@@ -644,6 +651,55 @@ class BackendAccessVoterTest extends TestCase
             ['g6'],
             1,
             1,
+            VoterInterface::ACCESS_GRANTED,
+        ];
+    }
+
+    /**
+     * @dataProvider getBackendModulePermissions
+     */
+    public function testBackendModulePermissions(array $allowedModules, string $requestedModule, array $config, int $expected): void
+    {
+        $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, 'modules' => $allowedModules]);
+
+        $token = $this->createMock(TokenInterface::class);
+        $token
+            ->expects($this->once())
+            ->method('getUser')
+            ->willReturn($user)
+        ;
+
+        $GLOBALS['BE_MOD'] = $config;
+
+        $this->assertSame($expected, $this->voter->vote($token, $requestedModule, [ContaoCorePermissions::USER_CAN_ACCESS_MODULE]));
+    }
+
+    public static function getBackendModulePermissions(): iterable
+    {
+        yield 'Denies access if module is not allowed for user' => [
+            ['foo'],
+            'bar',
+            [],
+            VoterInterface::ACCESS_DENIED,
+        ];
+
+        yield 'Allows access if module is allowed for user' => [
+            ['foo'],
+            'foo',
+            [],
+            VoterInterface::ACCESS_GRANTED,
+        ];
+
+        yield 'Allows access if module does not need permission checks' => [
+            ['foo'],
+            'ipsum',
+            [
+                'lorem' => [
+                    'ipsum' => [
+                        'disablePermissionChecks' => true,
+                    ],
+                ],
+            ],
             VoterInterface::ACCESS_GRANTED,
         ];
     }
