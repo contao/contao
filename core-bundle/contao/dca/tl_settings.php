@@ -76,7 +76,19 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		'allowedAttributes' => array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['allowedAttributes'],
-			'inputType'               => 'keyValueWizard',
+			'inputType'               => 'rowWizard',
+			'fields' => [
+				'key' => array
+				(
+					'label'           => &$GLOBALS['MSC']['ow_key'], // ToDo: When loading the widget this doesn't work yet
+					'inputType'       => 'text'
+				),
+				'value' => array
+				(
+					'label'           => &$GLOBALS['MSC']['ow_value'], // ToDo: When loading the widget this doesn't work yet
+					'inputType'       => 'text'
+				)
+			],
 			'eval'                    => array('tl_class'=>'clr'),
 			'load_callback' => array
 			(

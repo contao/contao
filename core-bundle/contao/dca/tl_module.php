@@ -18,6 +18,8 @@ use Contao\DC_Table;
 use Contao\StringUtil;
 use Contao\System;
 
+\Contao\System::loadLanguageFile('default');
+
 $GLOBALS['TL_DCA']['tl_module'] = array
 (
 	// Config
@@ -522,7 +524,21 @@ $GLOBALS['TL_DCA']['tl_module'] = array
 		),
 		'data' => array
 		(
-			'inputType'               => 'keyValueWizard',
+			'inputType'               => 'rowWizard',
+			'fields' => array
+			(
+				'key' => array
+				(
+					'label'           => &$GLOBALS['TL_LANG']['MSC']['ow_key'],
+					'inputType'       => 'text'
+				),
+				'value' => array
+				(
+					'label'           => &$GLOBALS['TL_LANG']['MSC']['ow_value'],
+					'inputType'       => 'text'
+				)
+			),
+			'eval'                    => array('style'=>'max-width:628px'),
 			'sql'                     => "text NULL"
 		),
 		'protected' => array

@@ -10,8 +10,13 @@
 
 namespace Contao;
 
+trigger_deprecation('contao/core-bundle', '5.6', 'Using "Contao\KeyValueWizard" is deprecated and will no longer work in Contao 6. Use the RowWizard instead.');
+
 /**
  * Provide methods to handle key value pairs.
+ *
+ * @deprecated Deprecated since Contao 5.6, to be removed in Contao 6;
+ *             use the rowWizard instead.
  *
  * @property integer $maxlength
  */
