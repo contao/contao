@@ -96,6 +96,7 @@ use Contao\RadioButton;
 use Contao\RadioTable;
 use Contao\RebuildBackendSearchIndex;
 use Contao\RootPageDependentSelect;
+use Contao\RowWizard;
 use Contao\SectionWizard;
 use Contao\SelectMenu;
 use Contao\SerpPreview;
@@ -321,7 +322,8 @@ $GLOBALS['BE_FFL'] = array
 	'metaWizard'              => MetaWizard::class,
 	'sectionWizard'           => SectionWizard::class,
 	'serpPreview'             => SerpPreview::class,
-	'rootPageDependentSelect' => RootPageDependentSelect::class
+	'rootPageDependentSelect' => RootPageDependentSelect::class,
+	'rowWizard'               => RowWizard::class
 );
 
 // Front end form fields

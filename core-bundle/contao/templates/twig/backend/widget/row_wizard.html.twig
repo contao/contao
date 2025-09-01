@@ -1,0 +1,108 @@
+{% trans_default_domain "contao_default" %}
+{% set controller_prefix = 'contao--' %}
+
+{% set table_attributes = attrs()
+    .set('id', 'ctrl_' ~ id)
+    .addClass(['row_wizard'])
+    .set('data-controller', controller_prefix ~ 'row-wizard')
+    .setIfExists('style', style|default)
+    .setIfExists('data-'~ controller_prefix ~ 'row-wizard-min-value', min_rows|default)
+    .setIfExists('data-'~ controller_prefix ~ 'row-wizard-max-value', max_rows|default)
+%}
+
+<table{{ table_attributes }}>
+    <thead>
+    <tr>
+        {% if sortable %}
+            <th></th>
+        {% endif %}
+        {% for cell in header %}
+            <th>{{ cell.label|default }}{% if cell.mandatory|default %}<span class="mandatory">*</span>{% endif %}</th>
+        {% endfor %}
+        <th></th>
+    </tr>
+    </thead>
+    {% set table_body_attributes = attrs()
+        .addClass('sortable', sortable)
+        .set('data-controller', controller_prefix ~ 'sortable', sortable)
+        .set('data-contao--sortable-handle-value', '.drag-handle', sortable)
+        .set('data-action', controller_prefix ~ 'sortable:update->contao--row-wizard#updateSorting', sortable)
+        .set('data-contao--row-wizard-target', 'body')
+    %}
+
+    <tbody{{ table_body_attributes }}>
+        {% for row in rows %}
+            <tr data-{{ controller_prefix }}row-wizard-target="row">
+                {% if sortable %}
+                    <td>
+                        {% set drag_handle_attributes = attrs()
+                            .set('type', 'button')
+                            .set('data-action', 'keydown->contao--sortable#move')
+                            .addClass(['drag-handle', 'row-wizard-drag-handle'])
+                        %}
+                        <button{{ drag_handle_attributes}}>{{ backend_icon('drag.svg', 'MSC.move'|trans) }}</button>
+                    </td>
+                {% endif %}
+
+                {% for widget in row.columns %}
+                    <td>{{ widget|raw }}</td>
+                {% endfor %}
+
+                {# Controls #}
+                <td class="tl_right">
+                    {# Edit #}
+                    {#{% if 'edit' in actions %}
+                        {% set edit_anchor_attributes = attrs()
+                            .set('title', 'MSC.editElement'|trans)
+                            .addClass(['module_link', 'hidden'])
+                        %}
+                        <a{{ edit_anchor_attributes }}></a>
+                    {% endif %}#}
+
+                    {# Copy row #}
+                    {% if 'copy' in actions %}
+                        {% set copy_button_attributes = attrs()
+                            .set('type', 'button')
+                            .set('data-action', controller_prefix ~ 'row-wizard#copy contao--scroll-offset#store')
+                            .set('data-contao--row-wizard-target', 'copy')
+                        %}
+                        <button{{ copy_button_attributes }}>{{ backend_icon('copy.svg', 'MSC.mw_copy'|trans) }}</button>
+                    {% endif %}
+
+                    {# Delete row #}
+                    {% if 'delete' in actions %}
+                        {% set delete_button_attributes = attrs()
+                            .set('type', 'button')
+                            .set('data-action', controller_prefix ~ 'row-wizard#delete contao--scroll-offset#store')
+                            .set('data-contao--row-wizard-target', 'delete')
+                        %}
+                        <button{{ delete_button_attributes }}>{{ backend_icon('delete.svg', 'MSC.mw_delete'|trans) }}</button>
+                    {% endif %}
+
+                    {# Enable checkbox #}
+                    {% if 'enable' in actions %}
+                        {% set enable_input_attributes = attrs()
+                            .set('id', "#{id}_#{loop.index0}_enable")
+                            .set('name', "#{id}[#{loop.index0}][enable]")
+                            .set('type', 'checkbox')
+                            .set('checked', condition: row.controls.enable)
+                            .set('value', '1')
+                            .set('data-action', 'focus->contao--scroll-offset#store')
+                            .addClass('tl_checkbox mw_enable')
+                        %}
+                        <input{{ enable_input_attributes }}>
+
+                        {% set enable_label_attributes = attrs()
+                            .set('for', "#{id}_#{loop.index0}_enable")
+                            .set('title', 'MSC.mw_enable'|trans)
+                            .set('data-contao--tooltips-target', 'tooltip')
+                            .set('data-action', 'click->contao--scroll-offset#store')
+                            .addClass('mw_enable')
+                        %}
+                        <label{{ enable_label_attributes }}>{{ 'MSC.mw_enable'|trans }}</label>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>

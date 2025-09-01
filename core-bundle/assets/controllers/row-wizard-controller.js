@@ -1,7 +1,15 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static targets = ['body', 'row'];
+    static targets = ['body', 'row', 'copy', 'delete'];
+    static values = {
+        min: Number,
+        max: Number,
+    };
+
+    connect() {
+        this.#updatePermissions();
+    }
 
     rowTargetConnected() {
         this.updateSorting();
@@ -12,6 +20,10 @@ export default class extends Controller {
     }
 
     copy(event) {
+        if (!this.#copyAllowed()) {
+            return;
+        }
+
         const row = this._getRow(event);
         const previous = row.previousElementSibling;
 
@@ -30,10 +42,15 @@ export default class extends Controller {
             }
 
             this._focus(newRow);
+            this.#updatePermissions();
         });
     }
 
     delete(event) {
+        if (!this.#deleteAllowed()) {
+            return;
+        }
+
         const row = this._getRow(event);
 
         if (this.bodyTarget.children.length > 1) {
@@ -46,6 +63,8 @@ export default class extends Controller {
             this._resetInputs(row);
             this._focus(row);
         }
+
+        this.#updatePermissions();
     }
 
     /**
@@ -82,7 +101,7 @@ export default class extends Controller {
 
     updateSorting() {
         Array.from(this.bodyTarget.children).forEach((tr, i) => {
-            for (const el of tr.querySelectorAll('label, input, select')) {
+            for (const el of tr.querySelectorAll('label, input, select, textarea')) {
                 if (el.name) {
                     el.name = el.name.replace(/\[[0-9]+]/g, `[${i}]`);
                 }
@@ -99,7 +118,7 @@ export default class extends Controller {
     }
 
     _getRow(event) {
-        return event.target.closest('*[data-contao--row-wizard-target="row"]');
+        return event.target.closest(`*[data-${this.identifier}-target="row"]`);
     }
 
     _resetInputs(row) {
@@ -120,5 +139,39 @@ export default class extends Controller {
         el.querySelector('input, select:not(.choices__input), .tl_select.choices')?.focus();
 
         return true;
+    }
+
+    #deleteAllowed() {
+        return !(this.hasMinValue && this.bodyTarget.children.length === this.minValue);
+    }
+
+    #copyAllowed() {
+        return !(this.hasMaxValue && this.bodyTarget.children.length === this.maxValue);
+    }
+
+    #updatePermissions() {
+        if (this.hasMinValue) {
+            const enable = this.#deleteAllowed();
+
+            for (const el of this.deleteTargets) {
+                if (enable) {
+                    el.removeAttribute('disabled');
+                } else {
+                    el.disabled = true;
+                }
+            }
+        }
+
+        if (this.hasMaxValue) {
+            const enable = this.#copyAllowed();
+
+            for (const el of this.copyTargets) {
+                if (enable) {
+                    el.removeAttribute('disabled');
+                } else {
+                    el.disabled = true;
+                }
+            }
+        }
     }
 }
