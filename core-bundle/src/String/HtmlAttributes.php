@@ -515,6 +515,7 @@ class HtmlAttributes implements \Stringable, \JsonSerializable, \IteratorAggrega
                 $property = trim(substr($match[0], 0, -1), " \n\r\t\v\f");
                 $value = trim(substr($declaration, \strlen($match[0])), " \n\r\t\v\f");
                 $propertyDecoded = $this->decodeStyleProperty($match[1]);
+
                 $result[$propertyDecoded][] = match (true) {
                     '' === $value && !str_starts_with($propertyDecoded, '--') => '',
                     default => "$property: $value;",
