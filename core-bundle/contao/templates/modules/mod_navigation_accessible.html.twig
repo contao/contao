@@ -64,8 +64,13 @@
         <script src="{{ asset('navigation.js', 'contao_core') }}" type="module"></script>
     {% endadd %}
 
+    {% set script_attributes = attrs()
+        .setIfExists('nonce', csp_nonce('script-src'))
+        .mergeWith(script_attributes|default)
+    %}
+
     {% add "accessible_navigation_js" to body %}
-        <script>
+        <script{{ script_attributes }}>
             const accessibleNavBreakpoint = parseInt(window.getComputedStyle(document.body).getPropertyValue('--nav-breakpoint'), 10) || 1024;
             new ResizeObserver(() => {
                 const navIsDesktop = window.innerWidth >= accessibleNavBreakpoint;
@@ -74,11 +79,6 @@
             }).observe(document.body);
         </script>
     {% endadd %}
-
-    {% set script_attributes = attrs()
-        .setIfExists('nonce', csp_nonce('script-src'))
-        .mergeWith(script_attributes|default)
-    %}
 
     <script{{ script_attributes }}>
         window.addEventListener('load', () => {
