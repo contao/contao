@@ -80,12 +80,12 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 			'fields' => [
 				'key' => array
 				(
-					'label'           => &$GLOBALS['MSC']['ow_key'], // ToDo: When loading the widget this doesn't work yet
+					'label'           => &$GLOBALS['TL_LANG']['MSC']['ow_key'],
 					'inputType'       => 'text'
 				),
 				'value' => array
 				(
-					'label'           => &$GLOBALS['MSC']['ow_value'], // ToDo: When loading the widget this doesn't work yet
+					'label'           => &$GLOBALS['TL_LANG']['MSC']['ow_value'],
 					'inputType'       => 'text'
 				)
 			],

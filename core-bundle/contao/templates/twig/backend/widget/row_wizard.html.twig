@@ -1,13 +1,12 @@
 {% trans_default_domain "contao_default" %}
-{% set controller_prefix = 'contao--' %}
 
 {% set table_attributes = attrs()
     .set('id', 'ctrl_' ~ id)
     .addClass(['row_wizard'])
-    .set('data-controller', controller_prefix ~ 'row-wizard')
+    .set('data-controller', 'contao--row-wizard')
     .setIfExists('style', style|default)
-    .setIfExists('data-'~ controller_prefix ~ 'row-wizard-min-value', min_rows|default)
-    .setIfExists('data-'~ controller_prefix ~ 'row-wizard-max-value', max_rows|default)
+    .setIfExists('data-contao--row-wizard-min-value', min_rows|default)
+    .setIfExists('data-contao--row-wizard-max-value', max_rows|default)
 %}
 
 <table{{ table_attributes }}>
@@ -24,15 +23,15 @@
     </thead>
     {% set table_body_attributes = attrs()
         .addClass('sortable', sortable)
-        .set('data-controller', controller_prefix ~ 'sortable', sortable)
+        .set('data-controller', 'contao--sortable', sortable)
         .set('data-contao--sortable-handle-value', '.drag-handle', sortable)
-        .set('data-action', controller_prefix ~ 'sortable:update->contao--row-wizard#updateSorting', sortable)
+        .set('data-action', 'contao--sortable:update->contao--row-wizard#updateSorting', sortable)
         .set('data-contao--row-wizard-target', 'body')
     %}
 
     <tbody{{ table_body_attributes }}>
         {% for row in rows %}
-            <tr data-{{ controller_prefix }}row-wizard-target="row">
+            <tr data-contao--row-wizard-target="row">
                 {% if sortable %}
                     <td>
                         {% set drag_handle_attributes = attrs()
@@ -63,7 +62,7 @@
                     {% if 'copy' in actions %}
                         {% set copy_button_attributes = attrs()
                             .set('type', 'button')
-                            .set('data-action', controller_prefix ~ 'row-wizard#copy contao--scroll-offset#store')
+                            .set('data-action', 'contao--row-wizard#copy contao--scroll-offset#store')
                             .set('data-contao--row-wizard-target', 'copy')
                         %}
                         <button{{ copy_button_attributes }}>{{ backend_icon('copy.svg', 'MSC.mw_copy'|trans) }}</button>
@@ -73,7 +72,7 @@
                     {% if 'delete' in actions %}
                         {% set delete_button_attributes = attrs()
                             .set('type', 'button')
-                            .set('data-action', controller_prefix ~ 'row-wizard#delete contao--scroll-offset#store')
+                            .set('data-action', 'contao--row-wizard#delete contao--scroll-offset#store')
                             .set('data-contao--row-wizard-target', 'delete')
                         %}
                         <button{{ delete_button_attributes }}>{{ backend_icon('delete.svg', 'MSC.mw_delete'|trans) }}</button>
