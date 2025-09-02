@@ -1,4 +1,5 @@
 :root {
+    --nav-breakpoint: 1024;
     --nav-color: #25455F;
     --nav-active-color: #f47c00;
     --nav-item-line-height: 1.5;
@@ -145,7 +146,7 @@ body.navigation-open {
     height: 44px;
 }
 
-@media (width < 1024px) {
+.nav-is-mobile {
     .nav-wrapper {
         position: relative;
         z-index: 5;
@@ -252,7 +253,7 @@ body.navigation-open {
     }
 }
 
-@media (width >= 1024px) {
+.nav-is-desktop {
     .nav-wrapper {
         display: flex;
         align-items: center;
