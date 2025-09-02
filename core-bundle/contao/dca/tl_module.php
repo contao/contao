@@ -18,8 +18,6 @@ use Contao\DC_Table;
 use Contao\StringUtil;
 use Contao\System;
 
-\Contao\System::loadLanguageFile('default');
-
 $GLOBALS['TL_DCA']['tl_module'] = array
 (
 	// Config
