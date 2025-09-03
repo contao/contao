@@ -5,7 +5,7 @@ export default class extends ColorPicker {
         let hexValueLoaded = false;
 
         if (this.inputTarget.value && /^[0-9a-f]{6}$/i.test(this.inputTarget.value)) {
-            this.inputTarget.value = '#' + this.inputTarget.value;
+            this.inputTarget.value = `#${this.inputTarget.value}`;
             hexValueLoaded = true;
         }
 
