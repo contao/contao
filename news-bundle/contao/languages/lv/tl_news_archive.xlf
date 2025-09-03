@@ -71,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.children.0">
         <source>News items</source>
+        <target>Jaunumu vienumi</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.children.1">
         <source>Edit the news items of news archive ID %s</source>
@@ -78,6 +79,7 @@
       </trans-unit>
       <trans-unit id="tl_news_archive.copy.0">
         <source>Duplicate</source>
+        <target>Dublēt</target>
       </trans-unit>
       <trans-unit id="tl_news_archive.copy.1">
         <source>Duplicate news archive ID %s</source>

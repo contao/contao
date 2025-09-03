@@ -123,7 +123,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.start.0">
         <source>Offset</source>
-        <target>Kompensācija (Offset)</target>
+        <target>Kompensācija</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.start.1">
         <source>In case the sending process is interrupted, you can enter a numeric offset here to continue with a particular recipient. You can check how many mails have been sent by selecting the category &lt;code&gt;NEWSLETTER_%s&lt;/code&gt; in the system log. If there are 120 entries, enter &quot;120&quot; to continue with the 121st recipient (counting starts at 0).</source>
@@ -183,11 +183,11 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.confirm">
         <source>The newsletter has been sent to %s recipients.</source>
-        <target>Biļetens ir nosūtīts% s saņēmējiem.</target>
+        <target>Biļetens ir nosūtīts %s saņēmējiem.</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.rejected">
         <source>%s invalid e-mail address(es) has/have been disabled (see system log).</source>
-        <target>% s nederīga e-pasta adrese (-es) ir/tika izslēgta (sk. sistēmas log).</target>
+        <target>%s nederīga(-s) e-pasta adrese(-es) ir/tika izslēgta(-s) (sk. sistēmas log).</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.skipped">
         <source>%s e-mail address(es) has/have been skipped.</source>
@@ -215,6 +215,7 @@
       </trans-unit>
       <trans-unit id="tl_newsletter.send.0">
         <source>Send</source>
+        <target>Sūtīt</target>
       </trans-unit>
       <trans-unit id="tl_newsletter.send.1">
         <source>Send newsletter ID %s</source>
