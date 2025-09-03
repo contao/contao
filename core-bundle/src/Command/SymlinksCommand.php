@@ -92,6 +92,7 @@ class SymlinksCommand extends Command
         $this->symlink('system/themes', Path::join($this->webDir, 'system/themes'));
 
         // Symlinks the logs directory
+        $fs->mkdir($this->logsDir); // see #8763
         $this->symlink($this->getRelativePath($this->logsDir), 'system/logs');
 
         // Symlink the highlight.php styles
