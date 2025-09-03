@@ -9,7 +9,6 @@ fieldset > .widget-group {
     display: grid;
     gap: var(--widget-gap-rows) var(--widget-gap-cols);
     grid-template-columns: repeat(var(--widget-col-amount), minmax(0, 1fr));
-    align-items: center;
 }
 
 .widget-group > * {
@@ -105,4 +104,8 @@ fieldset > .widget-group {
 
 .widget picture {
     display: contents;
+}
+
+.widget:has(.tl_checkbox_single_container) {
+    align-self: center;
 }
