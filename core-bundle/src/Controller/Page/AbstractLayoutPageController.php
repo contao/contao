@@ -15,6 +15,7 @@ use Contao\CoreBundle\Routing\ResponseContext\JsonLd\JsonLdManager;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContext;
 use Contao\CoreBundle\Routing\ResponseContext\ResponseContextAccessor;
 use Contao\CoreBundle\Security\Authentication\Token\TokenChecker;
+use Contao\CoreBundle\Twig\Defer\Renderer;
 use Contao\CoreBundle\Twig\LayoutTemplate;
 use Contao\CoreBundle\Util\LocaleUtil;
 use Contao\LayoutModel;
@@ -69,6 +70,7 @@ abstract class AbstractLayoutPageController extends AbstractController
         $services['contao.image.picture_factory'] = '?'.PictureFactoryInterface::class;
         $services['contao.image.preview_factory'] = '?'.PreviewFactory::class;
         $services['contao.assets.assets_context'] = '?'.ContaoContext::class;
+        $services['contao.twig.defer.renderer'] = '?'.Renderer::class;
 
         return $services;
     }
@@ -219,7 +221,15 @@ abstract class AbstractLayoutPageController extends AbstractController
     {
         $view ??= $this->view ?? throw new \InvalidArgumentException('Cannot derive template name, please make sure createTemplate() was called before or specify the template explicitly.');
 
-        return parent::render($view, $parameters, $response);
+        // The abstract parent class does several things when rendering a template (like
+        // handling Symfony Forms) but uses the default Twig environment, which would
+        // output the content in a linear fashion. In order to use our own renderer
+        // capable of deferred blocks, we first render an empty template using the
+        // default method and then set our own content.
+        $response = parent::render('@ContaoCore/blank.html.twig', $parameters, $response);
+        $response->setContent($this->container->get('contao.twig.defer.renderer')->render($view, $parameters));
+
+        return $response;
     }
 
     /**
