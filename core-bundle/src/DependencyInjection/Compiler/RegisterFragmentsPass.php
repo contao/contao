@@ -96,9 +96,11 @@ class RegisterFragmentsPass implements CompilerPassInterface
                     $serviceId = 'contao.fragment._'.$identifier;
                     $controllerDefinition = new ChildDefinition((string) $reference);
                     $controllerDefinition->setTags($definition->getTags());
+                    $controllerReference = new Reference($serviceId);
+                    $container->setDefinition($serviceId, $controllerDefinition);
                 } else {
-                    $serviceId = (string) $reference;
                     $controllerDefinition = $definition;
+                    $controllerReference = $reference;
                 }
 
                 // Can only have one service per tag and type (highest priority wins)
@@ -110,14 +112,14 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 $seenTagAndTypes[] = $identifier;
 
                 $controllerDefinition->setPublic(true);
-                $config = $this->getFragmentConfig($container, new Reference($serviceId), $attributes);
+                $config = $this->getFragmentConfig($container, $controllerReference, $attributes);
 
                 $attributes['priority'] ??= 0;
                 $attributes['template'] ??= substr($tag, 7).'/'.$attributes['type'];
                 $templates[$attributes['type']] = $attributes['template'];
 
                 if (is_a($definition->getClass(), FragmentPreHandlerInterface::class, true)) {
-                    $preHandlers[$identifier] = new Reference($serviceId);
+                    $preHandlers[$identifier] = $controllerReference;
                 }
 
                 if (is_a($definition->getClass(), FragmentOptionsAwareInterface::class, true)) {
@@ -133,8 +135,6 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 if (isset($attributes['nestedFragments'])) {
                     $compositor->addMethodCall('add', [$identifier, $attributes['nestedFragments']]);
                 }
-
-                $container->setDefinition($serviceId, $controllerDefinition);
 
                 if ($this->globalsKey && $this->proxyClass) {
                     if (!isset($attributes['category'])) {
