@@ -24,20 +24,20 @@
          <title>{{ title }}</title>
     {%- endblock -%}
 
-    {# @var \Contao\CoreBundle\Routing\ResponseContext\HtmlHeadBag\HtmlHeadBag head_bag #}
-    {% set head_bag = response_context.head %}
+    {# Access the response context inside a "defer" block, so that elements coming after it can still affect it. #}
+    {% defer %}
+        <meta name="robots" content="{{ response_context.head.metaRobots }}">
+        <meta name="description" content="{{ response_context.head.metaDescription|u.truncate(320, '…') }}">
+        {% if page['enableCanonical'] -%}
+            <link rel="canonical" href="{{ response_context.head.canonicalUriForRequest(app.request) }}">
+        {% endif %}
 
-    <meta name="robots" content="{{ head_bag.metaRobots }}">
-    <meta name="description" content="{{ head_bag.metaDescription|u.truncate(320, '…') }}">
-    {% if page['enableCanonical'] -%}
-        <link rel="canonical" href="{{ head_bag.canonicalUriForRequest(app.request) }}">
-    {% endif %}
-
-    {%- block end_of_head -%}
-        {% for element in response_context.end_of_head %}
-            {{ element|raw }}
-        {% endfor %}
-    {%- endblock -%}
+        {%- block end_of_head -%}
+            {% for element in response_context.end_of_head %}
+                {{ element|raw }}
+            {% endfor %}
+        {%- endblock -%}
+    {% enddefer %}
 {%- endblock -%}
 </head>
 <body{{ body_attributes|default }}>
@@ -56,13 +56,16 @@
         {% endslot %}
     {% endblock %}
 
-    {% block end_of_body %}
-        {% for element in response_context.end_of_body %}
-            {{ element|raw }}
-        {% endfor %}
+    {# Access the response context inside a "defer" block, so that elements coming after it can still affect it. #}
+    {% defer %}
+        {% block end_of_body %}
+            {% for element in response_context.end_of_body %}
+                {{ element|raw }}
+            {% endfor %}
 
-        {{ response_context.json_ld_scripts|default|raw }}
-    {% endblock %}
+            {{ response_context.json_ld_scripts|default|raw }}
+        {% endblock %}
+    {% enddefer %}
 {% endblock %}
 </body>
 </html>
