@@ -478,8 +478,8 @@
         <target>Oynatıcı boyutu</target>
       </trans-unit>
       <trans-unit id="tl_content.playerSize.1">
-        <source>Width and height of the media player in pixels (e.g. 640x480).</source>
-        <target>Ortam oynatıcının piksel olarak genişlik ve yüksekliği (640x480 gibi).</target>
+        <source>Width and height of the media player in pixels (e.g. 640x360).</source>
+        <target>Ortam oynatıcının piksel olarak genişlik ve yüksekliği (640x360 gibi).</target>
       </trans-unit>
       <trans-unit id="tl_content.playerOptions.0">
         <source>Player options</source>
