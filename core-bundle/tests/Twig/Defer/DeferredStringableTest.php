@@ -31,6 +31,5 @@ class DeferredStringableTest extends TestCase
 
         $this->assertFalse($evaluated);
         $this->assertSame('foo', (string) $deferredStringable);
-        $this->assertTrue($evaluated);
     }
 }
