@@ -55,7 +55,7 @@ abstract class AbstractLayoutPageController extends AbstractController
         $response = $this->getResponse($template, $layout, $request);
         $this->container->get('contao.routing.response_context_accessor')->finalizeCurrentContext($response);
 
-        return $response;
+        return $this->setCacheHeaders($response, $page);
     }
 
     public static function getSubscribedServices(): array
