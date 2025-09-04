@@ -292,7 +292,7 @@ class FileTree extends Widget
 		$return = '<input type="hidden" name="' . $this->strName . '" id="ctrl_' . $this->strId . '" value="' . $strSet . '"' . ($this->onchange ? ' onchange="' . $this->onchange . '"' : '') . ' data-contao--input-map-target="input">
   <div class="selector_container">' . (($this->isSortable && \count($arrValues) > 1) ? '
     <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '') . '
-    <ul id="sort_' . $this->strId . '" class="' . trim(($this->isSortable ? 'sortable ' : '') . ($this->isGallery ? 'sgallery' : 'single-image')) . '"' . ($this->isSortable ? ' data-controller="contao--sortable" data-action="contao--sortable:update->contao--input-map#update"' : '') . '>';
+    <ul id="sort_' . $this->strId . '" class="' . trim(($this->isSortable ? 'sortable ' : '') . ($this->isGallery ? 'sgallery' : '')) . '"' . ($this->isSortable ? ' data-controller="contao--sortable" data-action="contao--sortable:update->contao--input-map#update"' : '') . '>';
 
 		foreach ($arrValues as $k=>$v)
 		{
