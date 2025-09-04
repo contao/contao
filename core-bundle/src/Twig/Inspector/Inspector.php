@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Twig\Inspector;
 
 use Contao\CoreBundle\Twig\ContaoTwigUtil;
+use Contao\CoreBundle\Twig\Defer\DeferTokenParser;
 use Contao\CoreBundle\Twig\Loader\ContaoFilesystemLoader;
 use Twig\Environment;
 use Twig\Error\LoaderError;
@@ -55,7 +56,10 @@ class Inspector
 
         try {
             // Request blocks to trigger loading all parent templates
-            $blockNames = $this->twig->load($name)->getBlockNames();
+            $blockNames = array_filter(
+                $this->twig->load($name)->getBlockNames(),
+                static fn (string $name): bool => !str_starts_with($name, DeferTokenParser::PREFIX),
+            );
         } catch (LoaderError|SyntaxError $e) {
             // In case of a syntax or loader error we cannot inspect the template
             return new TemplateInformation($source, error: $e);

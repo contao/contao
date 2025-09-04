@@ -46,6 +46,17 @@ class InspectorTest extends TestCase
         $this->assertSame('{% block foo %}{% block bar %}[…]{% endblock %}{% endblock %}', $information->getCode());
     }
 
+    public function testHidesVirtualDeferredBlocks(): void
+    {
+        $templates = [
+            'foo.html.twig' => '{% defer %}{% block foo %}[…]{% endblock %}{% enddefer %}',
+        ];
+
+        $information = $this->getInspector($templates)->inspectTemplate('foo.html.twig');
+
+        $this->assertSame(['foo'], $information->getBlockNames());
+    }
+
     public function testAnalyzesSlots(): void
     {
         $inspector = $this->getInspector([
