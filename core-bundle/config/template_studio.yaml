@@ -16,7 +16,7 @@ services:
             - '@contao.twig.studio.operation_context_factory'
             - '@contao.twig.studio.autocomplete'
             - '@database_connection'
-            - !tagged_iterator { tag: contao.operation.template_studio_element, index_by: name }
+            - !tagged_iterator { tag: contao.operation.template_studio_element }
 
     contao.twig.studio.autocomplete:
         class: Contao\CoreBundle\Twig\Studio\Autocomplete
@@ -36,6 +36,15 @@ services:
 
     contao.twig.studio.delete_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\DeleteOperation
+
+    contao.twig.studio.delete_content_element_variant_operation:
+        class: Contao\CoreBundle\Twig\Studio\Operation\DeleteContentElementVariantOperation
+
+    contao.twig.studio.delete_frontend_module_variant_operation:
+        class: Contao\CoreBundle\Twig\Studio\Operation\DeleteFrontendModuleVariantOperation
+
+    contao.twig.studio.delete_layout_variant_operation:
+        class: Contao\CoreBundle\Twig\Studio\Operation\DeleteLayoutVariantOperation
 
     contao.twig.studio.operation_context_factory:
         class: Contao\CoreBundle\Twig\Studio\Operation\OperationContextFactory
