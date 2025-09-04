@@ -8,7 +8,7 @@
 
 {% block content %}
     <script{{ attrs().setIfExists('nonce', csp_nonce('script-src')) }}>
-        let accessibleNavBreakpoint = parseInt(window.getComputedStyle(document.body).getPropertyValue('--nav-breakpoint'), 10) ?? 1024;
+        let accessibleNavBreakpoint = parseInt(window.getComputedStyle(document.body).getPropertyValue('--nav-breakpoint')) || 1024;
         if (typeof accessibleNavObserver === 'undefined') {
             const accessibleNavObserver = new ResizeObserver(() => {
                 document.body.classList.toggle('nav-is-desktop', window.innerWidth >= accessibleNavBreakpoint)
