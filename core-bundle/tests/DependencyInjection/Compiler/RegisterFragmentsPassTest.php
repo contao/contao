@@ -56,9 +56,7 @@ class RegisterFragmentsPassTest extends TestCase
         $methodCalls = $container->getDefinition('contao.fragment.registry')->getMethodCalls();
         [$element, $module] = $methodCalls;
 
-        /*
-         * Test Content Element
-         */
+        // Test a content element
         $this->assertSame('add', $element[0]);
         $this->assertSame('contao.content_element.text', $element[1][0]);
         $this->assertMatchesRegularExpression('/^contao.fragment._config_/', (string) $element[1][1]);
@@ -66,9 +64,7 @@ class RegisterFragmentsPassTest extends TestCase
         $arguments = $container->getDefinition((string) $element[1][1])->getArguments();
         $this->assertSame('forward', $arguments[1]);
 
-        /*
-         * Test Frontend Module
-         */
+        // Test a front end module
         $this->assertSame('add', $module[0]);
         $this->assertSame('contao.frontend_module.login', $module[1][0]);
         $this->assertMatchesRegularExpression('/^contao.fragment._config_/', (string) $module[1][1]);
