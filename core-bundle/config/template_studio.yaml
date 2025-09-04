@@ -34,9 +34,6 @@ services:
     contao.twig.studio.create_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\CreateOperation
 
-    contao.twig.studio.delete_operation:
-        class: Contao\CoreBundle\Twig\Studio\Operation\DeleteOperation
-
     contao.twig.studio.delete_content_element_variant_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\DeleteContentElementVariantOperation
 
@@ -45,6 +42,9 @@ services:
 
     contao.twig.studio.delete_layout_variant_operation:
         class: Contao\CoreBundle\Twig\Studio\Operation\DeleteLayoutVariantOperation
+
+    contao.twig.studio.delete_operation:
+        class: Contao\CoreBundle\Twig\Studio\Operation\DeleteOperation
 
     contao.twig.studio.operation_context_factory:
         class: Contao\CoreBundle\Twig\Studio\Operation\OperationContextFactory
