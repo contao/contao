@@ -655,9 +655,7 @@ class BackendAccessVoterTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider getBackendModulePermissions
-     */
+    #[DataProvider('getBackendModulePermissions')]
     public function testBackendModulePermissions(array $allowedModules, string $requestedModule, array $config, int $expected): void
     {
         $user = $this->mockClassWithProperties(BackendUser::class, ['id' => 1, 'modules' => $allowedModules]);
