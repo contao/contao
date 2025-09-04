@@ -447,14 +447,18 @@ class ModuleEventlist extends Events
 		}
 
 		// No events found
-		if (!$strEvents)
+		if (!$templates)
 		{
 			$strEvents = "\n" . '<div class="empty">' . $strEmpty . '</div>' . "\n";
+		}
+		else
+		{
+			$strEvents = implode('', array_map(static fn (FrontendTemplate $template): string => $template->parse(), $templates));
 		}
 
 		// See #3672
 		$this->Template->headline = $this->headline;
-		$this->Template->events = implode('', array_map(static fn (FrontendTemplate $template): string => $template->parse(), $templates));
+		$this->Template->events = $strEvents;
 		$this->Template->eventCount = $eventCount;
 
 		// Clear the $_GET array (see #2445)
