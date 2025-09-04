@@ -12,7 +12,6 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Intl;
 
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -25,10 +24,8 @@ class Countries
 
     public function __construct(
         private readonly TranslatorInterface&TranslatorBagInterface $translator,
-        private readonly RequestStack $requestStack,
         array $defaultCountries,
         array $configCountries,
-        private readonly string $defaultLocale,
     ) {
         $this->countries = $this->filterCountries($defaultCountries, $configCountries);
     }
@@ -38,9 +35,7 @@ class Countries
      */
     public function getCountries(string|null $displayLocale = null): array
     {
-        if (null === $displayLocale && ($request = $this->requestStack->getCurrentRequest())) {
-            $displayLocale = $request->getLocale();
-        }
+        $displayLocale ??= $this->translator->getLocale();
 
         $countries = [];
 
@@ -50,11 +45,11 @@ class Countries
             if ($this->translator->getCatalogue($displayLocale)->has($langKey, 'contao_countries')) {
                 $countries[$countryCode] = $this->translator->trans($langKey, [], 'contao_countries', $displayLocale);
             } else {
-                $countries[$countryCode] = \Locale::getDisplayRegion('_'.$countryCode, $displayLocale ?? $this->defaultLocale);
+                $countries[$countryCode] = \Locale::getDisplayRegion('_'.$countryCode, $displayLocale);
             }
         }
 
-        (new \Collator($displayLocale ?? $this->defaultLocale))->asort($countries);
+        (new \Collator($displayLocale))->asort($countries);
 
         return $countries;
     }

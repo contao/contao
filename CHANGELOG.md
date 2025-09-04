@@ -2,6 +2,29 @@
 
 This project adheres to [Semantic Versioning].
 
+## [5.3.38] (2025-08-28)
+
+**Security fixes:**
+
+- [CVE-2025-57759]: Improper privilege management for page and article fields
+- [CVE-2025-57758]: Improper access control in the back end voters
+- [CVE-2025-57757]: Information disclosure in the news module
+- [CVE-2025-57756]: Information disclosure in the front end search index
+
+**Fixed issues:**
+
+- [#8741] Add an ID to the CAPTCHA in the registration form ([fritzmg])
+- [#8727] Deprecate some user variables ([fritzmg])
+- [#8729] Do not use the request locale in the `Countries` and `Locales` classes ([ausi])
+- [#8726] Allow to create a user without a request ([aschempp])
+- [#8580] Add the group index and count to events ([fritzmg])
+- [#8708] Add a higher priority to the `BooleanFieldsMigration` ([fritzmg])
+- [#8701] Check undefined global `objPage` ([bytehead])
+- [#8698] Fix the invalid permission check in `tl_content` ([aschempp])
+- [#8694] Fix the compatibility with `php-feed-io/feed-io` 6.1.1 ([ausi])
+- [#8681] Only vote on `pid` and `ptable` for parent mode ([aschempp])
+- [#8675] Check for main request in the `PreviewToolbarListener` ([fritzmg])
+
 ## [5.3.37] (2025-08-13)
 
 **Fixed issues:**
@@ -752,6 +775,7 @@ This project adheres to [Semantic Versioning].
 - [#6530] Also remove global operations in bundles ([aschempp])
 
 [Semantic Versioning]: https://semver.org/spec/v2.0.0.html
+[5.3.38]: https://github.com/contao/contao/releases/tag/5.3.38
 [5.3.37]: https://github.com/contao/contao/releases/tag/5.3.37
 [5.3.36]: https://github.com/contao/contao/releases/tag/5.3.36
 [5.3.35]: https://github.com/contao/contao/releases/tag/5.3.35
@@ -794,6 +818,10 @@ This project adheres to [Semantic Versioning].
 [5.3.0-RC3]: https://github.com/contao/contao/releases/tag/5.3.0-RC3
 [5.3.0-RC2]: https://github.com/contao/contao/releases/tag/5.3.0-RC2
 [5.3.0-RC1]: https://github.com/contao/contao/releases/tag/5.3.0-RC1
+[CVE-2025-57759]: https://github.com/contao/contao/security/advisories/GHSA-qqfq-7cpp-hcqj
+[CVE-2025-57758]: https://github.com/contao/contao/security/advisories/GHSA-7m47-r75r-cx8v
+[CVE-2025-57757]: https://github.com/contao/contao/security/advisories/GHSA-w53m-gxvg-vx7p
+[CVE-2025-57756]: https://github.com/contao/contao/security/advisories/GHSA-2xmj-8wmq-7475
 [CVE-2025-29790]: https://github.com/contao/contao/security/advisories/GHSA-vqqr-fgmh-f626
 [CVE-2024-45398]: https://github.com/contao/contao/security/advisories/GHSA-vm6r-j788-hjh5
 [CVE-2024-45612]: https://github.com/contao/contao/security/advisories/GHSA-2xpq-xp6c-5mgj
@@ -1331,6 +1359,7 @@ This project adheres to [Semantic Versioning].
 [#8527]: https://github.com/contao/contao/pull/8527
 [#8572]: https://github.com/contao/contao/pull/8572
 [#8579]: https://github.com/contao/contao/pull/8579
+[#8580]: https://github.com/contao/contao/pull/8580
 [#8582]: https://github.com/contao/contao/pull/8582
 [#8592]: https://github.com/contao/contao/pull/8592
 [#8597]: https://github.com/contao/contao/pull/8597
@@ -1344,3 +1373,13 @@ This project adheres to [Semantic Versioning].
 [#8654]: https://github.com/contao/contao/pull/8654
 [#8660]: https://github.com/contao/contao/pull/8660
 [#8665]: https://github.com/contao/contao/pull/8665
+[#8675]: https://github.com/contao/contao/pull/8675
+[#8681]: https://github.com/contao/contao/pull/8681
+[#8694]: https://github.com/contao/contao/pull/8694
+[#8698]: https://github.com/contao/contao/pull/8698
+[#8701]: https://github.com/contao/contao/pull/8701
+[#8708]: https://github.com/contao/contao/pull/8708
+[#8726]: https://github.com/contao/contao/pull/8726
+[#8727]: https://github.com/contao/contao/pull/8727
+[#8729]: https://github.com/contao/contao/pull/8729
+[#8741]: https://github.com/contao/contao/pull/8741
