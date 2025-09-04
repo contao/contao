@@ -187,7 +187,7 @@ abstract class AbstractLayoutPageController extends AbstractController
     protected function getResponseContextData(ResponseContext $responseContext): array
     {
         return [
-            'head' => static fn () => $responseContext->get(HtmlHeadBag::class),
+            'head' => $responseContext->get(HtmlHeadBag::class),
             'end_of_head' => fn () => [
                 ...array_map(
                     function (string $url): string {
