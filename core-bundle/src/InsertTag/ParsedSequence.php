@@ -13,7 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\InsertTag;
 
 /**
- * @implements \IteratorAggregate<int,InsertTag|InsertTagResult|string>
+ * @implements \IteratorAggregate<int, InsertTag|InsertTagResult|string>
  */
 final class ParsedSequence implements \IteratorAggregate, \Countable
 {
