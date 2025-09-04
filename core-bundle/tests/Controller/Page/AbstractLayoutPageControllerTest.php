@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Contao\CoreBundle\Tests\Controller\Page;
 
 use Contao\CoreBundle\Cache\CacheTagManager;
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Fixtures\Controller\Page\LayoutPageController;
 use Contao\CoreBundle\Image\PictureFactory;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
@@ -146,6 +147,7 @@ class AbstractLayoutPageControllerTest extends TestCase
         $response = $layoutPageController(new Request());
 
         $this->assertSame($expectedCacheControl, $response->headers->get('Cache-Control'));
+        $this->assertTrue($response->headers->has(SubrequestCacheSubscriber::MERGE_CACHE_HEADER));
     }
 
     public static function providePageCacheSettings(): iterable

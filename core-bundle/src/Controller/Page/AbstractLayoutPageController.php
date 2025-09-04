@@ -6,6 +6,7 @@ namespace Contao\CoreBundle\Controller\Page;
 
 use Contao\CoreBundle\Asset\ContaoContext;
 use Contao\CoreBundle\Controller\AbstractController;
+use Contao\CoreBundle\EventListener\SubrequestCacheSubscriber;
 use Contao\CoreBundle\Image\PictureFactoryInterface;
 use Contao\CoreBundle\Image\Preview\PreviewFactory;
 use Contao\CoreBundle\Routing\PageFinder;
@@ -55,7 +56,11 @@ abstract class AbstractLayoutPageController extends AbstractController
         $response = $this->getResponse($template, $layout, $request);
         $this->container->get('contao.routing.response_context_accessor')->finalizeCurrentContext($response);
 
-        return $this->setCacheHeaders($response, $page);
+        // Set cache headers
+        $response->headers->set(SubrequestCacheSubscriber::MERGE_CACHE_HEADER, '1');
+        $this->setCacheHeaders($response, $page);
+
+        return $response;
     }
 
     public static function getSubscribedServices(): array
