@@ -157,6 +157,11 @@ class BackendTemplateStudioControllerTest extends TestCase
             {
                 throw new \RuntimeException('not implemented');
             }
+
+            public function getName(): string
+            {
+                return 'foo_operation';
+            }
         };
 
         $controller = new BackendTemplateStudioController(
@@ -167,7 +172,7 @@ class BackendTemplateStudioControllerTest extends TestCase
             $this->createMock(OperationContextFactory::class),
             $this->createMock(Autocomplete::class),
             $connection,
-            ['foo_operation' => $fooOperation],
+            [$fooOperation],
         );
 
         $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
