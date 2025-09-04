@@ -18,7 +18,7 @@ namespace Contao\CoreBundle\Twig\Defer;
 class DeferredStringable implements \Stringable
 {
     /**
-     * @param \Closure<string> $content
+     * @param \Closure():string $content
      */
     public function __construct(private readonly \Closure $content)
     {
