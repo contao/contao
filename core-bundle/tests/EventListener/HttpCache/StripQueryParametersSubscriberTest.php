@@ -30,6 +30,9 @@ class StripQueryParametersSubscriberTest extends TestCase
         $this->assertSame([Events::PRE_HANDLE => 'preHandle'], $subscriber::getSubscribedEvents());
     }
 
+    /**
+     * @param array<string, string|int> $expectedParameters
+     */
     #[DataProvider('queryParametersProvider')]
     public function testQueryParametersAreStrippedCorrectly(array $parameters, array $expectedParameters, array $allowList = [], array $removeFromDenyList = []): void
     {
