@@ -56,7 +56,7 @@ class RebuildBackendSearchIndex extends Backend implements MaintenanceModuleInte
 		{
 			// Drop the entire index as the schema might have changed after an update, etc.
 			$backendSearch->clear();
-			$backendSearch->reindex(new ReindexConfig());
+			$backendSearch->reindex((new ReindexConfig())->withRequireJob(true));
 
 			Message::addConfirmation($GLOBALS['TL_LANG']['tl_maintenance']['backend_search']['confirmation'], self::class);
 

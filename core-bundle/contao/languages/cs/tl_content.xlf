@@ -15,6 +15,7 @@
       </trans-unit>
       <trans-unit id="tl_content.title.1">
         <source>Here you can enter an optional title for the content element.</source>
+        <target>Zde můžete přidat dodatečný název k obsahovému elementu.</target>
       </trans-unit>
       <trans-unit id="tl_content.headline.0">
         <source>Headline</source>
@@ -946,6 +947,7 @@
       </trans-unit>
       <trans-unit id="tl_content.copy.1">
         <source>Copy content element ID %s</source>
+        <target>Zkopírovat element ID %s</target>
       </trans-unit>
       <trans-unit id="tl_content.delete.1">
         <source>Delete content element ID %s</source>
@@ -969,9 +971,11 @@
       </trans-unit>
       <trans-unit id="tl_content.toggle.3">
         <source>Hide</source>
+        <target>Skrýt</target>
       </trans-unit>
       <trans-unit id="tl_content.toggle.4">
         <source>Unhide</source>
+        <target>Zobrazit</target>
       </trans-unit>
       <trans-unit id="tl_content.pasteafter.0">
         <source>Paste at the top</source>
@@ -1039,6 +1043,7 @@
       </trans-unit>
       <trans-unit id="tl_content.config_legend">
         <source>Element configuration</source>
+        <target>Nastavení elementu</target>
       </trans-unit>
       <trans-unit id="tl_content.autologin.0">
         <source>Allow auto login</source>
