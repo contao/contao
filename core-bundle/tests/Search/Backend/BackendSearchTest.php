@@ -137,6 +137,7 @@ class BackendSearchTest extends TestCase
     public function testReindexAsync(): void
     {
         $reindexConfig = (new ReindexConfig())
+            ->withRequireJob(true)
             ->limitToDocumentIds(new GroupedDocumentIds(['foo' => ['bar']]))
             ->limitToDocumentsNewerThan(new \DateTimeImmutable('2024-01-01T00:00:00+00:00'))
         ;
