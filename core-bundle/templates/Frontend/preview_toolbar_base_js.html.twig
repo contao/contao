@@ -1,209 +1,211 @@
 {% do csp_handler.addSource('img-src', 'data:') %}
 {% set style_nonce = csp_handler.getNonce('style-src') %}
-<style{% if style_nonce %} nonce="{{ style_nonce }}"{% endif %}>
-    .cto-toolbar {
-        font-family: -apple-system,system-ui,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
-        font-weight: 400;
-        font-size: 14px;
-        line-height: 1;
-        color: #444;
-    }
-
-    @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
+<style data-cto-toolbar{% if style_nonce %} nonce="{{ style_nonce }}"{% endif %}>
+    :host {
         .cto-toolbar {
-            font-weight: 300;
-            color: #222;
+            font-family: -apple-system, system-ui, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+            font-weight: 400;
+            font-size: 14px;
+            line-height: 1;
+            color: #444;
         }
-    }
 
-    .cto-toolbar__open {
-        width: 36px;
-        height: 36px;
-        position: fixed;
-        right: 0;
-        top: 0;
-        background: #222;
-        border-radius: 0 0 0 4px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 99999;
-    }
+        @media (-webkit-min-device-pixel-ratio: 2),(min-resolution: 192dpi) {
+            .cto-toolbar {
+                font-weight: 300;
+                color: #222;
+            }
+        }
 
-    .cto-toolbar--visible .cto-toolbar__open {
-        display: none;
-    }
+        .cto-toolbar__open {
+            width: 36px;
+            height: 36px;
+            position: fixed;
+            right: 0;
+            top: 0;
+            background: #222;
+            border-radius: 0 0 0 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+        }
 
-    .cto-toolbar__open a {
-        opacity: .7;
-    }
+        .cto-toolbar--visible .cto-toolbar__open {
+            display: none;
+        }
 
-    .cto-toolbar__inside {
-        display: grid;
-        grid-template: auto / 1fr auto;
-        width: 100%;
-        background: #f2f2f2;
-        position: fixed;
-        left: 0;
-        top: 0;
-        z-index: 99999;
-        border-bottom: 1px solid #ccc;
-    }
+        .cto-toolbar__open a {
+            opacity: .7;
+        }
 
-    .cto-toolbar--hidden .cto-toolbar__inside {
-        display: none;
-    }
+        .cto-toolbar__inside {
+            display: grid;
+            grid-template: auto / 1fr auto;
+            width: 100%;
+            background: #f2f2f2;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 99999;
+            border-bottom: 1px solid #ccc;
+        }
 
-    .cto-toolbar__close {
-        border-left: 1px solid #ccc;
-    }
+        .cto-toolbar--hidden .cto-toolbar__inside {
+            display: none;
+        }
 
-    .cto-toolbar__close a {
-        font-weight: 600;
-        font-size: 29px;
-        color: #444;
-        text-decoration: none;
-        display: block;
-        padding: 3px 8px 7px 9px;
-    }
+        .cto-toolbar__close {
+            border-left: 1px solid #ccc;
+        }
 
-    .cto-toolbar__close a:hover {
-        color: #666;
-        background: rgba(0, 0, 0, 0.03);
-    }
-
-    .cto-toolbar__clear {
-        height: 40px;
-        display: none;
-    }
-
-    .cto-toolbar--visible .cto-toolbar__clear {
-        display: block;
-    }
-
-    .cto-toolbar input, .cto-toolbar select, .cto-toolbar button {
-        font: inherit;
-        color: inherit;
-        line-height: 18px;
-    }
-
-    .cto-toolbar.ajax-loading .formbody {
-        pointer-events: none;
-        opacity: .5;
-    }
-
-    .cto-toolbar .formbody {
-        display: flex;
-        align-items: baseline;
-        justify-content: flex-end;
-        padding: 5px 0;
-        margin: 0 .5em 0 0;
-        background: none;
-    }
-
-    .cto-toolbar .formbody > div {
-        display: flex;
-        align-items: baseline;
-        margin-left: 1em;
-    }
-
-    @media only screen and (max-width: 676px) {
-        .cto-toolbar .formbody {
+        .cto-toolbar__close a {
+            font-weight: 600;
+            font-size: 29px;
+            color: #444;
+            text-decoration: none;
             display: block;
-            text-align: right;
+            padding: 3px 8px 7px 9px;
+        }
+
+        .cto-toolbar__close a:hover {
+            color: #666;
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        .cto-toolbar__clear {
+            height: 40px;
+            display: none;
+        }
+
+        .cto-toolbar--visible .cto-toolbar__clear {
+            display: block;
+        }
+
+        .cto-toolbar input, .cto-toolbar select, .cto-toolbar button {
+            font: inherit;
+            color: inherit;
+            line-height: 18px;
+        }
+
+        .cto-toolbar.ajax-loading .formbody {
+            pointer-events: none;
+            opacity: .5;
+        }
+
+        .cto-toolbar .formbody {
+            display: flex;
+            align-items: baseline;
+            justify-content: flex-end;
+            padding: 5px 0;
+            margin: 0 .5em 0 0;
+            background: none;
         }
 
         .cto-toolbar .formbody > div {
-            justify-content: flex-end;
-            padding: 3px 0;
+            display: flex;
+            align-items: baseline;
+            margin-left: 1em;
         }
-    }
 
-    .cto-toolbar label {
-        width: auto;
-        margin: 0 3px 0 0;
-    }
+        @media only screen and (max-width: 676px) {
+            .cto-toolbar .formbody {
+                display: block;
+                text-align: right;
+            }
 
-    .cto-toolbar input[type="text"] {
-        margin: 0;
-        width: auto;
-        box-sizing: border-box;
-        padding: 4px 6px 5px;
-        border: 1px solid #aaa;
-        border-radius: 2px;
-        background-color: #fff;
-        -moz-appearance: none;
-        -webkit-appearance: none;
-    }
+            .cto-toolbar .formbody > div {
+                justify-content: flex-end;
+                padding: 3px 0;
+            }
+        }
 
-    .cto-toolbar .tl_select {
-        margin: 0;
-        width: auto;
-        box-sizing: border-box;
-        border: 1px solid #aaa;
-        padding: 4px 22px 5px 6px;
-        border-radius: 2px;
-        background: #fff url({{ asset('system/themes/flexible/icons/down.svg') }}) right -16px center no-repeat;
-        background-origin: content-box;
-        cursor: pointer;
-        text-transform: none;
-        -moz-appearance: none;
-        -webkit-appearance: none;
-    }
+        .cto-toolbar label {
+            width: auto;
+            margin: 0 3px 0 0;
+        }
 
-    .cto-toolbar .tl_submit {
-        margin: 0 0 0 6px;
-        padding: 4px 10px 5px;
-        border: 1px solid #aaa;
-        border-radius: 2px;
-        box-sizing: border-box;
-        cursor: pointer;
-        background: #eee;
-        transition: background .2s ease;
-        font-family: inherit;
-        font-size: inherit;
-        color: inherit;
-        line-height: 18px;
-        text-decoration: none;
-    }
+        .cto-toolbar input[type="text"] {
+            margin: 0;
+            width: auto;
+            box-sizing: border-box;
+            padding: 4px 6px 5px;
+            border: 1px solid #aaa;
+            border-radius: 2px;
+            background-color: #fff;
+            -moz-appearance: none;
+            -webkit-appearance: none;
+        }
 
-    @media only screen and (max-width: 676px) {
+        .cto-toolbar .tl_select {
+            margin: 0;
+            width: auto;
+            box-sizing: border-box;
+            border: 1px solid #aaa;
+            padding: 4px 22px 5px 6px;
+            border-radius: 2px;
+            background: #fff url({{ asset('system/themes/flexible/icons/down.svg') }}) right -16px center no-repeat;
+            background-origin: content-box;
+            cursor: pointer;
+            text-transform: none;
+            -moz-appearance: none;
+            -webkit-appearance: none;
+        }
+
         .cto-toolbar .tl_submit {
-            margin-top: 3px;
-            margin-bottom: 1px;
+            margin: 0 0 0 6px;
+            padding: 4px 10px 5px;
+            border: 1px solid #aaa;
+            border-radius: 2px;
+            box-sizing: border-box;
+            cursor: pointer;
+            background: #eee;
+            transition: background .2s ease;
+            font-family: inherit;
+            font-size: inherit;
+            color: inherit;
+            line-height: 18px;
+            text-decoration: none;
         }
-    }
 
-    .cto-toolbar .tl_submit:hover {
-        color: inherit;
-        background-color: #f6f6f6;
-    }
-
-    .cto-toolbar .tl_submit:active {
-        color: #aaa;
-    }
-
-    .cto-toolbar .badge-title {
-        align-self: center;
-        margin: 0 auto 0 9px;
-        border-radius: 8px;
-        padding: 2px 5px;
-        background: #0f1c26;
-        color: #fff;
-        font-size: .75rem;
-        font-weight: 600;
-    }
-
-    @media (-webkit-min-device-pixel-ratio:2),(min-resolution:192dpi) {
-        .cto-toolbar .badge-title {
-            font-weight: 500;
+        @media only screen and (max-width: 676px) {
+            .cto-toolbar .tl_submit {
+                margin-top: 3px;
+                margin-bottom: 1px;
+            }
         }
-    }
 
-    @media only screen and (max-width: 676px) {
+        .cto-toolbar .tl_submit:hover {
+            color: inherit;
+            background-color: #f6f6f6;
+        }
+
+        .cto-toolbar .tl_submit:active {
+            color: #aaa;
+        }
+
         .cto-toolbar .badge-title {
-            float: left;
-            margin: 3px auto 0 8px;
+            align-self: center;
+            margin: 0 auto 0 9px;
+            border-radius: 8px;
+            padding: 2px 5px;
+            background: #0f1c26;
+            color: #fff;
+            font-size: .75rem;
+            font-weight: 600;
+        }
+
+        @media (-webkit-min-device-pixel-ratio: 2),(min-resolution: 192dpi) {
+            .cto-toolbar .badge-title {
+                font-weight: 500;
+            }
+        }
+
+        @media only screen and (max-width: 676px) {
+            .cto-toolbar .badge-title {
+                float: left;
+                margin: 3px auto 0 8px;
+            }
         }
     }
 </style>
@@ -211,9 +213,15 @@
 {% set script_nonce = csp_handler.getNonce('script-src') %}
 <script{% if script_nonce %} nonce="{{ script_nonce }}"{% endif %}>
     (function () {
+        const toolbarWrapper = document.createElement('cto-toolbar');
+        document.querySelector('body').prepend(toolbarWrapper);
+        toolbarWrapper.attachShadow({mode: 'open'});
+
+        toolbarWrapper.shadowRoot.appendChild(document.querySelector('style[data-cto-toolbar]'));
+
         const toolbar = document.createElement('div');
         toolbar.classList.add('cto-toolbar');
-        document.querySelector('body').prepend(toolbar);
+        toolbarWrapper.shadowRoot.appendChild(toolbar);
 
         function request(method, uri, body, callback, addClass = true) {
             body = body || null;
