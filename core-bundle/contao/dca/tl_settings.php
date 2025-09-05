@@ -77,7 +77,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 		(
 			'label'                   => &$GLOBALS['TL_LANG']['tl_settings']['allowedAttributes'],
 			'inputType'               => 'rowWizard',
-			'fields' => [
+			'fields' => array(
 				'key' => array
 				(
 					'label'           => &$GLOBALS['TL_LANG']['MSC']['ow_key'],
@@ -88,7 +88,7 @@ $GLOBALS['TL_DCA']['tl_settings'] = array
 					'label'           => &$GLOBALS['TL_LANG']['MSC']['ow_value'],
 					'inputType'       => 'text'
 				)
-			],
+			),
 			'eval'                    => array('tl_class'=>'clr'),
 			'load_callback' => array
 			(
