@@ -298,7 +298,7 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		),
 		'listitems' => array
 		(
-			'inputType'               => 'listWizard', // ToDo: Adding the row-wizard apparently does not work as there ain't a key in place. This would need a migration
+			'inputType'               => 'listWizard',
 			'eval'                    => array('multiple'=>true, 'allowHtml'=>true, 'tl_class'=>'clr'),
 			'xlabel' => array
 			(
