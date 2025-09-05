@@ -49,15 +49,6 @@
 
                 {# Controls #}
                 <td class="tl_right">
-                    {# Edit #}
-                    {#{% if 'edit' in actions %}
-                        {% set edit_anchor_attributes = attrs()
-                            .set('title', 'MSC.editElement'|trans)
-                            .addClass(['module_link', 'hidden'])
-                        %}
-                        <a{{ edit_anchor_attributes }}></a>
-                    {% endif %}#}
-
                     {# Copy row #}
                     {% if 'copy' in actions %}
                         {% set copy_button_attributes = attrs()
