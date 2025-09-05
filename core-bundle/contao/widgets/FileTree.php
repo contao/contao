@@ -419,7 +419,7 @@ class FileTree extends Widget
 		}
 		else
 		{
-			$buffer = Image::getHtml('placeholder.svg', $strInfo, \sprintf('class="%s" width="100" data-contao--tooltips-target="tooltip"', $strClass));
+			$buffer = Image::getHtml('placeholder.svg', $strInfo, \sprintf('class="%s" width="100" height="75" data-contao--tooltips-target="tooltip"', $strClass));
 		}
 
 		$buffer .= \sprintf('<button type="button" class="tl_red" data-action="contao--input-map#removeElement" data-contao--input-map-closest-param="li">%s</button>', Image::getHtml('close'));
