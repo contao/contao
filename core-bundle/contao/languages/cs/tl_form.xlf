@@ -203,9 +203,11 @@
       </trans-unit>
       <trans-unit id="tl_form.storeSession.0">
         <source>Store data in the session</source>
+        <target>Uložit data v sezení</target>
       </trans-unit>
       <trans-unit id="tl_form.storeSession.1">
         <source>Store the submitted data in the session so that it can be retrieved via the &lt;code&gt;{{form_session_data::*}}&lt;/code&gt; insert tag.</source>
+        <target>Uložit zadané údaje v sezení, čímž je lze použít na jiném místě pomocí inzertního tagu &lt;code&gt;{{form_session_data::*}}&lt;/code&gt;.</target>
       </trans-unit>
       <trans-unit id="tl_form.tstamp.0">
         <source>Revision date</source>
@@ -265,6 +267,7 @@
       </trans-unit>
       <trans-unit id="tl_form.copy.0">
         <source>Duplicate</source>
+        <target>Duplikovat</target>
       </trans-unit>
       <trans-unit id="tl_form.copy.1">
         <source>Duplicate form ID %s</source>
