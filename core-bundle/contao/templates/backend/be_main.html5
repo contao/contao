@@ -51,7 +51,7 @@ $this->bodyAttributes = $this
     <script src="<?= $this->asset('js/ext-language_tools.js', 'contao-components/ace') ?>" data-turbo-track="reload"></script>
     <script src="<?= $this->asset('js/ext-whitespace.js', 'contao-components/ace') ?>" data-turbo-track="reload"></script>
     <script src="<?= $this->asset('js/dropzone.min.js', 'contao-components/dropzone') ?>" data-turbo-track="reload"></script>
-    <script src="<?= $this->asset('contao-backend.js', 'contao_core') ?>" data-turbo-track="reload"></script>
+    <script src="<?= $this->asset('backend.js', 'contao_core') ?>" data-turbo-track="reload"></script>
     <script><?= $this->getDateString() ?></script>
     <?= $this->javascripts ?>
   <?php $this->endblock(); ?>
