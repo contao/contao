@@ -114,7 +114,7 @@ class AbstractLayoutPageControllerTest extends TestCase
                         </script>
                         EOF,
                 ],
-                'modules' => [],
+                'element_references' => [],
                 'templateName' => 'foo_template',
             ],
             $data,
