@@ -203,8 +203,11 @@ class Inspector
      */
     private function getSlots(array $data): array
     {
-        $slots = [];
+        /** @var list<string> $blocksToIgnore */
         $blocksToIgnore = [];
+
+        /** @var list<string> $slots */
+        $slots = [];
 
         $isIgnoredBlock = static function (string $block, array $nesting) use (&$blocksToIgnore): bool {
             $currentBlock = $block;
