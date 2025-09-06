@@ -68,6 +68,6 @@ class DeferTokenParser extends AbstractTokenParser
 
         self::$nextIndexByName[$templateName] = $index + 1;
 
-        return self::PREFIX.sha1($stream->getSourceContext()->getName()."\0".$index);
+        return self::PREFIX.hash('xxh3', $stream->getSourceContext()->getName()."\0".$index);
     }
 }
