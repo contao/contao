@@ -61,6 +61,11 @@ class DeferTokenParser extends AbstractTokenParser
         return 'defer';
     }
 
+    public static function reset(): void
+    {
+        self::$nextIndexByName = [];
+    }
+
     private function getUniqueName(TokenStream $stream): string
     {
         $templateName = $stream->getSourceContext()->getName();

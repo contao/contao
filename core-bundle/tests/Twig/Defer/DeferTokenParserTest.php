@@ -28,6 +28,13 @@ use Twig\Loader\LoaderInterface;
 
 class DeferTokenParserTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        DeferTokenParser::reset();
+
+        parent::tearDown();
+    }
+
     public function testGetTag(): void
     {
         $tokenParser = new DeferTokenParser();

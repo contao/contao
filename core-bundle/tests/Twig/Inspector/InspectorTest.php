@@ -14,6 +14,7 @@ namespace Contao\CoreBundle\Tests\Twig\Inspector;
 
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\CoreBundle\Tests\TestCase;
+use Contao\CoreBundle\Twig\Defer\DeferTokenParser;
 use Contao\CoreBundle\Twig\Extension\ContaoExtension;
 use Contao\CoreBundle\Twig\Global\ContaoVariable;
 use Contao\CoreBundle\Twig\Inspector\BlockType;
@@ -32,6 +33,13 @@ use Twig\Source;
 
 class InspectorTest extends TestCase
 {
+    protected function tearDown(): void
+    {
+        DeferTokenParser::reset();
+
+        parent::tearDown();
+    }
+
     public function testAnalyzesBlocks(): void
     {
         $templates = [
