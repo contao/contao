@@ -49,11 +49,59 @@ class InspectorTest extends TestCase
     public function testAnalyzesSlots(): void
     {
         $inspector = $this->getInspector([
-            'template.twig' => '{% slot B %}{% endslot %}{% block foo %}{% slot A %}body{% endslot %}{% slot A %}{% endslot %}{% endblock %}',
+            '@Contao_specific/parent.twig' => <<<'SOURCE'
+                {% block foo %}
+                    {% block foo_inner %}
+                        {% slot B %}{% endslot %}
+                    {% endblock %}
+                {% endblock %}
+                {% block bar %}
+                    {% slot C %}{% endslot %}
+                    {% slot C %}{% endslot %}
+                {% endblock %}
+                {% slot A %}…{% endslot %}
+
+                SOURCE,
+            '@Contao_specific/child1.twig' => <<<'SOURCE'
+                {% extends "@Contao_specific/parent.twig" %}
+
+                SOURCE,
+            '@Contao_specific/child2.twig' => <<<'SOURCE'
+                {% extends "@Contao_specific/parent.twig" %}
+
+                {% block foo %}
+                    {# removing slot B by overriding foo while adding slot D #}
+                    {% block baz %}
+                        {% slot D %}{% endslot %}
+                    {% endblock %}
+                {% endblock %}
+
+                {% block bar %}
+                    {# adding slot E #}
+                    {{ parent() }}
+                    {% slot E %}{% endslot %}
+                {% endblock %}
+
+                SOURCE,
         ]);
 
-        $information = $inspector->inspectTemplate('template.twig');
-        $this->assertSame(['A', 'B'], $information->getSlots());
+        $this->assertSame(
+            ['A', 'B', 'C'],
+            $inspector->inspectTemplate('@Contao_specific/parent.twig')->getSlots(),
+            'slots appear in alphabetical order',
+        );
+
+        $this->assertSame(
+            ['A', 'B', 'C'],
+            $inspector->inspectTemplate('@Contao_specific/child1.twig')->getSlots(),
+            'parent slots are inherited',
+        );
+
+        $this->assertSame(
+            ['A', 'C', 'D', 'E'],
+            $inspector->inspectTemplate('@Contao_specific/child2.twig')->getSlots(),
+            'overwritten parent slots are not present while additional ones are',
+        );
     }
 
     public function testAnalyzesUses(): void

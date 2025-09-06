@@ -64,21 +64,18 @@ class Inspector
             $blockNames = [];
         }
 
+        sort($blockNames);
+
         $data = $this->getData($name);
 
-        $parent = $data['parent'];
-        $uses = $data['uses'];
-        $slots = [];
-
-        // Accumulate slots data for the template as well as all statically set parents
-        foreach ($this->getDataFromAll($data) as $parentData) {
-            $slots = array_unique([...$slots, ...$parentData['slots']]);
-        }
-
-        sort($blockNames);
-        sort($slots);
-
-        return new TemplateInformation($source, $blockNames, $slots, $parent, $uses, $error);
+        return new TemplateInformation(
+            $source,
+            $blockNames,
+            $this->getSlots($data),
+            $data['parent'],
+            $data['uses'],
+            $error,
+        );
     }
 
     /**
@@ -176,8 +173,10 @@ class Inspector
         } catch (LoaderError|RuntimeError|SyntaxError) {
         }
 
-        return $this->storage->get($this->getPathByTemplateName($templateName)) ??
+        $data = $this->storage->get($this->getPathByTemplateName($templateName)) ??
             throw new InspectionException($templateName, reason: 'No recorded information was found. Please clear the Twig template cache to make sure templates are recompiled.');
+
+        return ['name' => $templateName, ...$data];
     }
 
     private function getPathByTemplateName(string $templateName): string|null
@@ -194,5 +193,53 @@ class Inspector
         }
 
         return $this->pathByTemplateName[$templateName] ?? null;
+    }
+
+    /**
+     * Accumulate slots from the template as well as all statically set parents but
+     * ignore those living in overwritten blocks.
+     *
+     * @return list<string>
+     */
+    private function getSlots(array $data): array
+    {
+        $slots = [];
+        $blocksToIgnore = [];
+
+        $isIgnoredBlock = static function (string $block, array $nesting) use (&$blocksToIgnore): bool {
+            $currentBlock = $block;
+
+            do {
+                if (\in_array($currentBlock, $blocksToIgnore, true)) {
+                    return true;
+                }
+            } while ($currentBlock = $nesting[$currentBlock] ?? false);
+
+            return false;
+        };
+
+        // Accumulate slots data for the template as well as all statically set parents
+        foreach ($this->getDataFromAll($data) as $currentData) {
+            foreach ($currentData['slots'] as $slot => $block) {
+                // Check if slot is in an ignored block
+                if (null !== $block && $isIgnoredBlock($block, $currentData['nesting'])) {
+                    continue;
+                }
+
+                $slots[] = $slot;
+
+                do {
+                    if (null !== $block && BlockType::overwrite === $this->getBlockHierarchy($currentData['name'], $block)[0]->getType()) {
+                        // This block overwrites the previous one
+                        $blocksToIgnore[] = $block;
+                        break;
+                    }
+                } while ($block = $currentData['nesting'][$block] ?? false);
+            }
+        }
+
+        sort($slots);
+
+        return $slots;
     }
 }
