@@ -412,9 +412,9 @@ abstract class Controller extends System
 		}
 
 		// Disable indexing if protected
-		if ($objModule->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
+		if ($objRow->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$groups = StringUtil::deserialize($objModule->groups, true);
+			$groups = StringUtil::deserialize($objRow->groups, true);
 
 			if (\count($groups) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true))
 			{
@@ -627,9 +627,9 @@ abstract class Controller extends System
 		}
 
 		// Disable indexing if protected
-		if ($objElement->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
+		if ($objRow->protected && !preg_match('/^\s*<!-- indexer::stop/', $strBuffer))
 		{
-			$groups = StringUtil::deserialize($objElement->groups, true);
+			$groups = StringUtil::deserialize($objRow->groups, true);
 
 			if (\count($groups) !== 1 || !\in_array(-1, array_map(\intval(...), $groups), true))
 			{
@@ -839,7 +839,7 @@ abstract class Controller extends System
 		global $objPage;
 
 		$objLayout = ($objPage !== null) ? LayoutModel::findById($objPage->layoutId) : null;
-		$blnCombineScripts = $objLayout !== null && $objLayout->combineScripts;
+		$blnCombineScripts = $objLayout !== null && $objLayout->combineScripts && !System::getContainer()->getParameter('kernel.debug');
 
 		$arrReplace["[[TL_BODY_$nonce]]"] = $strScripts;
 		$strScripts = '';

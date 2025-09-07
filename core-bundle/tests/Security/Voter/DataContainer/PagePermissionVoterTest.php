@@ -23,6 +23,7 @@ use Contao\CoreBundle\Security\Voter\DataContainer\FormFieldAccessVoter;
 use Contao\CoreBundle\Security\Voter\DataContainer\PagePermissionVoter;
 use Contao\CoreBundle\Tests\TestCase;
 use Contao\Database;
+use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -36,6 +37,7 @@ class PagePermissionVoterTest extends TestCase
         $voter = new PagePermissionVoter(
             $this->mockContaoFramework(),
             $this->createMock(AccessDecisionManagerInterface::class),
+            $this->createMock(Connection::class),
         );
 
         $this->assertTrue($voter->supportsAttribute(ContaoCorePermissions::DC_PREFIX.'tl_page'));
@@ -60,7 +62,13 @@ class PagePermissionVoterTest extends TestCase
             ->willReturn(true)
         ;
 
-        $voter = new PagePermissionVoter($this->mockContaoFramework(), $decisionManager);
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchOne')
+            ->willReturn('regular')
+        ;
+
+        $voter = new PagePermissionVoter($this->mockContaoFramework(), $decisionManager, $connection);
         $result = $voter->vote($token, new CreateAction('tl_page'), [ContaoCorePermissions::DC_PREFIX.'tl_page']);
 
         $this->assertSame(VoterInterface::ACCESS_ABSTAIN, $result);
@@ -87,7 +95,13 @@ class PagePermissionVoterTest extends TestCase
             ->willReturnMap($decisions)
         ;
 
-        $voter = new PagePermissionVoter($framework, $decisionManager);
+        $connection = $this->createMock(Connection::class);
+        $connection
+            ->method('fetchOne')
+            ->willReturn('regular')
+        ;
+
+        $voter = new PagePermissionVoter($framework, $decisionManager, $connection);
         $result = $voter->vote($token, $subject, [ContaoCorePermissions::DC_PREFIX.$subject->getDataSource()]);
 
         $this->assertSame($accessGranted ? VoterInterface::ACCESS_ABSTAIN : VoterInterface::ACCESS_DENIED, $result);
@@ -102,6 +116,7 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 1, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 1, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 1, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [1, 2, 3],
@@ -115,6 +130,7 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 3, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [1, 2, 3],
@@ -131,6 +147,7 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 3, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [1, 2, 3],
@@ -181,6 +198,7 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 1, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 1, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 1, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [1, 2, 3],
@@ -194,6 +212,7 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 3, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 3, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [1, 2, 3],
@@ -210,6 +229,7 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 3, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 3, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [1, 2, 3],
@@ -260,9 +280,11 @@ class PagePermissionVoterTest extends TestCase
             [
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 3, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [3, 2, 1],
@@ -273,12 +295,14 @@ class PagePermissionVoterTest extends TestCase
             [
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, false],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 2, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 2, false],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 1, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 1, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 1, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [3, 2, 1],
@@ -290,9 +314,11 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, false],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 3, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [3, 2, 1],
@@ -304,12 +330,14 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, false],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, false],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 2, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 2, false],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 1, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 1, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 1, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [3, 2, 1],
@@ -330,6 +358,7 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, false],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 3, false],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 2, false],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 1, false],
@@ -343,9 +372,11 @@ class PagePermissionVoterTest extends TestCase
             [
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 3, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 3, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [3, 2, 1],
@@ -356,12 +387,14 @@ class PagePermissionVoterTest extends TestCase
             [
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 3, false],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 2, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 2, false],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 1, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 1, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 1, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [3, 2, 1],
@@ -373,9 +406,11 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, false],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 3, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 3, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 3, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [3, 2, 1],
@@ -387,12 +422,14 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, false],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 3, false],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 2, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 2, false],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 1, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 1, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 1, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
             [3, 2, 1],
@@ -413,6 +450,7 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, false],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 3, false],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 2, false],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 1, false],
@@ -428,6 +466,7 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
         ];
@@ -465,6 +504,7 @@ class PagePermissionVoterTest extends TestCase
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
             ],
             true,
         ];
@@ -534,6 +574,7 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_page', ['id' => 42]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, true],
             ],
             true,
@@ -551,6 +592,7 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_page', ['id' => 42]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, false],
             ],
             false,
@@ -560,6 +602,7 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_article', ['pid' => 42]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, true],
             ],
             true,
@@ -577,6 +620,7 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_article', ['pid' => 42]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, false],
             ],
             false,
@@ -587,6 +631,7 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_page', ['id' => 42], ['sorting' => 128]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
             ],
             true,
@@ -604,6 +649,7 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_page', ['id' => 42], ['sorting' => 128]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, false],
             ],
             false,
@@ -613,6 +659,7 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_article', ['pid' => 42], ['sorting' => 128]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, true],
             ],
             true,
@@ -630,6 +677,7 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_article', ['pid' => 42], ['sorting' => 128]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, false],
             ],
             false,
@@ -639,8 +687,10 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_page', ['id' => 42], ['pid' => 21, 'sorting' => 128]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 21, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 21, true],
             ],
             true,
@@ -658,6 +708,7 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_page', ['id' => 42], ['pid' => 21, 'sorting' => 128]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, false],
             ],
             false,
@@ -667,6 +718,7 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_page', ['id' => 42], ['pid' => 21, 'sorting' => 128]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 21, false],
             ],
@@ -677,8 +729,10 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_page', ['id' => 42], ['pid' => 21, 'sorting' => 128]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 21, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 21, false],
             ],
             false,
@@ -688,8 +742,10 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_article', ['pid' => 42], ['pid' => 21, 'sorting' => 128]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 21, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 21, true],
             ],
             true,
@@ -707,6 +763,7 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_article', ['pid' => 42], ['pid' => 21, 'sorting' => 128]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, false],
             ],
             false,
@@ -716,6 +773,7 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_article', ['pid' => 42], ['pid' => 21, 'sorting' => 128]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 21, false],
             ],
@@ -726,8 +784,10 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_article', ['pid' => 42], ['pid' => 21, 'sorting' => 128]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 21, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLE_HIERARCHY], 21, false],
             ],
             false,
@@ -738,6 +798,7 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_page', ['id' => 42], ['foo' => 'bar']),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, true],
             ],
             true,
@@ -755,6 +816,7 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_page', ['id' => 42], ['foo' => 'bar']),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, false],
             ],
             false,
@@ -764,6 +826,7 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_article', ['pid' => 42], ['foo' => 'bar']),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, true],
             ],
             true,
@@ -781,6 +844,7 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_article', ['pid' => 42], ['foo' => 'bar']),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_ARTICLES], 42, false],
             ],
             false,
@@ -791,6 +855,7 @@ class PagePermissionVoterTest extends TestCase
             new DeleteAction('tl_page', ['id' => 42]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_DELETE_PAGE], 42, true],
             ],
             true,
@@ -808,6 +873,7 @@ class PagePermissionVoterTest extends TestCase
             new DeleteAction('tl_page', ['id' => 42]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_DELETE_PAGE], 42, false],
             ],
             false,
@@ -817,6 +883,7 @@ class PagePermissionVoterTest extends TestCase
             new DeleteAction('tl_article', ['pid' => 42]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_DELETE_ARTICLES], 42, true],
             ],
             true,
@@ -834,6 +901,7 @@ class PagePermissionVoterTest extends TestCase
             new DeleteAction('tl_article', ['pid' => 42]),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_DELETE_ARTICLES], 42, false],
             ],
             false,
@@ -844,8 +912,10 @@ class PagePermissionVoterTest extends TestCase
             new UpdateAction('tl_page', ['id' => 42], ['pid' => 21, 'sorting' => 128, 'foo' => 'bar']),
             [
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 42, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 42, true],
                 [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE], 21, true],
+                [[ContaoCorePermissions::USER_CAN_ACCESS_PAGE_TYPE], 'regular', true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE_HIERARCHY], 21, true],
                 [[ContaoCorePermissions::USER_CAN_EDIT_PAGE], 42, true],
             ],

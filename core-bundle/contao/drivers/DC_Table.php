@@ -6311,7 +6311,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 
 	protected function getClipboardPermission(string $mode, int $id, array|null $new = null): array
 	{
-		if (ClipboardManager::MODE_CREATE === $mode)
+		if (ClipboardManager::MODE_CREATE === $mode && ($GLOBALS['TL_DCA'][$this->strTable]['list']['sorting']['mode'] ?? null) == self::MODE_PARENT)
 		{
 			$parent = array('pid' => $id);
 

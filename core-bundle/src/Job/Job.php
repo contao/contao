@@ -105,6 +105,7 @@ final class Job
     {
         $clone = clone $this;
         $clone->status = Status::completed;
+        $clone->progress = 100.0;
 
         return $clone;
     }
