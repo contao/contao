@@ -56,6 +56,10 @@ class InsertTagParser implements ResetInterface
             |'.self::TAG_REGEX.'  # Or an insert tag
         )*';
 
+    private const MAX_RECURSION = 64;
+
+    private static int $recursionCount = 0;
+
     /**
      * @var array<string, InsertTagSubscription>
      */
@@ -310,6 +314,7 @@ class InsertTagParser implements ResetInterface
 
     public function reset(): void
     {
+        self::$recursionCount = 0;
         InsertTags::reset();
     }
 
@@ -452,35 +457,43 @@ class InsertTagParser implements ResetInterface
             $tag = $this->unresolveTag($tag);
         }
 
-        $result = $subscription->service->{$subscription->method}($tag);
-
-        foreach ($tag->getFlags() as $flag) {
-            // ESI tags need to be replaced before flags can be applied
-            $result = $this->replaceEsiTags($result, $esiTagsCount);
-
-            if ($esiTagsCount) {
-                $this->logger->error(
-                    \sprintf(
-                        'Using the insert tag flag "%s" in %s on page %s disables lazy loading of the fragment',
-                        $flag->getName(),
-                        $tag->serialize(),
-                        $this->framework->getAdapter(Environment::class)->get('uri'),
-                    ),
-                );
-            }
-
-            if ($callback = $this->flagCallbacks[strtolower($flag->getName())] ?? null) {
-                $result = $callback($flag, $result);
-            } else {
-                $result = $this->handleLegacyFlagsHook($result, $flag, $tag);
-            }
+        if (++self::$recursionCount > self::MAX_RECURSION) {
+            throw new \RuntimeException(\sprintf('Maximum insert tag nesting level of %s reached', self::MAX_RECURSION));
         }
 
-        if (!$allowEsiTags) {
-            $result = $this->replaceEsiTags($result);
-        }
+        try {
+            $result = $subscription->service->{$subscription->method}($tag);
 
-        return $result;
+            foreach ($tag->getFlags() as $flag) {
+                // ESI tags need to be replaced before flags can be applied
+                $result = $this->replaceEsiTags($result, $esiTagsCount);
+
+                if ($esiTagsCount) {
+                    $this->logger->error(
+                        \sprintf(
+                            'Using the insert tag flag "%s" in %s on page %s disables lazy loading of the fragment',
+                            $flag->getName(),
+                            $tag->serialize(),
+                            $this->framework->getAdapter(Environment::class)->get('uri'),
+                        ),
+                    );
+                }
+
+                if ($callback = $this->flagCallbacks[strtolower($flag->getName())] ?? null) {
+                    $result = $callback($flag, $result);
+                } else {
+                    $result = $this->handleLegacyFlagsHook($result, $flag, $tag);
+                }
+            }
+
+            if (!$allowEsiTags) {
+                $result = $this->replaceEsiTags($result);
+            }
+
+            return $result;
+        } finally {
+            --self::$recursionCount;
+        }
     }
 
     /**
@@ -545,7 +558,15 @@ class InsertTagParser implements ResetInterface
             $tag = $this->unresolveTag($tag);
         }
 
-        return $subscription->service->{$subscription->method}($tag, $content);
+        if (++self::$recursionCount > self::MAX_RECURSION) {
+            throw new \RuntimeException(\sprintf('Maximum insert tag recursion level of %s reached', self::MAX_RECURSION));
+        }
+
+        try {
+            return $subscription->service->{$subscription->method}($tag, $content);
+        } finally {
+            --self::$recursionCount;
+        }
     }
 
     private function resolveNestedTags(InsertTag $tag): ResolvedInsertTag
