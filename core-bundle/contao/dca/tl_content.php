@@ -639,20 +639,20 @@ $GLOBALS['TL_DCA']['tl_content'] = array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w25'),
+			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w25'),
 			'sql'                     => "int(10) unsigned NOT NULL default 0"
 		),
 		'sliderSpeed' => array
 		(
 			'search'                  => true,
 			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w25'),
+			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w25'),
 			'sql'                     => "int(10) unsigned NOT NULL default 300"
 		),
 		'sliderStartSlide' => array
 		(
 			'inputType'               => 'text',
-			'eval'                    => array('tl_class'=>'w25'),
+			'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'w25'),
 			'sql'                     => "smallint(5) unsigned NOT NULL default 0"
 		),
 		'sliderContinuous' => array
@@ -965,7 +965,15 @@ class tl_content extends Backend
 		$objModel->setRow($arrRow);
 
 		$class = 'cte_preview';
-		$preview = StringUtil::insertTagToSrc($this->getContentElement($objModel));
+
+		try
+		{
+			$preview = StringUtil::insertTagToSrc($this->getContentElement($objModel));
+		}
+		catch (Throwable $exception)
+		{
+			$preview = '<p class="tl_error">' . StringUtil::specialchars($exception->getMessage()) . '</p>';
+		}
 
 		if (!empty($arrRow['sectionHeadline']))
 		{

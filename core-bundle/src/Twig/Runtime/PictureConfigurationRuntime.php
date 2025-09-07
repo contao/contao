@@ -46,7 +46,7 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
             function (array $itemConfig): PictureConfigurationItem {
                 $sizeItem = $this->createPictureConfigurationItem($itemConfig);
 
-                if (!empty($itemConfig)) {
+                if ([] !== $itemConfig) {
                     $this->throwInvalidArgumentException($itemConfig, 'items');
                 }
 
@@ -60,7 +60,7 @@ final class PictureConfigurationRuntime implements RuntimeExtensionInterface
         // Apply remaining data to root config
         $this->applyConfiguration($pictureConfiguration, $config);
 
-        if (!empty($config)) {
+        if ([] !== $config) {
             $this->throwInvalidArgumentException($config);
         }
 

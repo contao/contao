@@ -91,11 +91,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.canonicalLink.0">
         <source>Canonical URL</source>
-        <target>Kanonik adres</target>
+        <target>Örtüşen adres</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.canonicalLink.1">
         <source>Here you can set a custom canonical URL like https://example.com/.</source>
-        <target>Buradan bir özel kanonik adres ayarlayabilirsiniz. Örnek: https://sitem.com/.</target>
+        <target>Buradan bir özel örtüşen adres ayarlayabilirsiniz. Örnek: https://sitem.com/.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.location.0">
         <source>Location name</source>
@@ -123,11 +123,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.details.0">
         <source>Event text</source>
-        <target>Etkinlik metni</target>
+        <target>Etkinlik yazısı</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.details.1">
         <source>Here you can enter the event text.</source>
-        <target>Buraya etkinlik metnini yazabilirsiniz.</target>
+        <target>Buraya etkinlik yazısını yazabilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.addImage.0">
         <source>Add an image</source>
@@ -223,11 +223,11 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.linkText.0">
         <source>Link text</source>
-        <target>Bağlantı metni</target>
+        <target>Bağlantı yazısı</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.linkText.1">
         <source>Here you can override the default &quot;read more…&quot; link text.</source>
-        <target>Buradan varsayılan &quot;Devamını oku…&quot; metnini değiştirebilirsiniz.</target>
+        <target>Buradan varsayılan &quot;Devamını oku…&quot; yazısını değiştirebilirsiniz.</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.jumpTo.0">
         <source>Redirect page</source>
@@ -307,7 +307,7 @@
       </trans-unit>
       <trans-unit id="tl_calendar_events.text_legend">
         <source>Event text</source>
-        <target>Etkinlik metni</target>
+        <target>Etkinlik yazısı</target>
       </trans-unit>
       <trans-unit id="tl_calendar_events.image_legend">
         <source>Image settings</source>

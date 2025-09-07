@@ -271,14 +271,14 @@ class Theme extends Backend
 			// Loop through the archive
 			while ($objArchive->next())
 			{
-				if (!str_starts_with($objArchive->file_name, 'templates/'))
+				if (!str_starts_with($objArchive->file_name, 'templates/') && !str_starts_with($objArchive->file_name, 'var/backups/'))
 				{
 					continue;
 				}
 
 				if (strtolower(pathinfo($objArchive->file_name, PATHINFO_EXTENSION)) === 'sql')
 				{
-					$exampleWebsites[] = substr($objArchive->file_name, 10);
+					$exampleWebsites[] = $objArchive->file_name;
 				}
 
 				if (file_exists($this->strRootDir . '/' . $objArchive->file_name))
@@ -389,7 +389,7 @@ class Theme extends Backend
 				}
 
 				// Limit file operations to files and the templates directory
-				if (!str_starts_with($objArchive->file_name, 'files/') && !str_starts_with($objArchive->file_name, 'tl_files/') && !str_starts_with($objArchive->file_name, 'templates/'))
+				if (!str_starts_with($objArchive->file_name, 'files/') && !str_starts_with($objArchive->file_name, 'tl_files/') && !str_starts_with($objArchive->file_name, 'templates/') && !str_starts_with($objArchive->file_name, 'var/backups/'))
 				{
 					continue;
 				}
@@ -399,9 +399,9 @@ class Theme extends Backend
 				{
 					File::putContent($this->customizeUploadPath($objArchive->file_name), $objArchive->unzip());
 
-					if (str_starts_with($objArchive->file_name, 'templates/') && strtolower(pathinfo($objArchive->file_name, PATHINFO_EXTENSION)) === 'sql')
+					if ((str_starts_with($objArchive->file_name, 'templates/') || str_starts_with($objArchive->file_name, 'var/backups/')) && strtolower(pathinfo($objArchive->file_name, PATHINFO_EXTENSION)) === 'sql')
 					{
-						$exampleWebsites[substr($objArchive->file_name, 10)] = $objArchive->file_name;
+						$exampleWebsites[$objArchive->file_name] = $objArchive->file_name;
 					}
 				}
 				catch (\Exception $e)

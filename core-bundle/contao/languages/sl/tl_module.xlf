@@ -71,6 +71,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPage.1">
         <source>Please choose the reference page.</source>
+        <target>Prosimo, izberite referenčno stran.</target>
       </trans-unit>
       <trans-unit id="tl_module.navigationTpl.0">
         <source>Navigation template</source>
@@ -366,6 +367,7 @@
       </trans-unit>
       <trans-unit id="tl_module.rss_feed.1">
         <source>Please enter the URL of one or more feeds.</source>
+        <target>Prosimo, vnesite spletni naslov (URL) enega ali več virov RSS (feeds).</target>
       </trans-unit>
       <trans-unit id="tl_module.rss_template.0">
         <source>Feed template</source>
@@ -508,9 +510,11 @@
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModules.1">
         <source>Please select a module for every website root page.</source>
+        <target>Prosimo, izberite modul za vsako vrhnjo stran (root).</target>
       </trans-unit>
       <trans-unit id="tl_module.rootPageDependentModulesBlankOptionLabel">
         <source>Choose module for &quot;%s&quot; [%s]</source>
+        <target>Izberite modul za &quot;%s&quot; [%s]</target>
       </trans-unit>
       <trans-unit id="tl_module.title_legend">
         <source>Title and type</source>

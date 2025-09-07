@@ -8,7 +8,7 @@
  * @license LGPL-3.0-or-later
  */
 
-$GLOBALS['TL_DCA']['tl_page']['palettes']['news_feed'] = '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{archives_legend},newsArchives;{feed_legend},feedFormat,feedSource,maxFeedItems,feedFeatured,feedDescription;{image_legend},imgSize;{cache_legend:hide},includeCache;{expert_legend:hide},cssClass,sitemap,hide,noSearch;{publish_legend},published,start,stop';
+$GLOBALS['TL_DCA']['tl_page']['palettes']['news_feed'] = '{title_legend},title,type;{routing_legend},alias,routePath,routePriority,routeConflicts;{archives_legend},newsArchives;{feed_legend},feedFormat,feedSource,maxFeedItems,feedFeatured,feedDescription;{image_legend},imgSize;{cache_legend:hide},includeCache;{expert_legend:hide},cssClass,sitemap,hide;{publish_legend},published,start,stop';
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['newsArchives'] = array(
 	'exclude' => true,
@@ -20,7 +20,6 @@ $GLOBALS['TL_DCA']['tl_page']['fields']['newsArchives'] = array(
 
 $GLOBALS['TL_DCA']['tl_page']['fields']['feedFormat'] = array(
 	'exclude' => true,
-	'filter' => true,
 	'inputType' => 'select',
 	'options' => array('rss' => 'RSS 2.0', 'atom' => 'Atom', 'json' => 'JSON'),
 	'eval' => array('tl_class' => 'w50'),

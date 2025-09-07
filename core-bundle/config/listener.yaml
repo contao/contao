@@ -43,7 +43,7 @@ services:
             - '@contao.cron'
             - '@database_connection'
             - '%fragment.path%'
-            - ~
+            - false
 
     contao.listener.csp_report:
         class: Contao\CoreBundle\EventListener\CspReportListener
@@ -53,7 +53,6 @@ services:
     contao.listener.csrf_token_cookie:
         class: Contao\CoreBundle\EventListener\CsrfTokenCookieSubscriber
         arguments:
-            - '@contao.csrf.token_manager'
             - '@contao.csrf.token_storage'
             - '%contao.csrf_cookie_prefix%'
 
@@ -288,6 +287,8 @@ services:
 
     contao.listener.data_container_callback:
         class: Contao\CoreBundle\EventListener\DataContainerCallbackListener
+        arguments:
+            - '@contao.framework'
 
     contao.listener.dbafs_metadata:
         class: Contao\CoreBundle\EventListener\DbafsMetadataSubscriber
@@ -329,6 +330,12 @@ services:
             - '@translator'
             - '@contao.routing.scope_matcher'
             - '@contao.intl.locales'
+
+    contao.listener.log_email_message:
+        class: Contao\CoreBundle\EventListener\LogEmailMessageListener
+        arguments:
+            - '@monolog.logger.contao.email'
+            - '@monolog.logger.contao.error'
 
     contao.listener.make_backend_response_uncacheable:
         class: Contao\CoreBundle\EventListener\MakeBackendResponseUncacheableListener
@@ -435,6 +442,8 @@ services:
         class: Contao\CoreBundle\EventListener\PreviewUrlCreateListener
         arguments:
             - '@contao.framework'
+            - '@contao.data_container.dca_url_analyzer'
+            - '@database_connection'
 
     contao.listener.referer_id:
         class: Contao\CoreBundle\EventListener\RefererIdListener
@@ -465,6 +474,7 @@ services:
         arguments:
             - '@messenger.bus.default'
             - '%fragment.path%'
+            - '%contao.backend.route_prefix%'
 
     contao.listener.security.logout:
         class: Contao\CoreBundle\EventListener\Security\LogoutListener
@@ -543,6 +553,7 @@ services:
         class: Contao\CoreBundle\Messenger\EventListener\MessageListener
         arguments:
             - '@monolog.logger.contao.error'
+            - '@database_connection'
 
     contao.twig.loader.auto_refresh_template_hierarchy_listener:
         class: Contao\CoreBundle\Twig\Loader\AutoRefreshTemplateHierarchyListener

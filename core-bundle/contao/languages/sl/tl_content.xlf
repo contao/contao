@@ -817,6 +817,7 @@
       </trans-unit>
       <trans-unit id="tl_content.player_playsinline">
         <source>Play inline (no fullscreen mode)</source>
+        <target>Predvajaj znotraj vsebine (inline, celozaslonski način izklopljen)</target>
       </trans-unit>
       <trans-unit id="tl_content.player_preload.auto">
         <source>Auto (preload the entire video)</source>

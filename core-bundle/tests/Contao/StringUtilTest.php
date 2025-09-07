@@ -57,7 +57,7 @@ class StringUtilTest extends TestCase
         $container->set('request_stack', new RequestStack());
         $container->set('contao.security.token_checker', $this->createMock(TokenChecker::class));
         $container->set('monolog.logger.contao', new NullLogger());
-        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class), $this->createMock(RequestStack::class)));
+        $container->set('contao.insert_tag.parser', new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class)));
 
         System::setContainer($container);
     }
@@ -229,6 +229,12 @@ class StringUtilTest extends TestCase
         $this->expectException('InvalidArgumentException');
 
         StringUtil::stripRootDir($this->getFixturesDir());
+    }
+
+    public function testDecodesEntities(): void
+    {
+        $this->assertSame("10\u{a0}€", StringUtil::decodeEntities('10&nbsp;€'));
+        $this->assertSame(['sum' => "10\u{a0}€"], StringUtil::decodeEntities(['sum' => '10&nbsp;€']));
     }
 
     public function testHandlesFalseyValuesWhenDecodingEntities(): void
@@ -625,5 +631,79 @@ class StringUtilTest extends TestCase
             'Foo <img src="{{file::##simple-token##|urlattr}}" /> Bar',
             StringUtil::insertTagToSrc('Foo <img src="{{file::##simple-token##|urlattr}}" /> Bar'),
         );
+    }
+
+    /**
+     * @dataProvider basicEntitiesProvider
+     */
+    public function testConvertsBasicEntities(array|string $htmlEntities, array|string $basicEntities): void
+    {
+        $this->assertSame($basicEntities, StringUtil::convertBasicEntities($htmlEntities));
+        $this->assertSame($htmlEntities, StringUtil::restoreBasicEntities($basicEntities));
+    }
+
+    public static function basicEntitiesProvider(): iterable
+    {
+        yield 'String value' => [
+            'foo&amp;bar',
+            'foo[&]bar',
+        ];
+
+        yield 'InputUnit field' => [
+            [
+                'unit' => 'h2',
+                'value' => '&lt;strong&gt;',
+            ],
+            [
+                'unit' => 'h2',
+                'value' => '[lt]strong[gt]',
+            ],
+        ];
+
+        yield 'KeyValue wizard' => [
+            [
+                [
+                    'key' => 'sum',
+                    'value' => '10&nbsp;€',
+                ],
+                [
+                    'key' => 'name',
+                    'value' => 'Con&shy;tao',
+                ],
+            ],
+            [
+                [
+                    'key' => 'sum',
+                    'value' => '10[nbsp]€',
+                ],
+                [
+                    'key' => 'name',
+                    'value' => 'Con[-]tao',
+                ],
+            ],
+        ];
+
+        yield 'Non-string values' => [
+            [
+                [
+                    'key' => 'sum',
+                    'value' => 42,
+                ],
+                [
+                    'key' => 'name',
+                    'value' => true,
+                ],
+            ],
+            [
+                [
+                    'key' => 'sum',
+                    'value' => 42,
+                ],
+                [
+                    'key' => 'name',
+                    'value' => true,
+                ],
+            ],
+        ];
     }
 }

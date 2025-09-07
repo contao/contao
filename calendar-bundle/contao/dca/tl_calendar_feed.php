@@ -174,13 +174,10 @@ $GLOBALS['TL_DCA']['tl_calendar_feed'] = array
 		),
 		'feedBase' => array
 		(
+			'default'                 => static fn (): string => Environment::get('base'),
 			'search'                  => true,
 			'inputType'               => 'text',
 			'eval'                    => array('trailingSlash'=>true, 'rgxp'=>HttpUrlListener::RGXP_NAME, 'decodeEntities'=>true, 'maxlength'=>255, 'tl_class'=>'w50'),
-			'load_callback' => array
-			(
-				array('tl_calendar_feed', 'addFeedBase')
-			),
 			'sql'                     => "varchar(255) NOT NULL default ''"
 		),
 		'description' => array
@@ -540,23 +537,6 @@ class tl_calendar_feed extends Backend
 		if (in_array($varValue, $arrFeeds))
 		{
 			throw new Exception(sprintf($GLOBALS['TL_LANG']['ERR']['aliasExists'], $varValue));
-		}
-
-		return $varValue;
-	}
-
-	/**
-	 * Add the RSS-feed base URL
-	 *
-	 * @param mixed $varValue
-	 *
-	 * @return string
-	 */
-	public function addFeedBase($varValue)
-	{
-		if (!$varValue)
-		{
-			$varValue = Environment::get('base');
 		}
 
 		return $varValue;

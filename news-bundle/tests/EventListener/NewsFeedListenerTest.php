@@ -23,6 +23,7 @@ use Contao\Files;
 use Contao\FilesModel;
 use Contao\Image\ImageInterface;
 use Contao\Model\Collection;
+use Contao\NewsArchiveModel;
 use Contao\NewsBundle\Event\FetchArticlesForFeedEvent;
 use Contao\NewsBundle\Event\TransformArticleForFeedEvent;
 use Contao\NewsBundle\EventListener\NewsFeedListener;
@@ -38,6 +39,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 class NewsFeedListenerTest extends ContaoTestCase
 {
@@ -57,6 +59,8 @@ class NewsFeedListenerTest extends ContaoTestCase
         $imageFactory = $this->createMock(ImageFactoryInterface::class);
         $cacheTags = $this->createMock(EntityCacheTags::class);
         $newsModel = $this->createMock(NewsModel::class);
+        $normalArchive = $this->mockClassWithProperties(NewsArchiveModel::class, ['id' => 1, 'protected' => 0]);
+        $protectedArchive = $this->mockClassWithProperties(NewsArchiveModel::class, ['id' => 2, 'protected' => 1]);
 
         $collection = $this->createMock(Collection::class);
         $collection
@@ -73,20 +77,35 @@ class NewsFeedListenerTest extends ContaoTestCase
             ->willReturn($collection)
         ;
 
-        $framework = $this->mockContaoFramework([NewsModel::class => $newsAdapter]);
+        $newsArchiveAdapter = $this->mockAdapter(['findMultipleByIds']);
+        $newsArchiveAdapter
+            ->expects($this->once())
+            ->method('findMultipleByIds')
+            ->with([1, 2])
+            ->willReturn(new Collection([$normalArchive, $protectedArchive], 'tl_news_archive'))
+        ;
+
+        $framework = $this->mockContaoFramework([NewsModel::class => $newsAdapter, NewsArchiveModel::class => $newsArchiveAdapter]);
         $feed = $this->createMock(Feed::class);
         $request = $this->createMock(Request::class);
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
 
+        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
+        $authorizationChecker
+            ->expects($this->once())
+            ->method('isGranted')
+            ->willReturn(false)
+        ;
+
         $pageModel = $this->mockClassWithProperties(PageModel::class, [
-            'newsArchives' => serialize([1]),
+            'newsArchives' => serialize([1, 2]),
             'feedFeatured' => $feedFeatured,
             'maxFeedItems' => 0,
         ]);
 
         $event = new FetchArticlesForFeedEvent($feed, $request, $pageModel);
 
-        $listener = new NewsFeedListener($framework, $imageFactory, $urlGenerator, $insertTags, $this->getTempDir(), $cacheTags, 'UTF-8');
+        $listener = new NewsFeedListener($framework, $imageFactory, $urlGenerator, $insertTags, $this->getTempDir(), $cacheTags, 'UTF-8', $authorizationChecker);
         $listener->onFetchArticlesForFeed($event);
 
         $this->assertSame([$newsModel], $event->getArticles());
@@ -211,6 +230,7 @@ class NewsFeedListenerTest extends ContaoTestCase
 
         $feed = $this->createMock(Feed::class);
         $cacheTags = $this->createMock(EntityCacheTags::class);
+        $authorizationChecker = $this->createMock(AuthorizationCheckerInterface::class);
 
         $urlGenerator = $this->createMock(ContentUrlGenerator::class);
         $urlGenerator
@@ -229,7 +249,7 @@ class NewsFeedListenerTest extends ContaoTestCase
         $baseUrl = 'example.org';
         $event = new TransformArticleForFeedEvent($article, $feed, $pageModel, $request, $baseUrl);
 
-        $listener = new NewsFeedListener($framework, $imageFactory, $urlGenerator, $insertTags, $this->getTempDir(), $cacheTags, 'UTF-8');
+        $listener = new NewsFeedListener($framework, $imageFactory, $urlGenerator, $insertTags, $this->getTempDir(), $cacheTags, 'UTF-8', $authorizationChecker);
         $listener->onTransformArticleForFeed($event);
 
         $item = $event->getItem();

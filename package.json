@@ -1,8 +1,8 @@
 {
     "devDependencies": {
-        "@hotwired/stimulus": "^3.2.2",
-        "@hotwired/stimulus-webpack-helpers": "^1.0.1",
-        "@symfony/webpack-encore": "^5.0.1"
+        "@hotwired/stimulus": "^3.2",
+        "@hotwired/stimulus-webpack-helpers": "^1.0",
+        "@symfony/webpack-encore": "^5.1"
     },
     "scripts": {
         "dev-server": "encore dev-server",
@@ -11,5 +11,5 @@
         "build": "encore production --progress"
     },
     "private": true,
-    "packageManager": "npm@10.8.2"
+    "packageManager": "npm@11.1.0"
 }

@@ -31,11 +31,18 @@ services:
             - '@contao.framework'
             - '@translator'
 
+    contao_news.listener.data_container.news_search:
+        class: Contao\NewsBundle\EventListener\DataContainer\NewsSearchListener
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+            - '@contao.routing.content_url_generator'
+
     contao_news.listener.data_container.page:
         class: Contao\NewsBundle\EventListener\DataContainer\PageListener
         arguments:
             - '@database_connection'
-            - '@security.helper'
+            - '@security.authorization_checker'
 
     contao_news.listener.data_container.start_stop_validation:
         class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
@@ -60,6 +67,7 @@ services:
             - '%kernel.project_dir%'
             - '@contao.cache.entity_tags'
             - '%kernel.charset%'
+            - '@security.helper'
 
     contao_news.listener.preview_url_convert:
         class: Contao\NewsBundle\EventListener\PreviewUrlConvertListener
@@ -70,8 +78,9 @@ services:
     contao_news.listener.preview_url_create:
         class: Contao\NewsBundle\EventListener\PreviewUrlCreateListener
         arguments:
-            - '@request_stack'
             - '@contao.framework'
+            - '@contao.data_container.dca_url_analyzer'
+            - '@database_connection'
 
     contao_news.listener.sitemap:
         class: Contao\NewsBundle\EventListener\SitemapListener

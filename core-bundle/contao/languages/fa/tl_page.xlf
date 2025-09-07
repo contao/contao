@@ -425,6 +425,13 @@
         <source>Hide the page in the navigation menu.</source>
         <target>پنهان کردن برگه در منوی ناوبری.</target>
       </trans-unit>
+      <trans-unit id="tl_page.guests.0">
+        <source>Hide if logged in</source>
+      </trans-unit>
+      <trans-unit id="tl_page.guests.1">
+        <source>Hide the page in the navigation menu if a member is logged in.</source>
+        <target>اگر کاربر وارد شده باشد، این صفحه در منوی ناوبری نمایش داده نشود.</target>
+      </trans-unit>
       <trans-unit id="tl_page.accesskey.0">
         <source>Access key</source>
         <target>کلید دسترسی</target>

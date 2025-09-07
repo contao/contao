@@ -27,6 +27,7 @@ use Contao\Image\PictureConfiguration;
 use Contao\Image\PictureConfigurationItem;
 use Contao\Image\ResizeConfiguration;
 use Doctrine\DBAL\Exception\DriverException;
+use enshrined\svgSanitize\Sanitizer;
 use Imagine\Exception\RuntimeException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
@@ -2077,6 +2078,17 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Save the file
 			if (md5($strContent) != md5($strSource))
 			{
+				if ($objFile->extension == 'svg' || $objFile->extension == 'svgz')
+				{
+					$sanitizer = new Sanitizer();
+					$strSource = $sanitizer->sanitize($strSource);
+
+					if (!$strSource)
+					{
+						throw new \Exception(\sprintf($GLOBALS['TL_LANG']['ERR']['invalidFile'], $this->intId));
+					}
+				}
+
 				if ($objFile->extension == 'svgz')
 				{
 					$strSource = gzencode($strSource);
@@ -2282,7 +2294,15 @@ class DC_Folder extends DataContainer implements ListableDataContainerInterface,
 			// Check the full path to see if the file extension has changed, because if
 			// $this->strExtension is empty, a new extension could otherwise be added to
 			// $varValue and change the file type!
-			if (Path::getExtension($varValue . $this->strExtension) !== Path::getExtension($this->varValue . $this->strExtension))
+			if (!is_dir(Path::join($this->strRootDir, $this->strPath, $this->varValue, $this->strExtension)) && Path::getExtension($varValue . $this->strExtension) !== Path::getExtension($this->varValue . $this->strExtension))
+			{
+				throw new \Exception($GLOBALS['TL_LANG']['ERR']['invalidName']);
+			}
+
+			// Disallow renaming folders and files to a name starting with a dot, as they
+			// will be treated as hidden files in Unix and the file manager will not display
+			// them in any case.
+			if (str_starts_with($varValue, '.'))
 			{
 				throw new \Exception($GLOBALS['TL_LANG']['ERR']['invalidName']);
 			}

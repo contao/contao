@@ -189,10 +189,17 @@ class ModuleBooknav extends Module
 		}
 
 		$security = System::getContainer()->get('security.helper');
+		$isMember = $security->isGranted('ROLE_MEMBER');
 
 		foreach ($arrPages as list('page' => $objPage, 'hasSubpages' => $blnHasSubpages))
 		{
 			$objPage->loadDetails();
+
+			// Hide the page if it is only visible to guests
+			if ($objPage->guests && $isMember)
+			{
+				continue;
+			}
 
 			// PageModel->groups is an array after calling loadDetails()
 			if (!$objPage->protected || $this->showProtected || $security->isGranted(ContaoCorePermissions::MEMBER_IN_GROUPS, $objPage->groups))

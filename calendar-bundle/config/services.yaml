@@ -18,6 +18,13 @@ services:
             - '@contao.framework'
             - '@contao.routing.content_url_generator'
 
+    contao_calendar.listener.data_container.event_search:
+        class: Contao\CalendarBundle\EventListener\DataContainer\EventSearchListener
+        arguments:
+            - '@contao.framework'
+            - '@database_connection'
+            - '@contao.routing.content_url_generator'
+
     contao_calendar.listener.data_container.start_stop_validation:
         class: Contao\CoreBundle\EventListener\DataContainer\StartStopValidationListener
         arguments:
@@ -39,8 +46,9 @@ services:
     contao_calendar.listener.preview_url_create:
         class: Contao\CalendarBundle\EventListener\PreviewUrlCreateListener
         arguments:
-            - '@request_stack'
             - '@contao.framework'
+            - '@contao.data_container.dca_url_analyzer'
+            - '@database_connection'
 
     contao_calendar.listener.sitemap:
         class: Contao\CalendarBundle\EventListener\SitemapListener

@@ -423,7 +423,7 @@ class ContentModel extends Model
 	}
 
 	/**
-	 * Find all published content elements by their parent ID and parent table
+	 * Count all published content elements by their parent ID and parent table
 	 *
 	 * @param integer $intPid         The article ID
 	 * @param string  $strParentTable The parent table name

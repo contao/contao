@@ -169,6 +169,7 @@ final class GlobalStateWatcher implements AfterTestHook, BeforeTestHook
                 'Symfony\Component\HttpClient\Response\MockResponse',
                 'Symfony\Component\Mime\Address',
                 'Symfony\Component\Mime\MimeTypes\\',
+                'Symfony\Component\Process\Process',
                 'Symfony\Component\String\\',
                 'Symfony\Component\VarDumper\\',
                 'Symfony\Component\Yaml\\',
