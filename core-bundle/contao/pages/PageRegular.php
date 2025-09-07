@@ -264,7 +264,7 @@ class PageRegular extends Frontend
 			/** @var class-string<Module> $strClass */
 			$strClass = Module::findClass($arrMapper[$arrModule['mod']]->type ?? '');
 
-			if (!$strClass || !$strClass::shouldPreload($objPage, $request))
+			if (!$strClass || !$strClass::shouldPreload($arrMapper[$arrModule['mod']]->type ?? '', $objPage, $request))
 			{
 				continue;
 			}
@@ -296,7 +296,7 @@ class PageRegular extends Frontend
 			/** @var class-string<Module> $strClass */
 			$strClass = Module::findClass($strType);
 
-			if (!$strClass::shouldPreload($objPage, $request))
+			if (!$strClass::shouldPreload($strType, $objPage, $request))
 			{
 				continue;
 			}

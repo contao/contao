@@ -220,7 +220,7 @@ class ModuleNewsReader extends ModuleNews
 		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_news', $objArticle->id, $arrNotifies);
 	}
 
-	public static function shouldPreload(PageModel $objPage, Request $request): bool
+	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
 	{
 		return $request->attributes->has('auto_item');
 	}

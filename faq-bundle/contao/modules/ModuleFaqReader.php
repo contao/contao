@@ -223,7 +223,7 @@ class ModuleFaqReader extends Module
 		(new Comments())->addCommentsToTemplate($this->Template, $objConfig, 'tl_faq', $objFaq->id, $arrNotifies);
 	}
 
-	public static function shouldPreload(PageModel $objPage, Request $request): bool
+	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
 	{
 		return $request->attributes->has('auto_item');
 	}

@@ -517,7 +517,7 @@ abstract class Module extends Frontend
 		return '';
 	}
 
-	public static function shouldPreload(PageModel $objPage, Request $request): bool
+	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
 	{
 		return false;
 	}
