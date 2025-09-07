@@ -457,9 +457,11 @@ class InsertTagParser implements ResetInterface
             $tag = $this->unresolveTag($tag);
         }
 
-        if (++self::$recursionCount > self::MAX_RECURSION) {
+        if (self::$recursionCount >= self::MAX_RECURSION) {
             throw new \RuntimeException(\sprintf('Maximum insert tag nesting level of %s reached', self::MAX_RECURSION));
         }
+
+        ++self::$recursionCount;
 
         try {
             $result = $subscription->service->{$subscription->method}($tag);
@@ -558,9 +560,11 @@ class InsertTagParser implements ResetInterface
             $tag = $this->unresolveTag($tag);
         }
 
-        if (++self::$recursionCount > self::MAX_RECURSION) {
+        if (self::$recursionCount > self::MAX_RECURSION) {
             throw new \RuntimeException(\sprintf('Maximum insert tag recursion level of %s reached', self::MAX_RECURSION));
         }
+
+        ++self::$recursionCount;
 
         try {
             return $subscription->service->{$subscription->method}($tag, $content);
