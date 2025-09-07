@@ -1,10 +1,12 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
+    #start = null;
+
     static targets = ['source', 'input'];
 
     initialize() {
-        this.start = null;
+        this.#start = null;
     }
 
     toggleRow(event) {
@@ -18,23 +20,23 @@ export default class extends Controller {
             return;
         }
 
-        if (this.start && event.shiftKey) {
+        if (this.#start && event.shiftKey) {
             this.#shiftToggle(target);
             return;
         }
 
         target.checked ^= 1;
-        this.start = target;
+        this.#start = target;
     }
 
     toggleInput(event) {
         const input = event.target;
 
-        if (event.shiftKey && null !== this.start) {
+        if (event.shiftKey && null !== this.#start) {
             this.#shiftToggle(input);
         }
 
-        this.start = input;
+        this.#start = input;
     }
 
     toggleAll() {
@@ -47,11 +49,11 @@ export default class extends Controller {
 
     #shiftToggle(el) {
         const thisIndex = this.inputTargets.indexOf(el);
-        const startIndex = this.inputTargets.indexOf(this.start);
+        const startIndex = this.inputTargets.indexOf(this.#start);
 
         const from = Math.min(thisIndex, startIndex);
         const to = Math.max(thisIndex, startIndex);
-        const status = this.start.checked;
+        const status = this.#start.checked;
 
         for (let i = from; i <= to; i++) {
             this.inputTargets[i].checked = status;

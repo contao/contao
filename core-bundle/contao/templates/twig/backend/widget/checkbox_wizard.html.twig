@@ -32,7 +32,7 @@
                     .set('value', option.value|default)
                     .set('checked', true, option.checked|default)
                     .set('data-contao--check-all-target', 'input')
-                    .set('data-action', 'focus->contao--scroll-offset#store')
+                    .set('data-action', 'focus->contao--scroll-offset#store click->contao--check-all#toggleInput')
                     .mergeWith(attributes)
                 %}
                 <input{{ input_attributes }}>
