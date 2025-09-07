@@ -4493,7 +4493,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 <ul' . ($blnIsSortable ? ' data-controller="contao--sortable" data-contao--sortable-handle-value=".drag-handle" data-contao--sortable-parent-mode-value="true" data-contao--sortable-request-token-value="' . $requestToken . '" data-id="' . $this->intCurrentPid . '"' : '') . '>';
 
 				$new = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
-				$new->addNewButton($operations::CREATE_TOP, $table, $objParent->id, $this->intId, ['primary' => true]);
+				$new->addNewButton($operations::CREATE_TOP, $table, $objParent->id, $this->intId);
 
 				$return .= '<li class="new_operation">'.$new.'</li>';
 			}
@@ -4633,7 +4633,7 @@ System::getContainer()->get('contao.data_container.global_operations_builder')->
 					$return .= '</li>';
 
 					$new = System::getContainer()->get('contao.data_container.operations_builder')->initialize($this->strTable);
-					$new->addNewButton($operations::CREATE_AFTER, $this->strTable, $row[$i]['id'], $objParent->id, ['primary' => true]);
+					$new->addNewButton($operations::CREATE_AFTER, $this->strTable, $row[$i]['id'], $objParent->id);
 
 					$return .= '<li class="new_operation">'.$new.'</li>';
 				}

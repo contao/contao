@@ -180,19 +180,19 @@ class DataContainerOperationsBuilder extends AbstractDataContainerOperationsBuil
     /**
      * @param self::CREATE_* $mode
      */
-    public function addNewButton(string $mode, string $table, int $pid, int|null $id = null, array $operation = []): self
+    public function addNewButton(string $mode, string $table, int $pid, int|null $id = null): self
     {
         [$label, $title] = $this->getLabelAndTitle($table, 'pastenew'.$mode, $pid);
 
-        $this->append(array_replace([
+        $this->append([
             'label' => $label,
             'title' => $title,
             'attributes' => (new HtmlAttributes($GLOBALS['TL_DCA'][$table]['list']['operations']['new']['attributes'] ?? null))->set('data-action', 'contao--scroll-offset#store'),
             'icon' => $GLOBALS['TL_DCA'][$table]['list']['operations']['new']['icon'] ?? 'new.svg',
             'href' => $this->getNewHref($mode, $pid, $id),
             'method' => $GLOBALS['TL_DCA'][$table]['list']['operations']['new']['method'] ?? 'POST',
-            'primary' => $GLOBALS['TL_DCA'][$table]['list']['operations']['new']['primary'] ?? false,
-        ], $operation));
+            'primary' => $GLOBALS['TL_DCA'][$table]['list']['operations']['new']['primary'] ?? null,
+        ]);
 
         return $this;
     }
