@@ -139,7 +139,10 @@ class ClipboardManager
             return false;
         }
 
-        if ((string) $id === (string) $clipboard['id'] || (\is_array($clipboard['id']) && \in_array($id, $clipboard['id'], false))) {
+        if (
+            (\is_array($clipboard['id']) && \in_array($id, $clipboard['id'], false))
+            || (!\is_array($clipboard['id']) && (string) $id === (string) $clipboard['id'])
+        ) {
             return true;
         }
 

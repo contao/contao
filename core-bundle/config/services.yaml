@@ -609,17 +609,14 @@ services:
         public: true
         arguments:
             - '@translator'
-            - '@request_stack'
             - []
             - '%contao.intl.countries%'
-            - '%kernel.default_locale%'
 
     contao.intl.locales:
         class: Contao\CoreBundle\Intl\Locales
         public: true
         arguments:
             - '@translator'
-            - '@request_stack'
             - []
             - []
             - '%contao.intl.locales%'
@@ -1112,6 +1109,7 @@ services:
         arguments:
             - '@contao.framework'
             - '@security.access.decision_manager'
+            - '@database_connection'
 
     contao.security.data_container.page_type_access_voter:
         class: Contao\CoreBundle\Security\Voter\DataContainer\PageTypeAccessVoter
@@ -1194,6 +1192,8 @@ services:
     contao.security.two_factor.authenticator:
         class: Contao\CoreBundle\Security\TwoFactor\Authenticator
         public: true
+        arguments:
+            - '@clock'
 
     contao.security.two_factor.backup_code_manager:
         class: Contao\CoreBundle\Security\TwoFactor\BackupCodeManager

@@ -43,6 +43,7 @@
       </trans-unit>
       <trans-unit id="MOD.template_studio.0">
         <source>Template Studio</source>
+        <target>Studio předloh</target>
       </trans-unit>
       <trans-unit id="MOD.template_studio.1">
         <source>Add or edit Twig templates</source>
@@ -163,9 +164,11 @@
       </trans-unit>
       <trans-unit id="MOD.jobs.0">
         <source>Jobs</source>
+        <target>Úpravy na pozadí</target>
       </trans-unit>
       <trans-unit id="MOD.jobs.1">
         <source>Overview of the system jobs</source>
+        <target>Přehled systémových úloh na pozadí</target>
       </trans-unit>
       <trans-unit id="MOD.login.0">
         <source>User profile</source>

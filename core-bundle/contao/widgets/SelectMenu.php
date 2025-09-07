@@ -183,7 +183,7 @@ class SelectMenu extends Widget
 					);
 				}
 
-				$arrOptions[] = \sprintf('<optgroup label="&nbsp;%s">%s</optgroup>', StringUtil::specialchars($strKey), implode('', $arrOptgroups));
+				$arrOptions[] = \sprintf('<optgroup label="%s">%s</optgroup>', StringUtil::specialchars($strKey), implode('', $arrOptgroups));
 			}
 		}
 
