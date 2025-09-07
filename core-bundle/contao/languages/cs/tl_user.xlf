@@ -91,9 +91,11 @@
       </trans-unit>
       <trans-unit id="tl_user.doNotHideMessages.0">
         <source>Keep pop-up messages</source>
+        <target>Zachovat vyskakující zprávy</target>
       </trans-unit>
       <trans-unit id="tl_user.doNotHideMessages.1">
         <source>Do not automatically hide pop-up messages.</source>
+        <target>Neskrývat automaticky vyskakující zprávy.</target>
       </trans-unit>
       <trans-unit id="tl_user.pwChange.0">
         <source>Password change required</source>
@@ -393,6 +395,7 @@
       </trans-unit>
       <trans-unit id="tl_user.copy.0">
         <source>Duplicate</source>
+        <target>Duplikovat</target>
       </trans-unit>
       <trans-unit id="tl_user.copy.1">
         <source>Duplicate user ID %s</source>
@@ -420,6 +423,7 @@
       </trans-unit>
       <trans-unit id="tl_user.toggle.4">
         <source>Activate</source>
+        <target>Aktivovat</target>
       </trans-unit>
       <trans-unit id="tl_user.su.0">
         <source>Switch user</source>

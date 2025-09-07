@@ -122,7 +122,7 @@ class ModuleRegistration extends Module
 		{
 			$arrCaptcha = array
 			(
-				'name' => 'registration',
+				'name' => 'registration_' . $this->id,
 				'label' => $GLOBALS['TL_LANG']['MSC']['securityQuestion'],
 				'inputType' => 'captcha',
 				'eval' => array('mandatory'=>true, 'required'=>true)

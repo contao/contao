@@ -15,6 +15,8 @@ final class ReindexConfig
 
     private string|null $jobId = null;
 
+    private bool $requireJob = false;
+
     public function __construct()
     {
         $this->limitedDocumentIds = new GroupedDocumentIds();
@@ -54,6 +56,19 @@ final class ReindexConfig
         return $clone;
     }
 
+    public function withRequireJob(bool $requireJob): self
+    {
+        $clone = clone $this;
+        $clone->requireJob = $requireJob;
+
+        return $clone;
+    }
+
+    public function requiresJob(): bool
+    {
+        return $this->requireJob;
+    }
+
     public function getJobId(): string|null
     {
         return $this->jobId;
@@ -70,6 +85,7 @@ final class ReindexConfig
             'updatedSince' => $this->updateSince?->format(\DateTimeInterface::ATOM),
             'limitedDocumentIds' => $this->limitedDocumentIds->toArray(),
             'jobId' => $this->jobId,
+            'requireJob' => $this->requireJob,
         ];
     }
 
@@ -83,6 +99,10 @@ final class ReindexConfig
 
         if (isset($array['jobId'])) {
             $config = $config->withJobId($array['jobId']);
+        }
+
+        if (isset($array['requireJob'])) {
+            $config = $config->withRequireJob($array['requireJob']);
         }
 
         return $config->limitToDocumentIds(GroupedDocumentIds::fromArray($array['limitedDocumentIds']));

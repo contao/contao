@@ -151,9 +151,11 @@
       </trans-unit>
       <trans-unit id="tl_faq.toggle.3">
         <source>Unpublish</source>
+        <target>Nepublicēt</target>
       </trans-unit>
       <trans-unit id="tl_faq.toggle.4">
         <source>Publish</source>
+        <target>Publicēt</target>
       </trans-unit>
       <trans-unit id="tl_faq.pasteafter.0">
         <source>Paste at the top</source>

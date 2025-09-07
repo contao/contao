@@ -266,7 +266,7 @@ class FileTree extends Widget
 							// Only show images
 							if ($objFile->isImage)
 							{
-								$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $objFile->path, true);
+								$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $objFile->path);
 							}
 						}
 						// Only show allowed download types
@@ -274,7 +274,7 @@ class FileTree extends Widget
 						{
 							if ($this->showAsImage($objFile))
 							{
-								$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $objFile->path, true);
+								$arrValues[$objFiles->uuid] = $this->getPreviewImage($objFile, $objFile->path);
 							}
 							else
 							{
@@ -381,11 +381,11 @@ class FileTree extends Widget
 	 *
 	 * @param File   $objFile
 	 * @param string $strInfo
-	 * @param string $blnRemovable
+	 * @param string $strClass
 	 *
 	 * @return string
 	 */
-	protected function getPreviewImage(File $objFile, $strInfo, $blnRemovable = false)
+	protected function getPreviewImage(File $objFile, $strInfo, $strClass='gimage')
 	{
 		if ($previewPath = $this->getFilePreviewPath($objFile->path))
 		{
@@ -415,17 +415,14 @@ class FileTree extends Widget
 
 			$img = $picture->getImg($projectDir, $container->get('contao.assets.files_context')->getStaticUrl());
 
-			$buffer = \sprintf('<img src="%s"%s width="%s" height="%s" alt="%s" loading="lazy" data-contao--tooltips-target="tooltip">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], $strInfo);
+			$buffer = \sprintf('<img src="%s"%s width="%s" height="%s" alt="%s" class="%s" loading="lazy" data-contao--tooltips-target="tooltip">', $img['src'], $img['srcset'] != $img['src'] ? ' srcset="' . $img['srcset'] . '"' : '', $img['width'], $img['height'], $strInfo, $strClass);
 		}
 		else
 		{
-			$buffer = Image::getHtml('placeholder.svg', $strInfo, 'data-contao--tooltips-target="tooltip"');
+			$buffer = Image::getHtml('placeholder.svg', $strInfo, \sprintf('class="%s" width="100" height="75" data-contao--tooltips-target="tooltip"', $strClass));
 		}
 
-		if ($blnRemovable)
-		{
-			$buffer .= \sprintf('<button type="button" class="tl_red" data-action="contao--input-map#removeElement" data-contao--input-map-closest-param="li">%s</button>', Image::getHtml('close'));
-		}
+		$buffer .= \sprintf('<button type="button" class="tl_red" data-action="contao--input-map#removeElement" data-contao--input-map-closest-param="li">%s</button>', Image::getHtml('close'));
 
 		return $buffer;
 	}
