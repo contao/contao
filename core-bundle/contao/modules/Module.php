@@ -517,6 +517,10 @@ abstract class Module extends Frontend
 		return '';
 	}
 
+	/**
+	 * @deprecated Deprecated since Contao 5.3, to be removed in Contao 6;
+	 *             use a page type controller instead.
+	 */
 	public static function shouldPreload(string $type, PageModel $objPage, Request $request): bool
 	{
 		return false;
