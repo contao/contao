@@ -103,7 +103,7 @@ $GLOBALS['TL_DCA']['tl_templates'] = array
 			(
 				'label'               => &$GLOBALS['TL_LANG']['tl_files']['cut'],
 				'icon'                => 'drag.svg',
-				'attributes'          => 'class="drag-handle" aria-hidden="true"',
+				'attributes'          => 'class="drag-handle"',
 				'primary'             => true,
 				'button_callback'     => array('tl_templates', 'dragFile')
 			)

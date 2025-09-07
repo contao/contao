@@ -107,26 +107,14 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
     {
         $this->ensureInitialized();
 
-        $url = match ($mode) {
-            'create' => 'act=create',
-            'paste' => 'act=paste&amp;mode=create',
-            'paste_after' => 'act=create&amp;mode=1',
-            'paste_into' => 'act=create&amp;mode=2',
-        };
-
-        if (null !== $pid) {
-            $url .= '&amp;pid='.$pid;
-        }
-
         [$label, $title] = $this->getLabelAndTitle($this->table, 'new');
 
-        $href = $this->framework->getAdapter(Backend::class)->addToUrl($url, true, [], false);
-
         $this->append([
-            'href' => $href,
+            'href' => $this->getNewHref($mode, $pid),
             'label' => $label,
             'title' => $title,
-            'attributes' => (new HtmlAttributes())->addClass('header_new')->set('accesskey', 'n')->set('data-action', 'contao--scroll-offset#store'),
+            'icon' => $GLOBALS['TL_DCA'][$this->table]['list']['operations']['new']['icon'] ?? null,
+            'attributes' => (new HtmlAttributes($GLOBALS['TL_DCA'][$this->table]['list']['global_operations']['new']['attributes'] ?? null))->addClass($GLOBALS['TL_DCA'][$this->table]['list']['global_operations']['new']['class'] ?? 'header_new')->set('accesskey', 'n')->set('data-action', 'contao--scroll-offset#store'),
             'method' => 'POST',
             'primary' => true,
         ]);
@@ -145,6 +133,10 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         $inputAdapter = $this->framework->getAdapter(Input::class);
 
         foreach ($GLOBALS['TL_DCA'][$this->table]['list']['global_operations'] as $k => $v) {
+            if ('new' === $k) {
+                continue;
+            }
+
             if ('-' === $v) {
                 $this->addSeparator();
                 continue;
@@ -187,6 +179,9 @@ class DataContainerGlobalOperationsBuilder extends AbstractDataContainerOperatio
         if ($config['class'] ?? null) {
             $config['attributes']->addClass($config['class']);
         }
+
+        // Add the key as CSS class
+        $config['attributes']->addClass($name);
 
         return [
             'href' => $href,

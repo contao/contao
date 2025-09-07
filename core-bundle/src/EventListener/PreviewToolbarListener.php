@@ -49,6 +49,10 @@ class PreviewToolbarListener
 
     public function __invoke(ResponseEvent $event): void
     {
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
         $request = $event->getRequest();
         $response = $event->getResponse();
 

@@ -118,6 +118,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * Authentication hash
 	 * @var string
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	protected $strHash;
 
@@ -130,6 +131,7 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 	/**
 	 * Cookie name
 	 * @var string
+	 * @deprecated Deprecated since Contao 5.0, to be removed in Contao 6.
 	 */
 	protected $strCookie;
 
@@ -339,11 +341,6 @@ abstract class User extends System implements UserInterface, EquatableInterface,
 
 	public static function loadUserBy(string $column, mixed $value): self|null
 	{
-		if (!System::getContainer()->get('request_stack')->getCurrentRequest())
-		{
-			return null;
-		}
-
 		$user = new static();
 
 		// Load the user object
