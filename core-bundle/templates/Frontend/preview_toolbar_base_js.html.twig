@@ -257,7 +257,7 @@
             if (200 === this.status) {
                 toolbar.innerHTML = this.responseText;
 
-                document.querySelectorAll('.cto-toolbar__share-url').forEach((link) => {
+                toolbar.querySelectorAll('.cto-toolbar__share-url').forEach((link) => {
                     link.addEventListener('click', (e) => {
                         e.preventDefault();
                         window.open(link.href+'&url='+location.href);
@@ -266,14 +266,14 @@
                 })
 
                 const event = new Event('cto-toolbar-loaded');
-                window.dispatchEvent(event);
+                toolbar.dispatchEvent(event);
             } else {
                 toolbar.innerHTML = '<p>Error while loading the preview bar.</p>';
             }
         });
 
         // Js for the authenticator
-        window.addEventListener("cto-toolbar-loaded", function () {
+        toolbar.addEventListener("cto-toolbar-loaded", function () {
             const form = toolbar.querySelector('input[name="FORM_SUBMIT"][value="tl_switch"]').form;
 
             if (!form) {
@@ -357,8 +357,12 @@
         });
 
         // Copy published link to clipboard
-        window.addEventListener('cto-toolbar-loaded', function() {
-            const copyButton = document.getElementById('copyPublishedPath');
+        toolbar.addEventListener('cto-toolbar-loaded', function() {
+            const copyButton = toolbar.querySelector('#copyPublishedPath');
+
+            if (!copyButton) {
+                return;
+            }
 
             copyButton.addEventListener('click', function(event) {
                 const href = window.location.href.replace('{{ preview_script|escape('js') }}', '');
