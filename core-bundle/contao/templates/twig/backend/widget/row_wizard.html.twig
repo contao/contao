@@ -4,7 +4,7 @@
     .set('id', 'ctrl_' ~ id)
     .addClass(['row_wizard'])
     .set('data-controller', 'contao--row-wizard')
-    .setIfExists('style', style|default)
+    .addStyle(style|default)
     .setIfExists('data-contao--row-wizard-min-value', min_rows|default)
     .setIfExists('data-contao--row-wizard-max-value', max_rows|default)
 %}
