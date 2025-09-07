@@ -163,6 +163,29 @@
     list-style: none;
 }
 
+.parent_view .new_operation {
+    display: flex;
+    justify-content: center;
+    margin: 8px 0 -10px;
+
+    &:first-child {
+        margin-top: -10px;
+    }
+
+    button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 3px;
+        border: 1px solid transparent;
+        border-radius: 50%;
+
+        &:hover {
+            border-color: var(--border);
+        }
+    }
+}
+
 .tl_content.indent_1 {
     margin-left: 20px;
 }
