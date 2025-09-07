@@ -245,9 +245,9 @@ class WidgetTest extends TestCase
         ];
 
         yield [
-            [[], 'name', '&amp;,&lt;,&gt;,&nbsp;,&shy;'],
+            [[], 'name', '&amp;,&lt;,&gt;,&nbsp;,&shy;,&lsqb;,&rsqb;'],
             [
-                'value' => '&amp;,&lt;,&gt;,&nbsp;,&shy;',
+                'value' => '&amp;,&lt;,&gt;,&nbsp;,&shy;,&lsqb;,&rsqb;',
             ],
         ];
 
@@ -255,11 +255,11 @@ class WidgetTest extends TestCase
             [
                 ['eval' => ['basicEntities' => true]],
                 'name',
-                '&amp;,&lt;,&gt;,&nbsp;,&shy;',
+                '&amp;,&lt;,&gt;,&nbsp;,&shy;,&lsqb;,&rsqb;',
             ],
             [
                 'basicEntities' => true,
-                'value' => '[&],[lt],[gt],[nbsp],[-]',
+                'value' => '[&],[lt],[gt],[nbsp],[-],[lsqb],[rsqb]',
             ],
         ];
     }
