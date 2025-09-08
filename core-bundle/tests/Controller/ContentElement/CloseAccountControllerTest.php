@@ -15,6 +15,7 @@ namespace Contao\CoreBundle\Tests\Controller\ContentElement;
 use Contao\ContentModel;
 use Contao\CoreBundle\Cache\CacheTagManager;
 use Contao\CoreBundle\Controller\ContentElement\CloseAccountController;
+use Contao\CoreBundle\Event\CloseAccountEvent;
 use Contao\CoreBundle\Framework\ContaoFramework;
 use Contao\CoreBundle\Routing\ContentUrlGenerator;
 use Contao\CoreBundle\Twig\FragmentTemplate;
@@ -31,6 +32,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherFactoryInterface;
+use Symfony\Component\PasswordHasher\PasswordHasherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\PreAuthenticatedToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -106,6 +108,113 @@ class CloseAccountControllerTest extends ContentElementTestCase
         $response = $controller($request, $model, 'main');
 
         $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    public function testShowsErrorMessageWhenInvalidPassword(): void
+    {
+        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user->password = 'hashed-password';
+
+        $container = $this->getContainerWithFrameworkTemplate($user);
+
+        $memberModel = $this->createMock(MemberModel::class);
+
+        $controller = new CloseAccountController(
+            $this->mockFrameworkWithTemplate($memberModel),
+            $this->mockPasswordHasherFactory(false),
+            $this->createMock(EventDispatcherInterface::class),
+            $this->createMock(Security::class),
+            $this->createMock(ContentUrlGenerator::class),
+            $this->createMock(LoggerInterface::class),
+        );
+
+        $controller->setContainer($container);
+
+        $model = $this->mockClassWithProperties(ContentModel::class);
+        $request = new Request();
+        $request->request->set('FORM_SUBMIT', 'tl_close_account_');
+        $request->request->set('password', '12345678');
+
+        $response = $controller($request, $model, 'main');
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    public function testDeactivatesMember(): void
+    {
+        $user = $this->mockClassWithProperties(FrontendUser::class);
+        $user->password = 'hashed-password';
+
+        $container = $this->getContainerWithFrameworkTemplate($user);
+
+        $memberModel = $this->createMock(MemberModel::class);
+        $memberModel
+            ->expects($this->once())
+            ->method('save')
+        ;
+
+        $controller = new CloseAccountController(
+            $this->mockFrameworkWithTemplate($memberModel),
+            $this->mockPasswordHasherFactory(true),
+            $this->mockEventDispatcher(),
+            $this->createMock(Security::class),
+            $this->createMock(ContentUrlGenerator::class),
+            $this->mockLogger(),
+        );
+
+        $controller->setContainer($container);
+
+        $model = $this->mockClassWithProperties(ContentModel::class);
+        $model->reg_close = 'close_deactivate';
+
+        $request = new Request();
+        $request->request->set('FORM_SUBMIT', 'tl_close_account_');
+        $request->request->set('password', '12345678');
+
+        $response = $controller($request, $model, 'main');
+
+        $this->assertSame(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    private function mockLogger(): LoggerInterface
+    {
+        $logger = $this->createMock(LoggerInterface::class);
+        $logger
+            ->expects($this->once())
+            ->method('info')
+        ;
+
+        return $logger;
+    }
+
+    private function mockEventDispatcher(): EventDispatcherInterface
+    {
+        $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
+        $eventDispatcher
+            ->expects($this->once())
+            ->method('dispatch')
+        ;
+
+        return $eventDispatcher;
+    }
+
+    private function mockPasswordHasherFactory(bool $willVerify): PasswordHasherFactoryInterface&MockObject
+    {
+        $passwordHasher = $this->createMock(PasswordHasherInterface::class);
+        $passwordHasher
+            ->expects($this->once())
+            ->method('verify')
+            ->willReturn($willVerify);
+        ;
+
+        $passwordHasherFactory = $this->createMock(PasswordHasherFactoryInterface::class);
+        $passwordHasherFactory
+            ->expects($this->once())
+            ->method('getPasswordHasher')
+            ->willReturn($passwordHasher)
+        ;
+
+        return $passwordHasherFactory;
     }
 
     private function mockFrameworkWithTemplate(MemberModel|null $member = null): ContaoFramework&MockObject
