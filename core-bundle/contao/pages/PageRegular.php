@@ -278,7 +278,6 @@ class PageRegular extends Frontend
 	protected function preloadReaderContentElements($objPage, $request, $arrModules, $arrMapper): array
 	{
 		$arrPreloaded = array();
-
 		$arrArticleColumns = array();
 
 		foreach ($arrModules as $arrModule)

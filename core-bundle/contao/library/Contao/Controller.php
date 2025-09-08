@@ -495,6 +495,7 @@ abstract class Controller extends System
 
 		$objArticle = new ModuleArticle($objRow, $strColumn);
 		$objArticle->setPreloadedContentElements($arrPreloadedContentElements);
+
 		$strBuffer = $objArticle->generate($blnIsInsertTag);
 
 		// Disable indexing if protected

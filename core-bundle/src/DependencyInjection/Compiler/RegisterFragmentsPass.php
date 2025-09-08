@@ -137,7 +137,7 @@ class RegisterFragmentsPass implements CompilerPassInterface
                 }
 
                 if (!empty($attributes['shouldPreload'])) {
-                    trigger_deprecation('contao/core-bundle', '5.3', 'Using the fragment attribute "shouldPreload" is deprecated. Use a page type controller instead.');
+                    trigger_deprecation('contao/core-bundle', '5.3', 'Using the fragment attribute "shouldPreload" is deprecated and will no longer work in Contao 6. Use a page type controller instead.');
 
                     $compositor->addMethodCall('addPreload', [$identifier]);
                 }

@@ -463,13 +463,18 @@ class ContentModel extends Model
 
 		$arrColumns[] = "tl_content.pid=tl_article.id";
 		$arrColumns[] = "tl_content.module=tl_module.id";
+
 		$arrColumns[] = "tl_content.type=?";
 		$arrValues[] = 'module';
+
 		$arrColumns[] = "tl_content.ptable=?";
 		$arrValues[] = 'tl_article';
+
 		$arrColumns[] = "tl_article.pid=?";
 		$arrValues[] = $intPageId;
+
 		$arrColumns[] = "tl_article.inColumn IN (" . implode(', ', array_map(static fn () => '?', $arrArticleColumns)) . ")";
+
 		$arrValues = array(...$arrValues, ...$arrArticleColumns);
 
 		if (!static::isPreviewMode($arrOptions))
@@ -485,7 +490,6 @@ class ContentModel extends Model
 		$strQuery .= implode (" AND ", $arrColumns);
 		$strQuery .= " ORDER BY tl_content.pid, tl_content.sorting";
 
-		return $objDatabase->prepare($strQuery)
-			->execute(...$arrValues);
+		return $objDatabase->prepare($strQuery)->execute(...$arrValues);
 	}
 }
