@@ -12,6 +12,7 @@ declare(strict_types=1);
 
 namespace Contao\CoreBundle\Tests\Twig;
 
+use Contao\BackendTemplate;
 use Contao\Config;
 use Contao\CoreBundle\Config\ResourceFinder;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
@@ -101,11 +102,25 @@ class TwigIntegrationTest extends TestCase
             ),
         );
 
+        $contaoFilesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $contaoFilesystemLoader
+            ->method('exists')
+            ->with('@Contao/form_text.html.twig')
+            ->willReturn(true)
+        ;
+
+        $contaoFilesystemLoader
+            ->method('getFirst')
+            ->with('form_text')
+            ->willReturn('@Contao_specific/form_text.html.twig')
+        ;
+
         $requestStack = new RequestStack();
         $requestStack->push($request = new Request());
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('twig', $environment);
+        $container->set('contao.twig.filesystem_loader', $contaoFilesystemLoader);
         $container->set(ContextFactory::class, new ContextFactory());
         $container->set('request_stack', $requestStack);
 
@@ -183,6 +198,7 @@ class TwigIntegrationTest extends TestCase
 
         $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
         $container->set('twig', $environment);
+        $container->set('contao.twig.filesystem_loader', $filesystemLoader);
         $container->set(ContextFactory::class, new ContextFactory());
 
         $insertTagParser = new InsertTagParser($this->createMock(ContaoFramework::class), $this->createMock(LoggerInterface::class), $this->createMock(FragmentHandler::class));
@@ -449,5 +465,55 @@ class TwigIntegrationTest extends TestCase
                 </ul>
                 HTML,
         ];
+    }
+
+    public function testRendersTwigSurrogateIfFirstInHierarchyIsNotALegacyTemplate(): void
+    {
+        (new Filesystem())->dumpFile(Path::join($this->getTempDir(), 'templates/base.html5'), 'content');
+        TemplateLoader::addFile('base', 'templates');
+
+        $container = $this->getContainerWithContaoConfiguration($this->getTempDir());
+
+        $loader = new ContaoFilesystemLoader(
+            new NullAdapter(),
+            $this->createMock(TemplateLocator::class),
+            new ThemeNamespace(),
+            $container->get('contao.framework'),
+            $this->createMock(PageFinder::class),
+            'project',
+        );
+
+        $environment = new Environment($loader);
+
+        $environment->addExtension(
+            new ContaoExtension(
+                $environment,
+                $this->createMock(ContaoFilesystemLoader::class),
+                $this->createMock(ContaoCsrfTokenManager::class),
+                $this->createMock(ContaoVariable::class),
+                new InspectorNodeVisitor($this->createMock(Storage::class), $environment),
+            ),
+        );
+
+        $contaoFilesystemLoader = $this->createMock(ContaoFilesystemLoader::class);
+        $contaoFilesystemLoader
+            ->method('exists')
+            ->with('@Contao/base.html.twig')
+            ->willReturn(true)
+        ;
+
+        $contaoFilesystemLoader
+            ->method('getFirst')
+            ->with('base')
+            ->willReturn('@Contao_App/base.html5')
+        ;
+
+        $container->set('twig', $environment);
+        $container->set('contao.twig.filesystem_loader', $contaoFilesystemLoader);
+
+        System::setContainer($container);
+
+        $template = new BackendTemplate('base');
+        $this->assertSame('content', $template->parse());
     }
 }
